@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public Widget CreateColumn()
 		{
-			var column = new Widgets.TilesContainer ()
+			var column = new Widgets.ContainerTiles ()
 			{
 				Name = string.Format ("Column{0}", this.ColumnCount),
 			};
@@ -126,9 +126,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void SetRightColumn(Widget column, bool value)
 		{
-			if (column is Widgets.TilesContainer)
+			if (column is Widgets.ContainerTiles)
 			{
-				var tilesContainer = column as Widgets.TilesContainer;
+				var tilesContainer = column as Widgets.ContainerTiles;
 				tilesContainer.IsRightColumn = value;
 			}
 		}
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private static readonly double minimalWidth = 220;
-		private static readonly double reduceWidth = Widgets.TileGrouping.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
+		private static readonly double reduceWidth = Widgets.GroupingTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 
 
 		private readonly Widget container;

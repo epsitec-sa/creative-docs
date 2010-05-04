@@ -16,13 +16,13 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget est un conteneur de TileContainer, qui correspond à une bande verticale complète.
 	/// Il dessine un cadre qui tient compte des flèches droites. 
 	/// </summary>
-	public class TilesContainer : FrameBox
+	public class ContainerTiles : FrameBox
 	{
-		public TilesContainer()
+		public ContainerTiles()
 		{
 		}
 
-		public TilesContainer(Widget embedder)
+		public ContainerTiles(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			rect.Deflate (0.5);
-			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-TileContainer.ArrowBreadth, rect.Height);
+			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-ContainerTile.ArrowBreadth, rect.Height);
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (adorner.ColorBorder);
 		}

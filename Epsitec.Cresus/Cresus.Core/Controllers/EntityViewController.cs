@@ -122,9 +122,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		#region Tiles creation
-		protected Widgets.TileGrouping CreateTileGrouping(Widget parent, string iconUri, string title, bool isEditing)
+		protected Widgets.GroupingTile CreateTileGrouping(Widget parent, string iconUri, string title, bool isEditing)
 		{
-			var group = new Widgets.TileGrouping
+			var group = new Widgets.GroupingTile
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected Widgets.SummaryTile CreateSummaryTile(Widgets.TileGrouping parent, EntitiesAccessors.AbstractAccessor accessor, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
+		protected Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
 		{
 			var tile = new Widgets.SummaryTile
 			{
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return tile;
 		}
 
-		protected Widgets.EditionTile CreateEditionTile(Widgets.TileGrouping parent, EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
+		protected Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//?GlyphShape = GlyphShape.ArrowLeft,
 				//?Dock = DockStyle.Left,
 				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
+				Margins = new Margins (0, Widgets.ContainerTile.ArrowBreadth+2, 2, 2-1),
 				//?Margins = new Margins (2, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
 			};
 
@@ -439,7 +439,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected void CreateTextFieldPair(Widget embedder, int width1, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, System.Func<string, bool> validator1, System.Func<string, bool> validator2, EntitiesAccessors.BidirectionnalConverter converter)
+		protected void CreateHintEditor(Widget embedder, int width1, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, EntitiesAccessors.BidirectionnalConverter converter)
 		{
 			var staticText = new StaticText
 			{
@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var frameBox = new FrameBox
+			var hint = new Widgets.HintEditor
 			{
 				Parent = embedder,
 				Dock = DockStyle.Top,
@@ -458,86 +458,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
-			var combo1 = new Widgets.SuperCombo
-			{
-				Parent = frameBox,
-				Text = initialValue1,
-				AllowMultipleSelection = false,
-				Dock = DockStyle.Left,
-				PreferredWidth = width1,
-				Margins = new Margins (0, 2, 0, 0),
-				TabIndex = ++this.tabIndex,
-			};
+			converter.InitializeHintEditor (hint);
+			hint.Text = converter.GetFormatedText (initialValue1, initialValue2);  // après InitializeHintEditor !
 
-			var combo2 = new Widgets.SuperCombo
-			{
-				Parent = frameBox,
-				AllowMultipleSelection = false,
-				Text = initialValue2,
-				Dock = DockStyle.Fill,
-				TabIndex = ++this.tabIndex,
-			};
-
-			converter.InitializeComboWithText1 (combo1);
-			converter.InitializeComboWithText2 (combo2);
-
-			combo1.TextInserted +=
+			hint.EditionAccepted +=
 				delegate (object sender)
 				{
-					if (validator1 == null || validator1 (combo1.Text))
+					int sel = hint.SelectedIndex;
+					if (sel != -1)
 					{
-						callback1 (combo1.Text);
-						combo1.SetError (false);
-
-						converter.Text1ToText2 (combo1, combo2);
-					}
-					else
-					{
-						combo1.SetError (true);
-					}
-				};
-
-			combo2.TextInserted +=
-				delegate (object sender)
-				{
-					if (validator2 == null || validator2 (combo2.Text))
-					{
-						callback2 (combo2.Text);
-						combo2.SetError (false);
-
-						converter.Text2ToText1 (combo2, combo1);
-					}
-					else
-					{
-						combo2.SetError (true);
-					}
-				};
-
-			combo1.TextDeleted +=
-				delegate (object sender)
-				{
-					if (validator1 == null || validator1 (combo1.Text))
-					{
-						callback1 (combo1.Text);
-						combo1.SetError (false);
-					}
-					else
-					{
-						combo1.SetError (true);
-					}
-				};
-
-			combo2.TextDeleted +=
-				delegate (object sender)
-				{
-					if (validator2 == null || validator2 (combo2.Text))
-					{
-						callback2 (combo2.Text);
-						combo2.SetError (false);
-					}
-					else
-					{
-						combo2.SetError (true);
+						string text1, text2;
+						converter.Get (sel, out text1, out text2);
+						callback1 (text1);
+						callback2 (text2);
 					}
 				};
 		}

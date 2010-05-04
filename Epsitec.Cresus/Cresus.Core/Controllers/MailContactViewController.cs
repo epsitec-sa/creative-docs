@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			this.container = container;
-			Widgets.TileGrouping group;
+			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.MailContactAccessor (null, this.Entity as Entities.MailContactEntity, false);
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.CreateLinkButtons (tile.Container);
 
-			this.CreateTextFieldPair (tile.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
+			this.CreateHintEditor(tile.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, EntitiesAccessors.MailContactAccessor.countryConverter);
 
 			this.CreateMargin (tile.Container, true);
 
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
 			this.CreateTextField (tile.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
 
-			//?this.CreateTextFieldPair (tile.Container.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
-			this.CreateTextFieldPair (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
+			this.CreateHintEditor (tile.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, EntitiesAccessors.MailContactAccessor.regionConverter);
+			this.CreateHintEditor (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, EntitiesAccessors.MailContactAccessor.locationConverter);
 
 			this.SetInitialFocus ();
 		}

@@ -26,6 +26,46 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			this.content.Add (line);
 		}
 
+		public void Get(int index, out string text1, out string text2)
+		{
+			if (index >= 0 && index < this.content.Count)
+			{
+				text1 = this.content[index][0];
+				text2 = this.content[index][1];
+			}
+			else
+			{
+				text1 = null;
+				text2 = null;
+			}
+		}
+
+
+		public string Format
+		{
+			get;
+			set;
+		}
+
+		public string GetFormatedText(string text1, string text2)
+		{
+			if (string.IsNullOrEmpty (text1) && string.IsNullOrEmpty (text2))
+			{
+				return null;
+			}
+			else
+			{
+				if (string.IsNullOrEmpty (this.Format))
+				{
+					return Misc.SpacingAppend (text1, text2);
+				}
+				else
+				{
+					return string.Format (this.Format, text1, text2);
+				}
+			}
+		}
+
 
 		public void Text1ToText2(Common.Widgets.AbstractTextField textField1, Common.Widgets.AbstractTextField textField2)
 		{
@@ -102,6 +142,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 
 			return list;
+		}
+
+
+		public void InitializeHintEditor(Widgets.HintEditor hint)
+		{
+			System.Diagnostics.Debug.Assert (this.Format != null);
+
+			hint.Items.Clear ();
+
+			foreach (var line in this.content)
+			{
+				hint.Items.Add (this.GetFormatedText (line[0], line[1]));
+			}
 		}
 
 

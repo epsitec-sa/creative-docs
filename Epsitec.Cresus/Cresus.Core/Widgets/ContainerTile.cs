@@ -16,13 +16,13 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
 	/// alors une flèche (qui déborde de son Client.Bounds) qui pointe vers son enfant.
 	/// </summary>
-	public class TileContainer : TileBackground
+	public class ContainerTile : BackgroundTile
 	{
-		public TileContainer()
+		public ContainerTile()
 		{
 		}
 
-		public TileContainer(Widget embedder)
+		public ContainerTile(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return TileContainer.arrowBreadth;
+				return ContainerTile.arrowBreadth;
 			}
 		}
 
@@ -111,8 +111,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	Dessine le hilite sous forme d'une jolie bordure orange, en accord avec l'adorner utilisé (mais pas les autres).
 			if (enteredPath != null)
 			{
+				graphics.Rasterizer.AddSurface (enteredPath);
+				graphics.RenderSolid (this.BackgroundSurfaceHilitedColor);
+
 				graphics.Rasterizer.AddOutline (enteredPath, 3);
-				graphics.RenderSolid (this.BackgroundHilitedColor);
+				graphics.RenderSolid (this.BackgroundOutlineHilitedColor);
 			}
 
 			//	Dessine le cadre.
@@ -130,7 +133,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.HasArrow)
 			{
-				return TileContainer.GetArrowPath (bounds, this.arrowLocation);
+				return ContainerTile.GetArrowPath (bounds, this.arrowLocation);
 			}
 			else
 			{
@@ -138,7 +141,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				Rectangle box;
 				Point pick;
-				TileContainer.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+				ContainerTile.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
 
 				path.AppendRectangle (box);
 
@@ -181,7 +184,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			bounds.Deflate (deflate);
 
-			return TileContainer.GetArrowPath (bounds, arrowLocation);
+			return ContainerTile.GetArrowPath (bounds, arrowLocation);
 		}
 
 		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation)
@@ -190,7 +193,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			Rectangle box;
 			Point pick;
-			TileContainer.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+			ContainerTile.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
 
 			switch (arrowLocation)
 			{
@@ -242,22 +245,22 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				default:
 				case Direction.Left:
-					box = new Rectangle (bounds.Left+TileContainer.arrowBreadth, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
+					box = new Rectangle (bounds.Left+ContainerTile.arrowBreadth, bounds.Bottom, bounds.Width-ContainerTile.arrowBreadth, bounds.Height);
 					pick = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
 					break;
 
 				case Direction.Right:
-					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
+					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-ContainerTile.arrowBreadth, bounds.Height);
 					pick = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
 					break;
 
 				case Direction.Up:
-					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
+					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-ContainerTile.arrowBreadth);
 					pick = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
 					break;
 
 				case Direction.Down:
-					box = new Rectangle (bounds.Left, bounds.Bottom+TileContainer.arrowBreadth, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
+					box = new Rectangle (bounds.Left, bounds.Bottom+ContainerTile.arrowBreadth, bounds.Width, bounds.Height-ContainerTile.arrowBreadth);
 					pick = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
 					break;
 			}
