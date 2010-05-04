@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Parent = this,
 				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, TileContainer.ArrowBreadth, 0, 0),
+				Margins = new Margins (2, ContainerTile.ArrowBreadth, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
 			};
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				GlyphShape = Common.Widgets.GlyphShape.Plus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Top,
 				PreferredSize = new Size (SummaryTile.simpleButtonSize, SummaryTile.simpleButtonSize),
-				Margins = new Margins (0, TileContainer.ArrowBreadth+5+SummaryTile.simpleButtonSize-1, 0, 0),
+				Margins = new Margins (0, ContainerTile.ArrowBreadth+5+SummaryTile.simpleButtonSize-1, 0, 0),
 				Visibility = false,
 			};
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Top,
 				PreferredSize = new Size (SummaryTile.simpleButtonSize, SummaryTile.simpleButtonSize),
-				Margins = new Margins (0, TileContainer.ArrowBreadth+5, 0, 0),
+				Margins = new Margins (0, ContainerTile.ArrowBreadth+5, 0, 0),
 				Visibility = false,
 			};
 
@@ -122,9 +122,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				while (widget != null)
 				{
-					if (widget is Widgets.TilesContainer)
+					if (widget is Widgets.ContainerTiles)
 					{
-						var container = widget as Widgets.TilesContainer;
+						var container = widget as Widgets.ContainerTiles;
 						return container.IsRightColumn;
 					}
 

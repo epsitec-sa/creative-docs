@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		static MailContactAccessor()
 		{
 			MailContactAccessor.locationConverter = new BidirectionnalConverter ();
+			MailContactAccessor.locationConverter.Format = "{0} {1}";  // "1000 Lausanne"
 
 			#region Locations
 			// TODO: Evidemment cette liste devra provenir d'une db !
@@ -5341,6 +5342,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			#endregion
 
 			MailContactAccessor.countryConverter = new BidirectionnalConverter ();
+			MailContactAccessor.countryConverter.Format = "{1} ({0})";  // "Suisse (CH)"
 
 			#region Countries
 			// TODO: A compléter à l'occasion...
@@ -5381,6 +5383,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			#endregion
 
 			MailContactAccessor.regionConverter = new BidirectionnalConverter ();
+			MailContactAccessor.regionConverter.Format = "{1} ({0})";  // "Vaud (VD)"
 
 			#region Regions
 			// TODO: Evidemment cette liste devra provenir d'une db !

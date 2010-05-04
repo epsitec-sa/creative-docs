@@ -15,13 +15,13 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// <summary>
 	/// Conteneur de base pour toutes les tuiles, qui s'occupe simplement de déterminer la couleur de fond, sans peindre ce dernier.
 	/// </summary>
-	public class TileBackground : FrameBox
+	public class BackgroundTile : FrameBox
 	{
-		public TileBackground()
+		public BackgroundTile()
 		{
 		}
 
-		public TileBackground(Widget embedder)
+		public BackgroundTile(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -81,7 +81,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public Color BackgroundHilitedColor
+		public Color BackgroundSurfaceHilitedColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("ffeec2");  // orange
+			}
+		}
+
+		public Color BackgroundOutlineHilitedColor
 		{
 			get
 			{

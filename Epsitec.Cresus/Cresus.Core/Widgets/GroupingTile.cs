@@ -16,17 +16,17 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TopLeftIconUri) et un titre (Title).
 	/// </summary>
-	public class TileGrouping : TileBackground
+	public class GroupingTile : BackgroundTile
 	{
-		public TileGrouping()
+		public GroupingTile()
 		{
-			this.PreferredWidth = TileGrouping.iconSize+TileGrouping.iconMargins*2;
+			this.PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2;
 
 			//	Crée deux panneaux gauche/droite.
 			this.leftPanel = new FrameBox
 			{
 				Parent = this,
-				PreferredWidth = TileGrouping.iconSize+TileGrouping.iconMargins*2,
+				PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2,
 				Dock = DockStyle.Left,
 			};
 
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.staticTextTopLeftIcon = new StaticText
 			{
 				Parent = this.leftPanel,
-				Margins = new Margins (TileGrouping.iconMargins),
-				PreferredSize = new Size (TileGrouping.iconSize, TileGrouping.iconSize),
+				Margins = new Margins (GroupingTile.iconMargins),
+				PreferredSize = new Size (GroupingTile.iconSize, GroupingTile.iconSize),
 				Dock = DockStyle.Top,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 			};
@@ -51,10 +51,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.staticTextTitle = new StaticText
 			{
 				Parent = this.rightPanel,
-				PreferredHeight = TileGrouping.titleHeight,
+				PreferredHeight = GroupingTile.titleHeight,
 				PreferredWidth = 0,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, TileContainer.ArrowBreadth, 0, 0),
+				Margins = new Margins (2, ContainerTile.ArrowBreadth, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 			};
@@ -67,20 +67,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			};
 		}
 
-		public TileGrouping(Widget embedder)
+		public GroupingTile(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
 		}
 
 
-		static TileGrouping()
+		static GroupingTile()
 		{
 			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			metadataDy.DefineDefaultValue (TileGrouping.iconSize+TileGrouping.iconMargins*2);
+			metadataDy.DefineDefaultValue (GroupingTile.iconSize+GroupingTile.iconMargins*2);
 
-			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (TileGrouping), metadataDy);
+			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (GroupingTile), metadataDy);
 		}
 
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
-			if (newRect.Width <= TileGrouping.WidthWithOnlyIcon)  // icône seule ?
+			if (newRect.Width <= GroupingTile.WidthWithOnlyIcon)  // icône seule ?
 			{
 				this.rightPanel.Visibility = false;
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return TileGrouping.iconSize+TileGrouping.iconMargins*2;
+				return GroupingTile.iconSize+GroupingTile.iconMargins*2;
 			}
 		}
 	
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			rect.Deflate (0.5);
-			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-TileContainer.ArrowBreadth, rect.Height);
+			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-ContainerTile.ArrowBreadth, rect.Height);
 
 			//	Dessine toujours le fond.
 			graphics.AddFilledRectangle (rect);

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			this.container = container;
-			Widgets.TileGrouping group;
+			Widgets.GroupingTile group;
 			Widgets.EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);

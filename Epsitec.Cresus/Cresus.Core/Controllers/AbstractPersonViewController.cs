@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUITiles(Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
-			Widgets.TileGrouping group = null;
+			Widgets.GroupingTile group = null;
 			int count;
 
 			if (this.Mode == ViewControllerMode.PersonEdition)
