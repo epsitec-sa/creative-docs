@@ -28,34 +28,36 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			this.container = container;
-
-			int groupIndex = 0;
+			Widgets.TileGrouping group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.MailContactAccessor (null, this.Entity as Entities.MailContactEntity, false);
 
 			//	Crée les tuiles.
 			this.CreateHeaderEditorTile ();
-			Widgets.AbstractTile tile1 = this.CreateEditionTile (accessor, ViewControllerMode.None);
-
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.MailContact, false);
-			this.CreateSummaryTile (roleAccessor, groupIndex, false, false, true, ViewControllerMode.RolesEdition);
-
-			Widgets.AbstractTile tile2 = this.CreateEditionTile ();
-			this.CreateFooterEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateLinkButtons (tile1.Container);
+			group = this.CreateTileGrouping (this.container, "Data.Roles", "Rôles", false);
 
-			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
-			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
-			this.CreateTextFieldPair (tile2.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
+			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.MailContact, false);
+			this.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
 
-			this.CreateMargin (tile2.Container, true);
+			//	Crée le contenu de la tuile d'édition.
+			group = this.CreateTileGrouping (this.container, "Data.Mail", "Adresse", true);
+			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
-			this.CreateTextField (tile2.Container, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
-			this.CreateTextFieldMulti (tile2.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
-			this.CreateTextField (tile2.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
+			this.CreateLinkButtons (tile.Container);
+
+			this.CreateTextFieldPair (tile.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
+
+			this.CreateMargin (tile.Container, true);
+
+			this.CreateTextField (tile.Container, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
+			this.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
+			this.CreateTextField (tile.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
+
+			//?this.CreateTextFieldPair (tile.Container.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
+			this.CreateTextFieldPair (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();

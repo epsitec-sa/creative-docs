@@ -12,25 +12,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public enum RectangleBordersShowedEnum
-	{
-		All   = 0x000f,
-		Left  = 0x0001,
-		Right = 0x0002,
-		Up    = 0x0004,
-		Down  = 0x0008,
-	}
-
-
 	/// <summary>
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
 	/// alors une flèche (qui déborde de son Client.Bounds) qui pointe vers son enfant.
 	/// </summary>
-	public class TileContainer : FrameBox
+	public class TileContainer : TileBackground
 	{
 		public TileContainer()
 		{
-			this.rectangleBordersShowed = RectangleBordersShowedEnum.All;
 		}
 
 		public TileContainer(Widget embedder)
@@ -76,27 +65,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		/// <summary>
-		/// Détermine quels sont les bords visibles lorsque le conteneur n'a pas de flèche et
-		/// qu'il a alors la forme d'un simple rectangle.
-		/// </summary>
-		/// <value>The simples borders showed.</value>
-		public RectangleBordersShowedEnum RectangleBordersShowed
-		{
-			get
-			{
-				return this.rectangleBordersShowed;
-			}
-			set
-			{
-				if (this.rectangleBordersShowed != value)
-				{
-					this.rectangleBordersShowed = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
-		/// <summary>
 		/// Détermine si le widget est sensible au survol de la souris.
 		/// </summary>
 		/// <value><c>true</c> if [entered sensitivity]; otherwise, <c>false</c>.</value>
@@ -112,37 +80,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		/// <summary>
-		/// Indique si la tuile permet d'éditer une entité.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is editing; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsEditing
-		{
-			get;
-			set;
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Path outlinePath = this.GetFramePath (0 ,true);
-			Path surfacePath = this.GetFramePath (0, false);
-			Path enteredPath = this.HasMouseHilite && !this.HasRevertedArrow ? this.GetFramePath (2, true) : null;
+			Path outlinePath = this.GetFramePath (0.0 ,true);
+			Path surfacePath = this.GetFramePath (0.5, false);
+			Path enteredPath = this.HasMouseHilite && !this.HasRevertedArrow ? this.GetFramePath (2.0, true) : null;
 
-			double surfaceAlpha;
-
-			if (this.HasRevertedArrow)
-			{
-				surfaceAlpha = 0.1;
-			}
-			else
-			{
-				surfaceAlpha = this.SurfaceAlpha;
-			}
-
-			this.PaintPath (graphics, enteredPath, outlinePath, surfacePath, surfaceAlpha);
+			this.PaintPath (graphics, enteredPath, outlinePath, surfacePath);
 		}
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -152,64 +96,30 @@ namespace Epsitec.Cresus.Core.Widgets
 				Path path = this.GetRevertedFramePath (0);
 				Path enteredPath = this.HasMouseHilite ? this.GetRevertedFramePath (2) : null;
 
-				this.PaintPath (graphics, enteredPath, path, path, 0.2);
+				this.PaintPath (graphics, enteredPath, path, path);
 			}
 		}
 
-		private void PaintPath(Graphics graphics, Path enteredPath, Path outlinePath, Path surfacePath, double surfaceAlpha)
+		private void PaintPath(Graphics graphics, Path enteredPath, Path outlinePath, Path surfacePath)
 		{
-			//	Dessine toujous le fond.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Color backColor = this.BackColor;
-
-			if (backColor.IsVisible == false)
-			{
-				backColor = adorner.ColorTextBackground;
-			}
-
+			//	Dessine toujours le fond.
 			graphics.Rasterizer.AddSurface (surfacePath);
-			graphics.RenderSolid (backColor);
-
-			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
-			if (this.HasMouseHilite || this.IsSelected || this.IsEditing)
-			{
-				backColor = new Color (surfaceAlpha, adorner.ColorCaption.R, adorner.ColorCaption.G, adorner.ColorCaption.B);
-
-				graphics.Rasterizer.AddSurface (surfacePath);
-				graphics.RenderSolid (backColor);
-			}
+			graphics.RenderSolid (this.BackgroundColor);
 
 			//	Dessine le hilite sous forme d'une jolie bordure orange, en accord avec l'adorner utilisé (mais pas les autres).
-			// TODO: Adapter aux autres adorners
 			if (enteredPath != null)
 			{
 				graphics.Rasterizer.AddOutline (enteredPath, 3);
-				graphics.RenderSolid (Color.FromHexa ("ffc83c"));  // orange
+				graphics.RenderSolid (this.BackgroundHilitedColor);
 			}
 
 			//	Dessine le cadre.
-			graphics.Rasterizer.AddOutline (outlinePath);
-			graphics.RenderSolid (adorner.ColorBorder);
-		}
-
-		private double SurfaceAlpha
-		{
-			get
+			if (enteredPath != null || this.IsSelected)
 			{
-				double alpha = 0.05;
-
-				if (this.IsSelected)
-				{
-					alpha *= 2;
-				}
-
-				if (this.IsEditing)
-				{
-					alpha *= 2;
-				}
-
-				return alpha;
+				graphics.Rasterizer.AddOutline (outlinePath);
+				graphics.RenderSolid (adorner.ColorBorder);
 			}
 		}
 
@@ -230,36 +140,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Point pick;
 				TileContainer.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
 
-				if (this.rectangleBordersShowed == RectangleBordersShowedEnum.All || outline == false)
-				{
-					path.AppendRectangle (box);
-				}
-				else
-				{
-					if ((this.rectangleBordersShowed & RectangleBordersShowedEnum.Left) != 0)
-					{
-						path.MoveTo (box.TopLeft);
-						path.LineTo (box.BottomLeft);
-					}
-
-					if ((this.rectangleBordersShowed & RectangleBordersShowedEnum.Right) != 0)
-					{
-						path.MoveTo (box.BottomRight);
-						path.LineTo (box.TopRight);
-					}
-
-					if ((this.rectangleBordersShowed & RectangleBordersShowedEnum.Up) != 0)
-					{
-						path.MoveTo (box.TopRight);
-						path.LineTo (box.TopLeft);
-					}
-
-					if ((this.rectangleBordersShowed & RectangleBordersShowedEnum.Down) != 0)
-					{
-						path.MoveTo (box.BottomLeft);
-						path.LineTo (box.BottomRight);
-					}
-				}
+				path.AppendRectangle (box);
 
 				return path;
 			}
@@ -411,7 +292,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double arrowBreadth = 8;
 
 		private Direction arrowLocation;
-		private RectangleBordersShowedEnum rectangleBordersShowed;
 		private bool enteredSensitivity;
 	}
 }

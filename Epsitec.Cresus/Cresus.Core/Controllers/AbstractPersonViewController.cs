@@ -62,8 +62,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUITiles(Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
+			Widgets.TileGrouping group = null;
 			int count;
-			bool compactFollower;
 
 			if (this.Mode == ViewControllerMode.PersonEdition)
 			{
@@ -71,8 +71,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.CreateHeaderEditorTile ();
 
+					group = this.CreateTileGrouping (this.Container, "Data.NaturalPerson", "Personne physique", true);
+
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
-					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
 					this.CreateFooterEditorTile ();
 
@@ -88,8 +90,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.CreateHeaderEditorTile ();
 
+					group = this.CreateTileGrouping (this.Container, "Data.LegalPerson", "Personne morale", true);
+
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
-					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
 					
 					this.CreateFooterEditorTile ();
 
@@ -105,103 +109,136 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.CreateHeaderEditorTile ();
 
-				int groupIndex = 0;
-
 				//	Une première tuile pour l'identité de la personne.
 				if (this.Entity is Entities.NaturalPersonEntity)
 				{
+					group = this.CreateTileGrouping (this.Container, "Data.NaturalPerson", "Personne physique", false);
+
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
 				}
 
 				if (this.Entity is Entities.LegalPersonEntity)
 				{
+					group = this.CreateTileGrouping (this.Container, "Data.LegalPerson", "Personne morale", false);
+
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
 				}
 
-				groupIndex++;
+				//	Crée les tuiles pour les adresses postales.
+				if (groupMail)
+				{
+					group = this.CreateTileGrouping (this.Container, "Data.Mail", "Adresse", false);
+				}
 
-				//	Une tuile distincte par adresse postale.
 				count = 0;
-				compactFollower = false;
-
 				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.MailContactEntity)
 					{
 						var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.GenericEdition);
+
+						if (!groupMail)
+						{
+							group = this.CreateTileGrouping (this.Container, "Data.Mail", accessor.Title, false);
+						}
+
+						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
 
 						count++;
-						compactFollower = groupMail;
 					}
 				}
 
 				if (count == 0)
 				{
+					if (!groupMail)
+					{
+						group = this.CreateTileGrouping (this.Container, "Data.Mail", "Adresse", false);
+					}
+
 					var emptyEntity = new Entities.MailContactEntity ();
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.GenericEdition);
 				}
 
-				groupIndex++;
+				//	Crée les tuiles pour les numéros de téléphone.
+				if (groupTelecom)
+				{
+					group = this.CreateTileGrouping (this.Container, "Data.Telecom", "Téléphone", false);
+				}
 
-				//	Une tuile distincte par numéro de téléphone.
 				count = 0;
-				compactFollower = false;
-
 				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.TelecomContactEntity)
 					{
 						var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.TelecomEdition);
+
+						if (!groupTelecom)
+						{
+							group = this.CreateTileGrouping (this.Container, "Data.Telecom", accessor.Title, false);
+						}
+
+						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
 
 						count++;
-						compactFollower = groupTelecom;
 					}
 				}
 
 				if (count == 0)
 				{
+					if (!groupTelecom)
+					{
+						group = this.CreateTileGrouping (this.Container, "Data.Telecom", "Téléphone", false);
+					}
+
 					var emptyEntity = new Entities.TelecomContactEntity ();
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.GenericEdition);
 				}
 
-				groupIndex++;
+				//	Crée les tuiles pour les adresses mail.
+				if (groupUri)
+				{
+					group = this.CreateTileGrouping (this.Container, "Data.Uri", "Mail", false);
+				}
 
-				//	Une tuile distincte par adresse mail.
 				count = 0;
-				compactFollower = false;
-
 				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.UriContactEntity)
 					{
 						var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.UriEdition);
+
+						if (!groupUri)
+						{
+							group = this.CreateTileGrouping (this.Container, "Data.Uri", accessor.Title, false);
+						}
+
+						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
 
 						count++;
-						compactFollower = groupUri;
 					}
 				}
 
 				if (count == 0)
 				{
+					if (!groupUri)
+					{
+						group = this.CreateTileGrouping (this.Container, "Data.Uri", "Mail", false);
+					}
+
 					var emptyEntity = new Entities.UriContactEntity ();
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.GenericEdition);
 				}
-
-				groupIndex++;
 
 				this.CreateFooterEditorTile ();
 			}

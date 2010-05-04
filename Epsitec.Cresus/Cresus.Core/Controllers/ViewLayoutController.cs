@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private static readonly double minimalWidth = 220;
-		private static readonly double reduceWidth = Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
+		private static readonly double reduceWidth = Widgets.TileGrouping.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 
 
 		private readonly Widget container;
