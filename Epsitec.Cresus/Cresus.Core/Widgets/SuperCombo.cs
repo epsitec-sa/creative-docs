@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		public SuperCombo()
 		{
 			this.AllowMultipleSelection = true;  //? provisoire
+			this.MultipleSelectionTextSeparator = ", ";
+
 			this.selection = new HashSet<int> ();
 		}
 
@@ -38,6 +40,13 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		public bool AllowMultipleSelection
+		{
+			get;
+			set;
+		}
+
+
+		public string MultipleSelectionTextSeparator
 		{
 			get;
 			set;
@@ -68,6 +77,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (dirty)
 			{
+				this.UpdateText ();
 				this.OnMultiSelectionChanged ();
 			}
 		}
@@ -86,6 +96,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (dirty)
 			{
+				this.UpdateText ();
 				this.OnMultiSelectionChanged ();
 			}
 		}
@@ -95,6 +106,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.selection.Count > 0)
 			{
 				this.selection.Clear ();
+
+				this.UpdateText ();
 				this.OnMultiSelectionChanged ();
 			}
 		}
@@ -117,13 +130,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		#endregion
-
-
-		public override void NotifyStringCollectionChanged()
-		{
-			//	Appelé lorsque la StringCollection this.Items a changé.
-			this.UpdateText ();
-		}
 
 
 		protected override void OpenCombo()
@@ -373,7 +379,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				list.Add (this.items[sel]);
 			}
 
-			this.Text = Misc.Combine (list, ", ");
+			this.Text = Misc.Combine (list, this.MultipleSelectionTextSeparator);
 		}
 		
 

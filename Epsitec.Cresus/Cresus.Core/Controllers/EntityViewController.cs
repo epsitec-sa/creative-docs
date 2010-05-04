@@ -720,8 +720,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				//?combo.Items.Add ("Coucou");
 				initializer.InitializeCombo (combo);
+				combo.AddSelection (Enumerable.Range (0, 1));
 
 				this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
 			}
