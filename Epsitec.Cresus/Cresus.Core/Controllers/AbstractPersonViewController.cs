@@ -242,8 +242,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.CreateFooterEditorTile ();
 			}
-
-			this.AdjustVisualForGroups ();
 		}
 	}
 }

@@ -93,8 +93,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.HasRevertedArrow)
 			{
-				Path path = this.GetRevertedFramePath (0);
-				Path enteredPath = this.HasMouseHilite ? this.GetRevertedFramePath (2) : null;
+				Path path = this.GetRevertedFramePath (0.0);
+				Path enteredPath = this.HasMouseHilite ? this.GetRevertedFramePath (2.0) : null;
 
 				this.PaintPath (graphics, enteredPath, path, path);
 			}
