@@ -72,11 +72,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (this.columns.Count > 0)
 			{
+#if false
 				double x = 0;
 				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
 				int columnIndex = 0;
 
-				//	Positionne les colonnes de gauche à drote, sauf la dernière.
+				//	Positionne les colonnes de gauche à droite, sauf la dernière.
 				foreach (var column in this.columns.Skip (1).Reverse ())
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
@@ -98,6 +99,28 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.container.Children.Add (column);
 				}
+#else
+				double x = 0;
+				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
+				int columnIndex = 0;
+
+				//	Positionne les colonnes de gauche à droite.
+				foreach (var column in this.columns.Reverse ())
+				{
+					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex++);
+					column.Margins = new Margins (x, 0, 0, 0);
+					x += column.PreferredWidth - overlap;
+
+					ViewLayoutController.SetRightColumn (column, columnIndex >= this.columns.Count);
+				}
+
+				//	Ajoute les colonnes au parent, mais de droite à gauche.
+				foreach (var column in this.columns)
+				{
+					this.container.Children.Add (column);
+				}
+#endif
 			}
 		}
 
@@ -112,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static double WidthCompute(int columnsCount, int columnIndex)
 		{
-			double width = 300 - 300*(columnsCount-columnIndex-2)*0.5;
+			double width = 250 - 250*(columnsCount-columnIndex-2)*0.5;
 
 			//	A part la première colonne de gauche, les autres colonnes doivent soit avoir une
 			//	largeur supérieure ou égale à minimalWidth, soit reduceWidth pour ne montrer que

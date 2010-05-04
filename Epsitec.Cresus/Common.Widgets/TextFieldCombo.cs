@@ -673,7 +673,7 @@ namespace Epsitec.Common.Widgets
 		
 		#region IStringCollectionHost Members
 		
-		public virtual void NotifyStringCollectionChanged()
+		public void NotifyStringCollectionChanged()
 		{
 			this.selectedIndex = -1;
 		}
