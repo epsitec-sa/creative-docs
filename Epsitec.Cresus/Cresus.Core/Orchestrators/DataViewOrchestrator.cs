@@ -31,9 +31,18 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// controller becomes the top level view.
 		/// </summary>
 		/// <param name="viewController">The view controller.</param>
-		public void CloseSubViews(CoreViewController viewController, bool andMe)
+		public void CloseSubViews(CoreViewController viewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController, andMe);
+			this.dataViewController.PopViewControllersUntil (viewController, false);
+		}
+
+		/// <summary>
+		/// Closes the view of the specified controller, including all sub views.
+		/// </summary>
+		/// <param name="viewController">The view controller.</param>
+		public void CloseView(CoreViewController viewController)
+		{
+			this.dataViewController.PopViewControllersUntil (viewController, true);
 		}
 
 		/// <summary>
