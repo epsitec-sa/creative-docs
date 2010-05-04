@@ -122,22 +122,27 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		#region Tiles creation
-		/// <summary>
-		/// Crée une tuile résumée qui s'insère en bas de l'empilement (qui commence en haut).
-		/// </summary>
-		/// <param name="accessor">The accessor.</param>
-		/// <param name="groupIndex">Index of the group.</param>
-		/// <param name="compactFollower">if set to <c>true</c> [compact follower].</param>
-		/// <param name="enableCreateAndRemoveButton">if set to <c>true</c> [enable create and remove button].</param>
-		/// <param name="childrenMode">The children mode.</param>
-		/// <returns></returns>
-		protected Widgets.AbstractTile CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, bool isEditing, ViewControllerMode childrenMode)
+		protected Widgets.TileGrouping CreateTileGrouping(Widget parent, string iconUri, string title, bool isEditing)
 		{
-			System.Diagnostics.Debug.Assert (this.container != null);
+			var group = new Widgets.TileGrouping
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+				TopLeftIconUri = iconUri,
+				Title = title,
+				IsEditing = isEditing,
+			};
 
+			return group;
+		}
+
+
+		protected Widgets.SummaryTile CreateSummaryTile(Widgets.TileGrouping parent, EntitiesAccessors.AbstractAccessor accessor, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
+		{
 			var tile = new Widgets.SummaryTile
 			{
-				Parent = this.container,
+				Parent = parent.Container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = true,
@@ -146,12 +151,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Entity = accessor.Entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
-				GroupIndex = groupIndex,
-				CompactFollower = compactFollower,
 				EnableCreateAndRemoveButton = enableCreateAndRemoveButton,
-				IsEditing = isEditing,
-				TopLeftIconUri = accessor.IconUri,
-				Title = accessor.Title,
+				IsEditing = false,
 				Summary = accessor.Summary,
 			};
 
@@ -163,19 +164,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			return tile;
 		}
 
-		/// <summary>
-		/// Crée une tuile permettant l'édition.
-		/// </summary>
-		/// <param name="accessor">The accessor.</param>
-		/// <param name="childrenMode">The children mode.</param>
-		/// <returns></returns>
-		protected Widgets.AbstractTile CreateEditionTile(EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
+		protected Widgets.EditionTile CreateEditionTile(Widgets.TileGrouping parent, EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
 			var tile = new Widgets.EditionTile
 			{
-				Parent = this.container,
+				Parent = parent.Container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = false,
@@ -185,33 +180,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
 				IsEditing = true,
-				TopLeftIconUri = accessor.IconUri,
-				Title = accessor.Title,
 			};
 
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-
-			return tile;
-		}
-
-		/// <summary>
-		/// Crée une tuile permettant l'édition.
-		/// </summary>
-		/// <param name="accessor">The accessor.</param>
-		/// <param name="childrenMode">The children mode.</param>
-		/// <returns></returns>
-		protected Widgets.AbstractTile CreateEditionTile()
-		{
-			System.Diagnostics.Debug.Assert (this.container != null);
-
-			var tile = new Widgets.EditionTile
-			{
-				Parent = this.container,
-				Dock = DockStyle.Top,
-				ArrowLocation = Direction.Right,
-				ArrowEnabled = false,
-				IsEditing = true,
-			};
 
 			return tile;
 		}
@@ -289,6 +260,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		protected void AdjustVisualForGroups()
 		{
+#if false
 			System.Diagnostics.Debug.Assert (this.container != null);
 
 			bool first = true;
@@ -340,6 +312,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 			}
+#endif
 		}
 		#endregion
 
@@ -384,6 +357,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		#region Tiles content creation
 		protected void CreateLinkButtons(Widget embedder)
 		{
+#if false
 			//	TODO: Prototype non fonctionnel, à valider puis terminer
 			var frameBox = new ClippingFrameBox
 			{
@@ -421,30 +395,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Text = "Utilisation unique",  // ou "Utilisé 10x"
 				Dock = DockStyle.Fill,
 			};
-
-			
-		}
-
-		protected FrameBox CreateGroup(Widget embedder, string label)
-		{
-			var staticText = new StaticText
-			{
-				Parent = embedder,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
-			};
-
-			var frameBox = new FrameBox
-			{
-				Parent = embedder,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
-				TabIndex = ++this.tabIndex,
-			};
-
-			return frameBox;
+#endif
 		}
 
 		protected void CreateTextField(Widget embedder, int width, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
@@ -455,7 +406,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Text = initialValue,
 				Dock = (width == 0) ? DockStyle.Fill : DockStyle.Left,
 				PreferredWidth = width,
-				Margins = new Margins (0, (width == 0) ? 0:2, 0, 0),
+				Margins = new Margins (0, (width == 0) ? 10:2, 0, 0),
 				TabIndex = ++this.tabIndex,
 			};
 

@@ -140,6 +140,8 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
+    <Compile Include="Widgets\TileBackground.cs" />
+    <Compile Include="Widgets\TileGrouping.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />
     <Compile Include="Widgets\TilesContainer.cs" />

@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 					var builder = new StringBuilder ();
 
 					builder.Append ("Mail");
-					builder.Append (Misc.Encapsulate (" ", this.Roles, ""));
+					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
 
 					return Misc.RemoveLastBreakLine (builder.ToString ());
 				}

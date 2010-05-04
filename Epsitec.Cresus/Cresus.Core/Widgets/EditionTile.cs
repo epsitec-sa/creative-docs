@@ -11,14 +11,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Cette tuile contient tout ce qu'il faut pour éditer une entité.
+	/// Son parent est forcément un TileGrouping.
+	/// </summary>
 	public class EditionTile : AbstractTile
 	{
 		public EditionTile()
 		{
 			this.container = new FrameBox
 			{
-				Parent = this.mainPanel,
+				Parent = this,
 				Dock = DockStyle.Fill,
+				Margins = new Margins (0, TileContainer.ArrowBreadth, 0, 0),
 			};
 		}
 
@@ -33,7 +38,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Donne le conteneur dans lequel on va mettre tous les widgets permettant d'éditer l'entité associée à la tuile.
 		/// </summary>
 		/// <value>The container.</value>
-		public override FrameBox Container
+		public FrameBox Container
 		{
 			get
 			{

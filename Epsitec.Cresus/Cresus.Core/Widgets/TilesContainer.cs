@@ -13,7 +13,8 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
-	/// Ce widget est un conteneur de TileContainer. Il dessine un cadre qui tient compte des flèches droites. 
+	/// Ce widget est un conteneur de TileContainer, qui correspond à une bande verticale complète.
+	/// Il dessine un cadre qui tient compte des flèches droites. 
 	/// </summary>
 	public class TilesContainer : FrameBox
 	{

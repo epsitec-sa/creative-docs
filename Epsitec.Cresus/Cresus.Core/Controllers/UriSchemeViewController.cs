@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			this.container = container;
+			Widgets.TileGrouping group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var contact = this.Entity as Entities.AbstractContactEntity;
@@ -36,10 +37,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//	Crée les tuiles.
 			this.CreateHeaderEditorTile ();
-			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
-			this.CreateFooterEditorTile ();
 
-			//?this.CreateLinkButtons (tile.Container);
+			group = this.CreateTileGrouping (this.container, "Data.Type", "Type", true);
+			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+
+			this.CreateFooterEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
 			this.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, true, accessor.UriScheme, x => accessor.UriScheme = x, null);

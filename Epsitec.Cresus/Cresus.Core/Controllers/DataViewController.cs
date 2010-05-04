@@ -153,12 +153,22 @@ namespace Epsitec.Cresus.Core.Controllers
 				selectedMode = s.Mode;
 			}
 
-			foreach (var widget in parent.Container.Children)
+			this.RecursivSelectViewController (parent.Container, selectedEntity, selectedMode);
+		}
+
+		private void RecursivSelectViewController(Widget parent, AbstractEntity selectedEntity, ViewControllerMode selectedMode)
+		{
+			foreach (Widget widget in parent.Children)
 			{
 				if (widget is Widgets.AbstractTile)
 				{
-					var tileContainer = widget as Widgets.AbstractTile;
-					tileContainer.SetSelected (tileContainer.ChildrenMode == selectedMode && tileContainer.Entity == selectedEntity);
+					var tile = widget as Widgets.AbstractTile;
+					tile.SetSelected (tile.ChildrenMode == selectedMode && tile.Entity == selectedEntity);
+				}
+
+				if (widget.Parent != null && widget.Parent.Children != null && widget.Parent.Children.Count > 0)
+				{
+					this.RecursivSelectViewController (widget, selectedEntity, selectedMode);
 				}
 			}
 		}

@@ -27,29 +27,33 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			this.container = container;
-
-			int groupIndex = 0;
+			Widgets.TileGrouping group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
 
 			//	Crée les tuiles.
 			this.CreateHeaderEditorTile ();
-			Widgets.AbstractTile tile1 = this.CreateEditionTile (accessor, ViewControllerMode.None);
-
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);
-			this.CreateSummaryTile (roleAccessor, groupIndex, false, false, true, ViewControllerMode.RolesEdition);
-
-			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false);
-			this.CreateSummaryTile (uriSchemeAccessor, groupIndex, false, false, true, ViewControllerMode.UriSchemeEdition);
-
-			Widgets.AbstractTile tile2 = this.CreateEditionTile ();
-			this.CreateFooterEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateLinkButtons (tile1.Container);
+			group = this.CreateTileGrouping (this.container, "Data.Roles", "Rôles", false);
 
-			this.CreateTextField (tile2.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
+			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);
+			this.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
+
+			//	Crée le contenu de la tuile d'édition.
+			group = this.CreateTileGrouping (this.container, "Data.Type", "Type", false);
+
+			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false);
+			this.CreateSummaryTile (group, uriSchemeAccessor, false, ViewControllerMode.UriSchemeEdition);
+	
+			//	Crée le contenu de la tuile d'édition.
+			group = this.CreateTileGrouping (this.container, "Data.Uri", "Mail", true);
+			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+
+			this.CreateLinkButtons (tile.Container);
+
+			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
