@@ -35,18 +35,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Roles", "Rôles", false);
 
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.TelecomContact, false);
-			builder.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
+			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.TelecomContact, false)
+			{
+				ViewControllerMode = ViewControllerMode.RolesEdition
+			};
+
+			builder.CreateSummaryTile (group, roleAccessor, this);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Type", "Type", false);
 
-			var telecomTypeAccessor = new EntitiesAccessors.TelecomTypeAccessor (null, accessor.TelecomContact, false);
-			builder.CreateSummaryTile (group, telecomTypeAccessor, false, ViewControllerMode.TelecomTypeEdition);
+			var telecomTypeAccessor = new EntitiesAccessors.TelecomTypeAccessor (null, accessor.TelecomContact, false)
+			{
+				ViewControllerMode = ViewControllerMode.TelecomTypeEdition
+			};
+
+			builder.CreateSummaryTile (group, telecomTypeAccessor, this);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Telecom", "Téléphone", true);
-			tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			tile = builder.CreateEditionTile (group, accessor, this);
 
 			builder.CreateLinkButtons (tile.Container);
 

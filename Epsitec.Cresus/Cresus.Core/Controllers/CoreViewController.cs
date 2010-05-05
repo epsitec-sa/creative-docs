@@ -24,6 +24,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		
+		public Orchestrators.DataViewOrchestrator Orchestrator
+		{
+			get;
+			set;
+		}
+		
 		/// <summary>
 		/// Creates the UI managed by this controller.
 		/// </summary>

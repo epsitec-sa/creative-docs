@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateHeaderEditorTile ();
 
 			group = builder.CreateGroupingTile ("Data.Type", "Type", true);
-			var tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			var tile = builder.CreateEditionTile (group, accessor, this);
 
 			builder.CreateFooterEditorTile ();
 

@@ -14,8 +14,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var group = builder.CreateGroupingTile ("Data.LegalPerson", "Personne morale", false);
 
-			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
-			builder.CreateSummaryTile (group, accessor, false, ViewControllerMode.Edition);
+			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false)
+			{
+				ViewControllerMode = ViewControllerMode.Edition
+			};
+
+			builder.CreateSummaryTile (group, accessor, this);
 		}
 	}
 }

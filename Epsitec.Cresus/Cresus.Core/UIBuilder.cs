@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
+		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, CoreViewController controller)
 		{
 			var tile = new Widgets.SummaryTile
 			{
@@ -42,19 +42,20 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = true,
-				EnteredSensitivity = childrenMode != ViewControllerMode.None,
+				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.Entity,
-				ChildrenMode = childrenMode,
-				EnableCreateAndRemoveButton = enableCreateAndRemoveButton,
+				ChildrenMode = accessor.ViewControllerMode,
+				EnableCreateAndRemoveButton = accessor.EnableAddAndRemove,
 				IsEditing = false,
 				Summary = accessor.Summary,
 			};
 
 			tile.PreferredHeight = tile.ContentHeight;
 
+			UIBuilder.CreateTileHandler (tile, controller);
+
 #if false
-			tile.Clicked += this.HandleTileClicked;
 			tile.CreateEntity += this.HandleTileCreateEntity;
 			tile.RemoveEntity += this.HandleTileRemoveEntity;
 #endif
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
+		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, CoreViewController controller)
 		{
 			var tile = new Widgets.EditionTile
 			{
@@ -71,16 +72,14 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = false,
-				EnteredSensitivity = childrenMode != ViewControllerMode.None,
+				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.Entity,
-				ChildrenMode = childrenMode,
+				ChildrenMode = accessor.ViewControllerMode,
 				IsEditing = true,
 			};
 
-#if false
-			tile.Clicked += this.HandleTileClicked;
-#endif
+			UIBuilder.CreateTileHandler (tile, controller);
 
 			return tile;
 		}
@@ -422,6 +421,24 @@ namespace Epsitec.Cresus.Core
 				currentHeight += widget.Margins.Height;
 			}
 			return currentHeight;
+		}
+
+		private static void CreateTileHandler(Widgets.AbstractTile tile, CoreViewController controller)
+		{
+			tile.Clicked +=
+				delegate
+				{
+					//	Appelé lorsqu'une tuile quelconque est cliquée.
+					if (tile.IsSelected)
+					{
+						//	If the tile was selected, deselect it by closing its sub-view:
+						tile.CloseSubView (controller.Orchestrator);
+					}
+					else
+					{
+						tile.OpenSubView (controller.Orchestrator, controller);
+					}
+				};
 		}
 		
 		private static void CreateTextFieldHandler(Widget textField, System.Action<string> valueSetter, System.Func<string, bool> validator)
