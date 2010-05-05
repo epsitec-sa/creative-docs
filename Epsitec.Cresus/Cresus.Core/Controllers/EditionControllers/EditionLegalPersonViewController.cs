@@ -4,17 +4,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class NaturalPersonViewController : AbstractPersonViewController
+	public class EditionLegalPersonViewController : AbstractEditionPersonViewController
 	{
-		public NaturalPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public EditionLegalPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)
 		{
 		}
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var person = this.Entity as Entities.NaturalPersonEntity;
+			var person = this.Entity as Entities.LegalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
 			this.CreateUITiles (person);

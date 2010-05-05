@@ -4,17 +4,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class RolesContactViewController : EntityViewController
+	public class EditionTelecomTypeViewController : EntityViewController
 	{
-		public RolesContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public EditionTelecomTypeViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)
 		{
 		}
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var contact = this.Entity as Entities.AbstractContactEntity;
 			System.Diagnostics.Debug.Assert (contact != null);
 
-			var accessor = new EntitiesAccessors.RolesContactAccessor (null, contact, false);
+			var accessor = new EntitiesAccessors.TelecomTypeAccessor (null, contact, false);
 
 			//	Crée les tuiles.
 			this.CreateHeaderEditorTile ();
@@ -43,10 +44,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.CreateFooterEditorTile ();
 
-			//?this.CreateLinkButtons (tile.Container);
-
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateCombo (tile.Container, 0, "Choix du ou des rôles souhaités", accessor.RoleInitializer, true, true, true, accessor.Roles, x => accessor.Roles = x, null);
+			this.CreateCombo (tile.Container, 150, "Type du numéro de téléphone", accessor.TelecomTypeInitializer, true, false, true, accessor.TelecomType, x => accessor.TelecomType = x, null);
 
 			UI.SetInitialFocus (container);
 		}

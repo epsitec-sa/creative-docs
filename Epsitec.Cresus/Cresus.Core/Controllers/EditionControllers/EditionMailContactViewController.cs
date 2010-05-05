@@ -11,11 +11,11 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class MailContactViewController : EntityViewController
+	public class EditionMailContactViewController : EntityViewController
 	{
-		public MailContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public EditionMailContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)
 		{
 		}
