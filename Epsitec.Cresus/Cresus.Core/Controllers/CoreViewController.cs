@@ -28,5 +28,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		/// <param name="container">The container.</param>
 		public abstract void CreateUI(Widget container);
+
+		
+		public ICoreViewControllerHost Host
+		{
+			get;
+			set;
+		}
+
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				var host = this.Host;
+
+				if (host != null)
+				{
+					host.NotifyDisposing (this);
+				}
+			}
+
+			base.Dispose (disposing);
+		}
 	}
 }
