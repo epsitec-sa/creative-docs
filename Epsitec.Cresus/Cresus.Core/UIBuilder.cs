@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, int width1, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, EntitiesAccessors.BidirectionnalConverter converter)
+		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, EntitiesAccessors.BidirectionnalConverter converter)
 		{
 			var staticText = new StaticText
 			{
