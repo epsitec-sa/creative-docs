@@ -106,6 +106,23 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public bool IsSoftHilite
+		{
+			get
+			{
+				return this.isSoftHilite;
+			}
+			set
+			{
+				if (this.isSoftHilite != value)
+				{
+					this.isSoftHilite = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+
 		public static double WidthWithOnlyIcon
 		{
 			get
@@ -168,8 +185,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-ContainerTile.ArrowBreadth, rect.Height);
 
 			//	Dessine toujours le fond.
+			Color backColor = this.BackgroundColor;
+
+			if (this.isSoftHilite)
+			{
+				backColor = this.BackgroundSurfaceHilitedColor;
+			}
+
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (this.BackgroundColor);
+			graphics.RenderSolid (backColor);
 
 			//	Dessine le cadre.
 			graphics.AddRectangle (rect);
@@ -190,5 +214,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string title;
 		private StaticText staticTextTitle;
+
+		private bool isSoftHilite;
 	}
 }

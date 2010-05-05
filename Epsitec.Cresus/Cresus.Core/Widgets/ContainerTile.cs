@@ -42,6 +42,13 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public GroupingTile GroupingTile
+		{
+			get;
+			set;
+		}
+
+
 		/// <summary>
 		/// Détermine le côté sur lequel s'affiche la flèche.
 		/// </summary>
@@ -78,6 +85,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				this.enteredSensitivity = value;
 			}
+		}
+
+
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			if (this.GroupingTile != null)
+			{
+				this.GroupingTile.IsSoftHilite = true;
+			}
+
+			base.OnEntered (e);
+		}
+
+		protected override void OnExited(MessageEventArgs e)
+		{
+			if (this.GroupingTile != null)
+			{
+				this.GroupingTile.IsSoftHilite = false;
+			}
+
+			base.OnExited (e);
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
