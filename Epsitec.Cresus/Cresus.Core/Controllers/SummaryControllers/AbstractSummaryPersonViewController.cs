@@ -68,22 +68,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			this.CreateHeaderEditorTile ();
 
-			//	Une première tuile pour l'identité de la personne.
-			if (this.Entity is Entities.NaturalPersonEntity)
-			{
-				group = EntityViewController.CreateGroupingTile (this.Container, "Data.NaturalPerson", "Personne physique", false);
-
-				var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false);
-				this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
-			}
-
-			if (this.Entity is Entities.LegalPersonEntity)
-			{
-				group = EntityViewController.CreateGroupingTile (this.Container, "Data.LegalPerson", "Personne morale", false);
-
-				var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
-				this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
-			}
+			//	Une première tuile pour l'identité de la personne, physique ou morale.
+			this.CreatePersonUI ();
 
 			//	Crée les tuiles pour les adresses postales.
 			if (groupMail)
@@ -200,6 +186,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			this.CreateFooterEditorTile ();
+		}
+
+		protected virtual void CreatePersonUI()
+		{
 		}
 	}
 }
