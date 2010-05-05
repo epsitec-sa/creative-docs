@@ -36,19 +36,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateHeaderEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			group = this.CreateTileGrouping (this.container, "Data.Roles", "Rôles", false);
+			group = EntityViewController.CreateGroupingTile (this.container, "Data.Roles", "Rôles", false);
 
 			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);
 			this.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
 
 			//	Crée le contenu de la tuile d'édition.
-			group = this.CreateTileGrouping (this.container, "Data.Type", "Type", false);
+			group = EntityViewController.CreateGroupingTile (this.container, "Data.Type", "Type", false);
 
 			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false);
 			this.CreateSummaryTile (group, uriSchemeAccessor, false, ViewControllerMode.UriSchemeEdition);
 	
 			//	Crée le contenu de la tuile d'édition.
-			group = this.CreateTileGrouping (this.container, "Data.Uri", "Mail", true);
+			group = EntityViewController.CreateGroupingTile (this.container, "Data.Uri", "Mail", true);
 			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
 			this.CreateLinkButtons (tile.Container);

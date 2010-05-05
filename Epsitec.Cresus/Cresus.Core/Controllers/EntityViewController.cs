@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		#region Tiles creation
-		protected Widgets.GroupingTile CreateTileGrouping(Widget parent, string iconUri, string title, bool isEditing)
+		protected static Widgets.GroupingTile CreateGroupingTile(Widget parent, string iconUri, string title, bool isEditing)
 		{
 			var group = new Widgets.GroupingTile
 			{
@@ -157,9 +157,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			tile.PreferredHeight = tile.ContentHeight;
-			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-			tile.CreateEntity += new EventHandler (this.HandleTileCreateEntity);
-			tile.RemoveEntity += new EventHandler (this.HandleTileRemoveEntity);
+			tile.Clicked += this.HandleTileClicked;
+			tile.CreateEntity += this.HandleTileCreateEntity;
+			tile.RemoveEntity += this.HandleTileRemoveEntity;
 
 			return tile;
 		}
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				IsEditing = true,
 			};
 
-			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
+			tile.Clicked += this.HandleTileClicked;
 
 			return tile;
 		}
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//?Margins = new Margins (2, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
 			};
 
-			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
+			closeButton.Clicked += this.HandleCloseButtonClicked;
 #endif
 		}
 
