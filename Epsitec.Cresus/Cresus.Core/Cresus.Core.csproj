@@ -90,7 +90,6 @@
     </Compile>
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\AbstractPersonViewController.cs" />
-    <Compile Include="Controllers\ICoreViewControllerHost.cs" />
     <Compile Include="Controllers\UriSchemeViewController.cs" />
     <Compile Include="Controllers\TelecomTypeViewController.cs" />
     <Compile Include="Controllers\RolesContactViewController.cs" />

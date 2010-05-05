@@ -107,8 +107,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Remove the rightmost column in the layout:
 			
 			this.viewLayoutController.DeleteColumn ();
-
-			this.RebuildLeafViewController ();
 		}
 
 		/// <summary>
