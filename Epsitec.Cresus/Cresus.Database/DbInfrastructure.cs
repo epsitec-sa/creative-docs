@@ -1305,7 +1305,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
-			if (table.Comment != null && table.Comment != "")
+			if (!string.IsNullOrEmpty (table.Comment))
 			{
 				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
 				this.ExecuteSilent (transaction);
@@ -1313,8 +1313,11 @@ namespace Epsitec.Cresus.Database
 
 			foreach (SqlColumn column in sqlTable.Columns)
 			{
-				transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, "coucou");	//	TODO: what is this "coucou" doing here ?
-				this.ExecuteSilent (transaction);
+				if (!string.IsNullOrEmpty (column.Comment))
+				{
+					transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, column.Comment);
+					this.ExecuteSilent (transaction);
+				}
 			}
 
 			//	Create the revision tracking table, if needed :
@@ -1353,7 +1356,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
-			if (table.Comment != null && table.Comment != "")
+			if (!string.IsNullOrEmpty (table.Comment))
 			{
 				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
 				this.ExecuteSilent (transaction);
