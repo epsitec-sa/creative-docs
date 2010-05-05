@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 #if false
 				double x = 0;
-				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
+				double overlap = Widgets.ArrowedTile.ArrowBreadth - 3;
 				int columnIndex = 0;
 
 				//	Positionne les colonnes de gauche à droite, sauf la dernière.
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 #else
 				double x = 0;
-				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
+				double overlap = Widgets.ArrowedTile.ArrowBreadth - 3;
 				int columnIndex = 0;
 
 				//	Positionne les colonnes de gauche à droite.
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private static readonly double minimalWidth = 220;
-		private static readonly double reduceWidth = Widgets.GroupingTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
+		private static readonly double reduceWidth = Widgets.GroupingTile.WidthWithOnlyIcon + Widgets.ArrowedTile.ArrowBreadth;
 
 
 		private readonly Widget container;

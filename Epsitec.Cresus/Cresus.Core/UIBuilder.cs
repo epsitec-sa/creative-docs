@@ -128,8 +128,8 @@ namespace Epsitec.Cresus.Core
 				//?GlyphShape = GlyphShape.ArrowLeft,
 				//?Dock = DockStyle.Left,
 				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.ContainerTile.ArrowBreadth+2, 2, 2-1),
-				//?Margins = new Margins (2, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
+				Margins = new Margins (0, Widgets.ArrowedTile.ArrowBreadth+2, 2, 2-1),
+				//?Margins = new Margins (2, Widgets.ArrowedTile.ArrowBreadth+2, 2, 2-1),
 			};
 
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Core
 				Text = "Fermer",
 				PreferredWidth = 75,
 				Dock = DockStyle.Right,
-				Margins = new Margins(0, Widgets.TileContainer.ArrowBreadth+10, 10, 10),
+				Margins = new Margins(0, Widgets.ArrowedTile.ArrowBreadth+10, 10, 10),
 			};
 
 			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);

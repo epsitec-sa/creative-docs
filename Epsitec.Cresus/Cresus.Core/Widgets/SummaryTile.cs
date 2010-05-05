@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Parent = this,
 				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (2, ContainerTile.ArrowBreadth, 0, 0),
+				Margins = new Margins (2, ArrowedTile.ArrowBreadth, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
 			};
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				GlyphShape = Common.Widgets.GlyphShape.Plus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
 				PreferredSize = new Size (SummaryTile.simpleButtonSize, SummaryTile.simpleButtonSize),
-				Margins = new Margins (0, ContainerTile.ArrowBreadth+SummaryTile.simpleButtonSize-1, 0, 0),
+				Margins = new Margins (0, ArrowedTile.ArrowBreadth+SummaryTile.simpleButtonSize-1, 0, 0),
 				Visibility = false,
 			};
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				Anchor = AnchorStyles.Right | AnchorStyles.Bottom,
 				PreferredSize = new Size (SummaryTile.simpleButtonSize, SummaryTile.simpleButtonSize),
-				Margins = new Margins (0, ContainerTile.ArrowBreadth, 0, 0),
+				Margins = new Margins (0, ArrowedTile.ArrowBreadth, 0, 0),
 				Visibility = false,
 			};
 
