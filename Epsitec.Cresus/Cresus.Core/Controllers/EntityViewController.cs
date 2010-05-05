@@ -627,15 +627,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Appelé lorsqu'une tuile quelconque est cliquée.
 			var tile = sender as Widgets.AbstractTile;
-			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", tile.Entity, tile.ChildrenMode, this.Orchestrator);
 
-			if (tile.IsSelected || controller == null)
+			if (tile.IsSelected)
 			{
-				this.Orchestrator.CloseSubViews (this);
+				//	Deselect the tile by simply closing the subviews.
+				
+				tile.CloseSubView (this.Orchestrator);
 			}
 			else
 			{
-				this.Orchestrator.ShowSubView (this, controller);
+				tile.OpenSubView (this, this.Orchestrator);
 			}
 		}
 
