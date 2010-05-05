@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			UIBuilder builder = new UIBuilder (container);
+			UIBuilder builder = new UIBuilder (container, this);
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
 
-			builder.CreateSummaryTile (group, roleAccessor, this);
+			builder.CreateSummaryTile (group, roleAccessor);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Type", "Type", false);
@@ -49,11 +49,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ViewControllerMode = ViewControllerMode.UriSchemeEdition
 			};
 
-			builder.CreateSummaryTile (group, uriSchemeAccessor, this);
+			builder.CreateSummaryTile (group, uriSchemeAccessor);
 	
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Uri", "Mail", true);
-			var tile = builder.CreateEditionTile (group, accessor, this);
+			var tile = builder.CreateEditionTile (group, accessor);
 
 			builder.CreateLinkButtons (tile.Container);
 

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				ViewControllerMode = ViewControllerMode.Edition
 			};
 
-			builder.CreateSummaryTile (group, accessor, this);
+			builder.CreateSummaryTile (group, accessor);
 		}
 	}
 }

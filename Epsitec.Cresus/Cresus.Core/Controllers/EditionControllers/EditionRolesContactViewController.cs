@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			UIBuilder builder = new UIBuilder (container);
+			UIBuilder builder = new UIBuilder (container, this);
 			
 			Widgets.GroupingTile group;
 
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateHeaderEditorTile ();
 
 			group = builder.CreateGroupingTile ("Data.Type", "Type", true);
-			var tile = builder.CreateEditionTile (group, accessor, this);
+			var tile = builder.CreateEditionTile (group, accessor);
 
 			builder.CreateFooterEditorTile ();
 

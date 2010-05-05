@@ -153,11 +153,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CloseTile()
-		{
-			this.Orchestrator.CloseView (this);
-		}
-
 
 		private void HandleTileCreateEntity(object sender)
 		{
@@ -171,12 +166,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
 			var tile = sender as Widgets.AbstractTile;
 			this.RemoveEntity (tile);
-		}
-
-		private void HandleCloseButtonClicked(object sender, MessageEventArgs e)
-		{
-			//	Appelé lorsque le bouton "Fermer" d'une tuile est cliqué.
-			this.CloseTile ();
 		}
 
 
