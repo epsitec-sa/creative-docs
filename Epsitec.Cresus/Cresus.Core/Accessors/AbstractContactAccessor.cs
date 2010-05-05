@@ -9,7 +9,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.EntitiesAccessors
+namespace Epsitec.Cresus.Core.Accessors
 {
 	public class AbstractContactAccessor : AbstractAccessor
 	{
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 						words.Add (role.Name);
 					}
 
-					return Misc.Combine(words, ", ");
+					return Misc.Join(words, ", ");
 				}
 				else
 				{

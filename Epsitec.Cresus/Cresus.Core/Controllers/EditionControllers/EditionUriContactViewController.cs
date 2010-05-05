@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity, false);
+			var accessor = new Accessors.UriContactAccessor (null, this.Entity, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Roles", "Rôles");
 
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false)
+			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.UriContact, false)
 			{
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Type", "Type");
 
-			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false)
+			var uriSchemeAccessor = new Accessors.UriSchemeAccessor (null, accessor.UriContact, false)
 			{
 				ViewControllerMode = ViewControllerMode.UriSchemeEdition
 			};

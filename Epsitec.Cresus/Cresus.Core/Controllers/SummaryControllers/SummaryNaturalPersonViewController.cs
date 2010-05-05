@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var group = builder.CreateSummaryGroupingTile ("Data.NaturalPerson", "Personne physique");
 
-			var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false)
+			var accessor = new Accessors.NaturalPersonAccessor (null, this.Entity, false)
 			{
 				ViewControllerMode = ViewControllerMode.Edition
 			};

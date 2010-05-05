@@ -9,7 +9,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.EntitiesAccessors
+namespace Epsitec.Cresus.Core.Accessors
 {
 	public class MailContactAccessor : AbstractContactAccessor
 	{

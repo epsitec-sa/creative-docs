@@ -32,15 +32,7 @@ namespace Epsitec.Cresus.Core
 
 			if (!string.IsNullOrEmpty (text))
 			{
-				string[] words = text.Split (new string[] { separator }, System.StringSplitOptions.RemoveEmptyEntries);
-
-				foreach (string word in words)
-				{
-					if (!string.IsNullOrEmpty (word))
-					{
-						list.Add (word);
-					}
-				}
+				list.AddRange (text.Split (new string[] { separator }, System.StringSplitOptions.RemoveEmptyEntries));
 			}
 
 			return list;
@@ -53,7 +45,7 @@ namespace Epsitec.Cresus.Core
 		/// <param name="list">The list.</param>
 		/// <param name="separator">The separator.</param>
 		/// <returns></returns>
-		public static string Combine(List<string> list, string separator)
+		public static string Join(IEnumerable<string> list, string separator)
 		{
 			if (list == null)
 			{
@@ -62,14 +54,19 @@ namespace Epsitec.Cresus.Core
 
 			var builder = new System.Text.StringBuilder ();
 
-			for (int i=0; i<list.Count; i++)
+			foreach (var word in list)
 			{
-				if (i > 0)
+				if (string.IsNullOrEmpty (word))
+                {
+					continue;
+                }
+
+				if (builder.Length > 0)
 				{
 					builder.Append (separator);
 				}
 
-				builder.Append (list[i]);
+				builder.Append (word);
 			}
 
 			return builder.ToString ();

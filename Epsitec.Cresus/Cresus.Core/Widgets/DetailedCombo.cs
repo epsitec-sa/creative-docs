@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public EntitiesAccessors.ComboInitializer ComboInitializer
+		public Accessors.ComboInitializer ComboInitializer
 		{
 			get
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.ignoreChange = true;
-			this.Text = Misc.Combine (words, ", ");
+			this.Text = Misc.Join (words, ", ");
 			this.ignoreChange = false;
 		}
 
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private EntitiesAccessors.ComboInitializer comboInitializer;
+		private Accessors.ComboInitializer comboInitializer;
 		private bool ignoreChange;
 	}
 }

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			Widgets.EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity, false);
+			var accessor = new Accessors.TelecomContactAccessor (null, this.Entity, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Roles", "Rôles");
 
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.TelecomContact, false)
+			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.TelecomContact, false)
 			{
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Type", "Type");
 
-			var telecomTypeAccessor = new EntitiesAccessors.TelecomTypeAccessor (null, accessor.TelecomContact, false)
+			var telecomTypeAccessor = new Accessors.TelecomTypeAccessor (null, accessor.TelecomContact, false)
 			{
 				ViewControllerMode = ViewControllerMode.TelecomTypeEdition
 			};
