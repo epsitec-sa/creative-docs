@@ -6,12 +6,10 @@ namespace Epsitec.Cresus.Core.Controllers
 	public enum ViewControllerMode
 	{
 		None,
-		Compact,
+		
+		Summary,
+		Edition,
 
-		GenericEdition,
-		PersonEdition,
-		TelecomEdition,
-		UriEdition,
 		RolesEdition,
 		TelecomTypeEdition,
 		UriSchemeEdition,

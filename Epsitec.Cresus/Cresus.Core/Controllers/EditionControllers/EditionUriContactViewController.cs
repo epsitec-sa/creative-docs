@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUriContactViewController : EntityViewController
 	{
-		public EditionUriContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public EditionUriContactViewController(string name, AbstractEntity entity)
+			: base (name, entity)
 		{
 		}
 
@@ -27,34 +27,34 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.container = container;
+			UIBuilder builder = new UIBuilder (container);
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
 
 			//	Crée les tuiles.
-			this.CreateHeaderEditorTile ();
+			builder.CreateHeaderEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Roles", "Rôles", false);
+			group = builder.CreateGroupingTile ("Data.Roles", "Rôles", false);
 
 			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);
-			this.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
+			builder.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
 
 			//	Crée le contenu de la tuile d'édition.
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Type", "Type", false);
+			group = builder.CreateGroupingTile ("Data.Type", "Type", false);
 
 			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false);
-			this.CreateSummaryTile (group, uriSchemeAccessor, false, ViewControllerMode.UriSchemeEdition);
+			builder.CreateSummaryTile (group, uriSchemeAccessor, false, ViewControllerMode.UriSchemeEdition);
 	
 			//	Crée le contenu de la tuile d'édition.
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Uri", "Mail", true);
-			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			group = builder.CreateGroupingTile ("Data.Uri", "Mail", true);
+			var tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
-			this.CreateLinkButtons (tile.Container);
+			builder.CreateLinkButtons (tile.Container);
 
-			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 		}

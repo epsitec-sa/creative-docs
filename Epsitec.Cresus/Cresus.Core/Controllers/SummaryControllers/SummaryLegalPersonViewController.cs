@@ -5,17 +5,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryLegalPersonViewController : SummaryAbstractPersonViewController
 	{
-		public SummaryLegalPersonViewController(string name, Entities.LegalPersonEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public SummaryLegalPersonViewController(string name, Entities.LegalPersonEntity entity)
+			: base (name, entity)
 		{
 		}
 
-		protected override void CreatePersonUI()
+		protected override void CreatePersonUI(UIBuilder builder)
 		{
-			var group = EntityViewController.CreateGroupingTile (this.Container, "Data.LegalPerson", "Personne morale", false);
+			var group = builder.CreateGroupingTile ("Data.LegalPerson", "Personne morale", false);
 
 			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
-			this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
+			builder.CreateSummaryTile (group, accessor, false, ViewControllerMode.Edition);
 		}
 	}
 }

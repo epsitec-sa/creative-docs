@@ -42,12 +42,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public Controllers.ViewControllerMode Mode
-		{
-			get;
-			set;
-		}
-
 		public Controllers.ViewControllerMode ChildrenMode
 		{
 			get;
@@ -74,7 +68,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
 		{
-			this.subViewController = EntityViewController.CreateViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
+			this.subViewController = EntityViewController.CreateEntityViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
 			this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
 
 			orchestrator.ShowSubView (parentController, this.subViewController);

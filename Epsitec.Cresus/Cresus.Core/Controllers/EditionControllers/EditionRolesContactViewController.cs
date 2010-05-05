@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionRolesContactViewController : EntityViewController
 	{
-		public EditionRolesContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public EditionRolesContactViewController(string name, AbstractEntity entity)
+			: base (name, entity)
 		{
 		}
 
@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.container = container;
+			UIBuilder builder = new UIBuilder (container);
+			
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
@@ -37,17 +38,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var accessor = new EntitiesAccessors.RolesContactAccessor (null, contact, false);
 
 			//	Crée les tuiles.
-			this.CreateHeaderEditorTile ();
+			builder.CreateHeaderEditorTile ();
 
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Type", "Type", true);
-			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			group = builder.CreateGroupingTile ("Data.Type", "Type", true);
+			var tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
-			this.CreateFooterEditorTile ();
+			builder.CreateFooterEditorTile ();
 
 			//?this.CreateLinkButtons (tile.Container);
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateCombo (tile.Container, 0, "Choix du ou des rôles souhaités", accessor.RoleInitializer, true, true, true, accessor.Roles, x => accessor.Roles = x, null);
+			builder.CreateCombo (tile.Container, 0, "Choix du ou des rôles souhaités", accessor.RoleInitializer, true, true, true, accessor.Roles, x => accessor.Roles = x, null);
 
 			UI.SetInitialFocus (container);
 		}
