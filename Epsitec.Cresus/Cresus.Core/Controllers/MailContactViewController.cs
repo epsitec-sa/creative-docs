@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateHintEditor (tile.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, EntitiesAccessors.MailContactAccessor.regionConverter);
 			this.CreateHintEditor (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, EntitiesAccessors.MailContactAccessor.locationConverter);
 
-			this.SetInitialFocus ();
+			UI.SetInitialFocus (container);
 		}
 	}
 }

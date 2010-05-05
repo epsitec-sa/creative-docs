@@ -172,6 +172,33 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static bool SetInitialFocus(Widget parent)
+		{
+			foreach (Widget widget in parent.Children)
+			{
+				if (widget is AbstractTextField)
+				{
+					var textField = widget as AbstractTextField;
+
+					textField.SelectAll ();
+					textField.Focus ();
+
+					return true;
+				}
+
+				if (widget.HasChildren)
+				{
+					if (UI.SetInitialFocus (widget))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+
 		private static void SetupResourceManagerPool()
 		{
 			//	Create a default resource manager pool, used for the UI and

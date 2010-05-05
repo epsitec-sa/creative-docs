@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateTextField (tile.Container, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
 			this.CreateTextField (tile.Container, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
 
-			this.SetInitialFocus ();
+			UI.SetInitialFocus (container);
 		}
 	}
 }
