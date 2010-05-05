@@ -141,13 +141,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="DataContext.EntityDataCache.cs" />
-    <Compile Include="DataQueryJoin.cs" />
-    <Compile Include="DataQueryResult.cs" />
-    <Compile Include="DataBrowserRow.cs" />
-    <Compile Include="DataQuerySortOrder.cs" />
-    <Compile Include="DataQueryColumn.cs" />
     <Compile Include="DataBrowser.cs" />
-    <Compile Include="DataQuery.cs" />
     <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

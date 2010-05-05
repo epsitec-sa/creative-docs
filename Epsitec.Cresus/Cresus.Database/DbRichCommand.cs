@@ -772,6 +772,10 @@ namespace Epsitec.Cresus.Database
 				yield break;
 			}
 
+			// TODO Replace this loop by something efficient (maybe a select call on table), because
+			// this loop is the bottleneck of the application when querying large amount of data in
+			// a large database.
+
 			foreach (System.Data.DataRow row in table.Rows)
 			{
 				long rowIdValue;

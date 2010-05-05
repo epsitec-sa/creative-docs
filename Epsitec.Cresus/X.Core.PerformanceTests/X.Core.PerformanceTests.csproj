@@ -43,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\EntityBuilder.cs">
+      <Link>EntityBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\TestSetup.cs">
+      <Link>TestSetup.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,6 +84,10 @@
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj">
+      <Project>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</Project>
+      <Name>Cresus.Core.UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

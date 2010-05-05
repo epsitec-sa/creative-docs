@@ -199,29 +199,29 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
 			{
-				DataQuery query = new DataQuery();
+				throw new System.NotImplementedException ();
 
-				query.Distinct = true;
+				// The DataBrowser has been significantly modified and this way of doing things does not exist anymore.
 				
-				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63073]")));
-				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63083]")));
-				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
-				
-				AdresseEntity example = new AdresseEntity ();
-				example.Npa = "*14*";
+				//DataQuery query = new DataQuery();
 
-				// The DataBrowser has been significantly modified. This method does not exist
-				// anymore but it could be implemented again, this is why I leave the test unchanged,
-				// except for the three lines below.
+				//query.Distinct = true;
+				
+				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63073]")));
+				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63083]")));
+				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
+				
+				//AdresseEntity example = new AdresseEntity ();
+				//example.Npa = "*14*";
 
 				//foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
 				//{
 				//    lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
 				//}
 
-				throw new System.NotImplementedException ("See comments above");
+				//throw new System.NotImplementedException ("See comments above");
 
-				transaction.Commit ();
+				//transaction.Commit ();
 			}
 
 			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");

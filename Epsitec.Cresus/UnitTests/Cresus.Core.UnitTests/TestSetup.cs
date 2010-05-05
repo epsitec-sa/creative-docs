@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core
 	/// The <c>TestSetup</c> class manages the global state needed to
 	/// successfully run the tests.
 	/// </summary>
-	static class TestSetup
+	public static class TestSetup
 	{
 		/// <summary>
 		/// Initializes the global state of the assembly so that the tests can
