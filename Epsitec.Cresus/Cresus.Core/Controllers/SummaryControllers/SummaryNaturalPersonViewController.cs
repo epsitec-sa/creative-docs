@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreatePersonUI(UIBuilder builder)
 		{
-			var group = builder.CreateGroupingTile ("Data.NaturalPerson", "Personne physique", false);
+			var group = builder.CreateSummaryGroupingTile ("Data.NaturalPerson", "Personne physique");
 
 			var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false)
 			{
