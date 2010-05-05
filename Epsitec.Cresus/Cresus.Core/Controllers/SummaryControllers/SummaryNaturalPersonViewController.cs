@@ -35,5 +35,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			this.CreateUITiles (person);
 		}
+
+
+		protected override void CreatePersonUI()
+		{
+			var group = EntityViewController.CreateGroupingTile (this.Container, "Data.NaturalPerson", "Personne physique", false);
+
+			var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false);
+			this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
+		}
 	}
 }
