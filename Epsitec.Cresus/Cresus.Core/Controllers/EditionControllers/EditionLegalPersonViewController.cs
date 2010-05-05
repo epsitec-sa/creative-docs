@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionLegalPersonViewController : EntityViewController
 	{
-		public EditionLegalPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public EditionLegalPersonViewController(string name, AbstractEntity entity)
+			: base (name, entity)
 		{
 		}
 
@@ -27,27 +27,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.container = container;
-
+			UIBuilder builder = new UIBuilder (container);
+			
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var person = this.Entity as Entities.LegalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
-			this.CreateHeaderEditorTile ();
+			builder.CreateHeaderEditorTile ();
 
-			var group = EntityViewController.CreateGroupingTile (this.Container, "Data.LegalPerson", "Personne morale", true);
+			var group = builder.CreateGroupingTile ("Data.LegalPerson", "Personne morale", true);
 
 			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
-			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			var tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
-			this.CreateFooterEditorTile ();
+			builder.CreateFooterEditorTile ();
 
-			this.CreateTextField (tile.Container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
-			this.CreateTextField (tile.Container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
-			this.CreateMargin (tile.Container, true);
-			this.CreateTextFieldMulti (tile.Container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
+			builder.CreateTextField (tile.Container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
+			builder.CreateMargin (tile.Container, true);
+			builder.CreateTextFieldMulti (tile.Container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
 
-			UI.SetInitialFocus (this.container);
+			UI.SetInitialFocus (container);
 		}
 	}
 }

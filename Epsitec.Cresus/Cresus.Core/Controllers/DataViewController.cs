@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private EntityViewController CreateCompactEntityViewController()
 		{
-			return EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
+			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.orchestrator);
 		}
 
 		private CoreViewController GetLeafController()

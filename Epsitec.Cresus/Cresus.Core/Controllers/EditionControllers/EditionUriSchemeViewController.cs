@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUriSchemeViewController : EntityViewController
 	{
-		public EditionUriSchemeViewController(string name, AbstractEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public EditionUriSchemeViewController(string name, AbstractEntity entity)
+			: base (name, entity)
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.container = container;
+			UIBuilder builder = new UIBuilder (container);
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
@@ -37,15 +37,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var accessor = new EntitiesAccessors.UriSchemeAccessor (null, contact, false);
 
 			//	Crée les tuiles.
-			this.CreateHeaderEditorTile ();
+			builder.CreateHeaderEditorTile ();
 
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Type", "Type", true);
-			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			group = builder.CreateGroupingTile ("Data.Type", "Type", true);
+			var tile = builder.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
-			this.CreateFooterEditorTile ();
+			builder.CreateFooterEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, true, accessor.UriScheme, x => accessor.UriScheme = x, null);
+			builder.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, true, accessor.UriScheme, x => accessor.UriScheme = x, null);
 
 			UI.SetInitialFocus (container);
 		}
