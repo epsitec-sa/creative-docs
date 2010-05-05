@@ -5454,74 +5454,71 @@ namespace Epsitec.Cresus.Core.Accessors
 					builder.Append ("Adresse");
 					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
 
-					return Misc.RemoveLastBreakLine (builder.ToString ());
+					return Misc.RemoveLastLineBreak (builder.ToString ());
 				}
 			}
 		}
 
-		public override string Summary
+		protected override string GetSummary()
 		{
-			get
+			var builder = new StringBuilder ();
+
+			if (this.Grouped)
 			{
-				var builder = new StringBuilder ();
+				bool first = true;
 
-				if (this.Grouped)
+				if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
 				{
-					bool first = true;
-
-					if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
-					{
-						if (!first)
-						{
-							builder.Append (", ");
-						}
-
-						builder.Append (this.MailContact.Address.Street.StreetName);
-						first = false;
-					}
-
-					if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
-					{
-						if (!first)
-						{
-							builder.Append (", ");
-						}
-
-						builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
-						first = false;
-					}
-
 					if (!first)
 					{
-						builder.Append (" ");
+						builder.Append (", ");
 					}
 
-					builder.Append (Misc.Encapsulate ("(", this.Roles, ")"));
+					builder.Append (this.MailContact.Address.Street.StreetName);
 					first = false;
 				}
-				else
+
+				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
 				{
-					if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
+					if (!first)
 					{
-						builder.Append (this.MailContact.Address.Street.StreetName);
-						builder.Append ("<br/>");
+						builder.Append (", ");
 					}
 
-					if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
-					{
-						builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
-						builder.Append ("<br/>");
-					}
-
-					if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
-					{
-						builder.Append (this.MailContact.Address.Location.Country.Name);
-						builder.Append ("<br/>");
-					}
+					builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
+					first = false;
 				}
 
-				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
+				if (!first)
+				{
+					builder.Append (" ");
+				}
+
+				builder.Append (Misc.Encapsulate ("(", this.Roles, ")"));
+				first = false;
 			}
+			else
+			{
+				if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
+				{
+					builder.Append (this.MailContact.Address.Street.StreetName);
+					builder.Append ("<br/>");
+				}
+
+				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
+				{
+					builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
+					builder.Append ("<br/>");
+				}
+
+				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
+				{
+					builder.Append (this.MailContact.Address.Location.Country.Name);
+					builder.Append ("<br/>");
+				}
+			}
+
+			return builder.ToString ();
 		}
 
 		public override AbstractEntity Create()

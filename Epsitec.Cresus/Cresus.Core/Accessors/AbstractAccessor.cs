@@ -12,9 +12,9 @@ using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class AbstractAccessor
+	public abstract class AbstractAccessor
 	{
-		public AbstractAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		protected AbstractAccessor(object parentEntities, AbstractEntity entity, bool grouped)
 		{
 			System.Diagnostics.Debug.Assert (entity != null);
 
@@ -66,29 +66,31 @@ namespace Epsitec.Cresus.Core.Accessors
 			set;
 		}
 
-		public virtual string IconUri
+		
+		public abstract string IconUri
+		{
+			get;
+		}
+
+		public abstract string Title
+		{
+			get;
+		}
+
+		public string Summary
 		{
 			get
 			{
-				return "?";
+				string summary;
+				
+				summary = this.GetSummary ();
+				summary = Misc.RemoveLastLineBreak (summary);
+				
+				return string.IsNullOrEmpty (summary) ? "<i>(vide)</i>" : summary;
 			}
 		}
 
-		public virtual string Title
-		{
-			get
-			{
-				return "?";
-			}
-		}
-
-		public virtual string Summary
-		{
-			get
-			{
-				return null;
-			}
-		}
+		protected abstract string GetSummary();
 
 		public virtual string RemoveQuestion
 		{
@@ -108,18 +110,6 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 		}
 
-
-		protected static string SummaryPostprocess(string summary)
-		{
-			summary = Misc.RemoveLastBreakLine (summary);
-
-			if (string.IsNullOrEmpty (summary))
-			{
-				summary = "<i>(vide)</i>";
-			}
-
-			return summary;
-		}
 
 
 		private readonly object parentEntities;

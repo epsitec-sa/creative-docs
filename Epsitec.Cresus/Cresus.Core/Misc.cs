@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core
 		/// </summary>
 		/// <param name="text">The text.</param>
 		/// <returns></returns>
-		public static string RemoveLastBreakLine(string text)
+		public static string RemoveLastLineBreak(string text)
 		{
 			if (!string.IsNullOrEmpty(text) && text.EndsWith ("<br/>"))
 			{
