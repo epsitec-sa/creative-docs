@@ -630,13 +630,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (tile.IsSelected)
 			{
-				//	Deselect the tile by simply closing the subviews.
-				
+				//	If the tile was selected, deselect it by closing its sub-view:
 				tile.CloseSubView (this.Orchestrator);
 			}
 			else
 			{
-				tile.OpenSubView (this, this.Orchestrator);
+				tile.OpenSubView (this.Orchestrator, this);
 			}
 		}
 
