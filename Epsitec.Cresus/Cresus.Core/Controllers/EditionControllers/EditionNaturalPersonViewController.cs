@@ -13,28 +13,20 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionNaturalPersonViewController : EntityViewController
+	public class EditionNaturalPersonViewController : EntityViewController<Entities.NaturalPersonEntity>
 	{
-		public EditionNaturalPersonViewController(string name, AbstractEntity entity)
+		public EditionNaturalPersonViewController(string name, Entities.NaturalPersonEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
 		{
 			UIBuilder builder = new UIBuilder (container);
 			
-			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var person = this.Entity as Entities.NaturalPersonEntity;
-			System.Diagnostics.Debug.Assert (person != null);
-
 			builder.CreateHeaderEditorTile ();
 
+			var person = this.Entity;
 			var group = builder.CreateGroupingTile ("Data.NaturalPerson", "Personne physique", true);
 
 			var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);

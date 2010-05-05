@@ -12,34 +12,17 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public abstract class SummaryAbstractPersonViewController : EntityViewController
+	public abstract class SummaryAbstractPersonViewController<T> : EntityViewController<T> where T : Entities.AbstractPersonEntity
 	{
-		public SummaryAbstractPersonViewController(string name, Entities.AbstractPersonEntity entity)
+		public SummaryAbstractPersonViewController(string name, T entity)
 			: base (name, entity)
 		{
 		}
 
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
-		}
-
 		public override void CreateUI(Widget container)
 		{
-			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var person = this.Entity as Entities.AbstractPersonEntity;
-			System.Diagnostics.Debug.Assert (person != null);
-
-			this.CreateUITiles (container, person);
-		}
-
-
-		protected abstract void CreatePersonUI(UIBuilder builder);
-
-
-
-		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person)
-		{
+			var person = this.Entity;
+			
 			//	Subtil système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
 			//	En cas de manque de place, ou groupe d'abord les mails, puis les téléphones, puis finalement les adresses.
 			if (!container.IsActualGeometryValid)
@@ -50,24 +33,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			for (int pass = 2; pass < 4; pass++)
 			{
 				container.Children.Clear ();  // supprime les widgets générés à la passe précédente
+				
 				this.CreateUITiles (container, person, pass > 2, pass > 1, pass > 0);
 
-				Common.Widgets.Layouts.LayoutContext.SyncMeasure (container);
-
 				//	Calcule la hauteur des tuiles qu'on vient de générer.
-				double currentHeight = 0;
-				foreach (Widget widget in container.Children)
-				{
-					currentHeight += Epsitec.Common.Widgets.Layouts.LayoutMeasure.GetHeight (widget).Desired;
-					currentHeight += widget.Margins.Height;
-				}
-
+				double currentHeight = UIBuilder.GetContentHeight (container);
 				if (currentHeight <= container.ActualHeight)  // assez de place ?
 				{
 					break;
 				}
 			}
 		}
+
+		protected abstract void CreatePersonUI(UIBuilder builder);
 
 		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{

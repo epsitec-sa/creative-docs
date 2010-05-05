@@ -13,16 +13,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionRolesContactViewController : EntityViewController
+	public class EditionRolesContactViewController : EntityViewController<Entities.AbstractContactEntity>
 	{
-		public EditionRolesContactViewController(string name, AbstractEntity entity)
+		public EditionRolesContactViewController(string name, Entities.AbstractContactEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -31,10 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			
 			Widgets.GroupingTile group;
 
-			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var contact = this.Entity as Entities.AbstractContactEntity;
-			System.Diagnostics.Debug.Assert (contact != null);
-
+			var contact = this.Entity;
 			var accessor = new EntitiesAccessors.RolesContactAccessor (null, contact, false);
 
 			//	Crée les tuiles.

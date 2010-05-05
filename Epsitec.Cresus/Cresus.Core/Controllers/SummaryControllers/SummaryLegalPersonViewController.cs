@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryLegalPersonViewController : SummaryAbstractPersonViewController
+	public class SummaryLegalPersonViewController : SummaryAbstractPersonViewController<Entities.LegalPersonEntity>
 	{
 		public SummaryLegalPersonViewController(string name, Entities.LegalPersonEntity entity)
 			: base (name, entity)
