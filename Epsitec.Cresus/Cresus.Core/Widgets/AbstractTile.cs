@@ -54,7 +54,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		
+
+		public Widgets.GroupingTile ParentGroupingTile
+		{
+			get;
+			set;
+		}
+
+
+		public void OpenOrCloseSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		{
+			if (this.IsSelected)
+			{
+				//	If the tile was selected, deselect it by closing its sub-view:
+				this.CloseSubView (orchestrator);
+			}
+			else
+			{
+				this.OpenSubView (orchestrator, parentController);
+			}
+		}
+
 		public void CloseSubView(Orchestrators.DataViewOrchestrator orchestrator)
 		{
 			System.Diagnostics.Debug.Assert (this.subViewController != null);

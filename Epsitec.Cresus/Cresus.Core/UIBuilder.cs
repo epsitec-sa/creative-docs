@@ -35,9 +35,13 @@ namespace Epsitec.Cresus.Core
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
+				ArrowLocation = Direction.Right,
+				EnteredSensitivity = true,
 				TopLeftIconUri = iconUri,
 				Title = title,
 			};
+
+			UIBuilder.CreateGroupingTileHandler (group, this.controller);
 
 			return group;
 		}
@@ -47,7 +51,7 @@ namespace Epsitec.Cresus.Core
 			var tile = new Widgets.SummaryTile
 			{
 				Parent = parent.Container,
-				GroupingTile = parent,
+				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = true,
@@ -61,6 +65,8 @@ namespace Epsitec.Cresus.Core
 			};
 
 			tile.PreferredHeight = tile.ContentHeight;
+
+			parent.ChildrenTiles.Add (tile);
 
 			UIBuilder.CreateTileHandler (tile, this.controller);
 
@@ -77,7 +83,7 @@ namespace Epsitec.Cresus.Core
 			var tile = new Widgets.EditionTile
 			{
 				Parent = parent.Container,
-				GroupingTile = parent,
+				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = false,
@@ -89,6 +95,8 @@ namespace Epsitec.Cresus.Core
 			};
 
 			UIBuilder.CreateTileHandler (tile, controller);
+
+			parent.ChildrenTiles.Add (tile);
 
 			return tile;
 		}
@@ -435,21 +443,32 @@ namespace Epsitec.Cresus.Core
 			return currentHeight;
 		}
 
+		
+		private static void CreateGroupingTileHandler(Widgets.GroupingTile group, CoreViewController controller)
+		{
+			group.Clicked +=
+				delegate
+				{
+					if (group.ChildrenTiles.Count == 1)
+					{
+						//	Si on a cliqué dans le conteneur GroupingTile d'un seul SummaryTile, il
+						//	faut faire comme si on avait cliqué dans ce dernier.
+						var tile = group.ChildrenTiles[0] as Widgets.SummaryTile;
+						if (tile != null)
+						{
+							tile.OpenOrCloseSubView (controller.Orchestrator, controller);
+						}
+					}
+				};
+		}
+
 		private static void CreateTileHandler(Widgets.AbstractTile tile, CoreViewController controller)
 		{
 			tile.Clicked +=
 				delegate
 				{
 					//	Appelé lorsqu'une tuile quelconque est cliquée.
-					if (tile.IsSelected)
-					{
-						//	If the tile was selected, deselect it by closing its sub-view:
-						tile.CloseSubView (controller.Orchestrator);
-					}
-					else
-					{
-						tile.OpenSubView (controller.Orchestrator, controller);
-					}
+					tile.OpenOrCloseSubView (controller.Orchestrator, controller);
 				};
 		}
 		

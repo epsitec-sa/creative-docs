@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
 	/// alors une flèche (qui déborde de son Client.Bounds) qui pointe vers son enfant.
 	/// </summary>
-	public class ContainerTile : BackgroundTile
+	public class ContainerTile : ArrowedTile
 	{
 		public ContainerTile()
 		{
@@ -30,45 +30,26 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		/// <summary>
-		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ArrowLocation.
+		/// Gets or sets the parent widget GroupingTile.
 		/// </summary>
-		/// <value>Epaisseur de la flèche.</value>
-		public static double ArrowBreadth
-		{
-			get
-			{
-				return ContainerTile.arrowBreadth;
-			}
-		}
-
-
-		public GroupingTile GroupingTile
+		/// <value>The GroupingTile widget.</value>
+		public GroupingTile ParentGroupingTile
 		{
 			get;
 			set;
 		}
 
-
-		/// <summary>
-		/// Détermine le côté sur lequel s'affiche la flèche.
-		/// </summary>
-		/// <value>Position de la flèche.</value>
-		public Direction ArrowLocation
-		{
-			get
-			{
-				return this.arrowLocation;
-			}
-			set
-			{
-				this.arrowLocation = value;
-			}
-		}
 
 		public bool ArrowEnabled
 		{
-			get;
-			set;
+			get
+			{
+				return this.arrowEnabled;
+			}
+			set
+			{
+				this.arrowEnabled = value;
+			}
 		}
 
 		/// <summary>
@@ -88,221 +69,125 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected override void OnSelected()
+		{
+			base.OnSelected ();
+
+			if (this.ParentGroupingTile != null)
+			{
+				this.ParentGroupingTile.Invalidate ();
+			}
+		}
+
+		protected override void OnDeselected()
+		{
+			base.OnDeselected ();
+
+			if (this.ParentGroupingTile != null)
+			{
+				this.ParentGroupingTile.Invalidate ();
+			}
+		}
+
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
-			if (this.GroupingTile != null)
-			{
-				this.GroupingTile.IsSoftHilite = true;
-			}
-
 			base.OnEntered (e);
+
+			if (this.ParentGroupingTile != null)
+			{
+				this.ParentGroupingTile.Invalidate ();
+			}
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			if (this.GroupingTile != null)
-			{
-				this.GroupingTile.IsSoftHilite = false;
-			}
-
 			base.OnExited (e);
+
+			if (this.ParentGroupingTile != null)
+			{
+				this.ParentGroupingTile.Invalidate ();
+			}
 		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Path outlinePath = this.GetFramePath (0.0 ,true);
-			Path surfacePath = this.GetFramePath (0.5, false);
-			Path enteredPath = this.HasMouseHilite && !this.HasRevertedArrow ? this.GetFramePath (2.0, true) : null;
+			PaintingArrowMode mode = this.GetPaintingArrowMode ();
+			Color thicknessColor = this.GetThicknessColor ();
+			Color outlineColor = this.GetOutlineColor ();
+			Color surfaceColor = this.GetSurfaceColor ();
 
-			this.PaintPath (graphics, enteredPath, outlinePath, surfacePath);
+			this.PaintArrow (graphics, clipRect, mode, thicknessColor, outlineColor, surfaceColor);
 		}
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (this.HasRevertedArrow)
-			{
-				Path path = this.GetRevertedFramePath (0.0);
-				Path enteredPath = this.HasMouseHilite ? this.GetRevertedFramePath (2.0) : null;
-
-				this.PaintPath (graphics, enteredPath, path, path);
-			}
 		}
 
-		private void PaintPath(Graphics graphics, Path enteredPath, Path outlinePath, Path surfacePath)
+
+		private PaintingArrowMode GetPaintingArrowMode()
 		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-			//	Dessine le fond.
-			if (this.HasMouseHilite || this.HasArrow || this.HasRevertedArrow)
-			{
-				graphics.Rasterizer.AddSurface (surfacePath);
-				graphics.RenderSolid (this.BackgroundColor);
-			}
-
-			//	Dessine le hilite sous forme d'une jolie bordure orange, en accord avec l'adorner utilisé (mais pas les autres).
-			if (enteredPath != null)
-			{
-				graphics.Rasterizer.AddSurface (enteredPath);
-				graphics.RenderSolid (this.BackgroundSurfaceHilitedColor);
-
-				graphics.Rasterizer.AddOutline (enteredPath, 3);
-				graphics.RenderSolid (this.BackgroundOutlineHilitedColor);
-			}
-
-			//	Dessine le cadre.
-			if (enteredPath != null || this.IsSelected)
-			{
-				graphics.Rasterizer.AddOutline (outlinePath);
-				graphics.RenderSolid (adorner.ColorBorder);
-			}
+			return Widgets.PaintingArrowMode.None;
 		}
 
-		private Path GetFramePath(double deflate, bool outline)
+		private Color GetSurfaceColor()
 		{
-			Rectangle bounds = this.Client.Bounds;
-			bounds.Deflate (deflate);
-
-			if (this.HasArrow)
+			if (this.IsEditing)
 			{
-				return ContainerTile.GetArrowPath (bounds, this.arrowLocation);
+				return ArrowedTile.BackgroundEditingColor;
 			}
 			else
 			{
-				Path path = new Path ();
+				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
+				{
+					return ArrowedTile.BackgroundOutlineHilitedColor;
+				}
 
-				Rectangle box;
-				Point pick;
-				ContainerTile.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
-
-				path.AppendRectangle (box);
-
-				return path;
+				if (this.IsSelected && !this.IsSoloContainer)
+				{
+					return ArrowedTile.BackgroundSelectedContainerColor;
+				}
 			}
+
+			return Color.Empty;
 		}
 
-		private Path GetRevertedFramePath(double deflate)
+		private Color GetOutlineColor()
 		{
-			Rectangle bounds = this.Client.Bounds;
-			Direction arrowLocation = Direction.None;
-			double revertedarrowBody;
-
-			switch (this.arrowLocation)
+			if (this.IsEditing)
 			{
-				case Direction.Left:
-					arrowLocation = Direction.Right;
-					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, revertedarrowBody, bounds.Height);
-					break;
+				return Color.Empty;
+			}
+			else
+			{
+				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
+				{
+					return ArrowedTile.BorderColor;
+				}
 
-				case Direction.Right:
-					arrowLocation = Direction.Left;
-					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Right-revertedarrowBody, bounds.Bottom, revertedarrowBody, bounds.Height);
-					break;
-
-				case Direction.Up:
-					arrowLocation = Direction.Down;
-					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Top-revertedarrowBody, bounds.Width, revertedarrowBody);
-					break;
-
-				case Direction.Down:
-					arrowLocation = Direction.Up;
-					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, revertedarrowBody);
-					break;
+				if (this.IsSelected && !this.IsSoloContainer)
+				{
+					return ArrowedTile.BorderColor;
+				}
 			}
 
-			bounds.Deflate (deflate);
-
-			return ContainerTile.GetArrowPath (bounds, arrowLocation);
+			return Color.Empty;
 		}
 
-		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation)
+		private Color GetThicknessColor()
 		{
-			Path path = new Path ();
-
-			Rectangle box;
-			Point pick;
-			ContainerTile.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
-
-			switch (arrowLocation)
-			{
-				case Direction.Left:
-					path.MoveTo (pick);
-					path.LineTo (box.BottomLeft);
-					path.LineTo (box.BottomRight);
-					path.LineTo (box.TopRight);
-					path.LineTo (box.TopLeft);
-					path.Close ();
-					break;
-
-				case Direction.Right:
-					path.MoveTo (pick);
-					path.LineTo (box.TopRight);
-					path.LineTo (box.TopLeft);
-					path.LineTo (box.BottomLeft);
-					path.LineTo (box.BottomRight);
-					path.Close ();
-					break;
-
-				case Direction.Up:
-					path.MoveTo (pick);
-					path.LineTo (box.TopLeft);
-					path.LineTo (box.BottomLeft);
-					path.LineTo (box.BottomRight);
-					path.LineTo (box.TopRight);
-					path.Close ();
-					break;
-
-				case Direction.Down:
-					path.MoveTo (pick);
-					path.LineTo (box.BottomRight);
-					path.LineTo (box.TopRight);
-					path.LineTo (box.TopLeft);
-					path.LineTo (box.BottomLeft);
-					path.Close ();
-					break;
-			}
-
-			return path;
-		}
-
-		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowLocation, out Rectangle box, out Point pick)
-		{
-			bounds.Deflate (0.5);
-
-			switch (arrowLocation)
-			{
-				default:
-				case Direction.Left:
-					box = new Rectangle (bounds.Left+ContainerTile.arrowBreadth, bounds.Bottom, bounds.Width-ContainerTile.arrowBreadth, bounds.Height);
-					pick = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
-					break;
-
-				case Direction.Right:
-					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-ContainerTile.arrowBreadth, bounds.Height);
-					pick = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
-					break;
-
-				case Direction.Up:
-					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-ContainerTile.arrowBreadth);
-					pick = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
-					break;
-
-				case Direction.Down:
-					box = new Rectangle (bounds.Left, bounds.Bottom+ContainerTile.arrowBreadth, bounds.Width, bounds.Height-ContainerTile.arrowBreadth);
-					pick = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
-					break;
-			}
+			return Color.Empty;
 		}
 
 
+#if false
 		private bool HasArrow
 		{
 			get
 			{
-				return this.ArrowEnabled && (this.IsSelected || this.IsEntered) && !this.HasRevertedArrow;
+				//?return this.ArrowEnabled && (this.IsSelected || this.IsEntered) && !this.HasRevertedArrow;
+				return false;
 			}
 		}
 
@@ -318,14 +203,29 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.IsEntered && this.enteredSensitivity;
+				return this.IsEntered && !this.IsSoloContainer && this.enteredSensitivity;
+			}
+		}
+#endif
+
+		private bool ShowSelection
+		{
+			get
+			{
+				return this.IsSelected && !this.IsSoloContainer;
+			}
+		}
+
+		private bool IsSoloContainer
+		{
+			get
+			{
+				return this.ParentGroupingTile != null && this.ParentGroupingTile.ChildrenTiles.Count <= 1;
 			}
 		}
 
 
-		private static readonly double arrowBreadth = 8;
-
-		private Direction arrowLocation;
+		private bool arrowEnabled;
 		private bool enteredSensitivity;
 	}
 }

@@ -145,7 +145,7 @@
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
     <Compile Include="Widgets\HintEditor.cs" />
-    <Compile Include="Widgets\BackgroundTile.cs" />
+    <Compile Include="Widgets\ArrowedTile.cs" />
     <Compile Include="Widgets\GroupingTile.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />
