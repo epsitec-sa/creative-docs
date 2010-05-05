@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Classe de base de SummaryTile et EditionTile, qui représente une entité.
 	/// Son parent est forcément un TileGrouping.
 	/// </summary>
-	public abstract class AbstractTile : ContainerTile, ICoreViewControllerHost
+	public abstract class AbstractTile : ContainerTile
 	{
 		public AbstractTile()
 		{
@@ -67,15 +67,22 @@ namespace Epsitec.Cresus.Core.Widgets
 			System.Diagnostics.Debug.Assert (orchestrator != null);
 
 			orchestrator.CloseView (this.subViewController);
+			
+			System.Diagnostics.Debug.Assert (this.subViewController == null);
+			System.Diagnostics.Debug.Assert (!this.IsSelected);
 		}
 
 		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
 		{
 			this.subViewController = EntityViewController.CreateViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
-			this.subViewController.Host = this;
-			this.SetSelected (true);
+			this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
 
 			orchestrator.ShowSubView (parentController, this.subViewController);
+			
+			this.SetSelected (true);
+
+			System.Diagnostics.Debug.Assert (this.subViewController != null);
+			System.Diagnostics.Debug.Assert (this.IsSelected);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -88,17 +95,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			base.Dispose (disposing);
 		}
 
-		#region ICoreViewControllerHost Members
-
-		public void NotifyDisposing(CoreViewController controller)
+		private void HandleSubViewControllerDisposing(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.subViewController == controller);
-
 			this.SetSelected (false);
 			this.subViewController = null;
 		}
-
-		#endregion
 
 		private CoreViewController subViewController;
 	}

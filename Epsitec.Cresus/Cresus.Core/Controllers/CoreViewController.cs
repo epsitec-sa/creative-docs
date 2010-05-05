@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -30,26 +31,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		public abstract void CreateUI(Widget container);
 
 		
-		public ICoreViewControllerHost Host
-		{
-			get;
-			set;
-		}
-
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				var host = this.Host;
-
-				if (host != null)
-				{
-					host.NotifyDisposing (this);
-				}
+				this.OnDisposing ();
+				this.Disposing = null;
 			}
 
 			base.Dispose (disposing);
 		}
+
+		private void OnDisposing()
+		{
+			var handler = this.Disposing;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler Disposing;
 	}
 }
