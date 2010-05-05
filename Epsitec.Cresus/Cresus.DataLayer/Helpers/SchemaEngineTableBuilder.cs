@@ -234,7 +234,9 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			DbTypeDef typeDef = this.CreateTypeDef (field.Type);
 			DbColumn  column  = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
-			
+
+			column.Comment = column.DisplayName;
+
 			table.Columns.Add (column);
 		}
 
@@ -252,7 +254,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			DbTable  target = this.CreateTable (field.TypeId);
 			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.engine.Infrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
-			
+
 			table.Columns.Add (column);
 		}
 

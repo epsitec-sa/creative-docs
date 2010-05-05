@@ -177,6 +177,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public string Comment
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Sets the type.
 		/// </summary>

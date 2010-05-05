@@ -391,6 +391,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public string Comment
+		{
+			get;
+			set;
+		}
+
 
 		/// <summary>
 		/// Defines the column category. A column category may not be changed
@@ -779,10 +785,11 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
 			}
 
-			column.Name         = this.MakeLocalizedSqlName (localizationSuffix);
-			column.IsNullable   = this.Type.IsNullable;
+			column.Name = this.MakeLocalizedSqlName (localizationSuffix);
+			column.Comment = this.Comment;
+			column.IsNullable = this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
-			
+	
 			return column;
 		}
 
