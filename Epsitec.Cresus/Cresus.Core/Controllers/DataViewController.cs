@@ -88,20 +88,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
 
-			CoreViewController parent = null;
-			if (this.viewControllers.Count != 0)
-			{
-				parent = this.GetLeafController ();
-			}
-
 			var column = this.viewLayoutController.CreateColumn ();
 			this.viewControllers.Push (controller);
 			controller.CreateUI (column);
-
-			if (parent != null)
-			{
-				this.SelectViewController (parent, controller);
-			}
 		}
 
 		public void PopViewController()
@@ -148,43 +137,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private EntityViewController CreateCompactEntityViewController()
 		{
 			return EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
-		}
-
-		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
-		{
-			//	Parmi toutes les tuiles d'un contrôleur parent, sélectionne celle qui correspond au contrôleur de droite.
-			//	Si selectedController = null, on désélectionne tout.
-			var parent = parentController as EntityViewController;
-			System.Diagnostics.Debug.Assert (parent != null);
-
-			AbstractEntity selectedEntity = null;
-			ViewControllerMode selectedMode = ViewControllerMode.None;
-
-			if (selectedController != null && selectedController is EntityViewController)
-			{
-				var s = selectedController as EntityViewController;
-				selectedEntity = s.Entity;
-				selectedMode = s.Mode;
-			}
-
-			this.RecursivSelectViewController (parent.Container, selectedEntity, selectedMode);
-		}
-
-		private void RecursivSelectViewController(Widget parent, AbstractEntity selectedEntity, ViewControllerMode selectedMode)
-		{
-			foreach (Widget widget in parent.Children)
-			{
-				if (widget is Widgets.AbstractTile)
-				{
-					var tile = widget as Widgets.AbstractTile;
-					tile.SetSelected (tile.ChildrenMode == selectedMode && tile.Entity == selectedEntity);
-				}
-
-				if (widget.Parent != null && widget.Parent.Children != null && widget.Parent.Children.Count > 0)
-				{
-					this.RecursivSelectViewController (widget, selectedEntity, selectedMode);
-				}
-			}
 		}
 
 
