@@ -120,29 +120,31 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<DbKey> FindCountryEntities(string code)
 		{
-			DataBrowser browser = new DataBrowser (UnitTestDataContext.infrastructure, new DataContext (UnitTestDataContext.infrastructure));
-			DataQuery query = new DataQuery ();
+			throw new System.NotImplementedException ();
 
-			var entity = new Entities.CountryEntity ();
+			// The DataBrowser has been significantly modified and this way of doing things does not exist anymore.
+			
+			//DataBrowser browser = new DataBrowser (UnitTestDataContext.infrastructure, new DataContext (UnitTestDataContext.infrastructure));
+			//DataQuery query = new DataQuery ();
 
-			entity.Code = code;
-			query.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse ("[L0A2]")));
+			//var entity = new Entities.CountryEntity ();
 
-			using (DbTransaction transaction = browser.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				// The DataBrowser has been significantly modified. This method does not exist
-				// anymore but it could be implemented again, this is why I leave the test unchanged,
-				// except for the three lines below.
+			//entity.Code = code;
+			//query.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse ("[L0A2]")));
 
-				//foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
-				//{
-				//    yield return row.Keys[0];
-				//}
+			//using (DbTransaction transaction = browser.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			//{
+				
 
-				throw new System.NotImplementedException ("See comments above");
+			//    foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
+			//    {
+			//        yield return row.Keys[0];
+			//    }
 
-				transaction.Commit ();
-			}
+			//    throw new System.NotImplementedException ("See comments above");
+
+			//    transaction.Commit ();
+			//}
 		}
 
 

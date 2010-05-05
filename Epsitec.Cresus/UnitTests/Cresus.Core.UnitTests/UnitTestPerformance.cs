@@ -40,15 +40,15 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Check02PopulateDatabase()
 		{
-		//    using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
-		//    {
-		//        dataContext.CreateSchema<AbstractPersonEntity> ();
-		//        dataContext.CreateSchema<MailContactEntity> ();
-		//        dataContext.CreateSchema<TelecomContactEntity> ();
-		//        dataContext.CreateSchema<UriContactEntity> ();
+		    using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
+		    {
+				//dataContext.CreateSchema<AbstractPersonEntity> ();
+				//dataContext.CreateSchema<MailContactEntity> ();
+				//dataContext.CreateSchema<TelecomContactEntity> ();
+				//dataContext.CreateSchema<UriContactEntity> ();
 
-		//        ContactRoleEntity[] contactRoles = EntityBuilder.CreateContactRoles (dataContext, 10);
-		//        dataContext.SaveChanges ();
+				//ContactRoleEntity[] contactRoles = EntityBuilder.CreateContactRoles (dataContext, 10);
+				//dataContext.SaveChanges ();
 
 		//        CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 2500);
 		//        dataContext.SaveChanges ();
@@ -65,19 +65,20 @@ namespace Epsitec.Cresus.Core
 		//        EntityBuilder.AssignComments (uriContacts, uriComments);
 		//        dataContext.SaveChanges ();
 
-		//        CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 2500);
-		//        dataContext.SaveChanges ();
+				//CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 2500);
+				//dataContext.SaveChanges ();
 
-		//        TelecomTypeEntity[] telecomTypes = EntityBuilder.CreateTelecomTypes (dataContext, 5);
-		//        dataContext.SaveChanges ();
+				//TelecomTypeEntity[] telecomTypes = EntityBuilder.CreateTelecomTypes (dataContext, 5);
+				//dataContext.SaveChanges ();
 
-		//        TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 2500);
-		//        dataContext.SaveChanges ();
+				//TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 2500);
+				//dataContext.SaveChanges ();
 
-		//        EntityBuilder.AssignRoles (telecomContacts, contactRoles);
-		//        dataContext.SaveChanges ();
-		//        EntityBuilder.AssignComments (telecomContacts, telecomComments);
-		//        dataContext.SaveChanges ();
+				//EntityBuilder.AssignRoles (telecomContacts, contactRoles);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignComments (telecomContacts, telecomComments);
+				//dataContext.SaveChanges ();
 
 		//        CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 2500);
 		//        dataContext.SaveChanges ();
@@ -138,7 +139,7 @@ namespace Epsitec.Cresus.Core
 
 		//        EntityBuilder.AssignParents (legalPersons);
 		//        dataContext.SaveChanges ();
-		//    }
+		    }
 		}
 
 		[TestMethod]
@@ -148,20 +149,21 @@ namespace Epsitec.Cresus.Core
 			{
 				Repository repository = new Repository (UnitTestPerformance.dbInfrastructure, dataContext);
 
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-				watch.Start ();
 				repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
-				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine (watch.ElapsedMilliseconds);
+
+				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
 				watch.Start ();
 				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
 				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine (watch.ElapsedMilliseconds);
-				watch.Start ();
+
+				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+
+				watch.Restart ();
 				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
 				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine (watch.ElapsedMilliseconds);
+
+				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 			}
 		}
 

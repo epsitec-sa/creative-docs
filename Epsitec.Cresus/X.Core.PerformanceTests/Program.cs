@@ -5,7 +5,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Common.Support;
+using Epsitec.Cresus.Core;
 
 
 
@@ -15,10 +15,9 @@ namespace Cresus.Core
 	{
 		static void Main(string[] args)
 		{
-			ResourceManagerPool.Default = new ResourceManagerPool ("default");
-			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Core");
+			TestSetup.Initialize ();
 
-			new UnitTestPerformance ().Check03RetreiveData ();
+			new UnitTestPerformance ().RetreiveData ();
 		}
 	}
 
@@ -26,10 +25,119 @@ namespace Cresus.Core
 	public class UnitTestPerformance
 	{
 
-		public void Check03RetreiveData()
+
+		public void InsertData()
+		{
+			UnitTestPerformance.dbInfrastructure = TestSetup.CreateDbInfrastructure ();
+
+			using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
+			{
+				dataContext.CreateSchema<AbstractPersonEntity> ();
+				dataContext.CreateSchema<MailContactEntity> ();
+				dataContext.CreateSchema<TelecomContactEntity> ();
+				dataContext.CreateSchema<UriContactEntity> ();
+				
+				ContactRoleEntity[] contactRoles = EntityBuilder.CreateContactRoles (dataContext, 10);
+				dataContext.SaveChanges ();
+
+				//CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 2500);
+				//dataContext.SaveChanges ();
+
+				//UriSchemeEntity[] uriSchemes = EntityBuilder.CreateUriSchemes (dataContext, 5);
+				//dataContext.SaveChanges ();
+
+				//UriContactEntity[] uriContacts = EntityBuilder.CreateUriContacts (dataContext, uriSchemes, 2500);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignRoles (uriContacts, contactRoles);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignComments (uriContacts, uriComments);
+				//dataContext.SaveChanges ();
+
+				//CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 2500);
+				//dataContext.SaveChanges ();
+
+				//TelecomTypeEntity[] telecomTypes = EntityBuilder.CreateTelecomTypes (dataContext, 5);
+				//dataContext.SaveChanges ();
+
+				//TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 2500);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignRoles (telecomContacts, contactRoles);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignComments (telecomContacts, telecomComments);
+				//dataContext.SaveChanges ();
+
+				//CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 2500);
+				//dataContext.SaveChanges ();
+
+				//CountryEntity[] countries = EntityBuilder.CreateCountries (dataContext, 5);
+				//dataContext.SaveChanges ();
+
+				//RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, 50);
+				//dataContext.SaveChanges ();
+
+				//LocationEntity[] locations = EntityBuilder.CreateLocations (dataContext, regions, 100);
+				//dataContext.SaveChanges ();
+
+				//StreetEntity[] streets = EntityBuilder.CreateStreets (dataContext, 1500);
+				//dataContext.SaveChanges ();
+
+				//PostBoxEntity[] postBoxes = EntityBuilder.CreatePostBoxes (dataContext, 1500);
+				//dataContext.SaveChanges ();
+
+				//AddressEntity[] addresses = EntityBuilder.CreateAddresses (dataContext, streets, postBoxes, locations, 1500);
+				//dataContext.SaveChanges ();
+
+				//MailContactEntity[] mailContacts = EntityBuilder.CreateMailContact (dataContext, addresses, 2500);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignRoles (mailContacts, contactRoles);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignComments (mailContacts, mailComments);
+				//dataContext.SaveChanges ();
+
+				//LanguageEntity[] languages = EntityBuilder.CreateLanguages (dataContext, 15);
+				//dataContext.SaveChanges ();
+
+				//PersonTitleEntity[] titles = EntityBuilder.CreatePersonTitles (dataContext, 15);
+				//dataContext.SaveChanges ();
+
+				//PersonGenderEntity[] genders = EntityBuilder.CreatePersonGenders (dataContext, 3);
+				//dataContext.SaveChanges ();
+
+				//LegalPersonTypeEntity[] legalPersonTypes = EntityBuilder.CreateLegalPersonTypes (dataContext, 5);
+				//dataContext.SaveChanges ();
+
+				//NaturalPersonEntity[] naturalPersons = EntityBuilder.CreateNaturalPersons (dataContext, languages, titles, genders, 1000);
+				//dataContext.SaveChanges ();
+
+				//LegalPersonEntity[] legalPersons = EntityBuilder.CreateLegalPersons (dataContext, languages, legalPersonTypes, 500);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignContacts (uriContacts, naturalPersons, legalPersons);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignContacts (telecomContacts, naturalPersons, legalPersons);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignContacts (mailContacts, naturalPersons, legalPersons);
+				//dataContext.SaveChanges ();
+
+				//EntityBuilder.AssignParents (legalPersons);
+				//dataContext.SaveChanges ();
+			}
+
+		}
+
+		public void RetreiveData()
 		{
 			UnitTestPerformance.dbInfrastructure = new DbInfrastructure ();
 			UnitTestPerformance.dbInfrastructure.AttachToDatabase (DbInfrastructure.CreateDatabaseAccess ("CORETEST"));
+
 			using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
 			{
 				Repository repository = new Repository (UnitTestPerformance.dbInfrastructure, dataContext);

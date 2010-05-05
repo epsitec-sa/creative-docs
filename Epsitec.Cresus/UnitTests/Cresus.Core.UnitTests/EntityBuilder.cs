@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core
 {
 
 
-	class EntityBuilder
+	public class EntityBuilder
 	{
 
 		public static ContactRoleEntity[] CreateContactRoles(DataContext dataContext, int number)
