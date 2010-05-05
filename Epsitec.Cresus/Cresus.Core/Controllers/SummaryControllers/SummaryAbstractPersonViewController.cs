@@ -1,21 +1,20 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public abstract class AbstractSummaryPersonViewController : EntityViewController
+	public abstract class SummaryAbstractPersonViewController : EntityViewController
 	{
-		public AbstractSummaryPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public SummaryAbstractPersonViewController(string name, Entities.AbstractPersonEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)
 		{
 		}
@@ -27,10 +26,21 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.container = container;
+
+			System.Diagnostics.Debug.Assert (this.Entity != null);
+			var person = this.Entity as Entities.AbstractPersonEntity;
+			System.Diagnostics.Debug.Assert (person != null);
+
+			this.CreateUITiles (person);
 		}
 
 
-		protected void CreateUITiles(Entities.AbstractPersonEntity person)
+		protected abstract void CreatePersonUI();
+
+
+
+		private void CreateUITiles(Entities.AbstractPersonEntity person)
 		{
 			//	Subtil système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
 			//	En cas de manque de place, ou groupe d'abord les mails, puis les téléphones, puis finalement les adresses.
@@ -186,10 +196,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			this.CreateFooterEditorTile ();
-		}
-
-		protected virtual void CreatePersonUI()
-		{
 		}
 	}
 }
