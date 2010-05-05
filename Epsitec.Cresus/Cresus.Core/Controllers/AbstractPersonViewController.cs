@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.CreateHeaderEditorTile ();
 
-					group = this.CreateTileGrouping (this.Container, "Data.NaturalPerson", "Personne physique", true);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.NaturalPerson", "Personne physique", true);
 
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
 					var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.CreateHeaderEditorTile ();
 
-					group = this.CreateTileGrouping (this.Container, "Data.LegalPerson", "Personne morale", true);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.LegalPerson", "Personne morale", true);
 
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
 					var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Une première tuile pour l'identité de la personne.
 				if (this.Entity is Entities.NaturalPersonEntity)
 				{
-					group = this.CreateTileGrouping (this.Container, "Data.NaturalPerson", "Personne physique", false);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.NaturalPerson", "Personne physique", false);
 
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false);
 					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (this.Entity is Entities.LegalPersonEntity)
 				{
-					group = this.CreateTileGrouping (this.Container, "Data.LegalPerson", "Personne morale", false);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.LegalPerson", "Personne morale", false);
 
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
 					this.CreateSummaryTile (group, accessor, false, ViewControllerMode.PersonEdition);
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Crée les tuiles pour les adresses postales.
 				if (groupMail)
 				{
-					group = this.CreateTileGrouping (this.Container, "Data.Mail", "Adresse", false);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.Mail", "Adresse", false);
 				}
 
 				count = 0;
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 						if (!groupMail)
 						{
-							group = this.CreateTileGrouping (this.Container, "Data.Mail", accessor.Title, false);
+							group = EntityViewController.CreateGroupingTile (this.Container, "Data.Mail", accessor.Title, false);
 						}
 
 						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (!groupMail)
 					{
-						group = this.CreateTileGrouping (this.Container, "Data.Mail", "Adresse", false);
+						group = EntityViewController.CreateGroupingTile (this.Container, "Data.Mail", "Adresse", false);
 					}
 
 					var emptyEntity = new Entities.MailContactEntity ();
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Crée les tuiles pour les numéros de téléphone.
 				if (groupTelecom)
 				{
-					group = this.CreateTileGrouping (this.Container, "Data.Telecom", "Téléphone", false);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.Telecom", "Téléphone", false);
 				}
 
 				count = 0;
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 						if (!groupTelecom)
 						{
-							group = this.CreateTileGrouping (this.Container, "Data.Telecom", accessor.Title, false);
+							group = EntityViewController.CreateGroupingTile (this.Container, "Data.Telecom", accessor.Title, false);
 						}
 
 						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (!groupTelecom)
 					{
-						group = this.CreateTileGrouping (this.Container, "Data.Telecom", "Téléphone", false);
+						group = EntityViewController.CreateGroupingTile (this.Container, "Data.Telecom", "Téléphone", false);
 					}
 
 					var emptyEntity = new Entities.TelecomContactEntity ();
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Crée les tuiles pour les adresses mail.
 				if (groupUri)
 				{
-					group = this.CreateTileGrouping (this.Container, "Data.Uri", "Mail", false);
+					group = EntityViewController.CreateGroupingTile (this.Container, "Data.Uri", "Mail", false);
 				}
 
 				count = 0;
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 						if (!groupUri)
 						{
-							group = this.CreateTileGrouping (this.Container, "Data.Uri", accessor.Title, false);
+							group = EntityViewController.CreateGroupingTile (this.Container, "Data.Uri", accessor.Title, false);
 						}
 
 						this.CreateSummaryTile (group, accessor, true, ViewControllerMode.GenericEdition);
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (!groupUri)
 					{
-						group = this.CreateTileGrouping (this.Container, "Data.Uri", "Mail", false);
+						group = EntityViewController.CreateGroupingTile (this.Container, "Data.Uri", "Mail", false);
 					}
 
 					var emptyEntity = new Entities.UriContactEntity ();
