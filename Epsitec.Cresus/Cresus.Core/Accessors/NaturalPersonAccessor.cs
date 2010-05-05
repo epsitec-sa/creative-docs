@@ -44,24 +44,21 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 		}
 
-		public override string Summary
+		protected override string GetSummary()
 		{
-			get
+			var builder = new StringBuilder ();
+
+			if (this.NaturalPerson.Title != null)
 			{
-				var builder = new StringBuilder ();
-
-				if (this.NaturalPerson.Title != null)
-				{
-					var titleEntity = this.NaturalPerson.Title;
-					builder.Append (titleEntity.Name);
-					builder.Append ("<br/>");
-				}
-
-				builder.Append (Misc.SpacingAppend (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname));
+				var titleEntity = this.NaturalPerson.Title;
+				builder.Append (titleEntity.Name);
 				builder.Append ("<br/>");
-
-				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
 			}
+
+			builder.Append (Misc.SpacingAppend (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname));
+			builder.Append ("<br/>");
+
+			return builder.ToString ();
 		}
 
 

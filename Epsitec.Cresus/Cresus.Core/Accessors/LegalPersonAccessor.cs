@@ -44,17 +44,14 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 		}
 
-		public override string Summary
+		protected override string GetSummary()
 		{
-			get
-			{
-				var builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 
-				builder.Append (this.LegalPerson.Name);
-				builder.Append ("<br/>");
+			builder.Append (this.LegalPerson.Name);
+			builder.Append ("<br/>");
 
-				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
-			}
+			return builder.ToString ();
 		}
 	}
 }

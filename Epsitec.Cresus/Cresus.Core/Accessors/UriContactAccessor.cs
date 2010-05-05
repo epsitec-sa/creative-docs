@@ -51,28 +51,25 @@ namespace Epsitec.Cresus.Core.Accessors
 					builder.Append ("Mail");
 					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
 
-					return Misc.RemoveLastBreakLine (builder.ToString ());
+					return Misc.RemoveLastLineBreak (builder.ToString ());
 				}
 			}
 		}
 
-		public override string Summary
+		protected override string GetSummary()
 		{
-			get
+			var builder = new StringBuilder ();
+
+			builder.Append (this.UriContact.Uri);
+
+			if (this.Grouped)
 			{
-				var builder = new StringBuilder ();
-
-				builder.Append (this.UriContact.Uri);
-
-				if (this.Grouped)
-				{
-					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
-				}
-
-				builder.Append ("<br/>");
-
-				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
+				builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
 			}
+
+			builder.Append ("<br/>");
+
+			return builder.ToString ();
 		}
 
 		public override AbstractEntity Create()
