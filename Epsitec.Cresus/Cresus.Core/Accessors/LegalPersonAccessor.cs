@@ -11,20 +11,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class LegalPersonAccessor : AbstractAccessor
+	public class LegalPersonAccessor : AbstractEntityAccessor<Entities.LegalPersonEntity>
 	{
-		public LegalPersonAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public LegalPersonAccessor(object parentEntities, Entities.LegalPersonEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.LegalPersonEntity LegalPerson
-		{
-			get
-			{
-				return this.Entity as Entities.LegalPersonEntity;
-			}
 		}
 
 
@@ -48,7 +39,7 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var builder = new StringBuilder ();
 
-			builder.Append (this.LegalPerson.Name);
+			builder.Append (this.Entity.Name);
 			builder.Append ("<br/>");
 
 			return builder.ToString ();

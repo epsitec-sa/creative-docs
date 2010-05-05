@@ -11,9 +11,9 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class TelecomContactAccessor : AbstractContactAccessor
+	public class TelecomContactAccessor : AbstractContactAccessor<Entities.TelecomContactEntity>
 	{
-		public TelecomContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public TelecomContactAccessor(object parentEntities, Entities.TelecomContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
 		}

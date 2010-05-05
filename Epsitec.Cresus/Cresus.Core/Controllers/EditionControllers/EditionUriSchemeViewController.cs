@@ -13,9 +13,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionUriSchemeViewController : EntityViewController<Entities.AbstractContactEntity>
+	public class EditionUriSchemeViewController : EntityViewController<Entities.UriContactEntity>
 	{
-		public EditionUriSchemeViewController(string name, Entities.AbstractContactEntity entity)
+		public EditionUriSchemeViewController(string name, Entities.UriContactEntity entity)
 			: base (name, entity)
 		{
 		}

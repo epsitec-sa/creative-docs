@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Roles", "Rôles");
 
-			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.MailContact, false)
+			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.Entity, false)
 			{
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};

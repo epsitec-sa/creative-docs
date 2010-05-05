@@ -11,20 +11,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class NaturalPersonAccessor : AbstractAccessor
+	public class NaturalPersonAccessor : AbstractEntityAccessor<Entities.NaturalPersonEntity>
 	{
-		public NaturalPersonAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public NaturalPersonAccessor(object parentEntities, Entities.NaturalPersonEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.NaturalPersonEntity NaturalPerson
-		{
-			get
-			{
-				return this.Entity as Entities.NaturalPersonEntity;
-			}
 		}
 
 
@@ -48,14 +39,14 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var builder = new StringBuilder ();
 
-			if (this.NaturalPerson.Title != null)
+			if (this.Entity.Title != null)
 			{
-				var titleEntity = this.NaturalPerson.Title;
+				var titleEntity = this.Entity.Title;
 				builder.Append (titleEntity.Name);
 				builder.Append ("<br/>");
 			}
 
-			builder.Append (Misc.SpacingAppend (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname));
+			builder.Append (Misc.SpacingAppend (this.Entity.Firstname, this.Entity.Lastname));
 			builder.Append ("<br/>");
 
 			return builder.ToString ();
@@ -97,9 +88,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.NaturalPerson.Title != null)
+				if (this.Entity.Title != null)
 				{
-					return this.NaturalPerson.Title.Name;
+					return this.Entity.Title.Name;
 				}
 				else
 				{
@@ -108,12 +99,12 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.NaturalPerson.Title == null)
+				if (this.Entity.Title == null)
 				{
-					this.NaturalPerson.Title = new Entities.PersonTitleEntity ();
+					this.Entity.Title = new Entities.PersonTitleEntity ();
 				}
 
-				this.NaturalPerson.Title.Name = value;
+				this.Entity.Title.Name = value;
 			}
 		}
 
@@ -121,7 +112,7 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				return this.NaturalPerson.BirthDate.ToString ();
+				return this.Entity.BirthDate.ToString ();
 			}
 			set
 			{
@@ -133,9 +124,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.NaturalPerson.Gender != null)
+				if (this.Entity.Gender != null)
 				{
-					return this.NaturalPerson.Gender.Name;
+					return this.Entity.Gender.Name;
 				}
 				else
 				{
@@ -144,12 +135,12 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.NaturalPerson.Gender == null)
+				if (this.Entity.Gender == null)
 				{
-					this.NaturalPerson.Gender = new Entities.PersonGenderEntity ();
+					this.Entity.Gender = new Entities.PersonGenderEntity ();
 				}
 
-				this.NaturalPerson.Gender.Name = value;
+				this.Entity.Gender.Name = value;
 			}
 		}
 	}

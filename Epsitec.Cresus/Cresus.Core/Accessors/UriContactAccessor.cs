@@ -11,20 +11,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class UriContactAccessor : AbstractContactAccessor
+	public class UriContactAccessor : AbstractContactAccessor<Entities.UriContactEntity>
 	{
-		public UriContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public UriContactAccessor(object parentEntities, Entities.UriContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.UriContactEntity UriContact
-		{
-			get
-			{
-				return this.Entity as Entities.UriContactEntity;
-			}
 		}
 
 
@@ -60,7 +51,7 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var builder = new StringBuilder ();
 
-			builder.Append (this.UriContact.Uri);
+			builder.Append (this.Entity.Uri);
 
 			if (this.Grouped)
 			{
@@ -76,14 +67,14 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var newEntity = new Entities.UriContactEntity ();
 
-			foreach (var role in this.UriContact.Roles)
+			foreach (var role in this.Entity.Roles)
 			{
 				newEntity.Roles.Add (role);
 			}
 
-			newEntity.UriScheme = this.UriContact.UriScheme;
+			newEntity.UriScheme = this.Entity.UriScheme;
 
-			int index = this.ParentAbstractContacts.IndexOf (this.UriContact);
+			int index = this.ParentAbstractContacts.IndexOf (this.Entity);
 			if (index == -1)
 			{
 				this.ParentAbstractContacts.Add (newEntity);

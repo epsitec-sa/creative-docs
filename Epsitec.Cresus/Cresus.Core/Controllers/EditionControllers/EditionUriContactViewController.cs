@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Roles", "Rôles");
 
-			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.UriContact, false)
+			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.Entity, false)
 			{
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Type", "Type");
 
-			var uriSchemeAccessor = new Accessors.UriSchemeAccessor (null, accessor.UriContact, false)
+			var uriSchemeAccessor = new Accessors.UriSchemeAccessor (null, accessor.Entity, false)
 			{
 				ViewControllerMode = ViewControllerMode.UriSchemeEdition
 			};
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateLinkButtons (tile.Container);
 
-			builder.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 0, "Adresse mail", accessor.Entity.Uri, x => accessor.Entity.Uri = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 		}

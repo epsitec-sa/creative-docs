@@ -11,7 +11,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class MailContactAccessor : AbstractContactAccessor
+	public class MailContactAccessor : AbstractContactAccessor<Entities.MailContactEntity>
 	{
 		static MailContactAccessor()
 		{
@@ -5416,18 +5416,9 @@ namespace Epsitec.Cresus.Core.Accessors
 			#endregion
 		}
 
-		public MailContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public MailContactAccessor(object parentEntities, Entities.MailContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.MailContactEntity MailContact
-		{
-			get
-			{
-				return this.Entity as Entities.MailContactEntity;
-			}
 		}
 
 
@@ -5467,25 +5458,25 @@ namespace Epsitec.Cresus.Core.Accessors
 			{
 				bool first = true;
 
-				if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
+				if (this.Entity.Address != null && this.Entity.Address.Street != null && !string.IsNullOrEmpty (this.Entity.Address.Street.StreetName))
 				{
 					if (!first)
 					{
 						builder.Append (", ");
 					}
 
-					builder.Append (this.MailContact.Address.Street.StreetName);
+					builder.Append (this.Entity.Address.Street.StreetName);
 					first = false;
 				}
 
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null)
 				{
 					if (!first)
 					{
 						builder.Append (", ");
 					}
 
-					builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
+					builder.Append (Misc.SpacingAppend (this.Entity.Address.Location.PostalCode, this.Entity.Address.Location.Name));
 					first = false;
 				}
 
@@ -5499,21 +5490,21 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			else
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Street != null && !string.IsNullOrEmpty (this.MailContact.Address.Street.StreetName))
+				if (this.Entity.Address != null && this.Entity.Address.Street != null && !string.IsNullOrEmpty (this.Entity.Address.Street.StreetName))
 				{
-					builder.Append (this.MailContact.Address.Street.StreetName);
+					builder.Append (this.Entity.Address.Street.StreetName);
 					builder.Append ("<br/>");
 				}
 
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null)
 				{
-					builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
+					builder.Append (Misc.SpacingAppend (this.Entity.Address.Location.PostalCode, this.Entity.Address.Location.Name));
 					builder.Append ("<br/>");
 				}
 
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null && this.Entity.Address.Location.Country != null)
 				{
-					builder.Append (this.MailContact.Address.Location.Country.Name);
+					builder.Append (this.Entity.Address.Location.Country.Name);
 					builder.Append ("<br/>");
 				}
 			}
@@ -5525,12 +5516,12 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var newEntity = new Entities.MailContactEntity ();
 
-			foreach (var role in this.MailContact.Roles)
+			foreach (var role in this.Entity.Roles)
 			{
 				newEntity.Roles.Add (role);
 			}
 
-			int index = this.ParentAbstractContacts.IndexOf (this.MailContact);
+			int index = this.ParentAbstractContacts.IndexOf (this.Entity);
 			if (index == -1)
 			{
 				this.ParentAbstractContacts.Add (newEntity);
@@ -5548,9 +5539,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Street != null)
+				if (this.Entity.Address != null && this.Entity.Address.Street != null)
 				{
-					return this.MailContact.Address.Street.StreetName;
+					return this.Entity.Address.Street.StreetName;
 				}
 				else
 				{
@@ -5559,17 +5550,17 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Street == null)
+				if (this.Entity.Address.Street == null)
 				{
-					this.MailContact.Address.Street = new Entities.StreetEntity ();
+					this.Entity.Address.Street = new Entities.StreetEntity ();
 				}
 
-				this.MailContact.Address.Street.StreetName = value;
+				this.Entity.Address.Street.StreetName = value;
 			}
 		}
 
@@ -5577,9 +5568,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Street != null)
+				if (this.Entity.Address != null && this.Entity.Address.Street != null)
 				{
-					return this.MailContact.Address.Street.Complement;
+					return this.Entity.Address.Street.Complement;
 				}
 				else
 				{
@@ -5588,17 +5579,17 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Street == null)
+				if (this.Entity.Address.Street == null)
 				{
-					this.MailContact.Address.Street = new Entities.StreetEntity ();
+					this.Entity.Address.Street = new Entities.StreetEntity ();
 				}
 
-				this.MailContact.Address.Street.Complement = value;
+				this.Entity.Address.Street.Complement = value;
 			}
 		}
 
@@ -5606,9 +5597,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.PostBox != null)
+				if (this.Entity.Address != null && this.Entity.Address.PostBox != null)
 				{
-					return this.MailContact.Address.PostBox.Number;
+					return this.Entity.Address.PostBox.Number;
 				}
 				else
 				{
@@ -5617,17 +5608,17 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.PostBox == null)
+				if (this.Entity.Address.PostBox == null)
 				{
-					this.MailContact.Address.PostBox = new Entities.PostBoxEntity ();
+					this.Entity.Address.PostBox = new Entities.PostBoxEntity ();
 				}
 
-				this.MailContact.Address.PostBox.Number = value;
+				this.Entity.Address.PostBox.Number = value;
 			}
 		}
 
@@ -5635,9 +5626,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null)
 				{
-					return this.MailContact.Address.Location.PostalCode;
+					return this.Entity.Address.Location.PostalCode;
 				}
 				else
 				{
@@ -5646,17 +5637,17 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				this.MailContact.Address.Location.PostalCode = value;
+				this.Entity.Address.Location.PostalCode = value;
 			}
 		}
 
@@ -5664,9 +5655,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null)
 				{
-					return this.MailContact.Address.Location.Name;
+					return this.Entity.Address.Location.Name;
 				}
 				else
 				{
@@ -5675,17 +5666,17 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				this.MailContact.Address.Location.Name = value;
+				this.Entity.Address.Location.Name = value;
 			}
 		}
 
@@ -5693,9 +5684,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null && this.Entity.Address.Location.Country != null)
 				{
-					return this.MailContact.Address.Location.Country.Name;
+					return this.Entity.Address.Location.Country.Name;
 				}
 				else
 				{
@@ -5704,22 +5695,22 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				if (this.MailContact.Address.Location.Country == null)
+				if (this.Entity.Address.Location.Country == null)
 				{
-					this.MailContact.Address.Location.Country = new Entities.CountryEntity ();
+					this.Entity.Address.Location.Country = new Entities.CountryEntity ();
 				}
 
-				this.MailContact.Address.Location.Country.Name = value;
+				this.Entity.Address.Location.Country.Name = value;
 			}
 		}
 
@@ -5727,9 +5718,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null && this.Entity.Address.Location.Country != null)
 				{
-					return this.MailContact.Address.Location.Country.Code;
+					return this.Entity.Address.Location.Country.Code;
 				}
 				else
 				{
@@ -5738,22 +5729,22 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				if (this.MailContact.Address.Location.Country == null)
+				if (this.Entity.Address.Location.Country == null)
 				{
-					this.MailContact.Address.Location.Country = new Entities.CountryEntity ();
+					this.Entity.Address.Location.Country = new Entities.CountryEntity ();
 				}
 
-				this.MailContact.Address.Location.Country.Code = value;
+				this.Entity.Address.Location.Country.Code = value;
 			}
 		}
 
@@ -5761,9 +5752,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Region != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null && this.Entity.Address.Location.Region != null)
 				{
-					return this.MailContact.Address.Location.Region.Name;
+					return this.Entity.Address.Location.Region.Name;
 				}
 				else
 				{
@@ -5772,22 +5763,22 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				if (this.MailContact.Address.Location.Region == null)
+				if (this.Entity.Address.Location.Region == null)
 				{
-					this.MailContact.Address.Location.Region = new Entities.RegionEntity ();
+					this.Entity.Address.Location.Region = new Entities.RegionEntity ();
 				}
 
-				this.MailContact.Address.Location.Region.Name = value;
+				this.Entity.Address.Location.Region.Name = value;
 			}
 		}
 
@@ -5795,9 +5786,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Region != null)
+				if (this.Entity.Address != null && this.Entity.Address.Location != null && this.Entity.Address.Location.Region != null)
 				{
-					return this.MailContact.Address.Location.Region.Code;
+					return this.Entity.Address.Location.Region.Code;
 				}
 				else
 				{
@@ -5806,22 +5797,22 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.MailContact.Address == null)
+				if (this.Entity.Address == null)
 				{
-					this.MailContact.Address = new Entities.AddressEntity ();
+					this.Entity.Address = new Entities.AddressEntity ();
 				}
 
-				if (this.MailContact.Address.Location == null)
+				if (this.Entity.Address.Location == null)
 				{
-					this.MailContact.Address.Location = new Entities.LocationEntity ();
+					this.Entity.Address.Location = new Entities.LocationEntity ();
 				}
 
-				if (this.MailContact.Address.Location.Region == null)
+				if (this.Entity.Address.Location.Region == null)
 				{
-					this.MailContact.Address.Location.Region = new Entities.RegionEntity ();
+					this.Entity.Address.Location.Region = new Entities.RegionEntity ();
 				}
 
-				this.MailContact.Address.Location.Region.Code = value;
+				this.Entity.Address.Location.Region.Code = value;
 			}
 		}
 
