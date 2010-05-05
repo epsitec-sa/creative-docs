@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
 	/// Classe de base de SummaryTile et EditionTile, qui représente une entité.
-	/// Son parent est forcément un TileGrouping.
+	/// Son parent est forcément un GroupingTile.
 	/// </summary>
 	public abstract class AbstractTile : ContainerTile
 	{

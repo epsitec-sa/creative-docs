@@ -246,22 +246,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.IsEditing)
 			{
-				return ArrowedTile.BackgroundEditingColor;
+				return ArrowedTile.SurfaceEditingColor;
 			}
 			else
 			{
 				if (this.enteredSensitivity && (this.IsEntered || this.HasEnteredChildren))
 				{
-					return ArrowedTile.BackgroundSurfaceHilitedColor;
+					return ArrowedTile.SurfaceHilitedColor;
 				}
 
 				if (this.HasSelectedChildren)
 				{
-					return ArrowedTile.BackgroundSelectedGroupingColor;
+					return ArrowedTile.SurfaceSelectedGroupingColor;
 				}
 			}
 
-			return ArrowedTile.BackgroundSummaryColor;
+			return ArrowedTile.SurfaceSummaryColor;
 		}
 
 		private Color GetOutlineColor()
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren) && (!this.HasSelectedChildren || this.HasManyChildren))
 				{
-					return ArrowedTile.BackgroundOutlineHilitedColor;
+					return ArrowedTile.ThicknessHilitedColor;
 				}
 			}
 
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-				return ArrowedTile.BackgroundSurfaceHilitedColor;
+				return ArrowedTile.SurfaceHilitedColor;
 			}
 		}
 
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-				return ArrowedTile.BackgroundOutlineHilitedColor;
+				return ArrowedTile.ThicknessHilitedColor;
 			}
 		}
 

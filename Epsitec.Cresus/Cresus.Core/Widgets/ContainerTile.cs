@@ -167,23 +167,23 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.IsEditing)
 			{
-				return ArrowedTile.BackgroundEditingColor;
+				return ArrowedTile.SurfaceEditingColor;
 			}
 			else
 			{
 				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer && this.IsSelected)
 				{
-					return ArrowedTile.BackgroundSurfaceHilitedColor;
+					return ArrowedTile.SurfaceHilitedColor;
 				}
 
 				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
 				{
-					return ArrowedTile.BackgroundOutlineHilitedColor;
+					return ArrowedTile.ThicknessHilitedColor;
 				}
 
 				if (this.IsSelected && !this.IsSoloContainer)
 				{
-					return ArrowedTile.BackgroundSelectedContainerColor;
+					return ArrowedTile.SurfaceSelectedContainerColor;
 				}
 			}
 
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-				return ArrowedTile.BackgroundOutlineHilitedColor;
+				return ArrowedTile.ThicknessHilitedColor;
 			}
 		}
 

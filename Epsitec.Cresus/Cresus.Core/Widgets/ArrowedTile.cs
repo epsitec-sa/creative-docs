@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 	/// <summary>
 	/// Conteneur de base pour toutes les tuiles, qui s'occupe de dessiner l'éventuelle flèche.
+	/// On indique à ce widget comment il doit dessiner, sans qu'il n'ait aucune connaissance de la logique liée.
 	/// </summary>
 	public class ArrowedTile : FrameBox
 	{
@@ -406,7 +407,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static Color BackgroundSummaryColor
+		public static Color SurfaceSummaryColor
 		{
 			get
 			{
@@ -415,7 +416,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static Color BackgroundEditingColor
+		public static Color SurfaceEditingColor
 		{
 			get
 			{
@@ -424,7 +425,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static Color BackgroundSelectedGroupingColor
+		public static Color SurfaceSelectedGroupingColor
 		{
 			get
 			{
@@ -433,7 +434,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static Color BackgroundSelectedContainerColor
+		public static Color SurfaceSelectedContainerColor
 		{
 			get
 			{
@@ -442,16 +443,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static Color BackgroundSurfaceHilitedColor
+		public static Color SurfaceHilitedColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffeec2");  // orange
+				return Color.FromHexa ("ffeec2");  // orange pâle
 			}
 		}
 
-		public static Color BackgroundOutlineHilitedColor
+		public static Color ThicknessHilitedColor
 		{
 			get
 			{
