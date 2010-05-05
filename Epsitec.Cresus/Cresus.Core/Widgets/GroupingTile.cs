@@ -193,23 +193,25 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			PaintingArrowMode mode = this.GetPaintingArrowMode ();
-			Color thicknessColor = this.GetThicknessColor ();
-			Color outlineColor = this.GetOutlineColor ();
-			Color surfaceColor = this.GetSurfaceColor ();
+			Color surfaceColor     = this.GetSurfaceColor ();
+			Color outlineColor     = this.GetOutlineColor ();
+			Color thicknessColor   = this.GetThicknessColor ();
 
-			this.PaintArrow (graphics, clipRect, mode, thicknessColor, outlineColor, surfaceColor);
+			this.PaintArrow (graphics, clipRect, mode, surfaceColor, outlineColor, thicknessColor);
 		}
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-#if false
-			PaintingArrowMode mode = this.GetRevertPaintingArrowMode ();
-			Color thicknessColor = this.GetRevertThicknessColor ();
-			Color outlineColor = this.GetRevertOutlineColor ();
-			Color surfaceColor = this.GetRevertSurfaceColor ();
+			PaintingArrowMode mode = this.GetPaintingArrowMode ();
 
-			this.PaintRevertArrow (graphics, clipRect, mode, thicknessColor, outlineColor, surfaceColor);
-#endif
+			if (mode == Widgets.PaintingArrowMode.Revert)
+			{
+				Color surfaceColor   = this.GetRevertSurfaceColor ();
+				Color outlineColor   = this.GetRevertOutlineColor ();
+				Color thicknessColor = this.GetRevertThicknessColor ();
+
+				this.PaintRevertArrow (graphics, clipRect, surfaceColor, outlineColor, thicknessColor);
+			}
 		}
 
 
@@ -221,6 +223,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
+				if (this.enteredSensitivity && this.IsEntered && !this.HasManyChildren && this.HasSelectedChildren)
+				{
+					return Widgets.PaintingArrowMode.Revert;
+				}
+
 				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren))
 				{
 					return Widgets.PaintingArrowMode.Normal;
@@ -270,7 +277,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren))
+				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren) && (!this.HasSelectedChildren || this.HasManyChildren))
 				{
 					return ArrowedTile.BackgroundOutlineHilitedColor;
 				}
@@ -280,35 +287,21 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private PaintingArrowMode GetRevertPaintingArrowMode()
-		{
-			if (this.IsEditing)
-			{
-				return Widgets.PaintingArrowMode.None;
-			}
-			else
-			{
-			}
-
-			return Widgets.PaintingArrowMode.None;
-		}
-
 		private Color GetRevertSurfaceColor()
 		{
 			if (this.IsEditing)
 			{
-				return ArrowedTile.BackgroundEditingColor;
+				return Color.Empty;
 			}
 			else
 			{
+				return ArrowedTile.BackgroundSurfaceHilitedColor;
 			}
-
-			return Color.Empty;
 		}
 
 		private Color GetRevertOutlineColor()
 		{
-			return Color.Empty;
+			return ArrowedTile.BorderColor;
 		}
 
 		private Color GetRevertThicknessColor()
@@ -319,53 +312,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
-			}
-
-			return Color.Empty;
-		}
-
-
-#if false
-		private bool HasArrow
-		{
-			get
-			{
-				return !this.IsEditing && (this.IsEntered || this.HasSelectedChildren || this.HasEnteredChildren);
+				return ArrowedTile.BackgroundOutlineHilitedColor;
 			}
 		}
 
-		private bool HasRevertedArrow
-		{
-			get
-			{
-				return this.HasSelectedChildren && this.HasMouseHilite;
-			}
-		}
-
-		private bool HasMouseHilite
-		{
-			get
-			{
-				return !this.IsEditing && (this.IsEntered || this.HasEnteredChildren) && this.enteredSensitivity;
-			}
-		}
-#endif
-
-		private bool HasExpandableChildren
-		{
-			get
-			{
-				foreach (var containerTile in this.childrenTiles)
-				{
-					if (containerTile.IsEntered && !containerTile.IsSelected)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
 
 		private bool HasManyChildren
 		{
