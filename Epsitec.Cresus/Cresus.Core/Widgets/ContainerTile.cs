@@ -132,9 +132,12 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			//	Dessine toujours le fond.
-			graphics.Rasterizer.AddSurface (surfacePath);
-			graphics.RenderSolid (this.BackgroundColor);
+			//	Dessine le fond.
+			if (this.HasMouseHilite || this.HasArrow || this.HasRevertedArrow)
+			{
+				graphics.Rasterizer.AddSurface (surfacePath);
+				graphics.RenderSolid (this.BackgroundColor);
+			}
 
 			//	Dessine le hilite sous forme d'une jolie bordure orange, en accord avec l'adorner utilisé (mais pas les autres).
 			if (enteredPath != null)
