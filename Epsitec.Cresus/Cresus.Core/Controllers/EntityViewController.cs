@@ -254,42 +254,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 
-		/// <summary>
-		/// Met le focus dans la tuile éditable sur le premier widget pertinent.
-		/// </summary>
-		protected void SetInitialFocus()
-		{
-			System.Diagnostics.Debug.Assert (this.container != null);
-
-			this.SetInitialFocus(this.container);
-		}
-
-		private bool SetInitialFocus(Widget parent)
-		{
-			foreach (Widget widget in parent.Children)
-			{
-				if (widget is AbstractTextField)
-				{
-					var textField = widget as AbstractTextField;
-
-					textField.SelectAll ();
-					textField.Focus ();
-
-					return true;
-				}
-
-				if (widget.Children != null && widget.Children.Count != 0)
-				{
-					if (this.SetInitialFocus (widget))
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
 
 		#region Tiles content creation
 		protected void CreateLinkButtons(Widget embedder)

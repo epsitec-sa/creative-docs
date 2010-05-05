@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="container">The container.</param>
 		public abstract void CreateUI(Widget container);
 
-		
 
 		protected override void Dispose(bool disposing)
 		{

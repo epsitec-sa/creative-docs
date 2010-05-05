@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.CreateTextFieldMulti (tile.Container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
 				}
 
-				this.SetInitialFocus ();
+				UI.SetInitialFocus (this.container);
 			}
 			else
 			{
