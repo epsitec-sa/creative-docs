@@ -19,7 +19,16 @@ namespace Epsitec.Cresus.Core
 			this.controller = controller;
 		}
 
-		public Widgets.GroupingTile CreateGroupingTile(string iconUri, string title, bool isEditing)
+		public Widgets.GroupingTile CreateEditionGroupingTile(string iconUri, string title)
+		{
+			var group = this.CreateSummaryGroupingTile (iconUri, title);
+
+			group.IsEditing = true;
+
+			return group;
+		}
+
+		public Widgets.GroupingTile CreateSummaryGroupingTile(string iconUri, string title)
 		{
 			var group = new Widgets.GroupingTile
 			{
@@ -28,7 +37,6 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 0, 0, 5),
 				TopLeftIconUri = iconUri,
 				Title = title,
-				IsEditing = isEditing,
 			};
 
 			return group;

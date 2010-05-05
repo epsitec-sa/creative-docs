@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée les tuiles pour les adresses postales.
 			if (groupMail)
 			{
-				group = builder.CreateGroupingTile ("Data.Mail", "Adresse", false);
+				group = builder.CreateSummaryGroupingTile ("Data.Mail", "Adresse");
 			}
 
 			count = 0;
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 					if (!groupMail)
 					{
-						group = builder.CreateGroupingTile ("Data.Mail", accessor.Title, false);
+						group = builder.CreateSummaryGroupingTile ("Data.Mail", accessor.Title);
 					}
 
 					builder.CreateSummaryTile (group, accessor);
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (!groupMail)
 				{
-					group = builder.CreateGroupingTile ("Data.Mail", "Adresse", false);
+					group = builder.CreateSummaryGroupingTile ("Data.Mail", "Adresse");
 				}
 
 				var emptyEntity = new Entities.MailContactEntity ();
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée les tuiles pour les numéros de téléphone.
 			if (groupTelecom)
 			{
-				group = builder.CreateGroupingTile ("Data.Telecom", "Téléphone", false);
+				group = builder.CreateSummaryGroupingTile ("Data.Telecom", "Téléphone");
 			}
 
 			count = 0;
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 					if (!groupTelecom)
 					{
-						group = builder.CreateGroupingTile ("Data.Telecom", accessor.Title, false);
+						group = builder.CreateSummaryGroupingTile ("Data.Telecom", accessor.Title);
 					}
 
 					builder.CreateSummaryTile (group, accessor);
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (!groupTelecom)
 				{
-					group = builder.CreateGroupingTile ("Data.Telecom", "Téléphone", false);
+					group = builder.CreateSummaryGroupingTile ("Data.Telecom", "Téléphone");
 				}
 
 				var emptyEntity = new Entities.TelecomContactEntity ();
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée les tuiles pour les adresses mail.
 			if (groupUri)
 			{
-				group = builder.CreateGroupingTile ("Data.Uri", "Mail", false);
+				group = builder.CreateSummaryGroupingTile ("Data.Uri", "Mail");
 			}
 
 			count = 0;
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 					if (!groupUri)
 					{
-						group = builder.CreateGroupingTile ("Data.Uri", accessor.Title, false);
+						group = builder.CreateSummaryGroupingTile ("Data.Uri", accessor.Title);
 					}
 
 					builder.CreateSummaryTile (group, accessor);
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (!groupUri)
 				{
-					group = builder.CreateGroupingTile ("Data.Uri", "Mail", false);
+					group = builder.CreateSummaryGroupingTile ("Data.Uri", "Mail");
 				}
 
 				var emptyEntity = new Entities.UriContactEntity ();
