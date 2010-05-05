@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateLinkButtons (tile.Container);
 
-			builder.CreateHintEditor (tile.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, EntitiesAccessors.MailContactAccessor.countryConverter);
+			builder.CreateHintEditor (tile.Container, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, EntitiesAccessors.MailContactAccessor.countryConverter);
 
 			builder.CreateMargin (tile.Container, true);
 
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
 			builder.CreateTextField (tile.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
 
-			builder.CreateHintEditor (tile.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, EntitiesAccessors.MailContactAccessor.regionConverter);
-			builder.CreateHintEditor (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, EntitiesAccessors.MailContactAccessor.locationConverter);
+			builder.CreateHintEditor (tile.Container, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, EntitiesAccessors.MailContactAccessor.regionConverter);
+			builder.CreateHintEditor (tile.Container, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, EntitiesAccessors.MailContactAccessor.locationConverter);
 
 			UI.SetInitialFocus (container);
 		}
