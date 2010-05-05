@@ -13,16 +13,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionMailContactViewController : EntityViewController
+	public class EditionMailContactViewController : EntityViewController<Entities.MailContactEntity>
 	{
-		public EditionMailContactViewController(string name, AbstractEntity entity)
+		public EditionMailContactViewController(string name, Entities.MailContactEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -30,8 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			UIBuilder builder = new UIBuilder (container);
 			Widgets.GroupingTile group;
 
-			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.MailContactAccessor (null, this.Entity as Entities.MailContactEntity, false);
+			var accessor = new EntitiesAccessors.MailContactAccessor (null, this.Entity, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();

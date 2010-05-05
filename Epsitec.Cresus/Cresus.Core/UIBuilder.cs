@@ -411,6 +411,18 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static double GetContentHeight(Widget container)
+		{
+			Common.Widgets.Layouts.LayoutContext.SyncMeasure (container);
+			
+			double currentHeight = 0;
+			foreach (Widget widget in container.Children)
+			{
+				currentHeight += Epsitec.Common.Widgets.Layouts.LayoutMeasure.GetHeight (widget).Desired;
+				currentHeight += widget.Margins.Height;
+			}
+			return currentHeight;
+		}
 		
 		private static void CreateTextFieldHandler(Widget textField, System.Action<string> valueSetter, System.Func<string, bool> validator)
 		{

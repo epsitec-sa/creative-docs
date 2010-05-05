@@ -17,24 +17,20 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class EntityViewController : CoreViewController
 	{
-		public EntityViewController(string name, AbstractEntity entity)
+		protected EntityViewController(string name)
 			: base (name)
 		{
-			this.entity = entity;
 		}
-
-		public AbstractEntity Entity
-		{
-			get
-			{
-				return this.entity;
-			}
-		}
-
 		public Orchestrators.DataViewOrchestrator Orchestrator
 		{
 			get;
 			set;
+		}
+
+
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			yield break;
 		}
 
 
@@ -51,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return controller;
 		}
-		
+
 		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 		{
 			if (mode == ViewControllerMode.None)
@@ -67,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 				else
 				{
-					return new EditionNaturalPersonViewController (name, entity);
+					return new EditionNaturalPersonViewController (name, entity as Entities.NaturalPersonEntity);
 				}
 			}
 
@@ -79,48 +75,63 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 				else
 				{
-					return new EditionLegalPersonViewController (name, entity);
+					return new EditionLegalPersonViewController (name, entity as Entities.LegalPersonEntity);
 				}
 			}
 
 			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
 			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
 			{
-				return new EditionRolesContactViewController (name, entity);
+				return new EditionRolesContactViewController (name, entity as Entities.AbstractContactEntity);
 			}
 
 			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
 			{
-				return new EditionTelecomTypeViewController (name, entity);
+				return new EditionTelecomTypeViewController (name, entity as Entities.TelecomContactEntity);
 			}
 
 			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
 			{
-				return new EditionUriSchemeViewController (name, entity);
+				return new EditionUriSchemeViewController (name, entity as Entities.UriContactEntity);
 			}
 
 			//	Après...
 			if (entity is Entities.MailContactEntity)
 			{
-				return new EditionMailContactViewController (name, entity);
+				return new EditionMailContactViewController (name, entity as Entities.MailContactEntity);
 			}
 
 			if (entity is Entities.TelecomContactEntity)
 			{
-				return new EditionTelecomContactViewController (name, entity);
+				return new EditionTelecomContactViewController (name, entity as Entities.TelecomContactEntity);
 			}
 
 			if (entity is Entities.UriContactEntity)
 			{
-				return new EditionUriContactViewController (name, entity);
+				return new EditionUriContactViewController (name, entity as Entities.UriContactEntity);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...
 
 			return null;
 		}
+	}
 
+	public abstract class EntityViewController<T> : EntityViewController where T : AbstractEntity
+	{
+		protected EntityViewController(string name, T entity)
+			: base (name)
+		{
+			this.entity = entity;
+		}
 
+		public T Entity
+		{
+			get
+			{
+				return this.entity;
+			}
+		}
 
 
 		private void CreateEntity(Widgets.AbstractTile tile)
@@ -190,7 +201,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly AbstractEntity entity;
-		private int tabIndex;
+		private readonly T entity;
 	}
 }

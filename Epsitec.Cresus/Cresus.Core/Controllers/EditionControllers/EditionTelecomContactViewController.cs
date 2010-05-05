@@ -12,16 +12,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionTelecomContactViewController : EntityViewController
+	public class EditionTelecomContactViewController : EntityViewController<Entities.TelecomContactEntity>
 	{
-		public EditionTelecomContactViewController(string name, AbstractEntity entity)
+		public EditionTelecomContactViewController(string name, Entities.TelecomContactEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -32,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			Widgets.EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity as Entities.TelecomContactEntity, false);
+			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();

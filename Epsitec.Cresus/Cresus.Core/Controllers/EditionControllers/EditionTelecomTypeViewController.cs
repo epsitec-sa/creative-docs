@@ -13,16 +13,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionTelecomTypeViewController : EntityViewController
+	public class EditionTelecomTypeViewController : EntityViewController<Entities.AbstractContactEntity>
 	{
-		public EditionTelecomTypeViewController(string name, AbstractEntity entity)
+		public EditionTelecomTypeViewController(string name, Entities.AbstractContactEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -30,10 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			UIBuilder builder = new UIBuilder (container);
 			Widgets.GroupingTile group;
 
-			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var contact = this.Entity as Entities.AbstractContactEntity;
-			System.Diagnostics.Debug.Assert (contact != null);
-
+			var contact = this.Entity;
 			var accessor = new EntitiesAccessors.TelecomTypeAccessor (null, contact, false);
 
 			//	Crée les tuiles.

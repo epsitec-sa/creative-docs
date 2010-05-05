@@ -13,16 +13,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionUriContactViewController : EntityViewController
+	public class EditionUriContactViewController : EntityViewController<Entities.UriContactEntity>
 	{
-		public EditionUriContactViewController(string name, AbstractEntity entity)
+		public EditionUriContactViewController(string name, Entities.UriContactEntity entity)
 			: base (name, entity)
 		{
-		}
-
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -31,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			Widgets.GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
+			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();
