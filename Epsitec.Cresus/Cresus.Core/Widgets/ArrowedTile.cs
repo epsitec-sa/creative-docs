@@ -203,19 +203,19 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			this.PaintArrow (graphics, clipRect, this.paintingArrowMode, this.thicknessColor, this.outlineColor, this.surfaceColor);
+			this.PaintArrow (graphics, clipRect, this.paintingArrowMode, this.surfaceColor, this.outlineColor, this.thicknessColor);
 		}
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (this.paintingArrowMode == Widgets.PaintingArrowMode.Revert)
 			{
-				this.PaintRevertArrow (graphics, clipRect, this.paintingArrowMode, this.revertThicknessColor, this.revertOutlineColor, this.revertSurfaceColor);
+				this.PaintRevertArrow (graphics, clipRect, this.revertSurfaceColor, this.revertOutlineColor, this.revertThicknessColor);
 			}
 		}
 
 
-		protected void PaintArrow(Graphics graphics, Rectangle clipRect, PaintingArrowMode mode, Color thicknessColor, Color outlineColor, Color surfaceColor)
+		protected void PaintArrow(Graphics graphics, Rectangle clipRect, PaintingArrowMode mode, Color surfaceColor, Color outlineColor, Color thicknessColor)
 		{
 			if (surfaceColor.IsValid)
 			{
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		protected void PaintRevertArrow(Graphics graphics, Rectangle clipRect, PaintingArrowMode mode, Color thicknessColor, Color outlineColor, Color surfaceColor)
+		protected void PaintRevertArrow(Graphics graphics, Rectangle clipRect, Color surfaceColor, Color outlineColor, Color thicknessColor)
 		{
 			if (surfaceColor.IsValid)
 			{
@@ -263,7 +263,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			Rectangle bounds = this.Client.Bounds;
 			bounds.Deflate (deflate);
 
-			if (mode == Widgets.PaintingArrowMode.None)
+			if (mode == Widgets.PaintingArrowMode.Normal)
+			{
+				return ArrowedTile.GetArrowPath (bounds, this.arrowLocation);
+			}
+			else
 			{
 				Rectangle box;
 				Point pick;
@@ -272,10 +276,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				Path path = new Path ();
 				path.AppendRectangle (box);
 				return path;
-			}
-			else
-			{
-				return ArrowedTile.GetArrowPath (bounds, this.arrowLocation);
 			}
 		}
 
