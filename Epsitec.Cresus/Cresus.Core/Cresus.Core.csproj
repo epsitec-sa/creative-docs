@@ -89,20 +89,23 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\AbstractPersonViewController.cs" />
-    <Compile Include="Controllers\UriSchemeViewController.cs" />
-    <Compile Include="Controllers\TelecomTypeViewController.cs" />
-    <Compile Include="Controllers\RolesContactViewController.cs" />
-    <Compile Include="Controllers\UriContactViewController.cs" />
-    <Compile Include="Controllers\TelecomContactViewController.cs" />
-    <Compile Include="Controllers\MailContactViewController.cs" />
-    <Compile Include="Controllers\LegalPersonViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\AbstractEditionPersonViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionRolesContactViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionUriContactViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTelecomContactViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionMailContactViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
-    <Compile Include="Controllers\NaturalPersonViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\AbstractSummaryPersonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="CoreData.Hack.cs" />

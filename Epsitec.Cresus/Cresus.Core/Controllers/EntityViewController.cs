@@ -4,11 +4,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -75,44 +78,58 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entity is Entities.NaturalPersonEntity)
 			{
-				return new NaturalPersonViewController (name, entity, mode);
+				if (mode == ViewControllerMode.Compact)
+				{
+					return new SummaryNaturalPersonViewController (name, entity, mode);
+				}
+				else
+				{
+					return new EditionNaturalPersonViewController (name, entity, mode);
+				}
 			}
 
 			if (entity is Entities.LegalPersonEntity)
 			{
-				return new LegalPersonViewController (name, entity, mode);
+				if (mode == ViewControllerMode.Compact)
+				{
+					return new SummaryLegalPersonViewController (name, entity, mode);
+				}
+				else
+				{
+					return new EditionLegalPersonViewController (name, entity, mode);
+				}
 			}
 
 			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
 			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
 			{
-				return new RolesContactViewController (name, entity, mode);
+				return new EditionRolesContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
 			{
-				return new TelecomTypeViewController (name, entity, mode);
+				return new EditionTelecomTypeViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
 			{
-				return new UriSchemeViewController (name, entity, mode);
+				return new EditionUriSchemeViewController (name, entity, mode);
 			}
 
 			//	Après...
 			if (entity is Entities.MailContactEntity)
 			{
-				return new MailContactViewController (name, entity, mode);
+				return new EditionMailContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity)
 			{
-				return new TelecomContactViewController (name, entity, mode);
+				return new EditionTelecomContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.UriContactEntity)
 			{
-				return new UriContactViewController (name, entity, mode);
+				return new EditionUriContactViewController (name, entity, mode);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...

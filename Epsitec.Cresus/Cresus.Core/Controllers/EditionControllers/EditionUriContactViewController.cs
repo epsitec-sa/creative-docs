@@ -4,17 +4,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class TelecomContactViewController : EntityViewController
+	public class EditionUriContactViewController : EntityViewController
 	{
-		public TelecomContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public EditionUriContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)
 		{
 		}
@@ -28,10 +29,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.container = container;
 			Widgets.GroupingTile group;
-			Widgets.EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity as Entities.TelecomContactEntity, false);
+			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
 
 			//	Crée les tuiles.
 			this.CreateHeaderEditorTile ();
@@ -39,23 +39,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée le contenu de la tuile d'édition.
 			group = EntityViewController.CreateGroupingTile (this.container, "Data.Roles", "Rôles", false);
 
-			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.TelecomContact, false);
+			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);
 			this.CreateSummaryTile (group, roleAccessor, false, ViewControllerMode.RolesEdition);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = EntityViewController.CreateGroupingTile (this.container, "Data.Type", "Type", false);
 
-			var telecomTypeAccessor = new EntitiesAccessors.TelecomTypeAccessor (null, accessor.TelecomContact, false);
-			this.CreateSummaryTile (group, telecomTypeAccessor, false, ViewControllerMode.TelecomTypeEdition);
-
+			var uriSchemeAccessor = new EntitiesAccessors.UriSchemeAccessor (null, accessor.UriContact, false);
+			this.CreateSummaryTile (group, uriSchemeAccessor, false, ViewControllerMode.UriSchemeEdition);
+	
 			//	Crée le contenu de la tuile d'édition.
-			group = EntityViewController.CreateGroupingTile (this.container, "Data.Telecom", "Téléphone", true);
-			tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
+			group = EntityViewController.CreateGroupingTile (this.container, "Data.Uri", "Mail", true);
+			var tile = this.CreateEditionTile (group, accessor, ViewControllerMode.None);
 
 			this.CreateLinkButtons (tile.Container);
 
-			this.CreateTextField (tile.Container, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
-			this.CreateTextField (tile.Container, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
+			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 		}
