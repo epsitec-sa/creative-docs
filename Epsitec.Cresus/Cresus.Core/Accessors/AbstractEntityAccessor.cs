@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.Accessors
 			System.Diagnostics.Debug.Assert (entity != null);
 
 			this.entity = entity;
+
+			EntityNullReferenceVirtualizer.Virtualize (entity);
 		}
 
 		public T Entity
