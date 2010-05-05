@@ -160,6 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var tile = new Widgets.SummaryTile
 			{
 				Parent = parent.Container,
+				GroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = true,
@@ -188,6 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var tile = new Widgets.EditionTile
 			{
 				Parent = parent.Container,
+				GroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				ArrowEnabled = false,
