@@ -55,13 +55,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Widgets.GroupingTile ParentGroupingTile
-		{
-			get;
-			set;
-		}
-
-
 		public void OpenOrCloseSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
 		{
 			if (this.IsSelected)
