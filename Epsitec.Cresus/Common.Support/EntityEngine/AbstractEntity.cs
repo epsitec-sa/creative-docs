@@ -803,6 +803,34 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		internal void SetModifiedValues(IValueStore values)
+		{
+			this.modifiedValues = values;
+		}
+
+		internal IValueStore GetModifiedValues()
+		{
+			if (this.ModifiedValues == null)
+			{
+				this.CreateModifiedValues ();
+			}
+			return this.ModifiedValues;
+		}
+
+		internal void SetOriginalValues(IValueStore values)
+		{
+			this.originalValues = values;
+		}
+
+		internal IValueStore GetOriginalValues()
+		{
+			if (this.OriginalValues == null)
+			{
+				this.CreateOriginalValues ();
+			}
+			return this.OriginalValues;
+		}
+
 
 		/// <summary>
 		/// Resolves this instance; override this method if the entity is just
