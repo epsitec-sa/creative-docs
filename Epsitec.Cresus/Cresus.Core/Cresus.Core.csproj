@@ -102,7 +102,7 @@
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\AbstractSummaryPersonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAbstractPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />

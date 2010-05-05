@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (mode == ViewControllerMode.Compact)
 				{
-					return new SummaryNaturalPersonViewController (name, entity, mode);
+					return new SummaryNaturalPersonViewController (name, entity as Entities.NaturalPersonEntity, mode);
 				}
 				else
 				{
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (mode == ViewControllerMode.Compact)
 				{
-					return new SummaryLegalPersonViewController (name, entity, mode);
+					return new SummaryLegalPersonViewController (name, entity as Entities.LegalPersonEntity, mode);
 				}
 				else
 				{
