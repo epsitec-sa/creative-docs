@@ -69,14 +69,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.MailContactEntity)
 				{
-					var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail);
+					var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail)
+					{
+						EnableAddAndRemove = true,
+						ViewControllerMode = ViewControllerMode.Edition
+					};
+
 
 					if (!groupMail)
 					{
 						group = builder.CreateGroupingTile ("Data.Mail", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, true, ViewControllerMode.Edition);
+					builder.CreateSummaryTile (group, accessor, this);
 
 					count++;
 				}
@@ -92,8 +97,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.MailContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, emptyEntity, false);
-				builder.CreateSummaryTile (group, accessor, false, ViewControllerMode.Edition);
+				var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, emptyEntity, false)
+				{
+					ViewControllerMode = ViewControllerMode.Edition
+				};
+
+				builder.CreateSummaryTile (group, accessor, this);
 			}
 
 			//	Crée les tuiles pour les numéros de téléphone.
@@ -107,14 +116,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.TelecomContactEntity)
 				{
-					var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom);
+					var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom)
+					{
+						EnableAddAndRemove = true,
+						ViewControllerMode = ViewControllerMode.Edition
+					};
 
 					if (!groupTelecom)
 					{
 						group = builder.CreateGroupingTile ("Data.Telecom", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, true, ViewControllerMode.Edition);
+					builder.CreateSummaryTile (group, accessor, this);
 
 					count++;
 				}
@@ -130,8 +143,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.TelecomContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, emptyEntity, false);
-				builder.CreateSummaryTile (group, accessor, false, ViewControllerMode.Edition);
+				var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, emptyEntity, false)
+				{
+					ViewControllerMode = ViewControllerMode.Edition
+				};
+
+				builder.CreateSummaryTile (group, accessor, this);
 			}
 
 			//	Crée les tuiles pour les adresses mail.
@@ -145,14 +162,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.UriContactEntity)
 				{
-					var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri);
+					var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri)
+					{
+						EnableAddAndRemove = true,
+						ViewControllerMode = ViewControllerMode.Edition
+					};
+
 
 					if (!groupUri)
 					{
 						group = builder.CreateGroupingTile ("Data.Uri", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, true, ViewControllerMode.Edition);
+					builder.CreateSummaryTile (group, accessor, this);
 
 					count++;
 				}
@@ -168,8 +190,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.UriContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, emptyEntity, false);
-				builder.CreateSummaryTile (group, accessor, false, ViewControllerMode.Edition);
+				var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, emptyEntity, false)
+				{
+					ViewControllerMode = ViewControllerMode.Edition
+				};
+
+				builder.CreateSummaryTile (group, accessor, this);
 			}
 
 			builder.CreateFooterEditorTile ();

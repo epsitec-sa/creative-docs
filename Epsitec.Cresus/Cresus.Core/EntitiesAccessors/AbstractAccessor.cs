@@ -8,6 +8,7 @@ using System.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
@@ -53,6 +54,17 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 		}
 
+		public bool EnableAddAndRemove
+		{
+			get;
+			set;
+		}
+
+		public ViewControllerMode ViewControllerMode
+		{
+			get;
+			set;
+		}
 
 		public virtual string IconUri
 		{

@@ -21,11 +21,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 		}
-		public Orchestrators.DataViewOrchestrator Orchestrator
-		{
-			get;
-			set;
-		}
 
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -163,22 +158,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Orchestrator.CloseView (this);
 		}
 
-
-		private void HandleTileClicked(object sender, MessageEventArgs e)
-		{
-			//	Appelé lorsqu'une tuile quelconque est cliquée.
-			var tile = sender as Widgets.AbstractTile;
-
-			if (tile.IsSelected)
-			{
-				//	If the tile was selected, deselect it by closing its sub-view:
-				tile.CloseSubView (this.Orchestrator);
-			}
-			else
-			{
-				tile.OpenSubView (this.Orchestrator, this);
-			}
-		}
 
 		private void HandleTileCreateEntity(object sender)
 		{
