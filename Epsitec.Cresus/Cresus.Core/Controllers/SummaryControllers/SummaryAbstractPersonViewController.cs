@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.MailContactEntity)
 				{
-					var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail)
+					var accessor = new Accessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail)
 					{
 						EnableAddAndRemove = true,
 						ViewControllerMode = ViewControllerMode.Edition
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.MailContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, emptyEntity, false)
+				var accessor = new Accessors.MailContactAccessor (person.Contacts, emptyEntity, false)
 				{
 					ViewControllerMode = ViewControllerMode.Edition
 				};
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.TelecomContactEntity)
 				{
-					var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom)
+					var accessor = new Accessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom)
 					{
 						EnableAddAndRemove = true,
 						ViewControllerMode = ViewControllerMode.Edition
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.TelecomContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, emptyEntity, false)
+				var accessor = new Accessors.TelecomContactAccessor (person.Contacts, emptyEntity, false)
 				{
 					ViewControllerMode = ViewControllerMode.Edition
 				};
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (contact is Entities.UriContactEntity)
 				{
-					var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri)
+					var accessor = new Accessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri)
 					{
 						EnableAddAndRemove = true,
 						ViewControllerMode = ViewControllerMode.Edition
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				var emptyEntity = new Entities.UriContactEntity ();
 				person.Contacts.Add (emptyEntity);
 
-				var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, emptyEntity, false)
+				var accessor = new Accessors.UriContactAccessor (person.Contacts, emptyEntity, false)
 				{
 					ViewControllerMode = ViewControllerMode.Edition
 				};

@@ -10,7 +10,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Controllers;
 
-namespace Epsitec.Cresus.Core.EntitiesAccessors
+namespace Epsitec.Cresus.Core.Accessors
 {
 	public class AbstractAccessor
 	{

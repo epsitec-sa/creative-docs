@@ -9,7 +9,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.EntitiesAccessors
+namespace Epsitec.Cresus.Core.Accessors
 {
 	public class ComboInitializer
 	{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				}
 			}
 
-			return Misc.Combine (list, ", ");
+			return Misc.Join (list, ", ");
 		}
 
 		public string ConvertEditionToInternal(string text)
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				}
 			}
 
-			return Misc.Combine (list, ", ");
+			return Misc.Join (list, ", ");
 		}
 
 

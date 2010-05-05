@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var person = this.Entity;
 			var group = builder.CreateEditionGroupingTile ("Data.LegalPerson", "Personne morale");
 
-			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
+			var accessor = new Accessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
 			var tile = builder.CreateEditionTile (group, accessor);
 
 			builder.CreateFooterEditorTile ();

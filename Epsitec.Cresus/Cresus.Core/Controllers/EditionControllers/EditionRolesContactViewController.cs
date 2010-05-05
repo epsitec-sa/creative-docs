@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			Widgets.GroupingTile group;
 
 			var contact = this.Entity;
-			var accessor = new EntitiesAccessors.RolesContactAccessor (null, contact, false);
+			var accessor = new Accessors.RolesContactAccessor (null, contact, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();

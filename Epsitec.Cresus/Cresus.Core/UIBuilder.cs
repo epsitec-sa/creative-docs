@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor)
+		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, Accessors.AbstractAccessor accessor)
 		{
 			var tile = new Widgets.SummaryTile
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor)
+		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, Accessors.AbstractAccessor accessor)
 		{
 			var tile = new Widgets.EditionTile
 			{
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, EntitiesAccessors.BidirectionnalConverter converter)
+		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, Accessors.BidirectionnalConverter converter)
 		{
 			var staticText = new StaticText
 			{
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Core
 			return hint;
 		}
 
-		public Widget CreateCombo(Widget embedder, int width, string label, EntitiesAccessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		public Widget CreateCombo(Widget embedder, int width, string label, Accessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static void CreateHintHandler(Epsitec.Cresus.Core.Widgets.HintEditor hint, System.Action<string> callback1, System.Action<string> callback2, EntitiesAccessors.BidirectionnalConverter converter)
+		private static void CreateHintHandler(Epsitec.Cresus.Core.Widgets.HintEditor hint, System.Action<string> callback1, System.Action<string> callback2, Accessors.BidirectionnalConverter converter)
 		{
 			hint.EditionAccepted +=
 				delegate
