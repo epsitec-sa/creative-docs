@@ -45,8 +45,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
-		
-		public void SetEntity(AbstractEntity entity)
+
+		/// <summary>
+		/// Sets the active entity visible in the data view. This will collapse everything
+		/// back to just one root view controller.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		public void SetActiveEntity(AbstractEntity entity)
 		{
 			this.ClearActiveEntity ();
 
@@ -57,6 +62,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Clears the active entity and disposes any visible view controllers.
+		/// </summary>
 		public void ClearActiveEntity()
 		{
 			if (this.entity != null)
@@ -71,6 +79,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		/// <summary>
+		/// Adds a new view controller to the data view. The default is to add a new column
+		/// on the rightmost side of the view.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
 		public void PushViewController(CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
@@ -78,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreViewController parent = null;
 			if (this.viewControllers.Count != 0)
 			{
-				parent = this.viewControllers.Peek ();
+				parent = this.GetLeafController ();
 			}
 
 			var column = this.viewLayoutController.CreateColumn ();
@@ -112,15 +125,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
 
-			while (this.viewControllers.Peek () != controller)
+			while (this.GetLeafController () != controller)
 			{
 				this.PopViewController ();
 			}
 		}
 
+		private CoreViewController GetLeafController()
+		{
+			return this.viewControllers.Peek ();
+		}
+		
 		public void RebuildViewController()
 		{
-			var controller = this.viewControllers.Peek ();
+			var controller = this.GetLeafController ();
 			var column = this.viewLayoutController.LastColumn;
 			
 			column.Children.Clear ();

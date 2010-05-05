@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
@@ -58,5 +59,33 @@ namespace Epsitec.Cresus.Core.Widgets
 			get;
 			set;
 		}
+
+		
+		public void CloseSubView(Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			System.Diagnostics.Debug.Assert (this.subViewController != null);
+			System.Diagnostics.Debug.Assert (orchestrator != null);
+
+			orchestrator.CloseView (this.subViewController);
+		}
+
+		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		{
+			this.subViewController = EntityViewController.CreateViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
+
+			orchestrator.ShowSubView (parentController, this.subViewController);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.subViewController = null;
+			}
+
+			base.Dispose (disposing);
+		}
+
+		private CoreViewController subViewController;
 	}
 }
