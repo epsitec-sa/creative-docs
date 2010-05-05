@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		/// <summary>
 		/// Adds a new view controller to the data view. The default is to add a new column
-		/// on the rightmost side of the view.
+		/// on the rightmost side of the data view.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
 		public void PushViewController(CoreViewController controller)
@@ -93,6 +93,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			controller.CreateUI (column);
 		}
 
+		/// <summary>
+		/// Disposes the leaf view controller. The default is to remove the rightmost
+		/// column of the data view.
+		/// </summary>
 		public void PopViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
@@ -104,12 +108,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.viewLayoutController.DeleteColumn ();
 
-			if (this.viewControllers.Count > 0)
-			{
-				this.orchestrator.RebuildView ();
-			}
+			this.RebuildLeafViewController ();
 		}
 
+		/// <summary>
+		/// Disposes the leaf views until we reach the specified controller, which will
+		/// be left untouched. This disposes all sub-views of the specified controller.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
 		public void PopViewControllersUntil(CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
@@ -120,18 +126,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private CoreViewController GetLeafController()
+		internal void RebuildLeafViewController()
 		{
-			return this.viewControllers.Peek ();
-		}
-		
-		public void RebuildViewController()
-		{
-			var controller = this.GetLeafController ();
-			var column = this.viewLayoutController.LastColumn;
-			
-			column.Children.Clear ();
-			controller.CreateUI (column);
+			if (this.viewControllers.Count > 0)
+			{
+				var controller = this.GetLeafController ();
+				var column = this.viewLayoutController.LastColumn;
+
+				//	TODO: remove this -- it can't work reliably, since we don't dispose the previous
+				//	controller (and we cannot, by the way)
+
+				column.Children.Clear ();
+				controller.CreateUI (column);
+			}
 		}
 
 		private EntityViewController CreateCompactEntityViewController()
@@ -139,6 +146,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
 		}
 
+		private CoreViewController GetLeafController()
+		{
+			return this.viewControllers.Peek ();
+		}
+		
 
 		private readonly Stack<CoreViewController> viewControllers;
 		private readonly Orchestrators.DataViewOrchestrator orchestrator;

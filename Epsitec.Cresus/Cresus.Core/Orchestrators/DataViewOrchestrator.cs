@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// </summary>
 		public void RebuildView()
 		{
-			this.dataViewController.RebuildViewController ();
+			this.dataViewController.RebuildLeafViewController ();
 		}
 
 		
