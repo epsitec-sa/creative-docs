@@ -91,32 +91,28 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void PopViewController()
+		public void PopViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
 
 			var controller = this.viewControllers.Pop ();
 			controller.Dispose ();
+			
+			//	Remove the rightmost column in the layout:
+			
 			this.viewLayoutController.DeleteColumn ();
 
-			if (this.viewControllers.Count != 0)
+			if (this.viewControllers.Count > 0)
 			{
-				var parent = this.viewControllers.Peek ();
-				//?this.SelectViewController (parent, null);
 				this.orchestrator.RebuildView ();
 			}
 		}
 
-		public void PopViewControllersUntil(CoreViewController controller, bool andMe)
+		public void PopViewControllersUntil(CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
 
 			while (this.viewControllers.Peek () != controller)
-			{
-				this.PopViewController ();
-			}
-
-			if (andMe)
 			{
 				this.PopViewController ();
 			}

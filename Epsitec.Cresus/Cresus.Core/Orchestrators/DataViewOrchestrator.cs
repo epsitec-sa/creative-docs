@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="viewController">The view controller.</param>
 		public void CloseSubViews(CoreViewController viewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController, false);
+			this.dataViewController.PopViewControllersUntil (viewController);
 		}
 
 		/// <summary>
@@ -42,7 +42,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="viewController">The view controller.</param>
 		public void CloseView(CoreViewController viewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController, true);
+			this.dataViewController.PopViewControllersUntil (viewController);
+			this.dataViewController.PopViewController ();
 		}
 
 		/// <summary>
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="subViewController">The sub view controller.</param>
 		public void ShowSubView(CoreViewController viewController, CoreViewController subViewController)
 		{
-			this.dataViewController.PopViewControllersUntil (viewController, false);
+			this.dataViewController.PopViewControllersUntil (viewController);
 			this.dataViewController.PushViewController (subViewController);
 		}
 
