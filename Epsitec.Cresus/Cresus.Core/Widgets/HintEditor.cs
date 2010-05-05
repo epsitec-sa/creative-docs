@@ -174,12 +174,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		protected override void OnClicked(MessageEventArgs e)
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			base.OnClicked (e);
-
-			// TODO: Ne fonctionne pas. Comment faire pour qu'un clic sélectionne tout ?
+			// TODO: Ne fonctionne toujours pas.
 			this.SelectAll ();
+			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 
 		protected override void OnTextChanged()
