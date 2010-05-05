@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			UIBuilder builder = new UIBuilder (container);
+			UIBuilder builder = new UIBuilder (container, this);
 			
 			Widgets.GroupingTile group;
 			Widgets.EditionTile tile;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
 
-			builder.CreateSummaryTile (group, roleAccessor, this);
+			builder.CreateSummaryTile (group, roleAccessor);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Type", "Type", false);
@@ -50,11 +50,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ViewControllerMode = ViewControllerMode.TelecomTypeEdition
 			};
 
-			builder.CreateSummaryTile (group, telecomTypeAccessor, this);
+			builder.CreateSummaryTile (group, telecomTypeAccessor);
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateGroupingTile ("Data.Telecom", "Téléphone", true);
-			tile = builder.CreateEditionTile (group, accessor, this);
+			tile = builder.CreateEditionTile (group, accessor);
 
 			builder.CreateLinkButtons (tile.Container);
 

@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.Core
 {
 	public class UIBuilder
 	{
-		public UIBuilder(Widget container)
+		public UIBuilder(Widget container, CoreViewController controller)
 		{
 			this.container = container;
+			this.controller = controller;
 		}
 
 		public Widgets.GroupingTile CreateGroupingTile(string iconUri, string title, bool isEditing)
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, CoreViewController controller)
+		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor)
 		{
 			var tile = new Widgets.SummaryTile
 			{
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Core
 
 			tile.PreferredHeight = tile.ContentHeight;
 
-			UIBuilder.CreateTileHandler (tile, controller);
+			UIBuilder.CreateTileHandler (tile, this.controller);
 
 #if false
 			tile.CreateEntity += this.HandleTileCreateEntity;
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor, CoreViewController controller)
+		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, EntitiesAccessors.AbstractAccessor accessor)
 		{
 			var tile = new Widgets.EditionTile
 			{
@@ -86,7 +87,6 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
-#if true
 			var tile = new FrameBox
 			{
 				Parent = this.container,
@@ -116,11 +116,15 @@ namespace Epsitec.Cresus.Core
 				//?Margins = new Margins (2, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
 			};
 
-#if false
-			closeButton.Clicked += this.HandleCloseButtonClicked;
-#endif
 
-#endif
+			var controller   = this.controller;
+			var orchestrator = controller.Orchestrator;
+
+			closeButton.Clicked +=
+				delegate
+				{
+					orchestrator.CloseView (controller);
+				};
 		}
 
 		public void CreateFooterEditorTile()
@@ -494,6 +498,7 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 		private readonly Widget container;
+		private readonly CoreViewController controller;
 		private int tabIndex;
 	}
 }

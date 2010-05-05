@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public override void CreateUI(Widget container)
 		{
-			UIBuilder builder = new UIBuilder (container);
+			UIBuilder builder = new UIBuilder (container, this);
 			
 			builder.CreateHeaderEditorTile ();
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var group = builder.CreateGroupingTile ("Data.LegalPerson", "Personne morale", true);
 
 			var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
-			var tile = builder.CreateEditionTile (group, accessor, this);
+			var tile = builder.CreateEditionTile (group, accessor);
 
 			builder.CreateFooterEditorTile ();
 

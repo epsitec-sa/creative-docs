@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
-			UIBuilder builder = new UIBuilder (container);
+			UIBuilder builder = new UIBuilder (container, this);
 			Widgets.GroupingTile group = null;
 			int count;
 
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						group = builder.CreateGroupingTile ("Data.Mail", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, this);
+					builder.CreateSummaryTile (group, accessor);
 
 					count++;
 				}
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					ViewControllerMode = ViewControllerMode.Edition
 				};
 
-				builder.CreateSummaryTile (group, accessor, this);
+				builder.CreateSummaryTile (group, accessor);
 			}
 
 			//	Crée les tuiles pour les numéros de téléphone.
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						group = builder.CreateGroupingTile ("Data.Telecom", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, this);
+					builder.CreateSummaryTile (group, accessor);
 
 					count++;
 				}
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					ViewControllerMode = ViewControllerMode.Edition
 				};
 
-				builder.CreateSummaryTile (group, accessor, this);
+				builder.CreateSummaryTile (group, accessor);
 			}
 
 			//	Crée les tuiles pour les adresses mail.
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						group = builder.CreateGroupingTile ("Data.Uri", accessor.Title, false);
 					}
 
-					builder.CreateSummaryTile (group, accessor, this);
+					builder.CreateSummaryTile (group, accessor);
 
 					count++;
 				}
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					ViewControllerMode = ViewControllerMode.Edition
 				};
 
-				builder.CreateSummaryTile (group, accessor, this);
+				builder.CreateSummaryTile (group, accessor);
 			}
 
 			builder.CreateFooterEditorTile ();
