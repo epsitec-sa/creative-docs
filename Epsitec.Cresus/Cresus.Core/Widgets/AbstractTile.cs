@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Accessors.AbstractAccessor EntitiesAccessor
+		public Accessors.AbstractEntityAccessor EntitiesAccessor
 		{
 			get;
 			set;

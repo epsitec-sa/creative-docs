@@ -88,6 +88,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Accessors\AbstractEntityAccessor.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />

@@ -35,8 +35,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateFooterEditorTile ();
 
 			builder.CreateCombo (tile.Container, 150, "Titre", accessor.TitleInitializer, false, false, false, accessor.NaturalTitle, x => accessor.NaturalTitle = x, null);
-			builder.CreateTextField (tile.Container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile.Container, 0, "Nom", accessor.NaturalPerson.Lastname, x => accessor.NaturalPerson.Lastname = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 0, "Prénom", accessor.Entity.Firstname, x => accessor.Entity.Firstname = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 0, "Nom", accessor.Entity.Lastname, x => accessor.Entity.Lastname = x, Validators.StringValidator.Validate);
 			builder.CreateMargin (tile.Container, true);
 			builder.CreateCombo (tile.Container, 0, "Sexe", accessor.GenderInitializer, true, false, true, accessor.Gender, x => accessor.Gender = x, null);
 			builder.CreateTextField (tile.Container, 75, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);

@@ -13,9 +13,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionTelecomTypeViewController : EntityViewController<Entities.AbstractContactEntity>
+	public class EditionTelecomTypeViewController : EntityViewController<Entities.TelecomContactEntity>
 	{
-		public EditionTelecomTypeViewController(string name, Entities.AbstractContactEntity entity)
+		public EditionTelecomTypeViewController(string name, Entities.TelecomContactEntity entity)
 			: base (name, entity)
 		{
 		}

@@ -11,20 +11,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class TelecomTypeAccessor : AbstractAccessor
+	public class TelecomTypeAccessor : AbstractEntityAccessor<Entities.TelecomContactEntity>
 	{
-		public TelecomTypeAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public TelecomTypeAccessor(object parentEntities, Entities.TelecomContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.TelecomContactEntity TelecomContact
-		{
-			get
-			{
-				return this.Entity as Entities.TelecomContactEntity;
-			}
 		}
 
 
@@ -76,9 +67,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.TelecomContact.TelecomType != null)
+				if (this.Entity.TelecomType != null)
 				{
-					return this.TelecomTypeInitializer.ConvertInternalToEdition (this.TelecomContact.TelecomType.Code);
+					return this.TelecomTypeInitializer.ConvertInternalToEdition (this.Entity.TelecomType.Code);
 				}
 				else
 				{
@@ -87,12 +78,12 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.TelecomContact.TelecomType == null)
+				if (this.Entity.TelecomType == null)
 				{
-					this.TelecomContact.TelecomType = new Entities.TelecomTypeEntity ();
+					this.Entity.TelecomType = new Entities.TelecomTypeEntity ();
 				}
 
-				this.TelecomContact.TelecomType.Code = this.TelecomTypeInitializer.ConvertEditionToInternal(value);
+				this.Entity.TelecomType.Code = this.TelecomTypeInitializer.ConvertEditionToInternal (value);
 			}
 		}
 	}

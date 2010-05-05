@@ -11,20 +11,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class UriSchemeAccessor : AbstractContactAccessor
+	public class UriSchemeAccessor : AbstractContactAccessor<Entities.UriContactEntity>
 	{
-		public UriSchemeAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public UriSchemeAccessor(object parentEntities, Entities.UriContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
-		}
-
-
-		public Entities.UriContactEntity UriContact
-		{
-			get
-			{
-				return this.Entity as Entities.UriContactEntity;
-			}
 		}
 
 
@@ -77,9 +68,9 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.UriContact.UriScheme != null)
+				if (this.Entity.UriScheme != null)
 				{
-					return this.UriSchemeInitializer.ConvertInternalToEdition (this.UriContact.UriScheme.Code);
+					return this.UriSchemeInitializer.ConvertInternalToEdition (this.Entity.UriScheme.Code);
 				}
 				else
 				{
@@ -88,12 +79,12 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.UriContact.UriScheme == null)
+				if (this.Entity.UriScheme == null)
 				{
-					this.UriContact.UriScheme = new Entities.UriSchemeEntity ();
+					this.Entity.UriScheme = new Entities.UriSchemeEntity ();
 				}
 
-				this.UriContact.UriScheme.Code = this.UriSchemeInitializer.ConvertEditionToInternal(value);
+				this.Entity.UriScheme.Code = this.UriSchemeInitializer.ConvertEditionToInternal (value);
 			}
 		}
 	}

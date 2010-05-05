@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, Accessors.AbstractAccessor accessor)
+		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
 			var tile = new Widgets.SummaryTile
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core
 				ArrowEnabled = true,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
-				Entity = accessor.Entity,
+				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode,
 				EnableCreateAndRemoveButton = accessor.EnableAddAndRemove,
 				IsEditing = false,
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, Accessors.AbstractAccessor accessor)
+		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
 			var tile = new Widgets.EditionTile
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core
 				ArrowEnabled = false,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
-				Entity = accessor.Entity,
+				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode,
 				IsEditing = true,
 			};

@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateEntity(Widgets.AbstractTile tile)
 		{
-			Accessors.AbstractAccessor accessor = tile.EntitiesAccessor;
-			AbstractEntity newEntity = accessor.Create ();
+			var accessor = tile.EntitiesAccessor;
+			var newEntity = accessor.Create ();
 			CoreViewController controller = EntityViewController.CreateEntityViewController ("ViewController", newEntity, tile.ChildrenMode, this.Orchestrator);
 
 			this.Orchestrator.RebuildView ();
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void RemoveEntity(Widgets.AbstractTile tile)
 		{
-			Accessors.AbstractAccessor accessor = tile.EntitiesAccessor;
+			var accessor = tile.EntitiesAccessor;
 
 			Common.Dialogs.DialogResult result = Common.Dialogs.MessageDialog.ShowQuestion (accessor.RemoveQuestion, tile.Window);
 

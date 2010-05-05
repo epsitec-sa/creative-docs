@@ -11,9 +11,9 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class RolesContactAccessor : AbstractContactAccessor
+	public class RolesContactAccessor : AbstractContactAccessor<Entities.AbstractContactEntity>
 	{
-		public RolesContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public RolesContactAccessor(object parentEntities, Entities.AbstractContactEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
 		}
@@ -67,11 +67,11 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			get
 			{
-				if (this.AbstractContact.Roles != null)
+				if (this.Entity.Roles != null)
 				{
 					var words = new List<string> ();
 
-					foreach (Entities.ContactRoleEntity role in this.AbstractContact.Roles)
+					foreach (Entities.ContactRoleEntity role in this.Entity.Roles)
 					{
 						words.Add (role.Name);
 					}
@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 			set
 			{
-				if (this.AbstractContact.Roles != null)
+				if (this.Entity.Roles != null)
 				{
-					this.AbstractContact.Roles.Clear ();
+					this.Entity.Roles.Clear ();
 
 					if (!string.IsNullOrEmpty (value))
 					{
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Accessors
 						{
 							var role = new Entities.ContactRoleEntity ();
 							role.Name = word;
-							this.AbstractContact.Roles.Add (role);
+							this.Entity.Roles.Add (role);
 						}
 					}
 				}
