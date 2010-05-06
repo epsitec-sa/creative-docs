@@ -21,6 +21,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.selectedRow = -1;
+
+			this.hintListIndex = new List<int> ();
+			this.hintSelected = -1;
 		}
 
 		public HintEditor(Widget embedder)
@@ -149,7 +152,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HintSearching(string typed)
 		{
-			List<int> menuIndex = new List<int> ();
+			this.hintListIndex.Clear ();
 
 			typed = Misc.RemoveAccentsToLower (typed);
 
@@ -164,7 +167,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 					if (name.StartsWith (typed))
 					{
-						menuIndex.Add (i);
+						this.hintListIndex.Add (i);
 					}
 				}
 
@@ -177,31 +180,42 @@ namespace Epsitec.Cresus.Core.Widgets
 
 					if (!name.StartsWith (typed) && name.Contains (typed))
 					{
-						menuIndex.Add (i);
+						this.hintListIndex.Add (i);
 					}
 				}
 			}
 
-			if (menuIndex.Count == 0)
+			if (this.hintListIndex.Count == 0)
 			{
-				this.HintText = null;
-				this.SetError (!string.IsNullOrEmpty (this.Text));
+				this.hintSelected = -1;
 			}
 			else
 			{
-				int index = menuIndex[0];  // la première proposition
-
-				var item = this.items[index];
-
-				this.SelectedIndex = index;
-				this.HintText = item.ToString ();
-				this.SetError (false);
+				this.hintSelected = 0;  // la première proposition
 			}
 
-			if (menuIndex.Count > 1)
+			this.UseSelectedHint ();
+
+#if false
+			if (this.hintListIndex.Count <= 1)
 			{
-				this.OpenCombo (menuIndex);
+				if (this.IsComboOpen)
+				{
+					this.CloseCombo (CloseMode.JustClose);
+				}
 			}
+			else
+			{
+				if (this.IsComboOpen)
+				{
+					this.UpdateCombo ();
+				}
+				else
+				{
+					this.OpenCombo ();
+				}
+			}
+#endif
 		}
 
 
@@ -238,10 +252,69 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 
-		private void OpenCombo(List<int> menuIndex)
+		protected override bool ProcessKeyDown(Message message, Point pos)
+		{
+			//	Gère les pressions de touches (en particulier les flèches haut
+			//	et bas qui permettent de cycler le contenu).
+			switch (message.KeyCode)
+			{
+				case KeyCode.ArrowUp:
+					this.Navigate (-1);
+					return true;
+
+				case KeyCode.ArrowDown:
+					this.Navigate (1);
+					return true;
+			}
+
+			return base.ProcessKeyDown (message, pos);
+		}
+
+		private void Navigate(int dir)
+		{
+			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
+			//	n'est pas "déroulée".
+			if (this.hintListIndex.Count != 0)
+			{
+				int sel = this.hintSelected + dir;
+
+				if (sel < 0)
+				{
+					sel = this.hintListIndex.Count-1;
+				}
+
+				if (sel >= this.hintListIndex.Count)
+				{
+					sel = 0;
+				}
+
+				this.hintSelected = sel;
+
+				this.UseSelectedHint ();
+			}
+		}
+
+		private void UseSelectedHint()
+		{
+			if (this.hintSelected >= 0 && this.hintSelected < this.hintListIndex.Count)
+			{
+				int i = this.hintListIndex[this.hintSelected];
+
+				this.SelectedIndex = i;
+				this.HintText = this.items[i];
+				this.SetError (false);
+			}
+			else
+			{
+				this.HintText = null;
+				this.SetError (!string.IsNullOrEmpty (this.Text));
+			}
+		}
+
+		
+		private void OpenCombo()
 		{
 			//	Rend la liste visible et démarre l'interaction.
-
 			if (this.IsComboOpen)
 			{
 				return;
@@ -255,32 +328,27 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			this.menu = this.CreateMenu (menuIndex);
+			this.menu = this.CreateMenu ();
 
-			if (this.menu == null)
-			{
-				return;
-			}
-
-			this.menu.AutoDispose = true;
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point (0, 0)), this);
-
-			if (this.scrollList != null)
-			{
-				this.scrollList.SelectedIndex = this.MapIndexToComboList (0);
-				this.scrollList.ShowSelected (ScrollShowMode.Center);
-			}
+			this.UpdateScrollList ();
 
 			this.menu.Accepted += this.HandleMenuAccepted;
 			this.menu.Rejected += this.HandleMenuRejected;
 
-			if (this.scrollList != null)
-			{
-				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
-				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
-			}
+			this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+			this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 
 			this.OnComboOpened ();
+		}
+
+		private void UpdateCombo()
+		{
+			if (!this.IsComboOpen)
+			{
+				return;
+			}
+
+			this.UpdateScrollList ();
 		}
 
 		private void CloseCombo(CloseMode mode)
@@ -313,15 +381,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.scrollList = null;
 			}
 
-			//-			this.menu.Dispose ();
+			this.menu.Dispose ();
 			this.menu = null;
-
-			this.SelectAll ();
-
-			if (this.AutoFocus)
-			{
-				this.Focus ();
-			}
 
 			switch (mode)
 			{
@@ -341,46 +402,31 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static void AdjustComboSize(Widget parent, AbstractMenu menu, bool isScrollable)
-		{
-			menu.AdjustSize ();
-
-			if (isScrollable)
-			{
-				MenuItem.SetMenuHost (parent, new ScrollableMenuHost (menu));
-			}
-			else
-			{
-				MenuItem.SetMenuHost (parent, new FixMenuHost (menu));
-			}
-		}
-
-		public static void AdjustScrollListWidth(ScrollList scrollList)
-		{
-			Size size = scrollList.GetBestFitSizeBasedOnContent ();
-
-			scrollList.RowHeight      = size.Height;
-			scrollList.PreferredWidth = size.Width;
-		}
-
-		private AbstractMenu CreateMenu(List<int> menuIndex)
+		private HintComboMenu CreateMenu()
 		{
 			var menu = new HintComboMenu ();
 
+			menu.AutoDispose = true;
 			menu.MinWidth = this.ActualWidth;
 
 			this.scrollList = new ScrollList ();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 
-			menu.Contents = this.scrollList;
+			return menu;
+		}
 
-			//	Remplit la liste :
-			this.CopyItemsToComboList (menuIndex, this.scrollList.Items);
+		private void UpdateScrollList()
+		{
+			this.CopyItemsToComboList (this.hintListIndex, this.scrollList.Items);
+
+			this.scrollList.SelectedIndex = this.hintSelected;
+			//?this.scrollList.ShowSelected (ScrollShowMode.Center);
 
 			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
-			TextFieldCombo.AdjustComboSize (this, menu, true);
+			TextFieldCombo.AdjustComboSize (this, this.menu, true);
 
-			return menu;
+			this.menu.Contents = this.scrollList;
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point (0, 0)), this);
 		}
 
 		private void ProcessComboActivatedIndex(int sel)
@@ -388,12 +434,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
 			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
 			//	qui est appelée à chaque changement "visuel".
-
-			int index = this.MapComboListToIndex (sel);
-
-			if (index >= 0)
+			if (sel >= 0)
 			{
-				this.SelectedIndex = index;
+				this.SelectedIndex = sel;
 				this.menu.Behavior.Accept ();
 			}
 		}
@@ -403,12 +446,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	Met à jour le contenu de la combo en cas de changement de sélection
 			//	dans la liste.
 
-			this.SelectedIndex = this.MapComboListToIndex (sel);
+			this.SelectedIndex = sel;
 		}
 
 
 		private void CopyItemsToComboList(List<int> menuIndex, Common.Widgets.Collections.StringCollection list)
 		{
+			list.Clear ();
+
 			for (int index = 0; index < menuIndex.Count; index++)
 			{
 				int i = menuIndex[index];
@@ -420,20 +465,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private int MapComboListToIndex(int value)
-		{
-			return (value < 0) ? -1 : value;
-		}
-
-		private int MapIndexToComboList(int value)
-		{
-			return (value < 0) ? -1 : value;
-		}
-
 
 		#region CloseMode Enumeration
 		private enum CloseMode
 		{
+			JustClose,
 			Accept,
 			Reject
 		}
@@ -670,7 +706,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		
 		private readonly Common.Widgets.Collections.StringCollection items;
 		private int selectedRow;
-		private AbstractMenu menu;
+
+		private readonly List<int> hintListIndex;
+		private int hintSelected;
+
+		private HintComboMenu menu;
 		private ScrollList scrollList;
 	}
 }
