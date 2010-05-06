@@ -154,6 +154,7 @@
     <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbDataTableMapping.cs" />
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />
     <Compile Include="DbReader.cs" />
