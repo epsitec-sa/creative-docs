@@ -1840,7 +1840,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (dataTable.Rows.Count < minRows)
 			{
-				throw new Exceptions.GenericException (this.access, string.Format ("Query returned to few rows; expected {0}, found {1}", minRows, dataTable.Rows.Count));
+				throw new Exceptions.GenericException (this.access, string.Format ("Query returned too few rows; expected {0}, found {1}", minRows, dataTable.Rows.Count));
 			}
 			
 			return dataTable;

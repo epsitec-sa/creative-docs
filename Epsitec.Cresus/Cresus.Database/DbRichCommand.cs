@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 using Epsitec.Common.Types;
 
+using System.Linq;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -22,7 +24,8 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
-			this.rowCache = new Dictionary<string, TableCache> ();
+			this.dataRowCache = new Dictionary<string, DbDataTableMapping> ();
+			this.relationsRowCache = new Dictionary<string, DbDataTableMapping> ();
 		}
 
 		/// <summary>
@@ -710,53 +713,22 @@ namespace Epsitec.Cresus.Database
 		/// </returns>
 		public System.Data.DataRow FindRow(string tableName, DbId rowId)
 		{
-			long       rowIdValue = rowId.Value;
-			
-			TableCache tableCache;
-			System.Data.DataRow row;
+			System.Data.DataTable table = this.DataSet.Tables[tableName];
+			System.Data.DataRow row = null;
 
-			if (this.rowCache.TryGetValue (tableName, out tableCache))
+			if (table != null && table.Rows.Count > 0)
 			{
-				//	Table has already been analyzed and pre-cached.
-			}
-			else
-			{
-				System.Data.DataTable table = this.DataSet.Tables[tableName];
-
-				if (table == null)
+				if (!this.relationsRowCache.ContainsKey (tableName))
 				{
-					return null;
+					this.relationsRowCache[tableName] = new DbDataTableMapping (table, Tags.ColumnId);
 				}
 
-				tableCache = new TableCache (table);
-				int count = 0;
+				DbDataTableMapping tableCache = this.relationsRowCache[tableName];
 
-				DbRichCommand.IterateRows (table, table.Rows,
-					(r, id) =>
-					{
-						tableCache.RowCache[id] = r;
-						count++;
-						return false;
-					});
-
-				if (count == 0)
+				if (tableCache.Contains (rowId.Value))
 				{
-					return null;
+					row = tableCache.GetRow (rowId.Value);
 				}
-				
-				this.rowCache[tableName] = tableCache;
-			}
-			
-			if (tableCache.RowCache.TryGetValue (rowIdValue, out row))
-			{
-				return row;
-			}
-
-			row = DbRichCommand.FindRow (tableCache.Table, tableCache.Table.Rows, rowId);
-
-			if (row != null)
-			{
-				tableCache.RowCache[rowIdValue] = row;
 			}
 
 			return row;
@@ -764,41 +736,25 @@ namespace Epsitec.Cresus.Database
 
 		public IEnumerable<System.Data.DataRow> FindRelationRows(string tableName, DbId sourceRowId)
 		{
+			List<System.Data.DataRow> rows = new List<System.Data.DataRow> ();
 			System.Data.DataTable table = this.DataSet.Tables[tableName];
-			int columnRefSourceIdIndex = table.Columns.IndexOf (Tags.ColumnRefSourceId);
 
-			if (table == null)
+			if (table != null && table.Rows.Count > 0)
 			{
-				yield break;
-			}
-
-			// TODO Replace this loop by something efficient (maybe a select call on table), because
-			// this loop is the bottleneck of the application when querying large amount of data in
-			// a large database.
-
-			foreach (System.Data.DataRow row in table.Rows)
-			{
-				long rowIdValue;
-
-				switch (row.RowState)
+				if (!this.relationsRowCache.ContainsKey (tableName))
 				{
-					case System.Data.DataRowState.Deleted:
-						rowIdValue = (long) row[columnRefSourceIdIndex, System.Data.DataRowVersion.Original];
-						break;
-				
-					case System.Data.DataRowState.Detached:
-						continue;
-
-					default:
-						rowIdValue = (long) row[columnRefSourceIdIndex];
-						break;
+					this.relationsRowCache[tableName] = new DbDataTableMapping (table, Tags.ColumnRefSourceId);
 				}
 
-				if (sourceRowId.Value == rowIdValue)
+				DbDataTableMapping tableCache = this.relationsRowCache[tableName];
+
+				if (tableCache.Contains (sourceRowId.Value))
 				{
-					yield return row;
+					rows = tableCache.GetRows (sourceRowId.Value);
 				}
 			}
+
+			return rows;
 		}
 
 		public static IEnumerable<System.Data.DataRow> FilterExistingRows(IEnumerable<System.Data.DataRow> collection)
@@ -1512,6 +1468,7 @@ namespace Epsitec.Cresus.Database
 			return DbRichCommand.IterateRows (table, rows, (row, id) => rowIdValue == id);
 		}
 
+
 		private static System.Data.DataRow IterateRows(System.Data.DataTable table, System.Collections.IEnumerable rows, System.Func<System.Data.DataRow, long, bool> action)
 		{
 			int columnIdIndex = table.Columns.IndexOf (Tags.ColumnId);
@@ -1957,28 +1914,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		class TableCache
-		{
-			public TableCache(System.Data.DataTable table)
-			{
-				this.Table = table;
-				this.RowCache = new Dictionary<long, System.Data.DataRow> ();
-			}
-
-			public System.Data.DataTable Table
-			{
-				get;
-				private set;
-			}
-
-			public Dictionary<long, System.Data.DataRow> RowCache
-			{
-				get;
-				private set;
-			}
-		}
-
 		struct TableRowId : System.IEquatable<TableRowId>
 		{
 			public TableRowId(string tableName, long rowId)
@@ -2043,7 +1978,8 @@ namespace Epsitec.Cresus.Database
 		private DbAccess						access;
 		private List<System.Data.IDataAdapter>	adapters;
 
-		private readonly Dictionary<string, TableCache> rowCache;
+		private readonly Dictionary<string, DbDataTableMapping> dataRowCache;
+		private readonly Dictionary<string, DbDataTableMapping> relationsRowCache;
 
 		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		

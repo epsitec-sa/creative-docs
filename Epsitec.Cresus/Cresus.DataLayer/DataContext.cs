@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
 
-			System.Data.DataRow[] relationRows = Collection.ToArray (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
+			System.Data.DataRow[] relationRows = DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToArray ();
 
 			if (targetEntity != null)
 			{
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			string relationTableName = this.GetRelationTableName (entityId, fieldDef);
 
-			List<System.Data.DataRow> relationRows = Collection.ToList (DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)));
+			List<System.Data.DataRow> relationRows = DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToList ();
 			List<System.Data.DataRow> resultingRows = new List<System.Data.DataRow> ();
 
 			for (int i = 0; i < collection.Count; i++)
@@ -819,8 +819,10 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					yield break;
 				}
-
-				this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
+				else
+				{
+					this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
+				}
 			}
 		}
 
@@ -852,7 +854,8 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
-//					condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
+					// HACK Uncomment the next line if you don't want the whole table being loaded.
+					//condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
 					this.richCommand.ImportTable (transaction, tableDef, condition);
 					this.LoadTableRelationSchemas (transaction, tableDef);
 					transaction.Commit ();
@@ -880,7 +883,8 @@ namespace Epsitec.Cresus.DataLayer
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
-//				condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+				// HACK Uncomment the next line if you don't want the whole table being loaded.
+				//condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
 				this.richCommand.ImportTable (transaction, relationTableDef, condition);
 				transaction.Commit ();
 			}
