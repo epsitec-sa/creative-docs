@@ -466,8 +466,6 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			
 			this.menu = this.CreateMenu ();
 
 			if (this.menu == null)
