@@ -12,10 +12,21 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	public enum HintEditorComboMenu
+	{
+		Never,
+		IfReasonable,
+		Always,
+	}
+
+
 	public class HintEditor : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.INamedStringSelection
 	{
 		public HintEditor()
 		{
+			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
+			this.ComboMenuItemsLimit = 20;
+
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
 
@@ -31,6 +42,35 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.SetEmbedder (embedder);
 		}
+
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.CloseComboMenu ();
+			}
+
+			base.Dispose (disposing);
+		}
+
+
+		public HintEditorComboMenu HintEditorComboMenu
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Lorsque HintEditorComboMenu = IfReasonable, détermine à partir de combien le combo-menu est caché.
+		/// </summary>
+		/// <value>The combo menu items limit.</value>
+		public int ComboMenuItemsLimit
+		{
+			get;
+			set;
+		}
+
 
 		#region IStringCollectionHost Members
 
@@ -141,15 +181,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		#endregion
 
 
-		public virtual bool IsComboOpen
-		{
-			get
-			{
-				return this.menu != null;
-			}
-		}
-		
-
 		private void HintSearching(string typed)
 		{
 			this.hintListIndex.Clear ();
@@ -171,7 +202,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					}
 				}
 
-				//	Met ensuite les textes qui contiennent la propostion.
+				//	Met ensuite les textes qui contiennent la proposition.
 				for (int i=0; i<this.items.Count; i++)
 				{
 					var item = this.items[i];
@@ -196,26 +227,24 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.UseSelectedHint ();
 
-#if false
 			if (this.hintListIndex.Count <= 1)
 			{
-				if (this.IsComboOpen)
+				if (this.IsComboMenuOpen)
 				{
-					this.CloseCombo (CloseMode.JustClose);
+					this.CloseComboMenu ();
 				}
 			}
 			else
 			{
-				if (this.IsComboOpen)
+				if (this.IsComboMenuOpen)
 				{
-					this.UpdateCombo ();
+					this.UpdateComboMenuContent ();
 				}
 				else
 				{
-					this.OpenCombo ();
+					this.OpenComboMenu ();
 				}
 			}
-#endif
 		}
 
 
@@ -248,6 +277,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			base.OnEditionAccepted ();
 
 			this.Text = this.HintText;
+			this.CloseComboMenu ();
+		}
+
+		protected override void OnEditionRejected()
+		{
+			base.OnEditionRejected ();
+
+			this.CloseComboMenu ();
 		}
 
 
@@ -290,6 +327,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				this.hintSelected = sel;
 
+				this.UpdateComboMenuSelection ();
 				this.UseSelectedHint ();
 			}
 		}
@@ -311,397 +349,198 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		
-		private void OpenCombo()
+
+
+		private bool IsComboMenuOpen
 		{
-			//	Rend la liste visible et démarre l'interaction.
-			if (this.IsComboOpen)
+			get
+			{
+				return this.window != null;
+			}
+		}
+
+		private void OpenComboMenu()
+		{
+			if (this.IsComboMenuOpen)
 			{
 				return;
 			}
 
-			CancelEventArgs cancelEvent = new CancelEventArgs ();
-			this.OnComboOpening (cancelEvent);
-
-			if (cancelEvent.Cancel)
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
 			{
 				return;
 			}
 
-			this.menu = this.CreateMenu ();
-
-			this.UpdateScrollList ();
-
-			this.menu.Accepted += this.HandleMenuAccepted;
-			this.menu.Rejected += this.HandleMenuRejected;
-
-			this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
-			this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
-
-			this.OnComboOpened ();
-		}
-
-		private void UpdateCombo()
-		{
-			if (!this.IsComboOpen)
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+				this.hintListIndex.Count >= this.ComboMenuItemsLimit)
 			{
 				return;
 			}
 
-			this.UpdateScrollList ();
-		}
+			this.window = new Common.Widgets.Window ();
 
-		private void CloseCombo(CloseMode mode)
-		{
-			//	Ferme la liste (si nécessaire) et valide/rejette la modification
-			//	en fonction du mode spécifié.
-
-			if (this.menu.IsMenuOpen)
-			{
-				switch (mode)
-				{
-					case CloseMode.Reject:
-						this.menu.Behavior.Reject ();
-						return;
-					case CloseMode.Accept:
-						this.menu.Behavior.Accept ();
-						return;
-				}
-			}
-
-			this.menu.Accepted -= this.HandleMenuAccepted;
-			this.menu.Rejected -= this.HandleMenuRejected;
-
-			if (this.scrollList != null)
-			{
-				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
-
-				this.scrollList.Dispose ();
-				this.scrollList = null;
-			}
-
-			this.menu.Dispose ();
-			this.menu = null;
-
-			switch (mode)
-			{
-				case CloseMode.Reject:
-					this.RejectEdition ();
-					break;
-				case CloseMode.Accept:
-					this.AcceptEdition ();
-					break;
-			}
-
-			this.OnComboClosed ();
-
-			if (this.InitialText != this.Text)
-			{
-				this.OnSelectedIndexChanged ();
-			}
-		}
-
-		private HintComboMenu CreateMenu()
-		{
-			var menu = new HintComboMenu ();
-
-			menu.AutoDispose = true;
-			menu.MinWidth = this.ActualWidth;
+			this.window.Owner = this.Window;
+			this.window.MakeFramelessWindow ();
+			this.window.MakeFloatingWindow ();
+			this.window.DisableMouseActivation ();
 
 			this.scrollList = new ScrollList ();
+			this.scrollList.Parent = window.Root;
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+			this.scrollList.Dock = DockStyle.Fill;
+			this.scrollList.SelectionActivated += new EventHandler (this.HandleScrollListSelectionActivated);
 
-			return menu;
+			this.UpdateComboMenuContent ();
+
+			this.window.Show ();
 		}
+
+		private void UpdateComboMenuContent()
+		{
+			if (!this.IsComboMenuOpen)
+			{
+				return;
+			}
+
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+				this.hintListIndex.Count >= this.ComboMenuItemsLimit)
+			{
+				this.CloseComboMenu ();
+				return;
+			}
+
+			this.UpdateScrollList ();
+
+			Size bestSize = this.scrollList.GetBestFitSize ();
+			Size size = new Size (this.ActualWidth, bestSize.Height);
+
+			Point location = this.MapClientToScreen (new Point (0, 0));
+
+			location = new Point (location.X, location.Y-size.Height);
+
+			this.window.WindowLocation = location;
+			this.window.WindowSize = size;
+		}
+
+		private void UpdateComboMenuSelection()
+		{
+			if (!this.IsComboMenuOpen)
+			{
+				return;
+			}
+
+			this.ignoreChange = true;
+			this.scrollList.SelectedIndex = this.hintSelected;
+			this.ignoreChange = false;
+		}
+
+		private void CloseComboMenu()
+		{
+			if (!this.IsComboMenuOpen)
+			{
+				return;
+			}
+
+			this.window.Close ();
+			this.window = null;
+
+			this.scrollList.SelectionActivated -= new EventHandler (this.HandleScrollListSelectionActivated);
+			this.scrollList = null;
+		}
+
 
 		private void UpdateScrollList()
 		{
-			this.CopyItemsToComboList (this.hintListIndex, this.scrollList.Items);
+			this.scrollList.Items.Clear ();
 
-			this.scrollList.SelectedIndex = this.hintSelected;
-			//?this.scrollList.ShowSelected (ScrollShowMode.Center);
-
-			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
-			TextFieldCombo.AdjustComboSize (this, this.menu, true);
-
-			this.menu.Contents = this.scrollList;
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point (0, 0)), this);
-		}
-
-		private void ProcessComboActivatedIndex(int sel)
-		{
-			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			//	qui est appelée à chaque changement "visuel".
-			if (sel >= 0)
+			for (int index = 0; index < this.hintListIndex.Count; index++)
 			{
-				this.SelectedIndex = sel;
-				this.menu.Behavior.Accept ();
-			}
-		}
-
-		private void ProcessComboSelectedIndex(int sel)
-		{
-			//	Met à jour le contenu de la combo en cas de changement de sélection
-			//	dans la liste.
-
-			this.SelectedIndex = sel;
-		}
-
-
-		private void CopyItemsToComboList(List<int> menuIndex, Common.Widgets.Collections.StringCollection list)
-		{
-			list.Clear ();
-
-			for (int index = 0; index < menuIndex.Count; index++)
-			{
-				int i = menuIndex[index];
+				int i = this.hintListIndex[index];
 
 				string name = this.items.GetName (i);
 				string text = this.items[i];
 
-				list.Add (name, text);
+				this.scrollList.Items.Add (name, text);
 			}
+
+			this.ignoreChange = true;
+			this.scrollList.SelectedIndex = this.hintSelected;
+			this.ignoreChange = false;
+
+			Size size = this.scrollList.GetBestFitSizeBasedOnContent ();
+			this.scrollList.RowHeight      = size.Height;
+			this.scrollList.PreferredWidth = size.Width;
 		}
 
 
-		#region CloseMode Enumeration
-		private enum CloseMode
+#if false
+		private void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
 		{
-			JustClose,
-			Accept,
-			Reject
-		}
-		#endregion
+			//	Détermine la hauteur maximale disponible par rapport à la position
+			//	actuelle :
+			Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
+			Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
+			ScreenInfo screenInfo  = ScreenInfo.Find (hot);
+			Rectangle workingArea = screenInfo.WorkingArea;
 
+			double maxHeight = pos.Y - workingArea.Bottom;
 
-		#region ScrollableMenuHost Class
-		protected class ScrollableMenuHost : IMenuHost
-		{
-			public ScrollableMenuHost(AbstractMenu menu)
+			if (maxHeight > size.Height || maxHeight > 100)
 			{
-				this.menu = menu;
-			}
-
-
-			#region IMenuHost Members
-			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
-			{
-				//	Détermine la hauteur maximale disponible par rapport à la position
-				//	actuelle :
-				Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
-				Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
-				ScreenInfo screenInfo  = ScreenInfo.Find (hot);
-				Rectangle workingArea = screenInfo.WorkingArea;
-
-				double maxHeight = pos.Y - workingArea.Bottom;
-
-				if (maxHeight > size.Height || maxHeight > 100)
-				{
-					//	Il y a assez de place pour dérouler le menu vers le bas,
-					//	mais il faudra peut-être le raccourcir un bout :
-					this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
-					this.menu.AdjustSize ();
-
-					size      = this.menu.ActualSize;
-					location  = pos;
-					animation = Animation.RollDown;
-				}
-				else
-				{
-					//	Il faut dérouler le menu vers le haut.
-					pos.Y += item.ActualHeight-2;
-
-					maxHeight = workingArea.Top - pos.Y;
-
-					this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
-					this.menu.AdjustSize ();
-
-					pos.Y += this.menu.ActualHeight;
-
-					size      = this.menu.ActualSize;
-					location  = pos;
-					animation = Animation.RollUp;
-				}
-
-				location.X -= this.menu.MenuShadow.Left;
-				location.Y -= size.Height;
-
-				if (location.X + size.Width > workingArea.Right)
-				{
-					location.X = workingArea.Right - size.Width;
-				}
-			}
-			#endregion
-
-			private AbstractMenu				menu;
-		}
-		#endregion
-
-		#region FixMenuHost Class
-		protected class FixMenuHost : IMenuHost
-		{
-			public FixMenuHost(AbstractMenu menu)
-			{
-				this.menu = menu;
-			}
-
-
-			#region IMenuHost Members
-			public void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
-			{
-				//	Détermine la hauteur maximale disponible par rapport à la position
-				//	actuelle :
-				Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
-				Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
-				ScreenInfo screenInfo  = ScreenInfo.Find (hot);
-				Rectangle workingArea = screenInfo.WorkingArea;
-
-				this.menu.MaxSize = new Size (this.menu.MaxWidth, workingArea.Height);
+				//	Il y a assez de place pour dérouler le menu vers le bas,
+				//	mais il faudra peut-être le raccourcir un bout :
+				this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
 				this.menu.AdjustSize ();
 
-				if (this.menu.PreferredHeight < pos.Y-workingArea.Bottom)
-				{
-					//	Il y a assez de place pour dérouler le menu vers le bas.
-					size      = this.menu.PreferredSize;
-					location  = pos;
-					animation = Animation.RollDown;
-				}
-				else if (this.menu.PreferredHeight < workingArea.Top-(pos.Y+item.ActualHeight))
-				{
-					//	Il y a assez de place pour dérouler le menu vers le haut.
-					pos.Y += item.ActualHeight;
-					pos.Y += this.menu.PreferredHeight;
-
-					size      = this.menu.PreferredSize;
-					location  = pos;
-					animation = Animation.RollUp;
-				}
-				else
-				{
-					//	Il faut dérouler le menu vers le bas, mais depuis en dessus du bouton.
-					pos.Y = workingArea.Bottom+this.menu.PreferredHeight;
-
-					size      = this.menu.PreferredSize;
-					location  = pos;
-					animation = Animation.RollDown;
-				}
-
-				location.X -= this.menu.MenuShadow.Left;
-				location.Y -= size.Height;
-
-				if (location.X + size.Width > workingArea.Right)
-				{
-					location.X = workingArea.Right - size.Width;
-				}
+				size      = this.menu.ActualSize;
+				location  = pos;
+				animation = Animation.RollDown;
 			}
-			#endregion
-
-			private AbstractMenu				menu;
-		}
-		#endregion
-
-
-		public event EventHandler<CancelEventArgs> ComboOpening
-		{
-			add
+			else
 			{
-				this.AddUserEventHandler ("ComboOpening", value);
+				//	Il faut dérouler le menu vers le haut.
+				pos.Y += item.ActualHeight-2;
+
+				maxHeight = workingArea.Top - pos.Y;
+
+				this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
+				this.menu.AdjustSize ();
+
+				pos.Y += this.menu.ActualHeight;
+
+				size      = this.menu.ActualSize;
+				location  = pos;
+				animation = Animation.RollUp;
 			}
-			remove
+
+			location.X -= this.menu.MenuShadow.Left;
+			location.Y -= size.Height;
+
+			if (location.X + size.Width > workingArea.Right)
 			{
-				this.RemoveUserEventHandler ("ComboOpening", value);
+				location.X = workingArea.Right - size.Width;
 			}
 		}
-
-		public event EventHandler ComboOpened
-		{
-			add
-			{
-				this.AddUserEventHandler ("ComboOpened", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler ("ComboOpened", value);
-			}
-		}
-
-		public event EventHandler ComboClosed
-		{
-			add
-			{
-				this.AddUserEventHandler ("ComboClosed", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler ("ComboClosed", value);
-			}
-		}
+#endif
 
 
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-
-			this.ProcessComboActivatedIndex (this.scrollList.SelectedIndex);
-		}
-
-		private void HandleScrollerSelectedIndexChanged(object sender)
-		{
-			//	L'utilisateur a simplement déplacé la souris dans la liste.
-
-			this.ProcessComboSelectedIndex (this.scrollList.SelectedIndex);
-		}
-
-		private void HandleMenuAccepted(object sender)
-		{
-			this.CloseCombo (CloseMode.Accept);
-		}
-
-		private void HandleMenuRejected(object sender)
-		{
-			this.CloseCombo (CloseMode.Reject);
-		}
-
-
-		private void OnComboOpening(CancelEventArgs e)
-		{
-			EventHandler<CancelEventArgs> handler = (EventHandler<CancelEventArgs>) this.GetUserEventHandler ("ComboOpening");
-
-			if (handler != null)
+			if (this.ignoreChange)
 			{
-				handler (this, e);
+				return;
 			}
+
+			this.hintSelected = this.scrollList.SelectedIndex;
+			this.UseSelectedHint ();
+			this.Text = this.HintText;
+			this.SelectAll ();
+			this.OnEditionAccepted ();
+
+			this.CloseComboMenu ();
 		}
 
-		private void OnComboOpened()
-		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
 
-			this.UpdateButtonVisibility ();
-
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ComboOpened");
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		private void OnComboClosed()
-		{
-			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
-
-			this.UpdateButtonVisibility ();
-
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ComboClosed");
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
 
 		
 		private readonly Common.Widgets.Collections.StringCollection items;
@@ -710,7 +549,9 @@ namespace Epsitec.Cresus.Core.Widgets
 		private readonly List<int> hintListIndex;
 		private int hintSelected;
 
-		private HintComboMenu menu;
+		private Window window;
 		private ScrollList scrollList;
+
+		private bool ignoreChange;
 	}
 }

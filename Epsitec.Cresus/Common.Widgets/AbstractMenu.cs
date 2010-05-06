@@ -219,7 +219,7 @@ namespace Epsitec.Common.Widgets
 			this.Focus ();
 			this.Window.MakeFocused ();
 		}
-		
+
 		
 		public override Drawing.Size GetBestFitSize()
 		{
