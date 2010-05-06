@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		public HintEditor()
 		{
 			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
-			this.ComboMenuItemsLimit = 20;
+			this.ComboMenuReasonableItemsLimit = 100;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Lorsque HintEditorComboMenu = IfReasonable, détermine à partir de combien le combo-menu est caché.
 		/// </summary>
 		/// <value>The combo menu items limit.</value>
-		public int ComboMenuItemsLimit
+		public int ComboMenuReasonableItemsLimit
 		{
 			get;
 			set;
@@ -189,31 +189,25 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (!string.IsNullOrEmpty (typed))
 			{
-				//	Met d'abord les textes qui commencent par la proposition.
+				List<int>[] lists = new List<int>[2];
+				lists[0] = new List<int> ();
+				lists[1] = new List<int> ();
+
 				for (int i=0; i<this.items.Count; i++)
 				{
 					var item = this.items[i];
 
 					string name = Misc.RemoveAccentsToLower (item.ToString ());
+					int result = HintEditor.HintWordSearching (typed, name);
 
-					if (name.StartsWith (typed))
+					if (result == 0 || result == 1)
 					{
-						this.hintListIndex.Add (i);
+						lists[result].Add (i);
 					}
 				}
 
-				//	Met ensuite les textes qui contiennent la proposition.
-				for (int i=0; i<this.items.Count; i++)
-				{
-					var item = this.items[i];
-
-					string name = Misc.RemoveAccentsToLower (item.ToString ());
-
-					if (!name.StartsWith (typed) && name.Contains (typed))
-					{
-						this.hintListIndex.Add (i);
-					}
-				}
+				this.hintListIndex.AddRange (lists[0]);
+				this.hintListIndex.AddRange (lists[1]);
 			}
 
 			if (this.hintListIndex.Count == 0)
@@ -227,6 +221,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.UseSelectedHint ();
 
+			//	Gère le combo menu.
 			if (this.hintListIndex.Count <= 1)
 			{
 				if (this.IsComboMenuOpen)
@@ -244,6 +239,29 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					this.OpenComboMenu ();
 				}
+			}
+		}
+
+		private static int HintWordSearching(string typed, string name)
+		{
+			//	Cherche si 'typed' fait partie de 'name'.
+			//	Retourne -1 si ce n'est pas le cas.
+			//	Retourne 0 si on est au début d'un mot.
+			//	Retourne 1 si on est ailleurs.
+			int i = name.IndexOf (typed);
+
+			if (i == -1 || i == 0)  // pas trouvé ou trouvé au début ?
+			{
+				return i;
+			}
+
+			if (name[i-1] == ' ')  // trouvé au début d'un mot ?
+			{
+				return 0;
+			}
+			else
+			{
+				return 1;
 			}
 		}
 
@@ -372,7 +390,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-				this.hintListIndex.Count >= this.ComboMenuItemsLimit)
+				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
 			{
 				return;
 			}
@@ -403,7 +421,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-				this.hintListIndex.Count >= this.ComboMenuItemsLimit)
+				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
 			{
 				this.CloseComboMenu ();
 				return;
@@ -439,6 +457,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void CloseComboMenu()
 		{
+			// TODO: Le menu n'est pas fermé lorsqu'on déplace la fenêtre !
 			if (!this.IsComboMenuOpen)
 			{
 				return;
@@ -542,8 +561,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.CloseComboMenu ();
 		}
-
-
 
 		
 		private readonly Common.Widgets.Collections.StringCollection items;
