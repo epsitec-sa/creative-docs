@@ -409,14 +409,16 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			this.UpdateScrollList ();
+			this.UpdateScrollListContent ();
 
 			Size bestSize = this.scrollList.GetBestFitSize ();
 			Size size = new Size (this.ActualWidth, bestSize.Height);
 
-			Point location = this.MapClientToScreen (new Point (0, 0));
+			//?Point location = this.MapClientToScreen (new Point (0, 0));
+			//?location = new Point (location.X, location.Y-size.Height);
 
-			location = new Point (location.X, location.Y-size.Height);
+			Point location;
+			HintEditor.GetMenuDisposition (this, this.scrollList, ref size, out location);
 
 			this.window.WindowLocation = location;
 			this.window.WindowSize = size;
@@ -431,6 +433,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.ignoreChange = true;
 			this.scrollList.SelectedIndex = this.hintSelected;
+			this.scrollList.ShowSelected (ScrollShowMode.Center);
 			this.ignoreChange = false;
 		}
 
@@ -449,7 +452,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private void UpdateScrollList()
+		private void UpdateScrollListContent()
 		{
 			this.scrollList.Items.Clear ();
 
@@ -465,6 +468,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.ignoreChange = true;
 			this.scrollList.SelectedIndex = this.hintSelected;
+			this.scrollList.ShowSelected (ScrollShowMode.Center);
 			this.ignoreChange = false;
 
 			Size size = this.scrollList.GetBestFitSizeBasedOnContent ();
@@ -473,11 +477,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-#if false
-		private void GetMenuDisposition(Widget item, ref Size size, out Point location, out Animation animation)
+		private static void GetMenuDisposition(Widget item, ScrollList scrollList, ref Size size, out Point location)
 		{
-			//	Détermine la hauteur maximale disponible par rapport à la position
-			//	actuelle :
 			Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
 			Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
 			ScreenInfo screenInfo  = ScreenInfo.Find (hot);
@@ -489,31 +490,28 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				//	Il y a assez de place pour dérouler le menu vers le bas,
 				//	mais il faudra peut-être le raccourcir un bout :
-				this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
-				this.menu.AdjustSize ();
+				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
+				HintEditor.AdjustSize (scrollList);
 
-				size      = this.menu.ActualSize;
-				location  = pos;
-				animation = Animation.RollDown;
+				size = scrollList.PreferredSize;
+				location = new Point(pos.X, pos.Y+1);
 			}
 			else
 			{
 				//	Il faut dérouler le menu vers le haut.
-				pos.Y += item.ActualHeight-2;
+				pos.Y += item.ActualHeight-1;
 
 				maxHeight = workingArea.Top - pos.Y;
 
-				this.menu.MaxSize = new Size (this.menu.MaxWidth, maxHeight);
-				this.menu.AdjustSize ();
+				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
+				HintEditor.AdjustSize (scrollList);
 
-				pos.Y += this.menu.ActualHeight;
+				pos.Y += scrollList.PreferredHeight;
 
-				size      = this.menu.ActualSize;
-				location  = pos;
-				animation = Animation.RollUp;
+				size = scrollList.PreferredSize;
+				location = pos;
 			}
 
-			location.X -= this.menu.MenuShadow.Left;
 			location.Y -= size.Height;
 
 			if (location.X + size.Width > workingArea.Right)
@@ -521,7 +519,12 @@ namespace Epsitec.Cresus.Core.Widgets
 				location.X = workingArea.Right - size.Width;
 			}
 		}
-#endif
+
+		private static void AdjustSize(ScrollList scrollList)
+		{
+			scrollList.PreferredSize = scrollList.GetBestFitSize ();
+			Common.Widgets.Layouts.LayoutContext.SyncArrange (scrollList);
+		}
 
 
 		private void HandleScrollListSelectionActivated(object sender)
