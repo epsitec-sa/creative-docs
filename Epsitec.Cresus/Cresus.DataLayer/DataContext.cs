@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.DataLayer
 				//	Either create and fill a new row in the database for this entity
 				//	or use and update an existing row.
 
-				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.FindDataRow (mapping.RowKey, id);
+				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.LoadDataRow (mapping.RowKey, id);
 
 				dataRow.BeginEdit ();
 
@@ -824,21 +824,6 @@ namespace Epsitec.Cresus.DataLayer
 					this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
 				}
 			}
-		}
-
-		/// <summary>
-		/// Finds the data row given a row key and an entity.
-		/// </summary>
-		/// <param name="rowKey">The row key.</param>
-		/// <param name="entityId">The entity id.</param>
-		/// <returns>The data row or <c>null</c>.</returns>
-		private System.Data.DataRow FindDataRow(DbKey rowKey, Druid entityId)
-		{
-			System.Diagnostics.Debug.Assert (entityId.IsValid);
-			System.Diagnostics.Debug.Assert (rowKey.IsEmpty == false);
-
-			string tableName = this.schemaEngine.GetDataTableName (entityId);
-			return this.richCommand.FindRow (tableName, rowKey.Id);
 		}
 
 		private System.Data.DataRow LoadDataRow(DbKey rowKey, Druid entityId)

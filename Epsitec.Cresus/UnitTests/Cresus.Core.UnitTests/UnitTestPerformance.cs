@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core
 {
@@ -63,16 +64,16 @@ namespace Epsitec.Cresus.Core
 				ContactRoleEntity[] contactRoles = EntityBuilder.CreateContactRoles (dataContext, 10);
 				dataContext.SaveChanges ();
 				
-				CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 2500);
-				//CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 100);
+				//CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 2500);
+				CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, 100);
 				dataContext.SaveChanges ();
 
 				
 				UriSchemeEntity[] uriSchemes = EntityBuilder.CreateUriSchemes (dataContext, 5);
 				dataContext.SaveChanges ();
 
-				UriContactEntity[] uriContacts = EntityBuilder.CreateUriContacts (dataContext, uriSchemes, 2500);
-				//UriContactEntity[] uriContacts = EntityBuilder.CreateUriContacts (dataContext, uriSchemes, 100);
+				//UriContactEntity[] uriContacts = EntityBuilder.CreateUriContacts (dataContext, uriSchemes, 2500);
+				UriContactEntity[] uriContacts = EntityBuilder.CreateUriContacts (dataContext, uriSchemes, 100);
 				dataContext.SaveChanges ();
 
 				EntityBuilder.AssignRoles (uriContacts, contactRoles);
@@ -81,15 +82,15 @@ namespace Epsitec.Cresus.Core
 				EntityBuilder.AssignComments (uriContacts, uriComments);
 				dataContext.SaveChanges ();
 
-				CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 2500);
-				//CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 100);
+				//CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 2500);
+				CommentEntity[] telecomComments = EntityBuilder.CreateComments (dataContext, 100);
 				dataContext.SaveChanges ();
 
 				TelecomTypeEntity[] telecomTypes = EntityBuilder.CreateTelecomTypes (dataContext, 5);
 				dataContext.SaveChanges ();
 
-				TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 2500);
-				//TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 100);
+				//TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 2500);
+				TelecomContactEntity[] telecomContacts = EntityBuilder.CreateTelecomContacts (dataContext, telecomTypes, 100);
 				dataContext.SaveChanges ();
 
 				EntityBuilder.AssignRoles (telecomContacts, contactRoles);
@@ -98,35 +99,35 @@ namespace Epsitec.Cresus.Core
 				EntityBuilder.AssignComments (telecomContacts, telecomComments);
 				dataContext.SaveChanges ();
 
-				CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 2500);
-				//CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 100);
+				//CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 2500);
+				CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, 100);
 				dataContext.SaveChanges ();
 
 				CountryEntity[] countries = EntityBuilder.CreateCountries (dataContext, 5);
 				dataContext.SaveChanges ();
 
-				RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, 50);
-				//RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, 10);
+				//RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, 50);
+				RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, 10);
 				dataContext.SaveChanges ();
 
 				LocationEntity[] locations = EntityBuilder.CreateLocations (dataContext, regions, 100);
 				//LocationEntity[] locations = EntityBuilder.CreateLocations (dataContext, regions, 15);
 				dataContext.SaveChanges ();
 
-				StreetEntity[] streets = EntityBuilder.CreateStreets (dataContext, 1500);
-				//StreetEntity[] streets = EntityBuilder.CreateStreets (dataContext, 25);
+				//StreetEntity[] streets = EntityBuilder.CreateStreets (dataContext, 1500);
+				StreetEntity[] streets = EntityBuilder.CreateStreets (dataContext, 25);
 				dataContext.SaveChanges ();
 
-				PostBoxEntity[] postBoxes = EntityBuilder.CreatePostBoxes (dataContext, 1500);
-				//PostBoxEntity[] postBoxes = EntityBuilder.CreatePostBoxes (dataContext, 25);
+				//PostBoxEntity[] postBoxes = EntityBuilder.CreatePostBoxes (dataContext, 1500);
+				PostBoxEntity[] postBoxes = EntityBuilder.CreatePostBoxes (dataContext, 25);
 				dataContext.SaveChanges ();
 
-				AddressEntity[] addresses = EntityBuilder.CreateAddresses (dataContext, streets, postBoxes, locations, 1500);
-				//AddressEntity[] addresses = EntityBuilder.CreateAddresses (dataContext, streets, postBoxes, locations, 50);
+				//AddressEntity[] addresses = EntityBuilder.CreateAddresses (dataContext, streets, postBoxes, locations, 1500);
+				AddressEntity[] addresses = EntityBuilder.CreateAddresses (dataContext, streets, postBoxes, locations, 50);
 				dataContext.SaveChanges ();
 
-				MailContactEntity[] mailContacts = EntityBuilder.CreateMailContact (dataContext, addresses, 2500);
-				//MailContactEntity[] mailContacts = EntityBuilder.CreateMailContact (dataContext, addresses, 100);
+				//MailContactEntity[] mailContacts = EntityBuilder.CreateMailContact (dataContext, addresses, 2500);
+				MailContactEntity[] mailContacts = EntityBuilder.CreateMailContact (dataContext, addresses, 100);
 				dataContext.SaveChanges ();
 
 				EntityBuilder.AssignRoles (mailContacts, contactRoles);
@@ -135,12 +136,12 @@ namespace Epsitec.Cresus.Core
 				EntityBuilder.AssignComments (mailContacts, mailComments);
 				dataContext.SaveChanges ();
 
-				LanguageEntity[] languages = EntityBuilder.CreateLanguages (dataContext, 15);
-				//LanguageEntity[] languages = EntityBuilder.CreateLanguages (dataContext, 5);
+				//LanguageEntity[] languages = EntityBuilder.CreateLanguages (dataContext, 15);
+				LanguageEntity[] languages = EntityBuilder.CreateLanguages (dataContext, 5);
 				dataContext.SaveChanges ();
 
-				PersonTitleEntity[] titles = EntityBuilder.CreatePersonTitles (dataContext, 15);
-				//PersonTitleEntity[] titles = EntityBuilder.CreatePersonTitles (dataContext, 5);
+				//PersonTitleEntity[] titles = EntityBuilder.CreatePersonTitles (dataContext, 15);
+				PersonTitleEntity[] titles = EntityBuilder.CreatePersonTitles (dataContext, 5);
 				dataContext.SaveChanges ();
 
 				PersonGenderEntity[] genders = EntityBuilder.CreatePersonGenders (dataContext, 3);
@@ -149,12 +150,12 @@ namespace Epsitec.Cresus.Core
 				LegalPersonTypeEntity[] legalPersonTypes = EntityBuilder.CreateLegalPersonTypes (dataContext, 5);
 				dataContext.SaveChanges ();
 
-				NaturalPersonEntity[] naturalPersons = EntityBuilder.CreateNaturalPersons (dataContext, languages, titles, genders, 1000);
-				//NaturalPersonEntity[] naturalPersons = EntityBuilder.CreateNaturalPersons (dataContext, languages, titles, genders, 25);
+				//NaturalPersonEntity[] naturalPersons = EntityBuilder.CreateNaturalPersons (dataContext, languages, titles, genders, 1000);
+				NaturalPersonEntity[] naturalPersons = EntityBuilder.CreateNaturalPersons (dataContext, languages, titles, genders, 25);
 				dataContext.SaveChanges ();
 
-				LegalPersonEntity[] legalPersons = EntityBuilder.CreateLegalPersons (dataContext, languages, legalPersonTypes, 500);
-				//LegalPersonEntity[] legalPersons = EntityBuilder.CreateLegalPersons (dataContext, languages, legalPersonTypes, 25);
+				//LegalPersonEntity[] legalPersons = EntityBuilder.CreateLegalPersons (dataContext, languages, legalPersonTypes, 500);
+				LegalPersonEntity[] legalPersons = EntityBuilder.CreateLegalPersons (dataContext, languages, legalPersonTypes, 25);
 				dataContext.SaveChanges ();
 
 				EntityBuilder.AssignContacts (uriContacts, naturalPersons, legalPersons);
