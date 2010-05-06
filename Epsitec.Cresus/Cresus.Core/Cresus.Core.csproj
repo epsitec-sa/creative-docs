@@ -144,7 +144,6 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
-    <Compile Include="Widgets\HintComboMenu.cs" />
     <Compile Include="Widgets\HintEditor.cs" />
     <Compile Include="Widgets\ArrowedTile.cs" />
     <Compile Include="Widgets\GroupingTile.cs" />
