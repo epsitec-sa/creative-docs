@@ -8,6 +8,7 @@ using System.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
@@ -5690,6 +5691,55 @@ namespace Epsitec.Cresus.Core.Accessors
 
 			return newEntity;
 		}
+
+
+		#region Location
+
+		public static void HintLocationInitialize(Widgets.HintEditor editor)
+		{
+			for (int i = 0; i < MailContactAccessor.locationConverter.Count; i++)
+			{
+				var entity = MailContactAccessor.GetLocationEntity (i);
+				editor.Items.Add (null, entity);
+			}
+
+			editor.ValueToDescriptionConverter = MailContactAccessor.HintLocalionValueToDescriptionConverter;
+			editor.HintComparer = MailContactAccessor.HintLocationComparer;
+		}
+
+		private static Entities.LocationEntity GetLocationEntity(int index)
+		{
+			var entity = new Entities.LocationEntity ();
+
+			string text1, text2;
+			MailContactAccessor.locationConverter.Get (index, out text1, out text2);
+
+			entity.PostalCode = text1;
+			entity.Name = text2;
+
+			return entity;
+		}
+
+		private static string HintLocalionValueToDescriptionConverter(object value)
+		{
+			var entity = value as Entities.LocationEntity;
+
+			return string.Format ("{0} {1}", entity.PostalCode, entity.Name);
+		}
+
+		private static Widgets.HintComparerResult HintLocationComparer(object value, string hint)
+		{
+			var entity = value as Entities.LocationEntity;
+
+			hint = Misc.RemoveAccentsToLower (hint);
+
+			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.PostalCode), hint);
+			var result2 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Name), hint);
+
+			return Widgets.HintEditor.Bestof (result1, result2);
+		}
+		
+		#endregion
 
 
 		public string StreetName

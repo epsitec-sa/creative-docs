@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			UIBuilder builder = new UIBuilder (container, this);
 			Widgets.GroupingTile group;
 
-			var accessor = new Accessors.MailContactAccessor (null, this.Entity, false);
+			var mailAccessor = new Accessors.MailContactAccessor (null, this.Entity, false);
+			var locationAccessor = new Accessors.LocationAccessor (null, this.Entity.Address.Location, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateSummaryGroupingTile ("Data.Roles", "Rôles");
 
-			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.Entity, false)
+			var roleAccessor = new Accessors.RolesContactAccessor (null, mailAccessor.Entity, false)
 			{
 				ViewControllerMode = ViewControllerMode.RolesEdition
 			};
@@ -42,20 +43,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//	Crée le contenu de la tuile d'édition.
 			group = builder.CreateEditionGroupingTile ("Data.Mail", "Adresse");
-			var tile = builder.CreateEditionTile (group, accessor);
+			var tile = builder.CreateEditionTile (group, mailAccessor);
 
 			builder.CreateLinkButtons (tile.Container);
 
-			builder.CreateHintEditor (tile.Container, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Accessors.MailContactAccessor.countryConverter);
+			//?builder.CreateHintEditor (tile.Container, "Code et nom du pays", mailAccessor.CountryCode, mailAccessor.CountryName, x => mailAccessor.CountryCode = x, x => mailAccessor.CountryName = x, Accessors.MailContactAccessor.countryConverter);
 
 			builder.CreateMargin (tile.Container, true);
 
-			builder.CreateTextField (tile.Container, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
-			builder.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
-			builder.CreateTextField (tile.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 0, "Rue", mailAccessor.StreetName, x => mailAccessor.StreetName = x, Validators.StringValidator.Validate);
+			builder.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", mailAccessor.StreetComplement, x => mailAccessor.StreetComplement = x, null);
+			builder.CreateTextField (tile.Container, 0, "Boîte postale", mailAccessor.PostBoxNumber, x => mailAccessor.PostBoxNumber = x, Validators.StringValidator.Validate);
 
-			builder.CreateHintEditor (tile.Container, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Accessors.MailContactAccessor.regionConverter);
-			builder.CreateHintEditor (tile.Container, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Accessors.MailContactAccessor.locationConverter);
+			//?builder.CreateHintEditor (tile.Container, "Code et nom de la région", mailAccessor.RegionCode, mailAccessor.RegionName, x => mailAccessor.RegionCode = x, x => mailAccessor.RegionName = x, Accessors.MailContactAccessor.regionConverter);
+
+			builder.CreateHintEditor (tile.Container, "Numéro postal et ville", this.Entity.Address.Location, locationAccessor);
+			//?builder.CreateHintEditor (tile.Container, "Numéro postal et ville", mailAccessor.LocationPostalCode, mailAccessor.LocationName, x => mailAccessor.LocationPostalCode = x, x => mailAccessor.LocationName = x, Accessors.MailContactAccessor.locationConverter);
 
 			UI.SetInitialFocus (container);
 		}

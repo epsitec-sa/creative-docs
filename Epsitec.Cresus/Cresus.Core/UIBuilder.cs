@@ -262,6 +262,34 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, Entities.LocationEntity entity, Accessors.LocationAccessor accessor)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var editor = new Widgets.HintEditor
+			{
+				Parent = embedder,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
+				ComboMenuReasonableItemsLimit = 100,
+				TabIndex = ++this.tabIndex,
+			};
+
+			accessor.HintInitialize (editor);
+
+			//?editor.SelectedItem = entity;
+
+			return editor;
+		}
+
 		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, Accessors.BidirectionnalConverter converter)
 		{
 			var staticText = new StaticText
@@ -280,11 +308,11 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 5),
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
 				ComboMenuReasonableItemsLimit = 100,
-				HintConverter = Misc.RemoveAccentsToLower,
+				//?HintConverter = Misc.RemoveAccentsToLower,
 				TabIndex = ++this.tabIndex,
 			};
 
-			hint.HintWordSeparators.Add (" ");
+			//?hint.HintWordSeparators.Add (" ");
 			converter.InitializeHintEditor (hint);
 			hint.Text = converter.GetFormatedText (initialValue1, initialValue2);  // après InitializeHintEditor !
 
