@@ -169,7 +169,8 @@ namespace Epsitec.Cresus.Core
 
 			var entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
 			var locations = new List<Entities.LocationEntity> (this.data.GetSampleLocations ());
-			var mainViewController = new MainViewController (entities, locations);
+			var countries = new List<Entities.CountryEntity> (this.data.GetSampleCountries ());
+			var mainViewController = new MainViewController (entities, locations, countries);
 
 			this.controllers.Add (ribbonController);
 			this.controllers.Add (mainViewController);

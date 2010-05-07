@@ -14,14 +14,29 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData
 	{
+		public IEnumerable<CountryEntity> GetSampleCountries()
+		{
+			//	HACK: this method will soon be replaced by repositories
+
+			if (this.sampleCountries == null)
+			{
+				this.sampleCountries = new List<CountryEntity> ();
+				CoreData.CreateSampleCountries (this.sampleCountries);
+			}
+
+			return this.sampleCountries;
+		}
+
 		public IEnumerable<LocationEntity> GetSampleLocations()
 		{
 			//	HACK: this method will soon be replaced by repositories
 
 			if (this.sampleLocations == null)
 			{
+				IEnumerable<CountryEntity> countries = this.GetSampleCountries ();
+
 				this.sampleLocations = new List<LocationEntity> ();
-				CoreData.CreateSampleLocations (this.sampleLocations);
+				CoreData.CreateSampleLocations (this.sampleLocations, countries);
 			}
 
 			return this.sampleLocations;
@@ -43,25 +58,243 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static void CreateSampleLocations(List<LocationEntity> locations)
+		private static void CreateSampleCountries(List<CountryEntity> countries)
 		{
-			var swiss = new CountryEntity ();
-			swiss.Code = "CH";
-			swiss.Name = "Suisse";
+			for (int i = 0; i < CoreData.countries.Length; i+=2)
+			{
+				var entity = new CountryEntity ();
 
-			for (int i = 0; i < CoreData.Locations.Length; i+=2)
+				entity.Code = CoreData.countries[i+0];
+				entity.Name = CoreData.countries[i+1];
+
+				countries.Add (entity);
+			}
+		}
+
+		private static readonly string[] countries =
+		{
+#region Textes
+			"AD", "Andorre",
+			"AE", "Emirats Arabes Unis",
+			"AF", "Afghanistan",
+			"AL", "Albanie",
+			"AM", "Arménie",
+			"AO", "Angola",
+			"AQ", "Antarctique",
+			"AR", "Argentine",
+			"AT", "Autriche",
+			"AU", "Australie",
+			"AZ", "Azerbaïdjan",
+			"BA", "Bosnie Herzégovine",
+			"BB", "Barbade",
+			"BD", "Bangladesh",
+			"BE", "Belgique",
+			"BF", "Burkina Faso",
+			"BG", "Bulgarie",
+			"BH", "Bahreïn",
+			"BI", "Burundi",
+			"BJ", "Bénin",
+			"BM", "Bermudes",
+			"BN", "Brunéi Darussalam",
+			"BO", "Bolivie",
+			"BR", "Brésil",
+			"BS", "Bahamas",
+			"BT", "Bhoutan",
+			"BW", "Botswana",
+			"BY", "Biélorussie",
+			"BZ", "Belize",
+			"CA", "Canada",
+			"CD", "Congo",
+			"CF", "République centrafricaine",
+			"CG", "Congo",
+			"CH", "Suisse",
+			"CI", "Côte d'Ivoire",
+			"CL", "Chili",
+			"CM", "Cameroun",
+			"CN", "Chine",
+			"CO", "Colombie",
+			"CR", "Costa Rica",
+			"CS", "Serbie-et-Monténégro",
+			"CU", "Cuba",
+			"CV", "Cap Vert",
+			"CY", "Chypre",
+			"CZ", "République Tchèque",
+			"DD", "République démocratique allemande",
+			"DE", "Allemagne",
+			"DJ", "Djibouti",
+			"DK", "Danemark",
+			"DO", "République Dominicaine",
+			"DZ", "Algérie",
+			"EC", "Equateur",
+			"EE", "Estonie",
+			"EG", "Egypte",
+			"ES", "Espagne",
+			"ET", "Ethiopie",
+			"FI", "Finlande",
+			"FÖ", "Iles Féroé",
+			"FR", "France",
+			"GA", "Gabon",
+			"GB", "Royaume-Uni",
+			"GE", "Géorgie",
+			"GF", "Guyane française",
+			"GH", "Ghana",
+			"GI", "Gibraltar",
+			"GL", "Groenland",
+			"GM", "Gambie",
+			"GN", "Guinée",
+			"GP", "Guadeloupe",
+			"GQ", "Guinée équatoriale",
+			"GR", "Grèce",
+			"GT", "Guatemala",
+			"GW", "Guinée-Bissau",
+			"GY", "Guyana",
+			"HK", "Hong-Kong",
+			"HN", "Honduras",
+			"HR", "Croatie",
+			"HT", "Haïti",
+			"HU", "Hongrie",
+			"ID", "Indonésie",
+			"IE", "Irlande",
+			"IL", "Israël",
+			"IN", "Inde",
+			"IQ", "Irak",
+			"IR", "Iran ",
+			"IS", "Islande",
+			"IT", "Italie",
+			"JM", "Jamaïque",
+			"JO", "Jordanie",
+			"JP", "Japon",
+			"KE", "Kenya",
+			"KG", "Kirghizistan",
+			"KH", "Cambodge",
+			"KM", "Comores",
+			"KP", "Corée ",
+			"KR", "Corée",
+			"KW", "Koweït",
+			"KZ", "Kazakhstan",
+			"LA", "Laos",
+			"LB", "Liban",
+			"LI", "Liechtenstein",
+			"LK", "Sri Lanka",
+			"LR", "Liberia",
+			"LS", "Lesotho",
+			"LT", "Lituanie",
+			"LU", "Luxembourg",
+			"LV", "Lettonie",
+			"MA", "Maroc",
+			"MC", "Monaco",
+			"MD", "Moldavie",
+			"ME", "Monténégro",
+			"MG", "Madagascar",
+			"ML", "Mali",
+			"MN", "Mongolie",
+			"MO", "Macao",
+			"MQ", "Martinique",
+			"MR", "Mauritanie",
+			"MT", "Malte",
+			"MU", "Maurice",
+			"MV", "Maldives",
+			"MW", "Malawi",
+			"MX", "Mexique",
+			"MY", "Malaisie",
+			"MZ", "Mozambique",
+			"NA", "Namibie",
+			"NC", "Nouvelle-Calédonie",
+			"NE", "Niger",
+			"NG", "Nigéria",
+			"NI", "Nicaragua",
+			"NL", "Pays-Bas",
+			"NO", "Norvège",
+			"NP", "Népal",
+			"NZ", "Nouvelle-Zélande",
+			"PA", "Panama",
+			"PE", "Pérou",
+			"PF", "Polynésie française",
+			"PG", "Papouasie-Nouvelle-Guinée",
+			"PH", "Philippines",
+			"PK", "Pakistan",
+			"PL", "Pologne",
+			"PR", "Porto Rico",
+			"PS", "Territoires palestiniens",
+			"PT", "Portugal",
+			"PY", "Paraguay",
+			"QC", "Québec ",
+			"RO", "Roumanie",
+			"RS", "Serbie",
+			"RU", "Russie",
+			"RW", "Rwanda",
+			"SA", "Arabie Saoudite",
+			"SB", "Salomon (Iles)",
+			"SC", "Seychelles",
+			"SD", "Soudan",
+			"SE", "Suède",
+			"SG", "Singapour",
+			"SI", "Slovénie",
+			"SK", "Slovaquie",
+			"SL", "Sierra Leone",
+			"SM", "Saint-Marin",
+			"SN", "Sénégal",
+			"SO", "Somalie",
+			"SR", "Suriname",
+			"SU", "Union des Républiques socialistes soviétiques ",
+			"SV", "El Salvador",
+			"SY", "Syrie",
+			"SZ", "Swaziland",
+			"TD", "Tchad",
+			"TJ", "Tadjikistan",
+			"TG", "Togo",
+			"TH", "Thaïlande",
+			"TM", "Turkmenistan",
+			"TN", "Tunisie",
+			"TR", "Turquie",
+			"TT", "Trinité-et-Tobago",
+			"TW", "Taïwan",
+			"TZ", "Tanzanie",
+			"UA", "Ukraine",
+			"UG", "Ouganda",
+			"US", "Etats-Unis",
+			"UY", "Uruguay",
+			"UZ", "Ouzbékistan",
+			"VA", "Vatican",
+			"VE", "Venezuela",
+			"VN", "Vietnam",
+			"YE", "Yémen",
+			"YU", "Yougoslavie",
+			"ZA", "Afrique du Sud",
+			"ZM", "Zambie",
+			"ZR", "Zaïre",
+			"ZW", "Zimbabwe",
+			"EU", "Union européenne",
+#endregion
+		};
+
+
+		private static void CreateSampleLocations(List<LocationEntity> locations, IEnumerable<CountryEntity> countries)
+		{
+			CountryEntity swiss = null;
+
+			foreach (var country in countries)
+			{
+				if (country.Code == "CH")
+				{
+					swiss = country;
+					break;
+				}
+			}
+
+			for (int i = 0; i < CoreData.locations.Length; i+=2)
 			{
 				var entity = new LocationEntity ();
 
 				entity.Country    = swiss;
-				entity.PostalCode = CoreData.Locations[i+0];
-				entity.Name       = CoreData.Locations[i+1];
+				entity.PostalCode = CoreData.locations[i+0];
+				entity.Name       = CoreData.locations[i+1];
 
 				locations.Add (entity);
 			}
 		}
 
-		private static readonly string[] Locations =
+		private static readonly string[] locations =
 		{
 #region Textes
 			"1000", "Lausanne",
@@ -5389,13 +5622,13 @@ namespace Epsitec.Cresus.Core
 
 		private static void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<LocationEntity> locations)
 		{
-			LocationEntity location1 = null;
+			LocationEntity yverdon = null;
 
 			foreach (var location in locations)
 			{
 				if (location.PostalCode == "1400")
 				{
-					location1 = location;
+					yverdon = location;
 					break;
 				}
 			}
@@ -5410,7 +5643,7 @@ namespace Epsitec.Cresus.Core
 			postbox1.Number = "Case postale 1234";
 
 			var address1 = context.CreateEmptyEntity<AddressEntity> ();
-			address1.Location = location1;
+			address1.Location = yverdon;
 			address1.Street = street1;
 			address1.PostBox = postbox1;
 
@@ -5535,6 +5768,7 @@ namespace Epsitec.Cresus.Core
 			persons.Add (enterprise);
 		}
 
+		List<CountryEntity> sampleCountries;
 		List<LocationEntity> sampleLocations;
 		List<AbstractPersonEntity> samplePersons;
 	}

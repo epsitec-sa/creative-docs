@@ -12,9 +12,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
-	public class LocationAccessor : AbstractEntityAccessor<Entities.LocationEntity>
+	public class CountryAccessor : AbstractEntityAccessor<Entities.CountryEntity>
 	{
-		public LocationAccessor(object parentEntities, Entities.LocationEntity entity, bool grouped)
+		public CountryAccessor(object parentEntities, Entities.CountryEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
 		}
@@ -49,31 +49,31 @@ namespace Epsitec.Cresus.Core.Accessors
 
 		public override void HintInitialize(Widgets.HintEditor editor)
 		{
-			var locations = Controllers.MainViewController.locations;
+			var countries = Controllers.MainViewController.countries;
 
-			foreach (var location in locations)
+			foreach (var country in countries)
 			{
-				editor.Items.Add (null, location);
+				editor.Items.Add (null, country);
 			}
 
-			editor.ValueToDescriptionConverter = LocationAccessor.HintValueToDescriptionConverter;
-			editor.HintComparer = LocationAccessor.HintComparer;
+			editor.ValueToDescriptionConverter = CountryAccessor.HintValueToDescriptionConverter;
+			editor.HintComparer = CountryAccessor.HintComparer;
 		}
 
 		private static string HintValueToDescriptionConverter(object value)
 		{
-			var entity = value as Entities.LocationEntity;
+			var entity = value as Entities.CountryEntity;
 
-			return string.Format ("{0} {1}", entity.PostalCode, entity.Name);
+			return string.Format ("{0} ({1})", entity.Name, entity.Code);
 		}
 
 		private static Widgets.HintComparerResult HintComparer(object value, string hint)
 		{
-			var entity = value as Entities.LocationEntity;
+			var entity = value as Entities.CountryEntity;
 
 			hint = Misc.RemoveAccentsToLower (hint);
 
-			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.PostalCode), hint);
+			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Code), hint);
 			var result2 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Name), hint);
 
 			return Widgets.HintEditor.Bestof (result1, result2);
