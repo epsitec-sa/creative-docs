@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers;
 
@@ -262,7 +264,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, Entities.LocationEntity entity, Accessors.LocationAccessor accessor, System.Action<Entities.LocationEntity> valueSetter)
+		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
 		{
 			var staticText = new StaticText
 			{
@@ -284,48 +286,18 @@ namespace Epsitec.Cresus.Core
 			};
 
 			accessor.HintInitialize (editor);
-
 			editor.SelectedIndex = editor.Items.FindIndexByValue (entity);
+
 			editor.SelectedIndexChanged +=
 				delegate
 				{
 					if (editor.SelectedIndex > -1)
 					{
-						valueSetter (editor.Items.GetValue (editor.SelectedIndex) as Entities.LocationEntity);
+						valueSetter (editor.Items.GetValue (editor.SelectedIndex) as AbstractEntity);
 					}
 				};
 
 			return editor;
-		}
-
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, string initialValue1, string initialValue2, System.Action<string> callback1, System.Action<string> callback2, Accessors.BidirectionnalConverter converter)
-		{
-			var staticText = new StaticText
-			{
-				Parent = embedder,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
-			};
-
-			var hint = new Widgets.HintEditor
-			{
-				Parent = embedder,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
-				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
-				ComboMenuReasonableItemsLimit = 100,
-				//?HintConverter = Misc.RemoveAccentsToLower,
-				TabIndex = ++this.tabIndex,
-			};
-
-			//?hint.HintWordSeparators.Add (" ");
-			converter.InitializeHintEditor (hint);
-			hint.Text = converter.GetFormatedText (initialValue1, initialValue2);  // après InitializeHintEditor !
-
-			UIBuilder.CreateHintHandler (hint, callback1, callback2, converter);
-			return hint;
 		}
 
 		public Widget CreateCombo(Widget embedder, int width, string label, Accessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)

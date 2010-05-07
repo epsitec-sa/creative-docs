@@ -91,6 +91,10 @@ namespace Epsitec.Cresus.Core.Accessors
 		}
 
 
+		public virtual void HintInitialize(Widgets.HintEditor editor)
+		{
+		}
+
 
 		private readonly object parentEntities;
 		private readonly bool grouped;

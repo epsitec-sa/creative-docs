@@ -15,11 +15,12 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController
 	{
-		public MainViewController(List<AbstractEntity> entities, List<Entities.LocationEntity> locations)
+		public MainViewController(List<AbstractEntity> entities, List<Entities.LocationEntity> locations, List<Entities.CountryEntity> countries)
 			: base ("MainView")
 		{
 			this.entities = entities;
 			MainViewController.locations = locations;
+			MainViewController.countries = countries;
 
 			this.browserController = new BrowserViewController ("MainBrowser");
 			this.dataViewController = new DataViewController ("MainViewer");
@@ -79,7 +80,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly DataViewController dataViewController;
 
 		private List<AbstractEntity> entities;
-		public static List<Entities.LocationEntity> locations;
+		public static List<Entities.LocationEntity> locations;  // accès statique grâce au 'public', beurk
+		public static List<Entities.CountryEntity> countries;  // accès statique grâce au 'public', beurk
 
 		private FrameBox frame;
 

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var mailAccessor = new Accessors.MailContactAccessor (null, this.Entity, false);
 			var locationAccessor = new Accessors.LocationAccessor (null, this.Entity.Address.Location, false);
+			var countryAccessor = new Accessors.CountryAccessor (null, this.Entity.Address.Location.Country, false);
 
 			//	Crée les tuiles.
 			builder.CreateHeaderEditorTile ();
@@ -47,8 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateLinkButtons (tile.Container);
 
-			//?builder.CreateHintEditor (tile.Container, "Code et nom du pays", mailAccessor.CountryCode, mailAccessor.CountryName, x => mailAccessor.CountryCode = x, x => mailAccessor.CountryName = x, Accessors.MailContactAccessor.countryConverter);
-
+			builder.CreateHintEditor (tile.Container, "Nom et code du pays", this.Entity.Address.Location.Country, countryAccessor, x => this.Entity.Address.Location.Country = x as Entities.CountryEntity);
 			builder.CreateMargin (tile.Container, true);
 
 			builder.CreateTextField (tile.Container, 0, "Rue", mailAccessor.StreetName, x => mailAccessor.StreetName = x, Validators.StringValidator.Validate);
@@ -57,8 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//?builder.CreateHintEditor (tile.Container, "Code et nom de la région", mailAccessor.RegionCode, mailAccessor.RegionName, x => mailAccessor.RegionCode = x, x => mailAccessor.RegionName = x, Accessors.MailContactAccessor.regionConverter);
 
-			builder.CreateHintEditor (tile.Container, "Numéro postal et ville", this.Entity.Address.Location, locationAccessor, x => this.Entity.Address.Location = x);
-			//?builder.CreateHintEditor (tile.Container, "Numéro postal et ville", mailAccessor.LocationPostalCode, mailAccessor.LocationName, x => mailAccessor.LocationPostalCode = x, x => mailAccessor.LocationName = x, Accessors.MailContactAccessor.locationConverter);
+			builder.CreateHintEditor (tile.Container, "Numéro postal et ville", this.Entity.Address.Location, locationAccessor, x => this.Entity.Address.Location = x as Entities.LocationEntity);
 
 			UI.SetInitialFocus (container);
 		}
