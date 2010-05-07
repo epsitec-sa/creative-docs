@@ -207,6 +207,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public System.Func<string, string> HintComparisonConverter
+		{
+			get;
+			set;
+		}
+
 		public System.StringComparison HintTextComparison
 		{
 			get
@@ -2003,10 +2009,19 @@ namespace Epsitec.Common.Widgets
 					/**/ (this.HintText != null))
 				{
 					TextLayout copy = new TextLayout (original);
-					string     hint = TextLayout.ConvertToSimpleText (this.HintText);
-					string     text = TextLayout.ConvertToSimpleText (original.Text);
+					string hint = TextLayout.ConvertToSimpleText (this.HintText);
+					string text = TextLayout.ConvertToSimpleText (original.Text);
 
-					int pos = hint.IndexOf (text, this.HintTextComparison);
+					string compHint = hint;
+					string compText = text;
+
+					if (this.HintComparisonConverter != null)
+					{
+						compHint = this.HintComparisonConverter (compHint);
+						compText = this.HintComparisonConverter (compText);
+					}
+
+					int pos = compHint.IndexOf (compText, this.HintTextComparison);
 
 					string fontBegin = "<font color=\".hint\">";
 					string fontEnd   = "</font>";
