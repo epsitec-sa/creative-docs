@@ -19,6 +19,13 @@ namespace Epsitec.Cresus.Core.Widgets
 		Always,
 	}
 
+	public enum HintComparerResult
+	{
+		NoMatch,
+		SecondaryMatch,
+		PrimaryMatch,	// le "meilleur" en dernier
+	}
+
 
 	public class HintEditor : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.INamedStringSelection
 	{
@@ -73,17 +80,55 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public System.Func<string, string> HintConverter
+
+		/// <summary>
+		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public System.Func<object, string> ValueToDescriptionConverter
 		{
 			get;
 			set;
 		}
 
-		public List<string> HintWordSeparators
+		/// <summary>
+		/// Méthode de comparaison d'un objet stocké dans Items.Value avec une chaîne partielle entrée par l'utilisateur.
+		/// </summary>
+		/// <value>The hint comparer.</value>
+		public System.Func<object, string, HintComparerResult> HintComparer
 		{
-			get
+			get;
+			set;
+		}
+
+
+		public static HintComparerResult Compare(string text, string hint)
+		{
+			int index = text.IndexOf (hint);
+
+			if (index == -1)
 			{
-				return this.hintWordSeparators;
+				return HintComparerResult.NoMatch;
+			}
+			else if (index == 0)
+			{
+				return HintComparerResult.PrimaryMatch;
+			}
+			else
+			{
+				return HintComparerResult.SecondaryMatch;
+			}
+		}
+
+		public static HintComparerResult Bestof(HintComparerResult result1, HintComparerResult result2)
+		{
+			if (result1 > result2)
+			{
+				return result1;
+			}
+			else
+			{
+				return result2;
 			}
 		}
 
@@ -199,31 +244,47 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HintSearching(string typed)
 		{
-			this.hintListIndex.Clear ();
+			if (this.ValueToDescriptionConverter == null || this.HintComparer == null)
+			{
+				return;
+			}
 
-			typed = this.HintConvert (typed);
+			this.hintListIndex.Clear ();
 
 			if (!string.IsNullOrEmpty (typed))
 			{
-				List<int>[] lists = new List<int>[2];
-				lists[0] = new List<int> ();
-				lists[1] = new List<int> ();
+				List<int> list1 = new List<int> ();
+				List<int> list2 = new List<int> ();
 
 				for (int i=0; i<this.items.Count; i++)
 				{
-					var item = this.items[i];
+					var value = this.items.GetValue (i);
 
-					string name = this.HintConvert (item.ToString ());
-					int result = this.HintWordSearching (typed, name);
-
-					if (result == 0 || result == 1)
+					string full = this.ValueToDescriptionConverter (value);
+					if (full == typed)  // trouvé exactement ?
 					{
-						lists[result].Add (i);
+						list1.Clear ();
+						list2.Clear ();
+
+						list1.Add (i);  // met une seule proposition, la bonne
+						break;
+					}
+
+					var result = this.HintComparer (value, typed);
+
+					if (result == HintComparerResult.PrimaryMatch)
+					{
+						list1.Add (i);
+					}
+
+					if (result == HintComparerResult.SecondaryMatch)
+					{
+						list2.Add (i);
 					}
 				}
 
-				this.hintListIndex.AddRange (lists[0]);
-				this.hintListIndex.AddRange (lists[1]);
+				this.hintListIndex.AddRange (list1);
+				this.hintListIndex.AddRange (list2);
 			}
 
 			if (this.hintListIndex.Count == 0)
@@ -255,44 +316,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					this.OpenComboMenu ();
 				}
-			}
-		}
-
-		private int HintWordSearching(string typed, string name)
-		{
-			//	Cherche si 'typed' fait partie de 'name'.
-			//	Retourne -1 si ce n'est pas le cas.
-			//	Retourne 0 si on est au début d'un mot.
-			//	Retourne 1 si on est ailleurs.
-			int i = name.IndexOf (typed);
-
-			if (i == -1 || i == 0)  // pas trouvé ou trouvé au début ?
-			{
-				return i;
-			}
-
-			foreach (var separator in this.hintWordSeparators)
-			{
-				var length = separator.Length;
-
-				if (i >= length && name.Substring(i-length, length) == separator)
-				{
-					return 0;  // trouvé au début d'un mot
-				}
-			}
-
-			return 1;  // trouvé dans un mot, mais pas au début
-		}
-
-		private string HintConvert(string text)
-		{
-			if (this.HintConverter == null)
-			{
-				return text;
-			}
-			else
-			{
-				return this.HintConverter (text);
 			}
 		}
 
@@ -388,13 +411,26 @@ namespace Epsitec.Cresus.Core.Widgets
 				int i = this.hintListIndex[this.hintSelected];
 
 				this.SelectedIndex = i;
-				this.HintText = this.items[i];
+				this.HintText = this.GetItemText (i);
 				this.SetError (false);
 			}
 			else
 			{
 				this.HintText = null;
 				this.SetError (!string.IsNullOrEmpty (this.Text));
+			}
+		}
+
+		private string GetItemText(int index)
+		{
+			if (this.ValueToDescriptionConverter == null)
+			{
+				return null;
+			}
+			else
+			{
+				object value = this.items.GetValue (index);
+				return this.ValueToDescriptionConverter (value);
 			}
 		}
 
@@ -463,9 +499,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			Size bestSize = this.scrollList.GetBestFitSize ();
 			Size size = new Size (this.ActualWidth, bestSize.Height);
 
-			//?Point location = this.MapClientToScreen (new Point (0, 0));
-			//?location = new Point (location.X, location.Y-size.Height);
-
 			Point location;
 			HintEditor.GetMenuDisposition (this, this.scrollList, ref size, out location);
 
@@ -510,10 +543,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				int i = this.hintListIndex[index];
 
-				string name = this.items.GetName (i);
-				string text = this.items[i];
+				string key = this.items.GetName (i);
+				string text = this.GetItemText (i);
 
-				this.scrollList.Items.Add (name, text);
+				this.scrollList.Items.Add (key, text);
 			}
 
 			this.ignoreChange = true;

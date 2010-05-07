@@ -40,6 +40,14 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 		}
 
+		public int Count
+		{
+			get
+			{
+				return this.content.Count;
+			}
+		}
+
 
 		public string Format
 		{
