@@ -71,6 +71,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		public System.Func<string, string> HintConverter
+		{
+			get;
+			set;
+		}
+
 
 		#region IStringCollectionHost Members
 
@@ -185,7 +191,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.hintListIndex.Clear ();
 
-			typed = Misc.RemoveAccentsToLower (typed);
+			typed = this.HintConvert (typed);
 
 			if (!string.IsNullOrEmpty (typed))
 			{
@@ -197,7 +203,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					var item = this.items[i];
 
-					string name = Misc.RemoveAccentsToLower (item.ToString ());
+					string name = this.HintConvert (item.ToString ());
 					int result = HintEditor.HintWordSearching (typed, name);
 
 					if (result == 0 || result == 1)
@@ -262,6 +268,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			else
 			{
 				return 1;
+			}
+		}
+
+		private string HintConvert(string text)
+		{
+			if (this.HintConverter == null)
+			{
+				return text;
+			}
+			else
+			{
+				return this.HintConverter (text);
 			}
 		}
 

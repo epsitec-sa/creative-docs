@@ -278,6 +278,9 @@ namespace Epsitec.Cresus.Core
 				Parent = embedder,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
+				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
+				ComboMenuReasonableItemsLimit = 100,
+				HintConverter = Misc.RemoveAccentsToLower,
 				TabIndex = ++this.tabIndex,
 			};
 
