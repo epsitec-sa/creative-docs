@@ -61,29 +61,37 @@ namespace Epsitec.Cresus.DataLayer
 		public IEnumerable<EntityType> QueryByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
 		{
 			Druid entityId = example.GetEntityContext ().CreateEmptyEntity<EntityType> ().GetEntityStructuredTypeId ();
-			
-			DataTable dataTable = this.BuildDataTable (entityId);
 
+			using (DataTable dataTable = this.BuildDataTable (entityId))
+			{
+				foreach (DbReader.RowData row in this.GetDataRows (entityId, example))
+				{
+					DbKey rowKey = this.ExtractDbKey (row);
+					Druid realEntityId = this.ExtractRealEntityId (row);
+					DataRow dataRow = this.ExtractDataRow (dataTable, row);
+
+					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, dataRow) as EntityType;
+				}
+			}
+		}
+
+
+		private IEnumerable<DbReader.RowData> GetDataRows(Druid entityId, AbstractEntity example)
+		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				using (DbReader reader = this.CreateReader (entityId, example))
 				{
 					reader.CreateDataReader (transaction);
-					
+
 					foreach (var row in reader.Rows)
 					{
-						DbKey rowKey = this.ExtractDbKey (row);
-						Druid realEntityId = this.ExtractRealEntityId (row);
-						DataRow dataRow = this.ExtractDataRow (dataTable, row);
-
-						yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, dataRow) as EntityType;
+						yield return row;
 					}
 				}
 
 				transaction.Commit ();
 			}
-
-			dataTable.Dispose ();
 		}
 
 

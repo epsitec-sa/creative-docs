@@ -24,8 +24,9 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
-			this.dataRowCache = new Dictionary<string, DbDataTableMapping> ();
-			this.relationsRowCache = new Dictionary<string, DbDataTableMapping> ();
+			this.dataMappings = new Dictionary<string, DbDataTableMapping> ();
+			this.relationSourceMappings = new Dictionary<string, DbDataTableMapping> ();
+			this.relationTargetMappings = new Dictionary<string, DbDataTableMapping> ();
 		}
 
 		/// <summary>
@@ -718,12 +719,12 @@ namespace Epsitec.Cresus.Database
 
 			if (table != null && table.Rows.Count > 0)
 			{
-				if (!this.relationsRowCache.ContainsKey (tableName))
+				if (!this.relationSourceMappings.ContainsKey (tableName))
 				{
-					this.relationsRowCache[tableName] = new DbDataTableMapping (table, Tags.ColumnId);
+					this.relationSourceMappings[tableName] = new DbDataTableMapping (table, Tags.ColumnId);
 				}
 
-				DbDataTableMapping tableCache = this.relationsRowCache[tableName];
+				DbDataTableMapping tableCache = this.relationSourceMappings[tableName];
 
 				if (tableCache.Contains (rowId.Value))
 				{
@@ -741,12 +742,12 @@ namespace Epsitec.Cresus.Database
 
 			if (table != null && table.Rows.Count > 0)
 			{
-				if (!this.relationsRowCache.ContainsKey (tableName))
+				if (!this.relationSourceMappings.ContainsKey (tableName))
 				{
-					this.relationsRowCache[tableName] = new DbDataTableMapping (table, Tags.ColumnRefSourceId);
+					this.relationSourceMappings[tableName] = new DbDataTableMapping (table, Tags.ColumnRefSourceId);
 				}
 
-				DbDataTableMapping tableCache = this.relationsRowCache[tableName];
+				DbDataTableMapping tableCache = this.relationSourceMappings[tableName];
 
 				if (tableCache.Contains (sourceRowId.Value))
 				{
@@ -877,14 +878,40 @@ namespace Epsitec.Cresus.Database
 		{
 			long id = oldId.Value;
 
-			foreach (System.Data.DataRow row in relationTable.Rows)
+			Dictionary<string, DbDataTableMapping> mappings;
+
+			if (columnName == Tags.ColumnRefSourceId)
 			{
-				if ((long) row[columnName] == id)
-				{
-					row.BeginEdit ();
-					row[columnName] = newId.Value;
-					row.EndEdit ();
-				}
+				mappings = this.relationSourceMappings;
+			}
+			else if (columnName == Tags.ColumnRefTargetId)
+			{
+				mappings = this.relationTargetMappings;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Invalid columnName: " + columnName);
+			}
+
+			if (!mappings.ContainsKey (relationTable.TableName))
+			{
+				mappings[relationTable.TableName] = new DbDataTableMapping (relationTable, columnName);
+			}
+
+			DbDataTableMapping mapping = mappings[relationTable.TableName];
+
+			List<System.Data.DataRow> dataRows = new List<System.Data.DataRow> ();
+
+			if (mapping.Contains (id))
+			{
+				dataRows.AddRange (mapping.GetRows (id));
+			}
+
+			foreach (System.Data.DataRow dataRow in dataRows)
+			{
+				dataRow.BeginEdit ();
+				dataRow[columnName] = newId.Value;
+				dataRow.EndEdit ();
 			}
 		}
 
@@ -1508,6 +1535,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>A collection of temporary rows.</returns>
 		public static IEnumerable<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Collections.IEnumerable rows)
 		{
+			// TODO Use DbDataTableMapping here?
 			foreach (System.Data.DataRow row in rows)
 			{
 				if (row.RowState != System.Data.DataRowState.Deleted)
@@ -1978,8 +2006,9 @@ namespace Epsitec.Cresus.Database
 		private DbAccess						access;
 		private List<System.Data.IDataAdapter>	adapters;
 
-		private readonly Dictionary<string, DbDataTableMapping> dataRowCache;
-		private readonly Dictionary<string, DbDataTableMapping> relationsRowCache;
+		private readonly Dictionary<string, DbDataTableMapping> dataMappings;
+		private readonly Dictionary<string, DbDataTableMapping> relationSourceMappings;
+		private readonly Dictionary<string, DbDataTableMapping> relationTargetMappings;
 
 		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		
