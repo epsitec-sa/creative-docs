@@ -33,8 +33,10 @@ namespace Epsitec.Cresus.Core
 
 			if (this.samplePersons == null)
 			{
+				IEnumerable<LocationEntity> locations = this.GetSampleLocations ();
+
 				this.samplePersons = new List<AbstractPersonEntity> ();
-				CoreData.CreateSamplePersons (this.samplePersons);
+				CoreData.CreateSamplePersons (this.samplePersons, locations);
 			}
 
 			return this.samplePersons;
@@ -43,10 +45,15 @@ namespace Epsitec.Cresus.Core
 
 		private static void CreateSampleLocations(List<LocationEntity> locations)
 		{
+			var swiss = new CountryEntity ();
+			swiss.Code = "CH";
+			swiss.Name = "Suisse";
+
 			for (int i = 0; i < CoreData.Locations.Length; i+=2)
 			{
 				var entity = new LocationEntity ();
 
+				entity.Country    = swiss;
 				entity.PostalCode = CoreData.Locations[i+0];
 				entity.Name       = CoreData.Locations[i+1];
 
@@ -5380,19 +5387,20 @@ namespace Epsitec.Cresus.Core
 		};
 
 
-		private static void CreateSamplePersons(List<AbstractPersonEntity> persons)
+		private static void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<LocationEntity> locations)
 		{
+			LocationEntity location1 = null;
+
+			foreach (var location in locations)
+			{
+				if (location.PostalCode == "1400")
+				{
+					location1 = location;
+					break;
+				}
+			}
+
 			var context = EntityContext.Current;
-
-			var country = context.CreateEmptyEntity<CountryEntity> ();
-			country.Code = "CH";
-			country.Name = "Suisse";
-
-			var location1 = context.CreateEmptyEntity<LocationEntity> ();
-			location1.Country = country;
-			location1.Name = "Yverdon-les-Bains";
-			location1.PostalCode = "1400";
-			location1.Region = null;
 
 			var street1 = context.CreateEmptyEntity<StreetEntity> ();
 			street1.StreetName = "Ch. du Fontenay 3";
@@ -5405,7 +5413,6 @@ namespace Epsitec.Cresus.Core
 			address1.Location = location1;
 			address1.Street = street1;
 			address1.PostBox = postbox1;
-
 
 			var comment1 = context.CreateEmptyEntity<CommentEntity> ();
 			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
