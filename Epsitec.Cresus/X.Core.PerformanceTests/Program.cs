@@ -17,7 +17,11 @@ namespace Cresus.Core
 		{
 			TestSetup.Initialize ();
 
-			new UnitTestPerformance (true);
+			for (int i = 0; i < 5; i++)
+			{
+				new UnitTestPerformance (true);
+				//new UnitTestPerformance (false).RetreiveData ();
+			}
 		}
 	}
 

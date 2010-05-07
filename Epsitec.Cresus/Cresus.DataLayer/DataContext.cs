@@ -878,8 +878,10 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
+
 					// HACK Uncomment the next line if you don't want the whole table being loaded.
 					//condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
+
 					this.richCommand.ImportTable (transaction, tableDef, condition);
 					this.LoadTableRelationSchemas (transaction, tableDef);
 					transaction.Commit ();
@@ -907,8 +909,10 @@ namespace Epsitec.Cresus.DataLayer
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
+
 				// HACK Uncomment the next line if you don't want the whole table being loaded.
 				//condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+
 				this.richCommand.ImportTable (transaction, relationTableDef, condition);
 				transaction.Commit ();
 			}

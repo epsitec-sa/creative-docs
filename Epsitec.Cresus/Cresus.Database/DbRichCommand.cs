@@ -1535,7 +1535,6 @@ namespace Epsitec.Cresus.Database
 		/// <returns>A collection of temporary rows.</returns>
 		public static IEnumerable<System.Data.DataRow> FindRowsUsingTemporaryIds(System.Collections.IEnumerable rows)
 		{
-			// TODO Use DbDataTableMapping here?
 			foreach (System.Data.DataRow row in rows)
 			{
 				if (row.RowState != System.Data.DataRowState.Deleted)
