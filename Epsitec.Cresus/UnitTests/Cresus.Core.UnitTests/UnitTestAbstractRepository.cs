@@ -121,6 +121,9 @@ namespace Epsitec.Cresus.Core
 
 
 				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity alfred = persons[0];
+
+				Date? error = alfred.BirthDate;
 			}
 		}
 
