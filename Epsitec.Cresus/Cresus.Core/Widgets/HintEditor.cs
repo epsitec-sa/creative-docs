@@ -102,9 +102,9 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public static HintComparerResult Compare(string text, string hint)
+		public static HintComparerResult Compare(string text, string typed)
 		{
-			int index = text.IndexOf (hint);
+			int index = text.IndexOf (typed);
 
 			if (index == -1)
 			{
@@ -256,6 +256,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.hintListIndex.Clear ();
 
+			string original = typed;
+			if (this.HintComparisonConverter != null)
+			{
+				typed = this.HintComparisonConverter (typed);
+			}
+
 			if (!string.IsNullOrEmpty (typed))
 			{
 				List<int> list1 = new List<int> ();
@@ -266,7 +272,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					var value = this.items.GetValue (i);
 
 					string full = this.ValueToDescriptionConverter (value);
-					if (full == typed)  // trouvé exactement ?
+					if (full == original)  // trouvé exactement ?
 					{
 						list1.Clear ();
 						list2.Clear ();
