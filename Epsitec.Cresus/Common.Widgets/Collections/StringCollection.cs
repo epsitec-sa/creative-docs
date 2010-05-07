@@ -128,6 +128,11 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			return this.keys.IndexOf (name);
 		}
+
+		public int FindIndexByValue(object value)
+		{
+			return this.FindIndexByValue (item => item == value);
+		}
 		
 		public int FindIndexByValue(System.Predicate<object> match)
 		{
