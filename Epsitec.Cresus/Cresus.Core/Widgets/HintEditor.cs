@@ -203,6 +203,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				if (value != this.selectedRow)
 				{
 					this.selectedRow = value;
+
+					this.ignoreChange = true;
+					this.Text = this.GetItemText (this.selectedRow);
+					this.ignoreChange = false;
+
 					this.OnSelectedIndexChanged ();
 				}
 			}
@@ -339,6 +344,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void OnTextChanged()
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			base.OnTextChanged ();
 
 			this.HintSearching (this.Text);
@@ -410,14 +420,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				int i = this.hintListIndex[this.hintSelected];
 
-				this.SelectedIndex = i;
+				this.SetSilentSelectedIndex (i);  // (*)
 				this.HintText = this.GetItemText (i);
 				this.SetError (false);
 			}
 			else
 			{
+				this.SetSilentSelectedIndex (-1);  // (*)
 				this.HintText = null;
 				this.SetError (!string.IsNullOrEmpty (this.Text));
+			}
+		}
+
+		// (*)	Il ne faut surtout pas utiliser SelectedIndex = i, car il ne faut surtout
+		//		pas modifier this.Text !
+
+		private void SetSilentSelectedIndex(int index)
+		{
+			if (this.selectedRow != index)
+			{
+				this.selectedRow = index;
+				this.OnSelectedIndexChanged ();
 			}
 		}
 
@@ -435,7 +458,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-
+		#region Combo menu
 		private bool IsComboMenuOpen
 		{
 			get
@@ -625,8 +648,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.CloseComboMenu ();
 		}
+		#endregion
 
-		
+
 		private readonly Common.Widgets.Collections.StringCollection items;
 		private int selectedRow;
 
