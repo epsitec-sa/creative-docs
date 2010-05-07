@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, Entities.LocationEntity entity, Accessors.LocationAccessor accessor)
+		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, Entities.LocationEntity entity, Accessors.LocationAccessor accessor, System.Action<Entities.LocationEntity> valueSetter)
 		{
 			var staticText = new StaticText
 			{
@@ -285,7 +285,15 @@ namespace Epsitec.Cresus.Core
 
 			accessor.HintInitialize (editor);
 
-			//?editor.SelectedItem = entity;
+			editor.SelectedIndex = editor.Items.FindIndexByValue (entity);
+			editor.SelectedIndexChanged +=
+				delegate
+				{
+					if (editor.SelectedIndex > -1)
+					{
+						valueSetter (editor.Items.GetValue (editor.SelectedIndex) as Entities.LocationEntity);
+					}
+				};
 
 			return editor;
 		}
