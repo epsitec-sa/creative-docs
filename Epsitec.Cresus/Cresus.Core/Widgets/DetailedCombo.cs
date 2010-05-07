@@ -11,10 +11,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class DetailedCombo : Widget
+	public class DetailedCombo : Widget, IMultipleSelection
 	{
 		public DetailedCombo()
 		{
+			this.items = new Common.Widgets.Collections.StringCollection (this);
+			this.items.AcceptsRichText = true;
+
+			this.selection = new HashSet<int> ();
 		}
 
 		public DetailedCombo(Widget embedder)
@@ -39,6 +43,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public Accessors.ComboInitializer ComboInitializer
 		{
+			// TODO: A supprimer
 			get
 			{
 				return this.comboInitializer;
@@ -46,13 +51,57 @@ namespace Epsitec.Cresus.Core.Widgets
 			set
 			{
 				this.comboInitializer = value;
-				this.CreateUI ();
+				this.CreateUIComboInitializer ();
 			}
 		}
 
 
 		public void CreateUI()
 		{
+			//	Il faut appeler cette méthode après avoir défini la liste Items.
+			//	Je ne veux pas le faire automatiquement après chaque Items.Add(), pour des raisons
+			//	d'efficacité !
+			this.Children.Clear ();
+
+			int tabIndex = 1;
+
+			for (int i = 0; i < this.items.Count; i++)
+			{
+				AbstractButton button;
+
+				if (this.AllowMultipleSelection)
+				{
+					button = new CheckButton
+					{
+						Parent = this,
+						Name = this.items.GetName (i),
+						Text = this.items[i],
+						Dock = DockStyle.Top,
+						TabIndex = tabIndex++,
+					};
+				}
+				else
+				{
+					button = new RadioButton
+					{
+						Parent = this,
+						Name = this.items.GetName (i),
+						Text = this.items[i],
+						Dock = DockStyle.Top,
+						TabIndex = tabIndex++,
+					};
+				}
+
+				button.ActiveStateChanged += new EventHandler (this.HandleButtonActiveStateChanged);
+			}
+		}
+
+		private void CreateUIComboInitializer()
+		{
+			// TODO: A supprimer
+			//	Il faut appeler cette méthode après avoir défini la liste Items.
+			//	Je ne veux pas le faire automatiquement après chaque Items.Add(), pour des raisons
+			//	d'efficacité !
 			this.Children.Clear ();
 
 			int tabIndex = 1;
@@ -89,52 +138,249 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private void TextToButtons()
-		{
-			string text = this.comboInitializer.ConvertEditionToInternal (this.Text);
-			var words = Misc.Split (text.Replace (",", " "), " ");
+		#region IMultipleSelection Members
 
-			foreach (AbstractButton button in this.Children)
+		public int SelectionCount
+		{
+			get
 			{
-				button.ActiveState = (words.Contains (button.Name)) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+				return this.selection.Count;
 			}
 		}
 
-		private void ButtonsToText()
+		public void AddSelection(IEnumerable<int> selection)
 		{
-			var words = new List<string> ();
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Add (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.SelectionToButtons ();
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void RemoveSelection(IEnumerable<int> selection)
+		{
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Remove (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.SelectionToButtons ();
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void ClearSelection()
+		{
+			if (this.selection.Count > 0)
+			{
+				this.selection.Clear ();
+
+				this.SelectionToButtons ();
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public ICollection<int> GetSortedSelection()
+		{
+			return this.selection.OrderBy (x => x).ToList ().AsReadOnly ();
+		}
+
+		public bool IsItemSelected(int index)
+		{
+			if (this.selection.Contains (index))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
+
+		#region IStringCollectionHost Members
+
+		public void NotifyStringCollectionChanged()
+		{
+			this.ClearSelection ();
+		}
+
+		public Common.Widgets.Collections.StringCollection Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+
+		#endregion
+
+		#region INamedStringSelection Members
+
+		public string SelectedName
+		{
+			get
+			{
+				int currentSelection = this.SelectedIndex;
+
+				if (currentSelection != -1)
+				{
+					return this.items.GetName (currentSelection);
+				}
+
+				return null;
+			}
+			set
+			{
+				this.SelectedIndex = this.items.FindIndexByName (value);
+			}
+		}
+
+		#endregion
+
+		#region IStringSelection Members
+
+		public int SelectedIndex
+		{
+			get
+			{
+				ICollection<int> sels = this.GetSortedSelection ();
+				if (sels.Count == 1)
+				{
+					return sels.First ();
+				}
+
+				return -1;
+			}
+			set
+			{
+				int currentSelection = this.SelectedIndex;
+
+				if (currentSelection != value)
+				{
+					this.ClearSelection ();
+
+					if (value != -1)
+					{
+						this.AddSelection (Enumerable.Range (value, 1));
+					}
+				}
+			}
+		}
+
+		public string SelectedItem
+		{
+			get
+			{
+				int currentSelection = this.SelectedIndex;
+
+				if (currentSelection != -1)
+				{
+					return this.items[currentSelection];
+				}
+
+				return null;
+			}
+			set
+			{
+				this.SelectedIndex = this.items.FindIndexByValueExactMatch (value);
+			}
+		}
+
+		public event EventHandler SelectedIndexChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("SelectedIndexChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SelectedIndexChanged", value);
+			}
+		}
+
+		#endregion
+
+
+		private void SelectionToButtons()
+		{
+			//	Met à jour l'état des boutons en fonction de la séleciton.
+			ICollection<int> sels = this.GetSortedSelection ();
+			List<string> list = new List<string> ();
+
+			foreach (int sel in sels)
+			{
+				list.Add (this.items.GetName(sel));
+			}
+
+			foreach (AbstractButton button in this.Children)
+			{
+				button.ActiveState = (list.Contains (button.Name)) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			}
+		}
+
+		private void ButtonsToSelection()
+		{
+			//	Met à jour la sélection en fonction de l'état des boutons.
+			this.ClearSelection ();
 
 			foreach (AbstractButton button in this.Children)
 			{
 				if (button.IsActive)
 				{
-					words.Add (button.Text);
+					int index = this.items.Keys.ToList ().IndexOf (button.Name);
+
+					if (index != -1)
+					{
+						this.AddSelection (Enumerable.Range (index, 1));
+					}
 				}
 			}
-
-			this.ignoreChange = true;
-			this.Text = Misc.Join (words, ", ");
-			this.ignoreChange = false;
 		}
 
 
-		protected override void OnTextChanged()
+		protected void OnMultiSelectionChanged()
 		{
-			base.OnTextChanged ();
+			this.Invalidate ();
 
-			if (!this.ignoreChange)
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (DetailedCombo.MultiSelectionChangedEvent);
+			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
+
+			if (handler != null)
 			{
-				this.TextToButtons ();
+				handler (this, e);
 			}
 		}
 
 
 		private void HandleButtonActiveStateChanged(object sender)
 		{
-			this.ButtonsToText ();
+			this.ButtonsToSelection ();
 		}
 
 
+		private const string MultiSelectionChangedEvent = "MultiSelectionChanged";
+
+		private Common.Widgets.Collections.StringCollection	items;
+		private readonly HashSet<int> selection;
 		private Accessors.ComboInitializer comboInitializer;
 		private bool ignoreChange;
 	}
