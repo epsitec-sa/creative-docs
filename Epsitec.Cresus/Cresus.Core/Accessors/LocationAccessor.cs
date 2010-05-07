@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Core.Accessors
 
 			editor.ValueToDescriptionConverter = LocationAccessor.HintValueToDescriptionConverter;
 			editor.HintComparer = LocationAccessor.HintComparer;
+			editor.HintComparisonConverter = Misc.RemoveAccentsToLower;
 		}
 
 		private static string HintValueToDescriptionConverter(object value)
