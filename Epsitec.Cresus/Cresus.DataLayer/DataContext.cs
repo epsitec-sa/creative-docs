@@ -553,6 +553,25 @@ namespace Epsitec.Cresus.DataLayer
 			return value;
 		}
 
+		private object ConvertFromInternal(object value, string tableName, string columnName)
+		{
+			if (value == System.DBNull.Value)
+			{
+				//	Nothing to convert : a DBNull value stays a DBNull value.
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (value != null);
+
+				DbTable   tableDef  = this.richCommand.Tables[tableName];
+				DbColumn  columnDef = tableDef.Columns[columnName];
+
+				value = DataContext.ConvertFromInternal (value, columnDef);
+			}
+
+			return value;
+		}
+
 		private static object ConvertToInternal(object value, DbColumn columnDef)
 		{
 			if (value != System.DBNull.Value)
@@ -579,6 +598,17 @@ namespace Epsitec.Cresus.DataLayer
 			return value;
 		}
 
+		private static object ConvertFromInternal(object value, DbColumn columnDef)
+		{
+			if (value != System.DBNull.Value)
+			{
+				DbTypeDef typeDef = columnDef.Type;
+				value = TypeConverter.ConvertToSimpleType (value, typeDef.SimpleType, typeDef.NumDef);
+			}
+
+			return value;
+		}
+		
 		private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
 			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
@@ -774,10 +804,19 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				IStringType stringType = fieldDef.Type as IStringType;
 
-				if ((stringType != null) &&
-					(stringType.UseFormattedText))
+				if (stringType != null)
 				{
-					value = FormattedText.CastToFormattedText (value);
+					if (stringType.UseFormattedText)
+					{
+						value = FormattedText.CastToFormattedText (value);
+					}
+				}
+				else
+				{
+					var entityId  = entity.GetEntityStructuredTypeId ();
+					var tableName = this.schemaEngine.GetDataTableName (entityId);
+
+					value = this.ConvertFromInternal (value, tableName, columnName);
 				}
 
 				entity.InternalSetValue (fieldDef.Id, value);
