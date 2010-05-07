@@ -68,14 +68,12 @@ namespace Epsitec.Cresus.Core.Accessors
 			return string.Format ("{0} ({1})", entity.Name, entity.Code);
 		}
 
-		private static Widgets.HintComparerResult HintComparer(object value, string hint)
+		private static Widgets.HintComparerResult HintComparer(object value, string typed)
 		{
 			var entity = value as Entities.CountryEntity;
 
-			hint = Misc.RemoveAccentsToLower (hint);
-
-			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Code), hint);
-			var result2 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Name), hint);
+			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Code), typed);
+			var result2 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Name), typed);
 
 			return Widgets.HintEditor.Bestof (result1, result2);
 		}
