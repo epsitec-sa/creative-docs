@@ -284,6 +284,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			hint.HintWordSeparators.Add (" ");
 			converter.InitializeHintEditor (hint);
 			hint.Text = converter.GetFormatedText (initialValue1, initialValue2);  // après InitializeHintEditor !
 

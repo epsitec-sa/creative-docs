@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.hintListIndex = new List<int> ();
 			this.hintSelected = -1;
+
+			this.hintWordSeparators = new List<string> ();
 		}
 
 		public HintEditor(Widget embedder)
@@ -75,6 +77,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get;
 			set;
+		}
+
+		public List<string> HintWordSeparators
+		{
+			get
+			{
+				return this.hintWordSeparators;
+			}
 		}
 
 
@@ -204,7 +214,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					var item = this.items[i];
 
 					string name = this.HintConvert (item.ToString ());
-					int result = HintEditor.HintWordSearching (typed, name);
+					int result = this.HintWordSearching (typed, name);
 
 					if (result == 0 || result == 1)
 					{
@@ -248,7 +258,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private static int HintWordSearching(string typed, string name)
+		private int HintWordSearching(string typed, string name)
 		{
 			//	Cherche si 'typed' fait partie de 'name'.
 			//	Retourne -1 si ce n'est pas le cas.
@@ -261,14 +271,17 @@ namespace Epsitec.Cresus.Core.Widgets
 				return i;
 			}
 
-			if (name[i-1] == ' ')  // trouvé au début d'un mot ?
+			foreach (var separator in this.hintWordSeparators)
 			{
-				return 0;
+				var length = separator.Length;
+
+				if (i >= length && name.Substring(i-length, length) == separator)
+				{
+					return 0;  // trouvé au début d'un mot
+				}
 			}
-			else
-			{
-				return 1;
-			}
+
+			return 1;  // trouvé dans un mot, mais pas au début
 		}
 
 		private string HintConvert(string text)
@@ -586,6 +599,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private readonly List<int> hintListIndex;
 		private int hintSelected;
+
+		private List<string> hintWordSeparators;
 
 		private Window window;
 		private ScrollList scrollList;
