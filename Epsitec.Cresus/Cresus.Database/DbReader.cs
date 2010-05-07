@@ -197,6 +197,17 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public System.Type GetColumnType(string columnName)
+		{
+			DbTableColumn column = this.renamedTableColumns.Find (c => c.Column.Name == columnName);
+			int columnIndex = int.Parse(column.ColumnAlias.Substring(1), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+
+			return dataReader.GetFieldType (columnIndex);
+
+			//  reader.dataReader.GetFieldType (2).ToString()
+			//return "".GetType ();
+		}
+
 		public IEnumerable<DbTable> Tables
 		{
 			get

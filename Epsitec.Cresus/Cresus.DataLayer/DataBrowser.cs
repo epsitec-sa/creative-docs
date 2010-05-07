@@ -14,18 +14,10 @@ using System.Data;
 namespace Epsitec.Cresus.DataLayer
 {
 
-	/// <summary>
-	/// The <c>DataBrowser</c> class provides sequential read access to the
-	/// database.
-	/// </summary>
 	public class DataBrowser
 	{
 
 		
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DataBrowser"/> class.
-		/// </summary>
-		/// <param name="infrastructure">The database infrastructure.</param>
 		public DataBrowser(DbInfrastructure infrastructure, DataContext dataContext)
 		{
 			this.DbInfrastructure = infrastructure;
@@ -62,40 +54,29 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			Druid entityId = example.GetEntityContext ().CreateEmptyEntity<EntityType> ().GetEntityStructuredTypeId ();
 
-			using (DataTable dataTable = this.BuildDataTable (entityId))
-			{
-				foreach (DbReader.RowData row in this.GetDataRows (entityId, example))
-				{
-					DbKey rowKey = this.ExtractDbKey (row);
-					Druid realEntityId = this.ExtractRealEntityId (row);
-					DataRow dataRow = this.ExtractDataRow (dataTable, row);
-
-					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, dataRow) as EntityType;
-				}
-			}
-		}
-
-
-		private IEnumerable<DbReader.RowData> GetDataRows(Druid entityId, AbstractEntity example)
-		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				using (DbReader reader = this.CreateReader (entityId, example))
 				{
 					reader.CreateDataReader (transaction);
-
-					foreach (var row in reader.Rows)
+					
+					using (DataTable dataTable = this.BuildDataTable (entityId, reader))
 					{
-						yield return row;
+						foreach (DbReader.RowData row in reader.Rows)
+						{
+							DbKey rowKey = this.ExtractDbKey (row);
+							Druid realEntityId = this.ExtractRealEntityId (row);
+							DataRow dataRow = this.ExtractDataRow (dataTable, row);
+
+							yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, dataRow) as EntityType;
+						}
 					}
 				}
-
-				transaction.Commit ();
 			}
 		}
 
 
-		private DataTable BuildDataTable(Druid entityId)
+		private DataTable BuildDataTable(Druid entityId, DbReader reader)
 		{
 			DataTable dataTable = new DataTable ();
 
@@ -103,7 +84,10 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				if (field.Relation == FieldRelation.None && field.Expression == null)
 				{
-					dataTable.Columns.Add (new DataColumn (this.DataContext.SchemaEngine.GetDataColumnName (field.Id)));
+					string name = this.DataContext.SchemaEngine.GetDataColumnName (field.Id);
+					System.Type type = reader.GetColumnType (name);
+					
+					dataTable.Columns.Add (new DataColumn (name, type));
 				}
 			}
 
@@ -268,8 +252,7 @@ namespace Epsitec.Cresus.DataLayer
 			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
 			AbstractType fieldType = field.Type as AbstractType;
 			object fieldValue = example.InternalGetValue (field.Id);
-
-
+			
 			// TODO Temporary code. Add other comparison behaviors.
 			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
 
@@ -281,11 +264,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				case TypeCode.Decimal:
 					throw new System.NotImplementedException ();
-					break;
 
 				case TypeCode.Double:
 					throw new System.NotImplementedException ();
-					break;
 
 				case TypeCode.Integer:
 					condition.AddCondition (tableColumn, DbCompare.Equal, (int) fieldValue);
@@ -301,19 +282,15 @@ namespace Epsitec.Cresus.DataLayer
 
 				case TypeCode.Date:
 					throw new System.NotImplementedException ();
-					break;
 
 				case TypeCode.DateTime:
 					throw new System.NotImplementedException ();
-					break;
 
 				case TypeCode.Time:
 					throw new System.NotImplementedException ();
-					break;
 
 				default:
 					throw new System.NotImplementedException ();
-					break;
 			}
 
 			reader.AddCondition (condition);

@@ -49,8 +49,8 @@ namespace Epsitec.Cresus.Database
 			this.ColumnName = columnName;
 
 			this.ColumnIndex = dataTable.Columns.IndexOf (columnName);
-			this.valueToRows = new Dictionary<long, List<DataRow>> ();
-			this.rowToValue = new Dictionary<DataRow, long> ();
+			this.valueToRows = new Dictionary<object, List<DataRow>> ();
+			this.rowToValue = new Dictionary<DataRow, object> ();
 
 			this.PopulateCache ();
 			this.SetupEventHandlers ();
@@ -73,22 +73,21 @@ namespace Epsitec.Cresus.Database
 			return dataRow.RowState != DataRowState.Detached;
 		}
 
-		private long GetValue(DataRow dataRow)
+		private object GetValue(DataRow dataRow)
 		{
-			long value;
+			object value;
 
 			switch (dataRow.RowState)
 			{
 				case DataRowState.Deleted:
-					value = (long) dataRow[this.ColumnIndex, DataRowVersion.Original];
+					value = dataRow[this.ColumnIndex, DataRowVersion.Original];
 					break;
 
 				case DataRowState.Detached:
 					throw new System.InvalidOperationException();
-					break;
 
 				default:
-					value = (long) dataRow[this.ColumnIndex];
+					value = dataRow[this.ColumnIndex];
 					break;
 			}
 
@@ -96,7 +95,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private void AddDataRow(long value, DataRow dataRow)
+		private void AddDataRow(object value, DataRow dataRow)
 		{
 			if (!this.valueToRows.ContainsKey (value))
 			{
@@ -110,7 +109,7 @@ namespace Epsitec.Cresus.Database
 
 		private void RemoveDataRow(DataRow dataRow)
 		{
-			long value = this.rowToValue[dataRow];
+			object value = this.rowToValue[dataRow];
 			List<DataRow> dataRows = this.valueToRows[value];
 
 			dataRows.Remove (dataRow);
@@ -133,14 +132,16 @@ namespace Epsitec.Cresus.Database
 
 			this.DataTable.RowChanged += (sender, e) =>
 			{
-				if (e.Action == DataRowAction.Change && this.IsValid(e.Row))
+				object value = this.GetValue (e.Row);
+
+				if (value != System.DBNull.Value)
 				{
 					if (this.rowToValue.ContainsKey (e.Row))
 					{
 						this.RemoveDataRow (e.Row);
 					}
 
-					this.AddDataRow (this.GetValue (e.Row), e.Row);
+					this.AddDataRow (value, e.Row);
 				}
 			};
 		}
@@ -154,7 +155,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>
 		/// <c>true</c> if there is such a row and <c>false</c> otherwise.
 		/// </returns>
-		public bool Contains(long value)
+		public bool Contains(object value)
 		{
 			return this.valueToRows.ContainsKey (value);
 		}
@@ -166,7 +167,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The <see cref="DataRow"/></returns>
-		public DataRow GetRow(long value)
+		public DataRow GetRow(object value)
 		{
 			if (!this.Contains (value))
 			{
@@ -178,12 +179,12 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
-		/// Gets the <see cref="List"/> of <see cref="DataRow"/> whose column value are equal to
+		/// Gets the list of <see cref="DataRow"/> whose column value are equal to
 		/// <paramref name="value"/>.
 		/// </summary>
 		/// <param name="value">The value.</param>
-		/// <returns>The <see cref="List"/> of <see cref="DataRow"/>.</returns>
-		public List<DataRow> GetRows(long value)
+		/// <returns>The list of <see cref="DataRow"/>.</returns>
+		public List<DataRow> GetRows(object value)
 		{
 			if (!this.Contains (value))
 			{
@@ -197,10 +198,10 @@ namespace Epsitec.Cresus.Database
 		private int ColumnIndex;
 
 
-		private Dictionary<DataRow, long> rowToValue;
+		private Dictionary<DataRow, object> rowToValue;
 
 
-		private Dictionary<long, List<DataRow>> valueToRows;
+		private Dictionary<object, List<DataRow>> valueToRows;
 
 	}
 

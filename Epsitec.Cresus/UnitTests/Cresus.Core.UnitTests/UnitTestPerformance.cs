@@ -179,37 +179,37 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Check03RetreiveData()
 		{
-			//using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
-			//{
-			//    Repository repository = new Repository (UnitTestPerformance.dbInfrastructure, dataContext);
+			using (DataContext dataContext = new DataContext (UnitTestPerformance.dbInfrastructure))
+			{
+				Repository repository = new Repository (UnitTestPerformance.dbInfrastructure, dataContext);
 
-			//    System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
-			//    watch.Start ();
-			//    repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
-			//    watch.Stop ();
+				watch.Start ();
+				repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
+				watch.Stop ();
 
-			//    System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
-			//    watch.Restart ();
-			//    repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
-			//    watch.Stop ();
+				watch.Restart ();
+				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
+				watch.Stop ();
 
-			//    System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
-			//    watch.Restart ();
-			//    repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
-			//    watch.Stop ();
+				watch.Restart ();
+				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
+				watch.Stop ();
 
-			//    System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
-			//}
+				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+			}
 		}
 
 
 		private static DbInfrastructure dbInfrastructure;
 
 
-		private static bool createAndPopulateDatabase = true;
+		private static bool createAndPopulateDatabase = false;
 
 
 	}
