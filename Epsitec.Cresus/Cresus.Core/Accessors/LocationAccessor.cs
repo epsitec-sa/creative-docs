@@ -47,8 +47,10 @@ namespace Epsitec.Cresus.Core.Accessors
 		}
 
 
-		public override void HintInitialize(Widgets.HintEditor editor)
+		public override void WidgetInitialize(Widget widget, object unspecifiedEntitie)
 		{
+			var editor = widget as Widgets.HintEditor;
+			var entity = unspecifiedEntitie as AbstractEntity;
 			var locations = Controllers.MainViewController.locations;
 
 			foreach (var location in locations)
@@ -59,6 +61,8 @@ namespace Epsitec.Cresus.Core.Accessors
 			editor.ValueToDescriptionConverter = LocationAccessor.HintValueToDescriptionConverter;
 			editor.HintComparer = LocationAccessor.HintComparer;
 			editor.HintComparisonConverter = Misc.RemoveAccentsToLower;
+
+			editor.SelectedIndex = editor.Items.FindIndexByValue (entity);
 		}
 
 		private static string HintValueToDescriptionConverter(object value)

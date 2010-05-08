@@ -8,6 +8,7 @@ using System.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.Accessors
@@ -91,7 +92,7 @@ namespace Epsitec.Cresus.Core.Accessors
 		}
 
 
-		public virtual void HintInitialize(Widgets.HintEditor editor)
+		public virtual void WidgetInitialize(Widget widget, object unspecifiedEntitie)
 		{
 		}
 
