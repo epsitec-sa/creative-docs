@@ -15,10 +15,11 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController
 	{
-		public MainViewController(List<AbstractEntity> entities, List<Entities.LocationEntity> locations, List<Entities.CountryEntity> countries)
+		public MainViewController(List<AbstractEntity> entities, List<Entities.ContactRoleEntity> roles, List<Entities.LocationEntity> locations, List<Entities.CountryEntity> countries)
 			: base ("MainView")
 		{
 			this.entities = entities;
+			MainViewController.roles = roles;
 			MainViewController.locations = locations;
 			MainViewController.countries = countries;
 
@@ -80,6 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly DataViewController dataViewController;
 
 		private List<AbstractEntity> entities;
+		public static List<Entities.ContactRoleEntity> roles;  // accès statique grâce au 'public', beurk
 		public static List<Entities.LocationEntity> locations;  // accès statique grâce au 'public', beurk
 		public static List<Entities.CountryEntity> countries;  // accès statique grâce au 'public', beurk
 
