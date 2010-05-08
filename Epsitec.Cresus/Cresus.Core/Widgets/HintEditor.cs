@@ -355,9 +355,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			base.OnTextChanged ();
-
 			this.HintSearching (this.Text);
+			base.OnTextChanged ();
 		}
 
 		protected override void OnEditionAccepted()

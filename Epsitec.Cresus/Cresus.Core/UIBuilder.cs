@@ -275,13 +275,32 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var editor = new Widgets.HintEditor
+			var container = new FrameBox
 			{
 				Parent = embedder,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
+			};
+
+			var editor = new Widgets.HintEditor
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
 				ComboMenuReasonableItemsLimit = 100,
+				TabIndex = ++this.tabIndex,
+			};
+
+			var button = new Button
+			{
+				Parent = container,
+				Text = "Ajouter",
+				PreferredWidth = 60,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+				Visibility = false,
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -295,6 +314,12 @@ namespace Epsitec.Cresus.Core
 					{
 						valueSetter (editor.Items.GetValue (editor.SelectedIndex) as AbstractEntity);
 					}
+				};
+
+			editor.TextChanged +=
+				delegate
+				{
+					button.Visibility = editor.InError;
 				};
 
 			return editor;
