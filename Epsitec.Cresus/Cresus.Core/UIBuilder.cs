@@ -345,6 +345,8 @@ namespace Epsitec.Cresus.Core
 			};
 
 			accessor.WidgetInitialize (combo, listEntities);
+
+			// TODO: câbler l'événement MultiSelectionChanged
 				
 			return combo;
 		}
