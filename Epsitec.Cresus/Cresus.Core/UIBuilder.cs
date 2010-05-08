@@ -304,8 +304,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			accessor.HintInitialize (editor);
-			editor.SelectedIndex = editor.Items.FindIndexByValue (entity);
+			accessor.WidgetInitialize (editor, entity);
 
 			editor.SelectedIndexChanged +=
 				delegate
@@ -325,8 +324,34 @@ namespace Epsitec.Cresus.Core
 			return editor;
 		}
 
+		public Widget CreateDetailed(Widget embedder, int width, string label, bool allowMultipleSelection, object listEntities, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var combo = new Widgets.DetailedCombo
+			{
+				Parent = embedder,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 5, 10),
+				AllowMultipleSelection = allowMultipleSelection,
+				TabIndex = ++this.tabIndex,
+			};
+
+			accessor.WidgetInitialize (combo, listEntities);
+				
+			return combo;
+		}
+
 		public Widget CreateCombo(Widget embedder, int width, string label, Accessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
+			// TODO: à supprimer
 			var staticText = new StaticText
 			{
 				Parent = embedder,
@@ -344,7 +369,7 @@ namespace Epsitec.Cresus.Core
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 5, 10),
 					AllowMultipleSelection = allowMultipleSelection,
-					ComboInitializer = initializer,
+					//?ComboInitializer = initializer,
 					Text = initializer.ConvertInternalToEdition (initialValue),
 					TabIndex = ++this.tabIndex,
 				};

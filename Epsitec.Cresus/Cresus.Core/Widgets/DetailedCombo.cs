@@ -41,21 +41,17 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public Accessors.ComboInitializer ComboInitializer
+		/// <summary>
+		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public System.Func<object, string> ValueToDescriptionConverter
 		{
-			// TODO: A supprimer
-			get
-			{
-				return this.comboInitializer;
-			}
-			set
-			{
-				this.comboInitializer = value;
-				this.CreateUIComboInitializer ();
-			}
+			get;
+			set;
 		}
 
-
+	
 		public void CreateUI()
 		{
 			//	Il faut appeler cette méthode après avoir défini la liste Items.
@@ -74,8 +70,8 @@ namespace Epsitec.Cresus.Core.Widgets
 					button = new CheckButton
 					{
 						Parent = this,
-						Name = this.items.GetName (i),
-						Text = this.items[i],
+						Name = this.GetItemText (i),
+						Text = this.GetItemText (i),
 						Dock = DockStyle.Top,
 						TabIndex = tabIndex++,
 					};
@@ -85,8 +81,8 @@ namespace Epsitec.Cresus.Core.Widgets
 					button = new RadioButton
 					{
 						Parent = this,
-						Name = this.items.GetName (i),
-						Text = this.items[i],
+						Name = this.GetItemText (i),
+						Text = this.GetItemText (i),
 						Dock = DockStyle.Top,
 						TabIndex = tabIndex++,
 					};
@@ -96,44 +92,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void CreateUIComboInitializer()
+		private string GetItemText(int index)
 		{
-			// TODO: A supprimer
-			//	Il faut appeler cette méthode après avoir défini la liste Items.
-			//	Je ne veux pas le faire automatiquement après chaque Items.Add(), pour des raisons
-			//	d'efficacité !
-			this.Children.Clear ();
-
-			int tabIndex = 1;
-
-			foreach (var pair in this.comboInitializer.Content)
+			if (this.ValueToDescriptionConverter == null)
 			{
-				AbstractButton button;
-
-				if (this.AllowMultipleSelection)
-				{
-					button = new CheckButton
-					{
-						Parent = this,
-						Name = pair.Key,
-						Text = pair.Value,
-						Dock = DockStyle.Top,
-						TabIndex = tabIndex++,
-					};
-				}
-				else
-				{
-					button = new RadioButton
-					{
-						Parent = this,
-						Name = pair.Key,
-						Text = pair.Value,
-						Dock = DockStyle.Top,
-						TabIndex = tabIndex++,
-					};
-				}
-
-				button.ActiveStateChanged += new EventHandler (this.HandleButtonActiveStateChanged);
+				return null;
+			}
+			else
+			{
+				object value = this.items.GetValue (index);
+				return this.ValueToDescriptionConverter (value);
 			}
 		}
 
@@ -328,12 +296,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			foreach (int sel in sels)
 			{
-				list.Add (this.items.GetName(sel));
+				list.Add (this.GetItemText (sel));
 			}
 
 			foreach (AbstractButton button in this.Children)
 			{
+				this.ignoreChange = true;
 				button.ActiveState = (list.Contains (button.Name)) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+				this.ignoreChange = false;
 			}
 		}
 
@@ -373,6 +343,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleButtonActiveStateChanged(object sender)
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			this.ButtonsToSelection ();
 		}
 

@@ -8,6 +8,7 @@ using System.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Accessors
 {
@@ -102,6 +103,39 @@ namespace Epsitec.Cresus.Core.Accessors
 					}
 				}
 			}
+		}
+
+
+		public override void WidgetInitialize(Widget widget, object unspecifiedEntitie)
+		{
+			var editor = widget as Widgets.DetailedCombo;
+			var selectedRoles = unspecifiedEntitie as IList<Entities.ContactRoleEntity>;
+			var possibleRoles = Controllers.MainViewController.roles;
+
+			foreach (var role in possibleRoles)
+			{
+				editor.Items.Add (null, role);
+			}
+
+			editor.ValueToDescriptionConverter = RolesContactAccessor.DetailedValueToDescriptionConverter;
+			editor.CreateUI ();
+
+			foreach (var role in selectedRoles)
+			{
+				int index = editor.Items.FindIndexByValue (role);
+
+				if (index != -1)
+				{
+					editor.AddSelection (Enumerable.Range (index, 1));
+				}
+			}
+		}
+
+		private static string DetailedValueToDescriptionConverter(object value)
+		{
+			var entity = value as Entities.ContactRoleEntity;
+
+			return entity.Name;
 		}
 	}
 }
