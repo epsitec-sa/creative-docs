@@ -168,9 +168,10 @@ namespace Epsitec.Cresus.Core
 			var ribbonController   = new RibbonViewController ();
 
 			var entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
+			var roles = new List<Entities.ContactRoleEntity> (this.data.GetSampleRoles ());
 			var locations = new List<Entities.LocationEntity> (this.data.GetSampleLocations ());
 			var countries = new List<Entities.CountryEntity> (this.data.GetSampleCountries ());
-			var mainViewController = new MainViewController (entities, locations, countries);
+			var mainViewController = new MainViewController (entities, roles, locations, countries);
 
 			this.controllers.Add (ribbonController);
 			this.controllers.Add (mainViewController);

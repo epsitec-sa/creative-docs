@@ -42,16 +42,30 @@ namespace Epsitec.Cresus.Core
 			return this.sampleLocations;
 		}
 
+		public IEnumerable<ContactRoleEntity> GetSampleRoles()
+		{
+			//	HACK: this method will soon be replaced by repositories
+
+			if (this.samplePersons == null)
+			{
+				this.sampleRoles = new List<ContactRoleEntity> ();
+				CoreData.CreateSampleRoles (this.sampleRoles);
+			}
+
+			return this.sampleRoles;
+		}
+
 		public IEnumerable<AbstractPersonEntity> GetSamplePersons()
 		{
 			//	HACK: this method will soon be replaced by repositories
 
 			if (this.samplePersons == null)
 			{
+				IEnumerable<ContactRoleEntity> roles = this.GetSampleRoles ();
 				IEnumerable<LocationEntity> locations = this.GetSampleLocations ();
 
 				this.samplePersons = new List<AbstractPersonEntity> ();
-				CoreData.CreateSamplePersons (this.samplePersons, locations);
+				CoreData.CreateSamplePersons (this.samplePersons, roles, locations);
 			}
 
 			return this.samplePersons;
@@ -5620,8 +5634,57 @@ namespace Epsitec.Cresus.Core
 		};
 
 
-		private static void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<LocationEntity> locations)
+		private static void CreateSampleRoles(List<ContactRoleEntity> roles)
 		{
+			var context = EntityContext.Current;
+
+			var role1 = context.CreateEmptyEntity<ContactRoleEntity> ();
+			role1.Name = "professionnel";
+
+			var role2 = context.CreateEmptyEntity<ContactRoleEntity> ();
+			role2.Name = "commande";
+
+			var role3 = context.CreateEmptyEntity<ContactRoleEntity> ();
+			role3.Name = "livraison";
+
+			var role4 = context.CreateEmptyEntity<ContactRoleEntity> ();
+			role4.Name = "facturation";
+
+			var role5 = context.CreateEmptyEntity<ContactRoleEntity> ();
+			role5.Name = "privé";
+
+			roles.Add (role1);
+			roles.Add (role2);
+			roles.Add (role3);
+			roles.Add (role4);
+			roles.Add (role5);
+		}
+
+		private static void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<ContactRoleEntity> roles, IEnumerable<LocationEntity> locations)
+		{
+			ContactRoleEntity role1 = null;
+			ContactRoleEntity role2 = null;
+			ContactRoleEntity role3 = null;
+
+			foreach (var role in roles)
+			{
+				if (role.Name == "facturation")
+				{
+					role1 = role;
+				}
+
+				if (role.Name == "professionnel")
+				{
+					role2 = role;
+				}
+
+				if (role.Name == "privé")
+				{
+					role3 = role;
+				}
+			}
+
+
 			LocationEntity yverdon = null;
 
 			foreach (var location in locations)
@@ -5632,6 +5695,7 @@ namespace Epsitec.Cresus.Core
 					break;
 				}
 			}
+
 
 			var context = EntityContext.Current;
 
@@ -5649,15 +5713,6 @@ namespace Epsitec.Cresus.Core
 
 			var comment1 = context.CreateEmptyEntity<CommentEntity> ();
 			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
-
-			var role1 = context.CreateEmptyEntity<ContactRoleEntity> ();
-			role1.Name = "facturation";
-
-			var role2 = context.CreateEmptyEntity<ContactRoleEntity> ();
-			role2.Name = "professionnel";
-
-			var role3 = context.CreateEmptyEntity<ContactRoleEntity> ();
-			role3.Name = "privé";
 
 			var contact1 = context.CreateEmptyEntity<MailContactEntity> ();
 			var contact2 = context.CreateEmptyEntity<MailContactEntity> ();
@@ -5770,6 +5825,7 @@ namespace Epsitec.Cresus.Core
 
 		List<CountryEntity> sampleCountries;
 		List<LocationEntity> sampleLocations;
+		List<ContactRoleEntity> sampleRoles;
 		List<AbstractPersonEntity> samplePersons;
 	}
 }
