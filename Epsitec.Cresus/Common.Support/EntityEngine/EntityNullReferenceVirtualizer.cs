@@ -14,14 +14,21 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (!EntityNullReferenceVirtualizer.IsVirtualizedEntity (entity))
 			{
-				EntityNullReferenceVirtualizer.VirtualizeEntity (entity, false);
+				entity.SetModifiedValues (new Store (entity.GetModifiedValues ()) { Entity = entity });
+				entity.SetOriginalValues (new Store (entity.GetOriginalValues ()) { Entity = entity });
 			}
 		}
 
-		private static void VirtualizeEntity(AbstractEntity entity, bool readOnly)
+		private static void VirtualizeEntity(AbstractEntity entity, Store parentStore, string id)
 		{
-			entity.SetModifiedValues (new Store (entity.GetModifiedValues ()) { ReadOnly = readOnly });
-			entity.SetOriginalValues (new Store (entity.GetOriginalValues ()) { ReadOnly = readOnly });
+			var store = new Store (entity.GetModifiedValues ())
+			{
+				Entity = entity,
+				ParentStore = parentStore,
+				FieldIdInParentStore = id,
+			};
+
+			entity.SetModifiedValues (store);
 		}
 
 		class Store : IValueStore
@@ -32,7 +39,27 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.values = new Dictionary<string, object> ();
 			}
 
+			public AbstractEntity Entity
+			{
+				get;
+				set;
+			}
+
 			public bool ReadOnly
+			{
+				get
+				{
+					return this.ParentStore != null;
+				}
+			}
+
+			public Store ParentStore
+			{
+				get;
+				set;
+			}
+
+			public string FieldIdInParentStore
 			{
 				get;
 				set;
@@ -51,24 +78,14 @@ namespace Epsitec.Common.Support.EntityEngine
 						return value;
 					}
 
-					IStructuredTypeProvider provider = this.realStore as IStructuredTypeProvider;
-					if (provider != null)
+					var entity = this.CreateEntityForField (id, Store.CreateAlwaysEmptyEntity);
+					
+					if (entity != null)
 					{
-						StructuredType type = provider.GetStructuredType () as StructuredType;
-						if (type != null)
-						{
-							var info = type.GetField (id);
-							
-							if (info.Relation == FieldRelation.Reference)
-							{
-								var entity = EntityClassFactory.CreateEmptyEntity (info.TypeId);
-								EntityNullReferenceVirtualizer.VirtualizeEntity (entity, true);
+						EntityNullReferenceVirtualizer.VirtualizeEntity (entity, this, id);
+						this.values.Add (id, entity);
 
-								this.values.Add (id, entity);
-
-								value = entity;
-							}
-						}
+						value = entity;
 					}
 				}
 
@@ -77,13 +94,69 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
-				if (this.ReadOnly)
-				{
-					throw new System.InvalidOperationException ();
-				}
-
+				this.RealizeEntity ();
+				
 				this.realStore.SetValue (id, value, mode);
 				this.values.Remove (id);
+			}
+
+			private static AbstractEntity CreateAlwaysEmptyEntity(Druid druid)
+			{
+				EntityContext.Push (EntityNullReferenceVirtualizer.emptyEntitiesContext);
+				
+				try
+				{
+					return EntityClassFactory.CreateEmptyEntity (druid);
+				}
+				finally
+				{
+					EntityContext.Pop ();
+				}
+			}
+
+			private AbstractEntity CreateEntityForField(string id, System.Func<Druid, AbstractEntity> creator)
+			{
+				var provider = this.realStore as IStructuredTypeProvider;
+
+				if (provider == null)
+				{
+					return null;
+				}
+
+				var type = provider.GetStructuredType () as StructuredType;
+
+				if (type == null)
+				{
+					return null;
+				}
+
+				var info = type.GetField (id);
+
+				if (info.Relation == FieldRelation.Reference)
+				{
+					return creator (info.TypeId);
+				}
+
+				return null;
+			}
+
+			private void RealizeEntity()
+			{
+				if (this.ReadOnly)
+				{
+					var entity  = this.Entity;
+					var parent  = this.ParentStore;
+					var fieldId = this.FieldIdInParentStore;
+
+					parent.RealizeEntity ();
+					parent.realStore.SetValue (fieldId, entity, ValueStoreSetMode.Default);
+					parent.values.Remove (fieldId);
+					parent.Entity.UpdateDataGeneration ();
+					
+					this.ParentStore = null;
+					
+					entity.ReplaceEntityContext (EntityContext.Current);
+				}
 			}
 
 			#endregion
@@ -103,5 +176,32 @@ namespace Epsitec.Common.Support.EntityEngine
 				return false;
 			}
 		}
+
+		public static bool IsVirtualizedReadOnlyEntity(AbstractEntity entity)
+		{
+			if (entity.InternalGetValueStores ().Any (store => store is Store && ((Store)store).ReadOnly))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private static EntityContext GetEmptyEntitiesContext()
+		{
+			var context = EntityNullReferenceVirtualizer.emptyEntitiesContext;
+
+			if (EntityNullReferenceVirtualizer.emptyEntitiesContext == null)
+			{
+				EntityNullReferenceVirtualizer.emptyEntitiesContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw);
+			}
+
+			return EntityNullReferenceVirtualizer.emptyEntitiesContext;
+		}
+
+		[System.ThreadStatic]
+		private static EntityContext emptyEntitiesContext;
 	}
 }
