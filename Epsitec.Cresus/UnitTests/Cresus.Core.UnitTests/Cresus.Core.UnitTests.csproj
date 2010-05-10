@@ -61,6 +61,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database.cs" />
     <Compile Include="EntityBuilder.cs" />
     <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
