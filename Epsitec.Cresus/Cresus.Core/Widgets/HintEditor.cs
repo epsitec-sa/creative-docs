@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	}
 
 
-	public class HintEditor : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.INamedStringSelection
+	public class HintEditor : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
 	{
 		public HintEditor()
 		{
@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#endregion
 
-		#region INamedStringSelection Members
+		#region IKeyedStringSelection Members
 
-		public string SelectedName
+		public string SelectedKey
 		{
 			get
 			{
@@ -160,17 +160,17 @@ namespace Epsitec.Cresus.Core.Widgets
 					return null;
 				}
 
-				return this.items.GetName (this.selectedRow);
+				return this.items.GetKey (this.selectedRow);
 			}
 			set
 			{
-				if (this.SelectedName != value)
+				if (this.SelectedKey != value)
 				{
 					int index = -1;
 
 					if (value != null)
 					{
-						index = this.items.FindIndexByName (value);
+						index = this.items.FindIndexByKey (value);
 
 						if (index < 0)
 						{
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						}
 					}
 
-					this.SelectedIndex = index;
+					this.SelectedItemIndex = index;
 				}
 			}
 		}
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region IStringSelection Members
 
-		public int SelectedIndex
+		public int SelectedItemIndex
 		{
 			get
 			{
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.Text = this.GetItemText (this.selectedRow);
 					this.ignoreChange = false;
 
-					this.OnSelectedIndexChanged ();
+					this.OnSelectedItemChanged ();
 				}
 			}
 		}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				int index = this.SelectedIndex;
+				int index = this.SelectedItemIndex;
 				
 				if (index < 0)
 				{
@@ -228,19 +228,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			set
 			{
-				this.SelectedIndex = this.Items.IndexOf (value);
+				this.SelectedItemIndex = this.Items.IndexOf (value);
 			}
 		}
 
-		public event EventHandler  SelectedIndexChanged
+		public event EventHandler SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectedIndexChanged", value);
+				this.AddUserEventHandler(HintEditor.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler (HintEditor.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -331,10 +331,10 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedIndexChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (HintEditor.SelectedItemChangedEvent);
 			if (handler != null)
 			{
 				handler (this);
@@ -425,27 +425,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				int i = this.hintListIndex[this.hintSelected];
 
-				this.SetSilentSelectedIndex (i);  // (*)
+				this.SetSilentSelectedItemIndex (i);  // (*)
 				this.HintText = this.GetItemText (i);
 				this.SetError (false);
 			}
 			else
 			{
-				this.SetSilentSelectedIndex (-1);  // (*)
+				this.SetSilentSelectedItemIndex (-1);  // (*)
 				this.HintText = null;
 				this.SetError (!string.IsNullOrEmpty (this.Text));
 			}
 		}
 
-		// (*)	Il ne faut surtout pas utiliser SelectedIndex = i, car il ne faut surtout
+		// (*)	Il ne faut surtout pas utiliser SelectedItemIndex = i, car il ne faut surtout
 		//		pas modifier this.Text !
 
-		private void SetSilentSelectedIndex(int index)
+		private void SetSilentSelectedItemIndex(int index)
 		{
 			if (this.selectedRow != index)
 			{
 				this.selectedRow = index;
-				this.OnSelectedIndexChanged ();
+				this.OnSelectedItemChanged ();
 			}
 		}
 
@@ -542,7 +542,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.ignoreChange = true;
-			this.scrollList.SelectedIndex = this.hintSelected;
+			this.scrollList.SelectedItemIndex = this.hintSelected;
 			this.scrollList.ShowSelected (ScrollShowMode.Center);
 			this.ignoreChange = false;
 		}
@@ -571,14 +571,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				int i = this.hintListIndex[index];
 
-				string key = this.items.GetName (i);
+				string key = this.items.GetKey (i);
 				string text = this.GetItemText (i);
 
 				this.scrollList.Items.Add (key, text);
 			}
 
 			this.ignoreChange = true;
-			this.scrollList.SelectedIndex = this.hintSelected;
+			this.scrollList.SelectedItemIndex = this.hintSelected;
 			this.scrollList.ShowSelected (ScrollShowMode.Center);
 			this.ignoreChange = false;
 
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			this.hintSelected = this.scrollList.SelectedIndex;
+			this.hintSelected = this.scrollList.SelectedItemIndex;
 			this.UseSelectedHint ();
 			this.Text = this.HintText;
 			this.SelectAll ();
@@ -654,6 +654,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.CloseComboMenu ();
 		}
 		#endregion
+
+		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 
 		private readonly Common.Widgets.Collections.StringCollection items;

@@ -31,9 +31,9 @@ namespace Epsitec.Common.Widgets
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex = 0;
 			table.TitleHeight       = 32;
-			table.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			table.SelectedItemChanged  += this.HandleSelectedItemChanged;
 			table.Clicked              += this.HandleClicked;
 			table.DoubleClicked        += this.HandleDoubleClicked;
 			table.PaintForeground      += this.HandlePaintForeground;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex     = 0;
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += this.HandleEditDoubleClicked;
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 			
 			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex     = 0;
 			table.EditionZoneHeight = 4;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += this.HandleEditDoubleClicked;
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex     = 0;
 			table.EditionZoneHeight = 1;
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex     = 0;
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.TitleWidget       = new StaticText (@"<font size=""120%"">Search Test.</font>");
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Widgets
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
+			table.SelectedItemIndex     = 0;
 			table.EditionZoneHeight = 1;
 			table.TitleWidget       = header;
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
@@ -325,12 +325,12 @@ namespace Epsitec.Common.Widgets
 			
 			public event Support.EventHandler	StoreContentsChanged;
 		}
-#endif		
-		
-		private void HandleSelectedIndexChanged(object sender)
+#endif
+
+		private void HandleSelectedItemChanged(object sender)
 		{
 			ScrollArray table = sender as ScrollArray;
-			System.Diagnostics.Debug.WriteLine ("Selected : " + table.SelectedIndex);
+			System.Diagnostics.Debug.WriteLine ("Selected : " + table.SelectedItemIndex);
 		}
 
 		private void HandleClicked(object sender, MessageEventArgs e)
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			ScrollArray table = sender as ScrollArray;
 			table.HitTestTable (e.Point, out this.hilite_row, out this.hilite_column);
 			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + this.hilite_row + "," + this.hilite_column);
-			table.SelectedIndex = this.hilite_row;
+			table.SelectedItemIndex = this.hilite_row;
 			table.ShowEdition (ScrollShowMode.Extremity);
 			table.Invalidate ();
 		}

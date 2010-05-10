@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.selectedIndex = value;
 					this.UpdateButtons();
-					this.OnSelectedIndexChanged();
+					this.OnSelectedItemChanged();
 				}
 			}
 		}
@@ -406,12 +406,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual void OnSelectedItemChanged()
 		{
 			//	Ne notifie les changements d'index que lorsque le menu déroulant est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedItemChanged");
 				if (handler != null)
 				{
 					handler(this);
@@ -533,7 +533,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
+				this.scrollList.SelectedItemIndex = this.MapIndexToComboList(this.SelectedIndex);
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
@@ -542,7 +542,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
@@ -573,7 +573,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollList != null )
 			{
 				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -588,7 +588,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.OnComboClosed();
-			this.OnSelectedIndexChanged();
+			this.OnSelectedItemChanged();
 		}
 
 
@@ -700,13 +700,13 @@ namespace Epsitec.Common.Widgets
 		private void HandleScrollListSelectionActivated(object sender)
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
 		
-		private void HandleScrollerSelectedIndexChanged(object sender)
+		private void HandleScrollListSelectedItemChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
-			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboSelectedIndex (this.scrollList.SelectedItemIndex);
 		}
 
 		private void HandleMenuAccepted(object sender)
@@ -832,15 +832,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler				SelectedIndexChanged
+		public event EventHandler				SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectedIndexChanged", value);
+				this.AddUserEventHandler("SelectedItemChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler("SelectedItemChanged", value);
 			}
 		}
 

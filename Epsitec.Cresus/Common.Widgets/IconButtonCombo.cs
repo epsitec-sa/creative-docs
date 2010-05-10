@@ -101,21 +101,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public int								SelectedIndex
+		public int								SelectedItemIndex
 		{
 			//	Donne le rang de l'élément sélectionné (-1 si aucune sélection).
 			get
 			{
-				return this.selectedIndex;
+				return this.selectedItemIndex;
 			}
 
 			set
 			{
-				if ( this.selectedIndex != value )
+				if ( this.selectedItemIndex != value )
 				{
-					this.selectedIndex = value;
+					this.selectedItemIndex = value;
 					this.UpdateIcon();
-					this.OnSelectedIndexChanged();
+					this.OnSelectedItemChanged ();
 				}
 			}
 		}
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets
 			//	Donne le nom de l'élément sélectionné (null si aucune sélection).
 			get
 			{
-				int sel = this.SelectedIndex;
+				int sel = this.SelectedItemIndex;
 				if ( sel == -1 )  return null;
 
 				int rank = 0;
@@ -153,14 +153,14 @@ namespace Epsitec.Common.Widgets
 
 					if ( item.Name == value )
 					{
-						this.SelectedIndex = rank;
+						this.SelectedItemIndex = rank;
 						return;
 					}
 
 					rank ++;
 				}
 
-				this.SelectedIndex = -1;
+				this.SelectedItemIndex = -1;
 			}
 		}
 
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateIcon()
 		{
 			//	Met à jour l'icône dans le bouton, en fonction de la sélection.
-			int sel = this.SelectedIndex;
+			int sel = this.SelectedItemIndex;
 
 			if ( sel == -1 )
 			{
@@ -234,15 +234,15 @@ namespace Epsitec.Common.Widgets
 				rank ++;
 			}
 		}
-		
-		
-		protected virtual void OnSelectedIndexChanged()
+
+
+		protected virtual void OnSelectedItemChanged()
 		{
 			//	Ne notifie les changements d'index que lorsque le menu déroulant
 			//	est fermé.
 			if ( this.IsComboOpen == false )
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
 				if (handler != null)
 				{
 					handler(this);
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( index >= 0 )
 			{
-				this.SelectedIndex = index;
+				this.SelectedItemIndex = index;
 				this.menu.Behavior.Accept();
 			}
 		}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 			//	activée.
 			if ( this.isLiveUpdateEnabled )
 			{
-				this.SelectedIndex = this.MapComboListToIndex(sel);
+				this.SelectedItemIndex = this.MapComboListToIndex (sel);
 			}
 		}
 		
@@ -327,14 +327,14 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
-			
-			int	 sel = this.SelectedIndex;
+
+			int	 sel = this.SelectedItemIndex;
 
 			sel += dir;
 			sel = System.Math.Max(sel, 0);
 			sel = System.Math.Min(sel, this.items.Count-1);
-			
-			this.SelectedIndex = sel;
+
+			this.SelectedItemIndex = sel;
 			this.Focus();
 		}
 		
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
+				this.scrollList.SelectedItemIndex = this.MapIndexToComboList (this.SelectedItemIndex);
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
@@ -400,7 +400,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollList != null )
 			{
 				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.OnComboClosed();
-			this.OnSelectedIndexChanged();
+			this.OnSelectedItemChanged();
 		}
 
 
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( item == null )  continue;  // séparateur ?
 
-				bool sel = (rank == this.SelectedIndex);
+				bool sel = (rank == this.SelectedItemIndex);
 				this.scrollList.Items.Add(item.Name, sel ? item.SelectedText : item.RegularText);
 				rank ++;
 			}
@@ -488,13 +488,13 @@ namespace Epsitec.Common.Widgets
 		private void HandleScrollListSelectionActivated(object sender)
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
-			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
-		
-		private void HandleScrollerSelectedIndexChanged(object sender)
+
+		private void HandleScrollListSelectedItemChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
-			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboSelectedIndex(this.scrollList.SelectedItemIndex);
 		}
 
 		private void HandleMenuAccepted(object sender)
@@ -599,15 +599,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler				SelectedIndexChanged
+		public event EventHandler				SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectedIndexChanged", value);
+				this.AddUserEventHandler ("SelectedItemChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler ("SelectedItemChanged", value);
 			}
 		}
 
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							isLiveUpdateEnabled	= true;
 		protected bool							menuDrawFrame = false;
 		protected bool							allLinesWidthSameWidth = false;
-		protected int							selectedIndex = -1;
+		protected int							selectedItemIndex = -1;
 		protected IconButton					buttonMain;
 		protected GlyphButton					buttonMenu;
 		protected System.Collections.ArrayList	items;

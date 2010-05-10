@@ -186,9 +186,9 @@ namespace Epsitec.Common.Dialogs.Controllers
 
 		private void HandleBrowserComboClosed(object sender)
 		{
-			if (this.browser.SelectedIndex != -1)
+			if (this.browser.SelectedItemIndex != -1)
 			{
-				this.navigationController.ActiveDirectory = this.comboFolders[this.browser.SelectedIndex].FolderItem;
+				this.navigationController.ActiveDirectory = this.comboFolders[this.browser.SelectedItemIndex].FolderItem;
 			}
 		}
 

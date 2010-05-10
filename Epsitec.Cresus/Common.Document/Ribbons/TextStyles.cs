@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.AutoFocus = false;
 			this.comboStyle.TabIndex = this.tabIndex++;
 			this.comboStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.comboStyle.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			this.comboStyle.SelectedItemChanged += this.HandleSelectedIndexChanged;
 			this.comboStyle.FirstIconChanged += this.HandleFirstIconChanged;
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a

@@ -57,7 +57,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </returns>
 		public static bool IsPatchedEntityStillUnchanged(AbstractEntity entity)
 		{
-			if (entity.InternalGetValueStores ().Select (store => store is Store).Cast<Store> ().All (store => store.ReadOnly))
+			if (entity.InternalGetValueStores ().Select (store => store is Store).Cast<Store> ().All (store => store.IsReadOnly))
 			{
 				return true;
 			}
@@ -65,6 +65,35 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				return false;
 			}
+		}
+
+
+		/// <summary>
+		/// Creates an empty entity attached to a dedicated context.
+		/// </summary>
+		/// <param name="druid">The druid.</param>
+		/// <returns>The empty entity.</returns>
+		private static AbstractEntity CreateEmptyEntity(Druid druid)
+		{
+			var context = EntityNullReferenceVirtualizer.GetEmptyEntitiesContext ();
+			return context.CreateEmptyEntity (druid);
+		}
+
+		/// <summary>
+		/// Gets the context used to create empty entities.
+		/// </summary>
+		/// <returns>The <see cref="EntityContext"/>.</returns>
+		private static EntityContext GetEmptyEntitiesContext()
+		{
+			var context = EntityNullReferenceVirtualizer.emptyEntitiesContext;
+
+			if (EntityNullReferenceVirtualizer.emptyEntitiesContext == null)
+			{
+				EntityNullReferenceVirtualizer.emptyEntitiesContext =
+					new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "EmptyEntities");
+			}
+
+			return EntityNullReferenceVirtualizer.emptyEntitiesContext;
 		}
 
 
@@ -86,30 +115,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			public Store(IValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
 				: this (realStore, entity)
 			{
-				this.ParentStore = parentStore;
-				this.FieldIdInParentStore = fieldIdInParentStore;
+				this.parentStore = parentStore;
+				this.fieldIdInParentStore = fieldIdInParentStore;
+				this.isReadOnly = true;
 			}
-
 			
 
-			public bool ReadOnly
+			public bool IsReadOnly
 			{
 				get
 				{
-					return this.ParentStore != null;
+					return this.isReadOnly;
 				}
-			}
-
-			private Store ParentStore
-			{
-				get;
-				set;
-			}
-
-			private string FieldIdInParentStore
-			{
-				get;
-				set;
 			}
 
 			#region IValueStore Members
@@ -126,7 +143,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					}
 					else
 					{
-						return this.CreateEmptyEntityForField (id);
+						return this.CreateEmptyEntityForUndefinedField (id);
 					}
 				}
 
@@ -135,24 +152,18 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
-				this.RealizeEntity ();
+				this.TranformNullEntityInfoLiveEntity ();
 				this.ReplaceValue (id, value, mode);
 			}
 
 			#endregion
 
-			private void ReplaceValue(string id, object value, ValueStoreSetMode mode)
+			private void TranformNullEntityInfoLiveEntity()
 			{
-				this.realStore.SetValue (id, value, mode);
-				this.values.Remove (id);
-			}
-
-			private void RealizeEntity()
-			{
-				if (this.ReadOnly)
+				if (this.IsReadOnly)
 				{
-					this.ParentStore.SetLiveEntity (this.FieldIdInParentStore, this.entity);
-					this.ParentStore = null;
+					this.parentStore.SetLiveEntity (this.fieldIdInParentStore, this.entity);
+					this.isReadOnly = false;
 
 					this.entity.ReplaceEntityContext (EntityContext.Current);
 				}
@@ -163,20 +174,38 @@ namespace Epsitec.Common.Support.EntityEngine
 				//	Make sure this is a real entity, before recording the entity into the specified
 				//	reference field:
 
-				this.RealizeEntity ();
+				this.TranformNullEntityInfoLiveEntity ();
 				this.ReplaceValue (fieldId, entity, ValueStoreSetMode.Default);
 				
 				this.entity.UpdateDataGeneration ();
 			}
 
-			
-			private static void PatchNullReferences(AbstractEntity entity, Store parentStore, string id)
+			private void ReplaceValue(string id, object value, ValueStoreSetMode mode)
 			{
-				var store = new Store (entity.GetModifiedValues (), entity, parentStore, id);
-				entity.SetModifiedValues (store);
+				this.realStore.SetValue (id, value, mode);
+				this.values.Remove (id);
 			}
 
-			private AbstractEntity CreateEmptyEntityForField(string id)
+			private AbstractEntity CreateEmptyEntityForUndefinedField(string id)
+			{
+				var info = this.GetStructuredTypeField (id);
+
+				if ((info != null) &&
+					(info.Relation == FieldRelation.Reference))
+				{
+					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
+
+					if (entity != null)
+					{
+						Store.PatchNullReferences (entity, this, id);
+						this.values.Add (id, entity);
+					}
+				}
+
+				return null;
+			}
+
+			private StructuredTypeField GetStructuredTypeField(string id)
 			{
 				var provider = this.realStore as IStructuredTypeProvider;
 
@@ -192,45 +221,24 @@ namespace Epsitec.Common.Support.EntityEngine
 					return null;
 				}
 
-				var info = type.GetField (id);
-
-				if (info.Relation == FieldRelation.Reference)
-				{
-					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
-
-					if (entity != null)
-					{
-						Store.PatchNullReferences (entity, this, id);
-						this.values.Add (id, entity);
-					}
-				}
-
-				return null;
+				return type.GetField (id);
 			}
 
-			private readonly IValueStore realStore;
-			private readonly Dictionary<string, object> values;
-			private readonly AbstractEntity entity;
-		}
-
-		private static AbstractEntity CreateEmptyEntity(Druid druid)
-		{
-			var context = EntityNullReferenceVirtualizer.GetEmptyEntitiesContext ();
-			return context.CreateEmptyEntity (druid);
-		}
-
-		private static EntityContext GetEmptyEntitiesContext()
-		{
-			var context = EntityNullReferenceVirtualizer.emptyEntitiesContext;
-
-			if (EntityNullReferenceVirtualizer.emptyEntitiesContext == null)
+			private static void PatchNullReferences(AbstractEntity entity, Store parentStore, string id)
 			{
-				EntityNullReferenceVirtualizer.emptyEntitiesContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw);
+				var store = new Store (entity.GetModifiedValues (), entity, parentStore, id);
+				entity.SetModifiedValues (store);
 			}
-
-			return EntityNullReferenceVirtualizer.emptyEntitiesContext;
+			
+			private readonly IValueStore				realStore;
+			private readonly Dictionary<string, object>	values;
+			private readonly AbstractEntity				entity;
+			private readonly Store						parentStore;
+			private readonly string						fieldIdInParentStore;
+			private bool								isReadOnly;
 		}
 
+		
 		[System.ThreadStatic]
 		private static EntityContext emptyEntitiesContext;
 	}

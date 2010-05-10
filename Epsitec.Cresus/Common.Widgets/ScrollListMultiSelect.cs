@@ -37,8 +37,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.dragSelectionStartIndex >= 0)
 				{
-					int begin = System.Math.Min (this.dragSelectionStartIndex, this.SelectedIndex);
-					int end   = System.Math.Max (this.dragSelectionStartIndex, this.SelectedIndex);
+					int begin = System.Math.Min (this.dragSelectionStartIndex, this.SelectedItemIndex);
+					int end   = System.Math.Max (this.dragSelectionStartIndex, this.SelectedItemIndex);
 
 					return end - begin + 1;
 				}
@@ -103,8 +103,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.dragSelectionStartIndex >= 0)
 			{
-				int begin = System.Math.Min (this.dragSelectionStartIndex, this.SelectedIndex);
-				int end   = System.Math.Max (this.dragSelectionStartIndex, this.SelectedIndex);
+				int begin = System.Math.Min (this.dragSelectionStartIndex, this.SelectedItemIndex);
+				int end   = System.Math.Max (this.dragSelectionStartIndex, this.SelectedItemIndex);
 
 				if ((index >= begin) &&
 					(index <= end))
@@ -138,15 +138,15 @@ namespace Epsitec.Common.Widgets
 		{
 			base.MouseSelectEnd ();
 
-			System.Diagnostics.Debug.WriteLine ("MouseSelectEnd, SelectedIndex : " + this.SelectedIndex.ToString ());
+			System.Diagnostics.Debug.WriteLine ("MouseSelectEnd, SelectedItemIndex : " + this.SelectedItemIndex.ToString ());
 			
 			if (this.dragSelectionStartIndex >= 0)
 			{
 				//	The user dragged a multiline selection, which will trigger an appropriate
 				//	notification event.
 
-				int begin = System.Math.Min (this.SelectedIndex, this.dragSelectionStartIndex);
-				int end   = System.Math.Max (this.SelectedIndex, this.dragSelectionStartIndex);
+				int begin = System.Math.Min (this.SelectedItemIndex, this.dragSelectionStartIndex);
+				int end   = System.Math.Max (this.SelectedItemIndex, this.dragSelectionStartIndex);
 
 				this.dragSelectionStartIndex = NoSelection;
 
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 			base.MouseSelectRow (index);
 		}
 
-		protected override void OnSelectedIndexChanged()
+		protected override void OnSelectedItemChanged()
 		{
 			if (this.dragSelectionStartIndex >= 0)
 			{
@@ -180,9 +180,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("SelectedIndexChanged : " + this.SelectedIndex.ToString ());
+				System.Diagnostics.Debug.WriteLine ("SelectedItemIndexChanged : " + this.SelectedItemIndex.ToString ());
 
-				int index = this.SelectedIndex;
+				int index = this.SelectedItemIndex;
 
 				if (index < 0)
 				{
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			base.OnSelectedIndexChanged ();
+			base.OnSelectedItemChanged ();
 		}
 
 		protected void OnMultiSelectionChanged()

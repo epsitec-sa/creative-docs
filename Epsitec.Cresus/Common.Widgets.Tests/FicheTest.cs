@@ -565,12 +565,12 @@ namespace Epsitec.Common.Widgets
 				i ++;
 			}
 
-			this.listLook.SelectedIndex = sel;
-			this.listLook.SelectedIndexChanged += this.HandleLook;
+			this.listLook.SelectedItemIndex = sel;
+			this.listLook.SelectedItemChanged += this.HandleLook;
 			this.topPane.Children.Add(this.listLook);
 
 			this.table = new ScrollArray();
-			this.table.SelectedIndexChanged += this.table_SelectedIndexChanged;
+			this.table.SelectedItemChanged += this.table_SelectedIndexChanged;
 			this.table.SortChanged += this.table_SortChanged;
 			this.InitTable();
 			this.UpdateTable();
@@ -597,7 +597,7 @@ namespace Epsitec.Common.Widgets
 			this.staticTexts = new System.Collections.ArrayList();
 			this.textFields = new System.Collections.ArrayList();
 			this.listCrit.Items.Add("<i><b>Partout</b></i>");
-			this.listCrit.SelectedIndex = 0;
+			this.listCrit.SelectedItemIndex = 0;
 			this.staticTexts.Clear();
 			this.textFields.Clear();
 			int nbField = this.db.TotalField;
@@ -675,7 +675,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleLook(object sender)
 		{
 			ScrollList sl = sender as ScrollList;
-			int sel = sl.SelectedIndex;
+			int sel = sl.SelectedItemIndex;
 			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
 		}
 
@@ -768,7 +768,7 @@ namespace Epsitec.Common.Widgets
 			TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(field);
 			this.table.SetSortingHeader(fd.rank, mode);
 
-			this.table.SelectedIndex = this.recordRank;
+			this.table.SelectedItemIndex = this.recordRank;
 			this.table.ShowSelected(ScrollShowMode.Extremity);
 		}
 
@@ -808,7 +808,7 @@ namespace Epsitec.Common.Widgets
 			//	Changement de sélection dans la liste.
 			if (this.textFields != null)
 			{
-				this.recordRank = this.table.SelectedIndex;
+				this.recordRank = this.table.SelectedItemIndex;
 				this.recordCreated = false;
 				this.UpdateLayout();
 				this.UpdateButton();
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.db.SearchCritere(ref rank, out field, 1, crit, out complete) )
 			{
 				this.recordRank = rank;
-				this.table.SelectedIndex = this.recordRank;
+				this.table.SelectedItemIndex = this.recordRank;
 				this.table.ShowSelected(ScrollShowMode.Extremity);
 				this.UpdateLayout();
 
@@ -867,7 +867,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.db.SearchCritere(ref rank, out field, 1, crit, out complete) )
 			{
 				this.recordRank = rank;
-				this.table.SelectedIndex = this.recordRank;
+				this.table.SelectedItemIndex = this.recordRank;
 				this.table.ShowSelected(ScrollShowMode.Extremity);
 				this.UpdateLayout();
 				this.UpdateButton();
@@ -936,7 +936,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Bouton "Annuler" cliqué.
 			this.recordCreated = false;
-			this.recordRank = this.table.SelectedIndex;
+			this.recordRank = this.table.SelectedItemIndex;
 			this.UpdateLayout();
 			this.UpdateButton();
 			this.table.Focus();

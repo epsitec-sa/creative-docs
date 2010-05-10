@@ -829,7 +829,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			//	Combo des agrégats fermé.
 			if ( this.ignoreChanged )  return;
-			int sel = this.aggregateCombo.SelectedIndex;
+			int sel = this.aggregateCombo.SelectedItemIndex;
 			if ( sel == -1 )  return;
 			Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
 			this.document.Modifier.AggregateUse(agg);

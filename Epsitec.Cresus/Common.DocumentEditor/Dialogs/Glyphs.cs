@@ -97,15 +97,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Symbol);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Substitute);
 				System.Diagnostics.Debug.Assert(this.family.Items.Count < this.maxFamiliy);
-				this.family.SelectedIndex = 0;
-				this.family.SelectedIndexChanged += this.HandleFamilyChanged;
+				this.family.SelectedItemIndex = 0;
+				this.family.SelectedItemChanged += this.HandleFamilyChanged;
 
 				this.list = new ScrollList(bookList);
 				this.list.Dock = DockStyle.Fill;
 				this.list.Margins = new Margins (6, 6, 6+20+4, 6);
 				this.list.TabIndex = tabIndex++;
 				this.list.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.list.SelectedIndexChanged += this.HandleGlyphSelected;
+				this.list.SelectedItemChanged += this.HandleGlyphSelected;
 				this.list.DoubleClicked += this.HandleDoubleClicked;
 
 				this.UpdateList();
@@ -157,7 +157,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.fieldFontStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.UpdateFontStyle();
 				this.fieldFontStyle.Text = this.fontStyle;
-				this.fieldFontStyle.SelectedIndexChanged += this.HandleFontStyleChanged;
+				this.fieldFontStyle.SelectedItemChanged += this.HandleFontStyleChanged;
 
 				this.currentFont = new GlyphButton(bookArray);
 				this.currentFont.GlyphShape = GlyphShape.ArrowLeft;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.SetFont(this.fontFace, this.fontStyle);
-				this.array.SelectedIndex = -1;
+				this.array.SelectedItemIndex = -1;
 				this.array.DoubleClicked += this.HandleDoubleClicked;
 				this.array.ChangeSelected += this.HandleArraySelected;
 				ToolTip.Default.SetToolTip(this.array, "*");
@@ -215,7 +215,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.alternatesArray.Margins = new Margins (6, 6, 6+20, 6+20+4);
 				this.alternatesArray.TabIndex = tabIndex++;
 				this.alternatesArray.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.alternatesArray.SelectedIndex = -1;
+				this.alternatesArray.SelectedItemIndex = -1;
 				this.alternatesArray.CellSize = 50;  // taille max
 				this.alternatesArray.DoubleClicked += this.HandleDoubleClicked;
 				this.alternatesArray.ChangeSelected += this.HandleArraySelected;
@@ -349,7 +349,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected void UpdateList()
 		{
 			//	Met à jour la liste des glyphs selon la famille choisie.
-			int family = this.family.SelectedIndex;
+			int family = this.family.SelectedItemIndex;
 
 			this.ignoreChanged = true;
 			this.list.Items.Clear();  // vide le contenu précédent
@@ -376,7 +376,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				}
 			}
 
-			this.list.SelectedIndex = this.listSelectedIndex[family];
+			this.list.SelectedItemIndex = this.listSelectedIndex[family];
 			this.list.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
 		}
@@ -524,7 +524,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( this.book.ActivePage.Name == "List" )
 			{
-				int family = this.family.SelectedIndex;
+				int family = this.family.SelectedItemIndex;
 				int sel = this.listSelectedIndex[family];
 
 				if ( family == 7 )  // textes de substitutions ?
@@ -552,9 +552,10 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( this.book.ActivePage.Name == "Array" )
 			{
-				if ( this.array.SelectedIndex == -1 )  return;
+				if (this.array.SelectedItemIndex == -1)
+					return;
 
-				int code = this.array.IndexToUnicode(array.SelectedIndex);
+				int code = this.array.IndexToUnicode (array.SelectedItemIndex);
 				char c = (char) code;
 				string insert = c.ToString();
 
@@ -575,7 +576,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( this.book.ActivePage.Name == "Alternates" )
 			{
-				if ( this.alternatesArray.SelectedIndex == -1 )  return;
+				if (this.alternatesArray.SelectedItemIndex == -1)
+					return;
 
 				int code         = this.alternatesArray.Code;
 				int glyph        = this.alternatesArray.SelectedGlyph;
@@ -605,9 +607,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected void SetFontFace(string fontFace)
 		{
 			//	Change la police.
-			if ( this.array.SelectedIndex != -1 )
+			if (this.array.SelectedItemIndex != -1)
 			{
-				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
+				int code = this.array.IndexToUnicode (this.array.SelectedItemIndex);
 				if ( code != 0 )
 				{
 					this.arrayProofCode = code;
@@ -625,7 +627,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			this.array.SetFont(this.fontFace, this.fontStyle);
 
-			this.array.SelectedIndex = this.array.UnicodeToIndex(this.arrayProofCode);
+			this.array.SelectedItemIndex = this.array.UnicodeToIndex (this.arrayProofCode);
 			this.array.ShowSelectedCell();
 
 			this.ignoreChanged = false;
@@ -634,9 +636,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected void SetFontStyle(string fontStyle)
 		{
 			//	Change le style de la police.
-			if ( this.array.SelectedIndex != -1 )
+			if (this.array.SelectedItemIndex != -1)
 			{
-				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
+				int code = this.array.IndexToUnicode (this.array.SelectedItemIndex);
 				if ( code != 0 )
 				{
 					this.arrayProofCode = code;
@@ -648,7 +650,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			this.array.SetFont(this.fontFace, this.fontStyle);
 
-			this.array.SelectedIndex = this.array.UnicodeToIndex(this.arrayProofCode);
+			this.array.SelectedItemIndex = this.array.UnicodeToIndex (this.arrayProofCode);
 			this.array.ShowSelectedCell();
 		}
 
@@ -718,19 +720,19 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			//	Le glyphe dans la liste est sélectionné.
 			if ( this.ignoreChanged )  return;
 
-			int family = this.family.SelectedIndex;
-			this.listSelectedIndex[family] = this.list.SelectedIndex;
+			int family = this.family.SelectedItemIndex;
+			this.listSelectedIndex[family] = this.list.SelectedItemIndex;
 		}
 
 		private void HandleArraySelected(object sender)
 		{
 			//	Le glyphe dans le tableau est sélectionné.
 			string text = "";
-			if ( this.Array.SelectedIndex != -1 )
+			if (this.Array.SelectedItemIndex != -1)
 			{
 				if ( this.book.ActivePage.Name == "Array" )
 				{
-					int code = this.array.IndexToUnicode(this.Array.SelectedIndex);
+					int code = this.array.IndexToUnicode (this.Array.SelectedItemIndex);
 					text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code, this.fontFace, this.fontStyle));
 				}
 

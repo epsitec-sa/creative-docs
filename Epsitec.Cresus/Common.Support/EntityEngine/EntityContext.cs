@@ -26,8 +26,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="resourceManager">The resource manager.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
-		public EntityContext(IStructuredTypeResolver resourceManager, EntityLoopHandlingMode loopHandlingMode)
+		public EntityContext(IStructuredTypeResolver resourceManager, EntityLoopHandlingMode loopHandlingMode, string name = null)
 		{
+			this.name = name;
+			
 			this.resourceManager     = resourceManager;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
@@ -36,7 +38,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
-
 
 			this.dataGeneration = 1;
 		}
@@ -1049,6 +1050,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
+		private readonly string name;
 
 		private long dataGeneration;
 		private int suspendConstraintChecking;

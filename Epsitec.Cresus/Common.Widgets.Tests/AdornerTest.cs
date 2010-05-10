@@ -688,7 +688,7 @@ namespace Epsitec.Common.Widgets
 			sl.Items.Add("Decembre");
 			sl.MaxSize = new Size (90, 100);
 			sl.PreferredSize = sl.GetBestFitSize ();
-			sl.SelectedIndex = 5;  // sélectionne juin
+			sl.SelectedItemIndex = 5;  // sélectionne juin
 			sl.ShowSelected(ScrollShowMode.Center);
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.Margins = new Margins(10, 0, 10, 10);
@@ -1669,10 +1669,10 @@ namespace Epsitec.Common.Widgets
 			sl.PreferredSize = sl.GetBestFitSize ();
 			sl.Anchor = AnchorStyles.TopLeft;
 			sl.Margins = new Margins (mx, 0, my, 0);
-			
-			sl.SelectedIndex = sel;
+
+			sl.SelectedItemIndex = sel;
 			sl.ShowSelected(ScrollShowMode.Center);
-			sl.SelectedIndexChanged += AdornerTest.HandleLook;
+			sl.SelectedItemChanged += AdornerTest.HandleLook;
 
 			if ( tooltip != null )
 			{
@@ -1683,7 +1683,7 @@ namespace Epsitec.Common.Widgets
 		private static void HandleLook(object sender)
 		{
 			ScrollList sl = sender as ScrollList;
-			int sel = sl.SelectedIndex;
+			int sel = sl.SelectedItemIndex;
 			Widgets.Adorners.Factory.SetActive(sl.Items[sel]);
 		}
 

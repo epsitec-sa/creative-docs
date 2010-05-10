@@ -306,12 +306,12 @@ namespace Epsitec.Cresus.Core
 
 			accessor.WidgetInitialize (editor, entity);
 
-			editor.SelectedIndexChanged +=
+			editor.SelectedItemChanged +=
 				delegate
 				{
-					if (editor.SelectedIndex > -1)
+					if (editor.SelectedItemIndex > -1)
 					{
-						valueSetter (editor.Items.GetValue (editor.SelectedIndex) as AbstractEntity);
+						valueSetter (editor.Items.GetValue (editor.SelectedItemIndex) as AbstractEntity);
 					}
 				};
 
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Core
 			hint.EditionAccepted +=
 				delegate
 				{
-					int sel = hint.SelectedIndex;
+					int sel = hint.SelectedItemIndex;
 					if (sel != -1)
 					{
 						string text1, text2;

@@ -906,9 +906,9 @@ namespace Epsitec.Common.Widgets
 				this.textArray.Clear ();
 			}
 
-			this.maxRows          = 0;
-			this.firstVirtvisRow = 0;
-			this.SelectedIndex     = -1;
+			this.maxRows           = 0;
+			this.firstVirtvisRow   = 0;
+			this.SelectedItemIndex = -1;
 
 			this.InvalidateContents ();
 		}
@@ -1466,7 +1466,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.HitTestTable (pos, out row, out column)) &&
 				(this.CheckChangeSelectedIndexTo (row)))
 			{
-				this.SelectedIndex = row;
+				this.SelectedItemIndex = row;
 			}
 		}
 
@@ -1479,7 +1479,7 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
-			int sel = this.SelectedIndex;
+			int sel = this.SelectedItemIndex;
 
 			switch (message.KeyCode)
 			{
@@ -1500,14 +1500,14 @@ namespace Epsitec.Common.Widgets
 					return false;
 			}
 
-			if (this.SelectedIndex != sel)
+			if (this.SelectedItemIndex != sel)
 			{
 				sel = System.Math.Max (sel, 0);
 				sel = System.Math.Min (sel, this.RowCount-1);
 
 				if (this.CheckChangeSelectedIndexTo (sel))
 				{
-					this.SelectedIndex = sel;
+					this.SelectedItemIndex = sel;
 					this.ShowSelected (ScrollShowMode.Extremity);
 				}
 			}
@@ -1905,7 +1905,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.tagWidget != null)
 			{
-				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedIndex);
+				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedItemIndex);
 
 				bounds.Inflate (0, 0, 0, 1);
 
@@ -1951,18 +1951,18 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged ();
 		}
 
-		protected virtual void OnSelectedIndexChanging()
+		protected virtual void OnSelectedItemChanging()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedIndexChanging");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanging");
 			if (handler != null)
 			{
 				handler (this);
 			}
 		}
 
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual void OnSelectedItemChanged()
 		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedIndexChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
 			if (handler != null)
 			{
 				handler (this);
@@ -2285,7 +2285,7 @@ namespace Epsitec.Common.Widgets
 
 
 		#region	IStringSelection Members
-		public int SelectedIndex
+		public int SelectedItemIndex
 		{
 			get
 			{
@@ -2300,10 +2300,10 @@ namespace Epsitec.Common.Widgets
 				}
 				if (value != this.selectedRow)
 				{
-					this.OnSelectedIndexChanging ();
+					this.OnSelectedItemChanging ();
 					this.selectedRow = value;
 					this.InvalidateContents ();
-					this.OnSelectedIndexChanged ();
+					this.OnSelectedItemChanged ();
 				}
 			}
 		}
@@ -2312,7 +2312,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int row = this.SelectedIndex;
+				int row = this.SelectedItemIndex;
 
 				if (row == -1)
 				{
@@ -2330,7 +2330,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SelectedIndex = this.FindRow (value.Split (this.separator));
+				this.SelectedItemIndex = this.FindRow (value.Split (this.separator));
 			}
 		}
 		#endregion
@@ -2419,27 +2419,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler SelectedIndexChanging
+		public event EventHandler SelectedItemChanging
 		{
 			add
 			{
-				this.AddUserEventHandler ("SelectedIndexChanging", value);
+				this.AddUserEventHandler ("SelectedItemChanging", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("SelectedIndexChanging", value);
+				this.RemoveUserEventHandler ("SelectedItemChanging", value);
 			}
 		}
 
-		public event EventHandler SelectedIndexChanged
+		public event EventHandler SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler ("SelectedIndexChanged", value);
+				this.AddUserEventHandler ("SelectedItemChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler ("SelectedItemChanged", value);
 			}
 		}
 

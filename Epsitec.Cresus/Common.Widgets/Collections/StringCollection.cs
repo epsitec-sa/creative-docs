@@ -19,18 +19,12 @@ namespace Epsitec.Common.Widgets.Collections
 			this.values = new List<object> ();
 			this.keys   = new List<string> ();
 		}
-		
-		
+
+
 		public bool								AcceptsRichText
 		{
-			get
-			{
-				return this.acceptsRichText;
-			}
-			set
-			{
-				this.acceptsRichText = value;
-			}
+			get;
+			set;
 		}
 		
 		public string							this[int index]
@@ -72,18 +66,12 @@ namespace Epsitec.Common.Widgets.Collections
 		/// <value>The value converter.</value>
 		public System.Func<object, string>		ValueConverter
 		{
-			get
-			{
-				return this.valueConverter;
-			}
-			set
-			{
-				this.valueConverter = value;
-			}
+			get;
+			set;
 		}
 		
 		
-		public int Add(string name, object value)
+		public int Add(string key, object value)
 		{
 			int index0 = this.values.Count;
 			int index1 = this.keys.Count;
@@ -91,7 +79,7 @@ namespace Epsitec.Common.Widgets.Collections
 			System.Diagnostics.Debug.Assert (index0 == index1);
 			
 			this.values.Add (value);
-			this.keys.Add (name);
+			this.keys.Add (key);
 			
 			this.HandleInsert (value);
 			this.HandleChange ();
@@ -108,12 +96,12 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 
 		
-		public void SetName(int index, string name)
+		public void SetKey(int index, string key)
 		{
-			this.keys[index] = name;
+			this.keys[index] = key;
 		}
 
-		public string GetName(int index)
+		public string GetKey(int index)
 		{
 			return this.keys[index];
 		}
@@ -124,9 +112,9 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 
 		
-		public int FindIndexByName(string name)
+		public int FindIndexByKey(string key)
 		{
-			return this.keys.IndexOf (name);
+			return this.keys.IndexOf (key);
 		}
 
 		public int FindIndexByValue(object value)
@@ -171,7 +159,7 @@ namespace Epsitec.Common.Widgets.Collections
 			{
 				string text = this[i];
 
-				if (this.acceptsRichText)
+				if (this.AcceptsRichText)
 				{
 					text = TextLayout.ConvertToSimpleText (text);
 				}
@@ -362,9 +350,9 @@ namespace Epsitec.Common.Widgets.Collections
 
 		private string ConvertValueToString(object value)
 		{
-			if (this.valueConverter != null)
+			if (this.ValueConverter != null)
 			{
-				return this.valueConverter (value);
+				return this.ValueConverter (value);
 			}
 			else if (value == null)
 			{
@@ -379,7 +367,5 @@ namespace Epsitec.Common.Widgets.Collections
 		private readonly IStringCollectionHost	host;
 		private readonly List<string>			keys;
 		private readonly List<object>			values;
-		private bool							acceptsRichText;
-		private System.Func<object, string>		valueConverter;
 	}
 }

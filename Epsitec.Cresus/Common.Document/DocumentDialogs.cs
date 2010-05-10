@@ -1296,7 +1296,7 @@ namespace Epsitec.Common.Document
 			field.IsReadOnly = true;
 			field.Name = sInteger.Name;
 			sInteger.InitCombo(field);
-			field.SelectedIndexChanged += this.HandleFieldComboChanged;
+			field.SelectedItemChanged += this.HandleFieldComboChanged;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
@@ -1315,7 +1315,7 @@ namespace Epsitec.Common.Document
 			Settings.Integer sInteger = settings as Settings.Integer;
 			if ( sInteger == null )  return;
 
-			sInteger.Value = sInteger.RankToType(field.SelectedIndex);
+			sInteger.Value = sInteger.RankToType (field.SelectedItemIndex);
 
 			if ( sInteger.Name == "ImageCrop" )
 			{
@@ -1469,7 +1469,7 @@ namespace Epsitec.Common.Document
 				field.Items.Add(format);
 			}
 
-			field.SelectedIndexChanged += this.HandleFieldPaperChanged;
+			field.SelectedItemChanged += this.HandleFieldPaperChanged;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
@@ -1485,7 +1485,7 @@ namespace Epsitec.Common.Document
 			TextFieldCombo field = sender as TextFieldCombo;
 			if ( field == null )  return;
 
-			int sel = field.SelectedIndex;
+			int sel = field.SelectedItemIndex;
 			if ( sel == 0 )  return;  // personnalisé ?
 
 			Settings.Abstract settings = this.document.Settings.Get("PageSize");
@@ -1536,7 +1536,7 @@ namespace Epsitec.Common.Document
 			TextFieldCombo combo = this.WidgetsTableSearch("PaperFormat", "") as TextFieldCombo;
 			if ( combo != null )
 			{
-				combo.SelectedIndex = DocumentDialogs.PaperSizeToRank(this.document.DocumentSize);
+				combo.SelectedItemIndex = DocumentDialogs.PaperSizeToRank (this.document.DocumentSize);
 			}
 
 			RadioButton radio;
@@ -2095,7 +2095,7 @@ namespace Epsitec.Common.Document
 					TextFieldCombo combo = this.WidgetsTableSearch(setting.Name, "") as TextFieldCombo;
 					if ( combo != null )
 					{
-						combo.SelectedIndex = sInteger.TypeToRank(sInteger.Value);
+						combo.SelectedItemIndex = sInteger.TypeToRank (sInteger.Value);
 					}
 				}
 

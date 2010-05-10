@@ -32,7 +32,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.list.Items.Clear ();
 					this.list.Items.AddRange (this.data);
-					this.list.SelectedIndex = 0;
+					this.list.SelectedItemIndex = 0;
 				}
 			}
 		}
@@ -42,8 +42,8 @@ namespace Epsitec.Common.Dialogs
 			get
 			{
 				string[] values = new string[1];
-				
-				values[0] = this.list.Items[this.list.SelectedIndex];
+
+				values[0] = this.list.Items[this.list.SelectedItemIndex];
 				
 				return values;
 			}

@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 8);
 				this.listModules.TabIndex = 1;
-				this.listModules.SelectedIndexChanged += this.HandleListModulesSelected;
+				this.listModules.SelectedItemChanged += this.HandleListModulesSelected;
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 8);
 				this.listResources.TabIndex = 2;
-				this.listResources.SelectedIndexChanged += this.HandleListResourcesSelected;
+				this.listResources.SelectedItemChanged += this.HandleListResourcesSelected;
 				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
 
 				//	Boutons de fermeture.
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.ignoreChanged = true;
-			this.listResources.SelectedIndex = sel;
+			this.listResources.SelectedItemIndex = sel;
 			this.listResources.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
 		}
@@ -469,11 +469,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton "Utiliser".
 			if (this.operation == Operation.InheritEntities)
 			{
-				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 || !this.IsInherit);
+				this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1 || !this.IsInherit);
 			}
 			else
 			{
-				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+				this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1);
 			}
 		}
 
@@ -580,13 +580,13 @@ namespace Epsitec.Common.Designer.Dialogs
 					return Druid.Empty;
 				}
 
-				if (this.listResources.SelectedIndex == -1)
+				if (this.listResources.SelectedItemIndex == -1)
 				{
 					return Druid.Empty;
 				}
 				else
 				{
-					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedIndex] as CultureMap;
+					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedItemIndex] as CultureMap;
 					return cultureMap.Id;
 				}
 			}

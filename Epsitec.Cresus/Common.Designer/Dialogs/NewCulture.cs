@@ -81,8 +81,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne la culture choisie.
 			get
 			{
-				if ( this.cultureWidget.SelectedIndex == -1 )  return null;
-				return this.cultureList[this.cultureWidget.SelectedIndex];
+				if (this.cultureWidget.SelectedItemIndex == -1)
+					return null;
+				return this.cultureList[this.cultureWidget.SelectedItemIndex];
 			}
 		}
 
@@ -111,13 +112,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				System.Globalization.CultureInfo culture = Resources.FindSpecificCultureInfo(name);
 				this.cultureWidget.Items.Add(Misc.CultureLongName(culture));
 			}
-			this.cultureWidget.SelectedIndex = 0;  // sélectionne en priorité la première culture de la liste
+			this.cultureWidget.SelectedItemIndex = 0;  // sélectionne en priorité la première culture de la liste
 		}
 
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.cultureWidget.SelectedIndex = -1;
+			this.cultureWidget.SelectedItemIndex = -1;
 
 			this.parentWindow.MakeActive();
 			this.window.Hide();

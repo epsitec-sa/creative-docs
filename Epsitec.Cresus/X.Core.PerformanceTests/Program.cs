@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core
 					System.Type.GetType ("System.Int32");
 				});
 
-			System.Console.ReadKey ();
+//-			System.Console.ReadKey ();
 		}
 
 		static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	public interface IMultipleSelection : Collections.IStringCollectionHost, Support.Data.INamedStringSelection
+	public interface IMultipleSelection : Collections.IStringCollectionHost, Support.Data.IKeyedStringSelection
 	{
 		int SelectionCount
 		{
