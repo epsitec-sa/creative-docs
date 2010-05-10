@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			base.Dispose (disposing);
 		}
-		
+
 
 		#region Internal Support Methods
 

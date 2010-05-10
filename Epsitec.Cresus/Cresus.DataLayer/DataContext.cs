@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.DataLayer
 		public DataContext(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-			this.richCommand = new DbRichCommand (this.infrastructure);
 			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
+			this.richCommand = new DbRichCommand (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();

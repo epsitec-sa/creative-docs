@@ -16,10 +16,12 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbRichCommand : System.IDisposable, IReadOnly
 	{
+
+
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-
+			
 			this.dataSet  = new System.Data.DataSet ();
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
@@ -273,9 +275,9 @@ namespace Epsitec.Cresus.Database
 					transaction.Dispose ();
 				}
 			}
-			
+
 			DbRichCommand command = new DbRichCommand (infrastructure);
-			
+
 			int n = tables.Length;
 			
 			for (int i = 0; i < n; i++)
@@ -1083,8 +1085,17 @@ namespace Epsitec.Cresus.Database
 						}
 					}
 
-					this.adapters[i].FillSchema (this.dataSet, System.Data.SchemaType.Mapped);
-					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.Error; //System.Data.MissingSchemaAction.AddWithKey;
+					if (this.infrastructure.SchemasCache.ContainsKey (tableDef))
+					{
+						this.dataSet.Tables.Add (this.infrastructure.SchemasCache[tableDef].Clone ());
+					}
+					else
+					{
+						this.adapters[i].FillSchema (this.dataSet, System.Data.SchemaType.Mapped);
+						this.infrastructure.SchemasCache[tableDef] = this.dataSet.Tables[tableDef.Name].Clone ();
+					}
+					
+					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.Error;
 					this.adapters[i].Fill (this.dataSet);
 				}
 			}

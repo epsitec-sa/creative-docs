@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Database
 			this.localizations    = "fr";
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
+
+			this.SchemasCache = new Dictionary<DbTable, System.Data.DataTable> ();
 		}
 
 
@@ -175,6 +177,13 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.locals;
 			}
+		}
+
+
+		public Dictionary<DbTable, System.Data.DataTable> SchemasCache
+		{
+			get;
+			private set;
 		}
 
 

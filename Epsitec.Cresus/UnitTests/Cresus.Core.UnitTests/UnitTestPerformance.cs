@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core
 			if (UnitTestPerformance.createAndPopulateDatabase)
 			{
 				Database.CreateAndConnectToDatabase ();
-				Database.PopulateDatabase ();
+				Database.PopulateDatabase (true);
 			}
 			else
 			{
@@ -41,6 +41,8 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
+				dataContext.BulkMode = true;
+				
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
