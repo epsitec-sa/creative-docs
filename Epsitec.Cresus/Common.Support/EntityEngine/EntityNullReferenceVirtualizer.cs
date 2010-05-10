@@ -8,42 +8,89 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityNullReferenceVirtualizer</c> provides the mechanism used to
+	/// automatically generate empty entities when null references are dereferenced.
+	/// </summary>
 	public static class EntityNullReferenceVirtualizer
 	{
-		public static void Virtualize<T>(T entity) where T : AbstractEntity
+		/// <summary>
+		/// Patches the null references in the specified entity.
+		/// </summary>
+		/// <typeparam name="T">An entity type.</typeparam>
+		/// <param name="entity">The entity which will be patched.</param>
+		public static void PatchNullReferences<T>(T entity) where T : AbstractEntity
 		{
-			if (!EntityNullReferenceVirtualizer.IsVirtualizedEntity (entity))
+			if (!EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
 			{
-				entity.SetModifiedValues (new Store (entity.GetModifiedValues ()) { Entity = entity });
-				entity.SetOriginalValues (new Store (entity.GetOriginalValues ()) { Entity = entity });
+				entity.SetModifiedValues (new Store (entity.GetModifiedValues (), entity));
+				entity.SetOriginalValues (new Store (entity.GetOriginalValues (), entity));
 			}
 		}
 
-		private static void VirtualizeEntity(AbstractEntity entity, Store parentStore, string id)
+		/// <summary>
+		/// Determines whether the specified entity was patched using <see cref="PatchNullReferences"/>.
+		/// </summary>
+		/// <param name="entity">The entity to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified entity was patched; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsPatchedEntity(AbstractEntity entity)
 		{
-			var store = new Store (entity.GetModifiedValues ())
+			if (entity.InternalGetValueStores ().Any (store => store is Store))
 			{
-				Entity = entity,
-				ParentStore = parentStore,
-				FieldIdInParentStore = id,
-			};
-
-			entity.SetModifiedValues (store);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified entity was patched using <see cref="PatchNullReferences"/>
+		/// and still is unchanged.
+		/// </summary>
+		/// <param name="entity">The entity to check.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified entity is a patched and still unchanged entity; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsPatchedEntityStillUnchanged(AbstractEntity entity)
+		{
+			if (entity.InternalGetValueStores ().Select (store => store is Store).Cast<Store> ().All (store => store.ReadOnly))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// The <c>Store</c> class implements the <c>GetValue</c> and <c>SetValue</c> accessors used
+		/// by the entity class to access its internal data store; <c>Store.GetValue</c> handles undefined
+		/// references by instantiating empty entities on the fly, whereas <c>Store.SetValue</c> on such
+		/// an empty entity will transform it into a real entity. Warning: avanced magic is going on here.
+		/// </summary>
 		class Store : IValueStore
 		{
-			public Store(IValueStore realStore)
+			public Store(IValueStore realStore, AbstractEntity entity)
 			{
 				this.realStore = realStore;
 				this.values = new Dictionary<string, object> ();
+				this.entity = entity;
 			}
 
-			public AbstractEntity Entity
+			public Store(IValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
+				: this (realStore, entity)
 			{
-				get;
-				set;
+				this.ParentStore = parentStore;
+				this.FieldIdInParentStore = fieldIdInParentStore;
 			}
+
+			
 
 			public bool ReadOnly
 			{
@@ -53,13 +100,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
-			public Store ParentStore
+			private Store ParentStore
 			{
 				get;
 				set;
 			}
 
-			public string FieldIdInParentStore
+			private string FieldIdInParentStore
 			{
 				get;
 				set;
@@ -77,15 +124,9 @@ namespace Epsitec.Common.Support.EntityEngine
 					{
 						return value;
 					}
-
-					var entity = this.CreateEntityForField (id, Store.CreateAlwaysEmptyEntity);
-					
-					if (entity != null)
+					else
 					{
-						EntityNullReferenceVirtualizer.VirtualizeEntity (entity, this, id);
-						this.values.Add (id, entity);
-
-						value = entity;
+						return this.CreateEmptyEntityForField (id);
 					}
 				}
 
@@ -95,26 +136,47 @@ namespace Epsitec.Common.Support.EntityEngine
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
 				this.RealizeEntity ();
-				
+				this.ReplaceValue (id, value, mode);
+			}
+
+			#endregion
+
+			private void ReplaceValue(string id, object value, ValueStoreSetMode mode)
+			{
 				this.realStore.SetValue (id, value, mode);
 				this.values.Remove (id);
 			}
 
-			private static AbstractEntity CreateAlwaysEmptyEntity(Druid druid)
+			private void RealizeEntity()
 			{
-				EntityContext.Push (EntityNullReferenceVirtualizer.emptyEntitiesContext);
-				
-				try
+				if (this.ReadOnly)
 				{
-					return EntityClassFactory.CreateEmptyEntity (druid);
-				}
-				finally
-				{
-					EntityContext.Pop ();
+					this.ParentStore.SetLiveEntity (this.FieldIdInParentStore, this.entity);
+					this.ParentStore = null;
+
+					this.entity.ReplaceEntityContext (EntityContext.Current);
 				}
 			}
 
-			private AbstractEntity CreateEntityForField(string id, System.Func<Druid, AbstractEntity> creator)
+			private void SetLiveEntity(string fieldId, AbstractEntity entity)
+			{
+				//	Make sure this is a real entity, before recording the entity into the specified
+				//	reference field:
+
+				this.RealizeEntity ();
+				this.ReplaceValue (fieldId, entity, ValueStoreSetMode.Default);
+				
+				this.entity.UpdateDataGeneration ();
+			}
+
+			
+			private static void PatchNullReferences(AbstractEntity entity, Store parentStore, string id)
+			{
+				var store = new Store (entity.GetModifiedValues (), entity, parentStore, id);
+				entity.SetModifiedValues (store);
+			}
+
+			private AbstractEntity CreateEmptyEntityForField(string id)
 			{
 				var provider = this.realStore as IStructuredTypeProvider;
 
@@ -134,59 +196,27 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (info.Relation == FieldRelation.Reference)
 				{
-					return creator (info.TypeId);
+					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
+
+					if (entity != null)
+					{
+						Store.PatchNullReferences (entity, this, id);
+						this.values.Add (id, entity);
+					}
 				}
 
 				return null;
 			}
 
-			private void RealizeEntity()
-			{
-				if (this.ReadOnly)
-				{
-					var entity  = this.Entity;
-					var parent  = this.ParentStore;
-					var fieldId = this.FieldIdInParentStore;
-
-					parent.RealizeEntity ();
-					parent.realStore.SetValue (fieldId, entity, ValueStoreSetMode.Default);
-					parent.values.Remove (fieldId);
-					parent.Entity.UpdateDataGeneration ();
-					
-					this.ParentStore = null;
-					
-					entity.ReplaceEntityContext (EntityContext.Current);
-				}
-			}
-
-			#endregion
-
 			private readonly IValueStore realStore;
 			private readonly Dictionary<string, object> values;
+			private readonly AbstractEntity entity;
 		}
 
-		public static bool IsVirtualizedEntity(AbstractEntity entity)
+		private static AbstractEntity CreateEmptyEntity(Druid druid)
 		{
-			if (entity.InternalGetValueStores ().Any (store => store is Store))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public static bool IsVirtualizedReadOnlyEntity(AbstractEntity entity)
-		{
-			if (entity.InternalGetValueStores ().Any (store => store is Store && ((Store)store).ReadOnly))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			var context = EntityNullReferenceVirtualizer.GetEmptyEntitiesContext ();
+			return context.CreateEmptyEntity (druid);
 		}
 
 		private static EntityContext GetEmptyEntitiesContext()
