@@ -707,6 +707,26 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
+		internal void ReplaceEntityContext(EntityContext newContext)
+		{
+			var oldContext = this.GetEntityContext ();
+			
+			if (oldContext != newContext)
+			{
+				if (this.context != null)
+				{
+					this.context.NotifyEntityDetached (this);
+				}
+
+				this.context = newContext;
+
+				if (this.context != null)
+				{
+					this.context.NotifyEntityAttached (this);
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the value for the specified field.
@@ -1175,8 +1195,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		private static long nextSerialId = 1;
 		private static readonly object globalExclusion = new object ();
 		
-		private readonly EntityContext context;
 		private readonly long entitySerialId;
+		private EntityContext context;
 		private long dataGeneration;
 		private int defineOriginalValuesCount;
 		private bool calculationsDisabled;

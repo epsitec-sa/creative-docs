@@ -457,7 +457,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityCreated (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityEventArgs (entity));
 			return entity;
 		}
 
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityCreated (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityEventArgs (entity));
 			return entity;
 		}
 
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 			
-			this.OnEntityCreated (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityEventArgs (entity));
 			return entity;
 		}
 
@@ -786,14 +786,24 @@ namespace Epsitec.Common.Support.EntityEngine
 				return null;
 			}
 		}
-		
-		protected virtual void OnEntityCreated(EntityEventArgs e)
+
+		internal void NotifyEntityAttached(AbstractEntity entity)
+		{
+			this.OnEntityAttached (new EntityEventArgs (entity));
+		}
+
+		internal void NotifyEntityDetached(AbstractEntity entity)
+		{
+			this.OnEntityDetached (new EntityEventArgs (entity));
+		}
+
+		protected virtual void OnEntityAttached(EntityEventArgs e)
 		{
 			EventHandler<EntityEventArgs> handler;
 
 			lock (this.eventExclusion)
 			{
-				handler = this.entityCreatedEvent;
+				handler = this.entityAttachedEvent;
 			}
 
 			if (handler != null)
@@ -801,7 +811,22 @@ namespace Epsitec.Common.Support.EntityEngine
 				handler (this, e);
 			}
 		}
-		
+
+		protected virtual void OnEntityDetached(EntityEventArgs e)
+		{
+			EventHandler<EntityEventArgs> handler;
+
+			lock (this.eventExclusion)
+			{
+				handler = this.entityDetachedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
 		protected void EnsureCorrectThread()
 		{
 			if (this.associatedThread == System.Threading.Thread.CurrentThread)
@@ -970,20 +995,38 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public event EventHandler<EntityEventArgs> EntityCreated
+		public event EventHandler<EntityEventArgs> EntityAttached
 		{
 			add
 			{
 				lock (this.eventExclusion)
 				{
-					this.entityCreatedEvent += value;
+					this.entityAttachedEvent += value;
 				}
 			}
 			remove
 			{
 				lock (this.eventExclusion)
 				{
-					this.entityCreatedEvent -= value;
+					this.entityAttachedEvent -= value;
+				}
+			}
+		}
+
+		public event EventHandler<EntityEventArgs> EntityDetached
+		{
+			add
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityDetachedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityDetachedEvent -= value;
 				}
 			}
 		}
@@ -996,7 +1039,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private readonly object eventExclusion = new object ();
 
-		private EventHandler<EntityEventArgs> entityCreatedEvent;
+		private EventHandler<EntityEventArgs> entityAttachedEvent;
+        private EventHandler<EntityEventArgs> entityDetachedEvent;
 
 		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;

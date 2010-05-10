@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
-			this.entityContext.EntityCreated += this.HandleEntityCreated;
+			this.entityContext.EntityAttached += this.HandleEntityCreated;
 			this.entityContext.PersistenceManagers.Add (this);
 		}
 
@@ -620,6 +620,11 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
 
+			if (EntityNullReferenceVirtualizer.IsVirtualizedReadOnlyEntity (targetEntity))
+			{
+				targetEntity = null;
+			}
+
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
 			EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
@@ -1205,7 +1210,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (disposing)
 			{
-				this.entityContext.EntityCreated -= this.HandleEntityCreated;
+				this.entityContext.EntityAttached -= this.HandleEntityCreated;
 				this.entityContext.PersistenceManagers.Remove (this);
 			}
 		}
