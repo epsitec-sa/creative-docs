@@ -58,6 +58,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public bool BulkMode
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Creates the schema for the specified type.
 		/// </summary>
@@ -881,7 +887,10 @@ namespace Epsitec.Cresus.DataLayer
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
 
 					// HACK Uncomment the next line if you don't want the whole table being loaded.
-					//condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
+					if (!this.BulkMode)
+					{
+						condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
+					}
 
 					this.richCommand.ImportTable (transaction, tableDef, condition);
 					this.LoadTableRelationSchemas (transaction, tableDef);
@@ -912,7 +921,10 @@ namespace Epsitec.Cresus.DataLayer
 				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
 
 				// HACK Uncomment the next line if you don't want the whole table being loaded.
-				//condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+				if (!this.BulkMode)
+				{
+					condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+				}
 
 				this.richCommand.ImportTable (transaction, relationTableDef, condition);
 				transaction.Commit ();
