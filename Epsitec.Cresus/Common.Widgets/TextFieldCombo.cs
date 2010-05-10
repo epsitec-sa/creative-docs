@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 	/// qui fait apparaître un menu dit "combo" pour permettre de choisir une
 	/// option prédéfinie.
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
+	public class TextFieldCombo : AbstractTextField, Collections.IStringCollectionHost, Support.Data.IKeyedStringSelection
 	{
 		public TextFieldCombo()
 			: base (TextFieldStyle.Combo)
@@ -247,14 +247,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual void OnSelectedItemChanged()
 		{
 			//	Ne notifie les changements d'index que lorsque le menu déroulant
 			//	est fermé.
 			
 			if (this.IsComboOpen == false)
 			{
-				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+				EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedItemChanged");
 
 				if (handler != null)
 				{
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.FindMatch (search, out index, out exact))
 			{
-				this.SelectedIndex = index;
+				this.SelectedItemIndex = index;
 			}
 		}
 
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (index >= 0)
 			{
-				this.SelectedIndex = index;
+				this.SelectedItemIndex = index;
 				this.menu.Behavior.Accept ();
 			}
 		}
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.isLiveUpdateEnabled)
 			{
-				this.SelectedIndex = this.MapComboListToIndex (sel);
+				this.SelectedItemIndex = this.MapComboListToIndex (sel);
 			}
 		}
 		
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Widgets
 		{
 			for (int i = 0 ; i < this.items.Count; i++)
 			{
-				string name = this.items.GetName (i);
+				string name = this.items.GetKey (i);
 				string text = this.items[i];
 
 				if (this.listTextConverter != null)
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Widgets
 			sel = System.Math.Max(sel, 0);
 			sel = System.Math.Min(sel, this.items.Count-1);
 			
-			this.SelectedIndex = sel;
+			this.SelectedItemIndex = sel;
 			this.Focus ();
 		}
 		
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
+				this.scrollList.SelectedItemIndex = this.MapIndexToComboList (this.SelectedItemIndex);
 				this.scrollList.ShowSelected (ScrollShowMode.Center);
 			}
 			
@@ -487,7 +487,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged += this.HandleScrollerSelectedItemChanged;
 				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Widgets
 			if (this.scrollList != null)
 			{
 				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged -= this.HandleScrollerSelectedItemChanged;
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;
@@ -545,7 +545,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.InitialText != this.Text )
 			{
-				this.OnSelectedIndexChanged ();
+				this.OnSelectedItemChanged ();
 			}
 		}
 
@@ -642,14 +642,14 @@ namespace Epsitec.Common.Widgets
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
-			this.ProcessComboActivatedIndex (this.scrollList.SelectedIndex);
+			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
 		
-		private void HandleScrollerSelectedIndexChanged(object sender)
+		private void HandleScrollerSelectedItemChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
 			
-			this.ProcessComboSelectedIndex (this.scrollList.SelectedIndex);
+			this.ProcessComboSelectedIndex (this.scrollList.SelectedItemIndex);
 		}
 		
 		private void HandleMenuAccepted(object sender)
@@ -666,14 +666,14 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextChanged ();
 
-			this.selectedIndex = -1;
+			this.selectedItemIndex = -1;
 		}
 		
 		#region IStringCollectionHost Members
 		
 		public void NotifyStringCollectionChanged()
 		{
-			this.selectedIndex = -1;
+			this.selectedItemIndex = -1;
 		}
 		
 		
@@ -686,30 +686,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		#endregion
-		
-		#region INamedStringSelection Members
-		
-		public virtual int						SelectedIndex
+
+		#region IKeyedStringSelection Members
+
+		public virtual int						SelectedItemIndex
 		{
 			get
 			{
-				if (this.selectedIndex == -1)
+				if (this.selectedItemIndex == -1)
 				{
 					int sel;
 					bool exact;
 
 					if (this.FindMatch (this.Text, out sel, out exact))
 					{
-						this.selectedIndex = sel;
+						this.selectedItemIndex = sel;
 					}
 				}
 
-				return this.selectedIndex;
+				return this.selectedItemIndex;
 			}
 
 			set
 			{
-				int oldIndex = this.SelectedIndex;
+				int oldIndex = this.SelectedItemIndex;
 				int newIndex = value;
 
 				string text = "";
@@ -731,11 +731,11 @@ namespace Epsitec.Common.Widgets
 					this.SelectAll ();
 				}
 
-				this.selectedIndex = newIndex;
+				this.selectedItemIndex = newIndex;
 
 				if (oldIndex != newIndex)
 				{
-					this.OnSelectedIndexChanged ();
+					this.OnSelectedItemChanged ();
 					this.SelectAll ();
 				}
 			}
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int index = this.SelectedIndex;
+				int index = this.SelectedItemIndex;
 				
 				if (index < 0)
 				{
@@ -779,17 +779,17 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					this.SelectedIndex = index;
+					this.SelectedItemIndex = index;
 				}
 			}
 		}
 
-		public string							SelectedName
+		public string							SelectedKey
 		{
 			//	Nom de la ligne sélectionnée, "" si aucune.
 			get
 			{
-				int index = this.SelectedIndex;
+				int index = this.SelectedItemIndex;
 				
 				if (index < 0)
 				{
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return this.items.GetName(index);
+					return this.items.GetKey(index);
 				}
 			}
 			
@@ -808,35 +808,35 @@ namespace Epsitec.Common.Widgets
 					value = "";
 				}
 				
-				if (this.SelectedName != value)
+				if (this.SelectedKey != value)
 				{
 					int index = -1;
 					
 					if (value.Length > 0)
 					{
-						index = this.items.FindIndexByName (value);
+						index = this.items.FindIndexByKey (value);
 						
 						if (index < 0)
 						{
 							throw new System.ArgumentException (string.Format ("No element named '{0}' in list", value));
 						}
 					}
-					
-					this.SelectedIndex = index;
+
+					this.SelectedItemIndex = index;
 				}
 			}
 		}
 
 
-		public event EventHandler				SelectedIndexChanged
+		public event EventHandler				SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectedIndexChanged", value);
+				this.AddUserEventHandler("SelectedItemChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler("SelectedItemChanged", value);
 			}
 		}
 		
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Widgets
 		protected AbstractMenu					menu;
 		
 		private ScrollList						scrollList;
-		private int								selectedIndex;
+		private int								selectedItemIndex;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;

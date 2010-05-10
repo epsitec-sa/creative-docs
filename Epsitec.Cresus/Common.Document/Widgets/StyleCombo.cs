@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		public override int SelectedIndex
+		public override int SelectedItemIndex
 		{
 			get
 			{

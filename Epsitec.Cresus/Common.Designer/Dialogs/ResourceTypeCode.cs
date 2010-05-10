@@ -162,9 +162,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Sytem.Type à utiliser, lors d'une énumération C# native.
 			get
 			{
-				if (this.typeAccepted == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex != -1)
+				if (this.typeAccepted == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedItemIndex != -1)
 				{
-					return this.systemTypes[this.enumList.SelectedIndex];
+					return this.systemTypes[this.enumList.SelectedItemIndex];
 				}
 				else
 				{
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le bouton D'accord.
 			bool enable = true;
 
-			if (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedIndex == -1)
+			if (this.typeEdited == TypeCode.Enum && this.checkNative.ActiveState == ActiveState.Yes && this.enumList.SelectedItemIndex == -1)
 			{
 				enable = false;
 			}
@@ -270,9 +270,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Met à jour la liste des énumérations C# natives en fonction du filtre.
 			string filter = null;
-			if (this.fieldFilter.SelectedIndex > 0)  // pas "tout montrer" ?
+			if (this.fieldFilter.SelectedItemIndex > 0)  // pas "tout montrer" ?
 			{
-				filter = this.filters[this.fieldFilter.SelectedIndex-1];
+				filter = this.filters[this.fieldFilter.SelectedItemIndex-1];
 			}
 
 			this.systemTypes = new List<System.Type>();

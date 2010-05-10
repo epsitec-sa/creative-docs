@@ -201,24 +201,24 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#endregion
 
-		#region INamedStringSelection Members
+		#region IKeyedStringSelection Members
 
-		public string SelectedName
+		public string SelectedKey
 		{
 			get
 			{
-				int currentSelection = this.SelectedIndex;
+				int currentSelection = this.SelectedItemIndex;
 
 				if (currentSelection != -1)
 				{
-					return this.items.GetName (currentSelection);
+					return this.items.GetKey (currentSelection);
 				}
 
 				return null;
 			}
 			set
 			{
-				this.SelectedIndex = this.items.FindIndexByName (value);
+				this.SelectedItemIndex = this.items.FindIndexByKey (value);
 			}
 		}
 
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region IStringSelection Members
 
-		public int SelectedIndex
+		public int SelectedItemIndex
 		{
 			get
 			{
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			set
 			{
-				int currentSelection = this.SelectedIndex;
+				int currentSelection = this.SelectedItemIndex;
 
 				if (currentSelection != value)
 				{
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				int currentSelection = this.SelectedIndex;
+				int currentSelection = this.SelectedItemIndex;
 
 				if (currentSelection != -1)
 				{
@@ -269,19 +269,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			set
 			{
-				this.SelectedIndex = this.items.FindIndexByValueExactMatch (value);
+				this.SelectedItemIndex = this.items.FindIndexByValueExactMatch (value);
 			}
 		}
 
-		public event EventHandler SelectedIndexChanged
+		public event EventHandler SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler ("SelectedIndexChanged", value);
+				this.AddUserEventHandler (DetailedCombo.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler ("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler (DetailedCombo.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -353,6 +353,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		private const string MultiSelectionChangedEvent = "MultiSelectionChanged";
+		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 		private Common.Widgets.Collections.StringCollection	items;
 		private readonly HashSet<int> selection;

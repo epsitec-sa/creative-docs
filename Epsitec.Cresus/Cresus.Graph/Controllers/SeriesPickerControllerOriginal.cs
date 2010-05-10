@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.scrollList.ClearSelection ();
 				this.scrollList.Items.Clear ();
 				this.scrollList.Items.AddRange (labels.Select (x => this.negatedSeriesLabels.Contains (x) ? string.Concat ("(", x, ")") : x));
-				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
+				this.scrollList.SelectedItemIndex = selection.Count == 0 ? -1 : selection.First ();
 				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
 			}
 		}
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedIndex = index;
+				this.scrollList.SelectedItemIndex = index;
 				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
 			}
 		}
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleMultiSelectionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			int index = this.scrollList.SelectedIndex;
+			int index = this.scrollList.SelectedItemIndex;
 
 			if ((this.scrollList.IsItemSelected (index)) &&
 				(this.scrollList.SelectionCount == 1))
@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandlePaintForeground(object sender, PaintEventArgs e)
 		{
-			int index = this.scrollList.SelectedIndex;
+			int index = this.scrollList.SelectedItemIndex;
 
 			if ((index >= 0) &&
 				(this.selection != null) &&

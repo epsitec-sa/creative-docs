@@ -264,7 +264,7 @@ namespace Epsitec.Common.Document.Settings
 
 			if ( combo.Items.Count == 0 )
 			{
-				combo.SelectedIndex = 0;
+				combo.SelectedItemIndex = 0;
 			}
 			else
 			{
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Document.Settings
 					this.Value = this.RankToType(0);
 					sel = this.TypeToRank(this.Value);
 				}
-				combo.SelectedIndex = sel;
+				combo.SelectedItemIndex = sel;
 			}
 
 			combo.Enable = (combo.Items.Count > 1);

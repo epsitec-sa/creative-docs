@@ -95,7 +95,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 				this.fontFace = "";
 				this.fontStyle = "";
 				this.glyphs = new int[0];  // alloue le tableau
-				this.SelectedIndex = -1;
+				this.SelectedItemIndex = -1;
 			}
 			else
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 				this.glyphs = (int[]) list.ToArray(typeof(int));
 
-				this.SelectedIndex = sel;
+				this.SelectedItemIndex = sel;
 			}
 
 			this.scroller.Value = 0.0M;
@@ -172,7 +172,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		}
 
 
-		public int SelectedIndex
+		public int SelectedItemIndex
 		{
 			//	Choix de l'index du glyphe sélectionné.
 			get
@@ -315,13 +315,13 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 			{
 				case MessageType.MouseDown:
 					this.mouseDown = true;
-					this.SelectedIndex = this.Detect(pos);
+					this.SelectedItemIndex = this.Detect (pos);
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.SelectedIndex = this.Detect(pos);
+						this.SelectedItemIndex = this.Detect (pos);
 					}
 					break;
 
@@ -384,7 +384,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 
 			sel = System.Math.Max(sel, 0);
 			sel = System.Math.Min(sel, this.TotalCell-1);
-			this.SelectedIndex = sel;
+			this.SelectedItemIndex = sel;
 			this.ShowSelectedCell();
 
 			return true;

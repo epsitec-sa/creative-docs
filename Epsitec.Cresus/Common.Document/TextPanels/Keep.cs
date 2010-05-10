@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.TextPanels
 			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewOddPage);
 			combo.Items.Add(Res.Strings.TextPanel.Keep.StartMode.NewEvenPage);
 
-			combo.SelectedIndexChanged += handler;
+			combo.SelectedItemChanged += handler;
 
 			return combo;
 		}
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Document.TextPanels
 		private void HandleStyleComboClosed(object sender)
 		{
 			//	Combo des styles fermé.
-			int sel = this.fieldNextStyle.SelectedIndex;
+			int sel = this.fieldNextStyle.SelectedItemIndex;
 			if ( sel == -1 )  return;
 
 			Text.TextStyle currentStyle = this.ParagraphWrapper.AttachedStyle;

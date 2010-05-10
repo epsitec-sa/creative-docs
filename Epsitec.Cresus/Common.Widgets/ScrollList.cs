@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	/// The <c>ScrollList</c> class implements a simple list with a vertical scrollbar,
 	/// from which the user can pick items.
 	/// </summary>
-	public class ScrollList : Widget, Collections.IStringCollectionHost, Support.Data.INamedStringSelection
+	public class ScrollList : Widget, Collections.IStringCollectionHost, Support.Data.IKeyedStringSelection
 	{
 		public ScrollList()
 		{
@@ -429,7 +429,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void MouseSelectRow(int index)
 		{
-			this.SelectedIndex = index;
+			this.SelectedItemIndex = index;
 			this.ShowSelected (ScrollShowMode.Extremity);
 		}
 		
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Widgets
 			
 			//	Gestion d'une touche pressée avec KeyDown dans la liste.
 			
-			int sel = this.SelectedIndex;
+			int sel = this.SelectedItemIndex;
 			
 			switch ( message.KeyCode )
 			{
@@ -470,14 +470,14 @@ namespace Epsitec.Common.Widgets
 					return false;
 			}
 			
-			if ( this.SelectedIndex != sel )
+			if ( this.SelectedItemIndex != sel )
 			{
 				this.selectItemBehavior.ClearSearch();
 				
 				sel = System.Math.Max(sel, 0);
 				sel = System.Math.Min(sel, this.RowCount-1);
 				
-				this.SelectedIndex = sel;
+				this.SelectedItemIndex = sel;
 				this.ShowSelected(ScrollShowMode.Extremity);
 			}
 			
@@ -632,7 +632,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void AutomaticItemSelection(string search, bool continued)
 		{
-			int index = this.items.FindIndexByValueStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
+			int index = this.items.FindIndexByValueStartMatch (search, this.SelectedItemIndex + (continued ? 0 : 1));
 
 			if (index < 0)
 			{
@@ -641,14 +641,14 @@ namespace Epsitec.Common.Widgets
 
 			if (index >= 0)
 			{
-				this.SelectedIndex = index;
+				this.SelectedItemIndex = index;
 				this.ShowSelected (ScrollShowMode.Extremity);
 			}
 		}
 
 		protected virtual void AutomaticScroll(Point magnitude)
 		{
-			int index = this.SelectedIndex;
+			int index = this.SelectedItemIndex;
 
 			if (index >= 0)
 			{
@@ -671,10 +671,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("SelectedIndexChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanged");
 			if (handler != null)
 			{
 				handler(this);
@@ -781,7 +781,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.selectedRow >= count)
 			{
-				this.SelectedIndex = count - 1;
+				this.SelectedItemIndex = count - 1;
 			}
 			
 			this.SetDirty ();
@@ -796,9 +796,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-		
-		#region INamedStringSelection Members
-		public int								SelectedIndex
+
+		#region IKeyedStringSelection Members
+
+		public int								SelectedItemIndex
 		{
 			get
 			{
@@ -818,7 +819,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.selectedRow = value;
 					this.SetDirty();
-					this.OnSelectedIndexChanged();
+					this.OnSelectedItemChanged();
 				}
 			}
 		}
@@ -827,18 +828,18 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int index = this.SelectedIndex;
+				int index = this.SelectedItemIndex;
 				if ( index < 0 )  return null;
 				return this.Items[index];
 			}
 			
 			set
 			{
-				this.SelectedIndex = this.Items.IndexOf(value);
+				this.SelectedItemIndex = this.Items.IndexOf(value);
 			}
 		}
 		
-		public string							SelectedName
+		public string							SelectedKey
 		{
 			//	Nom de la ligne sélectionnée, null si aucune.
 			get
@@ -848,18 +849,18 @@ namespace Epsitec.Common.Widgets
 					return null;
 				}
 				
-				return this.items.GetName(this.selectedRow);
+				return this.items.GetKey(this.selectedRow);
 			}
 
 			set
 			{
-				if ( this.SelectedName != value )
+				if ( this.SelectedKey != value )
 				{
 					int index = -1;
 					
 					if ( value != null )
 					{
-						index = this.items.FindIndexByName(value);
+						index = this.items.FindIndexByKey(value);
 					
 						if ( index < 0 )
 						{
@@ -867,21 +868,21 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					this.SelectedIndex = index;
+					this.SelectedItemIndex = index;
 				}
 			}
 		}
 		
 		
-		public event EventHandler				SelectedIndexChanged
+		public event EventHandler				SelectedItemChanged
 		{
 			add
 			{
-				this.AddUserEventHandler("SelectedIndexChanged", value);
+				this.AddUserEventHandler("SelectedItemChanged", value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler("SelectedIndexChanged", value);
+				this.RemoveUserEventHandler("SelectedItemChanged", value);
 			}
 		}
 		#endregion

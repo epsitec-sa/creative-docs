@@ -41,7 +41,7 @@ namespace Epsitec.Common.UI.Controllers
 
 		public override object GetUserInterfaceValue()
 		{
-			return this.helper.GetSelectedName ();
+			return this.helper.GetSelectedKey ();
 		}
 
 		protected override void CreateUserInterface(INamedType namedType, Caption caption)
@@ -67,7 +67,7 @@ namespace Epsitec.Common.UI.Controllers
 				(newValue != InvalidValue.Value) &&
 				(newValue != null))
 			{
-				this.helper.SetSelectedName (this.ConvertFromValue (newValue));
+				this.helper.SetSelectedKey (this.ConvertFromValue (newValue));
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Epsitec.Common.UI.Controllers
 			}
 			
 			public abstract void CreateUserInterface(IEnumType enumType, Caption caption);
-			public abstract string GetSelectedName();
+			public abstract string GetSelectedKey();
 			
 			protected EnumController host;
 
@@ -104,7 +104,7 @@ namespace Epsitec.Common.UI.Controllers
 
 			#endregion
 
-			public abstract void SetSelectedName(string name);
+			public abstract void SetSelectedKey(string name);
 		}
 
 		private class ComboHelper : Helper
@@ -114,14 +114,14 @@ namespace Epsitec.Common.UI.Controllers
 			{
 			}
 
-			public override string GetSelectedName()
+			public override string GetSelectedKey()
 			{
-				return this.combo.SelectedName;
+				return this.combo.SelectedKey;
 			}
 
-			public override void SetSelectedName(string name)
+			public override void SetSelectedKey(string name)
 			{
-				this.combo.SelectedName = name;
+				this.combo.SelectedKey = name;
 			}
 			
 			public override void Dispose()
@@ -189,7 +189,7 @@ namespace Epsitec.Common.UI.Controllers
 			{
 			}
 
-			public override string GetSelectedName()
+			public override string GetSelectedKey()
 			{
 				if (this.enumType.IsDefinedAsFlags)
 				{
@@ -213,7 +213,7 @@ namespace Epsitec.Common.UI.Controllers
 				}
 			}
 
-			public override void SetSelectedName(string name)
+			public override void SetSelectedKey(string name)
 			{
 				if (this.enumType.IsDefinedAsFlags)
 				{

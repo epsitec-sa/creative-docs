@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 0);
 				this.listModules.TabIndex = 2;
-				this.listModules.SelectedIndexChanged += this.HandleListModulesSelected;
+				this.listModules.SelectedItemChanged += this.HandleListModulesSelected;
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 0);
 				this.listResources.TabIndex = 3;
-				this.listResources.SelectedIndexChanged += this.HandleListResourcesSelected;
+				this.listResources.SelectedItemChanged += this.HandleListResourcesSelected;
 				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
 
 				this.textResource = new TextField(right);
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.existingCaption = Druid.Empty;
 
 			this.ignoreChanged = true;
-			this.listResources.SelectedIndex = sel;
+			this.listResources.SelectedItemIndex = sel;
 			this.listResources.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
 		}
@@ -323,9 +323,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour le texte de la ressource sélectionnée.
 			string text = null;
 
-			if (this.listResources.SelectedIndex != -1)
+			if (this.listResources.SelectedItemIndex != -1)
 			{
-				CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedIndex] as CultureMap;
+				CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedItemIndex] as CultureMap;
 				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				text = ResourceAccess.GetCaptionNiceDescription(data, 0);
 			}
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.tabBook.ActivePage == this.tabUse)
 			{
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
-				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+				this.buttonUse.Enable = (this.listResources.SelectedItemIndex != -1);
 			}
 		}
 
@@ -359,13 +359,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne le Druid de la ressource actuellement sélectionnée.
 			get
 			{
-				if (this.listResources.SelectedIndex == -1)
+				if (this.listResources.SelectedItemIndex == -1)
 				{
 					return Druid.Empty;
 				}
 				else
 				{
-					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedIndex] as CultureMap;
+					CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedItemIndex] as CultureMap;
 					return cultureMap.Id;
 				}
 			}

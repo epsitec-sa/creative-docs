@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
+				this.scrollList.SelectedItemIndex = this.MapIndexToComboList (this.SelectedItemIndex);
 				this.scrollList.ShowSelected (ScrollShowMode.Center);
 			}
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.scrollList != null)
 			{
 				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
 
 				this.scrollList.Dispose ();
 				this.scrollList = null;
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.InitialText != this.Text)
 			{
-				this.OnSelectedIndexChanged ();
+				this.OnSelectedItemChanged ();
 			}
 		}
 
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.SelectedIndex = index;
+					this.SelectedItemIndex = index;
 				}
 
 				this.menu.Behavior.Accept ();
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.IsLiveUpdateEnabled && !this.AllowMultipleSelection)
 			{
-				this.SelectedIndex = this.MapComboListToIndex (sel);
+				this.SelectedItemIndex = this.MapComboListToIndex (sel);
 			}
 		}
 
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			for (int i = 0; i < this.items.Count; i++)
 			{
-				string name = this.items.GetName (i);
+				string name = this.items.GetKey (i);
 				string text = this.items[i];
 
 				if (this.ListTextConverter != null)
@@ -411,14 +411,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 
-			this.ProcessComboActivatedIndex (this.scrollList.SelectedIndex);
+			this.ProcessComboActivatedIndex (this.scrollList.SelectedItemIndex);
 		}
 
-		private void HandleScrollerSelectedIndexChanged(object sender)
+		private void HandleScrollListSelectedItemChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
 
-			this.ProcessComboSelectedIndex (this.scrollList.SelectedIndex);
+			this.ProcessComboSelectedIndex (this.scrollList.SelectedItemIndex);
 		}
 
 		private void HandleMenuAccepted(object sender)

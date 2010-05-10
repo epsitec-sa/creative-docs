@@ -234,7 +234,7 @@
     <Compile Include="Data\ComponentCollection.cs" />
     <Compile Include="Data\IComponent.cs" />
     <Compile Include="Data\IContainer.cs" />
-    <Compile Include="Data\INamedStringSelection.cs" />
+    <Compile Include="Data\IKeyedStringSelection.cs" />
     <Compile Include="Data\INumValue.cs" />
     <Compile Include="Data\IStringSelection.cs" />
     <Compile Include="Data\ITextArrayStore.cs" />

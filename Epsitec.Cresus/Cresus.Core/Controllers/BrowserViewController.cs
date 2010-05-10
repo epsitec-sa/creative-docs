@@ -48,10 +48,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				ScrollListStyle = ScrollListStyle.Standard,
 			};
 
-			this.scrollList.SelectedIndexChanged +=
+			this.scrollList.SelectedItemChanged +=
 				delegate
 				{
-					int active = this.scrollList.SelectedIndex;
+					int active = this.scrollList.SelectedItemIndex;
                     
 					if (active != this.activeIndex)
 					{

@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonHomo   .ActiveState = p.Homo      ? ActiveState.Yes : ActiveState.No;
 			this.buttonInside .ActiveState = p.InsideDoc ? ActiveState.Yes : ActiveState.No;
 
-			this.buttonFilter.SelectedIndex = p.FilterCategory+1;  // -1=aucun, 0=A, 1=B
+			this.buttonFilter.SelectedItemIndex = p.FilterCategory+1;  // -1=aucun, 0=A, 1=B
 
 			this.cropper.Crop = p.CropMargins;
 
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Document.Panels
 			p.Homo      = ( this.buttonHomo   .ActiveState == ActiveState.Yes );
 			p.InsideDoc = ( this.buttonInside .ActiveState == ActiveState.Yes );
 
-			p.FilterCategory = this.buttonFilter.SelectedIndex-1;  // -1=aucun, 0=A, 1=B
+			p.FilterCategory = this.buttonFilter.SelectedItemIndex-1;  // -1=aucun, 0=A, 1=B
 
 			p.CropMargins = this.cropper.Crop;
 		}

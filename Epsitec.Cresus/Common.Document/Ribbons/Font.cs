@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.AutoFocus = false;
 			this.comboFont.TabIndex = this.tabIndex++;
 			this.comboFont.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.comboFont.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			this.comboFont.SelectedItemChanged += this.HandleSelectedItemChanged;
 			this.comboFont.FirstIconChanged += this.HandleFirstIconChanged;
 
 			this.buttonBold          = this.CreateIconButton(Res.Commands.FontBold.CommandId);
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		private void HandleSelectedIndexChanged(object sender)
+		private void HandleSelectedItemChanged(object sender)
 		{
 			if ( this.ignoreChange )  return;
 

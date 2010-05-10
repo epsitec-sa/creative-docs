@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Accessors
 			editor.HintComparer = CountryAccessor.HintComparer;
 			editor.HintComparisonConverter = Misc.RemoveAccentsToLower;
 
-			editor.SelectedIndex = editor.Items.FindIndexByValue (entity);
+			editor.SelectedItemIndex = editor.Items.FindIndexByValue (entity);
 		}
 
 		private static string HintValueToDescriptionConverter(object value)

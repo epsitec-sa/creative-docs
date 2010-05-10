@@ -99,7 +99,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 					Common.Document.Settings.FirstAction action = GlobalSettings.FirstActionType(i);
 					combo.Items.Add(GlobalSettings.FirstActionString(action));
 				}
-				combo.SelectedIndex = GlobalSettings.FirstActionRank(this.globalSettings.FirstAction);
+				combo.SelectedItemIndex = GlobalSettings.FirstActionRank (this.globalSettings.FirstAction);
 
 				check = this.CreateCheck(bookGeneral, "SplashScreen", Res.Strings.Dialog.Settings.SplashScreen);
 				check.ActiveState = this.globalSettings.SplashScreen ? ActiveState.Yes : ActiveState.No;
@@ -125,7 +125,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 					Common.Document.Settings.MouseWheelAction action = GlobalSettings.MouseWheelActionType(i);
 					combo.Items.Add(GlobalSettings.MouseWheelActionString(action));
 				}
-				combo.SelectedIndex = GlobalSettings.MouseWheelActionRank(this.globalSettings.MouseWheelAction);
+				combo.SelectedItemIndex = GlobalSettings.MouseWheelActionRank (this.globalSettings.MouseWheelAction);
 
 				field = this.CreateField(bookPeriph, "DefaultZoom", Res.Strings.Dialog.Settings.MouseZoom);
 				field.MinValue = 1.1M;
@@ -152,7 +152,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 					combo.Items.Add(name);
 					if ( name == Widgets.Adorners.Factory.ActiveName )
 					{
-						combo.SelectedIndex = rank;
+						combo.SelectedItemIndex = rank;
 					}
 					rank++;
 				}
@@ -360,7 +360,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			field.PreferredWidth = 160;
 			field.IsReadOnly = true;
 			field.Name = name;
-			field.SelectedIndexChanged += this.HandleComboSettingsChanged;
+			field.SelectedItemChanged += this.HandleComboSettingsChanged;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
@@ -439,12 +439,12 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( combo.Name == "FirstAction" )
 			{
-				this.globalSettings.FirstAction = GlobalSettings.FirstActionType(combo.SelectedIndex);
+				this.globalSettings.FirstAction = GlobalSettings.FirstActionType (combo.SelectedItemIndex);
 			}
 
 			if ( combo.Name == "MouseWheelAction" )
 			{
-				this.globalSettings.MouseWheelAction = GlobalSettings.MouseWheelActionType(combo.SelectedIndex);
+				this.globalSettings.MouseWheelAction = GlobalSettings.MouseWheelActionType (combo.SelectedItemIndex);
 			}
 
 			if ( combo.Name == "Adorner" )
