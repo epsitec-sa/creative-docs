@@ -1345,7 +1345,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (sqlQuery.SetQuery);
 			}
 
-#if DEBUG
+#if false
 			System.Console.WriteLine (this.buffer);
 #endif
 		}
