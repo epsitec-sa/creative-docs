@@ -182,6 +182,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void SaveChanges()
 		{
+			System.Diagnostics.Debug.WriteLine ("DataContext: SaveChanges");
 			this.SerializeChanges ();
 
 			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
