@@ -24,6 +24,32 @@ namespace Epsitec.Cresus.Core
 			}
 #endif
 
+			System.Console.WriteLine ("System.Type.GetType(string) -> {0}us",
+				Program.MeasureMilliseconds (1000,
+				delegate
+				{
+					System.Type.GetType ("System.String");
+					System.Type.GetType ("System.String");
+					System.Type.GetType ("System.String");
+					System.Type.GetType ("System.String");
+					System.Type.GetType ("System.String");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Boolean");
+					System.Type.GetType ("System.Int32");
+					System.Type.GetType ("System.Int32");
+					System.Type.GetType ("System.Int32");
+					System.Type.GetType ("System.Int32");
+					System.Type.GetType ("System.Int32");
+				}));
+
 			using (var test = new TestPerformance (false))
 			{
 				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
@@ -49,6 +75,24 @@ namespace Epsitec.Cresus.Core
 				watch.Stop ();
 				System.Console.WriteLine ("Executed {0} loops, mean time is {1} ms", loopCount, watch.ElapsedMilliseconds/loopCount);
 			}
+		}
+
+		static int MeasureMilliseconds(int count, System.Action action)
+		{
+			//	Warm-up first...
+			action ();
+
+			//	Performance measurement:
+			var watch = new System.Diagnostics.Stopwatch ();
+			watch.Start ();
+			
+			for (int i = 0; i < count; i++)
+			{
+				action ();
+			}
+			
+			watch.Stop ();
+			return (int) watch.ElapsedMilliseconds;
 		}
 	}
 }

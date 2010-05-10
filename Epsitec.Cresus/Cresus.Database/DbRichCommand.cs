@@ -1082,8 +1082,9 @@ namespace Epsitec.Cresus.Database
 							}
 						}
 					}
-					
-					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
+
+					this.adapters[i].FillSchema (this.dataSet, System.Data.SchemaType.Mapped);
+					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.Error; //System.Data.MissingSchemaAction.AddWithKey;
 					this.adapters[i].Fill (this.dataSet);
 				}
 			}
