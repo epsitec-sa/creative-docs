@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.Database
 			}
 			catch (System.IO.IOException ex)
 			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+				System.Diagnostics.Debug.WriteLine (string.Format ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ()));
 				System.Threading.Thread.Sleep (5000);
 
 				try

@@ -1345,7 +1345,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (sqlQuery.SetQuery);
 			}
 
+#if DEBUG
 			System.Console.WriteLine (this.buffer);
+#endif
 		}
 
 		private bool AppendAlias(SqlField field)

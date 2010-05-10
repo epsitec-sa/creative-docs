@@ -1011,7 +1011,7 @@ namespace Epsitec.Cresus.Database
 			//
 			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
 			
-#if DEBUG
+#if false //DEBUG
 			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
 			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
 			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);

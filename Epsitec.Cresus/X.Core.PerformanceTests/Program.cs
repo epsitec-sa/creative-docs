@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Core
 
 			using (var test = new TestPerformance (false))
 			{
+				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
+				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
+
 				test.RetrieveNaturalPerson ();
 
 				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
@@ -34,10 +37,17 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Test harness loaded");
 				System.Diagnostics.Debug.WriteLine ("--------------------------------------------------------------------------------");
 
-				for (int i = 0; i < 100; i++)
+				var watch = new System.Diagnostics.Stopwatch ();
+				const int loopCount = 100;
+				watch.Start ();
+
+				for (int i = 0; i < loopCount; i++)
 				{
 					test.RetrieveNaturalPerson ();
 				}
+
+				watch.Stop ();
+				System.Console.WriteLine ("Executed {0} loops, mean time is {1} ms", loopCount, watch.ElapsedMilliseconds/loopCount);
 			}
 		}
 	}

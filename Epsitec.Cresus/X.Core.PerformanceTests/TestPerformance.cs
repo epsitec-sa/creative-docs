@@ -28,12 +28,20 @@ namespace Epsitec.Cresus.Core
 			this.dbInfrastructure = Database.DbInfrastructure;
 		}
 
+		public DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return this.dbInfrastructure;
+			}
+		}
+
 		//	Retrieve a natural person
 		public void RetrieveNaturalPerson()
 		{
 			using (DataContext context =  new DataContext (this.dbInfrastructure))
 			{
-				System.Diagnostics.Debug.WriteLine ("About to retrieve a natural person entity");
+				System.Diagnostics.Trace.WriteLine ("About to retrieve a natural person entity");
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 
 				watch.Start ();
@@ -42,7 +50,7 @@ namespace Epsitec.Cresus.Core
 				var person = context.ResolveEntity<NaturalPersonEntity> (key);
 
 				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
 			}
 		}
 	
@@ -59,19 +67,19 @@ namespace Epsitec.Cresus.Core
 				repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
 				watch.Stop ();
 
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				System.Diagnostics.Trace.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
 				watch.Restart ();
 				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
 				watch.Stop ();
 
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				System.Diagnostics.Trace.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
 				watch.Restart ();
 				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
 				watch.Stop ();
 
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				System.Diagnostics.Trace .WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 			}
 		}
 
