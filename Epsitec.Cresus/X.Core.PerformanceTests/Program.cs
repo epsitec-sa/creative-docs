@@ -27,6 +27,9 @@ namespace Epsitec.Cresus.Core
 			using (var test = new TestPerformance (false))
 			{
 				test.RetrieveNaturalPerson ();
+
+				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
+				System.Console.ReadKey ();
 				
 				System.Diagnostics.Debug.WriteLine ("Test harness loaded");
 				System.Diagnostics.Debug.WriteLine ("--------------------------------------------------------------------------------");
