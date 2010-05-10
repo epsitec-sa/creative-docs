@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
 
-			if (EntityNullReferenceVirtualizer.IsVirtualizedReadOnlyEntity (targetEntity))
+			if (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (targetEntity))
 			{
 				targetEntity = null;
 			}
