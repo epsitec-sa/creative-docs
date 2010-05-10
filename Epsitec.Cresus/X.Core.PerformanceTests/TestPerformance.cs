@@ -36,7 +36,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		//	Retrieve a natural person
 		public void RetrieveNaturalPerson()
 		{
 			using (DataContext context =  new DataContext (this.dbInfrastructure))
@@ -48,6 +47,27 @@ namespace Epsitec.Cresus.Core
 
 				var key    = new DbKey (new DbId (1000000000040));
 				var person = context.ResolveEntity<NaturalPersonEntity> (key);
+
+				string.Concat (
+					person.Firstname,
+					person.Lastname);
+
+				watch.Stop ();
+				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
+			}
+		}
+
+		public void RetrieveLocation()
+		{
+			using (DataContext context =  new DataContext (this.dbInfrastructure))
+			{
+				System.Diagnostics.Trace.WriteLine ("About to retrieve a location entity");
+				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+
+				watch.Start ();
+
+				var key    = new DbKey (new DbId (1000000000040));
+				var person = context.ResolveEntity<LocationEntity> (key);
 
 				watch.Stop ();
 				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");

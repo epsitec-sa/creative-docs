@@ -24,6 +24,23 @@ namespace Epsitec.Cresus.Core
 			}
 #endif
 
+			using (var test = new TestPerformance (false))
+			{
+				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
+				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
+
+				test.RetrieveNaturalPerson ();
+				test.RetrieveLocation ();
+
+				System.Console.ForegroundColor = System.ConsoleColor.Yellow;
+				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
+				System.Console.ReadKey ();
+				System.Console.ResetColor ();
+
+				Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
+				Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
+			}
+			
 			Program.MeasureAndDisplayExecutionTime ("System.Type.GetType(...)", 1000,
 				delegate
 				{
@@ -49,31 +66,18 @@ namespace Epsitec.Cresus.Core
 					System.Type.GetType ("System.Int32");
 				});
 
-			using (var test = new TestPerformance (false))
-			{
-				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
-				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
-
-				test.RetrieveNaturalPerson ();
-
-				System.Console.ForegroundColor = System.ConsoleColor.Green;
-				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
-				System.Console.ReadKey ();
-				System.Console.ResetColor ();
-
-				Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
-			}
+			System.Console.ReadKey ();
 		}
 
 		static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)
 		{
-			var time = Program.MeasureMilliseconds (count, action);
+			var time = Program.MeasureExecutionTimeInMilliseconds (count, action);
 			System.Console.ForegroundColor = System.ConsoleColor.Green;
 			System.Console.WriteLine ("{0}: {1}ms", text, time);
 			System.Console.ResetColor ();
 		}
 
-		static decimal MeasureMilliseconds(int count, System.Action action)
+		static decimal MeasureExecutionTimeInMilliseconds(int count, System.Action action)
 		{
 			//	Warm-up first...
 			action ();
