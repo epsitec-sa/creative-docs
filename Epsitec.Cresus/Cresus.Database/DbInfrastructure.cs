@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.Database
 			this.releaseRequested = new List<IDbAbstraction> ();
 
 			this.SchemasCache = new Dictionary<DbTable, System.Data.DataTable> ();
+			this.DbKeysCache = new Dictionary<string, Dictionary<string, DbKey[]>> ();
 		}
 
 
@@ -1897,6 +1899,30 @@ namespace Epsitec.Cresus.Database
 			return DbKey.Empty;
 		}
 
+
+		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
+		{
+			DbKey[] dbKeys;
+			
+			if (this.DbKeysCache.ContainsKey (tableName) && this.DbKeysCache[tableName].ContainsKey (rowName))
+			{
+				dbKeys = this.DbKeysCache[tableName][rowName];
+			}
+			else
+			{
+				dbKeys = this.FindDbKeysWithQuery (transaction, tableName, rowName).ToArray ();
+				
+				if (!this.DbKeysCache.ContainsKey (tableName))
+				{
+					this.DbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
+				}
+
+				this.DbKeysCache[tableName][rowName] = dbKeys;
+			}
+
+			return dbKeys;
+		}
+
 		/// <summary>
 		/// Finds the keys for the named rows in the specified table.
 		/// </summary>
@@ -1904,7 +1930,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="rowName">Name of the row or rows.</param>
 		/// <returns>The keys.</returns>
-		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
+		internal IEnumerable<DbKey> FindDbKeysWithQuery(DbTransaction transaction, string tableName, string rowName)
 		{
 			SqlSelect query = new SqlSelect ();
 			
@@ -1916,15 +1942,16 @@ namespace Epsitec.Cresus.Database
 			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (rowName, DbRawType.String)));
 			
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
-			
+
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
 				long  id     = InvariantConverter.ToLong (row["T_ID"]);
 				short status = InvariantConverter.ToShort (row["T_STAT"]);
-				
+
 				yield return new DbKey (id, DbKey.ConvertFromIntStatus (status));
 			}
 		}
+
 
 		/// <summary>
 		/// Counts the rows of the specified table which have a matching value in
@@ -3036,7 +3063,7 @@ namespace Epsitec.Cresus.Database
 		private Settings.Locals					locals;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
-		private Collections.DbTypeDefList			internalTypes = new Collections.DbTypeDefList ();
+		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();
 
 		private int								clientId;
 		
@@ -3044,6 +3071,7 @@ namespace Epsitec.Cresus.Database
 
 		private Cache.DbTypeDefs				typeCache = new Cache.DbTypeDefs ();
 		private Cache.DbTables					tableCache = new Cache.DbTables ();
+		private Dictionary<string, Dictionary<string, DbKey[]>> DbKeysCache;
 
 		private List<DbTransaction>				liveTransactions;
 		private List<IDbAbstraction>			releaseRequested;
