@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Database
 			this.dataMappings = new Dictionary<string, DbDataTableMapping> ();
 			this.relationSourceMappings = new Dictionary<string, DbDataTableMapping> ();
 			this.relationTargetMappings = new Dictionary<string, DbDataTableMapping> ();
+			this.fillDataSet = true;
 		}
 
 		/// <summary>
@@ -354,8 +355,11 @@ namespace Epsitec.Cresus.Database
 				//	for the specific table; just fetch the empty table by using an always
 				//	false WHERE clause.
 
+				bool oldFillDataSet = this.fillDataSet;
+
 				if (condition == null)
 				{
+					this.fillDataSet = false;
 					select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
 				}
 				else
@@ -390,6 +394,7 @@ namespace Epsitec.Cresus.Database
 				this.commands = oldCommands;
 				this.tables   = oldTables;
 				this.adapters = oldAdapters;
+				this.fillDataSet = oldFillDataSet;
 
 				DbRichCommand.RelaxConstraints (this.dataSet.Tables[this.dataSet.Tables.Count-1]);
 			}
@@ -1096,7 +1101,11 @@ namespace Epsitec.Cresus.Database
 					}
 					
 					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.Error;
-					this.adapters[i].Fill (this.dataSet);
+					
+					if (this.fillDataSet)
+					{
+						this.adapters[i].Fill (this.dataSet);
+					}
 				}
 			}
 			finally
@@ -1106,7 +1115,7 @@ namespace Epsitec.Cresus.Database
 			
 			this.CreateDataRelations ();
 		}
-		
+
 		#region IDisposable Members
 
 		/// <summary>
@@ -2027,5 +2036,9 @@ namespace Epsitec.Cresus.Database
 		private int								statReplaceUpdateCount;
 		private int								statReplaceInsertCount;
 		private int								statReplaceDeleteCount;
+
+		// This field is a fugly hack to tell the DbRichCommand itself that it does not need to fill
+		// the DataSet in InternalFillDataSet in some cases.
+		private bool fillDataSet;
 	}
 }
