@@ -21,6 +21,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="entity">The entity which will be patched.</param>
 		public static void PatchNullReferences<T>(T entity) where T : AbstractEntity
 		{
+			if (entity == null)
+            {
+				throw new System.NullReferenceException ();
+            }
+
 			if (!EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
 			{
 				entity.SetModifiedValues (new Store (entity.GetModifiedValues (), entity));
@@ -37,6 +42,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </returns>
 		public static bool IsPatchedEntity(AbstractEntity entity)
 		{
+			if (entity == null)
+            {
+				return false;
+            }
+			
 			if (entity.InternalGetValueStores ().Any (store => store is Store))
 			{
 				return true;
@@ -57,7 +67,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </returns>
 		public static bool IsPatchedEntityStillUnchanged(AbstractEntity entity)
 		{
-			if (entity.InternalGetValueStores ().Select (store => store is Store).Cast<Store> ().All (store => store.IsReadOnly))
+			if (entity == null)
+			{
+				return false;
+			}
+
+			if (entity.InternalGetValueStores ().Where (store => store is Store).Cast<Store> ().All (store => store.IsReadOnly))
 			{
 				return true;
 			}
