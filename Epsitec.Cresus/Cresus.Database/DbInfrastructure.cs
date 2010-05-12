@@ -1911,13 +1911,16 @@ namespace Epsitec.Cresus.Database
 			else
 			{
 				dbKeys = this.FindDbKeysWithQuery (transaction, tableName, rowName).ToArray ();
-				
-				if (!this.DbKeysCache.ContainsKey (tableName))
-				{
-					this.DbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
-				}
 
-				this.DbKeysCache[tableName][rowName] = dbKeys;
+				if (dbKeys.Length > 0)
+				{
+					if (!this.DbKeysCache.ContainsKey (tableName))
+					{
+						this.DbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
+					}
+
+					this.DbKeysCache[tableName][rowName] = dbKeys;
+				}
 			}
 
 			return dbKeys;

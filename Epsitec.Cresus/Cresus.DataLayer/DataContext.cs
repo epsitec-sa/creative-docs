@@ -140,27 +140,16 @@ namespace Epsitec.Cresus.DataLayer
 
 				using (entity.DefineOriginalValues ())
 				{
-					Druid currentId = realEntityId;
+					Druid[] entityIds = this.EntityContext.GetHeritedEntityIds (realEntityId).ToArray();
 
-					while (currentId != askedEntityId)
+					foreach (Druid currentId in entityIds.TakeWhile (id => id != askedEntityId))
 					{
-						// TODO Use proxy instead of values obtained with a query.
-						StructuredType subType = this.entityContext.GetStructuredType(currentId) as StructuredType;
-
-						System.Data.DataRow currentDataRow = this.LoadDataRow (rowKey, currentId);
-
-						this.DeserializeEntityLocal (entity, currentDataRow, currentId);
-
-						currentId = subType.BaseTypeId;
+						this.DeserializeEntityLocalWithProxy (entity, currentId, rowKey);
 					}
 
-					while (currentId.IsValid)
+					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						StructuredType subType = this.entityContext.GetStructuredType (currentId) as StructuredType;
-
 						this.DeserializeEntityLocal (entity, dataRow, currentId);
-
-						currentId = subType.BaseTypeId;
 					}
 				}
 			}
@@ -188,6 +177,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void SaveChanges()
 		{
+			// TODO This method will fail and throw an exception if it is called on a DataContext without
+			// change. This is because the DbAccess in the RbRichCommand is missing because its InternalFillDataSet
+			// method is never called. Something should be done to initialize that DbAccess by some other way.
+
 			System.Diagnostics.Debug.WriteLine ("DataContext: SaveChanges");
 			this.SerializeChanges ();
 
@@ -358,24 +351,8 @@ namespace Epsitec.Cresus.DataLayer
 		/// <param name="entityId">The entity id.</param>
 		private void SerializeEntityLocal(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
 		{
-			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entityId))
+			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
-				//	Only process fields which are defined locally, since inherited
-				//	fields do not belong into the same data table.
-
-				if (fieldDef.Membership == FieldMembership.Inherited)
-				{
-					continue;
-				}
-
-				if (fieldDef.Source == FieldSource.Expression)
-				{
-					continue;
-				}
-
-				//	Depending on the relation (and therefore cardinality), write
-				//	the data into the row :
-
 				switch (fieldDef.Relation)
 				{
 					case FieldRelation.None:
@@ -465,20 +442,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+
 		private void DeserializeEntityLocal(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
 		{
-			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entityId))
+			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
-				//	Only process fields which are defined locally, since inherited
-				//	fields do not belong into the same data table. Expressions can
-				//	also be skipped.
-
-				if ((fieldDef.Membership == FieldMembership.Inherited) ||
-					(fieldDef.Expression != null))
-				{
-					continue;
-				}
-
 				//	Depending on the relation (and therefore cardinality), write
 				//	the data into the row :
 
@@ -489,7 +457,7 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 
 					case FieldRelation.Reference:
-						entity.InternalSetValue (fieldDef.Id, Collection.GetFirst (this.ReadFieldRelation (entity, entityId, fieldDef, dataRow), null));
+						entity.InternalSetValue (fieldDef.Id, Collection.GetFirst (this.ReadFieldRelation(entity, entityId, fieldDef), null));
 						break;
 
 					case FieldRelation.Collection:
@@ -497,7 +465,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						//	TODO: verify that this really works
 
-						foreach (object childEntity in this.ReadFieldRelation (entity, entityId, fieldDef, dataRow))
+						foreach (object childEntity in this.ReadFieldRelation(entity, entityId, fieldDef))
 						{
 							collection.Add (childEntity);
 						}
@@ -508,6 +476,42 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
+
+
+		private void DeserializeEntityLocalWithProxy(AbstractEntity entity, Druid entityId, DbKey rowKey)
+		{
+			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
+			{
+				switch (field.Relation)
+				{
+					case FieldRelation.None:
+
+						object value = new Helpers.FieldProxy (this, entity, entityId, rowKey, field);
+						entity.InternalSetValue (field.Id, value);
+
+						break;
+
+					case FieldRelation.Reference:
+
+						object target1 = this.ReadFieldRelation (entity, entityId, field).FirstOrDefault ();
+						entity.InternalSetValue (field.Id, target1);
+
+						break;
+
+					case FieldRelation.Collection:
+
+						System.Collections.IList targets = entity.InternalGetFieldCollection (field.Id);
+
+						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field))
+						{
+							targets.Add (target2);
+						}
+
+						break;
+				}
+			}
+		}
+
 
 		private object GetInstanceTypeValue(Druid entityId)
 		{
@@ -799,20 +803,23 @@ namespace Epsitec.Cresus.DataLayer
 			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
 
-		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		public object GetFieldValue(AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField fieldDef)
+		{
+			System.Data.DataRow dataRow = this.LoadDataRow (rowKey, entityId);
+
+			return this.GetFieldValue (entity, fieldDef, dataRow);
+		}
+
+		private object GetFieldValue(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
 			string columnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
 
 			System.Diagnostics.Debug.Assert (fieldDef.Expression == null);
 			System.Diagnostics.Debug.Assert (dataRow.Table.Columns.Contains (columnName));
-			
+
 			object value = dataRow[columnName];
 
-			if (System.DBNull.Value == value)
-			{
-				//	Undefined value. Do nothing.
-			}
-			else
+			if (System.DBNull.Value != value)
 			{
 				IStringType stringType = fieldDef.Type as IStringType;
 
@@ -830,12 +837,22 @@ namespace Epsitec.Cresus.DataLayer
 
 					value = this.ConvertFromInternal (value, tableName, columnName);
 				}
+			}
 
+			return value;
+		}
+
+		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		{
+			object value = this.GetFieldValue (entity, fieldDef, dataRow);
+
+			if (value != System.DBNull.Value)
+			{
 				entity.InternalSetValue (fieldDef.Id, value);
 			}
 		}
 
-		private IEnumerable<object> ReadFieldRelation(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
+		private IEnumerable<object> ReadFieldRelation(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef)
 		{
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
 			string tableName = this.GetRelationTableName (entityId, fieldDef);

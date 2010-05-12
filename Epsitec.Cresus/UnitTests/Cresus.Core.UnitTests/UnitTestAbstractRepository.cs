@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.Core
 				PersonTitleEntity mister = EntityBuilder.CreatePersonTitle (dataContext, "Mister", "M");
 				PersonTitleEntity lady = EntityBuilder.CreatePersonTitle (dataContext, "Lady", "L");
 
-				//LegalPersonTypeEntity sa = this.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
-				//LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
+				//LegalPersonTypeEntity sa = EntityBuilder.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
+				//LegalPersonTypeEntity sarl = EntityBuilder.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
 
 				NaturalPersonEntity alfred = EntityBuilder.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male);
 				alfred.Contacts.Add (contactAlfred1);
@@ -73,9 +73,9 @@ namespace Epsitec.Cresus.Core
 
 				NaturalPersonEntity hans = EntityBuilder.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male);
 				hans.Contacts.Add (contactHans);
-				
-				//LegalPersonEntity papetVaudois = this.CreateLegalPerson (dataContext, "Papet Vaudois SA", sa, french);
-				//LegalPersonEntity bratwurst = this.CreateLegalPerson (dataContext, "Bratwurst SARL", sarl, german);
+
+				//LegalPersonEntity papetVaudois = EntityBuilder.CreateLegalPerson (dataContext, "Papet Vaudois SA", "PV", "", sa, french);
+				//LegalPersonEntity bratwurst = EntityBuilder.CreateLegalPerson (dataContext, "Bratwurst SARL", "B", "", sarl, german);
 
 				dataContext.SaveChanges ();
 			}
@@ -120,10 +120,14 @@ namespace Epsitec.Cresus.Core
 				});
 
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
 				NaturalPersonEntity alfred = persons[0];
 
-				Date? error = alfred.BirthDate;
+				System.Diagnostics.Debug.WriteLine (alfred.Firstname);
+				System.Diagnostics.Debug.WriteLine (alfred.Lastname);
+				System.Diagnostics.Debug.WriteLine (alfred.BirthDate);
+				System.Diagnostics.Debug.WriteLine (alfred.Gender.Name);
 			}
 		}
 

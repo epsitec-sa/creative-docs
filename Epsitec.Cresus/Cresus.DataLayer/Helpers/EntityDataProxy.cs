@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Checks if the write to the specified entity value should proceed
 		/// normally or be discarded completely.
 		/// </summary>
-		/// <param name="store">The valuestore.</param>
+		/// <param name="store">The value store.</param>
 		/// <param name="id">The value id.</param>
 		/// <param name="value">The value.</param>
 		/// <returns>
