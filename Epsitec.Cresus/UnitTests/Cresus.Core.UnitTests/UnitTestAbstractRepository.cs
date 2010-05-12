@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core
 				//LegalPersonEntity papetVaudois = EntityBuilder.CreateLegalPerson (dataContext, "Papet Vaudois SA", "PV", "", sa, french);
 				//LegalPersonEntity bratwurst = EntityBuilder.CreateLegalPerson (dataContext, "Bratwurst SARL", "B", "", sarl, german);
 
-				dataContext.SaveChanges ();
+				dataContext.SaveChanges (); 
 			}
 		}
 
@@ -120,8 +120,8 @@ namespace Epsitec.Cresus.Core
 				});
 
 
-				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
+				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
 				NaturalPersonEntity alfred = persons[0];
 
 				System.Diagnostics.Debug.WriteLine (alfred.Firstname);

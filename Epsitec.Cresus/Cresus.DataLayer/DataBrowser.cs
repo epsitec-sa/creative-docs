@@ -13,7 +13,8 @@ using System.Data;
 
 namespace Epsitec.Cresus.DataLayer
 {
-
+	// TODO Add sorting criteria
+	// TODO Add comparison criteria
 	public class DataBrowser
 	{
 
@@ -23,9 +24,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
 			this.DataContext = dataContext;
-
-			this.rootTypeTableAlias = new Stack<string> ();
-			this.subTypeTableAlias = new Stack<string> ();
+			this.tableAliasManager = new TableAliasManager ();
 		}
 
 
@@ -113,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private Druid ExtractRealEntityId(DbReader.RowData row)
 		{
-			long realEntityIdAsLong = (long) row.Values.Last ();
+			long realEntityIdAsLong = (long) row.Values[row.Values.Length - 2];
 
 			return Druid.FromLong (realEntityIdAsLong);
 		}
@@ -121,7 +120,9 @@ namespace Epsitec.Cresus.DataLayer
 
 		private DbKey ExtractDbKey(DbReader.RowData row)
 		{
-			return row.Keys[0];
+			long dbKeyAsLong = (long) row.Values[row.Values.Length - 1];
+
+			return new DbKey (new DbId (dbKeyAsLong));
 		}
 
 
@@ -130,14 +131,14 @@ namespace Epsitec.Cresus.DataLayer
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
 				SelectPredicate = SqlSelectPredicate.Distinct,
-				IncludeRowKeys  = true,
+				IncludeRowKeys  = false,
 			};
 
-			this.resetTableAliases ();
+			this.tableAliasManager.resetTableAliases ();
 
-			this.PushRootTypeTableAlias ();
+			this.tableAliasManager.PushRootTypeTableAlias ();
 			this.AddQueryDataForEntity (reader, entityId, example, true);
-			this.PopRootTypeTableAlias ();
+			this.tableAliasManager.PopRootTypeTableAlias ();
 
 			return reader;
 		}
@@ -145,45 +146,23 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddQueryDataForEntity(DbReader reader, Druid entityId, AbstractEntity example, bool getFields)
 		{
-			List<string> definedFieldIds = example.GetEntityContext ().GetDefinedFieldIds (example).ToList ();
-			List<Druid> heritedEntityIds = example.GetEntityContext ().GetHeritedEntityIds (entityId).ToList();
-
-			Druid rootEntityId =  heritedEntityIds.Last ();
+			string[] definedFieldIds = example.GetEntityContext ().GetDefinedFieldIds (example).ToArray ();
+			Druid[] heritedEntityIds = example.GetEntityContext ().GetHeritedEntityIds (entityId).ToArray ();
+			Druid rootEntityId =  heritedEntityIds[heritedEntityIds.Length - 1];
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
 				bool isRootType = currentEntityId == rootEntityId;
-				this.PushSubTypeTableAlias (isRootType);
+				this.tableAliasManager.PushSubTypeTableAlias (isRootType);
 
 				StructuredTypeField[] localFields = example.GetEntityContext ().GetEntityLocalFieldDefinitions (currentEntityId).ToArray ();
-
-				List<StructuredTypeField> localValueFields = new List<StructuredTypeField> (
-
-					from StructuredTypeField field in localFields
-					where field.Relation == FieldRelation.None
-					select field
-
-				);
-
-				List<StructuredTypeField> definedLocalFields = new List<StructuredTypeField> (
-
-					from StructuredTypeField field in localFields
-					where definedFieldIds.Contains (field.Id)
-					select field
-
-				);
-
-				List<StructuredTypeField> definedLocalValueFields = new List<StructuredTypeField>(
-
-					from StructuredTypeField field in definedLocalFields
-					where field.Relation == FieldRelation.None
-					select field
-
-				);
-
-				bool localQueryFieldExists = getFields && localValueFields.Count > 0;
-				bool definedLocalValueFieldExists = definedLocalValueFields.Count () > 0; 
-				bool definedFieldExists = definedLocalFields.Count > 0;
+				StructuredTypeField[] localValueFields = localFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
+				StructuredTypeField[] definedLocalFields = localFields.Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
+				StructuredTypeField[] definedLocalValueFields = definedLocalFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
+				
+				bool localQueryFieldExists = getFields && localValueFields.Length > 0;
+				bool definedLocalValueFieldExists = definedLocalValueFields.Length > 0;
+				bool definedFieldExists = definedLocalFields.Length > 0;
 
 				if (!isRootType && (localQueryFieldExists || definedLocalValueFieldExists))
 				{
@@ -209,9 +188,10 @@ namespace Epsitec.Cresus.DataLayer
 				if (getFields && isRootType)
 				{
 					this.AddQueryField (reader, currentEntityId, DataBrowser.typeColumn);
+					this.AddQueryField (reader, currentEntityId, DataBrowser.idColumn);
 				}
 
-				this.PopSubTypeTableAlias ();
+				this.tableAliasManager.PopSubTypeTableAlias ();
 			}
 
 		}
@@ -232,22 +212,18 @@ namespace Epsitec.Cresus.DataLayer
 				case FieldRelation.Collection:
 					this.AddQueryDataForCollection (reader, currentEntityId, example, field);
 					break;
-
-				default:
-					throw new System.NotSupportedException ();
 			}			
 		}
 
 
 		private void AddQueryDataForValue(DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
-			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, this.PeekSubTypeTableAlias (), field.Id);
+			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, this.tableAliasManager.PeekSubTypeTableAlias (), field.Id);
 			
 			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
 			AbstractType fieldType = field.Type as AbstractType;
 			object fieldValue = example.InternalGetValue (field.Id);
 			
-			// TODO Temporary code. Add other comparison behaviors.
 			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
 
 			switch (fieldType.TypeCode)
@@ -403,15 +379,15 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.AddQueryDataForEntity (reader, targetEntityId, targetEntity, false);
 
-			this.PopRootTypeTableAlias ();
-			this.PopRootTypeTableAlias ();
+			this.tableAliasManager.PopRootTypeTableAlias ();
+			this.tableAliasManager.PopRootTypeTableAlias ();
 		}
 
 
 		private void AddSubTypingJoin(DbReader reader, Druid subTypeEntityId, Druid rootTypeEntityId)
 		{
-			string subTypeTableAlias = this.PeekSubTypeTableAlias ();
-			string rootTypeTableAlias = this.PeekRootTypeTableAlias ();
+			string subTypeTableAlias = this.tableAliasManager.PeekSubTypeTableAlias ();
+			string rootTypeTableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
 
 			DbTableColumn subEntityColumn = this.GetEntityTableColumn (subTypeEntityId, subTypeTableAlias, DataBrowser.idColumn);
 			DbTableColumn superEntityColumn = this.GetEntityTableColumn (rootTypeEntityId, rootTypeTableAlias, DataBrowser.idColumn);
@@ -427,9 +403,9 @@ namespace Epsitec.Cresus.DataLayer
 			Druid rootSourceEntityId = this.DataContext.EntityContext.GetBaseEntityId (sourceEntityId);
 			Druid rootTargetEntityId = this.DataContext.EntityContext.GetBaseEntityId (targetEntityId);
 
-			string sourceTableAlias = this.PeekRootTypeTableAlias ();
-			string relationTableAlias = this.PushRootTypeTableAlias ();
-			string targetTableAlias = this.PushRootTypeTableAlias ();
+			string sourceTableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
+			string relationTableAlias = this.tableAliasManager.PushRootTypeTableAlias ();
+			string targetTableAlias = this.tableAliasManager.PushRootTypeTableAlias ();
 
 			DbTableColumn sourceColumnId = this.GetEntityTableColumn (rootSourceEntityId, sourceTableAlias, DataBrowser.idColumn);
 			DbTableColumn relationSourceColumnId = this.GetRelationTableColumn (sourceEntityId, sourcefieldId, relationTableAlias, DataBrowser.relationSourceColumn);
@@ -446,27 +422,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddQueryField(DbReader reader, Druid entityId, string columnName)
 		{
-			string tableAlias = this.PeekSubTypeTableAlias ();
+			string tableAlias = this.tableAliasManager.PeekSubTypeTableAlias ();
 			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, tableAlias, columnName);
 
 			reader.AddQueryField (tableColumn);
-
-			// TODO Find a way to give sorting informations. Below is the way it was done
-			// before. I probably should use that SearchEntity stuff.
-
-			//switch (queryColumn.SortOrder)
-			//{
-			//    case DataQuerySortOrder.None:
-			//        break;
-			//    case DataQuerySortOrder.Ascending:
-			//        reader.AddSortOrder (tableColumn, SqlSortOrder.Ascending);
-			//        break;
-			//    case DataQuerySortOrder.Descending:
-			//        reader.AddSortOrder (tableColumn, SqlSortOrder.Descending);
-			//        break;
-			//    default:
-			//        throw new System.NotSupportedException ("Unsupported sort order");
-			//}
 		}
 
 
@@ -499,66 +458,7 @@ namespace Epsitec.Cresus.DataLayer
 			};
 		}
 
-		private void resetTableAliases()
-		{
-			this.tableAliasNumber = 0;
-
-			this.rootTypeTableAlias.Clear ();
-			this.subTypeTableAlias.Clear ();
-		}
-
-		private string PushRootTypeTableAlias()
-		{
-			string newTableAlias = this.GetNewTableAlias ();
-			
-			this.rootTypeTableAlias.Push (newTableAlias);
-
-			return newTableAlias;
-		}
-
-		private string PeekRootTypeTableAlias()
-		{
-			return this.rootTypeTableAlias.Peek ();
-		}
-
-		private void PopRootTypeTableAlias()
-		{
-			this.rootTypeTableAlias.Pop ();
-		}
-
-		private string PushSubTypeTableAlias(bool rootType)
-		{
-			string newTableAlias = (rootType) ? this.PeekRootTypeTableAlias () : this.GetNewTableAlias ();
-
-			subTypeTableAlias.Push (newTableAlias);
-
-			return newTableAlias;
-		}
-
-		private string PeekSubTypeTableAlias()
-		{
-			return this.subTypeTableAlias.Peek ();
-		}
-
-		private void PopSubTypeTableAlias()
-		{
-			this.subTypeTableAlias.Pop ();
-		}
-
-		private string GetNewTableAlias()
-		{
-			string tableAlias = "table" + this.tableAliasNumber;
-
-			this.tableAliasNumber++;
-
-			return tableAlias;
-		}
-
-		private int tableAliasNumber;
-
-		private Stack<string> rootTypeTableAlias;
-
-		private Stack<string> subTypeTableAlias;
+		private TableAliasManager tableAliasManager;
 
 		private static string relationSourceColumn = "[" + Tags.ColumnRefSourceId + "]";
 
