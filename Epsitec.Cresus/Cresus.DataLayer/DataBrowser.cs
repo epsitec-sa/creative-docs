@@ -154,14 +154,8 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				bool isRootType = currentEntityId == rootEntityId;
 				this.PushSubTypeTableAlias (isRootType);
-				
-				List<StructuredTypeField> localFields = new List<StructuredTypeField> (
 
-					from StructuredTypeField field in example.GetEntityContext ().GetEntityFieldDefinitions (currentEntityId)
-					where (field.Membership == FieldMembership.Local) && (field.Expression == null)
-					select field
-
-				);
+				StructuredTypeField[] localFields = example.GetEntityContext ().GetEntityLocalFieldDefinitions (currentEntityId).ToArray ();
 
 				List<StructuredTypeField> localValueFields = new List<StructuredTypeField> (
 

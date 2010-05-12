@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
+    <Compile Include="Helpers\FieldProxy.cs" />
     <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -307,7 +308,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (entityType == null)
 			{
-				throw new System.ArgumentException ("Invalid entity; no associted IStructuredType");
+				throw new System.ArgumentException ("Invalid entity; no associated IStructuredType");
 			}
 
 			return entityType.GetFieldIds ();
@@ -319,13 +320,20 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (entityType == null)
 			{
-				throw new System.ArgumentException ("Invalid entity; no associted IStructuredType");
+				throw new System.ArgumentException ("Invalid entity; no associated IStructuredType");
 			}
 
 			foreach (string fieldId in entityType.GetFieldIds ())
 			{
 				yield return entityType.GetField (fieldId);
 			}
+		}
+
+		public IEnumerable<StructuredTypeField> GetEntityLocalFieldDefinitions(Druid id)
+		{
+			return this.GetEntityFieldDefinitions (id)
+				.Where (field => field.Membership != FieldMembership.Inherited)
+				.Where (field => field.Source == FieldSource.Value);
 		}
 
 		public IStructuredType GetStructuredType(Druid id)
@@ -863,9 +871,9 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	If the value in the store is a proxy, let it resolve to
 					//	another value, if needed :
 
-					IEntityProxy proxy = value as IEntityProxy;
+					IEntityProxy entityProxy = value as IEntityProxy;
 					
-					if (proxy == null)
+					if (entityProxy == null)
 					{
 						//	If the value has an attached proxy, check to see if this
 						//	should be handled as a null value :
@@ -885,12 +893,20 @@ namespace Epsitec.Common.Support.EntityEngine
 								return UndefinedValue.Value;
 							}
 						}
-						
+
+						IFieldProxy fieldProxy = value as IFieldProxy;
+
+						if (fieldProxy != null)
+						{
+							value = fieldProxy.GetValue ();
+							this.SetValue (id, value, ValueStoreSetMode.Default);
+						}
+
 						return value;
 					}
 					else
 					{
-						return proxy.GetReadEntityValue (this, id);
+						return entityProxy.GetReadEntityValue (this, id);
 					}
 				}
 				else
