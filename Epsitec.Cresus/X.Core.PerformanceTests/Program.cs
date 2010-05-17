@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core
 				Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
 			}
 			
+#if false
 			Program.MeasureAndDisplayExecutionTime ("System.Type.GetType(...)", 1000,
 				delegate
 				{
@@ -65,6 +66,7 @@ namespace Epsitec.Cresus.Core
 					System.Type.GetType ("System.Int32");
 					System.Type.GetType ("System.Int32");
 				});
+#endif
 
 //-			System.Console.ReadKey ();
 		}

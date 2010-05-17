@@ -72,7 +72,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				return false;
 			}
 
-			if (entity.InternalGetValueStores ().Where (store => store is Store).Cast<Store> ().All (store => store.IsReadOnly))
+			var stores = entity.InternalGetValueStores ().Where (store => store is Store).Cast<Store> ().ToArray ();
+
+			if ((stores.Length > 0) &&
+				(stores.All (store => store.IsReadOnly)))
 			{
 				return true;
 			}
