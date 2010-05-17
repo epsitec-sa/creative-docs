@@ -1002,6 +1002,9 @@
             This property is loaded after the method call <see cref="M:FirebirdSql.Data.Isql.FbScript.Parse"/>.
             </summary>
         </member>
+        <member name="M:FirebirdSql.Data.Common.IscException.#ctor(System.String,System.Int32)">
+            <param name="dummy">This parameter is here only to differentiate sqlState and strParam.</param>
+        </member>
         <member name="M:FirebirdSql.Data.FirebirdClient.FbProviderManifest.#ctor(System.String)">
             <summary>
             Constructor
@@ -2285,24 +2288,24 @@
             <param name="parenthesiseArguments">Whether the arguments should be enclosed in parethesis</param>
             <returns></returns>
         </member>
-        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleConcatFunction(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)">
-            <summary>
-            <see cref="M:FirebirdSql.Data.Entity.SqlGenerator.HandleSpecialFunctionToOperator(System.Data.Common.CommandTrees.DbFunctionExpression,System.Boolean)"></see>
-            </summary>
-        </member>
         <!-- Badly formed XML comment ignored for member "M:FirebirdSql.Data.Entity.SqlGenerator.TrimHelper(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression,System.String)" -->
-        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionExtract(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)">
+        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionExtract(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression,System.String)">
             <summary>
             Handler for canonical funcitons for extracting date parts. 
             For example:
                 Year(date) -> EXTRACT(YEAR from date)
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionDateDiff(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)" -->
-        <!-- Badly formed XML comment ignored for member "M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionDateAdd(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)" -->
-        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionRound(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)">
+        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionCreateDateTime(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)">
             <summary>
-            Round(numericExpression) -> ROUND(numericExpression, 0);
+            CCYY-MM-DD HH:NN:SS.nnnn
+            CreateDateTime(year, month, day, hour, minute, second)
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SqlGenerator.HandleCanonicalFunctionCreateTime(FirebirdSql.Data.Entity.SqlGenerator,System.Data.Common.CommandTrees.DbFunctionExpression)">
+            <summary>
+            HH:NN:SS.nnnn
+            CreateTime(hour, minute, second)
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Entity.SqlGenerator.AddColumns(FirebirdSql.Data.Entity.SqlSelectStatement,FirebirdSql.Data.Entity.Symbol,System.Collections.Generic.List{FirebirdSql.Data.Entity.Symbol},System.Collections.Generic.Dictionary{System.String,FirebirdSql.Data.Entity.Symbol},System.String@)">
@@ -2489,7 +2492,7 @@
              This is used to determine if a calling expression needs to place
              round brackets around the translation of the expression e.
             
-             Constants, parameters and properties do not require brackets,
+             Constants, parameters, properties and internal functions as operators do not require brackets,
              everything else does.
              </summary>
              <param name="e"></param>
