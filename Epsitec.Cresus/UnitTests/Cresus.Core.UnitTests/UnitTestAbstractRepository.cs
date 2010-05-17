@@ -57,10 +57,10 @@ namespace Epsitec.Cresus.Core
 
 				PersonGenderEntity male = EntityBuilder.CreatePersonGender (dataContext, "M", "Male");
 				PersonGenderEntity female = EntityBuilder.CreatePersonGender (dataContext, "F", "Female");
-
+				
 				PersonTitleEntity mister = EntityBuilder.CreatePersonTitle (dataContext, "Mister", "M");
 				PersonTitleEntity lady = EntityBuilder.CreatePersonTitle (dataContext, "Lady", "L");
-
+				
 				//LegalPersonTypeEntity sa = EntityBuilder.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
 				//LegalPersonTypeEntity sarl = EntityBuilder.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core
 				NaturalPersonEntity gertrude = EntityBuilder.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female);
 				gertrude.Contacts.Add (contactGertrude);
 
-				NaturalPersonEntity hans = EntityBuilder.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male);
+				NaturalPersonEntity hans = EntityBuilder.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, null, null);
 				hans.Contacts.Add (contactHans);
 
 				//LegalPersonEntity papetVaudois = EntityBuilder.CreateLegalPerson (dataContext, "Papet Vaudois SA", "PV", "", sa, french);
@@ -120,14 +120,26 @@ namespace Epsitec.Cresus.Core
 				});
 
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
 				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
-				NaturalPersonEntity alfred = persons[0];
+				//NaturalPersonEntity alfred = persons[0];
 
-				System.Diagnostics.Debug.WriteLine (alfred.Firstname);
-				System.Diagnostics.Debug.WriteLine (alfred.Lastname);
-				System.Diagnostics.Debug.WriteLine (alfred.BirthDate);
-				System.Diagnostics.Debug.WriteLine (alfred.Gender.Name);
+				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
+
+				foreach (NaturalPersonEntity person in persons)
+				{
+					System.Diagnostics.Debug.WriteLine ("=====================================================");
+					System.Diagnostics.Debug.WriteLine ("Firstname: " + person.Firstname);
+					System.Diagnostics.Debug.WriteLine ("Lastname: " + person.Lastname);
+					System.Diagnostics.Debug.WriteLine ("Birthday: " + person.BirthDate);
+					System.Diagnostics.Debug.WriteLine ("Gender: " + ((person.Gender == null) ? "null" : person.Gender.Name));
+					System.Diagnostics.Debug.WriteLine ("Title: " + ((person.Title == null) ? "null" : person.Title.Name));
+					System.Diagnostics.Debug.WriteLine ("Language: " + ((person.PreferredLanguage == null) ? "null" : person.PreferredLanguage.Name));
+				}
+				System.Diagnostics.Debug.WriteLine ("=====================================================");
+
+				//persons[0].Gender = persons[2].Gender;
+				//dataContext.SaveChanges ();
 			}
 		}
 
