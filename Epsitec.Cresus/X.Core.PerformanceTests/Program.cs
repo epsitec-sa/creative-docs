@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core
 
 				System.Console.ForegroundColor = System.ConsoleColor.Yellow;
 				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
-				System.Console.ReadKey ();
+//-				System.Console.ReadKey ();
+				System.Threading.Thread.Sleep (2*1000);
 				System.Console.ResetColor ();
 
 				Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
