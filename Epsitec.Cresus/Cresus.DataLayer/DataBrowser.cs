@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.DataLayer
 {
 	// TODO Add sorting criteria
 	// TODO Add comparison criteria
+	// TODO Make sure that the references can be written in a consistent way after being loaded with the DataBrowser.
 	public class DataBrowser
 	{
 
@@ -79,13 +80,18 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataTable dataTable = new DataTable ();
 
-			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
+			foreach (Druid id in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
 			{
-				if (field.Relation == FieldRelation.None && field.Expression == null)
+				StructuredTypeField[] localFields = this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (id).ToArray ();
+
+				StructuredTypeField[] localValueFields = localFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
+				StructuredTypeField[] localReferenceFields = localFields.Where (field => field.Relation == FieldRelation.Reference).ToArray ();
+
+				foreach (StructuredTypeField field in localReferenceFields.Concat(localValueFields))
 				{
 					string name = this.DataContext.SchemaEngine.GetDataColumnName (field.Id);
-					System.Type type = reader.GetColumnType (name);
-					
+					System.Type type = (field.Relation == FieldRelation.None) ?  reader.GetColumnType (name) : typeof (string);
+
 					dataTable.Columns.Add (new DataColumn (name, type));
 				}
 			}
@@ -139,7 +145,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.tableAliasManager.PushRootTypeTableAlias ();
 			this.AddQueryDataForEntity (reader, entityId, example, true);
 			this.tableAliasManager.PopRootTypeTableAlias ();
-
+			
 			return reader;
 		}
 
@@ -156,28 +162,50 @@ namespace Epsitec.Cresus.DataLayer
 				this.tableAliasManager.PushSubTypeTableAlias (isRootType);
 
 				StructuredTypeField[] localFields = example.GetEntityContext ().GetEntityLocalFieldDefinitions (currentEntityId).ToArray ();
-				StructuredTypeField[] localValueFields = localFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
-				StructuredTypeField[] definedLocalFields = localFields.Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
-				StructuredTypeField[] definedLocalValueFields = definedLocalFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
 				
-				bool localQueryFieldExists = getFields && localValueFields.Length > 0;
-				bool definedLocalValueFieldExists = definedLocalValueFields.Length > 0;
-				bool definedFieldExists = definedLocalFields.Length > 0;
+				StructuredTypeField[] localValueFields = localFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
+				StructuredTypeField[] localReferenceFields = localFields.Where (field => field.Relation == FieldRelation.Reference).ToArray ();
+				StructuredTypeField[] localCollectionFields = localFields.Where (field => field.Relation == FieldRelation.Collection).ToArray ();
 
-				if (!isRootType && (localQueryFieldExists || definedLocalValueFieldExists))
+				StructuredTypeField[] localDefinedValueFields = localValueFields.Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
+				StructuredTypeField[] localDefinedReferenceFields = localReferenceFields.Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
+				StructuredTypeField[] localDefinedCollectionFields = localCollectionFields.Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
+
+				if (!isRootType && ((getFields && localValueFields.Length > 0) || localDefinedValueFields.Length > 0))
 				{
 					this.AddSubTypingJoin (reader, currentEntityId, heritedEntityIds.Last ());
 				}
 
-				if (definedFieldExists)
+				foreach (StructuredTypeField field in localDefinedValueFields)
 				{
-					foreach (StructuredTypeField field in definedLocalFields)
+					this.AddQueryDataForValue (reader, currentEntityId, example, field);
+				}
+
+				foreach (StructuredTypeField field in localReferenceFields)
+				{
+					if (localDefinedReferenceFields.Contains (field) && getFields)
 					{
-						this.AddQueryDataForField (reader, currentEntityId, example, field);
+						if (getFields)
+						{
+							this.AddQueryDataForReferenceIdJoin (reader, currentEntityId, example, field);
+						}
+						else
+						{
+							this.AddQueryDataForReferenceJoin (reader, currentEntityId, example, field);
+						}
+					}
+					else if (getFields)
+					{
+						this.AddQueryDataForReferenceId (reader, currentEntityId, field);
 					}
 				}
 
-				if (localQueryFieldExists)
+				foreach (StructuredTypeField field in localDefinedCollectionFields)
+				{
+					this.AddQueryDataForCollection (reader, currentEntityId, example, field);
+				}
+
+				if (getFields && localValueFields.Length > 0)
 				{
 					foreach (StructuredTypeField field in localValueFields)
 					{
@@ -194,25 +222,6 @@ namespace Epsitec.Cresus.DataLayer
 				this.tableAliasManager.PopSubTypeTableAlias ();
 			}
 
-		}
-
-
-		private void AddQueryDataForField(DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field)
-		{
-			switch (field.Relation)
-			{
-				case FieldRelation.None:
-					this.AddQueryDataForValue (reader, currentEntityId, example, field);
-					break;
-
-				case FieldRelation.Reference:
-					this.AddQueryDataForReference (reader, currentEntityId, example, field);
-					break;
-
-				case FieldRelation.Collection:
-					this.AddQueryDataForCollection (reader, currentEntityId, example, field);
-					break;
-			}			
 		}
 
 
@@ -267,96 +276,140 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void QueryDataForString(DbReader reader, DbTableColumn tableColumn, StructuredTypeField field, AbstractType fieldType, IFieldPropertyStore fieldProperties, string fieldValue)
-		{
-			if (!string.IsNullOrEmpty (fieldValue))
-			{
-				DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+		//private void QueryDataForString(DbReader reader, DbTableColumn tableColumn, StructuredTypeField field, AbstractType fieldType, IFieldPropertyStore fieldProperties, string fieldValue)
+		//{
+		//    if (!string.IsNullOrEmpty (fieldValue))
+		//    {
+		//        DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
 				
-				IStringType fieldStringType = fieldType as IStringType;
+		//        IStringType fieldStringType = fieldType as IStringType;
 
-				StringSearchBehavior searchBehavior = fieldStringType.DefaultSearchBehavior;
-				StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
+		//        StringSearchBehavior searchBehavior = fieldStringType.DefaultSearchBehavior;
+		//        StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
 
-				if (fieldProperties != null)
-				{
-					if (fieldProperties.ContainsValue (field.Id, StringType.DefaultSearchBehaviorProperty))
-					{
-						searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultSearchBehaviorProperty);
-					}
+		//        if (fieldProperties != null)
+		//        {
+		//            if (fieldProperties.ContainsValue (field.Id, StringType.DefaultSearchBehaviorProperty))
+		//            {
+		//                searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultSearchBehaviorProperty);
+		//            }
 
-					if (fieldProperties.ContainsValue (field.Id, StringType.DefaultComparisonBehaviorProperty))
-					{
-						comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultComparisonBehaviorProperty);
-					}
-				}
+		//            if (fieldProperties.ContainsValue (field.Id, StringType.DefaultComparisonBehaviorProperty))
+		//            {
+		//                comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultComparisonBehaviorProperty);
+		//            }
+		//        }
 
-				// TODO Do something useful withcomparisonBehavior or delete it if it is not useful.
+		//        // TODO Do something useful withcomparisonBehavior or delete it.
 
-				string pattern = this.CreateSearchPattern (fieldValue, searchBehavior);
+		//        string pattern = this.CreateSearchPattern (fieldValue, searchBehavior);
 
-				if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
-				{
-					condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
-				}
-				else
-				{
-					condition.AddCondition (tableColumn, DbCompare.Like, pattern);
-				}
+		//        if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
+		//        {
+		//            condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+		//        }
+		//        else
+		//        {
+		//            condition.AddCondition (tableColumn, DbCompare.Like, pattern);
+		//        }
 
-				reader.AddCondition (condition);
-			}
-		}
+		//        reader.AddCondition (condition);
+		//    }
+		//}
 
 
-		/// <summary>
-		/// Creates the SQL LIKE compatible search pattern.
-		/// </summary>
-		/// <param name="searchPattern">The search pattern.</param>
-		/// <param name="searchBehavior">The search behavior.</param>
-		/// <returns>The SQL LIKE compatible search pattern.</returns>
-		private string CreateSearchPattern(string searchPattern, StringSearchBehavior searchBehavior)
+		///// <summary>
+		///// Creates the SQL LIKE compatible search pattern.
+		///// </summary>
+		///// <param name="searchPattern">The search pattern.</param>
+		///// <param name="searchBehavior">The search behavior.</param>
+		///// <returns>The SQL LIKE compatible search pattern.</returns>
+		//private string CreateSearchPattern(string searchPattern, StringSearchBehavior searchBehavior)
+		//{
+		//    string pattern;
+
+		//    switch (searchBehavior)
+		//    {
+		//        case StringSearchBehavior.ExactMatch:
+		//            pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
+		//            break;
+
+		//        case StringSearchBehavior.WildcardMatch:
+		//            pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
+		//            break;
+
+		//        case StringSearchBehavior.MatchStart:
+		//            pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
+		//            pattern = string.Concat (pattern, "%");
+		//            break;
+
+		//        case StringSearchBehavior.MatchEnd:
+		//            pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
+		//            pattern = string.Concat ("%", pattern);
+		//            break;
+
+		//        case StringSearchBehavior.MatchAnywhere:
+		//            pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
+		//            pattern = string.Concat ("%", pattern, "%");
+		//            break;
+
+		//        default:
+		//            throw new System.ArgumentException (string.Format ("Unsupported search behavior {0}", searchBehavior));
+		//    }
+
+		//    return pattern;
+		//}
+
+
+		private void AddQueryDataForReferenceId(DbReader reader, Druid sourceEntityId, StructuredTypeField sourceField)
 		{
-			string pattern;
+			Druid targetEntityId = sourceField.TypeId;
 
-			switch (searchBehavior)
-			{
-				case StringSearchBehavior.ExactMatch:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
-					break;
+			this.AddRelationJoin1 (reader, sourceEntityId, Druid.Parse (sourceField.Id), SqlJoinCode.OuterLeft);
 
-				case StringSearchBehavior.WildcardMatch:
-					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
-					break;
+			string tableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
 
-				case StringSearchBehavior.MatchStart:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
-					pattern = string.Concat (pattern, "%");
-					break;
+			DbTableColumn tableColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse(sourceField.Id), tableAlias, DataBrowser.relationTargetColumn);
 
-				case StringSearchBehavior.MatchEnd:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
-					pattern = string.Concat ("%", pattern);
-					break;
+			reader.AddQueryField (tableColumn);
 
-				case StringSearchBehavior.MatchAnywhere:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
-					pattern = string.Concat ("%", pattern, "%");
-					break;
-
-				default:
-					throw new System.ArgumentException (string.Format ("Unsupported search behavior {0}", searchBehavior));
-			}
-
-			return pattern;
+			this.tableAliasManager.PopRootTypeTableAlias ();
 		}
 
 
-		private void AddQueryDataForReference(DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField)
+		private void AddQueryDataForReferenceJoin(DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField)
 		{
 			AbstractEntity targetEntity = sourceExample.InternalGetValue (sourceField.Id) as AbstractEntity;
 
-			this.AddQueryDataForRelation (reader, sourceEntityId, Druid.Parse (sourceField.Id), targetEntity);
+			Druid targetEntityId = targetEntity.GetEntityStructuredTypeId ();
+
+			this.AddRelationJoin1 (reader, sourceEntityId, Druid.Parse (sourceField.Id), SqlJoinCode.Inner);
+			this.AddRelationJoin2 (reader, sourceEntityId, Druid.Parse (sourceField.Id), targetEntityId, SqlJoinCode.Inner);
+
+			this.AddQueryDataForEntity (reader, targetEntityId, targetEntity, false);
+
+			this.tableAliasManager.PopRootTypeTableAlias ();
+			this.tableAliasManager.PopRootTypeTableAlias ();
+		}
+
+
+		private void AddQueryDataForReferenceIdJoin(DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField)
+		{
+			AbstractEntity targetEntity = sourceExample.InternalGetValue (sourceField.Id) as AbstractEntity;
+		
+			Druid targetEntityId = targetEntity.GetEntityStructuredTypeId ();
+
+			this.AddRelationJoin1 (reader, sourceEntityId, Druid.Parse (sourceField.Id), SqlJoinCode.Inner);
+			this.AddRelationJoin2 (reader, sourceEntityId, Druid.Parse (sourceField.Id), targetEntityId, SqlJoinCode.Inner);
+
+			string tableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
+			DbTableColumn tableColumn = this.GetEntityTableColumn (targetEntityId, tableAlias, DataBrowser.idColumn);
+			reader.AddQueryField (tableColumn);
+
+			this.AddQueryDataForEntity (reader, targetEntityId, targetEntity, false);
+
+			this.tableAliasManager.PopRootTypeTableAlias ();
+			this.tableAliasManager.PopRootTypeTableAlias ();
 		}
 
 
@@ -366,21 +419,16 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				AbstractEntity targetEntity = referencedObject as AbstractEntity;
 
-				this.AddQueryDataForRelation (reader, sourceEntityId, Druid.Parse(sourceField.Id), targetEntity);
+				Druid targetEntityId = targetEntity.GetEntityStructuredTypeId ();
+
+				this.AddRelationJoin1 (reader, sourceEntityId, Druid.Parse(sourceField.Id), SqlJoinCode.Inner);
+				this.AddRelationJoin2 (reader, sourceEntityId, Druid.Parse (sourceField.Id), targetEntityId, SqlJoinCode.Inner);
+
+				this.AddQueryDataForEntity (reader, targetEntityId, targetEntity, false);
+
+				this.tableAliasManager.PopRootTypeTableAlias ();
+				this.tableAliasManager.PopRootTypeTableAlias ();
 			}
-		}
-
-
-		private void AddQueryDataForRelation(DbReader reader, Druid sourceEntityId, Druid sourceFieldId, AbstractEntity targetEntity)
-		{
-			Druid targetEntityId = targetEntity.GetEntityStructuredTypeId ();
-
-			this.AddRelationJoin (reader, sourceEntityId, sourceFieldId, targetEntityId);
-
-			this.AddQueryDataForEntity (reader, targetEntityId, targetEntity, false);
-
-			this.tableAliasManager.PopRootTypeTableAlias ();
-			this.tableAliasManager.PopRootTypeTableAlias ();
 		}
 
 
@@ -398,25 +446,31 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddRelationJoin(DbReader reader, Druid sourceEntityId, Druid sourcefieldId, Druid targetEntityId)
+		private void AddRelationJoin1(DbReader reader, Druid sourceEntityId, Druid sourcefieldId, SqlJoinCode joinType)
 		{
 			Druid rootSourceEntityId = this.DataContext.EntityContext.GetBaseEntityId (sourceEntityId);
-			Druid rootTargetEntityId = this.DataContext.EntityContext.GetBaseEntityId (targetEntityId);
-
+			
 			string sourceTableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
 			string relationTableAlias = this.tableAliasManager.PushRootTypeTableAlias ();
-			string targetTableAlias = this.tableAliasManager.PushRootTypeTableAlias ();
-
+			
 			DbTableColumn sourceColumnId = this.GetEntityTableColumn (rootSourceEntityId, sourceTableAlias, DataBrowser.idColumn);
 			DbTableColumn relationSourceColumnId = this.GetRelationTableColumn (sourceEntityId, sourcefieldId, relationTableAlias, DataBrowser.relationSourceColumn);
+
+			reader.AddJoin (sourceColumnId, relationSourceColumnId, joinType);
+		}
+
+
+		private void AddRelationJoin2(DbReader reader, Druid sourceEntityId, Druid sourcefieldId, Druid targetEntityId, SqlJoinCode joinType)
+		{
+			Druid rootTargetEntityId = this.DataContext.EntityContext.GetBaseEntityId (targetEntityId);
+
+			string relationTableAlias = this.tableAliasManager.PeekRootTypeTableAlias ();
+			string targetTableAlias = this.tableAliasManager.PushRootTypeTableAlias ();
 
 			DbTableColumn relationTargetColumnId = this.GetRelationTableColumn (sourceEntityId, sourcefieldId, relationTableAlias, DataBrowser.relationTargetColumn);
 			DbTableColumn targetColumnId = this.GetEntityTableColumn (rootTargetEntityId, targetTableAlias, DataBrowser.idColumn);
 
-			SqlJoinCode type = SqlJoinCode.Inner;
-
-			reader.AddJoin (sourceColumnId, relationSourceColumnId, type);
-			reader.AddJoin (relationTargetColumnId, targetColumnId, type);
+			reader.AddJoin (relationTargetColumnId, targetColumnId, joinType);
 		}
 
 

@@ -149,13 +149,14 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						this.DeserializeEntityLocal (entity, dataRow, currentId);
+						this.DeserializeEntityLocalWithReference (entity, dataRow, currentId);
 					}
 				}
 			}
 
 			return entity;
 		}
+
 
 		public bool SerializeChanges()
 		{
@@ -513,6 +514,46 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
+		{
+			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
+			{
+				switch (fieldDef.Relation)
+				{
+					case FieldRelation.None:
+
+						this.ReadFieldValueFromDataRow (entity, fieldDef, dataRow);
+
+						break;
+
+					case FieldRelation.Reference:
+
+						object idAsObject = dataRow[this.SchemaEngine.GetDataColumnName (fieldDef.Id)];
+
+						if (idAsObject != System.DBNull.Value)
+						{
+							DbKey idAsKey = new DbKey (new DbId (long.Parse (idAsObject as string)));
+							object proxy = this.InternalResolveEntity (idAsKey, fieldDef.TypeId, EntityResolutionMode.DelayLoad);
+							entity.InternalSetValue (fieldDef.Id, proxy);
+						}
+
+						break;
+
+					case FieldRelation.Collection:
+
+						System.Collections.IList collection = entity.InternalGetFieldCollection (fieldDef.Id);
+
+						foreach (object childEntity in this.ReadFieldRelation (entity, entityId, fieldDef))
+						{
+							collection.Add (childEntity);
+						}
+
+						break;
+				}
+			}
+		}
+
+
 		private object GetInstanceTypeValue(Druid entityId)
 		{
 			return entityId.ToLong ();
@@ -527,8 +568,7 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractType  fieldType = fieldDef.Type as AbstractType;
 			INullableType nullableType = fieldDef.GetNullableType ();
 
-			if ((UndefinedValue.IsUndefinedValue (value)) ||
-				(nullableType.IsNullValue (value)))
+			if (UndefinedValue.IsUndefinedValue (value) || nullableType.IsNullValue (value))
 			{
 				if (nullableType.IsNullable)
 				{
@@ -908,7 +948,6 @@ namespace Epsitec.Cresus.DataLayer
 					DbTable tableDef = this.schemaEngine.FindTableDefinition (entityId);
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
 
-					// HACK Uncomment the next line if you don't want the whole table being loaded.
 					if (!this.BulkMode)
 					{
 						condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
@@ -924,6 +963,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			return row;
 		}
+
 
 		private void LoadRelationRows(Druid entityId, string tableName, DbKey sourceRowKey)
 		{
@@ -942,7 +982,6 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
 
-				// HACK Uncomment the next line if you don't want the whole table being loaded.
 				if (!this.BulkMode)
 				{
 					condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
@@ -952,8 +991,6 @@ namespace Epsitec.Cresus.DataLayer
 				transaction.Commit ();
 			}
 		}
-
-
 
 
 		/// <summary>
@@ -1254,12 +1291,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		readonly DbInfrastructure infrastructure;
-		readonly DbRichCommand richCommand;
-		readonly SchemaEngine schemaEngine;
-		readonly EntityContext entityContext;
-		readonly EntityDataCache entityDataCache;
-		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
-		readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
+		private readonly DbInfrastructure infrastructure;
+		private readonly DbRichCommand richCommand;
+		private readonly SchemaEngine schemaEngine;
+		private readonly EntityContext entityContext;
+		private readonly EntityDataCache entityDataCache;
+		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
+		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 	}
 }
