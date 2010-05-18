@@ -1,11 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +21,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.directArrow = new TileArrow ();
 			this.reverseArrow = new TileArrow ();
 		}
-
-
-
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this tile is read only.
@@ -120,7 +114,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-
+		#region Colors
 
 		public static Color BorderColor
 		{
@@ -185,6 +179,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		#endregion
 
 		private readonly TileArrow directArrow;
 		private readonly TileArrow reverseArrow;

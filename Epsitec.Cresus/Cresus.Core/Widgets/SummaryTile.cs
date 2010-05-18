@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			base.OnEntered (e);
 
-			if (this.buttonCreateEntity != null && this.EnableCreateAndRemoveButton && this.IsRightColumnParent)
+			if (this.buttonCreateEntity != null && this.EnableCreateAndRemoveButton)
 			{
 				this.buttonCreateEntity.Visibility = true;
 				this.buttonRemoveEntity.Visibility = true;
@@ -110,28 +110,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				this.buttonCreateEntity.Visibility = false;
 				this.buttonRemoveEntity.Visibility = false;
-			}
-		}
-
-
-		private bool IsRightColumnParent
-		{
-			get
-			{
-				Widget widget = this.Parent;
-
-				while (widget != null)
-				{
-					if (widget is Widgets.ContainerTiles)
-					{
-						var container = widget as Widgets.ContainerTiles;
-						return container.IsRightColumn;
-					}
-
-					widget = widget.Parent;
-				}
-
-				return false;
 			}
 		}
 

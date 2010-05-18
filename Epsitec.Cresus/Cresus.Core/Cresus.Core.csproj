@@ -152,7 +152,7 @@
     <Compile Include="Widgets\GroupingTile.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />
-    <Compile Include="Widgets\ContainerTiles.cs" />
+    <Compile Include="Widgets\TileContainer.cs" />
     <Compile Include="Widgets\EditionTile.cs" />
     <Compile Include="Widgets\SummaryTile.cs" />
     <Compile Include="Widgets\ContainerTile.cs" />
