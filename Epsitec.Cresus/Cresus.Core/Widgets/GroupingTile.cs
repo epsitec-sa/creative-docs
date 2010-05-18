@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TopLeftIconUri) et un titre (Title).
 	/// </summary>
-	public class GroupingTile : Tile
+	public class GroupingTile : Tile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>
 	{
 		public GroupingTile()
 		{
 			this.PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2;
-			this.childrenTiles = new List<ContainerTile> ();
+			this.items = new TileCollection (this);
 			this.CreateUI ();
 		}
 
@@ -42,11 +42,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public List<ContainerTile> ChildrenTiles
+		public TileCollection Items
 		{
 			get
 			{
-				return this.childrenTiles;
+				return this.items;
 			}
 		}
 
@@ -105,15 +105,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 	
-		public virtual FrameBox Container
-		{
-			get
-			{
-				return this.mainPanel;
-			}
-		}
-
-
 		public static double WidthWithOnlyIcon
 		{
 			get
@@ -335,7 +326,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.childrenTiles.Count > 1;
+				return this.items.Count > 1;
 			}
 		}
 
@@ -343,7 +334,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				foreach (var containerTile in this.childrenTiles)
+				foreach (var containerTile in this.items)
 				{
 					if (containerTile.IsEntered)
 					{
@@ -359,7 +350,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				foreach (var containerTile in this.childrenTiles)
+				foreach (var containerTile in this.items)
 				{
 					if (containerTile.IsSelected)
 					{
@@ -371,13 +362,52 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		#region IWidgetCollectionHost<GroupingTile> Members
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyInsertion(ContainerTile widget)
+		{
+			widget.Dock = DockStyle.Top;
+			widget.ArrowDirection = Direction.Right;
+			widget.Parent = this.mainPanel;
+			widget.ParentGroupingTile = this;
+		}
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyRemoval(ContainerTile widget)
+		{
+			widget.Parent = null;
+			widget.ParentGroupingTile = null;
+		}
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyPostRemoval(ContainerTile widget)
+		{
+		}
+
+		Common.Widgets.Collections.WidgetCollection<ContainerTile> Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+
+		#endregion
+
+		#region TileCollection Class
+
+		public class TileCollection : Epsitec.Common.Widgets.Collections.WidgetCollection<ContainerTile>
+		{
+			public TileCollection(GroupingTile host)
+				: base (host)
+			{
+			}
+		}
+
+		#endregion
+
 
 		private static readonly double iconSize = 32;
 		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 20;
 
 
-		private readonly List<ContainerTile> childrenTiles;
+		private readonly TileCollection items;
 
 		private bool enteredSensitivity;
 

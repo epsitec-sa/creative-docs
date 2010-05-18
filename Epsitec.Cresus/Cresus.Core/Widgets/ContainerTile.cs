@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.ParentGroupingTile != null && this.ParentGroupingTile.ChildrenTiles.Count <= 1;
+				return this.ParentGroupingTile != null && this.ParentGroupingTile.Items.Count <= 1;
 			}
 		}
 

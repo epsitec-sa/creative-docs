@@ -53,10 +53,6 @@ namespace Epsitec.Cresus.Core
 		{
 			var tile = new Widgets.SummaryTile
 			{
-				Parent = parent.Container,
-				ParentGroupingTile = parent,
-				Dock = DockStyle.Top,
-				ArrowDirection = Direction.Right,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
@@ -68,7 +64,7 @@ namespace Epsitec.Cresus.Core
 
 			tile.PreferredHeight = tile.ContentHeight;
 
-			parent.ChildrenTiles.Add (tile);
+			parent.Items.Add (tile);
 
 			UIBuilder.CreateTileHandler (tile, this.controller);
 
@@ -84,10 +80,6 @@ namespace Epsitec.Cresus.Core
 		{
 			var tile = new Widgets.EditionTile
 			{
-				Parent = parent.Container,
-				ParentGroupingTile = parent,
-				Dock = DockStyle.Top,
-				ArrowDirection = Direction.Right,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
@@ -97,7 +89,7 @@ namespace Epsitec.Cresus.Core
 
 			UIBuilder.CreateTileHandler (tile, controller);
 
-			parent.ChildrenTiles.Add (tile);
+			parent.Items.Add (tile);
 
 			return tile;
 		}
@@ -511,11 +503,11 @@ namespace Epsitec.Cresus.Core
 			group.Clicked +=
 				delegate
 				{
-					if (group.ChildrenTiles.Count == 1)
+					if (group.Items.Count == 1)
 					{
 						//	Si on a cliqué dans le conteneur GroupingTile d'un seul SummaryTile, il
 						//	faut faire comme si on avait cliqué dans ce dernier.
-						var tile = group.ChildrenTiles[0] as Widgets.SummaryTile;
+						var tile = group.Items[0] as Widgets.SummaryTile;
 						if (tile != null)
 						{
 							tile.OpenOrCloseSubView (controller.Orchestrator, controller);
