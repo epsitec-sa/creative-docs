@@ -9,20 +9,20 @@ namespace Epsitec.Cresus.DataLayer
 	internal class TableAliasManager
 	{
 
-		public TableAliasManager(Druid entityId)
+		public TableAliasManager(string name)
 		{
 			this.tableAliasNumber = 0;
 
-			this.currentEntityNode = new EntityTableAliasNode (null, entityId.ToString (), this.CreateNewAlias ());
+			this.currentEntityNode = new EntityTableAliasNode (null, name, this.CreateNewAlias ());
 
 			this.currentSubtypeNodes = new Stack<SubtypeTableAliasNode> ();
 			this.currentSubtypeNodes.Push (null);
 		}
 
 
-		public string CreateEntityAlias(Druid id)
+		public string CreateEntityAlias(string name)
 		{
-			this.currentEntityNode = this.currentEntityNode.CreateEntityNode (id.ToString (), this.CreateNewAlias ());
+			this.currentEntityNode = this.currentEntityNode.CreateEntityNode (name, this.CreateNewAlias ());
 			this.currentSubtypeNodes.Push (null);
 
 			return this.GetCurrentEntityAlias ();
@@ -44,20 +44,20 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public string GetNextEntityAlias(Druid id)
+		public string GetNextEntityAlias(string name)
 		{
-			this.currentEntityNode = this.currentEntityNode.GetEntityNode (id.ToString ());
+			this.currentEntityNode = this.currentEntityNode.GetEntityNode (name);
 			this.currentSubtypeNodes.Push (null);
 
 			return this.GetCurrentEntityAlias ();
 		}
 
 
-		public string CreateSubtypeAlias(Druid id, bool useCurrentEntityAlias)
+		public string CreateSubtypeAlias(string name, bool useCurrentEntityAlias)
 		{
 			string alias = (useCurrentEntityAlias) ? this.GetCurrentEntityAlias () : this.CreateNewAlias ();
 
-			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.CreateSubtypeNode (id.ToString (), alias);
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.CreateSubtypeNode (name, alias);
 
 			this.currentSubtypeNodes.Pop ();
 			this.currentSubtypeNodes.Push (currentSubtypeNode);
@@ -72,9 +72,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public string GetNextSubtypeAlias(Druid entityId)
+		public string GetNextSubtypeAlias(string name)
 		{
-			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (entityId.ToString ());
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (name);
 
 			this.currentSubtypeNodes.Pop ();
 			this.currentSubtypeNodes.Push (currentSubtypeNode);
