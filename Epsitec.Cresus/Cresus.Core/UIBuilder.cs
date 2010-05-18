@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 namespace Epsitec.Cresus.Core
 {
@@ -20,9 +21,10 @@ namespace Epsitec.Cresus.Core
 		{
 			this.container = container;
 			this.controller = controller;
+			this.dataItems = new List<SummaryData> ();
 		}
 
-		public GroupingTile CreateEditionGroupingTile(string iconUri, string title)
+		public TitleTile CreateEditionGroupingTile(string iconUri, string title)
 		{
 			var group = this.CreateSummaryGroupingTile (iconUri, title);
 
@@ -31,9 +33,9 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public GroupingTile CreateSummaryGroupingTile(string iconUri, string title)
+		public TitleTile CreateSummaryGroupingTile(string iconUri, string title)
 		{
-			var group = new GroupingTile
+			var group = new TitleTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -49,7 +51,7 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public SummaryTile CreateSummaryTile(GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
+		public SummaryTile CreateSummaryTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
 			var controller = new Controllers.EntityTileController<AbstractEntity> ()
 			{
@@ -71,7 +73,6 @@ namespace Epsitec.Cresus.Core
 			tile.AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None;
 			tile.Controller = controller;
 			tile.Summary = accessor.Summary;
-			tile.UpdatePreferredSize ();
 
 			parent.Items.Add (tile);
 
@@ -85,7 +86,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public EditionTile CreateEditionTile(GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
+		public EditionTile CreateEditionTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
 			var controller = new Controllers.EntityTileController<AbstractEntity> ()
 			{
@@ -510,8 +511,125 @@ namespace Epsitec.Cresus.Core
 			return currentHeight;
 		}
 
+
+		public void MapDataToTiles(IEnumerable<SummaryData> items)
+		{
+			this.dataItems.Clear ();
+			this.dataItems.AddRange (items);
+			this.dataItems.Sort ();
+
+			this.CreateMissingDataTiles ();
+			this.ResetDataTiles ();
+			this.RefreshDataTiles ();
+			this.SetDataTilesParent (this.container);
+		}
+
+
+
+		private void CreateMissingDataTiles()
+		{
+			foreach (var item in this.dataItems)
+			{
+				if (item.SummaryTile == null)
+				{
+					item.SummaryTile = new Widgets.Tiles.SummaryTile ();
+				}
+
+				if (item.TitleTile == null)
+				{
+					item.TitleTile = new Widgets.Tiles.TitleTile ();
+					item.TitleTile.Items.Add (item.SummaryTile);
+				}
+			}
+		}
+
+		private void ResetDataTiles()
+		{
+			HashSet<long> visualIds = new HashSet<long> ();
+
+			foreach (var item in this.dataItems)
+			{
+				System.Diagnostics.Debug.Assert (item.TitleTile != null);
+				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
+
+				long visualId = item.TitleTile.GetVisualSerialId ();
+
+				if (visualIds.Contains (visualId))
+				{
+					item.TitleTile.Items.Remove (item.SummaryTile);
+					item.TitleTile = new Widgets.Tiles.TitleTile ();
+					item.TitleTile.Items.Add (item.SummaryTile);
+				}
+				else
+				{
+					item.TitleTile.Parent = null;
+					visualIds.Add (visualId);
+				}
+
+				item.SummaryTile.IsCompact = false;
+			}
+		}
+
+		private double RefreshDataTiles()
+		{
+			var visualIds = new HashSet<long> ();
+			var titleTiles = new List<Widgets.Tiles.TitleTile> ();
+
+			foreach (var item in this.dataItems)
+			{
+				if (item.SummaryTile.IsCompact)
+				{
+					item.SummaryTile.Summary = item.CompactText.ToString ();
+					item.TitleTile.Title     = item.CompactTitle.ToString ();
+				}
+				else
+				{
+					item.SummaryTile.Summary = item.Text.ToString ();
+					item.TitleTile.Title     = item.Title.ToString ();
+				}
+
+				long visualId = item.TitleTile.GetVisualSerialId ();
+
+				if (!visualIds.Contains (visualId))
+				{
+					visualIds.Add (visualId);
+					titleTiles.Add (item.TitleTile);
+				}
+			}
+
+			double height = 0;
+
+			foreach (var tile in titleTiles)
+			{
+				if (height > 0)
+				{
+					height += 5;
+				}
+
+				height += tile.GetFullHeight ();
+			}
+
+			return height;
+		}
+
+		private void SetDataTilesParent(Widget parent)
+		{
+			var visualIds = new HashSet<long> ();
+
+			foreach (var item in this.dataItems)
+			{
+				long visualId = item.TitleTile.GetVisualSerialId ();
+
+				if (!visualIds.Contains (visualId))
+				{
+					visualIds.Add (visualId);
+					item.TitleTile.Parent = parent;
+				}
+			}
+		}
 		
-		private static void CreateGroupingTileHandler(GroupingTile group, CoreViewController controller)
+		
+		private static void CreateGroupingTileHandler(TitleTile group, CoreViewController controller)
 		{
 			group.Clicked +=
 				delegate
@@ -593,6 +711,7 @@ namespace Epsitec.Cresus.Core
 		}
 		private readonly Widget container;
 		private readonly CoreViewController controller;
+		private readonly List<SummaryData> dataItems;
 		private int tabIndex;
 	}
 }

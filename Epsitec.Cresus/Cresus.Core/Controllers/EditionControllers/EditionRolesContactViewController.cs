@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			
-			GroupingTile group;
+			TitleTile group;
 
 			var contact = this.Entity;
 			var accessor = new Accessors.RolesContactAccessor (null, contact, false);

@@ -31,7 +31,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			set
 			{
-				this.staticTextSummary.Text = value;
+				if (this.Summary != value)
+				{
+					this.staticTextSummary.Text = value;
+					this.UpdatePreferredSize ();
+				}
 			}
 		}
 

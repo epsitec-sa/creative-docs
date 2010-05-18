@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public override void CreateUI(Widget container)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
-			GroupingTile group;
+			TitleTile group;
 
 			var mailAccessor = new Accessors.MailContactAccessor (null, this.Entity, false);
 			var locationAccessor = new Accessors.LocationAccessor (null, this.Entity.Address.Location, false);
