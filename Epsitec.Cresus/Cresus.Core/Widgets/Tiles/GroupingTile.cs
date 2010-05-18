@@ -10,7 +10,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets
+namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).

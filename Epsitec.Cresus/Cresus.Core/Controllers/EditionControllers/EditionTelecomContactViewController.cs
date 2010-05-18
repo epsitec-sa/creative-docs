@@ -10,6 +10,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Widgets.Tiles;
+
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionTelecomContactViewController : EntityViewController<Entities.TelecomContactEntity>
@@ -23,8 +25,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			
-			Widgets.GroupingTile group;
-			Widgets.EditionTile tile;
+			GroupingTile group;
+			EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new Accessors.TelecomContactAccessor (null, this.Entity, false);

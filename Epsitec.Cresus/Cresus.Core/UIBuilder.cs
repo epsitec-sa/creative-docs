@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Core
 			this.controller = controller;
 		}
 
-		public Widgets.GroupingTile CreateEditionGroupingTile(string iconUri, string title)
+		public GroupingTile CreateEditionGroupingTile(string iconUri, string title)
 		{
 			var group = this.CreateSummaryGroupingTile (iconUri, title);
 
@@ -30,9 +31,9 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.GroupingTile CreateSummaryGroupingTile(string iconUri, string title)
+		public GroupingTile CreateSummaryGroupingTile(string iconUri, string title)
 		{
-			var group = new Widgets.GroupingTile
+			var group = new GroupingTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -48,19 +49,29 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public Widgets.SummaryTile CreateSummaryTile(Widgets.GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
+		public SummaryTile CreateSummaryTile(GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
-			var tile = new Widgets.SummaryTile
+			var controller = new Controllers.EntityTileController<AbstractEntity> ()
 			{
-				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
-				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
-				ChildrenMode = accessor.ViewControllerMode,
-				EnableCreateAndRemoveButton = accessor.EnableAddAndRemove,
-				IsReadOnly = true,
-				Summary = accessor.Summary,
+				ChildrenMode = accessor.ViewControllerMode
 			};
 
+			SummaryTile tile;
+
+			if (accessor.EnableAddAndRemove)
+			{
+				tile = new SummaryTile ();
+			}
+			else
+			{
+				tile = new CollectionItemTile ();
+			}
+
+			tile.AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None;
+			tile.Controller = controller;
+			tile.IsReadOnly = true;
+			tile.Summary = accessor.Summary;
 			tile.PreferredHeight = tile.ContentHeight;
 
 			parent.Items.Add (tile);
@@ -75,18 +86,22 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public Widgets.EditionTile CreateEditionTile(Widgets.GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
+		public EditionTile CreateEditionTile(GroupingTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
-			var tile = new Widgets.EditionTile
+			var controller = new Controllers.EntityTileController<AbstractEntity> ()
 			{
-				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
-				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
-				ChildrenMode = accessor.ViewControllerMode,
+				ChildrenMode = accessor.ViewControllerMode
+			};
+
+			var tile = new EditionTile
+			{
+				AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None,
+				Controller = controller,
 				IsReadOnly = false,
 			};
 
-			UIBuilder.CreateTileHandler (tile, controller);
+			UIBuilder.CreateTileHandler (tile, this.controller);
 
 			parent.Items.Add (tile);
 
@@ -140,7 +155,7 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.Assert (this.container != null);
 
 #if false
-			var tile = new Widgets.EditionTile
+			var tile = new EditionTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -497,7 +512,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		private static void CreateGroupingTileHandler(Widgets.GroupingTile group, CoreViewController controller)
+		private static void CreateGroupingTileHandler(GroupingTile group, CoreViewController controller)
 		{
 			group.Clicked +=
 				delegate
@@ -506,22 +521,22 @@ namespace Epsitec.Cresus.Core
 					{
 						//	Si on a cliqué dans le conteneur GroupingTile d'un seul SummaryTile, il
 						//	faut faire comme si on avait cliqué dans ce dernier.
-						var tile = group.Items[0] as Widgets.SummaryTile;
+						var tile = group.Items[0] as SummaryTile;
 						if (tile != null)
 						{
-							tile.OpenOrCloseSubView (controller.Orchestrator, controller);
+							tile.ToggleSubView (controller.Orchestrator, controller);
 						}
 					}
 				};
 		}
 
-		private static void CreateTileHandler(Widgets.GenericTile tile, CoreViewController controller)
+		private static void CreateTileHandler(GenericTile tile, CoreViewController controller)
 		{
 			tile.Clicked +=
 				delegate
 				{
 					//	Appelé lorsqu'une tuile quelconque est cliquée.
-					tile.OpenOrCloseSubView (controller.Orchestrator, controller);
+					tile.ToggleSubView (controller.Orchestrator, controller);
 				};
 		}
 		

@@ -11,6 +11,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Widgets.Tiles;
+
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionRolesContactViewController : EntityViewController<Entities.AbstractContactEntity>
@@ -24,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			
-			Widgets.GroupingTile group;
+			GroupingTile group;
 
 			var contact = this.Entity;
 			var accessor = new Accessors.RolesContactAccessor (null, contact, false);

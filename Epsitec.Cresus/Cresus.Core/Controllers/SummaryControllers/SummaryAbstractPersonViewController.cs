@@ -7,6 +7,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			int count;
-			Widgets.GroupingTile group;
+			GroupingTile group;
 			
 			builder.CreateHeaderEditorTile ();
 
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateMailContactTiles(Entities.AbstractPersonEntity person, bool groupMail, UIBuilder builder)
 		{
 			//	Crée les tuiles pour les adresses postales.
-			Widgets.GroupingTile group = null;
+			GroupingTile group = null;
 			int count;
 			if (groupMail)
 			{
@@ -117,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateTelecomContactTiles(Entities.AbstractPersonEntity person, bool groupTelecom, UIBuilder builder)
 		{
 			int count;
-			Widgets.GroupingTile group;
+			GroupingTile group;
 			group = null;
 			count = 0;
 			//	Crée les tuiles pour les numéros de téléphone.
@@ -168,7 +170,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUriContactTiles(Entities.AbstractPersonEntity person, bool groupUri, UIBuilder builder)
 		{
 			int count;
-			Widgets.GroupingTile group;
+			GroupingTile group;
 			group = null;
 			count = 0;
 
