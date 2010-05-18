@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.DataLayer
 	
 	// TODO Add sorting criteria
 	// TODO Add comparison criteria
-	// TODO Make sure that the references can be written in a consistent way after being loaded with the DataBrowser.
+	// TODO Implement that read/write stuff that we talked about with Pierre to ensure the consistency of write operations.
 	public class DataBrowser
 	{
 
@@ -59,18 +59,32 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-
-				DbReader valuesReader = this.CreateValueReader (entityId, example);
-				DbReader referencesReader = this.CreateReferenceReader (entityId, example);
-
+				DbReader valuesReader = this.CreateValuesReader (entityId, example);
 				valuesReader.CreateDataReader (transaction);
-				referencesReader.CreateDataReader (transaction);
-
 				DataTable valuesTable = this.BuildValuesTable (entityId, valuesReader);
-				DataTable referencesTable = this.BuildReferencesTable (entityId);
 
+
+				DbReader referencesReader = this.CreateReferencesReader (entityId, example);
+				referencesReader.CreateDataReader (transaction);
+				DataTable referencesTable = this.BuildReferencesTable (entityId);
 				IEnumerator<DbReader.RowData> referencesRows = referencesReader.Rows.GetEnumerator ();
 
+				Dictionary<StructuredTypeField, DbReader> collectionReaders = new Dictionary<StructuredTypeField, DbReader> ();
+				Dictionary<StructuredTypeField, DataTable> collectionTables = new Dictionary<StructuredTypeField, DataTable> ();
+				Dictionary<StructuredTypeField, IEnumerable<DbReader.RowData>> collectionRows = new Dictionary<StructuredTypeField, IEnumerable<DbReader.RowData>> ();
+
+				foreach (Druid currentId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
+				{
+					foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
+					{
+						DbReader reader = this.CreateCollectionReader (currentId, example, field);
+						reader.CreateDataReader (transaction);
+
+						collectionReaders[field] = reader;
+						collectionTables[field] = this.BuildCollectionTable (field);
+						collectionRows[field] = reader.Rows.ToArray ();
+					}
+				}
 
 				foreach (DbReader.RowData valuesRow in valuesReader.Rows)
 				{
@@ -82,8 +96,37 @@ namespace Epsitec.Cresus.DataLayer
 					DataRow valuesDataRow = this.ExtractDataRow (valuesTable, valuesRow);
 					DataRow referencesDataRow = this.ExtractDataRow (referencesTable, referencesRow);
 
-					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesDataRow) as EntityType;
+					Dictionary<StructuredTypeField, List<DataRow>> collectionDataRows = new Dictionary<StructuredTypeField, List<DataRow>> ();
+
+					foreach (StructuredTypeField field in collectionRows.Keys)
+					{
+						List<DataRow> dataRows = new List<DataRow> ();
+						DataTable dataTable = collectionTables[field];
+
+						foreach (DbReader.RowData dataRow in collectionRows[field].Where(r => this.ExtractDbKey(r) == rowKey))
+						{
+							dataRows.Add (this.ExtractDataRow (dataTable, dataRow));
+						}
+		
+						collectionDataRows[field] = dataRows;
+					}
+
+					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesDataRow, collectionDataRows) as EntityType;
 				}
+
+				valuesTable.Dispose ();
+				valuesReader.Dispose ();
+
+				referencesTable.Dispose ();
+				referencesReader.Dispose ();
+				referencesRows.Dispose ();
+
+				foreach (StructuredTypeField field in collectionReaders.Keys)
+				{
+					collectionTables[field].Dispose ();
+					collectionReaders[field].Dispose ();
+				}
+
 			}
 		}
 
@@ -111,7 +154,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-
 		private DataTable BuildReferencesTable(Druid entityId)
 		{
 			DataTable dataTable = new DataTable ();
@@ -124,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer
 			foreach (StructuredTypeField field in referenceFields)
 			{
 				string name = this.DataContext.SchemaEngine.GetDataColumnName (field.Id);
-				System.Type type = typeof (string);
+				System.Type type = typeof (long);
 
 				dataTable.Columns.Add (new DataColumn (name, type));
 			}
@@ -132,6 +174,23 @@ namespace Epsitec.Cresus.DataLayer
 			return dataTable;
 		}
 
+
+		private DataTable BuildCollectionTable(StructuredTypeField field)
+		{
+			DataTable dataTable = new DataTable ();
+
+			string targetName = this.DataContext.SchemaEngine.GetDataColumnName (DataBrowser.idColumn);
+			System.Type targetType = typeof (long);
+
+			dataTable.Columns.Add (new DataColumn (targetName, targetType));
+
+			string rankName = this.DataContext.SchemaEngine.GetDataColumnName (DataBrowser.relationRankColumn);
+			System.Type rankType = typeof (int);
+
+			dataTable.Columns.Add (new DataColumn (rankName, rankType));
+
+			return dataTable;
+		}
 
 
 		private DataRow ExtractDataRow(DataTable dataTable, DbReader.RowData row)
@@ -164,8 +223,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			return new DbKey (new DbId (dbKeyAsLong));
 		}
+
 		
-		private DbReader CreateValueReader(Druid entityId, AbstractEntity example)
+		private DbReader CreateValuesReader(Druid entityId, AbstractEntity example)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -177,13 +237,13 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
 			this.AddQueryForValues (tableAliasManager, reader, entityId, example);
-			this.AddSortOrder (tableAliasManager, reader, entityId, example);
+			this.AddSortOrderOnId (tableAliasManager, reader, entityId);
 
 			return reader;
 		}
 
 
-		private DbReader CreateReferenceReader(Druid entityId, AbstractEntity example)
+		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -195,7 +255,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
 			this.AddQueryForReferences (tableAliasManager, reader, entityId, example);
-			this.AddSortOrder (tableAliasManager, reader, entityId, example);
+			this.AddSortOrderOnId (tableAliasManager, reader, entityId);
 
 			return reader;
 		}
@@ -205,25 +265,19 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
-				SelectPredicate = SqlSelectPredicate.Distinct,
+				SelectPredicate = SqlSelectPredicate.All,
 				IncludeRowKeys  = false,
 			};
 
 			TableAliasManager tableAliasManager = new TableAliasManager (this.DataContext.EntityContext.GetBaseEntityId (entityId).ToResourceId ());
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
-			this.AddQueryForCollection (reader, entityId, example, field);
-			this.AddSortOrder (tableAliasManager, reader, entityId, example);
+			this.AddQueryForCollection (tableAliasManager, reader, entityId, example, field);
+			this.AddSortOrderOnId (tableAliasManager, reader, entityId);
+			this.AddSortOrderOnRank (tableAliasManager, reader, entityId, field);
 
 			return reader;
 		}
-
-
-
-
-
-
-
 
 
 		private void AddConditionsForEntity(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
@@ -480,18 +534,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 		private void AddQueryForValues(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
 			string[] definedFieldIds = example.GetEntityContext ().GetDefinedFieldIds (example).ToArray ();
@@ -527,15 +569,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-
-
-
-
-
-
-
-
-
 		private void AddQueryForReferences(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
 			string[] definedFieldIds = example.GetEntityContext ().GetDefinedFieldIds (example).ToArray ();
@@ -554,7 +587,6 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					this.AddQueryField (tableAliasManager, reader, example.GetEntityContext ().GetBaseEntityId (currentEntityId), DataBrowser.idColumn);
 				}
-
 			}
 		}
 
@@ -580,38 +612,27 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-		private void AddQueryForCollection(DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private void AddQueryForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
-			
+			this.AddRelationJoinToRelationTable (tableAliasManager, reader, entityId, field, SqlJoinCode.OuterLeft);
+
+			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
+
+			DbTableColumn tableColumnTarget = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationTargetColumn);
+
+			reader.AddQueryField (tableColumnTarget);
+
+			DbTableColumn tableColumnRank = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationRankColumn);
+
+			reader.AddQueryField (tableColumnRank);
+
+			tableAliasManager.GetPreviousEntityAlias ();
+
+			this.AddQueryField (tableAliasManager, reader, example.GetEntityContext ().GetBaseEntityId (entityId), DataBrowser.idColumn);
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		private void AddSortOrder(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
+		private void AddSortOrderOnId(TableAliasManager tableAliasManager, DbReader reader, Druid entityId)
 		{
 			Druid rootEntityId = this.DataContext.EntityContext.GetBaseEntityId (entityId);
 			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
@@ -622,12 +643,16 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		private void AddSortOrderOnRank(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, StructuredTypeField field)
+		{
+			string tableAlias = tableAliasManager.GetNextEntityAlias (field.Id);
 
+			DbTableColumn column = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationRankColumn);
 
+			reader.AddSortOrder (column, SqlSortOrder.Ascending);
 
-
-
-
+			tableAliasManager.GetPreviousEntityAlias ();
+		}
 
 
 		private void AddQueryField(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, string columnName)
@@ -673,6 +698,9 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		private static string relationTargetColumn = "[" + Tags.ColumnRefTargetId + "]";
+
+
+		private static string relationRankColumn = "[" + Tags.ColumnRefRank + "]";
 
 
 		private static string idColumn = "[" + Tags.ColumnId + "]";
