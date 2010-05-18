@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public Widget CreateColumn()
 		{
-			var column = new Widgets.ContainerTiles ()
+			var column = new Widgets.TileContainer ()
 			{
 				Name = string.Format ("Column{0}", this.ColumnCount),
 			};
@@ -84,7 +84,6 @@ namespace Epsitec.Cresus.Core.Controllers
 					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex++);
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
-					ViewLayoutController.SetRightColumn (column, false);
 				}
 
 				//	Positionne la dernière colonne de droite.
@@ -92,7 +91,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
 				lastColumn.Margins = new Margins (x, 0, 0, 0);
-				ViewLayoutController.SetRightColumn (lastColumn, true);
 
 				//	Ajoute les colonnes au parent, mais de droite à gauche.
 				foreach (var column in this.columns)
@@ -108,11 +106,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				foreach (var column in this.columns.Reverse ())
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex++);
+					column.PreferredWidth = ViewLayoutController.GetPreferredColumnWidth (this.columns.Count, columnIndex++);
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
-
-					ViewLayoutController.SetRightColumn (column, columnIndex >= this.columns.Count);
 				}
 
 				//	Ajoute les colonnes au parent, mais de droite à gauche.
@@ -124,18 +120,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static void SetRightColumn(Widget column, bool value)
+		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
 		{
-			if (column is Widgets.ContainerTiles)
-			{
-				var tilesContainer = column as Widgets.ContainerTiles;
-				tilesContainer.IsRightColumn = value;
-			}
-		}
-
-		private static double WidthCompute(int columnsCount, int columnIndex)
-		{
-			double width = 250 - 250*(columnsCount-columnIndex-2)*0.5;
+			double width = 250 - 250*(columnCount-columnIndex-2)*0.5;
 
 			//	A part la première colonne de gauche, les autres colonnes doivent soit avoir une
 			//	largeur supérieure ou égale à minimalWidth, soit reduceWidth pour ne montrer que
@@ -143,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	TODO: Voir ce problème avec Pierre (mail du 30.04.10 12:07)
 			if (columnIndex != 0 && width < ViewLayoutController.minimalWidth)
 			{
-				width = ViewLayoutController.reduceWidth;
+				width = ViewLayoutController.reducedWidth;
 			}
 
 			return width;
@@ -151,7 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private static readonly double minimalWidth = 220;
-		private static readonly double reduceWidth = Widgets.GroupingTile.WidthWithOnlyIcon + Widgets.TileArrow.Breadth;
+		private static readonly double reducedWidth = Widgets.GroupingTile.WidthWithOnlyIcon + Widgets.TileArrow.Breadth;
 
 
 		private readonly Widget container;
