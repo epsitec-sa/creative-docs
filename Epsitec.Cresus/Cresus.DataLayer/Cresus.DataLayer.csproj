@@ -141,6 +141,9 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="EntityTableAliasNode.cs" />
+    <Compile Include="SubtypeTableAliasNode.cs" />
+    <Compile Include="TableAliasNode.cs" />
     <Compile Include="TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
