@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
-		private static void CreateTileHandler(Widgets.AbstractTile tile, CoreViewController controller)
+		private static void CreateTileHandler(Widgets.GenericTile tile, CoreViewController controller)
 		{
 			tile.Clicked +=
 				delegate

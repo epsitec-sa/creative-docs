@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile contient un résumé non éditable d'une entité.
 	/// Son parent est forcément un TileGrouping.
 	/// </summary>
-	public class SummaryTile : AbstractTile
+	public class SummaryTile : GenericTile
 	{
 		public SummaryTile()
 		{
