@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow)
+		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Dictionary<StructuredTypeField, List<System.Data.DataRow>> collectionRows)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
 
@@ -149,8 +149,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesRow, currentId);
-						this.DeserializeEntityLocal (entity, valuesRow, currentId);
+						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesRow, collectionRows, currentId);
 					}
 				}
 			}
@@ -515,38 +514,40 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Dictionary<StructuredTypeField, List<System.Data.DataRow>> collectionRows, Druid entityId)
 		{
-			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
+			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
-				switch (fieldDef.Relation)
+				switch (field.Relation)
 				{
 					case FieldRelation.None:
 
-						this.ReadFieldValueFromDataRow (entity, fieldDef, valuesRow);
+						this.ReadFieldValueFromDataRow (entity, field, valuesRow);
 
 						break;
 
 					case FieldRelation.Reference:
 
-						object idAsObject = referencesRow[this.SchemaEngine.GetDataColumnName (fieldDef.Id)];
+						object idAsObject = referencesRow[this.SchemaEngine.GetDataColumnName (field.Id)];
 
 						if (idAsObject != System.DBNull.Value)
 						{
-							DbKey idAsKey = new DbKey (new DbId (long.Parse (idAsObject as string)));
-							object proxy = this.InternalResolveEntity (idAsKey, fieldDef.TypeId, EntityResolutionMode.DelayLoad);
-							entity.InternalSetValue (fieldDef.Id, proxy);
+							DbKey idAsKey = new DbKey (new DbId ((long) idAsObject));
+							object proxy = this.InternalResolveEntity (idAsKey, field.TypeId, EntityResolutionMode.DelayLoad);
+							entity.InternalSetValue (field.Id, proxy);
 						}
 
 						break;
 
 					case FieldRelation.Collection:
 
-						System.Collections.IList collection = entity.InternalGetFieldCollection (fieldDef.Id);
+						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
 
-						foreach (object childEntity in this.ReadFieldRelation (entity, entityId, fieldDef))
+						foreach (System.Data.DataRow dataRow in collectionRows[field])
 						{
-							collection.Add (childEntity);
+							DbKey idAsKey = new DbKey (new DbId ((long) dataRow[Tags.ColumnId]));
+							object proxy = this.InternalResolveEntity (idAsKey, field.TypeId, EntityResolutionMode.DelayLoad);
+							collection.Add (proxy);
 						}
 
 						break;

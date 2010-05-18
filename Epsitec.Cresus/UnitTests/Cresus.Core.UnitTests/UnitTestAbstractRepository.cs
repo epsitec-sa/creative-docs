@@ -133,6 +133,12 @@ namespace Epsitec.Cresus.Core
 					System.Diagnostics.Debug.WriteLine ("Gender: " + ((person.Gender == null) ? "null" : person.Gender.Name));
 					System.Diagnostics.Debug.WriteLine ("Title: " + ((person.Title == null) ? "null" : person.Title.Name));
 					System.Diagnostics.Debug.WriteLine ("Language: " + ((person.PreferredLanguage == null) ? "null" : person.PreferredLanguage.Name));
+
+					foreach (AbstractContactEntity contact in person.Contacts)
+					{
+						System.Diagnostics.Debug.WriteLine ("Contact: " + (contact as UriContactEntity).Uri);
+					}
+
 				}
 				System.Diagnostics.Debug.WriteLine ("=====================================================");
 
