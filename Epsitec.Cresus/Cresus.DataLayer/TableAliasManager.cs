@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Epsitec.Common.Support;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -7,67 +9,81 @@ namespace Epsitec.Cresus.DataLayer
 	internal class TableAliasManager
 	{
 
-		public TableAliasManager()
-		{
-			this.rootTypeTableAlias = new Stack<string> ();
-			this.subTypeTableAlias = new Stack<string> ();
-		}
-
-		
-		public void resetTableAliases()
+		public TableAliasManager(Druid entityId)
 		{
 			this.tableAliasNumber = 0;
 
-			this.rootTypeTableAlias.Clear ();
-			this.subTypeTableAlias.Clear ();
+			this.currentEntityNode = new EntityTableAliasNode (null, entityId.ToString (), this.CreateNewAlias ());
+
+			this.currentSubtypeNodes = new Stack<SubtypeTableAliasNode> ();
+			this.currentSubtypeNodes.Push (null);
 		}
 
 
-		public string PushRootTypeTableAlias()
+		public string CreateEntityAlias(Druid id)
 		{
-			string newTableAlias = this.GetNewTableAlias ();
+			this.currentEntityNode = this.currentEntityNode.CreateEntityNode (id.ToString (), this.CreateNewAlias ());
+			this.currentSubtypeNodes.Push (null);
 
-			this.rootTypeTableAlias.Push (newTableAlias);
-
-			return newTableAlias;
+			return this.GetCurrentEntityAlias ();
 		}
 
 
-		public string PeekRootTypeTableAlias()
+		public string GetCurrentEntityAlias()
 		{
-			return this.rootTypeTableAlias.Peek ();
+			return this.currentEntityNode.Alias;
 		}
 
 
-		public void PopRootTypeTableAlias()
+		public string GetPreviousEntityAlias()
 		{
-			this.rootTypeTableAlias.Pop ();
+			this.currentEntityNode = this.currentEntityNode.GetParentNode ();
+			this.currentSubtypeNodes.Pop ();
+
+			return this.GetCurrentEntityAlias ();
 		}
 
 
-		public string PushSubTypeTableAlias(bool useLastRootTypeAlias)
+		public string GetNextEntityAlias(Druid id)
 		{
-			string newTableAlias = (useLastRootTypeAlias) ? this.PeekRootTypeTableAlias () : this.GetNewTableAlias ();
+			this.currentEntityNode = this.currentEntityNode.GetEntityNode (id.ToString ());
+			this.currentSubtypeNodes.Push (null);
 
-			this.subTypeTableAlias.Push (newTableAlias);
-
-			return newTableAlias;
+			return this.GetCurrentEntityAlias ();
 		}
 
 
-		public string PeekSubTypeTableAlias()
+		public string CreateSubtypeAlias(Druid id, bool useCurrentEntityAlias)
 		{
-			return this.subTypeTableAlias.Peek ();
+			string alias = (useCurrentEntityAlias) ? this.GetCurrentEntityAlias () : this.CreateNewAlias ();
+
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.CreateSubtypeNode (id.ToString (), alias);
+
+			this.currentSubtypeNodes.Pop ();
+			this.currentSubtypeNodes.Push (currentSubtypeNode);
+
+			return this.GetCurrentSubtypeAlias ();
 		}
 
 
-		public void PopSubTypeTableAlias()
+		public string GetCurrentSubtypeAlias()
 		{
-			this.subTypeTableAlias.Pop ();
+			return this.currentSubtypeNodes.Peek ().Alias;
 		}
 
 
-		private string GetNewTableAlias()
+		public string GetNextSubtypeAlias(Druid entityId)
+		{
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (entityId.ToString ());
+
+			this.currentSubtypeNodes.Pop ();
+			this.currentSubtypeNodes.Push (currentSubtypeNode);
+
+			return this.GetCurrentSubtypeAlias ();
+		}
+
+
+		private string CreateNewAlias()
 		{
 			string tableAlias = "tableAlias" + this.tableAliasNumber;
 
@@ -80,10 +96,10 @@ namespace Epsitec.Cresus.DataLayer
 		private int tableAliasNumber;
 
 
-		private Stack<string> rootTypeTableAlias;
+		private EntityTableAliasNode currentEntityNode;
 
 
-		private Stack<string> subTypeTableAlias;
+		private Stack<SubtypeTableAliasNode> currentSubtypeNodes;
 
 
 	}
