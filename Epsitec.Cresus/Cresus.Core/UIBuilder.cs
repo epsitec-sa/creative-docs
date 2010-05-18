@@ -57,7 +57,6 @@ namespace Epsitec.Cresus.Core
 				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowDirection = Direction.Right,
-				ArrowEnabled = true,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
@@ -89,7 +88,6 @@ namespace Epsitec.Cresus.Core
 				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
 				ArrowDirection = Direction.Right,
-				ArrowEnabled = false,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
@@ -156,8 +154,7 @@ namespace Epsitec.Cresus.Core
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
-				ArrowEnabled = false,
-				IsEditing = true,
+				IsReadOnly = false
 			};
 
 			var closeButton = new Button
