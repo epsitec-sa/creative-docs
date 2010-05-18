@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core
 				EnteredSensitivity = true,
 				TopLeftIconUri = iconUri,
 				Title = title,
+				IsReadOnly = true,
 			};
 
 			UIBuilder.CreateGroupingTileHandler (group, this.controller);
