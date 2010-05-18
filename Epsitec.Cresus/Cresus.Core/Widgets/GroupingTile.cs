@@ -20,26 +20,11 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public GroupingTile()
 		{
-			this.PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2;
 			this.items = new TileCollection (this);
+			
 			this.CreateUI ();
 		}
 
-		public GroupingTile(Widget embedder)
-			: this ()
-		{
-			this.SetEmbedder (embedder);
-		}
-
-
-		static GroupingTile()
-		{
-			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-
-			metadataDy.DefineDefaultValue (GroupingTile.iconSize+GroupingTile.iconMargins*2);
-
-			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (GroupingTile), metadataDy);
-		}
 
 
 		public TileCollection Items
@@ -50,27 +35,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		/// <summary>
-		/// Détermine si le widget est sensible au survol de la souris.
-		/// </summary>
-		/// <value><c>true</c> if [entered sensitivity]; otherwise, <c>false</c>.</value>
-		public bool EnteredSensitivity
-		{
-			get
-			{
-				return this.enteredSensitivity;
-			}
-			set
-			{
-				this.enteredSensitivity = value;
-			}
-		}
-
+		
 		public override TileArrowMode ArrowMode
 		{
 			get
 			{
-				return this.GetPaintingArrowMode ();
+				return this.GetArrowMode ();
 			}
 			set
 			{
@@ -104,8 +74,40 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private bool HasSingleChild
+		{
+			get
+			{
+				return this.items.Count < 2;
+			}
+		}
+
+		private bool HasManyChildren
+		{
+			get
+			{
+				return this.items.Count > 1;
+			}
+		}
+
+		private bool HasEnteredChild
+		{
+			get
+			{
+				return this.items.Any (x => x.IsEntered);
+			}
+		}
+
+		private bool HasSelectedChild
+		{
+			get
+			{
+				return this.items.Any (x => x.IsSelected);
+			}
+		}
+
 	
-		public static double WidthWithOnlyIcon
+		public static double MinimumTileWidth
 		{
 			get
 			{
@@ -119,23 +121,30 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Si on donne un seul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string TopLeftIconUri
+		public string IconUri
 		{
 			get
 			{
-				return this.topLeftIconUri;
+				return this.iconUri;
 			}
 			set
 			{
-				this.topLeftIconUri = value;
+				if (this.iconUri != value)
+				{
+					this.iconUri = value;
 
-				if (string.IsNullOrEmpty (this.topLeftIconUri) || this.topLeftIconUri.Length == 1)  // un seul caractère ?
-				{
-					this.staticTextTopLeftIcon.Text = string.Concat ("<font size=\"200%\">", this.topLeftIconUri, "</font>");
-				}
-				else
-				{
-					this.staticTextTopLeftIcon.Text = Misc.GetResourceIconImageTag (value);
+					if (string.IsNullOrEmpty (this.iconUri))
+					{
+						this.staticTextIcon.Text = "";
+					}
+					else if (this.iconUri.Length == 1)  // un seul caractère ?
+					{
+						this.staticTextIcon.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
+					}
+					else
+					{
+						this.staticTextIcon.Text = Misc.GetResourceIconImageTag (value);
+					}
 				}
 			}
 		}
@@ -152,63 +161,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			set
 			{
-				this.title = value;
-				this.staticTextTitle.Text = string.Concat ("<b><font size=\"120%\">", this.title, "</font></b>");
+				if (this.title != value)
+				{
+					this.title = value;
+					this.staticTextTitle.Text = string.Concat ("<b><font size=\"120%\">", this.title, "</font></b>");
+				}
 			}
-		}
-
-
-		private void CreateUI()
-		{
-			//	Crée deux panneaux gauche/droite.
-			this.leftPanel = new FrameBox
-			{
-				Parent = this,
-				PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2,
-				Dock = DockStyle.Left,
-			};
-
-			this.rightPanel = new FrameBox
-			{
-				Parent = this,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-			};
-
-			//	Crée le contenu du panneau de gauche.
-			this.staticTextTopLeftIcon = new StaticText
-			{
-				Parent = this.leftPanel,
-				Margins = new Margins (GroupingTile.iconMargins),
-				PreferredSize = new Size (GroupingTile.iconSize, GroupingTile.iconSize),
-				Dock = DockStyle.Top,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-			};
-
-			//	Crée le contenu du panneau de droite.
-			this.staticTextTitle = new StaticText
-			{
-				Parent = this.rightPanel,
-				PreferredHeight = GroupingTile.titleHeight,
-				PreferredWidth = 0,
-				Dock = DockStyle.Top,
-				Margins = new Margins (2, TileArrow.Breadth, 0, 0),
-				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-			};
-
-			this.mainPanel = new FrameBox
-			{
-				Parent = this.rightPanel,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-			};
 		}
 
 
 		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
-			if (newRect.Width <= GroupingTile.WidthWithOnlyIcon)  // icône seule ?
+			if (newRect.Width <= GroupingTile.MinimumTileWidth)  // icône seule ?
 			{
 				this.rightPanel.Visibility = false;
 			}
@@ -217,28 +181,95 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.rightPanel.Visibility = true;
 			}
 		}
-
-
-
-		private TileArrowMode GetPaintingArrowMode()
+		
+		
+		private void CreateUI()
 		{
-			if (this.IsReadOnly == false)
+			this.PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2;
+
+			this.CreateLeftPanel ();
+			this.CreateLeftPanelIcon ();
+			this.CreateRightPanel ();
+			this.CreateRightPanelText ();
+			this.CreateRightPanelContainer ();
+		}
+
+
+		private void CreateLeftPanel()
+		{
+			this.leftPanel = new FrameBox
 			{
-				return Widgets.TileArrowMode.None;
-			}
-			else
+				Parent = this,
+				PreferredWidth = GroupingTile.iconSize+GroupingTile.iconMargins*2,
+				Dock = DockStyle.Left,
+			};
+		}
+
+		private void CreateLeftPanelIcon()
+		{
+			this.staticTextIcon = new StaticText
+						{
+							Parent = this.leftPanel,
+							Margins = new Margins (GroupingTile.iconMargins),
+							PreferredSize = new Size (GroupingTile.iconSize, GroupingTile.iconSize),
+							Dock = DockStyle.Top,
+							ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+						};
+		}
+		
+		private void CreateRightPanel()
+		{
+			this.rightPanel = new FrameBox
 			{
-				if (this.enteredSensitivity && this.IsEntered && !this.HasManyChildren && this.HasSelectedChildren)
+				Parent = this,
+				PreferredWidth = 0,
+				Dock = DockStyle.Fill,
+			};
+		}
+
+		private void CreateRightPanelText()
+		{
+			this.staticTextTitle = new StaticText
+						{
+							Parent = this.rightPanel,
+							PreferredHeight = GroupingTile.titleHeight,
+							PreferredWidth = 0,
+							Dock = DockStyle.Top,
+							Margins = new Margins (2, TileArrow.Breadth, 0, 0),
+							ContentAlignment = ContentAlignment.TopLeft,
+							TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+						};
+		}
+		
+		private void CreateRightPanelContainer()
+		{
+			this.mainPanel = new FrameBox
+			{
+				Parent = this.rightPanel,
+				PreferredWidth = 0,
+				Dock = DockStyle.Fill,
+			};
+		}
+		
+		
+
+
+
+		private TileArrowMode GetArrowMode()
+		{
+			if (this.IsReadOnly)
+			{
+				if (this.IsEntered && this.HasSingleChild && this.HasSelectedChild)
 				{
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren))
+				if ((this.IsEntered && this.HasSingleChild) || this.HasEnteredChild)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
 
-				if (this.HasSelectedChildren || this.HasEnteredChildren)
+				if (this.HasSelectedChild || this.HasEnteredChild)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
@@ -249,24 +280,21 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Color GetSurfaceColor()
 		{
-			if (this.IsReadOnly == false)
+			if (this.IsReadOnly)
 			{
-				return Tile.SurfaceEditingColor;
-			}
-			else
-			{
-				if (this.enteredSensitivity && (this.IsEntered || this.HasEnteredChildren))
+				if (this.IsEntered)
 				{
 					return Tile.SurfaceHilitedColor;
 				}
 
-				if (this.HasSelectedChildren)
+				if (this.HasSelectedChild)
 				{
 					return Tile.SurfaceSelectedGroupingColor;
 				}
+				return Tile.SurfaceSummaryColor;
 			}
 
-			return Tile.SurfaceSummaryColor;
+			return Tile.SurfaceEditingColor;
 		}
 
 		private Color GetOutlineColor()
@@ -276,13 +304,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Color GetThicknessColor()
 		{
-			if (this.IsReadOnly == false)
+			if (this.IsReadOnly)
 			{
-				return Color.Empty;
-			}
-			else
-			{
-				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren) && (!this.HasSelectedChildren || this.HasManyChildren))
+				if (((this.IsEntered && this.HasSingleChild) || this.HasEnteredChild) &&
+					(!this.HasSelectedChild || this.HasManyChildren))
 				{
 					return Tile.ThicknessHilitedColor;
 				}
@@ -294,14 +319,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Color GetReverseSurfaceColor()
 		{
-			if (this.IsReadOnly == false)
-			{
-				return Color.Empty;
-			}
-			else
+			if (this.IsReadOnly)
 			{
 				return Tile.SurfaceHilitedColor;
 			}
+			
+			return Color.Empty;
 		}
 
 		private Color GetReverseOutlineColor()
@@ -311,56 +334,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Color GetReverseThicknessColor()
 		{
-			if (this.IsReadOnly == false)
-			{
-				return Color.Empty;
-			}
-			else
+			if (this.IsReadOnly)
 			{
 				return Tile.ThicknessHilitedColor;
 			}
+			
+			return Color.Empty;
 		}
 
-
-		private bool HasManyChildren
-		{
-			get
-			{
-				return this.items.Count > 1;
-			}
-		}
-
-		private bool HasEnteredChildren
-		{
-			get
-			{
-				foreach (var containerTile in this.items)
-				{
-					if (containerTile.IsEntered)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
-
-		private bool HasSelectedChildren
-		{
-			get
-			{
-				foreach (var containerTile in this.items)
-				{
-					if (containerTile.IsSelected)
-					{
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
 
 		#region IWidgetCollectionHost<GroupingTile> Members
 
@@ -402,23 +383,31 @@ namespace Epsitec.Cresus.Core.Widgets
 		#endregion
 
 
-		private static readonly double iconSize = 32;
-		private static readonly double iconMargins = 2;
-		private static readonly double titleHeight = 20;
+		static GroupingTile()
+		{
+			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataDy.DefineDefaultValue (GroupingTile.iconSize+GroupingTile.iconMargins*2);
+
+			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (GroupingTile), metadataDy);
+		}
+
+
+		private static readonly double iconSize		= 32;
+		private static readonly double iconMargins	= 2;
+		private static readonly double titleHeight	= 20;
 
 
 		private readonly TileCollection items;
 
-		private bool enteredSensitivity;
+		private string iconUri;
+		private string title;
 
 		private FrameBox leftPanel;
 		private FrameBox rightPanel;
-		protected FrameBox mainPanel;
+		private FrameBox mainPanel;
 
-		private string topLeftIconUri;
-		private StaticText staticTextTopLeftIcon;
-
-		private string title;
+		private StaticText staticTextIcon;
 		private StaticText staticTextTitle;
 	}
 }

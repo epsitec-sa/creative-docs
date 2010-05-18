@@ -90,7 +90,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					group = builder.CreateSummaryGroupingTile ("Data.Mail", accessor.Title);
 				}
 
-				builder.CreateSummaryTile (group, accessor);
+				var tile = builder.CreateSummaryTile (group, accessor);
+				tile.IsCompact = groupMail;
 
 				count++;
 			}
@@ -139,7 +140,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						group = builder.CreateSummaryGroupingTile ("Data.Telecom", accessor.Title);
 					}
 
-					builder.CreateSummaryTile (group, accessor);
+					var tile = builder.CreateSummaryTile (group, accessor);
+					tile.IsCompact = groupTelecom;
 
 					count++;
 				}
@@ -191,7 +193,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						group = builder.CreateSummaryGroupingTile ("Data.Uri", accessor.Title);
 					}
 
-					builder.CreateSummaryTile (group, accessor);
+					var tile = builder.CreateSummaryTile (group, accessor);
+					tile.IsCompact = groupUri;
 
 					count++;
 				}

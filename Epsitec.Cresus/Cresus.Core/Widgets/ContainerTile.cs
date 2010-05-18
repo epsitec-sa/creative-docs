@@ -55,15 +55,13 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.enteredSensitivity = value;
 			}
 		}
-		
-		private bool IsSoloContainer
-		{
-			get
-			{
-				return this.ParentGroupingTile != null && this.ParentGroupingTile.Items.Count <= 1;
-			}
-		}
 
+		public bool IsCompact
+		{
+			get;
+			set;
+		}
+		
 		public override TileArrowMode ArrowMode
 		{
 			get
@@ -148,23 +146,19 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private TileArrowMode GetPaintingArrowMode()
 		{
-			if (this.IsReadOnly == false)
+			if (this.IsReadOnly && this.IsCompact)
 			{
-				return Widgets.TileArrowMode.None;
-			}
-			else
-			{
-				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer && this.IsSelected)
+				if (this.enteredSensitivity && this.IsEntered && this.IsSelected)
 				{
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
+				if (this.enteredSensitivity && this.IsEntered)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
 
-				if (this.IsSelected && !this.IsSoloContainer)
+				if (this.IsSelected)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
@@ -179,19 +173,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				return Tile.SurfaceEditingColor;
 			}
-			else
+			else if (this.IsCompact)
 			{
-				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer && this.IsSelected)
+				if (this.enteredSensitivity && this.IsEntered && this.IsSelected)
 				{
 					return Tile.SurfaceHilitedColor;
 				}
 
-				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
+				if (this.enteredSensitivity && this.IsEntered)
 				{
 					return Tile.ThicknessHilitedColor;
 				}
 
-				if (this.IsSelected && !this.IsSoloContainer)
+				if (this.IsSelected)
 				{
 					return Tile.SurfaceSelectedContainerColor;
 				}
@@ -202,18 +196,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Color GetOutlineColor()
 		{
-			if (this.IsReadOnly == false)
+			if (this.IsCompact && this.IsReadOnly)
 			{
-				return Color.Empty;
-			}
-			else
-			{
-				if (this.enteredSensitivity && this.IsEntered && !this.IsSoloContainer)
+				if (this.enteredSensitivity && this.IsEntered)
 				{
 					return Tile.BorderColor;
 				}
 
-				if (this.IsSelected && !this.IsSoloContainer)
+				if (this.IsSelected)
 				{
 					return Tile.BorderColor;
 				}

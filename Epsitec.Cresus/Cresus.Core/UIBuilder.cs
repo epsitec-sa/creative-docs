@@ -38,8 +38,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 				ArrowDirection = Direction.Right,
-				EnteredSensitivity = true,
-				TopLeftIconUri = iconUri,
+				IconUri = iconUri,
 				Title = title,
 				IsReadOnly = true,
 			};
