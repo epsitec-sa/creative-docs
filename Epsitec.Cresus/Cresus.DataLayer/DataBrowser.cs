@@ -63,39 +63,32 @@ namespace Epsitec.Cresus.DataLayer
 				valuesReader.CreateDataReader (transaction);
 				DataTable valuesTable = this.BuildValuesTable (entityId, valuesReader);
 
-				DbReader referencesReader = this.CreateReferencesReader (entityId, example);
-				referencesReader.CreateDataReader (transaction);
-				DataTable referencesTable = this.BuildReferencesTable (entityId);
-				IEnumerator<DbReader.RowData> referencesRows = referencesReader.Rows.GetEnumerator ();
+				List<KeyValuePair<DbKey, Dictionary<StructuredTypeField, DbKey>>> referencesData = this.GetReferences (transaction, entityId, example);
+				Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> collectionsData = this.GetCollections (transaction, entityId, example);
 
-				Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> collectionData = this.GetCollections (transaction, entityId, example);
+				int i = 0;
 
 				foreach (DbReader.RowData valuesRow in valuesReader.Rows)
 				{
-					referencesRows.MoveNext ();
-					DbReader.RowData referencesRow = referencesRows.Current;
-
 					DbKey rowKey = this.ExtractDbKey (valuesRow);
 					Druid realEntityId = this.ExtractRealEntityId (valuesRow);
 					DataRow valuesDataRow = this.ExtractDataRow (valuesTable, valuesRow);
-					DataRow referencesDataRow = this.ExtractDataRow (referencesTable, referencesRow);
+					
+					Dictionary<StructuredTypeField, DbKey> referencesKeys = referencesData[i].Value;
+					Dictionary<StructuredTypeField, DbKey[]> collectionsKeys = new Dictionary<StructuredTypeField, DbKey[]> ();
 
-					Dictionary<StructuredTypeField, DbKey[]> collectionKeys = new Dictionary<StructuredTypeField, DbKey[]> ();
-
-					foreach (StructuredTypeField field in collectionData.Keys)
+					foreach (StructuredTypeField field in collectionsData.Keys)
 					{
-						collectionKeys[field] = collectionData[field].Where(pair => pair.Key == rowKey).Select(pair => pair.Value).ToArray();
+						collectionsKeys[field] = collectionsData[field].Where(pair => pair.Key == rowKey).Select(pair => pair.Value).ToArray();
 					}
 
-					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesDataRow, collectionKeys) as EntityType;
+					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesKeys, collectionsKeys) as EntityType;
+
+					i++;
 				}
 
 				valuesTable.Dispose ();
 				valuesReader.Dispose ();
-
-				referencesTable.Dispose ();
-				referencesReader.Dispose ();
-				referencesRows.Dispose ();
 			}
 		}
 
@@ -117,27 +110,6 @@ namespace Epsitec.Cresus.DataLayer
 
 					dataTable.Columns.Add (new DataColumn (name, type));
 				}
-			}
-
-			return dataTable;
-		}
-
-
-		private DataTable BuildReferencesTable(Druid entityId)
-		{
-			DataTable dataTable = new DataTable ();
-
-			StructuredTypeField[] referenceFields = this.DataContext.EntityContext.GetEntityFieldDefinitions(entityId).
-				Where (field => field.Relation == FieldRelation.Reference).
-				Where (field => field.Source == FieldSource.Value).
-				ToArray ();
-
-			foreach (StructuredTypeField field in referenceFields)
-			{
-				string name = this.DataContext.SchemaEngine.GetDataColumnName (field.Id);
-				System.Type type = typeof (long);
-
-				dataTable.Columns.Add (new DataColumn (name, type));
 			}
 
 			return dataTable;
@@ -192,6 +164,47 @@ namespace Epsitec.Cresus.DataLayer
 
 			return reader;
 		}
+
+
+		private List<KeyValuePair<DbKey, Dictionary<StructuredTypeField, DbKey>>> GetReferences(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		{
+			List<KeyValuePair<DbKey, Dictionary<StructuredTypeField, DbKey>>> references = new List<KeyValuePair<DbKey, Dictionary<StructuredTypeField, DbKey>>> ();
+			List<StructuredTypeField> fields = new List<StructuredTypeField> ();
+
+			foreach (Druid currentEntityId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
+			{
+				foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (f => f.Relation == FieldRelation.Reference))
+				{
+					fields.Add(field);	
+				}
+			}
+
+			using (DbReader reader = this.CreateReferencesReader (entityId, example))
+			{
+				reader.CreateDataReader (transaction);
+
+				foreach (DbReader.RowData rowData in reader.Rows)
+				{
+					Dictionary<StructuredTypeField, DbKey> entityReferences = new Dictionary<StructuredTypeField, DbKey> ();
+					DbKey sourceKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
+
+					for (int i = 0; i < rowData.Values.Length - 1; i++)
+					{
+						if (rowData.Values[i] != System.DBNull.Value)
+						{
+							StructuredTypeField field = fields[i];
+							DbKey targetKey = new DbKey (new DbId ((long) rowData.Values[i]));
+							entityReferences[field] = targetKey;
+						}
+					}
+
+					references.Add (new KeyValuePair<DbKey, Dictionary<StructuredTypeField, DbKey>> (sourceKey, entityReferences));
+				}
+			}
+
+			return references;
+		}
+
 
 		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example)
 		{
