@@ -1,8 +1,6 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -12,38 +10,19 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// Cette tuile contient un résumé non éditable d'une entité.
-	/// Son parent est forcément un TileGrouping.
+	/// The <c>SummaryTile</c> class displays a summary text; this is a read-
+	/// only tile.
 	/// </summary>
 	public class SummaryTile : GenericTile
 	{
 		public SummaryTile()
 		{
-			this.staticTextSummary = new StaticText
-			{
-				Parent = this,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (2, TileArrow.Breadth, 0, 0),
-				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
-			};
+			this.IsReadOnly = true;
+
+			this.CreateUI ();
 		}
 
-		public double ContentHeight
-		{
-			get
-			{
-				// TODO: faire cela mieux !
-				string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
-				return lines.Length*16;
-			}
-		}
-
-		/// <summary>
-		/// Résumé multilignes affiché sous le titre.
-		/// </summary>
-		/// <value>The content.</value>
+		
 		public string Summary
 		{
 			get
@@ -57,6 +36,29 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private readonly StaticText staticTextSummary;
+		public override Size GetBestFitSize()
+		{
+			// TODO: faire cela mieux !
+			var lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+			var height = lines.Length*16;
+
+			return new Size (this.PreferredWidth, height);
+		}
+
+		private void CreateUI()
+		{
+			this.staticTextSummary = new StaticText
+			{
+				Parent = this,
+				PreferredWidth = 0,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (2, TileArrow.Breadth, 0, 0),
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
+			};
+		}
+
+
+		private StaticText staticTextSummary;
 	}
 }

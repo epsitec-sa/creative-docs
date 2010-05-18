@@ -61,18 +61,17 @@ namespace Epsitec.Cresus.Core
 
 			if (accessor.EnableAddAndRemove)
 			{
-				tile = new SummaryTile ();
+				tile = new CollectionItemTile ();
 			}
 			else
 			{
-				tile = new CollectionItemTile ();
+				tile = new SummaryTile ();
 			}
 
 			tile.AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None;
 			tile.Controller = controller;
-			tile.IsReadOnly = true;
 			tile.Summary = accessor.Summary;
-			tile.PreferredHeight = tile.ContentHeight;
+			tile.UpdatePreferredSize ();
 
 			parent.Items.Add (tile);
 
