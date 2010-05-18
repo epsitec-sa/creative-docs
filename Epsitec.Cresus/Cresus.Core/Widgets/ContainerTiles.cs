@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 			rect.Deflate (0.5);
-			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-ArrowedTile.ArrowBreadth, rect.Height);
+			rect = new Rectangle (rect.Left, rect.Bottom, rect.Width-TileArrow.Breadth, rect.Height);
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (adorner.ColorBorder);
 		}

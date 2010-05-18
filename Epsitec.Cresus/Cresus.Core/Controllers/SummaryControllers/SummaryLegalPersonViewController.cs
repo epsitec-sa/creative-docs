@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 		}
 
-		protected override void CreatePersonUI(UIBuilder builder)
+		protected override void CreatePersonTile(UIBuilder builder)
 		{
 			var group = builder.CreateSummaryGroupingTile ("Data.LegalPerson", "Personne morale");
 

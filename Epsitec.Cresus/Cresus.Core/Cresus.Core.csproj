@@ -147,7 +147,8 @@
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
     <Compile Include="Widgets\HintEditor.cs" />
-    <Compile Include="Widgets\ArrowedTile.cs" />
+    <Compile Include="Widgets\TileArrow.cs" />
+    <Compile Include="Widgets\Tile.cs" />
     <Compile Include="Widgets\GroupingTile.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Widgets\EditionTile.cs" />
     <Compile Include="Widgets\SummaryTile.cs" />
     <Compile Include="Widgets\ContainerTile.cs" />
+    <Compile Include="Widgets\TileArrowMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Core\module.info">
@@ -275,7 +277,6 @@
     <EmbeddedResource Include="Images\Data.Uri.icon" />
     <EmbeddedResource Include="Images\Data.LegalPerson.icon" />
     <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
-    <None Include="ClassDiagram1.cd" />
     <EmbeddedResource Include="Images\Data.Roles.icon" />
     <EmbeddedResource Include="Images\Data.Type.icon" />
   </ItemGroup>

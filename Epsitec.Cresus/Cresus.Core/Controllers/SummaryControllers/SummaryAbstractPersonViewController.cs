@@ -45,46 +45,54 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected abstract void CreatePersonUI(UIBuilder builder);
+		protected abstract void CreatePersonTile(UIBuilder builder);
 
 		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
-			Widgets.GroupingTile group = null;
 			int count;
-
+			Widgets.GroupingTile group;
+			
 			builder.CreateHeaderEditorTile ();
 
 			//	Une première tuile pour l'identité de la personne, physique ou morale.
-			this.CreatePersonUI (builder);
+			this.CreatePersonTile (builder);
 
+			this.CreateMailContactTiles (person, groupMail, builder);
+			this.CreateTelecomContactTiles (person, groupTelecom, builder);
+			this.CreateUriContactTiles (person, groupUri, builder);
+			
+			builder.CreateFooterEditorTile ();
+		}
+		
+		private void CreateMailContactTiles(Entities.AbstractPersonEntity person, bool groupMail, UIBuilder builder)
+		{
 			//	Crée les tuiles pour les adresses postales.
+			Widgets.GroupingTile group = null;
+			int count;
 			if (groupMail)
 			{
 				group = builder.CreateSummaryGroupingTile ("Data.Mail", "Adresse");
 			}
 
 			count = 0;
-			foreach (Entities.AbstractContactEntity contact in person.Contacts)
+			foreach (var contact in person.Contacts.Where (x => x is Entities.MailContactEntity))
 			{
-				if (contact is Entities.MailContactEntity)
+				var accessor = new Accessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail)
 				{
-					var accessor = new Accessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail)
-					{
-						EnableAddAndRemove = true,
-						ViewControllerMode = ViewControllerMode.Edition
-					};
+					EnableAddAndRemove = true,
+					ViewControllerMode = ViewControllerMode.Edition
+				};
 
 
-					if (!groupMail)
-					{
-						group = builder.CreateSummaryGroupingTile ("Data.Mail", accessor.Title);
-					}
-
-					builder.CreateSummaryTile (group, accessor);
-
-					count++;
+				if (!groupMail)
+				{
+					group = builder.CreateSummaryGroupingTile ("Data.Mail", accessor.Title);
 				}
+
+				builder.CreateSummaryTile (group, accessor);
+
+				count++;
 			}
 
 			if (count == 0)
@@ -104,14 +112,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 				builder.CreateSummaryTile (group, accessor);
 			}
-
+		}
+		private void CreateTelecomContactTiles(Entities.AbstractPersonEntity person, bool groupTelecom, UIBuilder builder)
+		{
+			int count;
+			Widgets.GroupingTile group;
+			group = null;
+			count = 0;
 			//	Crée les tuiles pour les numéros de téléphone.
 			if (groupTelecom)
 			{
 				group = builder.CreateSummaryGroupingTile ("Data.Telecom", "Téléphone");
 			}
-
-			count = 0;
 			foreach (Entities.AbstractContactEntity contact in person.Contacts)
 			{
 				if (contact is Entities.TelecomContactEntity)
@@ -150,14 +162,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 				builder.CreateSummaryTile (group, accessor);
 			}
+		}
+		private void CreateUriContactTiles(Entities.AbstractPersonEntity person, bool groupUri, UIBuilder builder)
+		{
+			int count;
+			Widgets.GroupingTile group;
+			group = null;
+			count = 0;
 
 			//	Crée les tuiles pour les adresses mail.
 			if (groupUri)
 			{
 				group = builder.CreateSummaryGroupingTile ("Data.Uri", "Mail");
 			}
-
-			count = 0;
 			foreach (Entities.AbstractContactEntity contact in person.Contacts)
 			{
 				if (contact is Entities.UriContactEntity)
@@ -197,8 +214,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 				builder.CreateSummaryTile (group, accessor);
 			}
-
-			builder.CreateFooterEditorTile ();
 		}
 	}
 }
