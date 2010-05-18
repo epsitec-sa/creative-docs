@@ -24,18 +24,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		protected override void OnEntered(MessageEventArgs e)
 		{
+			this.SetButtonVisibility (true);
+			
 			base.OnEntered (e);
-
-			this.buttonAdd.Visibility = true;
-			this.buttonRemove.Visibility = true;
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
+			this.SetButtonVisibility (false);
+			
 			base.OnExited (e);
-
-			this.buttonAdd.Visibility = false;
-			this.buttonRemove.Visibility = false;
 		}
 
 
@@ -89,6 +87,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				};
 		}
 
+		
+		private void SetButtonVisibility(bool visibility)
+		{
+			this.buttonAdd.Visibility = visibility;
+			this.buttonRemove.Visibility = visibility;
+		}
 
 
 		protected virtual void OnAddClicked()
