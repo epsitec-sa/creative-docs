@@ -16,7 +16,7 @@ using System.Data;
 namespace Epsitec.Cresus.DataLayer
 {
 	
-	
+
 	// TODO Add sorting criteria
 	// TODO Add comparison criteria
 	// TODO Implement that read/write stuff that we talked about with Pierre to ensure the consistency of write operations.
@@ -63,28 +63,12 @@ namespace Epsitec.Cresus.DataLayer
 				valuesReader.CreateDataReader (transaction);
 				DataTable valuesTable = this.BuildValuesTable (entityId, valuesReader);
 
-
 				DbReader referencesReader = this.CreateReferencesReader (entityId, example);
 				referencesReader.CreateDataReader (transaction);
 				DataTable referencesTable = this.BuildReferencesTable (entityId);
 				IEnumerator<DbReader.RowData> referencesRows = referencesReader.Rows.GetEnumerator ();
 
-				Dictionary<StructuredTypeField, DbReader> collectionReaders = new Dictionary<StructuredTypeField, DbReader> ();
-				Dictionary<StructuredTypeField, DataTable> collectionTables = new Dictionary<StructuredTypeField, DataTable> ();
-				Dictionary<StructuredTypeField, IEnumerable<DbReader.RowData>> collectionRows = new Dictionary<StructuredTypeField, IEnumerable<DbReader.RowData>> ();
-
-				foreach (Druid currentId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
-				{
-					foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
-					{
-						DbReader reader = this.CreateCollectionReader (currentId, example, field);
-						reader.CreateDataReader (transaction);
-
-						collectionReaders[field] = reader;
-						collectionTables[field] = this.BuildCollectionTable (field);
-						collectionRows[field] = reader.Rows.ToArray ();
-					}
-				}
+				Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> collectionData = this.GetCollections (transaction, entityId, example);
 
 				foreach (DbReader.RowData valuesRow in valuesReader.Rows)
 				{
@@ -96,22 +80,14 @@ namespace Epsitec.Cresus.DataLayer
 					DataRow valuesDataRow = this.ExtractDataRow (valuesTable, valuesRow);
 					DataRow referencesDataRow = this.ExtractDataRow (referencesTable, referencesRow);
 
-					Dictionary<StructuredTypeField, List<DataRow>> collectionDataRows = new Dictionary<StructuredTypeField, List<DataRow>> ();
+					Dictionary<StructuredTypeField, DbKey[]> collectionKeys = new Dictionary<StructuredTypeField, DbKey[]> ();
 
-					foreach (StructuredTypeField field in collectionRows.Keys)
+					foreach (StructuredTypeField field in collectionData.Keys)
 					{
-						List<DataRow> dataRows = new List<DataRow> ();
-						DataTable dataTable = collectionTables[field];
-
-						foreach (DbReader.RowData dataRow in collectionRows[field].Where(r => this.ExtractDbKey(r) == rowKey))
-						{
-							dataRows.Add (this.ExtractDataRow (dataTable, dataRow));
-						}
-		
-						collectionDataRows[field] = dataRows;
+						collectionKeys[field] = collectionData[field].Where(pair => pair.Key == rowKey).Select(pair => pair.Value).ToArray();
 					}
 
-					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesDataRow, collectionDataRows) as EntityType;
+					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, valuesDataRow, referencesDataRow, collectionKeys) as EntityType;
 				}
 
 				valuesTable.Dispose ();
@@ -120,13 +96,6 @@ namespace Epsitec.Cresus.DataLayer
 				referencesTable.Dispose ();
 				referencesReader.Dispose ();
 				referencesRows.Dispose ();
-
-				foreach (StructuredTypeField field in collectionReaders.Keys)
-				{
-					collectionTables[field].Dispose ();
-					collectionReaders[field].Dispose ();
-				}
-
 			}
 		}
 
@@ -175,24 +144,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private DataTable BuildCollectionTable(StructuredTypeField field)
-		{
-			DataTable dataTable = new DataTable ();
-
-			string targetName = this.DataContext.SchemaEngine.GetDataColumnName (DataBrowser.idColumn);
-			System.Type targetType = typeof (long);
-
-			dataTable.Columns.Add (new DataColumn (targetName, targetType));
-
-			string rankName = this.DataContext.SchemaEngine.GetDataColumnName (DataBrowser.relationRankColumn);
-			System.Type rankType = typeof (int);
-
-			dataTable.Columns.Add (new DataColumn (rankName, rankType));
-
-			return dataTable;
-		}
-
-
 		private DataRow ExtractDataRow(DataTable dataTable, DbReader.RowData row)
 		{
 			DataRow dataRow = dataTable.NewRow ();
@@ -224,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer
 			return new DbKey (new DbId (dbKeyAsLong));
 		}
 
-		
+
 		private DbReader CreateValuesReader(Druid entityId, AbstractEntity example)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
@@ -242,7 +193,6 @@ namespace Epsitec.Cresus.DataLayer
 			return reader;
 		}
 
-
 		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
@@ -258,6 +208,43 @@ namespace Epsitec.Cresus.DataLayer
 			this.AddSortOrderOnId (tableAliasManager, reader, entityId);
 
 			return reader;
+		}
+
+
+		private Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> GetCollections(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		{
+			Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> collections = new Dictionary<StructuredTypeField, List<KeyValuePair<DbKey, DbKey>>> ();
+
+			foreach (Druid currentId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
+			{
+				foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
+				{
+					collections[field] = this.GetCollection (transaction, currentId, example, field);
+				}
+			}
+
+			return collections;
+		}
+
+
+		private List<KeyValuePair<DbKey, DbKey>> GetCollection(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		{
+			List<KeyValuePair<DbKey, DbKey>> collection = new List<KeyValuePair<DbKey, DbKey>> ();
+
+			using (DbReader reader = this.CreateCollectionReader (entityId, example, field))
+			{
+				reader.CreateDataReader (transaction);
+
+				foreach (DbReader.RowData rowData in reader.Rows)
+				{
+					DbKey sourceKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
+					DbKey targetKey = new DbKey (new DbId ((long) rowData.Values[0]));
+
+					collection.Add (new KeyValuePair<DbKey, DbKey> (sourceKey, targetKey));
+				}
+			}
+
+			return collection;
 		}
 
 
@@ -278,6 +265,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			return reader;
 		}
+
+
 
 
 		private void AddConditionsForEntity(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
@@ -615,15 +604,12 @@ namespace Epsitec.Cresus.DataLayer
 		private void AddQueryForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
 			this.AddRelationJoinToRelationTable (tableAliasManager, reader, entityId, field, SqlJoinCode.OuterLeft);
-
 			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
 
 			DbTableColumn tableColumnTarget = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationTargetColumn);
-
 			reader.AddQueryField (tableColumnTarget);
 
 			DbTableColumn tableColumnRank = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationRankColumn);
-
 			reader.AddQueryField (tableColumnRank);
 
 			tableAliasManager.GetPreviousEntityAlias ();
