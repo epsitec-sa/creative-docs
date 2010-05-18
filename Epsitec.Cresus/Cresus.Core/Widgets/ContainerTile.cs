@@ -40,18 +40,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public bool ArrowEnabled
-		{
-			get
-			{
-				return this.arrowEnabled;
-			}
-			set
-			{
-				this.arrowEnabled = value;
-			}
-		}
-
 		/// <summary>
 		/// Détermine si le widget est sensible au survol de la souris.
 		/// </summary>
@@ -263,7 +251,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private bool arrowEnabled;
 		private bool enteredSensitivity;
 	}
 }
