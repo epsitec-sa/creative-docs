@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Dictionary<StructuredTypeField, DbKey[]> collectionKeys)
+		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, DbKey[]> collectionKeys)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesRow, collectionKeys, currentId);
+						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesKeys, collectionKeys, currentId);
 					}
 				}
 			}
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Dictionary<StructuredTypeField, DbKey[]> collectionKeys, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, DbKey[]> collectionsKeys, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
@@ -528,13 +528,9 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						object idAsObject = referencesRow[this.SchemaEngine.GetDataColumnName (field.Id)];
-
-						if (idAsObject != System.DBNull.Value)
+						if (referenceKeys.ContainsKey (field))
 						{
-							DbKey idAsKey = new DbKey (new DbId ((long) idAsObject));
-							object proxy = this.InternalResolveEntity (idAsKey, field.TypeId, EntityResolutionMode.DelayLoad);
-							entity.InternalSetValue (field.Id, proxy);
+							entity.InternalSetValue (field.Id, this.InternalResolveEntity (referenceKeys[field], field.TypeId, EntityResolutionMode.DelayLoad));
 						}
 
 						break;
@@ -543,7 +539,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
 
-						foreach (DbKey key in collectionKeys[field])
+						foreach (DbKey key in collectionsKeys[field])
 						{
 							collection.Add (this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad));
 						}
