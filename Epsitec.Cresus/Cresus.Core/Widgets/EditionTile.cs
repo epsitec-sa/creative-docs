@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile contient tout ce qu'il faut pour éditer une entité.
 	/// Son parent est forcément un TileGrouping.
 	/// </summary>
-	public class EditionTile : AbstractTile
+	public class EditionTile : GenericTile
 	{
 		public EditionTile()
 		{

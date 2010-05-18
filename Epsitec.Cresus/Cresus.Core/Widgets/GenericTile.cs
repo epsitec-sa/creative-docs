@@ -2,10 +2,13 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
+
+using Epsitec.Cresus.Core.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,28 +19,18 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
 	/// alors une flèche (qui déborde de son Client.Bounds) qui pointe vers son enfant.
 	/// </summary>
-	public class ContainerTile : Tile
+	public class GenericTile : Tile
 	{
-		public ContainerTile()
+		public GenericTile()
 		{
 		}
 
-		public ContainerTile(Widget embedder)
+		public GenericTile(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
 		}
 
-
-		/// <summary>
-		/// Gets or sets the parent widget GroupingTile.
-		/// </summary>
-		/// <value>The GroupingTile widget.</value>
-		public GroupingTile ParentGroupingTile
-		{
-			get;
-			set;
-		}
 
 
 		/// <summary>
@@ -100,47 +93,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-
-		protected override void OnSelected()
-		{
-			base.OnSelected ();
-
-			if (this.ParentGroupingTile != null)
-			{
-				this.ParentGroupingTile.Invalidate ();
-			}
-		}
-
-		protected override void OnDeselected()
-		{
-			base.OnDeselected ();
-
-			if (this.ParentGroupingTile != null)
-			{
-				this.ParentGroupingTile.Invalidate ();
-			}
-		}
-
-
-		protected override void OnEntered(MessageEventArgs e)
-		{
-			base.OnEntered (e);
-
-			if (this.ParentGroupingTile != null)
-			{
-				this.ParentGroupingTile.Invalidate ();
-			}
-		}
-
-		protected override void OnExited(MessageEventArgs e)
-		{
-			base.OnExited (e);
-
-			if (this.ParentGroupingTile != null)
-			{
-				this.ParentGroupingTile.Invalidate ();
-			}
-		}
 
 
 
@@ -240,6 +192,85 @@ namespace Epsitec.Cresus.Core.Widgets
 			return Color.Empty;
 		}
 
+		public Accessors.AbstractEntityAccessor EntitiesAccessor
+		{
+			get;
+			set;
+		}
+
+		public AbstractEntity Entity
+		{
+			get;
+			set;
+		}
+
+		public Controllers.ViewControllerMode ChildrenMode
+		{
+			get;
+			set;
+		}
+
+		public bool EnableCreateAndRemoveButton
+		{
+			get;
+			set;
+		}
+
+
+		public void OpenOrCloseSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		{
+			if (this.IsSelected)
+			{
+				//	If the tile was selected, deselect it by closing its sub-view:
+				this.CloseSubView (orchestrator);
+			}
+			else
+			{
+				this.OpenSubView (orchestrator, parentController);
+			}
+		}
+
+		public void CloseSubView(Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			System.Diagnostics.Debug.Assert (this.subViewController != null);
+			System.Diagnostics.Debug.Assert (orchestrator != null);
+
+			orchestrator.CloseView (this.subViewController);
+			
+			System.Diagnostics.Debug.Assert (this.subViewController == null);
+			System.Diagnostics.Debug.Assert (!this.IsSelected);
+		}
+
+		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		{
+			this.subViewController = EntityViewController.CreateEntityViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
+			this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
+
+			orchestrator.ShowSubView (parentController, this.subViewController);
+			
+			this.SetSelected (true);
+
+			System.Diagnostics.Debug.Assert (this.subViewController != null);
+			System.Diagnostics.Debug.Assert (this.IsSelected);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.subViewController = null;
+			}
+
+			base.Dispose (disposing);
+		}
+
+		private void HandleSubViewControllerDisposing(object sender)
+		{
+			this.SetSelected (false);
+			this.subViewController = null;
+		}
+
+		private CoreViewController subViewController;
 
 		private bool enteredSensitivity;
 	}

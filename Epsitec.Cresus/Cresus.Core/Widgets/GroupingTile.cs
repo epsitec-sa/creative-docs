@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TopLeftIconUri) et un titre (Title).
 	/// </summary>
-	public class GroupingTile : Tile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>
+	public class GroupingTile : Tile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
 	{
 		public GroupingTile()
 		{
@@ -345,25 +345,27 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region IWidgetCollectionHost<GroupingTile> Members
 
-		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyInsertion(ContainerTile widget)
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
 		{
 			widget.Dock = DockStyle.Top;
 			widget.ArrowDirection = Direction.Right;
 			widget.Parent = this.mainPanel;
-			widget.ParentGroupingTile = this;
+
+			this.AttachEventHandlers (widget);
 		}
 
-		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyRemoval(ContainerTile widget)
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyRemoval(GenericTile widget)
 		{
 			widget.Parent = null;
-			widget.ParentGroupingTile = null;
+
+			this.DetachEventHandlers (widget);
 		}
 
-		void Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.NotifyPostRemoval(ContainerTile widget)
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyPostRemoval(GenericTile widget)
 		{
 		}
 
-		Common.Widgets.Collections.WidgetCollection<ContainerTile> Common.Widgets.Collections.IWidgetCollectionHost<ContainerTile>.GetWidgetCollection()
+		Common.Widgets.Collections.WidgetCollection<GenericTile> Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -372,7 +374,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region TileCollection Class
 
-		public class TileCollection : Epsitec.Common.Widgets.Collections.WidgetCollection<ContainerTile>
+		
+		public class TileCollection : Epsitec.Common.Widgets.Collections.WidgetCollection<GenericTile>
 		{
 			public TileCollection(GroupingTile host)
 				: base (host)
@@ -382,6 +385,32 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#endregion
 
+
+		private void AttachEventHandlers(GenericTile widget)
+		{
+			widget.Entered += this.HandleChildWidgetEnteredOrExited;
+			widget.Exited  += this.HandleChildWidgetEnteredOrExited;
+			widget.Selected   += this.HandleChildWidgetSelectedOrDeselected;
+			widget.Deselected += this.HandleChildWidgetSelectedOrDeselected;
+		}
+
+		private void DetachEventHandlers(GenericTile widget)
+		{
+			widget.Entered -= this.HandleChildWidgetEnteredOrExited;
+			widget.Exited  -= this.HandleChildWidgetEnteredOrExited;
+			widget.Selected   -= this.HandleChildWidgetSelectedOrDeselected;
+			widget.Deselected -= this.HandleChildWidgetSelectedOrDeselected;
+		}
+
+		private void HandleChildWidgetEnteredOrExited(object sender, MessageEventArgs e)
+		{
+			this.Invalidate ();
+		}
+
+		private void HandleChildWidgetSelectedOrDeselected(object sender)
+		{
+			this.Invalidate ();
+		}
 
 		static GroupingTile()
 		{
