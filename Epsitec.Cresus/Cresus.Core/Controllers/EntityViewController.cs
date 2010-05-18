@@ -10,8 +10,10 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -128,8 +130,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
-		private void CreateEntity(Widgets.GenericTile tile)
+#if false
+		private void CreateEntity(GenericTile tile)
 		{
 			var accessor = tile.EntitiesAccessor;
 			var newEntity = accessor.Create ();
@@ -139,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Orchestrator.ShowSubView (this, controller);
 		}
 
-		private void RemoveEntity(Widgets.GenericTile tile)
+		private void RemoveEntity(GenericTile tile)
 		{
 			var accessor = tile.EntitiesAccessor;
 
@@ -152,20 +154,20 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.Orchestrator.RebuildView ();
 			}
 		}
-
+#endif
 
 		private void HandleTileCreateEntity(object sender)
 		{
 			//	Appelé lorsque le bouton "+" d'une tuile est cliqué.
-			var tile = sender as Widgets.GenericTile;
-			this.CreateEntity (tile);
+			var tile = sender as GenericTile;
+//-			this.CreateEntity (tile);
 		}
 
 		private void HandleTileRemoveEntity(object sender)
 		{
 			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
-			var tile = sender as Widgets.GenericTile;
-			this.RemoveEntity (tile);
+			var tile = sender as GenericTile;
+//-			this.RemoveEntity (tile);
 		}
 
 

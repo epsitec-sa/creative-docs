@@ -13,7 +13,7 @@ using Epsitec.Cresus.Core.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets
+namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// Ce widget est un conteneur générique, qui peut être sélectionné. L'un de ses côté est
@@ -37,16 +37,10 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Détermine si le widget est sensible au survol de la souris.
 		/// </summary>
 		/// <value><c>true</c> if [entered sensitivity]; otherwise, <c>false</c>.</value>
-		public bool EnteredSensitivity
+		public bool AutoHilite
 		{
-			get
-			{
-				return this.enteredSensitivity;
-			}
-			set
-			{
-				this.enteredSensitivity = value;
-			}
+			get;
+			set;
 		}
 
 		public bool IsCompact
@@ -54,6 +48,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			get;
 			set;
 		}
+
+		public Controllers.TileController Controller
+		{
+			get;
+			set;
+		}
+
 		
 		public override TileArrowMode ArrowMode
 		{
@@ -95,129 +96,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 
-
-		private TileArrowMode GetPaintingArrowMode()
-		{
-			if (this.IsReadOnly && this.IsCompact)
-			{
-				if (this.enteredSensitivity && this.IsEntered && this.IsSelected)
-				{
-					return Widgets.TileArrowMode.VisibleReverse;
-				}
-
-				if (this.enteredSensitivity && this.IsEntered)
-				{
-					return Widgets.TileArrowMode.VisibleDirect;
-				}
-
-				if (this.IsSelected)
-				{
-					return Widgets.TileArrowMode.VisibleDirect;
-				}
-			}
-
-			return Widgets.TileArrowMode.None;
-		}
-
-		private Color GetSurfaceColor()
-		{
-			if (this.IsReadOnly == false)
-			{
-				return Tile.SurfaceEditingColor;
-			}
-			else if (this.IsCompact)
-			{
-				if (this.enteredSensitivity && this.IsEntered && this.IsSelected)
-				{
-					return Tile.SurfaceHilitedColor;
-				}
-
-				if (this.enteredSensitivity && this.IsEntered)
-				{
-					return Tile.ThicknessHilitedColor;
-				}
-
-				if (this.IsSelected)
-				{
-					return Tile.SurfaceSelectedContainerColor;
-				}
-			}
-
-			return Color.Empty;
-		}
-
-		private Color GetOutlineColor()
-		{
-			if (this.IsCompact && this.IsReadOnly)
-			{
-				if (this.enteredSensitivity && this.IsEntered)
-				{
-					return Tile.BorderColor;
-				}
-
-				if (this.IsSelected)
-				{
-					return Tile.BorderColor;
-				}
-			}
-
-			return Color.Empty;
-		}
-
-		private Color GetThicknessColor()
-		{
-			return Color.Empty;
-		}
-
-
-		private Color GetReverseSurfaceColor()
-		{
-			if (this.IsReadOnly == false)
-			{
-				return Color.Empty;
-			}
-			else
-			{
-				return Tile.ThicknessHilitedColor;
-			}
-		}
-
-		private Color GetReverseOutlineColor()
-		{
-			return Tile.BorderColor;
-		}
-
-		private Color GetReverseThicknessColor()
-		{
-			return Color.Empty;
-		}
-
-		public Accessors.AbstractEntityAccessor EntitiesAccessor
-		{
-			get;
-			set;
-		}
-
-		public AbstractEntity Entity
-		{
-			get;
-			set;
-		}
-
-		public Controllers.ViewControllerMode ChildrenMode
-		{
-			get;
-			set;
-		}
-
-		public bool EnableCreateAndRemoveButton
-		{
-			get;
-			set;
-		}
-
-
-		public void OpenOrCloseSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		public void ToggleSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
 		{
 			if (this.IsSelected)
 			{
@@ -243,17 +122,23 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
 		{
-			this.subViewController = EntityViewController.CreateEntityViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
-			this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
+			var controller = this.CreateSubViewController (orchestrator);
 
-			orchestrator.ShowSubView (parentController, this.subViewController);
-			
-			this.SetSelected (true);
+			if (controller != null)
+			{
+				this.subViewController = controller;
+				this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
 
-			System.Diagnostics.Debug.Assert (this.subViewController != null);
-			System.Diagnostics.Debug.Assert (this.IsSelected);
+				orchestrator.ShowSubView (parentController, this.subViewController);
+
+				this.SetSelected (true);
+
+				System.Diagnostics.Debug.Assert (this.subViewController != null);
+				System.Diagnostics.Debug.Assert (this.IsSelected);
+			}
 		}
 
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -264,6 +149,125 @@ namespace Epsitec.Cresus.Core.Widgets
 			base.Dispose (disposing);
 		}
 
+		
+		private TileArrowMode GetPaintingArrowMode()
+		{
+			if (this.IsReadOnly && this.IsCompact)
+			{
+				if (this.AutoHilite)
+				{
+					if (this.IsEntered)
+					{
+						if (this.IsSelected)
+						{
+							return Widgets.TileArrowMode.VisibleReverse;
+						}
+						else
+						{
+							return Widgets.TileArrowMode.VisibleDirect;
+						}
+					}
+				}
+
+				if (this.IsSelected)
+				{
+					return Widgets.TileArrowMode.VisibleDirect;
+				}
+			}
+
+			return Widgets.TileArrowMode.None;
+		}
+
+		private Color GetSurfaceColor()
+		{
+			if (this.IsReadOnly == false)
+			{
+				return Tile.SurfaceEditingColor;
+			}
+			else if (this.IsCompact)
+			{
+				if (this.AutoHilite)
+				{
+					if (this.IsEntered)
+					{
+						if (this.IsSelected)
+						{
+							return Tile.SurfaceHilitedColor;
+						}
+						else
+						{
+							return Tile.ThicknessHilitedColor;
+						}
+					}
+				}
+
+				if (this.IsSelected)
+				{
+					return Tile.SurfaceSelectedContainerColor;
+				}
+			}
+
+			return Color.Empty;
+		}
+
+		private Color GetOutlineColor()
+		{
+			if (this.IsCompact && this.IsReadOnly)
+			{
+				if (this.AutoHilite && this.IsEntered)
+				{
+					return Tile.BorderColor;
+				}
+
+				if (this.IsSelected)
+				{
+					return Tile.BorderColor;
+				}
+			}
+
+			return Color.Empty;
+		}
+
+		private Color GetThicknessColor()
+		{
+			return Color.Empty;
+		}
+
+		private Color GetReverseSurfaceColor()
+		{
+			if (this.IsReadOnly == false)
+			{
+				return Color.Empty;
+			}
+			else
+			{
+				return Tile.ThicknessHilitedColor;
+			}
+		}
+
+		private Color GetReverseOutlineColor()
+		{
+			return Tile.BorderColor;
+		}
+
+		private Color GetReverseThicknessColor()
+		{
+			return Color.Empty;
+		}
+
+
+		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			if (this.Controller == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.Controller.CreateSubViewController (orchestrator);
+			}
+		}
+		
 		private void HandleSubViewControllerDisposing(object sender)
 		{
 			this.SetSelected (false);
@@ -271,7 +275,5 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		private CoreViewController subViewController;
-
-		private bool enteredSensitivity;
 	}
 }

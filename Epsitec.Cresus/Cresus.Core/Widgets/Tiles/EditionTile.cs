@@ -9,7 +9,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Widgets
+namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// Cette tuile contient tout ce qu'il faut pour éditer une entité.

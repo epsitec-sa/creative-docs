@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Widgets.Tiles;
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EditionUriContactViewController : EntityViewController<Entities.UriContactEntity>
@@ -23,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public override void CreateUI(Widget container)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
-			Widgets.GroupingTile group;
+			GroupingTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new Accessors.UriContactAccessor (null, this.Entity, false);
