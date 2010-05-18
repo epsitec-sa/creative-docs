@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public override void CreateUI(Widget container)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
-			GroupingTile group;
+			TitleTile group;
 
 			var contact = this.Entity;
 			var accessor = new Accessors.TelecomTypeAccessor (null, contact, false);

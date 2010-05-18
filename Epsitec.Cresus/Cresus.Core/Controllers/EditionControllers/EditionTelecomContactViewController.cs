@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			
-			GroupingTile group;
+			TitleTile group;
 			EditionTile tile;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public override void CreateUI(Widget container)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
-			GroupingTile group;
+			TitleTile group;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new Accessors.UriContactAccessor (null, this.Entity, false);

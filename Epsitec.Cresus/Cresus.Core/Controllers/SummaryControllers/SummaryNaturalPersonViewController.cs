@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryNaturalPersonViewController : SummaryAbstractPersonViewController<Entities.NaturalPersonEntity>
@@ -8,6 +10,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		public SummaryNaturalPersonViewController(string name, Entities.NaturalPersonEntity entity)
 			: base (name, entity)
 		{
+		}
+
+
+		public override void CreateUI(Common.Widgets.Widget container)
+		{
+			base.CreateUI (container);
 		}
 
 		protected override void CreatePersonTile(UIBuilder builder)
