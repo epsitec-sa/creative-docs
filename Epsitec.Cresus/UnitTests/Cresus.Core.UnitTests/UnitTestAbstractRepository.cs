@@ -122,8 +122,6 @@ namespace Epsitec.Cresus.Core
 
 				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
 				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
-				//NaturalPersonEntity alfred = persons[0];
-
 				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
 
 				foreach (NaturalPersonEntity person in persons)

@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow dataRow)
+		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
 
@@ -149,7 +149,8 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						this.DeserializeEntityLocalWithReference (entity, dataRow, currentId);
+						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesRow, currentId);
+						this.DeserializeEntityLocal (entity, valuesRow, currentId);
 					}
 				}
 			}
@@ -514,7 +515,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, System.Data.DataRow referencesRow, Druid entityId)
 		{
 			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
@@ -522,13 +523,13 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						this.ReadFieldValueFromDataRow (entity, fieldDef, dataRow);
+						this.ReadFieldValueFromDataRow (entity, fieldDef, valuesRow);
 
 						break;
 
 					case FieldRelation.Reference:
 
-						object idAsObject = dataRow[this.SchemaEngine.GetDataColumnName (fieldDef.Id)];
+						object idAsObject = referencesRow[this.SchemaEngine.GetDataColumnName (fieldDef.Id)];
 
 						if (idAsObject != System.DBNull.Value)
 						{
