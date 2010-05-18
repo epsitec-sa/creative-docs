@@ -75,6 +75,12 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
+			public override int GetHashCode()
+			{
+				return (this.name == null ? 0 : this.name.GetHashCode ())
+					^ (this.title == null ? 0 : this.title.GetHashCode ());
+			}
+
 			private readonly string name;
 			private readonly string title;
 			private readonly WindowPlacement placement;

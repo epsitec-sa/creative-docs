@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core
 		{
 			var group = this.CreateSummaryGroupingTile (iconUri, title);
 
-			group.IsEditing = true;
+			group.IsReadOnly = false;
 
 			return group;
 		}
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
-				ArrowLocation = Direction.Right,
+				ArrowDirection = Direction.Right,
 				EnteredSensitivity = true,
 				TopLeftIconUri = iconUri,
 				Title = title,
@@ -55,14 +55,14 @@ namespace Epsitec.Cresus.Core
 				Parent = parent.Container,
 				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
-				ArrowLocation = Direction.Right,
+				ArrowDirection = Direction.Right,
 				ArrowEnabled = true,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode,
 				EnableCreateAndRemoveButton = accessor.EnableAddAndRemove,
-				IsEditing = false,
+				IsReadOnly = true,
 				Summary = accessor.Summary,
 			};
 
@@ -87,13 +87,13 @@ namespace Epsitec.Cresus.Core
 				Parent = parent.Container,
 				ParentGroupingTile = parent,
 				Dock = DockStyle.Top,
-				ArrowLocation = Direction.Right,
+				ArrowDirection = Direction.Right,
 				ArrowEnabled = false,
 				EnteredSensitivity = accessor.ViewControllerMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode,
-				IsEditing = true,
+				IsReadOnly = false,
 			};
 
 			UIBuilder.CreateTileHandler (tile, controller);
@@ -130,8 +130,8 @@ namespace Epsitec.Cresus.Core
 				//?GlyphShape = GlyphShape.ArrowLeft,
 				//?Dock = DockStyle.Left,
 				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.ArrowedTile.ArrowBreadth+2, 2, 2-1),
-				//?Margins = new Margins (2, Widgets.ArrowedTile.ArrowBreadth+2, 2, 2-1),
+				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 2-1),
+				//?Margins = new Margins (2, Widgets.ArrowedTileArrow.ArrowBreadth+2, 2, 2-1),
 			};
 
 
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core
 				Text = "Fermer",
 				PreferredWidth = 75,
 				Dock = DockStyle.Right,
-				Margins = new Margins(0, Widgets.ArrowedTile.ArrowBreadth+10, 10, 10),
+				Margins = new Margins(0, Widgets.ArrowedTileArrow.ArrowBreadth+10, 10, 10),
 			};
 
 			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);

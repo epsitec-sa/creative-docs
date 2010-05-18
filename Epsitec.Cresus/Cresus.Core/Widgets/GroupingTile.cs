@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TopLeftIconUri) et un titre (Title).
 	/// </summary>
-	public class GroupingTile : ArrowedTile
+	public class GroupingTile : Tile
 	{
 		public GroupingTile()
 		{
@@ -63,6 +63,44 @@ namespace Epsitec.Cresus.Core.Widgets
 			set
 			{
 				this.enteredSensitivity = value;
+			}
+		}
+
+		public override TileArrowMode ArrowMode
+		{
+			get
+			{
+				return this.GetPaintingArrowMode ();
+			}
+			set
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		public override TileArrow DirectArrow
+		{
+			get
+			{
+				return new TileArrow ()
+				{
+					OutlineColor = this.GetOutlineColor (),
+					ThicknessColor = this.GetThicknessColor (),
+					SurfaceColor = this.GetSurfaceColor (),
+				};
+			}
+		}
+
+		public override TileArrow ReverseArrow
+		{
+			get
+			{
+				return new TileArrow ()
+				{
+					OutlineColor = this.GetReverseOutlineColor (),
+					ThicknessColor = this.GetReverseThicknessColor (),
+					SurfaceColor = this.GetReverseSurfaceColor (),
+				};
 			}
 		}
 
@@ -163,7 +201,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				PreferredHeight = GroupingTile.titleHeight,
 				PreferredWidth = 0,
 				Dock = DockStyle.Top,
-				Margins = new Margins (2, GroupingTile.ArrowBreadth, 0, 0),
+				Margins = new Margins (2, TileArrow.Breadth, 0, 0),
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 			};
@@ -190,88 +228,64 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+
+		private TileArrowMode GetPaintingArrowMode()
 		{
-			PaintingArrowMode mode = this.GetPaintingArrowMode ();
-			Color surfaceColor     = this.GetSurfaceColor ();
-			Color outlineColor     = this.GetOutlineColor ();
-			Color thicknessColor   = this.GetThicknessColor ();
-
-			this.PaintArrow (graphics, clipRect, mode, surfaceColor, outlineColor, thicknessColor);
-		}
-
-		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			PaintingArrowMode mode = this.GetPaintingArrowMode ();
-
-			if (mode == Widgets.PaintingArrowMode.Revert)
+			if (this.IsReadOnly == false)
 			{
-				Color surfaceColor   = this.GetRevertSurfaceColor ();
-				Color outlineColor   = this.GetRevertOutlineColor ();
-				Color thicknessColor = this.GetRevertThicknessColor ();
-
-				this.PaintRevertArrow (graphics, clipRect, surfaceColor, outlineColor, thicknessColor);
-			}
-		}
-
-
-		private PaintingArrowMode GetPaintingArrowMode()
-		{
-			if (this.IsEditing)
-			{
-				return Widgets.PaintingArrowMode.None;
+				return Widgets.TileArrowMode.None;
 			}
 			else
 			{
 				if (this.enteredSensitivity && this.IsEntered && !this.HasManyChildren && this.HasSelectedChildren)
 				{
-					return Widgets.PaintingArrowMode.Revert;
+					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
 				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren))
 				{
-					return Widgets.PaintingArrowMode.Normal;
+					return Widgets.TileArrowMode.VisibleDirect;
 				}
 
 				if (this.HasSelectedChildren || this.HasEnteredChildren)
 				{
-					return Widgets.PaintingArrowMode.Normal;
+					return Widgets.TileArrowMode.VisibleDirect;
 				}
 			}
 
-			return Widgets.PaintingArrowMode.None;
+			return Widgets.TileArrowMode.None;
 		}
 
 		private Color GetSurfaceColor()
 		{
-			if (this.IsEditing)
+			if (this.IsReadOnly == false)
 			{
-				return ArrowedTile.SurfaceEditingColor;
+				return Tile.SurfaceEditingColor;
 			}
 			else
 			{
 				if (this.enteredSensitivity && (this.IsEntered || this.HasEnteredChildren))
 				{
-					return ArrowedTile.SurfaceHilitedColor;
+					return Tile.SurfaceHilitedColor;
 				}
 
 				if (this.HasSelectedChildren)
 				{
-					return ArrowedTile.SurfaceSelectedGroupingColor;
+					return Tile.SurfaceSelectedGroupingColor;
 				}
 			}
 
-			return ArrowedTile.SurfaceSummaryColor;
+			return Tile.SurfaceSummaryColor;
 		}
 
 		private Color GetOutlineColor()
 		{
-			return ArrowedTile.BorderColor;
+			return Tile.BorderColor;
 		}
 
 		private Color GetThicknessColor()
 		{
-			if (this.IsEditing)
+			if (this.IsReadOnly == false)
 			{
 				return Color.Empty;
 			}
@@ -279,7 +293,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.enteredSensitivity && ((this.IsEntered && !this.HasManyChildren) || this.HasEnteredChildren) && (!this.HasSelectedChildren || this.HasManyChildren))
 				{
-					return ArrowedTile.ThicknessHilitedColor;
+					return Tile.ThicknessHilitedColor;
 				}
 			}
 
@@ -287,32 +301,32 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private Color GetRevertSurfaceColor()
+		private Color GetReverseSurfaceColor()
 		{
-			if (this.IsEditing)
+			if (this.IsReadOnly == false)
 			{
 				return Color.Empty;
 			}
 			else
 			{
-				return ArrowedTile.SurfaceHilitedColor;
+				return Tile.SurfaceHilitedColor;
 			}
 		}
 
-		private Color GetRevertOutlineColor()
+		private Color GetReverseOutlineColor()
 		{
-			return ArrowedTile.BorderColor;
+			return Tile.BorderColor;
 		}
 
-		private Color GetRevertThicknessColor()
+		private Color GetReverseThicknessColor()
 		{
-			if (this.IsEditing)
+			if (this.IsReadOnly == false)
 			{
 				return Color.Empty;
 			}
 			else
 			{
-				return ArrowedTile.ThicknessHilitedColor;
+				return Tile.ThicknessHilitedColor;
 			}
 		}
 
