@@ -170,8 +170,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	public class CollectionTemplate<T>
 		where T : AbstractEntity, new ()
 	{
-		public CollectionTemplate()
+		public CollectionTemplate(string name)
 		{
+			this.name = name;
 		}
 
 		public IndirectAccessor<T, FormattedText> TitleAccessor
@@ -204,6 +205,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			set;
 		}
 
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
 		public bool IsCompatible(AbstractEntity entity)
 		{
 			T source = entity as T;
@@ -227,16 +236,58 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
 			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor,  source);
 		}
+
+		private readonly string name;
 	}
 
-	public class CollectionAccessor
+	public abstract class CollectionAccessor
 	{
-		public static void Create<T1, T2, T3>(T1 value, CollectionTemplate<T2> template, System.Func<T1, System.Collections.Generic.IList<T3>> action)
+		public static CollectionAccessor Create<T1, T2, T3>(T1 source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 			where T1 : AbstractEntity, new ()
-			where T2 : T3, new ()
-			where T3 : AbstractEntity, new ()
+			where T2 : AbstractEntity, new ()
+			where T3 : T2, new ()
 		{
+			return new CollectionAccessor<T1, T2, T3> (source, collectionResolver, template);
 		}
+
+		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
+	}
+
+	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
+		where T1 : AbstractEntity, new ()
+		where T2 : AbstractEntity, new ()
+		where T3 : T2, new ()
+	{
+		public CollectionAccessor(T1 source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+		{
+			this.source = source;
+			this.collectionResolver = collectionResolver;
+			this.template = template;
+		}
+
+		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
+		{
+			var collection = this.collectionResolver (this.source);
+
+			int index = 0;
+
+			foreach (var item in collection)
+			{
+				if (this.template.IsCompatible (item))
+				{
+					var name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", this.template.Name, index);
+					var data = summaryDataGetter (name, index);
+
+					this.template.BindSummaryData (data, item);
+
+					yield return data;
+				}
+			}
+		}
+
+		private readonly T1 source;
+		private System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver;
+		private readonly CollectionTemplate<T3> template;
 	}
 
 	public class Accessor

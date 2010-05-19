@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		public override void CreateUI(Common.Widgets.Widget container)
 		{
-//			base.CreateUI (container);
+			//			base.CreateUI (container);
 
 			var builder = new UIBuilder (container, this);
 			var items   = new List<SummaryData> ();
@@ -40,39 +40,24 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var acc1 = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
 			var acc2 = acc1.GetAccessor (this.Entity.Contacts[0] as Entities.MailContactEntity);
 
-			var template1 = new CollectionTemplate<Entities.MailContactEntity>
+			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 			{
 				Filter				= x => x is Entities.MailContactEntity,
 				TextAccessor		= IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
 				CompactTextAccessor = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
 			};
-			
-			var res1 = acc2.ExecuteGetter ();
 
-			CollectionAccessor.Create (this.Entity, template1, x => x.Contacts);
+			var coll1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
 
-			for (int i = 0; i < this.Entity.Contacts.Count; i++)
-			{
-				var contact = this.Entity.Contacts[i];
-
-				if (template1.IsCompatible (contact))
+			items.AddRange (coll1.Resolve (
+				(name, index) => new SummaryData
 				{
-					var data =
-						new SummaryData
-						{
-							Rank				= 2000 + i,
-							Name				= string.Format (System.Globalization.CultureInfo.InvariantCulture, "MailContact.{0}", i),
-							IconUri				= "Data.Mail",
-							Title				= new FormattedText ("Adresse"),
-							CompactTitle		= new FormattedText ("Adresse"),
-						};
-
-					template1.BindSummaryData (data, contact);
-
-					items.Add (data);
-				}
-			}
-
+					Rank		 = 2000 + index,
+					Name		 = name,
+					IconUri		 = "Data.Mail",
+					Title		 = new FormattedText ("Adresse"),
+					CompactTitle = new FormattedText ("Adresse"),
+				}));
 
 			builder.MapDataToTiles (items);
 		}
