@@ -36,26 +36,41 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
 				});
 
+
+			var acc1 = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
+			var acc2 = acc1.GetAccessor (this.Entity.Contacts[0] as Entities.MailContactEntity);
+
+			var template1 = new CollectionTemplate<Entities.MailContactEntity>
+			{
+				Filter				= x => x is Entities.MailContactEntity,
+				TextAccessor		= IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
+				CompactTextAccessor = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
+			};
+			
+			var res1 = acc2.ExecuteGetter ();
+
+			CollectionAccessor.Create (this.Entity, template1, x => x.Contacts);
+
 			for (int i = 0; i < this.Entity.Contacts.Count; i++)
 			{
-				var contact = this.Entity.Contacts[i] as Entities.MailContactEntity;
-                
-				if (contact == null)
-                {
-					continue;
-                }
+				var contact = this.Entity.Contacts[i];
 
-				items.Add (
-					new SummaryData
-					{
-						Rank				= 2000 + i,
-						Name				= string.Format (System.Globalization.CultureInfo.InvariantCulture, "MailContact{0}", i),
-						IconUri				= "Data.Mail",
-						Title				= new FormattedText ("Adresse"),
-						CompactTitle		= new FormattedText ("Adresse"),
-						TextAccessor		= Accessor.Create (contact, x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
-						CompactTextAccessor = Accessor.Create (contact, x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
-					});
+				if (template1.IsCompatible (contact))
+				{
+					var data =
+						new SummaryData
+						{
+							Rank				= 2000 + i,
+							Name				= string.Format (System.Globalization.CultureInfo.InvariantCulture, "MailContact.{0}", i),
+							IconUri				= "Data.Mail",
+							Title				= new FormattedText ("Adresse"),
+							CompactTitle		= new FormattedText ("Adresse"),
+						};
+
+					template1.BindSummaryData (data, contact);
+
+					items.Add (data);
+				}
 			}
 
 
