@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core
 				CommentEntity[] mailComments = EntityBuilder.CreateComments (dataContext, big ? 2500 : 100);
 				dataContext.SaveChanges ();
 
-				CountryEntity[] countries = EntityBuilder.CreateCountries (dataContext, 200);
+				CountryEntity[] countries = EntityBuilder.CreateCountries (dataContext, 5);
 				dataContext.SaveChanges ();
 
 				RegionEntity[] regions = EntityBuilder.CreateRegions (dataContext, countries, big ? 50 : 10);

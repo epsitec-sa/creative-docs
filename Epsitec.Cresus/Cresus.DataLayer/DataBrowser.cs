@@ -59,25 +59,67 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> valuesData = this.GetValues (transaction, entityId, example);
-				List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> referencesData = this.GetReferences (transaction, entityId, example);
-				Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> collectionsData = this.GetCollections (transaction, entityId, example);
-
-				for (int i = 0; i < valuesData.Count; i++)
+				foreach (var entityData in this.GetEntitiesData(transaction, entityId, example))
 				{
-					DbKey rowKey = valuesData[i].Item1;
-					Druid realEntityId = valuesData[i].Item2;
-					Dictionary<StructuredTypeField, object> fieldValues = valuesData[i].Item3;
-					Dictionary<StructuredTypeField, DbKey> referencesKeys = referencesData[i].Item2;
-					Dictionary<StructuredTypeField, DbKey[]> collectionsKeys = new Dictionary<StructuredTypeField, DbKey[]> ();
-
-					foreach (StructuredTypeField field in collectionsData.Keys)
-					{
-						collectionsKeys[field] = collectionsData[field].Where(t => t.Item1 == rowKey).Select(t => t.Item2).ToArray();
-					}
+					DbKey rowKey = entityData.Item1;
+					Druid realEntityId = entityData.Item2;
+					Dictionary<StructuredTypeField, object> fieldValues = entityData.Item3;
+					Dictionary<StructuredTypeField, DbKey> referencesKeys = entityData.Item4;
+					Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys = entityData.Item5;
 
 					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, fieldValues, referencesKeys, collectionsKeys) as EntityType;
 				}
+			}
+		}
+
+
+		private IEnumerable<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>, Dictionary<StructuredTypeField, DbKey>, Dictionary<StructuredTypeField, List<DbKey>>>> GetEntitiesData(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		{
+			List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> valuesData = this.GetValues (transaction, entityId, example);
+			List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> referencesData = this.GetReferences (transaction, entityId, example);
+			Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> collectionsData = this.GetCollections (transaction, entityId, example);
+
+			if (valuesData.Count != referencesData.Count)
+			{
+				throw new System.Exception ("Invalid data.");
+			}
+
+			Dictionary<StructuredTypeField, int> collectionIterators = new Dictionary<StructuredTypeField, int> ();
+
+			foreach (StructuredTypeField field in collectionsData.Keys)
+			{
+				collectionIterators[field] = 0;
+			}
+
+			for (int i = 0; i < valuesData.Count; i++)
+			{
+				if (valuesData[i].Item1 != referencesData[i].Item1)
+				{
+					throw new System.Exception ("Invalid data");
+				}
+
+				DbKey rowKey = valuesData[i].Item1;
+				Druid realEntityId = valuesData[i].Item2;
+				Dictionary<StructuredTypeField, object> fieldValues = valuesData[i].Item3;
+				Dictionary<StructuredTypeField, DbKey> referencesKeys = referencesData[i].Item2;
+
+				Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys = new Dictionary<StructuredTypeField, List<DbKey>> ();
+
+				foreach (StructuredTypeField field in collectionsData.Keys)
+				{
+					List<System.Tuple<DbKey, DbKey>> keys = collectionsData[field];
+					List<DbKey> currentKeys = new List<DbKey> ();
+
+					for (int index = collectionIterators[field]; index < keys.Count && keys[index].Item1 == rowKey; index++)
+					{
+						currentKeys.Add (keys[index].Item2);
+					}
+
+					collectionIterators[field] = collectionIterators[field] + currentKeys.Count;
+					collectionsKeys[field] = currentKeys;
+				}
+
+				yield return System.Tuple.Create (rowKey, realEntityId, fieldValues, referencesKeys, collectionsKeys);
 			}
 		}
 
@@ -115,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer
 						}
 					}
 
-					values.Add (new System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>> (entityKey, realEntityId, currentValues));
+					values.Add (System.Tuple.Create (entityKey, realEntityId, currentValues));
 				}
 			}
 
@@ -173,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer
 						}
 					}
 
-					references.Add (new System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>> (sourceKey, currentReferences));
+					references.Add (System.Tuple.Create (sourceKey, currentReferences));
 				}
 			}
 
@@ -262,13 +304,15 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
+				bool isLeafType = currentEntityId == heritedEntityIds.First();
 				bool isRootType = currentEntityId == heritedEntityIds.Last ();
+
 				tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
 
 				StructuredTypeField[] localDefinedFields = example.GetEntityContext ().GetEntityLocalFieldDefinitions (currentEntityId).Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
 				StructuredTypeField[] localDefinedValueFields = localDefinedFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
 				
-				if (!isRootType && localDefinedValueFields.Length > 0)
+				if (!isRootType && (localDefinedValueFields.Length > 0 || isLeafType))
 				{
 					this.AddSubTypingJoin (tableAliasManager, reader, currentEntityId, heritedEntityIds.Last ());
 				}
@@ -515,11 +559,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
+				bool isLeafType = currentEntityId == heritedEntityIds.First ();
 				bool isRootType = currentEntityId == heritedEntityIds.Last ();
 				
 				StructuredTypeField[] localValueFields = example.GetEntityContext ().GetEntityLocalFieldDefinitions (currentEntityId).Where (field => field.Relation == FieldRelation.None).ToArray ();
 
-				if (isRootType || localValueFields.Any(field => definedFieldIds.Contains (field.Id)))
+				if (isRootType || isLeafType || localValueFields.Any (field => definedFieldIds.Contains (field.Id)))
 				{
 					tableAliasManager.GetNextSubtypeAlias (currentEntityId.ToResourceId ());
 				}

@@ -54,13 +54,13 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
 				watch.Restart ();
-				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
+				repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).Count ();
 				watch.Stop ();
 
 				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
 				watch.Restart ();
-				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
+				repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).Count ();
 				watch.Stop ();
 
 				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
