@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, DbKey[]> collectionKeys)
+		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, List<DbKey>> collectionKeys)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
 
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, DbKey[]> collectionsKeys, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
