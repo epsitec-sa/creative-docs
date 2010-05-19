@@ -161,7 +161,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private void ForEachField(EntityDataVersion version, string root, System.Action<EntityFieldPath, StructuredTypeField, object> action)
 		{
-			IValueStore store;
+			ICloneableValueStore store;
 			
 			switch (version)
 			{
@@ -541,13 +541,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			object value;
 
-			if ((this.ModifiedValues != null) &&
-				(this.IsDefiningOriginalValues == false))
+			if (this.ModifiedValues != null && this.IsDefiningOriginalValues == false)
 			{
 				value = this.ModifiedValues.GetValue (id);
 
-				if ((this.OriginalValues != null) &&
-					(UndefinedValue.IsUndefinedValue (value)))
+				if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
 				{
 					value = this.OriginalValues.GetValue (id);
 				}
@@ -655,7 +653,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
-		internal IEnumerable<IValueStore> InternalGetValueStores()
+		internal IEnumerable<ICloneableValueStore> InternalGetValueStores()
 		{
 			if (this.OriginalValues != null)
 			{
@@ -779,7 +777,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual IValueStore OriginalValues
+		protected virtual ICloneableValueStore OriginalValues
 		{
 			get
 			{
@@ -787,7 +785,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual IValueStore ModifiedValues
+		protected virtual ICloneableValueStore ModifiedValues
 		{
 			get
 			{
@@ -823,12 +821,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal void SetModifiedValues(IValueStore values)
+		internal void SetModifiedValues(ICloneableValueStore values)
 		{
 			this.modifiedValues = values;
 		}
 
-		internal IValueStore GetModifiedValues()
+		internal ICloneableValueStore GetModifiedValues()
 		{
 			if (this.ModifiedValues == null)
 			{
@@ -837,12 +835,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.ModifiedValues;
 		}
 
-		internal void SetOriginalValues(IValueStore values)
+		internal void SetOriginalValues(ICloneableValueStore values)
 		{
 			this.originalValues = values;
 		}
 
-		internal IValueStore GetOriginalValues()
+		internal ICloneableValueStore GetOriginalValues()
 		{
 			if (this.OriginalValues == null)
 			{
@@ -1072,7 +1070,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Sets the value. See <see cref="IValueStore.SetValue"/> for additional
+		/// Sets the value. See <see cref="ICloneableValueStore.SetValue"/> for additional
 		/// details (the default mode will be used).
 		/// </summary>
 		/// <param name="id">The identifier of the value.</param>
@@ -1200,8 +1198,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		private long dataGeneration;
 		private int defineOriginalValuesCount;
 		private bool calculationsDisabled;
-		private IValueStore originalValues;
-		private IValueStore modifiedValues;
+		private ICloneableValueStore originalValues;
+		private ICloneableValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
 	}
