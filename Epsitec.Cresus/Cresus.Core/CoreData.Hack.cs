@@ -5703,6 +5703,9 @@ namespace Epsitec.Cresus.Core
 			street1.StreetName = "Ch. du Fontenay 3";
 			street1.Complement = "2ème étage";
 
+			var street2 = context.CreateEmptyEntity<StreetEntity> ();
+			street2.StreetName = "Ch. du Fontenay 6";
+
 			var postbox1 = context.CreateEmptyEntity<PostBoxEntity> ();
 			postbox1.Number = "Case postale 1234";
 
@@ -5710,6 +5713,10 @@ namespace Epsitec.Cresus.Core
 			address1.Location = yverdon;
 			address1.Street = street1;
 			address1.PostBox = postbox1;
+
+			var address2 = context.CreateEmptyEntity<AddressEntity> ();
+			address2.Location = yverdon;
+			address2.Street = street2;
 
 			var comment1 = context.CreateEmptyEntity<CommentEntity> ();
 			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
@@ -5745,7 +5752,7 @@ namespace Epsitec.Cresus.Core
 			contact1.LegalPerson = enterprise;
 			contact1.NaturalPerson = person1;
 
-			contact2.Address = address1;
+			contact2.Address = address2;
 			contact2.Complement = "Domicile privé";
 			contact2.Roles.Add (role3);
 			contact2.LegalPerson = enterprise;

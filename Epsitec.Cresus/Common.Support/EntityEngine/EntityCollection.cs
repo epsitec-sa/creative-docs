@@ -10,12 +10,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	public class EntityCollection : ObservableList<object>
+	{
+	}
+
 	/// <summary>
 	/// The <c>EntityCollection</c> class is used to store and represent lists
 	/// of data for collection fields in a parent entity.
 	/// </summary>
 	/// <typeparam name="T">The type of the list items.</typeparam>
-	public sealed class EntityCollection<T> : ObservableList<object>, IList<T>, System.Collections.IList, IEntityCollection, INotifyCollectionChangedProvider where T : AbstractEntity
+	public sealed class EntityCollection<T> : EntityCollection, IList<T>, System.Collections.IList, IEntityCollection, INotifyCollectionChangedProvider where T : AbstractEntity
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityCollection&lt;T&gt;"/> class.
