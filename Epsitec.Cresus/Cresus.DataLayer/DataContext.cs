@@ -20,13 +20,23 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public sealed partial class DataContext : System.IDisposable, IEntityPersistenceManager
 	{
-		public DataContext(DbInfrastructure infrastructure)
+
+
+		public DataContext(DbInfrastructure infrastructure) : this (infrastructure, false)
 		{
+		
+		}
+
+		public DataContext(DbInfrastructure infrastructure, bool bulkMode)
+		{
+			this.bulkMode = bulkMode;
 			this.infrastructure = infrastructure;
 			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
 			this.richCommand = new DbRichCommand (this.infrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
+			this.entityBulkLoaded = new Dictionary<Druid, bool> ();
+			this.entityDataLoaded = new Dictionary<AbstractEntity, bool> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
@@ -60,8 +70,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		public bool BulkMode
 		{
-			get;
-			set;
+			get
+			{
+				return this.bulkMode;
+			}
 		}
 
 		/// <summary>
@@ -310,6 +322,10 @@ namespace Epsitec.Cresus.DataLayer
 				createRow = false;
 			}
 
+			if (!createRow && (!this.entityDataLoaded.ContainsKey(entity) || !this.entityDataLoaded[entity]))
+			{
+				this.LoadDataRows (entity);
+			}
 
 			while (id.IsValid)
 			{
@@ -413,6 +429,13 @@ namespace Epsitec.Cresus.DataLayer
 				this.DeserializeEntity (entity, realEntityId, rowKey);
 			}
 
+			this.entityDataLoaded[entity] = true;
+
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (realEntityId))
+			{
+				this.entityBulkLoaded[currentId] = true;
+			}
+
 			return entity;
 		}
 
@@ -458,7 +481,7 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 
 					case FieldRelation.Reference:
-						entity.InternalSetValue (fieldDef.Id, Collection.GetFirst (this.ReadFieldRelation(entity, entityId, fieldDef), null));
+						entity.InternalSetValue (fieldDef.Id, this.ReadFieldRelation (entity, entityId, fieldDef).FirstOrDefault ());
 						break;
 
 					case FieldRelation.Collection:
@@ -945,6 +968,35 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+
+		private void LoadDataRows(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
+
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			{
+				if (!this.BulkMode || (!this.entityBulkLoaded.ContainsKey (currentId) || !this.entityBulkLoaded[currentId]))
+				{
+					this.LoadDataRow (mapping.RowKey, currentId);
+
+					StructuredTypeField[] localFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).ToArray ();
+
+					foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection))
+					{
+						this.LoadRelationRows (currentId, this.GetRelationTableName (currentId, field), mapping.RowKey);
+					}
+
+					if (this.BulkMode)
+					{
+						this.entityBulkLoaded[currentId] = true;
+					}
+				}
+			}
+
+			this.entityDataLoaded[entity] = true;
+		}
+
+
 		private System.Data.DataRow LoadDataRow(DbKey rowKey, Druid entityId)
 		{
 			System.Data.DataRow row;
@@ -1302,11 +1354,14 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private readonly bool bulkMode;
 		private readonly DbInfrastructure infrastructure;
 		private readonly DbRichCommand richCommand;
 		private readonly SchemaEngine schemaEngine;
 		private readonly EntityContext entityContext;
 		private readonly EntityDataCache entityDataCache;
+		private readonly Dictionary<Druid, bool> entityBulkLoaded;
+		private readonly Dictionary<AbstractEntity, bool> entityDataLoaded;
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 	}

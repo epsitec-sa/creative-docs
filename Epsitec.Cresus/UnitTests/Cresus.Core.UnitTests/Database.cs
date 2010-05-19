@@ -37,8 +37,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.dbInfrastructure))
 		    {
-				dataContext.BulkMode = true;
-
 				dataContext.CreateSchema<AbstractPersonEntity> ();
 				dataContext.CreateSchema<MailContactEntity> ();
 				dataContext.CreateSchema<TelecomContactEntity> ();

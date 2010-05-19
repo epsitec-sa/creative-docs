@@ -142,8 +142,8 @@ namespace Epsitec.Cresus.Core
 				}
 				System.Diagnostics.Debug.WriteLine ("=====================================================");
 
-				//persons[0].Gender = persons[2].Gender;
-				//dataContext.SaveChanges ();
+				persons[0].Gender = persons[2].Gender;
+				dataContext.SaveChanges ();
 			}
 		}
 

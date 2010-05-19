@@ -10,7 +10,6 @@ using Epsitec.Cresus.Database;
 
 using System.Linq;
 using System.Collections.Generic;
-using System.Data;
 
 
 namespace Epsitec.Cresus.DataLayer
@@ -19,7 +18,6 @@ namespace Epsitec.Cresus.DataLayer
 
 	// TODO Add sorting criteria
 	// TODO Add comparison criteria
-	// TODO Implement that read/write stuff that we talked about with Pierre to ensure the consistency of write operations.
 	public class DataBrowser
 	{
 
@@ -79,11 +77,6 @@ namespace Epsitec.Cresus.DataLayer
 			List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> referencesData = this.GetReferences (transaction, entityId, example);
 			Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> collectionsData = this.GetCollections (transaction, entityId, example);
 
-			if (valuesData.Count != referencesData.Count)
-			{
-				throw new System.Exception ("Invalid data.");
-			}
-
 			Dictionary<StructuredTypeField, int> collectionIterators = new Dictionary<StructuredTypeField, int> ();
 
 			foreach (StructuredTypeField field in collectionsData.Keys)
@@ -93,11 +86,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			for (int i = 0; i < valuesData.Count; i++)
 			{
-				if (valuesData[i].Item1 != referencesData[i].Item1)
-				{
-					throw new System.Exception ("Invalid data");
-				}
-
 				DbKey rowKey = valuesData[i].Item1;
 				Druid realEntityId = valuesData[i].Item2;
 				Dictionary<StructuredTypeField, object> fieldValues = valuesData[i].Item3;
