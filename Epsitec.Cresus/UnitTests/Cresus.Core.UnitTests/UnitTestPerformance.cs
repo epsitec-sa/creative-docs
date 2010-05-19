@@ -40,9 +40,7 @@ namespace Epsitec.Cresus.Core
 		public void Check03RetrieveData()
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
-			{
-				dataContext.BulkMode = true;
-				
+			{				
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -54,7 +52,7 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 
 				watch.Restart ();
-				repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).Count ();
+				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
 				watch.Stop ();
 
 				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
@@ -68,7 +66,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static bool createAndPopulateDatabase = true;
+		private static bool createAndPopulateDatabase = false;
 		private static bool bigDatabase = true;
 	}
 }
