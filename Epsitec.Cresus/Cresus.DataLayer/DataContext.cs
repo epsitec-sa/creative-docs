@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow valuesRow, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, DbKey[]> collectionKeys)
+		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, DbKey[]> collectionKeys)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
 					{
-						this.DeserializeEntityLocalWithReference (entity, valuesRow, referencesKeys, collectionKeys, currentId);
+						this.DeserializeEntityLocalWithReference (entity, fieldValues, referencesKeys, collectionKeys, currentId);
 					}
 				}
 			}
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, System.Data.DataRow valuesRow, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, DbKey[]> collectionsKeys, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, DbKey[]> collectionsKeys, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
@@ -522,7 +522,11 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						this.ReadFieldValueFromDataRow (entity, field, valuesRow);
+						if (fieldValues.ContainsKey (field))
+						{
+							object value = this.GetFieldValue (entity, field, fieldValues[field]);
+							entity.InternalSetValue (field.Id, value);
+						}
 
 						break;
 
@@ -530,7 +534,8 @@ namespace Epsitec.Cresus.DataLayer
 
 						if (referenceKeys.ContainsKey (field))
 						{
-							entity.InternalSetValue (field.Id, this.InternalResolveEntity (referenceKeys[field], field.TypeId, EntityResolutionMode.DelayLoad));
+							object proxy = this.InternalResolveEntity (referenceKeys[field], field.TypeId, EntityResolutionMode.DelayLoad);
+							entity.InternalSetValue (field.Id, proxy);
 						}
 
 						break;
@@ -541,7 +546,8 @@ namespace Epsitec.Cresus.DataLayer
 
 						foreach (DbKey key in collectionsKeys[field])
 						{
-							collection.Add (this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad));
+							object proxy = this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad);
+							collection.Add (proxy);
 						}
 
 						break;
@@ -849,34 +855,43 @@ namespace Epsitec.Cresus.DataLayer
 		private object GetFieldValue(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
 			string columnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
-
+			object value = dataRow[columnName];
+			
 			System.Diagnostics.Debug.Assert (fieldDef.Expression == null);
 			System.Diagnostics.Debug.Assert (dataRow.Table.Columns.Contains (columnName));
 
-			object value = dataRow[columnName];
+			return this.GetFieldValue (entity, fieldDef, value);
+		}
 
-			if (System.DBNull.Value != value)
+		
+		private object GetFieldValue(AbstractEntity entity, StructuredTypeField field, object value)
+		{
+			string columnName = this.schemaEngine.GetDataColumnName (field.Id);
+			object newValue = value;
+
+			if (newValue != System.DBNull.Value)
 			{
-				IStringType stringType = fieldDef.Type as IStringType;
+				IStringType stringType = field.Type as IStringType;
 
 				if (stringType != null)
 				{
 					if (stringType.UseFormattedText)
 					{
-						value = FormattedText.CastToFormattedText (value);
+						newValue = FormattedText.CastToFormattedText (newValue);
 					}
 				}
 				else
 				{
-					var entityId  = entity.GetEntityStructuredTypeId ();
+					var entityId = entity.GetEntityStructuredTypeId ();
 					var tableName = this.schemaEngine.GetDataTableName (entityId);
 
-					value = this.ConvertFromInternal (value, tableName, columnName);
+					newValue = this.ConvertFromInternal (newValue, tableName, columnName);
 				}
 			}
 
-			return value;
+			return newValue;
 		}
+
 
 		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
