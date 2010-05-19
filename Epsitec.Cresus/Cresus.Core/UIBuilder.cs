@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -12,6 +13,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core
 {
@@ -514,6 +516,8 @@ namespace Epsitec.Cresus.Core
 
 		public void MapDataToTiles(IEnumerable<SummaryData> items)
 		{
+			items.ForEach (x => x.ExecuteAccessors ());
+
 			this.dataItems.Clear ();
 			this.dataItems.AddRange (items);
 			this.dataItems.Sort ();
@@ -524,6 +528,73 @@ namespace Epsitec.Cresus.Core
 			this.SetDataTilesParent (this.container);
 		}
 
+
+		public static FormattedText FormatText(params object[] values)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			bool startOfLine = true;
+
+			foreach (var value in values.Select (item => UIBuilder.ConvertToText (item)))
+			{
+				string text = value.Replace ("\n", "<br/>").Trim ();
+				
+				if (text.Length == 0)
+				{
+					continue;
+				}
+
+				if (!startOfLine && buffer[buffer.Length-1] != '(' && !UIBuilder.IsPunctuationMark (text[0]))
+				{
+					buffer.Append (" ");
+				}
+
+				buffer.Append (text);
+
+				startOfLine = text.EndsWith ("<br/>");
+			}
+
+			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
+		}
+
+		private static bool IsPunctuationMark(char c)
+		{
+			switch (c)
+			{
+				case ',':
+				case ';':
+				case '.':
+				case ':':
+				case '/':
+				case ')':
+					return true;
+
+				default:
+					return false;
+			}
+		}
+
+		public static string ConvertToText(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			string text = value as string;
+
+			if (text != null)
+			{
+				return text;
+			}
+
+			if (value is Date)
+			{
+				return ((Date)value).ToDateTime ().ToShortDateString ();
+			}
+
+			return value.ToString ();
+		}
 
 
 		private void CreateMissingDataTiles()
@@ -581,11 +652,13 @@ namespace Epsitec.Cresus.Core
 				{
 					item.SummaryTile.Summary = item.CompactText.ToString ();
 					item.TitleTile.Title     = item.CompactTitle.ToString ();
+					item.TitleTile.IconUri   = item.IconUri;
 				}
 				else
 				{
 					item.SummaryTile.Summary = item.Text.ToString ();
 					item.TitleTile.Title     = item.Title.ToString ();
+					item.TitleTile.IconUri   = item.IconUri;
 				}
 
 				long visualId = item.TitleTile.GetVisualSerialId ();
@@ -618,12 +691,17 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var item in this.dataItems)
 			{
-				long visualId = item.TitleTile.GetVisualSerialId ();
+				var titleTile = item.TitleTile;
+				long visualId = titleTile.GetVisualSerialId ();
 
 				if (!visualIds.Contains (visualId))
 				{
 					visualIds.Add (visualId);
-					item.TitleTile.Parent = parent;
+					titleTile.Parent = parent;
+					titleTile.Dock = DockStyle.Top;
+					titleTile.Margins = new Margins (0, 0, 0, 5);
+					titleTile.ArrowDirection = Direction.Right;
+					titleTile.IsReadOnly = true;
 				}
 			}
 		}

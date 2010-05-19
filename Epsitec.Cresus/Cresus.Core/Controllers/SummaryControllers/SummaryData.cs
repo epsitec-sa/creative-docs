@@ -13,6 +13,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	public class SummaryData : System.IComparable<SummaryData>
 	{
+		public SummaryData()
+		{
+			this.bindings = new List<AccessorBinding> ();
+		}
+
 		public string Name
 		{
 			get;
@@ -73,6 +78,45 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			get;
 			set;
 		}
+
+
+		public Accessor<FormattedText> TitleAccessor
+		{
+			set
+			{
+				this.bindings.Add (AccessorBinding.Create (value, x => this.Title = x));
+			}
+		}
+
+		public Accessor<FormattedText> TextAccessor
+		{
+			set
+			{
+				this.bindings.Add (AccessorBinding.Create (value, x => this.Text = x));
+			}
+		}
+
+		public Accessor<FormattedText> CompactTitleAccessor
+		{
+			set
+			{
+				this.bindings.Add (AccessorBinding.Create (value, x => this.CompactTitle = x));
+			}
+		}
+
+		public Accessor<FormattedText> CompactTextAccessor
+		{
+			set
+			{
+				this.bindings.Add (AccessorBinding.Create (value, x => this.CompactText = x));
+			}
+		}
+
+		public void ExecuteAccessors()
+		{
+			this.bindings.ForEach (x => x.Execute ());
+		}
+
 		
 		protected virtual void OnChanged()
 		{
@@ -106,5 +150,50 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		#endregion
 
 		public event EventHandler Changed;
+
+		private readonly List<AccessorBinding> bindings;
+	}
+
+	public class Accessor
+	{
+		public static Accessor<TResult> Create<T, TResult>(T value, System.Func<T, TResult> action)
+		{
+			return new Accessor<TResult> (() => action (value));
+		}
+	}
+
+	public class Accessor<T> : Accessor
+	{
+		public Accessor(System.Func<T> getter)
+		{
+			this.getter = getter;
+		}
+
+		public T ExecuteGetter()
+		{
+			return this.getter ();
+		}
+
+		private readonly System.Func<T> getter;
+	}
+
+	public class AccessorBinding
+	{
+		public AccessorBinding(System.Action action)
+		{
+			this.action = action;
+		}
+
+		public void Execute()
+		{
+			this.action ();
+		}
+
+		public static AccessorBinding Create<T>(Accessor<T> accessor, System.Action<T> setter)
+		{
+			return new AccessorBinding (() => setter (accessor.ExecuteGetter ()));
+		}
+
+		private readonly System.Action action;
 	}
 }

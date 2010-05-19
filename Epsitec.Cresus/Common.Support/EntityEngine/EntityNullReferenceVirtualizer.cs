@@ -218,6 +218,8 @@ namespace Epsitec.Common.Support.EntityEngine
 						Store.PatchNullReferences (entity, this, id);
 						this.values.Add (id, entity);
 					}
+
+					return entity;
 				}
 
 				return null;

@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.entity = entity;
+			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
 
 		public T Entity
