@@ -121,16 +121,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// references by instantiating empty entities on the fly, whereas <c>Store.SetValue</c> on such
 		/// an empty entity will transform it into a real entity. Warning: avanced magic is going on here.
 		/// </summary>
-		class Store : IValueStore
+		class Store : ICloneableValueStore
 		{
-			public Store(IValueStore realStore, AbstractEntity entity)
+			public Store(ICloneableValueStore realStore, AbstractEntity entity)
 			{
 				this.realStore = realStore;
 				this.values = new Dictionary<string, object> ();
 				this.entity = entity;
 			}
 
-			public Store(IValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
+			public Store(ICloneableValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
 				: this (realStore, entity)
 			{
 				this.parentStore = parentStore;
@@ -147,7 +147,9 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+
 			#region IValueStore Members
+
 
 			public object GetValue(string id)
 			{
@@ -182,13 +184,37 @@ namespace Epsitec.Common.Support.EntityEngine
 				return value;
 			}
 
+
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
 				this.TranformNullEntityInfoLiveEntity ();
 				this.ReplaceValue (id, value, mode);
 			}
 
+			
 			#endregion
+
+
+			#region ICloneable Members
+
+
+			object System.ICloneable.Clone()
+			{
+				Store clone = new Store ((ICloneableValueStore) this.realStore.Clone (), this.entity, (Store) ((System.ICloneable) this.parentStore).Clone (), this.fieldIdInParentStore);
+
+				foreach (KeyValuePair<string, object> item in this.values)
+				{
+					clone.values[item.Key] = item.Value;
+				}
+
+				clone.isReadOnly = this.isReadOnly;
+
+				return clone;
+			}
+
+
+			#endregion
+		
 
 			private void TranformNullEntityInfoLiveEntity()
 			{
@@ -267,8 +293,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				var store = new Store (entity.GetModifiedValues (), entity, parentStore, id);
 				entity.SetModifiedValues (store);
 			}
-			
-			private readonly IValueStore				realStore;
+
+			private readonly ICloneableValueStore		realStore;
 			private readonly Dictionary<string, object>	values;
 			private readonly AbstractEntity				entity;
 			private readonly Store						parentStore;
