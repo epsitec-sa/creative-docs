@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (!EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
 			{
-				entity.SetModifiedValues (new Store (entity.GetModifiedValues (), entity));
+//-				entity.SetModifiedValues (new Store (entity.GetModifiedValues (), entity));
 				entity.SetOriginalValues (new Store (entity.GetOriginalValues (), entity));
 			}
 		}
@@ -218,12 +218,16 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.values.Remove (id);
 			}
 
-			private AbstractEntity CreateEmptyEntityForUndefinedField(string id)
+			private object CreateEmptyEntityForUndefinedField(string id)
 			{
 				var info = this.GetStructuredTypeField (id);
 
-				if ((info != null) &&
-					(info.Relation == FieldRelation.Reference))
+				if (info == null)
+				{
+					return UndefinedValue.Value;
+				}
+
+				if (info.Relation == FieldRelation.Reference)
 				{
 					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
 
@@ -236,7 +240,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					return entity;
 				}
 
-				return null;
+				return UndefinedValue.Value;
 			}
 
 			private StructuredTypeField GetStructuredTypeField(string id)

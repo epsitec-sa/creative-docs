@@ -5700,64 +5700,101 @@ namespace Epsitec.Cresus.Core
 			var context = EntityContext.Current;
 
 			var street1 = context.CreateEmptyEntity<StreetEntity> ();
-			street1.StreetName = "Ch. du Fontenay 3";
-			street1.Complement = "2ème étage";
-
 			var street2 = context.CreateEmptyEntity<StreetEntity> ();
-			street2.StreetName = "Ch. du Fontenay 6";
-
 			var postbox1 = context.CreateEmptyEntity<PostBoxEntity> ();
-			postbox1.Number = "Case postale 1234";
-
 			var address1 = context.CreateEmptyEntity<AddressEntity> ();
-			address1.Location = yverdon;
-			address1.Street = street1;
-			address1.PostBox = postbox1;
-
 			var address2 = context.CreateEmptyEntity<AddressEntity> ();
-			address2.Location = yverdon;
-			address2.Street = street2;
-
 			var comment1 = context.CreateEmptyEntity<CommentEntity> ();
-			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
-
 			var contact1 = context.CreateEmptyEntity<MailContactEntity> ();
 			var contact2 = context.CreateEmptyEntity<MailContactEntity> ();
-
-			var enterprise = context.CreateEmptyEntity<LegalPersonEntity> ();
-			enterprise.Complement = "Logiciels de gestion Crésus";
-			enterprise.Name = "Epsitec SA";
-			enterprise.Contacts.Add (contact1);
-
 			var title1 = context.CreateEmptyEntity<PersonTitleEntity> ();
-			title1.Name = "Monsieur";
-			title1.ShortName = "M.";
-
 			var person1 = context.CreateEmptyEntity<NaturalPersonEntity> ();
-			person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-			person1.Firstname = "Pierre";
-			person1.Lastname = "Arnaud";
-			person1.Title = title1;
-			person1.Contacts.Add (contact1);
-			person1.Contacts.Add (contact2);
-
 			var person2 = context.CreateEmptyEntity<NaturalPersonEntity> ();
-			person2.Firstname = "Daniel";
-			person2.Lastname = "Roux";
+			var enterprise = context.CreateEmptyEntity<LegalPersonEntity> ();
+			
+			using (street1.DefineOriginalValues ())
+			{
+				street1.StreetName = "Ch. du Fontenay 3";
+				street1.Complement = "2ème étage";
+			}
 
-			contact1.Address = address1;
-			contact1.Complement = "Direction";
-			contact1.Comments.Add (comment1);
-			contact1.Roles.Add (role1);
-			contact1.LegalPerson = enterprise;
-			contact1.NaturalPerson = person1;
+			using (street2.DefineOriginalValues ())
+			{
+				street2.StreetName = "Ch. du Fontenay 6";
+			}
 
-			contact2.Address = address2;
-			contact2.Complement = "Domicile privé";
-			contact2.Roles.Add (role3);
-			contact2.LegalPerson = enterprise;
-			contact2.NaturalPerson = person1;
+			using (postbox1.DefineOriginalValues ())
+			{
+				postbox1.Number = "Case postale 1234";
+			}
 
+			using (address1.DefineOriginalValues ())
+			{
+				address1.Location = yverdon;
+				address1.Street = street1;
+				address1.PostBox = postbox1;
+			}
+
+			using (address2.DefineOriginalValues ())
+			{
+				address2.Location = yverdon;
+				address2.Street = street2;
+			}
+
+			using (comment1.DefineOriginalValues ())
+			{
+				comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
+			}
+
+			using (enterprise.DefineOriginalValues ())
+			{
+				enterprise.Complement = "Logiciels de gestion Crésus";
+				enterprise.Name = "Epsitec SA";
+				enterprise.Contacts.Add (contact1);
+			}
+
+			using (title1.DefineOriginalValues ())
+			{
+				title1.Name = "Monsieur";
+				title1.ShortName = "M.";
+			}
+
+			using (person1.DefineOriginalValues ())
+			{
+				person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
+				person1.Firstname = "Pierre";
+				person1.Lastname = "Arnaud";
+				person1.Title = title1;
+				person1.Contacts.Add (contact1);
+				person1.Contacts.Add (contact2);
+			}
+
+			using (person2.DefineOriginalValues ())
+			{
+				person2.Firstname = "Daniel";
+				person2.Lastname = "Roux";
+			}
+
+			using (contact1.DefineOriginalValues ())
+			{
+				contact1.Address = address1;
+				contact1.Complement = "Direction";
+				contact1.Comments.Add (comment1);
+				contact1.Roles.Add (role1);
+				contact1.LegalPerson = enterprise;
+				contact1.NaturalPerson = person1;
+			}
+
+			using (contact2.DefineOriginalValues ())
+			{
+				contact2.Address = address2;
+				contact2.Complement = "Domicile privé";
+				contact2.Roles.Add (role3);
+				contact2.LegalPerson = enterprise;
+				contact2.NaturalPerson = person1;
+			}
+
+#if false
 			var telecomType1 = context.CreateEmptyEntity<TelecomTypeEntity> ();
 			telecomType1.Code = "fixnet";
 			telecomType1.Name = "Téléphone fixe";
@@ -5824,6 +5861,7 @@ namespace Epsitec.Cresus.Core
 			uri3.Roles.Add (role3);
 
 			person1.Contacts.Add (uri3);
+#endif
 
 			persons.Add (person1);
 			persons.Add (person2);
