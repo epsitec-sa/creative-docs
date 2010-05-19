@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Core
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			bool startOfLine = true;
+			bool emptyItem = true;
 
 			foreach (var value in values.Select (item => UIBuilder.ConvertToText (item)))
 			{
@@ -541,17 +541,28 @@ namespace Epsitec.Cresus.Core
 				
 				if (text.Length == 0)
 				{
+					emptyItem = true;
 					continue;
 				}
 
-				if (!startOfLine && buffer[buffer.Length-1] != '(' && !UIBuilder.IsPunctuationMark (text[0]))
+				if (text[0] == '~')
+				{
+					if (emptyItem)
+					{
+						continue;
+					}
+
+					text = text.Substring (1);
+				}
+
+				if (!emptyItem && buffer[buffer.Length-1] != '(' && !UIBuilder.IsPunctuationMark (text[0]))
 				{
 					buffer.Append (" ");
 				}
 
 				buffer.Append (text);
 
-				startOfLine = text.EndsWith ("<br/>");
+				emptyItem = text.EndsWith ("<br/>");
 			}
 
 			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));

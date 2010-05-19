@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			items.Add (
 				new SummaryData
 				{
+					Rank				= 1000,
 					Name				= "NaturalPerson",
 					IconUri				= "Data.NaturalPerson",
 					Title				= new FormattedText ("Personne physique"),
@@ -33,6 +35,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					TextAccessor		= Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
 					CompactTextAccessor = Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
 				});
+
+			for (int i = 0; i < this.Entity.Contacts.Count; i++)
+			{
+				var contact = this.Entity.Contacts[i] as Entities.MailContactEntity;
+                
+				if (contact == null)
+                {
+					continue;
+                }
+
+				items.Add (
+					new SummaryData
+					{
+						Rank				= 2000 + i,
+						Name				= string.Format (System.Globalization.CultureInfo.InvariantCulture, "MailContact{0}", i),
+						IconUri				= "Data.Mail",
+						Title				= new FormattedText ("Adresse"),
+						CompactTitle		= new FormattedText ("Adresse"),
+						TextAccessor		= Accessor.Create (contact, x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
+						CompactTextAccessor = Accessor.Create (contact, x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
+					});
+			}
+
 
 			builder.MapDataToTiles (items);
 		}

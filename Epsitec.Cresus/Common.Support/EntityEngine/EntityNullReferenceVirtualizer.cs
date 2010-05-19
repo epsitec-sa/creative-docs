@@ -165,6 +165,20 @@ namespace Epsitec.Common.Support.EntityEngine
 					}
 				}
 
+				if (value is AbstractEntity)
+				{
+					AbstractEntity entity = value as AbstractEntity;
+					EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+				}
+				else if (value is EntityCollection)
+				{
+					EntityCollection collection = value as EntityCollection;
+					foreach (AbstractEntity entity in collection)
+					{
+						EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+					}
+				}
+
 				return value;
 			}
 
