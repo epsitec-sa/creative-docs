@@ -42,12 +42,27 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 			{
-				Filter				= x => x is Entities.MailContactEntity,
 				TextAccessor		= IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
 				CompactTextAccessor = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
 			};
 
-			var coll1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
+			var template2 = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
+			{
+				TitleAccessor		= IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.TelecomType.Name)),
+				TextAccessor		= IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.Number)),
+				CompactTextAccessor = IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")")),
+			};
+
+			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact")
+			{
+				Filter				= x => x.UriScheme.Code == "mailto",
+				TextAccessor		= IndirectAccessor<Entities.UriContactEntity>.Create (x => UIBuilder.FormatText (x.Uri)),
+				CompactTextAccessor = IndirectAccessor<Entities.UriContactEntity>.Create (x => UIBuilder.FormatText (x.Uri)),
+			};
+
+			var accessor1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
+			var accessor2 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template2);
+			var accessor3 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template3);
 
 			items.Add (
 				new SummaryData
@@ -59,7 +74,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTitle = new FormattedText ("Adresse"),
 				});
 
-			items.AddRange (coll1.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
+			items.Add (
+				new SummaryData
+				{
+					Rank		 = 3000,
+					Name		 = "TelecomContact.0",
+					IconUri		 = "Data.Telecom",
+					Title		 = new FormattedText ("Téléphone"),
+					CompactTitle = new FormattedText ("Téléphone"),
+				});
+
+			items.Add (
+				new SummaryData
+				{
+					Rank		 = 4000,
+					Name		 = "UriContact.0",
+					IconUri		 = "Data.Uri",
+					Title		 = new FormattedText ("E-Mail"),
+					CompactTitle = new FormattedText ("E-Mail"),
+				});
+
+			items.AddRange (accessor1.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
+			items.AddRange (accessor2.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
+			items.AddRange (accessor3.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
 
 			builder.MapDataToTiles (items);
 #endif

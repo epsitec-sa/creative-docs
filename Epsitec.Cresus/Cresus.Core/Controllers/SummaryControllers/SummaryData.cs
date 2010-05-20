@@ -170,19 +170,35 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		public int CompareTo(SummaryData other)
 		{
-			if (this.Rank < other.Rank)
+			int rankA = this.Rank / 1000;
+			int rankB = other.Rank / 1000;
+
+			if (rankA < rankB)
 			{
 				return -1;
 			}
-			else if (this.Rank > other.Rank)
+			else if (rankA > rankB)
 			{
 				return 1;
 			}
 
 			var options = System.Globalization.CompareOptions.StringSort | System.Globalization.CompareOptions.IgnoreCase;
 			var culture = System.Globalization.CultureInfo.CurrentCulture;
+			int result  = string.Compare (this.Title.ToSimpleText (), other.Title.ToSimpleText (), culture, options);
 
-			return string.Compare (this.Title.ToSimpleText (), other.Title.ToSimpleText (), culture, options);
+			if (result == 0)
+            {
+				if (this.Rank < other.Rank)
+				{
+					return -1;
+				}
+				else if (this.Rank > other.Rank)
+                {
+					return 1;
+                }
+            }
+
+			return result;
 		}
 
 		#endregion
@@ -245,6 +261,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			if (source == null)
 			{
 				return false;
+			}
+			else if (this.Filter == null)
+			{
+				return true;
 			}
 			else
 			{
