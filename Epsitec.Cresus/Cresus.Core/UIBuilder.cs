@@ -518,10 +518,7 @@ namespace Epsitec.Cresus.Core
 		{
 			items.ForEach (x => x.ExecuteAccessors ());
 
-			this.dataItems.Clear ();
-			this.dataItems.AddRange (items);
-			this.dataItems.Sort ();
-
+			this.AddSummaryData (items);
 			this.CreateMissingDataTiles ();
 			this.ResetDataTiles ();
 			this.RefreshDataTiles ();
@@ -607,6 +604,25 @@ namespace Epsitec.Cresus.Core
 			return value.ToString ();
 		}
 
+
+		private void AddSummaryData(IEnumerable<SummaryData> collection)
+		{
+			var set = new HashSet<string> ();
+
+			this.dataItems.Clear ();
+
+			foreach (var item in collection)
+			{
+				//	Avoid inserting exact duplicates in the list:
+				
+				if (set.Add (item.Name))
+				{
+					this.dataItems.Add (item);
+				}
+			}
+
+			this.dataItems.Sort ();
+		}
 
 		private void CreateMissingDataTiles()
 		{

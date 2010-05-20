@@ -18,7 +18,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		public override void CreateUI(Common.Widgets.Widget container)
 		{
-			//			base.CreateUI (container);
+#if false
+			base.CreateUI (container);
+#else
 
 			var builder = new UIBuilder (container, this);
 			var items   = new List<SummaryData> ();
@@ -37,9 +39,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 
 
-			var acc1 = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
-			var acc2 = acc1.GetAccessor (this.Entity.Contacts[0] as Entities.MailContactEntity);
-
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 			{
 				Filter				= x => x is Entities.MailContactEntity,
@@ -49,17 +48,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var coll1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
 
-			items.AddRange (coll1.Resolve (
-				(name, index) => new SummaryData
+			items.Add (
+				new SummaryData
 				{
-					Rank		 = 2000 + index,
-					Name		 = name,
+					Rank		 = 2000,
+					Name		 = "MailContact.0",
 					IconUri		 = "Data.Mail",
 					Title		 = new FormattedText ("Adresse"),
 					CompactTitle = new FormattedText ("Adresse"),
-				}));
+				});
+
+			items.AddRange (coll1.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
 
 			builder.MapDataToTiles (items);
+#endif
 		}
 
 		protected override void CreatePersonTile(UIBuilder builder)
