@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityDataLoaded = new Dictionary<AbstractEntity, bool> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
+			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 
 			this.entityContext.EntityAttached += this.HandleEntityCreated;
 			this.entityContext.PersistenceManagers.Add (this);
@@ -170,11 +171,23 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public void DeleteEntity(AbstractEntity entity)
+		{
+			this.entitiesToDelete.Add (entity);
+		}
+
+
 		public bool SerializeChanges()
 		{
 			bool containsChanges = false;
 
-			foreach (AbstractEntity entity in this.GetModifiedEntities ())
+			foreach (AbstractEntity entity in this.entitiesToDelete)
+			{
+				this.RemoveEntity (entity);
+				containsChanges = true;
+			}
+			
+			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except(this.entitiesToDelete))
 			{
 				this.SerializeEntity (entity);
 				containsChanges = true;
@@ -188,12 +201,9 @@ namespace Epsitec.Cresus.DataLayer
 			return containsChanges;
 		}
 
+
 		public void SaveChanges()
 		{
-			// TODO This method will fail and throw an exception if it is called on a DataContext without
-			// change. This is because the DbAccess in the RbRichCommand is missing because its InternalFillDataSet
-			// method is never called. Something should be done to initialize that DbAccess by some other way.
-
 			System.Diagnostics.Debug.WriteLine ("DataContext: SaveChanges");
 			this.SerializeChanges ();
 
@@ -287,6 +297,65 @@ namespace Epsitec.Cresus.DataLayer
 				return DbKey.Empty;
 			}
 		}
+
+
+		private void RemoveEntity(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
+
+			if (mapping.SerialGeneration != this.entityContext.DataGeneration)
+			{
+				mapping.SerialGeneration = this.entityContext.DataGeneration;
+
+				if (!mapping.RowKey.IsEmpty)
+				{
+					if (!this.entityDataLoaded.ContainsKey (entity) || !this.entityDataLoaded[entity])
+					{
+						this.LoadDataRows (entity);
+					}
+
+					foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+					{
+						StructuredTypeField[] localFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).ToArray ();
+
+						foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Reference))
+						{
+							string relationTableName = this.GetRelationTableName (currentId, field);
+
+							IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, mapping.RowKey.Id);
+							System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
+
+							if (existingRelationRows.Length == 1)
+							{
+								this.DeleteRelationRow (existingRelationRows[0]);
+							}
+							else if (existingRelationRows.Length > 1)
+							{
+								throw new System.InvalidOperationException ();
+							}
+						}
+
+						foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Collection))
+						{
+							string relationTableName = this.GetRelationTableName (currentId, field);
+
+							IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, mapping.RowKey.Id);
+							System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
+
+							foreach (System.Data.DataRow row in existingRelationRows)
+							{
+								this.DeleteRelationRow (row);
+							}
+						}
+
+						System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, currentId);
+
+						this.RichCommand.DeleteExistingRow (dataRow);
+					}
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Serializes the entity to the in-memory data set. This will either
@@ -701,7 +770,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Data.DataRow[] relationRows = DbRichCommand.FilterExistingRows (this.richCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToArray ();
 
-			if (targetEntity != null)
+			if (targetEntity != null && !this.entitiesToDelete.Contains (targetEntity))
 			{
 				System.Diagnostics.Debug.Assert (targetMapping != null);
 
@@ -752,30 +821,34 @@ namespace Epsitec.Cresus.DataLayer
 			for (int i = 0; i < collection.Count; i++)
 			{
 				AbstractEntity targetEntity  = collection[i] as AbstractEntity;
-				EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
-				System.Diagnostics.Debug.Assert (targetMapping != null);
-
-				if (targetMapping.RowKey.IsEmpty)
+				if (!this.entitiesToDelete.Contains (targetEntity))
 				{
-					this.SerializeEntity (targetEntity);
-				}
+					EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
-				long targetRowId = targetMapping.RowKey.Id.Value;
+					System.Diagnostics.Debug.Assert (targetMapping != null);
 
-				System.Diagnostics.Debug.Assert (targetEntity != null);
-				System.Diagnostics.Debug.Assert (targetMapping != null);
+					if (targetMapping.RowKey.IsEmpty)
+					{
+						this.SerializeEntity (targetEntity);
+					}
 
-				System.Data.DataRow row = DataContext.FindRelationRowForTarget (relationRows, targetRowId);
+					long targetRowId = targetMapping.RowKey.Id.Value;
 
-				if (row == null)
-				{
-					resultingRows.Add (this.CreateRelationRow (relationTableName, sourceMapping, targetMapping));
-				}
-				else
-				{
-					relationRows.Remove (row);
-					resultingRows.Add (row);
+					System.Diagnostics.Debug.Assert (targetEntity != null);
+					System.Diagnostics.Debug.Assert (targetMapping != null);
+
+					System.Data.DataRow row = DataContext.FindRelationRowForTarget (relationRows, targetRowId);
+
+					if (row == null)
+					{
+						resultingRows.Add (this.CreateRelationRow (relationTableName, sourceMapping, targetMapping));
+					}
+					else
+					{
+						relationRows.Remove (row);
+						resultingRows.Add (row);
+					}
 				}
 			}
 
@@ -1364,5 +1437,6 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly Dictionary<AbstractEntity, bool> entityDataLoaded;
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
+		private readonly HashSet<AbstractEntity> entitiesToDelete;
 	}
 }
