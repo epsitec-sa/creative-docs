@@ -5765,9 +5765,7 @@ namespace Epsitec.Cresus.Core
 			using (contact2.DefineOriginalValues ())
 			{
 				contact2.Address = address2;
-				contact2.Complement = "Domicile privé";
 				contact2.Roles.Add (role3);
-				contact2.LegalPerson = enterprise;
 				contact2.NaturalPerson = person1;
 			}
 

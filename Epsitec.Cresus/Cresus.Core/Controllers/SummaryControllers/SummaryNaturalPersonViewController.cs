@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineText			(x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
+				.DefineText			(x => UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
 				.DefineCompactText	(x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
 
 			var template2 = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
@@ -66,6 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Mail",
 					Title		 = new FormattedText ("Adresse"),
 					CompactTitle = new FormattedText ("Adresse"),
+					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
 			items.Add (
@@ -76,6 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Telecom",
 					Title		 = new FormattedText ("Téléphone"),
 					CompactTitle = new FormattedText ("Téléphone"),
+					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
 			items.Add (
@@ -86,6 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Uri",
 					Title		 = new FormattedText ("E-Mail"),
 					CompactTitle = new FormattedText ("E-Mail"),
+					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
 			items.AddRange (accessor1.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
