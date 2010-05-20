@@ -621,7 +621,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddQueryForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
-			this.AddRelationJoinToRelationTable (tableAliasManager, reader, entityId, field, SqlJoinCode.OuterLeft);
+			this.AddRelationJoinToRelationTable (tableAliasManager, reader, entityId, field, SqlJoinCode.Inner);
 			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
 
 			DbTableColumn tableColumnTarget = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationTargetColumn);
