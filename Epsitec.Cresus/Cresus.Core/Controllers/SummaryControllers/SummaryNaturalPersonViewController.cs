@@ -41,24 +41,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
-			{
-				TextAccessor		= IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name)),
-				CompactTextAccessor = IndirectAccessor<Entities.MailContactEntity>.Create (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name)),
-			};
+				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineText			(x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
+				.DefineCompactText	(x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
 
 			var template2 = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
-			{
-				TitleAccessor		= IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.TelecomType.Name)),
-				TextAccessor		= IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.Number)),
-				CompactTextAccessor = IndirectAccessor<Entities.TelecomContactEntity>.Create (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")")),
-			};
+				.DefineTitle		(x => UIBuilder.FormatText (x.TelecomType.Name))
+				.DefineText			(x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText  (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
 
-			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact")
-			{
-				Filter				= x => x.UriScheme.Code == "mailto",
-				TextAccessor		= IndirectAccessor<Entities.UriContactEntity>.Create (x => UIBuilder.FormatText (x.Uri)),
-				CompactTextAccessor = IndirectAccessor<Entities.UriContactEntity>.Create (x => UIBuilder.FormatText (x.Uri)),
-			};
+			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", x => x.UriScheme.Code == "mailto")
+				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri));
 
 			var accessor1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
 			var accessor2 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template2);
