@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core
 
 				PersonGenderEntity male = EntityBuilder.CreatePersonGender (dataContext, "M", "Male");
 				PersonGenderEntity female = EntityBuilder.CreatePersonGender (dataContext, "F", "Female");
-				
+
 				PersonTitleEntity mister = EntityBuilder.CreatePersonTitle (dataContext, "Mister", "M");
 				PersonTitleEntity lady = EntityBuilder.CreatePersonTitle (dataContext, "Lady", "L");
 				
@@ -70,7 +70,8 @@ namespace Epsitec.Cresus.Core
 				contactAlfred1.NaturalPerson = alfred;
 				contactAlfred2.NaturalPerson = alfred;
 
-				NaturalPersonEntity gertrude = EntityBuilder.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female);
+				NaturalPersonEntity gertrude = EntityBuilder.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), null, lady, female
+					);
 				gertrude.Contacts.Add (contactGertrude);
 				contactGertrude.NaturalPerson = gertrude;
 
