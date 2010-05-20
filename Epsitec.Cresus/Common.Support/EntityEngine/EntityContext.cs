@@ -264,7 +264,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal ICloneableValueStore CreateValueStore(AbstractEntity entity)
+		internal IValueStore CreateValueStore(AbstractEntity entity)
 		{
 			Druid typeId = entity.GetEntityStructuredTypeId ();
 			IStructuredType type = this.GetStructuredType (typeId);
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// The <c>Data</c> class is used to store the data contained in the
 		/// entity objects.
 		/// </summary>
-		private class Data : ICloneableValueStore, IStructuredTypeProvider
+		private class Data : IValueStore, IStructuredTypeProvider
 		{
 			public Data(IStructuredType type)
 			{
@@ -971,26 +971,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			#endregion
 
-
-			#region ICloneable Members
-
-
-			object System.ICloneable.Clone()
-			{
-				Data clone = new Data (this.type);
-
-				foreach (KeyValuePair<string, object> item in this.store)
-				{
-					clone.store[item.Key] = item.Value;
-				}
-
-				return clone;
-			}
-
-
-			#endregion		
-
-			
 			public IEnumerable<string> GetIds()
 			{
 				return this.store.Keys;

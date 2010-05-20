@@ -121,16 +121,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// references by instantiating empty entities on the fly, whereas <c>Store.SetValue</c> on such
 		/// an empty entity will transform it into a real entity. Warning: avanced magic is going on here.
 		/// </summary>
-		class Store : ICloneableValueStore
+		class Store : IValueStore
 		{
-			public Store(ICloneableValueStore realStore, AbstractEntity entity)
+			public Store(IValueStore realStore, AbstractEntity entity)
 			{
 				this.realStore = realStore;
 				this.values = new Dictionary<string, object> ();
 				this.entity = entity;
 			}
 
-			public Store(ICloneableValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
+			public Store(IValueStore realStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
 				: this (realStore, entity)
 			{
 				this.parentStore = parentStore;
@@ -194,26 +194,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			#endregion
 
-
-			#region ICloneable Members
-
-
-			object System.ICloneable.Clone()
-			{
-				Store clone = new Store ((ICloneableValueStore) this.realStore.Clone (), this.entity, (Store) ((System.ICloneable) this.parentStore).Clone (), this.fieldIdInParentStore);
-
-				foreach (KeyValuePair<string, object> item in this.values)
-				{
-					clone.values[item.Key] = item.Value;
-				}
-
-				clone.isReadOnly = this.isReadOnly;
-
-				return clone;
-			}
-
-
-			#endregion
 		
 
 			private void TranformNullEntityInfoLiveEntity()
@@ -294,7 +274,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				entity.SetModifiedValues (store);
 			}
 
-			private readonly ICloneableValueStore		realStore;
+			private readonly IValueStore		realStore;
 			private readonly Dictionary<string, object>	values;
 			private readonly AbstractEntity				entity;
 			private readonly Store						parentStore;
