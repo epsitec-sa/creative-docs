@@ -131,7 +131,6 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="Converters\TextConverter.cs" />
-    <Compile Include="ICloneableValueStore.cs" />
     <Compile Include="INotifyCurrentChanged.cs" />
     <Compile Include="DataSource.cs" />
     <Compile Include="DataSourceMetadata.cs" />

@@ -161,7 +161,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private void ForEachField(EntityDataVersion version, string root, System.Action<EntityFieldPath, StructuredTypeField, object> action)
 		{
-			ICloneableValueStore store;
+			IValueStore store;
 			
 			switch (version)
 			{
@@ -379,11 +379,11 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value store does not (yet) contain a collection for the
 					//	specified items. We have to allocate one :
 
-					//using (this.DefineOriginalValues ())
-					//{
+					using (this.DefineOriginalValues ())
+					{
 						list = new EntityCollection<T> (id, this, true);
 						this.InternalSetValue (id, list);
-					//}
+					}
 
 					list = new EntityCollectionProxy<T> (id, this);
 				}
@@ -544,10 +544,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				value = this.ModifiedValues.GetValue (id);
 
-				//if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
-				//{
-				//    value = this.OriginalValues.GetValue (id);
-				//}
+				if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
+				{
+				    value = this.OriginalValues.GetValue (id);
+				}
 			}
 			else if (this.OriginalValues != null)
 			{
@@ -607,8 +607,8 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value store does not (yet) contain a collection for the
 					//	specified items. We have to allocate one :
 
-					//using (this.DefineOriginalValues ())
-					//{
+					using (this.DefineOriginalValues ())
+					{
 						StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
 
@@ -623,7 +623,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						collectionType = genericType.MakeGenericType (itemType);
 
 						list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
-					//}
+					}
 				}
 				else
 				{
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return list;
 		}
 
-		internal IEnumerable<ICloneableValueStore> InternalGetValueStores()
+		internal IEnumerable<IValueStore> InternalGetValueStores()
 		{
 			if (this.OriginalValues != null)
 			{
@@ -776,7 +776,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual ICloneableValueStore OriginalValues
+		protected virtual IValueStore OriginalValues
 		{
 			get
 			{
@@ -784,7 +784,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual ICloneableValueStore ModifiedValues
+		protected virtual IValueStore ModifiedValues
 		{
 			get
 			{
@@ -812,14 +812,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (that.modifiedValues == null)
 			{
-				if (that.originalValues == null)
-				{
-					that.modifiedValues = that.context.CreateValueStore (that);
-				}
-				else
-				{
-					that.modifiedValues = that.originalValues.Clone () as ICloneableValueStore;
-				}
+				that.modifiedValues = that.context.CreateValueStore (that);
 			}
 			if (this != that)
 			{
@@ -828,12 +821,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 		}
 
-		internal void SetModifiedValues(ICloneableValueStore values)
+		internal void SetModifiedValues(IValueStore values)
 		{
 			this.modifiedValues = values;
 		}
 
-		internal ICloneableValueStore GetModifiedValues()
+		internal IValueStore GetModifiedValues()
 		{
 			if (this.ModifiedValues == null)
 			{
@@ -842,12 +835,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.ModifiedValues;
 		}
 
-		internal void SetOriginalValues(ICloneableValueStore values)
+		internal void SetOriginalValues(IValueStore values)
 		{
 			this.originalValues = values;
 		}
 
-		internal ICloneableValueStore GetOriginalValues()
+		internal IValueStore GetOriginalValues()
 		{
 			if (this.OriginalValues == null)
 			{
@@ -1205,8 +1198,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		private long dataGeneration;
 		private int defineOriginalValuesCount;
 		private bool calculationsDisabled;
-		private ICloneableValueStore originalValues;
-		private ICloneableValueStore modifiedValues;
+		private IValueStore originalValues;
+		private IValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
 	}

@@ -129,6 +129,8 @@ namespace Epsitec.Cresus.Core
 				//NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
 				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
 
+				persons[0].Gender = null;
+
 				foreach (NaturalPersonEntity person in persons)
 				{
 					System.Diagnostics.Debug.WriteLine ("=====================================================");
@@ -147,7 +149,7 @@ namespace Epsitec.Cresus.Core
 				}
 				System.Diagnostics.Debug.WriteLine ("=====================================================");
 
-				dataContext.DeleteEntity (persons[0]);
+				//dataContext.DeleteEntity (persons[0]);
 
 				dataContext.SaveChanges ();
 			}
