@@ -379,11 +379,11 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value store does not (yet) contain a collection for the
 					//	specified items. We have to allocate one :
 
-					using (this.DefineOriginalValues ())
-					{
+					//using (this.DefineOriginalValues ())
+					//{
 						list = new EntityCollection<T> (id, this, true);
 						this.InternalSetValue (id, list);
-					}
+					//}
 
 					list = new EntityCollectionProxy<T> (id, this);
 				}
@@ -392,8 +392,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					IEntityCollection collection = value as IEntityCollection;
 					System.Collections.IList simpleList = value as System.Collections.IList;
 
-					if ((collection == null) ||
-						(simpleList == null))
+					if (collection == null || simpleList == null)
 					{
 						throw new System.NotSupportedException (string.Format ("Field {0} uses incompatible collection type", id));
 					}
@@ -545,10 +544,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				value = this.ModifiedValues.GetValue (id);
 
-				if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
-				{
-					value = this.OriginalValues.GetValue (id);
-				}
+				//if (this.OriginalValues != null && UndefinedValue.IsUndefinedValue (value))
+				//{
+				//    value = this.OriginalValues.GetValue (id);
+				//}
 			}
 			else if (this.OriginalValues != null)
 			{
@@ -608,8 +607,8 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value store does not (yet) contain a collection for the
 					//	specified items. We have to allocate one :
 
-					using (this.DefineOriginalValues ())
-					{
+					//using (this.DefineOriginalValues ())
+					//{
 						StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
 
@@ -624,7 +623,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						collectionType = genericType.MakeGenericType (itemType);
 
 						list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
-					}
+					//}
 				}
 				else
 				{
@@ -813,12 +812,20 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (that.modifiedValues == null)
 			{
-				that.modifiedValues = that.context.CreateValueStore (that);
+				if (that.originalValues == null)
+				{
+					that.modifiedValues = that.context.CreateValueStore (that);
+				}
+				else
+				{
+					that.modifiedValues = that.originalValues.Clone () as ICloneableValueStore;
+				}
 			}
 			if (this != that)
 			{
 				this.modifiedValues = that.modifiedValues;
 			}
+			
 		}
 
 		internal void SetModifiedValues(ICloneableValueStore values)
