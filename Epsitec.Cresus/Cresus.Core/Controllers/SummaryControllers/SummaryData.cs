@@ -216,6 +216,36 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.name = name;
 		}
 
+		public CollectionTemplate(string name, System.Predicate<T> filter)
+			: this (name)
+		{
+			this.Filter = filter;
+		}
+
+		public CollectionTemplate<T> DefineTitle(System.Func<T, FormattedText> action)
+		{
+			this.TitleAccessor = IndirectAccessor<T>.Create (action);
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineText(System.Func<T, FormattedText> action)
+		{
+			this.TextAccessor = IndirectAccessor<T>.Create (action);
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineCompactTitle(System.Func<T, FormattedText> action)
+		{
+			this.CompactTitleAccessor = IndirectAccessor<T>.Create (action);
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineCompactText(System.Func<T, FormattedText> action)
+		{
+			this.CompactTextAccessor = IndirectAccessor<T>.Create (action);
+			return this;
+		}
+
 		public IndirectAccessor<T, FormattedText> TitleAccessor
 		{
 			get;
