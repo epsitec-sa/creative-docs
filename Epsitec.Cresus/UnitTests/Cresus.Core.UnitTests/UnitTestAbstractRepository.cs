@@ -67,12 +67,16 @@ namespace Epsitec.Cresus.Core
 				NaturalPersonEntity alfred = EntityBuilder.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male);
 				alfred.Contacts.Add (contactAlfred1);
 				alfred.Contacts.Add (contactAlfred2);
+				contactAlfred1.NaturalPerson = alfred;
+				contactAlfred2.NaturalPerson = alfred;
 
 				NaturalPersonEntity gertrude = EntityBuilder.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female);
 				gertrude.Contacts.Add (contactGertrude);
+				contactGertrude.NaturalPerson = gertrude;
 
 				NaturalPersonEntity hans = EntityBuilder.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, null, null);
 				hans.Contacts.Add (contactHans);
+				contactHans.NaturalPerson = hans;
 
 				//LegalPersonEntity papetVaudois = EntityBuilder.CreateLegalPerson (dataContext, "Papet Vaudois SA", "PV", "", sa, french);
 				//LegalPersonEntity bratwurst = EntityBuilder.CreateLegalPerson (dataContext, "Bratwurst SARL", "B", "", sarl, german);
@@ -142,7 +146,8 @@ namespace Epsitec.Cresus.Core
 				}
 				System.Diagnostics.Debug.WriteLine ("=====================================================");
 
-				persons[0].Gender = null;
+				dataContext.DeleteEntity (persons[0]);
+
 				dataContext.SaveChanges ();
 			}
 		}
