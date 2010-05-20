@@ -5746,33 +5746,10 @@ namespace Epsitec.Cresus.Core
 				comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
 			}
 
-			using (enterprise.DefineOriginalValues ())
-			{
-				enterprise.Complement = "Logiciels de gestion Crésus";
-				enterprise.Name = "Epsitec SA";
-				enterprise.Contacts.Add (contact1);
-			}
-
 			using (title1.DefineOriginalValues ())
 			{
 				title1.Name = "Monsieur";
 				title1.ShortName = "M.";
-			}
-
-			using (person1.DefineOriginalValues ())
-			{
-				person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-				person1.Firstname = "Pierre";
-				person1.Lastname = "Arnaud";
-				person1.Title = title1;
-				person1.Contacts.Add (contact1);
-				person1.Contacts.Add (contact2);
-			}
-
-			using (person2.DefineOriginalValues ())
-			{
-				person2.Firstname = "Daniel";
-				person2.Lastname = "Roux";
 			}
 
 			using (contact1.DefineOriginalValues ())
@@ -5794,74 +5771,127 @@ namespace Epsitec.Cresus.Core
 				contact2.NaturalPerson = person1;
 			}
 
-#if false
 			var telecomType1 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-			telecomType1.Code = "fixnet";
-			telecomType1.Name = "Téléphone fixe";
-
 			var telecomType2 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-			telecomType2.Code = "mobile";
-			telecomType2.Name = "Téléphone mobile";
-
 			var telecomType3 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-			telecomType3.Code = "fixnet";
-			telecomType3.Name = "Téléphone fixe";
+
+			using (telecomType1.DefineOriginalValues ())
+			{
+				telecomType1.Code = "fixnet";
+				telecomType1.Name = "Téléphone fixe";
+			}
+
+			using (telecomType2.DefineOriginalValues ())
+			{
+				telecomType2.Code = "mobile";
+				telecomType2.Name = "Téléphone mobile";
+			}
+
+			using (telecomType3.DefineOriginalValues ())
+			{
+				telecomType3.Code = "fixnet";
+				telecomType3.Name = "Téléphone fixe";
+			}
 
 			var telecom1 = context.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom1.TelecomType = telecomType1;
-			telecom1.LegalPerson = enterprise;
-			telecom1.Number = "+41 848 27 37 87";
-			telecom1.Roles.Add (role1);
-			telecom1.Roles.Add (role2);
-
 			var telecom2 = context.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom2.TelecomType = telecomType2;
-			telecom2.NaturalPerson = person1;
-			telecom2.Number = "+41 79 555 55 55";
-			telecom2.Roles.Add (role3);
-
-			person1.Contacts.Add (telecom2);
-
 			var telecom3 = context.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom3.TelecomType = telecomType3;
-			telecom3.LegalPerson = enterprise;
-			telecom3.NaturalPerson = person1;
-			telecom3.Number = "+41 24 425 08 30";
-			telecom3.Roles.Add (role2);
 
-			enterprise.Contacts.Add (telecom3);
-			person1.Contacts.Add (telecom3);
+			using (telecom1.DefineOriginalValues ())
+			{
+				telecom1.TelecomType = telecomType1;
+				telecom1.LegalPerson = enterprise;
+				telecom1.Number = "+41 848 27 37 87";
+				telecom1.Roles.Add (role1);
+				telecom1.Roles.Add (role2);
+			}
+
+			using (telecom2.DefineOriginalValues ())
+			{
+				telecom2.TelecomType = telecomType2;
+				telecom2.NaturalPerson = person1;
+				telecom2.Number = "+41 79 555 55 55";
+				telecom2.Roles.Add (role3);
+			}
+
+			using (telecom3.DefineOriginalValues ())
+			{
+				telecom3.TelecomType = telecomType3;
+				telecom3.LegalPerson = enterprise;
+				telecom3.NaturalPerson = person1;
+				telecom3.Number = "+41 24 425 08 30";
+				telecom3.Roles.Add (role2);
+			}
+
 
 			var uriScheme1 = context.CreateEmptyEntity<UriSchemeEntity> ();
-			uriScheme1.Code = "mailto";
-			uriScheme1.Name = "Mail";
+			
+			using (uriScheme1.DefineOriginalValues ())
+			{
+				uriScheme1.Code = "mailto";
+				uriScheme1.Name = "Mail";
+			}
 
 			var uri1 = context.CreateEmptyEntity<UriContactEntity> ();
-			uri1.LegalPerson = enterprise;
-			uri1.Uri = "epsitec@epsitec.ch";
-			uri1.UriScheme = uriScheme1;
-			uri1.Roles.Add (role2);
-			uri1.Roles.Add (role3);
-
-			enterprise.Contacts.Add (uri1);
-			person1.Contacts.Add (uri1);
-
 			var uri2 = context.CreateEmptyEntity<UriContactEntity> ();
-			uri2.LegalPerson = enterprise;
-			uri2.Uri = "arnaud@epsitec.ch";
-			uri2.UriScheme = uriScheme1;
-			uri2.Roles.Add (role3);
-
-			person1.Contacts.Add (uri2);
-
 			var uri3 = context.CreateEmptyEntity<UriContactEntity> ();
-			uri3.LegalPerson = enterprise;
-			uri3.Uri = "perre.arnaud@opac.ch";
-			uri3.UriScheme = uriScheme1;
-			uri3.Roles.Add (role3);
 
-			person1.Contacts.Add (uri3);
-#endif
+			using (uri1.DefineOriginalValues ())
+			{
+				uri1.LegalPerson = enterprise;
+				uri1.Uri = "epsitec@epsitec.ch";
+				uri1.UriScheme = uriScheme1;
+				uri1.Roles.Add (role2);
+				uri1.Roles.Add (role3);
+			}
+
+			using (enterprise.DefineOriginalValues ())
+			{
+				enterprise.Complement = "Logiciels de gestion Crésus";
+				enterprise.Name = "Epsitec SA";
+				enterprise.Contacts.Add (contact1);
+				enterprise.Contacts.Add (telecom3);
+				enterprise.Contacts.Add (uri1);
+			}
+
+
+			using (uri2.DefineOriginalValues ())
+			{
+				uri2.LegalPerson = enterprise;
+				uri2.Uri = "arnaud@epsitec.ch";
+				uri2.UriScheme = uriScheme1;
+				uri2.Roles.Add (role3);
+			}
+
+			using (uri3.DefineOriginalValues ())
+			{
+				uri3.LegalPerson = enterprise;
+				uri3.Uri = "perre.arnaud@opac.ch";
+				uri3.UriScheme = uriScheme1;
+				uri3.Roles.Add (role3);
+			}
+
+			using (person1.DefineOriginalValues ())
+			{
+				person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
+				person1.Firstname = "Pierre";
+				person1.Lastname = "Arnaud";
+				person1.Title = title1;
+				person1.Contacts.Add (contact1);
+				person1.Contacts.Add (contact2);
+				person1.Contacts.Add (telecom1);
+				person1.Contacts.Add (telecom2);
+				person1.Contacts.Add (telecom3);
+				person1.Contacts.Add (uri1);
+				person1.Contacts.Add (uri2);
+				person1.Contacts.Add (uri3);
+			}
+
+			using (person2.DefineOriginalValues ())
+			{
+				person2.Firstname = "Daniel";
+				person2.Lastname  = "Roux";
+			}
 
 			persons.Add (person1);
 			persons.Add (person2);
