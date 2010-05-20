@@ -132,16 +132,19 @@ namespace Epsitec.Cresus.Database
 
 			this.DataTable.RowChanged += (sender, e) =>
 			{
-				object value = this.GetValue (e.Row);
-
-				if (value != System.DBNull.Value)
+				if (this.rowToValue.ContainsKey (e.Row))
 				{
-					if (this.rowToValue.ContainsKey (e.Row))
-					{
-						this.RemoveDataRow (e.Row);
-					}
+					this.RemoveDataRow (e.Row);
+				}
 
-					this.AddDataRow (value, e.Row);
+				if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
+				{
+					object value = this.GetValue (e.Row);
+
+					if (value != System.DBNull.Value)
+					{
+						this.AddDataRow (value, e.Row);
+					}
 				}
 			};
 		}
