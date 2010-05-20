@@ -153,6 +153,7 @@
     <Compile Include="Widgets\TileArrow.cs" />
     <Compile Include="Widgets\Tile.cs" />
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
+    <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />

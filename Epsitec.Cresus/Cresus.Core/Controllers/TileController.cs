@@ -8,12 +8,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public abstract class TileController
+	public abstract class TileController : ITileController
 	{
 		public abstract EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator);
 	}
 
-	public class EntityTileController<T> : TileController where T : AbstractEntity
+	public class TileController<T> : TileController
+		where T : AbstractEntity
 	{
 		public T Entity
 		{
