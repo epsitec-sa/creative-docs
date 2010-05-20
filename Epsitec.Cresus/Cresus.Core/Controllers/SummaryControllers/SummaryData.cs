@@ -251,6 +251,44 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
+		
+		public static SummaryData FindTemplate(List<SummaryData> collection, string name, int index)
+		{
+			System.Diagnostics.Debug.Assert (name.Contains ('.'));
+
+			string prefix = name.Substring (0, name.LastIndexOf ('.') + 1);
+
+			SummaryData template = null;
+
+			foreach (var item in collection)
+			{
+				if (item.Name == name)
+				{
+					return item;
+				}
+
+				if ((template == null) &&
+					(item.Name.StartsWith (prefix, System.StringComparison.Ordinal)))
+				{
+					template = item;
+				}
+			}
+
+			if (template == null)
+			{
+				return null;
+			}
+
+			return new SummaryData
+			{
+				Name         = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", prefix, index),
+				IconUri      = template.IconUri,
+				Title        = template.Title,
+				CompactTitle = template.CompactTitle,
+				Rank         = (template.Rank / 1000) * 1000 + index,
+			};
+		}
+
 	}
 
 	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
@@ -281,6 +319,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					this.template.BindSummaryData (data, item);
 
 					yield return data;
+
+					index++;
 				}
 			}
 		}
