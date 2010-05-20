@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public Controllers.TileController Controller
+		public Controllers.ITileController Controller
 		{
 			get;
 			set;

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core
 
 		public SummaryTile CreateSummaryTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
-			var controller = new Controllers.EntityTileController<AbstractEntity> ()
+			var controller = new Controllers.TileController<AbstractEntity> ()
 			{
 				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core
 
 		public EditionTile CreateEditionTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
 		{
-			var controller = new Controllers.EntityTileController<AbstractEntity> ()
+			var controller = new Controllers.TileController<AbstractEntity> ()
 			{
 				Entity = accessor.AbstractEntity,
 				ChildrenMode = accessor.ViewControllerMode
@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
+#if false
 			var tile = new FrameBox
 			{
 				Parent = this.container,
@@ -150,6 +151,7 @@ namespace Epsitec.Cresus.Core
 				{
 					orchestrator.CloseView (controller);
 				};
+#endif
 		}
 
 		public void CreateFooterEditorTile()
@@ -176,6 +178,24 @@ namespace Epsitec.Cresus.Core
 
 			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
 #endif
+			var closeButton = new GlyphButton
+			{
+				Parent = this.container,
+				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Close,
+				Anchor = AnchorStyles.TopRight,
+				PreferredSize = new Size (18, 18),
+				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
+			};
+
+			var controller   = this.controller;
+			var orchestrator = controller.Orchestrator;
+
+			closeButton.Clicked +=
+				delegate
+				{
+					orchestrator.CloseView (controller);
+				};
 		}
 
 		public TextField CreateTextField(Widget embedder, int width, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
@@ -631,6 +651,9 @@ namespace Epsitec.Cresus.Core
 				if (item.SummaryTile == null)
 				{
 					item.SummaryTile = new Widgets.Tiles.SummaryTile ();
+					item.SummaryTile.Controller = item;
+					
+					UIBuilder.CreateTileHandler (item.SummaryTile, this.controller);
 				}
 
 				if (item.TitleTile == null)

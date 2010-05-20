@@ -12,7 +12,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryData : System.IComparable<SummaryData>
+	public class SummaryData : System.IComparable<SummaryData>, ITileController
 	{
 		public SummaryData()
 		{
@@ -81,6 +81,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
+		public System.Func<AbstractEntity> EntityAccessor
+		{
+			get;
+			set;
+		}
+
 		public Accessor<FormattedText> TitleAccessor
 		{
 			set
@@ -141,6 +147,25 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
+		#region ITileController Members
+
+		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			if (this.EntityAccessor != null)
+			{
+				var entity = this.EntityAccessor ();
+
+				if (entity != null)
+				{
+					return EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Edition, orchestrator);
+				}
+			}
+
+			return null;
+		}
+
+		#endregion
+		
 		#region IComparable<SummaryData> Members
 
 		public int CompareTo(SummaryData other)
@@ -231,6 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			T source = entity as T;
 
+			data.EntityAccessor		  = () => source;
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor,        source);
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor,         source);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);

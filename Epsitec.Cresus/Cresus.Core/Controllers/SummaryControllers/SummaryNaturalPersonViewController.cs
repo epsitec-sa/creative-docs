@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTitle		= new FormattedText ("Personne"),
 					TextAccessor		= Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
 					CompactTextAccessor = Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
+					EntityAccessor		= () => this.Entity,
 				});
 
 
