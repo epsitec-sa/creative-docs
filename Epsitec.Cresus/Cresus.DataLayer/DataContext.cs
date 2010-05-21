@@ -139,30 +139,30 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity(Druid realEntityId, Druid askedEntityId, DbKey rowKey, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referencesKeys, Dictionary<StructuredTypeField, List<DbKey>> collectionKeys)
+		public AbstractEntity ResolveEntity(EntityData entityData)
 		{
-			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
+			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (entityData.LoadedEntityId);
 
-			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, realEntityId, baseEntityId);
+			AbstractEntity entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, baseEntityId);
 			
 			if (entity == null)
 			{
-				entity = this.entityContext.CreateEmptyEntity (realEntityId);
+				entity = this.entityContext.CreateEmptyEntity (entityData.RealEntityId);
 
-				this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), rowKey);
+				this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), entityData.Key);
 
 				using (entity.DefineOriginalValues ())
 				{
-					Druid[] entityIds = this.EntityContext.GetHeritedEntityIds (realEntityId).ToArray();
+					Druid[] entityIds = this.EntityContext.GetHeritedEntityIds (entityData.RealEntityId).ToArray ();
 
-					foreach (Druid currentId in entityIds.TakeWhile (id => id != askedEntityId))
+					foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 					{
-						this.DeserializeEntityLocalWithProxy (entity, currentId, rowKey);
+						this.DeserializeEntityLocalWithProxy (entity, currentId, entityData.Key);
 					}
 
-					foreach (Druid currentId in entityIds.SkipWhile(id => id != askedEntityId))
+					foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
 					{
-						this.DeserializeEntityLocalWithReference (entity, fieldValues, referencesKeys, collectionKeys, currentId);
+						this.DeserializeEntityLocalWithReference (entity, entityData, currentId);
 					}
 				}
 			}
@@ -376,38 +376,31 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			Druid entityId = entity.GetEntityStructuredTypeId ();
-			Druid id = entityId;
-			DbKey rowKey = mapping.RowKey;
-			bool createRow;
 
-			if (rowKey.IsEmpty)
-			{
-				rowKey = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
-				mapping.RowKey = rowKey;
-				createRow = true;
-			}
-			else
-			{
-				createRow = false;
-			}
+			bool createRow = mapping.RowKey.IsEmpty;
 
-			if (!createRow && (!this.entityDataLoaded.ContainsKey(entity) || !this.entityDataLoaded[entity]))
+			if (createRow)
+			{
+				mapping.RowKey = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
+				this.entityDataLoaded[entity] = true;
+			}
+			else if (!this.entityDataLoaded.ContainsKey (entity) || !this.entityDataLoaded[entity])
 			{
 				this.LoadDataRows (entity);
 			}
 
-			while (id.IsValid)
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entityId))
 			{
-				StructuredType entityType = this.entityContext.GetStructuredType (id) as StructuredType;
+				StructuredType entityType = this.entityContext.GetStructuredType (currentId) as StructuredType;
 				Druid          baseTypeId = entityType.BaseTypeId;
 
 				System.Diagnostics.Debug.Assert (entityType != null);
-				System.Diagnostics.Debug.Assert (entityType.CaptionId == id);
+				System.Diagnostics.Debug.Assert (entityType.CaptionId == currentId);
 
 				//	Either create and fill a new row in the database for this entity
 				//	or use and update an existing row.
 
-				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, id) : this.LoadDataRow (mapping.RowKey, id);
+				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, currentId) : this.LoadDataRow (mapping.RowKey, currentId);
 
 				dataRow.BeginEdit ();
 
@@ -420,11 +413,9 @@ namespace Epsitec.Cresus.DataLayer
 					dataRow[Tags.ColumnInstanceType] = this.GetInstanceTypeValue (entityId);
 				}
 
-				this.SerializeEntityLocal (entity, dataRow, id);
+				this.SerializeEntityLocal (entity, dataRow, currentId);
 
 				dataRow.EndEdit ();
-
-				id = baseTypeId;
 			}
 		}
 
@@ -606,7 +597,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, Dictionary<StructuredTypeField, object> fieldValues, Dictionary<StructuredTypeField, DbKey> referenceKeys, Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, EntityData entityData, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
@@ -614,9 +605,9 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						if (fieldValues.ContainsKey (field))
+						if (entityData.ValueData.Contains (field))
 						{
-							object value = this.GetFieldValue (entity, field, fieldValues[field]);
+							object value = this.GetFieldValue (entity, field, entityData.ValueData[field]);
 							entity.InternalSetValue (field.Id, value);
 						}
 
@@ -624,9 +615,9 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						if (referenceKeys.ContainsKey (field))
+						if (entityData.ReferenceData.Contains (field))
 						{
-							object proxy = this.InternalResolveEntity (referenceKeys[field], field.TypeId, EntityResolutionMode.DelayLoad);
+							object proxy = this.InternalResolveEntity (entityData.ReferenceData[field], field.TypeId, EntityResolutionMode.DelayLoad);
 							entity.InternalSetValue (field.Id, proxy);
 						}
 
@@ -636,7 +627,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
 
-						foreach (DbKey key in collectionsKeys[field])
+						foreach (DbKey key in entityData.CollectionData[field])
 						{
 							object proxy = this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad);
 							collection.Add (proxy);

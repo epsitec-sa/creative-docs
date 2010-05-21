@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core
 		public void Check03RetrieveData()
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
-			{				
+			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static bool createAndPopulateDatabase = false;
+		private static bool createAndPopulateDatabase = true;
 		private static bool bigDatabase = true;
 	}
 }

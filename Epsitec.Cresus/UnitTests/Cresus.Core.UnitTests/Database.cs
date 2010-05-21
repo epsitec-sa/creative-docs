@@ -53,7 +53,6 @@ namespace Epsitec.Cresus.Core
 				CommentEntity[] uriComments = EntityBuilder.CreateComments (dataContext, big ? 2500 : 100);
 				dataContext.SaveChanges ();
 
-				
 				UriSchemeEntity[] uriSchemes = EntityBuilder.CreateUriSchemes (dataContext, 5);
 				dataContext.SaveChanges ();
 

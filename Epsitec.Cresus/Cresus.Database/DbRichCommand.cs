@@ -726,12 +726,12 @@ namespace Epsitec.Cresus.Database
 
 			if (table != null && table.Rows.Count > 0)
 			{
-				if (!this.relationSourceMappings.ContainsKey (tableName))
+				if (!this.dataMappings.ContainsKey (tableName))
 				{
-					this.relationSourceMappings[tableName] = new DbDataTableMapping (table, Tags.ColumnId);
+					this.dataMappings[tableName] = new DbDataTableMapping (table, Tags.ColumnId);
 				}
 
-				DbDataTableMapping tableCache = this.relationSourceMappings[tableName];
+				DbDataTableMapping tableCache = this.dataMappings[tableName];
 
 				if (tableCache.Contains (rowId.Value))
 				{

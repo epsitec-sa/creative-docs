@@ -57,64 +57,36 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				foreach (var entityData in this.GetEntitiesData(transaction, entityId, example))
+				foreach (EntityData entityData in this.GetEntitiesData (transaction, entityId, example))
 				{
-					DbKey rowKey = entityData.Item1;
-					Druid realEntityId = entityData.Item2;
-					Dictionary<StructuredTypeField, object> fieldValues = entityData.Item3;
-					Dictionary<StructuredTypeField, DbKey> referencesKeys = entityData.Item4;
-					Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys = entityData.Item5;
-
-					yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, fieldValues, referencesKeys, collectionsKeys) as EntityType;
+					yield return this.DataContext.ResolveEntity (entityData) as EntityType;
 				}
 			}
 		}
 
 
-		private IEnumerable<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>, Dictionary<StructuredTypeField, DbKey>, Dictionary<StructuredTypeField, List<DbKey>>>> GetEntitiesData(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		private IEnumerable<EntityData> GetEntitiesData(DbTransaction transaction, Druid entityId, AbstractEntity example)
 		{
-			List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> valuesData = this.GetValues (transaction, entityId, example);
-			List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> referencesData = this.GetReferences (transaction, entityId, example);
-			Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> collectionsData = this.GetCollections (transaction, entityId, example);
+			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valuesData = this.GetValueData (transaction, entityId, example);
+			Dictionary<DbKey, EntityReferenceData> referencesData = this.GetReferenceData (transaction, entityId, example);
+			Dictionary<DbKey, EntityCollectionData> collectionsData = this.GetCollectionData (transaction, entityId, example);
 
-			Dictionary<StructuredTypeField, int> collectionIterators = new Dictionary<StructuredTypeField, int> ();
-
-			foreach (StructuredTypeField field in collectionsData.Keys)
+			foreach (DbKey entityKey in valuesData.Keys)
 			{
-				collectionIterators[field] = 0;
-			}
+				Druid realEntityId = valuesData[entityKey].Item1;
+				EntityValueData entityValueData = valuesData[entityKey].Item2;
+				EntityReferenceData entityReferenceData = referencesData[entityKey];
+				EntityCollectionData entityCollectionData = collectionsData.ContainsKey(entityKey) ? collectionsData[entityKey] : new EntityCollectionData();
 
-			for (int i = 0; i < valuesData.Count; i++)
-			{
-				DbKey rowKey = valuesData[i].Item1;
-				Druid realEntityId = valuesData[i].Item2;
-				Dictionary<StructuredTypeField, object> fieldValues = valuesData[i].Item3;
-				Dictionary<StructuredTypeField, DbKey> referencesKeys = referencesData[i].Item2;
-
-				Dictionary<StructuredTypeField, List<DbKey>> collectionsKeys = new Dictionary<StructuredTypeField, List<DbKey>> ();
-
-				foreach (StructuredTypeField field in collectionsData.Keys)
-				{
-					List<System.Tuple<DbKey, DbKey>> keys = collectionsData[field];
-					List<DbKey> currentKeys = new List<DbKey> ();
-
-					for (int index = collectionIterators[field]; index < keys.Count && keys[index].Item1 == rowKey; index++)
-					{
-						currentKeys.Add (keys[index].Item2);
-					}
-
-					collectionIterators[field] = collectionIterators[field] + currentKeys.Count;
-					collectionsKeys[field] = currentKeys;
-				}
-
-				yield return System.Tuple.Create (rowKey, realEntityId, fieldValues, referencesKeys, collectionsKeys);
+				yield return new EntityData (entityKey, entityId, realEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 
 
-		private List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> GetValues(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		private Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> GetValueData(DbTransaction transaction, Druid entityId, AbstractEntity example)
 		{
-			List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> values = new List<System.Tuple<DbKey, Druid, Dictionary<StructuredTypeField, object>>> ();
+			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> ();
+
 			List<StructuredTypeField> fields = new List<StructuredTypeField> ();
 
 			foreach (Druid currentEntityId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
@@ -131,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				foreach (DbReader.RowData rowData in reader.Rows)
 				{
-					Dictionary<StructuredTypeField, object> currentValues = new Dictionary<StructuredTypeField, object> ();
+					EntityValueData entityValueData = new EntityValueData ();
 					Druid realEntityId = Druid.FromLong ((long) rowData.Values[rowData.Values.Length - 2]);
 					DbKey entityKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
 
@@ -139,17 +111,15 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						if (rowData.Values[i] != System.DBNull.Value)
 						{
-							StructuredTypeField field = fields[i];
-							object value = rowData.Values[i];
-							currentValues[field] = value;
+							entityValueData[fields[i]] = rowData.Values[i];
 						}
 					}
 
-					values.Add (System.Tuple.Create (entityKey, realEntityId, currentValues));
+					valueData[entityKey] = System.Tuple.Create (realEntityId, entityValueData);
 				}
 			}
 
-			return values;
+			return valueData;
 		}
 
 
@@ -171,9 +141,10 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> GetReferences(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		private Dictionary<DbKey, EntityReferenceData> GetReferenceData(DbTransaction transaction, Druid entityId, AbstractEntity example)
 		{
-			List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> references = new List<System.Tuple<DbKey, Dictionary<StructuredTypeField, DbKey>>> ();
+			Dictionary<DbKey, EntityReferenceData> references = new Dictionary<DbKey, EntityReferenceData> ();
+
 			List<StructuredTypeField> fields = new List<StructuredTypeField> ();
 
 			foreach (Druid currentEntityId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
@@ -190,20 +161,19 @@ namespace Epsitec.Cresus.DataLayer
 
 				foreach (DbReader.RowData rowData in reader.Rows)
 				{
-					Dictionary<StructuredTypeField, DbKey> currentReferences = new Dictionary<StructuredTypeField, DbKey> ();
 					DbKey sourceKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
+
+					EntityReferenceData entityReferenceData = new EntityReferenceData();
 
 					for (int i = 0; i < rowData.Values.Length - 1; i++)
 					{
 						if (rowData.Values[i] != System.DBNull.Value)
 						{
-							StructuredTypeField field = fields[i];
-							DbKey targetKey = new DbKey (new DbId ((long) rowData.Values[i]));
-							currentReferences[field] = targetKey;
+							entityReferenceData[fields[i]] = new DbKey (new DbId ((long) rowData.Values[i]));
 						}
 					}
 
-					references.Add (System.Tuple.Create (sourceKey, currentReferences));
+					references[sourceKey] = entityReferenceData;
 				}
 			}
 
@@ -229,23 +199,31 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> GetCollections(DbTransaction transaction, Druid entityId, AbstractEntity example)
+		private Dictionary<DbKey, EntityCollectionData> GetCollectionData(DbTransaction transaction, Druid entityId, AbstractEntity example)
 		{
-			Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> collections = new Dictionary<StructuredTypeField, List<System.Tuple<DbKey, DbKey>>> ();
+			Dictionary<DbKey, EntityCollectionData> collectionData = new Dictionary<DbKey, EntityCollectionData> ();
 
 			foreach (Druid currentId in this.DataContext.EntityContext.GetHeritedEntityIds (entityId))
 			{
 				foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
 				{
-					collections[field] = this.GetCollection (transaction, currentId, example, field);
+					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, currentId, example, field))
+					{
+						if (!collectionData.ContainsKey (relation.Item1))
+						{
+							collectionData[relation.Item1] = new EntityCollectionData ();
+						}
+
+						collectionData[relation.Item1][field].Add(relation.Item2);
+					}
 				}
 			}
 
-			return collections;
+			return collectionData;
 		}
 
 
-		private List<System.Tuple<DbKey, DbKey>> GetCollection(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private List<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
 			List<System.Tuple<DbKey, DbKey>> collection = new List<System.Tuple<DbKey, DbKey>> ();
 
