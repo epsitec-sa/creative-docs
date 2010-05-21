@@ -68,10 +68,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
 		private bool IsValid(DataRow dataRow)
 		{
 			return dataRow.RowState != DataRowState.Detached;
 		}
+
 
 		private object GetValue(DataRow dataRow)
 		{
@@ -131,20 +133,17 @@ namespace Epsitec.Cresus.Database
 			};
 
 			this.DataTable.RowChanged += (sender, e) =>
-			{
-				if (this.rowToValue.ContainsKey (e.Row))
-				{
-					this.RemoveDataRow (e.Row);
-				}
+			{			
+				object value = this.GetValue (e.Row);
 
-				if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
+				if (value != System.DBNull.Value)
 				{
-					object value = this.GetValue (e.Row);
-
-					if (value != System.DBNull.Value)
+					if (this.rowToValue.ContainsKey (e.Row))
 					{
-						this.AddDataRow (value, e.Row);
+						this.RemoveDataRow (e.Row);
 					}
+
+					this.AddDataRow (value, e.Row);
 				}
 			};
 		}
