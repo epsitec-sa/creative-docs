@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					Rank		 = 3000,
+					AutoGroup    = true,
 					Name		 = "TelecomContact.0",
 					IconUri		 = "Data.Telecom",
 					Title		 = new FormattedText ("Téléphone"),
@@ -84,6 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					Rank		 = 4000,
+					AutoGroup    = true,
 					Name		 = "UriContact.0",
 					IconUri		 = "Data.Uri",
 					Title		 = new FormattedText ("E-Mail"),
