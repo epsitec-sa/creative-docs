@@ -886,8 +886,7 @@ namespace Epsitec.Common.Support.EntityEngine
 							//	This trick is needed to properly implement proxying null
 							//	values in the DialogData class.
 
-							if ((nullableProxy != null) &&
-								(nullableProxy.IsNull))
+							if (nullableProxy != null && nullableProxy.IsNull)
 							{
 								return UndefinedValue.Value;
 							}
@@ -934,8 +933,7 @@ namespace Epsitec.Common.Support.EntityEngine
 							}
 						}
 
-						if ((proxy != null) &&
-							(proxy.DiscardWriteEntityValue (this, id, ref value)))
+						if (proxy != null && proxy.DiscardWriteEntityValue (this, id, ref value))
 						{
 							return;
 						}

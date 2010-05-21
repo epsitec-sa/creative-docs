@@ -884,8 +884,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
-			if ((field == null) ||
-				(field.Type == null))
+			if (field == null || field.Type == null)
 			{
 				throw new System.ArithmeticException (string.Format ("Invalid field '{0}' specified", id));
 			}
@@ -895,13 +894,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			bool isNullValue = field.IsNullValue (newValue);
 
-			if (isNullValue &&
-				((field.IsNullable) || (context.SkipConstraintChecking)))
+			if (isNullValue && (field.IsNullable || context.SkipConstraintChecking))
 			{
 				//	The value is null and the field is nullable; this operation
 				//	is valid and it will clear the field.
 
-				this.InternalSetValue (id, UndefinedValue.Value);
+				this.InternalSetValue (id, null);
 				this.UpdateDataGeneration ();
 			}
 			else
