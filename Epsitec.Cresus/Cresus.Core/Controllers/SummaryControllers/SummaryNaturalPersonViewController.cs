@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -98,6 +99,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			items.AddRange (accessor3.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
 
 			builder.MapDataToTiles (items);
+
+			container.SizeChanged +=
+				(sender, e) =>
+				{
+					Size oldSize = (Size) e.OldValue;
+					Size newSize = (Size) e.NewValue;
+
+					if (oldSize.Height != newSize.Height)
+					{
+						builder.LayoutTiles (newSize.Height);
+					}
+				};
 #endif
 		}
 

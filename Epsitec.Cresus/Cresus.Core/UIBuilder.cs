@@ -541,11 +541,40 @@ namespace Epsitec.Cresus.Core
 			this.AddSummaryData (items);
 			this.CreateMissingDataTiles ();
 			this.ResetDataTiles ();
-			this.RefreshDataTiles ();
+
+			if (!this.container.IsActualGeometryValid)
+			{
+				Common.Widgets.Layouts.LayoutContext.SyncArrange (this.container);
+			}
+			
+			double maxHeight = this.container.ActualHeight;
+
+			this.LayoutTiles (maxHeight);
 			this.SetDataTilesParent (this.container);
 		}
 
 
+		public void LayoutTiles(double maxHeight)
+		{
+			while (true)
+			{
+				double height = this.RefreshDataTiles ();
+
+				if (height <= maxHeight)
+				{
+					break;
+				}
+
+				var lastItem = this.dataItems.LastOrDefault (item => item.AutoGroup == false && !item.SummaryTile.IsCompact);
+
+				if (lastItem == null)
+				{
+					break;
+				}
+
+				lastItem.SummaryTile.IsCompact = true;
+			}
+		}
 		public static FormattedText FormatText(params object[] values)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -674,6 +703,8 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.Assert (item.TitleTile != null);
 				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
 
+				item.TitleTile.Parent = null;
+
 				if (item.AutoGroup)
 				{
 					string prefix = SummaryData.GetNamePrefix (item.Name);
@@ -705,7 +736,6 @@ namespace Epsitec.Cresus.Core
 					}
 					else
 					{
-						item.TitleTile.Parent = null;
 						visualIds.Add (visualId);
 					}
 				}
