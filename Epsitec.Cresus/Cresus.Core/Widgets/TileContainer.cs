@@ -20,6 +20,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected override void MeasureMinMax(ref Size min, ref Size max)
+		{
+			//-base.MeasureMinMax (ref min, ref max);
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var adorner = Common.Widgets.Adorners.Factory.Active;
