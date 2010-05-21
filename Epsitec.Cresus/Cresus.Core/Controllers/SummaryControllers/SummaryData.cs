@@ -19,6 +19,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.bindings = new List<AccessorBinding> ();
 		}
 
+		public SummaryData(SummaryData template)
+			: this ()
+		{
+			if (template != null)
+			{
+				this.Name      = template.Name;
+				this.Rank      = template.Rank;
+				this.IconUri   = template.IconUri;
+				this.AutoGroup = template.AutoGroup;
+				this.DataType  = template.DataType;
+			}
+		}
+
 		public string Name
 		{
 			get;
@@ -32,6 +45,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 		
 		public string IconUri
+		{
+			get;
+			set;
+		}
+
+		public bool AutoGroup
 		{
 			get;
 			set;
@@ -134,6 +153,31 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		public void ExecuteAccessors()
 		{
 			this.bindings.ForEach (x => x.Execute ());
+		}
+
+
+		public static string BuildName(string prefix, int index)
+		{
+			return string.Concat (prefix, ".", index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		public static string GetNamePrefix(string name)
+		{
+			if (name == null)
+            {
+				return null;
+            }
+
+			int pos = name.LastIndexOf ('.');
+
+			if (pos < 0)
+			{
+				return name;
+			}
+			else
+			{
+				return name.Substring (0, pos);
+			}
 		}
 
 		
@@ -276,7 +320,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			set;
 		}
 
-		public string Name
+		public string NamePrefix
 		{
 			get
 			{
@@ -332,7 +376,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			System.Diagnostics.Debug.Assert (name.Contains ('.'));
 
-			string prefix = name.Substring (0, name.LastIndexOf ('.') + 1);
+			string prefix = SummaryData.GetNamePrefix (name);
+			string search = prefix + ".";
 
 			SummaryData template = null;
 
@@ -344,7 +389,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 
 				if ((template == null) &&
-					(item.Name.StartsWith (prefix, System.StringComparison.Ordinal)))
+					(item.Name.StartsWith (search, System.StringComparison.Ordinal)))
 				{
 					template = item;
 				}
@@ -357,7 +402,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			return new SummaryData
 			{
-				Name         = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", prefix, index),
+				Name         = SummaryData.BuildName (prefix, index),
+				AutoGroup    = template.AutoGroup,
 				IconUri      = template.IconUri,
 				Title        = template.Title,
 				CompactTitle = template.CompactTitle,
@@ -389,7 +435,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (this.template.IsCompatible (item))
 				{
-					var name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", this.template.Name, index);
+					var name = SummaryData.BuildName (this.template.NamePrefix, index);
 					var data = summaryDataGetter (name, index);
 
 					this.template.BindSummaryData (data, item);

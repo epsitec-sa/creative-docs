@@ -667,24 +667,47 @@ namespace Epsitec.Cresus.Core
 		private void ResetDataTiles()
 		{
 			HashSet<long> visualIds = new HashSet<long> ();
+			Dictionary<string, TitleTile> tiles = new Dictionary<string, TitleTile> ();
 
 			foreach (var item in this.dataItems)
 			{
 				System.Diagnostics.Debug.Assert (item.TitleTile != null);
 				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
 
-				long visualId = item.TitleTile.GetVisualSerialId ();
-
-				if (visualIds.Contains (visualId))
+				if (item.AutoGroup)
 				{
-					item.TitleTile.Items.Remove (item.SummaryTile);
-					item.TitleTile = new Widgets.Tiles.TitleTile ();
-					item.TitleTile.Items.Add (item.SummaryTile);
+					string prefix = SummaryData.GetNamePrefix (item.Name);
+					TitleTile other;
+
+					if (tiles.TryGetValue (prefix, out other))
+					{
+						if (item.TitleTile != other)
+						{
+							item.TitleTile.Items.Remove (item.SummaryTile);
+							item.TitleTile = other;
+							item.TitleTile.Items.Add (item.SummaryTile);
+						}
+					}
+					else
+					{
+						tiles.Add (prefix, item.TitleTile);
+					}
 				}
 				else
 				{
-					item.TitleTile.Parent = null;
-					visualIds.Add (visualId);
+					long visualId = item.TitleTile.GetVisualSerialId ();
+
+					if (visualIds.Contains (visualId))
+					{
+						item.TitleTile.Items.Remove (item.SummaryTile);
+						item.TitleTile = new Widgets.Tiles.TitleTile ();
+						item.TitleTile.Items.Add (item.SummaryTile);
+					}
+					else
+					{
+						item.TitleTile.Parent = null;
+						visualIds.Add (visualId);
+					}
 				}
 
 				item.SummaryTile.IsCompact = false;
@@ -707,7 +730,7 @@ namespace Epsitec.Cresus.Core
 				else
 				{
 					item.SummaryTile.Summary = item.Text.ToString ();
-					item.TitleTile.Title     = item.Title.ToString ();
+					item.TitleTile.Title     = item.AutoGroup ? item.CompactTitle.ToString () : item.Title.ToString ();
 					item.TitleTile.IconUri   = item.IconUri;
 				}
 
