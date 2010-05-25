@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
 	
-	public class TileContainerController
+	public class TileContainerController : System.IDisposable
 	{
 		public TileContainerController(CoreViewController controller, Widget container, SummaryDataItems dataItems)
 		{
@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container   = container;
 			this.dataItems   = dataItems;
 			this.activeItems = new List<SummaryData> ();
+
+			this.container.SizeChanged += this.HandleContainerSizeChanged;
 		}
 
 		
@@ -75,7 +77,20 @@ namespace Epsitec.Cresus.Core.Controllers
 				break;
 			}
 		}
-		
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.container.SizeChanged -= this.HandleContainerSizeChanged;
+			
+			this.GetTitleTiles ().ForEach (x => x.Parent = null);
+
+			TileContainerController.DisposeDataItems (this.dataItems);
+		}
+
+		#endregion
 		
 		private void QueueTasklet<T>(string name, T source, System.Action<T> action, params SimpleCallback[] andThen)
 		{
@@ -112,11 +127,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.SortActiveItems ();
 			this.CreateMissingSummaryTiles ();
-			this.ResetTitleTiles ();
+			this.RefreshTitleTiles ();
 			this.RefreshLayout ();
 			this.SetDataTilesParent (this.container);
 		}
-
 
 		private void RefreshLayout()
 		{
@@ -128,6 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.LayoutTiles (this.container.ActualHeight);
 		}
 
+		
 		private static void DisposeDataItems(IEnumerable<SummaryData> collection)
 		{
 			foreach (var item in collection)
@@ -156,6 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		
 		private void SortActiveItems()
 		{
 			this.activeItems.Sort ();
@@ -244,7 +260,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.TitleTile = null;
 		}
 		
-		private void ResetTitleTiles()
+		private void RefreshTitleTiles()
 		{
 			var visualIds = new HashSet<long> ();
 			var tileCache = new Dictionary<string, TitleTile> ();
@@ -310,11 +326,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in this.activeItems)
 			{
-				TileContainerController.RefreshTileContent (item);
+				TileContainerController.SetTileContent (item);
 			}
 		}
 
-		private static void RefreshTileContent(SummaryData item)
+		private static void SetTileContent(SummaryData item)
 		{
 			if (item.SummaryTile.IsCompact)
 			{
@@ -372,11 +388,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		private void HandleContainerSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			Size oldSize = (Size) e.OldValue;
+			Size newSize = (Size) e.NewValue;
+
+			if (oldSize.Height != newSize.Height)
+			{
+				this.LayoutTiles (newSize.Height);
+			}
+		}
+
 		private readonly Widget					container;
 		private readonly CoreViewController		controller;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		activeItems;
-
-		private int currentGeneration;
 	}
 }

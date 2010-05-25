@@ -42,11 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					EntityAccessor		= () => this.Entity,
 				});
 
-			Entities.UriSchemeEntity uriMail = new Entities.UriSchemeEntity ()
-			{
-				Code = "mailto",
-				Name = "E-mail"
-			};
+			var uriMail = CoreProgram.Application.Data.GetUriSchemes ().Where (x => x.Code == "mailto").First ();
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
@@ -109,18 +105,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var containerController = new TileContainerController (this, container, data);
 
 			containerController.MapDataToTiles ();
-
-			container.SizeChanged +=
-				(sender, e) =>
-				{
-					Size oldSize = (Size) e.OldValue;
-					Size newSize = (Size) e.NewValue;
-
-					if (oldSize.Height != newSize.Height)
-					{
-						containerController.LayoutTiles (newSize.Height);
-					}
-				};
 #endif
 		}
 

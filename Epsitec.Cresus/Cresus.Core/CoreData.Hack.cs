@@ -55,6 +55,63 @@ namespace Epsitec.Cresus.Core
 			return this.sampleRoles;
 		}
 
+		public IEnumerable<UriSchemeEntity> GetUriSchemes()
+		{
+			if (this.uriSchemes == null)
+            {
+				this.uriSchemes = new List<UriSchemeEntity> ();
+				
+				var uriScheme1 = EntityContext.Current.CreateEmptyEntity<UriSchemeEntity> ();
+
+				using (uriScheme1.DefineOriginalValues ())
+				{
+					uriScheme1.Code = "mailto";
+					uriScheme1.Name = "Mail";
+				}
+
+				this.uriSchemes.Add (uriScheme1);
+			}
+
+			return this.uriSchemes;
+		}
+
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypes()
+		{
+			if (this.telecomTypes == null)
+            {
+				this.telecomTypes = new List<TelecomTypeEntity> ();
+
+				var telecomType1 = EntityContext.Current.CreateEmptyEntity<TelecomTypeEntity> ();
+				var telecomType2 = EntityContext.Current.CreateEmptyEntity<TelecomTypeEntity> ();
+				var telecomType3 = EntityContext.Current.CreateEmptyEntity<TelecomTypeEntity> ();
+
+				using (telecomType1.DefineOriginalValues ())
+				{
+					telecomType1.Code = "fixnet";
+					telecomType1.Name = "Téléphone fixe";
+				}
+
+				using (telecomType2.DefineOriginalValues ())
+				{
+					telecomType2.Code = "mobile";
+					telecomType2.Name = "Téléphone mobile";
+				}
+
+				using (telecomType3.DefineOriginalValues ())
+				{
+					telecomType3.Code = "fixnet";
+					telecomType3.Name = "Téléphone fixe";
+				}
+
+				this.telecomTypes.Add (telecomType1);
+				this.telecomTypes.Add (telecomType2);
+				this.telecomTypes.Add (telecomType3);
+			}
+
+			return this.telecomTypes;
+		}
+
+
 		public IEnumerable<AbstractPersonEntity> GetSamplePersons()
 		{
 			//	HACK: this method will soon be replaced by repositories
@@ -65,7 +122,7 @@ namespace Epsitec.Cresus.Core
 				IEnumerable<LocationEntity> locations = this.GetSampleLocations ();
 
 				this.samplePersons = new List<AbstractPersonEntity> ();
-				CoreData.CreateSamplePersons (this.samplePersons, roles, locations);
+				this.CreateSamplePersons (this.samplePersons, roles, locations);
 			}
 
 			return this.samplePersons;
@@ -5660,7 +5717,7 @@ namespace Epsitec.Cresus.Core
 			roles.Add (role5);
 		}
 
-		private static void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<ContactRoleEntity> roles, IEnumerable<LocationEntity> locations)
+		private void CreateSamplePersons(List<AbstractPersonEntity> persons, IEnumerable<ContactRoleEntity> roles, IEnumerable<LocationEntity> locations)
 		{
 			ContactRoleEntity role1 = null;
 			ContactRoleEntity role2 = null;
@@ -5769,27 +5826,9 @@ namespace Epsitec.Cresus.Core
 				contact2.NaturalPerson = person1;
 			}
 
-			var telecomType1 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-			var telecomType2 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-			var telecomType3 = context.CreateEmptyEntity<TelecomTypeEntity> ();
-
-			using (telecomType1.DefineOriginalValues ())
-			{
-				telecomType1.Code = "fixnet";
-				telecomType1.Name = "Téléphone fixe";
-			}
-
-			using (telecomType2.DefineOriginalValues ())
-			{
-				telecomType2.Code = "mobile";
-				telecomType2.Name = "Téléphone mobile";
-			}
-
-			using (telecomType3.DefineOriginalValues ())
-			{
-				telecomType3.Code = "fixnet";
-				telecomType3.Name = "Téléphone fixe";
-			}
+			var telecomType1 = this.GetTelecomTypes ().Where (x => x.Code == "fixnet").First ();
+			var telecomType2 = this.GetTelecomTypes ().Where (x => x.Code == "mobile").First ();
+			var telecomType3 = this.GetTelecomTypes ().Where (x => x.Code == "fixnet").First ();
 
 			var telecom1 = context.CreateEmptyEntity<TelecomContactEntity> ();
 			var telecom2 = context.CreateEmptyEntity<TelecomContactEntity> ();
@@ -5822,14 +5861,8 @@ namespace Epsitec.Cresus.Core
 			}
 
 
-			var uriScheme1 = context.CreateEmptyEntity<UriSchemeEntity> ();
+			var uriScheme1 = this.GetUriSchemes ().Where (x => x.Code == "mailto").First ();
 			
-			using (uriScheme1.DefineOriginalValues ())
-			{
-				uriScheme1.Code = "mailto";
-				uriScheme1.Name = "Mail";
-			}
-
 			var uri1 = context.CreateEmptyEntity<UriContactEntity> ();
 			var uri2 = context.CreateEmptyEntity<UriContactEntity> ();
 			var uri3 = context.CreateEmptyEntity<UriContactEntity> ();
@@ -5900,5 +5933,7 @@ namespace Epsitec.Cresus.Core
 		List<LocationEntity> sampleLocations;
 		List<ContactRoleEntity> sampleRoles;
 		List<AbstractPersonEntity> samplePersons;
+		List<TelecomTypeEntity> telecomTypes;
+		List<UriSchemeEntity> uriSchemes;
 	}
 }
