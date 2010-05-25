@@ -43,8 +43,8 @@
     <Compile Include="..\UnitTests\Cresus.Core.UnitTests\Database.cs">
       <Link>Database.cs</Link>
     </Compile>
-    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\EntityBuilder.cs">
-      <Link>EntityBuilder.cs</Link>
+    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\Database1.cs">
+      <Link>Database1.cs</Link>
     </Compile>
     <Compile Include="..\UnitTests\Cresus.Core.UnitTests\TestSetup.cs">
       <Link>TestSetup.cs</Link>

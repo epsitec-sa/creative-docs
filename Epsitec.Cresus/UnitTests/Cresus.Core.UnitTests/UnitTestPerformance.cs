@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core
 			if (UnitTestPerformance.createAndPopulateDatabase)
 			{
 				Database.CreateAndConnectToDatabase ();
-				Database.PopulateDatabase (UnitTestPerformance.bigDatabase);
+				Database1.PopulateDatabase (UnitTestPerformance.bigDatabase);
 			}
 			else
 			{
