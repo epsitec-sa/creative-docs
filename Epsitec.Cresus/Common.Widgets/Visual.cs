@@ -381,6 +381,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsActualGeometryDirty
+		{
+			get
+			{
+				return this.dirtyLayout;
+			}
+		}
+
 		public Drawing.Rectangle				ActualBounds
 		{
 			//	Coordonnées du widget par rapport à son parent.
