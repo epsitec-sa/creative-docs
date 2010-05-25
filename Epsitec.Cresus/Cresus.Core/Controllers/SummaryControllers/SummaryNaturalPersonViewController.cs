@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -40,6 +41,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					EntityAccessor		= () => this.Entity,
 				});
 
+			Entities.UriSchemeEntity uriMail = new Entities.UriSchemeEntity ()
+			{
+				Code = "mailto",
+				Name = "E-mail"
+			};
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
@@ -53,7 +59,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri));
+				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri))
+				.DefineSetupItem    (x => x.UriScheme = uriMail);
 
 			var accessor1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
 			var accessor2 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template2);
