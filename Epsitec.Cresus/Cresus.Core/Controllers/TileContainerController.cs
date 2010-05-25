@@ -33,6 +33,48 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshCollectionItems ();
 		}
 
+		public void LayoutTiles(double maxHeight)
+		{
+			bool expandWhenSpaceIsAvailable = true;
+
+			while (true)
+			{
+				this.RefreshDataTilesContent ();
+
+				var tiles  = this.GetTitleTiles ();
+				var height = TileContainerController.GetTotalHeight (tiles);
+
+				if (height < maxHeight)
+				{
+					if (expandWhenSpaceIsAvailable)
+					{
+						var lastCompactItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && item.SummaryTile.IsCompact);
+
+						if (lastCompactItem != null)
+						{
+							lastCompactItem.SummaryTile.IsCompact = false;
+							continue;
+						}
+					}
+				}
+				else if (height > maxHeight)
+				{
+					expandWhenSpaceIsAvailable = false;
+					
+					var lastExpandedItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && !item.SummaryTile.IsCompact);
+
+					if (lastExpandedItem != null)
+					{
+						lastExpandedItem.SummaryTile.IsCompact = true;
+						continue;
+					}
+				}
+
+				break;
+			}
+		}
+		
+		
 		private void QueueTasklet<T>(string name, T source, System.Action<T> action, params SimpleCallback[] andThen)
 		{
 			andThen.ForEach (callback => Application.QueueAsyncCallback (callback));
@@ -58,22 +100,40 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeItems.Clear ();
 			this.activeItems.AddRange (currentItems);
 
-			this.DisposeDataItems (obsoleteItems);
+			TileContainerController.DisposeDataItems (obsoleteItems);
 
 			this.QueueTasklet ("ExecuteAccessors", this.activeItems, items => items.ForEach (x => x.ExecuteAccessors ()),
 				this.RefreshDataTiles);
 		}
 
-		private void DisposeDataItems(IEnumerable<SummaryData> collection)
+		private static void DisposeDataItems(IEnumerable<SummaryData> collection)
 		{
-			//	TODO: dispose data items
+			foreach (var item in collection)
+			{
+				var summary = item.SummaryTile;
+				var title   = item.TitleTile;
+
+				item.TitleTile   = null;
+				item.SummaryTile = null;
+
+				if (summary != null)
+				{
+					summary.Dispose ();
+				}
+				
+				if ((title != null) &&
+					(title.Items.Count == 0))
+				{
+					title.Dispose ();
+				}
+			}
 		}
 
 
 		private void RefreshDataTiles()
 		{
 			this.SortActiveItems ();
-			this.CreateMissingDataTiles ();
+			this.CreateMissingSummaryTiles ();
 			this.ResetDataTiles ();
 
 			if (!this.container.IsActualGeometryValid)
@@ -88,95 +148,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void LayoutTiles(double maxHeight)
-		{
-			while (true)
-			{
-				double height = this.RefreshDataTilesContent ();
-
-				if (height <= maxHeight)
-				{
-					break;
-				}
-
-				var lastItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && !item.SummaryTile.IsCompact);
-
-				if (lastItem == null)
-				{
-					break;
-				}
-
-				lastItem.SummaryTile.IsCompact = true;
-			}
-		}
-		public static FormattedText FormatText(params object[] values)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			bool emptyItem = true;
-
-			foreach (var value in values.Select (item => UIBuilder.ConvertToText (item)))
-			{
-				string text = value.Replace ("\n", FormattedText.HtmlBreak).Trim ();
-
-				if (text.Length == 0)
-				{
-					emptyItem = true;
-					continue;
-				}
-
-				if (text[0] == '~')
-				{
-					if (emptyItem)
-					{
-						continue;
-					}
-
-					text = text.Substring (1);
-				}
-
-				if (!emptyItem && buffer[buffer.Length-1] != '(' && !Misc.IsPunctuationMark (text[0]))
-				{
-					buffer.Append (" ");
-				}
-
-				buffer.Append (text);
-
-				emptyItem = text.EndsWith (FormattedText.HtmlBreak);
-			}
-
-			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
-		}
-
-		public static string ConvertToText(object value)
-		{
-			if (value == null)
-			{
-				return "";
-			}
-
-			string text = value as string;
-
-			if (text != null)
-			{
-				return text;
-			}
-
-			if (value is Date)
-			{
-				return ((Date) value).ToDateTime ().ToShortDateString ();
-			}
-
-			return value.ToString ();
-		}
-
+		
 
 		private void SortActiveItems()
 		{
 			this.activeItems.Sort ();
 		}
 
-		private void CreateMissingDataTiles()
+		private void CreateMissingSummaryTiles()
 		{
 			foreach (var item in this.activeItems)
 			{
@@ -184,11 +163,32 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.CreateSummaryTile (item);
 
-					UIBuilder.CreateTileHandler (item.SummaryTile, this.controller);
+					TileContainerController.CreateSummaryTileHandler (item.SummaryTile, this.controller);
 				}
 
-				this.CreateTitleTile (item);
+				if (item.TitleTile == null)
+				{
+					this.CreateTitleTile (item);
+				}
 			}
+		}
+
+		private static void CreateSummaryTileHandler(SummaryTile tile, CoreViewController controller)
+		{
+			tile.Clicked +=
+				delegate
+				{
+					tile.ToggleSubView (controller.Orchestrator, controller);
+				};
+		}
+
+		private static void CreateTitleTileHandler(TitleTile tile, CoreViewController controller)
+		{
+			tile.Clicked +=
+				delegate
+				{
+					tile.Items[0].ToggleSubView (controller.Orchestrator, controller);
+				};
 		}
 
 		private void CreateSummaryTile(SummaryData item)
@@ -221,14 +221,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private TitleTile CreateTitleTile(SummaryData item)
 		{
-			if (item.TitleTile == null)
-			{
-				item.TitleTile = new TitleTile ();
-			}
+			System.Diagnostics.Debug.Assert (item.TitleTile == null);
+			System.Diagnostics.Debug.Assert (item.SummaryTile != null);
+			
+			item.TitleTile = new TitleTile ();
 
+			TileContainerController.CreateTitleTileHandler (item.TitleTile, this.controller);
+
+			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.SummaryTile));
+			
 			return item.TitleTile;
 		}
 
+		private void RemoveTitleTile(SummaryData item)
+		{
+			item.TitleTile = null;
+		}
+		
 		private void ResetDataTiles()
 		{
 			var visualIds = new HashSet<long> ();
@@ -238,78 +247,101 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
 
-				if (item.TitleTile != null)
-				{
-					item.TitleTile.Parent = null;
-				}
-
 				if (item.AutoGroup)
 				{
-					string prefix = SummaryData.GetNamePrefix (item.Name);
-					TitleTile other;
-
-					if (tileCache.TryGetValue (prefix, out other))
-					{
-						item.TitleTile = other;
-					}
-					else
-					{
-						tileCache.Add (prefix, this.CreateTitleTile (item));
-					}
+					this.ResetAutoGroupItemDataTile (item, tileCache);
 				}
 				else
 				{
-					this.CreateTitleTile (item);
-
-					long visualId = item.TitleTile.GetVisualSerialId ();
-
-					if (visualIds.Contains (visualId))
-					{
-						item.TitleTile = null;
-						this.CreateTitleTile (item);
-					}
-					else
-					{
-						visualIds.Add (visualId);
-					}
+					this.ResetStandardItemDataTile (item, visualIds);
 				}
 
 				item.SummaryTile.IsCompact = false;
 			}
+
+			tileCache.Values.ForEach (tile => tile.Parent = null);
 		}
 
-		private double RefreshDataTilesContent()
+		private void ResetAutoGroupItemDataTile(SummaryData item, Dictionary<string, TitleTile> tileCache)
 		{
-			var visualIds = new HashSet<long> ();
-			var titleTiles = new List<TitleTile> ();
+			TitleTile other;
+			string prefix = SummaryData.GetNamePrefix (item.Name);
+
+			if (tileCache.TryGetValue (prefix, out other))
+			{
+				item.TitleTile = other;
+			}
+			else
+			{
+				if (item.TitleTile == null)
+				{
+					this.CreateTitleTile (item);
+				}
+
+				tileCache.Add (prefix, item.TitleTile);
+			}
+		}
+
+		private void ResetStandardItemDataTile(SummaryData item, HashSet<long> visualIds)
+		{
+			if (item.TitleTile == null)
+			{
+				this.CreateTitleTile (item);
+				
+				visualIds.Add (item.TitleTile.GetVisualSerialId ());
+			}
+			else
+			{
+				if (! visualIds.Add (item.TitleTile.GetVisualSerialId ()))
+				{
+					this.RemoveTitleTile (item);
+					this.CreateTitleTile (item);
+				}
+			}
+		}
+		
+		private void RefreshDataTilesContent()
+		{
+			foreach (var item in this.activeItems)
+			{
+				TileContainerController.RefreshDataTileContent (item);
+			}
+		}
+
+		private static void RefreshDataTileContent(SummaryData item)
+		{
+			if (item.SummaryTile.IsCompact)
+			{
+				item.SummaryTile.Summary = item.CompactText.ToString ();
+				item.TitleTile.Title     = item.CompactTitle.ToString ();
+			}
+			else
+			{
+				item.SummaryTile.Summary = item.Text.ToString ();
+				item.TitleTile.Title     = item.DefaultTitle.ToString ();
+			}
+
+			item.TitleTile.IconUri = item.IconUri;
+		}
+
+		private IEnumerable<TitleTile> GetTitleTiles()
+		{
+			var visualIds  = new HashSet<long> ();
 
 			foreach (var item in this.activeItems)
 			{
-				if (item.SummaryTile.IsCompact)
+				if (visualIds.Add (item.TitleTile.GetVisualSerialId ()))
 				{
-					item.SummaryTile.Summary = item.CompactText.ToString ();
-					item.TitleTile.Title     = item.CompactTitle.ToString ();
-					item.TitleTile.IconUri   = item.IconUri;
-				}
-				else
-				{
-					item.SummaryTile.Summary = item.Text.ToString ();
-					item.TitleTile.Title     = item.DefaultTitle.ToString ();
-					item.TitleTile.IconUri   = item.IconUri;
-				}
-
-				long visualId = item.TitleTile.GetVisualSerialId ();
-
-				if (!visualIds.Contains (visualId))
-				{
-					visualIds.Add (visualId);
-					titleTiles.Add (item.TitleTile);
+					yield return item.TitleTile;
 				}
 			}
+		}
 
+		private static double GetTotalHeight(IEnumerable<TitleTile> collection)
+		{
 			double height = 0;
 
-			foreach (var tile in titleTiles)
+			foreach (var tile in collection)
 			{
 				if (height > 0)
 				{
@@ -318,10 +350,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				height += tile.GetFullHeight ();
 			}
-
+			
 			return height;
 		}
-
+		
 		private void SetDataTilesParent(Widget parent)
 		{
 			var visualIds = new HashSet<long> ();
