@@ -100,6 +100,34 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
+		public System.Action AddNewItem
+		{
+			get;
+			set;
+		}
+
+		public System.Action DeleteItem
+		{
+			get;
+			set;
+		}
+
+		public FormattedText DefaultTitle
+		{
+			get
+			{
+				if (this.AutoGroup)
+				{
+					return this.CompactTitle;
+				}
+				else
+				{
+					return this.Title;
+				}
+			}
+		}
+
+
 		public System.Func<AbstractEntity> EntityAccessor
 		{
 			get;
@@ -228,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var options = System.Globalization.CompareOptions.StringSort | System.Globalization.CompareOptions.IgnoreCase;
 			var culture = System.Globalization.CultureInfo.CurrentCulture;
-			int result  = string.Compare (this.Title.ToSimpleText (), other.Title.ToSimpleText (), culture, options);
+			int result  = string.Compare (this.DefaultTitle.ToSimpleText (), other.DefaultTitle.ToSimpleText (), culture, options);
 
 			if (result == 0)
             {
@@ -252,12 +280,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private readonly List<AccessorBinding> bindings;
 	}
 
-	public class CollectionTemplate<T>
+	public class CollectionTemplate<T> : ICollectionTemplate
 		where T : AbstractEntity, new ()
 	{
 		public CollectionTemplate(string name)
 		{
 			this.name = name;
+
+			this.DefineCreateItem (() => EntityContext.Current.CreateEmptyEntity<T> ());
+			this.DefineDeleteItem (item => { });
 		}
 
 		public CollectionTemplate(string name, System.Predicate<T> filter)
@@ -266,6 +297,40 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.Filter = filter;
 		}
 
+		public bool HasCreateItem
+		{
+			get
+			{
+				return this.createItem != null;
+			}
+		}
+
+		public bool HasDeleteItem
+		{
+			get
+			{
+				return this.deleteItem != null;
+			}
+		}
+
+		public CollectionTemplate<T> DefineCreateItem(System.Func<T> action)
+		{
+			this.createItem = action;
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineDeleteItem(System.Action<T> action)
+		{
+			this.deleteItem = action;
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineSetupItem(System.Action<T> action)
+		{
+			this.setupItem = action;
+			return this;
+		}
+		
 		public CollectionTemplate<T> DefineTitle(System.Func<T, FormattedText> action)
 		{
 			this.TitleAccessor = IndirectAccessor<T>.Create (action);
@@ -346,7 +411,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		public void BindSummaryData(SummaryData data, AbstractEntity entity)
+		public void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor)
 		{
 			T source = entity as T;
 
@@ -355,9 +420,68 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor,         source);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
 			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor,  source);
+			data.DataType			  = SummaryDataType.CollectionItem;
+
+			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
+            {
+				data.AddNewItem = () => collectionAccessor.AddItem (this.CreateItem ());
+				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
+            }
 		}
 
+		public T CreateItem()
+		{
+			var item = this.createItem ();
+			
+			if (item != null)
+            {
+				EntityNullReferenceVirtualizer.PatchNullReferences (item);
+
+				if (this.setupItem != null)
+				{
+					this.setupItem (item);
+				}
+            }
+			
+			return item;
+		}
+
+		public void DeleteItem(T item)
+		{
+			this.deleteItem (item);
+		}
+
+	
+		#region ICollectionTemplate Members
+
+		AbstractEntity  ICollectionTemplate.CreateItem()
+		{
+ 			return this.CreateItem ();
+		}
+
+		void  ICollectionTemplate.DeleteItem(AbstractEntity item)
+		{
+ 			this.DeleteItem (item as T);
+		}
+
+		#endregion
+		
 		private readonly string name;
+		private System.Func<T> createItem;
+		private System.Action<T> deleteItem;
+		private System.Action<T> setupItem;
+}
+
+	public interface ICollectionTemplate
+	{
+		AbstractEntity CreateItem();
+		void DeleteItem(AbstractEntity item);
+	}
+
+	public interface ICollectionAccessor
+	{
+		void AddItem(AbstractEntity item);
+		bool RemoveItem(AbstractEntity item);
 	}
 
 	public abstract class CollectionAccessor
@@ -371,7 +495,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
-		
+
 		public static SummaryData FindTemplate(List<SummaryData> collection, string name, int index)
 		{
 			System.Diagnostics.Debug.Assert (name.Contains ('.'));
@@ -413,7 +537,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 	}
 
-	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
+	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor, ICollectionAccessor
 		where T1 : AbstractEntity, new ()
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
@@ -438,7 +562,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					var name = SummaryData.BuildName (this.template.NamePrefix, index);
 					var data = summaryDataGetter (name, index);
 
-					this.template.BindSummaryData (data, item);
+					this.template.BindSummaryData (data, item, this);
 
 					yield return data;
 
@@ -446,6 +570,22 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 			}
 		}
+
+		#region ICollectionAccessor Members
+
+		void ICollectionAccessor.AddItem(AbstractEntity item)
+		{
+			var collection = this.collectionResolver (this.source);
+			collection.Add (item as T3);
+		}
+
+		bool ICollectionAccessor.RemoveItem(AbstractEntity item)
+		{
+			var collection = this.collectionResolver (this.source);
+			return collection.Remove (item as T3);
+		}
+
+		#endregion
 
 		private readonly T1 source;
 		private System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver;

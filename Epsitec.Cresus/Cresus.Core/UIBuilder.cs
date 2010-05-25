@@ -679,7 +679,7 @@ namespace Epsitec.Cresus.Core
 			{
 				if (item.SummaryTile == null)
 				{
-					item.SummaryTile = new Widgets.Tiles.SummaryTile ();
+					UIBuilder.CreateSummaryTile (item);
 					item.SummaryTile.Controller = item;
 					
 					UIBuilder.CreateTileHandler (item.SummaryTile, this.controller);
@@ -687,9 +687,27 @@ namespace Epsitec.Cresus.Core
 
 				if (item.TitleTile == null)
 				{
-					item.TitleTile = new Widgets.Tiles.TitleTile ();
+					item.TitleTile = new TitleTile ();
 					item.TitleTile.Items.Add (item.SummaryTile);
 				}
+			}
+		}
+
+		private static void CreateSummaryTile(SummaryData item)
+		{
+			if (item.DataType == SummaryDataType.CollectionItem)
+			{
+				var tile = new CollectionItemTile ();
+
+				tile.AddClicked    += sender => item.AddNewItem ();
+				tile.RemoveClicked += sender => item.DeleteItem ();
+
+				item.SummaryTile = tile;
+			}
+			else
+			{
+				var tile = new SummaryTile ();
+				item.SummaryTile = tile;
 			}
 		}
 
@@ -731,7 +749,7 @@ namespace Epsitec.Cresus.Core
 					if (visualIds.Contains (visualId))
 					{
 						item.TitleTile.Items.Remove (item.SummaryTile);
-						item.TitleTile = new Widgets.Tiles.TitleTile ();
+						item.TitleTile = new TitleTile ();
 						item.TitleTile.Items.Add (item.SummaryTile);
 					}
 					else
@@ -747,7 +765,7 @@ namespace Epsitec.Cresus.Core
 		private double RefreshDataTiles()
 		{
 			var visualIds = new HashSet<long> ();
-			var titleTiles = new List<Widgets.Tiles.TitleTile> ();
+			var titleTiles = new List<TitleTile> ();
 
 			foreach (var item in this.dataItems)
 			{
