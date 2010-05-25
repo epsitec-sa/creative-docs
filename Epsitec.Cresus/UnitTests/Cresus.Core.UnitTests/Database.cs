@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core
 
 		public static void CreateAndConnectToDatabase()
 		{
-			Database.dbInfrastructure = TestSetup.CreateDbInfrastructure ();
+			Database.dbInfrastructure = TestHelper.CreateDbInfrastructure ();
 		}
 
 

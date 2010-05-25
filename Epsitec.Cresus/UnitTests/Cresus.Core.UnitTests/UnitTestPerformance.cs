@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core
 		[ClassInitialize]
 		public static void Initialize(TestContext testContext)
 		{
-			TestSetup.Initialize ();
+			TestHelper.Initialize ();
 
 			if (UnitTestPerformance.createAndPopulateDatabase)
 			{

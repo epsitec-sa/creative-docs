@@ -46,8 +46,8 @@
     <Compile Include="..\UnitTests\Cresus.Core.UnitTests\Database1.cs">
       <Link>Database1.cs</Link>
     </Compile>
-    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\TestSetup.cs">
-      <Link>TestSetup.cs</Link>
+    <Compile Include="..\UnitTests\Cresus.Core.UnitTests\TestHelper.cs">
+      <Link>TestHelper.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

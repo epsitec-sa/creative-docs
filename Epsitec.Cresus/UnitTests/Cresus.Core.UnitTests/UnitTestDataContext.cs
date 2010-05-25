@@ -5,6 +5,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Entities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,141 +15,198 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
+
+
 	[TestClass]
 	public class UnitTestDataContext
 	{
+
+
 		[ClassInitialize]
 		public static void Initialize(TestContext testContext)
 		{
-			TestSetup.Initialize ();
-			UnitTestDataContext.infrastructure = TestSetup.CreateDbInfrastructure ();
+			TestHelper.Initialize ();
 		}
-		
-		[TestMethod]
-		public void Test01DatabaseConnection()
-		{
-			Assert.IsTrue (UnitTestDataContext.infrastructure.IsConnectionOpen);
-		}
+
 
 		[TestMethod]
-		public void Test02DatabaseSchemaCreation()
+		public void CreateDatabase()
 		{
-			EntityContext entityContext = EntityContext.Current;
-			DataContext   dataContext   = new DataContext (UnitTestDataContext.infrastructure);
+			TestHelper.PrintStartTest ("Create database");
 
-			Assert.AreEqual (entityContext, dataContext.EntityContext);
-			
-			Assert.IsTrue (dataContext.CreateSchema<Entities.AddressEntity> ());
-			Assert.IsFalse (dataContext.CreateSchema<Entities.LocationEntity> ());
+			Database.CreateAndConnectToDatabase ();
 
-			dataContext.Dispose ();
+			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+		}
+
+
+		[TestMethod]
+		public void PopulateDatabase()
+		{
+			TestHelper.PrintStartTest ("Populate database");
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
+		}
+
+
+		[TestMethod]
+		public void SaveWithoutChanges1()
+		{
+			TestHelper.PrintStartTest ("Save without changes 1");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				dataContext.SaveChanges ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SaveWithoutChanges2()
+		{
+			TestHelper.PrintStartTest ("Save without changes 2");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+
+				UriContactEntity[] contacts = repository.GetEntitiesByExample<UriContactEntity> (new UriContactEntity ()).ToArray ();
+
+				Assert.IsTrue (contacts.Length == 4);
+
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "nobody@nowhere.com", null)));
+
+				dataContext.SaveChanges ();
+			}
+		}
+
+
+		[TestMethod]
+		public void Resolve1()
+		{
+			TestHelper.PrintStartTest ("Resolve 1");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				Assert.IsTrue (Database2.CheckAlfred (alfred));
+			}
+		}
+
+
+		[TestMethod]
+		public void DeleteRelation1()
+		{
+			TestHelper.PrintStartTest ("Delete Relation 1");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				Assert.IsTrue (alfred.Gender != null);
+
+				alfred.Gender = null;
+
+				Assert.IsTrue (alfred.Gender == null);
+
+				dataContext.SaveChanges ();
+			}
 		}
 
 		[TestMethod]
-		public void Test03DatabaseCreateCountryEntity()
+		public void DeleteRelation2()
 		{
-			EntityContext entityContext = EntityContext.Current;
-			DataContext   dataContext   = new DataContext (UnitTestDataContext.infrastructure);
+			TestHelper.PrintStartTest ("Delete Relation 2");
 
-			var country1 = dataContext.CreateEmptyEntity<Entities.CountryEntity> ();
-			var country2 = dataContext.CreateEmptyEntity<Entities.CountryEntity> ();
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-			country1.Code = "CH";
-			country1.Name = "Suisse";
-
-			country2.Code = "FR";
-			country2.Name = "France";
-
-			dataContext.SaveChanges ();
-			dataContext.Dispose ();
+				Assert.IsTrue (alfred.Gender == null);
+			}
 		}
+
 
 		[TestMethod]
-		public void Test04DatabaseReadBackCountryEntity()
+		public void DeleteRelation3()
 		{
-			EntityContext entityContext = EntityContext.Current;
-			DataContext   dataContext   = new DataContext (UnitTestDataContext.infrastructure);
+			TestHelper.PrintStartTest ("Delete Relation 3");
 
-			Assert.AreEqual (1, this.FindCountryEntities ("CH").Count ());
-			Assert.AreEqual (1, this.FindCountryEntities ("FR").Count ());
-			Assert.AreEqual (0, this.FindCountryEntities ("DE").Count ());
-			
-			var countryKey = this.FindCountryEntities ("CH").First ();
-			var country = dataContext.ResolveEntity<Entities.CountryEntity> (countryKey);
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
 
-			Assert.AreEqual ("CH", country.Code);
-			Assert.AreEqual ("Suisse", country.Name);
-			
-			dataContext.Dispose ();
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				Assert.IsTrue (Database2.CheckAlfred (alfred));
+
+				alfred.Contacts.RemoveAt (0);
+
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+
+				dataContext.SaveChanges ();
+			}
 		}
+
 
 		[TestMethod]
-		public void Test05DatabaseCreateAddressEntity()
+		public void DeleteRelation4()
 		{
-			EntityContext entityContext = EntityContext.Current;
-			DataContext   dataContext   = new DataContext (UnitTestDataContext.infrastructure);
+			TestHelper.PrintStartTest ("Delete Relation 4");
 
-			var address1 = dataContext.CreateEntity<Entities.AddressEntity> ();
-			var address2 = dataContext.CreateEntity<Entities.AddressEntity> ();
-			var location = dataContext.CreateEntity<Entities.LocationEntity> ();
-			var street1  = dataContext.CreateEntity<Entities.StreetEntity> ();
-			var street2  = dataContext.CreateEntity<Entities.StreetEntity> ();
-			var postBox  = dataContext.CreateEntity<Entities.PostBoxEntity> ();
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-			var countryKey = this.FindCountryEntities ("CH").First ();
-			var country    = dataContext.ResolveEntity<Entities.CountryEntity> (countryKey);
-
-			address1.Location   = location;
-			address1.Street     = street1;
-			address1.PostBox    = postBox;
-
-			address2.Location   = location;
-			address2.Street     = street2;
-
-			location.Country    = country;
-			location.Name       = "Yverdon-les-Bains";
-			location.PostalCode = "1400";
-
-			street1.StreetName  = "Ch. du Fontenay 6";
-			street2.StreetName  = "Rue d'Orbe 28";
-
-			postBox.Number      = "Case postale 1234";
-			
-			dataContext.SaveChanges ();
-			dataContext.Dispose ();
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+			}
 		}
 
 
-		private IEnumerable<DbKey> FindCountryEntities(string code)
+		[TestMethod]
+		public void DeleteEntity1()
 		{
-			throw new System.NotImplementedException ();
+			TestHelper.PrintStartTest ("Delete Entity 1");
 
-			// The DataBrowser has been significantly modified and this way of doing things does not exist anymore.
-			
-			//DataBrowser browser = new DataBrowser (UnitTestDataContext.infrastructure, new DataContext (UnitTestDataContext.infrastructure));
-			//DataQuery query = new DataQuery ();
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
 
-			//var entity = new Entities.CountryEntity ();
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-			//entity.Code = code;
-			//query.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse ("[L0A2]")));
+				Assert.IsTrue (Database2.CheckAlfred (alfred));
 
-			//using (DbTransaction transaction = browser.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-			//{
-				
+				dataContext.DeleteEntity (alfred.Contacts[0] as UriContactEntity);
 
-			//    foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
-			//    {
-			//        yield return row.Keys[0];
-			//    }
-
-			//    throw new System.NotImplementedException ("See comments above");
-
-			//    transaction.Commit ();
-			//}
+				dataContext.SaveChanges ();
+			}
 		}
 
 
-		private static DbInfrastructure infrastructure;
+		[TestMethod]
+		public void DeleteEntity2()
+		{
+			TestHelper.PrintStartTest ("Delete Entity 2");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+			}
+		}
+
+
 	}
+
+
 }

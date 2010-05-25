@@ -59,11 +59,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static void CheckAlfred(IEnumerable<NaturalPersonEntity> persons)
+		public static bool CheckAlfred(NaturalPersonEntity person)
 		{
-			bool alfred = persons.Count (person =>
-
-				person.Firstname == "Alfred"
+			return person.Firstname == "Alfred"
 		        && person.Lastname == "Dupond"
 		        && person.BirthDate == new Date (1950, 12, 31)
 
@@ -83,19 +81,13 @@ namespace Epsitec.Cresus.Core
 
 		        && (person.Contacts[1] as UriContactEntity).Uri == "alfred@blabla.com"
 		        && (person.Contacts[1] as UriContactEntity).UriScheme.Code == "mailto:"
-		        && (person.Contacts[1] as UriContactEntity).UriScheme.Name == "email"
-
-			) == 1;
-
-			Assert.IsTrue (alfred);
+		        && (person.Contacts[1] as UriContactEntity).UriScheme.Name == "email";
 		}
 
 
-		public static void CheckGertrude(IEnumerable<NaturalPersonEntity> persons)
+		public static bool CheckGertrude(NaturalPersonEntity person)
 		{
-			bool gertrude = persons.Count (person =>
-
-				person.Firstname == "Gertrude"
+			return person.Firstname == "Gertrude"
 		        && person.Lastname == "De-La-Motte"
 		        && person.BirthDate == new Date (1965, 5, 3)
 
@@ -111,19 +103,13 @@ namespace Epsitec.Cresus.Core
 
 		        && (person.Contacts[0] as UriContactEntity).Uri == "gertrude@coucou.com"
 		        && (person.Contacts[0] as UriContactEntity).UriScheme.Code == "mailto:"
-		        && (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email"
-
-			) == 1;
-
-			Assert.IsTrue (gertrude);
+		        && (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email";
 		}
 
 
-		public static void CheckHans(IEnumerable<NaturalPersonEntity> persons)
+		public static bool CheckHans(NaturalPersonEntity person)
 		{
-			bool alfred = persons.Count (person =>
-
-				person.Firstname == "Hans"
+			return person.Firstname == "Hans"
 		        && person.Lastname == "Strüdel"
 		        && person.BirthDate == new Date (1984, 8, 9)
 
@@ -135,45 +121,19 @@ namespace Epsitec.Cresus.Core
 		        && person.PreferredLanguage.Name == "German"
 		        && person.PreferredLanguage.Code == "Ge"
 
-				&& person.Contacts.Count == 0
-
-			) == 1;
-
-			Assert.IsTrue (alfred);
+				&& person.Contacts.Count == 0;
 		}
 
 
-		public static void CheckUriContacts(IEnumerable<UriContactEntity> contacts)
+		public static bool CheckUriContact(UriContactEntity contact, string uri, string firstname)
 		{
-			string[] urls = {
-				"alfred@coucou.com",
-				"alfred@blabla.com",
-				"gertrude@coucou.com",
-				"nobody@nowhere.com"
-			};
-
-			Assert.IsTrue (contacts.Count () == 4);
-
-			foreach (string url in urls)
-			{
-				bool contains = contacts.Count (c =>
-
-					c.Uri == url
-					&& c.UriScheme.Code == "mailto:"
-					&& c.UriScheme.Name == "email"
-					&& c.Comments.Count == 0
-					&& c.Roles.Count == 0
-					&& c.LegalPerson == null
-
-				) == 1;
-
-				Assert.IsTrue (contains);
-			}
-
-			Assert.IsTrue (contacts.First (c => c.Uri == "nobody@nowhere.com").NaturalPerson == null);
-			Assert.IsTrue (contacts.First (c => c.Uri == "gertrude@coucou.com").NaturalPerson.Firstname == "Gertrude");
-			Assert.IsTrue (contacts.First (c => c.Uri == "alfred@blabla.com").NaturalPerson.Firstname == "Alfred");
-			Assert.IsTrue (contacts.First (c => c.Uri == "alfred@coucou.com").NaturalPerson.Firstname == "Alfred");
+			return contact.Uri == uri
+				&& contact.UriScheme.Code == "mailto:"
+				&& contact.UriScheme.Name == "email"
+				&& contact.Comments.Count == 0
+				&& contact.Roles.Count == 0
+				&& contact.LegalPerson == null
+				&& ((contact.NaturalPerson == null && firstname == null) || (contact.NaturalPerson != null && contact.NaturalPerson.Firstname == firstname));
 		}
 
 
