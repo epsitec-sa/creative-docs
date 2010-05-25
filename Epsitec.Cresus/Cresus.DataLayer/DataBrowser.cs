@@ -281,11 +281,23 @@ namespace Epsitec.Cresus.DataLayer
 					this.AddJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, currentEntityId, heritedEntityIds.Last ());
 				}
 
+				this.AddConditionForEntityStatus (tableAliasManager, reader, currentEntityId);
+
 				foreach (StructuredTypeField field in localDefinedFields)
 				{
 					this.AddConditionForField (tableAliasManager, reader, currentEntityId, example, field);
 				}
 			}
+		}
+
+
+		private void AddConditionForEntityStatus(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId)
+		{
+			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), DataBrowser.statusColumn);
+
+			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+			condition.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			reader.AddCondition (condition);
 		}
 
 
@@ -309,9 +321,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddConditionForValue(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private void AddConditionForValue(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field)
 		{
-			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, tableAliasManager.GetCurrentSubtypeAlias (), field.Id);
+			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), field.Id);
 			
 			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
 			AbstractType fieldType = field.Type as AbstractType;
@@ -586,6 +598,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationTargetColumn);
+			//this.AddConditionForRelationStatus (tableAliasManager, reader, entityId, field);
 
 			tableAliasManager.GetPreviousEntityAlias ();
 		}
@@ -597,10 +610,21 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationTargetColumn);
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationRankColumn);
-			
+			//this.AddConditionForRelationStatus (tableAliasManager, reader, entityId, field);
+
 			tableAliasManager.GetPreviousEntityAlias ();
 
 			this.AddEntityQueryField (tableAliasManager, reader, example.GetEntityContext ().GetBaseEntityId (entityId), DataBrowser.idColumn);
+		}
+
+
+		private void AddConditionForRelationStatus(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId, StructuredTypeField field)
+		{
+			DbTableColumn tableColumn = this.GetRelationTableColumn (currentEntityId, Druid.Parse (field.Id), tableAliasManager.GetCurrentEntityAlias (), DataBrowser.statusColumn);
+
+			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+			condition.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			reader.AddCondition (condition);
 		}
 
 
@@ -683,12 +707,14 @@ namespace Epsitec.Cresus.DataLayer
 
 		private static string relationRankColumn = "[" + Tags.ColumnRefRank + "]";
 
-
+		
 		private static string idColumn = "[" + Tags.ColumnId + "]";
 
 
 		private static string typeColumn = "[" + Tags.ColumnInstanceType + "]";
 
+
+		private static string statusColumn = "[" + Tags.ColumnStatus + "]";
 
 	}
 

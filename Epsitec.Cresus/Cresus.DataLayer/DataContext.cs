@@ -225,15 +225,7 @@ namespace Epsitec.Cresus.DataLayer
 			//	Tables which contain the data for derived entities should be
 			//	skipped. See method SaveTablesRowIdAssignmentCallbackImplementation.
 
-			if ((table.Columns.Contains (Tags.ColumnInstanceType)) ||
-				(table.Columns.Contains (Tags.ColumnRefSourceId)))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return table.Columns.Contains (Tags.ColumnInstanceType) || table.Columns.Contains (Tags.ColumnRefSourceId);
 		}
 
 		/// <summary>
@@ -288,7 +280,6 @@ namespace Epsitec.Cresus.DataLayer
 							this.EntityContext.GetEntityLocalFieldDefinitions (currentId).
 							Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection);
 
-
 						foreach (StructuredTypeField field in localRelationFields)
 						{
 							string relationTableName = this.GetRelationTableName (currentId, field);
@@ -304,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, currentId);
 
-						this.DeleteRelationRow (dataRow);
+						this.RichCommand.DeleteExistingRow (dataRow);
 					}
 				}
 			}
