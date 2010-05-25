@@ -1005,34 +1005,12 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Fills the data set. This method may only be called by the <c>DbInfrastructure</c>
-		/// class and this is verified at execution time by doing a stack walk. Use the
-		/// <c>DbInfrastructure.Execute</c> method instead.
+		/// class Use the <c>DbInfrastructure.Execute</c> method instead.
 		/// </summary>
-		/// <param name="access">The access.</param>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="adapters">The adapters.</param>
 		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
 		{
-			//	Verify that we have been called by DbInfrastructure through the
-			//	ISqlEngine layer :
-			//
-			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
-			
-#if false //DEBUG
-			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
-			System.Diagnostics.StackFrame caller1 = trace.GetFrame (1);
-			System.Diagnostics.StackFrame caller2 = trace.GetFrame (2);
-			
-			System.Type callerClassType = caller1.GetMethod ().DeclaringType;
-			System.Type reqInterfType   = typeof (Epsitec.Cresus.Database.ISqlEngine);
-			
-			if ((callerClassType.GetInterface (reqInterfType.FullName) != reqInterfType) ||
-				(caller2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
-			{
-				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", callerClassType.FullName, caller1.GetMethod ().Name));
-			}
-#endif
-
 			System.Diagnostics.Debug.Assert (access.IsValid);
 			
 			if (transaction == null)
@@ -1759,7 +1737,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFieldList sqlConds  = new Collections.SqlFieldList ();
 			
 			int colCount = tableDef.GetSqlColumnCount ();
-			int rowCount = dataTable.Rows.Count;
 			
 			//	For every row in the table, create an SQL representation of it, including the
 			//	fields to store the data.
