@@ -183,16 +183,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (item.SummaryTile == null)
 				{
 					this.CreateSummaryTile (item);
-					item.SummaryTile.Controller = item;
 
 					UIBuilder.CreateTileHandler (item.SummaryTile, this.controller);
 				}
 
-				if (item.TitleTile == null)
-				{
-					item.TitleTile = new TitleTile ();
-					item.TitleTile.Items.Add (item.SummaryTile);
-				}
+				this.CreateTitleTile (item);
 			}
 		}
 
@@ -220,48 +215,58 @@ namespace Epsitec.Cresus.Core.Controllers
 				var tile = new SummaryTile ();
 				item.SummaryTile = tile;
 			}
+			
+			item.SummaryTile.Controller = item;
+		}
+
+		private TitleTile CreateTitleTile(SummaryData item)
+		{
+			if (item.TitleTile == null)
+			{
+				item.TitleTile = new TitleTile ();
+			}
+
+			return item.TitleTile;
 		}
 
 		private void ResetDataTiles()
 		{
-			HashSet<long> visualIds = new HashSet<long> ();
-			Dictionary<string, TitleTile> tiles = new Dictionary<string, TitleTile> ();
+			var visualIds = new HashSet<long> ();
+			var tileCache = new Dictionary<string, TitleTile> ();
 
 			foreach (var item in this.activeItems)
 			{
-				System.Diagnostics.Debug.Assert (item.TitleTile != null);
 				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
 
-				item.TitleTile.Parent = null;
+				if (item.TitleTile != null)
+				{
+					item.TitleTile.Parent = null;
+				}
 
 				if (item.AutoGroup)
 				{
 					string prefix = SummaryData.GetNamePrefix (item.Name);
 					TitleTile other;
 
-					if (tiles.TryGetValue (prefix, out other))
+					if (tileCache.TryGetValue (prefix, out other))
 					{
-						if (item.TitleTile != other)
-						{
-							item.TitleTile.Items.Remove (item.SummaryTile);
-							item.TitleTile = other;
-							item.TitleTile.Items.Add (item.SummaryTile);
-						}
+						item.TitleTile = other;
 					}
 					else
 					{
-						tiles.Add (prefix, item.TitleTile);
+						tileCache.Add (prefix, this.CreateTitleTile (item));
 					}
 				}
 				else
 				{
+					this.CreateTitleTile (item);
+
 					long visualId = item.TitleTile.GetVisualSerialId ();
 
 					if (visualIds.Contains (visualId))
 					{
-						item.TitleTile.Items.Remove (item.SummaryTile);
-						item.TitleTile = new TitleTile ();
-						item.TitleTile.Items.Add (item.SummaryTile);
+						item.TitleTile = null;
+						this.CreateTitleTile (item);
 					}
 					else
 					{

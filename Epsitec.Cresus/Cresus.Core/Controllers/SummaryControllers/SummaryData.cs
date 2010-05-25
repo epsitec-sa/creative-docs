@@ -87,10 +87,32 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
+		private TitleTile titleTile;
 		public TitleTile TitleTile
 		{
-			get;
-			set;
+			get
+			{
+				return this.titleTile;
+			}
+			set
+			{
+				if (this.titleTile != value)
+				{
+					if ((this.titleTile != null) &&
+						(this.SummaryTile != null))
+                    {
+						this.titleTile.Items.Remove (this.SummaryTile);
+                    }
+
+					this.titleTile = value;
+
+					if ((this.titleTile != null) &&
+						(this.SummaryTile != null))
+					{
+						this.titleTile.Items.Add (this.SummaryTile);
+					}
+				}
+			}
 		}
 
 		public SummaryTile SummaryTile
