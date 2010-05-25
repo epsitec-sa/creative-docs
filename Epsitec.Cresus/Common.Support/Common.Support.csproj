@@ -168,6 +168,7 @@
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
+    <Compile Include="Extensions\QueueExtensions.cs" />
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
