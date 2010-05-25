@@ -27,8 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var builder = new UIBuilder (container, this);
 			var items   = new List<SummaryData> ();
 
+			var data = new SummaryDataItems ();
 
-			items.Add (
+			data.StaticItems.Add (
 				new SummaryData
 				{
 					Rank				= 1000,
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var accessor2 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template2);
 			var accessor3 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template3);
 
-			items.Add (
+			data.EmptyItems.Add (
 				new SummaryData
 				{
 					Rank		 = 2000,
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
-			items.Add (
+			data.EmptyItems.Add (
 				new SummaryData
 				{
 					Rank		 = 3000,
@@ -89,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
-			items.Add (
+			data.EmptyItems.Add (
 				new SummaryData
 				{
 					Rank		 = 4000,
@@ -101,11 +102,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = new FormattedText ("<i>vide</i>")
 				});
 
-			items.AddRange (accessor1.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
-			items.AddRange (accessor2.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
-			items.AddRange (accessor3.Resolve ((name, index) => CollectionAccessor.FindTemplate (items, name, index)));
+			data.CollectionAccessors.Add (accessor1);
+			data.CollectionAccessors.Add (accessor2);
+			data.CollectionAccessors.Add (accessor3);
 
-			builder.MapDataToTiles (items);
+			var containerController = new TileContainerController (this, container, data);
+
+			containerController.MapDataToTiles ();
 
 			container.SizeChanged +=
 				(sender, e) =>
@@ -115,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 					if (oldSize.Height != newSize.Height)
 					{
-						builder.LayoutTiles (newSize.Height);
+						containerController.LayoutTiles (newSize.Height);
 					}
 				};
 #endif

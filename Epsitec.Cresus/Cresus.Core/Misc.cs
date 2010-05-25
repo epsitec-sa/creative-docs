@@ -19,6 +19,23 @@ namespace Epsitec.Cresus.Core
 			Misc.RemoveAccentsToLowerInitialize ();
 		}
 
+		public static bool IsPunctuationMark(char c)
+		{
+			switch (c)
+			{
+				case ',':
+				case ';':
+				case '.':
+				case ':':
+				case '/':
+				case ')':
+					return true;
+
+				default:
+					return false;
+			}
+		}
+
 	
 		/// <summary>
 		/// Explose une chaîne avec un séparateur à choix en une liste.

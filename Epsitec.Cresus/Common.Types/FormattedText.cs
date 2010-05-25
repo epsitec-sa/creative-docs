@@ -257,6 +257,8 @@ namespace Epsitec.Common.Types
 
 		public static readonly FormattedText Null = new FormattedText (null);
 
+		public const string						HtmlBreak		= "<br/>";
+		
 		private readonly string text;
 	}
 }
