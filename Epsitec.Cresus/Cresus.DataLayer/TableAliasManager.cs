@@ -29,30 +29,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public string GetCurrentEntityAlias()
-		{
-			return this.currentEntityNode.Alias;
-		}
-
-
-		public string GetPreviousEntityAlias()
-		{
-			this.currentEntityNode = this.currentEntityNode.GetParentNode ();
-			this.currentSubtypeNodes.Pop ();
-
-			return this.GetCurrentEntityAlias ();
-		}
-
-
-		public string GetNextEntityAlias(string name)
-		{
-			this.currentEntityNode = this.currentEntityNode.GetEntityNode (name);
-			this.currentSubtypeNodes.Push (null);
-
-			return this.GetCurrentEntityAlias ();
-		}
-
-
 		public string CreateSubtypeAlias(string name, bool useCurrentEntityAlias)
 		{
 			string alias = (useCurrentEntityAlias) ? this.GetCurrentEntityAlias () : this.CreateNewAlias ();
@@ -66,15 +42,42 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public string GetCurrentEntityAlias()
+		{
+			return this.currentEntityNode.Alias;
+		}
+
+
 		public string GetCurrentSubtypeAlias()
 		{
 			return this.currentSubtypeNodes.Peek ().Alias;
 		}
 
 
+		public string GetNextEntityAlias(string name)
+		{
+			return this.GetNextEntityAlias (name, 0);
+		}
+
+
 		public string GetNextSubtypeAlias(string name)
 		{
-			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (name);
+			return this.GetNextSubtypeAlias (name, 0);
+		}
+
+
+		public string GetNextEntityAlias(string name, int position)
+		{
+			this.currentEntityNode = this.currentEntityNode.GetEntityNode (name, position);
+			this.currentSubtypeNodes.Push (null);
+
+			return this.GetCurrentEntityAlias ();
+		}
+
+
+		public string GetNextSubtypeAlias(string name, int position)
+		{
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (name, position);
 
 			this.currentSubtypeNodes.Pop ();
 			this.currentSubtypeNodes.Push (currentSubtypeNode);
@@ -90,6 +93,15 @@ namespace Epsitec.Cresus.DataLayer
 			this.tableAliasNumber++;
 
 			return tableAlias;
+		}
+
+
+		public string GetPreviousEntityAlias()
+		{
+			this.currentEntityNode = this.currentEntityNode.GetParentNode ();
+			this.currentSubtypeNodes.Pop ();
+
+			return this.GetCurrentEntityAlias ();
 		}
 
 

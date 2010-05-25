@@ -35,12 +35,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public EntityTableAliasNode GetEntityNode(string name)
-		{
-			return this.entityNodes.FirstOrDefault (n => n.Name == name);
-		}
-
-
 		public SubtypeTableAliasNode CreateSubtypeNode(string name, string alias)
 		{
 			SubtypeTableAliasNode node = new SubtypeTableAliasNode (this, name, alias);
@@ -51,9 +45,27 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public EntityTableAliasNode GetEntityNode(string name)
+		{
+			return this.GetEntityNode (name, 0);
+		}
+
+
 		public SubtypeTableAliasNode GetSubtypeNode(string name)
 		{
-			return this.subtypeNodes.FirstOrDefault (n => n.Name == name);
+			return this.GetSubtypeNode (name, 0);
+		}
+
+
+		public EntityTableAliasNode GetEntityNode(string name, int position)
+		{
+			return this.entityNodes.Where (n => n.Name == name).ElementAtOrDefault (position);
+		}
+
+
+		public SubtypeTableAliasNode GetSubtypeNode(string name, int position)
+		{
+			return this.subtypeNodes.Where (n => n.Name == name).ElementAtOrDefault (position);
 		}
 
 
