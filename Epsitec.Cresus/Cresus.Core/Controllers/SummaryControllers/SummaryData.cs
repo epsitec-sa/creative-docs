@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var options = System.Globalization.CompareOptions.StringSort | System.Globalization.CompareOptions.IgnoreCase;
 			var culture = System.Globalization.CultureInfo.CurrentCulture;
-			int result  = string.Compare (this.DefaultTitle.ToSimpleText (), other.DefaultTitle.ToSimpleText (), culture, options);
+			int result  = string.Compare (this.CompactTitle.ToSimpleText (), other.CompactTitle.ToSimpleText (), culture, options);
 
 			if (result == 0)
             {
@@ -496,20 +496,51 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
 
-		public static SummaryData FindTemplate(List<SummaryData> collection, string name, int index)
+		public static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
 		{
+			SummaryData template;
+			
 			System.Diagnostics.Debug.Assert (name.Contains ('.'));
 
+			if (CollectionAccessor.FindTemplate (collection, name, out template))
+			{
+				return CollectionAccessor.CreateSummayData (template, name, index);
+			}
+			else
+			{
+				return template;
+			}
+		}
+
+		/// <summary>
+		/// Finds the template and returns <c>true</c> if the template must be used to create a
+		/// new instance of <see cref="SummaryData"/>.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <param name="name">The item name.</param>
+		/// <param name="result">The matching template (if any).</param>
+		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryData"/>; otherwise, <c>false</c>.</returns>
+		private static bool FindTemplate(IEnumerable<SummaryData> collection, string name, out SummaryData result)
+		{
 			string prefix = SummaryData.GetNamePrefix (name);
 			string search = prefix + ".";
-
+			
 			SummaryData template = null;
 
 			foreach (var item in collection)
 			{
 				if (item.Name == name)
 				{
-					return item;
+					//	Exact match: return the item and tell the caller there is no need to
+					//	create a new SummaryData -- the template can be reused as is.
+
+					result = item;
+					return false;
+				}
+				
+				if (item.Name == prefix)
+				{
+					template = item;
 				}
 
 				if ((template == null) &&
@@ -519,11 +550,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 			}
 
-			if (template == null)
-			{
-				return null;
-			}
-
+			result = template;
+			return result != null;
+		}
+		
+		private static SummaryData CreateSummayData(SummaryData template, string name, int index)
+		{
+			string prefix = SummaryData.GetNamePrefix (name);
+			
 			return new SummaryData
 			{
 				Name         = SummaryData.BuildName (prefix, index),
@@ -534,7 +568,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				Rank         = (template.Rank / 1000) * 1000 + index,
 			};
 		}
-
 	}
 
 	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor, ICollectionAccessor

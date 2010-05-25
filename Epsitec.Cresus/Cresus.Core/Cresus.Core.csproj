@@ -111,9 +111,11 @@
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
+    <Compile Include="Controllers\TileContainerController.cs" />
     <Compile Include="Controllers\TileController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDataItems.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="Accessors\AbstractAccessor.cs" />
