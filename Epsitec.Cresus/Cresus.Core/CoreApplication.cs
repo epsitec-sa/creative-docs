@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
-			var entities = this.data.GetSamplePersons ();
+			var entities = this.data.GetAbstractPersons ();
 
 			foreach (var entity in entities)
 			{
@@ -167,10 +167,10 @@ namespace Epsitec.Cresus.Core
 		{
 			var ribbonController   = new RibbonViewController ();
 
-			var entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
-			var roles = new List<Entities.ContactRoleEntity> (this.data.GetSampleRoles ());
-			var locations = new List<Entities.LocationEntity> (this.data.GetSampleLocations ());
-			var countries = new List<Entities.CountryEntity> (this.data.GetSampleCountries ());
+			var entities = new List<AbstractEntity> (this.data.GetAbstractPersons ());
+			var roles = new List<Entities.ContactRoleEntity> (this.data.GetRoles ());
+			var locations = new List<Entities.LocationEntity> (this.data.GetLocations ());
+			var countries = new List<Entities.CountryEntity> (this.data.GetCountries ());
 			var mainViewController = new MainViewController (entities, roles, locations, countries);
 
 			this.controllers.Add (ribbonController);
