@@ -1,6 +1,7 @@
-//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Linq;
@@ -304,10 +305,17 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (Application.queueExclusion)
 			{
-				if ((Application.pendingCallbacks.Contains (callback)) ||
-					(Application.runningCallbacks.Contains (callback)))
+				//	Reorder the queue if the callback is already in the queue; otherwise
+				//	add it to the pending queue and make sure the main thread executes it
+				//	soon.
+				
+				if (Application.pendingCallbacks.Contains (callback))
 				{
-					//	Do nothing. The callback is already in the queue.
+					Application.pendingCallbacks.Requeue (callback);
+				}
+				else if (Application.runningCallbacks.Contains (callback))
+				{
+					Application.runningCallbacks.Requeue (callback);
 				}
 				else
 				{
