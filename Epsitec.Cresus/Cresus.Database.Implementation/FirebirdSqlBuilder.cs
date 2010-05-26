@@ -1055,9 +1055,6 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		private void Append(SqlJoin sqlJoin, Collections.SqlFieldList sqlTables, int row)
 		{
-			System.Diagnostics.Debug.Assert (sqlJoin != null);
-			System.Diagnostics.Debug.Assert (row > 0);
-
 			//	Convertit la jointure en SQL. La liste des tables est nécessaire pour
 			//	retrouver le nom de la table et son alias.
 
@@ -1088,12 +1085,36 @@ namespace Epsitec.Cresus.Database.Implementation
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unqualified table {0} in JOIN", sqlTables[row].AsName));
 			}
 
-			this.Append (" ON ");
+			this.Append (" ON ( ");
 			this.Append (this.GetQualifiedName (sqlJoin.LeftColumn));
 			this.Append (" = ");
 			this.Append (this.GetQualifiedName (sqlJoin.RightColumn));
+			
+			if (sqlJoin.Conditions.Count > 0)
+			{
+				this.Append (" AND ( ");
 
-			// TODO Append join condition
+				bool isFirstField = true;
+
+				foreach (SqlField field in sqlJoin.Conditions)
+				{
+					if (!isFirstField)
+					{
+						this.Append (" AND ");
+					}
+
+					if (field.FieldType != SqlFieldType.Function)
+					{
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field {0} in Join clause", field.AsName));
+					}
+
+					this.Append (field.AsFunction, true);
+				}
+
+				this.Append (" ) ");
+			}
+
+			this.Append (" ) ");
 		}
 
 		private void Append(SqlSelect sqlQuery)
