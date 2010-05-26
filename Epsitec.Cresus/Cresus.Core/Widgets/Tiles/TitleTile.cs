@@ -271,17 +271,17 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.IsReadOnly)
 			{
-				if (this.IsEntered && this.HasSingleChild && this.HasSelectedChild)
+				if (this.IsEntered && this.HasSelectedChild)
 				{
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if ((this.IsEntered && this.HasSingleChild) || this.HasEnteredChild)
+				if (this.IsEntered)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
 
-				if (this.HasSelectedChild || this.HasEnteredChild)
+				if (this.HasSelectedChild)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
@@ -318,8 +318,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.IsReadOnly)
 			{
-				if (((this.IsEntered && this.HasSingleChild) || this.HasEnteredChild) &&
-					(!this.HasSelectedChild || this.HasManyChildren))
+				if (this.IsEntered)
 				{
 					return Tile.ThicknessHilitedColor;
 				}
