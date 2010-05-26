@@ -115,13 +115,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		}
-
-		[TestMethod]
-		public void DeleteRelation2()
-		{
-			TestHelper.PrintStartTest ("Delete Relation 2");
-
+		
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
@@ -132,9 +126,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteRelation3()
+		public void DeleteRelation2()
 		{
-			TestHelper.PrintStartTest ("Delete Relation 3");
+			TestHelper.PrintStartTest ("Delete Relation 2");
 
 			Database.CreateAndConnectToDatabase ();
 			Database2.PupulateDatabase ();
@@ -152,14 +146,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		}
-
-
-		[TestMethod]
-		public void DeleteRelation4()
-		{
-			TestHelper.PrintStartTest ("Delete Relation 4");
-
+		
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
@@ -188,14 +175,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		}
-
-
-		[TestMethod]
-		public void DeleteEntity2()
-		{
-			TestHelper.PrintStartTest ("Delete Entity 2");
-
+	
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));

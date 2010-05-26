@@ -283,14 +283,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		}
-
-
-		[TestMethod]
-		public void GetObjects13()
-		{
-			TestHelper.PrintStartTest ("Get objects 13");
-
+		
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
@@ -305,9 +298,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects14()
+		public void GetObjects13()
 		{
-			TestHelper.PrintStartTest ("Get objects 14");
+			TestHelper.PrintStartTest ("Get objects 13");
 
 			Database.CreateAndConnectToDatabase ();
 			Database2.PupulateDatabase ();
@@ -330,14 +323,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		}
-
-
-		[TestMethod]
-		public void GetObjects15()
-		{
-			TestHelper.PrintStartTest ("Get objects 15");
-
+		
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
