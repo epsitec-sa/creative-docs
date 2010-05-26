@@ -91,11 +91,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			switch (this.ArrowMode)
+			var arrowMode = this.ArrowMode;
+
+			switch (arrowMode)
 			{
 				case TileArrowMode.None:
+				case TileArrowMode.Hilite:
 				case TileArrowMode.VisibleDirect:
-					this.DirectArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
+					this.DirectArrow.Paint (graphics, this.Client.Bounds, arrowMode, this.ArrowDirection);
 					break;
 
 				case TileArrowMode.VisibleReverse:

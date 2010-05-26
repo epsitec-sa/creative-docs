@@ -58,6 +58,10 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.PaintArrow (graphics, deflate => TileArrow.GetReverseArrowPath (bounds, direction, deflate));
 					break;
 
+				case TileArrowMode.Hilite:
+					this.PaintArrow (graphics, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
+					break;
+
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for TileArrowMode.{0} not implemented", mode));
 			}
@@ -93,6 +97,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		
 		private static Path GetDirectArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			bounds.Deflate (deflate);
@@ -197,6 +202,17 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 			}
 
+			return path;
+		}
+
+		private static Path GetHilitePath(Rectangle bounds, Direction arrowLocation, double deflate)
+		{
+			Rectangle box;
+			Point pick;
+			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+
+			Path path = new Path ();
+			path.AppendRoundedRectangle (box, 2.0);
 			return path;
 		}
 

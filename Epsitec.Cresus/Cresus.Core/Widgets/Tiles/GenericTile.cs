@@ -43,6 +43,18 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool AutoReverse
+		{
+			get;
+			set;
+		}
+
+		public bool Hilited
+		{
+			get;
+			set;
+		}
+
 		public bool IsCompact
 		{
 			get;
@@ -74,9 +86,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				return new TileArrow ()
 				{
-					OutlineColor = this.GetOutlineColor (),
+					OutlineColor   = this.GetOutlineColor (),
 					ThicknessColor = this.GetThicknessColor (),
-					SurfaceColor = this.GetSurfaceColor (),
+					SurfaceColor   = this.GetSurfaceColor (),
 				};
 			}
 		}
@@ -87,9 +99,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				return new TileArrow ()
 				{
-					OutlineColor = this.GetReverseOutlineColor (),
+					OutlineColor   = this.GetReverseOutlineColor (),
 					ThicknessColor = this.GetReverseThicknessColor (),
-					SurfaceColor = this.GetReverseSurfaceColor (),
+					SurfaceColor   = this.GetReverseSurfaceColor (),
 				};
 			}
 		}
@@ -150,15 +162,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 		
-		private TileArrowMode GetPaintingArrowMode()
+		protected virtual TileArrowMode GetPaintingArrowMode()
 		{
 			if (this.IsReadOnly && this.IsCompact)
 			{
 				if (this.AutoHilite)
 				{
-					if (this.IsEntered)
+					if (this.IsEntered || this.Hilited)
 					{
-						if (this.IsSelected)
+						if (this.IsSelected && this.AutoReverse)
 						{
 							return Widgets.TileArrowMode.VisibleReverse;
 						}
@@ -188,7 +200,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				if (this.AutoHilite)
 				{
-					if (this.IsEntered)
+					if (this.IsEntered || this.Hilited)
 					{
 						if (this.IsSelected)
 						{
@@ -214,7 +226,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.IsCompact && this.IsReadOnly)
 			{
-				if (this.AutoHilite && this.IsEntered)
+				if (this.AutoHilite && (this.IsEntered || this.Hilited))
 				{
 					return Tile.BorderColor;
 				}

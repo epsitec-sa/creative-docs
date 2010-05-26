@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.CreateUI ();
 		}
 
-		
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			this.SetButtonVisibility (true);
@@ -34,6 +34,19 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.SetButtonVisibility (false);
 			
 			base.OnExited (e);
+		}
+
+		protected override TileArrowMode GetPaintingArrowMode()
+		{
+			if (this.IsCompact)
+			{
+				if (this.IsEntered || this.Hilited || this.IsSelected)
+				{
+					return TileArrowMode.Hilite;
+				}
+			}
+			
+			return base.GetPaintingArrowMode ();
 		}
 
 
