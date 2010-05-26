@@ -226,6 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 				tile.RemoveClicked += sender =>
 				{
+					this.controller.Orchestrator.CloseSubViews (this.controller);
 					item.DeleteItem ();
 					this.MapDataToTiles ();
 				};

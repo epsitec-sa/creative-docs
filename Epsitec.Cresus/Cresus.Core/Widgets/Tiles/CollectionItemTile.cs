@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		
 		private void SetButtonVisibility(bool visibility)
 		{
-			this.buttonAdd.Visibility = visibility;
+//-			this.buttonAdd.Visibility = visibility;
 			this.buttonRemove.Visibility = visibility;
 		}
 
