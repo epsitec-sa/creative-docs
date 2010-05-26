@@ -18,13 +18,21 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	{
 		public CollectionItemTile()
 		{
+			this.EnableAddRemoveButtons = true;
+
 			this.CreateUI ();
 		}
 
 
+		public bool EnableAddRemoveButtons
+		{
+			get;
+			set;
+		}
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
-			this.SetButtonVisibility (true);
+			this.SetButtonVisibility (this.EnableAddRemoveButtons);
 			
 			base.OnEntered (e);
 		}

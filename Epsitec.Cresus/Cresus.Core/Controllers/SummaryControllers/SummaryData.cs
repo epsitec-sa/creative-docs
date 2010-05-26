@@ -457,6 +457,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
             }
 		}
 
+		public void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
+		{
+			if (this.HasCreateItem && collectionAccessor != null)
+			{
+				data.AddNewItem = () => collectionAccessor.AddItem (this.CreateItem ());
+			}
+		}
+
 		public T CreateItem()
 		{
 			var item = this.createItem ();
@@ -502,6 +510,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 	public interface ICollectionTemplate
 	{
+		string NamePrefix
+		{
+			get;
+		}
+		void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
 		AbstractEntity CreateItem();
 		void DeleteItem(AbstractEntity item);
 	}
@@ -512,7 +525,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		bool RemoveItem(AbstractEntity item);
 	}
 
-	public abstract class CollectionAccessor
+	public abstract class CollectionAccessor : ICollectionAccessor
 	{
 		public static CollectionAccessor Create<T1, T2, T3>(T1 source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 			where T1 : AbstractEntity, new ()
@@ -522,8 +535,22 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return new CollectionAccessor<T1, T2, T3> (source, collectionResolver, template);
 		}
 
+		public abstract ICollectionTemplate Template
+		{
+			get;
+		}
+		
 		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
 
+
+		#region ICollectionAccessor Members
+
+		public abstract void AddItem(AbstractEntity item);
+
+		public abstract bool RemoveItem(AbstractEntity item);
+		
+		#endregion
+		
 		public static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
 		{
 			SummaryData template;
@@ -598,7 +625,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 	}
 
-	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor, ICollectionAccessor
+	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
 		where T1 : AbstractEntity, new ()
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
@@ -608,6 +635,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.source = source;
 			this.collectionResolver = collectionResolver;
 			this.template = template;
+		}
+
+		public override ICollectionTemplate Template
+		{
+			get
+			{
+				return this.template;
+			}
 		}
 
 		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
@@ -632,21 +667,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		#region ICollectionAccessor Members
-
-		void ICollectionAccessor.AddItem(AbstractEntity item)
+		public override void AddItem(AbstractEntity item)
 		{
 			var collection = this.collectionResolver (this.source);
 			collection.Add (item as T3);
 		}
 
-		bool ICollectionAccessor.RemoveItem(AbstractEntity item)
+		public override bool RemoveItem(AbstractEntity item)
 		{
 			var collection = this.collectionResolver (this.source);
 			return collection.Remove (item as T3);
 		}
-
-		#endregion
 
 		private readonly T1 source;
 		private System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver;

@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		Undefined,
 
 		SimpleItem,
+		EmptyItem,
 		CollectionItem,
 	}
 }

@@ -61,6 +61,23 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			this.collectionItems.Clear ();
 			this.collectionItems.AddRange (items);
+
+			this.RefreshEmptyItems ();
+		}
+
+		private void RefreshEmptyItems()
+		{
+			foreach (var item in this.emptyItems)
+			{
+				item.DataType = SummaryDataType.EmptyItem;
+
+				if (item.AddNewItem == null)
+                {
+					var accessor = this.collectionAccessors.First (x => x.Template.NamePrefix == item.Name);
+
+					accessor.Template.BindCreateItem (item, accessor);
+                }
+			}
 		}
 
 
@@ -78,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			lock (this.SyncObject)
 			{
 				var itemNames = new HashSet<string> ();
-				return new List<SummaryData> (this.staticItems.Concat (this.collectionItems).Concat (this.emptyItems).Where (x => itemNames.Add (x.Name)));
+				return new List<SummaryData> (this.staticItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
 			}
 		}
 
