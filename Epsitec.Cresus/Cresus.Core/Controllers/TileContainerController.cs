@@ -392,6 +392,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				titleTile.ArrowDirection = Direction.Right;
 				titleTile.IsReadOnly     = true;
 			}
+
+			Window.RefreshEnteredWidgets ();
 		}
 
 
