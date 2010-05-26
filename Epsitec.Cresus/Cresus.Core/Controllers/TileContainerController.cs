@@ -52,11 +52,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (expandWhenSpaceIsAvailable)
 					{
-						var lastCompactItem = this.activeItems.FirstOrDefault (item => item.AutoGroup == false && item.SummaryTile.IsCompact);
+						var lastCompactItem = this.activeItems.FirstOrDefault (item => item.AutoGroup == false && item.IsCompact);
 
 						if (lastCompactItem != null)
 						{
-							lastCompactItem.SummaryTile.IsCompact = false;
+							lastCompactItem.IsCompact = false;
 							continue;
 						}
 					}
@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					expandWhenSpaceIsAvailable = false;
 					
-					var lastExpandedItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && !item.SummaryTile.IsCompact);
+					var lastExpandedItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && !item.IsCompact);
 
 					if (lastExpandedItem != null)
 					{
-						lastExpandedItem.SummaryTile.IsCompact = true;
+						lastExpandedItem.IsCompact = true;
 						continue;
 					}
 				}
@@ -231,6 +231,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 
 				item.SummaryTile = tile;
+
+				if (item.AutoGroup)
+				{
+					tile.Margins = new Margins (0, 2, 0, 0);
+				}
 			}
 			else
 			{
@@ -278,7 +283,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.ResetStandardTitleTile (item, visualIds);
 				}
 
-				item.SummaryTile.IsCompact = false;
+				item.SummaryTile.IsCompact  = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
+				item.SummaryTile.AutoHilite = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
 			}
 
 			tileCache.Values.ForEach (tile => tile.Parent = null);
@@ -332,7 +338,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void SetTileContent(SummaryData item)
 		{
-			if (item.SummaryTile.IsCompact)
+			if (item.IsCompact)
 			{
 				item.SummaryTile.Summary = item.CompactText.ToString ();
 				item.TitleTile.Title     = item.CompactTitle.ToString ();

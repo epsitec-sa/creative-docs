@@ -9,5 +9,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		VisibleDirect,
 		VisibleReverse,
+
+		Hilite,
 	}
 }

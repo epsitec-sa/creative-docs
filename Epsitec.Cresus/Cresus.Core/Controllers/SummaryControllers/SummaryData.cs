@@ -56,6 +56,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			set;
 		}
 
+		public bool IsCompact
+		{
+			get;
+			set;
+		}
+
 		public SummaryDataType DataType
 		{
 			get;

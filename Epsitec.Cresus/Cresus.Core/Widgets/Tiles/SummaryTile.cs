@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public override Size GetBestFitSize()
 		{
 			// TODO: faire cela mieux !
-			var lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+			var lines = this.Summary.Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.None);
 			var height = lines.Length*16;
 
 			return new Size (this.PreferredWidth, height);

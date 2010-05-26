@@ -26,6 +26,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public bool AutoReverse
+		{
+			get;
+			set;
+		}
+
 
 		public TileCollection Items
 		{
@@ -193,8 +199,42 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.rightPanel.Visibility = true;
 			}
 		}
-		
-		
+
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			base.OnEntered (e);
+
+			this.UpdateDefaultChildHilite ();
+		}
+
+		protected override void OnExited(MessageEventArgs e)
+		{
+			base.OnExited (e);
+
+			if (this.HasChildren)
+			{
+				this.Items[0].Hilited = false;
+				this.Items[0].Invalidate ();
+			}
+		}
+
+		private void UpdateDefaultChildHilite()
+		{
+			if (this.HasManyChildren)
+			{
+				bool hilite = this.IsEntered;
+
+				if ((hilite) &&
+					(this.items.Any (x => x.IsEntered)))
+				{
+					hilite = false;
+				}
+
+				this.Items[0].Hilited = hilite;
+				this.Items[0].Invalidate ();
+			}
+		}
+
 		private void CreateUI()
 		{
 			this.PreferredWidth = TitleTile.iconSize+TitleTile.iconMargins*2;
@@ -271,7 +311,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.IsReadOnly)
 			{
-				if (this.IsEntered && this.HasSelectedChild)
+				if (this.IsEntered && this.AutoReverse && this.HasSelectedChild)
 				{
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
@@ -367,7 +407,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyRemoval(GenericTile widget)
 		{
-			widget.Parent = null;
+			widget.Parent  = null;
+			widget.Hilited = false;
 
 			this.DetachEventHandlers (widget);
 		}
@@ -399,22 +440,23 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void AttachEventHandlers(GenericTile widget)
 		{
-			widget.Entered += this.HandleChildWidgetEnteredOrExited;
-			widget.Exited  += this.HandleChildWidgetEnteredOrExited;
+			widget.Entered    += this.HandleChildWidgetEnteredOrExited;
+			widget.Exited     += this.HandleChildWidgetEnteredOrExited;
 			widget.Selected   += this.HandleChildWidgetSelectedOrDeselected;
 			widget.Deselected += this.HandleChildWidgetSelectedOrDeselected;
 		}
 
 		private void DetachEventHandlers(GenericTile widget)
 		{
-			widget.Entered -= this.HandleChildWidgetEnteredOrExited;
-			widget.Exited  -= this.HandleChildWidgetEnteredOrExited;
+			widget.Entered    -= this.HandleChildWidgetEnteredOrExited;
+			widget.Exited     -= this.HandleChildWidgetEnteredOrExited;
 			widget.Selected   -= this.HandleChildWidgetSelectedOrDeselected;
 			widget.Deselected -= this.HandleChildWidgetSelectedOrDeselected;
 		}
 
 		private void HandleChildWidgetEnteredOrExited(object sender, MessageEventArgs e)
 		{
+			this.UpdateDefaultChildHilite ();
 			this.Invalidate ();
 		}
 
