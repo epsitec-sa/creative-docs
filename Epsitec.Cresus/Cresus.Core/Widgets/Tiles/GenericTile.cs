@@ -67,6 +67,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public CoreViewController SubViewController
+		{
+			get
+			{
+				return this.subViewController;
+			}
+		}
 		
 		public override TileArrowMode ArrowMode
 		{
