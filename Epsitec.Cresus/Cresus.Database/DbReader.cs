@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Database
 			this.shortTableAliasOrdered = new List<string> ();
 			this.renamedTables = new List<DbTable> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
-			this.joinsWithTableAlias = new List<DbJoin> ();
+			this.joins = new List<DbJoin> ();
 			this.conditions = new List<DbSelectCondition> ();
 			this.orderByTableColumns = new Dictionary<string, SqlSortOrder> ();
 		}
@@ -87,28 +87,15 @@ namespace Epsitec.Cresus.Database
 			this.orderByTableColumns[shortColumnAlias] = order;
 		}
 
-		/// <summary>
-		/// Adds a join to the reader. IMPORTANT: IF YOU DON'T READ THE REMARKS, YOU PROGRAM IS DEEMED
-		/// TO MALFUNCTION.
-		/// </summary>
-		/// <remarks>
-		/// Given how this class and how FirebirdSqlBuilder are implemented, it is better to add the joins before
-		/// you add the query fields. If you don't, say that the tables targeted by the query fields
-		/// appear in a given order, then the tables targeted by the joins must appear in the exact same
-		/// order. If some joins target tables that are not targeted by the query fields, they can be added
-		/// in any order, given that they are added after all the joins which target only tables targeted by
-		/// query fields are added. If you don't comply with these constraints, the reader will most certainly
-		/// fail to accomplish what you want it to do.
-		/// </remarks>
-		/// <param name="leftColumn">The left column of the join.</param>
-		/// <param name="rightColumn">The right column of the join.</param>
-		/// <param name="joinType">The type of the join.</param>
-		public void AddJoin(DbTableColumn leftColumn, DbTableColumn rightColumn, SqlJoinCode joinType)
+		
+		public void AddJoin(DbJoin join)
 		{
-			DbTableColumn columnWithTableAliasLeft = this.ConvertWithTableAlias(leftColumn);
-			DbTableColumn columnWithTableAliasRight = this.ConvertWithTableAlias (rightColumn);
+			foreach (DbTableColumn column in join.Columns)
+			{
+				this.RegisterTable (column);
+			}
 
-			this.joinsWithTableAlias.Add (new DbJoin (columnWithTableAliasLeft, columnWithTableAliasRight, joinType));
+			this.joins.Add (join);
 		}
 
 		public void AddCondition(DbSelectCondition condition)
@@ -382,14 +369,6 @@ namespace Epsitec.Cresus.Database
 			return shortTableAlias;
 		}
 
-		private DbTableColumn ConvertWithTableAlias(DbTableColumn column)
-		{
-			return new DbTableColumn (column.Column)
-			{
-				TableAlias =  this.RegisterTable (column),
-			};
-		}
-
 		private void CreateSelectColumns(SqlSelect select)
 		{
 			foreach (DbTableColumn tableColumn in this.renamedTableColumns)
@@ -445,32 +424,19 @@ namespace Epsitec.Cresus.Database
 
 		private void CreateSelectJoins(SqlSelect select)
 		{
-			foreach (DbJoin join in this.joinsWithTableAlias)
+			foreach (DbJoin join in this.joins)
 			{
-				select.Joins.Add (this.CreateSelectJoin (join));
+				join.ReplaceTableColumns (this.TranslateToShortTableAlias);
+				select.Joins.Add (join.CreateSqlJoin ());
 			}
-		}
-
-		private SqlJoin CreateSelectJoin(DbJoin join)
-		{
-			DbTableColumn leftColumn = join.LeftColumn;
-			DbTableColumn rightColumn = join.RightColumn;
-
-			SqlField leftField = SqlField.CreateAliasedName (leftColumn.TableAlias, leftColumn.Column.GetSqlName (), leftColumn.ColumnAlias);
-			SqlField rightField = SqlField.CreateAliasedName (rightColumn.TableAlias, rightColumn.Column.GetSqlName (), rightColumn.ColumnAlias);
-
-			return new SqlJoin (leftField, rightField, join.Type);
 		}
 
 		private void CreateSelectConditions(SqlSelect select)
 		{
-			if (this.conditions.Count > 0)
+			foreach (DbSelectCondition condition in this.conditions)
 			{
-				foreach (DbSelectCondition condition in this.conditions)
-				{
-					condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
-					condition.CreateConditions (select.Conditions);
-				}
+				condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
+				condition.CreateConditions (select.Conditions);
 			}
 		}
 
@@ -499,7 +465,7 @@ namespace Epsitec.Cresus.Database
 		private readonly List<string> shortTableAliasOrdered;
 		private readonly List<DbTable> renamedTables;
 		private readonly List<DbTableColumn> renamedTableColumns;
-		private readonly List<DbJoin> joinsWithTableAlias;
+		private readonly List<DbJoin> joins;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
 		private System.Data.IDataReader dataReader;

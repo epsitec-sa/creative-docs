@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentNullException ("conditions");
 			}
 
-			foreach (SqlField field in new SqlField[] { leftColumn, rightColumn }.Union (conditions))
+			foreach (SqlField field in new SqlField[] { leftColumn, rightColumn }.Concat (conditions))
 			{
 				if (field.FieldType != SqlFieldType.QualifiedName)
 				{

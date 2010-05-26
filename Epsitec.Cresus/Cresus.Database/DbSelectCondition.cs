@@ -45,9 +45,20 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the conditions based on the previous <c>AddCondition</c>
+		/// calls and using the expected revision.
+		/// </summary>
+		/// <param name="fields">The collection to which the conditions will be added.</param>
+		internal void CreateConditions(Collections.SqlFieldList fields)
+		{
+			this.CreateConditions (null, null, fields);
+		}
+
+
 		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
 		{
-			base.CreateConditions (mainTable, mainTableAlias, fields);
+			base.CreateConditions (fields);
 			
 			DbCondition revisionCondition = null;
 

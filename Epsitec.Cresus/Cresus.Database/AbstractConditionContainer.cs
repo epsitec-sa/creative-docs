@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the columns used by the conditions.
 		/// </summary>
 		/// <value>The columns.</value>
-		public IEnumerable<DbTableColumn>		Columns
+		public IEnumerable<DbTableColumn> Columns
 		{
 			get
 			{
@@ -178,25 +178,7 @@ namespace Epsitec.Cresus.Database
 		/// calls and using the expected revision.
 		/// </summary>
 		/// <param name="fields">The collection to which the conditions will be added.</param>
-		internal void CreateConditions(Collections.SqlFieldList fields)
-		{
-			this.CreateConditions (null, null, fields);
-		}
-
-
-		/// <summary>
-		/// Creates the conditions based on the previous <c>AddCondition</c>
-		/// calls and using the expected revision.
-		/// </summary>
-		/// <param name="mainTable">The main table.</param>
-		/// <param name="fields">The collection to which the conditions will be added.</param>
-		internal void CreateConditions(DbTable mainTable, Collections.SqlFieldList fields)
-		{
-			this.CreateConditions (mainTable, null, fields);
-		}
-
-
-		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
+		protected void CreateConditions(Collections.SqlFieldList fields)
 		{
 			Collections.SqlFieldList sqlFields = new Collections.SqlFieldList ();
 
