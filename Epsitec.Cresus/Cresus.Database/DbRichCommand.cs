@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The <c>DbRichCommand</c> instance.</returns>
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision selectRevision)
 		{
-			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (infrastructure.Converter, selectRevision));
+			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, new DbSelectCondition (selectRevision));
 		}
 
 		/// <summary>

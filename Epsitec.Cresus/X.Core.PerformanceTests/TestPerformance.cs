@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public TestPerformance(bool createAndPopulateDatabase)
 		{
-			TestSetup.Initialize ();
+			TestHelper.Initialize ();
 
 			if (createAndPopulateDatabase)
 			{

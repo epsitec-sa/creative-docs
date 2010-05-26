@@ -1089,9 +1089,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 
 			this.Append (" ON ");
-			this.Append (this.GetQualifiedName (sqlJoin.A));
+			this.Append (this.GetQualifiedName (sqlJoin.LeftColumn));
 			this.Append (" = ");
-			this.Append (this.GetQualifiedName (sqlJoin.B));
+			this.Append (this.GetQualifiedName (sqlJoin.RightColumn));
+
+			// TODO Append join condition
 		}
 
 		private void Append(SqlSelect sqlQuery)
@@ -1268,8 +1270,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				if (isFirstField)
 				{
-					if ((aggregateCount > 0) && 
-						(notAggregateCount > 0))
+					if (aggregateCount > 0 && notAggregateCount > 0)
 					{
 						this.Append (" HAVING ");
 					}
@@ -1344,10 +1345,6 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.Append (sqlQuery.SetQuery);
 			}
-
-#if false
-			System.Console.WriteLine (this.buffer);
-#endif
 		}
 
 		private bool AppendAlias(SqlField field)

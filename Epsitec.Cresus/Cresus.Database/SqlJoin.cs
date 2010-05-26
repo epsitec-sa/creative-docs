@@ -1,78 +1,88 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using Epsitec.Cresus.Database.Collections;
+
+using System.Linq;
+
+
 namespace Epsitec.Cresus.Database
 {
+
+
 	/// <summary>
 	/// The <c>SqlJoin</c> class describes joins for <c>SqlSelect</c>.
 	/// </summary>
 	public sealed class SqlJoin
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlJoin"/> class.
-		/// </summary>
-		/// <param name="code">The join code.</param>
-		/// <param name="fields">The fields.</param>
-		public SqlJoin(SqlJoinCode code, params SqlField[] fields)
-		{
-			this.code = code;
 
-			if (fields.Length != 2)
+
+		public SqlJoin(SqlField leftColumn, SqlField rightColumn, SqlJoinCode code)
+			: this (leftColumn, rightColumn, code, new SqlFieldList ())
+		{
+		}
+
+		public SqlJoin(SqlField leftColumn, SqlField rightColumn, SqlJoinCode code, SqlFieldList conditions)
+		{
+			if (leftColumn == null)
 			{
-				throw new System.ArgumentOutOfRangeException (string.Format ("Join ({0}) requires 2 fields, got {1}.", code, fields.Length));
+				throw new System.ArgumentNullException ("leftColumn");
 			}
 
-			for (int i = 0; i < fields.Length; i++)
+			if (rightColumn == null)
 			{
-				if (fields[i].FieldType != SqlFieldType.QualifiedName)
+				throw new System.ArgumentNullException ("rightColumn");
+			}
+
+			if (conditions == null)
+			{
+				throw new System.ArgumentNullException ("conditions");
+			}
+
+			foreach (SqlField field in new SqlField[] { leftColumn, rightColumn }.Union (conditions))
+			{
+				if (field.FieldType != SqlFieldType.QualifiedName)
 				{
-					throw new System.ArgumentException (string.Format ("Join argument {0} must be a qualified names (specified {1}).", i, fields[i].FieldType));
+					throw new System.ArgumentException ("Fields must have qualified names");
 				}
 			}
 
-			this.a = fields[0];
-			this.b = fields[1];
+			this.LeftColumn = leftColumn;
+			this.RightColumn = rightColumn;
+			this.Code = code;
+			this.Conditions = conditions;
 		}
 
-
-		/// <summary>
-		/// Gets the join code.
-		/// </summary>
-		/// <value>The join code.</value>
-		public SqlJoinCode						Code
+		public SqlField LeftColumn
 		{
-			get
-			{
-				return this.code;
-			}
+			get;
+			private set;
 		}
 
-		/// <summary>
-		/// Gets the A field.
-		/// </summary>
-		/// <value>The A field.</value>
-		public SqlField							A
+
+		public SqlField RightColumn
 		{
-			get
-			{
-				return this.a;
-			}
+			get;
+			private set;
 		}
 
-		/// <summary>
-		/// Gets the B field.
-		/// </summary>
-		/// <value>The B field.</value>
-		public SqlField							B
+
+		public SqlJoinCode Code
 		{
-			get
-			{
-				return this.b;
-			}
+			get;
+			private set;
 		}
 
 
-		private SqlJoinCode						code;
-		private SqlField						a, b;
+		public SqlFieldList Conditions
+		{
+			get;
+			private set;
+		}
+
+
 	}
+
+
 }

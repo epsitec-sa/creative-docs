@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), DataBrowser.statusColumn);
 
-			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+			DbSelectCondition condition = new DbSelectCondition ();
 			condition.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 			reader.AddCondition (condition);
 		}
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractType fieldType = field.Type as AbstractType;
 			object fieldValue = example.InternalGetValue (field.Id);
 			
-			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+			DbSelectCondition condition = new DbSelectCondition ();
 
 			switch (fieldType.TypeCode)
 			{
@@ -622,7 +622,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbTableColumn tableColumn = this.GetRelationTableColumn (currentEntityId, Druid.Parse (field.Id), tableAliasManager.GetCurrentEntityAlias (), DataBrowser.statusColumn);
 
-			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+			DbSelectCondition condition = new DbSelectCondition ();
 			condition.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 			reader.AddCondition (condition);
 		}

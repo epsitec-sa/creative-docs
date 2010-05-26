@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			DbSelectCondition condition_a = new DbSelectCondition (infrastructure.Converter, DbSelectRevision.LiveActive);
-			DbSelectCondition condition_b = new DbSelectCondition (infrastructure.Converter, DbSelectRevision.LiveActive);
+			DbSelectCondition condition_a = new DbSelectCondition (DbSelectRevision.LiveActive);
+			DbSelectCondition condition_b = new DbSelectCondition (DbSelectRevision.LiveActive);
 
 			DbTable[] tables = new DbTable[] { db_table_a, db_table_b };
 			DbSelectCondition[] conditions = new DbSelectCondition[] { condition_a, condition_b };

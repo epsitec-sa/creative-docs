@@ -127,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractConditionContainer.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,6 +156,7 @@
     <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DbCondition.cs" />
     <Compile Include="DbDataTableMapping.cs" />
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />

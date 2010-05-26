@@ -604,7 +604,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The select condition.</returns>
 		public DbSelectCondition CreateSelectCondition(DbSelectRevision revision)
 		{
-			return new DbSelectCondition (this.Converter, revision);
+			return new DbSelectCondition (revision);
 		}
 
 		/// <summary>

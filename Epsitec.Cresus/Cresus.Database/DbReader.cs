@@ -203,9 +203,6 @@ namespace Epsitec.Cresus.Database
 			int columnIndex = int.Parse(column.ColumnAlias.Substring(1), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 
 			return dataReader.GetFieldType (columnIndex);
-
-			//  reader.dataReader.GetFieldType (2).ToString()
-			//return "".GetType ();
 		}
 
 		public IEnumerable<DbTable> Tables
@@ -462,7 +459,7 @@ namespace Epsitec.Cresus.Database
 			SqlField leftField = SqlField.CreateAliasedName (leftColumn.TableAlias, leftColumn.Column.GetSqlName (), leftColumn.ColumnAlias);
 			SqlField rightField = SqlField.CreateAliasedName (rightColumn.TableAlias, rightColumn.Column.GetSqlName (), rightColumn.ColumnAlias);
 
-			return new SqlJoin (join.Type, rightField, leftField);
+			return new SqlJoin (leftField, rightField, join.Type);
 		}
 
 		private void CreateSelectConditions(SqlSelect select)
@@ -486,18 +483,7 @@ namespace Epsitec.Cresus.Database
 
 		private IEnumerable<KeyValuePair<string, DbTable>> GetAliasTables()
 		{
-			// Before, the keys where ordered alphabetically, but I need them to be ordered in
-			// the order in which they are registered, because of the joins and how the sql
-			// query is generated with the SqlSelect object. I leave the previous code here
-			// because there might have been a good reason why the tables where ordered
-			// alphabetically.
-
-			//List<string> keys = new List<string> (this.shortAliasToTableMap.Keys);
-			//keys.Sort ();
-
-			List<string> keys = this.shortTableAliasOrdered;
-
-			foreach (string key in keys)
+			foreach (string key in this.shortTableAliasOrdered)
 			{
 				DbTable value = this.shortAliasToTableMap[key];
 

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core
 	{
 		static void Main(string[] args)
 		{
-			TestSetup.Initialize ();
+			TestHelper.Initialize ();
 			
 #if false
 			using (var test = new TestPerformance (true))
