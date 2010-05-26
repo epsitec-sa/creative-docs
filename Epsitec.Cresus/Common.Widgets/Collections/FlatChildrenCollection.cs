@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets.Collections
 {
@@ -490,6 +491,29 @@ namespace Epsitec.Common.Widgets.Collections
 				
 				this.NotifyChanges (snapshot);
 			}
+		}
+
+		public void Change(System.Func<IEnumerable<Visual>, IEnumerable<Visual>> changeFunction)
+		{
+			Visual[] oldItems = this.visuals.ToArray ();
+			Visual[] newItems = changeFunction (oldItems).ToArray ();
+			Visual[] delta    = oldItems.Except (newItems).Union (newItems.Except (oldItems)).ToArray ();
+			
+			Snapshot snapshot = Snapshot.RecordTree (delta);
+
+			this.visuals.Clear ();
+			this.visuals.AddRange (newItems);
+
+			foreach (Visual visual in oldItems.Except (newItems))
+			{
+				this.DetachVisual (visual);
+			}
+			foreach (Visual visual in newItems.Except (oldItems))
+			{
+				this.AttachVisual (visual);
+			}
+
+			this.NotifyChanges (snapshot);
 		}
 
 		public bool Contains(Visual item)

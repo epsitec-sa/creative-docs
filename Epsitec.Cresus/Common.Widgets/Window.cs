@@ -1174,6 +1174,24 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
+
+		public static void RefreshEnteredWidgets()
+		{
+			var message = Message.GetLastMessage ();
+
+			if (message == null)
+			{
+				return;
+			}
+
+			if ((message.WindowRoot == null) ||
+				(message.WindowRoot.Window == null))
+            {
+				return;
+            }
+
+			message.WindowRoot.Window.RefreshEnteredWidgets (message);
+		}
 		
 		public void RefreshEnteredWidgets(Message message)
 		{
