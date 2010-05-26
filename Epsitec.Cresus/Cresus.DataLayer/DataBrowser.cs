@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			SqlJoinCode type = SqlJoinCode.Inner;
 
-			reader.AddJoin (subEntityColumn, superEntityColumn, type);
+			reader.AddJoin (new DbJoin (subEntityColumn, superEntityColumn, type));
 		}
 
 
@@ -510,7 +510,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbTableColumn sourceColumnId = this.GetEntityTableColumn (rootSourceEntityId, sourceTableAlias, DataBrowser.idColumn);
 			DbTableColumn relationSourceColumnId = this.GetRelationTableColumn (sourceEntityId, Druid.Parse(sourcefield.Id), relationTableAlias, DataBrowser.relationSourceColumn);
 
-			reader.AddJoin (sourceColumnId, relationSourceColumnId, joinType);
+			reader.AddJoin (new DbJoin (sourceColumnId, relationSourceColumnId, joinType));
 		}
 
 
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbTableColumn relationTargetColumnId = this.GetRelationTableColumn (sourceEntityId, Druid.Parse(sourcefield.Id), relationTableAlias, DataBrowser.relationTargetColumn);
 			DbTableColumn targetColumnId = this.GetEntityTableColumn (rootTargetEntityId, targetTableAlias, DataBrowser.idColumn);
 
-			reader.AddJoin (relationTargetColumnId, targetColumnId, joinType);
+			reader.AddJoin (new DbJoin (relationTargetColumnId, targetColumnId, joinType));
 		}
 
 
