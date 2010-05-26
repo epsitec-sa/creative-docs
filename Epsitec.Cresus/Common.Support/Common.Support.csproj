@@ -300,6 +300,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FolderId.cs" />
+    <Compile Include="Tasklet.cs" />
+    <Compile Include="TaskletJob.cs" />
+    <Compile Include="TaskletRunMode.cs" />
     <Compile Include="TimedLock.cs" />
     <Compile Include="UrlNavigator.cs" />
     <Compile Include="VersionChecker.cs">
