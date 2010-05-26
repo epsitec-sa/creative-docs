@@ -495,9 +495,11 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void Change(System.Func<IEnumerable<Visual>, IEnumerable<Visual>> changeFunction)
 		{
-			Visual[] oldItems = this.visuals.ToArray ();
-			Visual[] newItems = changeFunction (oldItems).ToArray ();
-			Visual[] delta    = oldItems.Except (newItems).Union (newItems.Except (oldItems)).ToArray ();
+			var oldItems = this.visuals.ToArray ();
+			var newItems = changeFunction (this.visuals).ToArray ();
+
+			var delta = new HashSet<Visual> (oldItems);
+			delta.SymmetricExceptWith (newItems);
 			
 			Snapshot snapshot = Snapshot.RecordTree (delta);
 
