@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			DbTable table1 = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
 			DbTable table2 = context.SchemaEngine.FindTableDefinition (this.articleVisserieEntityId);
-			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+			DbSelectCondition condition = new DbSelectCondition (DbSelectRevision.LiveActive);
 
 			System.Diagnostics.Debug.WriteLine ("Loading data from database");
 
@@ -141,9 +141,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			DbTable table1 = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
 			DbTable table2 = context.SchemaEngine.FindTableDefinition (this.articleVisserieEntityId);
-			DbSelectCondition condition1 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
-			DbSelectCondition condition2 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
-			DbSelectCondition condition3 = new DbSelectCondition (this.infrastructure.Converter, DbSelectRevision.LiveActive);
+			DbSelectCondition condition1 = new DbSelectCondition (DbSelectRevision.LiveActive);
+			DbSelectCondition condition2 = new DbSelectCondition (DbSelectRevision.LiveActive);
+			DbSelectCondition condition3 = new DbSelectCondition (DbSelectRevision.LiveActive);
 			condition1.AddCondition (new DbTableColumn (table1.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000002L);
 			condition2.AddCondition (new DbTableColumn (table2.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000002L);
 			condition3.AddCondition (new DbTableColumn (table1.Columns[Tags.ColumnId]), DbCompare.Equal, 1000000000001L);
