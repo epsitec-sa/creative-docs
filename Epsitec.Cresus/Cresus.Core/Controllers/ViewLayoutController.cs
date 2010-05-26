@@ -68,36 +68,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateColumnLayout()
 		{
-			this.container.Children.Clear ();
+			List<Visual> visuals = new List<Visual> ();
 
 			if (this.columns.Count > 0)
 			{
-#if false
-				double x = 0;
-				double overlap = Widgets.ArrowedTileArrow.ArrowBreadth - 3;
-				int columnIndex = 0;
-
-				//	Positionne les colonnes de gauche à droite, sauf la dernière.
-				foreach (var column in this.columns.Skip (1).Reverse ())
-				{
-					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex++);
-					column.Margins = new Margins (x, 0, 0, 0);
-					x += column.PreferredWidth - overlap;
-				}
-
-				//	Positionne la dernière colonne de droite.
-				var lastColumn = this.columns.Peek ();
-
-				lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
-				lastColumn.Margins = new Margins (x, 0, 0, 0);
-
-				//	Ajoute les colonnes au parent, mais de droite à gauche.
-				foreach (var column in this.columns)
-				{
-					this.container.Children.Add (column);
-				}
-#else
 				double x = 0;
 				double overlap = Widgets.TileArrow.Breadth - 3;
 				int columnIndex = 0;
@@ -114,10 +88,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Ajoute les colonnes au parent, mais de droite à gauche.
 				foreach (var column in this.columns)
 				{
-					this.container.Children.Add (column);
+					visuals.Add (column);
 				}
-#endif
 			}
+
+			this.container.Children.Change (collection => visuals);
 		}
 
 		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
