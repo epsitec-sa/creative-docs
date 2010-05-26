@@ -92,21 +92,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 		
-		private void QueueTasklet<T>(string name, T source, System.Action<T> action, params SimpleCallback[] andThen)
+		private void QueueTasklets(string name, params TaskletJob[] jobs)
 		{
-			andThen.ForEach (callback => Application.QueueAsyncCallback (callback));
+			//	TODO: use another thread to run the asynchronous work
 
-			//	TODO: execute following code asynchronously :
-			
-			action (source);
-			andThen.ForEach (callback => Application.QueueAsyncCallback (callback));
+			Application.QueueTasklets (name, jobs);
 		}
 
 		
 		private void RefreshCollectionItems()
 		{
-			this.QueueTasklet ("RefreshCollectionItems", this.dataItems, items => items.RefreshCollectionItems (),
-				this.RefreshActiveItems);
+			this.QueueTasklets ("RefreshCollectionItems",
+				new TaskletJob (() => this.dataItems.RefreshCollectionItems (), TaskletRunMode.Async),
+				new TaskletJob (() => this.RefreshActiveItems (), TaskletRunMode.BeforeAndAfter));
 		}
 		
 		private void RefreshActiveItems()
@@ -119,8 +117,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			TileContainerController.DisposeDataItems (obsoleteItems);
 
-			this.QueueTasklet ("ExecuteAccessors", this.activeItems, items => items.ForEach (x => x.ExecuteAccessors ()),
-				this.RefreshDataTiles);
+			this.QueueTasklets ("ExecuteAccessors",
+				new TaskletJob (() => this.activeItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
+				new TaskletJob (() => this.RefreshDataTiles (), TaskletRunMode.BeforeAndAfter));
 		}
 
 		private void RefreshDataTiles()
@@ -184,8 +183,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (item.SummaryTile == null)
 				{
 					this.CreateSummaryTile (item);
-
-					this.CreateSummaryTileClickHandler (item.SummaryTile);
+					this.CreateSummaryTileClickHandler (item);
 				}
 
 				if (item.TitleTile == null)
@@ -195,27 +193,47 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void CreateSummaryTileClickHandler(SummaryTile tile)
+		private void CreateSummaryTileClickHandler(SummaryData item)
 		{
-			tile.Clicked +=
-				delegate
-				{
-					tile.ToggleSubView (this.controller.Orchestrator, this.controller);
-				};
+			item.SummaryTile.Clicked += (sender, e) => this.HandleTileClicked (item);
 		}
 
 		private void CreateTitleTileClickHandler(TitleTile tile)
 		{
-			tile.Clicked +=
-				delegate
-				{
-					tile.Items[0].ToggleSubView (this.controller.Orchestrator, this.controller);
-				};
+			tile.Clicked += (sender, e) => this.HandleTileClicked (this.activeItems.First (x => x.TitleTile == tile));
+		}
+
+		private void HandleTileClicked(SummaryData item)
+		{
+			if (item.DataType == SummaryDataType.EmptyItem)
+			{
+				string itemName = item.Name;
+
+				this.QueueTasklets ("CreateNewTile",
+					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
+					new TaskletJob (() => this.MapDataToTiles (), TaskletRunMode.After),
+					new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
+			}
+			else
+			{
+				item.SummaryTile.ToggleSubView (this.controller.Orchestrator, this.controller);
+			}
+		}
+
+		private void OpenSubViewForLastSummaryTile(string itemName)
+		{
+			var last = this.activeItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
+
+			if (last != null)
+			{
+				last.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
+			}
 		}
 
 		private void CreateSummaryTile(SummaryData item)
 		{
-			if (item.DataType == SummaryDataType.CollectionItem)
+			if ((item.DataType == SummaryDataType.CollectionItem) ||
+				(item.DataType == SummaryDataType.EmptyItem))
 			{
 				var tile = new CollectionItemTile ();
 
@@ -231,6 +249,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.MapDataToTiles ();
 				};
 
+				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem;
 				item.SummaryTile = tile;
 
 				if (item.AutoGroup)
@@ -265,7 +284,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			item.TitleTile = null;
 		}
-		
+
 		private void RefreshTitleTiles()
 		{
 			var visualIds = new HashSet<long> ();
@@ -284,8 +303,24 @@ namespace Epsitec.Cresus.Core.Controllers
 					this.ResetStandardTitleTile (item, visualIds);
 				}
 
-				item.SummaryTile.IsCompact  = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
-				item.SummaryTile.AutoHilite = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
+				bool isItemPartOfCollection = item.AutoGroup;
+
+				if (isItemPartOfCollection)
+				{
+					switch (item.DataType)
+					{
+						case SummaryDataType.CollectionItem:
+						case SummaryDataType.EmptyItem:
+							break;
+
+						default:
+							isItemPartOfCollection = false;
+							break;
+					}
+				}
+				
+				item.SummaryTile.IsCompact  = isItemPartOfCollection;
+				item.SummaryTile.AutoHilite = isItemPartOfCollection;
 			}
 
 			tileCache.Values.ForEach (tile => tile.Parent = null);
