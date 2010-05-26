@@ -123,13 +123,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public void CloseSubView(Orchestrators.DataViewOrchestrator orchestrator)
 		{
-			System.Diagnostics.Debug.Assert (this.subViewController != null);
-			System.Diagnostics.Debug.Assert (orchestrator != null);
+			if (this.subViewController != null)
+			{
+				System.Diagnostics.Debug.Assert (orchestrator != null);
 
-			orchestrator.CloseView (this.subViewController);
-			
-			System.Diagnostics.Debug.Assert (this.subViewController == null);
-			System.Diagnostics.Debug.Assert (!this.IsSelected);
+				orchestrator.CloseView (this.subViewController);
+
+				System.Diagnostics.Debug.Assert (this.subViewController == null);
+				System.Diagnostics.Debug.Assert (!this.IsSelected);
+			}
 		}
 
 		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)

@@ -205,6 +205,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			base.OnEntered (e);
 
 			this.UpdateDefaultChildHilite ();
+			this.SetButtonVisibility (true);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
@@ -216,6 +217,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.Items[0].Hilited = false;
 				this.Items[0].Invalidate ();
 			}
+
+			this.SetButtonVisibility (false);
 		}
 
 		private void UpdateDefaultChildHilite()
@@ -241,11 +244,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			this.CreateLeftPanel ();
 			this.CreateLeftPanelIcon ();
+			this.CreateLeftPanelButtons ();
 			this.CreateRightPanel ();
 			this.CreateRightPanelText ();
 			this.CreateRightPanelContainer ();
 		}
-
 
 		private void CreateLeftPanel()
 		{
@@ -260,15 +263,20 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private void CreateLeftPanelIcon()
 		{
 			this.staticTextIcon = new StaticText
-						{
-							Parent = this.leftPanel,
-							Margins = new Margins (TitleTile.iconMargins),
-							PreferredSize = new Size (TitleTile.iconSize, TitleTile.iconSize),
-							Dock = DockStyle.Top,
-							ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-						};
+			{
+				Parent = this.leftPanel,
+				Margins = new Margins (TitleTile.iconMargins),
+				PreferredSize = new Size (TitleTile.iconSize, TitleTile.iconSize),
+				Dock = DockStyle.Top,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+			};
 		}
-		
+
+		private void CreateLeftPanelButtons()
+		{
+			this.CreateAddButton ();
+		}
+
 		private void CreateRightPanel()
 		{
 			this.rightPanel = new FrameBox
@@ -302,8 +310,33 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Dock = DockStyle.Fill,
 			};
 		}
-		
-		
+
+		private void CreateAddButton()
+		{
+			this.buttonAdd = new GlyphButton
+			{
+				Parent			= this.leftPanel,
+				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
+				GlyphShape		= Common.Widgets.GlyphShape.Plus,
+				Anchor			= AnchorStyles.TopLeft,
+				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
+				Margins			= new Margins (TitleTile.iconSize - TitleTile.buttonSize, 0, TitleTile.iconSize - TitleTile.buttonSize, 0),
+				Visibility		= false,
+			};
+			
+			this.buttonAdd.Clicked +=
+				delegate
+				{
+					//	TODO: ...
+				};
+		}
+
+
+		private void SetButtonVisibility(bool visibility)
+		{
+			this.buttonAdd.Visibility = visibility;
+		}
+
 
 
 
@@ -479,15 +512,18 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private static readonly double iconMargins	= 2;
 		private static readonly double titleHeight	= 20;
 
+		private static readonly double buttonSize	= 16;
 
 		private readonly TileCollection items;
 
 		private string iconUri;
 		private string title;
-
+		
 		private FrameBox leftPanel;
 		private FrameBox rightPanel;
 		private FrameBox mainPanel;
+		
+		private GlyphButton buttonAdd;
 
 		private StaticText staticTextIcon;
 		private StaticText staticTextTitle;
