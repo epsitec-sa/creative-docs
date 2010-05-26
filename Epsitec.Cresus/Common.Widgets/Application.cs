@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 
 using System.Linq;
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -251,6 +252,18 @@ namespace Epsitec.Common.Widgets
 		{
 			Application.thread = System.Threading.Thread.CurrentThread;
 		}
+
+		public static void QueueTasklets(string name, params TaskletJob[] jobs)
+		{
+			var tasklet = Tasklet.QueueBatch (name, jobs);
+
+			if (tasklet.ContainsPendingJobs)
+			{
+				Application.QueueAsyncCallback (tasklet.ExecuteAllJobs);
+			}
+		}
+
+
 		
 		public static bool HasQueuedAsyncCallback(Support.SimpleCallback callback)
 		{
