@@ -146,6 +146,7 @@
     <Compile Include="EntityReferenceData.cs" />
     <Compile Include="EntityTableAliasNode.cs" />
     <Compile Include="EntityValueData.cs" />
+    <Compile Include="Helpers\EntityFieldProxy.cs" />
     <Compile Include="SubtypeTableAliasNode.cs" />
     <Compile Include="TableAliasNode.cs" />
     <Compile Include="TableAliasManager.cs" />
@@ -163,7 +164,7 @@
     <Compile Include="Retired sources\DataBrokerItem.cs" />
     <Compile Include="EntityResolutionMode.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
-    <Compile Include="Helpers\EntityDataProxy.cs" />
+    <Compile Include="Helpers\EntityKeyProxy.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="Helpers\TemporaryRowCollection.cs" />
     <Compile Include="RequestFactory.cs">

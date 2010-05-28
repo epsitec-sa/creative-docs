@@ -425,6 +425,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return id;
 		}
 
+
+		public Druid GetLocalEntityId(Druid entityId, Druid fieldId)
+		{
+			return this.GetHeritedEntityIds (entityId).First (id => this.GetEntityLocalFieldDefinitions (id).Any (f => f.CaptionId == fieldId));
+		}
+
 		/// <summary>
 		/// Gets the list of entity ids from the given one to the one of its top supertype,
 		/// including the given one.

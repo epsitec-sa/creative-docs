@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.DataLayer
 					return this.DeserializeEntity (rowKey, entityId);
 
 				case EntityResolutionMode.DelayLoad:
-					return new Helpers.EntityDataProxy (this, rowKey, entityId);
+					return new Helpers.EntityKeyProxy (this, rowKey, entityId);
 
 				default:
 					throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
@@ -541,27 +541,31 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void DeserializeEntityLocal(AbstractEntity entity, System.Data.DataRow dataRow, Druid entityId)
 		{
-			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
+			foreach (StructuredTypeField field in this.entityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
-				switch (fieldDef.Relation)
+				switch (field.Relation)
 				{
 					case FieldRelation.None:
-						this.ReadFieldValueFromDataRow (entity, fieldDef, dataRow);
+						this.ReadFieldValueFromDataRow (entity, field, dataRow);
 						break;
 
 					case FieldRelation.Reference:
-						entity.InternalSetValue (fieldDef.Id, this.ReadFieldRelation (entity, entityId, fieldDef).FirstOrDefault ());
+
+						//object target1 = this.ReadFieldRelation (entity, entityId, fieldDef, EntityResolutionMode.DelayLoad).FirstOrDefault ();
+						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
+						entity.InternalSetValue (field.Id, target1);
+
 						break;
 
 					case FieldRelation.Collection:
-						
-						System.Collections.IList collection = entity.InternalGetFieldCollection (fieldDef.Id);
 
-						foreach (object childEntity in this.ReadFieldRelation(entity, entityId, fieldDef))
+						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
+
+						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
 						{
-							collection.Add (childEntity);
+							collection.Add (target2);
 						}
-						
+
 						break;
 				}
 			}
@@ -583,7 +587,8 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						object target1 = this.ReadFieldRelation (entity, entityId, field).FirstOrDefault ();
+						//object target1 = this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad).FirstOrDefault ();
+						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target1);
 
 						break;
@@ -592,7 +597,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						System.Collections.IList targets = entity.InternalGetFieldCollection (field.Id);
 
-						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field))
+						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
 						{
 							targets.Add (target2);
 						}
@@ -623,8 +628,8 @@ namespace Epsitec.Cresus.DataLayer
 
 						if (entityData.ReferenceData.Contains (field))
 						{
-							object proxy = this.InternalResolveEntity (entityData.ReferenceData[field], field.TypeId, EntityResolutionMode.DelayLoad);
-							entity.InternalSetValue (field.Id, proxy);
+							object target1 = this.InternalResolveEntity (entityData.ReferenceData[field], field.TypeId, EntityResolutionMode.DelayLoad);
+							entity.InternalSetValue (field.Id, target1);
 						}
 
 						break;
@@ -635,8 +640,8 @@ namespace Epsitec.Cresus.DataLayer
 
 						foreach (DbKey key in entityData.CollectionData[field])
 						{
-							object proxy = this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad);
-							collection.Add (proxy);
+							object target2 = this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad);
+							collection.Add (target2);
 						}
 
 						break;
@@ -977,7 +982,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private IEnumerable<object> ReadFieldRelation(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef)
+		internal IEnumerable<object> ReadFieldRelation(AbstractEntity entity, Druid entityId, StructuredTypeField fieldDef, EntityResolutionMode resolutionMode)
 		{
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
 			string tableName = this.GetRelationTableName (entityId, fieldDef);
@@ -1003,7 +1008,7 @@ namespace Epsitec.Cresus.DataLayer
 				foreach (System.Data.DataRow relationRow in Collection.Enumerate (this.richCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id), comparer))
 				{
 					long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
-					object targetEntity = this.InternalResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId, EntityResolutionMode.DelayLoad);
+					object targetEntity = this.InternalResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId, resolutionMode);
 					yield return targetEntity;
 					found = true;
 				}

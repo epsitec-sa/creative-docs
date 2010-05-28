@@ -7,16 +7,13 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Helpers;
-
-using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
 	/// <summary>
 	/// The <c>EntityDataProxy</c> class automatically loads entities on demand.
 	/// </summary>
-	public class EntityDataProxy : IEntityProxy
+	public class EntityKeyProxy : IEntityProxy
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataProxy"/> class.
@@ -24,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <param name="context">The context.</param>
 		/// <param name="rowKey">The row key.</param>
 		/// <param name="entityId">The entity id.</param>
-		public EntityDataProxy(DataContext context, DbKey rowKey, Druid entityId)
+		public EntityKeyProxy(DataContext context, DbKey rowKey, Druid entityId)
 		{
 			this.context = context;
 			this.rowKey = rowKey;
