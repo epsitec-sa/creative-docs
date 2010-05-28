@@ -1,7 +1,9 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -188,7 +190,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public IEnumerable<Druid> GetSourceReferences(Druid targetEntity)
+		public IEnumerable<EntityFieldPath> GetSourceReferences(Druid targetEntity)
 		{
 			this.EnsureSourceReferenceResolverIsBuilt ();
 			
@@ -198,7 +200,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				return new Druid[0];
+				return new EntityFieldPath[0];
 			}
 		}
 
@@ -2220,24 +2222,27 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private Dictionary<Druid, HashSet<Druid>> BuildSourceReferenceResolver()
+		private Dictionary<Druid, HashSet<EntityFieldPath>> BuildSourceReferenceResolver()
 		{
-			Dictionary<Druid, HashSet<Druid>> sourceReferenceResolver = new Dictionary<Druid, HashSet<Druid>> ();
+			Dictionary<Druid, HashSet<EntityFieldPath>> sourceReferenceResolver = new Dictionary<Druid, HashSet<EntityFieldPath>> ();
 
 			foreach (System.Data.DataRow row in this.GetSourceReferenceResolverRows ().Rows)
 			{
 				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
 				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
 
-				Druid source = Druid.Parse ("[" + row["T_NAME"] + "]");
-				Druid target = Druid.Parse ("[" + dbColumn.TargetTableName + "]");
+				Druid sourceId = Druid.Parse ("[" + row["T_NAME"] + "]");
+				Druid sourceFieldId = dbColumn.CaptionId;
+				Druid targetId = Druid.Parse ("[" + dbColumn.TargetTableName + "]");
 
-				if (!sourceReferenceResolver.ContainsKey (target))
+				EntityFieldPath sourcePath = EntityFieldPath.CreateAbsolutePath (sourceId, EntityFieldPath.CreateRelativePath (sourceFieldId.ToResourceId ()));
+
+				if (!sourceReferenceResolver.ContainsKey (targetId))
 				{
-					sourceReferenceResolver[target] = new HashSet<Druid> ();
+					sourceReferenceResolver[targetId] = new HashSet<EntityFieldPath> ();
 				}
 
-				sourceReferenceResolver[target].Add (source);
+				sourceReferenceResolver[targetId].Add (sourcePath);
 			}
 
 			return sourceReferenceResolver;
@@ -3183,6 +3188,6 @@ namespace Epsitec.Cresus.Database
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
 
-		private Dictionary<Druid, HashSet<Druid>> sourceReferenceResolver;
+		private Dictionary<Druid, HashSet<EntityFieldPath>> sourceReferenceResolver;
 	}
 }

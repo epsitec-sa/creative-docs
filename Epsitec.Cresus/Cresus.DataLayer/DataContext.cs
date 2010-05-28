@@ -288,24 +288,24 @@ namespace Epsitec.Cresus.DataLayer
 						this.LoadDataRows (entity);
 					}
 
-					this.RemoveEntityValueData (entity, mapping);
-					this.RemoveEntitySourceReferenceData (entity, mapping);
-					this.RemoveEntityTargetReferenceData (entity, mapping);
+					this.RemoveEntityValueData (entity, mapping.RowKey);
+					this.RemoveEntitySourceReferenceData (entity, mapping.RowKey);
+					this.RemoveEntityTargetReferenceData (entity, mapping.RowKey);
 				}
 			}
 		}
 
 
-		public void RemoveEntityValueData(AbstractEntity entity, EntityDataMapping mapping)
+		private void RemoveEntityValueData(AbstractEntity entity, DbKey entityKey)
 		{
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
-				this.RichCommand.DeleteExistingRow (this.LoadDataRow (mapping.RowKey, currentId));
+				this.RichCommand.DeleteExistingRow (this.LoadDataRow (entityKey, currentId));
 			}
 		}
 
 
-		public void RemoveEntitySourceReferenceData(AbstractEntity entity, EntityDataMapping mapping)
+		private void RemoveEntitySourceReferenceData(AbstractEntity entity, DbKey entityKey)
 		{
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					string relationTableName = this.GetRelationTableName (currentId, field);
 
-					IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, mapping.RowKey.Id);
+					IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, entityKey.Id);
 					System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
 
 					foreach (System.Data.DataRow row in existingRelationRows)
@@ -327,9 +327,23 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void RemoveEntityTargetReferenceData(AbstractEntity entity, EntityDataMapping mapping)
+		private void RemoveEntityTargetReferenceData(AbstractEntity entity, DbKey entityKey)
+		{
+			foreach (Druid targetEntityId in this.entityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			{
+				foreach (EntityFieldPath sourceFieldPath in this.infrastructure.GetSourceReferences (targetEntityId))
+				{
+					this.RemoveEntityTargetReferenceData (sourceFieldPath, targetEntityId, entityKey);
+				}
+			}
+		}
+
+
+		private void RemoveEntityTargetReferenceData(EntityFieldPath sourceFieldPath, Druid targetEntityId, DbKey targetKey)
 		{
 			// TODO
+
+			// Search by reference with DataBrowser and remove the proper relation in the results.
 		}
 
 
