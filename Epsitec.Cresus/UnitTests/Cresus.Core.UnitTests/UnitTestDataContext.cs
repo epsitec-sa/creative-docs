@@ -29,22 +29,13 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		[TestMethod]
-		public void CreateDatabase()
-		{
-			TestHelper.PrintStartTest ("Create database");
-
-			Database.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
-		}
-
 
 		[TestMethod]
-		public void PopulateDatabase()
+		public void CreateAndPopulateDatabase()
 		{
-			TestHelper.PrintStartTest ("Populate database");
+			TestHelper.PrintStartTest ("Create and populate database");
 			Database.CreateAndConnectToDatabase ();
+			Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
 			Database2.PupulateDatabase ();
 		}
 
@@ -56,6 +47,7 @@ namespace Epsitec.Cresus.Core
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
+				Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
 				dataContext.SaveChanges ();
 			}
 		}

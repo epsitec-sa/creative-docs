@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
+			this.deletedEntities = new HashSet<AbstractEntity> ();
 
 			this.entityContext.EntityAttached += this.HandleEntityCreated;
 			this.entityContext.PersistenceManagers.Add (this);
@@ -147,7 +148,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void DeleteEntity(AbstractEntity entity)
 		{
-			this.entitiesToDelete.Add (entity);
+			if (!this.deletedEntities.Contains (entity))
+			{
+				this.entitiesToDelete.Add (entity);
+			}
 		}
 
 
@@ -158,10 +162,13 @@ namespace Epsitec.Cresus.DataLayer
 			foreach (AbstractEntity entity in this.entitiesToDelete)
 			{
 				this.RemoveEntity (entity);
+				this.deletedEntities.Add (entity);
 				containsChanges = true;
 			}
+
+			this.deletedEntities.Clear ();
 			
-			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except(this.entitiesToDelete))
+			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except(this.deletedEntities))
 			{
 				this.SerializeEntity (entity);
 				containsChanges = true;
@@ -189,6 +196,13 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
+
+
+		public bool IsEntityDeleted(AbstractEntity entity)
+		{
+			return this.deletedEntities.Contains (entity);
+		}
+
 
 		public IEnumerable<AbstractEntity> GetManagedEntities()
 		{
@@ -274,31 +288,48 @@ namespace Epsitec.Cresus.DataLayer
 						this.LoadDataRows (entity);
 					}
 
-					foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+					this.RemoveEntityValueData (entity, mapping);
+					this.RemoveEntitySourceReferenceData (entity, mapping);
+					this.RemoveEntityTargetReferenceData (entity, mapping);
+				}
+			}
+		}
+
+
+		public void RemoveEntityValueData(AbstractEntity entity, EntityDataMapping mapping)
+		{
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			{
+				this.RichCommand.DeleteExistingRow (this.LoadDataRow (mapping.RowKey, currentId));
+			}
+		}
+
+
+		public void RemoveEntitySourceReferenceData(AbstractEntity entity, EntityDataMapping mapping)
+		{
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			{
+				IEnumerable<StructuredTypeField> localRelationFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection);
+
+				foreach (StructuredTypeField field in localRelationFields)
+				{
+					string relationTableName = this.GetRelationTableName (currentId, field);
+
+					IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, mapping.RowKey.Id);
+					System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
+
+					foreach (System.Data.DataRow row in existingRelationRows)
 					{
-						IEnumerable<StructuredTypeField> localRelationFields =
-							this.EntityContext.GetEntityLocalFieldDefinitions (currentId).
-							Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection);
-
-						foreach (StructuredTypeField field in localRelationFields)
-						{
-							string relationTableName = this.GetRelationTableName (currentId, field);
-
-							IEnumerable<System.Data.DataRow> relationRows = this.richCommand.FindRelationRows (relationTableName, mapping.RowKey.Id);
-							System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
-
-							foreach (System.Data.DataRow row in existingRelationRows)
-							{
-								this.DeleteRelationRow (row);
-							}
-						}
-
-						System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, currentId);
-
-						this.RichCommand.DeleteExistingRow (dataRow);
+						this.DeleteRelationRow (row);
 					}
 				}
 			}
+		}
+
+
+		public void RemoveEntityTargetReferenceData(AbstractEntity entity, EntityDataMapping mapping)
+		{
+			// TODO
 		}
 
 
@@ -1371,5 +1402,6 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 		private readonly HashSet<AbstractEntity> entitiesToDelete;
+		private readonly HashSet<AbstractEntity> deletedEntities;
 	}
 }

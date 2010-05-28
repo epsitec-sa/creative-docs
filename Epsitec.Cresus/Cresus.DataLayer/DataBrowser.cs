@@ -59,6 +59,8 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					yield return this.DataContext.ResolveEntity (entityData) as EntityType;
 				}
+
+				transaction.Commit ();
 			}
 		}
 

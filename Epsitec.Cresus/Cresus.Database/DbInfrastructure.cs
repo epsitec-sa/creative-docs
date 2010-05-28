@@ -55,8 +55,7 @@ namespace Epsitec.Cresus.Database
 			}
 			set
 			{
-				if ((value == null) ||
-					(value.Length == 0))
+				if (value == null || value.Length == 0)
 				{
 					this.localizations = null;
 				}
@@ -186,6 +185,21 @@ namespace Epsitec.Cresus.Database
 		{
 			get;
 			private set;
+		}
+
+
+		public IEnumerable<Druid> GetSourceReferences(Druid targetEntity)
+		{
+			this.EnsureSourceReferenceResolverIsBuilt ();
+			
+			if (this.sourceReferenceResolver.ContainsKey (targetEntity))
+			{
+				return this.sourceReferenceResolver[targetEntity];
+			}
+			else
+			{
+				return new Druid[0];
+			}
 		}
 
 
@@ -1385,10 +1399,6 @@ namespace Epsitec.Cresus.Database
 			DbTable relationTable = DbTable.CreateRelationTable (this, sourceTable, sourceColumn);
 
 			this.RegisterNewDbTable (transaction, relationTable);
-			/*
-			transaction.SqlBuilder.InsertTable (relationTable.CreateSqlTable (this.converter));
-			this.ExecuteSilent (transaction);
-			 */
 		}
 
 		/// <summary>
@@ -2194,6 +2204,90 @@ namespace Epsitec.Cresus.Database
 			return tables;
 		}
 
+
+		private void EnsureSourceReferenceResolverIsBuilt()
+		{
+			if (this.sourceReferenceResolver == null)
+			{
+				this.sourceReferenceResolver = this.BuildSourceReferenceResolver ();
+			}
+		}
+
+
+		private void ClearSourceReferenceResolver()
+		{
+			this.sourceReferenceResolver = null;
+		}
+
+
+		private Dictionary<Druid, HashSet<Druid>> BuildSourceReferenceResolver()
+		{
+			Dictionary<Druid, HashSet<Druid>> sourceReferenceResolver = new Dictionary<Druid, HashSet<Druid>> ();
+
+			foreach (System.Data.DataRow row in this.GetSourceReferenceResolverRows ().Rows)
+			{
+				string columnInfo = InvariantConverter.ToString (row["C_INFO"]);
+				DbColumn dbColumn = DbTools.DeserializeFromXml<DbColumn> (columnInfo);
+
+				Druid source = Druid.Parse ("[" + row["T_NAME"] + "]");
+				Druid target = Druid.Parse ("[" + dbColumn.TargetTableName + "]");
+
+				if (!sourceReferenceResolver.ContainsKey (target))
+				{
+					sourceReferenceResolver[target] = new HashSet<Druid> ();
+				}
+
+				sourceReferenceResolver[target].Add (source);
+			}
+
+			return sourceReferenceResolver;
+		}
+
+
+		private System.Data.DataTable GetSourceReferenceResolverRows()
+		{
+			System.Data.DataTable dataTable;
+			
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = this.BuildSourceReferenceResolverQuery ();
+
+				dataTable = this.ExecuteSqlSelect (transaction, query, 0);
+
+				transaction.Commit ();
+			}
+
+			return dataTable;
+		}
+
+
+		private SqlSelect BuildSourceReferenceResolverQuery()
+		{
+			SqlSelect query = new SqlSelect ();
+
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnName));
+			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
+
+			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
+			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
+
+			SqlField tableColumnId = SqlField.CreateName ("T_TABLE", Tags.ColumnId);
+			SqlField columnRefTableId = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTable);
+			query.Joins.Add (new SqlJoin (tableColumnId, columnRefTableId, SqlJoinCode.Inner));
+
+			SqlField statusColumn  = SqlField.CreateName ("T_COLUMN", Tags.ColumnStatus);
+			SqlField statusValue = SqlField.CreateConstant (DbRowStatus.Live, DbKey.RawTypeForStatus);
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, statusColumn, statusValue));
+
+			SqlField typeColumn = SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType);
+			SqlField typeValue = SqlField.CreateConstant (DbKey.Empty.Id, DbKey.RawTypeForId);
+			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, typeColumn, typeValue));
+
+			return query;
+		}
+
+
+
 		/// <summary>
 		/// Loads the type definitions based on the metadata type key and the
 		/// specified search mode.
@@ -2524,6 +2618,8 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
+
+			this.ClearSourceReferenceResolver ();
 		}
 
 		/// <summary>
@@ -2594,6 +2690,8 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
+
+			this.ClearSourceReferenceResolver ();
 		}
 
 		/// <summary>
@@ -2624,6 +2722,8 @@ namespace Epsitec.Cresus.Database
 			
 			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
+
+			this.ClearSourceReferenceResolver ();
 		}
 
 		protected override void Dispose(bool disposing)
@@ -2657,6 +2757,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
 			System.Diagnostics.Debug.Assert (this.converter == null);
 		}
+
 
 		#region Initialisation
 
@@ -3081,5 +3182,7 @@ namespace Epsitec.Cresus.Database
 		
 		private int								lockTimeout = 15000;
 		System.Threading.ReaderWriterLock		globalLock = new System.Threading.ReaderWriterLock ();
+
+		private Dictionary<Druid, HashSet<Druid>> sourceReferenceResolver;
 	}
 }
