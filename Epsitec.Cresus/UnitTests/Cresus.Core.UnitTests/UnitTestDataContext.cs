@@ -149,33 +149,33 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		[TestMethod]
-		public void DeleteEntity1()
-		{
-			TestHelper.PrintStartTest ("Delete Entity 1");
+		//[TestMethod]
+		//public void DeleteEntity1()
+		//{
+		//    TestHelper.PrintStartTest ("Delete Entity 1");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+		//    Database.CreateAndConnectToDatabase ();
+		//    Database2.PupulateDatabase ();
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+		//    using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+		//    {
+		//        NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-				Assert.IsTrue (Database2.CheckAlfred (alfred));
+		//        Assert.IsTrue (Database2.CheckAlfred (alfred));
 
-				dataContext.DeleteEntity (alfred.Contacts[0] as UriContactEntity);
+		//        dataContext.DeleteEntity (alfred.Contacts[0] as UriContactEntity);
 
-				dataContext.SaveChanges ();
-			}
+		//        dataContext.SaveChanges ();
+		//    }
 	
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+		//    using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+		//    {
+		//        NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-				Assert.IsTrue (alfred.Contacts.Count == 1);
-				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
-			}
-		}
+		//        Assert.IsTrue (alfred.Contacts.Count == 1);
+		//        Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+		//    }
+		//}
 
 
 	}
