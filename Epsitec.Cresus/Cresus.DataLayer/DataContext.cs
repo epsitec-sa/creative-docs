@@ -561,13 +561,6 @@ namespace Epsitec.Cresus.DataLayer
 						object target2 = new Helpers.EntityCollectionFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target2);
 
-						//System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
-
-						//foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
-						//{
-						//    collection.Add (target2);
-						//}
-
 						break;
 				}
 			}
@@ -596,12 +589,8 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Collection:
 
-						System.Collections.IList targets = entity.InternalGetFieldCollection (field.Id);
-
-						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
-						{
-							targets.Add (target2);
-						}
+						object target2 = new Helpers.EntityCollectionFieldProxy (this, entity, field);
+						entity.InternalSetValue (field.Id, target2);
 
 						break;
 				}
