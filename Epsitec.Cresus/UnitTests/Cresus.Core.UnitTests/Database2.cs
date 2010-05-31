@@ -237,9 +237,7 @@ namespace Epsitec.Cresus.Core
 
 		public static NaturalPersonEntity GetIncorrectExample4()
 		{
-			NaturalPersonEntity example = new NaturalPersonEntity ()
-			{
-			};
+			NaturalPersonEntity example = new NaturalPersonEntity ();
 
 			example.Contacts.Add (new UriContactEntity ()
 			{

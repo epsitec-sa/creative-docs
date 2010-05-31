@@ -1098,7 +1098,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				foreach (SqlField field in sqlJoin.Conditions)
 				{
-					if (!isFirstField)
+					if (isFirstField)
+					{
+						isFirstField = false;
+					}
+					else
 					{
 						this.Append (" AND ");
 					}
