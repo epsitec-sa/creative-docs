@@ -31,11 +31,21 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void CreateAndPopulateDatabase()
+		public void CreateDatabase()
 		{
-			TestHelper.PrintStartTest ("Create and populate database");
+			TestHelper.PrintStartTest ("Create database");
+
 			Database.CreateAndConnectToDatabase ();
-			Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
+
+			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+		}
+
+
+		[TestMethod]
+		public void PopulateDatabase()
+		{
+			TestHelper.PrintStartTest ("Populate database");
+
 			Database2.PupulateDatabase ();
 		}
 

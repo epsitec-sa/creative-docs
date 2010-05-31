@@ -44,9 +44,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects1()
+		public void GetObjects()
 		{
-			TestHelper.PrintStartTest ("Get objects 1");
+			TestHelper.PrintStartTest ("Get objects");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -65,9 +65,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects2()
+		public void GetObjectsWithCast()
 		{
-			TestHelper.PrintStartTest ("Get objects 2");
+			TestHelper.PrintStartTest ("Get objects with cast");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects3()
+		public void GetObjectsWithCorrectValueExample()
 		{
-			TestHelper.PrintStartTest ("Get objects 3");
+			TestHelper.PrintStartTest ("Get objects with correct value example");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -105,9 +105,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects4()
+		public void GetObjectsWithCorrectReferenceExample()
 		{
-			TestHelper.PrintStartTest ("Get objects 4");
+			TestHelper.PrintStartTest ("Get objects with correct reference example");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -125,9 +125,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects5()
+		public void GetObjectsWithCorrectCollectionExample1()
 		{
-			TestHelper.PrintStartTest ("Get objects 5");
+			TestHelper.PrintStartTest ("Get objects with correct collection example 1");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects6()
+		public void GetObjectsWithCorrectCollectionExample2()
 		{
-			TestHelper.PrintStartTest ("Get objects 6");
+			TestHelper.PrintStartTest ("Get objects with correct collection example 2");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -166,9 +166,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects7()
+		public void GetObjectsWithIncorrectValueExample()
 		{
-			TestHelper.PrintStartTest ("Get objects 7");
+			TestHelper.PrintStartTest ("Get objects with incorrect value example");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -184,9 +184,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects8()
+		public void GetObjectsWithIncorrectReferenceExample()
 		{
-			TestHelper.PrintStartTest ("Get objects 8");
+			TestHelper.PrintStartTest ("Get objects with incorrect reference example");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -202,9 +202,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects9()
+		public void GetObjectsWithIncorrectCollectionExample1()
 		{
-			TestHelper.PrintStartTest ("Get objects 9");
+			TestHelper.PrintStartTest ("Get objects with incorrect collection example 1");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -220,9 +220,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects10()
+		public void GetObjectsWithIncorrectCollectionExample2()
 		{
-			TestHelper.PrintStartTest ("Get objects 10");
+			TestHelper.PrintStartTest ("Get objects with incorrect collection example 2");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -238,9 +238,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects11()
+		public void GetObjectsWithEntityEquality()
 		{
-			TestHelper.PrintStartTest ("Get objects 11");
+			TestHelper.PrintStartTest ("Get objects with entity equality");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -258,15 +258,43 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (persons2.Any (p => Database2.CheckAlfred (p)));
 
 				Assert.IsTrue (object.ReferenceEquals (persons1[0], persons2[0]));
-
 			}
 		}
 
 
 		[TestMethod]
-		public void GetObjects12()
+		public void GetObjectByReference()
 		{
-			TestHelper.PrintStartTest ("Get objects 12");
+			TestHelper.PrintStartTest ("Get objects by reference");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+
+				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity alfred = repository.GetEntityByExample<NaturalPersonEntity> (alfredExample);
+
+				UriContactEntity contactExample = new UriContactEntity ()
+				{
+					NaturalPerson = alfred,
+				};
+
+				UriContactEntity[] contacts = repository.GetEntitiesByExample<UriContactEntity> (contactExample).ToArray ();
+
+				Assert.IsTrue (contacts.Length == 2);
+
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == alfred));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectsWithDeletedEntity()
+		{
+			TestHelper.PrintStartTest ("Get objects with deleted entity");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -298,9 +326,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjects13()
+		public void GetObjectsWithDeletedRelation()
 		{
-			TestHelper.PrintStartTest ("Get objects 13");
+			TestHelper.PrintStartTest ("Get objects with deleted relation");
 
 			Database.CreateAndConnectToDatabase ();
 			Database2.PupulateDatabase ();
