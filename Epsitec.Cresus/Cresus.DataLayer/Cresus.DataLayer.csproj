@@ -146,13 +146,14 @@
     <Compile Include="EntityReferenceData.cs" />
     <Compile Include="EntityTableAliasNode.cs" />
     <Compile Include="EntityValueData.cs" />
+    <Compile Include="Helpers\EntityCollectionFieldProxy.cs" />
     <Compile Include="Helpers\EntityFieldProxy.cs" />
     <Compile Include="SubtypeTableAliasNode.cs" />
     <Compile Include="TableAliasNode.cs" />
     <Compile Include="TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
-    <Compile Include="Helpers\FieldProxy.cs" />
+    <Compile Include="Helpers\ValueFieldProxy.cs" />
     <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -36,9 +36,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <param name="store">The value store.</param>
 		/// <param name="id">The value id.</param>
 		/// <returns>The real instance to be used.</returns>
-		object IEntityProxy.GetReadEntityValue(IValueStore store, string id)
+		public object GetReadEntityValue(IValueStore store, string id)
 		{
-			return this.ResolveEntity (store, id);
+			object value = this.PromoteToRealInstance ();
+			store.SetValue (id, value, ValueStoreSetMode.Default);
+
+			return value;
 		}
 
 		/// <summary>
@@ -47,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <param name="store">The value store.</param>
 		/// <param name="id">The value id.</param>
 		/// <returns>The real instance to be used.</returns>
-		object IEntityProxy.GetWriteEntityValue(IValueStore store, string id)
+		public object GetWriteEntityValue(IValueStore store, string id)
 		{
 			return this;
 		}
@@ -72,38 +75,16 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Promotes the proxy to its real instance.
 		/// </summary>
 		/// <returns>The real instance.</returns>
-		object IEntityProxy.PromoteToRealInstance()
-		{
-			return this.PromoteToRealInstance ();
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Resolves the entity by promoting it and the storing it back into
-		/// the value store.
-		/// </summary>
-		/// <param name="store">The store.</param>
-		/// <param name="id">The id.</param>
-		/// <returns>The real instance.</returns>
-		private object ResolveEntity(IValueStore store, string id)
-		{
-			object value = this.PromoteToRealInstance ();
-			store.SetValue (id, value, ValueStoreSetMode.Default);
-			return value;
-		}
-
-		/// <summary>
-		/// Promotes the proxy to its real instance.
-		/// </summary>
-		/// <returns>The real instance.</returns>
-		private object PromoteToRealInstance()
+		public object PromoteToRealInstance()
 		{
 			return this.context.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
 		}
 
+		#endregion
+
 		readonly DataContext context;
 		readonly DbKey rowKey;
 		readonly Druid entityId;
+
 	}
 }

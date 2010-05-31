@@ -27,7 +27,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		public object GetReadEntityValue(Common.Types.IValueStore store, string id)
 		{
-			return this.ResolveEntity (store, id);
+			object value = this.PromoteToRealInstance ();
+			store.SetValue (id, value, ValueStoreSetMode.Default);
+
+			return value;
 		}
 
 
@@ -46,22 +49,14 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public object PromoteToRealInstance()
 		{
 			Druid entityId = this.entity.GetEntityStructuredTypeId();
-			Druid localEntityId = this.entity.GetEntityContext ().GetLocalEntityId (entityId, field.CaptionId);
+			Druid localEntityId = this.entity.GetEntityContext ().GetLocalEntityId (entityId, this.field.CaptionId);
 
-			return this.dataContext.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load).FirstOrDefault ();
+			return this.dataContext.ReadFieldRelation (this.entity, localEntityId, this.field, EntityResolutionMode.Load).FirstOrDefault ();
 		}
 
 
 		#endregion
-
-
-		private object ResolveEntity(IValueStore store, string id)
-		{
-			object value = this.PromoteToRealInstance ();
-			store.SetValue (id, value, ValueStoreSetMode.Default);
-			return value;
-		}
-
+		
 
 		private DataContext dataContext;
 

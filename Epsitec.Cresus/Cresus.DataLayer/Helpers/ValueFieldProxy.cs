@@ -8,11 +8,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 {
 
 
-	public class FieldProxy : IFieldProxy
+	public class ValueFieldProxy : IFieldProxy
 	{
 
 
-		public FieldProxy(DataContext context, AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField field)
+		public ValueFieldProxy(DataContext context, AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField field)
 		{
 			this.context = context;
 			this.entity = entity;

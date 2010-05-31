@@ -551,7 +551,6 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						//object target1 = this.ReadFieldRelation (entity, entityId, fieldDef, EntityResolutionMode.DelayLoad).FirstOrDefault ();
 						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target1);
 
@@ -559,12 +558,15 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Collection:
 
-						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
+						object target2 = new Helpers.EntityCollectionFieldProxy (this, entity, field);
+						entity.InternalSetValue (field.Id, target2);
 
-						foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
-						{
-							collection.Add (target2);
-						}
+						//System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
+
+						//foreach (object target2 in this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad))
+						//{
+						//    collection.Add (target2);
+						//}
 
 						break;
 				}
@@ -580,14 +582,13 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						object value = new Helpers.FieldProxy (this, entity, entityId, rowKey, field);
+						object value = new Helpers.ValueFieldProxy (this, entity, entityId, rowKey, field);
 						entity.InternalSetValue (field.Id, value);
 
 						break;
 
 					case FieldRelation.Reference:
 
-						//object target1 = this.ReadFieldRelation (entity, entityId, field, EntityResolutionMode.DelayLoad).FirstOrDefault ();
 						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target1);
 
