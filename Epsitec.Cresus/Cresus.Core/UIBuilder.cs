@@ -318,11 +318,11 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var button = new Button
+			var showButton = new Button
 			{
 				Parent = container,
-				Text = "Ajouter",
-				PreferredWidth = 60,
+				Text = "Voir",
+				PreferredWidth = 50,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
@@ -330,11 +330,24 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			accessor.WidgetInitialize (editor, entity);
+			var createButton = new Button
+			{
+				Parent = container,
+				Text = "Créer",
+				PreferredWidth = 50,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+				Visibility = false,
+				TabIndex = ++this.tabIndex,
+			};
 
 			editor.SelectedItemChanged +=
 				delegate
 				{
+					showButton.Visibility = !editor.InError && editor.HasItemValue;
+					createButton.Visibility = editor.InError;
+
 					if (editor.SelectedItemIndex > -1)
 					{
 						valueSetter (editor.Items.GetValue (editor.SelectedItemIndex) as AbstractEntity);
@@ -344,8 +357,11 @@ namespace Epsitec.Cresus.Core
 			editor.TextChanged +=
 				delegate
 				{
-					button.Visibility = editor.InError;
+					showButton.Visibility = !editor.InError && editor.HasItemValue;
+					createButton.Visibility = editor.InError;
 				};
+
+			accessor.WidgetInitialize (editor, entity);
 
 			return editor;
 		}

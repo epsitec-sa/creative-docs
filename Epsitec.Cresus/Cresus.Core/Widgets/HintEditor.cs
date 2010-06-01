@@ -102,6 +102,16 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public bool HasItemValue
+		{
+			get
+			{
+				this.HintUpdateList (this.Text);
+				return this.hintListIndex.Count == 1;
+			}
+		}
+
+
 		public static HintComparerResult Compare(string text, string typed)
 		{
 			int index = text.IndexOf (typed);
@@ -254,6 +264,47 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
+			this.HintUpdateList (typed);
+
+			if (this.hintListIndex.Count == 0)
+			{
+				this.hintSelected = -1;
+			}
+			else
+			{
+				this.hintSelected = 0;  // la première proposition
+			}
+
+			this.UseSelectedHint ();
+
+			//	Gère le combo menu.
+			if (this.hintListIndex.Count <= 1)
+			{
+				if (this.IsComboMenuOpen)
+				{
+					this.CloseComboMenu ();
+				}
+			}
+			else
+			{
+				if (this.IsComboMenuOpen)
+				{
+					this.UpdateComboMenuContent ();
+				}
+				else
+				{
+					this.OpenComboMenu ();
+				}
+			}
+		}
+
+		private void HintUpdateList(string typed)
+		{
+			if (this.ValueToDescriptionConverter == null || this.HintComparer == null)
+			{
+				return;
+			}
+
 			this.hintListIndex.Clear ();
 
 			string original = typed;
@@ -296,37 +347,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				this.hintListIndex.AddRange (list1);
 				this.hintListIndex.AddRange (list2);
-			}
-
-			if (this.hintListIndex.Count == 0)
-			{
-				this.hintSelected = -1;
-			}
-			else
-			{
-				this.hintSelected = 0;  // la première proposition
-			}
-
-			this.UseSelectedHint ();
-
-			//	Gère le combo menu.
-			if (this.hintListIndex.Count <= 1)
-			{
-				if (this.IsComboMenuOpen)
-				{
-					this.CloseComboMenu ();
-				}
-			}
-			else
-			{
-				if (this.IsComboMenuOpen)
-				{
-					this.UpdateComboMenuContent ();
-				}
-				else
-				{
-					this.OpenComboMenu ();
-				}
 			}
 		}
 
