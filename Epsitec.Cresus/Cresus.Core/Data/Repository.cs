@@ -12,17 +12,23 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core.Data
 {
 
+
 	public class Repository
 	{
+
 
 		public Repository(DbInfrastructure dbInfrastructure, DataContext dataContext)
 		{
 			this.DbInfrastructure = dbInfrastructure;
 			this.DataContext = dataContext;
+
+			this.dataBrowser = new DataBrowser (dbInfrastructure, dataContext);
 		}
+
 
 		public DbInfrastructure DbInfrastructure
 		{
@@ -30,23 +36,33 @@ namespace Epsitec.Cresus.Core.Data
 			private set;
 		}
 
+
 		public DataContext DataContext
 		{
 			get;
 			private set;
 		}
 
-		public EntityType GetEntityByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
+
+		public EntityType GetEntityByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
 		{
 			return this.GetEntitiesByExample (example).FirstOrDefault ();
 		}
 
-		public IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
-		{
-			DataBrowser dataBrowser = new DataBrowser (this.DbInfrastructure, this.DataContext);
 
-			return dataBrowser.GetByExample<EntityType> (example);
+		public IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
+		{
+			return this.dataBrowser.GetByExample<EntityType> (example);
 		}
+
+
+		public IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
+		{
+			return this.dataBrowser.GetReferencers (target).Select (result => result.Item1);
+		}
+
+
+		private DataBrowser dataBrowser;
 
 	}
 

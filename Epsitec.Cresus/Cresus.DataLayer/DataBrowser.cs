@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
+		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -66,13 +66,36 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		//public IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
-		//{
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		{
+			EntityDataMapping targetMapping = this.DataContext.FindEntityDataMapping (target);
 
+			if (targetMapping != null)
+			{
+				foreach (Druid targetEntityId in this.DataContext.EntityContext.GetHeritedEntityIds (target.GetEntityStructuredTypeId ()))
+				{
+					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
+					{
+						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target))
+						{
+							yield return item;
+						}
+					}
+				}
+			}
+		}
+		
 
+		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target)
+		{
+			Druid sourceEntityId = sourceFieldPath.EntityId;
+			string sourceFieldId = sourceFieldPath.Fields.First ();
 
+			AbstractEntity example = this.DataContext.EntityContext.CreateEmptyEntity (sourceEntityId);
+			example.InternalSetValue (sourceFieldId, target);
 
-		//}
+			return this.GetByExample (example).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
+		}
 
 
 		private IEnumerable<EntityData> GetEntitiesData(DbTransaction transaction, AbstractEntity example)
