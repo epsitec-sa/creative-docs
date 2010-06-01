@@ -3,11 +3,12 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {

@@ -92,6 +92,13 @@
     <Compile Include="AccessorsObsolete\CountryAccessor.cs" />
     <Compile Include="AccessorsObsolete\LocationAccessor.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\DataAccessors\Accessor.cs" />
+    <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionTemplate.cs" />
+    <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionRolesContactViewController.cs" />
@@ -106,8 +113,8 @@
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAbstractPersonViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryData.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryDataType.cs" />
+    <Compile Include="Controllers\DataAccessors\SummaryData.cs" />
+    <Compile Include="Controllers\DataAccessors\SummaryDataType.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
@@ -115,7 +122,7 @@
     <Compile Include="Controllers\TileController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryDataItems.cs" />
+    <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
