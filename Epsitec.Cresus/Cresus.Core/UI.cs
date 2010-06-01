@@ -172,9 +172,25 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static bool SetInitialFocus(Widget parent)
+		/// <summary>
+		/// Sets the initial focus on the first (or last) widget which accepts
+		/// tab navigation.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <returns><c>true</c> if the focus was set; otherwise, <c>false</c>.</returns>
+		public static bool SetInitialFocus(Visual container)
 		{
-			foreach (Widget widget in parent.Children)
+			IEnumerable<Visual> children = container.Children;
+
+			if (UI.reverseSetFocus)
+			{
+				//	We are called as a result to ExecuteWithReverseSetFocus, which means
+				//	that we should start looking for the widgets in reverse order:
+
+				children = children.Reverse ();
+			}
+
+			foreach (Visual widget in children)
 			{
 				if (widget is AbstractTextField)
 				{
@@ -198,6 +214,45 @@ namespace Epsitec.Cresus.Core
 			return false;
 		}
 
+
+		/// <summary>
+		/// Sets up the context for <see cref="SetInitialFocus"/> and executes the action.
+		/// </summary>
+		/// <typeparam name="T">The return type of the action.</typeparam>
+		/// <param name="action">The action.</param>
+		/// <returns>The value returned by the action.</returns>
+		public static T ExecuteWithDirectSetFocus<T>(System.Func<T> action)
+		{
+			return UI.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: false);
+		}
+
+		/// <summary>
+		/// Sets up the context for <see cref="SetInitialFocus"/> and executes the action.
+		/// </summary>
+		/// <typeparam name="T">The return type of the action.</typeparam>
+		/// <param name="action">The action.</param>
+		/// <returns>The value returned by the action.</returns>
+		public static T ExecuteWithReverseSetFocus<T>(System.Func<T> action)
+		{
+			return UI.ExecuteWithSpecifiedSetFocus (action, reverseSetFocus: true);
+		}
+
+		
+		private static T ExecuteWithSpecifiedSetFocus<T>(System.Func<T> action, bool reverseSetFocus)
+		{
+			bool focus = UI.reverseSetFocus;
+			
+			UI.reverseSetFocus = reverseSetFocus;
+			
+			try
+			{
+				return action ();
+			}
+			finally
+			{
+				UI.reverseSetFocus = focus;
+			}
+		}
 
 		private static void SetupResourceManagerPool()
 		{
@@ -323,5 +378,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 		private static readonly List<WindowPlacementHint>	windowPlacementHints				= new List<WindowPlacementHint> ();
+		private static bool									reverseSetFocus;
 	}
 }
