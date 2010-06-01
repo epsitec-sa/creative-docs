@@ -30,26 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
 
-			this.controller.ActivateNextSubView = () => this.ActivateNextSummaryTile (this.GetSummaryTiles ());
-			this.controller.ActivatePrevSubView = () => this.ActivateNextSummaryTile (this.GetSummaryTiles ().Reverse ());
-		}
-
-		private SummaryTile GetNextActiveSummaryTile(IEnumerable<SummaryTile> tiles)
-		{
-			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
-		}
-
-		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
-		{
-			var tile = this.GetNextActiveSummaryTile (tiles);
-
-			if (tile == null)
-			{
-				return false;
-			}
-			
-			tile.OpenSubView (this.controller.Orchestrator, this.controller);
-			return true;
+			this.controller.ActivateNextSubView = () => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetSummaryTiles ()));
+			this.controller.ActivatePrevSubView = () => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetSummaryTiles ().Reverse ()));
 		}
 
 		
@@ -426,6 +408,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return this.activeItems.Select (x => x.SummaryTile);
 		}
+		
+		private static SummaryTile GetNextActiveSummaryTile(IEnumerable<SummaryTile> tiles)
+		{
+			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
+		}
+
 
 		private static double GetTotalHeight(IEnumerable<TitleTile> collection)
 		{
@@ -456,6 +444,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			Window.RefreshEnteredWidgets ();
+		}
+
+		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
+		{
+			var tile = TileContainerController.GetNextActiveSummaryTile (tiles);
+
+			if (tile == null)
+			{
+				return false;
+			}
+			else
+			{
+				tile.OpenSubView (this.controller.Orchestrator, this.controller);
+				return true;
+			}
 		}
 
 
