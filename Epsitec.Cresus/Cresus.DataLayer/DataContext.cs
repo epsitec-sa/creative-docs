@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					this.RemoveEntityValueData (entity, mapping.RowKey);
 					this.RemoveEntitySourceReferenceData (entity, mapping.RowKey);
-					this.RemoveEntityTargetReferenceData (entity, mapping.RowKey);
+					this.RemoveEntityTargetReferenceData (entity);
 				}
 			}
 		}
@@ -319,23 +319,22 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void RemoveEntityTargetReferenceData(AbstractEntity entity, DbKey entityKey)
+		private void RemoveEntityTargetReferenceData(AbstractEntity entity)
 		{
-			//foreach (Druid targetEntityId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
-			//{
-			//    foreach (EntityFieldPath sourceFieldPath in this.infrastructure.GetSourceReferences (targetEntityId))
-			//    {
-			//        this.RemoveEntityTargetReferenceData (sourceFieldPath, targetEntityId, entityKey);
-			//    }
-			//}
-		}
+			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.infrastructure, this).GetReferencers (entity))
+			{
+				AbstractEntity sourceEntity = item.Item1;
+				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
 
-
-		private void RemoveEntityTargetReferenceData(EntityFieldPath sourceFieldPath, Druid targetEntityId, DbKey targetKey)
-		{
-			// TODO
-
-			// Search by reference with DataBrowser and remove the proper relation in the results.
+				if (field.Relation == FieldRelation.Reference)
+				{
+					sourceEntity.InternalSetValue (field.Id, null);
+				}
+				else if (field.Relation == FieldRelation.Collection)
+				{
+					sourceEntity.InternalGetFieldCollection (field.Id).Remove (entity);
+				}
+			}
 		}
 
 
