@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			DataBrowser dataBrowser = new DataBrowser (this.DbInfrastructure, this.DataContext);
 
-			return dataBrowser.QueryByExample<EntityType> (example);
+			return dataBrowser.GetByExample<EntityType> (example);
 		}
 
 	}
