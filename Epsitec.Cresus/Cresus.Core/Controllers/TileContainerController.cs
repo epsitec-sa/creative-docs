@@ -30,8 +30,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
 
-			this.controller.ActivateNextSubView = () => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetSummaryTiles ()));
-			this.controller.ActivatePrevSubView = () => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetSummaryTiles ().Reverse ()));
+			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
+			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 		}
 
 		
@@ -407,6 +407,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		private IEnumerable<SummaryTile> GetSummaryTiles()
 		{
 			return this.activeItems.Select (x => x.SummaryTile);
+		}
+
+		private IEnumerable<SummaryTile> GetCyclicSummaryTiles(bool cyclic)
+		{
+			if (cyclic)
+			{
+				return this.GetSummaryTiles ().Concat (this.GetSummaryTiles ());
+			}
+			else
+			{
+				return this.GetSummaryTiles ();
+			}
 		}
 		
 		private static SummaryTile GetNextActiveSummaryTile(IEnumerable<SummaryTile> tiles)

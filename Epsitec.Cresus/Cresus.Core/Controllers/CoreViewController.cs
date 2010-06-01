@@ -31,13 +31,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<bool> ActivateNextSubView
+		public System.Func<bool, bool> ActivateNextSubView
 		{
 			get;
 			set;
 		}
 
-		public System.Func<bool> ActivatePrevSubView
+		public System.Func<bool, bool> ActivatePrevSubView
 		{
 			get;
 			set;
