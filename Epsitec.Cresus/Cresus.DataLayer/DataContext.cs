@@ -321,13 +321,13 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void RemoveEntityTargetReferenceData(AbstractEntity entity, DbKey entityKey)
 		{
-			foreach (Druid targetEntityId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
-			{
-				foreach (EntityFieldPath sourceFieldPath in this.infrastructure.GetSourceReferences (targetEntityId))
-				{
-					this.RemoveEntityTargetReferenceData (sourceFieldPath, targetEntityId, entityKey);
-				}
-			}
+			//foreach (Druid targetEntityId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			//{
+			//    foreach (EntityFieldPath sourceFieldPath in this.infrastructure.GetSourceReferences (targetEntityId))
+			//    {
+			//        this.RemoveEntityTargetReferenceData (sourceFieldPath, targetEntityId, entityKey);
+			//    }
+			//}
 		}
 
 

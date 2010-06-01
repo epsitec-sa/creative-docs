@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Data;
+﻿using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
@@ -6,6 +8,7 @@ using Epsitec.Cresus.DataLayer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
+
 
 namespace Epsitec.Cresus.Core
 {
@@ -290,6 +293,28 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		[TestMethod]
+		public void GetReferencers()
+		{
+			TestHelper.PrintStartTest ("Get referencers");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+
+				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity alfred = repository.GetEntityByExample<NaturalPersonEntity> (alfredExample);
+
+				AbstractEntity[] referencers = repository.GetReferencers (alfred).ToArray ();
+
+				Assert.IsTrue (referencers.Length == 2);
+
+				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+			}
+		}
+		
 
 		[TestMethod]
 		public void GetObjectsWithDeletedEntity()
