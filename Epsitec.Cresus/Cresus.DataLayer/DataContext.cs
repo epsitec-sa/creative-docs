@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.RichCommand = new DbRichCommand (this.infrastructure);
 			this.EntityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
-			this.entityBulkLoaded = new Dictionary<Druid, bool> ();
+			this.tableBulkLoaded = new Dictionary<string, bool> ();
 			this.entityDataLoaded = new Dictionary<AbstractEntity, bool> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
@@ -154,6 +154,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				this.RemoveEntity (entity);
 				this.deletedEntities.Add (entity);
+				this.entityDataCache.Remove (entity.GetEntitySerialId ());
 				containsChanges = true;
 			}
 
@@ -503,11 +504,6 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			this.entityDataLoaded[entity] = true;
-
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (realEntityId))
-			{
-				this.entityBulkLoaded[currentId] = true;
-			}
 
 			return entity;
 		}
@@ -967,38 +963,35 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			EntityDataMapping sourceMapping = this.GetEntityDataMapping (entity);
 			string tableName = this.GetRelationTableName (entityId, fieldDef);
-			bool found = false;
+			
 			System.Comparison<System.Data.DataRow> comparer = null;
 
 			if (fieldDef.Relation == FieldRelation.Collection)
 			{
 				//	TODO: check that comparer really works !
 
-				comparer =
-					delegate (System.Data.DataRow a, System.Data.DataRow b)
-					{
-						int valueA = (int) a[Tags.ColumnRefRank];
-						int valueB = (int) b[Tags.ColumnRefRank];
-
-						return valueA.CompareTo (valueB);
-					};
+				comparer = (a, b) =>
+				{
+					int valueA = (int) a[Tags.ColumnRefRank];
+					int valueB = (int) b[Tags.ColumnRefRank];
+					return valueA.CompareTo (valueB);
+				};
 			}
 
-			for (int i = 0; i < 2; i++)
+			bool found = false;
+
+			for (int i = 0; i < 2 && !found; i++)
 			{
 				foreach (System.Data.DataRow relationRow in Collection.Enumerate (this.RichCommand.FindRelationRows (tableName, sourceMapping.RowKey.Id), comparer))
 				{
 					long relationTargetId = (long) relationRow[Tags.ColumnRefTargetId];
 					object targetEntity = this.InternalResolveEntity (new DbKey (new DbId (relationTargetId)), fieldDef.TypeId, resolutionMode);
 					yield return targetEntity;
+					
 					found = true;
 				}
 
-				if (found)
-				{
-					yield break;
-				}
-				else
+				if (!found)
 				{
 					this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
 				}
@@ -1012,21 +1005,13 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
-				if (!this.BulkMode || (!this.entityBulkLoaded.ContainsKey (currentId) || !this.entityBulkLoaded[currentId]))
+				this.LoadDataRow (mapping.RowKey, currentId);
+
+				StructuredTypeField[] localFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).ToArray ();
+
+				foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection))
 				{
-					this.LoadDataRow (mapping.RowKey, currentId);
-
-					StructuredTypeField[] localFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).ToArray ();
-
-					foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection))
-					{
-						this.LoadRelationRows (currentId, this.GetRelationTableName (currentId, field), mapping.RowKey);
-					}
-
-					if (this.BulkMode)
-					{
-						this.entityBulkLoaded[currentId] = true;
-					}
+					this.LoadRelationRows (currentId, this.GetRelationTableName (currentId, field), mapping.RowKey);
 				}
 			}
 
@@ -1036,19 +1021,22 @@ namespace Epsitec.Cresus.DataLayer
 
 		private System.Data.DataRow LoadDataRow(DbKey rowKey, Druid entityId)
 		{
-			System.Data.DataRow row;
-
 			string tableName = this.SchemaEngine.GetDataTableName (entityId);
-			row = this.RichCommand.FindRow (tableName, rowKey.Id);
 
-			if (row == null)
+			System.Data.DataRow row = this.RichCommand.FindRow (tableName, rowKey.Id);
+
+			if (row == null && !(this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName]))
 			{
 				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					DbTable tableDef = this.SchemaEngine.FindTableDefinition (entityId);
 					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
 
-					if (!this.BulkMode)
+					if (this.BulkMode)
+					{
+						this.tableBulkLoaded[tableName] = true;
+					}
+					else
 					{
 						condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
 					}
@@ -1067,28 +1055,35 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void LoadRelationRows(Druid entityId, string tableName, DbKey sourceRowKey)
 		{
-			DbTable relationTableDef = this.RichCommand.Tables[tableName];
-
-			if (relationTableDef == null)
+			if (!(this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName]))
 			{
-				this.LoadTableRelationSchemas (entityId);
+				DbTable relationTableDef = this.RichCommand.Tables[tableName];
 
-				relationTableDef = this.RichCommand.Tables[tableName];
-
-				System.Diagnostics.Debug.Assert (relationTableDef != null);
-			}
-
-			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
-
-				if (!this.BulkMode)
+				if (relationTableDef == null)
 				{
-					condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+					this.LoadTableRelationSchemas (entityId);
+
+					relationTableDef = this.RichCommand.Tables[tableName];
+
+					System.Diagnostics.Debug.Assert (relationTableDef != null);
 				}
 
-				this.RichCommand.ImportTable (transaction, relationTableDef, condition);
-				transaction.Commit ();
+				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
+
+					if (this.BulkMode)
+					{
+						this.tableBulkLoaded[tableName] = true;
+					}
+					else
+					{
+						condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+					}
+
+					this.RichCommand.ImportTable (transaction, relationTableDef, condition);
+					transaction.Commit ();
+				}
 			}
 		}
 
@@ -1393,7 +1388,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private readonly DbInfrastructure infrastructure;
 		private readonly EntityDataCache entityDataCache;
-		private readonly Dictionary<Druid, bool> entityBulkLoaded;
+		private readonly Dictionary<string, bool> tableBulkLoaded;
 		private readonly Dictionary<AbstractEntity, bool> entityDataLoaded;
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;

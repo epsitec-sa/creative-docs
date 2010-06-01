@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<EntityType> QueryByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
+		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -64,6 +64,15 @@ namespace Epsitec.Cresus.DataLayer
 				transaction.Commit ();
 			}
 		}
+
+
+		//public IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
+		//{
+
+
+
+
+		//}
 
 
 		private IEnumerable<EntityData> GetEntitiesData(DbTransaction transaction, AbstractEntity example)

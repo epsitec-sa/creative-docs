@@ -87,15 +87,37 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void Resolve1()
+		public void ResolveWithoutBulkMode()
 		{
-			TestHelper.PrintStartTest ("Resolve 1");
+			TestHelper.PrintStartTest ("Resolve without bulk mode");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
+				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000003)));
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
+				Assert.IsTrue (Database2.CheckGertrude (gertrude));
+				Assert.IsTrue (Database2.CheckHans (hans));
+			}
+		}
+
+
+		[TestMethod]
+		public void ResolveWithBulkMode()
+		{
+			TestHelper.PrintStartTest ("Resolve with bulk mode");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, true))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
+				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000003)));
+
+				Assert.IsTrue (Database2.CheckAlfred (alfred));
+				Assert.IsTrue (Database2.CheckGertrude (gertrude));
+				Assert.IsTrue (Database2.CheckHans (hans));
 			}
 		}
 
