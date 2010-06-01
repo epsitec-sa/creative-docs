@@ -12,6 +12,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
+	/// <summary>
+	/// The <c>SummaryData</c> provides the texts used to set up the
+	/// <see cref="TitleTile"/> and <see cref="SummaryTile"/>. It is
+	/// built to support asynchronous tile initialization.
+	/// </summary>
 	public class SummaryData : System.IComparable<SummaryData>, ITileController
 	{
 		public SummaryData()
@@ -33,68 +38,88 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		public string Name
+		public string							Name
 		{
 			get;
 			set;
 		}
 
-		public int Rank
+		public int								Rank
 		{
 			get;
 			set;
 		}
 		
-		public string IconUri
+		public string							IconUri
 		{
 			get;
 			set;
 		}
 
-		public bool AutoGroup
+		public bool								AutoGroup
 		{
 			get;
 			set;
 		}
 
-		public bool IsCompact
+		public bool								IsCompact
 		{
 			get;
 			set;
 		}
 
-		public SummaryDataType DataType
+		public SummaryDataType					DataType
 		{
 			get;
 			set;
 		}
 
-		public FormattedText Title
+		public FormattedText					Title
 		{
 			get;
 			set;
 		}
 
-		public FormattedText Text
+		public FormattedText					Text
 		{
 			get;
 			set;
 		}
 
-		public FormattedText CompactTitle
+		public FormattedText					CompactTitle
 		{
 			get;
 			set;
 		}
 
-		public FormattedText CompactText
+		public FormattedText					CompactText
 		{
 			get;
 			set;
 		}
 
+		public FormattedText					DefaultTitle
+		{
+			get
+			{
+				if (this.AutoGroup)
+				{
+					return this.CompactTitle;
+				}
+				else
+				{
+					return this.Title;
+				}
+			}
+		}
 
-		public TitleTile TitleTile
+
+		/// <summary>
+		/// Gets or sets the associated title tile. The <see cref="SummaryData"/>
+		/// will be inserted into the title tile collection of items.
+		/// </summary>
+		/// <value>The title tile.</value>
+		public TitleTile						TitleTile
 		{
 			get
 			{
@@ -104,6 +129,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.titleTile != value)
 				{
+					//	Manage insertion/removal from the title tile items
+					//	collection:
+
 					if ((this.titleTile != null) &&
 						(this.SummaryTile != null))
                     {
@@ -121,48 +149,34 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public SummaryTile SummaryTile
+		public SummaryTile						SummaryTile
 		{
 			get;
 			set;
 		}
 
 
-		public System.Action AddNewItem
+		public System.Action					AddNewItem
 		{
 			get;
 			set;
 		}
 
-		public System.Action DeleteItem
+		public System.Action					DeleteItem
 		{
 			get;
 			set;
 		}
 
-		public FormattedText DefaultTitle
-		{
-			get
-			{
-				if (this.AutoGroup)
-				{
-					return this.CompactTitle;
-				}
-				else
-				{
-					return this.Title;
-				}
-			}
-		}
 
 
-		public System.Func<AbstractEntity> EntityAccessor
+		public System.Func<AbstractEntity>		EntityAccessor
 		{
 			get;
 			set;
 		}
 
-		public Accessor<FormattedText> TitleAccessor
+		public Accessor<FormattedText>			TitleAccessor
 		{
 			set
 			{
@@ -173,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public Accessor<FormattedText> TextAccessor
+		public Accessor<FormattedText>			TextAccessor
 		{
 			set
 			{
@@ -184,7 +198,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public Accessor<FormattedText> CompactTitleAccessor
+		public Accessor<FormattedText>			CompactTitleAccessor
 		{
 			set
 			{
@@ -195,7 +209,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public Accessor<FormattedText> CompactTextAccessor
+		public Accessor<FormattedText>			CompactTextAccessor
 		{
 			set
 			{
@@ -206,6 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		
 		public void ExecuteAccessors()
 		{
 			this.bindings.ForEach (x => x.Execute ());
@@ -234,6 +249,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				return name.Substring (0, pos);
 			}
+		}
+
+		public static int GetGroupingRank(int rank)
+		{
+			return rank / 1000;
+		}
+
+		public static int GetLocalRank(int rank)
+		{
+			return rank % 1000;
+		}
+
+		public static int CreateRank(int groupingRank, int localRank)
+		{
+			return groupingRank * 1000 + localRank;
 		}
 
 		
@@ -293,7 +323,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#endregion
 
-		private readonly List<AccessorBinding> bindings;
-		private TitleTile titleTile;
+		private readonly List<AccessorBinding>	bindings;
+		private TitleTile						titleTile;
 	}
 }
