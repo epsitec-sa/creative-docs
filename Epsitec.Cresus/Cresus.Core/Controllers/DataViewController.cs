@@ -164,17 +164,44 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleColumnTabNavigating(object sender, TabNavigateEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("Navigating: " + e.Direction);
+			int depth = 0;
+			var functions = new Stack<System.Func<bool>> ();
 
-			int depth = 1;
-
-			while (this.viewControllers.Count > depth)
+			while (this.viewControllers.Count > ++depth)
 			{
-				var parentController = this.viewControllers.Skip (depth++).FirstOrDefault ();
+				//	Find the (grand-) parent controller and try to activate the next (or previous)
+				//	sub view; if this succeeds, cancel the tab navigation - the focus will already
+				//	have been set by the implied call to DataViewOrchestrator.OpenSubView.
+
+				var parentController = this.GetParentController (depth);
 				var activateSubView  = e.Direction == TabNavigationDir.Forwards ? parentController.ActivateNextSubView : parentController.ActivatePrevSubView;
 
-				if ((activateSubView != null) &&
-					(activateSubView ()))
+				if (activateSubView != null)
+				{
+					if (activateSubView (false))
+					{
+						e.Cancel = true;
+						break;
+					}
+
+					//	If non-cyclic activation failed, keep track of the cyclic activation
+					//	function, so that we can try it later on:
+
+					functions.Push (() => activateSubView (true));
+				}
+			}
+
+			//	We were not able to activate the next (or previous) sub-view of any parent
+			//	controller; maybe we have hit the end (or beginning) of the sub-view list.
+			
+			while (functions.Count > 0)
+			{
+				//	Try to activate the next possible sub-views by cycling past the end
+				//	of the list:
+
+				var activateSubView = functions.Pop ();
+
+				if (activateSubView ())
 				{
 					e.Cancel = true;
 					break;
@@ -185,6 +212,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private EntityViewController CreateCompactEntityViewController()
 		{
 			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.orchestrator);
+		}
+
+		private CoreViewController GetParentController(int depth)
+		{
+			return this.viewControllers.Skip (depth).FirstOrDefault ();
 		}
 
 		private CoreViewController GetLeafController()
