@@ -1,7 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public TileContainer()
 		{
+			this.TabNavigationMode = Common.Widgets.TabNavigationMode.ForwardTabActive | Common.Widgets.TabNavigationMode.ForwardToChildren;
+			this.TabIndex = 1;
 		}
 
 
@@ -34,5 +37,43 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.AddRectangle (frame);
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
+
+		protected override Widget TabNavigate(int index, TabNavigationDir dir, Widget[] siblings)
+		{
+			if ((dir == TabNavigationDir.Backwards) ||
+				(dir == TabNavigationDir.Forwards))
+            {
+				var e = new TabNavigateEventArgs (dir);
+
+				this.OnTabNavigating (e);
+
+				if (e.Cancel)
+				{
+					return this;
+				}
+
+				var result = e.ReplacementWidget;
+
+				if (result != null)
+				{
+					return result;
+				}
+            }
+			
+			return base.TabNavigate (index, dir, siblings);
+		}
+
+
+		protected virtual void OnTabNavigating(TabNavigateEventArgs e)
+		{
+			var handler = this.TabNavigating;
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		public event EventHandler<TabNavigateEventArgs>		TabNavigating;
 	}
 }

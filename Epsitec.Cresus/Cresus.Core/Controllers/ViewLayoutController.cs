@@ -1,13 +1,13 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Widgets;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.container = container;
-			this.columns = new Stack<Widget> ();
+			this.columns = new Stack<TileContainer> ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public Widget LastColumn
+		public TileContainer LastColumn
 		{
 			get
 			{
@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public Widget CreateColumn()
+		public TileContainer CreateColumn()
 		{
-			var column = new Widgets.TileContainer ()
+			var column = new TileContainer ()
 			{
 				Name = string.Format ("Column{0}", this.ColumnCount),
 			};
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return column;
 		}
 
-		public void DeleteColumn()
+		public TileContainer DeleteColumn()
 		{
 			if (this.ColumnCount > 0)
 			{
@@ -62,6 +62,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				column.Dispose ();
 				this.UpdateColumnLayout ();
+
+				return column;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
@@ -117,6 +123,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private readonly Widget container;
-		private readonly Stack<Widget> columns;
+		private readonly Stack<TileContainer> columns;
 	}
 }
