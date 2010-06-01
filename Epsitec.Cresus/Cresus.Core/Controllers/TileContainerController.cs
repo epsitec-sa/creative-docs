@@ -29,6 +29,27 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.activeItems = new List<SummaryData> ();
 
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
+
+			this.controller.ActivateNextSubView = () => this.ActivateNextSummaryTile (this.GetSummaryTiles ());
+			this.controller.ActivatePrevSubView = () => this.ActivateNextSummaryTile (this.GetSummaryTiles ().Reverse ());
+		}
+
+		private SummaryTile GetNextActiveSummaryTile(IEnumerable<SummaryTile> tiles)
+		{
+			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
+		}
+
+		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
+		{
+			var tile = this.GetNextActiveSummaryTile (tiles);
+
+			if (tile == null)
+			{
+				return false;
+			}
+			
+			tile.OpenSubView (this.controller.Orchestrator, this.controller);
+			return true;
 		}
 
 		
@@ -399,6 +420,11 @@ namespace Epsitec.Cresus.Core.Controllers
 					yield return item.TitleTile;
 				}
 			}
+		}
+
+		private IEnumerable<SummaryTile> GetSummaryTiles()
+		{
+			return this.activeItems.Select (x => x.SummaryTile);
 		}
 
 		private static double GetTotalHeight(IEnumerable<TitleTile> collection)
