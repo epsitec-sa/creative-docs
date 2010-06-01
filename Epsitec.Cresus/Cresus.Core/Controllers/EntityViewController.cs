@@ -1,19 +1,17 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -29,6 +27,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			yield break;
 		}
+
+		public sealed override void CreateUI(Widget container)
+		{
+			this.CreateUI (container as TileContainer);
+		}
+
+		protected abstract void CreateUI(TileContainer container);
 
 
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)

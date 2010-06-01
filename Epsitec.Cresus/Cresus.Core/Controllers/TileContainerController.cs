@@ -18,10 +18,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
-	
+
+	/// <summary>
+	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
+	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
+	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
+	/// </summary>
 	public class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(CoreViewController controller, Widget container, SummaryDataItems dataItems)
+		public TileContainerController(CoreViewController controller, TileContainer container, SummaryDataItems dataItems)
 		{
 			this.controller  = controller;
 			this.container   = container;

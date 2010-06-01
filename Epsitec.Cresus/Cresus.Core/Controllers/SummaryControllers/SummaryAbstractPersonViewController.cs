@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 		}
 
-		public override void CreateUI(Widget container)
+		protected override void CreateUI(TileContainer container)
 		{
 			var person = this.Entity;
 			
