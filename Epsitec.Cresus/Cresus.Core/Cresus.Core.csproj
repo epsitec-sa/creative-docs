@@ -88,9 +88,9 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Accessors\AbstractEntityAccessor.cs" />
-    <Compile Include="Accessors\CountryAccessor.cs" />
-    <Compile Include="Accessors\LocationAccessor.cs" />
+    <Compile Include="AccessorsObsolete\AbstractEntityAccessor.cs" />
+    <Compile Include="AccessorsObsolete\CountryAccessor.cs" />
+    <Compile Include="AccessorsObsolete\LocationAccessor.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />
@@ -119,18 +119,18 @@
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
-    <Compile Include="Accessors\AbstractAccessor.cs" />
-    <Compile Include="Accessors\AbstractContactAccessor.cs" />
-    <Compile Include="Accessors\ComboInitializer.cs" />
-    <Compile Include="Accessors\BidirectionnalConverter.cs" />
-    <Compile Include="Accessors\UriSchemeAccessor.cs" />
-    <Compile Include="Accessors\TelecomTypeAccessor.cs" />
-    <Compile Include="Accessors\RolesContactAccessor.cs" />
-    <Compile Include="Accessors\UriContactAccessor.cs" />
-    <Compile Include="Accessors\TelecomContactAccessor.cs" />
-    <Compile Include="Accessors\LegalPersonAccessor.cs" />
-    <Compile Include="Accessors\NaturalPersonAccessor.cs" />
-    <Compile Include="Accessors\MailContactAccessor.cs" />
+    <Compile Include="AccessorsObsolete\AbstractAccessor.cs" />
+    <Compile Include="AccessorsObsolete\AbstractContactAccessor.cs" />
+    <Compile Include="AccessorsObsolete\ComboInitializer.cs" />
+    <Compile Include="AccessorsObsolete\BidirectionnalConverter.cs" />
+    <Compile Include="AccessorsObsolete\UriSchemeAccessor.cs" />
+    <Compile Include="AccessorsObsolete\TelecomTypeAccessor.cs" />
+    <Compile Include="AccessorsObsolete\RolesContactAccessor.cs" />
+    <Compile Include="AccessorsObsolete\UriContactAccessor.cs" />
+    <Compile Include="AccessorsObsolete\TelecomContactAccessor.cs" />
+    <Compile Include="AccessorsObsolete\LegalPersonAccessor.cs" />
+    <Compile Include="AccessorsObsolete\NaturalPersonAccessor.cs" />
+    <Compile Include="AccessorsObsolete\MailContactAccessor.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
