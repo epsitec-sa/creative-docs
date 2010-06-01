@@ -93,7 +93,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private TitleTile titleTile;
 		public TitleTile TitleTile
 		{
 			get
@@ -306,6 +305,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		public event EventHandler Changed;
 
 		private readonly List<AccessorBinding> bindings;
+		private TitleTile titleTile;
 	}
 
 	public class CollectionTemplate<T> : ICollectionTemplate
