@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
