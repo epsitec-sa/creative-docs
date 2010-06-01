@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public override void CreateUI(Common.Widgets.Widget container)
+		protected override void CreateUI(TileContainer container)
 		{
 #if false
 			base.CreateUI (container);

@@ -1,16 +1,11 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -21,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		public override void CreateUI(Widget container)
+		protected override void CreateUI(TileContainer container)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
 			
