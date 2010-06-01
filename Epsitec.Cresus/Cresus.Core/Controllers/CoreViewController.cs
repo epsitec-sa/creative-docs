@@ -30,7 +30,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			get;
 			set;
 		}
-		
+
+		public System.Func<bool> ActivateNextSubView
+		{
+			get;
+			set;
+		}
+
+		public System.Func<bool> ActivatePrevSubView
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Creates the UI managed by this controller.
 		/// </summary>

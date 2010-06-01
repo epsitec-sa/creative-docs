@@ -1,15 +1,17 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Widgets;
+
+using System.Collections.Generic;
+
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -163,6 +165,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void HandleColumnTabNavigating(object sender, TabNavigateEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Navigating: " + e.Direction);
+
+			int depth = 1;
+
+			while (this.viewControllers.Count > depth)
+			{
+				var parentController = this.viewControllers.Skip (depth++).FirstOrDefault ();
+				var activateSubView  = e.Direction == TabNavigationDir.Forwards ? parentController.ActivateNextSubView : parentController.ActivatePrevSubView;
+
+				if ((activateSubView != null) &&
+					(activateSubView ()))
+				{
+					e.Cancel = true;
+					break;
+				}
+			}
 		}
 
 		private EntityViewController CreateCompactEntityViewController()
@@ -172,7 +189,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private CoreViewController GetLeafController()
 		{
-			return this.viewControllers.Peek ();
+			if (this.viewControllers.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.viewControllers.Peek ();
+			}
 		}
 		
 
