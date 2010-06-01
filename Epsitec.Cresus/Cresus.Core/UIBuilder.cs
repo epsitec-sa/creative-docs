@@ -305,6 +305,7 @@ namespace Epsitec.Cresus.Core
 				Parent = embedder,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
 			};
 
 			var editor = new Widgets.HintEditor
