@@ -9,6 +9,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -91,6 +92,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			var column = this.viewLayoutController.CreateColumn ();
 			this.viewControllers.Push (controller);
 			controller.CreateUI (column);
+
+			this.AttachColumn (column);
 		}
 
 		/// <summary>
@@ -106,7 +109,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			//	Remove the rightmost column in the layout:
 			
-			this.viewLayoutController.DeleteColumn ();
+			var column = this.viewLayoutController.DeleteColumn ();
+
+			this.DetachColumn (column);
 		}
 
 		/// <summary>
@@ -137,6 +142,27 @@ namespace Epsitec.Cresus.Core.Controllers
 				column.Children.Clear ();
 				controller.CreateUI (column);
 			}
+		}
+
+		private void AttachColumn(TileContainer column)
+		{
+			if (column != null)
+            {
+				column.TabNavigating += this.HandleColumnTabNavigating;
+            }
+		}
+
+		private void DetachColumn(TileContainer column)
+		{
+			if (column != null)
+			{
+				column.TabNavigating -= this.HandleColumnTabNavigating;
+			}
+		}
+
+		private void HandleColumnTabNavigating(object sender, TabNavigateEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Navigating: " + e.Direction);
 		}
 
 		private EntityViewController CreateCompactEntityViewController()
