@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			if (data.Rank == 0)
 			{
-				data.Rank = SummaryData.GetGroupingRank (rank+1);
+				data.Rank = SummaryData.CreateRank (rank+1, 0);
 			}
 
 			if (data.EntityAccessor == null)
