@@ -2,10 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -17,6 +18,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		public IEnumerable<T> Items
+		{
+			get;
+			set;
+		}
+
+		public System.Action<T> ValueSetter
+		{
+			get;
+			set;
+		}
+
+		public System.Func<T> ValueGetter
 		{
 			get;
 			set;
@@ -34,6 +47,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+
+		public T GetValue()
+		{
+			if (this.ValueGetter == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.ValueGetter ();
+			}
+		}
+
+		public void SetValue(T value)
+		{
+			if (this.ValueSetter == null)
+			{
+				throw new System.InvalidOperationException ("Cannot set value without setter");
+			}
+			else
+			{
+				this.ValueSetter (value);
+			}
+		}
+
 		public void Attach(Widgets.HintEditor editor)
 		{
 			foreach (var item in this.Items)
@@ -43,10 +81,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			editor.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 			
-			editor.HintComparer                = this.MatchUserText;
-			editor.HintComparisonConverter = Misc.RemoveAccentsToLower;
+			editor.HintComparer            = (value, text) => this.MatchUserText (value as T, text);
+			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-//			editor.SelectedItemIndex = editor.Items.FindIndexByValue (entity);
+			editor.SelectedItemIndex       = editor.Items.FindIndexByValue (this.GetValue ());
 		}
 
 		private string ConvertHintValueToDescription(object value)
@@ -64,10 +102,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private Widgets.HintComparerResult MatchUserText(object value, string userText)
+		private Widgets.HintComparerResult MatchUserText(T entity, string userText)
 		{
-			var entity = value as T;
-
 			if ((entity == null) ||
 				(this.ToTextArrayConverter == null))
 			{
@@ -79,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var text in texts)
 			{
-				result = Widgets.HintEditor.Bestof (result, Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (text), userText));
+				result = Widgets.HintEditor.Bestof (result, Widgets.HintEditor.Compare (TextConverter.ConvertToLowerAndStripAccents (text), userText));
 			}
 
 			return result;

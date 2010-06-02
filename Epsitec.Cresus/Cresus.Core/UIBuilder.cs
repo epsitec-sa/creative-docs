@@ -383,7 +383,10 @@ namespace Epsitec.Cresus.Core
 					createButton.Visibility = editor.InError;
 				};
 
-			accessor.WidgetInitialize (editor, entity);
+			if (accessor != null)
+			{
+				accessor.WidgetInitialize (editor, entity);
+			}
 
 			return editor;
 		}

@@ -133,6 +133,17 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public IEnumerable<Entities.PersonTitleEntity> GetTitles()
+		{
+			if (this.sampleTitles == null)
+            {
+				this.sampleTitles = new List<PersonTitleEntity> ();
+				CoreData.CreateSampleTitles (this.sampleTitles);
+            }
+
+			return this.sampleTitles;
+		}
+
 		private static void CreateSampleCountries(List<CountryEntity> countries)
 		{
 			for (int i = 0; i < CoreData.countries.Length; i+=2)
@@ -197,6 +208,37 @@ namespace Epsitec.Cresus.Core
 			roles.Add (role5);
 		}
 
+		private static void CreateSampleTitles(List<PersonTitleEntity> titles)
+		{
+			var context = EntityContext.Current;
+
+			var title1 = context.CreateEmptyEntity<PersonTitleEntity> ();
+			var title2 = context.CreateEmptyEntity<PersonTitleEntity> ();
+			var title3 = context.CreateEmptyEntity<PersonTitleEntity> ();
+
+			using (title1.DefineOriginalValues ())
+			{
+				title1.Name = "Monsieur";
+				title1.ShortName = "M.";
+			}
+
+			using (title2.DefineOriginalValues ())
+			{
+				title2.Name = "Madame";
+				title2.ShortName = "Mme";
+			}
+
+			using (title3.DefineOriginalValues ())
+			{
+				title3.Name = "Mademoiselle";
+				title3.ShortName = "Mlle";
+			}
+
+			titles.Add (title1);
+			titles.Add (title2);
+			titles.Add (title3);
+		}
+
 		private void CreateSamplePersons(List<AbstractPersonEntity> persons)
 		{
 			var context = EntityContext.Current;
@@ -221,7 +263,7 @@ namespace Epsitec.Cresus.Core
 			var comment1 = context.CreateEmptyEntity<CommentEntity> ();
 			var contact1 = context.CreateEmptyEntity<MailContactEntity> ();
 			var contact2 = context.CreateEmptyEntity<MailContactEntity> ();
-			var title1 = context.CreateEmptyEntity<PersonTitleEntity> ();
+			var title1 = this.GetTitles ().Where (x => x.ShortName == "M.").First ();
 			var person1 = context.CreateEmptyEntity<NaturalPersonEntity> ();
 			var person2 = context.CreateEmptyEntity<NaturalPersonEntity> ();
 			var enterprise = context.CreateEmptyEntity<LegalPersonEntity> ();
@@ -258,12 +300,6 @@ namespace Epsitec.Cresus.Core
 			using (comment1.DefineOriginalValues ())
 			{
 				comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
-			}
-
-			using (title1.DefineOriginalValues ())
-			{
-				title1.Name = "Monsieur";
-				title1.ShortName = "M.";
 			}
 
 			using (contact1.DefineOriginalValues ())
@@ -386,5 +422,6 @@ namespace Epsitec.Cresus.Core
 		List<AbstractPersonEntity> samplePersons;
 		List<TelecomTypeEntity> telecomTypes;
 		List<UriSchemeEntity> uriSchemes;
+		List<PersonTitleEntity> sampleTitles;
 	}
 }
