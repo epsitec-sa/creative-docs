@@ -81,5 +81,30 @@ namespace Epsitec.Cresus.Core.Accessors
 
 			return Widgets.HintEditor.Bestof (result1, result2);
 		}
+
+
+		public string Name
+		{
+			get
+			{
+				return this.Entity.Name;
+			}
+			set
+			{
+				this.Entity.Name = value;
+			}
+		}
+
+		public string Code
+		{
+			get
+			{
+				return this.Entity.Code;
+			}
+			set
+			{
+				this.Entity.Code = value;
+			}
+		}
 	}
 }
