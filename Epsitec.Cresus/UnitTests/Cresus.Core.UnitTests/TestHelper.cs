@@ -102,7 +102,30 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.WriteLine ("===========================================================================================================================================================");
 		}
 
-		
+
+		public static void MeasureAndDisplayTime(string message, System.Action action)
+		{
+			TestHelper.MeasureAndDisplayTime (message, action, 1);
+		}
+
+
+		public static void MeasureAndDisplayTime(string message, System.Action action, int count)
+		{
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+
+			watch.Start ();
+
+			for (int i = 0; i < count; i++)
+			{
+				action ();
+			}
+
+			watch.Stop ();
+
+			System.Diagnostics.Debug.WriteLine ("Average time elapsed for " + count + " runs of " + message + ": " + watch.ElapsedMilliseconds / count);
+		}
+
+
 		static DbInfrastructure infrastructure;
 
 
