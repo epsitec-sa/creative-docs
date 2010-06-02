@@ -321,25 +321,25 @@ namespace Epsitec.Cresus.Core
 			var showButton = new Button
 			{
 				Parent = container,
-				Text = "Voir",
+				Text = "<m>V</m>oir",
 				PreferredWidth = 50,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
 				Visibility = false,
-				TabIndex = ++this.tabIndex,
+//-				TabIndex = ++this.tabIndex,
 			};
 
 			var createButton = new Button
 			{
 				Parent = container,
-				Text = "Créer",
+				Text = "<m>C</m>réer",
 				PreferredWidth = 50,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
 				Visibility = false,
-				TabIndex = ++this.tabIndex,
+//-				TabIndex = ++this.tabIndex,
 			};
 
 			editor.SelectedItemChanged +=
