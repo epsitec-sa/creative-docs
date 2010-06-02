@@ -10,18 +10,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	{
 		public SummaryDataItems()
 		{
-			this.staticItems = new List<SummaryData> ();
+			this.simpleItems = new List<SummaryData> ();
 			this.emptyItems  = new List<SummaryData> ();
 			this.collectionItems = new List<SummaryData> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
 		}
 
 
-		public IList<SummaryData> StaticItems
+		public IList<SummaryData> SimpleItems
 		{
 			get
 			{
-				return this.staticItems;
+				return this.simpleItems;
 			}
 		}
 
@@ -53,25 +53,31 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public void Add(SummaryData data)
 		{
-			int rank = this.EmptyItems.Count + this.StaticItems.Count;
+			int rank = this.EmptyItems.Count + this.SimpleItems.Count;
 
 			if (data.Rank == 0)
 			{
 				data.Rank = SummaryData.CreateRank (rank+1, 0);
 			}
-
+			
+			System.Diagnostics.Debug.Assert (data.DataType == SummaryDataType.Undefined);
+			
 			if (data.EntityAccessor == null)
 			{
+				data.DataType = SummaryDataType.EmptyItem;
 				this.EmptyItems.Add (data);
 			}
 			else
 			{
-				this.StaticItems.Add (data);
+				data.DataType = SummaryDataType.SimpleItem;
+				this.SimpleItems.Add (data);
 			}
 		}
 
 		public void Add(CollectionAccessor collectionAccessor)
 		{
+			System.Diagnostics.Debug.Assert (collectionAccessor.Template != null);
+
 			this.CollectionAccessors.Add (collectionAccessor);
 		}
 
@@ -88,24 +94,30 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.collectionItems.Clear ();
 			this.collectionItems.AddRange (items);
 
-			this.RefreshEmptyItems ();
+			this.RefreshAddNewItemFunctionForEmptyItems ();
 		}
 
-		private void RefreshEmptyItems()
+
+		private void RefreshAddNewItemFunctionForEmptyItems()
 		{
 			foreach (var item in this.emptyItems)
 			{
-				item.DataType = SummaryDataType.EmptyItem;
-
 				if (item.AddNewItem == null)
-                {
-					var accessor = this.collectionAccessors.First (x => x.Template.NamePrefix == item.Name);
+				{
+					var accessor = this.GetCollectionAccessor (item.Name);
 
-					accessor.Template.BindCreateItem (item, accessor);
-                }
+					if (accessor != null)
+					{
+						accessor.Template.BindCreateItem (item, accessor);
+					}
+				}
 			}
 		}
 
+		private CollectionAccessor GetCollectionAccessor(string templateName)
+		{
+			return this.collectionAccessors.FirstOrDefault (x => x.Template.NamePrefix == templateName);
+		}
 
 		private SummaryData GetTemplate(string name, int index)
 		{
@@ -121,7 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			lock (this.SyncObject)
 			{
 				var itemNames = new HashSet<string> ();
-				return new List<SummaryData> (this.staticItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
+				return new List<SummaryData> (this.simpleItems.Concat (this.collectionItems.Where (x => itemNames.Add (x.Name))).Concat (this.emptyItems.Where (x => itemNames.Add (x.Name + ".0"))));
 			}
 		}
 
@@ -146,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly object exclusion = new object ();
 
-		private readonly List<SummaryData> staticItems;
+		private readonly List<SummaryData> simpleItems;
 		private readonly List<SummaryData> emptyItems;
 		private readonly List<SummaryData> collectionItems;
 		private readonly List<CollectionAccessor> collectionAccessors;
