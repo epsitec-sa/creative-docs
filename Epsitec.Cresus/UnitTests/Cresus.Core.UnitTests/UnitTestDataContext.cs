@@ -28,25 +28,24 @@ namespace Epsitec.Cresus.Core
 			TestHelper.Initialize ();
 		}
 
-
-
+		
 		[TestMethod]
 		public void CreateDatabase()
 		{
 			TestHelper.PrintStartTest ("Create database");
 
-			Database.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+			this.CreateDatabase (false);
+			this.CreateDatabase (true);
 		}
 
 
-		[TestMethod]
-		public void PopulateDatabase()
+		public void CreateDatabase(bool bulkMode)
 		{
-			TestHelper.PrintStartTest ("Populate database");
+			Database.CreateAndConnectToDatabase ();
 
-			Database2.PupulateDatabase ();
+			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+
+			Database2.PupulateDatabase (bulkMode);
 		}
 
 
@@ -55,7 +54,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Save without changes 1");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.SaveWithoutChanges1 (false);
+			this.SaveWithoutChanges1 (true);
+		}
+
+
+		public void SaveWithoutChanges1(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
 				dataContext.SaveChanges ();
@@ -68,7 +74,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Save without changes 2");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.SaveWithoutChanges2 (false);
+			this.SaveWithoutChanges2 (true);
+		}
+
+
+		public void SaveWithoutChanges2(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -87,29 +100,18 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void ResolveWithoutBulkMode()
+		public void Resolve()
 		{
-			TestHelper.PrintStartTest ("Resolve without bulk mode");
+			TestHelper.PrintStartTest ("Resolve");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
-			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
-				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000003)));
-
-				Assert.IsTrue (Database2.CheckAlfred (alfred));
-				Assert.IsTrue (Database2.CheckGertrude (gertrude));
-				Assert.IsTrue (Database2.CheckHans (hans));
-			}
+			this.Resolve (false);
+			this.Resolve (true);
 		}
 
 
-		[TestMethod]
-		public void ResolveWithBulkMode()
+		public void Resolve(bool bulkMode)
 		{
-			TestHelper.PrintStartTest ("Resolve with bulk mode");
-
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, true))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
@@ -127,7 +129,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Relation 1");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.DeleteRelation1 (false);
+			this.DeleteRelation1 (true);
+		}
+
+
+		public void DeleteRelation1(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -139,13 +148,15 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
 				Assert.IsTrue (alfred.Gender == null);
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -154,10 +165,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Relation 2");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.DeleteRelation2 (false);
+			this.DeleteRelation2 (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void DeleteRelation2(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -170,14 +185,16 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 			}
-		
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -186,10 +203,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Entity 1");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.DeleteEntity1 (false);
+			this.DeleteEntity1 (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void DeleteEntity1(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -203,13 +224,15 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -218,10 +241,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Entity 2");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.DeleteEntity2 (false);
+			this.DeleteEntity2 (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void DeleteEntity2(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -238,7 +265,7 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -247,6 +274,8 @@ namespace Epsitec.Cresus.Core
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -255,10 +284,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Entity 3");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.DeleteEntity3 (false);
+			this.DeleteEntity3 (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void DeleteEntity3(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001)));
 				dataContext.DeleteEntity (contact);
@@ -266,18 +299,20 @@ namespace Epsitec.Cresus.Core
 				dataContext.SaveChanges ();
 
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
-					
+
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -286,10 +321,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Delete Entity 4");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.DeleteEntity4 (false);
+			this.DeleteEntity4 (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void DeleteEntity4(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				dataContext.DeleteEntity (alfred);
@@ -300,11 +339,11 @@ namespace Epsitec.Cresus.Core
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
 				};
-				
+
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -313,6 +352,8 @@ namespace Epsitec.Cresus.Core
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
