@@ -112,6 +112,8 @@
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\HintEditorController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAbstractPersonViewController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryData.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataType.cs" />

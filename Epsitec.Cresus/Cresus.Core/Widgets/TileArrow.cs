@@ -118,32 +118,32 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private static Path GetReverseArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
-			double revertedarrowBody;
+			double revertedArrowBody;
 
 			switch (arrowLocation)
 			{
 				case Direction.Left:
 					arrowLocation = Direction.Right;
-					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, revertedarrowBody, bounds.Height);
+					revertedArrowBody = System.Math.Floor (bounds.Width*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Bottom, revertedArrowBody, bounds.Height);
 					break;
 
 				case Direction.Right:
 					arrowLocation = Direction.Left;
-					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
-					bounds = new Rectangle (bounds.Right-revertedarrowBody, bounds.Bottom, revertedarrowBody, bounds.Height);
+					revertedArrowBody = System.Math.Floor (bounds.Width*0.25);
+					bounds = new Rectangle (bounds.Right-revertedArrowBody, bounds.Bottom, revertedArrowBody, bounds.Height);
 					break;
 
 				case Direction.Up:
 					arrowLocation = Direction.Down;
-					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Top-revertedarrowBody, bounds.Width, revertedarrowBody);
+					revertedArrowBody = System.Math.Floor (bounds.Height*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Top-revertedArrowBody, bounds.Width, revertedArrowBody);
 					break;
 
 				case Direction.Down:
 					arrowLocation = Direction.Up;
-					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
-					bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, revertedarrowBody);
+					revertedArrowBody = System.Math.Floor (bounds.Height*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, revertedArrowBody);
 					break;
 
 				default:
