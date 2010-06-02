@@ -18,10 +18,7 @@ namespace Epsitec.Cresus.Core
 				dataContext.CreateSchema<TelecomContactEntity> ();
 				dataContext.CreateSchema<UriContactEntity> ();
 
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-				System.Diagnostics.Debug.WriteLine ("Populating database. This will take a few minutes");
-
-				watch.Start ();
+				System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 
 				ContactRoleEntity[] contactRoles = Database.CreateContactRoles (dataContext, 10);
 				dataContext.SaveChanges ();
@@ -115,9 +112,6 @@ namespace Epsitec.Cresus.Core
 
 				Database.AssignParents (legalPersons);
 				dataContext.SaveChanges ();
-
-				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
 			}
 		}
 

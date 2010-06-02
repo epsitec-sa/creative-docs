@@ -15,58 +15,96 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core
 {
+
+
 	[TestClass]
 	public class UnitTestPerformance
 	{
+
+
 		[ClassInitialize]
 		public static void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+		}
 
+
+		[TestMethod]
+		public void CreateAndPopulateDatabase()
+		{
 			if (UnitTestPerformance.createAndPopulateDatabase)
 			{
+				TestHelper.PrintStartTest ("Database creation");
+							
 				Database.CreateAndConnectToDatabase ();
-				Database1.PopulateDatabase (UnitTestPerformance.bigDatabase);
+
+				TestHelper.MeasureAndDisplayTime(
+					"database population",
+					() => Database1.PopulateDatabase (UnitTestPerformance.bigDatabase)
+				);
 			}
 			else
 			{
+				TestHelper.PrintStartTest ("Database connection");
+
 				Database.ConnectToDatabase ();
 			}
 		}
 
+
 		[TestMethod]
-		public void Check03RetrieveData()
+		public void RetrieveTelecomDataWithoutWarmup()
 		{
+			TestHelper.PrintStartTest ("Retrieve telecom without warmup");
+
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
-
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-
-				watch.Start ();
 				repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
-				watch.Stop ();
+			}
 
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+			TestHelper.MeasureAndDisplayTime (
+				"retrieval",
+				() =>
+				{
+					using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+					{
+						Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+						repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
+					}
+				},
+				10
+			);
+		}
 
-				watch.Restart ();
+
+		[TestMethod]
+		public void RetrieveTelecomDataWithWarmup()
+		{
+			TestHelper.PrintStartTest ("Retrieve telecom with warmup");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
-				watch.Stop ();
 
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
-
-				watch.Restart ();
-				repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).Count ();
-				watch.Stop ();
-
-				System.Diagnostics.Debug.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
+				TestHelper.MeasureAndDisplayTime (
+					"retrieval",
+					() => repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count (),
+					10
+				);
 			}
 		}
 
 
 		private static bool createAndPopulateDatabase = true;
+
+
 		private static bool bigDatabase = true;
+
+
 	}
 }
