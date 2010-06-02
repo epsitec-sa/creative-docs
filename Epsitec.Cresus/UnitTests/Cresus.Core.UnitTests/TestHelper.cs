@@ -122,7 +122,20 @@ namespace Epsitec.Cresus.Core
 
 			watch.Stop ();
 
-			System.Diagnostics.Debug.WriteLine ("Average time elapsed for " + count + " runs of " + message + ": " + watch.ElapsedMilliseconds / count);
+			System.Diagnostics.Debug.WriteLine (message + "\t\t\t\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count);
+		}
+
+
+		public static string extendString(string text, int length)
+		{
+			string result = text;
+
+			while (result.Length < length)
+			{
+				result += " ";
+			}
+
+			return result;
 		}
 
 
