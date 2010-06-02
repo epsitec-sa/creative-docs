@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return new CollectionAccessor<T1, T2, T3> (source, collectionResolver, template);
 		}
 
-		public abstract ICollectionTemplate Template
+		public abstract CollectionTemplate Template
 		{
 			get;
 		}
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.template = template;
 		}
 
-		public override ICollectionTemplate Template
+		public override CollectionTemplate Template
 		{
 			get
 			{

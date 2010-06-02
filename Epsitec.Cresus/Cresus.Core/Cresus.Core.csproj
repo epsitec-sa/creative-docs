@@ -97,7 +97,6 @@
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
-    <Compile Include="Controllers\DataAccessors\ICollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTelecomTypeViewController.cs" />

@@ -12,17 +12,46 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
-	public class CollectionTemplate<T> : ICollectionTemplate
+	/// <summary>
+	/// The <c>CollectionTemplate</c> class provides the basic functionality
+	/// needed to create and delete items, related to a <see cref="CollectionAccessor"/>.
+	/// </summary>
+	public abstract class CollectionTemplate
+	{
+		protected CollectionTemplate(string name)
+		{
+			this.name = name;
+		}
+
+		public string NamePrefix
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
+		public abstract bool IsCompatible(AbstractEntity entity);
+
+		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor);
+
+		public abstract AbstractEntity CreateItem();
+		
+		public abstract void DeleteItem(AbstractEntity item);
+
+		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
+
+		private readonly string name;
+	}
+
+	public class CollectionTemplate<T> : CollectionTemplate
 			where T : AbstractEntity, new ()
 	{
 		public CollectionTemplate(string name)
+			: base (name)
 		{
-			this.name = name;
-
 			this.DefineCreateItem (() => EntityContext.Current.CreateEmptyEntity<T> ());
-			this.DefineDeleteItem (item =>
-			{
-			});
+			this.DefineDeleteItem (item => { });
 		}
 
 		public CollectionTemplate(string name, System.Predicate<T> filter)
@@ -119,15 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		public string NamePrefix
-		{
-			get
-			{
-				return this.name;
-			}
-		}
-
-		public bool IsCompatible(AbstractEntity entity)
+		public override bool IsCompatible(AbstractEntity entity)
 		{
 			T source = entity as T;
 
@@ -145,7 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor)
+		public override void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor)
 		{
 			T source = entity as T;
 
@@ -158,20 +179,32 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.CreateItem ());
+				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
 				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
 			}
 		}
 
-		public void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
+		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
 		{
 			if (this.HasCreateItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.CreateItem ());
+				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
 			}
 		}
 
-		public T CreateItem()
+		
+		public override AbstractEntity CreateItem()
+		{
+			return this.GenericCreateItem ();
+		}
+
+		public override void DeleteItem(AbstractEntity item)
+		{
+			this.GenericDeleteItem (item as T);
+		}
+
+
+		private T GenericCreateItem()
 		{
 			var item = this.createItem ();
 
@@ -188,27 +221,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return item;
 		}
 
-		public void DeleteItem(T item)
+		private void GenericDeleteItem(T item)
 		{
 			this.deleteItem (item);
 		}
 
 
-		#region ICollectionTemplate Members
-
-		AbstractEntity ICollectionTemplate.CreateItem()
-		{
-			return this.CreateItem ();
-		}
-
-		void ICollectionTemplate.DeleteItem(AbstractEntity item)
-		{
-			this.DeleteItem (item as T);
-		}
-
-		#endregion
-
-		private readonly string name;
 		private System.Func<T> createItem;
 		private System.Action<T> deleteItem;
 		private System.Action<T> setupItem;
