@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core
 			if (createAndPopulateDatabase)
 			{
 				Database.CreateAndConnectToDatabase ();
-				Database1.PopulateDatabase (true);
+				Database1.PopulateDatabase (DatabaseSize.Medium);
 			}
 			else
 			{
