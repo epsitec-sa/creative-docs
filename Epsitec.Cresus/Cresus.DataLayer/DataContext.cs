@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (field.Relation == FieldRelation.Reference)
 				{
-					sourceEntity.InternalSetValue (field.Id, null);
+					sourceEntity.SetField<object> (field.Id, null);
 				}
 				else if (field.Relation == FieldRelation.Collection)
 				{
