@@ -198,6 +198,9 @@ namespace Epsitec.Cresus.Core
 				dataContext.DeleteEntity (alfred.Contacts[0] as UriContactEntity);
 
 				dataContext.SaveChanges ();
+
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
@@ -232,6 +235,72 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				UriContactEntity[] contacts = {
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+				};
+
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
+			}
+		}
+
+
+		[TestMethod]
+		public void DeleteEntity3()
+		{
+			TestHelper.PrintStartTest ("Delete Entity 3");
+
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001)));
+				dataContext.DeleteEntity (contact);
+
+				dataContext.SaveChanges ();
+
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+					
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				Assert.IsTrue (alfred.Contacts.Count == 1);
+				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+			}
+		}
+
+
+		[TestMethod]
+		public void DeleteEntity4()
+		{
+			TestHelper.PrintStartTest ("Delete Entity 4");
+
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				dataContext.DeleteEntity (alfred);
+
+				dataContext.SaveChanges ();
+
+				UriContactEntity[] contacts = {
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+				};
+				
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
