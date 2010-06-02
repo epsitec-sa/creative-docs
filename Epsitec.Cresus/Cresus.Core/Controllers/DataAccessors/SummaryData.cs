@@ -49,7 +49,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			get;
 			set;
 		}
-		
+
+		public int								GroupingRank
+		{
+			get
+			{
+				return SummaryData.GetGroupingRank (this.Rank);
+			}
+		}
+
+		public int								LocalRank
+		{
+			get
+			{
+				return SummaryData.GetLocalRank (this.Rank);
+			}
+		}
+
 		public string							IconUri
 		{
 			get;
@@ -290,14 +306,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public int CompareTo(SummaryData other)
 		{
-			int rankA = this.Rank / 1000;
-			int rankB = other.Rank / 1000;
+			int groupingRankA = SummaryData.GetGroupingRank (this.Rank);
+			int groupingRankB = SummaryData.GetGroupingRank (other.Rank);
 
-			if (rankA < rankB)
+			if (groupingRankA < groupingRankB)
 			{
 				return -1;
 			}
-			else if (rankA > rankB)
+			else if (groupingRankA > groupingRankB)
 			{
 				return 1;
 			}

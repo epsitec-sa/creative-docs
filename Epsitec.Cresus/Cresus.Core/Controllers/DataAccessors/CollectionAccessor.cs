@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	public abstract class CollectionAccessor : ICollectionAccessor
 	{
-		public static CollectionAccessor Create<T1, T2, T3>(T1 source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : T2, new ()
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				IconUri      = template.IconUri,
 				Title        = template.Title,
 				CompactTitle = template.CompactTitle,
-				Rank         = (template.Rank / 1000) * 1000 + index,
+				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
 			};
 		}
 	}
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
 	{
-		public CollectionAccessor(T1 source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+		public CollectionAccessor(System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 		{
 			this.source = source;
 			this.collectionResolver = collectionResolver;
@@ -131,7 +131,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
 		{
-			var collection = this.collectionResolver (this.source);
+			var source = this.source ();
+			var collection = this.collectionResolver (source);
 
 			int index = 0;
 
@@ -153,17 +154,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public override void AddItem(AbstractEntity item)
 		{
-			var collection = this.collectionResolver (this.source);
+			var source = this.source ();
+			var collection = this.collectionResolver (source);
 			collection.Add (item as T3);
 		}
 
 		public override bool RemoveItem(AbstractEntity item)
 		{
-			var collection = this.collectionResolver (this.source);
+			var source = this.source ();
+			var collection = this.collectionResolver (source);
 			return collection.Remove (item as T3);
 		}
 
-		private readonly T1 source;
+		private readonly System.Func<T1> source;
 		private System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver;
 		private readonly CollectionTemplate<T3> template;
 	}

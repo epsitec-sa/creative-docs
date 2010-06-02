@@ -50,6 +50,32 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+
+		public void Add(SummaryData data)
+		{
+			int rank = this.EmptyItems.Count + this.StaticItems.Count;
+
+			if (data.Rank == 0)
+			{
+				data.Rank = SummaryData.GetGroupingRank (rank+1);
+			}
+
+			if (data.EntityAccessor == null)
+			{
+				this.EmptyItems.Add (data);
+			}
+			else
+			{
+				this.StaticItems.Add (data);
+			}
+		}
+
+		public void Add(CollectionAccessor collectionAccessor)
+		{
+			this.CollectionAccessors.Add (collectionAccessor);
+		}
+
+		
 		public void RefreshCollectionItems()
 		{
 			var items = new List<SummaryData> ();

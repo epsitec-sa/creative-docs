@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(CoreViewController controller, TileContainer container, SummaryDataItems dataItems)
+		public TileContainerController(CoreViewController controller, TileContainer container)
 		{
 			this.controller  = controller;
 			this.container   = container;
-			this.dataItems   = dataItems;
+			this.dataItems   = new SummaryDataItems ();
 			this.activeItems = new List<SummaryData> ();
 
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
@@ -39,8 +39,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 		}
 
-		
-		public void MapDataToTiles()
+
+		public SummaryDataItems DataItems
+		{
+			get
+			{
+				return this.dataItems;
+			}
+		}
+
+		public void GenerateTiles()
 		{
 			this.RefreshCollectionItems ();
 		}
@@ -219,7 +227,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				this.QueueTasklets ("CreateNewTile",
 					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
-					new TaskletJob (() => this.MapDataToTiles (), TaskletRunMode.After),
+					new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 					new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
 			}
 			else
@@ -248,13 +256,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				tile.AddClicked    += sender =>
 				{
 					item.AddNewItem ();
-					this.MapDataToTiles ();
+					this.GenerateTiles ();
 				};
 				tile.RemoveClicked += sender =>
 				{
 					this.controller.Orchestrator.CloseSubViews (this.controller);
 					item.DeleteItem ();
-					this.MapDataToTiles ();
+					this.GenerateTiles ();
 				};
 
 				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem;

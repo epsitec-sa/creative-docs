@@ -8,10 +8,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	public class Accessor
 	{
-		public static Accessor<TResult> Create<T, TResult>(T value, System.Func<T, TResult> action)
+		public static Accessor<TResult> Create<T, TResult>(System.Func<T> sourceValueFunction, System.Func<T, TResult> resultValueFunction)
 			where T : new ()
 		{
-			return new Accessor<TResult> (() => action (value));
+			return new Accessor<TResult> (() => resultValueFunction (sourceValueFunction ()));
 		}
 	}
 	

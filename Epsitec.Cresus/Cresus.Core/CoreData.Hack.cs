@@ -75,6 +75,11 @@ namespace Epsitec.Cresus.Core
 			return this.uriSchemes;
 		}
 
+		public UriSchemeEntity GetUriScheme(string code)
+		{
+			return this.GetUriSchemes ().Where (x => x.Code == code).FirstOrDefault ();
+		}
+
 		public IEnumerable<TelecomTypeEntity> GetTelecomTypes()
 		{
 			if (this.telecomTypes == null)
