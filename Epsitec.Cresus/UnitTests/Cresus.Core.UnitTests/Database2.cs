@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Core
 	{
 
 
-		public static void PupulateDatabase()
+		public static void PupulateDatabase(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				dataContext.CreateSchema<AbstractPersonEntity> ();
 				dataContext.CreateSchema<MailContactEntity> ();

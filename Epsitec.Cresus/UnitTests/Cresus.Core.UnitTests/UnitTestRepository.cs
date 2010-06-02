@@ -31,18 +31,18 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Create database");
 
-			Database.CreateAndConnectToDatabase ();
-
-			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+			this.CreateDatabase (false);
+			this.CreateDatabase (true);
 		}
 
 
-		[TestMethod]
-		public void PopulateDatabase()
+		public void CreateDatabase(bool bulkMode)
 		{
-			TestHelper.PrintStartTest ("Populate database");
+			Database.CreateAndConnectToDatabase ();
 
-			Database2.PupulateDatabase ();
+			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+
+			Database2.PupulateDatabase (bulkMode);
 		}
 
 
@@ -51,7 +51,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjects (false);
+			this.GetObjects (true);
+		}
+
+
+		public void GetObjects(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -72,7 +79,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with cast");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithCast (false);
+			this.GetObjectsWithCast (true);
+		}
+
+
+		public void GetObjectsWithCast(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -92,7 +106,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with correct value example");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithCorrectValueExample (false);
+			this.GetObjectsWithCorrectValueExample (true);
+		}
+
+
+		public void GetObjectsWithCorrectValueExample(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -112,7 +133,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with correct reference example");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithCorrectReferenceExample (false);
+			this.GetObjectsWithCorrectReferenceExample (true);
+		}
+
+
+		public void GetObjectsWithCorrectReferenceExample(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -132,7 +160,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with correct collection example 1");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithCorrectCollectionExample1 (false);
+			this.GetObjectsWithCorrectCollectionExample1 (true);
+		}
+
+
+		public void GetObjectsWithCorrectCollectionExample1(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -153,7 +188,15 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with correct collection example 2");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+			this.GetObjectsWithCorrectCollectionExample2 (false);
+			this.GetObjectsWithCorrectCollectionExample2 (true);
+		}
+
+
+		public void GetObjectsWithCorrectCollectionExample2(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -173,7 +216,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect value example");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithIncorrectValueExample (false);
+			this.GetObjectsWithIncorrectValueExample (true);
+		}
+
+
+		public void GetObjectsWithIncorrectValueExample(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -191,7 +241,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect reference example");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithIncorrectReferenceExample (false);
+			this.GetObjectsWithIncorrectReferenceExample (true);
+		}
+
+
+		public void GetObjectsWithIncorrectReferenceExample(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -209,7 +266,13 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect collection example 1");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithIncorrectCollectionExample1 (false);
+			this.GetObjectsWithIncorrectCollectionExample1 (true);
+		}
+
+		public void GetObjectsWithIncorrectCollectionExample1(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -227,7 +290,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect collection example 2");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithIncorrectCollectionExample2 (false);
+			this.GetObjectsWithIncorrectCollectionExample2 (true);
+		}
+
+
+		public void GetObjectsWithIncorrectCollectionExample2(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -245,7 +315,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with entity equality");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithEntityEquality (false);
+			this.GetObjectsWithEntityEquality (true);
+		}
+
+
+		public void GetObjectsWithEntityEquality(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -270,7 +347,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects by reference reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectByReferenceReference (false);
+			this.GetObjectByReferenceReference (true);
+		}
+
+
+		public void GetObjectByReferenceReference(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -299,7 +383,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects by collection reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectByCollectionReference (false);
+			this.GetObjectByCollectionReference (true);
+		}
+
+
+		public void GetObjectByCollectionReference(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -325,7 +416,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get referencers reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetReferencersReference (false);
+			this.GetReferencersReference (true);
+		}
+
+
+		public void GetReferencersReference(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -347,7 +445,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get referencers collection");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetReferencersCollection (false);
+			this.GetReferencersCollection (true);
+		}
+
+
+		public void GetReferencersCollection(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -371,7 +476,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with deleted entity");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			this.GetObjectsWithDeletedEntity (false);
+			this.GetObjectsWithDeletedEntity (true);
+		}
+
+
+		public void GetObjectsWithDeletedEntity(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -385,9 +497,13 @@ namespace Epsitec.Cresus.Core
 				dataContext.DeleteEntity (persons[0]);
 
 				dataContext.SaveChanges ();
+
+				NaturalPersonEntity[] persons2 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+
+				Assert.IsTrue (persons2.Count () == 0);
 			}
-		
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -397,6 +513,8 @@ namespace Epsitec.Cresus.Core
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
@@ -405,10 +523,14 @@ namespace Epsitec.Cresus.Core
 		{
 			TestHelper.PrintStartTest ("Get objects with deleted relation");
 
-			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase ();
+			this.GetObjectsWithDeletedRelation (false);
+			this.GetObjectsWithDeletedRelation (true);
+		}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+		public void GetObjectsWithDeletedRelation(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -425,9 +547,15 @@ namespace Epsitec.Cresus.Core
 				persons[0].Gender = null;
 
 				dataContext.SaveChanges ();
+
+				NaturalPersonEntity[] persons2 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+
+				Assert.IsTrue (persons2.Count () == 1);
+				Assert.IsTrue (persons2[0].Contacts.Count == 0);
+				Assert.IsTrue (persons2[0].Gender == null);
 			}
-		
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
@@ -439,6 +567,8 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (persons[0].Contacts.Count == 0);
 				Assert.IsTrue (persons[0].Gender == null);
 			}
+
+			this.CreateDatabase (bulkMode);
 		}
 
 
