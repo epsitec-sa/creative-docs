@@ -210,6 +210,43 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		[TestMethod]
+		public void DeleteEntity2()
+		{
+			TestHelper.PrintStartTest ("Delete Entity 2");
+
+			Database.CreateAndConnectToDatabase ();
+			Database2.PupulateDatabase ();
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				UriContactEntity[] contacts = {
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+				};
+
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				dataContext.DeleteEntity (alfred);
+
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == alfred));
+
+				dataContext.SaveChanges ();
+
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				UriContactEntity[] contacts = {
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+				};
+
+				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
+			}
+		}
+
+
 	}
 
 
