@@ -383,6 +383,17 @@ namespace Epsitec.Cresus.Core
 					createButton.Visibility = editor.InError;
 				};
 
+			showButton.Clicked +=
+				delegate
+				{
+					var controller = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
+
+					if (controller != null)
+					{
+						this.controller.Orchestrator.ShowSubView (this.controller, controller);
+					}
+				};
+
 			if (accessor != null)
 			{
 				accessor.WidgetInitialize (editor, entity);

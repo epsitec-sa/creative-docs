@@ -81,6 +81,30 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
+			if (entity is Entities.CountryEntity)
+			{
+				if (mode == ViewControllerMode.Summary)
+				{
+					return new SummaryCountryViewController (name, entity as Entities.CountryEntity);
+				}
+				else
+				{
+					//?return new EditionCountryViewController (name, entity as Entities.CountryEntity);
+				}
+			}
+
+			if (entity is Entities.LocationEntity)
+			{
+				if (mode == ViewControllerMode.Summary)
+				{
+					return new SummaryLocationViewController (name, entity as Entities.LocationEntity);
+				}
+				else
+				{
+					//?return new EditionLocationViewController (name, entity as Entities.LocationEntity);
+				}
+			}
+
 			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
 			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
 			{
