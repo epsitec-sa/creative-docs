@@ -1,17 +1,13 @@
-﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+﻿//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe Comparer permet de comparer deux objets.
+	/// The <c>Comparer</c> class provides comparison support for two objects.
 	/// </summary>
-	public sealed class Comparer
+	public static class Comparer
 	{
-		private Comparer()
-		{
-		}
-		
 		public static bool Equal(double a, double b, double δ)
 		{
 			//	Compare deux nombres avec une certaine marge d'erreur.
@@ -272,6 +268,63 @@ namespace Epsitec.Common.Types
 			}
 			result = false;
 			return false;
+		}
+
+		public static int Compare(string a, string b, TextComparison comparison)
+		{
+			if (comparison == TextComparison.Default)
+			{
+				return string.CompareOrdinal (a, b);
+			}
+			
+			//	Comparing both strings will require that we convert them; rather
+			//	than converting the full strings, we start with just a few characters
+			//	in order to return quickly if both strings differ at the beginning,
+			//	which is highly probable.
+
+			const int probeOffset = 4;
+			
+			string textA = Comparer.ConvertForComparison (a.Substring (0, System.Math.Min (probeOffset, a.Length)), comparison);
+			string textB = Comparer.ConvertForComparison (b.Substring (0, System.Math.Min (probeOffset, b.Length)), comparison);
+
+			int result = string.CompareOrdinal (textA, textB);
+
+			if (result != 0)
+			{
+				return result;
+			}
+
+			textA = Comparer.ConvertForComparison (a.Substring (probeOffset, System.Math.Max (0, a.Length-probeOffset)), comparison);
+			textB = Comparer.ConvertForComparison (b.Substring (probeOffset, System.Math.Max (0, b.Length-probeOffset)), comparison);
+
+			return string.CompareOrdinal (textA, textB);
+		}
+
+		public static bool Equal(string a, string b, TextComparison comparison)
+		{
+			return Comparer.Compare (a, b, comparison) == 0;
+		}
+
+
+		private static string ConvertForComparison(string text, TextComparison comparison)
+		{
+			switch (comparison)
+			{
+				case TextComparison.Default:
+					return text;
+
+				case TextComparison.IgnoreAccents:
+					return Converters.TextConverter.StripAccents (text);
+
+				case TextComparison.IgnoreCase:
+					return Converters.TextConverter.ConvertToLower (text);
+
+				case TextComparison.IgnoreAccents | TextComparison.IgnoreCase:
+					return Converters.TextConverter.ConvertToLowerAndStripAccents (text);
+
+				default:
+					throw new System.NotImplementedException (string.Format ("Support for TextComparison.{0} not implemented", comparison));
+			}
 		}
 	}
 }

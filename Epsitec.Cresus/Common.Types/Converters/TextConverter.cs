@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <summary>
 		/// Converts the specified HTML text to simple text.
 		/// </summary>
-		/// <param name="text">The html text.</param>
+		/// <param name="text">The HTML text.</param>
 		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text)
 		{
@@ -23,9 +23,9 @@ namespace Epsitec.Common.Types.Converters
 
 		/// <summary>
 		/// Converts the specified HTML text to simple text. The image tag will
-		/// be repalced with a specific image replacement character.
+		/// be replaced with a specific image replacement character.
 		/// </summary>
-		/// <param name="text">The html text.</param>
+		/// <param name="text">The HTML text.</param>
 		/// <param name="imageReplacement">The image replacement character.</param>
 		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text, char imageReplacement)
@@ -35,9 +35,9 @@ namespace Epsitec.Common.Types.Converters
 
 		/// <summary>
 		/// Converts the specified HTML text to simple text. The image tag will
-		/// be repalced with a specific image replacement text.
+		/// be replaced with a specific image replacement text.
 		/// </summary>
-		/// <param name="text">The html text.</param>
+		/// <param name="text">The HTML text.</param>
 		/// <param name="imageReplacement">The image replacement text.</param>
 		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text, string imageReplacement)
@@ -91,12 +91,30 @@ namespace Epsitec.Common.Types.Converters
 			return buffer.ToString ();
 		}
 
+		/// <summary>
+		/// Gets the length of the equivalent simple text.
+		/// </summary>
+		/// <param name="text">The HTML text.</param>
+		/// <returns>The length of the equivalent simple text.</returns>
+		public static int GetSimpleTextLength(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+			else
+			{
+				string simple = TextConverter.ConvertToSimpleText (text);
+				return simple.Length;
+			}
+		}
+
 
 		/// <summary>
 		/// Converts the specified simple text to HTML text.
 		/// </summary>
 		/// <param name="text">The simple text.</param>
-		/// <returns>The html text.</returns>
+		/// <returns>The HTML text.</returns>
 		public static string ConvertToTaggedText(string text)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -133,7 +151,7 @@ namespace Epsitec.Common.Types.Converters
 
 
 		/// <summary>
-		/// Analyses a character defined as an entity.
+		/// Analyzes a character defined as an entity.
 		/// </summary>
 		/// <param name="text">The text to analyze.</param>
 		/// <param name="offset">The offset, which will be updated to point after the
@@ -192,6 +210,168 @@ namespace Epsitec.Common.Types.Converters
 			}
 
 			return text[offset++];
+		}
+
+		
+		public static string StripAccents(string text)
+		{
+			return TextConverter.ConvertString (text, TextConverter.Tables.StripAccents);
+		}
+
+		public static string ConvertToLowerAndStripAccents(string text)
+		{
+			return TextConverter.ConvertString (text, TextConverter.Tables.StripAccentsToLower);
+		}
+
+		public static string ConvertToUpperAndStripAccents(string text)
+		{
+			return TextConverter.ConvertString (text, TextConverter.Tables.StripAccentsToUpper);
+		}
+		
+		public static string ConvertToLower(string text)
+		{
+			return TextConverter.ConvertString (text, TextConverter.Tables.ToLower);
+		}
+
+		public static string ConvertToUpper(string text)
+		{
+			return TextConverter.ConvertString (text, TextConverter.Tables.ToUpper);
+		}
+
+		
+		private static string ConvertString(string text, char[] conversionTable)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+
+			char[] chars = null;
+
+			for (int i = 0; i < text.Length; i++)
+			{
+				char c1 = text[i];
+				char c2 = c1 < conversionTable.Length ? conversionTable[c1] : c1;
+
+				if (c2 != c1)
+				{
+					//	Produce a character table in which we can replace the individual
+					//	characters only if there is a difference:
+
+					if (chars == null)
+					{
+						chars = text.ToCharArray ();
+					}
+
+					chars[i] = c2;
+				}
+			}
+
+			//	If there is a character array, this means that we did an in-place
+			//	replacement and that the output string will be different from the
+			//	input:
+
+			return chars == null ? text : new string (chars);
+		}
+
+
+		static TextConverter()
+		{
+			TextConverter.InitializeConversionTables ();
+		}
+		
+		private static void InitializeConversionTables()
+		{
+			for (int i = 0; i < TextConverter.ConversionCharacterCount; i++)
+			{
+				char c = TextConverter.StripAccent ((char) i);
+
+				TextConverter.Tables.StripAccents[i]        = c;
+				TextConverter.Tables.StripAccentsToLower[i] = char.ToLower (c);
+				TextConverter.Tables.StripAccentsToUpper[i] = char.ToUpper (c);
+				TextConverter.Tables.ToLower[i]              = char.ToLower ((char) i);
+				TextConverter.Tables.ToUpper[i]              = char.ToUpper ((char) i);
+			}
+		}
+		
+		private static char StripAccent(char c)
+		{
+			//	TODO: compléter la liste pour qu'elle soit complète
+
+			switch (c)
+			{
+				case 'â':	return 'a';
+				case 'ä':	return 'a';
+				case 'á':	return 'a';
+				case 'à':	return 'a';
+				case 'å':	return 'a';
+				case 'ã':	return 'a';
+				case 'ç':	return 'c';
+				case 'ê':	return 'e';
+				case 'ë':	return 'e';
+				case 'é':	return 'e';
+				case 'è':	return 'e';
+				case 'î':	return 'i';
+				case 'ï':	return 'i';
+				case 'í':	return 'i';
+				case 'ì':	return 'i';
+				case 'ñ':	return 'n';
+				case 'ô':	return 'o';
+				case 'ö':	return 'o';
+				case 'ó':	return 'o';
+				case 'ò':	return 'o';
+				case 'ø':	return 'o';
+				case 'õ':	return 'o';
+				case 'û':	return 'u';
+				case 'ü':	return 'u';
+				case 'ú':	return 'u';
+				case 'ù':	return 'u';
+				case 'ÿ':	return 'y';
+				
+				case 'Â':	return 'A';
+				case 'Å':	return 'A';
+				case 'Ä':	return 'A';
+				case 'Á':	return 'A';
+				case 'À':	return 'A';
+				case 'Ã':	return 'A';
+				case 'Ç':	return 'C';
+				case 'Ê':	return 'E';
+				case 'Ë':	return 'E';
+				case 'É':	return 'E';
+				case 'È':	return 'E';
+				case 'Î':	return 'I';
+				case 'Ï':	return 'I';
+				case 'Í':	return 'I';
+				case 'Ì':	return 'I';
+				case 'Ñ':	return 'N';
+				case 'Ô':	return 'O';
+				case 'Ö':	return 'O';
+				case 'Ó':	return 'O';
+				case 'Ò':	return 'O';
+				case 'Ø':	return 'O';
+				case 'Õ':	return 'O';
+				case 'Û':	return 'U';
+				case 'Ü':	return 'U';
+				case 'Ú':	return 'U';
+				case 'Ù':	return 'U';
+				case 'Ÿ':	return 'Y';
+
+				case '°':	return 'o';
+
+				default:	return c;
+			}
+		}
+
+		
+		private const int ConversionCharacterCount = 512;
+
+		private static class Tables
+		{
+			public static char[] StripAccents        = new char[TextConverter.ConversionCharacterCount];
+			public static char[] StripAccentsToLower = new char[TextConverter.ConversionCharacterCount];
+			public static char[] StripAccentsToUpper = new char[TextConverter.ConversionCharacterCount];
+			public static char[] ToLower             = new char[TextConverter.ConversionCharacterCount];
+			public static char[] ToUpper             = new char[TextConverter.ConversionCharacterCount];
 		}
 
 

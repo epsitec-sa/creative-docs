@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Common.Widgets
 {
@@ -211,18 +212,6 @@ namespace Epsitec.Common.Widgets
 		{
 			get;
 			set;
-		}
-
-		public System.StringComparison HintTextComparison
-		{
-			get
-			{
-				return (System.StringComparison) this.GetValue (AbstractTextField.HintTextComparisonProperty);
-			}
-			set
-			{
-				this.SetValue (AbstractTextField.HintTextComparisonProperty, value);
-			}
 		}
 
 		public int HintOffset
@@ -1986,76 +1975,109 @@ namespace Epsitec.Common.Widgets
 
 			if (this.isPassword)
 			{
-				if (original.Text.Length == 0)
+				return AbstractTextField.GetPaintTextLayoutForPassword (original, this.PasswordReplacementCharacter);
+			}
+
+			if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
+			{
+				return AbstractTextField.GetPaintTextLayoutItalic (original);
+			}
+			
+			string hintText = this.HintText;
+
+			if (hintText != null)
+			{
+				switch (this.textFieldDisplayMode)
 				{
-					return original;
+					case TextFieldDisplayMode.ActiveHint:
+						return this.GetPaintTextLayoutForHint (original, hintText);
+					
+					case TextFieldDisplayMode.PassiveHint:
+						return AbstractTextField.GetPaintTextLayoutReplacement (original, hintText);
+					
+					default:
+						break;
 				}
-				else
+			}
+
+			return original;
+		}
+
+		private TextLayout GetPaintTextLayoutForHint(TextLayout original, string hintText)
+		{
+			string hint = TextConverter.ConvertToSimpleText (hintText);
+			string text = TextConverter.ConvertToSimpleText (original.Text);
+
+			string compHint = hint;
+			string compText = text;
+
+			if (this.HintComparisonConverter != null)
+			{
+				compHint = this.HintComparisonConverter (compHint);
+				compText = this.HintComparisonConverter (compText);
+			}
+
+			int pos = compHint.IndexOf (compText, System.StringComparison.Ordinal);
+
+			const string fontBegin = @"<font color="".hint"">";
+			const string fontEnd   = @"</font>";
+
+			if (pos < 0)
+			{
+				return new TextLayout (original)
 				{
-					TextLayout layout = new TextLayout (original);
-					layout.Text = new string (this.PasswordReplacementCharacter, Types.Converters.TextConverter.ConvertToSimpleText (original.Text).Length);
-					return layout;
-				}
+					Text = string.Concat (fontBegin, TextConverter.ConvertToTaggedText (hint), fontEnd)
+				};
 			}
 			else
 			{
-				if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
+				this.SetValue (AbstractTextField.HintOffsetProperty, pos);
+				
+				string hintPrefix = TextConverter.ConvertToTaggedText (hint.Substring (0, pos));
+				string hintSuffix = TextConverter.ConvertToTaggedText (hint.Substring (pos + text.Length));
+				
+				return new TextLayout (original)
 				{
-					TextLayout copy = new TextLayout (original);
-					copy.Text = string.Concat ("<i>", original.Text, "</i>");
-					return copy;
-				}
-				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.ActiveHint) &&
-					/**/ (this.HintText != null))
-				{
-					TextLayout copy = new TextLayout (original);
-					string hint = TextLayout.ConvertToSimpleText (this.HintText);
-					string text = TextLayout.ConvertToSimpleText (original.Text);
-
-					string compHint = hint;
-					string compText = text;
-
-					if (this.HintComparisonConverter != null)
-					{
-						compHint = this.HintComparisonConverter (compHint);
-						compText = this.HintComparisonConverter (compText);
-					}
-
-					int pos = compHint.IndexOf (compText, this.HintTextComparison);
-
-					string fontBegin = "<font color=\".hint\">";
-					string fontEnd   = "</font>";
-
-					if (pos < 0)
-					{
-						copy.Text = string.Concat (fontBegin, TextLayout.ConvertToTaggedText (hint), fontEnd);
-					}
-					else
-					{
-						string hintPrefix = TextLayout.ConvertToTaggedText (hint.Substring (0, pos));
-						string hintSuffix = TextLayout.ConvertToTaggedText (hint.Substring (pos + text.Length));
-						
-						copy.Text = string.Concat (fontBegin, hintPrefix, fontEnd, TextLayout.ConvertToTaggedText (text), fontBegin, hintSuffix, fontEnd);
-						
-						this.SetValue (AbstractTextField.HintOffsetProperty, pos /*fontBegin.Length + hintPrefix.Length + fontEnd.Length*/);
-					}
-
-					return copy;
-				}
-				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.PassiveHint) &&
-					/**/ (this.HintText != null))
-				{
-					TextLayout copy = new TextLayout (original);
-					copy.Text = TextLayout.ConvertToSimpleText (this.HintText);
-					return copy;
-				}
-				else
-				{
-					return original;
-				}
+					Text = string.Concat (fontBegin, hintPrefix, fontEnd, TextConverter.ConvertToTaggedText (text), fontBegin, hintSuffix, fontEnd)
+				};
 			}
 		}
 
+		private static TextLayout GetPaintTextLayoutForPassword(TextLayout original, char passwordReplacementCharacter)
+		{
+			if (original.Text.Length == 0)
+			{
+				return original;
+			}
+			
+			int textLength = TextConverter.GetSimpleTextLength (original.Text);
+				
+			return new TextLayout (original)
+			{
+				Text = new string (passwordReplacementCharacter, textLength)
+			};
+		}
+
+		private static TextLayout GetPaintTextLayoutItalic(TextLayout original)
+		{
+			var text = TextConverter.ConvertToSimpleText (original.Text);
+
+			return new TextLayout (original)
+			{
+				Text = string.Concat ("<i>", TextConverter.ConvertToTaggedText (text), "</i>")
+			};
+		}
+
+
+		private static TextLayout GetPaintTextLayoutReplacement(TextLayout original, string hintText)
+		{
+			var text = TextConverter.ConvertToSimpleText (hintText);
+
+			return new TextLayout (original)
+			{
+				Text = TextConverter.ConvertToTaggedText (text)
+			};
+		}
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
@@ -2230,7 +2252,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						html = TextLayout.ConvertToTaggedText (data.ReadText ());
+						html = TextConverter.ConvertToTaggedText (data.ReadText ());
 					}
 				}
 
@@ -2435,7 +2457,6 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
 		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty HintTextComparisonProperty = DependencyProperty.Register ("HintTextComparison", typeof (System.StringComparison), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (System.StringComparison.CurrentCultureIgnoreCase, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.RegisterReadOnly ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty DefocusActionProperty = DependencyProperty.Register ("DefocusAction", typeof (DefocusAction), typeof (AbstractTextField), new DependencyPropertyMetadata (DefocusAction.None));
 		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ButtonShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ButtonShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
