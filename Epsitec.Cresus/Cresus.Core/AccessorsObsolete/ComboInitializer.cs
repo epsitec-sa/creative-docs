@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Accessors
 				}
 			}
 
-			return Misc.Join (list, ", ");
+			return Misc.Join (", ", list);
 		}
 
 		public string ConvertEditionToInternal(string text)
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Accessors
 				}
 			}
 
-			return Misc.Join (list, ", ");
+			return Misc.Join (", ", list);
 		}
 
 

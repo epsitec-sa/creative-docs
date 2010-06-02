@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				list.Add (this.items[sel]);
 			}
 
-			this.Text = Misc.Join (list, this.MultipleSelectionTextSeparator);
+			this.Text = Misc.Join (this.MultipleSelectionTextSeparator, list);
 		}
 		
 

@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Accessors
 						words.Add (role.Name);
 					}
 
-					return Misc.Join (words, ", ");
+					return Misc.Join (", ", words);
 				}
 				else
 				{

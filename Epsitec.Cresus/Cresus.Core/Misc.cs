@@ -51,36 +51,19 @@ namespace Epsitec.Cresus.Core
 
 		/// <summary>
 		/// Combine une liste en une seule chaîne avec un séparateur à choix.
-		///	C'est un peu l'inverse de Misc.Split().
+		/// C'est un peu l'inverse de Misc.Split().
 		/// </summary>
-		/// <param name="list">The list.</param>
 		/// <param name="separator">The separator.</param>
+		/// <param name="list">The list.</param>
 		/// <returns></returns>
-		public static string Join(IEnumerable<string> list, string separator)
+		public static string Join(string separator, IEnumerable<string> list)
 		{
 			if (list == null)
 			{
 				return null;
 			}
 
-			var builder = new System.Text.StringBuilder ();
-
-			foreach (var word in list)
-			{
-				if (string.IsNullOrEmpty (word))
-                {
-					continue;
-                }
-
-				if (builder.Length > 0)
-				{
-					builder.Append (separator);
-				}
-
-				builder.Append (word);
-			}
-
-			return builder.ToString ();
+			return string.Join (separator, list);
 		}
 
 	
