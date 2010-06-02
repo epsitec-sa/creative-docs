@@ -266,9 +266,9 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetObjectByReference()
+		public void GetObjectByReferenceReference()
 		{
-			TestHelper.PrintStartTest ("Get objects by reference");
+			TestHelper.PrintStartTest ("Get objects by reference reference");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -295,9 +295,35 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void GetReferencers()
+		public void GetObjectByCollectionReference()
 		{
-			TestHelper.PrintStartTest ("Get referencers");
+			TestHelper.PrintStartTest ("Get objects by collection reference");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+
+				UriContactEntity contactExample = new UriContactEntity ()
+				{
+					Uri = "alfred@coucou.com",
+				};
+
+				UriContactEntity contact = repository.GetEntityByExample (contactExample);
+
+				NaturalPersonEntity alfredExample = new NaturalPersonEntity ();
+				alfredExample.Contacts.Add (contact);
+
+				NaturalPersonEntity alfred = repository.GetEntityByExample (alfredExample);
+
+				Assert.IsTrue (Database2.CheckAlfred (alfred));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetReferencersReference()
+		{
+			TestHelper.PrintStartTest ("Get referencers reference");
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
@@ -312,6 +338,30 @@ namespace Epsitec.Cresus.Core
 
 				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
 				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetReferencersCollection()
+		{
+			TestHelper.PrintStartTest ("Get referencers collection");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+
+				UriContactEntity contactExample = new UriContactEntity ()
+				{
+					Uri = "alfred@coucou.com",
+				};
+
+				UriContactEntity contact = repository.GetEntityByExample (contactExample);
+
+				AbstractEntity[] referencers = repository.GetReferencers (contact).ToArray ();
+
+				Assert.IsTrue (referencers.Length == 1);
+				Assert.IsTrue (referencers.OfType<NaturalPersonEntity> ().Any (p => Database2.CheckAlfred (p)));
 			}
 		}
 		

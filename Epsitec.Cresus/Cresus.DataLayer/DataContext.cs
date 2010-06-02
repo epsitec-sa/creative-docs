@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.EntityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
 			this.tableBulkLoaded = new Dictionary<string, bool> ();
-			this.entityDataLoaded = new Dictionary<AbstractEntity, bool> ();
+			this.entityDataLoaded = new Dictionary<Druid, HashSet<DbKey>> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
@@ -275,11 +275,8 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (!mapping.RowKey.IsEmpty)
 				{
-					if (!this.entityDataLoaded.ContainsKey (entity) || !this.entityDataLoaded[entity])
-					{
-						this.LoadDataRows (entity);
-					}
-
+					this.LoadDataRows (entity);
+					
 					this.RemoveEntityValueData (entity, mapping.RowKey);
 					this.RemoveEntitySourceReferenceData (entity, mapping.RowKey);
 					this.RemoveEntityTargetReferenceData (entity);
@@ -292,7 +289,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
-				this.RichCommand.DeleteExistingRow (this.LoadDataRow (entityKey, currentId));
+				this.RichCommand.DeleteExistingRow (this.LoadDataRow(entityKey, currentId));
 			}
 		}
 
@@ -363,9 +360,8 @@ namespace Epsitec.Cresus.DataLayer
 			if (createRow)
 			{
 				mapping.RowKey = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
-				this.entityDataLoaded[entity] = true;
 			}
-			else if (!this.entityDataLoaded.ContainsKey (entity) || !this.entityDataLoaded[entity])
+			else
 			{
 				this.LoadDataRows (entity);
 			}
@@ -381,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer
 				//	Either create and fill a new row in the database for this entity
 				//	or use and update an existing row.
 
-				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, currentId) : this.LoadDataRow (mapping.RowKey, currentId);
+				System.Data.DataRow dataRow = createRow ? this.CreateDataRow (mapping, currentId) : this.LoadDataRow(mapping.RowKey, currentId);
 
 				dataRow.BeginEdit ();
 
@@ -492,7 +488,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			Druid baseEntityId = this.EntityContext.GetBaseEntityId (entityId);
 
-			System.Data.DataRow dataRow = this.LoadDataRow (rowKey, baseEntityId);
+			System.Data.DataRow dataRow = this.LoadDataRow(rowKey, baseEntityId);
 			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
 			Druid realEntityId = Druid.FromLong (typeValueId);
 			AbstractEntity entity = this.EntityContext.CreateEmptyEntity (realEntityId);
@@ -501,8 +497,6 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				this.DeserializeEntity (entity, realEntityId, rowKey);
 			}
-
-			this.entityDataLoaded[entity] = true;
 
 			return entity;
 		}
@@ -518,7 +512,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entityId))
 			{
-				System.Data.DataRow dataRow = this.LoadDataRow (mapping.RowKey, currentId);
+				System.Data.DataRow dataRow = this.LoadDataRow(mapping.RowKey, currentId);
 
 				this.DeserializeEntityLocal (entity, dataRow, currentId);
 			}
@@ -902,7 +896,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public object GetFieldValue(AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField fieldDef)
 		{
-			System.Data.DataRow dataRow = this.LoadDataRow (rowKey, entityId);
+			System.Data.DataRow dataRow = this.LoadDataRow(rowKey, entityId);
 
 			return this.GetFieldValue (entity, fieldDef, dataRow);
 		}
@@ -992,7 +986,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (!found)
 				{
-					this.LoadRelationRows (entityId, tableName, sourceMapping.RowKey);
+					this.LoadRelationRows(entityId, fieldDef.CaptionId, tableName, sourceMapping.RowKey);
 				}
 			}
 		}
@@ -1004,17 +998,15 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
-				this.LoadDataRow (mapping.RowKey, currentId);
+				this.LoadDataRow(mapping.RowKey, currentId);
 
 				StructuredTypeField[] localFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).ToArray ();
 
 				foreach (StructuredTypeField field in localFields.Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection))
 				{
-					this.LoadRelationRows (currentId, this.GetRelationTableName (currentId, field), mapping.RowKey);
+					this.LoadRelationRows(currentId, field.CaptionId, this.GetRelationTableName(currentId, field), mapping.RowKey);
 				}
 			}
-
-			this.entityDataLoaded[entity] = true;
 		}
 
 
@@ -1024,7 +1016,11 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Data.DataRow row = this.RichCommand.FindRow (tableName, rowKey.Id);
 
-			if (row == null && !(this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName]))
+			bool noRow = row == null;
+			bool bulkLoaded = this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName];
+			bool alreadyLoaded = this.entityDataLoaded.ContainsKey (entityId) && this.entityDataLoaded[entityId].Contains (rowKey);
+
+			if (noRow && !bulkLoaded && !alreadyLoaded)
 			{
 				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
@@ -1046,15 +1042,25 @@ namespace Epsitec.Cresus.DataLayer
 				}
 
 				row = this.RichCommand.FindRow (tableName, rowKey.Id);
+
+				if (!this.entityDataLoaded.ContainsKey (entityId))
+				{
+					this.entityDataLoaded[entityId] = new HashSet<DbKey> ();
+				}
+
+				this.entityDataLoaded[entityId].Add (rowKey);
 			}
 
 			return row;
 		}
 
 
-		private void LoadRelationRows(Druid entityId, string tableName, DbKey sourceRowKey)
+		private void LoadRelationRows(Druid entityId, Druid fieldId, string tableName, DbKey sourceRowKey)
 		{
-			if (!(this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName]))
+			bool bulkLoaded = this.BulkMode && this.tableBulkLoaded.ContainsKey (tableName) && this.tableBulkLoaded[tableName];
+			bool alreadyLoaded = this.entityDataLoaded.ContainsKey (fieldId) && this.entityDataLoaded[fieldId].Contains (sourceRowKey);
+			
+			if (!bulkLoaded && !alreadyLoaded)
 			{
 				DbTable relationTableDef = this.RichCommand.Tables[tableName];
 
@@ -1083,6 +1089,13 @@ namespace Epsitec.Cresus.DataLayer
 					this.RichCommand.ImportTable (transaction, relationTableDef, condition);
 					transaction.Commit ();
 				}
+
+				if (!this.entityDataLoaded.ContainsKey (fieldId))
+				{
+					this.entityDataLoaded[fieldId] = new HashSet<DbKey> ();
+				}
+
+				this.entityDataLoaded[fieldId].Add (sourceRowKey);
 			}
 		}
 
@@ -1388,7 +1401,7 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly DbInfrastructure infrastructure;
 		private readonly EntityDataCache entityDataCache;
 		private readonly Dictionary<string, bool> tableBulkLoaded;
-		private readonly Dictionary<AbstractEntity, bool> entityDataLoaded;
+		private readonly Dictionary<Druid, HashSet<DbKey>> entityDataLoaded;
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 		private readonly HashSet<AbstractEntity> entitiesToDelete;
