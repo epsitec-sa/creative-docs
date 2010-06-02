@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets.Collections
 			return index0;
 		}
 
-		public void AddRange(System.Collections.Generic.IEnumerable<string> values)
+		public void AddRange(IEnumerable<string> values)
 		{
 			foreach (var value in values)
 			{
@@ -268,18 +268,7 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public int Add(object value)
 		{
-			int index0 = this.values.Count;
-			int index1 = this.keys.Count;
-
-			this.values.Add (value);
-			this.keys.Add (null);
-			
-			System.Diagnostics.Debug.Assert (index0 == index1);
-			
-			this.HandleInsert (value);
-			this.HandleChange ();
-			
-			return index0;
+			return this.Add (null, value);
 		}
 
 		public bool IsFixedSize

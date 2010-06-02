@@ -109,6 +109,28 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
+		public EditionTile CreateEditionTile(TitleTile parent, AbstractEntity entity)
+		{
+			var controller = new Controllers.TileController<AbstractEntity> ()
+			{
+				Entity = entity,
+//-				ChildrenMode = accessor.ViewControllerMode
+			};
+
+			var tile = new EditionTile
+			{
+				AutoHilite = false,
+				Controller = controller,
+				IsReadOnly = false,
+			};
+
+			UIBuilder.CreateTileHandler (tile, this.controller);
+
+			parent.Items.Add (tile);
+
+			return tile;
+		}
+
 		public void CreateHeaderEditorTile()
 		{
 #if false
