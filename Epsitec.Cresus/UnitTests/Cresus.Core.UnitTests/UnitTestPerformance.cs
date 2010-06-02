@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void CreateAndPopulateDatabase()
 		{
-			if (UnitTestPerformance.createAndPopulateDatabase)
+			if (UnitTestPerformance.createDatabase)
 			{
 				TestHelper.PrintStartTest ("Database creation");
 							
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime(
 					"database population",
-					() => Database1.PopulateDatabase (UnitTestPerformance.bigDatabase)
+					() => Database1.PopulateDatabase (UnitTestPerformance.databaseSize)
 				);
 			}
 			else
@@ -100,10 +100,10 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static bool createAndPopulateDatabase = true;
+		private static bool createDatabase = true;
 
 
-		private static bool bigDatabase = true;
+		private static DatabaseSize databaseSize = DatabaseSize.Small;
 
 
 	}
