@@ -56,9 +56,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			IList targets = System.Activator.CreateInstance (collectionType, this.field.Id, this.entity, false) as IList;
 
-			foreach (object item in this.dataContext.ReadFieldRelation (this.entity, localEntityId, this.field, EntityResolutionMode.Load))
+			using (this.entity.DefineOriginalValues ())
 			{
-				targets.Add (item);
+				foreach (object item in this.dataContext.ReadFieldRelation (this.entity, localEntityId, this.field, EntityResolutionMode.Load))
+				{
+					targets.Add (item);
+				}
 			}
 
 			return targets;

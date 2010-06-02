@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
 
-				dataContext.DeleteEntity (alfred.Contacts[0] as UriContactEntity);
+				dataContext.DeleteEntity (alfred.Contacts[0]);
 
 				dataContext.SaveChanges ();
 
