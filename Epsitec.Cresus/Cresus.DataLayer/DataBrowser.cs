@@ -94,13 +94,16 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractEntity example = this.DataContext.EntityContext.CreateEmptyEntity (sourceEntityId);
 			StructuredTypeField field = this.DataContext.EntityContext.GetStructuredTypeField (example, sourceFieldId);
 
-			if (field.Relation == FieldRelation.Reference)
+			using (example.DefineOriginalValues ())
 			{
-				example.InternalSetValue (field.Id, target);
-			}
-			else if (field.Relation == FieldRelation.Collection)
-			{
-				example.InternalGetFieldCollection (field.Id).Add (target);
+				if (field.Relation == FieldRelation.Reference)
+				{
+					example.SetField<object> (field.Id, target);
+				}
+				else if (field.Relation == FieldRelation.Collection)
+				{
+					example.InternalGetFieldCollection (field.Id).Add (target);
+				}
 			}
 			
 			return this.GetByExample (example).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
