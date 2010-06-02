@@ -22,29 +22,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-#if false
-			base.CreateUI (container);
-#else
+			var containerController = new TileContainerController (this, container);
+			var data = containerController.DataItems;
 
-			var builder = new UIBuilder (container, this);
-			var items   = new List<SummaryData> ();
-
-			var data = new SummaryDataItems ();
-
-			data.StaticItems.Add (
+			data.Add (
 				new SummaryData
 				{
-					Rank				= 1000,
 					Name				= "NaturalPerson",
 					IconUri				= "Data.NaturalPerson",
-					Title				= new FormattedText ("Personne physique"),
-					CompactTitle		= new FormattedText ("Personne"),
-					TextAccessor		= Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
-					CompactTextAccessor = Accessor.Create (this.Entity, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
-					EntityAccessor		= () => this.Entity,
+					Title				= UIBuilder.FormatText ("Personne physique"),
+					CompactTitle		= UIBuilder.FormatText ("Personne"),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
+					EntityAccessor		= this.EntityGetter,
 				});
-
-			var uriMail = CoreProgram.Application.Data.GetUriSchemes ().Where (x => x.Code == "mailto").First ();
 
 			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
@@ -56,70 +47,48 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineText			(x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText  (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
 
-			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", x => x.UriScheme.Code == "mailto")
+			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri))
-				.DefineSetupItem    (x => x.UriScheme = uriMail);
+				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
 
-			var accessor1 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template1);
-			var accessor2 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template2);
-			var accessor3 = CollectionAccessor.Create (this.Entity, x => x.Contacts, template3);
-
-			data.EmptyItems.Add (
+			data.Add (
 				new SummaryData
 				{
-					Rank		 = 2000,
 					Name		 = "MailContact",
 					IconUri		 = "Data.Mail",
-					Title		 = new FormattedText ("Adresse"),
-					CompactTitle = new FormattedText ("Adresse"),
-					Text		 = new FormattedText ("<i>vide</i>")
+					Title		 = UIBuilder.FormatText ("Adresse"),
+					CompactTitle = UIBuilder.FormatText ("Adresse"),
+					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
 
-			data.EmptyItems.Add (
+			data.Add (
 				new SummaryData
 				{
-					Rank		 = 3000,
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
 					IconUri		 = "Data.Telecom",
-					Title		 = new FormattedText ("Téléphone"),
-					CompactTitle = new FormattedText ("Téléphone"),
-					Text		 = new FormattedText ("<i>vide</i>")
+					Title		 = UIBuilder.FormatText ("Téléphone"),
+					CompactTitle = UIBuilder.FormatText ("Téléphone"),
+					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
 
-			data.EmptyItems.Add (
+			data.Add (
 				new SummaryData
 				{
-					Rank		 = 4000,
 					AutoGroup    = true,
 					Name		 = "UriContact",
 					IconUri		 = "Data.Uri",
-					Title		 = new FormattedText ("E-Mail"),
-					CompactTitle = new FormattedText ("E-Mail"),
-					Text		 = new FormattedText ("<i>vide</i>")
+					Title		 = UIBuilder.FormatText ("E-Mail"),
+					CompactTitle = UIBuilder.FormatText ("E-Mail"),
+					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
 
-			data.CollectionAccessors.Add (accessor1);
-			data.CollectionAccessors.Add (accessor2);
-			data.CollectionAccessors.Add (accessor3);
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template1));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template2));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template3));
 
-			var containerController = new TileContainerController (this, container, data);
-
-			containerController.MapDataToTiles ();
-#endif
-		}
-
-		protected override void CreatePersonTile(UIBuilder builder)
-		{
-			var group = builder.CreateSummaryGroupingTile ("Data.NaturalPerson", "Personne physique");
-
-			var accessor = new Accessors.NaturalPersonAccessor (this.Entity)
-			{
-				ViewControllerMode = ViewControllerMode.Edition
-			};
-
-			builder.CreateSummaryTile (group, accessor);
+			containerController.GenerateTiles ();
 		}
 	}
 }

@@ -136,6 +136,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public System.Func<T> EntityGetter
+		{
+			get
+			{
+				return () => this.entity;
+			}
+		}
+
 #if false
 		private void CreateEntity(GenericTile tile)
 		{

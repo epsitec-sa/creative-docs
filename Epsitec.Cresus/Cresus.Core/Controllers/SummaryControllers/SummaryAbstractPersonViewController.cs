@@ -48,7 +48,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected abstract void CreatePersonTile(UIBuilder builder);
+		protected virtual void CreatePersonTile(UIBuilder builder)
+		{
+		}
 
 		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
