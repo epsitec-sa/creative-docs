@@ -386,11 +386,11 @@ namespace Epsitec.Cresus.Core
 			showButton.Clicked +=
 				delegate
 				{
-					var controller = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
+					var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
 
-					if (controller != null)
+					if (newController != null)
 					{
-						this.controller.Orchestrator.ShowSubView (this.controller, controller);
+						this.controller.Orchestrator.ShowSubView (this.controller, newController);
 					}
 				};
 

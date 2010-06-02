@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 				else
 				{
-					//?return new EditionCountryViewController (name, entity as Entities.CountryEntity);
+					return new EditionCountryViewController (name, entity as Entities.CountryEntity);
 				}
 			}
 
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 				else
 				{
-					//?return new EditionLocationViewController (name, entity as Entities.LocationEntity);
+					return new EditionLocationViewController (name, entity as Entities.LocationEntity);
 				}
 			}
 
