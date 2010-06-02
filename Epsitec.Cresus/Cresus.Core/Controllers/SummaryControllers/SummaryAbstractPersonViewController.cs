@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+#if false
 			var person = this.Entity;
 			
 			//	Subtil système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
@@ -46,12 +47,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					break;
 				}
 			}
+#endif
 		}
 
-		protected virtual void CreatePersonTile(UIBuilder builder)
-		{
-		}
-
+#if false
 		private void CreateUITiles(Widget container, Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
 			UIBuilder builder = new UIBuilder (container, this);
@@ -223,5 +222,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				builder.CreateSummaryTile (group, accessor);
 			}
 		}
+#endif
 	}
 }
