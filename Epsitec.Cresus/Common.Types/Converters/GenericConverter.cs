@@ -30,6 +30,23 @@ namespace Epsitec.Common.Types.Converters
 
 			return converter;
 		}
+
+		/// <summary>
+		/// Finds the type of the matching converter, if any.
+		/// </summary>
+		/// <typeparam name="T">The type for which a converter is required.</typeparam>
+		/// <returns>The type of the matching converter if it exists in the current assembly; otherwise, <c>null</c>.</returns>
+		protected static System.Type FindConverterType<T>()
+			where T : struct
+		{
+			var assembly = System.Reflection.Assembly.GetAssembly (typeof (GenericConverter));
+
+			var types = from type in assembly.GetTypes ()
+						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType == typeof (GenericConverter<T>)
+						select type;
+
+			return types.FirstOrDefault ();
+		}
 	}
 
 	/// <summary>
@@ -50,19 +67,24 @@ namespace Epsitec.Common.Types.Converters
 
 		public abstract bool CanConvertFromString(string text);
 
+		public ConversionResult<T> GetConversionResult(string text)
+		{
+			bool canConvert = this.CanConvertFromString (text);
+			var  result     = this.ConvertFromString (text);
+
+			return new ConversionResult<T>
+			{
+				IsInvalid = !canConvert,
+				IsNull    = !result.HasValue,
+				Value     = result.HasValue ? result.Value : default (T)
+			};
+		}
+
 		public static readonly GenericConverter<T> Instance;
 
 		static GenericConverter()
 		{
-			var assembly = System.Reflection.Assembly.GetAssembly (typeof (GenericConverter));
-
-			var types = from type in assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter))
-						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.GetGenericArguments ()[0] == typeof (T)
-						select type;
-
-			var converterType = types.FirstOrDefault ();
+			var converterType = GenericConverter.FindConverterType<T> ();
 
 			if (converterType != null)
 			{
