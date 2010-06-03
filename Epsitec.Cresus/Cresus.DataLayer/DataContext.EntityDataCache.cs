@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer
 			public void DefineRowKey(EntityDataMapping mapping, DbKey key)
 			{
 				System.Diagnostics.Debug.Assert (mapping.IsReadOnly == false);
-				System.Diagnostics.Debug.Assert (this.list.Contains (mapping));
+				//System.Diagnostics.Debug.Assert (this.list.Contains (mapping));
 
 				mapping.RowKey = key;
 

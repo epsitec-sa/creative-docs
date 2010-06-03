@@ -54,14 +54,9 @@ namespace Epsitec.Cresus.DataLayer
 
 		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			foreach (EntityData entityData in this.GetEntitiesData (example))
 			{
-				foreach (EntityData entityData in this.GetEntitiesData (transaction, example))
-				{
-					yield return this.DataContext.ResolveEntity (entityData) as EntityType;
-				}
-
-				transaction.Commit ();
+				yield return this.DataContext.ResolveEntity (entityData) as EntityType;
 			}
 		}
 
@@ -110,11 +105,20 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private IEnumerable<EntityData> GetEntitiesData(DbTransaction transaction, AbstractEntity example)
+		private IEnumerable<EntityData> GetEntitiesData(AbstractEntity example)
 		{
-			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valuesData = this.GetValueData (transaction, example);
-			Dictionary<DbKey, EntityReferenceData> referencesData = this.GetReferenceData (transaction, example);
-			Dictionary<DbKey, EntityCollectionData> collectionsData = this.GetCollectionData (transaction, example);
+			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valuesData;
+			Dictionary<DbKey, EntityReferenceData> referencesData;
+			Dictionary<DbKey, EntityCollectionData> collectionsData;
+
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				valuesData = this.GetValueData (transaction, example);
+				referencesData = this.GetReferenceData (transaction, example);
+				collectionsData = this.GetCollectionData (transaction, example);
+
+				transaction.Commit ();
+			}
 
 			foreach (DbKey entityKey in valuesData.Keys)
 			{

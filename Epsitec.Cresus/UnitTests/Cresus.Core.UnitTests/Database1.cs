@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 10},
 						{DatabaseSize.Medium, 10},
-						{DatabaseSize.Big, 10},
+						{DatabaseSize.Large, 10},
 						{DatabaseSize.Huge, 10},
 					}
 				},
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 5},
 						{DatabaseSize.Medium, 5},
-						{DatabaseSize.Big, 5},
+						{DatabaseSize.Large, 5},
 						{DatabaseSize.Huge, 5},
 					}
 				},
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 5},
 						{DatabaseSize.Medium, 5},
-						{DatabaseSize.Big, 5},
+						{DatabaseSize.Large, 5},
 						{DatabaseSize.Huge, 5},
 					}
 				},
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 1},
 						{DatabaseSize.Medium, 5},
-						{DatabaseSize.Big, 25},
+						{DatabaseSize.Large, 25},
 						{DatabaseSize.Huge, 125},
 					}
 				},
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 10},
 						{DatabaseSize.Medium, 50},
-						{DatabaseSize.Big, 250},
+						{DatabaseSize.Large, 250},
 						{DatabaseSize.Huge, 1250},
 					}
 				},
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 75},
 						{DatabaseSize.Medium, 750},
-						{DatabaseSize.Big, 7500},
+						{DatabaseSize.Large, 7500},
 						{DatabaseSize.Huge, 75000},
 					}
 				},
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 150},
 						{DatabaseSize.Medium, 1500},
-						{DatabaseSize.Big, 15000},
+						{DatabaseSize.Large, 15000},
 						{DatabaseSize.Huge, 150000},
 					}
 				},
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 150},
 						{DatabaseSize.Medium, 1500},
-						{DatabaseSize.Big, 15000},
+						{DatabaseSize.Large, 15000},
 						{DatabaseSize.Huge, 150000},
 					}
 				},
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 150},
 						{DatabaseSize.Medium, 1500},
-						{DatabaseSize.Big, 15000},
+						{DatabaseSize.Large, 15000},
 						{DatabaseSize.Huge, 150000},
 					}
 				},
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 200},
 						{DatabaseSize.Medium, 2000},
-						{DatabaseSize.Big, 20000},
+						{DatabaseSize.Large, 20000},
 						{DatabaseSize.Huge, 200000},
 					}
 				},
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 15},
 						{DatabaseSize.Medium, 15},
-						{DatabaseSize.Big, 15},
+						{DatabaseSize.Large, 15},
 						{DatabaseSize.Huge, 15},
 					}
 				},
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 15},
 						{DatabaseSize.Medium, 15},
-						{DatabaseSize.Big, 15},
+						{DatabaseSize.Large, 15},
 						{DatabaseSize.Huge, 15},
 					}
 				},
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 2},
 						{DatabaseSize.Medium, 2},
-						{DatabaseSize.Big, 2},
+						{DatabaseSize.Large, 2},
 						{DatabaseSize.Huge, 2},
 					}
 				},
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 5},
 						{DatabaseSize.Medium, 5},
-						{DatabaseSize.Big, 5},
+						{DatabaseSize.Large, 5},
 						{DatabaseSize.Huge, 5},
 					}
 				},
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 100},
 						{DatabaseSize.Medium, 1000},
-						{DatabaseSize.Big, 10000},
+						{DatabaseSize.Large, 10000},
 						{DatabaseSize.Huge, 100000},
 					}
 				},
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core
 					{
 						{DatabaseSize.Small, 100},
 						{DatabaseSize.Medium, 1000},
-						{DatabaseSize.Big, 10000},
+						{DatabaseSize.Large, 10000},
 						{DatabaseSize.Huge, 100000},
 					}
 				},
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Core
 	{
 		Small,
 		Medium,
-		Big,
+		Large,
 		Huge,
 	}
 

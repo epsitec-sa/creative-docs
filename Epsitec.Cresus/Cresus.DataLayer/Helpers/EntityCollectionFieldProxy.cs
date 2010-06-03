@@ -4,6 +4,7 @@ using Epsitec.Common.Types;
 
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Helpers
 {
@@ -51,10 +52,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			Druid entityId = this.entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.dataContext.EntityContext.GetLocalEntityId (entityId, this.field.CaptionId);
 
-			System.Type itemType = this.dataContext.EntityContext.CreateEmptyEntity (this.field.TypeId).GetType ();
-			System.Type collectionType = typeof (EntityCollection<>).MakeGenericType (itemType);
+			//System.Type itemType = this.dataContext.EntityContext.CreateEmptyEntity (this.field.TypeId).GetType ();
+			//System.Type collectionType = typeof (EntityCollection<>).MakeGenericType (itemType);
 
-			IList targets = System.Activator.CreateInstance (collectionType, this.field.Id, this.entity, false) as IList;
+			//IList targets = System.Activator.CreateInstance (collectionType, this.field.Id, this.entity, false) as IList;
+
+			IList targets = new EntityCollection<AbstractEntity> (this.field.Id, this.entity, false) as IList;
 
 			using (this.entity.DefineOriginalValues ())
 			{

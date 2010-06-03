@@ -6,6 +6,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Core
 			if (createAndPopulateDatabase)
 			{
 				Database.CreateAndConnectToDatabase ();
-				Database1.PopulateDatabase (DatabaseSize.Medium);
+				Database1.PopulateDatabase (DatabaseSize.Large);
 			}
 			else
 			{
@@ -73,35 +74,17 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
 			}
 		}
-	
 
-		public void RetrieveData()
+
+		public void RetrieveAllData<EntityType>(bool bulkMode) where EntityType : AbstractEntity, new ()
 		{
-			using (DataContext dataContext = new DataContext (this.dbInfrastructure))
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (this.dbInfrastructure, dataContext);
-
-				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-
-				watch.Start ();
-				repository.GetEntitiesByExample<CountryEntity> (new CountryEntity ()).Count ();
-				watch.Stop ();
-
-				System.Diagnostics.Trace.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
-
-				watch.Restart ();
-				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
-				watch.Stop ();
-
-				System.Diagnostics.Trace.WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
-
-				watch.Restart ();
-				repository.GetEntitiesByExample<TelecomContactEntity> (new TelecomContactEntity ()).Count ();
-				watch.Stop ();
-
-				System.Diagnostics.Trace .WriteLine ("Time elapsed: " + watch.ElapsedMilliseconds);
-			}
+				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count ();
+			};
 		}
+
 
 		#region IDisposable Members
 

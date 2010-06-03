@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.DataLayer
 		public DataContext(DbInfrastructure infrastructure, bool bulkMode)
 		{
 			this.BulkMode = bulkMode;
-			this.infrastructure = infrastructure;
-			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
-			this.RichCommand = new DbRichCommand (this.infrastructure);
+			this.DbInfrastructure = infrastructure;
+			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
+			this.RichCommand = new DbRichCommand (this.DbInfrastructure);
 			this.EntityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
 			this.tableBulkLoaded = new Dictionary<string, bool> ();
@@ -44,6 +44,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.EntityContext.EntityAttached += this.HandleEntityCreated;
 			this.EntityContext.PersistenceManagers.Add (this);
+		}
+
+		public DbInfrastructure DbInfrastructure
+		{
+			get;
+			private set;
 		}
 
 		public SchemaEngine SchemaEngine
@@ -84,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (tableDef == null)
 			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					this.SchemaEngine.CreateTableDefinition (entityId);
 					transaction.Commit ();
@@ -182,7 +188,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (containsChanges)
 			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					this.RichCommand.SaveTables (transaction, this.SaveTablesFilterImplementation, this.SaveTablesRowIdAssignmentCallbackImplementation);
 					transaction.Commit ();
@@ -191,7 +197,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public bool IsEntityDeleted(AbstractEntity entity)
+		public bool IsDeleted(AbstractEntity entity)
 		{
 			return this.deletedEntities.Contains (entity);
 		}
@@ -319,7 +325,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void RemoveEntityTargetReferenceData(AbstractEntity entity)
 		{
-			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.infrastructure, this).GetReferencers (entity))
+			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.DbInfrastructure, this).GetReferencers (entity))
 			{
 				AbstractEntity sourceEntity = item.Item1;
 				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
@@ -1041,10 +1047,10 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (noRow && !bulkLoaded && !alreadyLoaded)
 			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					DbTable tableDef = this.SchemaEngine.FindTableDefinition (entityId);
-					DbSelectCondition condition = this.infrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
+					DbSelectCondition condition = this.DbInfrastructure.CreateSelectCondition (DbSelectRevision.LiveActive);
 
 					if (this.BulkMode)
 					{
@@ -1085,9 +1091,9 @@ namespace Epsitec.Cresus.DataLayer
 					System.Diagnostics.Debug.Assert (relationTableDef != null);
 				}
 
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					DbSelectCondition condition = this.infrastructure.CreateSelectCondition ();
+					DbSelectCondition condition = this.DbInfrastructure.CreateSelectCondition ();
 
 					if (this.BulkMode)
 					{
@@ -1239,7 +1245,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					this.RichCommand.ImportTable (transaction, tableDefinition, null);
 					this.LoadTableRelationSchemas (transaction, tableDefinition);
@@ -1253,7 +1259,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbTable tableDef = this.SchemaEngine.FindTableDefinition (entityId);
 
-			using (DbTransaction transaction = this.infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.LoadTableRelationSchemas (transaction, tableDef);
 
@@ -1268,7 +1274,7 @@ namespace Epsitec.Cresus.DataLayer
 				if (columnDefinition.Cardinality != DbCardinality.None)
 				{
 					string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
-					DbTable relationTableDef = this.infrastructure.ResolveDbTable (transaction, relationTableName);
+					DbTable relationTableDef = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
 					this.RichCommand.ImportTable (transaction, relationTableDef, null);
 				}
 			}
@@ -1299,15 +1305,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
 
-			if ((mapping != null) &&
-				(mapping.RowKey.IsEmpty == false))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return mapping != null && !mapping.RowKey.IsEmpty;
 		}
 
 		#region IEntityPersistenceManager Members
@@ -1417,7 +1415,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private readonly DbInfrastructure infrastructure;
+
 		private readonly EntityDataCache entityDataCache;
 		private readonly Dictionary<string, bool> tableBulkLoaded;
 		private readonly HashSet<AbstractEntity> dataLoadedEntities;
