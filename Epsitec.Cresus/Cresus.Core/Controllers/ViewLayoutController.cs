@@ -103,6 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
 		{
+#if false
 			double width = 250 - 250*(columnCount-columnIndex-2)*0.5;
 
 			//	A part la première colonne de gauche, les autres colonnes doivent soit avoir une
@@ -115,6 +116,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			return width;
+#else
+			double width = 300 - 300*(columnCount-columnIndex-1)*0.2;
+
+			if (width < ViewLayoutController.minimalWidth)
+			{
+				//?width = ViewLayoutController.reducedWidth;
+			}
+			
+			return width;
+#endif
 		}
 
 
