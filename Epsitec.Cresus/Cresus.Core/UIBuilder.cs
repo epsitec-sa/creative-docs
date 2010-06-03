@@ -399,6 +399,11 @@ namespace Epsitec.Cresus.Core
 					}
 				};
 
+			createButton.Clicked +=
+				delegate
+				{
+				};
+
 			if (accessor != null)
 			{
 				accessor.WidgetInitialize (editor, entity);
