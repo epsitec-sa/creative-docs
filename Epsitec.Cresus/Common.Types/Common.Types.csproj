@@ -130,6 +130,7 @@
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
+    <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="TextComparison.cs" />
     <Compile Include="INotifyCurrentChanged.cs" />
