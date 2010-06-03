@@ -354,6 +354,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
 				Visibility = false,
+				AutoFocus = false,
 //-				TabIndex = ++this.tabIndex,
 			};
 
@@ -366,6 +367,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
 				Visibility = false,
+				AutoFocus = false,
 //-				TabIndex = ++this.tabIndex,
 			};
 
