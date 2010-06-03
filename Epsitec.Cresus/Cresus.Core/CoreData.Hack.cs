@@ -136,12 +136,23 @@ namespace Epsitec.Cresus.Core
 		public IEnumerable<Entities.PersonTitleEntity> GetTitles()
 		{
 			if (this.sampleTitles == null)
-            {
+			{
 				this.sampleTitles = new List<PersonTitleEntity> ();
 				CoreData.CreateSampleTitles (this.sampleTitles);
-            }
+			}
 
 			return this.sampleTitles;
+		}
+
+		public IEnumerable<Entities.PersonGenderEntity> GetGenders()
+		{
+			if (this.sampleGenders == null)
+			{
+				this.sampleGenders = new List<PersonGenderEntity> ();
+				CoreData.CreateSampleGenders (this.sampleGenders);
+			}
+
+			return this.sampleGenders;
 		}
 
 		private static void CreateSampleCountries(List<CountryEntity> countries)
@@ -237,6 +248,29 @@ namespace Epsitec.Cresus.Core
 			titles.Add (title1);
 			titles.Add (title2);
 			titles.Add (title3);
+		}
+
+		private static void CreateSampleGenders(List<PersonGenderEntity> genders)
+		{
+			var context = EntityContext.Current;
+
+			var gender1 = context.CreateEmptyEntity<PersonGenderEntity> ();
+			var gender2 = context.CreateEmptyEntity<PersonGenderEntity> ();
+
+			using (gender1.DefineOriginalValues ())
+			{
+				gender1.Name = "Homme";
+				gender1.Code = "♂";
+			}
+
+			using (gender2.DefineOriginalValues ())
+			{
+				gender2.Name = "Femme";
+				gender2.Code = "♀";
+			}
+
+			genders.Add (gender1);
+			genders.Add (gender2);
 		}
 
 		private void CreateSamplePersons(List<AbstractPersonEntity> persons)
@@ -423,5 +457,6 @@ namespace Epsitec.Cresus.Core
 		List<TelecomTypeEntity> telecomTypes;
 		List<UriSchemeEntity> uriSchemes;
 		List<PersonTitleEntity> sampleTitles;
+		List<PersonGenderEntity> sampleGenders;
 	}
 }
