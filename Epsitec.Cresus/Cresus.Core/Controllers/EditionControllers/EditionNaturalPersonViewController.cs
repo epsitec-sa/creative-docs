@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -79,8 +80,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			};
 
 			genderCtrl.Attach (genderHint);
-			
-			builder.CreateTextField (tile.Container, 75, "Date de naissance", DateConverter.ConvertToString (this.Entity.BirthDate), x => this.Entity.BirthDate = DateConverter.ConvertFromString (x), x => DateConverter.CanConvertFromString (x));
+
+			builder.CreateTextField (tile.Container, 75, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
 
 			UI.SetInitialFocus (container);
 #endif
