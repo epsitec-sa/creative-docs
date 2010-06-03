@@ -408,21 +408,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public Druid GetBaseEntityId(Druid id)
 		{
-			Druid baseId = id;
-
-			while (baseId.IsValid)
-			{
-				StructuredType type = this.GetStructuredType (baseId) as StructuredType;
-
-				System.Diagnostics.Debug.Assert (type != null);
-				System.Diagnostics.Debug.Assert (type.CaptionId == baseId);
-				
-				id = baseId;
-				
-				baseId = type.BaseTypeId;
-			}
-
-			return id;
+			return this.GetHeritedEntityIds (id).Last ();
 		}
 
 

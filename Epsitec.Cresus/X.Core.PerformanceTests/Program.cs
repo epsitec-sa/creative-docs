@@ -8,7 +8,9 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
+using System.Collections.Generic;
 using System.Linq;
+
 
 namespace Epsitec.Cresus.Core
 {
@@ -26,6 +28,32 @@ namespace Epsitec.Cresus.Core
 
 			using (var test = new TestPerformance (false))
 			{
+
+#if false
+				test.RetrieveAllData<AbstractPersonEntity> (false);
+				test.RetrieveAllData<NaturalPersonEntity> (false);
+				test.RetrieveAllData<LegalPersonEntity> (false);
+				test.RetrieveAllData<LegalPersonTypeEntity> (false);
+				test.RetrieveAllData<PersonTitleEntity> (false);
+				test.RetrieveAllData<PersonGenderEntity> (false);
+				test.RetrieveAllData<AbstractContactEntity> (false);
+				test.RetrieveAllData<ContactRoleEntity> (false);
+				test.RetrieveAllData<CommentEntity> (false);
+				test.RetrieveAllData<MailContactEntity> (false);
+				test.RetrieveAllData<AddressEntity> (false);
+				test.RetrieveAllData<StreetEntity> (false);
+				test.RetrieveAllData<PostBoxEntity> (false);
+				test.RetrieveAllData<LocationEntity> (false);
+				test.RetrieveAllData<RegionEntity> (false);
+				test.RetrieveAllData<CountryEntity> (false);
+				test.RetrieveAllData<TelecomContactEntity> (false);
+				test.RetrieveAllData<TelecomTypeEntity> (false);
+				test.RetrieveAllData<UriContactEntity> (false);
+				test.RetrieveAllData<UriSchemeEntity> (false);
+
+#endif
+	
+#if true		
 				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
 				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
 
@@ -34,12 +62,13 @@ namespace Epsitec.Cresus.Core
 
 				System.Console.ForegroundColor = System.ConsoleColor.Yellow;
 				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
-//-				System.Console.ReadKey ();
+				//System.Console.ReadKey ();
 				System.Threading.Thread.Sleep (2*1000);
 				System.Console.ResetColor ();
 
 				Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
 				Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
+#endif
 			}
 			
 #if false
@@ -69,7 +98,7 @@ namespace Epsitec.Cresus.Core
 				});
 #endif
 
-//-			System.Console.ReadKey ();
+			//System.Console.ReadKey ();
 		}
 
 		static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)

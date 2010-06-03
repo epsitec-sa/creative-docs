@@ -595,6 +595,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return field.Source;
 		}
 
+
 		internal System.Collections.IList InternalGetFieldCollection(string id)
 		{
 			object value = this.InternalGetValue (id);
@@ -609,20 +610,25 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					using (this.DefineOriginalValues ())
 					{
-						StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
+						//StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+						//AbstractEntity model = this.context.CreateEmptyEntity (field.TypeId);
 
-						System.Type itemType = model.GetType ();
-						System.Type genericType = typeof (EntityCollection<>);
-						System.Type collectionType = genericType.MakeGenericType (itemType);
+						//System.Type itemType = model.GetType ();
+						//System.Type genericType = typeof (EntityCollection<>);
+						//System.Type collectionType = genericType.MakeGenericType (itemType);
 
-						list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
+						//list = System.Activator.CreateInstance (collectionType, id, this, true) as System.Collections.IList;
+						
+						//genericType = typeof (EntityCollectionProxy<>);
+						//collectionType = genericType.MakeGenericType (itemType);
+
+						//list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
+
+						list = new EntityCollection<AbstractEntity> (id, this, true);
+
 						this.InternalSetValue (id, list);
 
-						genericType = typeof (EntityCollectionProxy<>);
-						collectionType = genericType.MakeGenericType (itemType);
-
-						list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
+						list = new EntityCollectionProxy<AbstractEntity> (id, this);
 					}
 				}
 				else
@@ -1201,4 +1207,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
 	}
+
+
 }
