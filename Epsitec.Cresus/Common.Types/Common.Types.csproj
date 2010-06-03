@@ -131,6 +131,11 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="Converters\DateConverter.cs" />
+    <Compile Include="Converters\GenericConverter.cs" />
+    <Compile Include="Converters\Marshalers\GenericMarshaler.cs" />
+    <Compile Include="Converters\Marshaler.cs" />
+    <Compile Include="Converters\Marshalers\NonNullableMarshaler.cs" />
+    <Compile Include="Converters\Marshalers\NullableMarshaler.cs" />
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="TextComparison.cs" />
     <Compile Include="INotifyCurrentChanged.cs" />

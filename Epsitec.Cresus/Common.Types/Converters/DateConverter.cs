@@ -10,19 +10,14 @@ namespace Epsitec.Common.Types.Converters
 	/// The <c>DateConverter</c> is used to convert <see cref="Date"/> to/from
 	/// <c>string</c>.
 	/// </summary>
-	public static class DateConverter
+	public class DateConverter : GenericConverter<Date>
 	{
-		public static string ConvertToString(Date date)
+		public override string ConvertToString(Date date)
 		{
 			return date == Date.Null ? null : date.ToDateTime ().ToShortDateString ();
 		}
 
-		public static string ConvertToString(Date? date)
-		{
-			return date.HasValue ? DateConverter.ConvertToString (date.Value) : null;
-		}
-
-		public static Date? ConvertFromString(string text)
+		public override Date? ConvertFromString(string text)
 		{
 			if (string.IsNullOrWhiteSpace (text))
             {
@@ -39,7 +34,7 @@ namespace Epsitec.Common.Types.Converters
 			return null;
 		}
 
-		public static bool CanConvertFromString(string text)
+		public override bool CanConvertFromString(string text)
 		{
 			System.DateTime result;
 
