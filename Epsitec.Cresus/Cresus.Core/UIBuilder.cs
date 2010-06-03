@@ -236,6 +236,11 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public TextField CreateTextField(Widget embedder, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaller)
+		{
+			return this.CreateTextField (embedder, width, label, marshaller.GetStringValue (), x => marshaller.SetStringValue (x), x => marshaller.CanConvert (x));
+		}
+
 		public TextField CreateTextField(Widget embedder, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
