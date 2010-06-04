@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
@@ -9,6 +10,7 @@ using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -36,13 +38,39 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.frame = new FrameBox ()
+			this.scrollable = new Scrollable ()
 			{
 				Parent = container,
+				Dock = DockStyle.Fill,
+				HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways,
+				VerticalScrollerMode = ScrollableScrollerMode.HideAlways,
+			};
+
+			this.scrollable.Viewport.IsAutoFitting = true;
+
+			this.frame = new FrameBox ()
+			{
+				Parent = this.scrollable.Viewport,
 				Dock = DockStyle.Fill,
 			};
 
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
+
+			this.CreateViewLayoutHandler ();
+		}
+
+		private void CreateViewLayoutHandler()
+		{
+			this.viewLayoutController.LayoutChanged +=
+				delegate
+				{
+					LayoutContext.SyncArrange (this.scrollable.Viewport);
+					
+					var startValue = this.scrollable.ViewportOffsetX;
+					var endValue   = this.scrollable.HorizontalScroller.MaxValue;
+
+					this.scrollable.HorizontalScroller.Value = endValue;
+				};
 		}
 
 
@@ -234,6 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private ViewLayoutController viewLayoutController;
 		private FrameBox frame;
+		private Scrollable scrollable;
 		
 		private AbstractEntity entity;
 	}

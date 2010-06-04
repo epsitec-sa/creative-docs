@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -71,6 +72,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public double TotalWidth
+		{
+			get
+			{
+				return this.totalWidth;
+			}
+		}
 
 		private void UpdateColumnLayout()
 		{
@@ -96,9 +104,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					visuals.Add (column);
 				}
+
+				this.totalWidth = x + overlap;
 			}
 
 			this.container.Children.Change (collection => visuals);
+			this.OnLayoutChanged ();
 		}
 
 		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
@@ -129,11 +140,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void OnLayoutChanged()
+		{
+			var handler = this.LayoutChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler LayoutChanged;
+
 		private static readonly double minimalWidth = 220;
 		private static readonly double reducedWidth = Widgets.Tiles.TitleTile.MinimumTileWidth + Widgets.TileArrow.Breadth;
 
 
 		private readonly Widget container;
 		private readonly Stack<TileContainer> columns;
+		private double totalWidth;
 	}
 }
