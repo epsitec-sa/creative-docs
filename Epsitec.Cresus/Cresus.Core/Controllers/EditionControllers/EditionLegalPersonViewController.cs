@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+#if false
 			UIBuilder builder = new UIBuilder (container, this);
 			
 			builder.CreateHeaderEditorTile ();
@@ -36,6 +37,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextFieldMulti (tile.Container, 100, "Complément", accessor.Entity.Complement, x => accessor.Entity.Complement = x, null);
 
 			UI.SetInitialFocus (container);
+#else
+			var builder = new UIBuilder (container, this);
+
+			builder.CreateHeaderEditorTile ();
+
+			var mail = this.Entity;
+			var group = builder.CreateEditionGroupingTile ("Data.LegalPerson", "Personne morale");
+			var tile = builder.CreateEditionTile (group, this.Entity);
+
+			builder.CreateTextField (tile.Container, 0, "Nom complet", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile.Container, 150, "Nom court", this.Entity.ShortName, x => this.Entity.ShortName = x, Validators.StringValidator.Validate);
+			builder.CreateMargin (tile.Container, true);
+			builder.CreateTextFieldMulti (tile.Container, 100, "Complément", this.Entity.Complement, x => this.Entity.Complement = x, Validators.StringValidator.Validate);
+
+			UI.SetInitialFocus (container);
+#endif
 		}
 	}
 }

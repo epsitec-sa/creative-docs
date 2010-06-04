@@ -64,13 +64,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var mail = this.Entity;
 			var group = builder.CreateEditionGroupingTile ("Data.Mail", "Adresse");
-			var tile1 = builder.CreateEditionTile (group, this.Entity);
-			var tile2 = builder.CreateEditionTile (group, this.Entity);
-			var tile3 = builder.CreateEditionTile (group, this.Entity);
+			var contryTile   = builder.CreateEditionTile (group, this.Entity);
+			var mainTile     = builder.CreateEditionTile (group, this.Entity);
+			var locationTile = builder.CreateEditionTile (group, this.Entity);
 
 			builder.CreateFooterEditorTile ();
 
-			var countryHint = builder.CreateHintEditor (tile1.Container, "Nom et code du pays", this.Entity.Address.Location.Country, null, x => this.Entity.Address.Location.Country = x as Entities.CountryEntity);
+			var countryHint = builder.CreateHintEditor (contryTile.Container, "Nom et code du pays", this.Entity.Address.Location.Country, null, x => this.Entity.Address.Location.Country = x as Entities.CountryEntity);
 			var countryCtrl = new HintEditorController<Entities.CountryEntity>
 			{
 				ValueGetter = () => this.Entity.Address.Location.Country,
@@ -80,14 +80,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
 			};
 			countryCtrl.Attach (countryHint);
-			builder.CreateMargin (tile2.Container, true);
+			builder.CreateMargin (mainTile.Container, true);
 
-			builder.CreateTextField (tile2.Container, 0, "Rue", this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x, Validators.StringValidator.Validate);
-			builder.CreateTextFieldMulti (tile2.Container, 52, "Complément de l'adresse", this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile2.Container, 0, "Boîte postale", this.Entity.Address.PostBox.Number, x => this.Entity.Address.PostBox.Number = x, Validators.StringValidator.Validate);
-			builder.CreateMargin (tile2.Container, true);
+			builder.CreateTextField (mainTile.Container, 0, "Rue", this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x, Validators.StringValidator.Validate);
+			builder.CreateTextFieldMulti (mainTile.Container, 52, "Complément de l'adresse", this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (mainTile.Container, 0, "Boîte postale", this.Entity.Address.PostBox.Number, x => this.Entity.Address.PostBox.Number = x, Validators.StringValidator.Validate);
+			builder.CreateMargin (mainTile.Container, true);
 
-			var locationHint = builder.CreateHintEditor (tile3.Container, "Numéro postal et ville", this.Entity.Address.Location, null, x => this.Entity.Address.Location = x as Entities.LocationEntity);
+			var locationHint = builder.CreateHintEditor (locationTile.Container, "Numéro postal et ville", this.Entity.Address.Location, null, x => this.Entity.Address.Location = x as Entities.LocationEntity);
 			var locationCtrl = new HintEditorController<Entities.LocationEntity>
 			{
 				ValueGetter = () => this.Entity.Address.Location,
