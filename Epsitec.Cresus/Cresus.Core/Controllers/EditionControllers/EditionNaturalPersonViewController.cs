@@ -49,11 +49,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var person = this.Entity;
 			var group = builder.CreateEditionGroupingTile ("Data.NaturalPerson", "Personne physique");
-			var tile = builder.CreateEditionTile (group, this.Entity);
+			var tile1 = builder.CreateEditionTile (group, this.Entity);
+			var tile2 = builder.CreateEditionTile (group, this.Entity);
 
 			builder.CreateFooterEditorTile ();
 
-			var titleHint = builder.CreateHintEditor (tile.Container, "Titre", this.Entity.Title, null, x => this.Entity.Title = x as Entities.PersonTitleEntity);
+			var titleHint = builder.CreateHintEditor (tile1.Container, "Titre", this.Entity.Title, null, x => this.Entity.Title = x as Entities.PersonTitleEntity);
 			var titleCtrl = new HintEditorController<Entities.PersonTitleEntity>
 			{
 				ValueGetter = () => this.Entity.Title,
@@ -65,11 +66,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			titleCtrl.Attach (titleHint);
 			
-			builder.CreateTextField (tile.Container, 0, "Prénom", this.Entity.Firstname, x => this.Entity.Firstname = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile.Container, 0, "Nom", this.Entity.Lastname, x => this.Entity.Lastname = x, Validators.StringValidator.Validate);
-			builder.CreateMargin (tile.Container, true);
+			builder.CreateTextField (tile1.Container, 0, "Prénom", this.Entity.Firstname, x => this.Entity.Firstname = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile1.Container, 0, "Nom", this.Entity.Lastname, x => this.Entity.Lastname = x, Validators.StringValidator.Validate);
+			builder.CreateMargin (tile1.Container, true);
 
-			var genderHint = builder.CreateHintEditor (tile.Container, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
+			var genderHint = builder.CreateHintEditor (tile2.Container, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
 			var genderCtrl = new HintEditorController<Entities.PersonGenderEntity>
 			{
 				ValueGetter = () => this.Entity.Gender,
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			genderCtrl.Attach (genderHint);
 
-			builder.CreateTextField (tile.Container, 75, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
+			builder.CreateTextField (tile2.Container, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
 
 			UI.SetInitialFocus (container);
 #endif
