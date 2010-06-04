@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			var titleHint = builder.CreateHintEditor (tile1.Container, "Titre", this.Entity.Title, null, x => this.Entity.Title = x as Entities.PersonTitleEntity);
+			var titleHint = builder.CreateHintEditor (tile1, "Titre", this.Entity.Title, null, x => this.Entity.Title = x as Entities.PersonTitleEntity);
 			var titleCtrl = new HintEditorController<Entities.PersonTitleEntity>
 			{
 				ValueGetter = () => this.Entity.Title,
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile1.Container, 0, "Nom", this.Entity.Lastname, x => this.Entity.Lastname = x, Validators.StringValidator.Validate);
 			builder.CreateMargin (tile1.Container, true);
 
-			var genderHint = builder.CreateHintEditor (tile2.Container, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
+			var genderHint = builder.CreateHintEditor (tile2, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
 			var genderCtrl = new HintEditorController<Entities.PersonGenderEntity>
 			{
 				ValueGetter = () => this.Entity.Gender,
