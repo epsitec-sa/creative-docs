@@ -290,15 +290,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private void CreateRightPanelText()
 		{
 			this.staticTextTitle = new StaticText
-						{
-							Parent = this.rightPanel,
-							PreferredHeight = TitleTile.titleHeight,
-							PreferredWidth = 0,
-							Dock = DockStyle.Top,
-							Margins = new Margins (2, TileArrow.Breadth, 0, 0),
-							ContentAlignment = ContentAlignment.TopLeft,
-							TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-						};
+			{
+				Parent = this.rightPanel,
+				PreferredHeight = TitleTile.titleHeight,
+				PreferredWidth = 0,
+				Dock = DockStyle.Top,
+				Margins = new Margins (GenericTile.leftRightGap, TileArrow.Breadth, 0, 0),
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+			};
 		}
 		
 		private void CreateRightPanelContainer()
