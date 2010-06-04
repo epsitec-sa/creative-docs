@@ -46,6 +46,135 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		public bool AllowSelection
+		{
+			get;
+			set;
+		}
+
+
+		public override TileArrowMode ArrowMode
+		{
+			get
+			{
+				return this.GetArrowMode ();
+			}
+			set
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		public override TileArrow DirectArrow
+		{
+			get
+			{
+				return new TileArrow ()
+				{
+					OutlineColor = this.GetOutlineColor (),
+					ThicknessColor = this.GetThicknessColor (),
+					SurfaceColor = this.GetSurfaceColor (),
+				};
+			}
+		}
+
+		public override TileArrow ReverseArrow
+		{
+			get
+			{
+				return new TileArrow ()
+				{
+					OutlineColor = this.GetReverseOutlineColor (),
+					ThicknessColor = this.GetReverseThicknessColor (),
+					SurfaceColor = this.GetReverseSurfaceColor (),
+				};
+			}
+		}
+
+
+		private TileArrowMode GetArrowMode()
+		{
+			if (this.AllowSelection)
+			{
+				if (this.IsEntered && this.AutoReverse)
+				{
+					return Widgets.TileArrowMode.VisibleReverse;
+				}
+
+				if (this.IsEntered)
+				{
+					return Widgets.TileArrowMode.VisibleDirect;
+				}
+
+				if (this.IsSelected)
+				{
+					return Widgets.TileArrowMode.VisibleDirect;
+				}
+			}
+
+			return Widgets.TileArrowMode.None;
+		}
+
+		private Color GetSurfaceColor()
+		{
+			if (this.AllowSelection)
+			{
+				if (this.IsEntered)
+				{
+					return Tile.SurfaceHilitedColor;
+				}
+
+				if (this.IsSelected)
+				{
+					return Tile.SurfaceSelectedGroupingColor;
+				}
+			}
+
+			return Tile.SurfaceEditingColor;
+		}
+
+		private Color GetOutlineColor()
+		{
+			if (this.AllowSelection)
+			{
+				if (this.IsEntered || this.IsSelected)
+				{
+					return Tile.BorderColor;
+				}
+			}
+
+			return Color.Empty;
+		}
+
+		private Color GetThicknessColor()
+		{
+			if (this.AllowSelection)
+			{
+				if (this.IsEntered)
+				{
+					return Tile.ThicknessHilitedColor;
+				}
+			}
+
+			return Color.Empty;
+		}
+
+
+		private Color GetReverseSurfaceColor()
+		{
+			return Tile.SurfaceHilitedColor;
+		}
+
+		private Color GetReverseOutlineColor()
+		{
+			return Tile.BorderColor;
+		}
+
+		private Color GetReverseThicknessColor()
+		{
+			return Tile.ThicknessHilitedColor;
+		}
+
 
 		private FrameBox container;
 	}

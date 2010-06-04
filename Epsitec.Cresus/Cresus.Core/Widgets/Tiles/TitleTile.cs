@@ -376,6 +376,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					return Tile.SurfaceSelectedGroupingColor;
 				}
+
 				return Tile.SurfaceSummaryColor;
 			}
 
