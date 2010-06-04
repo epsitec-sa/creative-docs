@@ -346,11 +346,11 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateHintEditor(Widget embedder, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
+		public Widgets.HintEditor CreateHintEditor(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
 		{
 			var staticText = new StaticText
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core
 
 			var container = new FrameBox
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
@@ -423,11 +423,20 @@ namespace Epsitec.Cresus.Core
 			showButton.Clicked +=
 				delegate
 				{
-					var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
-
-					if (newController != null)
+					if (tile.IsSelected)
 					{
-						this.controller.Orchestrator.ShowSubView (this.controller, newController);
+						this.controller.Orchestrator.CloseSubViews (this.controller);
+						tile.SetSelected (false);
+					}
+					else
+					{
+						var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
+
+						if (newController != null)
+						{
+							this.controller.Orchestrator.ShowSubView (this.controller, newController);
+							tile.SetSelected (true);
+						}
 					}
 				};
 
