@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	{
 		public GenericTile()
 		{
+			this.Padding = new Margins (GenericTile.leftRightGap, 0, 0, 0);
 		}
 
 		public GenericTile(Widget embedder)
@@ -302,6 +303,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.SetSelected (false);
 			this.subViewController = null;
 		}
+
+
+		public  static readonly double leftRightGap = 4;
 
 		private CoreViewController subViewController;
 	}
