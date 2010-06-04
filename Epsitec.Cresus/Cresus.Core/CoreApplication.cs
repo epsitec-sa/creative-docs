@@ -144,6 +144,11 @@ namespace Epsitec.Cresus.Core
 			};
 
 			this.Window = window;
+			this.Window.Root.SizeChanged +=
+				delegate
+				{
+					this.Window.Text = string.Format ("{0} {1}x{2}", this.ShortWindowTitle, this.Window.ClientSize.Width, this.Window.ClientSize.Height);
+				};
 		}
 
 		private void CreateUIRootBoxes()
