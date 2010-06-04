@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		public IEnumerable<T> Items
+		public System.Func<IEnumerable<T>> ItemsGetter
 		{
 			get;
 			set;
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(Widgets.HintEditor editor)
 		{
-			foreach (var item in this.Items)
+			foreach (var item in this.ItemsGetter ())
 			{
 				editor.Items.Add (item);
 			}
