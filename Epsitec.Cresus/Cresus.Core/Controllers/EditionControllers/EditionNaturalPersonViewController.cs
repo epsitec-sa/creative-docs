@@ -47,12 +47,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateHeaderEditorTile ();
 
-			var person = this.Entity;
 			var group = builder.CreateEditionGroupingTile ("Data.NaturalPerson", "Personne physique");
-			var titleTile = builder.CreateEditionTile (group, this.Entity);
-			var mainTile1 = builder.CreateEditionTile (group, this.Entity);
-			var sexTile   = builder.CreateEditionTile (group, this.Entity);
-			var mainTile2 = builder.CreateEditionTile (group, this.Entity);
+			
+			var titleTile  = builder.CreateEditionTile (group, this.Entity);
+			var mainTile1  = builder.CreateEditionTile (group, this.Entity);
+			var genderTile = builder.CreateEditionTile (group, this.Entity);
+			var mainTile2  = builder.CreateEditionTile (group, this.Entity);
 
 			builder.CreateFooterEditorTile ();
 
@@ -61,8 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				ValueGetter = () => this.Entity.Title,
 				ValueSetter = x => this.Entity.Title = x,
-				Items = CoreProgram.Application.Data.GetTitles (),
-				ToTextArrayConverter = x => new string[] { x.ShortName, x.Name },
+				
+				ItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
+				
+				ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 			titleCtrl.Attach (titleHint);
@@ -71,12 +73,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (mainTile1.Container, 0, "Nom", this.Entity.Lastname, x => this.Entity.Lastname = x, Validators.StringValidator.Validate);
 			builder.CreateMargin (mainTile1.Container, true);
 
-			var genderHint = builder.CreateHintEditor (sexTile, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
+			var genderHint = builder.CreateHintEditor (genderTile, "Sexe", this.Entity.Gender, null, x => this.Entity.Gender = x as Entities.PersonGenderEntity);
 			var genderCtrl = new HintEditorController<Entities.PersonGenderEntity>
 			{
 				ValueGetter = () => this.Entity.Gender,
 				ValueSetter = x => this.Entity.Gender = x,
-				Items = CoreProgram.Application.Data.GetGenders (),
+				ItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				ToTextArrayConverter = x => new string[] { x.Name },
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};

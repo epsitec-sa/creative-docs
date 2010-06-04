@@ -141,8 +141,6 @@
     <Compile Include="AccessorsObsolete\RolesContactAccessor.cs" />
     <Compile Include="AccessorsObsolete\UriContactAccessor.cs" />
     <Compile Include="AccessorsObsolete\TelecomContactAccessor.cs" />
-    <Compile Include="AccessorsObsolete\LegalPersonAccessor.cs" />
-    <Compile Include="AccessorsObsolete\NaturalPersonAccessor.cs" />
     <Compile Include="AccessorsObsolete\MailContactAccessor.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\Repository.cs" />
