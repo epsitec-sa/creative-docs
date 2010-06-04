@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter = x => this.Entity.Address.Location = x,
 				Items = CoreProgram.Application.Data.GetLocations (),
 				ToTextArrayConverter = x => new string[] { x.PostalCode, x.Name },
-				ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, " ", x.Name)
+				ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name)
 			};
 			locationCtrl.Attach (locationHint);
 
