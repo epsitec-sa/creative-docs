@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var group = builder.CreateEditionGroupingTile ("Data.LegalPerson", "Personne morale");
 			var tile = builder.CreateEditionTile (group, this.Entity);
 
+			builder.CreateFooterEditorTile ();
+
 			builder.CreateTextField (tile.Container, 0, "Nom complet", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
 			builder.CreateTextField (tile.Container, 150, "Nom court", this.Entity.ShortName, x => this.Entity.ShortName = x, Validators.StringValidator.Validate);
 			builder.CreateMargin (tile.Container, true);
