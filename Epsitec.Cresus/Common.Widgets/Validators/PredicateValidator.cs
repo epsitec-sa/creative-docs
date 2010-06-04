@@ -6,15 +6,8 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Widgets.Validators
 {
-
 	/// <summary>
-	/// This delegate represents a predicate, i.e. a function with no arguments
-	/// returning a boolean value.
-	/// </summary>
-	public delegate bool Predicate();
-
-	/// <summary>
-	/// This Validator uses a delegate given by the user to validate its widget.
+	/// The <c>PredicateValidator</c> class uses a predicate to validate its widget.
 	/// </summary>
 	public class PredicateValidator : AbstractValidator
 	{
@@ -41,7 +34,7 @@ namespace Epsitec.Common.Widgets.Validators
 		/// </summary>
 		/// <param name="widget">The widget to validate.</param>
 		/// <param name="predicate">The delegate used to validate.</param>
-		public PredicateValidator(Widget widget, Predicate predicate)
+		public PredicateValidator(Widget widget, System.Func<bool> predicate)
 			: base (widget)
 		{
 			this.Predicate = predicate;
@@ -51,15 +44,25 @@ namespace Epsitec.Common.Widgets.Validators
 		/// Gets or sets the delegate used to validate the widget.
 		/// </summary>
 		/// <value>The predicate.</value>
-		public Predicate Predicate
+		public System.Func<bool> Predicate
 		{
-			get;
-			set;
+			get
+			{
+				return this.predicate;
+			}
+			set
+			{
+				if (this.predicate != value)
+                {
+					this.predicate = value;
+					this.SetState (ValidationState.Dirty);
+                }
+			}
 		}
 
 		/// <summary>
-		/// Validates the widget based on the result of this instance's predicate. If this
-		/// instance's predicate is not set, the validation state is set to Unknown.
+		/// Validates the widget based on the result of the predicate. If this
+		/// predicate is not set, the validation state will be set to <c>Unknown</c>.
 		/// </summary>
 		public override void Validate()
 		{
@@ -77,6 +80,6 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 
+		private System.Func<bool> predicate;
 	}
-
 }

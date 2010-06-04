@@ -79,8 +79,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.acceptRejectBehavior.RejectClicked -= this.HandleAcceptRejectRejectClicked;
 				this.acceptRejectBehavior.AcceptClicked -= this.HandleAcceptRejectAcceptClicked;
-				
-				this.acceptRejectBehavior = null;
 			}
 			
 			base.Dispose (disposing);
@@ -245,6 +243,6 @@ namespace Epsitec.Common.Widgets
 		}		
 		
 		
-		private Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
+		private readonly Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
 	}
 }
