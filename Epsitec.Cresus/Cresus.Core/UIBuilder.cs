@@ -378,7 +378,6 @@ namespace Epsitec.Cresus.Core
 			var showButton = new Button
 			{
 				Parent = container,
-				ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
 				Text = "<m>V</m>oir",
 				PreferredWidth = 40,
 				PreferredHeight = 20,
@@ -392,7 +391,6 @@ namespace Epsitec.Cresus.Core
 			var createButton = new Button
 			{
 				Parent = container,
-				ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
 				Text = "<m>C</m>réer",
 				PreferredWidth = 40,
 				PreferredHeight = 20,
@@ -429,7 +427,6 @@ namespace Epsitec.Cresus.Core
 					{
 						this.controller.Orchestrator.CloseSubViews (this.controller);
 						tile.SetSelected (false);
-						showButton.ActiveState = ActiveState.No;
 					}
 					else
 					{
@@ -439,7 +436,6 @@ namespace Epsitec.Cresus.Core
 						{
 							this.controller.Orchestrator.ShowSubView (this.controller, newController);
 							tile.SetSelected (true);
-							showButton.ActiveState = ActiveState.Yes;
 						}
 					}
 				};

@@ -196,6 +196,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				}
 			}
 
+			if (!this.IsReadOnly)
+			{
+				if (this.IsSelected)
+				{
+					return Widgets.TileArrowMode.VisibleDirect;
+				}
+			}
+
 			return Widgets.TileArrowMode.None;
 		}
 
