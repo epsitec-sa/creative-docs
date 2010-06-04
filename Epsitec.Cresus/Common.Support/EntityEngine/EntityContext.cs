@@ -39,6 +39,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
 
+			this.baseEntityId = new Dictionary<Druid, Druid> ();
+			this.heritedEntityIds = new Dictionary<Druid, IEnumerable<Druid>> ();
+
+			this.entityFields = new Dictionary<Druid, IEnumerable<StructuredTypeField>> ();
+
 			this.dataGeneration = 1;
 		}
 
@@ -313,7 +318,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entityType.GetFieldIds ();
 		}
 
+
 		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
+		{
+			if (!this.entityFields.ContainsKey (id))
+			{
+				this.entityFields[id] = this.ComputeEntityFieldDefinitions (id).ToArray ();
+			}
+
+			return this.entityFields[id];
+		}
+
+		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid id)
 		{
 			IStructuredType entityType = this.GetStructuredType (id);
 
@@ -327,6 +343,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				yield return entityType.GetField (fieldId);
 			}
 		}
+
 
 		public IEnumerable<StructuredTypeField> GetEntityLocalFieldDefinitions(Druid id)
 		{
@@ -406,9 +423,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public Druid GetBaseEntityId(Druid id)
+		public Druid GetBaseEntityId(Druid entityId)
 		{
-			return this.GetHeritedEntityIds (id).Last ();
+			if (!this.baseEntityId.ContainsKey (entityId))
+			{
+				this.baseEntityId[entityId] = this.GetHeritedEntityIds (entityId).Last ();
+			}
+
+			return this.baseEntityId[entityId];
 		}
 
 
@@ -425,12 +447,23 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns></returns>
 		public IEnumerable<Druid> GetHeritedEntityIds(Druid entityId)
 		{
+			if (!this.heritedEntityIds.ContainsKey (entityId))
+			{
+				this.heritedEntityIds[entityId] = this.ComputeHeritedEntityIds (entityId).ToArray ();
+			}
+
+			return this.heritedEntityIds[entityId];
+		}
+
+
+		private IEnumerable<Druid> ComputeHeritedEntityIds(Druid entityId)
+		{
 			Druid currentId = entityId;
 
 			while (currentId.IsValid)
 			{
 				yield return currentId;
-				
+
 				currentId = (this.GetStructuredType (currentId) as StructuredType).BaseTypeId;
 			}
 		}
@@ -1058,6 +1091,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 		private readonly string name;
+
+		private readonly Dictionary<Druid, Druid> baseEntityId;
+		private readonly Dictionary<Druid, IEnumerable<Druid>> heritedEntityIds;
+
+		private readonly Dictionary<Druid, IEnumerable<StructuredTypeField>> entityFields;
 
 		private long dataGeneration;
 		private int suspendConstraintChecking;

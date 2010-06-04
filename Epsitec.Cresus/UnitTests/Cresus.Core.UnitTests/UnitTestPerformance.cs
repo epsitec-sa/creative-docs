@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core
 						repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count ();
 		            }
 		        },
-		        5
+				UnitTestPerformance.nbRuns
 		    );
 			
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 		            TestHelper.extendString (new EntityType().GetType().Name, 30) + "\twarmup: true\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<UriContactEntity> (example).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<UriContactEntity> (example).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<LocationEntity> (example).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<LocationEntity> (example).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<LegalPersonEntity> (example).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<LegalPersonEntity> (example).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<AbstractContactEntity> (example).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<AbstractContactEntity> (example).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Core
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<NaturalPersonEntity> (example).Count (),
-		            5
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<NaturalPersonEntity> (example).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -463,13 +463,13 @@ namespace Epsitec.Cresus.Core
 
 		        MailContactEntity example = new MailContactEntity ()
 		        {
-					LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001))),
+					LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize]))),
 		        };
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => repository.GetEntitiesByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
-		            1
+					UnitTestPerformance.nbRuns
 		        );
 		    }
 		}
@@ -492,7 +492,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
 					() => repository.GetEntitiesByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
-					1
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.Core
 				TestHelper.MeasureAndDisplayTime (
 					"bulkMode: " + bulkMode,
 					() => repository.GetReferencers (address).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
@@ -541,22 +541,77 @@ namespace Epsitec.Cresus.Core
 			{
 				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
 
-				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001)));
+				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
 				TestHelper.MeasureAndDisplayTime (
 					"bulkMode: " + bulkMode,
 					() => repository.GetReferencers (person).Count (),
-					5
+					UnitTestPerformance.nbRuns
 				);
 			}
 		}
 
 
-				
-		private static bool createDatabase = false;
+		[TestMethod]
+		public void DeleteEntities()
+		{
+			TestHelper.PrintStartTest ("DeleteEntities");
+
+			if (UnitTestPerformance.runDeleteTests)
+			{
+				this.DeleteEntity<NaturalPersonEntity> (1000000000001, false);
+				this.DeleteEntity<NaturalPersonEntity> (1000000000002, true);
+
+				this.DeleteEntity<AbstractContactEntity> (1000000000001, false);
+				this.DeleteEntity<AbstractContactEntity> (1000000000002, true);
+
+				this.DeleteEntity<RegionEntity> (1000000000001, false);
+				this.DeleteEntity<RegionEntity> (1000000000002, true);
+
+				this.DeleteEntity<ContactRoleEntity> (1000000000001, false);
+				this.DeleteEntity<ContactRoleEntity> (1000000000002, true);
+			}
+		}
 
 
-		private static DatabaseSize databaseSize = DatabaseSize.Small;
+		public void DeleteEntity<EntityType>(long id, bool bulkMode) where EntityType : AbstractEntity, new()
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (id)));
+
+				TestHelper.MeasureAndDisplayTime (
+					TestHelper.extendString (entity.GetType ().Name, 30) + "\tbulkMode: " + bulkMode,
+					() =>
+					{
+						dataContext.DeleteEntity (entity);
+						dataContext.SaveChanges ();
+					},
+					1
+				);
+			}
+		}
+
+
+		private readonly static Dictionary<DatabaseSize, long> legalPersonId = new Dictionary<DatabaseSize, long> ()
+		{
+			{DatabaseSize.Small,	1000000000101},
+			{DatabaseSize.Medium,	1000000001001},
+			{DatabaseSize.Large,	1000000010001},
+			{DatabaseSize.Huge,		1000000100001},
+		};
+
+
+		private readonly static int nbRuns = 5;		
+
+
+		private readonly static bool createDatabase = false;
+
+
+		private readonly static bool runDeleteTests = true;
+
+
+		private readonly static DatabaseSize databaseSize = DatabaseSize.Large;
 
 
 	}

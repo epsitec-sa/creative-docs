@@ -30,30 +30,15 @@ namespace Epsitec.Cresus.Core
 			{
 
 #if false
-				test.RetrieveAllData<AbstractPersonEntity> (false);
-				test.RetrieveAllData<NaturalPersonEntity> (false);
-				test.RetrieveAllData<LegalPersonEntity> (false);
-				test.RetrieveAllData<LegalPersonTypeEntity> (false);
-				test.RetrieveAllData<PersonTitleEntity> (false);
-				test.RetrieveAllData<PersonGenderEntity> (false);
-				test.RetrieveAllData<AbstractContactEntity> (false);
-				test.RetrieveAllData<ContactRoleEntity> (false);
-				test.RetrieveAllData<CommentEntity> (false);
-				test.RetrieveAllData<MailContactEntity> (false);
-				test.RetrieveAllData<AddressEntity> (false);
-				test.RetrieveAllData<StreetEntity> (false);
-				test.RetrieveAllData<PostBoxEntity> (false);
-				test.RetrieveAllData<LocationEntity> (false);
-				test.RetrieveAllData<RegionEntity> (false);
-				test.RetrieveAllData<CountryEntity> (false);
-				test.RetrieveAllData<TelecomContactEntity> (false);
-				test.RetrieveAllData<TelecomTypeEntity> (false);
-				test.RetrieveAllData<UriContactEntity> (false);
-				test.RetrieveAllData<UriSchemeEntity> (false);
+				test.RetrieveAllData ();
+#endif
 
+
+#if true
+				test.RetrieveRequestedData ();
 #endif
 	
-#if true		
+#if false		
 				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
 				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
 
