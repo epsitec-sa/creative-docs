@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var group = builder.CreateEditionGroupingTile ("Data.NaturalPerson", "Titre");
 			var tile = builder.CreateEditionTile (group, this.Entity);
 
+			builder.CreateFooterEditorTile ();
+
 			builder.CreateTextField (tile.Container, 0, "Titre", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);

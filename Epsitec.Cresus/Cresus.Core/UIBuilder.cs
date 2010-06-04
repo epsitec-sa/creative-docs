@@ -134,72 +134,12 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
-#if false
-			var tile = new FrameBox
-			{
-				Parent = this.container,
-				Dock = DockStyle.Top,
-			};
-
-#if false
-			var title = new StaticText
-			{
-				Parent = tile,
-				Dock = DockStyle.Fill,
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Text = "Sous-titre",
-			};
-#endif
-
-			var closeButton = new GlyphButton
-			{
-				Parent = tile,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
-				GlyphShape = GlyphShape.Close,
-				Dock = DockStyle.Right,
-				//?GlyphShape = GlyphShape.ArrowLeft,
-				//?Dock = DockStyle.Left,
-				PreferredSize = new Size (18, 18),
-				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 2-1),
-				//?Margins = new Margins (2, Widgets.ArrowedTileArrow.ArrowBreadth+2, 2, 2-1),
-			};
-
-
-			var controller   = this.controller;
-			var orchestrator = controller.Orchestrator;
-
-			closeButton.Clicked +=
-				delegate
-				{
-					orchestrator.CloseView (controller);
-				};
-#endif
 		}
 
 		public void CreateFooterEditorTile()
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
-#if false
-			var tile = new EditionTile
-			{
-				Parent = this.container,
-				Dock = DockStyle.Top,
-				ArrowLocation = Direction.Right,
-				IsReadOnly = false
-			};
-
-			var closeButton = new Button
-			{
-				Parent = tile,
-				Text = "Fermer",
-				PreferredWidth = 75,
-				Dock = DockStyle.Right,
-				Margins = new Margins(0, Widgets.ArrowedTileArrow.ArrowBreadth+10, 10, 10),
-			};
-
-			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
-#endif
 			var closeButton = new GlyphButton
 			{
 				Parent = this.container,
@@ -377,37 +317,39 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var showButton = new Button
+			var showButton = new GlyphButton
 			{
 				Parent = container,
-				Text = "<m>V</m>oir",
-				PreferredWidth = 40,
+				GlyphShape = GlyphShape.ArrowRight,
+				PreferredWidth = 20,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (5, 0, 0, 0),
-				Visibility = false,
+				Enable = false,
 				AutoFocus = false,
-//-				TabIndex = ++this.tabIndex,
-			};
-
-			var createButton = new Button
-			{
-				Parent = container,
-				Text = "<m>C</m>réer",
-				PreferredWidth = 40,
-				PreferredHeight = 20,
-				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
-				Visibility = false,
-				AutoFocus = false,
-//-				TabIndex = ++this.tabIndex,
 			};
 
 			editor.SelectedItemChanged +=
 				delegate
 				{
-					showButton.Visibility = !editor.InError && editor.HasItemValue;
-					createButton.Visibility = editor.InError;
+					if (editor.InError)
+					{
+						showButton.GlyphShape = GlyphShape.Plus;
+						showButton.Enable = true;
+					}
+					else
+					{
+						if (editor.HasItemValue)
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = true;
+						}
+						else
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = false;
+						}
+					}
 
 					if (editor.SelectedItemIndex > -1)
 					{
@@ -418,8 +360,24 @@ namespace Epsitec.Cresus.Core
 			editor.TextChanged +=
 				delegate
 				{
-					showButton.Visibility = !editor.InError && editor.HasItemValue;
-					createButton.Visibility = editor.InError;
+					if (editor.InError)
+					{
+						showButton.GlyphShape = GlyphShape.Plus;
+						showButton.Enable = true;
+					}
+					else
+					{
+						if (editor.HasItemValue)
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = true;
+						}
+						else
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = false;
+						}
+					}
 				};
 
 			showButton.Clicked +=
@@ -440,11 +398,6 @@ namespace Epsitec.Cresus.Core
 							tile.SetSelected (true);
 						}
 					}
-				};
-
-			createButton.Clicked +=
-				delegate
-				{
 				};
 
 			if (accessor != null)
@@ -479,6 +432,33 @@ namespace Epsitec.Cresus.Core
 
 			// TODO: câbler l'événement MultiSelectionChanged
 				
+			return combo;
+		}
+
+		public Widget CreateDetailed(EditionTile tile, int width, string label, bool allowMultipleSelection, object initialValue, System.Action<object> valueSetter)
+		{
+			tile.AllowSelection = true;
+
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var combo = new Widgets.DetailedCombo
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 5, 10),
+				AllowMultipleSelection = allowMultipleSelection,
+				TabIndex = ++this.tabIndex,
+			};
+
+			// TODO: Initialiser le widget DetailedCombo
+
 			return combo;
 		}
 

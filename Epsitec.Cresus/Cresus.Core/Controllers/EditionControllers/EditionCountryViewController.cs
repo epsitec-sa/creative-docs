@@ -45,6 +45,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var group = builder.CreateEditionGroupingTile ("Data.Mail", "Pays");
 			var tile = builder.CreateEditionTile (group, this.Entity);
 
+			builder.CreateFooterEditorTile ();
+
 			builder.CreateTextField (tile.Container, 0, "Pays", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
 			builder.CreateTextField (tile.Container, 150, "Code ISO à deux lettres", this.Entity.Code, x => this.Entity.Code = x, Validators.StringValidator.Validate);
 
