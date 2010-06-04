@@ -17,21 +17,33 @@ namespace Epsitec.Common.Types.Converters
 			return date == Date.Null ? null : date.ToDateTime ().ToShortDateString ();
 		}
 
-		public override Date? ConvertFromString(string text)
+		public override ConversionResult<Date> ConvertFromString(string text)
 		{
 			if (string.IsNullOrWhiteSpace (text))
             {
-				return null;
+				return new ConversionResult<Date>
+				{
+					IsNull = true
+				};
             }
 			
 			System.DateTime result;
 
 			if (System.DateTime.TryParse (text, System.Globalization.CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out result))
 			{
-				return new Date (result);
+				return new ConversionResult<Date>
+				{
+					IsNull = false,
+					Value = new Date (result)
+				};
 			}
-			
-			return null;
+			else
+			{
+				return new ConversionResult<Date>
+				{
+					IsInvalid = true,
+				};
+			}
 		}
 
 		public override bool CanConvertFromString(string text)

@@ -20,7 +20,6 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="setter">The setter.</param>
 		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
 		public static Marshaler Create<T>(System.Func<T> getter, System.Action<T> setter)
-			where T : struct
 		{
 			return new Marshalers.NonNullableMarshaler<T>
 			{
@@ -29,7 +28,6 @@ namespace Epsitec.Common.Types.Converters
 				InitialValue = getter (),
 			};
 		}
-
 
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.

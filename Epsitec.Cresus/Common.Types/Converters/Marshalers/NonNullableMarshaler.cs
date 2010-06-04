@@ -7,7 +7,6 @@ using System.Linq;
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
 	public class NonNullableMarshaler<T> : GenericMarshaler<T, T>
-			where T : struct
 	{
 		public override string GetStringValue()
 		{

@@ -131,6 +131,7 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="Converters\ConversionResult.cs" />
+    <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\DateConverter.cs" />
     <Compile Include="Converters\GenericConversionResult.cs" />
     <Compile Include="Converters\GenericConverter.cs" />

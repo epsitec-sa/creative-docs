@@ -119,9 +119,12 @@ namespace Epsitec.Common.Types.Converters
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			foreach (char c in text)
+			if (text != null)
 			{
-				buffer.Append (TextConverter.ConvertToEntity (c));
+				foreach (char c in text)
+				{
+					buffer.Append (TextConverter.ConvertToEntity (c));
+				}
 			}
 
 			return buffer.ToString ();
