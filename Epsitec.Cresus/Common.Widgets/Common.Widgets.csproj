@@ -193,6 +193,7 @@
     <Compile Include="ScrollListMultiSelect.cs" />
     <Compile Include="FlatTextField.cs" />
     <Compile Include="ValidationState.cs" />
+    <Compile Include="Validators\MarshalerValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
     <Compile Include="WindowPlacement.cs" />
     <Compile Include="FocusChangingEventArgs.cs" />
