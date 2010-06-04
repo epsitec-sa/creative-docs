@@ -127,7 +127,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			return width;
-#else
+#endif
+#if false
 			double width = 300 - 300*(columnCount-columnIndex-1)*0.2;
 
 			if (width < ViewLayoutController.minimalWidth)
@@ -136,6 +137,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			
 			return width;
+#endif
+#if true
+			return 300;
 #endif
 		}
 
