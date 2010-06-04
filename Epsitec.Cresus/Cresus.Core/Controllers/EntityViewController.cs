@@ -81,6 +81,18 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
+			if (entity is Entities.PersonTitleEntity)
+			{
+				if (mode == ViewControllerMode.Summary)
+				{
+					return new SummaryTitleViewController (name, entity as Entities.PersonTitleEntity);
+				}
+				else
+				{
+					return new EditionTitleViewController (name, entity as Entities.PersonTitleEntity);
+				}
+			}
+
 			if (entity is Entities.CountryEntity)
 			{
 				if (mode == ViewControllerMode.Summary)

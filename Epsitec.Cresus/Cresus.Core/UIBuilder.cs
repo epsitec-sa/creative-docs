@@ -348,6 +348,8 @@ namespace Epsitec.Cresus.Core
 
 		public Widgets.HintEditor CreateHintEditor(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
 		{
+			tile.AllowSelection = true;
+
 			var staticText = new StaticText
 			{
 				Parent = tile.Container,
