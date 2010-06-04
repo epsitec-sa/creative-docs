@@ -52,16 +52,21 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
+		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example, bool loadFromDatabase) where EntityType : AbstractEntity
 		{
 			foreach (EntityData entityData in this.GetEntitiesData (example))
 			{
-				yield return this.DataContext.ResolveEntity (entityData) as EntityType;
+				EntityType entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as EntityType;
+
+				if (entity != null)
+				{
+					yield return entity;
+				}
 			}
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, bool loadFromDatabase)
 		{
 			EntityDataMapping targetMapping = this.DataContext.FindEntityDataMapping (target);
 
@@ -71,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
 					{
-						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target))
+						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target, loadFromDatabase))
 						{
 							yield return item;
 						}
@@ -79,9 +84,9 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
-		
 
-		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target)
+
+		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target, bool loadFromDatabase)
 		{
 			Druid sourceEntityId = sourceFieldPath.EntityId;
 			string sourceFieldId = sourceFieldPath.Fields.First ();
@@ -101,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 			
-			return this.GetByExample (example).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
+			return this.GetByExample (example, loadFromDatabase).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
 		}
 
 

@@ -138,9 +138,9 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity(EntityData entityData)
+		public AbstractEntity ResolveEntity(EntityData entityData, bool loadFromDatabase)
 		{
-			return this.InternalResolveEntity (entityData);
+			return this.InternalResolveEntity (entityData, loadFromDatabase);
 		}
 
 
@@ -286,7 +286,8 @@ namespace Epsitec.Cresus.DataLayer
 					
 					this.RemoveEntityValueData (entity, mapping.RowKey);
 					this.RemoveEntitySourceReferenceData (entity, mapping.RowKey);
-					this.RemoveEntityTargetReferenceData (entity);
+					this.RemoveEntityTargetReferenceDataInMemory (entity);
+					this.RemoveEntityTargetReferenceDataInDatabase (entity);
 				}
 			}
 		}
@@ -323,12 +324,14 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void RemoveEntityTargetReferenceData(AbstractEntity entity)
+		private void RemoveEntityTargetReferenceDataInMemory(AbstractEntity entity)
 		{
-			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.DbInfrastructure, this).GetReferencers (entity))
+			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.DbInfrastructure, this).GetReferencers (entity, false))
 			{
 				AbstractEntity sourceEntity = item.Item1;
 				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
+
+				// TODO "Silently" modify the entities, so that they won't be saved back if they are not modified otherwise.
 
 				if (field.Relation == FieldRelation.Reference)
 				{
@@ -338,6 +341,51 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					sourceEntity.InternalGetFieldCollection (field.Id).Remove (entity);
 				}
+			}
+		}
+
+
+		private void RemoveEntityTargetReferenceDataInDatabase(AbstractEntity entity)
+		{
+			EntityDataMapping targetMapping = this.FindEntityDataMapping (entity);
+			
+			List<EntityFieldPath> sources = new List<EntityFieldPath> ();
+
+			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			{
+				sources.AddRange (this.DbInfrastructure.GetSourceReferences (currentId));
+			}
+
+			Database.Collections.SqlFieldList fields = new Database.Collections.SqlFieldList ();
+			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbKey.RawTypeForStatus));
+
+			Database.Collections.SqlFieldList conditions = new Database.Collections.SqlFieldList ();
+			SqlField nameColId = SqlField.CreateName (Tags.ColumnRefTargetId);
+			SqlField constantId = SqlField.CreateConstant (targetMapping.RowKey.Id, DbKey.RawTypeForId);
+
+			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
+
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction())
+			{
+				transaction.SqlBuilder.Clear ();
+
+				foreach (EntityFieldPath source in sources)
+				{
+					string sourceTableName = this.SchemaEngine.GetDataTableName (source.EntityId);
+					string sourceColumnName = this.SchemaEngine.GetDataColumnName (source.Fields[0]);
+					string relationTableName = DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
+					DbTable relationTable = this.DbInfrastructure.ResolveDbTable (relationTableName);
+					
+					transaction.SqlBuilder.UpdateData (relationTable.GetSqlName (), fields, conditions);
+
+					System.Data.IDbCommand command = transaction.SqlBuilder.Command;
+					command.Transaction = transaction.Transaction;
+					command.ExecuteNonQuery ();
+
+					transaction.SqlBuilder.Clear ();
+				}
+
+				transaction.Commit ();
 			}
 		}
 
@@ -442,13 +490,13 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		internal AbstractEntity InternalResolveEntity(EntityData entityData)
+		internal AbstractEntity InternalResolveEntity(EntityData entityData, bool loadFromDatabase)
 		{
 			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (entityData.LoadedEntityId);
 
 			AbstractEntity entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, baseEntityId);
 
-			if (entity == null)
+			if (entity == null && loadFromDatabase)
 			{
 				entity = this.EntityContext.CreateEmptyEntity (entityData.RealEntityId);
 

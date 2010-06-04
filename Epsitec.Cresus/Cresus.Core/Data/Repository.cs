@@ -52,13 +52,13 @@ namespace Epsitec.Cresus.Core.Data
 
 		public IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
 		{
-			return this.dataBrowser.GetByExample<EntityType> (example);
+			return this.dataBrowser.GetByExample<EntityType> (example, true);
 		}
 
 
 		public IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
 		{
-			return this.dataBrowser.GetReferencers (target).Select (result => result.Item1);
+			return this.dataBrowser.GetReferencers (target, true).Select (result => result.Item1);
 		}
 
 

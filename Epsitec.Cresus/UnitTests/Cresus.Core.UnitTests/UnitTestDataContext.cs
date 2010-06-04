@@ -125,16 +125,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteRelation1()
+		public void DeleteRelationReference()
 		{
-			TestHelper.PrintStartTest ("Delete Relation 1");
+			TestHelper.PrintStartTest ("Delete Relation Reference");
 
-			this.DeleteRelation1 (false);
-			this.DeleteRelation1 (true);
+			this.DeleteRelationReference (false);
+			this.DeleteRelationReference (true);
 		}
 
 
-		public void DeleteRelation1(bool bulkMode)
+		public void DeleteRelationReference(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -161,16 +161,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteRelation2()
+		public void DeleteRelationCollection()
 		{
-			TestHelper.PrintStartTest ("Delete Relation 2");
+			TestHelper.PrintStartTest ("Delete Relation Collection");
 
-			this.DeleteRelation2 (false);
-			this.DeleteRelation2 (true);
+			this.DeleteRelationCollection (false);
+			this.DeleteRelationCollection (true);
 		}
 
 
-		public void DeleteRelation2(bool bulkMode)
+		public void DeleteRelationCollection(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -199,16 +199,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteEntity1()
+		public void DeleteEntityCollectionTargetInMemory()
 		{
-			TestHelper.PrintStartTest ("Delete Entity 1");
+			TestHelper.PrintStartTest ("Delete Entity Collection Target In Memory");
 
-			this.DeleteEntity1 (false);
-			this.DeleteEntity1 (true);
+			this.DeleteEntityCollectionTargetInMemory (false);
+			this.DeleteEntityCollectionTargetInMemory (true);
 		}
 
 
-		public void DeleteEntity1(bool bulkMode)
+		public void DeleteEntityCollectionTargetInMemory(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -237,16 +237,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteEntity2()
+		public void DeleteEntityReferenceTargetInMemory()
 		{
-			TestHelper.PrintStartTest ("Delete Entity 2");
+			TestHelper.PrintStartTest ("Delete Entity Reference Target In Memory");
 
-			this.DeleteEntity2 (false);
-			this.DeleteEntity2 (true);
+			this.DeleteEntityReferenceTargetInMemory (false);
+			this.DeleteEntityReferenceTargetInMemory (true);
 		}
 
 
-		public void DeleteEntity2(bool bulkMode)
+		public void DeleteEntityReferenceTargetInMemory(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -280,16 +280,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteEntity3()
+		public void DeleteEntityCollectionTargetInDatabase()
 		{
-			TestHelper.PrintStartTest ("Delete Entity 3");
+			TestHelper.PrintStartTest ("Delete Entity Collection Target In Database");
 
-			this.DeleteEntity3 (false);
-			this.DeleteEntity3 (true);
+			this.DeleteEntityCollectionTargetInDatabase (false);
+			this.DeleteEntityCollectionTargetInDatabase (true);
 		}
 
 
-		public void DeleteEntity3(bool bulkMode)
+		public void DeleteEntityCollectionTargetInDatabase(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -317,16 +317,16 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void DeleteEntity4()
+		public void DeleteEntityReferenceTargetInDatabase()
 		{
-			TestHelper.PrintStartTest ("Delete Entity 4");
+			TestHelper.PrintStartTest ("Delete Entity Reference Target In Database");
 
-			this.DeleteEntity4 (false);
-			this.DeleteEntity4 (true);
+			this.DeleteEntityReferenceTargetInDatabase (false);
+			this.DeleteEntityReferenceTargetInDatabase (true);
 		}
 
 
-		public void DeleteEntity4(bool bulkMode)
+		public void DeleteEntityReferenceTargetInDatabase(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
