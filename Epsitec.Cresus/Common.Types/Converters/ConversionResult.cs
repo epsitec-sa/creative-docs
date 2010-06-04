@@ -12,20 +12,11 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	/// <typeparam name="T">The type on which the converter operates.</typeparam>
 	public class ConversionResult<T> : GenericConversionResult
-		where T : struct
 	{
 		public T Value
 		{
 			get;
 			set;
-		}
-
-		public T? NullableValue
-		{
-			get
-			{
-				return this.IsNull ? null : (T?) this.Value;
-			}
 		}
 	}
 }

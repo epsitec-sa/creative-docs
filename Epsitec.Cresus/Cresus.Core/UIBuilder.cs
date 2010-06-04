@@ -26,13 +26,21 @@ namespace Epsitec.Cresus.Core
 			this.controller = controller;
 		}
 
+		public TitleTile CurrentGroupingTile
+		{
+			get
+			{
+				return this.groupingTile;
+			}
+		}
+
+
 		public TitleTile CreateEditionGroupingTile(string iconUri, string title)
 		{
-			var group = this.CreateSummaryGroupingTile (iconUri, title);
+			this.groupingTile = this.CreateSummaryGroupingTile (iconUri, title);
+			this.groupingTile.IsReadOnly = false;
 
-			group.IsReadOnly = false;
-
-			return group;
+			return this.groupingTile;
 		}
 
 		public TitleTile CreateSummaryGroupingTile(string iconUri, string title)
@@ -110,6 +118,24 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
+		public EditionTile CreateEditionTile(TitleTile parent = null)
+		{
+			if (parent == null)
+            {
+				parent = this.groupingTile;
+            }
+
+			var tile = new EditionTile
+			{
+				AutoHilite = false,
+				IsReadOnly = false,
+			};
+
+			parent.Items.Add (tile);
+
+			return tile;
+		}
+
 		public EditionTile CreateEditionTile(TitleTile parent, AbstractEntity entity)
 		{
 			var controller = new Controllers.TileController<AbstractEntity> ()
@@ -177,6 +203,11 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public TextField CreateTextField(EditionTile tile, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		{
+			return this.CreateTextField (tile.Container, width, label, marshaler);
+		}
+
 		public TextField CreateTextField(Widget embedder, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
 			var staticText = new StaticText
@@ -209,6 +240,11 @@ namespace Epsitec.Cresus.Core
 			UIBuilder.CreateTextFieldHandler (textField, marshaler);
 
 			return textField;
+		}
+
+		public TextField CreateTextField(EditionTile tile, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
+		{
+			return this.CreateTextField (tile.Container, width, label, initialValue, valueSetter, validator);
 		}
 
 		public TextField CreateTextField(Widget embedder, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
@@ -286,6 +322,17 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, HintEditorController<T> controller)
+			where T : AbstractEntity
+		{
+			var tile = this.CreateEditionTile ();
+			var hint = this.CreateHintEditor (tile, label, controller.GetValue (), null, x => controller.SetValue (x as T));
+
+			controller.Attach (hint);
+
+			return hint;
+		}
+		
 		public Widgets.HintEditor CreateHintEditor(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
 		{
 			tile.AllowSelection = true;
@@ -581,8 +628,13 @@ namespace Epsitec.Cresus.Core
 			};
 #endif
 		}
+
+		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)
+		{
+			this.CreateMargin (tile.Container, horizontalSeparator);
+		}
 		
-		public void CreateMargin(Widget embedder, bool horizontalSeparator)
+		public void CreateMargin(Widget embedder, bool horizontalSeparator = false)
 		{
 			if (horizontalSeparator)
 			{
@@ -777,5 +829,6 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreViewController controller;
 		private readonly Widget container;
 		private int tabIndex;
+		private TitleTile groupingTile;
 	}
 }

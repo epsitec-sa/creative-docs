@@ -7,7 +7,6 @@ using System.Linq;
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
 	public abstract class GenericMarshaler<T1, T2> : Marshaler
-			where T2 : struct
 	{
 		public System.Func<T1> ValueGetter
 		{

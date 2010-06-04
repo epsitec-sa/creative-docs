@@ -12,7 +12,15 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		public override string GetStringValue()
 		{
 			var value = this.GetValue ();
-			return this.Converter.ConvertToString (value);
+			
+			if (value.HasValue)
+			{
+				return this.Converter.ConvertToString (value.Value);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public override void SetStringValue(string text)

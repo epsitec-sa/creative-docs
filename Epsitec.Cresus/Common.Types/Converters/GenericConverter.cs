@@ -19,7 +19,6 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>The matching converter.</returns>
 		/// <exception cref="System.InvalidOperationException">Throws an invalid operation exception if there is not converter for the specified type.</exception>
 		public static GenericConverter<T> GetConverter<T>()
-			where T : struct
 		{
 			var converter = GenericConverter<T>.Instance;
 
@@ -37,7 +36,6 @@ namespace Epsitec.Common.Types.Converters
 		/// <typeparam name="T">The type for which a converter is required.</typeparam>
 		/// <returns>The type of the matching converter if it exists in the current assembly; otherwise, <c>null</c>.</returns>
 		protected static System.Type FindConverterType<T>()
-			where T : struct
 		{
 			var assembly = System.Reflection.Assembly.GetAssembly (typeof (GenericConverter));
 
@@ -54,31 +52,12 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	/// <typeparam name="T">The type on which the converter operates.</typeparam>
 	public abstract class GenericConverter<T> : GenericConverter
-		where T : struct
 	{
-		public string ConvertToString(T? value)
-		{
-			return value.HasValue ? this.ConvertToString (value.Value) : null;
-		}
-
 		public abstract string ConvertToString(T value);
 
-		public abstract T? ConvertFromString(string text);
+		public abstract ConversionResult<T> ConvertFromString(string text);
 
 		public abstract bool CanConvertFromString(string text);
-
-		public ConversionResult<T> GetConversionResult(string text)
-		{
-			bool canConvert = this.CanConvertFromString (text);
-			var  result     = this.ConvertFromString (text);
-
-			return new ConversionResult<T>
-			{
-				IsInvalid = !canConvert,
-				IsNull    = !result.HasValue,
-				Value     = result.HasValue ? result.Value : default (T)
-			};
-		}
 
 		public static readonly GenericConverter<T> Instance;
 
