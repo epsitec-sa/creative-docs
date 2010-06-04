@@ -70,7 +70,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			contryTile.AllowSelection = true;
 			var countryHint = builder.CreateHintEditor (contryTile, "Nom et code du pays", this.Entity.Address.Location.Country, null, x => this.Entity.Address.Location.Country = x as Entities.CountryEntity);
 			var countryCtrl = new HintEditorController<Entities.CountryEntity>
 			{
@@ -88,7 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (mainTile.Container, 0, "Boîte postale", this.Entity.Address.PostBox.Number, x => this.Entity.Address.PostBox.Number = x, Validators.StringValidator.Validate);
 			builder.CreateMargin (mainTile.Container, true);
 
-			locationTile.AllowSelection = true;
 			var locationHint = builder.CreateHintEditor (locationTile, "Numéro postal et ville", this.Entity.Address.Location, null, x => this.Entity.Address.Location = x as Entities.LocationEntity);
 			var locationCtrl = new HintEditorController<Entities.LocationEntity>
 			{
