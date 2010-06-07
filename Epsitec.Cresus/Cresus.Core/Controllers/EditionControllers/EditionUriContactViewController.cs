@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionUriContactViewController : EntityViewController<Entities.UriContactEntity>
+	public class EditionUriContactViewController : EditionViewController<Entities.UriContactEntity>
 	{
 		public EditionUriContactViewController(string name, Entities.UriContactEntity entity)
 			: base (name, entity)

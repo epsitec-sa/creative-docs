@@ -13,7 +13,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionNaturalPersonViewController : EntityViewController<Entities.NaturalPersonEntity>
+	public class EditionNaturalPersonViewController : EditionViewController<Entities.NaturalPersonEntity>
 	{
 		public EditionNaturalPersonViewController(string name, Entities.NaturalPersonEntity entity)
 			: base (name, entity)

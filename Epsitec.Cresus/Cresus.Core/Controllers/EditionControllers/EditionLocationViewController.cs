@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionLocationViewController : EntityViewController<Entities.LocationEntity>
+	public class EditionLocationViewController : EditionViewController<Entities.LocationEntity>
 	{
 		public EditionLocationViewController(string name, Entities.LocationEntity entity)
 			: base (name, entity)
