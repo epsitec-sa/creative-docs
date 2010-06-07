@@ -192,39 +192,41 @@ namespace Epsitec.Cresus.DataLayer
 		[Test]
 		public void Check03QueryByExample()
 		{
-			System.Diagnostics.Debug.WriteLine ("Query by example");
+			throw new System.NotImplementedException ();
+			
+			//System.Diagnostics.Debug.WriteLine ("Query by example");
 
-			DataBrowser browser = new DataBrowser (this.infrastructure, new DataContext (this.infrastructure));
-			List<string> lines = new List<string> ();
+			//DataBrowser browser = new DataBrowser (new DataContext (this.infrastructure));
+			//List<string> lines = new List<string> ();
 
-			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
-			{
-				throw new System.NotImplementedException ();
-
-				// The DataBrowser has been significantly modified and this way of doing things does not exist anymore.
+			//using (DbTransaction transaction = this.infrastructure.BeginTransaction ())
+			//{
 				
-				//DataQuery query = new DataQuery();
 
-				//query.Distinct = true;
+			//    The DataBrowser has been significantly modified and this way of doing things does not exist anymore.
 				
-				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63073]")));
-				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63083]")));
-				//query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
+			//    DataQuery query = new DataQuery();
+
+			//    query.Distinct = true;
 				
-				//AdresseEntity example = new AdresseEntity ();
-				//example.Npa = "*14*";
+			//    query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63073]")));
+			//    query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[63083]")));
+			//    query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
+				
+			//    AdresseEntity example = new AdresseEntity ();
+			//    example.Npa = "*14*";
 
-				//foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
-				//{
-				//    lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
-				//}
+			//    foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
+			//    {
+			//        lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
+			//    }
 
-				//throw new System.NotImplementedException ("See comments above");
+			//    throw new System.NotImplementedException ("See comments above");
 
-				//transaction.Commit ();
-			}
+			//    transaction.Commit ();
+			//}
 
-			System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
+			//System.Diagnostics.Debug.WriteLine ("Loaded " + lines.Count + " records");
 		}
 
 		[Test]

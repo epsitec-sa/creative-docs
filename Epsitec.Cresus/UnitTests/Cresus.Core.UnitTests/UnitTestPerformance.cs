@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void RetrieveAllDataWithWarmup()
 		{
-		    TestHelper.PrintStartTest ("Retrieve all data with warmup");
+		    TestHelper.PrintStartTest ("Retrieve all data");
 
 			this.RetrieveAllData<AbstractPersonEntity> (false);
 		    this.RetrieveAllData<AbstractPersonEntity> (true);
@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Core
 		        {
 		            using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		            {
-		                Repository repository = new Repository (Database.DbInfrastructure, dataContext);
-						repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count ();
+		                DataBrowser dataBrowser = new DataBrowser (dataContext);
+						dataBrowser.GetByExample<EntityType> (new EntityType ()).Count ();
 		            }
 		        },
 				UnitTestPerformance.nbRuns
@@ -140,12 +140,12 @@ namespace Epsitec.Cresus.Core
 			
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
-		        repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count ();
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
+		        dataBrowser.GetByExample<EntityType> (new EntityType ()).Count ();
 
 		        TestHelper.MeasureAndDisplayTime (
 		            TestHelper.extendString (new EntityType().GetType().Name, 30) + "\twarmup: true\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<EntityType> (new EntityType ()).Count (),
+		            () => dataBrowser.GetByExample<EntityType> (new EntityType ()).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        UriContactEntity example = new UriContactEntity ()
 		        {
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<UriContactEntity> (example).Count (),
+		            () => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<UriContactEntity> (example).Count (),
+					() => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        LocationEntity example = new LocationEntity ()
 		        {
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<LocationEntity> (example).Count (),
+		            () => dataBrowser.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				LocationEntity example = new LocationEntity ()
 				{
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<LocationEntity> (example).Count (),
+					() => dataBrowser.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        LegalPersonEntity example = new LegalPersonEntity ()
 		        {
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<LegalPersonEntity> (example).Count (),
+		            () => dataBrowser.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<LegalPersonEntity> (example).Count (),
+					() => dataBrowser.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        AbstractContactEntity example = new AbstractContactEntity ()
 		        {
@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<AbstractContactEntity> (example).Count (),
+		            () => dataBrowser.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -369,7 +369,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<AbstractContactEntity> (example).Count (),
+					() => dataBrowser.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        NaturalPersonEntity example = new NaturalPersonEntity ();
 		        example.Contacts.Add (new MailContactEntity ()
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<NaturalPersonEntity> (example).Count (),
+		            () => dataBrowser.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<NaturalPersonEntity> (example).Count (),
+					() => dataBrowser.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Core
 		{
 		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		    {
-		        Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 		        MailContactEntity example = new MailContactEntity ()
 		        {
@@ -468,7 +468,7 @@ namespace Epsitec.Cresus.Core
 
 		        TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => repository.GetEntitiesByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
+		            () => dataBrowser.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
 		        );
 		    }
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Core
 
 				TestHelper.MeasureAndDisplayTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
-					() => repository.GetEntitiesByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
+					() => dataBrowser.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -512,13 +512,13 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
 				TestHelper.MeasureAndDisplayTime (
 					"bulkMode: " + bulkMode,
-					() => repository.GetReferencers (address).Count (),
+					() => dataBrowser.GetReferencers (address).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -539,13 +539,13 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
 				TestHelper.MeasureAndDisplayTime (
 					"bulkMode: " + bulkMode,
-					() => repository.GetReferencers (person).Count (),
+					() => dataBrowser.GetReferencers (person).Count (),
 					UnitTestPerformance.nbRuns
 				);
 			}
@@ -605,13 +605,13 @@ namespace Epsitec.Cresus.Core
 		private readonly static int nbRuns = 5;		
 
 
-		private readonly static bool createDatabase = false;
+		private readonly static bool createDatabase = true;
 
 
 		private readonly static bool runDeleteTests = true;
 
 
-		private readonly static DatabaseSize databaseSize = DatabaseSize.Large;
+		private readonly static DatabaseSize databaseSize = DatabaseSize.Small;
 
 
 	}

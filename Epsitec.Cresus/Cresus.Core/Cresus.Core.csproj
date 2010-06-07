@@ -131,7 +131,6 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
-    <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="AccessorsObsolete\AbstractAccessor.cs" />
     <Compile Include="AccessorsObsolete\AbstractContactAccessor.cs" />
     <Compile Include="AccessorsObsolete\ComboInitializer.cs" />
