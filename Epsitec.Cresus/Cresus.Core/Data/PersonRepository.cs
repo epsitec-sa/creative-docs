@@ -8,22 +8,26 @@ using Epsitec.Cresus.DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core.Data
 {
+
 	
-	class PersonRepository : Repository
+	public class PersonRepository : Repository
 	{
 
-		public PersonRepository(DbInfrastructure datadbInfrastructure, DataContext dataContext)
-			: base (datadbInfrastructure, dataContext)
+		public PersonRepository(DataContext dataContext) : base (dataContext)
 		{
 		}
+
 
 		public IEnumerable<AbstractPersonEntity> GetAllPersons()
 		{
 			throw new System.NotImplementedException ();
-		
 		}
+
+
 	}
+
 
 }

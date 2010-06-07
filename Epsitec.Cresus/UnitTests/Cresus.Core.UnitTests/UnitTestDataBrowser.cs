@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core
 
 
 	[TestClass]
-	public class UnitTestRepository
+	public class UnitTestDataBrowser
 	{
 
 
@@ -60,9 +60,9 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
 
 				Assert.IsTrue (persons.Length == 3);
 
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
 
 				Assert.IsTrue (persons.Length == 3);
 
@@ -115,11 +115,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 
@@ -142,11 +142,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample2 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 
@@ -169,11 +169,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Length == 2);
 
@@ -198,11 +198,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample4 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 
@@ -225,11 +225,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetIncorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -250,11 +250,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetIncorrectExample2 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -274,11 +274,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetIncorrectExample3 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -299,11 +299,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetIncorrectExample4 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -324,12 +324,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons1 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
-				NaturalPersonEntity[] persons2 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons1 = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons2 = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons1.Count () == 1);
 				Assert.IsTrue (persons2.Count () == 1);
@@ -356,17 +356,17 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred = repository.GetEntityByExample<NaturalPersonEntity> (alfredExample);
+				NaturalPersonEntity alfred = dataBrowser.GetByExample<NaturalPersonEntity> (alfredExample).FirstOrDefault ();
 
 				UriContactEntity contactExample = new UriContactEntity ()
 				{
 					NaturalPerson = alfred,
 				};
 
-				UriContactEntity[] contacts = repository.GetEntitiesByExample<UriContactEntity> (contactExample).ToArray ();
+				UriContactEntity[] contacts = dataBrowser.GetByExample<UriContactEntity> (contactExample).ToArray ();
 
 				Assert.IsTrue (contacts.Length == 2);
 
@@ -392,19 +392,19 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				UriContactEntity contactExample = new UriContactEntity ()
 				{
 					Uri = "alfred@coucou.com",
 				};
 
-				UriContactEntity contact = repository.GetEntityByExample (contactExample);
+				UriContactEntity contact = dataBrowser.GetByExample (contactExample).FirstOrDefault ();
 
 				NaturalPersonEntity alfredExample = new NaturalPersonEntity ();
 				alfredExample.Contacts.Add (contact);
 
-				NaturalPersonEntity alfred = repository.GetEntityByExample (alfredExample);
+				NaturalPersonEntity alfred = dataBrowser.GetByExample (alfredExample).FirstOrDefault ();
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
 			}
@@ -425,12 +425,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred = repository.GetEntityByExample<NaturalPersonEntity> (alfredExample);
+				NaturalPersonEntity alfred = dataBrowser.GetByExample<NaturalPersonEntity> (alfredExample).FirstOrDefault ();
 
-				AbstractEntity[] referencers = repository.GetReferencers (alfred).ToArray ();
+				AbstractEntity[] referencers = dataBrowser.GetReferencers (alfred).Select (r => r.Item1).ToArray ();
 
 				Assert.IsTrue (referencers.Length == 2);
 
@@ -454,16 +454,16 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				UriContactEntity contactExample = new UriContactEntity ()
 				{
 					Uri = "alfred@coucou.com",
 				};
 
-				UriContactEntity contact = repository.GetEntityByExample (contactExample);
+				UriContactEntity contact = dataBrowser.GetByExample (contactExample).FirstOrDefault ();
 
-				AbstractEntity[] referencers = repository.GetReferencers (contact).ToArray ();
+				AbstractEntity[] referencers = dataBrowser.GetReferencers (contact).Select (r => r.Item1).ToArray ();
 
 				Assert.IsTrue (referencers.Length == 1);
 				Assert.IsTrue (referencers.OfType<NaturalPersonEntity> ().Any (p => Database2.CheckAlfred (p)));
@@ -485,11 +485,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -498,18 +498,18 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 
-				NaturalPersonEntity[] persons2 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons2 = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons2.Count () == 0);
 			}
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -532,11 +532,11 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -548,7 +548,7 @@ namespace Epsitec.Cresus.Core
 
 				dataContext.SaveChanges ();
 
-				NaturalPersonEntity[] persons2 = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons2 = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons2.Count () == 1);
 				Assert.IsTrue (persons2[0].Contacts.Count == 0);
@@ -557,11 +557,11 @@ namespace Epsitec.Cresus.Core
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
-				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons[0].Contacts.Count == 0);

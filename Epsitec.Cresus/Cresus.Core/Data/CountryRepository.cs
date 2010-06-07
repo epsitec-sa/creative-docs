@@ -10,18 +10,46 @@ using Epsitec.Cresus.DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core.Data
 {
 
-	class CountryRepository : GenericRepository<CountryEntity>
+
+	public class CountryRepository : Repository
 	{
 
-		public CountryRepository(DbInfrastructure dbInfrastructure, DataContext dataContext)
-			: base (dbInfrastructure, dataContext)
-		{
-			
+
+		public CountryRepository(DataContext dataContext) : base (dataContext)
+		{	
 		}
 
+
+		public CountryEntity CreateCountryExample()
+		{
+			return this.CreateExample<CountryEntity> ();
+		}
+
+
+		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example)
+		{
+			return this.GetEntitiesByExample<CountryEntity> (example);
+		}
+
+
+		public CountryEntity GetCountryByExample(CountryEntity example)
+		{
+			return this.GetEntityByExample<CountryEntity> (example);
+		}
+		
+
+		public IEnumerable<CountryEntity> GetAllCountries()
+		{
+			CountryEntity example = new Entities.CountryEntity ();
+
+			return this.GetCountriesByExample (example);
+		}
+
+		
 		public CountryEntity GetCountryByCode(string code)
 		{
 			CountryEntity example = new Entities.CountryEntity ()
@@ -29,8 +57,9 @@ namespace Epsitec.Cresus.Core.Data
 				Code = code,
 			};
 
-			return this.GetEntityByExample (example);
+			return this.GetCountryByExample (example);
 		}
+
 
 		public CountryEntity GetCountryByName(string name)
 		{
@@ -39,16 +68,11 @@ namespace Epsitec.Cresus.Core.Data
 				Name = name,
 			};
 
-			return this.GetEntityByExample (example);
+			return this.GetCountryByExample (example);
 		}
 
-		public IEnumerable<CountryEntity> GetAllCountries()
-		{
-			CountryEntity example = new Entities.CountryEntity ();
-
-			return this.GetEntitiesByExample (example);
-		}
 
 	}
+
 
 }

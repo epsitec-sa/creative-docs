@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void RemoveEntityTargetReferenceDataInMemory(AbstractEntity entity)
 		{
-			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this.DbInfrastructure, this).GetReferencers (entity, false))
+			foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in new DataBrowser (this).GetReferencers (entity, false))
 			{
 				AbstractEntity sourceEntity = item.Item1;
 				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());

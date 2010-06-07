@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core
 
 		private void SetupDataBrowser()
 		{
-			this.dataBrowser = new DataBrowser (this.infrastructure, this.dataContext);
+			this.dataBrowser = new DataBrowser (this.dataContext);
 		}
 
 		private bool ConnectToDatabase(DbAccess access)

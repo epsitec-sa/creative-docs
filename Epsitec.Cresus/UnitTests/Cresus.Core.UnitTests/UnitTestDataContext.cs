@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				Repository repository = new Repository (Database.DbInfrastructure, dataContext);
+				DataBrowser repository = new DataBrowser (dataContext);
 
-				UriContactEntity[] contacts = repository.GetEntitiesByExample<UriContactEntity> (new UriContactEntity ()).ToArray ();
+				UriContactEntity[] contacts = repository.GetByExample<UriContactEntity> (new UriContactEntity ()).ToArray ();
 
 				Assert.IsTrue (contacts.Length == 4);
 
