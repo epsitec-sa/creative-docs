@@ -11,6 +11,7 @@ using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -331,15 +332,28 @@ namespace Epsitec.Cresus.DataLayer
 				AbstractEntity sourceEntity = item.Item1;
 				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
 
-				// TODO "Silently" modify the entities, so that they won't be saved back if they are not modified otherwise.
+				using (sourceEntity.UseSilentUpdates ())
+				{
+					switch (field.Relation)
+					{
+						case FieldRelation.Reference:
+							sourceEntity.InternalSetValue (field.Id, null);
+							break;
+							
+						case FieldRelation.Collection:
 
-				if (field.Relation == FieldRelation.Reference)
-				{
-					sourceEntity.SetField<object> (field.Id, null);
-				}
-				else if (field.Relation == FieldRelation.Collection)
-				{
-					sourceEntity.InternalGetFieldCollection (field.Id).Remove (entity);
+							IList collection = sourceEntity.InternalGetFieldCollection (field.Id) as IList;
+
+							while (collection.Contains (entity))
+							{
+								collection.Remove (entity);
+							}
+
+							break;
+
+						default:
+							throw new System.InvalidOperationException ();
+					}
 				}
 			}
 		}

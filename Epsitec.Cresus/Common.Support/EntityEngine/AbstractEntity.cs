@@ -23,6 +23,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
 			this.context = EntityContext.Current;
+
+			this.defineOriginalValuesCount = 0;
+			this.silentUpdateCount = 0;
 		}
 
 		/// <summary>
@@ -37,16 +40,19 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				if (this.defineOriginalValuesCount > 0)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return this.defineOriginalValuesCount > 0;
 			}
 		}
+
+
+		public bool IsUpdateSilent
+		{
+			get
+			{
+				return this.silentUpdateCount > 0;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.
@@ -317,6 +323,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return new DefineOriginalValuesHelper (this);
 		}
+
+
+		public System.IDisposable UseSilentUpdates()
+		{
+			return new SilentUpdatesHelper (this);
+		}
+
 
 		internal void DisableCalculations()
 		{
@@ -627,8 +640,6 @@ namespace Epsitec.Common.Support.EntityEngine
 						list = new EntityCollection<AbstractEntity> (id, this, true);
 
 						this.InternalSetValue (id, list);
-
-						list = new EntityCollectionProxy<AbstractEntity> (id, this);
 					}
 				}
 				else
@@ -1146,50 +1157,111 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		internal void UpdateDataGeneration()
 		{
-			if (this.defineOriginalValuesCount == 0)
+			if (!this.IsUpdateSilent)
 			{
 				this.dataGeneration = this.context.DataGeneration;
 			}
 		}
 
-		#region DefineOriginalValuesHelper Class
+
+		#region Helper Classes
+
+
+		private abstract class Helper : System.IDisposable
+		{
+
+
+			protected AbstractEntity Entity
+			{
+				get;
+				private set;
+			}
+
+
+			protected bool Done
+			{
+				get;
+				private set;
+			}
+
+
+			public Helper(AbstractEntity entity)
+			{
+				this.Entity = entity;
+				this.Done = false;
+			}
+
+
+			~Helper()
+			{
+				throw new System.InvalidOperationException ("Caller forgot to call Dispose");
+			}
+
+
+			public void Dispose()
+			{
+				if (!this.Done && this.Entity != null)
+				{
+					this.Done = true;
+					this.Finish ();
+					
+					System.GC.SuppressFinalize (this);
+				}
+			}
+
+
+			protected abstract void Finish();
+
+
+		}
+
 
 		/// <summary>
 		/// The <c>DefineOriginalValuesHelper</c> is used by the <see cref="DefineOriginalValues"/>
 		/// method to manage the end of the definition phase; instances of this class
 		/// are meant to be used in a <c>using</c> block.
 		/// </summary>
-		private sealed class DefineOriginalValuesHelper : System.IDisposable
+		private class DefineOriginalValuesHelper : SilentUpdatesHelper
 		{
-			public DefineOriginalValuesHelper(AbstractEntity entity)
+			public DefineOriginalValuesHelper(AbstractEntity entity) : base (entity)
 			{
-				this.entity = entity;
-				System.Threading.Interlocked.Increment (ref this.entity.defineOriginalValuesCount);
+				System.Threading.Interlocked.Increment (ref this.Entity.defineOriginalValuesCount);
 			}
 
-			~DefineOriginalValuesHelper()
+			
+			protected override void Finish()
 			{
-				throw new System.InvalidOperationException ("Caller of DefineOriginalValues forgot to call Dispose");
+				System.Threading.Interlocked.Decrement (ref this.Entity.defineOriginalValuesCount);
+				base.Finish ();
 			}
 
-			#region IDisposable Members
 
-			public void Dispose()
-			{
-				if (this.entity != null)
-				{
-					System.GC.SuppressFinalize (this);
-					System.Threading.Interlocked.Decrement (ref this.entity.defineOriginalValuesCount);
-					this.entity = null;
-				}
-			}
-
-			#endregion
-
-			AbstractEntity entity;
 		}
 
+		private class SilentUpdatesHelper : Helper
+		{
+
+	
+			public SilentUpdatesHelper(AbstractEntity entity) : base (entity)
+			{
+				System.Threading.Interlocked.Increment (ref this.Entity.silentUpdateCount);
+			}
+			
+
+			protected override void Finish()
+			{
+				System.Threading.Interlocked.Decrement (ref this.Entity.silentUpdateCount);
+			}
+
+
+		}
+
+
 		#endregion
+
+
+
+
 
 		public static readonly Druid EntityStructuredTypeId = Druid.Empty;
 		public static readonly string EntityStructuredTypeKey = null;
@@ -1200,6 +1272,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly long entitySerialId;
 		private EntityContext context;
 		private long dataGeneration;
+		private int silentUpdateCount;
 		private int defineOriginalValuesCount;
 		private bool calculationsDisabled;
 		private IValueStore originalValues;
