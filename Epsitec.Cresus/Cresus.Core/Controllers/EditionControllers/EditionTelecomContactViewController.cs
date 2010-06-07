@@ -73,8 +73,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateDetailed (roleTile, 0, "Choix du ou des rôles souhaités", true, this.Entity.Roles, CoreProgram.Application.Data.GetRoles (), x => x.Name);
-			//?builder.CreateDetailed (typeTile, 0, "Type du numéro de téléphone", false, this.Entity.TelecomType, CoreProgram.Application.Data.GetTelecomTypes ());
+			builder.CreateDetailedRadio (roleTile, 0, "Choix du ou des rôles souhaités", this.Entity.Roles, CoreProgram.Application.Data.GetRoles (), x => x.Name);
+			builder.CreateDetailedCheck (typeTile, 0, "Type du numéro de téléphone", this.Entity.TelecomType.Name, x => this.Entity.TelecomType.Name = x, CoreProgram.Application.Data.GetTelecomTypes (), x => x.Name);
 
 			builder.CreateTextField (mainTile.Container, 150, "Numéro de téléphone", this.Entity.Number, x => this.Entity.Number = x, Validators.StringValidator.Validate);
 			builder.CreateTextField (mainTile.Container, 100, "Numéro interne", this.Entity.Extension, x => this.Entity.Extension = x, Validators.StringValidator.Validate);
