@@ -482,11 +482,9 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		public Widget CreateDetailed<T>(EditionTile tile, int width, string label, bool allowMultipleSelection, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
+		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
 			where T : AbstractEntity
 		{
-			tile.AllowSelection = true;
-
 			var staticText = new StaticText
 			{
 				Parent = tile.Container,
@@ -501,7 +499,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 5, 10),
-				AllowMultipleSelection = allowMultipleSelection,
+				AllowMultipleSelection = true,
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -522,6 +520,54 @@ namespace Epsitec.Cresus.Core
 					combo.AddSelection (Enumerable.Range (index, 1));
 				}
 			}
+
+			combo.SelectedItemChanged +=
+				delegate
+				{
+				};
+
+			return combo;
+		}
+
+		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, string initialValue, System.Action<string> valueSetter, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
+			where T : AbstractEntity
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var combo = new Widgets.DetailedCombo
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 5, 10),
+				AllowMultipleSelection = false,
+				TabIndex = ++this.tabIndex,
+			};
+
+			foreach (T item in allItems)
+			{
+				combo.Items.Add (null, item);
+			}
+
+			combo.ValueToDescriptionConverter = x => converter ((T) x);
+			combo.CreateUI ();
+
+			int index = combo.Items.FindIndexByValue (initialValue);
+			if (index != -1)
+			{
+				combo.AddSelection (Enumerable.Range (index, 1));
+			}
+
+			combo.SelectedItemChanged +=
+				delegate
+				{
+				};
 
 			return combo;
 		}
