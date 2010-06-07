@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var roleAccessor = new Accessors.RolesContactAccessor (null, accessor.Entity, false)
 			{
-				ViewControllerMode = ViewControllerMode.RolesEdition
+				ViewControllerMode = ViewControllerMode.Edition
 			};
 
 			builder.CreateSummaryTile (group, roleAccessor);
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var uriSchemeAccessor = new Accessors.UriSchemeAccessor (null, accessor.Entity, false)
 			{
-				ViewControllerMode = ViewControllerMode.UriSchemeEdition
+				ViewControllerMode = ViewControllerMode.Edition
 			};
 
 			builder.CreateSummaryTile (group, uriSchemeAccessor);

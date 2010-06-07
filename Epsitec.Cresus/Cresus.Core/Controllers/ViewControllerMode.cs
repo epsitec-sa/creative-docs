@@ -9,9 +9,5 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		Summary,
 		Edition,
-
-		RolesEdition,
-		TelecomTypeEdition,
-		UriSchemeEdition,
 	}
 }
