@@ -332,11 +332,23 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.Invalidate ();
 
 			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (DetailedCombo.MultiSelectionChangedEvent);
-			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
+			var e = new DependencyPropertyChangedEventArgs ("MultiSelectionChanged");
 
 			if (handler != null)
 			{
 				handler (this, e);
+			}
+		}
+
+		public event EventHandler MultiSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (DetailedCombo.MultiSelectionChangedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (DetailedCombo.MultiSelectionChangedEvent, value);
 			}
 		}
 
