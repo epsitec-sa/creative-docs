@@ -482,7 +482,8 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		public Widget CreateDetailed(EditionTile tile, int width, string label, bool allowMultipleSelection, object initialValue, System.Action<object> valueSetter)
+		public Widget CreateDetailed<T>(EditionTile tile, int width, string label, bool allowMultipleSelection, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
+			where T : AbstractEntity
 		{
 			tile.AllowSelection = true;
 
@@ -504,7 +505,23 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			// TODO: Initialiser le widget DetailedCombo
+			foreach (T item in allItems)
+			{
+				combo.Items.Add (null, item);
+			}
+
+			combo.ValueToDescriptionConverter = x => converter ((T) x);
+			combo.CreateUI ();
+
+			foreach (var item in selectedItems)
+			{
+				int index = combo.Items.FindIndexByValue (item);
+
+				if (index != -1)
+				{
+					combo.AddSelection (Enumerable.Range (index, 1));
+				}
+			}
 
 			return combo;
 		}
