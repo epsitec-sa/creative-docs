@@ -1,14 +1,11 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
-using System.Linq;
 
 
 namespace Epsitec.Cresus.Core.Data
@@ -21,12 +18,6 @@ namespace Epsitec.Cresus.Core.Data
 
 		public CountryRepository(DataContext dataContext) : base (dataContext)
 		{	
-		}
-
-
-		public CountryEntity CreateCountryExample()
-		{
-			return this.CreateExample<CountryEntity> ();
 		}
 
 
@@ -44,7 +35,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public IEnumerable<CountryEntity> GetAllCountries()
 		{
-			CountryEntity example = new Entities.CountryEntity ();
+			CountryEntity example = this.CreateCountryExample ();
 
 			return this.GetCountriesByExample (example);
 		}
@@ -52,10 +43,7 @@ namespace Epsitec.Cresus.Core.Data
 		
 		public CountryEntity GetCountryByCode(string code)
 		{
-			CountryEntity example = new Entities.CountryEntity ()
-			{
-				Code = code,
-			};
+			CountryEntity example = this.CreateCountryExampleByCode (code);
 
 			return this.GetCountryByExample (example);
 		}
@@ -63,12 +51,33 @@ namespace Epsitec.Cresus.Core.Data
 
 		public CountryEntity GetCountryByName(string name)
 		{
-			CountryEntity example = new Entities.CountryEntity ()
-			{
-				Name = name,
-			};
+			CountryEntity example = this.CreateCountryExampleByName (name);
 
 			return this.GetCountryByExample (example);
+		}
+
+
+		public CountryEntity CreateCountryExample()
+		{
+			return this.CreateExample<CountryEntity> ();
+		}
+
+
+		private CountryEntity CreateCountryExampleByCode(string code)
+		{
+			CountryEntity example = this.CreateCountryExample ();
+			example.Code = code;
+
+			return example;
+		}
+
+
+		private CountryEntity CreateCountryExampleByName(string name)
+		{
+			CountryEntity example = this.CreateCountryExample ();
+			example.Name = name;
+
+			return example;
 		}
 
 

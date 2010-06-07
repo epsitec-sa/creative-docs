@@ -141,6 +141,13 @@
     <Compile Include="AccessorsObsolete\UriContactAccessor.cs" />
     <Compile Include="AccessorsObsolete\TelecomContactAccessor.cs" />
     <Compile Include="AccessorsObsolete\MailContactAccessor.cs" />
+    <Compile Include="Data\AbstractContactRepository.cs" />
+    <Compile Include="Data\AddressRepository.cs" />
+    <Compile Include="Data\LocationRepository.cs" />
+    <Compile Include="Data\MailContactRepository.cs" />
+    <Compile Include="Data\PostBoxRepository.cs" />
+    <Compile Include="Data\RegionRepository.cs" />
+    <Compile Include="Data\StreetRepository.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
