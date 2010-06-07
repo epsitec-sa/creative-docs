@@ -521,9 +521,17 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-			combo.SelectedItemChanged +=
+			combo.MultiSelectionChanged +=
 				delegate
 				{
+					selectedItems.Clear ();
+					ICollection<int> list = combo.GetSortedSelection ();
+					
+					foreach (int sel in list)
+					{
+						var item = combo.Items[sel];
+						//?selectedItems.Add (combo.Items[sel]);
+					}
 				};
 
 			return combo;
