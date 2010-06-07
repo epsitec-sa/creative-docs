@@ -109,6 +109,7 @@
     <Compile Include="Controllers\EditionControllers\EditionMailContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAbstractPersonViewController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryData.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataType.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />

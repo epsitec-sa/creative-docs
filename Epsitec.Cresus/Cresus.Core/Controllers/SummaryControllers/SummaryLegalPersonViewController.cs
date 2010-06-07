@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryLegalPersonViewController : SummaryAbstractPersonViewController<Entities.LegalPersonEntity>
+	public class SummaryLegalPersonViewController : SummaryViewController<Entities.LegalPersonEntity>
 	{
 		public SummaryLegalPersonViewController(string name, Entities.LegalPersonEntity entity)
 			: base (name, entity)

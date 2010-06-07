@@ -50,6 +50,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			return controller;
 		}
 
+		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
+		{
+			var baseTypeName = mode == ViewControllerMode.Summary ? "SummaryViewController`1" : "EditionViewController`1";
+
+			var types = from type in typeof (EntityViewController).Assembly.GetTypes ()
+						where type.IsClass
+						let baseType = type.BaseType
+						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
+						select type;
+
+			return types.FirstOrDefault ();
+		}
+
 		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 		{
 			if (mode == ViewControllerMode.None)
@@ -57,101 +70,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				return null;
 			}
 
-			if (entity is Entities.NaturalPersonEntity)
+			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode);
+
+			if (type == null)
 			{
-				if (mode == ViewControllerMode.Summary)
-				{
-					return new SummaryNaturalPersonViewController (name, entity as Entities.NaturalPersonEntity);
-				}
-				else
-				{
-					return new EditionNaturalPersonViewController (name, entity as Entities.NaturalPersonEntity);
-				}
+				throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
 			}
 
-			if (entity is Entities.LegalPersonEntity)
-			{
-				if (mode == ViewControllerMode.Summary)
-				{
-					return new SummaryLegalPersonViewController (name, entity as Entities.LegalPersonEntity);
-				}
-				else
-				{
-					return new EditionLegalPersonViewController (name, entity as Entities.LegalPersonEntity);
-				}
-			}
-
-			if (entity is Entities.PersonTitleEntity)
-			{
-				if (mode == ViewControllerMode.Summary)
-				{
-					return new SummaryTitleViewController (name, entity as Entities.PersonTitleEntity);
-				}
-				else
-				{
-					return new EditionTitleViewController (name, entity as Entities.PersonTitleEntity);
-				}
-			}
-
-			if (entity is Entities.CountryEntity)
-			{
-				if (mode == ViewControllerMode.Summary)
-				{
-					return new SummaryCountryViewController (name, entity as Entities.CountryEntity);
-				}
-				else
-				{
-					return new EditionCountryViewController (name, entity as Entities.CountryEntity);
-				}
-			}
-
-			if (entity is Entities.LocationEntity)
-			{
-				if (mode == ViewControllerMode.Summary)
-				{
-					return new SummaryLocationViewController (name, entity as Entities.LocationEntity);
-				}
-				else
-				{
-					return new EditionLocationViewController (name, entity as Entities.LocationEntity);
-				}
-			}
-
-			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
-			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
-			{
-				return new EditionRolesContactViewController (name, entity as Entities.AbstractContactEntity);
-			}
-
-			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
-			{
-				return new EditionTelecomTypeViewController (name, entity as Entities.TelecomContactEntity);
-			}
-
-			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
-			{
-				return new EditionUriSchemeViewController (name, entity as Entities.UriContactEntity);
-			}
-
-			//	Après...
-			if (entity is Entities.MailContactEntity)
-			{
-				return new EditionMailContactViewController (name, entity as Entities.MailContactEntity);
-			}
-
-			if (entity is Entities.TelecomContactEntity)
-			{
-				return new EditionTelecomContactViewController (name, entity as Entities.TelecomContactEntity);
-			}
-
-			if (entity is Entities.UriContactEntity)
-			{
-				return new EditionUriContactViewController (name, entity as Entities.UriContactEntity);
-			}
-
-			// TODO: Compléter ici au fur et à mesure des besoins...
-
-			return null;
+			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
 	}
 
