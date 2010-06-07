@@ -52,10 +52,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
 		{
-			var baseTypeName = mode == ViewControllerMode.Summary ? "SummaryViewController`1" : "EditionViewController`1";
+			var baseTypePrefix = mode == ViewControllerMode.Summary ? "Summary" : "Edition";
+			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
+
+			//	Find all concrete classes which use either the generic SummaryViewController or the
+			//	generic EditionViewController base classes, which match the entity type (usually,
+			//	there should be exactly one such type).
 
 			var types = from type in typeof (EntityViewController).Assembly.GetTypes ()
-						where type.IsClass
+						where type.IsClass && !type.IsAbstract
 						let baseType = type.BaseType
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;
@@ -65,9 +70,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 		{
-			if (mode == ViewControllerMode.None)
+			switch (mode)
 			{
-				return null;
+				case ViewControllerMode.None:
+					return null;
+
+				case ViewControllerMode.Summary:
+				case ViewControllerMode.Edition:
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
 
 			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode);
@@ -80,6 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
 	}
+
 
 	public abstract class EntityViewController<T> : EntityViewController where T : AbstractEntity
 	{
