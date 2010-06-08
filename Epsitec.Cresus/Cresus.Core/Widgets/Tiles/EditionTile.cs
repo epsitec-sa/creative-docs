@@ -52,6 +52,22 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool TileArrowHilite
+		{
+			get
+			{
+				return this.tileHilite;
+			}
+			set
+			{
+				if (this.tileHilite != value)
+				{
+					this.tileHilite = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 
 		public override TileArrowMode ArrowMode
 		{
@@ -96,12 +112,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.AllowSelection)
 			{
-				if (this.IsEntered && this.AutoReverse)
+				if (this.TileArrowHilite && this.AutoReverse)
 				{
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if (this.IsEntered)
+				if (this.TileArrowHilite)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
@@ -119,7 +135,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.AllowSelection)
 			{
-				if (this.IsEntered)
+				if (this.TileArrowHilite)
 				{
 					return Tile.SurfaceHilitedColor;
 				}
@@ -137,7 +153,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.AllowSelection)
 			{
-				if (this.IsEntered || this.IsSelected)
+				if (this.TileArrowHilite || this.IsSelected)
 				{
 					return Tile.BorderColor;
 				}
@@ -150,7 +166,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			if (this.AllowSelection)
 			{
-				if (this.IsEntered)
+				if (this.TileArrowHilite)
 				{
 					return Tile.ThicknessHilitedColor;
 				}
@@ -177,5 +193,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 		private FrameBox container;
+		private bool tileHilite;
 	}
 }
