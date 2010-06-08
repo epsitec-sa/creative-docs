@@ -96,6 +96,26 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public StaticText CreateWarning(EditionTile tile)
+		{
+			return this.CreateStaticText (tile, 60, "<i><b>ATTENTION:</b><br/>Les modifications effectuées ici seront répercutées<br/>dans tous les enregistrements.</i>");
+		}
+
+		public StaticText CreateStaticText(EditionTile tile, int height, string text)
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = text,
+				TextBreakMode = Common.Drawing.TextBreakMode.Hyphenate,
+				PreferredHeight = height,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 10, 10),
+			};
+
+			return staticText;
+		}
+
 		public TextField CreateTextField(EditionTile tile, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
 			var staticText = new StaticText
@@ -230,7 +250,7 @@ namespace Epsitec.Cresus.Core
 						}
 						else
 						{
-							var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
+							var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Edition, this.controller.Orchestrator);
 
 							if (newController != null)
 							{
