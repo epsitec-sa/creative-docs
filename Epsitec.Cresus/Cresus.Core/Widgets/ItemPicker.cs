@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		/// <summary>
 		/// Autorise ou non les sélections multiples, ce qui se traduit par des CheckButtons ou des RadioButtons.
-		/// Dans l'implémentation actuelle, le setter doit être appelé avant le setter de ComboInitializer !
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> if [allow multiple selection]; otherwise, <c>false</c>.
@@ -381,7 +380,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private Common.Widgets.Collections.StringCollection	items;
 		private readonly HashSet<int> selection;
-		private Accessors.ComboInitializer comboInitializer;
 		private bool ignoreChange;
 	}
 }

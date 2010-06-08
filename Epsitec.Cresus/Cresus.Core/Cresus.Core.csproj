@@ -88,9 +88,6 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="AccessorsObsolete\AbstractEntityAccessor.cs" />
-    <Compile Include="AccessorsObsolete\CountryAccessor.cs" />
-    <Compile Include="AccessorsObsolete\LocationAccessor.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
@@ -128,16 +125,6 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
-    <Compile Include="AccessorsObsolete\AbstractAccessor.cs" />
-    <Compile Include="AccessorsObsolete\AbstractContactAccessor.cs" />
-    <Compile Include="AccessorsObsolete\ComboInitializer.cs" />
-    <Compile Include="AccessorsObsolete\BidirectionnalConverter.cs" />
-    <Compile Include="AccessorsObsolete\UriSchemeAccessor.cs" />
-    <Compile Include="AccessorsObsolete\TelecomTypeAccessor.cs" />
-    <Compile Include="AccessorsObsolete\RolesContactAccessor.cs" />
-    <Compile Include="AccessorsObsolete\UriContactAccessor.cs" />
-    <Compile Include="AccessorsObsolete\TelecomContactAccessor.cs" />
-    <Compile Include="AccessorsObsolete\MailContactAccessor.cs" />
     <Compile Include="Data\AbstractContactRepository.cs" />
     <Compile Include="Data\AddressRepository.cs" />
     <Compile Include="Data\LocationRepository.cs" />
