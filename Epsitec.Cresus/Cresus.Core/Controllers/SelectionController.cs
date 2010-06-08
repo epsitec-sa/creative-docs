@@ -82,78 +82,86 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public void Attach(Widgets.HintEditor editor)
+		public void Attach(Widgets.HintEditor widget)
 		{
 			foreach (var item in this.PossibleItemsGetter ())
 			{
-				editor.Items.Add (item);
+				widget.Items.Add (item);
 			}
 
-			editor.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
+			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 			
-			editor.HintComparer            = (value, text) => this.MatchUserText (value as T, text);
-			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			widget.HintComparer            = (value, text) => this.MatchUserText (value as T, text);
+			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			editor.SelectedItemIndex       = editor.Items.FindIndexByValue (this.GetValue ());
+			widget.SelectedItemIndex       = widget.Items.FindIndexByValue (this.GetValue ());
 		}
 		
-		public void Attach(Widgets.DetailedCombo editor)
+		public void Attach(Widgets.DetailedCombo widget)
 		{
 			foreach (var item in this.PossibleItemsGetter ())
 			{
-				editor.Items.Add (item);
+				widget.Items.Add (item);
 			}
 
-			editor.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
-			editor.CreateUI ();
+			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
+			widget.CreateUI ();
 
 			if (this.CollectionValueGetter != null)
 			{
-				foreach (var item in this.CollectionValueGetter ())
-				{
-					int index = editor.Items.FindIndexByValue (item);
-
-					if (index != -1)
-					{
-						editor.AddSelection (new int[] { index });
-					}
-				}
-
-				editor.MultiSelectionChanged +=
-					delegate
-					{
-						var selectedItems = this.CollectionValueGetter ();
-
-						selectedItems.Clear ();
-						var list = editor.GetSortedSelection ();
-
-						foreach (int sel in list)
-						{
-							var item = editor.Items.GetValue (sel) as T;
-							selectedItems.Add (item);
-						}
-					};
+				this.AttachMultipleValueSelector (widget);
 			}
 			else if ((this.ValueGetter != null) &&
 					 (this.ValueSetter != null))
 			{
-				var initialValue = this.GetValue ();
-
-				int index = editor.Items.FindIndexByValue (initialValue);
-				if (index != -1)
-				{
-					editor.AddSelection (new int[] { index });
-				}
-
-				editor.SelectedItemChanged +=
-					delegate
-					{
-						this.ValueSetter (editor.Items.GetValue (editor.SelectedItemIndex) as T);
-					};
-
+				this.AttachSingleValueSelector (widget);
 			}
 		}
 
+		private void AttachMultipleValueSelector(Widgets.DetailedCombo widget)
+		{
+			foreach (var item in this.CollectionValueGetter ())
+			{
+				int index = widget.Items.FindIndexByValue (item);
+
+				if (index != -1)
+				{
+					widget.AddSelection (new int[] { index });
+				}
+			}
+
+			widget.MultiSelectionChanged +=
+							delegate
+				{
+					var selectedItems = this.CollectionValueGetter ();
+
+					selectedItems.Clear ();
+					var list = widget.GetSortedSelection ();
+
+					foreach (int sel in list)
+					{
+						var item = widget.Items.GetValue (sel) as T;
+						selectedItems.Add (item);
+					}
+				};
+		}
+
+		private void AttachSingleValueSelector(Widgets.DetailedCombo widget)
+		{
+			var initialValue = this.GetValue ();
+
+			int index = widget.Items.FindIndexByValue (initialValue);
+			if (index != -1)
+			{
+				widget.AddSelection (new int[] { index });
+			}
+
+			widget.SelectedItemChanged +=
+							delegate
+				{
+					this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
+				};
+		}
 		private FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
