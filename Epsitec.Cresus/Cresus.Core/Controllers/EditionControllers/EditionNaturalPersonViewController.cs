@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUITitle(UIBuilder builder)
 		{
 			builder.CreateEditionHintEditor ("Titre",
-				new BindingController<Entities.PersonTitleEntity>
+				new SelectionController<Entities.PersonTitleEntity>
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x,
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIGender(UIBuilder builder)
 		{
 			builder.CreateEditionHintEditor ("Sexe",
-				new BindingController<Entities.PersonGenderEntity>
+				new SelectionController<Entities.PersonGenderEntity>
 				{
 					ValueGetter = () => this.Entity.Gender,
 					ValueSetter = x => this.Entity.Gender = x,
