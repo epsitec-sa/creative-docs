@@ -57,6 +57,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static bool IsNullEntity(AbstractEntity entity)
+		{
+			if (entity == null)
+            {
+				return true;
+            }
+
+			if (entity.GetEntityContext () is EmptyEntityContext)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		/// <summary>
 		/// Determines whether the specified entity was patched using <see cref="PatchNullReferences"/>
 		/// and still is unchanged.
@@ -107,11 +122,18 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (EntityNullReferenceVirtualizer.emptyEntitiesContext == null)
 			{
-				EntityNullReferenceVirtualizer.emptyEntitiesContext =
-					new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "EmptyEntities");
+				EntityNullReferenceVirtualizer.emptyEntitiesContext = new EmptyEntityContext ();
 			}
 
 			return EntityNullReferenceVirtualizer.emptyEntitiesContext;
+		}
+
+		private class EmptyEntityContext : EntityContext
+		{
+			public EmptyEntityContext()
+				: base (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "EmptyEntities")
+			{
+			}
 		}
 
 
@@ -274,7 +296,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				entity.SetModifiedValues (store);
 			}
 
-			private readonly IValueStore		realStore;
+			private readonly IValueStore				realStore;
 			private readonly Dictionary<string, object>	values;
 			private readonly AbstractEntity				entity;
 			private readonly Store						parentStore;
