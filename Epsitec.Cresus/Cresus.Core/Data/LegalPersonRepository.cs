@@ -65,22 +65,6 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByParent(LegalPersonEntity parent)
-		{
-			LegalPersonEntity example = this.CreateLegalPersonExampleByParent (parent);
-
-			return this.GetLegalPersonsByExample (example);
-		}
-
-
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByParent(LegalPersonEntity parent, int index, int count)
-		{
-			LegalPersonEntity example = this.CreateLegalPersonExampleByParent (parent);
-
-			return this.GetLegalPersonsByExample (example, index, count);
-		}
-
-
 		public IEnumerable<LegalPersonEntity> GetLegalPersonsByLegalPersonType(LegalPersonTypeEntity legalPersonType)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByLegalPersonType (legalPersonType);
@@ -150,14 +134,6 @@ namespace Epsitec.Cresus.Core.Data
 			return this.CreateGenericPersonExample<LegalPersonEntity> ();
 		}
 
-
-		private LegalPersonEntity CreateLegalPersonExampleByParent(LegalPersonEntity parent)
-		{
-			LegalPersonEntity example = this.CreateLegalPersonExample ();
-			example.Parent = parent;
-
-			return example;
-		}
 
 
 		private LegalPersonEntity CreateLegalPersonExampleByLegalPersonType(LegalPersonTypeEntity legalPersonType)

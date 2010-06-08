@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Core
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			Data.Test.Example1 ();
 			using (var splash = new SplashScreen ("logo.png"))
 			{
 				CoreProgram.ExecuteCoreProgram (splash);

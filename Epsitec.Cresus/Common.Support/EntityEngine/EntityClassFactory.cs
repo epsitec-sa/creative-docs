@@ -29,5 +29,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return EntityClassFactory.CreateInstance (id);
 		}
+
+		public static Druid GetEntityId(System.Type type)
+		{
+			return EntityClassFactory.FindId (type);
+		}
 	}
 }

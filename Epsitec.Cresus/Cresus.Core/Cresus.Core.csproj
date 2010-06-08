@@ -125,6 +125,7 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
+    <Compile Include="Data\CoreDataBrowser.cs" />
     <Compile Include="Data\AbstractContactRepository.cs" />
     <Compile Include="Data\AddressRepository.cs" />
     <Compile Include="Data\CommentRepository.cs" />

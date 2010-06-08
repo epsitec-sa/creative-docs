@@ -57,6 +57,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified entity is null or is an empty virtualized entity.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified entity is null or is an empty virtualized entity; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsNullEntity(AbstractEntity entity)
 		{
 			if (entity == null)
