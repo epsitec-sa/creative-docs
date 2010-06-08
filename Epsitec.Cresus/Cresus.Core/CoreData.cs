@@ -6,28 +6,47 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.Core
 {
+
+
 	public sealed partial class CoreData : System.IDisposable
 	{
-		public CoreData()
+
+
+		public CoreData(bool useHack, bool forceDatabasebCreation)
 		{
-			this.infrastructure = new DbInfrastructure ();
+			this.IsReady = false;
+			this.UseHack = useHack;
+			this.ForceDatabaseCreation = forceDatabasebCreation;
+
+			this.DbInfrastructure = new DbInfrastructure ();
+			this.DataContext = null;
 		}
+
+
+		public DbInfrastructure DbInfrastructure
+		{
+			get;
+			set;
+		}
+
 
 		public DataContext DataContext
 		{
-			get
-			{
-				return this.dataContext;
-			}
+			get;
+			private set;
 		}
+
 
 		public bool IsReady
 		{
@@ -35,50 +54,46 @@ namespace Epsitec.Cresus.Core
 			private set;
 		}
 
+
+		public bool UseHack
+		{
+			get;
+			private set;
+		}
+
+
+		public bool ForceDatabaseCreation
+		{
+			get;
+			private set;
+		}
+
+
 		public void SetupDatabase()
 		{
-			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen == false);
-			System.Diagnostics.Debug.Assert (this.dataContext == null);
-
-			DbAccess access = CoreData.GetDatabaseAccess ();
-			bool     empty  = this.ConnectToDatabase (access);
-
-			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen);
-
-			this.SetupDataContext ();
-
-			if (empty)
+			if (!this.UseHack && !this.IsReady)
 			{
-				this.CreateDatabaseSchemas ();
-//-				this.PopulateDatabase ();
-			}
-			else
-			{
-				this.VerifyDatabaseSchemas ();
-//-				this.ReloadDatabase ();
-			}
-			
-			System.Diagnostics.Debug.WriteLine ("Database ready");
+				System.Diagnostics.Debug.Assert (this.DbInfrastructure.IsConnectionOpen == false);
+				System.Diagnostics.Debug.Assert (this.DataContext == null);
 
-			this.SetupDataBrowser ();
+				DbAccess dbAccess = CoreData.GetDatabaseAccess ();
+				bool databaseIsNew = this.ConnectToDatabase (dbAccess);
+
+				System.Diagnostics.Debug.Assert (this.DbInfrastructure.IsConnectionOpen);
+
+				this.SetupDataContext ();
+				this.SetupDatabase (databaseIsNew || this.ForceDatabaseCreation);
+				
+				System.Diagnostics.Debug.WriteLine ("Database ready");
+			}
+
 			this.IsReady = true;
 		}
 
 
-		
-		private void SetupDataContext()
-		{
-			this.dataContext = new DataContext (this.infrastructure);
-		}
-
-		private void SetupDataBrowser()
-		{
-			this.dataBrowser = new DataBrowser (this.dataContext);
-		}
-
 		private bool ConnectToDatabase(DbAccess access)
 		{
-			if (this.infrastructure.AttachToDatabase (access))
+			if (this.DbInfrastructure.AttachToDatabase (access))
 			{
 				System.Diagnostics.Trace.WriteLine ("Connected to database");
 
@@ -90,7 +105,7 @@ namespace Epsitec.Cresus.Core
 
 				try
 				{
-					this.infrastructure.CreateDatabase (access);
+					this.DbInfrastructure.CreateDatabase (access);
 				}
 				catch (System.Exception ex)
 				{
@@ -107,15 +122,54 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		private void SetupDatabase(bool createNewDatabase)
+		{
+			if (createNewDatabase)
+			{
+				this.CreateDatabaseSchemas ();
+				this.PopulateDatabase ();
+			}
+			else
+			{
+				this.VerifyDatabaseSchemas ();
+				this.ReloadDatabase ();
+			}
+		}
+
+
 		private void VerifyDatabaseSchemas()
 		{
+			// TODO
 		}
+
 
 		private void CreateDatabaseSchemas()
 		{
-			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.ClientEntity> ();
-			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
+			this.DataContext.CreateSchema<AbstractPersonEntity> ();
+			this.DataContext.CreateSchema<MailContactEntity> ();
+			this.DataContext.CreateSchema<TelecomContactEntity> ();
+			this.DataContext.CreateSchema<UriContactEntity> ();
 		}
+
+
+		private void PopulateDatabase()
+		{
+			this.PopulateDatabaseHack ();
+		}
+
+
+		private void ReloadDatabase()
+		{
+			// TODO
+		}
+
+
+		private void SetupDataContext()
+		{
+			this.DataContext = new DataContext (this.DbInfrastructure);
+		}
+
 
 		private static DbAccess GetDatabaseAccess()
 		{
@@ -130,24 +184,26 @@ namespace Epsitec.Cresus.Core
 		
 		#region IDisposable Members
 
+
 		public void Dispose()
 		{
-			if (this.dataContext != null)
+			if (this.DataContext != null)
 			{
-				this.dataContext.Dispose ();
-				this.dataContext = null;
+				this.DataContext.Dispose ();
+				this.DataContext = null;
 			}
 			
-			if (this.infrastructure.IsConnectionOpen)
+			if (this.DbInfrastructure.IsConnectionOpen)
 			{
-				this.infrastructure.Dispose ();
+				this.DbInfrastructure.Dispose ();
 			}
 		}
 
+
 		#endregion
 		
-		private readonly DbInfrastructure infrastructure;
-		private DataContext dataContext;
-		private DataBrowser dataBrowser;
+
 	}
+
+
 }
