@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public PersonTitleEntity GetPersonTitleByExample(PersonTitleEntity example)
+		public IEnumerable<PersonTitleEntity> GetPersonsTitlesByExample(PersonTitleEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<PersonTitleEntity> (example);
+			return this.GetEntitiesByExample<PersonTitleEntity> (example, index, count);
 		}
 
 
@@ -38,19 +38,19 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public PersonTitleEntity GetPersonTitleByShortName(string shortName)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(string shortName)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByShortName (shortName);
 
-			return this.GetPersonTitleByExample (example);
+			return this.GetPersonTitlesByExample (example);
 		}
 
 
-		public PersonTitleEntity GetPersonTitleByName(string name)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(string name)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByName (name);
 
-			return this.GetPersonTitleByExample (example);
+			return this.GetPersonTitlesByExample (example);
 		}
 
 

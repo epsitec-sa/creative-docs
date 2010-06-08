@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public LanguageEntity GetLanguageByExample(LanguageEntity example)
+		public IEnumerable<LanguageEntity> GetLanguagesByExample(LanguageEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<LanguageEntity> (example);
+			return this.GetEntitiesByExample<LanguageEntity> (example, index, count);
 		}
 
 
@@ -38,19 +38,19 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public LanguageEntity GetLanguageByShortCode(string code)
+		public IEnumerable<LanguageEntity> GetLanguagesByShortCode(string code)
 		{
 			LanguageEntity example = this.CreateLanguageExampleByShortCode (code);
 
-			return this.GetLanguageByExample (example);
+			return this.GetLanguagesByExample (example);
 		}
 
 
-		public LanguageEntity GetLanguageByName(string name)
+		public IEnumerable<LanguageEntity> GetLanguagesByName(string name)
 		{
 			LanguageEntity example = this.CreateLanguageExampleByName (name);
 
-			return this.GetLanguageByExample (example);
+			return this.GetLanguagesByExample (example);
 		}
 
 

@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public AbstractContactEntity GetAbstractContactByExample(AbstractContactEntity example)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, int index, int count)
 		{
-			return this.GetGenericContactByExample<AbstractContactEntity> (example);
+			return this.GetGenericContactsByExample<AbstractContactEntity> (example, index, count);
 		}
 
 
@@ -35,27 +35,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactByNaturalPerson(NaturalPersonEntity naturalPerson)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByNaturalPerson(NaturalPersonEntity naturalPerson)
 		{
-			return this.GetGenericContactByNaturalPerson<AbstractContactEntity> (naturalPerson);
+			return this.GetGenericContactsByNaturalPerson<AbstractContactEntity> (naturalPerson);
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactByLegalPerson(LegalPersonEntity legalPerson)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByLegalPerson(LegalPersonEntity legalPerson)
 		{
-			return this.GetGenericContactByLegalPerson<AbstractContactEntity> (legalPerson);
+			return this.GetGenericContactsByLegalPerson<AbstractContactEntity> (legalPerson);
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactByRoles(params ContactRoleEntity[] roles)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByRoles(params ContactRoleEntity[] roles)
 		{
-			return this.GetGenericContactByRoles<AbstractContactEntity> (roles);
+			return this.GetGenericContactsByRoles<AbstractContactEntity> (roles);
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactByComments(params CommentEntity[] comments)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByComments(params CommentEntity[] comments)
 		{
-			return this.GetGenericContactByComments<AbstractContactEntity> (comments);
+			return this.GetGenericContactsByComments<AbstractContactEntity> (comments);
 		}
 
 
@@ -71,9 +71,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected EntityType GetGenericContactByExample<EntityType>(EntityType example) where EntityType : AbstractContactEntity
+		protected IEnumerable<EntityType> GetGenericContactsByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractContactEntity
 		{
-			return this.GetEntityByExample<EntityType> (example);
+			return this.GetEntitiesByExample<EntityType> (example, index, count);
 		}
 
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactByNaturalPerson<EntityType>(NaturalPersonEntity naturalPerson) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<EntityType> GetGenericContactsByNaturalPerson<EntityType>(NaturalPersonEntity naturalPerson) where EntityType : AbstractContactEntity, new ()
 		{
 			EntityType example = this.CreateGenericContactExampleByNaturalPerson<EntityType> (naturalPerson);
 
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactByLegalPerson<EntityType>(LegalPersonEntity legalPerson) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<EntityType> GetGenericContactsByLegalPerson<EntityType>(LegalPersonEntity legalPerson) where EntityType : AbstractContactEntity, new ()
 		{
 			EntityType example = this.CreateGenericContactExampleByLegalPerson<EntityType> (legalPerson);
 
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactByRoles<EntityType>(params ContactRoleEntity[] roles) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<EntityType> GetGenericContactsByRoles<EntityType>(params ContactRoleEntity[] roles) where EntityType : AbstractContactEntity, new ()
 		{
 			EntityType example = this.CreateGenericContactExampleByRoles<EntityType> (roles);
 
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactByComments<EntityType>(params CommentEntity[] comments) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<EntityType> GetGenericContactsByComments<EntityType>(params CommentEntity[] comments) where EntityType : AbstractContactEntity, new ()
 		{
 			EntityType example = this.CreateGenericContactExampleByComments<EntityType> (comments);
 

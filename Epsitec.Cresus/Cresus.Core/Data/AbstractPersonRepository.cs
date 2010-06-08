@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public AbstractPersonEntity GetAbstractPersonByExample(AbstractPersonEntity example)
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, int index, int count)
 		{
-			return this.GetGenericPersonByExample<AbstractPersonEntity> (example);
+			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, index, count);
 		}
 
 
@@ -35,15 +35,15 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractPersonEntity> GetAbstractPersonByPreferredLanguage(LanguageEntity preferredLanguage)
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByPreferredLanguage(LanguageEntity preferredLanguage)
 		{
-			return this.GetGenericPersonByPreferredLanguage<AbstractPersonEntity> (preferredLanguage);
+			return this.GetGenericPersonsByPreferredLanguage<AbstractPersonEntity> (preferredLanguage);
 		}
 
 
-		public IEnumerable<AbstractPersonEntity> GetAbstractPersonByContacts(params AbstractContactEntity[] contacts)
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByContacts(params AbstractContactEntity[] contacts)
 		{
-			return this.GetGenericPersonByContacts<AbstractPersonEntity> (contacts);
+			return this.GetGenericPersonsByContacts<AbstractPersonEntity> (contacts);
 		}
 
 
@@ -59,9 +59,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected EntityType GetGenericPersonByExample<EntityType>(EntityType example) where EntityType : AbstractPersonEntity
+		protected IEnumerable<EntityType> GetGenericPersonsByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractPersonEntity
 		{
-			return this.GetEntityByExample<EntityType> (example);
+			return this.GetEntitiesByExample<EntityType> (example, index, count);
 		}
 
 
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<EntityType> GetGenericPersonsByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage) where EntityType : AbstractPersonEntity, new ()
 		{
 			EntityType example = this.CreateGenericPersonExampleByPreferredLanguage<EntityType> (preferredLanguage);
 
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonByContacts<EntityType>(params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<EntityType> GetGenericPersonsByContacts<EntityType>(params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
 		{
 			EntityType example = this.CreateGenericPersonExampleByContacts<EntityType> (contacts);
 

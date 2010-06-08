@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public LocationEntity GetLocationByExample(LocationEntity example)
+		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<LocationEntity> (example);
+			return this.GetEntitiesByExample<LocationEntity> (example, index, count);
 		}
 
 
@@ -44,27 +44,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public LocationEntity GetLocationByName(string name)
-		{
-			LocationEntity example = this.CreateLocationExampleByName (name);
-
-			return this.GetLocationByExample (example);
-		}
-
-
 		public IEnumerable<LocationEntity> GetLocationsByPostalCode(string postalCode)
 		{
 			LocationEntity example = this.CreateLocationExampleByPostalCode (postalCode);
 
 			return this.GetLocationsByExample (example);
-		}
-
-
-		public LocationEntity GetLocationByPostalCode(string postalCode)
-		{
-			LocationEntity example = this.CreateLocationExampleByPostalCode (postalCode);
-
-			return this.GetLocationByExample (example);
 		}
 
 

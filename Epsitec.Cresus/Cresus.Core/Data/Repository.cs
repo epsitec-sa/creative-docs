@@ -38,15 +38,15 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected EntityType GetEntityByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
-		{
-			return this.GetEntitiesByExample (example).FirstOrDefault ();
-		}
-
-
 		protected IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
 		{
 			return this.dataBrowser.GetByExample<EntityType> (example, true);
+		}
+
+
+		protected IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractEntity
+		{
+			return this.dataBrowser.GetByExample<EntityType> (example, true).Skip (index + 1).Take (count);
 		}
 
 

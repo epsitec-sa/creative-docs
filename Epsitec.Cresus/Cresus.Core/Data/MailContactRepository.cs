@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public MailContactEntity GetMailContactByExample(MailContactEntity example)
+		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, int index, int count)
 		{
-			return this.GetGenericContactByExample<MailContactEntity> (example);
+			return this.GetGenericContactsByExample<MailContactEntity> (example, index, count);
 		}
 
 
@@ -35,27 +35,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactByNaturalPerson(NaturalPersonEntity naturalPerson)
+		public IEnumerable<MailContactEntity> GetMailContactsByNaturalPerson(NaturalPersonEntity naturalPerson)
 		{
-			return this.GetGenericContactByNaturalPerson<MailContactEntity> (naturalPerson);
+			return this.GetGenericContactsByNaturalPerson<MailContactEntity> (naturalPerson);
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactByLegalPerson(LegalPersonEntity legalPerson)
+		public IEnumerable<MailContactEntity> GetMailContactsByLegalPerson(LegalPersonEntity legalPerson)
 		{
-			return this.GetGenericContactByLegalPerson<MailContactEntity> (legalPerson);
+			return this.GetGenericContactsByLegalPerson<MailContactEntity> (legalPerson);
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactByRoles(params ContactRoleEntity[] roles)
+		public IEnumerable<MailContactEntity> GetMailContactsByRoles(params ContactRoleEntity[] roles)
 		{
-			return this.GetGenericContactByRoles<MailContactEntity> (roles);
+			return this.GetGenericContactsByRoles<MailContactEntity> (roles);
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactByComments(params CommentEntity[] comments)
+		public IEnumerable<MailContactEntity> GetMailContactsByComments(params CommentEntity[] comments)
 		{
-			return this.GetGenericContactByComments<MailContactEntity> (comments);
+			return this.GetGenericContactsByComments<MailContactEntity> (comments);
 		}
 
 
@@ -67,27 +67,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public MailContactEntity GetMailContactByComplement(string complement)
-		{
-			MailContactEntity example = this.CreateMailContactExampleByComplement (complement);
-
-			return this.GetMailContactByExample (example);
-		}
-
-
 		public IEnumerable<MailContactEntity> GetMailContactsByAddress(AddressEntity address)
 		{
 			MailContactEntity example = this.CreateMailContactExampleByAddress (address);
 
 			return this.GetMailContactsByExample (example);
-		}
-
-
-		public MailContactEntity GetMailContactByAddress(AddressEntity address)
-		{
-			MailContactEntity example = this.CreateMailContactExampleByAddress (address);
-
-			return this.GetMailContactByExample (example);
 		}
 
 

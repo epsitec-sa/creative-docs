@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public PostBoxEntity GetPostBoxByExample(PostBoxEntity example)
+		public IEnumerable<PostBoxEntity> GetPostBoxesByExample(PostBoxEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<PostBoxEntity> (example);
+			return this.GetEntitiesByExample<PostBoxEntity> (example, index, count);
 		}
 
 
@@ -42,14 +42,6 @@ namespace Epsitec.Cresus.Core.Data
 			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
 
 			return this.GetPostBoxesByExample (example);
-		}
-
-
-		public PostBoxEntity GetPostBoxByNumber(string number)
-		{
-			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
-
-			return this.GetPostBoxByExample (example);
 		}
 
 
