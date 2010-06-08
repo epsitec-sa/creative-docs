@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Core.Widgets
 	}
 
 
-	public class HintEditor : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
+	public class AutoCompleteTextField : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
 	{
-		public HintEditor()
+		public AutoCompleteTextField()
 		{
 			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
 			this.ComboMenuReasonableItemsLimit = 100;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.hintWordSeparators = new List<string> ();
 		}
 
-		public HintEditor(Widget embedder)
+		public AutoCompleteTextField(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -246,11 +246,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler(HintEditor.SelectedItemChangedEvent, value);
+				this.AddUserEventHandler(AutoCompleteTextField.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (HintEditor.SelectedItemChangedEvent, value);
+				this.RemoveUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
-			EventHandler handler = (EventHandler) this.GetUserEventHandler (HintEditor.SelectedItemChangedEvent);
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent);
 			if (handler != null)
 			{
 				handler (this);
@@ -548,7 +548,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			Size size = new Size (this.ActualWidth, bestSize.Height);
 
 			Point location;
-			HintEditor.GetMenuDisposition (this, this.scrollList, ref size, out location);
+			AutoCompleteTextField.GetMenuDisposition (this, this.scrollList, ref size, out location);
 
 			this.window.WindowLocation = location;
 			this.window.WindowSize = size;
@@ -622,7 +622,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				//	Il y a assez de place pour dérouler le menu vers le bas,
 				//	mais il faudra peut-être le raccourcir un bout :
 				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
-				HintEditor.AdjustSize (scrollList);
+				AutoCompleteTextField.AdjustSize (scrollList);
 
 				size = scrollList.PreferredSize;
 				location = new Point(pos.X, pos.Y+1);
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				maxHeight = workingArea.Top - pos.Y;
 
 				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
-				HintEditor.AdjustSize (scrollList);
+				AutoCompleteTextField.AdjustSize (scrollList);
 
 				pos.Y += scrollList.PreferredHeight;
 

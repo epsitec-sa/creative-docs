@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Accessors
 
 		public override void WidgetInitialize(Widget widget, object unspecifiedEntitie)
 		{
-			var editor = widget as Widgets.DetailedCombo;
+			var editor = widget as Widgets.ItemPicker;
 			var selectedRoles = unspecifiedEntitie as IList<Entities.ContactRoleEntity>;
 			var possibleRoles = Controllers.MainViewController.roles;
 

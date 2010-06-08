@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Accessors
 
 		public override void WidgetInitialize(Widget widget, object unspecifiedEntitie)
 		{
-			var editor = widget as Widgets.HintEditor;
+			var editor = widget as Widgets.AutoCompleteTextField;
 			var entity = unspecifiedEntitie as AbstractEntity;
 			var locations = Controllers.MainViewController.locations;
 
@@ -76,10 +76,10 @@ namespace Epsitec.Cresus.Core.Accessors
 		{
 			var entity = value as Entities.LocationEntity;
 
-			var result1 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.PostalCode), typed);
-			var result2 = Widgets.HintEditor.Compare (Misc.RemoveAccentsToLower (entity.Name), typed);
+			var result1 = Widgets.AutoCompleteTextField.Compare (Misc.RemoveAccentsToLower (entity.PostalCode), typed);
+			var result2 = Widgets.AutoCompleteTextField.Compare (Misc.RemoveAccentsToLower (entity.Name), typed);
 
-			return Widgets.HintEditor.Bestof (result1, result2);
+			return Widgets.AutoCompleteTextField.Bestof (result1, result2);
 		}
 
 

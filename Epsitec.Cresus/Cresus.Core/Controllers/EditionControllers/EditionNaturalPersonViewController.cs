@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		
 		private void CreateUITitle(UIBuilder builder)
 		{
-			builder.CreateEditionHintEditor ("Titre",
+			builder.CreateAutoCompleteTextField ("Titre",
 				new SelectionController<Entities.PersonTitleEntity>
 				{
 					ValueGetter = () => this.Entity.Title,
@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIFirstnameAndLastname(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
+
 			builder.CreateTextField (tile, 0, "Prénom", Marshaler.Create (() => this.Entity.Firstname, x => this.Entity.Firstname = x));
 			builder.CreateTextField (tile, 0, "Nom",    Marshaler.Create (() => this.Entity.Lastname,  x => this.Entity.Lastname = x));
 			builder.CreateMargin (tile, horizontalSeparator: true);
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIGender(UIBuilder builder)
 		{
-			builder.CreateEditionHintEditor ("Sexe",
+			builder.CreateAutoCompleteTextField ("Sexe",
 				new SelectionController<Entities.PersonGenderEntity>
 				{
 					ValueGetter = () => this.Entity.Gender,
