@@ -11,7 +11,8 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
-	/// The <c>BindingController</c> class is used to bind 
+	/// The <c>BindingController</c> class is used to bind an entity with one of
+	/// the item picker widgets.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class SelectionController<T>
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public SelectionController()
 		{
 		}
+		
 
 		public System.Func<IEnumerable<T>> PossibleItemsGetter
 		{
@@ -95,6 +97,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
 			widget.SelectedItemIndex       = widget.Items.FindIndexByValue (this.GetValue ());
+
+			widget.SelectedItemChanged +=
+				delegate
+				{
+					if (widget.SelectedItemIndex > -1)
+					{
+						this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
+					}
+				};
 		}
 		
 		public void Attach(Widgets.ItemPicker widget)
@@ -131,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			widget.MultiSelectionChanged +=
-							delegate
+				delegate
 				{
 					var selectedItems = this.CollectionValueGetter ();
 
@@ -157,11 +168,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			widget.SelectedItemChanged +=
-							delegate
+				delegate
 				{
 					this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
 				};
 		}
+		
 		private FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
@@ -190,7 +202,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var text in texts)
 			{
-				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (TextConverter.ConvertToLowerAndStripAccents (text), userText));
+				var itemText = TextConverter.ConvertToLowerAndStripAccents (text);
+				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (itemText, userText));
 			}
 
 			return result;
