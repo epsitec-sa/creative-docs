@@ -323,12 +323,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Margins			= new Margins (0, 0, TitleTile.iconSize - TitleTile.buttonSize, 0),
 				Visibility		= false,
 			};
-			
-			this.buttonAdd.Clicked +=
-				delegate
-				{
-					//	TODO: ...
-				};
+
+			this.buttonAdd.Clicked += (sender, e) => this.OnAddClicked (e);
 		}
 
 
@@ -499,6 +495,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.Invalidate ();
 		}
 
+		protected virtual void OnAddClicked(MessageEventArgs e)
+		{
+			var handler = this.AddClicked;
+			
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+		
 		static TitleTile()
 		{
 			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
@@ -507,6 +513,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (TitleTile), metadataDy);
 		}
+
+
+		public event EventHandler<MessageEventArgs> AddClicked;
 
 
 		private static readonly double iconSize		= 32;
