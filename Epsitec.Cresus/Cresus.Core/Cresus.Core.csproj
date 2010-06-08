@@ -101,7 +101,6 @@
     <Compile Include="Controllers\EditionControllers\EditionTitleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLocationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCountryViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionUriSchemeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUriContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTelecomContactViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionMailContactViewController.cs" />
