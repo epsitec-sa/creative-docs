@@ -385,20 +385,28 @@ namespace Epsitec.Cresus.Core
 			showButton.Clicked +=
 				delegate
 				{
-					if (tile.IsSelected)
+					if (showButton.GlyphShape == GlyphShape.ArrowRight)
 					{
-						this.controller.Orchestrator.CloseSubViews (this.controller);
-						tile.SetSelected (false);
-					}
-					else
-					{
-						var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
-
-						if (newController != null)
+						if (tile.IsSelected)
 						{
-							this.controller.Orchestrator.ShowSubView (this.controller, newController);
-							tile.SetSelected (true);
+							this.controller.Orchestrator.CloseSubViews (this.controller);
+							tile.SetSelected (false);
 						}
+						else
+						{
+							var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Summary, this.controller.Orchestrator);
+
+							if (newController != null)
+							{
+								this.controller.Orchestrator.ShowSubView (this.controller, newController);
+								tile.SetSelected (true);
+							}
+						}
+					}
+
+					if (showButton.GlyphShape == GlyphShape.Plus)
+					{
+						// TODO:
 					}
 				};
 
@@ -429,8 +437,8 @@ namespace Epsitec.Cresus.Core
 						}
 						else
 						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
-							showButton.Enable = false;
+							showButton.GlyphShape = GlyphShape.Plus;
+							showButton.Enable = true;
 						}
 					}
 				};
