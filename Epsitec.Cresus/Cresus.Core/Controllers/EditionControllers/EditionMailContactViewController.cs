@@ -71,11 +71,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateFooterEditorTile ();
 
 			var countryHint = builder.CreateHintEditor (contryTile, "Nom et code du pays", this.Entity.Address.Location.Country, null, x => this.Entity.Address.Location.Country = x as Entities.CountryEntity);
-			var countryCtrl = new HintEditorController<Entities.CountryEntity>
+			var countryCtrl = new BindingController<Entities.CountryEntity>
 			{
 				ValueGetter = () => this.Entity.Address.Location.Country,
 				ValueSetter = x => this.Entity.Address.Location.Country = x,
-				ItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 				ToTextArrayConverter = x => new string[] { x.Code, x.Name },
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
 			};
@@ -88,11 +88,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (mainTile.Container, true);
 
 			var locationHint = builder.CreateHintEditor (locationTile, "Numéro postal et ville", this.Entity.Address.Location, null, x => this.Entity.Address.Location = x as Entities.LocationEntity);
-			var locationCtrl = new HintEditorController<Entities.LocationEntity>
+			var locationCtrl = new BindingController<Entities.LocationEntity>
 			{
 				ValueGetter = () => this.Entity.Address.Location,
 				ValueSetter = x => this.Entity.Address.Location = x,
-				ItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
 				ToTextArrayConverter = x => new string[] { x.PostalCode, x.Name },
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name)
 			};

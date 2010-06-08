@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, HintEditorController<T> controller)
+		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, BindingController<T> controller)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
@@ -482,7 +482,14 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
+		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, BindingController<T> controller)
+			where T : AbstractEntity
+		{
+			return this.CreateDetailedRadio (tile, width, label, controller.CollectionValueGetter (), controller.PossibleItemsGetter (), controller.ToFormattedTextConverter);
+		}
+
+
+		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, FormattedText> converter)
 			where T : AbstractEntity
 		{
 			var staticText = new StaticText
@@ -529,15 +536,21 @@ namespace Epsitec.Cresus.Core
 					
 					foreach (int sel in list)
 					{
-						var item = combo.Items[sel];
-						//?selectedItems.Add (combo.Items[sel]);
+						var item = combo.Items.GetValue (sel) as T;
+						selectedItems.Add (item);
 					}
 				};
 
 			return combo;
 		}
 
-		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, string initialValue, System.Action<string> valueSetter, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, string> converter)
+		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, BindingController<T> controller)
+			where T : AbstractEntity
+		{
+			return this.CreateDetailedCheck (tile, width, label, controller.GetValue (), controller.ValueSetter, controller.PossibleItemsGetter (), controller.ToFormattedTextConverter);
+		}
+
+		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, T initialValue, System.Action<T> valueSetter, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, FormattedText> converter)
 			where T : AbstractEntity
 		{
 			var staticText = new StaticText

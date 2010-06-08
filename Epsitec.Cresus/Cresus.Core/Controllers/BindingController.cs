@@ -10,14 +10,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class HintEditorController<T>
+	public class BindingController<T>
 		where T : AbstractEntity
 	{
-		public HintEditorController()
+		public BindingController()
 		{
 		}
 
-		public System.Func<IEnumerable<T>> ItemsGetter
+		public System.Func<IEnumerable<T>> PossibleItemsGetter
 		{
 			get;
 			set;
@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		public System.Func<T> ValueGetter
+		{
+			get;
+			set;
+		}
+
+		public System.Func<System.Collections.Generic.IList<T>> CollectionValueGetter
 		{
 			get;
 			set;
@@ -74,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(Widgets.HintEditor editor)
 		{
-			foreach (var item in this.ItemsGetter ())
+			foreach (var item in this.PossibleItemsGetter ())
 			{
 				editor.Items.Add (item);
 			}

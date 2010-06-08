@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -64,23 +67,49 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var builder = new UIBuilder (container, this);
 
 			builder.CreateHeaderEditorTile ();
+			builder.CreateEditionGroupingTile ("Data.Telecom", "Téléphone");
 
-			var person = this.Entity;
-			var group = builder.CreateEditionGroupingTile ("Data.Telecom", "Téléphone");
-			var roleTile = builder.CreateEditionTile (group, this.Entity);
-			var typeTile = builder.CreateEditionTile (group, this.Entity);
-			var mainTile = builder.CreateEditionTile (group, this.Entity);
-
+			this.CreateUIRoles (builder);
+			this.CreateUITelecomType (builder);
+			this.CreateUIPhoneNumber (builder);
+			
 			builder.CreateFooterEditorTile ();
-
-			builder.CreateDetailedRadio (roleTile, 0, "Choix du ou des rôles souhaités", this.Entity.Roles, CoreProgram.Application.Data.GetRoles (), x => x.Name);
-			builder.CreateDetailedCheck (typeTile, 0, "Type du numéro de téléphone", this.Entity.TelecomType.Name, x => this.Entity.TelecomType.Name = x, CoreProgram.Application.Data.GetTelecomTypes (), x => x.Name);
-
-			builder.CreateTextField (mainTile.Container, 150, "Numéro de téléphone", this.Entity.Number, x => this.Entity.Number = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (mainTile.Container, 100, "Numéro interne", this.Entity.Extension, x => this.Entity.Extension = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 #endif
+		}
+		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var controller = new BindingController<Entities.ContactRoleEntity>
+			{
+				CollectionValueGetter    = () => this.Entity.Roles,
+				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
+				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+			};
+
+			var tile = builder.CreateEditionTile ();
+			builder.CreateDetailedRadio (tile, 0, "Choix du ou des rôles souhaités", controller);
+		}
+		
+		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var controller = new BindingController<Entities.TelecomTypeEntity>
+			{
+				ValueGetter              = () => this.Entity.TelecomType,
+				ValueSetter              = x => this.Entity.TelecomType = x,
+				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetTelecomTypes (),
+				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+			};
+			
+			var tile = builder.CreateEditionTile ();
+			builder.CreateDetailedCheck (tile, 0, "Type du numéro de téléphone", controller);
+		}
+		
+		private void CreateUIPhoneNumber(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+			builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
+			builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
 		}
 	}
 }
