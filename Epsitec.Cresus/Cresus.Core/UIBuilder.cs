@@ -165,56 +165,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public TextField CreateTextField(EditionTile tile, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
-		{
-			var staticText = new StaticText
-			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
-			};
-
-			TextField textField;
-
-			if (width == 0)  // occupe toute la largeur ?
-			{
-				textField = new TextField
-				{
-					Parent = tile.Container,
-					Text = initialValue,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 10, 0, 5),
-					TabIndex = ++this.tabIndex,
-				};
-			}
-			else  // largeur partielle fixe ?
-			{
-				var box = new FrameBox
-				{
-					Parent = tile.Container,
-					Dock = DockStyle.Top,
-					TabIndex = ++this.tabIndex,
-				};
-
-				textField = new TextField
-				{
-					Parent = box,
-					Text = initialValue,
-					Dock = DockStyle.Left,
-					PreferredWidth = width,
-					Margins = new Margins (0, 10, 0, 5),
-					TabIndex = ++this.tabIndex,
-				};
-			}
-
-			UIBuilder.CreateTextFieldHandler (textField, valueSetter, validator);
-
-			return textField;
-		}
-
-		public TextFieldMulti CreateTextFieldMulti(EditionTile tile, int height, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
+		public TextFieldMulti CreateTextFieldMulti(EditionTile tile, int height, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
 			var staticText = new StaticText
 			{
@@ -228,14 +179,16 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldMulti
 			{
 				Parent = tile.Container,
-				Text = initialValue,
+				Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ()),
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
 			};
 
-			UIBuilder.CreateTextFieldHandler (textField, valueSetter, validator);
+			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
+
+			UIBuilder.CreateTextFieldHandler (textField, marshaler);
 
 			return textField;
 		}
@@ -545,23 +498,6 @@ namespace Epsitec.Cresus.Core
 				{
 					//	Appelé lorsqu'une tuile quelconque est cliquée.
 					tile.ToggleSubView (controller.Orchestrator, controller);
-				};
-		}
-
-		private static void CreateTextFieldHandler(Widget textField, System.Action<string> valueSetter, System.Func<string, bool> validator)
-		{
-			textField.TextChanged +=
-				delegate
-				{
-					if (validator == null || validator (textField.Text))
-					{
-						valueSetter (textField.Text);
-						textField.SetError (false);
-					}
-					else
-					{
-						textField.SetError (true);
-					}
 				};
 		}
 

@@ -1,6 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -21,17 +25,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var builder = new UIBuilder (container, this);
 
 			builder.CreateHeaderEditorTile ();
-
-			var mail = this.Entity;
-			var group = builder.CreateEditionGroupingTile ("Data.Mail", "Ville");
-			var tile = builder.CreateEditionTile (group, this.Entity);
+			builder.CreateEditionGroupingTile ("Data.Mail", "Ville");
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateTextField (tile,   0, "Numéro postal", this.Entity.PostalCode, x => this.Entity.PostalCode = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile, 150, "Ville",         this.Entity.Name,       x => this.Entity.Name = x,       Validators.StringValidator.Validate);
+			this.CreateUIMain (builder);
+
+			builder.CreateFooterEditorTile ();
 
 			UI.SetInitialFocus (container);
+		}
+
+
+		private void CreateUIMain(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 50, "Numéro postal", Marshaler.Create (() => this.Entity.PostalCode, x => this.Entity.PostalCode = x));
+			builder.CreateTextField (tile,  0, "Ville",         Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
 		}
 	}
 }
