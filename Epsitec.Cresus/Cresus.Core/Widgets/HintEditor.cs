@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public System.Func<object, string> ValueToDescriptionConverter
+		public System.Func<object, FormattedText> ValueToDescriptionConverter
 		{
 			get;
 			set;
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					var value = this.items.GetValue (i);
 
-					string full = this.ValueToDescriptionConverter (value);
+					string full = this.ValueToDescriptionConverter (value).ToSimpleText ();
 					if (full == original)  // trouvé exactement ?
 					{
 						list1.Clear ();
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			else
 			{
 				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value);
+				return this.ValueToDescriptionConverter (value).ToSimpleText ();
 			}
 		}
 

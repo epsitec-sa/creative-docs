@@ -336,6 +336,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				handler (this);
 			}
+			
+			this.OnSelectedItemChanged ();
 		}
 
 		protected void OnSelectedItemChanged()

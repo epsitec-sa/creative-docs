@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.Core.Accessors
 			editor.SelectedItemIndex = editor.Items.FindIndexByValue (entity);
 		}
 
-		private static string HintValueToDescriptionConverter(object value)
+		private static FormattedText HintValueToDescriptionConverter(object value)
 		{
 			var entity = value as Entities.LocationEntity;
 
-			return string.Format ("{0} {1}", entity.PostalCode, entity.Name);
+			return FormattedText.FromSimpleText (string.Format ("{0} {1}", entity.PostalCode, entity.Name));
 		}
 
 		private static Widgets.HintComparerResult HintComparer(object value, string typed)

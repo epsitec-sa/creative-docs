@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, BindingController<T> controller)
+		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
@@ -482,15 +482,19 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, BindingController<T> controller)
+		public Widget CreateEditionDetailedRadio<T>(int width, string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
-			return this.CreateDetailedRadio (tile, width, label, controller.CollectionValueGetter (), controller.PossibleItemsGetter (), controller.ToFormattedTextConverter);
+			var tile = this.CreateEditionTile ();
+			var combo = this.CreateDetailedRadio (tile, width, label);
+
+			controller.Attach (combo);
+
+			return combo;
 		}
 
 
-		public Widget CreateDetailedRadio<T>(EditionTile tile, int width, string label, System.Collections.Generic.IList<T> selectedItems, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, FormattedText> converter)
-			where T : AbstractEntity
+		private Widgets.DetailedCombo CreateDetailedRadio(EditionTile tile, int width, string label)
 		{
 			var staticText = new StaticText
 			{
@@ -510,48 +514,21 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			foreach (T item in allItems)
-			{
-				combo.Items.Add (null, item);
-			}
-
-			combo.ValueToDescriptionConverter = x => converter ((T) x);
-			combo.CreateUI ();
-
-			foreach (var item in selectedItems)
-			{
-				int index = combo.Items.FindIndexByValue (item);
-
-				if (index != -1)
-				{
-					combo.AddSelection (Enumerable.Range (index, 1));
-				}
-			}
-
-			combo.MultiSelectionChanged +=
-				delegate
-				{
-					selectedItems.Clear ();
-					ICollection<int> list = combo.GetSortedSelection ();
-					
-					foreach (int sel in list)
-					{
-						var item = combo.Items.GetValue (sel) as T;
-						selectedItems.Add (item);
-					}
-				};
-
 			return combo;
 		}
 
-		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, BindingController<T> controller)
+		public Widget CreateEditionDetailedCheck<T>(int width, string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
-			return this.CreateDetailedCheck (tile, width, label, controller.GetValue (), controller.ValueSetter, controller.PossibleItemsGetter (), controller.ToFormattedTextConverter);
+			var tile  = this.CreateEditionTile ();
+			var combo = this.CreateDetailedCheck (tile, width, label);
+
+			controller.Attach (combo);
+			
+			return combo;
 		}
 
-		public Widget CreateDetailedCheck<T>(EditionTile tile, int width, string label, T initialValue, System.Action<T> valueSetter, System.Collections.Generic.IEnumerable<T> allItems, System.Func<T, FormattedText> converter)
-			where T : AbstractEntity
+		private Widgets.DetailedCombo CreateDetailedCheck(EditionTile tile, int width, string label)
 		{
 			var staticText = new StaticText
 			{
@@ -570,25 +547,6 @@ namespace Epsitec.Cresus.Core
 				AllowMultipleSelection = false,
 				TabIndex = ++this.tabIndex,
 			};
-
-			foreach (T item in allItems)
-			{
-				combo.Items.Add (null, item);
-			}
-
-			combo.ValueToDescriptionConverter = x => converter ((T) x);
-			combo.CreateUI ();
-
-			int index = combo.Items.FindIndexByValue (initialValue);
-			if (index != -1)
-			{
-				combo.AddSelection (Enumerable.Range (index, 1));
-			}
-
-			combo.SelectedItemChanged +=
-				delegate
-				{
-				};
 
 			return combo;
 		}

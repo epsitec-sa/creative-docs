@@ -80,20 +80,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new BindingController<Entities.ContactRoleEntity>
+			var controller = new SelectionController<Entities.ContactRoleEntity>
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 
-			var tile = builder.CreateEditionTile ();
-			builder.CreateDetailedRadio (tile, 0, "Choix du ou des rôles souhaités", controller);
+			builder.CreateEditionDetailedRadio (0, "Choix du ou des rôles souhaités", controller);
 		}
 		
 		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new BindingController<Entities.TelecomTypeEntity>
+			var controller = new SelectionController<Entities.TelecomTypeEntity>
 			{
 				ValueGetter              = () => this.Entity.TelecomType,
 				ValueSetter              = x => this.Entity.TelecomType = x,
@@ -101,8 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 			
-			var tile = builder.CreateEditionTile ();
-			builder.CreateDetailedCheck (tile, 0, "Type du numéro de téléphone", controller);
+			builder.CreateEditionDetailedCheck (0, "Type du numéro de téléphone", controller);
 		}
 		
 		private void CreateUIPhoneNumber(Epsitec.Cresus.Core.UIBuilder builder)
