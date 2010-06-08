@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateHeaderEditorTile ();
 			builder.CreateEditionGroupingTile ("Data.Mail", "Adresse");
 
+			this.CreateUIRoles (builder);
 			this.CreateUICountry (builder);
 			this.CreateUIMain (builder);
 			this.CreateUILocation (builder);
@@ -32,6 +33,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			UI.SetInitialFocus (container);
 		}
 
+
+		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var controller = new SelectionController<Entities.ContactRoleEntity>
+			{
+				CollectionValueGetter    = () => this.Entity.Roles,
+				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
+				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+			};
+
+			builder.CreateEditionDetailedRadio (0, "Choix du ou des rôles souhaités", controller);
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{
