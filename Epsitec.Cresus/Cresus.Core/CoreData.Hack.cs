@@ -104,8 +104,8 @@ namespace Epsitec.Cresus.Core
 
 				using (telecomType3.DefineOriginalValues ())
 				{
-					telecomType3.Code = "fixnet";
-					telecomType3.Name = "Téléphone fixe";
+					telecomType3.Code = "fax";
+					telecomType3.Name = "Télécopieur (fax)";
 				}
 
 				this.telecomTypes.Add (telecomType1);

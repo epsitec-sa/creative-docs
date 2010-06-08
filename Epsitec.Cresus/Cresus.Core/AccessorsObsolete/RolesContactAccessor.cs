@@ -131,11 +131,11 @@ namespace Epsitec.Cresus.Core.Accessors
 			}
 		}
 
-		private static string DetailedValueToDescriptionConverter(object value)
+		private static FormattedText DetailedValueToDescriptionConverter(object value)
 		{
 			var entity = value as Entities.ContactRoleEntity;
 
-			return entity.Name;
+			return FormattedText.FromSimpleText (entity.Name);
 		}
 	}
 }

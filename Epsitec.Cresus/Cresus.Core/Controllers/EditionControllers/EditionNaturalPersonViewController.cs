@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
@@ -9,7 +10,6 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUITitle(UIBuilder builder)
 		{
 			builder.CreateEditionHintEditor ("Titre",
-				new HintEditorController<Entities.PersonTitleEntity>
+				new BindingController<Entities.PersonTitleEntity>
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x,
-					ItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
@@ -63,11 +63,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIGender(UIBuilder builder)
 		{
 			builder.CreateEditionHintEditor ("Sexe",
-				new HintEditorController<Entities.PersonGenderEntity>
+				new BindingController<Entities.PersonGenderEntity>
 				{
 					ValueGetter = () => this.Entity.Gender,
 					ValueSetter = x => this.Entity.Gender = x,
-					ItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)

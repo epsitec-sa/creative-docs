@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Méthode de conversion d'un objet stocké dans Items.Value en une chaîne à afficher.
 		/// </summary>
 		/// <value>The value converter.</value>
-		public System.Func<object, string> ValueToDescriptionConverter
+		public System.Func<object, FormattedText> ValueToDescriptionConverter
 		{
 			get;
 			set;
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					button = new CheckButton
 					{
 						Parent = this,
-						Name = this.GetItemText (i),
+						Index = i,
 						Text = this.GetItemText (i),
 						Dock = DockStyle.Top,
 						TabIndex = tabIndex++,
@@ -81,14 +81,14 @@ namespace Epsitec.Cresus.Core.Widgets
 					button = new RadioButton
 					{
 						Parent = this,
-						Name = this.GetItemText (i),
+						Index = i,
 						Text = this.GetItemText (i),
 						Dock = DockStyle.Top,
 						TabIndex = tabIndex++,
 					};
 				}
 
-				button.ActiveStateChanged += new EventHandler (this.HandleButtonActiveStateChanged);
+				button.ActiveStateChanged += this.HandleButtonActiveStateChanged;
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			else
 			{
 				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value);
+				return this.ValueToDescriptionConverter (value).ToString ();
 			}
 		}
 
@@ -250,6 +250,8 @@ namespace Epsitec.Cresus.Core.Widgets
 					{
 						this.AddSelection (Enumerable.Range (value, 1));
 					}
+					
+					this.OnSelectedItemChanged ();
 				}
 			}
 		}
@@ -291,18 +293,12 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void SelectionToButtons()
 		{
 			//	Met à jour l'état des boutons en fonction de la séleciton.
-			ICollection<int> sels = this.GetSortedSelection ();
-			List<string> list = new List<string> ();
-
-			foreach (int sel in sels)
-			{
-				list.Add (this.GetItemText (sel));
-			}
-
+			var sels = this.GetSortedSelection ();
+			
 			foreach (AbstractButton button in this.Children)
 			{
 				this.ignoreChange = true;
-				button.ActiveState = (list.Contains (button.Name)) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+				button.ActiveState = sels.Contains (button.Index) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
 				this.ignoreChange = false;
 			}
 		}
@@ -310,20 +306,23 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void ButtonsToSelection()
 		{
 			//	Met à jour la sélection en fonction de l'état des boutons.
-			this.ClearSelection ();
+
+			this.selection.Clear ();
 
 			foreach (AbstractButton button in this.Children)
 			{
 				if (button.IsActive)
 				{
-					int index = this.items.Keys.ToList ().IndexOf (button.Name);
+					int index = button.Index;
 
 					if (index != -1)
 					{
-						this.AddSelection (Enumerable.Range (index, 1));
+						this.selection.Add (index);
 					}
 				}
 			}
+
+			this.OnMultiSelectionChanged ();
 		}
 
 
@@ -331,12 +330,23 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (DetailedCombo.MultiSelectionChangedEvent);
-			var e = new DependencyPropertyChangedEventArgs ("MultiSelectionChanged");
+			var handler = (EventHandler) this.GetUserEventHandler (DetailedCombo.MultiSelectionChangedEvent);
 
 			if (handler != null)
 			{
-				handler (this, e);
+				handler (this);
+			}
+		}
+
+		protected void OnSelectedItemChanged()
+		{
+			this.Invalidate ();
+
+			var handler = (EventHandler) this.GetUserEventHandler (DetailedCombo.SelectedItemChangedEvent);
+
+			if (handler != null)
+			{
+				handler (this);
 			}
 		}
 

@@ -114,7 +114,7 @@
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
-    <Compile Include="Controllers\HintEditorController.cs" />
+    <Compile Include="Controllers\BindingController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
