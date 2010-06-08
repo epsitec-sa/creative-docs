@@ -1,6 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -28,10 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateTextField (tile, 0, "Nom complet", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile, 150, "Nom court", this.Entity.ShortName, x => this.Entity.ShortName = x, Validators.StringValidator.Validate);
-			builder.CreateMargin (tile, true);
-			builder.CreateTextFieldMulti (tile, 100, "Complément", this.Entity.Complement, x => this.Entity.Complement = x, Validators.StringValidator.Validate);
+			builder.CreateTextField      (tile,   0, "Nom complet", Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
+			builder.CreateTextField      (tile, 150, "Nom court",   Marshaler.Create (() => this.Entity.ShortName,  x => this.Entity.ShortName = x));
+			builder.CreateMargin         (tile, true);
+			builder.CreateTextFieldMulti (tile, 100, "Complément",  Marshaler.Create (() => this.Entity.Complement, x => this.Entity.Complement = x));
 
 			UI.SetInitialFocus (container);
 		}

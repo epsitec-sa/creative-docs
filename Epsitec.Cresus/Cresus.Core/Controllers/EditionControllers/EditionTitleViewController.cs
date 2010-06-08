@@ -1,6 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -21,16 +25,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var builder = new UIBuilder (container, this);
 
 			builder.CreateHeaderEditorTile ();
+			builder.CreateEditionGroupingTile ("Data.NaturalPerson", "Titre");
 
-			var mail = this.Entity;
-			var group = builder.CreateEditionGroupingTile ("Data.NaturalPerson", "Titre");
-			var tile = builder.CreateEditionTile (group, this.Entity);
+			this.CreateUIMain (builder);
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateTextField (tile, 0, "Titre", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
-
 			UI.SetInitialFocus (container);
+		}
+
+
+		private void CreateUIMain(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 0, "Titre", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 		}
 	}
 }
