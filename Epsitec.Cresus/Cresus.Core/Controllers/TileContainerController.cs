@@ -214,9 +214,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.SummaryTile.Clicked += (sender, e) => this.HandleTileClicked (item);
 		}
 
-		private void CreateTitleTileClickHandler(TitleTile tile)
+		private void CreateTitleTileClickHandler(SummaryData item, TitleTile tile)
 		{
 			tile.Clicked += (sender, e) => this.HandleTileClicked (this.activeItems.First (x => x.TitleTile == tile));
+			tile.AddClicked += (sender, e) =>
+				{
+					string itemName = SummaryData.GetNamePrefix (item.Name);
+
+					this.QueueTasklets ("CreateNewTile",
+						new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
+						new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
+						new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
+				};
+
 		}
 
 		private void HandleTileClicked(SummaryData item)
@@ -289,7 +299,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			item.TitleTile = new TitleTile ();
 
-			this.CreateTitleTileClickHandler (item.TitleTile);
+			this.CreateTitleTileClickHandler (item, item.TitleTile);
 
 			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.SummaryTile));
 			
