@@ -61,63 +61,6 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		public SummaryTile CreateSummaryTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
-		{
-			var controller = new Controllers.TileController<AbstractEntity> ()
-			{
-				Entity = accessor.AbstractEntity,
-				ChildrenMode = accessor.ViewControllerMode
-			};
-
-			SummaryTile tile;
-
-			if (accessor.EnableAddAndRemove)
-			{
-				tile = new CollectionItemTile ();
-			}
-			else
-			{
-				tile = new SummaryTile ();
-			}
-
-			tile.AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None;
-			tile.Controller = controller;
-			tile.Summary = accessor.Summary;
-
-			parent.Items.Add (tile);
-
-			UIBuilder.CreateTileHandler (tile, this.controller);
-
-#if false
-			tile.CreateEntity += this.HandleTileCreateEntity;
-			tile.RemoveEntity += this.HandleTileRemoveEntity;
-#endif
-
-			return tile;
-		}
-
-		public EditionTile CreateEditionTile(TitleTile parent, Accessors.AbstractEntityAccessor accessor)
-		{
-			var controller = new Controllers.TileController<AbstractEntity> ()
-			{
-				Entity = accessor.AbstractEntity,
-				ChildrenMode = accessor.ViewControllerMode
-			};
-
-			var tile = new EditionTile
-			{
-				AutoHilite = accessor.ViewControllerMode != ViewControllerMode.None,
-				Controller = controller,
-				IsReadOnly = false,
-			};
-
-			UIBuilder.CreateTileHandler (tile, this.controller);
-
-			parent.Items.Add (tile);
-
-			return tile;
-		}
-
 		public EditionTile CreateEditionTile(TitleTile parent = null)
 		{
 			if (parent == null)
@@ -141,7 +84,6 @@ namespace Epsitec.Cresus.Core
 			var controller = new Controllers.TileController<AbstractEntity> ()
 			{
 				Entity = entity,
-//-				ChildrenMode = accessor.ViewControllerMode
 			};
 
 			var tile = new EditionTile
@@ -327,14 +269,14 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), null, x => controller.SetValue (x as T));
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), x => controller.SetValue (x as T));
 
 			controller.Attach (autoCompleteTextField);
 
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter)
 		{
 			tile.AllowSelection = true;
 
@@ -409,11 +351,6 @@ namespace Epsitec.Cresus.Core
 						// TODO:
 					}
 				};
-
-			if (accessor != null)
-			{
-				accessor.WidgetInitialize (editor, entity);
-			}
 
 			return editor;
 		}
@@ -520,126 +457,6 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-
-		public Widget CreateCombo(Widget embedder, int width, string label, Accessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
-		{
-			// TODO: à supprimer
-			var staticText = new StaticText
-			{
-				Parent = embedder,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
-			};
-
-			if (detailed)
-			{
-				var combo = new Widgets.ItemPicker
-				{
-					Parent = embedder,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 5, 10),
-					AllowMultipleSelection = allowMultipleSelection,
-					//?ComboInitializer = initializer,
-					Text = initializer.ConvertInternalToEdition (initialValue),
-					TabIndex = ++this.tabIndex,
-				};
-
-				UIBuilder.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
-				
-				return combo;
-			}
-			else
-			{
-				Widgets.SuperCombo combo;
-
-				if (width == 0)  // occupe toute la largeur ?
-				{
-					combo = new Widgets.SuperCombo
-					{
-						Parent = embedder,
-						IsReadOnly = readOnly,
-						AllowMultipleSelection = allowMultipleSelection,
-						//?Text = initializer.ConvertInternalToEdition (initialValue),
-						Dock = DockStyle.Top,
-						Margins = new Margins (0, 10, 0, 5),
-						TabIndex = ++this.tabIndex,
-					};
-				}
-				else  // largeur partielle fixe ?
-				{
-					var box = new FrameBox
-					{
-						Parent = embedder,
-						Dock = DockStyle.Top,
-						TabIndex = ++this.tabIndex,
-					};
-
-					combo = new Widgets.SuperCombo
-					{
-						Parent = box,
-						IsReadOnly = readOnly,
-						AllowMultipleSelection = allowMultipleSelection,
-						//?Text = initializer.ConvertInternalToEdition (initialValue),
-						Dock = DockStyle.Left,
-						PreferredWidth = width,
-						Margins = new Margins (0, 10, 0, 5),
-						TabIndex = ++this.tabIndex,
-					};
-				}
-
-				initializer.InitializeCombo (combo);
-				combo.AddSelection (Enumerable.Range (0, 1));
-
-				UIBuilder.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
-
-				return combo;
-			}
-		}
-
-		public void CreateLinkButtons(Widget embedder)
-		{
-#if false
-			//	TODO: Prototype non fonctionnel, à valider puis terminer
-			var frameBox = new ClippingFrameBox
-			{
-				Parent = embedder,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 10, 20),
-				TabIndex = ++this.tabIndex,
-				ClippingMode = ClippingMode.ClipWidth,
-			};
-
-			var linkButton = new Button
-			{
-				Parent = frameBox,
-				Text = "Lier avec...",
-				PreferredWidth = 70,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 2, 0, 0),
-				TabIndex = ++this.tabIndex,
-			};
-
-			var unlinkButton = new Button
-			{
-				Parent = frameBox,
-				Text = "Délier",
-				PreferredWidth = 70,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
-				TabIndex = ++this.tabIndex,
-				Enable = false,
-			};
-
-			var label = new StaticText
-			{
-				Parent = frameBox,
-				Text = "Utilisation unique",  // ou "Utilisé 10x"
-				Dock = DockStyle.Fill,
-			};
-#endif
-		}
 
 		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)
 		{
