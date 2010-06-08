@@ -50,11 +50,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin (tile.Container, true);
-			builder.CreateTextField      (tile.Container,  0, "Rue",                     this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x, Validators.StringValidator.Validate);
-			builder.CreateTextFieldMulti (tile.Container, 52, "Complément de l'adresse", this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x, Validators.StringValidator.Validate);
-			builder.CreateTextField      (tile.Container,  0, "Boîte postale",           this.Entity.Address.PostBox.Number,    x => this.Entity.Address.PostBox.Number = x,    Validators.StringValidator.Validate);
-			builder.CreateMargin (tile.Container, true);
+			builder.CreateMargin         (tile, true);
+			builder.CreateTextField      (tile,  0, "Rue",                     this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x, Validators.StringValidator.Validate);
+			builder.CreateTextFieldMulti (tile, 52, "Complément de l'adresse", this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x, Validators.StringValidator.Validate);
+			builder.CreateTextField      (tile,  0, "Boîte postale",           this.Entity.Address.PostBox.Number,    x => this.Entity.Address.PostBox.Number = x,    Validators.StringValidator.Validate);
+			builder.CreateMargin         (tile, true);
 		}
 
 		private void CreateUICountry(UIBuilder builder)

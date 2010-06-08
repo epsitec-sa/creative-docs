@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateTextField (tile.Container, 0, "Pays", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile.Container, 150, "Code ISO à deux lettres", this.Entity.Code, x => this.Entity.Code = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile, 0, "Pays", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile, 150, "Code ISO à deux lettres", this.Entity.Code, x => this.Entity.Code = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 #endif
