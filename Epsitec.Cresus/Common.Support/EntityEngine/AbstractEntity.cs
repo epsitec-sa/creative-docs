@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
+	[System.Diagnostics.DebuggerDisplay ("Value = {DebuggerDisplayValue}")]
 	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider
 	{
 		/// <summary>
@@ -63,6 +64,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			get
 			{
 				return this.calculationsDisabled;
+			}
+		}
+
+		/// <summary>
+		/// Gets the value which should be displayed by the debugger when the entity is
+		/// inspected in the variables window (or data tip, etc.).
+		/// </summary>
+		/// <value>The debugger display value.</value>
+		internal string DebuggerDisplayValue
+		{
+			get
+			{
+				var buffer = new System.Text.StringBuilder ();
+				this.Dump (buffer, topLevelOnly: true, skipUndefinedFields: true);
+				return string.Join (", ", buffer.ToString ().Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries));
 			}
 		}
 
@@ -149,14 +165,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		public string Dump()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), null, true);
+			this.Dump (buffer, includeLabels: true);
 			return buffer.ToString ();
 		}
 
-		public string DumpFlatData(System.Predicate<StructuredTypeField> filter)
+		public string DumpFlatData(System.Predicate<StructuredTypeField> filter = null)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), filter, false);
+			this.Dump (buffer, filter: filter);
 			return buffer.ToString ();
 		}
 
@@ -220,8 +236,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history, System.Predicate<StructuredTypeField> filter, bool includeLabels)
+		private void Dump(System.Text.StringBuilder buffer, int level = 0, HashSet<AbstractEntity> history = null, System.Predicate<StructuredTypeField> filter = null, bool includeLabels = false, bool topLevelOnly = false, bool skipUndefinedFields = false)
 		{
+			if (history == null)
+            {
+				history = new HashSet<AbstractEntity> ();
+            }
+
 			string indent = new string (' ', level*2);
 			string name   = "";
 			
@@ -249,6 +270,15 @@ namespace Epsitec.Common.Support.EntityEngine
 					object value = this.DynamicGetField (id);
 					AbstractEntity child = value as AbstractEntity;
 
+					if (skipUndefinedFields)
+					{
+						if ((value == null) ||
+							(value == UndefinedValue.Value))
+						{
+							continue;
+						}
+					}
+
 					switch (this.InternalGetFieldRelation (id))
 					{
 						case FieldRelation.None:
@@ -256,7 +286,13 @@ namespace Epsitec.Common.Support.EntityEngine
 							break;
 
 						case FieldRelation.Reference:
-							if (child == null)
+							if (topLevelOnly)
+							{
+								continue;
+							}
+
+							if ((child == null) ||
+								(EntityNullReferenceVirtualizer.IsNullEntity (child)))
 							{
 								buffer.AppendFormat (includeLabels ? "{0}{1}: {2}\n" : "\n", indent, name, nullValue);
 							}
@@ -266,11 +302,16 @@ namespace Epsitec.Common.Support.EntityEngine
 								{
 									buffer.AppendFormat ("{0}{1}:\n", indent, name);
 								}
-								child.Dump (buffer, level+1, history, filter, includeLabels);
+								child.Dump (buffer, level+1, history, filter, includeLabels, topLevelOnly, skipUndefinedFields);
 							}
 							break;
 
 						case FieldRelation.Collection:
+							if (topLevelOnly)
+							{
+								continue;
+							}
+
 							if (includeLabels)
 							{
 								buffer.AppendFormat ("{0}{1}{2}:\n", indent, name, "{");
@@ -279,7 +320,8 @@ namespace Epsitec.Common.Support.EntityEngine
 							foreach (object item in (System.Collections.IList) value)
 							{
 								child = item as AbstractEntity;
-								if (child == null)
+								if ((child == null) ||
+									(EntityNullReferenceVirtualizer.IsNullEntity (child)))
 								{
 									if (includeLabels)
 									{
@@ -292,7 +334,7 @@ namespace Epsitec.Common.Support.EntityEngine
 									{
 										buffer.AppendFormat ("{0}  {1}:\n", indent, index++);
 									}
-									child.Dump (buffer, level+2, history, filter, includeLabels);
+									child.Dump (buffer, level+2, history, filter, includeLabels, topLevelOnly, skipUndefinedFields);
 								}
 							}
 							if (includeLabels)
