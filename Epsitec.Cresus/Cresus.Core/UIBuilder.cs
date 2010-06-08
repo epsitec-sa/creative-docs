@@ -238,6 +238,18 @@ namespace Epsitec.Cresus.Core
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
 
+			showButton.Entered +=
+				delegate
+				{
+					tile.TileArrowHilite = true;
+				};
+
+			showButton.Exited +=
+				delegate
+				{
+					tile.TileArrowHilite = false;
+				};
+
 			showButton.Clicked +=
 				delegate
 				{
@@ -311,7 +323,6 @@ namespace Epsitec.Cresus.Core
 
 			return combo;
 		}
-
 
 		private Widgets.ItemPicker CreateDetailedRadio(EditionTile tile, int width, string label)
 		{
