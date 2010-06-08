@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomTypeEntity> GetAllTelecomTypes(int index, int count)
+		{
+			TelecomTypeEntity example = this.CreateTelecomTypeExample ();
+
+			return this.GetTelecomTypesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByCode(string code)
 		{
 			TelecomTypeEntity example = this.CreateTelecomTypeExampleByCode (code);
@@ -45,11 +53,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByCode(string code, int index, int count)
+		{
+			TelecomTypeEntity example = this.CreateTelecomTypeExampleByCode (code);
+
+			return this.GetTelecomTypesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(string name)
 		{
 			TelecomTypeEntity example = this.CreateTelecomTypeExampleByName (name);
 
 			return this.GetTelecomTypesByExample (example);
+		}
+
+
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(string name, int index, int count)
+		{
+			TelecomTypeEntity example = this.CreateTelecomTypeExampleByName (name);
+
+			return this.GetTelecomTypesByExample (example, index, count);
 		}
 
 

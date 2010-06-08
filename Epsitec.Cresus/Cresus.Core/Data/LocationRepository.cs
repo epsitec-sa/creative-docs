@@ -36,11 +36,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<LocationEntity> GetAllLocations(int index, int count)
+		{
+			LocationEntity example = this.CreateLocationExample ();
+
+			return this.GetLocationsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<LocationEntity> GetLocationsByName(string name)
 		{
 			LocationEntity example = this.CreateLocationExampleByName (name);
 
 			return this.GetLocationsByExample (example);
+		}
+
+
+		public IEnumerable<LocationEntity> GetLocationsByName(string name, int index, int count)
+		{
+			LocationEntity example = this.CreateLocationExampleByName (name);
+
+			return this.GetLocationsByExample (example, index, count);
 		}
 
 
@@ -52,6 +68,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<LocationEntity> GetLocationsByPostalCode(string postalCode, int index, int count)
+		{
+			LocationEntity example = this.CreateLocationExampleByPostalCode (postalCode);
+
+			return this.GetLocationsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<LocationEntity> GetLocationsByCountry(CountryEntity country)
 		{
 			LocationEntity example = this.CreateLocationExampleByCountry (country);
@@ -60,11 +84,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<LocationEntity> GetLocationsByCountry(CountryEntity country, int index, int count)
+		{
+			LocationEntity example = this.CreateLocationExampleByCountry (country);
+
+			return this.GetLocationsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<LocationEntity> GetLocationsByRegion(RegionEntity region)
 		{
 			LocationEntity example = this.CreateLocationExampleByRegion (region);
 
 			return this.GetLocationsByExample (example);
+		}
+
+
+		public IEnumerable<LocationEntity> GetLocationsByRegion(RegionEntity region, int index, int count)
+		{
+			LocationEntity example = this.CreateLocationExampleByRegion (region);
+
+			return this.GetLocationsByExample (example, index, count);
 		}
 
 

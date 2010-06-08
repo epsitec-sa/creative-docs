@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonTitleEntity> GetPersonsTitlesByExample(PersonTitleEntity example, int index, int count)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByExample(PersonTitleEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<PersonTitleEntity> (example, index, count);
 		}
@@ -38,6 +38,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PersonTitleEntity> GetAllPersonTitles(int index, int count)
+		{
+			PersonTitleEntity example = this.CreatePersonTitleExample ();
+
+			return this.GetPersonTitlesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(string shortName)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByShortName (shortName);
@@ -46,11 +54,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(string shortName, int index, int count)
+		{
+			PersonTitleEntity example = this.CreatePersonTitleExampleByShortName (shortName);
+
+			return this.GetPersonTitlesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(string name)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByName (name);
 
 			return this.GetPersonTitlesByExample (example);
+		}
+
+
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(string name, int index, int count)
+		{
+			PersonTitleEntity example = this.CreatePersonTitleExampleByName (name);
+
+			return this.GetPersonTitlesByExample (example, index, count);
 		}
 
 

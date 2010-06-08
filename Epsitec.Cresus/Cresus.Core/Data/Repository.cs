@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Data
 		public Repository(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
-
+			
 			this.dataBrowser = new DataBrowser (this.DataContext);
 		}
 

@@ -37,9 +37,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<NaturalPersonEntity> GetAllNaturalPersons(int index, int count)
+		{
+			return this.GetAllGenericPersons<NaturalPersonEntity> (index, count);
+		}
+
+
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByPreferredLanguage(LanguageEntity preferredLanguage)
 		{
 			return this.GetGenericPersonsByPreferredLanguage<NaturalPersonEntity> (preferredLanguage);
+		}
+
+
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByPreferredLanguage(LanguageEntity preferredLanguage, int index, int count)
+		{
+			return this.GetGenericPersonsByPreferredLanguage<NaturalPersonEntity> (preferredLanguage, index, count);
 		}
 
 
@@ -48,6 +60,11 @@ namespace Epsitec.Cresus.Core.Data
 			return this.GetGenericPersonsByContacts<NaturalPersonEntity> (contacts);
 		}
 
+
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByContacts(int index, int count, params AbstractContactEntity[] contacts)
+		{
+			return this.GetGenericPersonsByContacts<NaturalPersonEntity> (index, count, contacts);
+		}
 
 
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByTitle(PersonTitleEntity title)
@@ -58,12 +75,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByTitle(PersonTitleEntity title, int index, int count)
+		{
+			NaturalPersonEntity example = this.CreateNaturalPersonExampleByTitle (title);
+
+			return this.GetNaturalPersonsByExample (example, index, count);
+		}
+
 
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(string firstname)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByFirstname (firstname);
 
 			return this.GetNaturalPersonsByExample (example);
+		}
+
+
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(string firstname, int index, int count)
+		{
+			NaturalPersonEntity example = this.CreateNaturalPersonExampleByFirstname (firstname);
+
+			return this.GetNaturalPersonsByExample (example, index, count);
 		}
 
 
@@ -77,6 +109,14 @@ namespace Epsitec.Cresus.Core.Data
 
 
 
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByLastname(string lastname, int index, int count)
+		{
+			NaturalPersonEntity example = this.CreateNaturalPersonExampleByLastname (lastname);
+
+			return this.GetNaturalPersonsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByGender(PersonGenderEntity gender)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByGender (gender);
@@ -85,12 +125,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByGender(PersonGenderEntity gender, int index, int count)
+		{
+			NaturalPersonEntity example = this.CreateNaturalPersonExampleByGender (gender);
+
+			return this.GetNaturalPersonsByExample (example, index, count);
+		}
+
 
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByBirthDate(Date date)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByBirthDate (date);
 
 			return this.GetNaturalPersonsByExample (example);
+		}
+
+
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByBirthDate(Date date, int index, int count)
+		{
+			NaturalPersonEntity example = this.CreateNaturalPersonExampleByBirthDate (date);
+
+			return this.GetNaturalPersonsByExample (example, index, count);
 		}
 
 

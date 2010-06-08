@@ -37,11 +37,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PostBoxEntity> GetAllPostBoxes(int index, int count)
+		{
+			PostBoxEntity example = this.CreatePostBoxExample ();
+
+			return this.GetPostBoxesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(string number)
 		{
 			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
 
 			return this.GetPostBoxesByExample (example);
+		}
+
+
+		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(string number, int index, int count)
+		{
+			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
+
+			return this.GetPostBoxesByExample (example, index, count);
 		}
 
 

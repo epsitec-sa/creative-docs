@@ -37,11 +37,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AddressEntity> GetAllAddresses(int index, int count)
+		{
+			AddressEntity example = this.CreateAddressExample ();
+
+			return this.GetAddressesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<AddressEntity> GetAddressesByStreet(StreetEntity street)
 		{
 			AddressEntity example = this.CreateAddressExampleByStreet (street);
 
 			return this.GetAddressesByExample (example);
+		}
+
+
+		public IEnumerable<AddressEntity> GetAddressesByStreet(StreetEntity street, int index, int count)
+		{
+			AddressEntity example = this.CreateAddressExampleByStreet (street);
+
+			return this.GetAddressesByExample (example, index, count);
 		}
 
 
@@ -53,11 +69,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AddressEntity> GetAddressesByPostBox(PostBoxEntity postBox, int index, int count)
+		{
+			AddressEntity example = this.CreateAddressExampleByPostBox (postBox);
+
+			return this.GetAddressesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<AddressEntity> GetAddressesByLocation(LocationEntity location)
 		{
 			AddressEntity example = this.CreateAddressExampleByLocation (location);
 
 			return this.GetAddressesByExample (example);
+		}
+
+
+		public IEnumerable<AddressEntity> GetAddressesByLocation(LocationEntity location, int index, int count)
+		{
+			AddressEntity example = this.CreateAddressExampleByLocation (location);
+
+			return this.GetAddressesByExample (example, index, count);
 		}
 
 

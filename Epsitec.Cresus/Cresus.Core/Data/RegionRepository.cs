@@ -37,11 +37,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<RegionEntity> GetAllRegions(int index, int count)
+		{
+			RegionEntity example = this.CreateRegionExample ();
+
+			return this.GetRegionsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<RegionEntity> GetRegionsByName(string name)
 		{
 			RegionEntity example = this.CreateRegionExampleByName (name);
 
 			return this.GetRegionsByExample (example);
+		}
+
+
+		public IEnumerable<RegionEntity> GetRegionsByName(string name, int index, int count)
+		{
+			RegionEntity example = this.CreateRegionExampleByName (name);
+
+			return this.GetRegionsByExample (example, index, count);
 		}
 
 
@@ -53,11 +69,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<RegionEntity> GetRegionsByCode(string code, int index, int count)
+		{
+			RegionEntity example = this.CreateRegionExampleByCode (code);
+
+			return this.GetRegionsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<RegionEntity> GetRegionsByCountry(CountryEntity country)
 		{
 			RegionEntity example = this.CreateRegionExampleByCountry (country);
 
 			return this.GetRegionsByExample (example);
+		}
+
+
+		public IEnumerable<RegionEntity> GetRegionsByCountry(CountryEntity country, int index, int count)
+		{
+			RegionEntity example = this.CreateRegionExampleByCountry (country);
+
+			return this.GetRegionsByExample (example, index, count);
 		}
 
 
