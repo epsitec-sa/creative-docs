@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Core
 			this.controllers = new List<CoreController> ();
 			this.persistenceManager = new PersistenceManager ();
 
-			this.data = new CoreData ();
+			this.data = new CoreData (true, true);
+
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommands (this);
 		}
@@ -100,6 +101,8 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
+			this.data.SetupDatabase ();
+			
 			var entities = this.data.GetAbstractPersons ();
 
 			foreach (var entity in entities)
@@ -107,8 +110,6 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine (entity.Dump ());
 				System.Diagnostics.Debug.WriteLine ("---------------------------------------------------");
 			}
-
-			//?this.data.SetupDatabase ();
 		}
 
 		

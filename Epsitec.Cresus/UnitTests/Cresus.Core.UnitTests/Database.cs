@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < legalPersons.Length; i++)
 			{
-				legalPersons[i].Parent = legalPersons[(i + 1) % legalPersons.Length];
+				//legalPersons[i].p Parent = legalPersons[(i + 1) % legalPersons.Length];
 			}
 		}
 
