@@ -377,56 +377,10 @@ namespace Epsitec.Cresus.Core
 				AutoFocus = false,
 			};
 
-			editor.SelectedItemChanged +=
-				delegate
-				{
-					if (editor.InError)
-					{
-						showButton.GlyphShape = GlyphShape.Plus;
-						showButton.Enable = true;
-					}
-					else
-					{
-						if (editor.HasItemValue)
-						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
-							showButton.Enable = true;
-						}
-						else
-						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
-							showButton.Enable = false;
-						}
-					}
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, showButton);
 
-					if (editor.SelectedItemIndex > -1)
-					{
-						valueSetter (editor.Items.GetValue (editor.SelectedItemIndex) as AbstractEntity);
-					}
-				};
-
-			editor.TextChanged +=
-				delegate
-				{
-					if (editor.InError)
-					{
-						showButton.GlyphShape = GlyphShape.Plus;
-						showButton.Enable = true;
-					}
-					else
-					{
-						if (editor.HasItemValue)
-						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
-							showButton.Enable = true;
-						}
-						else
-						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
-							showButton.Enable = false;
-						}
-					}
-				};
+			editor.SelectedItemChanged += sender => changeHandler ();
+			editor.TextChanged         += sender => changeHandler ();
 
 			showButton.Clicked +=
 				delegate
@@ -454,6 +408,37 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return editor;
+		}
+
+		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton)
+		{
+			return
+				delegate
+				{
+					if (editor.InError)
+					{
+						showButton.GlyphShape = GlyphShape.Plus;
+						showButton.Enable = true;
+					}
+					else
+					{
+						if (editor.HasItemValue)
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = true;
+						}
+						else
+						{
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = false;
+						}
+					}
+				};
+		}
+
+		void editor_SelectedItemChanged(object sender)
+		{
+			throw new System.NotImplementedException ();
 		}
 
 
