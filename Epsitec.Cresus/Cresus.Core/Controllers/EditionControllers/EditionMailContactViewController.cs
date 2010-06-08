@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionGroupingTile ("Data.Mail", "Adresse");
 
 			this.CreateUIRoles (builder);
+			this.CreateUIMargin (builder);
 			this.CreateUICountry (builder);
 			this.CreateUIMain (builder);
 			this.CreateUILocation (builder);
@@ -48,6 +49,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			};
 
 			builder.CreateEditionDetailedRadio (0, "Choix du ou des rôles souhaités", controller);
+		}
+
+		private void CreateUIMargin(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin         (tile, true);
 		}
 
 		private void CreateUIMain(UIBuilder builder)

@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
+			builder.CreateWarning   (tile);
 			builder.CreateTextField (tile, 50, "Numéro postal", Marshaler.Create (() => this.Entity.PostalCode, x => this.Entity.PostalCode = x));
 			builder.CreateTextField (tile,  0, "Ville",         Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
 		}
