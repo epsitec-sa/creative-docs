@@ -35,9 +35,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomContactEntity> GetAllTelecomContacts(int index, int count)
+		{
+			return this.GetAllGenericContacts<TelecomContactEntity> (index, count);
+		}
+
+
 		public IEnumerable<TelecomContactEntity> GetTelecomContactsByNaturalPerson(NaturalPersonEntity naturalPerson)
 		{
 			return this.GetGenericContactsByNaturalPerson<TelecomContactEntity> (naturalPerson);
+		}
+
+
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByNaturalPerson(NaturalPersonEntity naturalPerson, int index, int count)
+		{
+			return this.GetGenericContactsByNaturalPerson<TelecomContactEntity> (naturalPerson, index, count);
 		}
 
 
@@ -47,15 +59,33 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByLegalPerson(LegalPersonEntity legalPerson, int index, int count)
+		{
+			return this.GetGenericContactsByLegalPerson<TelecomContactEntity> (legalPerson, index, count);
+		}
+
+
 		public IEnumerable<TelecomContactEntity> GetTelecomContactsByRoles(params ContactRoleEntity[] roles)
 		{
 			return this.GetGenericContactsByRoles<TelecomContactEntity> (roles);
 		}
 
 
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByRoles(int index, int count, params ContactRoleEntity[] roles)
+		{
+			return this.GetGenericContactsByRoles<TelecomContactEntity> (index, count, roles);
+		}
+
+
 		public IEnumerable<TelecomContactEntity> GetTelecomContactsByComments(params CommentEntity[] comments)
 		{
 			return this.GetGenericContactsByComments<TelecomContactEntity> (comments);
+		}
+
+
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByComments(int index, int count, params CommentEntity[] comments)
+		{
+			return this.GetGenericContactsByComments<TelecomContactEntity> (index, count, comments);
 		}
 
 
@@ -67,6 +97,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByNumber(string number, int index, int count)
+		{
+			TelecomContactEntity example = this.CreateTelecomContactExampleByNumber (number);
+
+			return this.GetTelecomContactsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<TelecomContactEntity> GetTelecomContactsByExtension(string extension)
 		{
 			TelecomContactEntity example = this.CreateTelecomContactExampleByExtension (extension);
@@ -75,11 +113,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByExtension(string extension, int index, int count)
+		{
+			TelecomContactEntity example = this.CreateTelecomContactExampleByExtension (extension);
+
+			return this.GetTelecomContactsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<TelecomContactEntity> GetTelecomContactsByTelecomScheme(TelecomTypeEntity telecomType)
 		{
 			TelecomContactEntity example = this.CreateTelecomContactExampleByTelecomType (telecomType);
 
 			return this.GetTelecomContactsByExample (example);
+		}
+
+
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByTelecomScheme(TelecomTypeEntity telecomType, int index, int count)
+		{
+			TelecomContactEntity example = this.CreateTelecomContactExampleByTelecomType (telecomType);
+
+			return this.GetTelecomContactsByExample (example, index, count);
 		}
 
 

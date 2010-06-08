@@ -35,9 +35,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<UriContactEntity> GetAllUriContacts(int index, int count)
+		{
+			return this.GetAllGenericContacts<UriContactEntity> (index, count);
+		}
+
+
 		public IEnumerable<UriContactEntity> GetUriContactsByNaturalPerson(NaturalPersonEntity naturalPerson)
 		{
 			return this.GetGenericContactsByNaturalPerson<UriContactEntity> (naturalPerson);
+		}
+
+
+		public IEnumerable<UriContactEntity> GetUriContactsByNaturalPerson(NaturalPersonEntity naturalPerson, int index, int count)
+		{
+			return this.GetGenericContactsByNaturalPerson<UriContactEntity> (naturalPerson, index, count);
 		}
 
 
@@ -47,15 +59,33 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<UriContactEntity> GetUriContactsByLegalPerson(LegalPersonEntity legalPerson, int index, int count)
+		{
+			return this.GetGenericContactsByLegalPerson<UriContactEntity> (legalPerson, index, count);
+		}
+
+
 		public IEnumerable<UriContactEntity> GetUriContactsByRoles(params ContactRoleEntity[] roles)
 		{
 			return this.GetGenericContactsByRoles<UriContactEntity> (roles);
 		}
 
 
+		public IEnumerable<UriContactEntity> GetUriContactsByRoles(int index, int count, params ContactRoleEntity[] roles)
+		{
+			return this.GetGenericContactsByRoles<UriContactEntity> (index, count, roles);
+		}
+
+
 		public IEnumerable<UriContactEntity> GetUriContactsByComments(params CommentEntity[] comments)
 		{
 			return this.GetGenericContactsByComments<UriContactEntity> (comments);
+		}
+
+
+		public IEnumerable<UriContactEntity> GetUriContactsByComments(int index, int count, params CommentEntity[] comments)
+		{
+			return this.GetGenericContactsByComments<UriContactEntity> (index, count, comments);
 		}
 
 
@@ -67,11 +97,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<UriContactEntity> GetUriContactsByUri(string uri, int index, int count)
+		{
+			UriContactEntity example = this.CreateUriContactExampleByUri (uri);
+
+			return this.GetUriContactsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<UriContactEntity> GetUriContactsByUriScheme(UriSchemeEntity uriScheme)
 		{
 			UriContactEntity example = this.CreateUriContactExampleByUriScheme (uriScheme);
 
 			return this.GetUriContactsByExample (example);
+		}
+
+
+		public IEnumerable<UriContactEntity> GetUriContactsByUriScheme(UriSchemeEntity uriScheme, int index, int count)
+		{
+			UriContactEntity example = this.CreateUriContactExampleByUriScheme (uriScheme);
+
+			return this.GetUriContactsByExample (example, index, count);
 		}
 
 

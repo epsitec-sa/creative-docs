@@ -35,15 +35,33 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AbstractPersonEntity> GetAllAbstractPersons(int index, int count)
+		{
+			return this.GetAllGenericPersons<AbstractPersonEntity> (index, count);
+		}
+
+
 		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByPreferredLanguage(LanguageEntity preferredLanguage)
 		{
 			return this.GetGenericPersonsByPreferredLanguage<AbstractPersonEntity> (preferredLanguage);
 		}
 
 
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByPreferredLanguage(LanguageEntity preferredLanguage, int index, int count)
+		{
+			return this.GetGenericPersonsByPreferredLanguage<AbstractPersonEntity> (preferredLanguage, index, count);
+		}
+
+
 		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByContacts(params AbstractContactEntity[] contacts)
 		{
 			return this.GetGenericPersonsByContacts<AbstractPersonEntity> (contacts);
+		}
+
+
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByContacts(int index, int count, params AbstractContactEntity[] contacts)
+		{
+			return this.GetGenericPersonsByContacts<AbstractPersonEntity> (index, count, contacts);
 		}
 
 
@@ -73,6 +91,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		protected IEnumerable<EntityType> GetAllGenericPersons<EntityType>(int index, int count) where EntityType : AbstractPersonEntity, new ()
+		{
+			EntityType example = this.CreateGenericPersonExample<EntityType> ();
+
+			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
+		}
+
+
 		protected IEnumerable<EntityType> GetGenericPersonsByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage) where EntityType : AbstractPersonEntity, new ()
 		{
 			EntityType example = this.CreateGenericPersonExampleByPreferredLanguage<EntityType> (preferredLanguage);
@@ -81,11 +107,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		protected IEnumerable<EntityType> GetGenericPersonsByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage, int index, int count) where EntityType : AbstractPersonEntity, new ()
+		{
+			EntityType example = this.CreateGenericPersonExampleByPreferredLanguage<EntityType> (preferredLanguage);
+
+			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
+		}
+
+
 		protected IEnumerable<EntityType> GetGenericPersonsByContacts<EntityType>(params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
 		{
 			EntityType example = this.CreateGenericPersonExampleByContacts<EntityType> (contacts);
 
 			return this.GetGenericPersonsByExample<EntityType> (example);
+		}
+
+
+		protected IEnumerable<EntityType> GetGenericPersonsByContacts<EntityType>(int index, int count, params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
+		{
+			EntityType example = this.CreateGenericPersonExampleByContacts<EntityType> (contacts);
+
+			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
 		}
 
 

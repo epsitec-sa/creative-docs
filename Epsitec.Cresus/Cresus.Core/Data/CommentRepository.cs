@@ -37,11 +37,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<CommentEntity> GetAllComments(int index, int count)
+		{
+			CommentEntity example = this.CreateCommentExample ();
+
+			return this.GetCommentsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<CommentEntity> GetCommentsByText(string text)
 		{
 			CommentEntity example = this.CreateCommentExampleByText (text);
 
 			return this.GetCommentsByExample (example);
+		}
+
+
+		public IEnumerable<CommentEntity> GetCommentsByText(string text, int index, int count)
+		{
+			CommentEntity example = this.CreateCommentExampleByText (text);
+
+			return this.GetCommentsByExample (example, index, count);
 		}
 
 

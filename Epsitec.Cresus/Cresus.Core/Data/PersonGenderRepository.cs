@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PersonGenderEntity> GetAllPersonGenders(int index, int count)
+		{
+			PersonGenderEntity example = this.CreatePersonGenderExample ();
+
+			return this.GetPersonGendersByExample (example, index, count);
+		}
+
+
 		public IEnumerable<PersonGenderEntity> GetPersonGendersByShortCode(string code)
 		{
 			PersonGenderEntity example = this.CreatePersonGenderExampleByShortCode (code);
@@ -45,11 +53,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByShortCode(string code, int index, int count)
+		{
+			PersonGenderEntity example = this.CreatePersonGenderExampleByShortCode (code);
+
+			return this.GetPersonGendersByExample (example, index, count);
+		}
+
+
 		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(string name)
 		{
 			PersonGenderEntity example = this.CreatePersonGenderExampleByName (name);
 
 			return this.GetPersonGendersByExample (example);
+		}
+
+
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(string name, int index, int count)
+		{
+			PersonGenderEntity example = this.CreatePersonGenderExampleByName (name);
+
+			return this.GetPersonGendersByExample (example, index, count);
 		}
 
 

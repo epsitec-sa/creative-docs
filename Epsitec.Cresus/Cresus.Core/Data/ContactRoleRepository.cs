@@ -37,11 +37,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<ContactRoleEntity> GetAllContactRoles(int index, int count)
+		{
+			ContactRoleEntity example = this.CreateContactRoleExample ();
+
+			return this.GetContactRolesByExample (example, index, count);
+		}
+
+
 		public IEnumerable<ContactRoleEntity> GetContactRolesByName(string name)
 		{
 			ContactRoleEntity example = this.CreateContactRoleExampleByName (name);
 
 			return this.GetContactRolesByExample (example);
+		}
+
+
+		public IEnumerable<ContactRoleEntity> GetContactRolesByName(string name, int index, int count)
+		{
+			ContactRoleEntity example = this.CreateContactRoleExampleByName (name);
+
+			return this.GetContactRolesByExample (example, index, count);
 		}
 
 

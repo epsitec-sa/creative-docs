@@ -36,6 +36,14 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<StreetEntity> GetAllStreets(int index, int count)
+		{
+			StreetEntity example = this.CreateStreetExample ();
+
+			return this.GetStreetsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<StreetEntity> GetStreetsByName(string streetName)
 		{
 			StreetEntity example = this.CreateStreetExampleByName (streetName);
@@ -44,11 +52,27 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<StreetEntity> GetStreetsByName(string streetName, int index, int count)
+		{
+			StreetEntity example = this.CreateStreetExampleByName (streetName);
+
+			return this.GetStreetsByExample (example, index, count);
+		}
+
+
 		public IEnumerable<StreetEntity> GetStreetsByComplement(string complement)
 		{
 			StreetEntity example = this.CreateStreetExampleByComplement (complement);
 
 			return this.GetStreetsByExample (example);
+		}
+
+
+		public IEnumerable<StreetEntity> GetStreetsByComplement(string complement, int index, int count)
+		{
+			StreetEntity example = this.CreateStreetExampleByComplement (complement);
+
+			return this.GetStreetsByExample (example, index, count);
 		}
 
 
