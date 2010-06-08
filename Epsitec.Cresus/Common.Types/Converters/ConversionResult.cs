@@ -13,6 +13,10 @@ namespace Epsitec.Common.Types.Converters
 	/// <typeparam name="T">The type on which the converter operates.</typeparam>
 	public class ConversionResult<T> : GenericConversionResult
 	{
+		/// <summary>
+		/// Gets or sets the result value.
+		/// </summary>
+		/// <value>The result value.</value>
 		public T Value
 		{
 			get;

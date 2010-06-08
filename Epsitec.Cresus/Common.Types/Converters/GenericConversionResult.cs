@@ -8,16 +8,25 @@ namespace Epsitec.Common.Types.Converters
 {
 	/// <summary>
 	/// The <c>GenericConversionResult</c> class stores a conversion result. See
-	/// also <see cref="GenericConverter&lt;T&gt;.GetConversionResult"/>.
+	/// also <see cref="GenericConverter&lt;T&gt;.GetConversionResult"/> and
+	/// <see cref="ConversionResult"/>
 	/// </summary>
 	public abstract class GenericConversionResult
 	{
+		/// <summary>
+		/// Gets or sets a value indicating whether the result is null.
+		/// </summary>
+		/// <value><c>true</c> if the result is null; otherwise, <c>false</c>.</value>
 		public bool IsNull
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the result has a valid, non-null value.
+		/// </summary>
+		/// <value><c>true</c> if this instance has a valid, non-null value; otherwise, <c>false</c>.</value>
 		public bool HasValue
 		{
 			get
@@ -26,12 +35,22 @@ namespace Epsitec.Common.Types.Converters
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the result is invalid.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the result is invalid; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsInvalid
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the result is valid.
+		/// </summary>
+		/// <value><c>true</c> if the result is valid; otherwise, <c>false</c>.</value>
 		public bool IsValid
 		{
 			get
