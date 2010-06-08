@@ -322,6 +322,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
+
 		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
@@ -455,32 +456,6 @@ namespace Epsitec.Cresus.Core
 			return editor;
 		}
 
-		public Widget CreateDetailed(Widget embedder, int width, string label, bool allowMultipleSelection, object listEntities, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
-		{
-			var staticText = new StaticText
-			{
-				Parent = embedder,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
-			};
-
-			var combo = new Widgets.ItemPicker
-			{
-				Parent = embedder,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 5, 10),
-				AllowMultipleSelection = allowMultipleSelection,
-				TabIndex = ++this.tabIndex,
-			};
-
-			accessor.WidgetInitialize (combo, listEntities);
-
-			// TODO: câbler l'événement MultiSelectionChanged
-				
-			return combo;
-		}
 
 		public Widget CreateEditionDetailedRadio<T>(int width, string label, SelectionController<T> controller)
 			where T : AbstractEntity
@@ -517,6 +492,7 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
+
 		public Widget CreateEditionDetailedCheck<T>(int width, string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
@@ -550,6 +526,7 @@ namespace Epsitec.Cresus.Core
 
 			return combo;
 		}
+
 
 		public Widget CreateCombo(Widget embedder, int width, string label, Accessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{

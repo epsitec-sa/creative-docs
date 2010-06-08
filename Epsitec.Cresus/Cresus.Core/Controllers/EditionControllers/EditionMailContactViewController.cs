@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			UI.SetInitialFocus (container);
 		}
 
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
