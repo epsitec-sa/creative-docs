@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core
 			return this.groupingTile;
 		}
 
-		public TitleTile CreateSummaryGroupingTile(string iconUri, string title)
+		private TitleTile CreateSummaryGroupingTile(string iconUri, string title)
 		{
 			var group = new TitleTile
 			{
@@ -60,6 +60,7 @@ namespace Epsitec.Cresus.Core
 
 			return group;
 		}
+
 
 		public EditionTile CreateEditionTile(TitleTile parent = null)
 		{
@@ -100,6 +101,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
+
 		public void CreateHeaderEditorTile()
 		{
 		}
@@ -128,33 +130,12 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
-		public TextField CreateTextField(Widget embedder, int width, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
-		{
-			var textField = new TextField
-			{
-				Parent = embedder,
-				Text = initialValue,
-				Dock = (width == 0) ? DockStyle.Fill : DockStyle.Left,
-				PreferredWidth = width,
-				Margins = new Margins (0, (width == 0) ? 10:2, 0, 0),
-				TabIndex = ++this.tabIndex,
-			};
-
-			UIBuilder.CreateTextFieldHandler (textField, valueSetter, validator);
-
-			return textField;
-		}
 
 		public TextField CreateTextField(EditionTile tile, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
-			return this.CreateTextField (tile.Container, width, label, marshaler);
-		}
-
-		public TextField CreateTextField(Widget embedder, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
-		{
 			var staticText = new StaticText
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
@@ -163,7 +144,7 @@ namespace Epsitec.Cresus.Core
 
 			var textField = new TextFieldEx
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ()),
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
@@ -186,14 +167,9 @@ namespace Epsitec.Cresus.Core
 
 		public TextField CreateTextField(EditionTile tile, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
 		{
-			return this.CreateTextField (tile.Container, width, label, initialValue, valueSetter, validator);
-		}
-
-		public TextField CreateTextField(Widget embedder, int width, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
-		{
 			var staticText = new StaticText
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
@@ -206,7 +182,7 @@ namespace Epsitec.Cresus.Core
 			{
 				textField = new TextField
 				{
-					Parent = embedder,
+					Parent = tile.Container,
 					Text = initialValue,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 10, 0, 5),
@@ -217,7 +193,7 @@ namespace Epsitec.Cresus.Core
 			{
 				var box = new FrameBox
 				{
-					Parent = embedder,
+					Parent = tile.Container,
 					Dock = DockStyle.Top,
 					TabIndex = ++this.tabIndex,
 				};
@@ -238,11 +214,11 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public TextFieldMulti CreateTextFieldMulti(Widget embedder, int height, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
+		public TextFieldMulti CreateTextFieldMulti(EditionTile tile, int height, string label, string initialValue, System.Action<string> valueSetter, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
@@ -251,7 +227,7 @@ namespace Epsitec.Cresus.Core
 
 			var textField = new TextFieldMulti
 			{
-				Parent = embedder,
+				Parent = tile.Container,
 				Text = initialValue,
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
@@ -460,16 +436,11 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)
 		{
-			this.CreateMargin (tile.Container, horizontalSeparator);
-		}
-		
-		public void CreateMargin(Widget embedder, bool horizontalSeparator = false)
-		{
 			if (horizontalSeparator)
 			{
 				var separator = new Separator
 				{
-					Parent = embedder,
+					Parent = tile.Container,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 10, 10, 10),
 					PreferredHeight = 2,
@@ -479,24 +450,11 @@ namespace Epsitec.Cresus.Core
 			{
 				var frame = new FrameBox
 				{
-					Parent = embedder,
+					Parent = tile.Container,
 					Dock = DockStyle.Top,
 					PreferredHeight = 10,
 				};
 			}
-		}
-
-		public static double GetContentHeight(Widget container)
-		{
-			Common.Widgets.Layouts.LayoutContext.SyncMeasure (container);
-			
-			double currentHeight = 0;
-			foreach (Widget widget in container.Children)
-			{
-				currentHeight += Epsitec.Common.Widgets.Layouts.LayoutMeasure.GetHeight (widget).Desired;
-				currentHeight += widget.Margins.Height;
-			}
-			return currentHeight;
 		}
 
 

@@ -28,10 +28,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateFooterEditorTile ();
 
-			builder.CreateTextField (tile.Container, 0, "Nom complet", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
-			builder.CreateTextField (tile.Container, 150, "Nom court", this.Entity.ShortName, x => this.Entity.ShortName = x, Validators.StringValidator.Validate);
-			builder.CreateMargin (tile.Container, true);
-			builder.CreateTextFieldMulti (tile.Container, 100, "Complément", this.Entity.Complement, x => this.Entity.Complement = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile, 0, "Nom complet", this.Entity.Name, x => this.Entity.Name = x, Validators.StringValidator.Validate);
+			builder.CreateTextField (tile, 150, "Nom court", this.Entity.ShortName, x => this.Entity.ShortName = x, Validators.StringValidator.Validate);
+			builder.CreateMargin (tile, true);
+			builder.CreateTextFieldMulti (tile, 100, "Complément", this.Entity.Complement, x => this.Entity.Complement = x, Validators.StringValidator.Validate);
 
 			UI.SetInitialFocus (container);
 		}
