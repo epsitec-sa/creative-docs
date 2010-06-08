@@ -169,14 +169,14 @@
     <Compile Include="UIBuilder.cs" />
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
-    <Compile Include="Widgets\HintEditor.cs" />
+    <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
     <Compile Include="Widgets\TileArrow.cs" />
     <Compile Include="Widgets\Tile.cs" />
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />
-    <Compile Include="Widgets\DetailedCombo.cs" />
+    <Compile Include="Widgets\ItemPicker.cs" />
     <Compile Include="Widgets\SuperCombo.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
     <Compile Include="Widgets\Tiles\EditionTile.cs" />

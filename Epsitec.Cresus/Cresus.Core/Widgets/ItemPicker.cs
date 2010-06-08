@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class DetailedCombo : Widget, IMultipleSelection
+	public class ItemPicker : Widget, IMultipleSelection
 	{
-		public DetailedCombo()
+		public ItemPicker()
 		{
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.items.AcceptsRichText = true;
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.selection = new HashSet<int> ();
 		}
 
-		public DetailedCombo(Widget embedder)
+		public ItemPicker(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -279,11 +279,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (DetailedCombo.SelectedItemChangedEvent, value);
+				this.AddUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (DetailedCombo.SelectedItemChangedEvent, value);
+				this.RemoveUserEventHandler (ItemPicker.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = (EventHandler) this.GetUserEventHandler (DetailedCombo.MultiSelectionChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (ItemPicker.MultiSelectionChangedEvent);
 
 			if (handler != null)
 			{
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = (EventHandler) this.GetUserEventHandler (DetailedCombo.SelectedItemChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (ItemPicker.SelectedItemChangedEvent);
 
 			if (handler != null)
 			{
@@ -356,11 +356,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (DetailedCombo.MultiSelectionChangedEvent, value);
+				this.AddUserEventHandler (ItemPicker.MultiSelectionChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (DetailedCombo.MultiSelectionChangedEvent, value);
+				this.RemoveUserEventHandler (ItemPicker.MultiSelectionChangedEvent, value);
 			}
 		}
 

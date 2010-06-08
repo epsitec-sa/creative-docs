@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Accessors
 		}
 
 
-		public void InitializeHintEditor(Widgets.HintEditor hint)
+		public void InitializeHintEditor(Widgets.AutoCompleteTextField hint)
 		{
 			System.Diagnostics.Debug.Assert (this.Format != null);
 

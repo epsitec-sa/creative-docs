@@ -322,18 +322,18 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.HintEditor CreateEditionHintEditor<T>(string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var hint = this.CreateHintEditor (tile, label, controller.GetValue (), null, x => controller.SetValue (x as T));
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), null, x => controller.SetValue (x as T));
 
-			controller.Attach (hint);
+			controller.Attach (autoCompleteTextField);
 
-			return hint;
+			return autoCompleteTextField;
 		}
-		
-		public Widgets.HintEditor CreateHintEditor(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
+
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, Accessors.AbstractAccessor accessor, System.Action<AbstractEntity> valueSetter)
 		{
 			tile.AllowSelection = true;
 
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var editor = new Widgets.HintEditor
+			var editor = new Widgets.AutoCompleteTextField
 			{
 				Parent = container,
 				Dock = DockStyle.Fill,
@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var combo = new Widgets.DetailedCombo
+			var combo = new Widgets.ItemPicker
 			{
 				Parent = embedder,
 				Dock = DockStyle.Top,
@@ -494,7 +494,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private Widgets.DetailedCombo CreateDetailedRadio(EditionTile tile, int width, string label)
+		private Widgets.ItemPicker CreateDetailedRadio(EditionTile tile, int width, string label)
 		{
 			var staticText = new StaticText
 			{
@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var combo = new Widgets.DetailedCombo
+			var combo = new Widgets.ItemPicker
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		private Widgets.DetailedCombo CreateDetailedCheck(EditionTile tile, int width, string label)
+		private Widgets.ItemPicker CreateDetailedCheck(EditionTile tile, int width, string label)
 		{
 			var staticText = new StaticText
 			{
@@ -539,7 +539,7 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var combo = new Widgets.DetailedCombo
+			var combo = new Widgets.ItemPicker
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
@@ -565,7 +565,7 @@ namespace Epsitec.Cresus.Core
 
 			if (detailed)
 			{
-				var combo = new Widgets.DetailedCombo
+				var combo = new Widgets.ItemPicker
 				{
 					Parent = embedder,
 					Dock = DockStyle.Top,
@@ -852,22 +852,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static void CreateHintHandler(Epsitec.Cresus.Core.Widgets.HintEditor hint, System.Action<string> callback1, System.Action<string> callback2, Accessors.BidirectionnalConverter converter)
-		{
-			hint.EditionAccepted +=
-				delegate
-				{
-					int sel = hint.SelectedItemIndex;
-					if (sel != -1)
-					{
-						string text1, text2;
-						converter.Get (sel, out text1, out text2);
-						callback1 (text1);
-						callback2 (text2);
-					}
-				};
-		}
-		
 		private readonly CoreViewController controller;
 		private readonly Widget container;
 		private int tabIndex;

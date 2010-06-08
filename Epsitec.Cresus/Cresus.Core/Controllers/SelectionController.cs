@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public void Attach(Widgets.HintEditor widget)
+		public void Attach(Widgets.AutoCompleteTextField widget)
 		{
 			foreach (var item in this.PossibleItemsGetter ())
 			{
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.SelectedItemIndex       = widget.Items.FindIndexByValue (this.GetValue ());
 		}
 		
-		public void Attach(Widgets.DetailedCombo widget)
+		public void Attach(Widgets.ItemPicker widget)
 		{
 			foreach (var item in this.PossibleItemsGetter ())
 			{
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void AttachMultipleValueSelector(Widgets.DetailedCombo widget)
+		private void AttachMultipleValueSelector(Widgets.ItemPicker widget)
 		{
 			foreach (var item in this.CollectionValueGetter ())
 			{
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		private void AttachSingleValueSelector(Widgets.DetailedCombo widget)
+		private void AttachSingleValueSelector(Widgets.ItemPicker widget)
 		{
 			var initialValue = this.GetValue ();
 
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var text in texts)
 			{
-				result = Widgets.HintEditor.Bestof (result, Widgets.HintEditor.Compare (TextConverter.ConvertToLowerAndStripAccents (text), userText));
+				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (TextConverter.ConvertToLowerAndStripAccents (text), userText));
 			}
 
 			return result;
