@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public UriSchemeEntity GetUriSchemeByExample(UriSchemeEntity example)
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByExample(UriSchemeEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<UriSchemeEntity> (example);
+			return this.GetEntitiesByExample<UriSchemeEntity> (example, index, count);
 		}
 
 
@@ -37,19 +37,19 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public UriSchemeEntity GetUriSchemeByCode(string code)
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByCode(string code)
 		{
 			UriSchemeEntity example = this.CreateUriSchemeExampleByCode (code);
 
-			return this.GetUriSchemeByExample (example);
+			return this.GetUriSchemesByExample (example);
 		}
 
 
-		public UriSchemeEntity GetUriSchemeByName(string name)
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByName(string name)
 		{
 			UriSchemeEntity example = this.CreateUriSchemeExampleByName (name);
 
-			return this.GetUriSchemeByExample (example);
+			return this.GetUriSchemesByExample (example);
 		}
 
 

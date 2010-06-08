@@ -12,8 +12,7 @@ namespace Epsitec.Cresus.Core.Data
 	{
 
 
-		public CommentRepository(DataContext dataContext)
-			: base (dataContext)
+		public CommentRepository(DataContext dataContext) : base (dataContext)
 		{
 		}
 
@@ -24,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public CommentEntity GetCommentByExample(CommentEntity example)
+		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<CommentEntity> (example);
+			return this.GetEntitiesByExample<CommentEntity> (example, index, count);
 		}
 
 
@@ -38,11 +37,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public CommentEntity GetCommentByText(string text)
+		public IEnumerable<CommentEntity> GetCommentsByText(string text)
 		{
 			CommentEntity example = this.CreateCommentExampleByText (text);
 
-			return this.GetCommentByExample (example);
+			return this.GetCommentsByExample (example);
 		}
 
 

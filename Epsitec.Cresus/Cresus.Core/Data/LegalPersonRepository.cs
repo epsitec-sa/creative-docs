@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public LegalPersonEntity GetLegalPersonByExample(LegalPersonEntity example)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByExample(LegalPersonEntity example, int index, int count)
 		{
-			return this.GetGenericPersonByExample<LegalPersonEntity> (example);
+			return this.GetGenericPersonsByExample<LegalPersonEntity> (example, index, count);
 		}
 
 
@@ -35,15 +35,15 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonByPreferredLanguage(LanguageEntity preferredLanguage)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByPreferredLanguage(LanguageEntity preferredLanguage)
 		{
-			return this.GetGenericPersonByPreferredLanguage<LegalPersonEntity> (preferredLanguage);
+			return this.GetGenericPersonsByPreferredLanguage<LegalPersonEntity> (preferredLanguage);
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonByContacts(params AbstractContactEntity[] contacts)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByContacts(params AbstractContactEntity[] contacts)
 		{
-			return this.GetGenericPersonByContacts<LegalPersonEntity> (contacts);
+			return this.GetGenericPersonsByContacts<LegalPersonEntity> (contacts);
 		}
 
 

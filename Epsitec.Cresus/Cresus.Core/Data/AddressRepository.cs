@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public AddressEntity GetAddressByExample(AddressEntity example)
+		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, int index, int count)
 		{
-			return this.GetEntityByExample<AddressEntity> (example);
+			return this.GetEntitiesByExample<AddressEntity> (example, index, count);
 		}
 
 
