@@ -37,15 +37,7 @@ namespace Epsitec.Cresus.Core
 
 		public TitleTile CreateEditionGroupingTile(string iconUri, string title)
 		{
-			this.groupingTile = this.CreateSummaryGroupingTile (iconUri, title);
-			this.groupingTile.IsReadOnly = false;
-
-			return this.groupingTile;
-		}
-
-		private TitleTile CreateSummaryGroupingTile(string iconUri, string title)
-		{
-			var group = new TitleTile
+			this.groupingTile = new TitleTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -53,50 +45,23 @@ namespace Epsitec.Cresus.Core
 				ArrowDirection = Direction.Right,
 				IconUri = iconUri,
 				Title = title,
-				IsReadOnly = true,
+				IsReadOnly = false,
 			};
 
-			UIBuilder.CreateGroupingTileHandler (group, this.controller);
+			UIBuilder.CreateGroupingTileHandler (this.groupingTile, this.controller);
 
-			return group;
+			return this.groupingTile;
 		}
 
-
-		public EditionTile CreateEditionTile(TitleTile parent = null)
+		public EditionTile CreateEditionTile()
 		{
-			if (parent == null)
-            {
-				parent = this.groupingTile;
-            }
-
 			var tile = new EditionTile
 			{
 				AutoHilite = false,
 				IsReadOnly = false,
 			};
 
-			parent.Items.Add (tile);
-
-			return tile;
-		}
-
-		public EditionTile CreateEditionTile(TitleTile parent, AbstractEntity entity)
-		{
-			var controller = new Controllers.TileController<AbstractEntity> ()
-			{
-				Entity = entity,
-			};
-
-			var tile = new EditionTile
-			{
-				AutoHilite = false,
-				Controller = controller,
-				IsReadOnly = false,
-			};
-
-			UIBuilder.CreateTileHandler (tile, this.controller);
-
-			parent.Items.Add (tile);
+			this.groupingTile.Items.Add (tile);
 
 			return tile;
 		}

@@ -25,19 +25,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var builder = new UIBuilder (container, this);
 
 			builder.CreateHeaderEditorTile ();
+			builder.CreateEditionGroupingTile ("Data.LegalPerson", "Personne morale");
 
-			var mail = this.Entity;
-			var group = builder.CreateEditionGroupingTile ("Data.LegalPerson", "Personne morale");
-			var tile = builder.CreateEditionTile (group, this.Entity);
+			this.CreateUIMain (builder);
 
 			builder.CreateFooterEditorTile ();
+
+			UI.SetInitialFocus (container);
+		}
+
+
+		private void CreateUIMain(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField      (tile,   0, "Nom complet", Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
 			builder.CreateTextField      (tile, 150, "Nom court",   Marshaler.Create (() => this.Entity.ShortName,  x => this.Entity.ShortName = x));
 			builder.CreateMargin         (tile, true);
 			builder.CreateTextFieldMulti (tile, 100, "Complément",  Marshaler.Create (() => this.Entity.Complement, x => this.Entity.Complement = x));
-
-			UI.SetInitialFocus (container);
 		}
 	}
 }
