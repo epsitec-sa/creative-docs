@@ -207,10 +207,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				else if (value is EntityCollection)
 				{
 					EntityCollection collection = value as EntityCollection;
-					foreach (AbstractEntity entity in collection)
-					{
-						EntityNullReferenceVirtualizer.PatchNullReferences (entity);
-					}
+					collection.EnableEntityNullReferenceVirtualizer ();
+					//foreach (AbstractEntity entity in collection)
+					//{
+					//    EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+					//}
 				}
 
 				return value;

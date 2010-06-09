@@ -12,6 +12,22 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	public abstract class EntityCollection : ObservableList<object>
 	{
+		internal void EnableEntityNullReferenceVirtualizer()
+		{
+			this.enableVirtualizer = true;
+		}
+
+		protected void Virtualize<T>(T entity)
+			where T: AbstractEntity
+		{
+			if (this.enableVirtualizer)
+			{
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+			}
+		}
+
+
+		private bool enableVirtualizer;
 	}
 
 	/// <summary>
@@ -136,6 +152,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				if (promotedItem != null)
 				{
 					this.PatchItem (index, promotedItem);
+					this.Virtualize (promotedItem);
+
 					return promotedItem;
 				}
 			}
@@ -149,6 +167,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (promotedItem != null)
 				{
+					this.Virtualize (promotedItem);
 					return promotedItem;
 				}
 			}
