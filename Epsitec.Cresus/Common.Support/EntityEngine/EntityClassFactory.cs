@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -30,6 +30,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityClassFactory.CreateInstance (id);
 		}
 
+		/// <summary>
+		/// Gets the entity id for the specified entity type.
+		/// </summary>
+		/// <param name="type">The entity type.</param>
+		/// <returns>The <see cref="Druid"/> of the specified entity or <c>Druid.Empty</c>.</returns>
 		public static Druid GetEntityId(System.Type type)
 		{
 			return EntityClassFactory.FindId (type);

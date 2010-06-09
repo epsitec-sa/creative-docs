@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (targetMapping != null)
 			{
-				foreach (Druid targetEntityId in this.EntityContext.GetHeritedEntityIds (target.GetEntityStructuredTypeId ()))
+				foreach (Druid targetEntityId in this.EntityContext.GetInheritedEntityIds (target.GetEntityStructuredTypeId ()))
 				{
 					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
 					{
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			List<StructuredTypeField> fields = new List<StructuredTypeField> ();
 
-			foreach (Druid currentEntityId in this.EntityContext.GetHeritedEntityIds (entityId))
+			foreach (Druid currentEntityId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (f => f.Relation == FieldRelation.None))
 				{
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.DataLayer
 				IncludeRowKeys  = false,
 			};
 
-			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetBaseEntityId (entityId).ToResourceId ());
+			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
 			this.AddQueryForValues (tableAliasManager, reader, entityId, example);
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			List<StructuredTypeField> fields = new List<StructuredTypeField> ();
 
-			foreach (Druid currentEntityId in this.EntityContext.GetHeritedEntityIds (entityId))
+			foreach (Druid currentEntityId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (f => f.Relation == FieldRelation.Reference))
 				{
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer
 				IncludeRowKeys  = false,
 			};
 
-			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetBaseEntityId (entityId).ToResourceId ());
+			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
 			this.AddQueryForReferences (tableAliasManager, reader, entityId, example);
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			Druid entityId = example.GetEntityStructuredTypeId ();
 
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entityId))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
 				{
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.DataLayer
 				IncludeRowKeys  = false,
 			};
 
-			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetBaseEntityId (entityId).ToResourceId ());
+			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
 			this.AddQueryForCollection (tableAliasManager, reader, entityId, example, field);
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.DataLayer
 		private void AddConditionsForEntity(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
 			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
-			Druid[] heritedEntityIds = this.EntityContext.GetHeritedEntityIds (entityId).ToArray ();
+			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
@@ -541,7 +541,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private DbJoin BuildJoinFromEntityTableToRelationTable(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, StructuredTypeField sourcefield, SqlJoinCode joinType)
 		{
-			Druid rootSourceEntityId = this.EntityContext.GetBaseEntityId (sourceEntityId);
+			Druid rootSourceEntityId = this.EntityContext.GetRootEntityId (sourceEntityId);
 
 			string sourceTableAlias = tableAliasManager.GetCurrentEntityAlias ();
 			string relationTableAlias = tableAliasManager.CreateEntityAlias (sourcefield.Id);
@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddJoinFromRelationTableToTargetTable(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, StructuredTypeField sourcefield, Druid targetEntityId, SqlJoinCode joinType)
 		{
-			Druid rootTargetEntityId = this.EntityContext.GetBaseEntityId (targetEntityId);
+			Druid rootTargetEntityId = this.EntityContext.GetRootEntityId (targetEntityId);
 
 			string relationTableAlias = tableAliasManager.GetCurrentEntityAlias ();
 			string targetTableAlias = tableAliasManager.CreateEntityAlias (targetEntityId.ToResourceId ());
@@ -580,7 +580,7 @@ namespace Epsitec.Cresus.DataLayer
 		private void AddQueryForValues(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
 			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
-			Druid[] heritedEntityIds = this.EntityContext.GetHeritedEntityIds (entityId).ToArray ();
+			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
@@ -616,7 +616,7 @@ namespace Epsitec.Cresus.DataLayer
 		private void AddQueryForReferences(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
 			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
-			Druid[] heritedEntityIds = this.EntityContext.GetHeritedEntityIds (entityId).ToArray ();
+			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
@@ -629,7 +629,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (currentEntityId == heritedEntityIds.Last ())
 				{
-					this.AddEntityQueryField (tableAliasManager, reader, this.EntityContext.GetBaseEntityId (currentEntityId), DataBrowser.idColumn);
+					this.AddEntityQueryField (tableAliasManager, reader, this.EntityContext.GetRootEntityId (currentEntityId), DataBrowser.idColumn);
 				}
 			}
 		}
@@ -661,7 +661,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			tableAliasManager.GetPreviousEntityAlias ();
 
-			this.AddEntityQueryField (tableAliasManager, reader, this.EntityContext.GetBaseEntityId (entityId), DataBrowser.idColumn);
+			this.AddEntityQueryField (tableAliasManager, reader, this.EntityContext.GetRootEntityId (entityId), DataBrowser.idColumn);
 		}
 
 

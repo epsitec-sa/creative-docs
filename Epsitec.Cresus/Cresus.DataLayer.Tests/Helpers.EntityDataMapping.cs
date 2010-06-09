@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityContext context = EntityContext.Current;
 			AbstractEntity entity = context.CreateEmptyEntity (Druid.Parse ("[630Q]"));
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetBaseEntityId (entity.GetEntityStructuredTypeId ()));
+			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			Assert.AreEqual (entity, mapping.Entity);
 			Assert.AreEqual (Druid.Parse ("[630Q]"), mapping.EntityId);
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityContext context = EntityContext.Current;
 			AbstractEntity entity = context.CreateEmptyEntity (Druid.Parse ("[630Q]"));
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetBaseEntityId (entity.GetEntityStructuredTypeId ()));
+			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			mapping.RowKey = new DbKey (new DbId (1000000000001L));
 			mapping.RowKey = new DbKey (new DbId (1000000000001L));
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityContext context = EntityContext.Current;
 			AbstractEntity entity = context.CreateEmptyEntity (Druid.Parse ("[630Q]"));
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetBaseEntityId (entity.GetEntityStructuredTypeId ()));
+			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			mapping.RowKey = new DbKey (new DbId (1000000000001L));
 			mapping.RowKey = new DbKey (new DbId (1000000000002L));
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityContext context = EntityContext.Current;
 			AbstractEntity entity = context.CreateEmptyEntity (Druid.Parse ("[630Q]"));
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetBaseEntityId (entity.GetEntityStructuredTypeId ()));
+			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			mapping.RowKey = new DbKey (new DbId (1000000000001L));
 			mapping.RowKey = DbKey.Empty;
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityContext context = EntityContext.Current;
 			AbstractEntity entity = context.CreateEmptyEntity (Druid.Parse ("[630Q]"));
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetBaseEntityId (entity.GetEntityStructuredTypeId ()));
+			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			mapping.RowKey = new DbKey (DbKey.CreateTemporaryId ());
 			mapping.RowKey = new DbKey (DbKey.CreateTemporaryId ());

@@ -25,12 +25,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <param name="entity">The entity.</param>
 		/// <param name="entityId">The entity id.</param>
-		/// <param name="baseEntityId">The base entity id.</param>
-		public EntityDataMapping(AbstractEntity entity, Druid entityId, Druid baseEntityId)
+		/// <param name="rootEntityId">The root entity id.</param>
+		public EntityDataMapping(AbstractEntity entity, Druid entityId, Druid rootEntityId)
 		{
 			this.entity = entity;
 			this.entityId = entityId;
-			this.baseEntityId = baseEntityId;
+			this.rootEntityId = rootEntityId;
 			this.rowKey = new DbKey ();
 		}
 
@@ -39,11 +39,11 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <param name="rowKey">The row key.</param>
 		/// <param name="entityId">The entity id.</param>
-		/// <param name="baseEntityId">The base entity id.</param>
-		public EntityDataMapping(DbKey rowKey, Druid entityId, Druid baseEntityId)
+		/// <param name="rootEntityId">The root entity id.</param>
+		public EntityDataMapping(DbKey rowKey, Druid entityId, Druid rootEntityId)
 		{
 			this.entityId = entityId;
-			this.baseEntityId = baseEntityId;
+			this.rootEntityId = rootEntityId;
 			this.rowKey = rowKey;
 		}
 
@@ -72,14 +72,14 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 		/// <summary>
-		/// Gets the associated base entity id.
+		/// Gets the associated root entity id.
 		/// </summary>
-		/// <value>The base entity id.</value>
-		public Druid BaseEntityId
+		/// <value>The root entity id.</value>
+		public Druid RootEntityId
 		{
 			get
 			{
-				return this.baseEntityId;
+				return this.rootEntityId;
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		public bool Equals(EntityDataMapping other)
 		{
-			return this.baseEntityId == other.baseEntityId
+			return this.rootEntityId == other.rootEntityId
 				&& this.rowKey == other.rowKey;
 		}
 
@@ -159,13 +159,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Compares this instance with the specified row key and entity id pair.
 		/// </summary>
 		/// <param name="rowKey">The row key.</param>
-		/// <param name="baseEntityId">The base entity id.</param>
+		/// <param name="rootEntityId">The root entity id.</param>
 		/// <returns><c>true</c> if this instance matches the row key and entity
 		/// id pair; otherwise, <c>false</c>.</returns>
-		public bool Equals(DbKey rowKey, Druid baseEntityId)
+		public bool Equals(DbKey rowKey, Druid rootEntityId)
 		{
 			return this.rowKey.Id == rowKey.Id
-				&& this.baseEntityId == baseEntityId;
+				&& this.rootEntityId == rootEntityId;
 		}
 		
 		public override bool Equals(object obj)
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			if (this.IsReadOnly)
 			{
-				return this.rowKey.GetHashCode () ^ this.baseEntityId.GetHashCode ();
+				return this.rowKey.GetHashCode () ^ this.rootEntityId.GetHashCode ();
 			}
 			else
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		private readonly AbstractEntity entity;
 		private readonly Druid entityId;
-		private readonly Druid baseEntityId;
+		private readonly Druid rootEntityId;
 		private DbKey rowKey;
 	}
 }

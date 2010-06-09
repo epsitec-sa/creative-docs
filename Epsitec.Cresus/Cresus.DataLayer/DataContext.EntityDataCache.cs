@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		/// <summary>
 		/// The <c>EntityDataCache</c> class provides a centralized cache for
-		/// mainting relations between entity instances in memory and in the
+		/// maintaining relations between entity instances in memory and in the
 		/// database.
 		/// </summary>
 		class EntityDataCache

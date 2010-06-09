@@ -39,8 +39,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
 
-			this.baseEntityId = new Dictionary<Druid, Druid> ();
-			this.heritedEntityIds = new Dictionary<Druid, IEnumerable<Druid>> ();
+			this.rootEntityId = new Dictionary<Druid, Druid> ();
+			this.inheritedEntityIds = new Dictionary<Druid, IEnumerable<Druid>> ();
 
 			this.entityFields = new Dictionary<Druid, IEnumerable<StructuredTypeField>> ();
 
@@ -319,19 +319,19 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
+		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid entityId)
 		{
-			if (!this.entityFields.ContainsKey (id))
+			if (!this.entityFields.ContainsKey (entityId))
 			{
-				this.entityFields[id] = this.ComputeEntityFieldDefinitions (id).ToArray ();
+				this.entityFields[entityId] = this.ComputeEntityFieldDefinitions (entityId).ToArray ();
 			}
 
-			return this.entityFields[id];
+			return this.entityFields[entityId];
 		}
 
-		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid id)
+		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid entityId)
 		{
-			IStructuredType entityType = this.GetStructuredType (id);
+			IStructuredType entityType = this.GetStructuredType (entityId);
 
 			if (entityType == null)
 			{
@@ -345,28 +345,28 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public IEnumerable<StructuredTypeField> GetEntityLocalFieldDefinitions(Druid id)
+		public IEnumerable<StructuredTypeField> GetEntityLocalFieldDefinitions(Druid entityId)
 		{
-			return this.GetEntityFieldDefinitions (id)
+			return this.GetEntityFieldDefinitions (entityId)
 				.Where (field => field.Membership != FieldMembership.Inherited)
 				.Where (field => field.Source == FieldSource.Value);
 		}
 
-		public IStructuredType GetStructuredType(Druid id)
+		public IStructuredType GetStructuredType(Druid entityId)
 		{
 			this.EnsureCorrectThread ();
 
 			IStructuredType type;
 
-			if (!this.structuredTypeMap.TryGetValue (id, out type))
+			if (!this.structuredTypeMap.TryGetValue (entityId, out type))
 			{
-				if (id.IsTemporary)
+				if (entityId.IsTemporary)
 				{
 					return null;
 				}
 				
-				type = this.resourceManager.GetStructuredType (id);
-				this.structuredTypeMap[id] = type;
+				type = this.resourceManager.GetStructuredType (entityId);
+				this.structuredTypeMap[entityId] = type;
 			}
 			
 			return type;
@@ -423,40 +423,51 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public Druid GetBaseEntityId(Druid entityId)
+		/// <summary>
+		/// Gets the entity id of the root entity class.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The root entity id.</returns>
+		public Druid GetRootEntityId(Druid entityId)
 		{
-			if (!this.baseEntityId.ContainsKey (entityId))
+			if (!this.rootEntityId.ContainsKey (entityId))
 			{
-				this.baseEntityId[entityId] = this.GetHeritedEntityIds (entityId).Last ();
+				this.rootEntityId[entityId] = this.GetInheritedEntityIds (entityId).Last ();
 			}
 
-			return this.baseEntityId[entityId];
-		}
-
-
-		public Druid GetLocalEntityId(Druid entityId, Druid fieldId)
-		{
-			return this.GetHeritedEntityIds (entityId).First (id => this.GetEntityLocalFieldDefinitions (id).Any (f => f.CaptionId == fieldId));
+			return this.rootEntityId[entityId];
 		}
 
 		/// <summary>
-		/// Gets the list of entity ids from the given one to the one of its top supertype,
-		/// including the given one.
+		/// Gets the entity id of the entity where the field is defined.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="fieldId">The field id.</param>
+		/// <returns>The entity id where the field is defined.</returns>
+		/// <exception cref="System.InvalidOperationException">Thrown if the field does not belong to this entity.</exception>
+		public Druid GetLocalEntityId(Druid entityId, Druid fieldId)
+		{
+			return this.GetInheritedEntityIds (entityId).First (id => this.GetEntityLocalFieldDefinitions (id).Any (f => f.CaptionId == fieldId));
+		}
+
+		/// <summary>
+		/// Gets the entity ids for the class hierarchy, starting with the specified entity
+		/// and up to the root of the hierarchy.
 		/// </summary>
 		/// <param name="entityId">The entity id.</param>
 		/// <returns></returns>
-		public IEnumerable<Druid> GetHeritedEntityIds(Druid entityId)
+		public IEnumerable<Druid> GetInheritedEntityIds(Druid entityId)
 		{
-			if (!this.heritedEntityIds.ContainsKey (entityId))
+			if (!this.inheritedEntityIds.ContainsKey (entityId))
 			{
-				this.heritedEntityIds[entityId] = this.ComputeHeritedEntityIds (entityId).ToArray ();
+				this.inheritedEntityIds[entityId] = this.ComputeInheritedEntityIds (entityId).ToArray ();
 			}
 
-			return this.heritedEntityIds[entityId];
+			return this.inheritedEntityIds[entityId];
 		}
 
 
-		private IEnumerable<Druid> ComputeHeritedEntityIds(Druid entityId)
+		private IEnumerable<Druid> ComputeInheritedEntityIds(Druid entityId)
 		{
 			Druid currentId = entityId;
 
@@ -464,7 +475,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				yield return currentId;
 
-				currentId = (this.GetStructuredType (currentId) as StructuredType).BaseTypeId;
+				var structuredType = this.GetStructuredType (currentId) as StructuredType;
+
+				if (structuredType == null)
+				{
+					break;
+				}
+
+				currentId = structuredType.BaseTypeId;
 			}
 		}
 
@@ -1092,8 +1110,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 		private readonly string name;
 
-		private readonly Dictionary<Druid, Druid> baseEntityId;
-		private readonly Dictionary<Druid, IEnumerable<Druid>> heritedEntityIds;
+		private readonly Dictionary<Druid, Druid> rootEntityId;
+		private readonly Dictionary<Druid, IEnumerable<Druid>> inheritedEntityIds;
 
 		private readonly Dictionary<Druid, IEnumerable<StructuredTypeField>> entityFields;
 
