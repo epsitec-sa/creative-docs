@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Types.Collections
 {
@@ -115,8 +116,19 @@ namespace Epsitec.Common.Types.Collections
 		/// the notifications.</returns>
 		public System.IDisposable DisableNotifications()
 		{
-			System.Threading.Interlocked.Increment (ref this.silent);
 			return new ReEnabler (this);
+		}
+
+		/// <summary>
+		/// Temporarily disables all change notifications. Any changes which
+		/// happen until <c>Dispose</c> is called on the returned object will
+		/// not generate events.
+		/// </summary>
+		/// <returns>An object you will have to <c>Dispose</c> in order to re-enable
+		/// the notifications.</returns>
+		public System.IDisposable SuspendNotifications()
+		{
+			return new DeferredNotifier (this);
 		}
 
 		/// <summary>
@@ -494,7 +506,7 @@ namespace Epsitec.Common.Types.Collections
 		{
 			if (this.silent == 0)
 			{
-				Epsitec.Common.Support.EventHandler handler;
+				EventHandler handler;
 
 				lock (this.list)
 				{
@@ -512,16 +524,29 @@ namespace Epsitec.Common.Types.Collections
 		{
 			if (this.silent == 0)
 			{
-				Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
+				EventHandler<CollectionChangedEventArgs> handler;
+				DeferredNotifier notifier;
 
 				lock (this.list)
 				{
 					handler = this.collectionChangedEvent;
+					notifier = this.deferredNotifier;
 				}
 
-				if (handler != null)
+				if ((notifier != null) &&
+					(handler != null))
 				{
-					handler (this, e);
+					foreach (var invocation in handler.GetInvocationList ())
+					{
+						notifier.RecordEvent (invocation, e);
+					}
+				}
+				else
+				{
+					if (handler != null)
+					{
+						handler (this, e);
+					}
 				}
 			}
 		}
@@ -532,7 +557,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Occurs when the list changes, either by adding or removing items.
 		/// <remarks>Subscribing to this event is thread safe.</remarks>
 		/// </summary>
-		public event Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> CollectionChanged
+		public event EventHandler<CollectionChangedEventArgs> CollectionChanged
 		{
 			add
 			{
@@ -556,7 +581,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Occurs before the collection changes. There is no way to prevent
 		/// the change; the event is only informative.
 		/// </summary>
-		public event Epsitec.Common.Support.EventHandler CollectionChanging
+		public event EventHandler CollectionChanging
 		{
 			add
 			{
@@ -581,6 +606,7 @@ namespace Epsitec.Common.Types.Collections
 			public ReEnabler(ObservableList<T> list)
 			{
 				this.list = list;
+				System.Threading.Interlocked.Increment (ref this.list.silent);
 			}
 
 			#region IDisposable Members
@@ -592,16 +618,107 @@ namespace Epsitec.Common.Types.Collections
 
 			#endregion
 
-			ObservableList<T> list;
+			private readonly ObservableList<T> list;
 		}
 
 		#endregion
 
-		private Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
-		private Epsitec.Common.Support.EventHandler collectionChangingEvent;
+
+		private class DeferredNotifier : System.IDisposable
+		{
+			public DeferredNotifier(ObservableList<T> list)
+			{
+				this.list = list;
+				this.nextNotifier = this.list.deferredNotifier;
+				this.list.deferredNotifier = this;
+
+				this.eventHandlers = new HashSet<System.Delegate> ();
+				this.events        = new List<Event> ();
+			}
+
+			public void RecordEvent(System.Delegate invocation, CollectionChangedEventArgs e)
+			{
+				if (this.eventHandlers.Add (invocation))
+				{
+					this.events.Add (new Event (invocation, e));
+				}
+				else
+				{
+					int pos = this.events.FindIndex (x => x.EventHandler == invocation);
+
+					System.Diagnostics.Debug.Assert (pos >= 0);
+
+					this.events[pos] = new Event (invocation, CollectionChangedEventArgs.Merge (this.events[pos].EventArgs, e));
+				}
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				if (this.nextNotifier == null)
+				{
+					//	Last in the chain - we will reactivate the event generation.
+					
+					this.FireRecordedEvents ();
+				}
+				else
+				{
+					this.list.deferredNotifier = this.nextNotifier;
+				}
+			}
+
+			private void FireRecordedEvents()
+			{
+				foreach (var item in this.events)
+				{
+					var handler = (EventHandler<CollectionChangedEventArgs>) item.EventHandler;
+					handler (this.list, item.EventArgs);
+				}
+			}
+
+			#endregion
+
+			struct Event
+			{
+				public Event(System.Delegate eventHandler, CollectionChangedEventArgs eventArgs)
+				{
+					this.eventHandler = eventHandler;
+					this.eventArgs    = eventArgs;
+				}
+
+				public System.Delegate EventHandler
+				{
+					get
+					{
+						return this.eventHandler;
+					}
+				}
+
+				public CollectionChangedEventArgs EventArgs
+				{
+					get
+					{
+						return this.eventArgs;
+					}
+				}
+
+				private readonly System.Delegate eventHandler;
+				private readonly CollectionChangedEventArgs eventArgs;
+			}
+
+			private readonly ObservableList<T> list;
+			private readonly DeferredNotifier nextNotifier;
+			private readonly HashSet<System.Delegate> eventHandlers;
+			private readonly List<Event> events;
+		}
+
+		private EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
+		private EventHandler collectionChangingEvent;
 
 		private readonly List<T> list = new List<T> ();
 		private int silent;
+		private DeferredNotifier deferredNotifier;
 		private bool isReadOnly;
 	}
 }
