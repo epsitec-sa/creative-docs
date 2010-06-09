@@ -93,6 +93,11 @@ namespace Epsitec.Cresus.Core
 
 		private bool ConnectToDatabase(DbAccess access)
 		{
+			if (this.ForceDatabaseCreation)
+			{
+				this.DeleteDatabase (access);
+			}
+
 			if (this.DbInfrastructure.AttachToDatabase (access))
 			{
 				System.Diagnostics.Trace.WriteLine ("Connected to database");
@@ -119,6 +124,35 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Trace.WriteLine ("Created new database");
 				
 				return true;
+			}
+		}
+
+		private void DeleteDatabase(DbAccess access)
+		{
+			string path = DbFactory.GetDatabaseFilePaths (access).First ();
+
+			try
+			{
+				if (System.IO.File.Exists (path))
+				{
+					System.IO.File.Delete (path);
+				}
+			}
+			catch (System.IO.IOException ex)
+			{
+				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+				System.Threading.Thread.Sleep (5000);
+
+				try
+				{
+					System.IO.File.Delete (path);
+					System.Console.Out.WriteLine ("Finally succeeded");
+				}
+				catch
+				{
+					System.Console.Out.WriteLine ("Failed again, giving up");
+					throw;
+				}
 			}
 		}
 
