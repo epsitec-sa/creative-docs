@@ -11,24 +11,21 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class Repository
+	public abstract class Repository
 	{
-
-
-		public Repository(DataContext dataContext)
+		protected Repository(DataContext dataContext)
 		{
-			this.DataContext = dataContext;
-			
-			this.dataBrowser = new DataBrowser (this.DataContext);
+			this.dataContext = dataContext;
+			this.dataBrowser = new DataBrowser (this.dataContext);
 		}
 
 
 		public DataContext DataContext
 		{
-			get;
-			private set;
+			get
+			{
+				return this.dataContext;
+			}
 		}
 
 
@@ -54,12 +51,9 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			return this.dataBrowser.GetReferencers (target, true).Select (result => result.Item1);
 		}
-		
-		
-		private DataBrowser dataBrowser;
 
 
+		private readonly DataContext dataContext;
+		private readonly DataBrowser dataBrowser;
 	}
-
-
 }

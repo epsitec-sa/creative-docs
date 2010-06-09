@@ -74,11 +74,12 @@ namespace Epsitec.Cresus.DataLayer
 		/// <summary>
 		/// Creates the schema for the specified type.
 		/// </summary>
-		/// <typeparam name="T">The entity type for which to create the schema.</typeparam>
+		/// <typeparam name="TEntity">The entity type for which to create the schema.</typeparam>
 		/// <returns><c>true</c> if a new table definition was created; otherwise, <c>false</c>.</returns>
-		public bool CreateSchema<T>() where T : AbstractEntity, new ()
+		public bool CreateSchema<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
-			T entity = new T ();
+			TEntity entity = new TEntity ();
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 
 			DbTable tableDef = this.SchemaEngine.FindTableDefinition (entityId);
@@ -105,14 +106,16 @@ namespace Epsitec.Cresus.DataLayer
 			return this.EntityContext.CreateEntity (entityId);
 		}
 		
-		public T CreateEntity<T>() where T : AbstractEntity, new ()
+		public TEntity CreateEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
-			return this.EntityContext.CreateEntity<T> ();
+			return this.EntityContext.CreateEntity<TEntity> ();
 		}
 
-		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
+		public TEntity CreateEmptyEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
-			return this.EntityContext.CreateEmptyEntity<T> ();
+			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
 		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
@@ -125,12 +128,12 @@ namespace Epsitec.Cresus.DataLayer
 			return this.InternalResolveEntity (rowKey, entityId, mode) as AbstractEntity;
 		}
 
-		public T ResolveEntity<T>(DbKey rowKey) where T : AbstractEntity, new ()
+		public TEntity ResolveEntity<TEntity>(DbKey rowKey)
+			where TEntity : AbstractEntity, new ()
 		{
-			T entity = new T ();
-			Druid entityId = entity.GetEntityStructuredTypeId ();
+			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
 
-			return this.ResolveEntity (rowKey, entityId) as T;
+			return this.ResolveEntity (rowKey, entityId) as TEntity;
 		}
 
 		public AbstractEntity ResolveEntity(EntityData entityData, bool loadFromDatabase)
@@ -138,6 +141,16 @@ namespace Epsitec.Cresus.DataLayer
 			return this.InternalResolveEntity (entityData, loadFromDatabase);
 		}
 
+
+		public bool Contains(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			return this.entityDataCache.ContainsEntity (entity);
+		}
 
 		public void DeleteEntity(AbstractEntity entity)
 		{
@@ -175,8 +188,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			return containsChanges;
 		}
-
-
+		
 		public void SaveChanges()
 		{
 			bool containsChanges = this.SerializeChanges ();
@@ -405,7 +417,19 @@ namespace Epsitec.Cresus.DataLayer
 		/// <param name="entity">The entity.</param>
 		private void SerializeEntity(AbstractEntity entity)
 		{
+			if (entity == null)
+			{
+				return;
+			}
+			if (!this.Contains (entity))
+            {
+				//	TODO: should we propagate the serialization to another DataContext ?
+				return;
+            }
+
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
+
+			System.Diagnostics.Debug.Assert (mapping != null);
 
 			if (mapping.SerialGeneration == this.EntityContext.DataGeneration)
 			{
