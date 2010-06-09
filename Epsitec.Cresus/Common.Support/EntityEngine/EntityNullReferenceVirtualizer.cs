@@ -184,15 +184,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				object value = this.realStore.GetValue (id);
 
-				if (UndefinedValue.IsUndefinedValue (value))
+				if ((UndefinedValue.IsUndefinedValue (value)) ||
+					(value == null))
 				{
-					if (this.values.TryGetValue (id, out value))
+					object outValue;
+
+					if (this.values.TryGetValue (id, out outValue))
 					{
-						return value;
+						return outValue;
 					}
 					else
 					{
-						return this.CreateEmptyEntityForUndefinedField (id);
+						return this.CreateEmptyEntityForUndefinedField (id, value);
 					}
 				}
 
@@ -253,13 +256,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.values.Remove (id);
 			}
 
-			private object CreateEmptyEntityForUndefinedField(string id)
+			private object CreateEmptyEntityForUndefinedField(string id, object defaultValue)
 			{
 				var info = this.GetStructuredTypeField (id);
 
 				if (info == null)
 				{
-					return UndefinedValue.Value;
+					return defaultValue;
 				}
 
 				if (info.Relation == FieldRelation.Reference)
@@ -275,7 +278,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					return entity;
 				}
 
-				return UndefinedValue.Value;
+				return defaultValue;
 			}
 
 			private StructuredTypeField GetStructuredTypeField(string id)
