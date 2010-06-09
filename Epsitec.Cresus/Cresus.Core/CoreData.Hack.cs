@@ -544,6 +544,7 @@ namespace Epsitec.Cresus.Core
 
 			using (person2.DefineOriginalValues ())
 			{
+				person2.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
 				person2.Firstname = "Daniel";
 				person2.Lastname  = "Roux";
 			}
