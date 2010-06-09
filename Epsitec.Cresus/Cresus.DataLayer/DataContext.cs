@@ -1,5 +1,5 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -21,13 +21,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public sealed partial class DataContext : System.IDisposable, IEntityPersistenceManager
 	{
-
-
-		public DataContext(DbInfrastructure infrastructure) : this (infrastructure, false)
-		{
-		}
-
-		public DataContext(DbInfrastructure infrastructure, bool bulkMode)
+		public DataContext(DbInfrastructure infrastructure, bool bulkMode = false)
 		{
 			this.BulkMode = bulkMode;
 			this.DbInfrastructure = infrastructure;
@@ -296,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void RemoveEntityValueData(AbstractEntity entity, DbKey entityKey)
 		{
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
 				this.RichCommand.DeleteExistingRow (this.LoadDataRow(entity, entityKey, currentId));
 			}
@@ -305,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void RemoveEntitySourceReferenceData(AbstractEntity entity, DbKey entityKey)
 		{
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
 				IEnumerable<StructuredTypeField> localRelationFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Reference || f.Relation == FieldRelation.Collection);
 
@@ -365,7 +359,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			List<EntityFieldPath> sources = new List<EntityFieldPath> ();
 
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
 				sources.AddRange (this.DbInfrastructure.GetSourceReferences (currentId));
 			}
@@ -436,7 +430,7 @@ namespace Epsitec.Cresus.DataLayer
 				this.LoadDataRows (entity);
 			}
 
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entityId))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				StructuredType entityType = this.EntityContext.GetStructuredType (currentId) as StructuredType;
 				Druid          baseTypeId = entityType.BaseTypeId;
@@ -506,7 +500,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal AbstractEntity InternalResolveEntity(EntityData entityData, bool loadFromDatabase)
 		{
-			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (entityData.LoadedEntityId);
+			Druid baseEntityId =  this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
 
 			AbstractEntity entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, baseEntityId);
 
@@ -518,7 +512,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				using (entity.DefineOriginalValues ())
 				{
-					Druid[] entityIds = this.EntityContext.GetHeritedEntityIds (entityData.RealEntityId).ToArray ();
+					Druid[] entityIds = this.EntityContext.GetInheritedEntityIds (entityData.RealEntityId).ToArray ();
 
 					foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 					{
@@ -538,7 +532,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
-			Druid baseEntityId = this.EntityContext.GetBaseEntityId (entityId);
+			Druid baseEntityId = this.EntityContext.GetRootEntityId (entityId);
 			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, entityId, baseEntityId);
 
 			if (entity != null)
@@ -565,7 +559,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal AbstractEntity DeserializeEntity(DbKey rowKey, Druid entityId)
 		{
-			Druid baseEntityId = this.EntityContext.GetBaseEntityId (entityId);
+			Druid baseEntityId = this.EntityContext.GetRootEntityId (entityId);
 
 			System.Data.DataRow dataRow = this.LoadDataRow(null, rowKey, baseEntityId);
 			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
@@ -591,7 +585,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.entityDataCache.DefineRowKey (mapping, entityKey);
 
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entityId))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				System.Data.DataRow dataRow = this.LoadDataRow(null, mapping.RowKey, currentId);
 
@@ -1081,7 +1075,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
 
-			foreach (Druid currentId in this.EntityContext.GetHeritedEntityIds (entity.GetEntityStructuredTypeId ()))
+			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
 			{
 				this.LoadDataRow(entity, mapping.RowKey, currentId);
 
@@ -1191,7 +1185,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Data.DataRow row = this.RichCommand.CreateRow (tableName);
 
 			TemporaryRowCollection temporaryRows;
-			temporaryRows = this.GetTemporaryRows (mapping.BaseEntityId);
+			temporaryRows = this.GetTemporaryRows (mapping.RootEntityId);
 			temporaryRows.AssociateRow (this.RichCommand, mapping, row);
 
 			return row;
@@ -1458,13 +1452,16 @@ namespace Epsitec.Cresus.DataLayer
 		private void HandleEntityCreated(object sender, EntityEventArgs e)
 		{
 			AbstractEntity entity = e.Entity;
-			Druid entityId = entity.GetEntityStructuredTypeId ();
-			Druid baseEntityId = this.EntityContext.GetBaseEntityId (entityId);
+
+			System.Diagnostics.Debug.Assert (this.EntityContext == entity.GetEntityContext ());
+
+			Druid entityId      = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId  = this.EntityContext.GetRootEntityId (entityId);
+			var   entityMapping = new EntityDataMapping (entity, entityId, rootEntityId);
+			
 			long entitySerialId = entity.GetEntitySerialId ();
 
-			EntityDataMapping mapping = new EntityDataMapping (entity, entityId, baseEntityId);
-
-			this.entityDataCache.Add (entitySerialId, mapping);
+			this.entityDataCache.Add (entitySerialId, entityMapping);
 
 			try
 			{
