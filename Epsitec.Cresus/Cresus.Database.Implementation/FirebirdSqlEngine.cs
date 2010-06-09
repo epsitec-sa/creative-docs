@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
 
@@ -125,6 +125,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				adapters[i] = adapter;
 				
 #if true
+				//	HACK: find another way of doing this
+				//	TODO: set transaction on the update command too in DbRichCommand.SetCommandTransaction
+
 				//	FbCommandBuilder.RowUpdatingHandler pourrait bénéficier du rajout
 				//	suivant: e.Command.Transaction = this.DataAdapter.SelectCommand.Transaction
 				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction;
