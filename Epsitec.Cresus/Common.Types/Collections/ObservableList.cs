@@ -340,7 +340,19 @@ namespace Epsitec.Common.Types.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return this.list.GetEnumerator ();
+			var enumerator = this.GetListEnumerator ();
+			
+			while (enumerator.MoveNext ())
+			{
+				yield return (T) enumerator.Current;
+			}
+
+			var dispoableEnumerator = enumerator as System.IDisposable;
+
+			if (dispoableEnumerator != null)
+			{
+				dispoableEnumerator.Dispose ();
+			}
 		}
 
 		#endregion
@@ -349,7 +361,7 @@ namespace Epsitec.Common.Types.Collections
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.list.GetEnumerator ();
+			return this.GetListEnumerator ();
 		}
 
 		#endregion
@@ -455,6 +467,11 @@ namespace Epsitec.Common.Types.Collections
 		}
 
 		#endregion
+
+		protected virtual System.Collections.IEnumerator GetListEnumerator()
+		{
+			return this.list.GetEnumerator ();
+		}
 
 		/// <summary>
 		/// Silently replaces the item. This will not generate any event and
@@ -716,7 +733,7 @@ namespace Epsitec.Common.Types.Collections
 		private EventHandler<CollectionChangedEventArgs> collectionChangedEvent;
 		private EventHandler collectionChangingEvent;
 
-		private readonly List<T> list = new List<T> ();
+		protected readonly List<T> list = new List<T> ();
 		private int silent;
 		private DeferredNotifier deferredNotifier;
 		private bool isReadOnly;

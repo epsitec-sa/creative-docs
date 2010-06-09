@@ -206,11 +206,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		protected override System.Collections.IEnumerator GetListEnumerator()
+		{
+			object[] items = this.list.ToArray ();
+			
+			for (int i = 0; i < items.Length; i++)
+			{
+				yield return this.Promote (i, items[i]);
+			}
+		}
+
 		#region IEnumerable<T> Members
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
 			object[] items = this.ToArray ();
+			
 			for (int i = 0; i < items.Length; i++)
 			{
 				yield return this.Promote (i, items[i]);
