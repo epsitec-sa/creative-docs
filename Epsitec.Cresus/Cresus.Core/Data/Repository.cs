@@ -29,21 +29,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected EntityType CreateExample<EntityType>() where EntityType : AbstractEntity, new()
+		protected T CreateExample<T>() where T : AbstractEntity, new()
 		{
-			return new EntityType ();
+			return new T ();
 		}
 
 
-		protected IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example) where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByExample<EntityType> (example, true);
+			return this.dataBrowser.GetByExample<T> (example, true);
 		}
 
 
-		protected IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractEntity
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count) where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByExample<EntityType> (example, true).Skip (index + 1).Take (count);
+			return this.dataBrowser.GetByExample<T> (example, true).Skip (index + 1).Take (count);
 		}
 
 

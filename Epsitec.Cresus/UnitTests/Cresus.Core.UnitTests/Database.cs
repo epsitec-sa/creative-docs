@@ -571,7 +571,7 @@ namespace Epsitec.Cresus.Core
 			person.PreferredLanguage = language;
 			person.Gender = gender;
 			person.Title = title;
-			person.BirthDate = birthday;
+			//person.BirthDate = birthday;
 
 			return person;
 		}

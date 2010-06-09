@@ -71,84 +71,84 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByExample<EntityType>(EntityType example) where EntityType : AbstractPersonEntity
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example) where T : AbstractPersonEntity
 		{
-			return this.GetEntitiesByExample<EntityType> (example);
+			return this.GetEntitiesByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractPersonEntity
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, int index, int count) where T : AbstractPersonEntity
 		{
-			return this.GetEntitiesByExample<EntityType> (example, index, count);
+			return this.GetEntitiesByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetAllGenericPersons<EntityType>() where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetAllGenericPersons<T>() where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExample<EntityType> ();
+			T example = this.CreateGenericPersonExample<T> ();
 
-			return this.GetGenericPersonsByExample<EntityType> (example);
+			return this.GetGenericPersonsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetAllGenericPersons<EntityType>(int index, int count) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetAllGenericPersons<T>(int index, int count) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExample<EntityType> ();
+			T example = this.CreateGenericPersonExample<T> ();
 
-			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
+			return this.GetGenericPersonsByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetGenericPersonsByPreferredLanguage<T>(LanguageEntity preferredLanguage) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExampleByPreferredLanguage<EntityType> (preferredLanguage);
+			T example = this.CreateGenericPersonExampleByPreferredLanguage<T> (preferredLanguage);
 
-			return this.GetGenericPersonsByExample<EntityType> (example);
+			return this.GetGenericPersonsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage, int index, int count) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetGenericPersonsByPreferredLanguage<T>(LanguageEntity preferredLanguage, int index, int count) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExampleByPreferredLanguage<EntityType> (preferredLanguage);
+			T example = this.CreateGenericPersonExampleByPreferredLanguage<T> (preferredLanguage);
 
-			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
+			return this.GetGenericPersonsByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByContacts<EntityType>(params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetGenericPersonsByContacts<T>(params AbstractContactEntity[] contacts) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExampleByContacts<EntityType> (contacts);
+			T example = this.CreateGenericPersonExampleByContacts<T> (contacts);
 
-			return this.GetGenericPersonsByExample<EntityType> (example);
+			return this.GetGenericPersonsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericPersonsByContacts<EntityType>(int index, int count, params AbstractContactEntity[] contacts) where EntityType : AbstractPersonEntity, new ()
+		protected IEnumerable<T> GetGenericPersonsByContacts<T>(int index, int count, params AbstractContactEntity[] contacts) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExampleByContacts<EntityType> (contacts);
+			T example = this.CreateGenericPersonExampleByContacts<T> (contacts);
 
-			return this.GetGenericPersonsByExample<EntityType> (example, index, count);
+			return this.GetGenericPersonsByExample<T> (example, index, count);
 		}
 
 
-		protected EntityType CreateGenericPersonExample<EntityType>() where EntityType : AbstractPersonEntity, new ()
+		protected T CreateGenericPersonExample<T>() where T : AbstractPersonEntity, new ()
 		{
-			return this.CreateExample<EntityType> ();
+			return this.CreateExample<T> ();
 		}
 
 
-		protected EntityType CreateGenericPersonExampleByPreferredLanguage<EntityType>(LanguageEntity preferredLanguage) where EntityType : AbstractPersonEntity, new ()
+		protected T CreateGenericPersonExampleByPreferredLanguage<T>(LanguageEntity preferredLanguage) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExample<EntityType> ();
+			T example = this.CreateGenericPersonExample<T> ();
 			example.PreferredLanguage = preferredLanguage;
 
 			return example;
 		}
 
 
-		protected EntityType CreateGenericPersonExampleByContacts<EntityType>(IEnumerable<AbstractContactEntity> contacts) where EntityType : AbstractPersonEntity, new ()
+		protected T CreateGenericPersonExampleByContacts<T>(IEnumerable<AbstractContactEntity> contacts) where T : AbstractPersonEntity, new ()
 		{
-			EntityType example = this.CreateGenericPersonExample<EntityType> ();
+			T example = this.CreateGenericPersonExample<T> ();
 
 			foreach (AbstractContactEntity contact in contacts)
 			{

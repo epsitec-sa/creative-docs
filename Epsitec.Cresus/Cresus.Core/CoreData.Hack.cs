@@ -699,6 +699,7 @@ namespace Epsitec.Cresus.Core
 			LocationEntity location1 = locations.Where (x => x.PostalCode == "1400").First ();
 
 			PersonTitleEntity title1 = personTitles.Where (x => x.ShortName == "M.").First ();
+			PersonGenderEntity gender1 = personGenders.Where (x => x.Code == "♂").First ();
 
 			StreetEntity street1 = this.DataContext.CreateEmptyEntity<StreetEntity> ();
 			street1.StreetName = "Ch. du Fontenay 3";
@@ -796,12 +797,12 @@ namespace Epsitec.Cresus.Core
 			person1.Contacts.Add (uri1);
 			person1.Contacts.Add (uri2);
 			person1.Contacts.Add (uri3);
-			person1.BirthDate = null;
-
+			person1.BirthDate = new Common.Types.Date (2001, 1, 1);
+			
 			person2.Firstname = "Daniel";
 			person2.Lastname  = "Roux";
-			person2.BirthDate = null;
-
+			person2.BirthDate = new Common.Types.Date (2001, 1, 1);
+			
 			yield return person1;
 			yield return person2;
 			yield return company;

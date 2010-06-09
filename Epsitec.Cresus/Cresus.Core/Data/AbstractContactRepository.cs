@@ -95,125 +95,125 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByExample<EntityType>(EntityType example) where EntityType : AbstractContactEntity
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example) where T : AbstractContactEntity
 		{
-			return this.GetEntitiesByExample<EntityType> (example);
+			return this.GetEntitiesByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByExample<EntityType>(EntityType example, int index, int count) where EntityType : AbstractContactEntity
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, int index, int count) where T : AbstractContactEntity
 		{
-			return this.GetEntitiesByExample<EntityType> (example, index, count);
+			return this.GetEntitiesByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetAllGenericContacts<EntityType>() where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetAllGenericContacts<T>() where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetAllGenericContacts<EntityType>(int index, int count) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetAllGenericContacts<T>(int index, int count) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 
-			return this.GetGenericContactsByExample<EntityType> (example, index, count);
+			return this.GetGenericContactsByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByNaturalPerson<EntityType>(NaturalPersonEntity naturalPerson) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByNaturalPerson<T>(NaturalPersonEntity naturalPerson) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByNaturalPerson<EntityType> (naturalPerson);
+			T example = this.CreateGenericContactExampleByNaturalPerson<T> (naturalPerson);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByNaturalPerson<EntityType>(NaturalPersonEntity naturalPerson, int index, int count) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByNaturalPerson<T>(NaturalPersonEntity naturalPerson, int index, int count) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByNaturalPerson<EntityType> (naturalPerson);
+			T example = this.CreateGenericContactExampleByNaturalPerson<T> (naturalPerson);
 
-			return this.GetGenericContactsByExample<EntityType> (example, index, count);
+			return this.GetGenericContactsByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByLegalPerson<EntityType>(LegalPersonEntity legalPerson) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByLegalPerson<T>(LegalPersonEntity legalPerson) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByLegalPerson<EntityType> (legalPerson);
+			T example = this.CreateGenericContactExampleByLegalPerson<T> (legalPerson);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByLegalPerson<EntityType>(LegalPersonEntity legalPerson, int index, int count) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByLegalPerson<T>(LegalPersonEntity legalPerson, int index, int count) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByLegalPerson<EntityType> (legalPerson);
+			T example = this.CreateGenericContactExampleByLegalPerson<T> (legalPerson);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByRoles<EntityType>(params ContactRoleEntity[] roles) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByRoles<T>(params ContactRoleEntity[] roles) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByRoles<EntityType> (roles);
+			T example = this.CreateGenericContactExampleByRoles<T> (roles);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByRoles<EntityType>(int index, int count, params ContactRoleEntity[] roles) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByRoles<T>(int index, int count, params ContactRoleEntity[] roles) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByRoles<EntityType> (roles);
+			T example = this.CreateGenericContactExampleByRoles<T> (roles);
 
-			return this.GetGenericContactsByExample<EntityType> (example, index, count);
+			return this.GetGenericContactsByExample<T> (example, index, count);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByComments<EntityType>(params CommentEntity[] comments) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByComments<T>(params CommentEntity[] comments) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByComments<EntityType> (comments);
+			T example = this.CreateGenericContactExampleByComments<T> (comments);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected IEnumerable<EntityType> GetGenericContactsByComments<EntityType>(int index, int count, params CommentEntity[] comments) where EntityType : AbstractContactEntity, new ()
+		protected IEnumerable<T> GetGenericContactsByComments<T>(int index, int count, params CommentEntity[] comments) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExampleByComments<EntityType> (comments);
+			T example = this.CreateGenericContactExampleByComments<T> (comments);
 
-			return this.GetGenericContactsByExample<EntityType> (example);
+			return this.GetGenericContactsByExample<T> (example);
 		}
 
 
-		protected EntityType CreateGenericContactExample<EntityType>() where EntityType : AbstractContactEntity, new ()
+		protected T CreateGenericContactExample<T>() where T : AbstractContactEntity, new ()
 		{
-			return this.CreateExample<EntityType> ();
+			return this.CreateExample<T> ();
 		}
 
 
-		protected EntityType CreateGenericContactExampleByNaturalPerson<EntityType>(NaturalPersonEntity naturalPerson) where EntityType : AbstractContactEntity, new ()
+		protected T CreateGenericContactExampleByNaturalPerson<T>(NaturalPersonEntity naturalPerson) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 			example.NaturalPerson = naturalPerson;
 
 			return example;
 		}
 
 
-		protected EntityType CreateGenericContactExampleByLegalPerson<EntityType>(LegalPersonEntity legalPerson) where EntityType : AbstractContactEntity, new ()
+		protected T CreateGenericContactExampleByLegalPerson<T>(LegalPersonEntity legalPerson) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 			example.LegalPerson = legalPerson;
 
 			return example;
 		}
 
 
-		protected EntityType CreateGenericContactExampleByRoles<EntityType>(IEnumerable<ContactRoleEntity> roles) where EntityType : AbstractContactEntity, new ()
+		protected T CreateGenericContactExampleByRoles<T>(IEnumerable<ContactRoleEntity> roles) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 
 			foreach (ContactRoleEntity role in roles)
 			{
@@ -224,9 +224,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected EntityType CreateGenericContactExampleByComments<EntityType>(IEnumerable<CommentEntity> comments) where EntityType : AbstractContactEntity, new ()
+		protected T CreateGenericContactExampleByComments<T>(IEnumerable<CommentEntity> comments) where T : AbstractContactEntity, new ()
 		{
-			EntityType example = this.CreateGenericContactExample<EntityType> ();
+			T example = this.CreateGenericContactExample<T> ();
 
 			foreach (CommentEntity comment in comments)
 			{
