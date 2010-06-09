@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				dataContext.CreateSchema<AbstractPersonEntity> ();
+				dataContext.CreateSchema<NaturalPersonEntity> ();
 				dataContext.CreateSchema<MailContactEntity> ();
 				dataContext.CreateSchema<TelecomContactEntity> ();
 				dataContext.CreateSchema<UriContactEntity> ();
