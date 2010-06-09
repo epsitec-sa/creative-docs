@@ -1042,8 +1042,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PersonTitle</c> entity.
 	///	designer:cap/L0AT
 	///	</summary>
-	public partial class PersonTitleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class PersonTitleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AT/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>ShortName</c> field.
 		///	designer:fld/L0AT/L0AS1
@@ -1188,8 +1206,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PersonGender</c> entity.
 	///	designer:cap/L0AA1
 	///	</summary>
-	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AA1/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Code</c> field.
 		///	designer:fld/L0AA1/L0AB1
@@ -1261,8 +1297,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ContactRole</c> entity.
 	///	designer:cap/L0AE1
 	///	</summary>
-	public partial class ContactRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class ContactRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AE1/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AE1/L0AF1
@@ -1310,8 +1364,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>LegalPersonType</c> entity.
 	///	designer:cap/L0AL1
 	///	</summary>
-	public partial class LegalPersonTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class LegalPersonTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AL1/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>ShortName</c> field.
 		///	designer:fld/L0AL1/L0AM1
@@ -1529,8 +1601,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>TelecomType</c> entity.
 	///	designer:cap/L0AV1
 	///	</summary>
-	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AV1/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Code</c> field.
 		///	designer:fld/L0AV1/L0A12
@@ -1675,8 +1765,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>UriScheme</c> entity.
 	///	designer:cap/L0A62
 	///	</summary>
-	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0A62/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Code</c> field.
 		///	designer:fld/L0A62/L0A72
@@ -2196,6 +2304,50 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 88);	// [L0AO2]
 		public static readonly new string EntityStructuredTypeKey = "[L0AO2]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IItemRank Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IItemRank</c> entity.
+	///	designer:cap/L0AV2
+	///	</summary>
+	public interface IItemRank
+	{
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AV2/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		int? Rank
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IItemRankInterfaceImplementation
+	{
+		public static int? GetRank(global::Epsitec.Cresus.Core.Entities.IItemRank obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<int?> ("[L0A03]");
+		}
+		public static void SetRank(global::Epsitec.Cresus.Core.Entities.IItemRank obj, int? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			int? oldValue = obj.Rank;
+			if (oldValue != value)
+			{
+				IItemRankInterfaceImplementation.OnRankChanging (obj, oldValue, value);
+				entity.SetField<int?> ("[L0A03]", oldValue, value);
+				IItemRankInterfaceImplementation.OnRankChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnRankChanged(global::Epsitec.Cresus.Core.Entities.IItemRank obj, int? oldValue, int? newValue);
+		static partial void OnRankChanging(global::Epsitec.Cresus.Core.Entities.IItemRank obj, int? oldValue, int? newValue);
 	}
 }
 #endregion

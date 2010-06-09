@@ -21,32 +21,30 @@ namespace Epsitec.Cresus.Core
 
 	public sealed partial class CoreData : System.IDisposable
 	{
-
-
 		public CoreData(bool useHack, bool forceDatabasebCreation)
 		{
 			this.IsReady = false;
 			this.UseHack = useHack;
 			this.ForceDatabaseCreation = forceDatabasebCreation;
 
-			this.DbInfrastructure = new DbInfrastructure ();
-			this.DataContext = null;
+			this.dbInfrastructure = new DbInfrastructure ();
 		}
-
 
 		public DbInfrastructure DbInfrastructure
 		{
-			get;
-			set;
+			get
+			{
+				return this.dbInfrastructure;
+			}
 		}
-
 
 		public DataContext DataContext
 		{
-			get;
-			private set;
+			get
+			{
+				return this.activeDataContext;
+			}
 		}
-
 
 		public bool IsReady
 		{
@@ -54,13 +52,11 @@ namespace Epsitec.Cresus.Core
 			private set;
 		}
 
-
 		public bool UseHack
 		{
 			get;
 			private set;
 		}
-
 
 		public bool ForceDatabaseCreation
 		{
@@ -90,7 +86,44 @@ namespace Epsitec.Cresus.Core
 			this.IsReady = true;
 		}
 
+		public void SaveDataContext(DataContext context)
+		{
+			if (context != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("About to save context");
+				context.SaveChanges ();
+				System.Diagnostics.Debug.WriteLine ("Done");
+			}
+		}
 
+		public DataContext CreateDataContext()
+		{
+			return new DataContext (this.dbInfrastructure)
+			{
+				EnableEntityNullReferenceVirtualizer = true,
+			};
+		}
+
+		#region IDisposable Members
+
+
+		public void Dispose()
+		{
+			if (this.activeDataContext != null)
+			{
+				this.activeDataContext.Dispose ();
+				this.activeDataContext = null;
+			}
+
+			if (this.dbInfrastructure.IsConnectionOpen)
+			{
+				this.dbInfrastructure.Dispose ();
+			}
+		}
+
+
+		#endregion
+		
 		private bool ConnectToDatabase(DbAccess access)
 		{
 			if (this.ForceDatabaseCreation)
@@ -156,7 +189,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		private void SetupDatabase(bool createNewDatabase)
 		{
 			if (createNewDatabase)
@@ -171,12 +203,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		private void VerifyDatabaseSchemas()
 		{
 			// TODO
 		}
-
 
 		private void CreateDatabaseSchemas()
 		{
@@ -187,27 +217,20 @@ namespace Epsitec.Cresus.Core
 			this.DataContext.CreateSchema<UriContactEntity> ();
 		}
 
-
 		private void PopulateDatabase()
 		{
 			this.PopulateDatabaseHack ();
 		}
-
 
 		private void ReloadDatabase()
 		{
 			// TODO
 		}
 
-
 		private void SetupDataContext()
 		{
-			this.DataContext = new DataContext (this.DbInfrastructure)
-			{
-				EnableEntityNullReferenceVirtualizer = true,
-			};
+			this.activeDataContext = this.CreateDataContext ();
 		}
-
 
 		private static DbAccess GetDatabaseAccess()
 		{
@@ -219,29 +242,7 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
-		
-		#region IDisposable Members
-
-
-		public void Dispose()
-		{
-			if (this.DataContext != null)
-			{
-				this.DataContext.Dispose ();
-				this.DataContext = null;
-			}
-			
-			if (this.DbInfrastructure.IsConnectionOpen)
-			{
-				this.DbInfrastructure.Dispose ();
-			}
-		}
-
-
-		#endregion
-		
-
+		private readonly DbInfrastructure dbInfrastructure;
+		private DataContext activeDataContext;
 	}
-
-
 }
