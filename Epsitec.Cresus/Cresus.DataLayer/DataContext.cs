@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
 			this.RichCommand = new DbRichCommand (this.DbInfrastructure);
-			this.EntityContext = EntityContext.Current;
+			this.entityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
 			this.tableBulkLoaded = new Dictionary<string, bool> ();
 			this.dataLoadedEntities = new HashSet<AbstractEntity> ();
@@ -55,8 +55,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		public EntityContext EntityContext
 		{
-			get;
-			private set;
+			get
+			{
+				return this.entityContext;
+			}
 		}
 
 		public DbRichCommand RichCommand
@@ -69,6 +71,12 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			get;
 			private set;
+		}
+
+		public bool EnableEntityNullReferenceVirtualizer
+		{
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -524,36 +532,45 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal AbstractEntity InternalResolveEntity(EntityData entityData, bool loadFromDatabase)
 		{
-			Druid baseEntityId =  this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
+			var rootEntityId = this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
+			var entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, rootEntityId);
 
-			AbstractEntity entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, baseEntityId);
-
-			if (entity == null && loadFromDatabase)
+			if ((entity == null) &&
+				(loadFromDatabase))
 			{
-				entity = this.EntityContext.CreateEmptyEntity (entityData.RealEntityId);
-
-				this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), entityData.Key);
-
-				using (entity.DefineOriginalValues ())
-				{
-					Druid[] entityIds = this.EntityContext.GetInheritedEntityIds (entityData.RealEntityId).ToArray ();
-
-					foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
-					{
-						this.DeserializeEntityLocalWithProxy (entity, currentId, entityData.Key);
-					}
-
-					foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
-					{
-						this.DeserializeEntityLocalWithReference (entity, entityData, currentId);
-					}
-				}
+				return this.InternalResolveEntityBasedOnDataLoadedFromDatabase (entityData);
 			}
-
-			return entity;
+			else
+			{
+				return entity;
+			}
 		}
 
 
+		private AbstractEntity InternalResolveEntityBasedOnDataLoadedFromDatabase(EntityData entityData)
+		{
+			var entity = this.EntityContext.CreateEmptyEntity (entityData.RealEntityId);
+
+			this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), entityData.Key);
+
+			using (entity.DefineOriginalValues ())
+			{
+				Druid[] entityIds = this.EntityContext.GetInheritedEntityIds (entityData.RealEntityId).ToArray ();
+
+				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
+				{
+					this.DeserializeEntityLocalWithProxy (entity, currentId, entityData.Key);
+				}
+
+				foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
+				{
+					this.DeserializeEntityLocalWithReference (entity, entityData, currentId);
+				}
+			}
+			
+			return entity;
+		}
+		
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
 			Druid baseEntityId = this.EntityContext.GetRootEntityId (entityId);
@@ -1479,6 +1496,11 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.Assert (this.EntityContext == entity.GetEntityContext ());
 
+			if (this.EnableEntityNullReferenceVirtualizer)
+			{
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+			}
+
 			Druid entityId      = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId  = this.EntityContext.GetRootEntityId (entityId);
 			var   entityMapping = new EntityDataMapping (entity, entityId, rootEntityId);
@@ -1499,6 +1521,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		private readonly EntityContext entityContext;
 		private readonly EntityDataCache entityDataCache;
 		private readonly Dictionary<string, bool> tableBulkLoaded;
 		private readonly HashSet<AbstractEntity> dataLoadedEntities;
