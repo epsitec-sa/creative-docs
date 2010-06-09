@@ -116,6 +116,7 @@ namespace Epsitec.Cresus.Core
 			return staticText;
 		}
 
+
 		public TextField CreateTextField(EditionTile tile, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
 			var staticText = new StaticText
@@ -145,7 +146,16 @@ namespace Epsitec.Cresus.Core
 				textField.PreferredWidth = width;
 			}
 
-			UIBuilder.CreateTextFieldHandler (textField, marshaler);
+			//?UIBuilder.CreateTextFieldHandler (textField, marshaler);
+
+			textField.AcceptingEdition +=
+				delegate
+				{
+					string text = TextConverter.ConvertToSimpleText (textField.Text);
+					marshaler.SetStringValue (text);
+				};
+
+			textField.KeyboardFocusChanged += (sender, e) => textField.Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ());
 
 			return textField;
 		}
