@@ -3,8 +3,10 @@
 
 using Epsitec.Common.Support;
 
-using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
@@ -44,30 +46,21 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
 				//	une exception.
 				
-				bool dbAlreadyExists = false;
+				this.CreateConnection (ignoreErrors: true);
 				
-				try
-				{
-					this.CreateConnection (true);
-					
-					//	Si on est arrivé ici, c'est que la base existait déjà... Aïe !
-					
-					dbAlreadyExists = true;
-				}
-				catch
+				if (this.dbConnection == null)
 				{
 					this.CreateDatabase ();
-					this.CreateConnection (true);
+					this.CreateConnection ();
 				}
-				
-				if (dbAlreadyExists)
+				else
 				{
-					throw new Exceptions.ExistsException (this.dbAccess, "Cannot create existing database");
+					throw new Exceptions.ExistsException (this.dbAccess, "Cannot create existing database, it already exists");
 				}
 			}
 			else
 			{
-				this.CreateConnection (this.dbAccess.CheckConnection, this.dbAccess.IgnoreInitialConnectionErrors);
+				this.CreateConnection (testConnection: this.dbAccess.CheckConnection, ignoreErrors: this.dbAccess.IgnoreInitialConnectionErrors);
 			}
 			
 			this.sqlBuilder = new FirebirdSqlBuilder (this);
@@ -92,20 +85,23 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
-		private void CreateConnection()
-		{
-			this.CreateConnection (false, false);
-		}
-
-		private void CreateConnection(bool testConnection)
-		{
-			this.CreateConnection (testConnection, false);
-		}
-
-		private void CreateConnection(bool testConnection, bool ignoreErrors)
+		private void CreateConnection(bool testConnection = true, bool ignoreErrors = false)
 		{
 			try
 			{
+				if ((testConnection) &&
+					(ignoreErrors) &&
+					(this.dbAccess.IsLocalHost))
+				{
+					if (!FirebirdAbstractionFactory.GetDatabaseFilePaths (this.dbAccess).Any (path => System.IO.File.Exists (path)))
+                    {
+						//	We know that we will fail - no need to try, the file is
+						//	missing.
+
+						return;
+                    }
+				}
+
 				this.dbConnection = new FbConnection (this.dbConnectionString);
 				
 				if (testConnection)
