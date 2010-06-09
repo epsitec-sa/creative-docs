@@ -991,6 +991,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			this.NotifyEventHandlers (id, oldValue, newValue);
+			this.NotifyContextEventHandlers (id, oldValue, newValue);
 		}
 
 		/// <summary>
@@ -1025,7 +1026,15 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		protected void NotifyContextEventHandlers(string id, object oldValue, object newValue)
+		{
+			if (this.context != null)
+			{
+				this.context.NotifyEntityChanged (this, id, oldValue, newValue);
+			}
+		}
 
+		
 		/// <summary>
 		/// Asserts that the id identifies a simple field.
 		/// </summary>

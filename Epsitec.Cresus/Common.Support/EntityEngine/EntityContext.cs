@@ -848,6 +848,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.OnEntityDetached (new EntityEventArgs (entity));
 		}
 
+		internal void NotifyEntityChanged(AbstractEntity entity, string id, object oldValue, object newValue)
+		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Entity {0}.{1} changed from {2} to {3}", entity.GetEntitySerialId (), id, oldValue, newValue));
+		}
+
 		protected virtual void OnEntityAttached(EntityEventArgs e)
 		{
 			EventHandler<EntityEventArgs> handler;
