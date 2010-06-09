@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -116,6 +116,17 @@ namespace Epsitec.Common.Types
 			{
 				return this.oldStartingIndex-1;
 			}
+		}
+
+		/// <summary>
+		/// Merges the specified change event data into a single one.
+		/// </summary>
+		/// <param name="a">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
+		/// <param name="b">The <see cref="Epsitec.Common.Types.CollectionChangedEventArgs"/> instance containing the event data.</param>
+		/// <returns>The new event data.</returns>
+		public static CollectionChangedEventArgs Merge(CollectionChangedEventArgs a, CollectionChangedEventArgs b)
+		{
+			return new CollectionChangedEventArgs (CollectionChangedAction.Reset);
 		}
 		
 		
