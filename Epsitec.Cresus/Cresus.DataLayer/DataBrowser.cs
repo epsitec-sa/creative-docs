@@ -62,17 +62,19 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example) where EntityType : AbstractEntity
+		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
+			where TEntity : AbstractEntity
 		{
-			return this.GetByExample<EntityType> (example, true);
+			return this.GetByExample<TEntity> (example, true);
 		}
 
 
-		public IEnumerable<EntityType> GetByExample<EntityType>(EntityType example, bool loadFromDatabase) where EntityType : AbstractEntity
+		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example, bool loadFromDatabase)
+			where TEntity : AbstractEntity
 		{
 			foreach (EntityData entityData in this.GetEntitiesData (example))
 			{
-				EntityType entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as EntityType;
+				TEntity entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as TEntity;
 
 				if (entity != null)
 				{

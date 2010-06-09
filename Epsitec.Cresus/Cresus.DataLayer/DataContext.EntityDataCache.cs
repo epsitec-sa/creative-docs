@@ -33,7 +33,8 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				this.idToEntityMapping = new Dictionary<long, EntityDataMapping> ();
 				this.lookup = new Dictionary<EntityDataMapping, EntityDataMapping> ();
-				this.list = new List<EntityDataMapping> ();
+				this.mappings = new List<EntityDataMapping> ();
+				this.entities = new HashSet<AbstractEntity> ();
 			}
 
 			/// <summary>
@@ -63,8 +64,11 @@ namespace Epsitec.Cresus.DataLayer
 			/// <param name="mapping">The entity mapping.</param>
 			public void Add(long entitySerialId, EntityDataMapping mapping)
 			{
+				System.Diagnostics.Debug.Assert (!this.entities.Contains (mapping.Entity));
+				
 				this.idToEntityMapping.Add (entitySerialId, mapping);
-				this.list.Add (mapping);
+				this.mappings.Add (mapping);
+				this.entities.Add (mapping.Entity);
 
 				//	If the mapping is read only, then this means that the row key
 				//	is already defined and that the mapping's hash value won't
@@ -91,8 +95,11 @@ namespace Epsitec.Cresus.DataLayer
 						throw new System.InvalidOperationException ("Cannot remove item while an iteration is executing");
 					}
 
+					System.Diagnostics.Debug.Assert (this.entities.Contains (mapping.Entity));
+					
 					this.idToEntityMapping.Remove (entitySerialId);
-					this.list.Remove (mapping);
+					this.mappings.Remove (mapping);
+					this.entities.Remove (mapping.Entity);
 
 					if (mapping.IsReadOnly)
 					{
@@ -126,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				get
 				{
-					return this.list.Count;
+					return this.mappings.Count;
 				}
 			}
 
@@ -163,9 +170,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				this.isIteratingList++;
 
-				for (int i = 0; i < this.list.Count; i++)
+				for (int i = 0; i < this.mappings.Count; i++)
 				{
-					AbstractEntity entity = this.list[i].Entity;
+					AbstractEntity entity = this.mappings[i].Entity;
 					yield return entity;
 				}
 
@@ -184,9 +191,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				this.isIteratingList++;
 
-				for (int i = 0; i < this.list.Count; i++)
+				for (int i = 0; i < this.mappings.Count; i++)
 				{
-					AbstractEntity entity = this.list[i].Entity;
+					AbstractEntity entity = this.mappings[i].Entity;
 
 					if (predicate (entity))
 					{
@@ -197,9 +204,22 @@ namespace Epsitec.Cresus.DataLayer
 				this.isIteratingList--;
 			}
 
+			/// <summary>
+			/// Determines whether the cache contains the specified entity.
+			/// </summary>
+			/// <param name="entity">The entity.</param>
+			/// <returns>
+			/// 	<c>true</c> if the cache contains the specified entity; otherwise, <c>false</c>.
+			/// </returns>
+			public bool ContainsEntity(AbstractEntity entity)
+			{
+				return this.entities.Contains (entity);
+			}
+
 			readonly Dictionary<long, EntityDataMapping> idToEntityMapping;
-			readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;
-			readonly List<EntityDataMapping> list;
+			readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;			//	we cannot use a HashSet because we need to be able to quickly retrieve an item from the dictionary based on a partial key
+			readonly List<EntityDataMapping> mappings;
+			readonly HashSet<AbstractEntity> entities;
 			int isIteratingList;
 		}
 	}
