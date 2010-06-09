@@ -1,30 +1,29 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Entities;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController
 	{
-		public MainViewController(List<AbstractEntity> entities, List<Entities.ContactRoleEntity> roles, List<Entities.LocationEntity> locations, List<Entities.CountryEntity> countries)
+		public MainViewController(CoreData data)
 			: base ("MainView")
 		{
-			this.entities = entities;
-			MainViewController.roles = roles;
-			MainViewController.locations = locations;
-			MainViewController.countries = countries;
+			this.data     = data;
+			this.entities = data.GetAbstractPersons ().ToList ();
 
-			this.browserController = new BrowserViewController ("MainBrowser");
-			this.dataViewController = new DataViewController ("MainViewer")
+			this.browserController = new BrowserViewController ("MainBrowser", data);
+			this.dataViewController = new DataViewController ("MainViewer", data)
 			{
 				DataContext = CoreProgram.Application.Data.DataContext,
 			};
@@ -44,49 +43,63 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (this.entities != null);
 
-			this.frame = new FrameBox
-			{
-				Parent = container,
-				Dock = DockStyle.Fill,
-				DrawFullFrame = true,
-			};
-
-			//	Crée les panneaux gauche et droite séparés par un splitter.
-			this.leftPanel = new FrameBox
-			{
-				Parent = this.frame,
-				Name = "LeftPanel",
-				Dock = DockStyle.Left,
-				Padding = new Margins (5),
-				PreferredWidth = 150,
-			};
-
-			this.rightPanel = new FrameBox
-			{
-				Parent = this.frame,
-				Name = "RightPanel",
-				Dock = DockStyle.Fill,
-				Padding = new Margins (5, 0, 5, 5),
-			};
-
-			this.splitter = new VSplitter
-			{
-				Parent = this.frame,
-				Dock = DockStyle.Left,
-			};
+			this.CreateUIFrame (container);
+			this.CreateUILeftPanel ();
+			this.CreateUIRightPanel ();
+			this.CreateUISplitter ();
 
 			this.browserController.CreateUI (this.leftPanel);
 			this.dataViewController.CreateUI (this.rightPanel);
 		}
 
 
+		private void CreateUIFrame(Widget container)
+		{
+			this.frame = new FrameBox
+						{
+							Parent = container,
+							Dock = DockStyle.Fill,
+							DrawFullFrame = true,
+						};
+		}
+
+		private void CreateUILeftPanel()
+		{
+			this.leftPanel = new FrameBox
+						{
+							Parent = this.frame,
+							Name = "LeftPanel",
+							Dock = DockStyle.Left,
+							Padding = new Margins (5),
+							PreferredWidth = 150,
+						};
+		}
+
+		private void CreateUIRightPanel()
+		{
+			this.rightPanel = new FrameBox
+						{
+							Parent = this.frame,
+							Name = "RightPanel",
+							Dock = DockStyle.Fill,
+							Padding = new Margins (5, 0, 5, 5),
+						};
+		}
+
+		private void CreateUISplitter()
+		{
+			this.splitter = new VSplitter
+						{
+							Parent = this.frame,
+							Dock = DockStyle.Left,
+						};
+		}
+		
+		private readonly CoreData data;
 		private readonly BrowserViewController browserController;
 		private readonly DataViewController dataViewController;
 
-		private List<AbstractEntity> entities;
-		public static List<Entities.ContactRoleEntity> roles;  // accès statique grâce au 'public', beurk
-		public static List<Entities.LocationEntity> locations;  // accès statique grâce au 'public', beurk
-		public static List<Entities.CountryEntity> countries;  // accès statique grâce au 'public', beurk
+		private List<AbstractPersonEntity> entities;
 
 		private FrameBox frame;
 

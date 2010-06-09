@@ -15,9 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	class BrowserViewController : CoreViewController, INotifyCurrentChanged
 	{
-		public BrowserViewController(string name)
+		public BrowserViewController(string name, CoreData data)
 			: base (name)
 		{
+			this.data       = data;
 			this.collection = new List<AbstractEntity> ();
 		}
 
@@ -144,6 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
+		private readonly CoreData data;
 		private readonly List<AbstractEntity> collection;
 
 		private ScrollList scrollList;

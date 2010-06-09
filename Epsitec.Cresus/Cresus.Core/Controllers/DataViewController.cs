@@ -16,9 +16,11 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class DataViewController : CoreViewController
 	{
-		public DataViewController(string name)
+		public DataViewController(string name, CoreData data)
 			: base (name)
 		{
+			this.data = data;
+
 			this.viewControllers = new Stack<CoreViewController> ();
 			this.orchestrator = new Orchestrators.DataViewOrchestrator (this);
 		}
@@ -151,12 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if ((leafController == null) ||
 				(leafController.DataContext != lastController.DataContext))
 			{
-				var context = lastController.DataContext;
-                
-				if (context != null)
-                {
-					context.SaveChanges ();
-                }
+				this.data.SaveDataContext (lastController.DataContext);
 			}
 
 			lastController.Dispose ();
@@ -282,8 +279,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.viewControllers.Peek ();
 			}
 		}
-		
 
+
+		private readonly CoreData data;
 		private readonly Stack<CoreViewController> viewControllers;
 		private readonly Orchestrators.DataViewOrchestrator orchestrator;
 		
