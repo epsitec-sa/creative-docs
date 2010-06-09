@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
+			this.DataContext.CreateSchema<NaturalPersonEntity> ();
 			this.DataContext.CreateSchema<AbstractPersonEntity> ();
 			this.DataContext.CreateSchema<MailContactEntity> ();
 			this.DataContext.CreateSchema<TelecomContactEntity> ();
@@ -201,7 +202,10 @@ namespace Epsitec.Cresus.Core
 
 		private void SetupDataContext()
 		{
-			this.DataContext = new DataContext (this.DbInfrastructure);
+			this.DataContext = new DataContext (this.DbInfrastructure)
+			{
+				EnableEntityNullReferenceVirtualizer = true,
+			};
 		}
 
 

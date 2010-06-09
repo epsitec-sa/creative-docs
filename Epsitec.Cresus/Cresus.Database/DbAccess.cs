@@ -172,6 +172,21 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the database is local to this machine.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the database is local to this machine; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsLocalHost
+		{
+			get
+			{
+				return this.server == "localhost";
+			}
+		}
+		
+		
 		public static readonly DbAccess			Empty;
 		
 		private string							provider;
