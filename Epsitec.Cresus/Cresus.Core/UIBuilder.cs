@@ -146,21 +146,12 @@ namespace Epsitec.Cresus.Core
 				textField.PreferredWidth = width;
 			}
 
-			//?UIBuilder.CreateTextFieldHandler (textField, marshaler);
-
-			textField.AcceptingEdition +=
-				delegate
-				{
-					string text = TextConverter.ConvertToSimpleText (textField.Text);
-					marshaler.SetStringValue (text);
-				};
-
-			textField.KeyboardFocusChanged += (sender, e) => textField.Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ());
+			UIBuilder.CreateTextFieldHandler (textField, marshaler);
 
 			return textField;
 		}
 
-		public TextFieldMulti CreateTextFieldMulti(EditionTile tile, int height, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, int height, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
 			var staticText = new StaticText
 			{
@@ -171,7 +162,7 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var textField = new TextFieldMulti
+			var textField = new TextFieldMultiEx
 			{
 				Parent = tile.Container,
 				Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ()),
@@ -179,6 +170,9 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
+				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+				ScrollerVisibility = false,
+				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
 			};
 
 			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
@@ -507,9 +501,9 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
-		private static void CreateTextFieldHandler(Widget textField, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		private static void CreateTextFieldHandler(AbstractTextField textField, Epsitec.Common.Types.Converters.Marshaler marshaler)
 		{
-			textField.TextChanged +=
+			textField.AcceptingEdition +=
 				delegate
 				{
 					string text = TextConverter.ConvertToSimpleText (textField.Text);
