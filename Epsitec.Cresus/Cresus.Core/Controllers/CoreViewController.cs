@@ -31,6 +31,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public Epsitec.Cresus.DataLayer.DataContext DataContext
+		{
+			get;
+			set;
+		}
+
 		public System.Func<bool, bool> ActivateNextSubView
 		{
 			get;

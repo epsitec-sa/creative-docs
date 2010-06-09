@@ -24,7 +24,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			MainViewController.countries = countries;
 
 			this.browserController = new BrowserViewController ("MainBrowser");
-			this.dataViewController = new DataViewController ("MainViewer");
+			this.dataViewController = new DataViewController ("MainViewer")
+			{
+				DataContext = CoreProgram.Application.Data.DataContext,
+			};
 
 			this.browserController.SetContents (this.entities);
 			this.browserController.CurrentChanged += sender => this.dataViewController.SetActiveEntity (this.browserController.ActiveEntity);
