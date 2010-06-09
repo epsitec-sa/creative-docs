@@ -134,11 +134,13 @@ namespace Epsitec.Cresus.Database.Implementation
 				adapter.RowUpdating +=
 					delegate (object sender, FbRowUpdatingEventArgs e)
 					{
+						var activeTransaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
+
 						if ((e.Command != null) &&
-							(e.Command.Transaction == null))
+							(e.Command.Transaction != activeTransaction))
 						{
 							System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
-							e.Command.Transaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
+							e.Command.Transaction = activeTransaction;
 						}
 					};
 #endif
