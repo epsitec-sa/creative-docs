@@ -1003,15 +1003,16 @@ namespace Epsitec.Common.Widgets
 
 
 
-		public Drawing.Rectangle GetButtonBounds()
+		public virtual Drawing.Rectangle GetButtonBounds()
 		{
+			//	Retourne le rectangle à utiliser pour les boutons Accept/Reject.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle ();
 
-			rect.Left   = this.ActualWidth-this.margins.Right-adorner.GeometryComboRightMargin;
-			rect.Right  = this.ActualWidth-adorner.GeometryComboRightMargin;
+			rect.Left   = this.ActualWidth - this.margins.Right - adorner.GeometryComboRightMargin;
+			rect.Right  = this.ActualWidth - adorner.GeometryComboRightMargin;
 			rect.Bottom = adorner.GeometryComboBottomMargin;
-			rect.Top    = this.ActualHeight-adorner.GeometryComboTopMargin;
+			rect.Top    = this.ActualHeight - adorner.GeometryComboTopMargin;
 
 			return rect;
 		}
