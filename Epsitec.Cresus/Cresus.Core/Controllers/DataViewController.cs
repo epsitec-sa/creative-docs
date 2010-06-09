@@ -116,6 +116,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
 
+			if (controller.DataContext == null)
+			{
+				var leafController = this.GetLeafController ();
+
+				if (leafController == null)
+				{
+					controller.DataContext = this.DataContext;
+				}
+				else
+				{
+					controller.DataContext = leafController.DataContext ?? this.DataContext;
+				}
+			}
+
 			var column = this.viewLayoutController.CreateColumn ();
 			this.viewControllers.Push (controller);
 			controller.CreateUI (column);
@@ -131,8 +145,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
 
-			var controller = this.viewControllers.Pop ();
-			controller.Dispose ();
+			var lastController = this.viewControllers.Pop ();
+			var leafController = this.GetLeafController ();
+
+			if ((leafController == null) ||
+				(leafController.DataContext != lastController.DataContext))
+			{
+				var context = lastController.DataContext;
+                
+				if (context != null)
+                {
+					context.SaveChanges ();
+                }
+			}
+
+			lastController.Dispose ();
 			
 			//	Remove the rightmost column in the layout:
 			
