@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <param name="field">The field.</param>
 		private void CreateDataColumn(DbTable table, StructuredTypeField field)
 		{
-			DbTypeDef typeDef = this.CreateTypeDef (field.Type);
+			DbTypeDef typeDef = this.CreateTypeDef (field.Type, field.Options);
 			DbColumn  column  = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			column.Comment = column.DisplayName;
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns>The <see cref="DbTypeDef"/> instance or <c>null</c>.</returns>
-		private DbTypeDef CreateTypeDef(INamedType type)
+		private DbTypeDef CreateTypeDef(INamedType type, FieldOptions options)
 		{
 			this.AssertTransaction ();
 
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			if (typeDef == null)
 			{
-				typeDef = new DbTypeDef (type);
+				typeDef = new DbTypeDef (type, options == FieldOptions.Nullable);
 
 				infrastructure.RegisterNewDbType (this.transaction, typeDef);
 			}
