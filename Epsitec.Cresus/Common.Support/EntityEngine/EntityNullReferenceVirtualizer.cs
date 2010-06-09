@@ -135,6 +135,13 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityNullReferenceVirtualizer.emptyEntitiesContext;
 		}
 
+		#region EmptyEntityContext class
+
+		/// <summary>
+		/// The <c>EmptyEntityContext</c> class will be used when creating empty entities.
+		/// This allows the virtualizer to identify an empty entity very easily by just
+		/// checking if it belongs to this context, or not.
+		/// </summary>
 		private class EmptyEntityContext : EntityContext
 		{
 			public EmptyEntityContext()
@@ -143,6 +150,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		#endregion
+
+		#region Store Class
 
 		/// <summary>
 		/// The <c>Store</c> class implements the <c>GetValue</c> and <c>SetValue</c> accessors used
@@ -167,7 +177,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.isReadOnly = true;
 			}
 			
-
 			public bool IsReadOnly
 			{
 				get
@@ -175,7 +184,6 @@ namespace Epsitec.Common.Support.EntityEngine
 					return this.isReadOnly;
 				}
 			}
-
 
 			#region IValueStore Members
 
@@ -201,17 +209,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (value is AbstractEntity)
 				{
-					AbstractEntity entity = value as AbstractEntity;
+					var entity = value as AbstractEntity;
 					EntityNullReferenceVirtualizer.PatchNullReferences (entity);
 				}
 				else if (value is EntityCollection)
 				{
-					EntityCollection collection = value as EntityCollection;
+					var collection = value as EntityCollection;
 					collection.EnableEntityNullReferenceVirtualizer ();
-					//foreach (AbstractEntity entity in collection)
-					//{
-					//    EntityNullReferenceVirtualizer.PatchNullReferences (entity);
-					//}
 				}
 
 				return value;
@@ -226,8 +230,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			
 			#endregion
-
-		
 
 			private void TranformNullEntityInfoLiveEntity()
 			{
@@ -315,7 +317,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			private bool								isReadOnly;
 		}
 
-		
+		#endregion
+
 		[System.ThreadStatic]
 		private static EntityContext emptyEntitiesContext;
 	}

@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core
 		internal void SetupData()
 		{
 			this.data.SetupDatabase ();
-			
+
 			var entities = this.data.GetAbstractPersons ();
 
 			foreach (var entity in entities)

@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -10,6 +10,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityCollection</c> class is used as a common base class for all
+	/// its generic versions.
+	/// </summary>
 	public abstract class EntityCollection : ObservableList<object>
 	{
 		internal void EnableEntityNullReferenceVirtualizer()
@@ -17,6 +21,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.enableVirtualizer = true;
 		}
 
+		/// <summary>
+		/// Virtualizes the null references of the specified entity, if this has
+		/// been enabled for this collection.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <param name="entity">The entity.</param>
 		protected void Virtualize<T>(T entity)
 			where T: AbstractEntity
 		{
@@ -25,7 +35,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
 			}
 		}
-
 
 		private bool enableVirtualizer;
 	}
