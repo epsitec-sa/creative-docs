@@ -83,9 +83,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
-				UriContactEntity[] contacts = repository.GetByExample<UriContactEntity> (new UriContactEntity ()).ToArray ();
+				UriContactEntity[] contacts = {
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000003))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000004))),
+				};
 
 				Assert.IsTrue (contacts.Length == 4);
 
@@ -121,6 +124,38 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (Database2.CheckGertrude (gertrude));
 				Assert.IsTrue (Database2.CheckHans (hans));
 			}
+		}
+
+
+		[TestMethod]
+		public void GetFreshObject()
+		{
+			TestHelper.PrintStartTest ("Get fresh object");
+
+			this.GetFreshObject (false);
+			this.GetFreshObject (true);
+		}
+
+
+		public void GetFreshObject(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				NaturalPersonEntity freshPerson1 = dataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+
+				freshPerson1.Firstname = "Albert";
+				freshPerson1.Lastname = "Levert";
+
+				dataContext.SaveChanges ();
+
+				NaturalPersonEntity freshPerson2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000004)));
+
+				Assert.IsTrue (freshPerson1 == freshPerson2);
+
+				dataContext.SaveChanges ();
+			}
+
+			this.CreateDatabase (false);
 		}
 
 

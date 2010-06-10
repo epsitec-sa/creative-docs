@@ -343,6 +343,46 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
+		public void GetFreshObject()
+		{
+			TestHelper.PrintStartTest ("Get fresh object");
+
+			this.GetFreshObject (false);
+			this.GetFreshObject (true);
+		}
+
+
+		public void GetFreshObject(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				NaturalPersonEntity freshPerson1 = dataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+
+				freshPerson1.Firstname = "Albert";
+				freshPerson1.Lastname = "Levert";
+
+				dataContext.SaveChanges ();
+
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Firstname = "Albert",
+					Lastname = "Levert",
+				};
+
+				NaturalPersonEntity freshPerson2 = dataBrowser.GetByExample<NaturalPersonEntity> (example).First ();
+
+				Assert.IsTrue (freshPerson1 == freshPerson2);
+
+				dataContext.SaveChanges ();
+			}
+
+			this.CreateDatabase (false);
+		}
+
+
+		[TestMethod]
 		public void GetObjectByReferenceReference()
 		{
 			TestHelper.PrintStartTest ("Get objects by reference reference");

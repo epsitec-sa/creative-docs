@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <param name="command">The command.</param>
 		/// <param name="oldKey">The old key.</param>
 		/// <param name="newKey">The new key.</param>
-		public void UpdateAssociatedRowKeys(DbRichCommand command, DbKey oldKey, DbKey newKey)
+		public EntityDataMapping UpdateAssociatedRowKeys(DbRichCommand command, DbKey oldKey, DbKey newKey)
 		{
 			System.Diagnostics.Debug.Assert (oldKey.IsTemporary == true);
 			System.Diagnostics.Debug.Assert (newKey.IsTemporary == false);
@@ -88,9 +88,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 					//	key ids and can therefore be discarded.
 					
 					this.entries.RemoveAt (i);
-					break;
+
+					return entry.Mapping;
 				}
 			}
+
+			return null;
 		}
 
 		#region Entry Structure
