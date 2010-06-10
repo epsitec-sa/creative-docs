@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserController = new BrowserViewController ("MainBrowser", data);
 			this.dataViewController = new DataViewController ("MainViewer", data);
 
-			this.browserController.SetContents (() => this.data.GetAbstractPersons ());
+			this.browserController.SetContents (() => this.data.GetCustomers ());
 			
 			this.browserController.CurrentChanging +=
 				delegate
