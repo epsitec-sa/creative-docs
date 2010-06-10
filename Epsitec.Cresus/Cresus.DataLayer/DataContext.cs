@@ -310,7 +310,12 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				TemporaryRowCollection temporaryRows;
 				temporaryRows = this.GetTemporaryRows (table.TableName);
-				temporaryRows.UpdateAssociatedRowKeys (this.RichCommand, oldKey, newKey);
+				EntityDataMapping mapping = temporaryRows.UpdateAssociatedRowKeys (this.RichCommand, oldKey, newKey);
+
+				if (mapping != null && mapping.IsReadOnly)
+				{
+					this.entityDataCache.DefineRowKey (mapping);
+				}
 
 				return DbKey.Empty;
 			}

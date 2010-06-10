@@ -116,12 +116,19 @@ namespace Epsitec.Cresus.DataLayer
 			public void DefineRowKey(EntityDataMapping mapping, DbKey key)
 			{
 				System.Diagnostics.Debug.Assert (mapping.IsReadOnly == false);
-				//System.Diagnostics.Debug.Assert (this.list.Contains (mapping));
 
 				mapping.RowKey = key;
 
 				System.Diagnostics.Debug.Assert (mapping.IsReadOnly);
 
+				this.lookup.Add (mapping, mapping);
+			}
+
+
+			public void DefineRowKey(EntityDataMapping mapping)
+			{
+				System.Diagnostics.Debug.Assert (mapping.IsReadOnly == true);
+				
 				this.lookup.Add (mapping, mapping);
 			}
 

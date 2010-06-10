@@ -695,10 +695,7 @@ namespace Epsitec.Cresus.Core
 			street1.Complement = "2ème étage";
 
 			StreetEntity street2 = this.DataContext.CreateEmptyEntity<StreetEntity> ();
-			using (street2.DefineOriginalValues ())
-			{
-				street2.StreetName = "Ch. du Fontenay 6";
-			}
+			street2.StreetName = "Ch. du Fontenay 6";
 
 			PostBoxEntity postbox1 = this.DataContext.CreateEmptyEntity<PostBoxEntity> ();
 			postbox1.Number = "Case postale 1234";
