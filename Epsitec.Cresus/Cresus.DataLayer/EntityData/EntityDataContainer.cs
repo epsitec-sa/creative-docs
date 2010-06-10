@@ -1,11 +1,11 @@
 ﻿using Epsitec.Cresus.Database;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.EntityData
 {
 	
 	
-	public class EntityData
+	internal class EntityDataContainer
 	{
 
 
@@ -30,28 +30,28 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public EntityValueData ValueData
+		public EntityValueDataContainer ValueData
 		{
 			get;
 			private set;
 		}
 
 
-		public EntityReferenceData ReferenceData
+		public EntityReferenceDataContainer ReferenceData
 		{
 			get;
 			private set;
 		}
 
 
-		public EntityCollectionData CollectionData
+		public EntityCollectionDataContainer CollectionData
 		{
 			get;
 			private set;
 		}
 
 
-		public EntityData(DbKey key, Druid loadedEntityId, Druid realEntityId, EntityValueData valueData, EntityReferenceData referenceData, EntityCollectionData collectionData)
+		public EntityDataContainer(DbKey key, Druid loadedEntityId, Druid realEntityId, EntityValueDataContainer valueData, EntityReferenceDataContainer referenceData, EntityCollectionDataContainer collectionData)
 		{
 			this.Key = key;
 			this.LoadedEntityId = loadedEntityId;

@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.EntityData
 {
 
 
-	public class EntityValueData
+	internal class EntityValueDataContainer
 	{
 
 		public object this[StructuredTypeField field]
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public EntityValueData()
+		public EntityValueDataContainer()
 		{
 			this.values = new Dictionary<StructuredTypeField, object> ();
 		}

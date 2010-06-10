@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.TableAlias
 {
 
 
-	class EntityTableAliasNode : TableAliasNode
+	internal class EntityTableAliasNode : TableAliasNode
 	{
 
 		public EntityTableAliasNode(EntityTableAliasNode parentNode, string name, string alias)

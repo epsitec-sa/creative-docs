@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.EntityData;
 using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
@@ -160,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as TEntity;
 		}
 
-		public AbstractEntity ResolveEntity(EntityData entityData, bool loadFromDatabase)
+		internal AbstractEntity ResolveEntity(EntityDataContainer entityData, bool loadFromDatabase)
 		{
 			return this.InternalResolveEntity (entityData, loadFromDatabase);
 		}
@@ -565,7 +566,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		internal AbstractEntity InternalResolveEntity(EntityData entityData, bool loadFromDatabase)
+		internal AbstractEntity InternalResolveEntity(EntityDataContainer entityData, bool loadFromDatabase)
 		{
 			if (this.isDisposed)
 			{
@@ -587,7 +588,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private AbstractEntity InternalResolveEntityBasedOnDataLoadedFromDatabase(EntityData entityData)
+		private AbstractEntity InternalResolveEntityBasedOnDataLoadedFromDatabase(EntityDataContainer entityData)
 		{
 			var entity = this.EntityContext.CreateEmptyEntity (entityData.RealEntityId);
 
@@ -739,7 +740,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void DeserializeEntityLocalWithReference(AbstractEntity entity, EntityData entityData, Druid entityId)
+		private void DeserializeEntityLocalWithReference(AbstractEntity entity, EntityDataContainer entityData, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
 			{

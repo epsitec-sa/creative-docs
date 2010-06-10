@@ -4,11 +4,11 @@ using Epsitec.Cresus.Database;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.EntityData
 {
 
-	
-	public class EntityCollectionData
+
+	internal class EntityCollectionDataContainer
 	{
 
 		public List<DbKey> this[StructuredTypeField field]
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public EntityCollectionData()
+		public EntityCollectionDataContainer()
 		{
 			this.collectionKeys = new Dictionary<StructuredTypeField, List<DbKey>> ();
 		}

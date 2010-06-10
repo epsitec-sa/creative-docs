@@ -1,8 +1,8 @@
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.TableAlias
 {
 
 
-	class SubtypeTableAliasNode : TableAliasNode
+	internal class SubtypeTableAliasNode : TableAliasNode
 	{
 
 
