@@ -137,6 +137,11 @@ namespace Epsitec.Cresus.DataLayer
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
+		public AbstractEntity ResolveEntity(EntityKey entityKey)
+		{
+			return this.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+		}
+
 		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
 		{
 			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
@@ -158,6 +163,20 @@ namespace Epsitec.Cresus.DataLayer
 		public AbstractEntity ResolveEntity(EntityData entityData, bool loadFromDatabase)
 		{
 			return this.InternalResolveEntity (entityData, loadFromDatabase);
+		}
+
+		public EntityKey GetEntityKey(AbstractEntity entity)
+		{
+			var mapping = this.GetEntityDataMapping (entity);
+
+			if (mapping == null)
+			{
+				return EntityKey.Empty;
+			}
+			else
+			{
+				return new EntityKey (mapping.RowKey, entity.GetEntityStructuredTypeId ());
+			}
 		}
 
 
