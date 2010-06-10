@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						int active = this.scrollList.SelectedItemIndex;
 						var entity = BrowserViewController.GetActiveItem (this.collection, active);
-						var key   = this.data.DataContextPool.FindEntityKey (entity);
+						var key    = this.data.DataContextPool.FindEntityKey (entity);
 
 						if (this.activeEntityKey != key )
 						{

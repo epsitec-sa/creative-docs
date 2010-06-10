@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
-	[System.Diagnostics.DebuggerDisplay ("{DebuggerDisplayValue}")]
+	[System.Diagnostics.DebuggerDisplay ("Value = {DebuggerDisplayValue}")]
 	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider
 	{
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				var buffer = new System.Text.StringBuilder ();
 				this.Dump (buffer, topLevelOnly: true, skipUndefinedFields: true);
-				return string.Concat (this.GetType ().Name, ": ", string.Join (", ", buffer.ToString ().Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries)));
+				return string.Join (", ", buffer.ToString ().Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries));
 			}
 		}
 

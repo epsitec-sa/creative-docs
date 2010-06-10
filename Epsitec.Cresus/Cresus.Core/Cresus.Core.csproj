@@ -110,6 +110,7 @@
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryCustomerViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
