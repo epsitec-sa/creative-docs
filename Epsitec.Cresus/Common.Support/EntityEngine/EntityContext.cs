@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -578,14 +579,40 @@ namespace Epsitec.Common.Support.EntityEngine
 		public IEnumerable<string> GetDefinedFieldIds(AbstractEntity entity)
 		{
 			HashSet<string> ids = new HashSet<string> ();
+			List<StructuredTypeField> fields = this.GetEntityFieldDefinitions (entity.GetEntityStructuredTypeId ()).ToList ();
 
 			foreach (IValueStore store in entity.InternalGetValueStores ())
 			{
 				Data dataStore = store as Data;
-				
+
 				foreach (string id in dataStore.GetIds ())
 				{
-					ids.Add (id);
+					StructuredTypeField field = fields.First (f => f.Id == id);
+					object value = store.GetValue(id);
+
+					switch (field.Relation)
+                    {
+                    	case FieldRelation.None:
+                    	case FieldRelation.Reference:
+
+							if (value != null)
+							{
+								ids.Add (id);
+							}
+
+                    		break;
+
+                    	case FieldRelation.Collection:
+
+							IList values = value as IList;
+
+							if (values != null && values.Count > 0)
+							{
+								ids.Add (id);
+							}
+
+                    		break;
+                    }
 				}
 			}
 
