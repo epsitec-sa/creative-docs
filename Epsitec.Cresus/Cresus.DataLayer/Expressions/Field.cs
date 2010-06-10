@@ -1,11 +1,14 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Database;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
-	public class Field : Value
+	public class Field
 	{
 
 
@@ -19,6 +22,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
+		}
+
+
+		internal DbTableColumn CreateDbTableColumn(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		{
+			return dbTableColumnResolver (this.FieldId);
 		}
 
 

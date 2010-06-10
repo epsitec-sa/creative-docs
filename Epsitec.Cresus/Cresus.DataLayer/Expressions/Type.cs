@@ -2,13 +2,20 @@
 {
 
 
-	public enum BinaryOperator
+	public enum Type
 	{
 
+		Boolean,
 
-		And,
 
-		Or,
+		Int16,
+
+		
+		Int32,
+
+		
+		Int64,
+
 
 	}
 

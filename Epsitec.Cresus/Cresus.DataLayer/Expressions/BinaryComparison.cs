@@ -2,19 +2,18 @@
 {
 
 
-	public class BinaryComparison : Expression
+	public abstract class BinaryComparison : Comparison
 	{
 
 
-		public BinaryComparison(Value left, BinaryComparator op, Value right) : base ()
+		protected BinaryComparison(Field left, BinaryComparator op) : base ()
 		{
 			this.Left = left;
 			this.Operator = op;
-			this.Right = right;
 		}
 
 
-		public Value Left
+		public Field Left
 		{
 			get;
 			private set;
@@ -22,13 +21,6 @@
 
 
 		public BinaryComparator Operator
-		{
-			get;
-			private set;
-		}
-
-
-		public Value Right
 		{
 			get;
 			private set;

@@ -1,11 +1,15 @@
 ﻿namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
-	
-	public enum UnaryOperator
+
+	public enum UnaryComparator
 	{
 
-		Not,
+
+		IsNull,
+
+
+		IsNotNull,
 
 
 	}

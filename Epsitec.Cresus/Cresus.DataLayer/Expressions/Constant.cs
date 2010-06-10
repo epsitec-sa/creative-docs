@@ -2,21 +2,32 @@
 {
 
 
-	public class Constant : Value
+	public class Constant
 	{
 
 		
-		public Constant(object val) : base()
+		public Constant(Type type, object value) : base()
 		{
-			this.Value = val;
+			this.Type = type;
+			this.Value = value;
 		}
 
 
+		public Type Type
+		{
+			get;
+			private set;
+		}
+		
+		
 		public object Value
 		{
 			get;
 			private set;
 		}
+
+
+
 
 	}
 
