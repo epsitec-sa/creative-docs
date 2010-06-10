@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabasebCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
+			this.dataContextPool = new DataContextPool ();
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -42,7 +43,20 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
+				if (this.activeDataContext == null)
+				{
+					this.SetupDataContext ();
+				}
+
 				return this.activeDataContext;
+			}
+		}
+
+		public DataContextPool DataContextPool
+		{
+			get
+			{
+				return this.dataContextPool;
 			}
 		}
 
@@ -69,13 +83,13 @@ namespace Epsitec.Cresus.Core
 		{
 			if (!this.UseHack && !this.IsReady)
 			{
-				System.Diagnostics.Debug.Assert (this.DbInfrastructure.IsConnectionOpen == false);
-				System.Diagnostics.Debug.Assert (this.DataContext == null);
+				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen == false);
+				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
-				DbAccess dbAccess = CoreData.GetDatabaseAccess ();
-				bool databaseIsNew = this.ConnectToDatabase (dbAccess);
+				var  databaseAccess = CoreData.GetDatabaseAccess ();
+				bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
 
-				System.Diagnostics.Debug.Assert (this.DbInfrastructure.IsConnectionOpen);
+				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
 
 				this.SetupDataContext ();
 				this.SetupDatabase (databaseIsNew || this.ForceDatabaseCreation);
@@ -90,7 +104,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (context != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("About to save context");
+				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
 				context.SaveChanges ();
 				System.Diagnostics.Debug.WriteLine ("Done");
 			}
@@ -98,10 +112,32 @@ namespace Epsitec.Cresus.Core
 
 		public DataContext CreateDataContext()
 		{
-			return new DataContext (this.dbInfrastructure)
+			var context = new DataContext (this.dbInfrastructure)
 			{
 				EnableEntityNullReferenceVirtualizer = true,
 			};
+
+			this.dataContextPool.Add (context);
+
+			return context;
+		}
+
+		public void DisposeDataContext(DataContext context)
+		{
+			if (this.dataContextPool.Remove (context))
+			{
+				context.Dispose ();
+
+				if (this.activeDataContext == context)
+				{
+					this.activeDataContext = null;
+					this.OnDataContextChanged ();
+				}
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("Context does not belong to the pool");
+			}
 		}
 
 		#region IDisposable Members
@@ -242,7 +278,20 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
+		private void OnDataContextChanged()
+		{
+			var handler = this.DataContextChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler DataContextChanged;
+
 		private readonly DbInfrastructure dbInfrastructure;
+		private readonly DataContextPool dataContextPool;
 		private DataContext activeDataContext;
 	}
 }

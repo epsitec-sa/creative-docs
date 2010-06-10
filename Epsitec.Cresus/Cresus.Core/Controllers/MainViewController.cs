@@ -20,16 +20,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base ("MainView")
 		{
 			this.data     = data;
-			this.entities = data.GetAbstractPersons ().ToList ();
 
 			this.browserController = new BrowserViewController ("MainBrowser", data);
-			this.dataViewController = new DataViewController ("MainViewer", data)
-			{
-				DataContext = CoreProgram.Application.Data.DataContext,
-			};
+			this.dataViewController = new DataViewController ("MainViewer", data);
 
-			this.browserController.SetContents (this.entities);
-			this.browserController.CurrentChanged += sender => this.dataViewController.SetActiveEntity (this.browserController.ActiveEntity);
+			this.browserController.SetContents (() => this.data.GetAbstractPersons ());
+			
+			this.browserController.CurrentChanging +=
+				delegate
+				{
+					this.dataViewController.ClearActiveEntity ();
+				};
+
+			this.browserController.CurrentChanged +=
+				delegate
+				{
+					this.dataViewController.SetActiveEntity (this.browserController.GetActiveEntity ());
+				};
 		}
 
 
@@ -41,8 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			System.Diagnostics.Debug.Assert (this.entities != null);
-
 			this.CreateUIFrame (container);
 			this.CreateUILeftPanel ();
 			this.CreateUIRightPanel ();
@@ -98,8 +103,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreData data;
 		private readonly BrowserViewController browserController;
 		private readonly DataViewController dataViewController;
-
-		private List<AbstractPersonEntity> entities;
 
 		private FrameBox frame;
 
