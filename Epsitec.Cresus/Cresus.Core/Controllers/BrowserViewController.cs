@@ -1,15 +1,17 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -20,6 +22,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data       = data;
 			this.collection = new List<AbstractEntity> ();
+			this.data.DataContextChanged +=
+				delegate
+				{
+					this.UpdateCollection ();
+				};
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -27,21 +34,20 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield break;
 		}
 
+		private static T GetActiveItem<T>(IList<T> collection, int index)
+		{
+			if (index < 0)
+			{
+				return default (T);
+			}
+			else
+			{
+				return collection[index];
+			}
+		}
+
 		public override void CreateUI(Widget container)
 		{
-#if false
-			new StaticText ()
-			{
-				Parent = container,
-				BackColor = Color.FromBrightness (1),
-				Dock = DockStyle.Top,
-				PreferredHeight = 40,
-				Text = "Ici viendra la future <i>liste de gauche</i> Crésus.",
-				TextBreakMode = TextBreakMode.Hyphenate,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-			};
-#endif
-
 			this.scrollList = new ScrollList ()
 			{
 				Parent = container,
@@ -52,44 +58,56 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.scrollList.SelectedItemChanged +=
 				delegate
 				{
-					int active = this.scrollList.SelectedItemIndex;
-                    
-					if (active != this.activeIndex)
+					if (this.suspendUpdates == 0)
 					{
-						this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-						this.activeIndex = active;
-						this.OnCurrentChanged ();
-                    }
+						int active = this.scrollList.SelectedItemIndex;
+						var entity = BrowserViewController.GetActiveItem (this.collection, active);
+						var key   = this.data.DataContextPool.FindDbKey (entity);
+
+						if (this.activeEntityKey != key )
+						{
+							this.activeEntityKey = key;
+							this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+							this.OnCurrentChanged ();
+						}
+					}
 				};
 			
 			this.RefreshScrollList ();
 		}
 
 
-		public AbstractEntity ActiveEntity
+		public AbstractEntity GetActiveEntity()
 		{
-			get
+			if (this.activeEntityKey.IsEmpty)
 			{
-				if (this.activeIndex < 0)
-				{
-					return null;
-				}
-				else
-				{
-					return this.collection[this.activeIndex];
-				}
+				return null;
 			}
+
+			int active   = this.scrollList.SelectedItemIndex;
+			var entity   = BrowserViewController.GetActiveItem (this.collection, active);
+			var entityId = entity.GetEntityStructuredTypeId ();
+
+			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey, entityId);
+
+			return entity;
 		}
 
 
-		public void SetContents(IEnumerable<AbstractEntity> collection)
+		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
+		{
+			this.collectionGetter = collectionGetter;
+			this.UpdateCollection ();
+		}
+
+		private void UpdateCollection()
 		{
 			this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
 			this.collection.Clear ();
-			this.collection.AddRange (collection);
+			this.collection.AddRange (this.collectionGetter ());
 			this.RefreshScrollList ();
 		}
-
+		
 		protected void OnCurrentChanged()
 		{
 			var handler = this.CurrentChanged;
@@ -114,30 +132,47 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.scrollList != null)
 			{
-				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-				this.scrollList.Items.Clear ();
+				var updatedList = new List<FormattedText> ();
 
 				foreach (var entity in this.collection)
 				{
-					if (entity is LegalPersonEntity)
-                    {
-						var person = entity as LegalPersonEntity;
-
-						this.scrollList.Items.Add (person.Name);
-                    }
-					else if (entity is NaturalPersonEntity)
-                    {
-						var person = entity as NaturalPersonEntity;
-
-						this.scrollList.Items.Add (Misc.SpacingAppend (person.Firstname, person.Lastname));
-					}
+					updatedList.Add (BrowserViewController.GetEntityDisplayText (entity));
 				}
 
-				this.OnCurrentChanged ();
+				int oldActive = this.scrollList.SelectedItemIndex;
+				int newActive = oldActive < updatedList.Count ? oldActive : updatedList.Count-1;
+
+				this.suspendUpdates++;
+				this.scrollList.Items.Clear ();
+				this.scrollList.Items.AddRange (updatedList.Select (x => x.ToString ()));
+				this.suspendUpdates--;
+				
+				this.scrollList.SelectedItemIndex = newActive;
 			}
 		}
 
-        #region INotifyCurrentChanged Members
+		private static FormattedText GetEntityDisplayText(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return FormattedText.Empty;
+			}
+
+			if (entity is LegalPersonEntity)
+			{
+				var person = entity as LegalPersonEntity;
+				return UIBuilder.FormatText (person.Name);
+			}
+			if (entity is NaturalPersonEntity)
+			{
+				var person = entity as NaturalPersonEntity;
+				return UIBuilder.FormatText (person.Firstname, person.Lastname);
+			}
+			
+			return FormattedText.Empty;
+		}
+
+		#region INotifyCurrentChanged Members
 
 		public event EventHandler  CurrentChanged;
 
@@ -147,8 +182,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly CoreData data;
 		private readonly List<AbstractEntity> collection;
+		private System.Func<IEnumerable<AbstractEntity>> collectionGetter;
+		private int suspendUpdates;
 
 		private ScrollList scrollList;
-		private int activeIndex = -1;
+		private DbKey activeEntityKey;
 	}
 }
