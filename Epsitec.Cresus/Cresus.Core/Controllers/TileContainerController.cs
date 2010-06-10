@@ -263,11 +263,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var tile = new CollectionItemTile ();
 
-				tile.AddClicked    += sender =>
+				tile.AddClicked += sender =>
 				{
 					item.AddNewItem ();
 					this.GenerateTiles ();
 				};
+
 				tile.RemoveClicked += sender =>
 				{
 					this.controller.Orchestrator.CloseSubViews (this.controller);
@@ -473,7 +474,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				titleTile.Parent         = parent;
 				titleTile.Dock           = DockStyle.Top;
-				titleTile.Margins        = new Margins (0, 0, 0, 5);
+				//?titleTile.Margins        = new Margins (0, 0, 0, 5);
+				titleTile.Margins        = new Margins (0, 0, 0, -1);
 				titleTile.ArrowDirection = Direction.Right;
 				titleTile.IsReadOnly     = true;
 			}

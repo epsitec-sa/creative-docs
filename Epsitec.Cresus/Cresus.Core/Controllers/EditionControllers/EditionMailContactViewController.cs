@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin (tile, true);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
