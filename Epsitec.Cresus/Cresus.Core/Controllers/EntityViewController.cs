@@ -28,6 +28,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield break;
 		}
 
+		public sealed override void CreateUI(Widget container)
+		{
+			this.CreateUI (container as TileContainer);
+		}
+
 		protected abstract void CreateUI(TileContainer container);
 
 
@@ -113,12 +118,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				return () => this.entity;
 			}
-		}
-
-		public sealed override void CreateUI(Widget container)
-		{
-			System.Diagnostics.Debug.Assert (this.DataContext.Contains (this.Entity));
-			this.CreateUI (container as TileContainer);
 		}
 
 #if false

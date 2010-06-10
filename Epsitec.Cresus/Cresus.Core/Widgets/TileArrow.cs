@@ -29,11 +29,30 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		public bool MouseHilite
+		{
+			get;
+			set;
+		}
+
+
 		/// <summary>
 		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ArrowLocation.
 		/// </summary>
 		/// <value>Epaisseur de la flèche.</value>
 		public static double Breadth
+		{
+			get
+			{
+				return 8;
+			}
+		}
+
+		/// <summary>
+		/// Epaisseur de la flèche.
+		/// </summary>
+		/// <value>Epaisseur de la flèche.</value>
+		private static double Thickness
 		{
 			get
 			{
@@ -47,19 +66,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			switch (mode)
 			{
 				case TileArrowMode.None:
-					this.PaintArrow (graphics, deflate => TileArrow.GetInactiveArrowPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetInactiveArrowPath (bounds, direction, deflate));
 					break;
 
 				case TileArrowMode.VisibleDirect:
-					this.PaintArrow (graphics, deflate => TileArrow.GetDirectArrowPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetDirectArrowPath (bounds, direction, deflate));
 					break;
 
 				case TileArrowMode.VisibleReverse:
-					this.PaintArrow (graphics, deflate => TileArrow.GetReverseArrowPath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetReverseArrowPath (bounds, direction, deflate));
 					break;
 
 				case TileArrowMode.Hilite:
-					this.PaintArrow (graphics, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
+					this.PaintArrow (graphics, bounds, deflate => TileArrow.GetHilitePath (bounds, direction, deflate));
 					break;
 
 				default:
@@ -67,14 +86,50 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void PaintArrow(Graphics graphics, System.Func<double, Path> pathProvider)
+		private void PaintArrow(Graphics graphics, Rectangle bounds, System.Func<double, Path> pathProvider)
 		{
 			if (this.SurfaceColor.IsValid)
 			{
 				using (Path path = pathProvider (0.5))
 				{
 					graphics.Rasterizer.AddSurface (path);
+#if false
 					graphics.RenderSolid (this.SurfaceColor);
+#else
+					if (this.SurfaceColor.IsValid)
+					{
+						Transform ot = graphics.GradientRenderer.Transform;
+
+						if (this.MouseHilite)
+						{
+							graphics.GradientRenderer.Fill = GradientFill.Circle;
+							graphics.GradientRenderer.SetParameters (0, 100);
+							graphics.GradientRenderer.SetColors (Color.FromName ("White"), this.SurfaceColor);
+
+							Transform t = Transform.Identity;
+							Point center = bounds.Center;
+							t = t.Scale (bounds.Width/100/2, bounds.Height/100/2);
+							t = t.Translate (center);
+							graphics.GradientRenderer.Transform = t;
+							graphics.RenderGradient ();  // dégradé circulaire
+						}
+						else
+						{
+							graphics.GradientRenderer.Fill = GradientFill.X;
+							graphics.GradientRenderer.SetParameters (-50, 100);
+							graphics.GradientRenderer.SetColors (this.SurfaceColor, Color.FromName ("White"));
+
+							Transform t = Transform.Identity;
+							Point center = bounds.Center;
+							t = t.Scale (bounds.Width/100/2, bounds.Height/100/2);
+							t = t.Translate (center);
+							graphics.GradientRenderer.Transform = t;
+							graphics.RenderGradient ();  // dégradé de gauche à droite
+						}
+
+						graphics.GradientRenderer.Transform = ot;
+					}
+#endif
 				}
 			}
 			
@@ -108,8 +163,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static Path GetInactiveArrowPath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			Rectangle box;
-			Point pick;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+			Point pick1, pick2, pick3;
+			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRectangle (box);
@@ -160,13 +215,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			Path path = new Path ();
 
 			Rectangle box;
-			Point pick;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+			Point pick1, pick2, pick3;
+			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
 
 			switch (arrowLocation)
 			{
 				case Direction.Left:
-					path.MoveTo (pick);
+					path.MoveTo (pick1);
+					path.LineTo (pick2);
+					path.LineTo (pick3);
 					path.LineTo (box.BottomLeft);
 					path.LineTo (box.BottomRight);
 					path.LineTo (box.TopRight);
@@ -175,7 +232,9 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 
 				case Direction.Right:
-					path.MoveTo (pick);
+					path.MoveTo (pick1);
+					path.LineTo (pick2);
+					path.LineTo (pick3);
 					path.LineTo (box.TopRight);
 					path.LineTo (box.TopLeft);
 					path.LineTo (box.BottomLeft);
@@ -184,7 +243,9 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 
 				case Direction.Up:
-					path.MoveTo (pick);
+					path.MoveTo (pick1);
+					path.LineTo (pick2);
+					path.LineTo (pick3);
 					path.LineTo (box.TopLeft);
 					path.LineTo (box.BottomLeft);
 					path.LineTo (box.BottomRight);
@@ -193,7 +254,9 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 
 				case Direction.Down:
-					path.MoveTo (pick);
+					path.MoveTo (pick1);
+					path.LineTo (pick2);
+					path.LineTo (pick3);
 					path.LineTo (box.BottomRight);
 					path.LineTo (box.TopRight);
 					path.LineTo (box.TopLeft);
@@ -208,16 +271,20 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static Path GetHilitePath(Rectangle bounds, Direction arrowLocation, double deflate)
 		{
 			Rectangle box;
-			Point pick;
-			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+			Point pick1, pick2, pick3;
+			TileArrow.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick1, out pick2, out pick3);
 
 			Path path = new Path ();
 			path.AppendRoundedRectangle (box, 2.0);
 			return path;
 		}
 
-		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowLocation, out Rectangle box, out Point pick)
+		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowLocation, out Rectangle box, out Point pick1, out Point pick2, out Point pick3)
 		{
+			//	Les points pick1..3 sont dans le sens CCW.
+			Point pick;
+			double thickness;
+
 			bounds.Deflate (0.5);
 
 			switch (arrowLocation)
@@ -225,22 +292,42 @@ namespace Epsitec.Cresus.Core.Widgets
 				default:
 				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileArrow.Breadth, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
-					pick = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
+					pick2 = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
+
+					pick = Point.Scale (box.TopLeft, box.BottomLeft, 0.5);
+					thickness = System.Math.Min (TileArrow.Thickness, box.Height/2);
+					pick1 = Point.Move (pick, box.TopLeft, thickness);
+					pick3 = Point.Move (pick, box.BottomLeft, thickness);
 					break;
 
 				case Direction.Right:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
-					pick = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
+					pick2 = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
+					
+					pick = Point.Scale (box.TopRight, box.BottomRight, 0.5);
+					thickness = System.Math.Min (TileArrow.Thickness, box.Height/2);
+					pick1 = Point.Move (pick, box.BottomRight, thickness);
+					pick3 = Point.Move (pick, box.TopRight, thickness);
 					break;
 
 				case Direction.Up:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-TileArrow.Breadth);
-					pick = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
+					pick2 = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
+					
+					pick = Point.Scale (box.TopLeft, box.TopRight, 0.5);
+					thickness = System.Math.Min (TileArrow.Thickness, box.Width/2);
+					pick1 = Point.Move (pick, box.TopRight, thickness);
+					pick3 = Point.Move (pick, box.TopLeft, thickness);
 					break;
 
 				case Direction.Down:
 					box = new Rectangle (bounds.Left, bounds.Bottom+TileArrow.Breadth, bounds.Width, bounds.Height-TileArrow.Breadth);
-					pick = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
+					pick2 = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
+					
+					pick = Point.Scale (box.BottomLeft, box.BottomRight, 0.5);
+					thickness = System.Math.Min (TileArrow.Thickness, box.Width/2);
+					pick1 = Point.Move (pick, box.BottomLeft, thickness);
+					pick3 = Point.Move (pick, box.BottomRight, thickness);
 					break;
 			}
 		}

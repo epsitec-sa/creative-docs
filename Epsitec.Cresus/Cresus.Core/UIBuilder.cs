@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.Core
 					Parent = tile.Container,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 10, 10, 10),
-					PreferredHeight = 2,
+					PreferredHeight = 1,
 				};
 			}
 			else
