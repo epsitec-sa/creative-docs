@@ -34,28 +34,23 @@ namespace Epsitec.Cresus.DataLayer
 			return this.dataContexts.FirstOrDefault (context => context.Contains (entity));
 		}
 
-		public DbKey FindDbKey(AbstractEntity entity)
+		public EntityKey FindEntityKey(AbstractEntity entity)
 		{
 			if (entity == null)
             {
-				return DbKey.Empty;
+				return EntityKey.Empty;
             }
 
 			var context = this.FindDataContext (entity);
-			
+
 			if (context == null)
-            {
-				return DbKey.Empty;
-            }
-
-			var mapping = context.GetEntityDataMapping (entity);
-
-			if (mapping == null)
 			{
-				return DbKey.Empty;
+				return EntityKey.Empty;
 			}
-
-			return mapping.RowKey;
+			else
+			{
+				return context.GetEntityKey (entity);
+			}
 		}
 
 		#region IEnumerable<DataContext> Members

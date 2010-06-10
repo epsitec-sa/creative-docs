@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						int active = this.scrollList.SelectedItemIndex;
 						var entity = BrowserViewController.GetActiveItem (this.collection, active);
-						var key   = this.data.DataContextPool.FindDbKey (entity);
+						var key   = this.data.DataContextPool.FindEntityKey (entity);
 
 						if (this.activeEntityKey != key )
 						{
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var entity   = BrowserViewController.GetActiveItem (this.collection, active);
 			var entityId = entity.GetEntityStructuredTypeId ();
 
-			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey, entityId);
+			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey);
 
 			return entity;
 		}
@@ -186,6 +186,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private int suspendUpdates;
 
 		private ScrollList scrollList;
-		private DbKey activeEntityKey;
+		private EntityKey activeEntityKey;
 	}
 }

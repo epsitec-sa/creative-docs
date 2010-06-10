@@ -144,6 +144,7 @@
     <Compile Include="DataContextPool.cs" />
     <Compile Include="EntityCollectionData.cs" />
     <Compile Include="EntityData.cs" />
+    <Compile Include="EntityKey.cs" />
     <Compile Include="EntityReferenceData.cs" />
     <Compile Include="EntityTableAliasNode.cs" />
     <Compile Include="EntityValueData.cs" />
