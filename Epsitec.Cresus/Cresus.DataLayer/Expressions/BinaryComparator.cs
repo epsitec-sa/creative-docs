@@ -6,22 +6,34 @@
 	{
 
 		
-		EQ,
+		IsEqual,
 
 		
-		NEQ,
+		IsNotEqual,
 
 		
-		LE,
+		IsLower,
 
 		
-		LT,
+		IsLowerOrEqual,
 
 		
-		GE,
+		IsGreater,
 		
 	
-		GT,
+		IsGreaterOrEqual,
+
+
+		IsLike,
+
+
+		IsNotLike,
+
+
+		IsLikeEscape,
+
+
+		IsNotLikeEscape,
 
 
 	}

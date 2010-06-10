@@ -1,4 +1,10 @@
-﻿namespace Epsitec.Cresus.DataLayer.Expressions
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Database;
+
+
+namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
@@ -8,11 +14,12 @@
 
 		public Expression()
 		{
-
-			
 		}
 
 
+		internal abstract DbSelectCondition CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
+	
+	
 	}
 
 

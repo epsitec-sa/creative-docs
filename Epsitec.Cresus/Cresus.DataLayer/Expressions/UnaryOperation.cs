@@ -1,4 +1,10 @@
-﻿namespace Epsitec.Cresus.DataLayer.Expressions
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Database;
+
+
+namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
@@ -24,6 +30,12 @@
 		{
 			get;
 			private set;
+		}
+
+
+		internal override DbSelectCondition CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		{
+			throw new System.NotImplementedException ();
 		}
 
 
