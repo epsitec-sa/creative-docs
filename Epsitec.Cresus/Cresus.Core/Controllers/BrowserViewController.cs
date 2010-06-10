@@ -168,6 +168,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				var person = entity as NaturalPersonEntity;
 				return UIBuilder.FormatText (person.Firstname, person.Lastname);
 			}
+			if (entity is CustomerEntity)
+			{
+				var customer = entity as CustomerEntity;
+				return BrowserViewController.GetEntityDisplayText (customer.Person);
+			}
 			
 			return FormattedText.Empty;
 		}

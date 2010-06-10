@@ -246,6 +246,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
+			this.DataContext.CreateSchema<CustomerEntity> ();
 			this.DataContext.CreateSchema<NaturalPersonEntity> ();
 			this.DataContext.CreateSchema<AbstractPersonEntity> ();
 			this.DataContext.CreateSchema<MailContactEntity> ();

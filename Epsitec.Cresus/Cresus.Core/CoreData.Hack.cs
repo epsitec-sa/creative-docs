@@ -12,15 +12,10 @@ using Epsitec.Cresus.DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace Epsitec.Cresus.Core
 {
-
-
 	public sealed partial class CoreData
 	{
-
-
 		public IEnumerable<CountryEntity> GetCountries()
 		{
 			//	HACK: this method will soon be replaced by repositories
@@ -40,7 +35,6 @@ namespace Epsitec.Cresus.Core
 				return new CountryRepository (this.DataContext).GetAllCountries ();
 			}
 		}
-
 
 		public IEnumerable<LocationEntity> GetLocations()
 		{
@@ -64,7 +58,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		public IEnumerable<ContactRoleEntity> GetRoles()
 		{
 			//	HACK: this method will soon be replaced by repositories
@@ -84,7 +77,6 @@ namespace Epsitec.Cresus.Core
 				return new ContactRoleRepository (this.DataContext).GetAllContactRoles ();
 			}
 		}
-
 
 		public IEnumerable<UriSchemeEntity> GetUriSchemes()
 		{
@@ -120,7 +112,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		public IEnumerable<TelecomTypeEntity> GetTelecomTypes()
 		{
 			//	HACK: this method will soon be replaced by repositories
@@ -140,7 +131,6 @@ namespace Epsitec.Cresus.Core
 				return new TelecomTypeRepository (this.DataContext).GetAllTelecomTypes ();
 			}
 		}
-
 
 		public IEnumerable<AbstractPersonEntity> GetAbstractPersons()
 		{
@@ -165,8 +155,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
-		public IEnumerable<Entities.PersonTitleEntity> GetTitles()
+		public IEnumerable<PersonTitleEntity> GetTitles()
 		{
 			//	HACK: this method will soon be replaced by repositories
 
@@ -186,8 +175,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
-		public IEnumerable<Entities.PersonGenderEntity> GetGenders()
+		public IEnumerable<PersonGenderEntity> GetGenders()
 		{
 			//	HACK: this method will soon be replaced by repositories
 
@@ -207,10 +195,20 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public IEnumerable<CustomerEntity> GetCustomers()
+		{
+			if (this.UseHack)
+			{
+				return new CustomerEntity[0];
+			}
+			else
+			{
+				return new CustomerRepository (this.DataContext).GetAllCustomers ();
+			}
+		}
 
 		private void CreateSampleCountries(List<CountryEntity> countries)
 		{
-			
 			for (int i = 0; i < CoreData.countries.Length; i+=2)
 			{
 				var entity = new CountryEntity ();
@@ -221,7 +219,6 @@ namespace Epsitec.Cresus.Core
 				countries.Add (entity);
 			}
 		}
-
 
 		private void CreateSampleLocations(List<LocationEntity> locations, IEnumerable<CountryEntity> countries)
 		{
@@ -247,7 +244,6 @@ namespace Epsitec.Cresus.Core
 				locations.Add (entity);
 			}
 		}
-
 
 		private void CreateSampleRoles(List<ContactRoleEntity> roles)
 		{
@@ -275,7 +271,6 @@ namespace Epsitec.Cresus.Core
 			roles.Add (role5);
 		}
 
-
 		private void CreateSampleUriSchemes(List<UriSchemeEntity> uriSchemes)
 		{
 			var uriScheme1 = EntityContext.Current.CreateEmptyEntity<UriSchemeEntity> ();
@@ -288,7 +283,6 @@ namespace Epsitec.Cresus.Core
 
 			uriSchemes.Add (uriScheme1);
 		}
-
 
 		private void CreateSampleTelecomTypes(List<TelecomTypeEntity> telecomTypes)
 		{
@@ -318,7 +312,6 @@ namespace Epsitec.Cresus.Core
 			telecomTypes.Add (telecomType2);
 			telecomTypes.Add (telecomType3);
 		}
-
 
 		private void CreateSampleTitles(List<PersonTitleEntity> titles)
 		{
@@ -351,7 +344,6 @@ namespace Epsitec.Cresus.Core
 			titles.Add (title3);
 		}
 
-
 		private void CreateSampleGenders(List<PersonGenderEntity> genders)
 		{
 			var context = EntityContext.Current;
@@ -374,7 +366,6 @@ namespace Epsitec.Cresus.Core
 			genders.Add (gender1);
 			genders.Add (gender2);
 		}
-
 
 		private void CreateSamplePersons(List<AbstractPersonEntity> persons)
 		{
@@ -565,6 +556,7 @@ namespace Epsitec.Cresus.Core
 			PersonTitleEntity[] personTitles = this.InsertPersonTitlesInDatabase ().ToArray ();
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
+			CustomerEntity[] customers = this.InsertCustomersInDatabase (abstractPersons).ToArray ();
 
 			this.DataContext.SaveChanges ();
 		}
@@ -613,7 +605,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		private IEnumerable<UriSchemeEntity> InsertUriSchemesInDatabase()
 		{
 			string[] codes = new string[] { "mailto" };
@@ -629,7 +620,6 @@ namespace Epsitec.Cresus.Core
 				yield return uriScheme;
 			}
 		}
-
 
 		private IEnumerable<TelecomTypeEntity> InsertTelecomTypesInDatabase()
 		{
@@ -647,7 +637,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
 		private IEnumerable<PersonTitleEntity> InsertPersonTitlesInDatabase()
 		{
 			string[] shortNames = new string[] { "M.", "Mme", "Mlle" };
@@ -663,7 +652,6 @@ namespace Epsitec.Cresus.Core
 				yield return personTitle;
 			}
 		}
-
 
 		private IEnumerable<PersonGenderEntity> InsertPersonGendersInDatabase()
 		{
@@ -807,6 +795,23 @@ namespace Epsitec.Cresus.Core
 			yield return person2;
 			yield return company;
 		}
+		
+		private IEnumerable<CustomerEntity> InsertCustomersInDatabase(IEnumerable<AbstractPersonEntity> persons)
+		{
+			int id = 1000;
+
+			foreach (var person in persons)
+			{
+				CustomerEntity customer = this.DataContext.CreateEmptyEntity<CustomerEntity> ();
+
+				customer.Id = (id++).ToString ();
+				customer.Person = person;
+				customer.CustomerSince = Common.Types.Date.Today;
+
+				yield return customer;
+			}
+		}
+
 
 
 		List<CountryEntity> sampleCountries;
@@ -817,9 +822,5 @@ namespace Epsitec.Cresus.Core
 		List<UriSchemeEntity> uriSchemes;
 		List<PersonTitleEntity> sampleTitles;
 		List<PersonGenderEntity> sampleGenders;
-
-
 	}
-
-
 }
