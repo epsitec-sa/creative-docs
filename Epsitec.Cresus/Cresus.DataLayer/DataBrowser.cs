@@ -7,7 +7,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.EntityData;
 using Epsitec.Cresus.DataLayer.Helpers;
+using Epsitec.Cresus.DataLayer.TableAlias;
 
 using System.Linq;
 using System.Collections.Generic;
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example, bool loadFromDatabase = true)
 			where TEntity : AbstractEntity
 		{
-			foreach (EntityData entityData in this.GetEntitiesData (example))
+			foreach (EntityDataContainer entityData in this.GetEntitiesData (example))
 			{
 				TEntity entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as TEntity;
 
@@ -127,11 +129,11 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private IEnumerable<EntityData> GetEntitiesData(AbstractEntity example)
+		private IEnumerable<EntityDataContainer> GetEntitiesData(AbstractEntity example)
 		{
-			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valuesData;
-			Dictionary<DbKey, EntityReferenceData> referencesData;
-			Dictionary<DbKey, EntityCollectionData> collectionsData;
+			Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> valuesData;
+			Dictionary<DbKey, EntityReferenceDataContainer> referencesData;
+			Dictionary<DbKey, EntityCollectionDataContainer> collectionsData;
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -146,18 +148,18 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				Druid loadedEntityId = example.GetEntityStructuredTypeId ();
 				Druid realEntityId = valuesData[entityKey].Item1;
-				EntityValueData entityValueData = valuesData[entityKey].Item2;
-				EntityReferenceData entityReferenceData = referencesData[entityKey];
-				EntityCollectionData entityCollectionData = collectionsData.ContainsKey(entityKey) ? collectionsData[entityKey] : new EntityCollectionData();
+				EntityValueDataContainer entityValueData = valuesData[entityKey].Item2;
+				EntityReferenceDataContainer entityReferenceData = referencesData[entityKey];
+				EntityCollectionDataContainer entityCollectionData = collectionsData.ContainsKey(entityKey) ? collectionsData[entityKey] : new EntityCollectionDataContainer();
 
-				yield return new EntityData (entityKey, loadedEntityId, realEntityId, entityValueData, entityReferenceData, entityCollectionData);
+				yield return new EntityDataContainer (entityKey, loadedEntityId, realEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> GetValueData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> GetValueData(DbTransaction transaction, AbstractEntity example)
 		{
-			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> ();
+			Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> ();
 
 			Druid entityId = example.GetEntityStructuredTypeId ();
 			
@@ -177,7 +179,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				foreach (DbReader.RowData rowData in reader.Rows)
 				{
-					EntityValueData entityValueData = new EntityValueData ();
+					EntityValueDataContainer entityValueData = new EntityValueDataContainer ();
 					Druid realEntityId = Druid.FromLong ((long) rowData.Values[rowData.Values.Length - 2]);
 					DbKey entityKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
 
@@ -214,9 +216,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private Dictionary<DbKey, EntityReferenceData> GetReferenceData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, EntityReferenceDataContainer> GetReferenceData(DbTransaction transaction, AbstractEntity example)
 		{
-			Dictionary<DbKey, EntityReferenceData> references = new Dictionary<DbKey, EntityReferenceData> ();
+			Dictionary<DbKey, EntityReferenceDataContainer> references = new Dictionary<DbKey, EntityReferenceDataContainer> ();
 
 			Druid entityId = example.GetEntityStructuredTypeId ();
 
@@ -238,7 +240,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					DbKey sourceKey = new DbKey (new DbId ((long) rowData.Values[rowData.Values.Length - 1]));
 
-					EntityReferenceData entityReferenceData = new EntityReferenceData();
+					EntityReferenceDataContainer entityReferenceData = new EntityReferenceDataContainer();
 
 					for (int i = 0; i < rowData.Values.Length - 1; i++)
 					{
@@ -273,9 +275,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private Dictionary<DbKey, EntityCollectionData> GetCollectionData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, EntityCollectionDataContainer> GetCollectionData(DbTransaction transaction, AbstractEntity example)
 		{
-			Dictionary<DbKey, EntityCollectionData> collectionData = new Dictionary<DbKey, EntityCollectionData> ();
+			Dictionary<DbKey, EntityCollectionDataContainer> collectionData = new Dictionary<DbKey, EntityCollectionDataContainer> ();
 
 			Druid entityId = example.GetEntityStructuredTypeId ();
 
@@ -287,7 +289,7 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						if (!collectionData.ContainsKey (relation.Item1))
 						{
-							collectionData[relation.Item1] = new EntityCollectionData ();
+							collectionData[relation.Item1] = new EntityCollectionDataContainer ();
 						}
 
 						collectionData[relation.Item1][field].Add (relation.Item2);

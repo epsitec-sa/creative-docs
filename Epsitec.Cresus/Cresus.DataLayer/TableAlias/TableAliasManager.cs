@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.TableAlias
 {
 
 	

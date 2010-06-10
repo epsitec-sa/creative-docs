@@ -142,17 +142,17 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="DataContextPool.cs" />
-    <Compile Include="EntityCollectionData.cs" />
-    <Compile Include="EntityData.cs" />
+    <Compile Include="EntityData\EntityCollectionDataContainer.cs" />
+    <Compile Include="EntityData\EntityDataContainer.cs" />
     <Compile Include="EntityKey.cs" />
-    <Compile Include="EntityReferenceData.cs" />
-    <Compile Include="EntityTableAliasNode.cs" />
-    <Compile Include="EntityValueData.cs" />
+    <Compile Include="EntityData\EntityReferenceDataContainer.cs" />
+    <Compile Include="TableAlias\EntityTableAliasNode.cs" />
+    <Compile Include="EntityData\EntityValueDataContainer.cs" />
     <Compile Include="Helpers\EntityCollectionFieldProxy.cs" />
     <Compile Include="Helpers\EntityFieldProxy.cs" />
-    <Compile Include="SubtypeTableAliasNode.cs" />
-    <Compile Include="TableAliasNode.cs" />
-    <Compile Include="TableAliasManager.cs" />
+    <Compile Include="TableAlias\SubtypeTableAliasNode.cs" />
+    <Compile Include="TableAlias\TableAliasNode.cs" />
+    <Compile Include="TableAlias\TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
     <Compile Include="Helpers\ValueFieldProxy.cs" />
@@ -196,6 +196,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Expression\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
