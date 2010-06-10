@@ -144,7 +144,6 @@
     <Compile Include="DataContextPool.cs" />
     <Compile Include="EntityData\EntityCollectionDataContainer.cs" />
     <Compile Include="EntityData\EntityDataContainer.cs" />
-    <Compile Include="EntityKey.cs" />
     <Compile Include="EntityData\EntityReferenceDataContainer.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
