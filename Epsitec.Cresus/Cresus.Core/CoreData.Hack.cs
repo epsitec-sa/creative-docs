@@ -251,18 +251,23 @@ namespace Epsitec.Cresus.Core
 
 			var role1 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role1.Name = "professionnel";
+			role1.Rank = 0;
 
 			var role2 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role2.Name = "commande";
+			role2.Rank = 1;
 
 			var role3 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role3.Name = "livraison";
+			role3.Rank = 2;
 
 			var role4 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role4.Name = "facturation";
+			role4.Rank = 3;
 
 			var role5 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role5.Name = "privé";
+			role5.Rank = 4;
 
 			roles.Add (role1);
 			roles.Add (role2);
@@ -294,18 +299,21 @@ namespace Epsitec.Cresus.Core
 			{
 				telecomType1.Code = "fixnet";
 				telecomType1.Name = "Téléphone fixe";
+				telecomType1.Rank = 0;
 			}
 
 			using (telecomType2.DefineOriginalValues ())
 			{
 				telecomType2.Code = "mobile";
 				telecomType2.Name = "Téléphone mobile";
+				telecomType2.Rank = 1;
 			}
 
 			using (telecomType3.DefineOriginalValues ())
 			{
 				telecomType3.Code = "fax";
 				telecomType3.Name = "Télécopieur (fax)";
+				telecomType3.Rank = 2;
 			}
 
 			telecomTypes.Add (telecomType1);
