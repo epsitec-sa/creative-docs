@@ -95,6 +95,8 @@
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDefaultAddressViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTitleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLocationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCountryViewController.cs" />
@@ -304,6 +306,9 @@
     <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
     <EmbeddedResource Include="Images\Data.Roles.icon" />
     <EmbeddedResource Include="Images\Data.Type.icon" />
+    <EmbeddedResource Include="Images\Data.Customer.icon" />
+    <EmbeddedResource Include="Images\Data.Document.icon" />
+    <EmbeddedResource Include="Images\Data.Folder.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
