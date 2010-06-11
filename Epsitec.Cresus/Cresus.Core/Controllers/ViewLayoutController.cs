@@ -42,10 +42,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public TileContainer CreateColumn()
+		public TileContainer CreateColumn(CoreViewController controller)
 		{
 			var column = new TileContainer ()
 			{
+				Controller = controller,
 				Name = string.Format ("Column{0}", this.ColumnCount),
 			};
 

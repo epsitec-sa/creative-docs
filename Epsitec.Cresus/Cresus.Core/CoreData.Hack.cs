@@ -251,23 +251,23 @@ namespace Epsitec.Cresus.Core
 
 			var role1 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role1.Name = "professionnel";
-			role1.Rank = 0;
+			role1.Rank = 1;
 
 			var role2 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role2.Name = "commande";
-			role2.Rank = 1;
+			role2.Rank = 2;
 
 			var role3 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role3.Name = "livraison";
-			role3.Rank = 2;
+			role3.Rank = 3;
 
 			var role4 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role4.Name = "facturation";
-			role4.Rank = 3;
+			role4.Rank = 4;
 
 			var role5 = context.CreateEmptyEntity<ContactRoleEntity> ();
 			role5.Name = "privé";
-			role5.Rank = 4;
+			role5.Rank = 0;
 
 			roles.Add (role1);
 			roles.Add (role2);

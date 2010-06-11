@@ -20,6 +20,28 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			if (this.personController != null)
+			{
+				yield return this.personController;
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.personController != null)
+                {
+					this.personController.Dispose ();
+					this.personController = null;
+                }
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		protected override void CreateUI(TileContainer container)
 		{
 			var builder = new UIBuilder (container, this);
@@ -28,6 +50,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionGroupingTile ("Data.Customer", "Client");
 
 			this.CreateUIMain (builder);
+
+			this.personController = EntityViewController.CreateEntityViewController (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
+			this.personController.DataContext = this.DataContext;
+			this.personController.CreateUI (container);
 
 			builder.CreateFooterEditorTile ();
 
@@ -42,5 +68,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 150, "Numéro de client", Marshaler.Create (() => this.Entity.Id,            x => this.Entity.Id = x));
 			builder.CreateTextField (tile,  90, "Client depuis le", Marshaler.Create (() => this.Entity.CustomerSince, x => this.Entity.CustomerSince = x));
 		}
+
+
+		private EntityViewController personController;
 	}
 }
