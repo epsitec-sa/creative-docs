@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case UnaryComparator.IsNotNull:
 					return DbCompare.IsNotNull;
 				default:
-					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (UnaryComparator), unaryComparator) + "' is not supported");
+					throw new System.ArgumentException ("Conversion of '" + unaryComparator + "' is not supported");
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case BinaryComparator.IsNotLikeEscape:
 					return DbCompare.NotLikeEscape;
 				default:
-					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (BinaryComparator), binaryComparator) + "' is not supported");
+					throw new System.ArgumentException ("Conversion of '" + binaryComparator + "' is not supported");
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case Type.String:
 					return DbRawType.String;
 				default:
-					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (Type), type) + "' is not supported");
+					throw new System.ArgumentException ("Conversion of '" + type + "' is not supported");
 			}
 		}
 

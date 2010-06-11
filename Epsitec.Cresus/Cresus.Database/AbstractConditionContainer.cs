@@ -37,14 +37,9 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (DbCondition condition in this.conditions)
 				{
-					if (condition.ColumnA != null)
+					foreach (DbTableColumn column in condition.Columns)
 					{
-						yield return condition.ColumnA;
-					}
-
-					if (condition.ColumnB != null)
-					{
-						yield return condition.ColumnB;
+						yield return column;
 					}
 				}
 			}
@@ -59,14 +54,7 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbCondition condition in this.conditions)
 			{
-				if (condition.ColumnA != null)
-				{
-					condition.ColumnA = replaceOperation (condition.ColumnA);
-				}
-				if (condition.ColumnB != null)
-				{
-					condition.ColumnB = replaceOperation (condition.ColumnB);
-				}
+				condition.ReplaceTableColumns (replaceOperation);
 			}
 		}
 
@@ -190,7 +178,7 @@ namespace Epsitec.Cresus.Database
 
 			foreach (DbCondition condition in this.conditions)
 			{
-				condition.Register (sqlFields);
+				sqlFields.Add (condition.CreateSqlField ());
 			}
 
 			switch (this.Combiner)
