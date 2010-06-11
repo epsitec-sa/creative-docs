@@ -124,11 +124,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (leafController == null)
 				{
-					controller.DataContext = this.DataContext;
+					controller.DataContext = this.data.DataContext;
 				}
 				else
 				{
-					controller.DataContext = leafController.DataContext ?? this.DataContext;
+					controller.DataContext = leafController.DataContext ?? this.data.DataContext;
 				}
 			}
 
@@ -154,6 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				(leafController.DataContext != lastController.DataContext))
 			{
 				this.data.SaveDataContext (lastController.DataContext);
+				this.data.DisposeDataContext (lastController.DataContext);
 			}
 
 			lastController.Dispose ();
