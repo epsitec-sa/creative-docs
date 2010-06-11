@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 	/// row(s) in the <see cref="System.Data.DataSet"/> associated with the live
 	/// <see cref="DataContext"/>.
 	/// </summary>
-	public sealed class EntityDataMapping : System.IEquatable<EntityDataMapping>, IReadOnly
+	internal sealed class EntityDataMapping : System.IEquatable<EntityDataMapping>, IReadOnly
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.

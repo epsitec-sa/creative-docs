@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 {
 
 
-	public class ValueFieldProxy : IFieldProxy
+	internal class ValueFieldProxy : IFieldProxy
 	{
 
 

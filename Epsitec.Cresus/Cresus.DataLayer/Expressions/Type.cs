@@ -17,6 +17,21 @@
 		Int64,
 
 
+		Double,
+
+
+		String,
+
+
+		Date,
+
+
+		Time,
+
+
+		DateTime,
+
+
 	}
 
 

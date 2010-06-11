@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 {
 
 
-	public class EntityFieldProxy : IEntityProxy
+	internal class EntityFieldProxy : IEntityProxy
 	{
 
 
