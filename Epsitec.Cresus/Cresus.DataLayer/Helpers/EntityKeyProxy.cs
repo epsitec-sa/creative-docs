@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 	/// <summary>
 	/// The <c>EntityDataProxy</c> class automatically loads entities on demand.
 	/// </summary>
-	public class EntityKeyProxy : IEntityProxy
+	internal class EntityKeyProxy : IEntityProxy
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataProxy"/> class.

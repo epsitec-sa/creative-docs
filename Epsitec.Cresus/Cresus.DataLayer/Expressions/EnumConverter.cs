@@ -11,19 +11,73 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		public static DbCompare ToDbCompare(UnaryComparator unaryComparator)
 		{
-			throw new System.NotImplementedException ();
+			switch (unaryComparator)
+			{
+				case UnaryComparator.IsNull:
+					return DbCompare.IsNull;
+				case UnaryComparator.IsNotNull:
+					return DbCompare.IsNotNull;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (UnaryComparator), unaryComparator) + "' is not supported");
+			}
 		}
 
 
 		public static DbCompare ToDbCompare(BinaryComparator binaryComparator)
 		{
-			throw new System.NotImplementedException ();
+			switch (binaryComparator)
+			{
+				case BinaryComparator.IsEqual:
+					return DbCompare.Equal;
+				case BinaryComparator.IsNotEqual:
+					return DbCompare.NotEqual;
+				case BinaryComparator.IsLower:
+					return DbCompare.LessThan;
+				case BinaryComparator.IsLowerOrEqual:
+					return DbCompare.LessThanOrEqual;
+				case BinaryComparator.IsGreater:
+					return DbCompare.GreaterThan;
+				case BinaryComparator.IsGreaterOrEqual:
+					return DbCompare.GreaterThanOrEqual;
+				case BinaryComparator.IsLike:
+					return DbCompare.Like;
+				case BinaryComparator.IsNotLike:
+					return DbCompare.NotLike;
+				case BinaryComparator.IsLikeEscape:
+					return DbCompare.LikeEscape;
+				case BinaryComparator.IsNotLikeEscape:
+					return DbCompare.NotLikeEscape;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (BinaryComparator), binaryComparator) + "' is not supported");
+			}
 		}
 
 
-		public static DbRawType ToDbRawType(Type constantType)
+		public static DbRawType ToDbRawType(Type type)
 		{
-			throw new System.NotImplementedException ();
+			switch (type)
+			{
+				case Type.Boolean:
+					return DbRawType.Boolean;
+				case Type.Int16:
+					return DbRawType.Int16;
+				case Type.Int32:
+					return DbRawType.Int32;
+				case Type.Int64:
+					return DbRawType.Int64;
+				case Type.Double:
+					return DbRawType.LargeDecimal;
+				case Type.Date:
+					return DbRawType.Date;
+				case Type.Time:
+					return DbRawType.Time;
+				case Type.DateTime:
+					return DbRawType.DateTime;
+				case Type.String:
+					return DbRawType.String;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + System.Enum.GetName (typeof (Type), type) + "' is not supported");
+			}
 		}
 
 

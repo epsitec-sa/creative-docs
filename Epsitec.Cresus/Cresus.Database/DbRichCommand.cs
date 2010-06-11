@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Database.Collections;
 
 using System.Linq;
 
@@ -1285,6 +1286,40 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+
+
+		public void Update(DbTransaction transaction, DbTable table, SqlFieldList fields, SqlFieldList conditions)
+		{
+			transaction.SqlBuilder.Clear ();
+
+			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, conditions);
+
+			System.Data.IDbCommand command = transaction.SqlBuilder.Command;
+			command.Transaction = transaction.Transaction;
+			command.ExecuteNonQuery ();
+
+			if (table.Columns.Contains (Tags.ColumnRefLog))
+			{
+				SqlField logField = fields.SingleOrDefault (f => f.AsName == Tags.ColumnRefLog);
+				long logValue = this.infrastructure.Logger.CurrentId.Value;
+
+				if (logField != null)
+				{
+					logField.Overwrite (SqlField.CreateConstant (logValue, DbKey.RawTypeForId));
+					logField.Alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
+				}
+				else
+				{
+					logField = SqlField.CreateConstant (logValue, DbKey.RawTypeForId);
+					string alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
+
+					fields.Add (alias, logField);
+				}
+			}
+
+			transaction.SqlBuilder.Clear ();
+		}
+
 
 		/// <summary>
 		/// Defines the log id for the specified row.

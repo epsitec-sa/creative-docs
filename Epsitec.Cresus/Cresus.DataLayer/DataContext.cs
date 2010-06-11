@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Collections;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.EntityData;
 using Epsitec.Cresus.DataLayer.Helpers;
@@ -412,7 +413,7 @@ namespace Epsitec.Cresus.DataLayer
 		private void RemoveEntityTargetReferenceDataInDatabase(AbstractEntity entity)
 		{
 			EntityDataMapping targetMapping = this.FindEntityDataMapping (entity);
-			
+
 			List<EntityFieldPath> sources = new List<EntityFieldPath> ();
 
 			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
@@ -420,33 +421,25 @@ namespace Epsitec.Cresus.DataLayer
 				sources.AddRange (this.DbInfrastructure.GetSourceReferences (currentId));
 			}
 
-			Database.Collections.SqlFieldList fields = new Database.Collections.SqlFieldList ();
+			SqlFieldList fields = new Database.Collections.SqlFieldList ();
 			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbKey.RawTypeForStatus));
 
-			Database.Collections.SqlFieldList conditions = new Database.Collections.SqlFieldList ();
+			SqlFieldList conditions = new Database.Collections.SqlFieldList ();
 			SqlField nameColId = SqlField.CreateName (Tags.ColumnRefTargetId);
 			SqlField constantId = SqlField.CreateConstant (targetMapping.RowKey.Id, DbKey.RawTypeForId);
 
 			conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
 
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction())
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
 			{
-				transaction.SqlBuilder.Clear ();
-
 				foreach (EntityFieldPath source in sources)
 				{
 					string sourceTableName = this.SchemaEngine.GetDataTableName (source.EntityId);
 					string sourceColumnName = this.SchemaEngine.GetDataColumnName (source.Fields[0]);
 					string relationTableName = DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 					DbTable relationTable = this.DbInfrastructure.ResolveDbTable (relationTableName);
-					
-					transaction.SqlBuilder.UpdateData (relationTable.GetSqlName (), fields, conditions);
 
-					System.Data.IDbCommand command = transaction.SqlBuilder.Command;
-					command.Transaction = transaction.Transaction;
-					command.ExecuteNonQuery ();
-
-					transaction.SqlBuilder.Clear ();
+					this.RichCommand.Update (transaction, relationTable, fields, conditions);
 				}
 
 				transaction.Commit ();
@@ -768,7 +761,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Collection:
 
-						System.Collections.IList collection = entity.InternalGetFieldCollection (field.Id);
+						IList collection = entity.InternalGetFieldCollection (field.Id);
 
 						foreach (DbKey key in entityData.CollectionData[field])
 						{
@@ -937,7 +930,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void WriteFieldCollection(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
 		{
-			System.Collections.IList collection = sourceEntity.InternalGetFieldCollection (fieldDef.Id);
+			IList collection = sourceEntity.InternalGetFieldCollection (fieldDef.Id);
 
 			System.Diagnostics.Debug.Assert (collection != null);
 
