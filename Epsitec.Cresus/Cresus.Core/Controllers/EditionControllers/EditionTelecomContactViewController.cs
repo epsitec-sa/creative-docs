@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 
-			builder.CreateEditionDetailedRadio (0, "Choix du ou des rôles souhaités", controller);
+			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
 		}
 		
 		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 			
-			builder.CreateEditionDetailedCheck (0, "Type du numéro de téléphone", controller);
+			builder.CreateEditionDetailedRadio (0, "Type du numéro de téléphone", controller);
 		}
 		
 		private void CreateUIPhoneNumber(Epsitec.Cresus.Core.UIBuilder builder)

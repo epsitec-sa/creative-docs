@@ -325,6 +325,11 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (combo);
 
+			if (combo.SelectionCount == 0)  // aucune sélection ?
+			{
+				combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+			}
+
 			return combo;
 		}
 
@@ -344,7 +349,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 5, 10),
-				AllowMultipleSelection = true,
+				AllowMultipleSelection = false,
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -379,7 +384,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 5, 10),
-				AllowMultipleSelection = false,
+				AllowMultipleSelection = true,
 				TabIndex = ++this.tabIndex,
 			};
 
