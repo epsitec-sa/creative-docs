@@ -10,11 +10,6 @@ namespace Epsitec.Cresus.Database
 	public enum DbCompareCombiner : byte
 	{
 		/// <summary>
-		/// No combination specified.
-		/// </summary>
-		None,
-
-		/// <summary>
 		/// Combine using logical and.
 		/// </summary>
 		And,

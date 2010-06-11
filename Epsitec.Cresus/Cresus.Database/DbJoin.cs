@@ -63,8 +63,11 @@ namespace Epsitec.Cresus.Database
 			SqlField rightField = SqlField.CreateAliasedName (this.RightColumn.TableAlias, this.RightColumn.Column.GetSqlName (), this.RightColumn.ColumnAlias);
 
 			SqlJoin join = new SqlJoin (leftField, rightField, this.Type);
-			
-			this.CreateConditions (join.Conditions);
+
+			if (!this.IsEmpty)
+			{
+				join.Conditions.Add (this.CreateSqlField ());
+			}
 
 			return join;
 		}

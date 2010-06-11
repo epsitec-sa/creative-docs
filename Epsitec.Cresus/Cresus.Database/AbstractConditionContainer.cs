@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Epsitec.Cresus.Database
@@ -13,6 +14,15 @@ namespace Epsitec.Cresus.Database
 		{
 			this.conditions = new List<DbCondition> ();
 			this.Combiner = DbCompareCombiner.And;
+		}
+
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.conditions.Count == 0;
+			}
 		}
 
 
@@ -172,32 +182,49 @@ namespace Epsitec.Cresus.Database
 		/// calls and using the expected revision.
 		/// </summary>
 		/// <param name="fields">The collection to which the conditions will be added.</param>
-		protected void CreateConditions(Collections.SqlFieldList fields)
+		protected SqlField CreateSqlField()
 		{
-			Collections.SqlFieldList sqlFields = new Collections.SqlFieldList ();
-
-			foreach (DbCondition condition in this.conditions)
+			if (this.conditions.Count == 0)
 			{
-				sqlFields.Add (condition.CreateSqlField ());
+				throw new System.Exception ("No conditions in container.");
 			}
 
-			switch (this.Combiner)
+			SqlField result = null;
+
+			foreach (SqlField field in this.conditions.Select (c => c.CreateSqlField ()))
 			{
-				case DbCompareCombiner.And:
-					fields.AddRange (sqlFields);
-					break;
-				
+				if (result == null)
+				{
+					result = field;
+				}
+				else
+				{
+					SqlField left = result;
+					SqlField right = field;
+					SqlFunctionCode op = this.ConvertToSqlFunctionType (this.Combiner);
+
+					SqlFunction function = new SqlFunction (op, left, right);
+
+					result = SqlField.CreateFunction (function);
+				}
+
+			}
+
+			return result;
+		}
+
+
+		protected SqlFunctionCode ConvertToSqlFunctionType(DbCompareCombiner combiner)
+		{
+			switch (combiner)
+			{
 				case DbCompareCombiner.Or:
-					if (sqlFields.Count > 0)
-					{
-						SqlField or = sqlFields.Merge (SqlFunctionCode.LogicOr);
-						fields.Add (or);
-					}
-					break;
-				
-				default:
-					throw new System.InvalidOperationException (string.Format ("Cannot create conditions with {0} combiner", this.Combiner));
+					return SqlFunctionCode.LogicOr;
+				case DbCompareCombiner.And:
+					return SqlFunctionCode.LogicAnd;
 			}
+
+			throw new System.ArgumentException ("Unsupported combiner: " + combiner);
 		}
 		
 

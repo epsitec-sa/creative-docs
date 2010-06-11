@@ -58,8 +58,11 @@ namespace Epsitec.Cresus.Database
 
 		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
 		{
-			base.CreateConditions (fields);
-			
+			if (!this.IsEmpty)
+			{
+				fields.Add (this.CreateSqlField ());
+			}
+
 			DbCondition revisionCondition = null;
 
 			if (mainTable != null)

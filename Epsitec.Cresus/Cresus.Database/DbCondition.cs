@@ -115,8 +115,9 @@ namespace Epsitec.Cresus.Database
 		private SqlField CreateSqlFieldWithSingleField()
 		{
 			SqlField field = this.CreateSqlField (this.ColumnA);
+			SqlFunctionCode op = this.ToSqlFunctionType (this.Comparison);
 
-			SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
+			SqlFunction function = new SqlFunction (op, field);
 
 			return SqlField.CreateFunction (function);
 		}
@@ -126,8 +127,9 @@ namespace Epsitec.Cresus.Database
 		{
 			SqlField fieldA = this.CreateSqlField (this.ColumnA);
 			SqlField fieldB = (this.ColumnB == null) ? SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType) : this.CreateSqlField (this.ColumnB);
+			SqlFunctionCode op = this.ToSqlFunctionType (this.Comparison);
 
-			SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
+			SqlFunction function = new SqlFunction (op, fieldA, fieldB);
 
 			return SqlField.CreateFunction (function);
 		}
@@ -139,7 +141,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static SqlFunctionCode MapDbCompareToSqlFunctionType(DbCompare comparison)
+		private SqlFunctionCode ToSqlFunctionType(DbCompare comparison)
 		{
 			switch (comparison)
 			{
@@ -169,7 +171,7 @@ namespace Epsitec.Cresus.Database
 					return SqlFunctionCode.CompareIsNotNull;
 			}
 
-			throw new System.ArgumentException (string.Format ("Unsupported comparison {0}", comparison), "comparison");
+			throw new System.ArgumentException ("Unsupported comparison " + comparison);
 		}
 
 
