@@ -20,10 +20,13 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataContext</c> class provides a context in which entities can
 	/// be loaded from the database, modified and then saved back.
 	/// </summary>
+	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed partial class DataContext : System.IDisposable, IEntityPersistenceManager
 	{
 		public DataContext(DbInfrastructure infrastructure, bool bulkMode = false)
 		{
+			this.uniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
+
 			this.BulkMode = bulkMode;
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
@@ -80,6 +83,14 @@ namespace Epsitec.Cresus.DataLayer
 			set;
 		}
 
+		public int UniqueId
+		{
+			get
+			{
+				return this.uniqueId;
+			}
+		}
+
 		/// <summary>
 		/// Creates the schema for the specified type.
 		/// </summary>
@@ -127,6 +138,11 @@ namespace Epsitec.Cresus.DataLayer
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
+		public AbstractEntity ResolveEntity(EntityKey entityKey)
+		{
+			return this.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+		}
+
 		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
 		{
 			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
@@ -148,6 +164,20 @@ namespace Epsitec.Cresus.DataLayer
 		internal AbstractEntity ResolveEntity(EntityDataContainer entityData, bool loadFromDatabase)
 		{
 			return this.InternalResolveEntity (entityData, loadFromDatabase);
+		}
+
+		public EntityKey GetEntityKey(AbstractEntity entity)
+		{
+			var mapping = this.GetEntityDataMapping (entity);
+
+			if (mapping == null)
+			{
+				return EntityKey.Empty;
+			}
+			else
+			{
+				return new EntityKey (mapping.RowKey, entity.GetEntityStructuredTypeId ());
+			}
 		}
 
 
@@ -538,6 +568,11 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal AbstractEntity InternalResolveEntity(EntityDataContainer entityData, bool loadFromDatabase)
 		{
+			if (this.isDisposed)
+			{
+				throw new System.InvalidOperationException ("DataContext was disposed");
+			}
+
 			var rootEntityId = this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
 			var entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, rootEntityId);
 
@@ -579,6 +614,11 @@ namespace Epsitec.Cresus.DataLayer
 		
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
+			if (this.isDisposed)
+			{
+				throw new System.InvalidOperationException ("DataContext was disposed");
+			}
+
 			Druid baseEntityId = this.EntityContext.GetRootEntityId (entityId);
 			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, entityId, baseEntityId);
 
@@ -1491,6 +1531,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (disposing)
 			{
+				this.isDisposed = true;
 				this.EntityContext.EntityAttached -= this.HandleEntityCreated;
 				this.EntityContext.PersistenceManagers.Remove (this);
 			}
@@ -1526,7 +1567,9 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		private static int nextUniqueId;
 
+		private readonly int uniqueId;
 		private readonly EntityContext entityContext;
 		private readonly EntityDataCache entityDataCache;
 		private readonly Dictionary<string, bool> tableBulkLoaded;
@@ -1536,5 +1579,7 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 		private readonly HashSet<AbstractEntity> entitiesToDelete;
 		private readonly HashSet<AbstractEntity> deletedEntities;
+
+		private bool isDisposed;
 	}
 }
