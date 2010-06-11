@@ -25,6 +25,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
+			this.CreateUIPerson (data);
+			this.CreateUIMailContacts (data);
+			this.CreateUITelecomContacts (data);
+			this.CreateUIUriContacts (data);
+
+			containerController.GenerateTiles ();
+		}
+
+
+		private void CreateUIPerson(SummaryDataItems data)
+		{
 			data.Add (
 				new SummaryData
 				{
@@ -36,21 +47,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
 					EntityAccessor		= this.EntityGetter,
 				});
+		}
 
-			var template1 = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
+		private void CreateUIMailContacts(SummaryDataItems data)
+		{
+			var template = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
 				.DefineTitle (x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineText (x => UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
-
-			var template2 = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
-				.DefineTitle (x => UIBuilder.FormatText (x.TelecomType.Name))
-				.DefineText (x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
-
-			var template3 = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
-				.DefineText (x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Uri))
-				.DefineSetupItem (x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
 
 			data.Add (
 				new SummaryData
@@ -61,6 +65,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTitle = UIBuilder.FormatText ("Adresse"),
 					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
+		}
+
+		private void CreateUITelecomContacts(SummaryDataItems data)
+		{
+			var template = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
+				.DefineTitle (x => UIBuilder.FormatText (x.TelecomType.Name))
+				.DefineText (x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
 
 			data.Add (
 				new SummaryData
@@ -73,6 +87,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
 
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
+		}
+
+		private void CreateUIUriContacts(SummaryDataItems data)
+		{
+			var template = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
+				.DefineText (x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Uri))
+				.DefineSetupItem (x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
+
 			data.Add (
 				new SummaryData
 				{
@@ -84,11 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = UIBuilder.FormatText ("<i>vide</i>")
 				});
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template1));
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template2));
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template3));
-
-			containerController.GenerateTiles ();
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
 		}
 	}
 }

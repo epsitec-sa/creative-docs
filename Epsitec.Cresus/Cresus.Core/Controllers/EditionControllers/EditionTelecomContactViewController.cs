@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIPhoneNumber(Epsitec.Cresus.Core.UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
+
 			builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
 			builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
 		}
