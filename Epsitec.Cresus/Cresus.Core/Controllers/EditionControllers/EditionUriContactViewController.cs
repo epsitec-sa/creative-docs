@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
 			};
 
-			builder.CreateEditionDetailedRadio (0, "Choix du ou des rôles souhaités", controller);
+			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
 		}
 
 		private void CreateUIMail(Epsitec.Cresus.Core.UIBuilder builder)
