@@ -18,5 +18,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			: base (name, entity)
 		{
 		}
+
+
+		protected virtual EditionStatus EditionStatus
+		{
+			get
+			{
+				return EditionControllers.EditionStatus.Unknown;
+			}
+		}
 	}
 }
