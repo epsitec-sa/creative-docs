@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
-			var column = this.viewLayoutController.CreateColumn ();
+			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);
 			controller.CreateUI (column);
 

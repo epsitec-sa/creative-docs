@@ -5,6 +5,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Controllers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +24,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.TabIndex = 1;
 		}
 
+
+		public CoreViewController Controller
+		{
+			get;
+			set;
+		}
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
 		{

@@ -6,22 +6,26 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Cresus.Core
 {
 	public class UIBuilder
 	{
-		public UIBuilder(Widget container, CoreViewController controller)
+		public UIBuilder(TileContainer container, CoreViewController controller)
 		{
+			System.Diagnostics.Debug.Assert (container != null);
+			System.Diagnostics.Debug.Assert (controller != null);
+			
 			this.container = container;
 			this.controller = controller;
 		}
@@ -69,11 +73,27 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
+			if (this.container.Controller != this.controller)
+			{
+				//	The header is not being created by the main controller; we can safely skip it,
+				//	since we create only one header for every container.
+				
+				return;
+			}
+
+			System.Diagnostics.Debug.Assert (this.container.HasChildren == false);
 		}
 
 		public void CreateFooterEditorTile()
 		{
-			System.Diagnostics.Debug.Assert (this.container != null);
+			if (this.container.Controller != this.controller)
+			{
+				//	The footer is not being created by the main controller; we can safely skip it,
+				//	since we create only one footer for every container.
+				return;
+			}
+
+			System.Diagnostics.Debug.Assert (this.container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
 
 			var closeButton = new GlyphButton
 			{
@@ -83,13 +103,14 @@ namespace Epsitec.Cresus.Core
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (18, 18),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
+				Name = "ColumnTileCloseButton",
 			};
 
-			var controller   = this.controller;
+			var controller   = this.container.Controller;
 			var orchestrator = controller.Orchestrator;
 
 			closeButton.Clicked +=
-				delegate
+			delegate
 				{
 					orchestrator.CloseView (controller);
 				};
@@ -539,7 +560,7 @@ namespace Epsitec.Cresus.Core
 
 
 		private readonly CoreViewController controller;
-		private readonly Widget container;
+		private readonly TileContainer container;
 		private int tabIndex;
 		private TitleTile groupingTile;
 	}
