@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="revision">The expected revision.</param>
 		public DbSelectCondition(DbSelectRevision revision) : base()
 		{
-			this.revision = revision;
+			this.Revision = revision;
 		}
 
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Database
 
 			if (mainTable != null)
 			{
-				switch (this.revision)
+				switch (this.Revision)
 				{
 					case DbSelectRevision.LiveAll:
 						//	Select all live revisions of the rows: live (0), copied (1)
@@ -91,18 +91,15 @@ namespace Epsitec.Cresus.Database
 						break;
 
 					default:
-						throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.revision));
+						throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.Revision));
 				}
 			}
 			
 			if (revisionCondition != null)
 			{
-				revisionCondition.Register (fields);
+				fields.Add (revisionCondition.CreateSqlField ());
 			}	
 		}
-
-
-		private DbSelectRevision					revision;
 
 
 	}

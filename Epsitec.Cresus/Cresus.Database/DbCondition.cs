@@ -1,4 +1,9 @@
-﻿namespace Epsitec.Cresus.Database
+﻿using Epsitec.Cresus.Database.Collections;
+
+using System.Collections.Generic;
+
+
+namespace Epsitec.Cresus.Database
 {
 
 
@@ -69,35 +74,68 @@
 			private set;
 		}
 
-		
-		public void Register(Collections.SqlFieldList fields)
+
+		public IEnumerable<DbTableColumn> Columns
 		{
-			if (this.argumentCount == 1)
+			get
 			{
-				SqlField field = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
+				if (this.ColumnA != null)
+				{
+					yield return this.ColumnA;
+				}
 
-				SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
-
-				fields.Add (SqlField.CreateFunction (function));
+				if (this.ColumnB != null)
+				{
+					yield return this.ColumnB;
+				}
 			}
-			else if (this.ColumnB == null)
+		}
+
+
+		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
+		{
+			if (this.ColumnA != null)
 			{
-				SqlField fieldA = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
-				SqlField fieldB = SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType);
-
-				SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
-
-				fields.Add (SqlField.CreateFunction (function));
+				this.ColumnA = replaceOperation (this.ColumnA);
 			}
-			else
+
+			if (this.ColumnB != null)
 			{
-				SqlField fieldA = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnA.TableAlias) ?? this.ColumnA.Table.GetSqlName (), this.ColumnA.Column.GetSqlName (), this.ColumnA.ColumnAlias);
-				SqlField fieldB = SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (this.ColumnB.TableAlias) ?? this.ColumnB.Table.GetSqlName (), this.ColumnB.Column.GetSqlName (), this.ColumnB.ColumnAlias);
-
-				SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
-
-				fields.Add (SqlField.CreateFunction (function));
+				this.ColumnB = replaceOperation (this.ColumnB);
 			}
+		}
+
+
+		public SqlField CreateSqlField()
+		{
+			return (this.argumentCount == 1) ? this.CreateSqlFieldWithSingleField () : this.CreateSqlFieldWithBothFields ();
+		}
+
+
+		private SqlField CreateSqlFieldWithSingleField()
+		{
+			SqlField field = this.CreateSqlField (this.ColumnA);
+
+			SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), field);
+
+			return SqlField.CreateFunction (function);
+		}
+
+
+		private SqlField CreateSqlFieldWithBothFields()
+		{
+			SqlField fieldA = this.CreateSqlField (this.ColumnA);
+			SqlField fieldB = (this.ColumnB == null) ? SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType) : this.CreateSqlField (this.ColumnB);
+
+			SqlFunction function = new SqlFunction (DbCondition.MapDbCompareToSqlFunctionType (this.Comparison), fieldA, fieldB);
+
+			return SqlField.CreateFunction (function);
+		}
+
+
+		private SqlField CreateSqlField(DbTableColumn column)
+		{
+			return SqlField.CreateAliasedName (DbSqlStandard.MakeDelimitedIdentifier (column.TableAlias) ?? column.Table.GetSqlName (), column.Column.GetSqlName (), column.ColumnAlias);
 		}
 
 

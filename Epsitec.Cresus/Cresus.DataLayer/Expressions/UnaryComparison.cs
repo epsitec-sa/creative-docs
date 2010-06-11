@@ -12,8 +12,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
-		public UnaryComparison(UnaryComparator op, Field field)
-			: base ()
+		public UnaryComparison(Field field, UnaryComparator op) : this (op, field)
+		{
+		}
+
+
+		public UnaryComparison(UnaryComparator op, Field field) : base ()
 		{
 			this.Operator = op;
 			this.Field = field;

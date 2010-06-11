@@ -12,6 +12,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
+		public UnaryOperation(Expression expression, UnaryOperator op) : this (op, expression)
+		{
+		}
+
+
 		public UnaryOperation(UnaryOperator op, Expression expression) : base()
 		{
 			this.Operator = op;
