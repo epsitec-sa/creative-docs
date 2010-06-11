@@ -68,5 +68,28 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
 			builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
 		}
+
+
+		protected override EditionStatus EditionStatus
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.Entity.Number) &&
+					string.IsNullOrEmpty (this.Entity.Extension))
+				{
+					return EditionControllers.EditionStatus.Empty;
+				}
+
+				if (string.IsNullOrEmpty (this.Entity.Number) &&
+					!string.IsNullOrEmpty (this.Entity.Extension))
+				{
+					return EditionControllers.EditionStatus.Invalid;
+				}
+
+				// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
+
+				return EditionControllers.EditionStatus.Valid;
+			}
+		}
 	}
 }

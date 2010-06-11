@@ -106,6 +106,7 @@
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionStatus.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
