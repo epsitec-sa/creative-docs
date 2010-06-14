@@ -1094,6 +1094,9 @@ namespace Epsitec.Cresus.DataLayer
 					var tableName = this.SchemaEngine.GetDataTableName (entityId);
 
 					newValue = this.ConvertFromInternal (newValue, tableName, columnName);
+					bool ok = InvariantConverter.Convert (newValue, field, out newValue);
+
+					System.Diagnostics.Debug.Assert (ok, string.Format ("Could not convert column {0}.{1} to type {2}", tableName, columnName, field.Type.Name));
 				}
 			}
 
