@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			List<T> list = new List<T> (this.PossibleItemsGetter ());
 
-			if (default (T) is Entities.IItemRank)
+			if (typeof (T).GetInterfaces ().Contains (typeof (Entities.IItemRank)))
 			{
 				list.Sort (SelectionController<T>.CompareItems);
 			}
