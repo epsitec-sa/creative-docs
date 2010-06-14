@@ -21,10 +21,9 @@ namespace Epsitec.Cresus.Core
 
 	public sealed partial class CoreData : System.IDisposable
 	{
-		public CoreData(bool useHack, bool forceDatabasebCreation)
+		public CoreData(bool forceDatabasebCreation)
 		{
 			this.IsReady = false;
-			this.UseHack = useHack;
 			this.ForceDatabaseCreation = forceDatabasebCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
@@ -66,12 +65,6 @@ namespace Epsitec.Cresus.Core
 			private set;
 		}
 
-		public bool UseHack
-		{
-			get;
-			private set;
-		}
-
 		public bool ForceDatabaseCreation
 		{
 			get;
@@ -81,7 +74,7 @@ namespace Epsitec.Cresus.Core
 
 		public void SetupDatabase()
 		{
-			if (!this.UseHack && !this.IsReady)
+			if (!this.IsReady)
 			{
 				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen == false);
 				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
