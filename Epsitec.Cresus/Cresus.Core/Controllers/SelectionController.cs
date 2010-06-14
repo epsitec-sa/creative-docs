@@ -107,23 +107,38 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				};
 		}
+
+		static int CompareItems(T a, T b)
+		{
+			var ra = a as Entities.IItemRank;
+			var rb = b as Entities.IItemRank;
+
+			int valueA = ra.Rank ?? -1;
+			int valueB = rb.Rank ?? -1;
+
+			if (valueA < valueB)
+            {
+				return -1;
+            }
+			if (valueA > valueB)
+			{
+				return 1;
+			}
+			return 0;
+		}
 		
 		public void Attach(Widgets.ItemPicker widget)
 		{
-			Dictionary<int?, AbstractEntity> entities = new Dictionary<int?, AbstractEntity> ();
+			List<T> list = new List<T> (this.PossibleItemsGetter ());
 
-			foreach (var item in this.PossibleItemsGetter ())
+			if (default (T) is Entities.IItemRank)
 			{
-				Entities.IItemRank itemRank = item as Entities.IItemRank;
+				list.Sort (SelectionController<T>.CompareItems);
+			}
 
-				if (itemRank == null)
-				{
-					widget.Items.Add (item);
-				}
-				else
-				{
-					entities.Add (itemRank.Rank, item);
-				}
+			foreach (var item in list)
+			{
+				widget.Items.Add (item);
 			}
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
