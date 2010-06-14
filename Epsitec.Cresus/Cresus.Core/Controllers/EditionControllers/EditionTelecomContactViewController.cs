@@ -70,26 +70,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		public override EditionStatus EditionStatus
+		protected override EditionStatus GetEditionStatus()
 		{
-			get
+			if (string.IsNullOrEmpty (this.Entity.Number) &&
+				string.IsNullOrEmpty (this.Entity.Extension))
 			{
-				if (string.IsNullOrEmpty (this.Entity.Number) &&
-					string.IsNullOrEmpty (this.Entity.Extension))
-				{
-					return EditionControllers.EditionStatus.Empty;
-				}
-
-				if (string.IsNullOrEmpty (this.Entity.Number) &&
-					!string.IsNullOrEmpty (this.Entity.Extension))
-				{
-					return EditionControllers.EditionStatus.Invalid;
-				}
-
-				// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-				return EditionControllers.EditionStatus.Valid;
+				return EditionControllers.EditionStatus.Empty;
 			}
+
+			if (string.IsNullOrEmpty (this.Entity.Number) &&
+				!string.IsNullOrEmpty (this.Entity.Extension))
+			{
+				return EditionControllers.EditionStatus.Invalid;
+			}
+
+			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
+
+			return EditionControllers.EditionStatus.Valid;
 		}
 	}
 }

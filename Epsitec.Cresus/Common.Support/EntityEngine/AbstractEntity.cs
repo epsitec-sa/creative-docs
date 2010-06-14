@@ -76,9 +76,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
+#if true
+				return this.GetType ().Name;
+#else
 				var buffer = new System.Text.StringBuilder ();
 				this.Dump (buffer, topLevelOnly: true, skipUndefinedFields: true);
 				return string.Concat (this.GetType ().Name, ": ", string.Join (", ", buffer.ToString ().Split (new char[] { '\n' }, System.StringSplitOptions.RemoveEmptyEntries)));
+#endif
 			}
 		}
 

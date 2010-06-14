@@ -26,14 +26,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		/// Gets the edition status of the entity.
 		/// </summary>
 		/// <value>The edition status.</value>
-		public virtual EditionStatus EditionStatus
+		public EditionStatus EditionStatus
 		{
 			get
 			{
-				return EditionStatus.Unknown;
+				return this.GetEditionStatus ();
 			}
 		}
 
 		#endregion
+		
+		protected virtual EditionStatus GetEditionStatus()
+		{
+			return EditionStatus.Unknown;
+		}
+
 	}
 }
