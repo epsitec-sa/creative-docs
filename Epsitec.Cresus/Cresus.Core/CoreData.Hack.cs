@@ -601,13 +601,15 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<ContactRoleEntity> InsertContactRolesInDatabase()
 		{
-			string[] names = new string[] { "professionnel", "commande", "livraison", "privé", "facturation" };
+			string[] names = new string[] { "professionnel", "commande", "livraison", "facturation", "privé" };
+			int rank = 0;
 
 			foreach (string name in names)
 			{
 				ContactRoleEntity contactRole = this.DataContext.CreateEmptyEntity<ContactRoleEntity> ();
 
 				contactRole.Name = name;
+				contactRole.Rank = rank++;
 
 				yield return contactRole;
 			}
@@ -633,6 +635,7 @@ namespace Epsitec.Cresus.Core
 		{
 			string[] codes = new string[] { "fixnet", "mobile", "fax" };
 			string[] names = new string[] { "Téléphone fixe", "Téléphone mobile", "Télécopieur (fax)" };
+			int rank = 0;
 
 			for (int i = 0; i < codes.Length && i < names.Length; i++)
 			{
@@ -640,6 +643,7 @@ namespace Epsitec.Cresus.Core
 
 				telecomType.Code = codes[i];
 				telecomType.Name = names[i];
+				telecomType.Rank = rank++;
 
 				yield return telecomType;
 			}
