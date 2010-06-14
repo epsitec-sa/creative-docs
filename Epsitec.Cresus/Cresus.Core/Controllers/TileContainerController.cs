@@ -143,6 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.SortActiveItems ();
 			this.CreateMissingSummaryTiles ();
 			this.RefreshTitleTiles ();
+			this.RefreshTitleTilesFreezeMode ();
 			this.RefreshLayout ();
 			this.SetDataTilesParent (this.container);
 		}
@@ -351,6 +352,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			tileCache.Values.ForEach (tile => tile.Parent = null);
+		}
+
+		private void RefreshTitleTilesFreezeMode()
+		{
+			foreach (var item in this.activeItems)
+			{
+				if (item.AutoGroup)
+				{
+					item.SummaryTile.SetFrozen (false);
+				}
+				else
+				{
+					item.SummaryTile.SetFrozen (true);
+				}
+			}
 		}
 
 		private void ResetAutoGroupTitleTile(SummaryData item, Dictionary<string, TitleTile> tileCache)
