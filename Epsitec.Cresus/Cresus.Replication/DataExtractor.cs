@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Replication
 			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
 			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
 
-			condition.Condition = DbConditionCombiner.Combine (part1, part2);
+			condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Replication
 			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
 			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
 
-			condition.Condition = DbConditionCombiner.Combine (part1, part2);
+			condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
 
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
