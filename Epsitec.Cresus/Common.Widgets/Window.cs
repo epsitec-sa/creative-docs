@@ -471,6 +471,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (oldFocus != null)
 					{
+						oldFocus.InternalAboutToLoseFocus (TabNavigationDir.None, TabNavigationMode.None);
 						oldFocus.SetFocused (false);
 					}
 					
