@@ -110,9 +110,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public void Attach(Widgets.ItemPicker widget)
 		{
+			Dictionary<int?, AbstractEntity> entities = new Dictionary<int?, AbstractEntity> ();
+
 			foreach (var item in this.PossibleItemsGetter ())
 			{
-				widget.Items.Add (item);
+				Entities.IItemRank itemRank = item as Entities.IItemRank;
+
+				if (itemRank == null)
+				{
+					widget.Items.Add (item);
+				}
+				else
+				{
+					entities.Add (itemRank.Rank, item);
+				}
 			}
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
