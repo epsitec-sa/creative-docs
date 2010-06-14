@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			int numCommands = richCommand.Commands.Count;
 			
-			System.Data.IDbDataAdapter[] adapters = new System.Data.IDbDataAdapter[numCommands];
+			var adapters = new System.Data.IDbDataAdapter[numCommands];
+			var builders = new System.Data.Common.DbCommandBuilder[numCommands];
 			
 			for (int i = 0; i < numCommands; i++)
 			{
@@ -123,7 +124,8 @@ namespace Epsitec.Cresus.Database.Implementation
 				FbCommandBuilder builder = new FbCommandBuilder (adapter);
 
 				adapters[i] = adapter;
-				
+				builders[i] = builder;
+
 #if true
 				//	HACK: find another way of doing this
 				//	TODO: set transaction on the update command too in DbRichCommand.SetCommandTransaction
@@ -134,10 +136,13 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	en attendant, on détecte la mise à jour via la commande et on s'assure nous-
 				//	même que la transaction est bien correcte :
 
+				int index = i;
+
 				adapter.RowUpdating +=
 					delegate (object sender, FbRowUpdatingEventArgs e)
 					{
 						var activeTransaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
+						var activeBuilder     = builders[index];
 
 						if ((e.Command != null) &&
 							(e.Command.Transaction != activeTransaction))
@@ -149,7 +154,7 @@ namespace Epsitec.Cresus.Database.Implementation
 #endif
 			}
 				
-			richCommand.InternalFillDataSet (this.fb.DbAccess, transaction, adapters);
+			richCommand.InternalFillDataSet (this.fb.DbAccess, transaction, adapters, builders);
 		}
 		
 		#endregion
