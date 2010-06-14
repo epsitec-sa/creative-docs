@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.TelecomContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
+			var template = new CollectionTemplate<T3> ("TelecomContact")
 				.DefineTitle		(x => UIBuilder.FormatText (x.TelecomType.Name))
 				.DefineText			(x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText  (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.UriContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
+			var template = new CollectionTemplate<T3> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri))
 				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
