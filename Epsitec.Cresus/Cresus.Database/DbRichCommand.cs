@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
+			this.builders = new List<System.Data.Common.DbCommandBuilder> ();
 			this.dataMappings = new Dictionary<string, DbDataTableMapping> ();
 			this.relationSourceMappings = new Dictionary<string, DbDataTableMapping> ();
 			this.relationTargetMappings = new Dictionary<string, DbDataTableMapping> ();
@@ -376,12 +377,15 @@ namespace Epsitec.Cresus.Database
 				Collections.DbTableList oldTables = this.tables;
 				Collections.DbTableList newTables = new Collections.DbTableList ();
 
-				List<System.Data.IDataAdapter> oldAdapters = this.adapters;
-				List<System.Data.IDataAdapter> newAdapters = new List<System.Data.IDataAdapter> ();
+				var oldAdapters = this.adapters;
+				var oldBuilders = this.builders;
+				var newAdapters = new List<System.Data.IDataAdapter> ();
+				var newBuilders = new List<System.Data.Common.DbCommandBuilder> ();
 
 				this.commands = newCommands;
 				this.tables   = newTables;
 				this.adapters = newAdapters;
+				this.builders = newBuilders;
 
 				this.commands.Add (builder.Command);
 				this.tables.Add (table);
@@ -391,10 +395,14 @@ namespace Epsitec.Cresus.Database
 				oldCommands.AddRange (newCommands);
 				oldTables.AddRange (newTables);
 				oldAdapters.AddRange (newAdapters);
+				oldBuilders.AddRange (newBuilders);
+
+				System.Data.IDataAdapter a;
 
 				this.commands = oldCommands;
 				this.tables   = oldTables;
 				this.adapters = oldAdapters;
+				this.builders = oldBuilders;
 				this.fillDataSet = oldFillDataSet;
 
 				DbRichCommand.RelaxConstraints (this.dataSet.Tables[this.dataSet.Tables.Count-1]);
@@ -1008,9 +1016,11 @@ namespace Epsitec.Cresus.Database
 		/// Fills the data set. This method may only be called by the <c>DbInfrastructure</c>
 		/// class Use the <c>DbInfrastructure.Execute</c> method instead.
 		/// </summary>
+		/// <param name="access">The access.</param>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="adapters">The adapters.</param>
-		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		/// <param name="builders">The builders.</param>
+		public void InternalFillDataSet(DbAccess access, DbTransaction transaction, System.Data.IDbDataAdapter[] adapters, System.Data.Common.DbCommandBuilder[] builders)
 		{
 			System.Diagnostics.Debug.Assert (access.IsValid);
 			
@@ -1028,6 +1038,7 @@ namespace Epsitec.Cresus.Database
 			//	the caller :
 
 			this.adapters.AddRange (adapters);
+			this.builders.AddRange (builders);
 			
 			this.SetCommandTransaction (transaction);
 			
@@ -1120,6 +1131,7 @@ namespace Epsitec.Cresus.Database
 
 			this.infrastructure = null;
 			this.adapters = null;
+			this.builders = null;
 		}
 		
 		#endregion
@@ -1686,14 +1698,18 @@ namespace Epsitec.Cresus.Database
 
 			try
 			{
-				foreach (System.Data.IDbCommand command in this.commands)
+				foreach (var command in this.commands)
+				{
+					command.Transaction = dataTransaction;
+				}
+				foreach (var command in this.GetCommandBuilderCommands ())
 				{
 					command.Transaction = dataTransaction;
 				}
 			}
 			catch
 			{
-				this.activeTransactions.Pop ();
+				this.activeTransactions.Pop ();	//	TODO: check that this is OK if the exception occurred while setting up the this.commands transactions (since we will try to create commands in a builder where the original commands are not tied to active transactions
 				throw;
 			}
 		}
@@ -1706,9 +1722,28 @@ namespace Epsitec.Cresus.Database
 		{
 			this.activeTransactions.Pop ();
 
-			foreach (System.Data.IDbCommand command in this.commands)
+			foreach (var command in this.commands)
 			{
 				command.Transaction = null;
+			}
+			foreach (var command in this.GetCommandBuilderCommands ())
+			{
+				command.Transaction = null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the command builder commands. This may only be called once the original
+		/// select commands have live transactions associated to them.
+		/// </summary>
+		/// <returns>The update, insert and delete commands produced by the command builders.</returns>
+		private IEnumerable<System.Data.IDbCommand> GetCommandBuilderCommands()
+		{
+			foreach (var builder in this.builders)
+			{
+				yield return builder.GetUpdateCommand ();
+				yield return builder.GetInsertCommand ();
+				yield return builder.GetDeleteCommand ();
 			}
 		}
 
@@ -1733,7 +1768,13 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.GenericException (this.access, "No adapters defined.");
 			}
-			
+
+			if ((this.builders == null) ||
+				(this.builders.Count == 0))
+			{
+				throw new Exceptions.GenericException (this.access, "No builders defined.");
+			}
+
 			if (this.commands.Count == 0)
 			{
 				throw new Exceptions.GenericException (this.access, "No commands defined.");
@@ -1767,9 +1808,9 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder    builder   = database.SqlBuilder;
 			ITypeConverter converter = this.infrastructure.Converter;
 			
-			Collections.SqlFieldList sqlUpdate = new Collections.SqlFieldList ();
-			Collections.SqlFieldList sqlInsert = new Collections.SqlFieldList ();
-			Collections.SqlFieldList sqlConds  = new Collections.SqlFieldList ();
+			var sqlUpdate = new Collections.SqlFieldList ();
+			var sqlInsert = new Collections.SqlFieldList ();
+			var sqlConds  = new Collections.SqlFieldList ();
 			
 			int colCount = tableDef.GetSqlColumnCount ();
 			
@@ -2037,6 +2078,7 @@ namespace Epsitec.Cresus.Database
 		private System.Data.DataSet				dataSet;
 		private DbAccess						access;
 		private List<System.Data.IDataAdapter>	adapters;
+		private List<System.Data.Common.DbCommandBuilder> builders;
 
 		private readonly Dictionary<string, DbDataTableMapping> dataMappings;
 		private readonly Dictionary<string, DbDataTableMapping> relationSourceMappings;
