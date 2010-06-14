@@ -11,7 +11,7 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public abstract class EditionViewController<T> : EntityViewController<T>
+	public abstract class EditionViewController<T> : EntityViewController<T>, IEditionStatus
 		where T : AbstractEntity
 	{
 		protected EditionViewController(string name, T entity)
@@ -20,12 +20,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected virtual EditionStatus EditionStatus
+		#region IEditionStatus Members
+
+		/// <summary>
+		/// Gets the edition status of the entity.
+		/// </summary>
+		/// <value>The edition status.</value>
+		public virtual EditionStatus EditionStatus
 		{
 			get
 			{
-				return EditionControllers.EditionStatus.Unknown;
+				return EditionStatus.Unknown;
 			}
 		}
+
+		#endregion
 	}
 }
