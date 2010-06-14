@@ -93,6 +93,22 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			if (this.DragHost != null)  // tuile en cours de déplacement pendant un drag ?
+			{
+				Rectangle rect = this.Client.Bounds;
+				rect.Width -= TileArrow.Breadth;
+				rect.Deflate (0.5);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromName ("LightGray"));
+
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Color.FromName ("Black"));
+
+				return;
+			}
+
+
 			var arrowMode = this.ArrowMode;
 
 			switch (arrowMode)
@@ -106,15 +122,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				case TileArrowMode.VisibleReverse:
 					this.DirectArrow.Paint (graphics, this.Client.Bounds, TileArrowMode.None, this.ArrowDirection);
 					break;
-			}
-
-			if (this.DragHost != null)
-			{
-				Rectangle rect = this.Client.Bounds;
-				rect.Deflate (3);
-
-				graphics.AddRectangle (rect);
-				graphics.RenderSolid (Color.FromName ("Green"));
 			}
 
 			if (this.dragInfo != null)
@@ -207,18 +214,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Drag & drop
 
-		public bool DragSourceFrame
-		{
-			get
-			{
-				return (bool) this.GetValue (Tile.DragSourceFrameProperty);
-			}
-			set
-			{
-				this.SetValue (Tile.DragSourceFrameProperty, value);
-			}
-		}
-
 		public bool DragSourceEnable
 		{
 			get
@@ -261,13 +256,46 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Tile FindDropTarget(Point mouse)
 		{
 			//	Cherche un widget Tile destinataire du drag & drop.
-			return this.Window.Root.FindChild (this.MapClientToRoot (mouse), Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled) as Tile;
+			return Tile.FindChild (this.Window.Root, this.MapClientToRoot (mouse)) as Tile;
+		}
+
+		private static Widget FindChild(Widget widget, Point point)
+		{
+			if (widget.HasChildren == false)
+			{
+				return null;
+			}
+
+			Widget[] childrens = widget.Children.Widgets;
+			int  childrenNum = childrens.Length;
+
+			for (int i = 0; i < childrenNum; i++)
+			{
+				Widget children = childrens[childrenNum-1 - i];
+				System.Diagnostics.Debug.Assert (children != null);
+
+				if (children.HitTest (point))
+				{
+					Widget deep = Tile.FindChild (children, children.MapParentToClient (point));
+
+					if (deep != null)
+					{
+						if (deep is Tile || deep.HasChildren)
+						{
+							return deep;
+						}
+					}
+
+					return children;
+				}
+			}
+
+			return null;
 		}
 
 		private void DragHilite(Tile dst, Tile src, bool enable)
 		{
 			//	Met en évidence le widget Tile destinataire du drag & drop.
-
 			if (dst == null || src == null || src == dst)
 			{
 				return;
@@ -567,7 +595,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static readonly DependencyProperty DragHostProperty         = DependencyProperty.Register ("DragHost", typeof (Tile), typeof (Tile), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ColorProperty            = DependencyProperty.Register ("Color", typeof (RichColor), typeof (Tile), new Common.Widgets.Helpers.VisualPropertyMetadata (Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty DragSourceFrameProperty  = DependencyProperty.Register ("DragSourceFrame", typeof (bool), typeof (Tile), new Common.Widgets.Helpers.VisualPropertyMetadata (false, Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (Tile), new DependencyPropertyMetadata (true));
 
 		private static readonly double dragBeginMinimalMove = 8;
