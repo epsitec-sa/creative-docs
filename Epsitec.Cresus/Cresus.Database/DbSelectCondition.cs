@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbSelectCondition</c> class represents a condition for the
 	/// WHERE clause.
 	/// </summary>
-	public sealed class DbSelectCondition : AbstractConditionContainer
+	public sealed class DbSelectCondition
 	{
 		
 		
@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Database
 		public DbSelectCondition(DbSelectRevision revision) : base()
 		{
 			this.Revision = revision;
+			this.Conditions = new ConditionContainer ();
 		}
 
 
@@ -42,6 +43,13 @@ namespace Epsitec.Cresus.Database
 		{
 			get;
 			set;
+		}
+
+
+		public ConditionContainer Conditions
+		{
+			get;
+			private set;
 		}
 
 
@@ -58,9 +66,9 @@ namespace Epsitec.Cresus.Database
 
 		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
 		{
-			if (!this.IsEmpty)
+			if (!this.Conditions.IsEmpty)
 			{
-				fields.Add (this.CreateSqlField ());
+				fields.Add (this.Conditions.CreateSqlField ());
 			}
 
 			DbCondition revisionCondition = null;

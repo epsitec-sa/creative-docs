@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 {
 	
 
-	public class DbJoin : AbstractConditionContainer
+	public class DbJoin
 	{
 
 
@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Database
 			this.RightColumn = rightColumn;
 
 			this.Type = type;
+
+			this.Conditions = new ConditionContainer ();
 		}
 
 
@@ -39,18 +41,26 @@ namespace Epsitec.Cresus.Database
 			private set;
 		}
 
+
+		public ConditionContainer Conditions
+		{
+			get;
+			private set;
+		}
+
+
 		public IEnumerable<DbTableColumn> Columns
 		{
 			get
 			{
-				return new DbTableColumn[] { this.LeftColumn, this.RightColumn }.Concat (base.Columns);
+				return new DbTableColumn[] { this.LeftColumn, this.RightColumn }.Concat (this.Conditions.Columns);
 			}
 		}
 
 
 		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
 		{
-			base.ReplaceTableColumns (replaceOperation);
+			this.Conditions.ReplaceTableColumns (replaceOperation);
 
 			this.LeftColumn = replaceOperation (this.LeftColumn);
 			this.RightColumn = replaceOperation (this.RightColumn);
@@ -64,9 +74,9 @@ namespace Epsitec.Cresus.Database
 
 			SqlJoin join = new SqlJoin (leftField, rightField, this.Type);
 
-			if (!this.IsEmpty)
+			if (!this.Conditions.IsEmpty)
 			{
-				join.Conditions.Add (this.CreateSqlField ());
+				join.Conditions.Add (this.Conditions.CreateSqlField ());
 			}
 
 			return join;

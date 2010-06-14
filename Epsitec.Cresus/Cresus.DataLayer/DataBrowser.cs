@@ -374,7 +374,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), DataBrowser.statusColumn);
 
 			DbSelectCondition condition = new DbSelectCondition ();
-			condition.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 			reader.AddCondition (condition);
 		}
 
@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.DataLayer
 			switch (fieldType.TypeCode)
 			{
 				case TypeCode.String:
-					condition.AddCondition (tableColumn, DbCompare.Like, (string) fieldValue);
+					condition.Conditions.AddCondition (tableColumn, DbCompare.Like, (string) fieldValue);
 					break;
 
 				case TypeCode.Decimal:
@@ -422,15 +422,15 @@ namespace Epsitec.Cresus.DataLayer
 					throw new System.NotImplementedException ();
 
 				case TypeCode.Integer:
-					condition.AddCondition (tableColumn, DbCompare.Equal, (int) fieldValue);
+					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (int) fieldValue);
 					break;
 
 				case TypeCode.LongInteger:
-					condition.AddCondition (tableColumn, DbCompare.Equal, (long) fieldValue);
+					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (long) fieldValue);
 					break;
 					
 				case TypeCode.Boolean:
-					condition.AddCondition (tableColumn, DbCompare.Equal, (bool) fieldValue);
+					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (bool) fieldValue);
 					break;
 
 				case TypeCode.Date:
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			DbJoin join = new DbJoin (subEntityIdColumn, superEntityIdColumn, type);
 
-			join.AddCondition (subEntityStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			join.Conditions.AddCondition (subEntityStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 			
 			reader.AddJoin (join);
 		}
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.DataLayer
 			string relationTableAlias = tableAliasManager.GetCurrentEntityAlias ();
 			DbTableColumn relationTargetIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationTargetColumn);
 
-			join.AddCondition (relationTargetIdColumn, DbCompare.Equal, targetKey.Id.Value);
+			join.Conditions.AddCondition (relationTargetIdColumn, DbCompare.Equal, targetKey.Id.Value);
 
 			reader.AddJoin (join);
 		}
@@ -549,7 +549,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			DbJoin join = new DbJoin (sourceIdColumn, relationSourceIdColumn, joinType);
 
-			join.AddCondition (relationSourceStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			join.Conditions.AddCondition (relationSourceStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 
 			return join;
 		}
@@ -568,7 +568,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			DbJoin join = new DbJoin (relationTargetIdColumn, targetIdColumn, joinType);
 
-			join.AddCondition (targetStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			join.Conditions.AddCondition (targetStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
 
 			reader.AddJoin (join);
 		}

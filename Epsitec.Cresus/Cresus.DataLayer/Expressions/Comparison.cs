@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			DbSelectCondition dbSelectCondition = new DbSelectCondition ();
 			DbCondition dbCondition = this.CreateDbCondition (entity, dbTableColumnResolver);
 
-			dbSelectCondition.AddCondition (dbCondition);
+			dbSelectCondition.Conditions.AddCondition (dbCondition);
 
 			return dbSelectCondition;
 		}
