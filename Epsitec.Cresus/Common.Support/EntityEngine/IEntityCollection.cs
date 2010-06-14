@@ -45,5 +45,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <returns>The type of the items.</returns>
 		System.Type GetItemType();
+
+		/// <summary>
+		/// Temporarily disables all change notifications. Any changes which
+		/// happen until <c>Dispose</c> is called on the returned object will
+		/// not generate events.
+		/// </summary>
+		/// <returns>An object you will have to <c>Dispose</c> in order to re-enable
+		/// the notifications.</returns>
+		System.IDisposable SuspendNotifications();
 	}
 }
