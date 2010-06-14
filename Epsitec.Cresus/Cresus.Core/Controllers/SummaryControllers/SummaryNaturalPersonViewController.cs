@@ -51,22 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIMailContacts(SummaryDataItems data)
 		{
-			var template = new CollectionTemplate<Entities.MailContactEntity> ("MailContact")
-				.DefineTitle (x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineText (x => UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
-
-			data.Add (
-				new SummaryData
-				{
-					Name		 = "MailContact",
-					IconUri		 = "Data.Mail",
-					Title		 = UIBuilder.FormatText ("Adresse"),
-					CompactTitle = UIBuilder.FormatText ("Adresse"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
-				});
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
+			Common.CreateUIMailContacts (data, this.EntityGetter, x => x.Contacts);
 		}
 
 		private void CreateUITelecomContacts(SummaryDataItems data)
