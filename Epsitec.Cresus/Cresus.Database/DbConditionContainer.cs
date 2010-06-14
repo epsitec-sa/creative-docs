@@ -6,13 +6,13 @@ namespace Epsitec.Cresus.Database
 {
 
 
-	public class ConditionContainer
+	public class DbConditionContainer : DbAbstractCondition
 	{
 
 
-		public ConditionContainer()
+		public DbConditionContainer() : base()
 		{
-			this.conditions = new List<DbCondition> ();
+			this.conditions = new List<DbAbstractCondition> ();
 			this.Combiner = DbCompareCombiner.And;
 		}
 
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.conditions.Count == 0;
+				return !this.conditions.Any ();
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the columns used by the conditions.
 		/// </summary>
 		/// <value>The columns.</value>
-		public IEnumerable<DbTableColumn> Columns
+		internal override IEnumerable<DbTableColumn> Columns
 		{
 			get
 			{
@@ -60,16 +60,16 @@ namespace Epsitec.Cresus.Database
 		/// Replaces the table columns used by the currently defined conditions.
 		/// </summary>
 		/// <param name="replaceOperation">The replace operation.</param>
-		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
+		internal override void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
 		{
-			foreach (DbCondition condition in this.conditions)
+			foreach (DbAbstractCondition condition in this.conditions)
 			{
 				condition.ReplaceTableColumns (replaceOperation);
 			}
 		}
 
 
-		public void AddCondition(DbCondition condition)
+		public void AddCondition(DbConditionContainer condition)
 		{
 			this.conditions.Add (condition);
 		}
@@ -182,9 +182,9 @@ namespace Epsitec.Cresus.Database
 		/// calls and using the expected revision.
 		/// </summary>
 		/// <param name="fields">The collection to which the conditions will be added.</param>
-		internal SqlField CreateSqlField()
+		internal override SqlField CreateSqlField()
 		{
-			if (this.conditions.Count == 0)
+			if (this.IsEmpty)
 			{
 				throw new System.Exception ("No conditions in container.");
 			}
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Database
 				{
 					SqlField left = result;
 					SqlField right = field;
-					SqlFunctionCode op = this.ConvertToSqlFunctionType (this.Combiner);
+					SqlFunctionCode op = this.ToSqlFunctionType (this.Combiner);
 
 					SqlFunction function = new SqlFunction (op, left, right);
 
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		protected SqlFunctionCode ConvertToSqlFunctionType(DbCompareCombiner combiner)
+		private SqlFunctionCode ToSqlFunctionType(DbCompareCombiner combiner)
 		{
 			switch (combiner)
 			{
@@ -226,9 +226,9 @@ namespace Epsitec.Cresus.Database
 
 			throw new System.ArgumentException ("Unsupported combiner: " + combiner);
 		}
-		
 
-		private readonly List<DbCondition> conditions;
+
+		private readonly List<DbAbstractCondition> conditions;
 		
 
 	}

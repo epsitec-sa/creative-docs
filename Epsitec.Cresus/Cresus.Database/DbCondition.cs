@@ -1,112 +1,111 @@
-﻿using Epsitec.Cresus.Database.Collections;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.Database
 {
 
 
-	public class DbCondition
+	public class DbCondition : DbAbstractCondition
 	{
 
 
-		public DbCondition(DbTableColumn column, DbCompare condition)
+		private DbCondition(DbCompare op, int argumentCount) : base ()
 		{
-			this.argumentCount = 1;
-			this.ColumnA = column;
-			this.Comparison = condition;
+			this.Operator = op;
+			this.argumentCount = argumentCount;
+		}
+
+
+		public DbCondition(DbTableColumn column, DbCompare op) : this (op, 1)
+		{
+			this.Left = column;
+		}
+
+
+		public DbCondition(DbTableColumn leftColumn, DbCompare op, DbTableColumn rightColumn) : this (op, 2)
+		{
+			this.Left = leftColumn;
+			this.RightColumn = rightColumn;
+		}
+
+
+		public DbCondition(DbTableColumn leftColumn, DbCompare op, object rightConstantValue, DbRawType rightConstantRawType) : this (op, 2)
+		{
+			System.Diagnostics.Debug.Assert (leftColumn.Column.Type.RawType == rightConstantRawType);
+
+			this.Left = leftColumn;
+			this.RightConstantValue = rightConstantValue;
+			this.RightConstantRawType = rightConstantRawType;
 		}
 
 		
-		public DbCondition(DbTableColumn columnA, DbCompare comparison, DbTableColumn columnB)
-		{
-			this.argumentCount = 2;
-			this.ColumnA = columnA;
-			this.ColumnB = columnB;
-			this.Comparison = comparison;
-		}
-
-		
-		public DbCondition(DbTableColumn column, DbCompare comparison, object value, DbRawType valueRawType)
-		{
-			System.Diagnostics.Debug.Assert (column.Column.Type.RawType == valueRawType);
-
-			this.argumentCount = 2;
-			this.ColumnA = column;
-			this.Comparison = comparison;
-			this.ConstantValue = value;
-			this.ConstantValueRawType = valueRawType;
-		}
-
-		
-		public DbTableColumn ColumnA
+		public DbTableColumn Left
 		{
 			get;
 			set;
 		}
 
 		
-		public DbTableColumn ColumnB
+		public DbTableColumn RightColumn
 		{
 			get;
 			set;
 		}
 
 		
-		public DbCompare Comparison
+		public DbCompare Operator
 		{
 			get;
 			private set;
 		}
 
 		
-		public object ConstantValue
+		public object RightConstantValue
 		{
 			get;
 			private set;
 		}
 
 		
-		public DbRawType ConstantValueRawType
+		public DbRawType RightConstantRawType
 		{
 			get;
 			private set;
 		}
 
 
-		public IEnumerable<DbTableColumn> Columns
+		internal override IEnumerable<DbTableColumn> Columns
 		{
 			get
 			{
-				if (this.ColumnA != null)
+				if (this.Left != null)
 				{
-					yield return this.ColumnA;
+					yield return this.Left;
 				}
 
-				if (this.ColumnB != null)
+				if (this.RightColumn != null)
 				{
-					yield return this.ColumnB;
+					yield return this.RightColumn;
 				}
 			}
 		}
 
 
-		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
+		internal override void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
 		{
-			if (this.ColumnA != null)
+			if (this.Left != null)
 			{
-				this.ColumnA = replaceOperation (this.ColumnA);
+				this.Left = replaceOperation (this.Left);
 			}
 
-			if (this.ColumnB != null)
+			if (this.RightColumn != null)
 			{
-				this.ColumnB = replaceOperation (this.ColumnB);
+				this.RightColumn = replaceOperation (this.RightColumn);
 			}
 		}
 
 
-		public SqlField CreateSqlField()
+		internal override SqlField CreateSqlField()
 		{
 			return (this.argumentCount == 1) ? this.CreateSqlFieldWithSingleField () : this.CreateSqlFieldWithBothFields ();
 		}
@@ -114,8 +113,8 @@ namespace Epsitec.Cresus.Database
 
 		private SqlField CreateSqlFieldWithSingleField()
 		{
-			SqlField field = this.CreateSqlField (this.ColumnA);
-			SqlFunctionCode op = this.ToSqlFunctionType (this.Comparison);
+			SqlField field = this.CreateSqlField (this.Left);
+			SqlFunctionCode op = this.ToSqlFunctionType (this.Operator);
 
 			SqlFunction function = new SqlFunction (op, field);
 
@@ -125,9 +124,9 @@ namespace Epsitec.Cresus.Database
 
 		private SqlField CreateSqlFieldWithBothFields()
 		{
-			SqlField fieldA = this.CreateSqlField (this.ColumnA);
-			SqlField fieldB = (this.ColumnB == null) ? SqlField.CreateConstant (this.ConstantValue, this.ConstantValueRawType) : this.CreateSqlField (this.ColumnB);
-			SqlFunctionCode op = this.ToSqlFunctionType (this.Comparison);
+			SqlField fieldA = this.CreateSqlField (this.Left);
+			SqlField fieldB = (this.RightColumn == null) ? SqlField.CreateConstant (this.RightConstantValue, this.RightConstantRawType) : this.CreateSqlField (this.RightColumn);
+			SqlFunctionCode op = this.ToSqlFunctionType (this.Operator);
 
 			SqlFunction function = new SqlFunction (op, fieldA, fieldB);
 
@@ -171,7 +170,7 @@ namespace Epsitec.Cresus.Database
 					return SqlFunctionCode.CompareIsNotNull;
 			}
 
-			throw new System.ArgumentException ("Unsupported comparison " + comparison);
+			throw new System.ArgumentException ("Unsupported comparison: " + comparison);
 		}
 
 

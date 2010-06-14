@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new System.ArgumentException ("Mismatch of tables and conditions");
 			}
-			
+
 			if (transaction == null)
 			{
 				try
@@ -282,49 +282,54 @@ namespace Epsitec.Cresus.Database
 			DbRichCommand command = new DbRichCommand (infrastructure);
 
 			int n = tables.Length;
-			
+
 			for (int i = 0; i < n; i++)
 			{
 				DbTable table = tables[i];
 				DbSelectCondition condition = conditions[i];
-				
+
 				SqlSelect select = new SqlSelect ();
 				ISqlBuilder builder = transaction.SqlBuilder;
-				
+
 				select.Fields.Add (SqlField.CreateAll ());
 				select.Tables.Add (table.Name, SqlField.CreateName (table.GetSqlName ()));
-				
+
 				//	If there is no condition, this means we don't want to get any data
 				//	for the specific table; just fetch the empty table by using an always
 				//	false WHERE clause.
-				
+
 				if (condition == null)
 				{
 					select.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareFalse));
 				}
 				else
 				{
-					condition.CreateConditions (table, table.Name, select.Conditions);
+					SqlField conditionSqlField = condition.CreateConditions (table, table.Name);
+
+					if (conditionSqlField != null)
+					{
+						select.Conditions.Add (conditionSqlField);
+					}
 				}
-				
+
 				builder.SelectData (select);
-				
+
 				command.Commands.Add (builder.Command);
 				command.Tables.Add (table);
 			}
-			
+
 			//	Fetch the table contents into a data set :
-			
+
 			infrastructure.Execute (transaction, command);
-			
+
 			//	Relax the constraints imposed by ADO.NET based on the table schemas, so
 			//	that we can fill the rows with partial data without getting exceptions :
-			
+
 			foreach (System.Data.DataTable table in command.DataSet.Tables)
 			{
 				DbRichCommand.RelaxConstraints (table);
 			}
-			
+
 			return command;
 		}
 
@@ -366,7 +371,12 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					condition.CreateConditions (table, table.Name, select.Conditions);
+					SqlField conditionSqlField = condition.CreateConditions (table, table.Name);
+					
+					if (conditionSqlField != null)
+					{
+						select.Conditions.Add (conditionSqlField);
+					}
 				}
 
 				this.infrastructure.DefaultSqlBuilder.SelectData (select);
@@ -396,8 +406,6 @@ namespace Epsitec.Cresus.Database
 				oldTables.AddRange (newTables);
 				oldAdapters.AddRange (newAdapters);
 				oldBuilders.AddRange (newBuilders);
-
-				System.Data.IDataAdapter a;
 
 				this.commands = oldCommands;
 				this.tables   = oldTables;

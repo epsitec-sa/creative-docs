@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		internal abstract DbSelectCondition CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
+		internal abstract DbConditionContainer CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
 	
 	
 	}
