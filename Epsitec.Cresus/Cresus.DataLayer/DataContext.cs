@@ -1194,7 +1194,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 					else
 					{
-						condition.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
+						condition.Conditions.AddCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbCompare.Equal, rowKey.Id.Value);
 					}
 
 					this.RichCommand.ImportTable (transaction, tableDef, condition);
@@ -1237,7 +1237,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 					else
 					{
-						condition.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
+						condition.Conditions.AddCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbCompare.Equal, sourceRowKey.Id.Value);
 					}
 
 					this.RichCommand.ImportTable (transaction, relationTableDef, condition);

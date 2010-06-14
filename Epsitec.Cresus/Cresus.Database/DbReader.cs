@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Database
 
 		public void AddCondition(DbSelectCondition condition)
 		{
-			foreach (DbTableColumn column in condition.Columns)
+			foreach (DbTableColumn column in condition.Conditions.Columns)
 			{
 				this.RegisterTable (column);
 			}
@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (DbSelectCondition condition in this.conditions)
 			{
-				condition.ReplaceTableColumns (this.TranslateToShortTableAlias);
+				condition.Conditions.ReplaceTableColumns (this.TranslateToShortTableAlias);
 				condition.CreateConditions (select.Conditions);
 			}
 		}

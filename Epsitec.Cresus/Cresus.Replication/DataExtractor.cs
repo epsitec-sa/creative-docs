@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Replication
 		public System.Data.DataTable ExtractDataUsingLogId(DbTable table, DbId logId)
 		{
 			DbSelectCondition condition = new DbSelectCondition ();
-			
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.Equal, logId);
+
+			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.Equal, logId);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -43,9 +43,9 @@ namespace Epsitec.Cresus.Replication
 			long syncIdMax = syncEndId.Value;
 			
 			DbSelectCondition condition = new DbSelectCondition ();
-			
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.GreaterThanOrEqual, syncIdMin);
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.LessThanOrEqual, syncIdMax);
+
+			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.GreaterThanOrEqual, syncIdMin);
+			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.LessThanOrEqual, syncIdMax);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -62,9 +62,9 @@ namespace Epsitec.Cresus.Replication
 			System.Diagnostics.Debug.Assert (DbId.GetClass (syncIdMax) == DbIdClass.Standard);
 			
 			DbSelectCondition condition = new DbSelectCondition ();
-			
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, syncIdMin);
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, syncIdMax);
+
+			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, syncIdMin);
+			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, syncIdMax);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -77,12 +77,12 @@ namespace Epsitec.Cresus.Replication
 			DbSelectCondition condition = new DbSelectCondition ();
 			DbColumn          idColumn  = table.Columns[Tags.ColumnId];
 			DbTableColumn     tableCol  = new DbTableColumn (idColumn);
-			
-			condition.Combiner = DbCompareCombiner.Or;
+
+			condition.Conditions.Combiner = DbCompareCombiner.Or;
 			
 			foreach (long id in ids)
 			{
-				condition.AddCondition (tableCol, DbCompare.Equal, id);
+				condition.Conditions.AddCondition (tableCol, DbCompare.Equal, id);
 			}
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
