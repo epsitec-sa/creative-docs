@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database
 
 			this.Type = type;
 
-			this.Conditions = new ConditionContainer ();
+			this.Conditions = new DbConditionContainer ();
 		}
 
 
@@ -42,14 +42,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public ConditionContainer Conditions
+		public DbConditionContainer Conditions
 		{
 			get;
-			private set;
+			set;
 		}
 
 
-		public IEnumerable<DbTableColumn> Columns
+		internal IEnumerable<DbTableColumn> Columns
 		{
 			get
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
+		internal void ReplaceTableColumns(System.Func<DbTableColumn, DbTableColumn> replaceOperation)
 		{
 			this.Conditions.ReplaceTableColumns (replaceOperation);
 
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public SqlJoin CreateSqlJoin()
+		internal SqlJoin CreateSqlJoin()
 		{
 			SqlField leftField = SqlField.CreateAliasedName (this.LeftColumn.TableAlias, this.LeftColumn.Column.GetSqlName (), this.LeftColumn.ColumnAlias);
 			SqlField rightField = SqlField.CreateAliasedName (this.RightColumn.TableAlias, this.RightColumn.Column.GetSqlName (), this.RightColumn.ColumnAlias);

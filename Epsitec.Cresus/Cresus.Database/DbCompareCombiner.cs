@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Combine using logical or.
 		/// </summary>
-		Or
+		Or,
+
+		
+		Not,
+
+
 	}
 }

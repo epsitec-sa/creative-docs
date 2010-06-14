@@ -127,7 +127,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionContainer.cs" />
+    <Compile Include="DbAbstractCondition.cs" />
+    <Compile Include="DbConditionContainer.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

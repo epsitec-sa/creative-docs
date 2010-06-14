@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected override EditionStatus EditionStatus
+		public override EditionStatus EditionStatus
 		{
 			get
 			{

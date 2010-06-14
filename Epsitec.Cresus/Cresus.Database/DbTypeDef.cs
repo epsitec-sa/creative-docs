@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="namedType">The named type.</param>
 		/// <param name="key">The key.</param>
+		/// <param name="forceNullable">If true, forces the type to be nullable.</param>
 		public DbTypeDef(INamedType namedType, DbKey key, bool forceNullable)
 		{
 			this.key        = key;

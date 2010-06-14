@@ -436,7 +436,13 @@ namespace Epsitec.Cresus.Database
 			foreach (DbSelectCondition condition in this.conditions)
 			{
 				condition.Conditions.ReplaceTableColumns (this.TranslateToShortTableAlias);
-				condition.CreateConditions (select.Conditions);
+
+				SqlField conditions = condition.CreateConditions ();
+
+				if (conditions != null)
+				{
+					select.Conditions.Add (conditions);
+				}
 			}
 		}
 

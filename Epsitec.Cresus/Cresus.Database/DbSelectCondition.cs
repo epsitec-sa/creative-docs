@@ -1,7 +1,7 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
+using Epsitec.Cresus.Database.Collections;
 
 
 namespace Epsitec.Cresus.Database
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database
 		public DbSelectCondition(DbSelectRevision revision) : base()
 		{
 			this.Revision = revision;
-			this.Conditions = new ConditionContainer ();
+			this.Conditions = new DbConditionContainer ();
 		}
 
 
@@ -46,34 +46,48 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public ConditionContainer Conditions
+		public DbConditionContainer Conditions
 		{
 			get;
-			private set;
+			set;
 		}
 
 
-		/// <summary>
-		/// Creates the conditions based on the previous <c>AddCondition</c>
-		/// calls and using the expected revision.
-		/// </summary>
-		/// <param name="fields">The collection to which the conditions will be added.</param>
-		internal void CreateConditions(Collections.SqlFieldList fields)
+		internal SqlField CreateConditions()
 		{
-			this.CreateConditions (null, null, fields);
+			return this.CreateConditions (null, null);
 		}
 
 
-		internal void CreateConditions(DbTable mainTable, string mainTableAlias, Collections.SqlFieldList fields)
+		internal SqlField CreateConditions(DbTable mainTable, string mainTableAlias)
 		{
-			if (!this.Conditions.IsEmpty)
+			SqlField conditions = this.CreateConditionSqlField ();
+			SqlField revision = this.CreateRevisionSqlField (mainTable, mainTableAlias);
+
+			if (conditions != null && revision != null)
 			{
-				fields.Add (this.Conditions.CreateSqlField ());
+				SqlFunction function = new SqlFunction (SqlFunctionCode.LogicAnd, conditions, revision);
+
+				return SqlField.CreateFunction (function);
 			}
+			else
+			{
+				return conditions ?? revision ?? null;
+			}
+		}
 
+
+		private SqlField CreateConditionSqlField()
+		{
+			return (this.Conditions.IsEmpty) ? null : this.Conditions.CreateSqlField ();
+		}
+
+
+		private SqlField CreateRevisionSqlField(DbTable mainTable, string mainTableAlias)
+		{
 			DbCondition revisionCondition = null;
-
-			if (mainTable != null)
+			
+			if (mainTable != null && mainTableAlias != null)
 			{
 				switch (this.Revision)
 				{
@@ -105,11 +119,8 @@ namespace Epsitec.Cresus.Database
 						throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.Revision));
 				}
 			}
-			
-			if (revisionCondition != null)
-			{
-				fields.Add (revisionCondition.CreateSqlField ());
-			}	
+
+			return (revisionCondition == null) ? null : revisionCondition.CreateSqlField ();
 		}
 
 
