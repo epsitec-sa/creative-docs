@@ -55,8 +55,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="container">The container.</param>
 		public abstract void CreateUI(Widget container);
 
-
-		protected override void Dispose(bool disposing)
+		public virtual void AboutToDispose(Widget container)
+		{
+			if (container.ContainsKeyboardFocus)
+			{
+				container.Window.ClearFocusedWidget ();
+			}
+		}
+		
+        protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
