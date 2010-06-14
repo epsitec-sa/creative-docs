@@ -6,8 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public interface ITileController
+	public interface ITileController : IGroupedItem
 	{
+		/// <summary>
+		/// Creates a sub view controller for the item.
+		/// </summary>
+		/// <param name="orchestrator">The orchestrator.</param>
+		/// <returns>The sub view controller.</returns>
 		EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator);
 	}
 }
