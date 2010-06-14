@@ -124,6 +124,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (this.isDragging)
 			{
 				message.Consumer = this.widget;
+				//?message.Swallowed = true;
 				
 				this.isDragging = false;
 				

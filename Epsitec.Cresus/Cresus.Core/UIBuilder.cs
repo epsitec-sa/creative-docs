@@ -30,18 +30,18 @@ namespace Epsitec.Cresus.Core
 			this.controller = controller;
 		}
 
-		public TitleTile CurrentGroupingTile
+		public TitleTile CurrentTitleTile
 		{
 			get
 			{
-				return this.groupingTile;
+				return this.titleTile;
 			}
 		}
 
 
-		public TitleTile CreateEditionGroupingTile(string iconUri, string title)
+		public TitleTile CreateEditionTitleTile(string iconUri, string title)
 		{
-			this.groupingTile = new TitleTile
+			this.titleTile = new TitleTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Core
 				IsReadOnly = false,
 			};
 
-			UIBuilder.CreateGroupingTileHandler (this.groupingTile, this.controller);
+			UIBuilder.CreateTitleTileHandler (this.titleTile, this.controller);
 
-			return this.groupingTile;
+			return this.titleTile;
 		}
 
 		public EditionTile CreateEditionTile()
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core
 				IsReadOnly = false,
 			};
 
-			this.groupingTile.Items.Add (tile);
+			this.titleTile.Items.Add (tile);
 
 			return tile;
 		}
@@ -498,32 +498,22 @@ namespace Epsitec.Cresus.Core
 			return value.ToString ();
 		}
 
-		
-		private static void CreateGroupingTileHandler(TitleTile group, CoreViewController controller)
+
+		private static void CreateTitleTileHandler(TitleTile titleTile, CoreViewController controller)
 		{
-			group.Clicked +=
+			titleTile.Clicked +=
 				delegate
 				{
-					if (group.Items.Count == 1)
+					if (titleTile.Items.Count == 1)
 					{
-						//	Si on a cliqué dans le conteneur GroupingTile d'un seul SummaryTile, il
+						//	Si on a cliqué dans le conteneur TitleTile d'un seul SummaryTile, il
 						//	faut faire comme si on avait cliqué dans ce dernier.
-						var tile = group.Items[0] as SummaryTile;
-						if (tile != null)
+						var summaryTile = titleTile.Items[0] as SummaryTile;
+						if (summaryTile != null)
 						{
-							tile.ToggleSubView (controller.Orchestrator, controller);
+							summaryTile.ToggleSubView (controller.Orchestrator, controller);
 						}
 					}
-				};
-		}
-
-		internal static void CreateTileHandler(GenericTile tile, CoreViewController controller)
-		{
-			tile.Clicked +=
-				delegate
-				{
-					//	Appelé lorsqu'une tuile quelconque est cliquée.
-					tile.ToggleSubView (controller.Orchestrator, controller);
 				};
 		}
 
@@ -562,6 +552,6 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreViewController controller;
 		private readonly TileContainer container;
 		private int tabIndex;
-		private TitleTile groupingTile;
+		private TitleTile titleTile;
 	}
 }
