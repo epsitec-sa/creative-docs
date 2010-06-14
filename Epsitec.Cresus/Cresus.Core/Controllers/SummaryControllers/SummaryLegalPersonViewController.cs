@@ -56,44 +56,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUITelecomContacts(SummaryDataItems data)
 		{
-			var template = new CollectionTemplate<Entities.TelecomContactEntity> ("TelecomContact")
-				.DefineTitle (x => UIBuilder.FormatText (x.TelecomType.Name))
-				.DefineText (x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
-
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "TelecomContact",
-					IconUri		 = "Data.Telecom",
-					Title		 = UIBuilder.FormatText ("Téléphone"),
-					CompactTitle = UIBuilder.FormatText ("Téléphone"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
-				});
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
+			Common.CreateUITelecomContacts (data, this.EntityGetter, x => x.Contacts);
 		}
 
 		private void CreateUIUriContacts(SummaryDataItems data)
 		{
-			var template = new CollectionTemplate<Entities.UriContactEntity> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
-				.DefineText (x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Uri))
-				.DefineSetupItem (x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
-
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "UriContact",
-					IconUri		 = "Data.Uri",
-					Title		 = UIBuilder.FormatText ("E-Mail"),
-					CompactTitle = UIBuilder.FormatText ("E-Mail"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
-				});
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Contacts, template));
+			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Contacts);
 		}
 	}
 }
