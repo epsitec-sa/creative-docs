@@ -1203,8 +1203,8 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						DbAbstractCondition part1 = condition.Condition;
 						DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (tableDef.Columns[Tags.ColumnId]), DbSimpleConditionOperator.Equal, rowKey.Id.Value);
-						
-						condition.Condition = DbConditionCombiner.Combine (part1, part2);
+
+						condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
 					}
 
 					this.RichCommand.ImportTable (transaction, tableDef, condition);
@@ -1250,7 +1250,7 @@ namespace Epsitec.Cresus.DataLayer
 						DbAbstractCondition part1 = condition.Condition;
 						DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (relationTableDef.Columns[Tags.ColumnRefSourceId]), DbSimpleConditionOperator.Equal, sourceRowKey.Id.Value);
 
-						condition.Condition = DbConditionCombiner.Combine (part1, part2);
+						condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
 					}
 
 					this.RichCommand.ImportTable (transaction, relationTableDef, condition);

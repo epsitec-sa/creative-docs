@@ -5,11 +5,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 {
 	
 	
-	internal static class EnumConverter
+	internal static class OperatorConverter
 	{
 
 
-		public static DbSimpleConditionOperator ToDbCompare(UnaryComparator unaryComparator)
+		public static DbSimpleConditionOperator ToDbSimpleConditionOperator(UnaryComparator unaryComparator)
 		{
 			switch (unaryComparator)
 			{
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		public static DbSimpleConditionOperator ToDbCompare(BinaryComparator binaryComparator)
+		public static DbSimpleConditionOperator ToDbSimpleConditionOperator(BinaryComparator binaryComparator)
 		{
 			switch (binaryComparator)
 			{
@@ -49,6 +49,32 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return DbSimpleConditionOperator.NotLikeEscape;
 				default:
 					throw new System.ArgumentException ("Conversion of '" + binaryComparator + "' is not supported");
+			}
+		}
+
+
+		public static DbConditionModifierOperator ToDbConditionModifierOperator(UnaryOperator unaryOperator)
+		{
+			switch (unaryOperator)
+			{
+				case UnaryOperator.Not:
+					return DbConditionModifierOperator.Not;
+				default:
+					throw new System.ArgumentException ("Conversion of '" + unaryOperator + "' is not supported");
+			}
+		}
+
+
+		public static DbConditionCombinerOperator ToDbConditionCombinerOperator(BinaryOperator binaryOperator)
+		{
+			switch (binaryOperator)
+			{
+				case BinaryOperator.And:
+					return DbConditionCombinerOperator.And;
+				case BinaryOperator.Or:
+					return DbConditionCombinerOperator.Or;
+				default:
+					throw new System.ArgumentException ("Conversion of '" + binaryOperator + "' is not supported");
 			}
 		}
 

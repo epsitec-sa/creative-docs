@@ -10,11 +10,28 @@ namespace Epsitec.Cresus.Database
 	{
 
 
-		public DbConditionCombiner() : base()
+		public DbConditionCombiner() : this (DbConditionCombiner.DefaultCombinerOperator)
 		{
-			this.conditions = new List<DbAbstractCondition> ();
-			this.Combiner = DbConditionCombiner.DefaultCombinerOperator;
 		}
+
+
+		public DbConditionCombiner(DbConditionCombinerOperator op) : this (op, new DbAbstractCondition[0])
+		{
+		}
+
+
+		public DbConditionCombiner(params DbAbstractCondition[] conditions)	: this (DbConditionCombiner.DefaultCombinerOperator, conditions)
+		{
+		}
+
+
+		public DbConditionCombiner(DbConditionCombinerOperator op, params DbAbstractCondition[] conditions) : base()
+		{
+			this.Combiner = op;
+
+			this.conditions = conditions.Where (c => c != null).ToList ();
+		}
+
 
 
 		public bool IsEmpty
@@ -58,7 +75,10 @@ namespace Epsitec.Cresus.Database
 
 		public void AddCondition(DbAbstractCondition condition)
 		{
-			this.conditions.Add (condition);
+			if (condition != null)
+			{
+				this.conditions.Add (condition);
+			}
 		}
 
 
@@ -118,28 +138,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			throw new System.ArgumentException ("Unsupported combiner: " + op);
-		}
-
-
-		public static DbConditionCombiner Combine(params DbAbstractCondition[] conditions)
-		{
-			return DbConditionCombiner.Combine (DbConditionCombiner.DefaultCombinerOperator, conditions);
-		}
-
-
-		public static DbConditionCombiner Combine(DbConditionCombinerOperator op, params DbAbstractCondition[] conditions)
-		{
-			DbConditionCombiner combiner = new DbConditionCombiner ()
-			{
-				Combiner = op,
-			};
-			
-			foreach (DbAbstractCondition condition in conditions.Where (c => c != null))
-			{
-				combiner.AddCondition (condition);
-			}
-
-			return combiner;
 		}
 
 

@@ -537,7 +537,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbAbstractCondition part1 = join.Condition;
 			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (relationTargetIdColumn, DbSimpleConditionOperator.Equal, targetKey.Id.Value);
 
-			join.Condition = DbConditionCombiner.Combine (part1, part2);
+			join.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
 
 			reader.AddJoin (join);
 		}

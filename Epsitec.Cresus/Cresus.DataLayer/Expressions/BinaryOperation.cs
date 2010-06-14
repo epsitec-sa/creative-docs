@@ -42,9 +42,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 
-		internal override DbConditionCombiner CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		internal override DbAbstractCondition CreateDbAbstractCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
-			throw new System.NotImplementedException ();
+			DbAbstractCondition left = this.Left.CreateDbAbstractCondition (entity, dbTableColumnResolver);
+			DbAbstractCondition right = this.Right.CreateDbAbstractCondition (entity, dbTableColumnResolver);
+
+			DbConditionCombinerOperator op = OperatorConverter.ToDbConditionCombinerOperator (this.Operator);
+
+			return new DbConditionCombiner (op, left, right);
 		}
 
 
