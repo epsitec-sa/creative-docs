@@ -1299,6 +1299,11 @@ namespace Epsitec.Cresus.Core.Entities
 	///	</summary>
 	public partial class ContactRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		public ContactRoleEntity()
+		{
+			System.Diagnostics.Debug.WriteLine ("ContactRoleEntity created");
+		}
+
 		#region IItemRank Members
 		///	<summary>
 		///	The <c>Rank</c> field.
