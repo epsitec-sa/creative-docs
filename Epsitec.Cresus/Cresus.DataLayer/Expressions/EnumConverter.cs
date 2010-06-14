@@ -9,44 +9,44 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
-		public static DbCompare ToDbCompare(UnaryComparator unaryComparator)
+		public static DbSimpleConditionOperator ToDbCompare(UnaryComparator unaryComparator)
 		{
 			switch (unaryComparator)
 			{
 				case UnaryComparator.IsNull:
-					return DbCompare.IsNull;
+					return DbSimpleConditionOperator.IsNull;
 				case UnaryComparator.IsNotNull:
-					return DbCompare.IsNotNull;
+					return DbSimpleConditionOperator.IsNotNull;
 				default:
 					throw new System.ArgumentException ("Conversion of '" + unaryComparator + "' is not supported");
 			}
 		}
 
 
-		public static DbCompare ToDbCompare(BinaryComparator binaryComparator)
+		public static DbSimpleConditionOperator ToDbCompare(BinaryComparator binaryComparator)
 		{
 			switch (binaryComparator)
 			{
 				case BinaryComparator.IsEqual:
-					return DbCompare.Equal;
+					return DbSimpleConditionOperator.Equal;
 				case BinaryComparator.IsNotEqual:
-					return DbCompare.NotEqual;
+					return DbSimpleConditionOperator.NotEqual;
 				case BinaryComparator.IsLower:
-					return DbCompare.LessThan;
+					return DbSimpleConditionOperator.LessThan;
 				case BinaryComparator.IsLowerOrEqual:
-					return DbCompare.LessThanOrEqual;
+					return DbSimpleConditionOperator.LessThanOrEqual;
 				case BinaryComparator.IsGreater:
-					return DbCompare.GreaterThan;
+					return DbSimpleConditionOperator.GreaterThan;
 				case BinaryComparator.IsGreaterOrEqual:
-					return DbCompare.GreaterThanOrEqual;
+					return DbSimpleConditionOperator.GreaterThanOrEqual;
 				case BinaryComparator.IsLike:
-					return DbCompare.Like;
+					return DbSimpleConditionOperator.Like;
 				case BinaryComparator.IsNotLike:
-					return DbCompare.NotLike;
+					return DbSimpleConditionOperator.NotLike;
 				case BinaryComparator.IsLikeEscape:
-					return DbCompare.LikeEscape;
+					return DbSimpleConditionOperator.LikeEscape;
 				case BinaryComparator.IsNotLikeEscape:
-					return DbCompare.NotLikeEscape;
+					return DbSimpleConditionOperator.NotLikeEscape;
 				default:
 					throw new System.ArgumentException ("Conversion of '" + binaryComparator + "' is not supported");
 			}

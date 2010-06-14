@@ -5,31 +5,31 @@ namespace Epsitec.Cresus.Database
 {
 
 
-	public class DbCondition : DbAbstractCondition
+	public class DbSimpleCondition : DbAbstractCondition
 	{
 
 
-		private DbCondition(DbCompare op, int argumentCount) : base ()
+		private DbSimpleCondition(DbSimpleConditionOperator op, int argumentCount) : base ()
 		{
 			this.Operator = op;
 			this.argumentCount = argumentCount;
 		}
 
 
-		public DbCondition(DbTableColumn column, DbCompare op) : this (op, 1)
+		public DbSimpleCondition(DbTableColumn column, DbSimpleConditionOperator op) : this (op, 1)
 		{
 			this.Left = column;
 		}
 
 
-		public DbCondition(DbTableColumn leftColumn, DbCompare op, DbTableColumn rightColumn) : this (op, 2)
+		public DbSimpleCondition(DbTableColumn leftColumn, DbSimpleConditionOperator op, DbTableColumn rightColumn) : this (op, 2)
 		{
 			this.Left = leftColumn;
 			this.RightColumn = rightColumn;
 		}
 
 
-		public DbCondition(DbTableColumn leftColumn, DbCompare op, object rightConstantValue, DbRawType rightConstantRawType) : this (op, 2)
+		public DbSimpleCondition(DbTableColumn leftColumn, DbSimpleConditionOperator op, object rightConstantValue, DbRawType rightConstantRawType) : this (op, 2)
 		{
 			System.Diagnostics.Debug.Assert (leftColumn.Column.Type.RawType == rightConstantRawType);
 
@@ -42,18 +42,18 @@ namespace Epsitec.Cresus.Database
 		public DbTableColumn Left
 		{
 			get;
-			set;
+			private set;
 		}
 
 		
 		public DbTableColumn RightColumn
 		{
 			get;
-			set;
+			private set;
 		}
 
 		
-		public DbCompare Operator
+		public DbSimpleConditionOperator Operator
 		{
 			get;
 			private set;
@@ -140,37 +140,76 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private SqlFunctionCode ToSqlFunctionType(DbCompare comparison)
+		private SqlFunctionCode ToSqlFunctionType(DbSimpleConditionOperator op)
 		{
-			switch (comparison)
+			switch (op)
 			{
-				case DbCompare.Equal:
+				case DbSimpleConditionOperator.Equal:
 					return SqlFunctionCode.CompareEqual;
-				case DbCompare.NotEqual:
+				case DbSimpleConditionOperator.NotEqual:
 					return SqlFunctionCode.CompareNotEqual;
-				case DbCompare.LessThan:
+				case DbSimpleConditionOperator.LessThan:
 					return SqlFunctionCode.CompareLessThan;
-				case DbCompare.LessThanOrEqual:
+				case DbSimpleConditionOperator.LessThanOrEqual:
 					return SqlFunctionCode.CompareLessThanOrEqual;
-				case DbCompare.GreaterThan:
+				case DbSimpleConditionOperator.GreaterThan:
 					return SqlFunctionCode.CompareGreaterThan;
-				case DbCompare.GreaterThanOrEqual:
+				case DbSimpleConditionOperator.GreaterThanOrEqual:
 					return SqlFunctionCode.CompareGreaterThanOrEqual;
-				case DbCompare.Like:
+				case DbSimpleConditionOperator.Like:
 					return SqlFunctionCode.CompareLike;
-				case DbCompare.LikeEscape:
+				case DbSimpleConditionOperator.LikeEscape:
 					return SqlFunctionCode.CompareLikeEscape;
-				case DbCompare.NotLike:
+				case DbSimpleConditionOperator.NotLike:
 					return SqlFunctionCode.CompareNotLike;
-				case DbCompare.NotLikeEscape:
+				case DbSimpleConditionOperator.NotLikeEscape:
 					return SqlFunctionCode.CompareNotLikeEscape;
-				case DbCompare.IsNull:
+				case DbSimpleConditionOperator.IsNull:
 					return SqlFunctionCode.CompareIsNull;
-				case DbCompare.IsNotNull:
+				case DbSimpleConditionOperator.IsNotNull:
 					return SqlFunctionCode.CompareIsNotNull;
 			}
 
-			throw new System.ArgumentException ("Unsupported comparison: " + comparison);
+			throw new System.ArgumentException ("Unsupported comparison: " + op);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, bool value)
+		{
+			return new DbSimpleCondition (a, comparison, value, DbRawType.Boolean);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, short value)
+		{
+			return new DbSimpleCondition (a, comparison, value, DbRawType.Int16);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, int value)
+		{
+			return new DbSimpleCondition (a, comparison, value, DbRawType.Int32);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, long value)
+		{
+			return new DbSimpleCondition (a, comparison, value, DbRawType.Int64);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, decimal value, DbNumDef numDef)
+		{
+			DbRawType rawType  = TypeConverter.GetRawType (DbSimpleType.Decimal, numDef);
+			object    rawValue = TypeConverter.ConvertFromSimpleType (value, DbSimpleType.Decimal, numDef);
+
+			return new DbSimpleCondition (a, comparison, rawValue, rawType);
+		}
+
+
+		public static DbSimpleCondition CreateCondition(DbTableColumn a, DbSimpleConditionOperator comparison, string value)
+		{
+			return new DbSimpleCondition (a, comparison, value, DbRawType.String);
 		}
 
 

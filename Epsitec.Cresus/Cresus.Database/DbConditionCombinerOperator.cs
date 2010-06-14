@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbCompareCombiner</c> enumeration specifies how comparisons
 	/// are combined together (logical and/logical or).
 	/// </summary>
-	public enum DbCompareCombiner : byte
+	public enum DbConditionCombinerOperator : byte
 	{
 		/// <summary>
 		/// Combine using logical and.
@@ -18,9 +18,6 @@ namespace Epsitec.Cresus.Database
 		/// Combine using logical or.
 		/// </summary>
 		Or,
-
-		
-		Not,
 
 
 	}

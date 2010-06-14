@@ -27,9 +27,10 @@ namespace Epsitec.Cresus.Replication
 		
 		public System.Data.DataTable ExtractDataUsingLogId(DbTable table, DbId logId)
 		{
-			DbSelectCondition condition = new DbSelectCondition ();
-
-			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.Equal, logId);
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.Equal, logId),
+			};
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -44,8 +45,10 @@ namespace Epsitec.Cresus.Replication
 			
 			DbSelectCondition condition = new DbSelectCondition ();
 
-			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.GreaterThanOrEqual, syncIdMin);
-			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbCompare.LessThanOrEqual, syncIdMax);
+			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
+			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
+
+			condition.Condition = DbConditionCombiner.Combine (part1, part2);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -63,9 +66,11 @@ namespace Epsitec.Cresus.Replication
 			
 			DbSelectCondition condition = new DbSelectCondition ();
 
-			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, syncIdMin);
-			condition.Conditions.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, syncIdMax);
-			
+			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
+			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
+
+			condition.Condition = DbConditionCombiner.Combine (part1, part2);
+
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
 				return command.DataTable;
@@ -78,12 +83,17 @@ namespace Epsitec.Cresus.Replication
 			DbColumn          idColumn  = table.Columns[Tags.ColumnId];
 			DbTableColumn     tableCol  = new DbTableColumn (idColumn);
 
-			condition.Conditions.Combiner = DbCompareCombiner.Or;
-			
+			DbConditionCombiner conditionCombiner = new DbConditionCombiner ()
+			{
+				Combiner = DbConditionCombinerOperator.Or,
+			};
+						
 			foreach (long id in ids)
 			{
-				condition.Conditions.AddCondition (tableCol, DbCompare.Equal, id);
+				conditionCombiner.AddCondition (DbSimpleCondition.CreateCondition (tableCol, DbSimpleConditionOperator.Equal, id));
 			}
+
+			condition.Condition = conditionCombiner;
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{

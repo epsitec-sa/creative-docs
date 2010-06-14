@@ -159,9 +159,10 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.WriteLine ("Starting reader with condition");
 
 			DbReader reader = new DbReader (this.infrastructure);
-			DbSelectCondition condition = new DbSelectCondition ();
-
-			condition.Conditions.AddCondition (new DbTableColumn ("T1", c4), DbCompare.Like, "%14%");
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = DbSimpleCondition.CreateCondition (new DbTableColumn ("T1", c4), DbSimpleConditionOperator.Like, "%14%"),
+			};
 
 			reader.AddQueryFields (queryFields);
 			reader.AddCondition (condition);

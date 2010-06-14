@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 
-		internal override DbConditionContainer CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		internal override DbConditionCombiner CreateDbSelectCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			throw new System.NotImplementedException ();
 		}

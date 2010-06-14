@@ -373,8 +373,11 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), DataBrowser.statusColumn);
 
-			DbSelectCondition condition = new DbSelectCondition ();
-			condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = DbSimpleCondition.CreateCondition (tableColumn, DbSimpleConditionOperator.Equal, (short) DbRowStatus.Live),
+			};
+
 			reader.AddCondition (condition);
 		}
 
@@ -412,7 +415,7 @@ namespace Epsitec.Cresus.DataLayer
 			switch (fieldType.TypeCode)
 			{
 				case TypeCode.String:
-					condition.Conditions.AddCondition (tableColumn, DbCompare.Like, (string) fieldValue);
+					condition.Condition = DbSimpleCondition.CreateCondition (tableColumn, DbSimpleConditionOperator.Like, (string) fieldValue);
 					break;
 
 				case TypeCode.Decimal:
@@ -422,15 +425,15 @@ namespace Epsitec.Cresus.DataLayer
 					throw new System.NotImplementedException ();
 
 				case TypeCode.Integer:
-					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (int) fieldValue);
+					condition.Condition = DbSimpleCondition.CreateCondition (tableColumn, DbSimpleConditionOperator.Equal, (int) fieldValue);
 					break;
 
 				case TypeCode.LongInteger:
-					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (long) fieldValue);
+					condition.Condition = DbSimpleCondition.CreateCondition (tableColumn, DbSimpleConditionOperator.Equal, (long) fieldValue);
 					break;
 					
 				case TypeCode.Boolean:
-					condition.Conditions.AddCondition (tableColumn, DbCompare.Equal, (bool) fieldValue);
+					condition.Condition = DbSimpleCondition.CreateCondition (tableColumn, DbSimpleConditionOperator.Equal, (bool) fieldValue);
 					break;
 
 				case TypeCode.Date:
@@ -507,9 +510,10 @@ namespace Epsitec.Cresus.DataLayer
 
 			SqlJoinCode type = SqlJoinCode.Inner;
 
-			DbJoin join = new DbJoin (subEntityIdColumn, superEntityIdColumn, type);
-
-			join.Conditions.AddCondition (subEntityStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			DbJoin join = new DbJoin (subEntityIdColumn, superEntityIdColumn, type)
+			{
+				Condition = DbSimpleCondition.CreateCondition (subEntityStatusColumn, DbSimpleConditionOperator.Equal, (short) DbRowStatus.Live),
+			};
 			
 			reader.AddJoin (join);
 		}
@@ -530,7 +534,10 @@ namespace Epsitec.Cresus.DataLayer
 			string relationTableAlias = tableAliasManager.GetCurrentEntityAlias ();
 			DbTableColumn relationTargetIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationTargetColumn);
 
-			join.Conditions.AddCondition (relationTargetIdColumn, DbCompare.Equal, targetKey.Id.Value);
+			DbAbstractCondition part1 = join.Condition;
+			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (relationTargetIdColumn, DbSimpleConditionOperator.Equal, targetKey.Id.Value);
+
+			join.Condition = DbConditionCombiner.Combine (part1, part2);
 
 			reader.AddJoin (join);
 		}
@@ -547,9 +554,10 @@ namespace Epsitec.Cresus.DataLayer
 			DbTableColumn relationSourceIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationSourceColumn);
 			DbTableColumn relationSourceStatusColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.statusColumn);
 
-			DbJoin join = new DbJoin (sourceIdColumn, relationSourceIdColumn, joinType);
-
-			join.Conditions.AddCondition (relationSourceStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			DbJoin join = new DbJoin (sourceIdColumn, relationSourceIdColumn, joinType)
+			{
+				Condition = DbSimpleCondition.CreateCondition (relationSourceStatusColumn, DbSimpleConditionOperator.Equal, (short) DbRowStatus.Live),
+			};
 
 			return join;
 		}
@@ -566,9 +574,10 @@ namespace Epsitec.Cresus.DataLayer
 			DbTableColumn targetIdColumn = this.GetEntityTableColumn (rootTargetEntityId, targetTableAlias, DataBrowser.idColumn);
 			DbTableColumn targetStatusColumn = this.GetEntityTableColumn (rootTargetEntityId, targetTableAlias, DataBrowser.statusColumn);
 
-			DbJoin join = new DbJoin (relationTargetIdColumn, targetIdColumn, joinType);
-
-			join.Conditions.AddCondition (targetStatusColumn, DbCompare.Equal, (short) DbRowStatus.Live);
+			DbJoin join = new DbJoin (relationTargetIdColumn, targetIdColumn, joinType)
+			{
+				Condition = DbSimpleCondition.CreateCondition (targetStatusColumn, DbSimpleConditionOperator.Equal, (short) DbRowStatus.Live),
+			};
 
 			reader.AddJoin (join);
 		}

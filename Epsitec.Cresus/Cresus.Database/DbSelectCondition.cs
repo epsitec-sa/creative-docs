@@ -31,7 +31,6 @@ namespace Epsitec.Cresus.Database
 		public DbSelectCondition(DbSelectRevision revision) : base()
 		{
 			this.Revision = revision;
-			this.Conditions = new DbConditionContainer ();
 		}
 
 
@@ -46,7 +45,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public DbConditionContainer Conditions
+		public DbAbstractCondition Condition
 		{
 			get;
 			set;
@@ -79,13 +78,13 @@ namespace Epsitec.Cresus.Database
 
 		private SqlField CreateConditionSqlField()
 		{
-			return (this.Conditions.IsEmpty) ? null : this.Conditions.CreateSqlField ();
+			return (this.Condition == null) ? null : this.Condition.CreateSqlField ();
 		}
 
 
 		private SqlField CreateRevisionSqlField(DbTable mainTable, string mainTableAlias)
 		{
-			DbCondition revisionCondition = null;
+			DbSimpleCondition revisionCondition = null;
 			
 			if (mainTable != null && mainTableAlias != null)
 			{
@@ -95,8 +94,8 @@ namespace Epsitec.Cresus.Database
 						//	Select all live revisions of the rows: live (0), copied (1)
 						//	and archive copy (2) are all < deleted (3).
 
-						revisionCondition = new DbCondition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
-														   DbCompare.LessThan,
+						revisionCondition = new DbSimpleCondition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+														   DbSimpleConditionOperator.LessThan,
 														   DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbRawType.Int16);
 						break;
 
@@ -104,8 +103,8 @@ namespace Epsitec.Cresus.Database
 						//	Select only the active revisions of the rows: live (0) and
 						//	copied (1) both describe active rows and are < archive copy (2).
 
-						revisionCondition = new DbCondition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
-														   DbCompare.LessThan,
+						revisionCondition = new DbSimpleCondition (new DbTableColumn (mainTableAlias, mainTable.Columns[Tags.ColumnStatus]),
+														   DbSimpleConditionOperator.LessThan,
 														   DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy), DbRawType.Int16);
 						break;
 
