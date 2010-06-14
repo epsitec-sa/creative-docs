@@ -26,13 +26,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		internal override DbCondition CreateDbCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		internal override DbSimpleCondition CreateDbCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn left = this.Left.CreateDbTableColumn (entity, dbTableColumnResolver);
-			DbCompare op = EnumConverter.ToDbCompare (this.Operator);
+			DbSimpleConditionOperator op = EnumConverter.ToDbCompare (this.Operator);
 			DbTableColumn right = this.Right.CreateDbTableColumn (entity, dbTableColumnResolver);
 
-			return new DbCondition (left, op, right);
+			return new DbSimpleCondition (left, op, right);
 		}
 
 

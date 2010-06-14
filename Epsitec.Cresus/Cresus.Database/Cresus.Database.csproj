@@ -128,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbAbstractCondition.cs" />
-    <Compile Include="DbConditionContainer.cs" />
+    <Compile Include="DbConditionCombiner.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -157,7 +157,9 @@
     <Compile Include="Collections\SqlFieldList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbCondition.cs" />
+    <Compile Include="DbConditionModifier.cs" />
+    <Compile Include="DbConditionModifierOperator.cs" />
+    <Compile Include="DbSimpleCondition.cs" />
     <Compile Include="DbDataTableMapping.cs" />
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />
@@ -199,10 +201,10 @@
     <Compile Include="DbCommandType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbCompare.cs">
+    <Compile Include="DbSimpleConditionOperator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbCompareCombiner.cs">
+    <Compile Include="DbConditionCombinerOperator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbDict.cs">

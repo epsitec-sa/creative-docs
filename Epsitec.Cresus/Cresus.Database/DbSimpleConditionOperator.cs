@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// The <c>DbCompare</c> enumeration defines the comparison operation
 	/// which has to be applied to two fields.
 	/// </summary>
-	public enum DbCompare : byte
+	public enum DbSimpleConditionOperator : byte
 	{
 		/// <summary>
 		/// Returns <c>true</c> if both fields are equal.
