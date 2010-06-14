@@ -1093,6 +1093,10 @@ namespace Epsitec.Cresus.DataLayer
 					var entityId = entity.GetEntityStructuredTypeId ();
 					var tableName = this.SchemaEngine.GetDataTableName (entityId);
 
+					//	The conversion is a two step process:
+					//	1. Convert from an ADO.NET type to a simple type (i.e. almost all numbers map to decimal)
+					//	2. Convert from the simple type to the expected field type
+					
 					newValue = this.ConvertFromInternal (newValue, tableName, columnName);
 					bool ok = InvariantConverter.Convert (newValue, field, out newValue);
 
