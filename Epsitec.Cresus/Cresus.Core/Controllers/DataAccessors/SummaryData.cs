@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		public GroupedItemController		GroupController
+		public GroupedItemController			GroupController
 		{
 			get;
 			set;
@@ -348,7 +348,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		string IGroupedItem.GetGroupId()
 		{
-			return this.CompactTitle.ToString ();
+			if (this.GroupController == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.CompactTitle.ToString ();
+			}
 		}
 
 		#endregion
@@ -361,7 +368,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.GroupController == null)
 				{
-					throw new System.NotImplementedException ();
+					return 0;
 				}
 
 				return this.GroupController.GetItemIndex ();
@@ -370,7 +377,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.GroupController == null)
 				{
-					throw new System.NotImplementedException ();
+					throw new System.InvalidOperationException ();
 				}
 
 				this.GroupController.SetItemIndex (value);
@@ -383,7 +390,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.GroupController == null)
 				{
-					throw new System.NotImplementedException ();
+					return 0;
 				}
 
 				return this.GroupController.GetItemCount ();
