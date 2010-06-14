@@ -12,9 +12,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
+	/// <summary>
+	/// The <c>ICollectionAccessor</c> interface is used to access items in an entity
+	/// collection.
+	/// </summary>
 	public interface ICollectionAccessor
 	{
 		void AddItem(AbstractEntity item);
 		bool RemoveItem(AbstractEntity item);
+
+		/// <summary>
+		/// Gets the item collection.
+		/// </summary>
+		/// <returns>The item collection.</returns>
+		System.Collections.IList GetItemCollection();
 	}
 }

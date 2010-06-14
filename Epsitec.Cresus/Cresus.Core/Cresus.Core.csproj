@@ -95,6 +95,7 @@
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDefaultAddressViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTitleViewController.cs" />
@@ -111,6 +112,8 @@
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
+    <Compile Include="Controllers\IGroupedItem.cs" />
+    <Compile Include="Controllers\IGroupedItemPosition.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />

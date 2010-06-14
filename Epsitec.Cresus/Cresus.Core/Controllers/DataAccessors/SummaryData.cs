@@ -72,6 +72,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
+		public GroupedItemController		GroupController
+		{
+			get;
+			set;
+		}
+		
 		public bool								AutoGroup
 		{
 			get;
@@ -236,7 +242,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		
 		public void ExecuteAccessors()
 		{
 			this.bindings.ForEach (x => x.Execute ());
@@ -335,6 +340,54 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
             }
 
 			return result;
+		}
+
+		#endregion
+
+		#region IGroupController Members
+
+		string IGroupedItem.GetGroupId()
+		{
+			return this.CompactTitle.ToString ();
+		}
+
+		#endregion
+
+		#region IGroupPositionController Members
+
+		int IGroupedItemPosition.GroupedItemIndex
+		{
+			get
+			{
+				if (this.GroupController == null)
+				{
+					throw new System.NotImplementedException ();
+				}
+
+				return this.GroupController.GetItemIndex ();
+			}
+			set
+			{
+				if (this.GroupController == null)
+				{
+					throw new System.NotImplementedException ();
+				}
+
+				this.GroupController.SetItemIndex (value);
+			}
+		}
+
+		int IGroupedItemPosition.GroupedItemCount
+		{
+			get
+			{
+				if (this.GroupController == null)
+				{
+					throw new System.NotImplementedException ();
+				}
+
+				return this.GroupController.GetItemCount ();
+			}
 		}
 
 		#endregion

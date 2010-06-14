@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract bool RemoveItem(AbstractEntity item);
 
+		public abstract System.Collections.IList GetItemCollection();
+
 		#endregion
 
 		public static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
@@ -164,6 +166,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			var source = this.source ();
 			var collection = this.collectionResolver (source);
 			return collection.Remove (item as T3);
+		}
+
+		public override System.Collections.IList GetItemCollection()
+		{
+			var source = this.source ();
+			var collection = this.collectionResolver (source);
+			return collection as System.Collections.IList;
 		}
 
 		private readonly System.Func<T1> source;

@@ -182,6 +182,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
 				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
 			}
+
+			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
 		}
 
 		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)

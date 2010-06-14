@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+#if false
 	public abstract class TileController : ITileController
 	{
 		public abstract EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator);
@@ -33,4 +34,5 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EntityViewController.CreateEntityViewController ("ViewController", this.Entity, this.ChildrenMode, orchestrator);
 		}
 	}
+#endif
 }
