@@ -26,9 +26,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var data = containerController.DataItems;
 
 			this.CreateUICustomer (data);
-			this.CreateUIPerson (data);
-			this.CreateUISalesRepresentative (data);
-			this.CreateUIDefaultAddress (data);
 			this.CreateUIMailContacts (data);
 			this.CreateUITelecomContacts (data);
 			this.CreateUIUriContacts (data);
@@ -46,113 +43,71 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Customer",
 					Title				= UIBuilder.FormatText ("Client"),
 					CompactTitle		= UIBuilder.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Id)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Id)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "~Représentant: ", this.SalesRepresentativeText)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonCompactText)),
 					EntityAccessor		= this.EntityGetter,
 				});
 		}
 
-		private void CreateUIPerson(SummaryDataItems data)
+		private FormattedText PersonText
 		{
-			if (this.Entity.Person is Entities.NaturalPersonEntity)
+			get
 			{
-				System.Func<Entities.NaturalPersonEntity > entityGetter = () => this.Entity.Person as Entities.NaturalPersonEntity;
+				if (this.Entity.Person is Entities.NaturalPersonEntity)
+				{
+					var x = this.Entity.Person as Entities.NaturalPersonEntity;
 
-				data.Add (
-					new SummaryData
-					{
-						Name				= "NaturalPerson",
-						IconUri				= "Data.NaturalPerson",
-						Title				= UIBuilder.FormatText ("Personne physique"),
-						CompactTitle		= UIBuilder.FormatText ("Personne"),
-						TextAccessor		= Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
-						CompactTextAccessor = Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
-						EntityAccessor		= entityGetter,
-					});
-			}
+					return UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate);
+				}
 
-			if (this.Entity.Person is Entities.LegalPersonEntity)
-			{
-				System.Func<Entities.LegalPersonEntity > entityGetter = () => this.Entity.Person as Entities.LegalPersonEntity;
+				if (this.Entity.Person is Entities.LegalPersonEntity)
+				{
+					var x = this.Entity.Person as Entities.LegalPersonEntity;
 
-				data.Add (
-					new SummaryData
-					{
-						Name				= "LegalPerson",
-						IconUri				= "Data.LegalPerson",
-						Title				= UIBuilder.FormatText ("Personne morale"),
-						CompactTitle		= UIBuilder.FormatText ("Personne"),
-						TextAccessor		= Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Name)),
-						CompactTextAccessor = Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Name)),
-						EntityAccessor		= entityGetter,
-					});
+					return UIBuilder.FormatText (x.Name);
+				}
+
+				return FormattedText.Empty;
 			}
 		}
 
-		private void CreateUISalesRepresentative(SummaryDataItems data)
+		private FormattedText PersonCompactText
 		{
-			if (this.Entity.SalesRepresentative == null)
+			get
 			{
-				data.Add (
-					new SummaryData
-					{
-						Name		 = "SalesRepresentative",
-						IconUri		 = "Data.NaturalPerson",
-						Title		 = UIBuilder.FormatText ("Représentant"),
-						CompactTitle = UIBuilder.FormatText ("Représentant"),
-						Text		 = UIBuilder.FormatText ("<i>vide</i>")
-					});
-			}
-			else
-			{
-				System.Func<Entities.NaturalPersonEntity > entityGetter = () => this.Entity.SalesRepresentative;
+				if (this.Entity.Person is Entities.NaturalPersonEntity)
+				{
+					var x = this.Entity.Person as Entities.NaturalPersonEntity;
 
-				data.Add (
-					new SummaryData
-					{
-						Name				= "SalesRepresentative",
-						IconUri				= "Data.NaturalPerson",
-						Title				= UIBuilder.FormatText ("Représentant"),
-						CompactTitle		= UIBuilder.FormatText ("Représentant"),
-						TextAccessor		= Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
-						CompactTextAccessor = Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
-						EntityAccessor		= entityGetter,  // TODO: ce n'est pas ça...
-					});
+					return UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
+				}
+
+				if (this.Entity.Person is Entities.LegalPersonEntity)
+				{
+					var x = this.Entity.Person as Entities.LegalPersonEntity;
+
+					return UIBuilder.FormatText (x.Name);
+				}
+
+				return FormattedText.Empty;
 			}
 		}
 
-		private void CreateUIDefaultAddress(SummaryDataItems data)
+		private FormattedText SalesRepresentativeText
 		{
-			if (this.Entity.DefaultAddress == null)  // TODO: comment tester si l'adresse par défaut n'existe pas ?
-			//?if (this.Entity.DefaultAddress.IsDefiningOriginalValues)  // TODO: comment tester si l'adresse par défaut n'existe pas ?
+			get
 			{
-				data.Add (
-					new SummaryData
-					{
-						Name		 = "DefaultAddress",
-						IconUri		 = "Data.Mail",
-						Title		 = UIBuilder.FormatText ("Adresse par défaut du client"),
-						CompactTitle = UIBuilder.FormatText ("Adresse par défaut"),
-						Text		 = UIBuilder.FormatText ("<i>vide</i>")
-					});
-			}
-			else
-			{
-				System.Func<Entities.AddressEntity > entityGetter = () => this.Entity.DefaultAddress;
+				if (this.Entity.SalesRepresentative is Entities.NaturalPersonEntity)
+				{
+					var x = this.Entity.SalesRepresentative as Entities.NaturalPersonEntity;
 
-				data.Add (
-					new SummaryData
-					{
-						Name				= "DefaultAddress",
-						IconUri				= "Data.Mail",
-						Title				= UIBuilder.FormatText ("Adresse par défaut du client"),
-						CompactTitle		= UIBuilder.FormatText ("Adresse par défaut"),
-						TextAccessor		= Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Street.StreetName, "\n", x.Street.Complement, "\n", x.PostBox.Number, "\n", x.Location.Country.Code, "~-", x.Location.PostalCode, x.Location.Name)),
-						CompactTextAccessor = Accessor.Create (entityGetter, x => UIBuilder.FormatText (x.Street.StreetName, "~,", x.Location.PostalCode, x.Location.Name)),
-						EntityAccessor		= entityGetter,  // TODO: ce n'est pas ça...
-					});
+					return UIBuilder.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
+				}
+
+				return FormattedText.Empty;
 			}
 		}
+
 
 		private void CreateUIMailContacts(SummaryDataItems data)
 		{
