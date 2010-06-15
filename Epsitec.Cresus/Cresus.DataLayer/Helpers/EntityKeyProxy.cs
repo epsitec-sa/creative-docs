@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 	internal class EntityKeyProxy : IEntityProxy
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityDataProxy"/> class.
+		/// Initializes a new instance of the <see cref="EntityKeyProxy"/> class.
 		/// </summary>
 		/// <param name="context">The context.</param>
 		/// <param name="rowKey">The row key.</param>

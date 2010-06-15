@@ -330,6 +330,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.entityFields[entityId];
 		}
 
+
+		public StructuredTypeField GetEntityFieldDefinition(Druid entityId, string fieldId)
+		{
+			IStructuredType entityType = this.GetStructuredType (entityId);
+			StructuredTypeField field = entityType.GetField (fieldId);
+
+			return field;
+		}
+
+
+
 		public IEnumerable<StructuredTypeField> ComputeEntityFieldDefinitions(Druid entityId)
 		{
 			IStructuredType entityType = this.GetStructuredType (entityId);
@@ -578,46 +589,43 @@ namespace Epsitec.Common.Support.EntityEngine
 		
 		public IEnumerable<string> GetDefinedFieldIds(AbstractEntity entity)
 		{
-			HashSet<string> ids = new HashSet<string> ();
-			List<StructuredTypeField> fields = this.GetEntityFieldDefinitions (entity.GetEntityStructuredTypeId ()).ToList ();
+			return this.GetEntityFieldIds (entity).Where (f => this.IsFieldDefined (f, entity));
+		}
 
-			foreach (IValueStore store in entity.InternalGetValueStores ())
+
+		public bool IsFieldDefined(string fieldId, AbstractEntity entity)
+		{
+			bool isDefined;
+			
+			IStructuredType entityType = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+			StructuredTypeField field = entityType.GetField (fieldId);
+
+			object value = entity.InternalGetValueOrFieldCollection (fieldId);
+
+			switch (field.Relation)
 			{
-				Data dataStore = store as Data;
+				case FieldRelation.None:
+				case FieldRelation.Reference:
 
-				foreach (string id in dataStore.GetIds ())
-				{
-					StructuredTypeField field = fields.First (f => f.Id == id);
-					object value = store.GetValue(id);
+					isDefined = (value != null) && (value != UndefinedValue.Value);
 
-					switch (field.Relation)
-                    {
-                    	case FieldRelation.None:
-                    	case FieldRelation.Reference:
+					break;
 
-							if (value != null)
-							{
-								ids.Add (id);
-							}
+				case FieldRelation.Collection:
 
-                    		break;
+					IList values = value as IList;
 
-                    	case FieldRelation.Collection:
+					isDefined = (values != null) && (values.Count > 0);
 
-							IList values = value as IList;
+					break;
 
-							if (values != null && values.Count > 0)
-							{
-								ids.Add (id);
-							}
-
-                    		break;
-                    }
-				}
+				default:
+					throw new System.NotSupportedException ();
 			}
 
-			return ids;
+			return isDefined;
 		}
+
 
 		public INamedType GetFieldType(AbstractEntity entity, string id)
 		{

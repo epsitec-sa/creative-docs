@@ -3,6 +3,9 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -52,6 +55,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			return new DbConditionCombiner (op, left, right);
 		}
 
+
+		internal override IEnumerable<Druid> GetFields()
+		{
+			IEnumerable<Druid> left = this.Left.GetFields ();
+			IEnumerable<Druid> right = this.Right.GetFields ();
+
+			return left.Concat (right);
+		}
 
 	}
 

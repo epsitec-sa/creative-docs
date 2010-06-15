@@ -1,9 +1,9 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
