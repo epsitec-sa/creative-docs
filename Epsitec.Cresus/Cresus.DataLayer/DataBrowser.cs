@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.EntityData;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Helpers;
 using Epsitec.Cresus.DataLayer.TableAlias;
 
@@ -19,8 +20,6 @@ namespace Epsitec.Cresus.DataLayer
 {
 	
 
-	// TODO Add sorting criteria
-	// TODO Add comparison criteria
 	public class DataBrowser
 	{
 
@@ -64,12 +63,19 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example, bool loadFromDatabase = true)
-			where TEntity : AbstractEntity
+		public IEnumerable<T> GetByExample<T>(T example, bool loadFromDatabase = true)
+			where T : AbstractEntity
 		{
-			foreach (EntityDataContainer entityData in this.GetEntitiesData (example))
+			return this.GetByExample<T> (example, new EntityConstrainer (), loadFromDatabase);
+		}
+
+
+		public IEnumerable<T> GetByExample<T>(T example, EntityConstrainer entityConstrainer, bool loadFromDatabase = true)
+			where T : AbstractEntity
+		{
+			foreach (EntityDataContainer entityData in this.GetEntitiesData (example, entityConstrainer))
 			{
-				TEntity entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as TEntity;
+				T entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as T;
 
 				if (entity != null)
 				{
@@ -79,13 +85,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
-		{
-			return this.GetReferencers (target, true);
-		}
-
-
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, bool loadFromDatabase)
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, bool loadFromDatabase = true)
 		{
 			EntityDataMapping targetMapping = this.DataContext.FindEntityDataMapping (target);
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private IEnumerable<EntityDataContainer> GetEntitiesData(AbstractEntity example)
+		private IEnumerable<EntityDataContainer> GetEntitiesData(AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> valuesData;
 			Dictionary<DbKey, EntityReferenceDataContainer> referencesData;
@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData (transaction, example);
-				referencesData = this.GetReferenceData (transaction, example);
-				collectionsData = this.GetCollectionData (transaction, example);
+				valuesData = this.GetValueData (transaction, example, entityConstrainer);
+				referencesData = this.GetReferenceData (transaction, example, entityConstrainer);
+				collectionsData = this.GetCollectionData (transaction, example, entityConstrainer);
 
 				transaction.Commit ();
 			}
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> GetValueData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> GetValueData(DbTransaction transaction, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueDataContainer>> ();
 
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
-			using (DbReader reader = this.CreateValuesReader (entityId, example))
+			using (DbReader reader = this.CreateValuesReader (entityId, example, entityConstrainer))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private DbReader CreateValuesReader(Druid entityId, AbstractEntity example)
+		private DbReader CreateValuesReader(Druid entityId, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -209,14 +209,14 @@ namespace Epsitec.Cresus.DataLayer
 
 			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
-			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
+			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example, entityConstrainer);
 			this.AddQueryForValues (tableAliasManager, reader, entityId, example);
 
 			return reader;
 		}
 
 
-		private Dictionary<DbKey, EntityReferenceDataContainer> GetReferenceData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, EntityReferenceDataContainer> GetReferenceData(DbTransaction transaction, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			Dictionary<DbKey, EntityReferenceDataContainer> references = new Dictionary<DbKey, EntityReferenceDataContainer> ();
 
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
-			using (DbReader reader = this.CreateReferencesReader (entityId, example))
+			using (DbReader reader = this.CreateReferencesReader (entityId, example, entityConstrainer))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example)
+		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -268,14 +268,14 @@ namespace Epsitec.Cresus.DataLayer
 
 			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
-			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
+			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example, entityConstrainer);
 			this.AddQueryForReferences (tableAliasManager, reader, entityId, example);
 
 			return reader;
 		}
 
 
-		private Dictionary<DbKey, EntityCollectionDataContainer> GetCollectionData(DbTransaction transaction, AbstractEntity example)
+		private Dictionary<DbKey, EntityCollectionDataContainer> GetCollectionData(DbTransaction transaction, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			Dictionary<DbKey, EntityCollectionDataContainer> collectionData = new Dictionary<DbKey, EntityCollectionDataContainer> ();
 
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
 				{
-					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, currentId, example, field))
+					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, currentId, example, field, entityConstrainer))
 					{
 						if (!collectionData.ContainsKey (relation.Item1))
 						{
@@ -301,9 +301,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field, EntityConstrainer entityConstrainer)
 		{
-			using (DbReader reader = this.CreateCollectionReader (entityId, example, field))
+			using (DbReader reader = this.CreateCollectionReader (entityId, example, field, entityConstrainer))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private DbReader CreateCollectionReader(Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private DbReader CreateCollectionReader(Druid entityId, AbstractEntity example, StructuredTypeField field, EntityConstrainer entityConstrainer)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
-			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example);
+			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example, entityConstrainer);
 			this.AddQueryForCollection (tableAliasManager, reader, entityId, example, field);
 			this.AddSortOrderOnRank (tableAliasManager, reader, entityId, example, field);
 
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddConditionsForEntity(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
+		private void AddConditionsForEntity(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, EntityConstrainer entityConstrainer)
 		{
 			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
 			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
@@ -363,9 +363,30 @@ namespace Epsitec.Cresus.DataLayer
 
 				foreach (StructuredTypeField field in localDefinedFields)
 				{
-					this.AddConditionForField (tableAliasManager, reader, currentEntityId, example, field);
+					this.AddConditionForField (tableAliasManager, reader, currentEntityId, example, field, entityConstrainer);
 				}
 			}
+
+			foreach (Expression constraint in entityConstrainer.GetLocalConstraints (example))
+			{
+				this.AddConditionForLocalConstraint (tableAliasManager, reader, example, constraint);
+			}
+		}
+
+
+		private void AddConditionForLocalConstraint(TableAliasManager tableAliasManager, DbReader reader, AbstractEntity example, Expression constraint)
+		{
+			DbSelectCondition selectCondition = new DbSelectCondition ()
+			{
+				Condition = constraint.CreateDbAbstractCondition (example, d =>
+				{
+					// TODO
+					return null;
+				}),
+			};
+
+			// TODO Uncomment this.
+			//reader.AddCondition (selectCondition);
 		}
 
 
@@ -382,7 +403,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddConditionForField(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field)
+		private void AddConditionForField(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field, EntityConstrainer entityConstrainer)
 		{
 			switch (field.Relation)
 			{
@@ -391,12 +412,12 @@ namespace Epsitec.Cresus.DataLayer
 					break;
 
 				case FieldRelation.Reference:
-					this.AddConditionForReference (tableAliasManager, reader, currentEntityId, example, field, example.InternalGetValue (field.Id) as AbstractEntity);
+					this.AddConditionForReference (tableAliasManager, reader, currentEntityId, example, field, example.InternalGetValue (field.Id) as AbstractEntity, entityConstrainer);
 					break;
 
 
 				case FieldRelation.Collection:
-					this.AddConditionForCollection (tableAliasManager, reader, currentEntityId, example, field);
+					this.AddConditionForCollection (tableAliasManager, reader, currentEntityId, example, field, entityConstrainer);
 					break;
 			}
 		}
@@ -453,11 +474,11 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddConditionForReference(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField, AbstractEntity targetExample)
+		private void AddConditionForReference(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField, AbstractEntity targetExample, EntityConstrainer entityConstrainer)
 		{
 			if (this.DataContext.FindEntityDataMapping (targetExample) == null)
 			{
-				this.AddContidionForReferenceByValue (tableAliasManager, reader, sourceEntityId, sourceExample, sourceField, targetExample);
+				this.AddContidionForReferenceByValue (tableAliasManager, reader, sourceEntityId, sourceExample, sourceField, targetExample, entityConstrainer);
 			}
 			else
 			{
@@ -466,14 +487,14 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddContidionForReferenceByValue(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField, AbstractEntity targetExample)
+		private void AddContidionForReferenceByValue(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField, AbstractEntity targetExample, EntityConstrainer entityConstrainer)
 		{
 			Druid targetEntityId = targetExample.GetEntityStructuredTypeId ();
 
 			this.AddJoinFromEntityTableToRelationTable (tableAliasManager, reader, sourceEntityId, sourceField, SqlJoinCode.Inner);
 			this.AddJoinFromRelationTableToTargetTable (tableAliasManager, reader, sourceEntityId, sourceField, targetEntityId, SqlJoinCode.Inner);
 
-			this.AddConditionsForEntity (tableAliasManager, reader, targetEntityId, targetExample);
+			this.AddConditionsForEntity (tableAliasManager, reader, targetEntityId, targetExample, entityConstrainer);
 
 			tableAliasManager.GetPreviousEntityAlias ();
 			tableAliasManager.GetPreviousEntityAlias ();
@@ -490,11 +511,11 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddConditionForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField)
+		private void AddConditionForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, AbstractEntity sourceExample, StructuredTypeField sourceField, EntityConstrainer entityConstrainer)
 		{
 			foreach (object targetExample in sourceExample.InternalGetFieldCollection (sourceField.Id))
 			{
-				this.AddConditionForReference (tableAliasManager, reader, sourceEntityId, sourceExample, sourceField, targetExample as AbstractEntity);
+				this.AddConditionForReference (tableAliasManager, reader, sourceEntityId, sourceExample, sourceField, targetExample as AbstractEntity, entityConstrainer);
 			}
 		}
 

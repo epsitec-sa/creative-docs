@@ -20,7 +20,7 @@
 		}
 
 
-		public TableAliasNode(string name, string alias)
+		protected TableAliasNode(string name, string alias)
 		{
 			this.Name = name;
 			this.Alias = alias;

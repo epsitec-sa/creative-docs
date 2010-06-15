@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public IEnumerable<Expression> GetLocalConstraints(AbstractEntity entity)
+		internal IEnumerable<Expression> GetLocalConstraints(AbstractEntity entity)
 		{
 			if (this.IsLocalyConstrained (entity))
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public bool IsLocalyConstrained(AbstractEntity entity)
+		internal bool IsLocalyConstrained(AbstractEntity entity)
 		{
 			return this.localConstraints.ContainsKey (entity);
 		}

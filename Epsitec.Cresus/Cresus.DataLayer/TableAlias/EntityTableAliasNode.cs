@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 
 namespace Epsitec.Cresus.DataLayer.TableAlias
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 			this.entityNodes = new List<EntityTableAliasNode> ();
 			this.subtypeNodes = new List<SubtypeTableAliasNode> ();
-		}
+		}         
 
 
 		public EntityTableAliasNode GetParentNode()
@@ -53,19 +54,13 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 		public SubtypeTableAliasNode GetSubtypeNode(string name)
 		{
-			return this.GetSubtypeNode (name, 0);
+			return this.subtypeNodes.Where (n => n.Name == name).FirstOrDefault ();
 		}
 
 
 		public EntityTableAliasNode GetEntityNode(string name, int position)
 		{
 			return this.entityNodes.Where (n => n.Name == name).ElementAtOrDefault (position);
-		}
-
-
-		public SubtypeTableAliasNode GetSubtypeNode(string name, int position)
-		{
-			return this.subtypeNodes.Where (n => n.Name == name).ElementAtOrDefault (position);
 		}
 
 

@@ -62,7 +62,12 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 		public string GetNextSubtypeAlias(string name)
 		{
-			return this.GetNextSubtypeAlias (name, 0);
+			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (name);
+
+			this.currentSubtypeNodes.Pop ();
+			this.currentSubtypeNodes.Push (currentSubtypeNode);
+
+			return this.GetCurrentSubtypeAlias ();
 		}
 
 
@@ -72,17 +77,6 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 			this.currentSubtypeNodes.Push (null);
 
 			return this.GetCurrentEntityAlias ();
-		}
-
-
-		public string GetNextSubtypeAlias(string name, int position)
-		{
-			SubtypeTableAliasNode currentSubtypeNode = this.currentEntityNode.GetSubtypeNode (name, position);
-
-			this.currentSubtypeNodes.Pop ();
-			this.currentSubtypeNodes.Push (currentSubtypeNode);
-
-			return this.GetCurrentSubtypeAlias ();
 		}
 
 
