@@ -878,6 +878,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		internal void NotifyEntityChanged(AbstractEntity entity, string id, object oldValue, object newValue)
 		{
 //-			System.Diagnostics.Debug.WriteLine (string.Format ("Entity {0}.{1} changed from {2} to {3}", entity.GetEntitySerialId (), id, oldValue, newValue));
+			this.OnEntityChanged (new EntityChangedEventArgs (entity, id, oldValue, newValue));
 		}
 
 		protected virtual void OnEntityAttached(EntityEventArgs e)
@@ -902,6 +903,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			lock (this.eventExclusion)
 			{
 				handler = this.entityDetachedEvent;
+			}
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		protected virtual void OnEntityChanged(EntityChangedEventArgs e)
+		{
+			EventHandler<EntityChangedEventArgs> handler;
+
+			lock (this.eventExclusion)
+			{
+				handler = this.entityChangedEvent;
 			}
 
 			if (handler != null)
@@ -1122,6 +1138,24 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public event EventHandler<EntityChangedEventArgs> EntityChanged
+		{
+			add
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityChangedEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.eventExclusion)
+				{
+					this.entityChangedEvent -= value;
+				}
+			}
+		}
+
 		[System.ThreadStatic]
 		private static EntityContext current;
 
@@ -1132,6 +1166,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private EventHandler<EntityEventArgs> entityAttachedEvent;
         private EventHandler<EntityEventArgs> entityDetachedEvent;
+        private EventHandler<EntityChangedEventArgs> entityChangedEvent;
 
 		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;

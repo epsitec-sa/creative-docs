@@ -446,6 +446,17 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
+		{
+			base.OnCollectionChanged (e);
+
+			if (this.container != null)
+			{
+				var context = this.container.GetEntityContext ();
+				context.NotifyEntityChanged (this.container, this.containerFieldId, null, null);
+			}
+		}
+
 		private readonly string containerFieldId;
 		private readonly AbstractEntity container;
 		private State state;
