@@ -450,8 +450,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			base.OnCollectionChanged (e);
 
-			if (this.container != null)
+			if ((this.container != null) &&
+				(this.containerFieldId != null))
 			{
+				//	Notifies the entity context that the containing entity changed, since
+				//	one of its collections changed.
+
 				var context = this.container.GetEntityContext ();
 				context.NotifyEntityChanged (this.container, this.containerFieldId, null, null);
 			}

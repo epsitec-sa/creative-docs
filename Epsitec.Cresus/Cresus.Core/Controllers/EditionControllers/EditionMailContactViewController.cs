@@ -22,20 +22,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			var builder = new UIBuilder (container, this);
+			using (var builder = new UIBuilder (container, this))
+			{
+				builder.CreateHeaderEditorTile ();
+				builder.CreateEditionTitleTile ("Data.Mail", "Adresse");
 
-			builder.CreateHeaderEditorTile ();
-			builder.CreateEditionTitleTile ("Data.Mail", "Adresse");
+				this.CreateUIRoles (builder);
+				this.CreateUIMargin (builder);
+				this.CreateUICountry (builder);
+				this.CreateUIMain (builder);
+				this.CreateUILocation (builder);
 
-			this.CreateUIRoles (builder);
-			this.CreateUIMargin (builder);
-			this.CreateUICountry (builder);
-			this.CreateUIMain (builder);
-			this.CreateUILocation (builder);
-
-			builder.CreateFooterEditorTile ();
-
-			UI.SetInitialFocus (container);
+				builder.CreateFooterEditorTile ();
+			}
 		}
 
 

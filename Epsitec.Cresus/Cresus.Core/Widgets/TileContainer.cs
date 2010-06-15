@@ -52,12 +52,13 @@ namespace Epsitec.Cresus.Core.Widgets
 				(dir == TabNavigationDir.Forwards))
             {
 				var e = new TabNavigateEventArgs (dir);
+				var window = this.Window;
 
 				this.OnTabNavigating (e);
 
 				if (e.Cancel)
 				{
-					return this;
+					return window.FocusedWidget ?? this;
 				}
 
 				var result = e.ReplacementWidget;
