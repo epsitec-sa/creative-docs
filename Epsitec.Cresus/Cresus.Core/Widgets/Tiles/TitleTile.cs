@@ -231,8 +231,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				bool hilite = this.IsEntered;
 
-				if ((hilite) &&
-					(this.items.Any (x => x.IsEntered)))
+				if (hilite && this.items.Any (x => x.IsEntered))
 				{
 					hilite = false;
 				}
@@ -349,11 +348,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if (this.IsEntered)
-				{
-					return Widgets.TileArrowMode.VisibleDirect;
-				}
-
 				if (this.HasSelectedChild)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
@@ -407,14 +401,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				if (this.IsReadOnly)
-				{
-					if (this.IsEntered)
-					{
-						return Tile.ThicknessHilitedColors;
-					}
-				}
-
 				return null;
 			}
 		}

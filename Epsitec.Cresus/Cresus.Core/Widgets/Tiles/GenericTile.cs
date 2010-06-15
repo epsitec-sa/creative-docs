@@ -235,14 +235,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					{
 						if (this.IsEntered || this.Hilited)
 						{
-							if (this.IsSelected)
-							{
-								return Tile.SurfaceHilitedColors;
-							}
-							else
-							{
-								return Tile.ThicknessHilitedColors;
-							}
+							return Tile.SurfaceHilitedColors;
 						}
 					}
 

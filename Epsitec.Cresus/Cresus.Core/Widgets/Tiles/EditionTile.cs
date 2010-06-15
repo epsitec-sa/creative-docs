@@ -121,11 +121,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					return Widgets.TileArrowMode.VisibleReverse;
 				}
 
-				if (this.TileArrowHilite)
-				{
-					return Widgets.TileArrowMode.VisibleDirect;
-				}
-
 				if (this.IsSelected)
 				{
 					return Widgets.TileArrowMode.VisibleDirect;
@@ -185,14 +180,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				if (this.AllowSelection)
-				{
-					if (this.TileArrowHilite)
-					{
-						return Tile.ThicknessHilitedColors;
-					}
-				}
-
 				return null;
 			}
 		}

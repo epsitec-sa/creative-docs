@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				// TODO: Adapter aux autres adorners
 				List<Color> colors = new List<Color> ();
 
-				colors.Add (Color.FromHexa ("eef6ff"));  // bleu très très clair
+				colors.Add (Color.FromHexa ("daebff"));  // bleu très clair
 				colors.Add (Color.FromHexa ("ffffff"));  // blanc
 
 				return colors;
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				// TODO: Adapter aux autres adorners
 				List<Color> colors = new List<Color> ();
 
-				colors.Add (Color.FromHexa ("ffeec2"));  // jaune-orange pâle
+				colors.Add (Color.FromHexa ("eef6ff"));  // bleu pâle
 				colors.Add (Color.FromHexa ("ffffff"));  // blanc
 
 				return colors;
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				// TODO: Adapter aux autres adorners
 				List<Color> colors = new List<Color> ();
 
-				colors.Add (Color.FromHexa ("ffc83c"));  // jaune-orange
+				colors.Add (Color.FromHexa ("b3d7ff"));  // bleu
 
 				return colors;
 			}
