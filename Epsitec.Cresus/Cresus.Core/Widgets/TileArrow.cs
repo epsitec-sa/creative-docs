@@ -115,9 +115,17 @@ namespace Epsitec.Cresus.Core.Widgets
 						}
 						else
 						{
+							Color right = Color.FromName ("White");
+
+							if (this.SurfaceColor == Tile.SurfaceSelectedGroupingColor ||
+								this.SurfaceColor == Tile.SurfaceSelectedContainerColor)
+							{
+								right = Color.FromHexa ("fcd123");
+							}
+
 							graphics.GradientRenderer.Fill = GradientFill.X;
 							graphics.GradientRenderer.SetParameters (-50, 100);
-							graphics.GradientRenderer.SetColors (this.SurfaceColor, Color.FromName ("White"));
+							graphics.GradientRenderer.SetColors (this.SurfaceColor, right);
 
 							Transform t = Transform.Identity;
 							Point center = bounds.Center;

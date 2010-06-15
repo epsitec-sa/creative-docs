@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffe195");  // orange très pâle
+				return Color.FromHexa ("ffba49");  // orange clair
 			}
 		}
 
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffd873");  // orange pâle
+				return Color.FromHexa ("f99d08");  // orange
 			}
 		}
 
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("def1ff");  // bleu pâle
+				return Color.FromHexa ("ffeec2");  // jaune-orange pâle
 			}
 		}
 
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("afdcff");  // bleu
+				return Color.FromHexa ("ffc83c");  // jaune-orange
 			}
 		}
 #endif
