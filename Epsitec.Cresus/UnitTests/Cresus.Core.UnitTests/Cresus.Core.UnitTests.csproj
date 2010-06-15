@@ -67,6 +67,7 @@
     <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
+    <Compile Include="UnitTestEntityConstrainer.cs" />
     <Compile Include="UnitTestPerformance.cs" />
     <Compile Include="UnitTestDataBrowser.cs" />
     <Compile Include="UnitTestDataContext.cs" />

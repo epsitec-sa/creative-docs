@@ -3,6 +3,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -44,6 +46,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			DbConditionModifierOperator op = OperatorConverter.ToDbConditionModifierOperator (this.Operator);
 
 			return new DbConditionModifier (op, condition);
+		}
+
+
+		internal override IEnumerable<Druid> GetFields()
+		{
+			return this.Expression.GetFields ();
 		}
 
 

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		internal abstract DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
+		protected abstract DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
 
 
 	}

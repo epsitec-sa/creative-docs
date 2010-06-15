@@ -3,6 +3,9 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -26,13 +29,19 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		internal override DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		protected override DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn left = this.Left.CreateDbTableColumn (entity, dbTableColumnResolver);
 			DbSimpleConditionOperator op = OperatorConverter.ToDbSimpleConditionOperator (this.Operator);
 			DbTableColumn right = this.Right.CreateDbTableColumn (entity, dbTableColumnResolver);
 
 			return new DbSimpleCondition (left, op, right);
+		}
+
+
+		internal override IEnumerable<Druid> GetFields()
+		{
+			return new Druid[] { this.Left.FieldId, this.Right.FieldId, };
 		}
 
 
