@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						{
 							graphics.GradientRenderer.Fill = GradientFill.Circle;
 							graphics.GradientRenderer.SetParameters (0, 100);
-							graphics.GradientRenderer.SetColors (this.surfaceColors[1], this.surfaceColors[0]);
+							graphics.GradientRenderer.SetColors (this.surfaceColors[1], this.surfaceColors[0]);  // [0] dans les bords, [1] au centre
 
 							Transform t = Transform.Identity;
 							Point center = bounds.Center;
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						{
 							graphics.GradientRenderer.Fill = GradientFill.X;
 							graphics.GradientRenderer.SetParameters (-50, 100);
-							graphics.GradientRenderer.SetColors (this.surfaceColors[0], this.surfaceColors[1]);
+							graphics.GradientRenderer.SetColors (this.surfaceColors[0], this.surfaceColors[1]);  // [0] à gauche, [1] à droite
 
 							Transform t = Transform.Identity;
 							Point center = bounds.Center;
