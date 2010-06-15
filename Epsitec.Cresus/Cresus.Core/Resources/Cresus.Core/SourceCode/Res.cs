@@ -12,6 +12,26 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Commands
 		{
+			public static class Base
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0A23
+				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
+			}
+			
+			public static class Edition
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0A13
+				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97));
+			}
+			
 			public static class Test
 			{
 				internal static void _Initialize()
@@ -24,12 +44,26 @@ namespace Epsitec.Cresus.Core
 			
 			internal static void _Initialize()
 			{
+				Base._Initialize ();
+				Edition._Initialize ();
 				Test._Initialize ();
 			}
 		}
 		
 		public static class CommandIds
 		{
+			public static class Base
+			{
+				//	designer:cap/L0A23
+				public const long ShowCustomers = 0x150000A000062L;
+			}
+			
+			public static class Edition
+			{
+				//	designer:cap/L0A13
+				public const long SaveRecord = 0x150000A000061L;
+			}
+			
 			public static class Test
 			{
 				//	designer:cap/L0A

@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = 200,
 			};
 
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
+
 			new FrameBox ()
 			{
 				Parent = section,
@@ -78,14 +80,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Name = "Database",
 				Title = "Bases de données",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = 240,
 			};
 
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
 		}
 
 		private void CreateRibbonStateSection()
@@ -97,12 +96,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
-
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
-
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
-			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
 		}
 
 		
