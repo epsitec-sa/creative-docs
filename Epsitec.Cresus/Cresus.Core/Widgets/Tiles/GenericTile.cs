@@ -92,13 +92,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return new TileArrow ()
-				{
-					OutlineColor   = this.GetOutlineColor (),
-					ThicknessColor = this.GetThicknessColor (),
-					SurfaceColor   = this.GetSurfaceColor (),
-					MouseHilite    = this.GetMouseHilite (),
-				};
+				var arrow = new TileArrow ();
+
+				arrow.SetOutlineColors   (this.GetOutlineColors);
+				arrow.SetThicknessColors (this.GetThicknessColors);
+				arrow.SetSurfaceColors   (this.GetSurfaceColors);
+				arrow.MouseHilite = this.GetMouseHilite ();
+
+				return arrow;
 			}
 		}
 
@@ -106,13 +107,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return new TileArrow ()
-				{
-					OutlineColor   = this.GetReverseOutlineColor (),
-					ThicknessColor = this.GetReverseThicknessColor (),
-					SurfaceColor   = this.GetReverseSurfaceColor (),
-					MouseHilite    = true,
-				};
+				var arrow = new TileArrow ();
+
+				arrow.SetOutlineColors   (this.GetReverseOutlineColors);
+				arrow.SetThicknessColors (this.GetReverseThicknessColors);
+				arrow.SetSurfaceColors   (this.GetReverseSurfaceColors);
+				arrow.MouseHilite = true;
+
+				return arrow;
 			}
 		}
 
@@ -212,84 +214,103 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private bool GetMouseHilite()
 		{
-			return this.GetSurfaceColor () == Tile.SurfaceHilitedColor;
+			List<Color> surfaceColors = this.GetSurfaceColors;
+			return surfaceColors != null && surfaceColors.Count > 0 && surfaceColors[0] == Tile.SurfaceHilitedColor[0];
 		}
 
-		private Color GetSurfaceColor()
+		private List<Color> GetSurfaceColors
 		{
-			if (this.IsReadOnly == false)
+			get
 			{
-				return Tile.SurfaceEditingColor;
-			}
-			else if (this.IsCompact)
-			{
-				if (this.AutoHilite)
+				if (this.IsReadOnly == false)
 				{
-					if (this.IsEntered || this.Hilited)
+					return Tile.SurfaceEditingColor;
+				}
+				else if (this.IsCompact)
+				{
+					if (this.AutoHilite)
 					{
-						if (this.IsSelected)
+						if (this.IsEntered || this.Hilited)
 						{
-							return Tile.SurfaceHilitedColor;
+							if (this.IsSelected)
+							{
+								return Tile.SurfaceHilitedColor;
+							}
+							else
+							{
+								return Tile.ThicknessHilitedColor;
+							}
 						}
-						else
-						{
-							return Tile.ThicknessHilitedColor;
-						}
+					}
+
+					if (this.IsSelected)
+					{
+						return Tile.SurfaceSelectedContainerColor;
 					}
 				}
 
-				if (this.IsSelected)
+				return null;
+			}
+		}
+
+		private List<Color> GetOutlineColors
+		{
+			get
+			{
+				if (this.IsCompact && this.IsReadOnly)
 				{
-					return Tile.SurfaceSelectedContainerColor;
+					if (this.AutoHilite && (this.IsEntered || this.Hilited))
+					{
+						return Tile.BorderColor;
+					}
+
+					if (this.IsSelected)
+					{
+						return Tile.BorderColor;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private List<Color> GetThicknessColors
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		private List<Color> GetReverseSurfaceColors
+		{
+			get
+			{
+				if (this.IsReadOnly == false)
+				{
+					return null;
+				}
+				else
+				{
+					return Tile.ThicknessHilitedColor;
 				}
 			}
-
-			return Color.Empty;
 		}
 
-		private Color GetOutlineColor()
+		private List<Color> GetReverseOutlineColors
 		{
-			if (this.IsCompact && this.IsReadOnly)
+			get
 			{
-				if (this.AutoHilite && (this.IsEntered || this.Hilited))
-				{
-					return Tile.BorderColor;
-				}
-
-				if (this.IsSelected)
-				{
-					return Tile.BorderColor;
-				}
-			}
-
-			return Color.Empty;
-		}
-
-		private Color GetThicknessColor()
-		{
-			return Color.Empty;
-		}
-
-		private Color GetReverseSurfaceColor()
-		{
-			if (this.IsReadOnly == false)
-			{
-				return Color.Empty;
-			}
-			else
-			{
-				return Tile.ThicknessHilitedColor;
+				return Tile.BorderColor;
 			}
 		}
 
-		private Color GetReverseOutlineColor()
+		private List<Color> GetReverseThicknessColors
 		{
-			return Tile.BorderColor;
-		}
-
-		private Color GetReverseThicknessColor()
-		{
-			return Color.Empty;
+			get
+			{
+				return null;
+			}
 		}
 
 

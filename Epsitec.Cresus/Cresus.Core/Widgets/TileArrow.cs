@@ -11,23 +11,44 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	public class TileArrow
 	{
-		public Color SurfaceColor
+		public TileArrow()
 		{
-			get;
-			set;
+			this.surfaceColors   = new List<Color> ();
+			this.outlineColors   = new List<Color> ();
+			this.thicknessColors = new List<Color> ();
 		}
 
-		public Color OutlineColor
+
+		public void SetSurfaceColors(List<Color> colors)
 		{
-			get;
-			set;
+			this.surfaceColors.Clear ();
+
+			if (colors != null)
+			{
+				this.surfaceColors.AddRange (colors);
+			}
 		}
 
-		public Color ThicknessColor
+		public void SetOutlineColors(List<Color> colors)
 		{
-			get;
-			set;
+			this.outlineColors.Clear ();
+
+			if (colors != null)
+			{
+				this.outlineColors.AddRange (colors);
+			}
 		}
+
+		public void SetThicknessColors(List<Color> colors)
+		{
+			this.thicknessColors.Clear ();
+
+			if (colors != null)
+			{
+				this.thicknessColors.AddRange (colors);
+			}
+		}
+
 
 		public bool MouseHilite
 		{
@@ -88,15 +109,17 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void PaintArrow(Graphics graphics, Rectangle bounds, System.Func<double, Path> pathProvider)
 		{
-			if (this.SurfaceColor.IsValid)
+			if (this.surfaceColors.Count > 0 && this.surfaceColors[0].IsValid)
 			{
 				using (Path path = pathProvider (0.5))
 				{
 					graphics.Rasterizer.AddSurface (path);
-#if false
-					graphics.RenderSolid (this.SurfaceColor);
-#else
-					if (this.SurfaceColor.IsValid)
+
+					if (this.surfaceColors.Count == 1)
+					{
+						graphics.RenderSolid (this.surfaceColors[0]);
+					}
+					else
 					{
 						Transform ot = graphics.GradientRenderer.Transform;
 
@@ -104,7 +127,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						{
 							graphics.GradientRenderer.Fill = GradientFill.Circle;
 							graphics.GradientRenderer.SetParameters (0, 100);
-							graphics.GradientRenderer.SetColors (Color.FromName ("White"), this.SurfaceColor);
+							graphics.GradientRenderer.SetColors (this.surfaceColors[1], this.surfaceColors[0]);
 
 							Transform t = Transform.Identity;
 							Point center = bounds.Center;
@@ -115,17 +138,9 @@ namespace Epsitec.Cresus.Core.Widgets
 						}
 						else
 						{
-							Color right = Color.FromName ("White");
-
-							if (this.SurfaceColor == Tile.SurfaceSelectedGroupingColor ||
-								this.SurfaceColor == Tile.SurfaceSelectedContainerColor)
-							{
-								right = Tile.SurfaceSelectedOppositeColor;
-							}
-
 							graphics.GradientRenderer.Fill = GradientFill.X;
 							graphics.GradientRenderer.SetParameters (-50, 100);
-							graphics.GradientRenderer.SetColors (this.SurfaceColor, right);
+							graphics.GradientRenderer.SetColors (this.surfaceColors[0], this.surfaceColors[1]);
 
 							Transform t = Transform.Identity;
 							Point center = bounds.Center;
@@ -137,25 +152,24 @@ namespace Epsitec.Cresus.Core.Widgets
 
 						graphics.GradientRenderer.Transform = ot;
 					}
-#endif
 				}
 			}
-			
-			if (this.ThicknessColor.IsValid)
+
+			if (this.thicknessColors.Count > 0 && this.thicknessColors[0].IsValid)
 			{
 				using (Path path = pathProvider (2.0))
 				{
 					graphics.Rasterizer.AddOutline (path, 3.0);
-					graphics.RenderSolid (this.ThicknessColor);
+					graphics.RenderSolid (this.thicknessColors[0]);
 				}
 			}
-			
-			if (this.OutlineColor.IsValid)
+
+			if (this.outlineColors.Count > 0 && this.outlineColors[0].IsValid)
 			{
 				using (Path path = pathProvider (0.0))
 				{
 					graphics.Rasterizer.AddOutline (path, 1.0);
-					graphics.RenderSolid (this.OutlineColor);
+					graphics.RenderSolid (this.outlineColors[0]);
 				}
 			}
 		}
@@ -340,5 +354,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
+		private List<Color> surfaceColors;
+		private List<Color> outlineColors;
+		private List<Color> thicknessColors;
 	}
 }

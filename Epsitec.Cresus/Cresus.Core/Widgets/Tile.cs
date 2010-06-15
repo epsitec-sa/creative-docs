@@ -155,142 +155,100 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Colors
 
-#if false
-		public static Color BorderColor
+		public static List<Color> BorderColor
 		{
 			get
 			{
+				List<Color> colors = new List<Color> ();
+
 				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-				return adorner.ColorBorder;
+				colors.Add (adorner.ColorBorder);
+
+				return colors;
 			}
 		}
 
-		public static Color SurfaceSummaryColor
+		public static List<Color> SurfaceSummaryColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffffff");
+				List<Color> colors = new List<Color>();
+
+				colors.Add (Color.FromHexa ("ffffff"));  // blanc
+
+				return colors;
 			}
 		}
 
-		public static Color SurfaceEditingColor
+		public static List<Color> SurfaceEditingColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("eef6ff");  // bleu très très clair
+				List<Color> colors = new List<Color> ();
+
+				colors.Add (Color.FromHexa ("eef6ff"));  // bleu très très clair
+				colors.Add (Color.FromHexa ("ffffff"));  // blanc
+
+				return colors;
 			}
 		}
 
-		public static Color SurfaceSelectedGroupingColor
+		public static List<Color> SurfaceSelectedGroupingColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("d8e8fe");  // bleu très clair
+				List<Color> colors = new List<Color> ();
+
+				colors.Add (Color.FromHexa ("ffba49"));  // orange
+				colors.Add (Color.FromHexa ("fcd123"));  // jaune-orange clair
+
+				return colors;
 			}
 		}
 
-		public static Color SurfaceSelectedContainerColor
+		public static List<Color> SurfaceSelectedContainerColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("c6defe");  // bleu clair
+				List<Color> colors = new List<Color> ();
+
+				colors.Add (Color.FromHexa ("ffd672"));  // orange clair
+				colors.Add (Color.FromHexa ("fcd123"));  // jaune-orange clair
+
+				return colors;
 			}
 		}
 
-		public static Color SurfaceHilitedColor
+		public static List<Color> SurfaceHilitedColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffeec2");  // orange pâle
+				List<Color> colors = new List<Color> ();
+
+				colors.Add (Color.FromHexa ("ffeec2"));  // jaune-orange pâle
+				colors.Add (Color.FromHexa ("ffffff"));  // blanc
+
+				return colors;
 			}
 		}
 
-		public static Color ThicknessHilitedColor
+		public static List<Color> ThicknessHilitedColor
 		{
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffc83c");  // orange
-			}
-		}
-#else
-		public static Color BorderColor
-		{
-			get
-			{
-				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-				return adorner.ColorBorder;
-			}
-		}
+				List<Color> colors = new List<Color> ();
 
-		public static Color SurfaceSummaryColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffffff");
-			}
-		}
+				colors.Add (Color.FromHexa ("ffc83c"));  // jaune-orange
 
-		public static Color SurfaceEditingColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("eef6ff");  // bleu très très clair
+				return colors;
 			}
 		}
-
-		public static Color SurfaceSelectedGroupingColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffba49");  // orange
-			}
-		}
-
-		public static Color SurfaceSelectedContainerColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffd672");  // orange clair
-			}
-		}
-
-		public static Color SurfaceSelectedOppositeColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("fcd123");  // jaune-orange clair
-			}
-		}
-
-		public static Color SurfaceHilitedColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffeec2");  // jaune-orange pâle
-			}
-		}
-
-		public static Color ThicknessHilitedColor
-		{
-			get
-			{
-				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("ffc83c");  // jaune-orange
-			}
-		}
-#endif
 
 		#endregion
 
