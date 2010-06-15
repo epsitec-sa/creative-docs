@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Customer",
 					Title				= UIBuilder.FormatText ("Client"),
 					CompactTitle		= UIBuilder.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "~Représentant: ", this.SalesRepresentativeText)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Client depuis: ~", x.CustomerSince, "\n", "Représentant: ~", this.SalesRepresentativeText)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonCompactText)),
 					EntityAccessor		= this.EntityGetter,
 				});
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					var x = this.Entity.Person as Entities.NaturalPersonEntity;
 
-					return UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate);
+					return UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")");
 				}
 
 				if (this.Entity.Person is Entities.LegalPersonEntity)

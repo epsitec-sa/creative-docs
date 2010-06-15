@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var lastController = this.viewControllers.Pop ();
 			var leafController = this.GetLeafController ();
 
-			lastController.AboutToDispose (this.viewLayoutController.LastColumn);
+			lastController.CloseUI (this.viewLayoutController.LastColumn);
 
 			if ((leafController == null) ||
 				(leafController.DataContext != lastController.DataContext))
