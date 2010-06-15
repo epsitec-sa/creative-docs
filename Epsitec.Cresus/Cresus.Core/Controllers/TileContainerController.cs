@@ -18,6 +18,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
+using Epsitec.Common.Support.EntityEngine;
 
 	/// <summary>
 	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
@@ -32,11 +33,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container   = container;
 			this.dataItems   = new SummaryDataItems ();
 			this.activeItems = new List<SummaryData> ();
+			this.entityContext = EntityContext.Current;
+			this.refreshTimer = new Timer ()
+			{
+				AutoRepeat = 0.2,
+				Delay = 0.5,
+			};
 
+			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
 
 			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
+
+			this.entityContext.EntityChanged += this.HandleEntityChanged;
+			this.refreshTimer.Start ();
 		}
 
 
@@ -47,6 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.dataItems;
 			}
 		}
+
 
 		public void GenerateTiles()
 		{
@@ -99,6 +111,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Dispose()
 		{
+			this.refreshTimer.Stop ();
+
+			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
+			this.entityContext.EntityChanged -= this.HandleEntityChanged;
 			this.container.SizeChanged -= this.HandleContainerSizeChanged;
 			
 			this.GetTitleTiles ().ForEach (x => x.Parent = null);
@@ -140,6 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void RefreshDataTiles()
 		{
+			this.refreshNeeded = false;
 			this.SortActiveItems ();
 			this.CreateMissingSummaryTiles ();
 			this.RefreshTitleTiles ();
@@ -158,7 +175,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.LayoutTiles (this.container.ActualHeight);
 		}
 
-		
 		private static void DisposeDataItems(IEnumerable<SummaryData> collection)
 		{
 			foreach (var item in collection)
@@ -514,7 +530,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
 		private void HandleContainerSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			Size oldSize = (Size) e.OldValue;
@@ -526,9 +541,30 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		private void HandleEntityChanged(object sender, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs e)
+		{
+			//	We don't refresh synchronously, since this method could be called very, very often
+			//	and also produce deep recursive calls. Simply set a flag and let the refresh timer
+			//	to its job asynchronously.
+
+			this.refreshNeeded = true;
+		}
+
+		private void HandleTimerTimeElapsed(object sender)
+		{
+			if (this.refreshNeeded)
+			{
+				this.RefreshCollectionItems ();
+			}
+		}
+
 		private readonly Widget					container;
 		private readonly CoreViewController		controller;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		activeItems;
+		private readonly EntityContext			entityContext;
+		private readonly Timer					refreshTimer;
+
+		private bool							refreshNeeded;
 	}
 }

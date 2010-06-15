@@ -27,5 +27,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			//	TODO: ...
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				//	...
+			}
+
+			base.Dispose (disposing);
+		}
 	}
 }
