@@ -439,21 +439,32 @@ namespace Epsitec.Cresus.Core
 
 		public static FormattedText FormatText(params object[] values)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			var buffer = new System.Text.StringBuilder ();
+			var items  = new List<string> ();
 
 			bool emptyItem = true;
 
 			foreach (var value in values.Select (item => UIBuilder.ConvertToText (item)))
 			{
-				string text = value.Replace ("\n", "<br/>").Trim ();
-				
+				items.Add (value.Replace ("\n", "<br/>").Trim ());
+			}
+
+			int count = items.Count;
+
+			items.Add ("");
+
+			for (int i = 0; i < count; i++)
+			{
+				string text = items[i];
+				string next = items[i+1];
+
 				if (text.Length == 0)
 				{
 					emptyItem = true;
 					continue;
 				}
 
-				if (text[0] == '~')
+				if (text.FirstCharacter () == '~')
 				{
 					if (emptyItem)
 					{
@@ -462,8 +473,17 @@ namespace Epsitec.Cresus.Core
 
 					text = text.Substring (1);
 				}
+				if (text.LastCharacter () == '~')
+				{
+					if (next.Length == 0)
+					{
+						continue;
+					}
 
-				if (!emptyItem && buffer[buffer.Length-1] != '(' && !Misc.IsPunctuationMark (text[0]))
+					text = text.Substring (0, text.Length-1);
+				}
+
+				if (!emptyItem && buffer.LastCharacter () != '(' && !Misc.IsPunctuationMark (text.FirstCharacter ()))
 				{
 					buffer.Append (" ");
 				}
@@ -553,5 +573,29 @@ namespace Epsitec.Cresus.Core
 		private readonly TileContainer container;
 		private int tabIndex;
 		private TitleTile titleTile;
+	}
+	
+	static class StringExtension
+	{
+		public static char LastCharacter(this string text)
+		{
+			int n = text.Length - 1;
+			return n < 0 ? (char) 0 : text[n];
+		}
+		
+		public static char FirstCharacter(this string text)
+		{
+			int n = text.Length;
+			return n < 1 ? (char) 0 : text[0];
+		}
+	}
+	
+	static class StringBuilderExtension
+	{
+		public static char LastCharacter(this System.Text.StringBuilder text)
+		{
+			int n = text.Length - 1;
+			return n < 0 ? (char) 0 : text[n];
+		}
 	}
 }

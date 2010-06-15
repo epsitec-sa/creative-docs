@@ -49,18 +49,38 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		
 		/// <summary>
 		/// Creates the UI managed by this controller.
 		/// </summary>
 		/// <param name="container">The container.</param>
 		public abstract void CreateUI(Widget container);
 
-		public virtual void AboutToDispose(Widget container)
+		/// <summary>
+		/// Closes the UI. The container will be disposed by the caller
+		/// and is the same object that was provided to <c>CreateUI</c>.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		public void CloseUI(Widget container)
+		{
+			this.ReleaseUIFocus (container);
+			this.AboutToCloseUI ();
+		}
+
+		private void ReleaseUIFocus(Widget container)
 		{
 			if (container.ContainsKeyboardFocus)
 			{
+				//	This will produce an automatic validation or cancellation of any pending
+				//	TextFieldEx edition; without this, the last edition would not be validated
+				//	correctly:
+
 				container.Window.ClearFocusedWidget ();
 			}
+		}
+		
+		protected virtual void AboutToCloseUI()
+		{
 		}
 		
         protected override void Dispose(bool disposing)
