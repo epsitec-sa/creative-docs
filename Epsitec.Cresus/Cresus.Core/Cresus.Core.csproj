@@ -315,6 +315,7 @@
     <EmbeddedResource Include="Images\Data.Customer.icon" />
     <EmbeddedResource Include="Images\Data.Document.icon" />
     <EmbeddedResource Include="Images\Data.Folder.icon" />
+    <EmbeddedResource Include="Images\Edition.SaveRecord.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
