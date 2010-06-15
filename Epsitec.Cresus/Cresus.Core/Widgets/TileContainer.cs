@@ -58,6 +58,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (e.Cancel)
 				{
+					//	If the navigation was canceled, this implies that the currently focused
+					//	widget has to be kept focused (it might have been focused manually in the
+					//	process of handling the TabNavigating event).
+					
 					return window.FocusedWidget ?? this;
 				}
 
