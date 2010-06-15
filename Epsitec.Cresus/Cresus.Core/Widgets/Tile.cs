@@ -155,6 +155,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Colors
 
+#if false
 		public static Color BorderColor
 		{
 			get
@@ -178,7 +179,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("eef6ff");
+				return Color.FromHexa ("eef6ff");  // bleu très très clair
 			}
 		}
 
@@ -187,7 +188,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("d8e8fe");
+				return Color.FromHexa ("d8e8fe");  // bleu très clair
 			}
 		}
 
@@ -196,7 +197,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			get
 			{
 				// TODO: Adapter aux autres adorners
-				return Color.FromHexa ("c6defe");
+				return Color.FromHexa ("c6defe");  // bleu clair
 			}
 		}
 
@@ -217,6 +218,70 @@ namespace Epsitec.Cresus.Core.Widgets
 				return Color.FromHexa ("ffc83c");  // orange
 			}
 		}
+#else
+		public static Color BorderColor
+		{
+			get
+			{
+				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+				return adorner.ColorBorder;
+			}
+		}
+
+		public static Color SurfaceSummaryColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("ffffff");
+			}
+		}
+
+		public static Color SurfaceEditingColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("eef6ff");  // bleu très très clair
+			}
+		}
+
+		public static Color SurfaceSelectedGroupingColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("ffe195");  // orange très pâle
+			}
+		}
+
+		public static Color SurfaceSelectedContainerColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("ffd873");  // orange pâle
+			}
+		}
+
+		public static Color SurfaceHilitedColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("def1ff");  // bleu pâle
+			}
+		}
+
+		public static Color ThicknessHilitedColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("afdcff");  // bleu
+			}
+		}
+#endif
 
 		#endregion
 
