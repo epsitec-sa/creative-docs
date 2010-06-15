@@ -362,7 +362,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			get
 			{
 				List<Color> surfaceColors = this.SurfaceColors;
-				return surfaceColors != null && surfaceColors.Count > 0 && surfaceColors[0] == Tile.SurfaceHilitedColors[0];
+
+				return surfaceColors != null && surfaceColors.Count > 0 &&
+					   (surfaceColors[0] == Tile.SurfaceHilitedColors[0] || surfaceColors[0] == Tile.SurfaceHilitedSelectedColors[0]);
 			}
 		}
 
@@ -374,7 +376,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered)
 					{
-						return Tile.SurfaceHilitedColors;
+						if (this.HasSelectedChild)
+						{
+							return Tile.SurfaceHilitedSelectedColors;
+						}
+						else
+						{
+							return Tile.SurfaceHilitedColors;
+						}
 					}
 
 					if (this.HasSelectedChild)
