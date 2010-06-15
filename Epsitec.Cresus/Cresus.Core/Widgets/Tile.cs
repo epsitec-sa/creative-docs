@@ -237,6 +237,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public static List<Color> SurfaceHilitedSelectedColors
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				List<Color> colors = new List<Color> ();
+
+				colors.Add (Color.FromHexa ("ffd673"));  // orange clair
+				colors.Add (Color.FromHexa ("ffffff"));  // blanc
+
+				return colors;
+			}
+		}
+
 		public static List<Color> ThicknessHilitedColors
 		{
 			get
@@ -477,9 +491,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OnDragging(DragEventArgs e)
 		{
+			Point mousePosition = e.ToPoint;
+
+#if false
 			if (this.dragInfo == null)  // drag pas véritablement commencé ?
 			{
-				double distance = Point.Distance (this.dragBeginPoint, e.ToPoint);
+				double distance = Point.Distance (this.dragBeginPoint, mousePosition);
 				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
 				{
 					Tile widget = new Tile ();
@@ -493,16 +510,16 @@ namespace Epsitec.Cresus.Core.Widgets
 						this.dragInfo = null;
 					}
 
-					this.dragInfo = new DragInfo (e.ToPoint, widget);
+					this.dragInfo = new DragInfo (mousePosition, widget);
 				}
 			}
 			else
 			{
 				this.dragInfo.Window.WindowLocation = this.dragInfo.Origin + e.Offset;
 
-				Tile target = this.FindDropTarget (e.ToPoint);
+				Tile target = this.FindDropTarget (mousePosition);
 
-				Point mouse = e.ToPoint;
+				Point mouse = mousePosition;
 				if (target != null)
 				{
 					mouse = this.MapClientToScreen (mouse);
@@ -513,6 +530,65 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.dragInfo.Target = target;
 				this.DragHilite (this.dragInfo.Target, true, mouse);
 			}
+#else
+			Point ps = this.MapClientToScreen (mousePosition);
+			System.Diagnostics.Debug.WriteLine (string.Format("mouse={0};{1} screen={2};{3}", mousePosition.X, mousePosition.Y, ps.X, ps.Y));
+
+
+			if (this.dragWindow == null)
+			{
+				double distance = Point.Distance (this.dragBeginPoint, mousePosition);
+				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
+				{
+					this.dragWindowPosition = this.MapClientToScreen (mousePosition);
+					this.dragWindowOffset = mousePosition;
+					this.dragWindowSize = this.ActualSize;
+
+					this.dragErstazTile = new Tile ()
+					{
+						Margins       = this.Margins,
+						PreferredSize = this.dragWindowSize,
+						Dock          = this.Dock,
+						Anchor        = this.Anchor,
+					};
+
+					int index = this.Parent.Children.IndexOf (this);
+					if (index != -1)
+					{
+						this.Parent.Children[index] = this.dragErstazTile;  // remplace la vraie tuile (this) par l'ersatz
+					}
+
+					this.PreferredSize = this.dragWindowSize;
+					this.Margins = Margins.Zero;
+
+					this.dragWindow = new DragWindow ();
+					this.dragWindow.Alpha = 0.5;
+					this.dragWindow.DefineWidget (this, this.dragWindowSize, Margins.Zero);
+					this.dragWindow.WindowLocation = this.dragWindowPosition - this.dragWindowOffset;
+					this.dragWindow.Owner = this.dragErstazTile.Window;
+					this.dragWindow.FocusWidget (this);
+					this.dragWindow.Show ();
+				}
+			}
+			else
+			{
+				Point p = this.MapClientToScreen (mousePosition);
+				this.dragWindow.WindowLocation = p - this.dragWindowOffset;
+
+				Tile target = this.FindDropTarget (mousePosition);
+
+				Point mouse = mousePosition;
+				if (target != null)
+				{
+					mouse = this.MapClientToScreen (mouse);
+					mouse = target.MapScreenToClient (mouse);
+				}
+
+				//?this.DragHilite (this.dragInfo.Target, false, Point.Zero);
+				//?this.dragInfo.Target = target;
+				//?this.DragHilite (this.dragInfo.Target, true, mouse);
+			}
+#endif
 		}
 
 		public void OnDragEnd()
@@ -635,5 +711,10 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Point											dragBeginPoint;
 		private bool											isDragTarget;
 		private bool											isDragTargetTop;
+		private DragWindow										dragWindow;
+		private Point											dragWindowPosition;
+		private Point											dragWindowOffset;
+		private Size											dragWindowSize;
+		private Tile											dragErstazTile;
 	}
 }

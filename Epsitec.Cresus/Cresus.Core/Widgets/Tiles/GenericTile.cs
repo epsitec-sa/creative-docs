@@ -217,6 +217,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			get
 			{
 				List<Color> surfaceColors = this.SurfaceColors;
+
 				return surfaceColors != null && surfaceColors.Count > 0 && surfaceColors[0] == Tile.SurfaceHilitedColors[0];
 			}
 		}
