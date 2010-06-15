@@ -108,15 +108,12 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-
-			var arrowMode = this.ArrowMode;
-
-			switch (arrowMode)
+			switch (this.ArrowMode)
 			{
 				case TileArrowMode.None:
 				case TileArrowMode.Hilite:
 				case TileArrowMode.VisibleDirect:
-					this.DirectArrow.Paint (graphics, this.Client.Bounds, arrowMode, this.ArrowDirection);
+					this.DirectArrow.Paint (graphics, this.Client.Bounds, this.ArrowMode, this.ArrowDirection);
 					break;
 
 				case TileArrowMode.VisibleReverse:
@@ -124,13 +121,25 @@ namespace Epsitec.Cresus.Core.Widgets
 					break;
 			}
 
-			if (this.dragInfo != null)
+			if (this.isDragTarget)
 			{
 				Rectangle rect = this.Client.Bounds;
-				rect.Deflate (2);
+				rect.Width -= TileArrow.Breadth;
+				rect.Deflate (1);
 
-				graphics.AddRectangle (rect);
+				if (this.isDragTargetTop)
+				{
+					rect.Bottom = rect.Top-3;
+				}
+				else
+				{
+					rect.Top = rect.Bottom+3;
+				}
+
+				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (Color.FromName ("Red"));
+
+				return;
 			}
 		}
 
@@ -233,6 +242,37 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public bool IsDragTarget
+		{
+			get
+			{
+				return this.isDragTarget;
+			}
+			set
+			{
+				if (this.isDragTarget != value)
+				{
+					this.isDragTarget = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool IsDragTargetTop
+		{
+			get
+			{
+				return this.isDragTargetTop;
+			}
+			set
+			{
+				if (this.isDragTargetTop != value)
+				{
+					this.isDragTargetTop = value;
+					this.Invalidate ();
+				}
+			}
+		}
 
 		public Tile DragHost
 		{
@@ -310,40 +350,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			return null;
 		}
 
-		private void DragHilite(Tile dst, Tile src, bool enable)
+		private void DragHilite(Tile target, bool enable, Point mouse)
 		{
 			//	Met en évidence le widget Tile destinataire du drag & drop.
-			if (dst == null || src == null || src == dst)
+			if (target != null && target != this)
 			{
-				return;
-			}
-
-			if (enable)
-			{
-				//?RichColor color = src.Color;
-				RichColor color = RichColor.FromName ("Blue");
-
-				if (dst.dragInfo == null)
-				{
-					dst.dragInfo = new DragInfo (dst);
-				}
-
-				if (dst.dragInfo.Color != color)
-				{
-					dst.dragInfo.Color = color;
-				}
-			}
-			else if (dst.dragInfo != null)
-			{
-				if (dst.dragInfo.Window != null)
-				{
-					dst.dragInfo.Color = RichColor.Empty;
-				}
-				else
-				{
-					dst.dragInfo = null;
-					dst.Invalidate ();
-				}
+				target.IsDragTarget = enable;
+				target.IsDragTargetTop = mouse.Y > target.Client.Bounds.Center.Y;
 			}
 		}
 
@@ -439,7 +452,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					Tile widget = new Tile ();
 
-					//?widget.Color = this.Color;
 					widget.PreferredSize = this.ActualSize;
 					widget.DragHost = this;
 
@@ -458,12 +470,16 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				Tile target = this.FindDropTarget (e.ToPoint);
 
-				if (target != this.dragInfo.Target)
+				Point mouse = e.ToPoint;
+				if (target != null)
 				{
-					this.DragHilite (this.dragInfo.Target, this, false);
-					this.dragInfo.DefineTarget (target);
-					this.DragHilite (this.dragInfo.Target, this, true);
+					mouse = this.MapClientToScreen (mouse);
+					mouse = target.MapScreenToClient (mouse);
 				}
+
+				this.DragHilite (this.dragInfo.Target, false, Point.Zero);
+				this.dragInfo.Target = target;
+				this.DragHilite (this.dragInfo.Target, true, mouse);
 			}
 		}
 
@@ -471,25 +487,10 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.dragInfo != null)
 			{
-				this.DragHilite (this, this.dragInfo.Target, false);
-				this.DragHilite (this.dragInfo.Target, this, false);
+				this.DragHilite (this.dragInfo.Target, false, Point.Zero);
 
-				if (this.dragInfo.Target != null)
-				{
-					if (this.dragInfo.Target != this)
-					{
-						//?this.dragInfo.Target.Color = this.Color;
-						//?this.dragInfo.Target.OnColorChanged ();
-					}
-
-					this.dragInfo.Dispose ();
-					this.dragInfo = null;
-				}
-				else
-				{
-					this.dragInfo.DissolveAndDispose ();
-					this.dragInfo = null;
-				}
+				this.dragInfo.DissolveAndDispose ();
+				this.dragInfo = null;
 			}
 		}
 
@@ -504,11 +505,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// </summary>
 		private class DragInfo : System.IDisposable
 		{
-			public DragInfo(Tile host)
-			{
-				this.host = host;
-			}
-
 			public DragInfo(Point cursor, Tile widget)
 			{
 				System.Diagnostics.Debug.Assert (widget.DragHost != null);
@@ -548,29 +544,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					return this.target;
 				}
-			}
-
-			public RichColor Color
-			{
-				get
-				{
-					return this.color;
-				}
 				set
 				{
-					if (this.color != value)
-					{
-						this.color = value;
-						this.host.Invalidate ();
-					}
+					this.target = value;
 				}
 			}
-
-			public void DefineTarget(Tile target)
-			{
-				this.target = target;
-			}
-
 
 			public void DissolveAndDispose()
 			{
@@ -604,7 +582,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			private DragWindow			window;
 			private Point				origin;
 			private Tile				target;
-			private RichColor			color;
 		}
 
 		#endregion
@@ -624,5 +601,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private TileArrowMode									arrowMode;
 		private DragInfo										dragInfo;
 		private Point											dragBeginPoint;
+		private bool											isDragTarget;
+		private bool											isDragTargetTop;
 	}
 }
