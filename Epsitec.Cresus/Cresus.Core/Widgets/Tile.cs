@@ -264,6 +264,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public static Color SurfaceSelectedOppositeColor
+		{
+			get
+			{
+				// TODO: Adapter aux autres adorners
+				return Color.FromHexa ("fcd123");  // jaune-orange clair
+			}
+		}
+
 		public static Color SurfaceHilitedColor
 		{
 			get

@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Widgets
 							if (this.SurfaceColor == Tile.SurfaceSelectedGroupingColor ||
 								this.SurfaceColor == Tile.SurfaceSelectedContainerColor)
 							{
-								right = Color.FromHexa ("fcd123");
+								right = Tile.SurfaceSelectedOppositeColor;
 							}
 
 							graphics.GradientRenderer.Fill = GradientFill.X;
