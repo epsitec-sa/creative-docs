@@ -60,10 +60,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors   (this.GetOutlineColors);
-				arrow.SetThicknessColors (this.GetThicknessColors);
-				arrow.SetSurfaceColors   (this.GetSurfaceColors);
-				arrow.MouseHilite = this.GetMouseHilite ();
+				arrow.SetOutlineColors   (this.OutlineColors);
+				arrow.SetThicknessColors (this.ThicknessColors);
+				arrow.SetSurfaceColors   (this.SurfaceColors);
+				arrow.MouseHilite = this.MouseHilite;
 
 				return arrow;
 			}
@@ -75,9 +75,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors   (this.GetReverseOutlineColors);
-				arrow.SetThicknessColors (this.GetReverseThicknessColors);
-				arrow.SetSurfaceColors   (this.GetReverseSurfaceColors);
+				arrow.SetOutlineColors   (this.ReverseOutlineColors);
+				arrow.SetThicknessColors (this.ReverseThicknessColors);
+				arrow.SetSurfaceColors   (this.ReverseSurfaceColors);
 				arrow.MouseHilite = false;
 
 				return arrow;
@@ -363,13 +363,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			return Widgets.TileArrowMode.None;
 		}
 
-		private bool GetMouseHilite()
+		private bool MouseHilite
 		{
-			List<Color> surfaceColors = this.GetSurfaceColors;
-			return surfaceColors != null && surfaceColors.Count > 0 && surfaceColors[0] == Tile.SurfaceHilitedColor[0];
+			get
+			{
+				List<Color> surfaceColors = this.SurfaceColors;
+				return surfaceColors != null && surfaceColors.Count > 0 && surfaceColors[0] == Tile.SurfaceHilitedColors[0];
+			}
 		}
 
-		private List<Color> GetSurfaceColors
+		private List<Color> SurfaceColors
 		{
 			get
 			{
@@ -377,30 +380,30 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered)
 					{
-						return Tile.SurfaceHilitedColor;
+						return Tile.SurfaceHilitedColors;
 					}
 
 					if (this.HasSelectedChild)
 					{
-						return Tile.SurfaceSelectedGroupingColor;
+						return Tile.SurfaceSelectedGroupingColors;
 					}
 
-					return Tile.SurfaceSummaryColor;
+					return Tile.SurfaceSummaryColors;
 				}
 
-				return Tile.SurfaceEditingColor;
+				return Tile.SurfaceEditingColors;
 			}
 		}
 
-		private List<Color> GetOutlineColors
+		private List<Color> OutlineColors
 		{
 			get
 			{
-				return Tile.BorderColor;
+				return Tile.BorderColors;
 			}
 		}
 
-		private List<Color> GetThicknessColors
+		private List<Color> ThicknessColors
 		{
 			get
 			{
@@ -408,7 +411,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				{
 					if (this.IsEntered)
 					{
-						return Tile.ThicknessHilitedColor;
+						return Tile.ThicknessHilitedColors;
 					}
 				}
 
@@ -417,34 +420,34 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private List<Color> GetReverseSurfaceColors
+		private List<Color> ReverseSurfaceColors
 		{
 			get
 			{
 				if (this.IsReadOnly)
 				{
-					return Tile.SurfaceHilitedColor;
+					return Tile.SurfaceHilitedColors;
 				}
 
 				return null;
 			}
 		}
 
-		private List<Color> GetReverseOutlineColors
+		private List<Color> ReverseOutlineColors
 		{
 			get
 			{
-				return Tile.BorderColor;
+				return Tile.BorderColors;
 			}
 		}
 
-		private List<Color> GetReverseThicknessColors
+		private List<Color> ReverseThicknessColors
 		{
 			get
 			{
 				if (this.IsReadOnly)
 				{
-					return Tile.ThicknessHilitedColor;
+					return Tile.ThicknessHilitedColors;
 				}
 
 				return null;

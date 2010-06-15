@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Colors
 
-		public static List<Color> BorderColor
+		public static List<Color> BorderColors
 		{
 			get
 			{
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> SurfaceSummaryColor
+		public static List<Color> SurfaceSummaryColors
 		{
 			get
 			{
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> SurfaceEditingColor
+		public static List<Color> SurfaceEditingColors
 		{
 			get
 			{
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> SurfaceSelectedGroupingColor
+		public static List<Color> SurfaceSelectedGroupingColors
 		{
 			get
 			{
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> SurfaceSelectedContainerColor
+		public static List<Color> SurfaceSelectedContainerColors
 		{
 			get
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> SurfaceHilitedColor
+		public static List<Color> SurfaceHilitedColors
 		{
 			get
 			{
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public static List<Color> ThicknessHilitedColor
+		public static List<Color> ThicknessHilitedColors
 		{
 			get
 			{
