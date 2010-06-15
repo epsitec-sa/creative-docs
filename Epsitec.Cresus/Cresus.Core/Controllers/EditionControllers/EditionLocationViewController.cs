@@ -27,8 +27,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Mail", "Ville");
 
-				builder.CreateFooterEditorTile ();
-
 				this.CreateUIMain (builder);
 
 				builder.CreateFooterEditorTile ();
