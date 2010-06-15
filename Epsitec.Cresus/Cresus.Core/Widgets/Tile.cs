@@ -256,7 +256,26 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Tile FindDropTarget(Point mouse)
 		{
 			//	Cherche un widget Tile destinataire du drag & drop.
-			return Tile.FindChild (this.Window.Root, this.MapClientToRoot (mouse)) as Tile;
+			Tile tile = Tile.FindChild (this.Window.Root, this.MapClientToRoot (mouse)) as Tile;
+
+			if (tile != null && tile.IsFrozen)
+			{
+				//	Si on a trouvé une tuile gelée, il faut remonter jusqu'à le prochaine tuile
+				//	non gelée.
+				Widget widget = tile;
+
+				while (widget.Parent != null)
+				{
+					widget = widget.Parent;
+
+					if (widget is Tile && !widget.IsFrozen)
+					{
+						return widget as Tile;
+					}
+				}
+			}
+
+			return tile;
 		}
 
 		private static Widget FindChild(Widget widget, Point point)
@@ -267,12 +286,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			Widget[] childrens = widget.Children.Widgets;
-			int  childrenNum = childrens.Length;
 
-			for (int i = 0; i < childrenNum; i++)
+			for (int i=childrens.Length-1; i>=0; i--)
 			{
-				Widget children = childrens[childrenNum-1 - i];
-				System.Diagnostics.Debug.Assert (children != null);
+				Widget children = childrens[i];
 
 				if (children.HitTest (point))
 				{
