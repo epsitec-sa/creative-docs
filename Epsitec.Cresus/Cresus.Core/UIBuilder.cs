@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public class UIBuilder
+	public sealed class UIBuilder : System.IDisposable
 	{
 		public UIBuilder(TileContainer container, CoreViewController controller)
 		{
@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Core
 			
 			this.container = container;
 			this.controller = controller;
+			this.nextBuilder = UIBuilder.current;
+
+			if (this.nextBuilder != null)
+			{
+				this.tabIndex = this.nextBuilder.tabIndex;
+			}
+
+			UIBuilder.current = this;
 		}
 
 		public TitleTile CurrentTitleTile
@@ -50,6 +58,7 @@ namespace Epsitec.Cresus.Core
 				IconUri = iconUri,
 				Title = title,
 				IsReadOnly = false,
+				TabIndex = ++this.tabIndex,
 			};
 
 			UIBuilder.CreateTitleTileHandler (this.titleTile, this.controller);
@@ -63,6 +72,7 @@ namespace Epsitec.Cresus.Core
 			{
 				AutoHilite = false,
 				IsReadOnly = false,
+				TabIndex = ++this.tabIndex,
 			};
 
 			this.titleTile.Items.Add (tile);
@@ -88,8 +98,10 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.container.Controller != this.controller)
 			{
-				//	The footer is not being created by the main controller; we can safely skip it,
-				//	since we create only one footer for every container.
+				//	This method is not being called by the main controller; we can safely skip the
+				//	creation of the footer, since we create only one footer for every container and
+				//	the main controller will do it later on...
+				
 				return;
 			}
 
@@ -568,9 +580,27 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			UI.SetInitialFocus (this.container);
+
+			if (this.nextBuilder != null)
+			{
+				this.nextBuilder.tabIndex = this.tabIndex;
+			}
+			
+			UIBuilder.current = this.nextBuilder;
+		}
+
+		#endregion
+
+		private static UIBuilder current;
 
 		private readonly CoreViewController controller;
 		private readonly TileContainer container;
+		private readonly UIBuilder nextBuilder;
 		private int tabIndex;
 		private TitleTile titleTile;
 	}
