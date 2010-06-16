@@ -121,36 +121,14 @@ namespace Epsitec.Cresus.Core.Widgets
 					}
 					else
 					{
-						Transform ot = graphics.GradientRenderer.Transform;
-
 						if (this.MouseHilite)
 						{
-							graphics.GradientRenderer.Fill = GradientFill.Circle;
-							graphics.GradientRenderer.SetParameters (0, 100);
-							graphics.GradientRenderer.SetColors (this.surfaceColors[1], this.surfaceColors[0]);  // [0] dans les bords, [1] au centre
-
-							Transform t = Transform.Identity;
-							Point center = bounds.Center;
-							t = t.Scale (bounds.Width/100/2, bounds.Height/100/2);
-							t = t.Translate (center);
-							graphics.GradientRenderer.Transform = t;
-							graphics.RenderGradient ();  // dégradé circulaire
+							Painter.PaintCircleGradient (graphics, bounds, this.surfaceColors[1], this.surfaceColors[0]);
 						}
 						else
 						{
-							graphics.GradientRenderer.Fill = GradientFill.X;
-							graphics.GradientRenderer.SetParameters (-50, 100);
-							graphics.GradientRenderer.SetColors (this.surfaceColors[0], this.surfaceColors[1]);  // [0] à gauche, [1] à droite
-
-							Transform t = Transform.Identity;
-							Point center = bounds.Center;
-							t = t.Scale (bounds.Width/100/2, bounds.Height/100/2);
-							t = t.Translate (center);
-							graphics.GradientRenderer.Transform = t;
-							graphics.RenderGradient ();  // dégradé de gauche à droite
+							Painter.PaintLeftToRightGradient (graphics, bounds, this.surfaceColors[0], this.surfaceColors[1]);
 						}
-
-						graphics.GradientRenderer.Transform = ot;
 					}
 				}
 			}

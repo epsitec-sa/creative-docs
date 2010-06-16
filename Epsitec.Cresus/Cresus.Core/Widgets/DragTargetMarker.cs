@@ -69,17 +69,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			linePath.Close ();
 
 			graphics.Rasterizer.AddSurface (linePath);
-
-			graphics.GradientRenderer.Fill = GradientFill.X;
-			graphics.GradientRenderer.SetParameters (-100, 100);
-			graphics.GradientRenderer.SetColors (Color.FromAlphaColor (1.0, this.markerColor), Color.FromAlphaColor (0.0, this.markerColor));
-
-			Transform t = Transform.Identity;
-			Point center = lineRect.Center;
-			t = t.Scale (lineRect.Width/100/2, lineRect.Height/100/2);
-			t = t.Translate (center);
-			graphics.GradientRenderer.Transform = t;
-			graphics.RenderGradient ();  // dégradé de gauche à droite
+			Painter.PaintLeftToRightGradient (graphics, lineRect, Color.FromAlphaColor (1.0, this.markerColor), Color.FromAlphaColor (0.0, this.markerColor));
 		}
 
 
