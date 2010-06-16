@@ -356,11 +356,11 @@ using Epsitec.Common.Support.EntityEngine;
 				{
 					case SummaryDataType.CollectionItem:
 					case SummaryDataType.EmptyItem:
-						item.TitleTile.AddButtonVisibility = true;
+						item.TitleTile.ContainsCollectionItemTiles = true;
 						break;
 
 					default:
-						item.TitleTile.AddButtonVisibility = false;
+						item.TitleTile.ContainsCollectionItemTiles = false;
 						isItemPartOfCollection = false;
 						break;
 				}
