@@ -41,15 +41,15 @@ namespace Epsitec.Cresus.Core
 			EntityConstrainer entityConstrainer = new EntityConstrainer ();
 
 			Assert.IsFalse (this.IsExceptionThrown (() =>
-				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithField (new Field (new Druid ("[L0AU]")), BinaryComparator.IsEqual, new Field (new Druid ("[L0AV]"))))
+				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithField (new Field (new Druid ("[L0A01]")), BinaryComparator.IsEqual, new Field (new Druid ("[L0AV]"))))
 			));
 
 			Assert.IsFalse (this.IsExceptionThrown (() =>
-				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithValue (new Field (new Druid ("[L0A11]")), BinaryComparator.IsEqual, new Constant (Type.Boolean, true)))
+				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithValue (new Field (new Druid ("[L0A61]")), BinaryComparator.IsEqual, new Constant (Type.Boolean, true)))
 			));
 
 			Assert.IsFalse (this.IsExceptionThrown (() =>
-				entityConstrainer.AddLocalConstraint (uriContact, new UnaryComparison (new Field (new Druid ("[L0A92]")), UnaryComparator.IsNull))
+				entityConstrainer.AddLocalConstraint (uriContact, new UnaryComparison (new Field (new Druid ("[L0AA2]")), UnaryComparator.IsNull))
 			));
 
 			Assert.IsFalse (this.IsExceptionThrown (() =>
@@ -77,11 +77,11 @@ namespace Epsitec.Cresus.Core
 			));
 
 			Assert.IsTrue (this.IsExceptionThrown (() =>
-				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithValue (new Field (new Druid ("[L0AI]")), BinaryComparator.IsEqual, new Constant (Type.Boolean, true)))
+				entityConstrainer.AddLocalConstraint (person, new BinaryComparisonFieldWithValue (new Field (new Druid ("[L0AS]")), BinaryComparator.IsEqual, new Constant (Type.Boolean, true)))
 			));
 
 			Assert.IsTrue (this.IsExceptionThrown (() =>
-				entityConstrainer.AddLocalConstraint (uriContact, new UnaryComparison (new Field (new Druid ("[L0A93]")), UnaryComparator.IsNull))
+				entityConstrainer.AddLocalConstraint (uriContact, new UnaryComparison (new Field (new Druid ("[L0A92]")), UnaryComparator.IsNull))
 			));
 
 			Assert.IsTrue (this.IsExceptionThrown (() =>
