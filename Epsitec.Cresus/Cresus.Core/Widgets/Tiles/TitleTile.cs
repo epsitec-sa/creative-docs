@@ -47,11 +47,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public Controllers.ITileController Controller
+		public override Controllers.ITileController Controller
 		{
 			get
 			{
 				return this.Items.Select (item => item.Controller).FirstOrDefault ();
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
 			}
 		}
 		

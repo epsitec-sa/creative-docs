@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public Controllers.ITileController Controller
+		public override Controllers.ITileController Controller
 		{
 			get;
 			set;
