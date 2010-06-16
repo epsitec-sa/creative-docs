@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			graphics.GradientRenderer.Fill = GradientFill.X;
 			graphics.GradientRenderer.SetParameters (-100, 100);
-			graphics.GradientRenderer.SetColors (Color.FromAlphaRgb (1.0, this.markerColor.R, this.markerColor.G, this.markerColor.B), Color.FromAlphaRgb (0.0, this.markerColor.R, this.markerColor.G, this.markerColor.B));
+			graphics.GradientRenderer.SetColors (Color.FromAlphaColor (1.0, this.markerColor), Color.FromAlphaColor (0.0, this.markerColor));
 
 			Transform t = Transform.Identity;
 			Point center = lineRect.Center;
