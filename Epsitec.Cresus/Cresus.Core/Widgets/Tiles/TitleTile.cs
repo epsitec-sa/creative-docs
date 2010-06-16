@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				return !this.ContainsCollectionItemTiles;
+				return this.ContainsFrozenTiles;
 			}
 		}
 

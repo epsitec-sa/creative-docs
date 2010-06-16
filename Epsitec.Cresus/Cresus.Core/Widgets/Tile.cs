@@ -453,7 +453,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OnDragging(DragEventArgs e)
 		{
-			// TODO: IsDragAndDropEnabled ne joure pas dans les TitleTile
 			// TODO: IsSelected pas suffisant
 			if (this.Controller == null || !this.IsDragAndDropEnabled || this.IsSelected)
 			{
@@ -461,7 +460,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			Point mouseCursor = Tile.MouseCursorLocation;
-			mouseCursor.X = this.dragBeginPoint.X;  // essai pour forcer un déplacement vertical
+			//?mouseCursor.X = this.dragBeginPoint.X;  // essai pour forcer un déplacement vertical
 
 			if (this.dragWindowSource == null)
 			{
@@ -542,21 +541,13 @@ namespace Epsitec.Cresus.Core.Widgets
 
 					this.dragTargetIndex = target.Controller.GroupedItemIndex;
 
-					bool b = false;
-					if (this.dragTargetIndex > this.Controller.GroupedItemIndex)
-					{
-						this.dragTargetIndex--;  // TODO: faux !
-						b = true;
-					}
-
 					if (!dragOnTargetTop)
 					{
 						this.dragTargetIndex++;
 					}
 
-					System.Diagnostics.Debug.WriteLine (string.Format ("index={0} top={1} after={2}", this.dragTargetIndex, dragOnTargetTop, b));
-
-					if (this.dragTargetIndex == this.Controller.GroupedItemIndex)
+					if (this.Controller.GroupedItemIndex == this.dragTargetIndex ||
+						this.Controller.GroupedItemIndex == this.dragTargetIndex-1)
 					{
 						this.dragWindowTarget.Hide ();
 					}
@@ -579,8 +570,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 						this.dragWindowTarget.WindowLocation = location - this.dragTargetMarker.HotSpot;
 						this.dragWindowTarget.Show ();
-
-						this.dragTargetIndex = target.Controller.GroupedItemIndex;
 					}
 				}
 			}
