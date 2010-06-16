@@ -51,12 +51,24 @@ namespace Epsitec.Cresus.Core.Widgets
 			if ((this.DrawFrameState & FrameState.Right) != 0)
 			{
 				var adorner = Common.Widgets.Adorners.Factory.Active;
-				var frame   = this.GetFrameRectangle ();
-				
-				graphics.AddLine (frame.Right+1, frame.Top, frame.Right+1, frame.Bottom);
-				graphics.RenderSolid (Color.FromAlphaColor (0.6, adorner.ColorBorder));
-				graphics.AddLine (frame.Right+2, frame.Top, frame.Right+2, frame.Bottom);
-				graphics.RenderSolid (Color.FromAlphaColor (0.3, adorner.ColorBorder));
+				var gradientRect = new Rectangle (this.Client.Bounds.Right-TileArrow.Breadth, this.Client.Bounds.Bottom, TileArrow.Breadth*0.5, this.Client.Bounds.Height);
+
+				graphics.AddFilledRectangle (gradientRect);
+
+				Transform ot = graphics.GradientRenderer.Transform;
+
+				graphics.GradientRenderer.Fill = GradientFill.X;
+				graphics.GradientRenderer.SetParameters (-100, 100);
+				graphics.GradientRenderer.SetColors (Color.FromAlphaColor (0.6, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
+
+				Transform t = Transform.Identity;
+				Point center = gradientRect.Center;
+				t = t.Scale (gradientRect.Width/100/2, gradientRect.Height/100/2);
+				t = t.Translate (center);
+				graphics.GradientRenderer.Transform = t;
+				graphics.RenderGradient ();  // dégradé de gauche à droite
+
+				graphics.GradientRenderer.Transform = ot;
 			}
 		}
 
