@@ -27,15 +27,21 @@ namespace Epsitec.Cresus.Core
 			this.commandHandlers = new List<ICommandHandler> ();
 			this.commandHandlerStack = new Dictionary<Command, CommandHandlerStack> ();
 
-			this.dispatcher.RegisterController (this);
-			this.application.CommandDispatcher.RegisterController (this);
-
 			this.CreateCommandHandlers ();
+			this.RegisterCommandHandlers ();
 		}
 
 		private void CreateCommandHandlers()
 		{
 			this.commandHandlers.Add (new CommandHandlers.CoreCommandHandler (this));
+		}
+
+		private void RegisterCommandHandlers()
+		{
+			foreach (var handler in this.commandHandlers)
+			{
+				this.dispatcher.RegisterController (handler);
+			}
 		}
 
 		public void PushHandler(Command command, System.Action handler)
@@ -54,7 +60,10 @@ namespace Epsitec.Cresus.Core
 		{
 			CommandHandlerStack stack;
 
-			if ((this.commandHandlerStack.TryGetValue (command, out stack)) &&
+			var state = this.commandContext.GetCommandState (command);
+
+			if ((state.Enable) &&
+				(this.commandHandlerStack.TryGetValue (command, out stack)) &&
 				(stack.ContainsCommandHandlers))
 			{
 				stack.Execute ();

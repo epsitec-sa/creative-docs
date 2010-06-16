@@ -20,7 +20,23 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			var widget = e.Source as Widget;
+
+			if (widget.KeyboardFocus)
+			{
+				widget.ClearFocus ();
+			}
+			else
+			{
+				widget = null;
+			}
+			
 			this.commandDispatcher.DispatchGenericCommand (e.Command);
+
+			if (widget != null)
+            {
+				widget.SetFocusOnTabWidget ();
+            }
 		}
 
 		[Command (Core.Res.CommandIds.Test.Crash)]
