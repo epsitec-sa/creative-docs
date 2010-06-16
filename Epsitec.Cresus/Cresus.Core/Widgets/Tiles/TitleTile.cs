@@ -38,6 +38,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool ContainsFrozenTiles
+		{
+			get
+			{
+				return this.Items.Any (item => item.IsFrozen);
+			}
+		}
 
 		public TileCollection Items
 		{
