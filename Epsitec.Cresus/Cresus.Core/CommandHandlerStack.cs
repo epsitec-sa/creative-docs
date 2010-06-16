@@ -7,7 +7,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.CommandHandlers
+namespace Epsitec.Cresus.Core
 {
 	public class CommandHandlerStack : System.IEquatable<CommandHandlerStack>
 	{

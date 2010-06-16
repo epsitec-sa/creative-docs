@@ -213,9 +213,11 @@ namespace Epsitec.Cresus.DataLayer
 				containsChanges = true;
 			}
 
+			var deletedEntities = this.deletedEntities.ToArray ();
+
 			this.deletedEntities.Clear ();
-			
-			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except(this.deletedEntities))
+
+			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except (deletedEntities))
 			{
 				this.SerializeEntity (entity);
 				containsChanges = true;
@@ -227,6 +229,18 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			return containsChanges;
+		}
+
+		public bool ContainsChanges()
+		{
+			if (this.entitiesToDelete.Count > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return this.GetModifiedEntities ().Any (x => true);
+			}
 		}
 		
 		public void SaveChanges()

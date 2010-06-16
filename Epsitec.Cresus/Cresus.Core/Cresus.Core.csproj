@@ -91,8 +91,9 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="CommandHandlers\CommandHandlerStack.cs" />
+    <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
+    <Compile Include="CommandHandlers\ICommandHandler.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
@@ -173,7 +174,7 @@
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="PersistenceManager.cs" />
-    <Compile Include="CoreCommands.cs" />
+    <Compile Include="CoreCommandDispatcher.cs" />
     <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
