@@ -385,8 +385,7 @@ namespace Epsitec.Cresus.DataLayer
 				}),
 			};
 
-			// TODO Uncomment this.
-			//reader.AddCondition (selectCondition);
+			reader.AddCondition (selectCondition);
 		}
 
 

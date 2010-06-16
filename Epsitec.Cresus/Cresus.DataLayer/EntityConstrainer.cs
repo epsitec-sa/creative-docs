@@ -70,7 +70,13 @@ namespace Epsitec.Cresus.DataLayer
 			HashSet<string> fields1 = new HashSet<string> (entity.GetEntityContext ().GetEntityFieldIds (entity));
 			HashSet<string> fields2 = new HashSet<string> (contraint.GetFields ().Select (d => d.ToResourceId ()));
 
-			return fields1.IsSupersetOf (fields2);
+			return fields1.IsSupersetOf (fields2) && fields2.All (id => this.IsValueField (entity, id));
+		}
+
+
+		private bool IsValueField(AbstractEntity entity, string fieldId)
+		{
+			return entity.GetEntityContext ().GetEntityFieldDefinition (entity.GetEntityStructuredTypeId (), fieldId).Relation == FieldRelation.None;
 		}
 
 
