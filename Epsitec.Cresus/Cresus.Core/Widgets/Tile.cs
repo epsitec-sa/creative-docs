@@ -93,21 +93,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (this.DragHost != null)  // tuile en cours de déplacement pendant un drag ?
-			{
-				Rectangle rect = this.Client.Bounds;
-				rect.Width -= TileArrow.Breadth;
-				rect.Deflate (0.5);
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromName ("LightGray"));
-
-				graphics.AddRectangle (rect);
-				graphics.RenderSolid (Color.FromName ("Black"));
-
-				return;
-			}
-
 			switch (this.ArrowMode)
 			{
 				case TileArrowMode.None:
@@ -119,27 +104,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				case TileArrowMode.VisibleReverse:
 					this.DirectArrow.Paint (graphics, this.Client.Bounds, TileArrowMode.None, this.ArrowDirection);
 					break;
-			}
-
-			if (this.isDragTarget)
-			{
-				Rectangle rect = this.Client.Bounds;
-				rect.Width -= TileArrow.Breadth;
-				rect.Deflate (1);
-
-				if (this.isDragTargetTop)
-				{
-					rect.Bottom = rect.Top-3;
-				}
-				else
-				{
-					rect.Top = rect.Bottom+3;
-				}
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromName ("Red"));
-
-				return;
 			}
 		}
 
@@ -269,6 +233,16 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Drag & drop
 
+		public bool IsClickForDrag
+		{
+			//	Indique si l'événement Clicked doit être ignoré parce qu'il a servi à faire du drag & drop.
+			//	On devrait pouvoir faire cela plus proprement.
+			get
+			{
+				return this.isClickForDrag;
+			}
+		}
+
 		public bool DragSourceEnable
 		{
 			get
@@ -284,38 +258,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				else
 				{
 					this.SetValue (Tile.DragSourceEnableProperty, value);
-				}
-			}
-		}
-
-		public bool IsDragTarget
-		{
-			get
-			{
-				return this.isDragTarget;
-			}
-			set
-			{
-				if (this.isDragTarget != value)
-				{
-					this.isDragTarget = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
-		public bool IsDragTargetTop
-		{
-			get
-			{
-				return this.isDragTargetTop;
-			}
-			set
-			{
-				if (this.isDragTargetTop != value)
-				{
-					this.isDragTargetTop = value;
-					this.Invalidate ();
 				}
 			}
 		}
@@ -339,17 +281,21 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private Tile FindDropTarget(Point mouse)
+
+		private Tile FindDropTarget(Point screenPoint)
 		{
 			//	Cherche un widget Tile destinataire du drag & drop.
-			Tile tile = Tile.FindChild (this.Window.Root, this.MapClientToRoot (mouse)) as Tile;
+			Widget widget = Tile.FindChild (this.dragErsatzTile.Window.Root, screenPoint);
 
-			if (tile != null && tile.IsFrozen)
+			if (widget == null)
 			{
-				//	Si on a trouvé une tuile gelée, il faut remonter jusqu'à le prochaine tuile
-				//	non gelée.
-				Widget widget = tile;
+				return null;
+			}
 
+			if (!(widget is Tile) || widget.IsFrozen)
+			{
+				//	Si on a trouvé un widget qui n'est pas une tuile ou une tuile gelée, il faut remonter
+				//	jusqu'à le prochaine tuile non gelée.
 				while (widget.Parent != null)
 				{
 					widget = widget.Parent;
@@ -361,10 +307,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
-			return tile;
+			return widget as Tile;
 		}
 
-		private static Widget FindChild(Widget widget, Point point)
+		private static Widget FindChild(Widget widget, Point screenPoint)
 		{
 			if (widget.HasChildren == false)
 			{
@@ -377,9 +323,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				Widget children = childrens[i];
 
-				if (children.HitTest (point))
+				Rectangle bounds = children.MapClientToScreen (children.Client.Bounds);
+
+				if (bounds.Contains (screenPoint))
 				{
-					Widget deep = Tile.FindChild (children, children.MapParentToClient (point));
+					Widget deep = Tile.FindChild (children, screenPoint);
 
 					if (deep != null)
 					{
@@ -396,15 +344,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			return null;
 		}
 
-		private void DragHilite(Tile target, bool enable, Point mouse)
-		{
-			//	Met en évidence le widget Tile destinataire du drag & drop.
-			if (target != null && target != this)
-			{
-				target.IsDragTarget = enable;
-				target.IsDragTargetTop = mouse.Y > target.Client.Bounds.Center.Y;
-			}
-		}
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
@@ -480,226 +419,195 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public bool OnDragBegin(Point cursor)
 		{
+			Point mouseCursor = Tile.MouseCursorLocation;
+
+			this.isClickForDrag = false;
+
 			if (this.DragSourceEnable == false)
 			{
 				return false;
 			}
 
-			this.dragBeginPoint = cursor;
+			this.dragBeginPoint = mouseCursor;
 			return true;
 		}
 
 		public void OnDragging(DragEventArgs e)
 		{
-			Point mousePosition = e.ToPoint;
+			Point mouseCursor = Tile.MouseCursorLocation;
 
-#if false
-			if (this.dragInfo == null)  // drag pas véritablement commencé ?
+			if (this.dragWindowSource == null)
 			{
-				double distance = Point.Distance (this.dragBeginPoint, mousePosition);
+				this.dragGroupId = Tile.GetGroupId (this);
+
+				double distance = Point.Distance (this.dragBeginPoint, mouseCursor);
+				//?if (this.dragGroupId != null && distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
 				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
 				{
-					Tile widget = new Tile ();
+					this.isClickForDrag = true;
 
-					widget.PreferredSize = this.ActualSize;
-					widget.DragHost = this;
+					this.dragWindowSourceBeginPosition = mouseCursor;
+					this.dragWindowSourceOffset = this.MapScreenToClient (mouseCursor);
+					this.dragWindowSourceSize = this.ActualSize;
 
-					if (this.dragInfo != null)
-					{
-						this.dragInfo.Dispose ();
-						this.dragInfo = null;
-					}
-
-					this.dragInfo = new DragInfo (mousePosition, widget);
-				}
-			}
-			else
-			{
-				this.dragInfo.Window.WindowLocation = this.dragInfo.Origin + e.Offset;
-
-				Tile target = this.FindDropTarget (mousePosition);
-
-				Point mouse = mousePosition;
-				if (target != null)
-				{
-					mouse = this.MapClientToScreen (mouse);
-					mouse = target.MapScreenToClient (mouse);
-				}
-
-				this.DragHilite (this.dragInfo.Target, false, Point.Zero);
-				this.dragInfo.Target = target;
-				this.DragHilite (this.dragInfo.Target, true, mouse);
-			}
-#else
-			Point ps = this.MapClientToScreen (mousePosition);
-			System.Diagnostics.Debug.WriteLine (string.Format("mouse={0};{1} screen={2};{3}", mousePosition.X, mousePosition.Y, ps.X, ps.Y));
-
-
-			if (this.dragWindow == null)
-			{
-				double distance = Point.Distance (this.dragBeginPoint, mousePosition);
-				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
-				{
-					this.dragWindowPosition = this.MapClientToScreen (mousePosition);
-					this.dragWindowOffset = mousePosition;
-					this.dragWindowSize = this.ActualSize;
-
-					this.dragErstazTile = new Tile ()
+					this.dragErsatzTile = new Tile ()
 					{
 						Margins       = this.Margins,
-						PreferredSize = this.dragWindowSize,
+						PreferredSize = this.dragWindowSourceSize,
 						Dock          = this.Dock,
 						Anchor        = this.Anchor,
 					};
 
-					int index = this.Parent.Children.IndexOf (this);
-					if (index != -1)
+					this.dragErsatzIndex = this.Parent.Children.IndexOf (this);
+					if (this.dragErsatzIndex != -1)
 					{
-						this.Parent.Children[index] = this.dragErstazTile;  // remplace la vraie tuile (this) par l'ersatz
+						this.Parent.Children[this.dragErsatzIndex] = this.dragErsatzTile;  // remplace la vraie tuile (this) par l'ersatz
 					}
 
-					this.PreferredSize = this.dragWindowSize;
-					this.Margins = Margins.Zero;
+					var box = new Tiles.FrameTile ()
+					{
+						PreferredSize = this.dragWindowSourceSize,
+						Dock          = DockStyle.Fill,
+					};
 
-					this.dragWindow = new DragWindow ();
-					this.dragWindow.Alpha = 0.5;
-					this.dragWindow.DefineWidget (this, this.dragWindowSize, Margins.Zero);
-					this.dragWindow.WindowLocation = this.dragWindowPosition - this.dragWindowOffset;
-					this.dragWindow.Owner = this.dragErstazTile.Window;
-					this.dragWindow.FocusWidget (this);
-					this.dragWindow.Show ();
+					this.Parent        = box;
+					this.PreferredSize = this.dragWindowSourceSize;
+					this.Margins       = Margins.Zero;
+
+					//	Crée la fenêtre qui contient la tuile déplacée.
+					this.dragWindowSource = new DragWindow ();
+					this.dragWindowSource.Alpha = 0.8;
+					this.dragWindowSource.DefineWidget (box, this.dragWindowSourceSize, Margins.Zero);
+					this.dragWindowSource.WindowLocation = this.dragWindowSourceBeginPosition - this.dragWindowSourceOffset;
+					this.dragWindowSource.Owner = this.dragErsatzTile.Window;
+					this.dragWindowSource.FocusWidget (this);
+					this.dragWindowSource.Show ();
+
+					this.dragTargetMarker = new DragTargetMarker ()
+					{
+						MarkerColor   = Color.FromHexa ("ff6600"),  // orange vif
+						PreferredSize = Tile.dragTargetMarkerSize,
+						Dock          = DockStyle.Fill,
+					};
+
+					//	Crée la fenêtre qui contient le marqueur '>------'.
+					this.dragWindowTarget = new DragWindow ();
+					this.dragWindowTarget.Alpha = 1.0;
+					this.dragWindowTarget.DefineWidget (this.dragTargetMarker, this.dragTargetMarker.PreferredSize, Margins.Zero);
+					this.dragWindowTarget.WindowLocation = this.dragWindowSourceBeginPosition - this.dragWindowSourceOffset;
+					this.dragWindowTarget.Owner = this.dragErsatzTile.Window;
+					this.dragWindowTarget.FocusWidget (this.dragTargetMarker);
 				}
 			}
 			else
 			{
-				Point p = this.MapClientToScreen (mousePosition);
-				this.dragWindow.WindowLocation = p - this.dragWindowOffset;
+				this.dragWindowSource.WindowLocation = mouseCursor - this.dragWindowSourceOffset;
 
-				Tile target = this.FindDropTarget (mousePosition);
+				Tile target = this.FindDropTarget (mouseCursor);
 
-				Point mouse = mousePosition;
-				if (target != null)
+				//?if (target == null || Tile.GetGroupId (target) != this.dragGroupId)
+				if (target == null)
 				{
-					mouse = this.MapClientToScreen (mouse);
-					mouse = target.MapScreenToClient (mouse);
+					this.dragWindowTarget.Hide ();
 				}
+				else
+				{
+					Rectangle bounds = target.MapClientToScreen (target.Client.Bounds);
+					this.dragOnTargetTop = mouseCursor.Y > bounds.Center.Y;
 
-				//?this.DragHilite (this.dragInfo.Target, false, Point.Zero);
-				//?this.dragInfo.Target = target;
-				//?this.DragHilite (this.dragInfo.Target, true, mouse);
+					if (target.Margins.Bottom == -1)
+					{
+						bounds.Top--;
+					}
+
+					Point location;
+					if (this.dragOnTargetTop)
+					{
+						location = bounds.TopLeft;
+					}
+					else
+					{
+						location = bounds.BottomLeft;
+					}
+
+					this.dragWindowTarget.WindowLocation = location - this.dragTargetMarker.HotSpot;
+					this.dragWindowTarget.Show ();
+				}
 			}
-#endif
 		}
 
 		public void OnDragEnd()
 		{
-			if (this.dragInfo != null)
+			if (this.dragWindowSource != null)
 			{
-				this.DragHilite (this.dragInfo.Target, false, Point.Zero);
+				bool doDrag = this.dragWindowSource.IsVisible;
 
-				this.dragInfo.DissolveAndDispose ();
-				this.dragInfo = null;
+				this.Margins = this.dragErsatzTile.Margins;
+				this.Dock    = this.dragErsatzTile.Dock;
+				this.Anchor  = this.dragErsatzTile.Anchor;
+
+				this.dragErsatzTile.Parent.Children[this.dragErsatzIndex] = this;  // remet la vraie tuile à sa place
+
+				this.dragWindowSource.Hide ();
+				this.dragWindowSource.Dispose ();
+				this.dragWindowSource = null;
+
+				this.dragWindowTarget.Hide ();
+				this.dragWindowTarget.Dispose ();
+				this.dragWindowTarget = null;
+
+				this.dragErsatzTile = null;
+				this.dragTargetMarker = null;
+
+				if (doDrag)
+				{
+					// TODO:
+				}
 			}
 		}
 
 		#endregion
 
 
-		#region DragInfo Class
-
-		/// <summary>
-		/// The <c>DragInfo</c> classe stores information needed only while drag
-		/// and drop is in progress.
-		/// </summary>
-		private class DragInfo : System.IDisposable
+		private static string GetGroupId(Tile tile)
 		{
-			public DragInfo(Point cursor, Tile widget)
+			if (tile is Tiles.GenericTile)
 			{
-				System.Diagnostics.Debug.Assert (widget.DragHost != null);
+				var genericTile = tile as Tiles.GenericTile;
 
-				this.host   = widget.DragHost;
-				this.target = null;
-				this.origin = widget.DragHost.MapClientToScreen (new Point (-cursor.X, -cursor.Y));
-
-				this.window = new DragWindow ();
-				this.window.Alpha = 0.5;
-				this.window.DefineWidget (widget, widget.PreferredSize, Margins.Zero);
-				this.window.WindowLocation = this.Origin + cursor;
-				this.window.Owner = widget.DragHost.Window;
-				this.window.FocusWidget (widget);
-				this.window.Show ();
-			}
-
-			public DragWindow Window
-			{
-				get
+				if (genericTile.Controller != null)
 				{
-					return this.window;
+					return genericTile.Controller.GetGroupId ();
 				}
 			}
 
-			public Point Origin
-			{
-				get
-				{
-					return this.origin;
-				}
-			}
-
-			public Tile Target
-			{
-				get
-				{
-					return this.target;
-				}
-				set
-				{
-					this.target = value;
-				}
-			}
-
-			public void DissolveAndDispose()
-			{
-				if (this.window != null)
-				{
-					this.window.DissolveAndDisposeWindow ();
-					this.window = null;
-				}
-
-				this.Dispose ();
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				if (this.window != null)
-				{
-					this.window.Hide ();
-					this.window.Dispose ();
-				}
-
-				this.window = null;
-				this.host   = null;
-				this.target = null;
-			}
-
-			#endregion
-
-			private Tile				host;
-			private DragWindow			window;
-			private Point				origin;
-			private Tile				target;
+			return null;
 		}
 
-		#endregion
+		private static Point MouseCursorLocation
+		{
+			get
+			{
+				var message = Message.GetLastMessage ();
+				Point mouseCuror = message.Cursor;
+
+				if (message.InWidget != null)
+				{
+					mouseCuror = message.InWidget.MapRootToClient (mouseCuror);
+					mouseCuror = message.InWidget.MapClientToScreen (mouseCuror);
+				}
+
+				return mouseCuror;
+			}
+		}
 
 
 		public static readonly DependencyProperty DragHostProperty         = DependencyProperty.Register ("DragHost", typeof (Tile), typeof (Tile), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		public static readonly DependencyProperty ColorProperty            = DependencyProperty.Register ("Color", typeof (RichColor), typeof (Tile), new Common.Widgets.Helpers.VisualPropertyMetadata (Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (Tile), new DependencyPropertyMetadata (true));
 
-		private static readonly double dragBeginMinimalMove = 8;
+		private static readonly double dragBeginMinimalMove = 4;
+		private static readonly Size dragTargetMarkerSize = new Size (250, 21);
 
 		private readonly TileArrow								directArrow;
 		private readonly TileArrow								reverseArrow;
@@ -707,14 +615,21 @@ namespace Epsitec.Cresus.Core.Widgets
 		
 		private Direction										arrowDirection;
 		private TileArrowMode									arrowMode;
-		private DragInfo										dragInfo;
+
+		private bool											isClickForDrag;
 		private Point											dragBeginPoint;
-		private bool											isDragTarget;
-		private bool											isDragTargetTop;
-		private DragWindow										dragWindow;
-		private Point											dragWindowPosition;
-		private Point											dragWindowOffset;
-		private Size											dragWindowSize;
-		private Tile											dragErstazTile;
+		private bool											dragOnTargetTop;
+		private string											dragGroupId;
+
+		private DragWindow										dragWindowSource;
+		private Point											dragWindowSourceBeginPosition;
+		private Point											dragWindowSourceOffset;
+		private Size											dragWindowSourceSize;
+
+		private DragWindow										dragWindowTarget;
+
+		private Tile											dragErsatzTile;
+		private int												dragErsatzIndex;
+		private DragTargetMarker								dragTargetMarker;
 	}
 }

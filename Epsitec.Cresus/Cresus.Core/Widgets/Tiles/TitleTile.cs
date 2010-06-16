@@ -222,17 +222,22 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			base.OnExited (e);
 
+// Suppression de la sélection de la première tuile contenue lorsque le parent TitleTile est cliqué.
+// Cela n'était pas logique et causait des interférences avec le drag & drop.
+#if false
 			if (this.HasChildren)
 			{
 				this.Items[0].Hilited = false;
 				this.Items[0].Invalidate ();
 			}
+#endif
 
 			this.SetButtonVisibility (false);
 		}
 
 		private void UpdateDefaultChildHilite()
 		{
+#if false
 			if (this.HasManyChildren)
 			{
 				bool hilite = this.IsEntered;
@@ -245,6 +250,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				this.Items[0].Hilited = hilite;
 				this.Items[0].Invalidate ();
 			}
+#endif
 		}
 
 		private void CreateUI()

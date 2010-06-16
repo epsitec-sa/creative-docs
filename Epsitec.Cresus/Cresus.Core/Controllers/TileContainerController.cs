@@ -259,7 +259,10 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 			else
 			{
-				item.SummaryTile.ToggleSubView (this.controller.Orchestrator, this.controller);
+				if (!item.SummaryTile.IsClickForDrag)
+				{
+					item.SummaryTile.ToggleSubView (this.controller.Orchestrator, this.controller);
+				}
 			}
 		}
 
