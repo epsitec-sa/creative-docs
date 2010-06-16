@@ -90,6 +90,17 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public virtual Controllers.ITileController Controller
+		{
+			get
+			{
+				return null;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
+			}
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
