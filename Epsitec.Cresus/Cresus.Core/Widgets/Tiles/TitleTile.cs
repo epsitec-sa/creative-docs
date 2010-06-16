@@ -47,6 +47,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		public Controllers.ITileController Controller
+		{
+			get
+			{
+				return this.Items.Select (item => item.Controller).FirstOrDefault ();
+			}
+		}
 		
 		public override TileArrowMode ArrowMode
 		{
