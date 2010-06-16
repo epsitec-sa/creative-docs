@@ -139,10 +139,13 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateUIMainWindow()
 		{
+			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
+			
 			Window window = new Window
 			{
 				Text = this.ShortWindowTitle,
-				ClientSize = new Epsitec.Common.Drawing.Size (600, 400)
+				ClientSize = new Epsitec.Common.Drawing.Size (600, 400),
+				Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
 			};
 
 			this.Window = window;
