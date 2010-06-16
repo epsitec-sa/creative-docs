@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core
 			this.data = new CoreData (false);
 
 			this.exceptionManager = new ExceptionManager ();
-			this.commands = new CoreCommands (this);
+			this.commands = new CoreCommandDispatcher (this);
 		}
 
 
@@ -228,7 +228,8 @@ namespace Epsitec.Cresus.Core
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;
 		private ExceptionManager						exceptionManager;
-		private CoreCommands							commands;
+		private CoreCommandDispatcher							commands;
+
 		private readonly List<CoreController>			controllers;
 
 		private FrameBox								ribbonBox;

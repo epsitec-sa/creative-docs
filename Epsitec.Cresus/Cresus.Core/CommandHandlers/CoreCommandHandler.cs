@@ -9,59 +9,27 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.CommandHandlers
 {
-	public class CoreCommandHandler
+	public class CoreCommandHandler : ICommandHandler
 	{
-		public CoreCommandHandler(CoreApplication application)
+		public CoreCommandHandler(CoreCommandDispatcher commandDispatcher)
 		{
-			this.dispatcher = application.CommandDispatcher;
-			this.commandContext = application.CommandContext;
-			this.commandHandlers = new Dictionary<Command, CommandHandlerStack> ();
-
-			this.dispatcher.RegisterController (this);
+			this.commandDispatcher = commandDispatcher;
 		}
 
-
-		public void PushHandler(Command command, System.Action handler)
-		{
-			var stack = this.GetCommandHandlerStack (command);
-			stack.Push (handler);
-		}
-
-		public void PopHandler(Command command)
-		{
-			var stack = this.GetCommandHandlerStack (command);
-			stack.Pop ();
-		}
 
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			CommandHandlerStack stack;
-
-			if ((this.commandHandlers.TryGetValue (e.Command, out stack)) &&
-				(stack.ContainsCommandHandlers))
-			{
-				stack.Execute ();
-			}
+			this.commandDispatcher.DispatchGenericCommand (e.Command);
 		}
 
-
-		private CommandHandlerStack GetCommandHandlerStack(Command command)
+		[Command (Core.Res.CommandIds.Test.Crash)]
+		public void TestCrash()
 		{
-			CommandHandlerStack stack;
-
-			if (this.commandHandlers.TryGetValue (command, out stack) == false)
-			{
-				stack = new CommandHandlerStack (command);
-				this.commandHandlers[command] = stack;
-			}
-
-			return stack;
+			throw new System.Exception ("Crashing the application on purpose");
 		}
 
-		private readonly CommandDispatcher dispatcher;
-		private readonly CommandContext commandContext;
-		private readonly Dictionary<Command, CommandHandlerStack> commandHandlers;
+		private readonly CoreCommandDispatcher commandDispatcher;
 	}
 
 }

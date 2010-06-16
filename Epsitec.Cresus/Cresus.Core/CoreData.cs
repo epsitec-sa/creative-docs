@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core
 				if (this.activeDataContext == context)
 				{
 					this.activeDataContext = null;
-					this.OnDataContextChanged ();
+					this.OnDataContextChanged (context);
 				}
 			}
 			else
@@ -259,7 +259,9 @@ namespace Epsitec.Cresus.Core
 
 		private void SetupDataContext()
 		{
+			var oldContext = this.activeDataContext;
 			this.activeDataContext = this.CreateDataContext ();
+			this.OnDataContextChanged (oldContext);
 		}
 
 		private static DbAccess GetDatabaseAccess()
@@ -272,20 +274,71 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
-		private void OnDataContextChanged()
+		private void OnDataContextChanged(DataContext oldDataContext)
 		{
-			var handler = this.DataContextChanged;
+			var newDataContext = this.activeDataContext;
 
-			if (handler != null)
+			if (oldDataContext != null)
 			{
-				handler (this);
+				this.DetachSaveStateHandler (oldDataContext);
+			}
+			if (newDataContext != null)
+            {
+				this.AttachSaveStateHandler (newDataContext);
+            }
+
+			try
+			{
+				if (System.Threading.Interlocked.Increment (ref this.dataContextChangedLevel) == 1)
+				{
+					var handler = this.DataContextChanged;
+
+					if (handler != null)
+					{
+						handler (this);
+					}
+				}
+			}
+			finally
+			{
+				System.Threading.Interlocked.Decrement (ref this.dataContextChangedLevel);
 			}
 		}
 
+		private void AttachSaveStateHandler(DataContext context)
+		{
+			context.EntityContext.EntityChanged += this.HandleEntityContextEntityChanged;
+			this.UpdateEditionSaveRecordCommandState ();
+		}
+
+		private void DetachSaveStateHandler(DataContext context)
+		{
+			context.EntityContext.EntityChanged -= this.HandleEntityContextEntityChanged;
+			this.UpdateEditionSaveRecordCommandState ();
+		}
+
+		private void HandleEntityContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+			this.UpdateEditionSaveRecordCommandState ();
+		}
+
+		private void UpdateEditionSaveRecordCommandState()
+		{
+			if ((this.activeDataContext != null) &&
+				(this.activeDataContext.ContainsChanges ()))
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
+			}
+			else
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
+			}
+		}
 		public event EventHandler DataContextChanged;
 
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataContextPool dataContextPool;
 		private DataContext activeDataContext;
+		private int dataContextChangedLevel;
 	}
 }
