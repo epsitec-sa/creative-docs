@@ -137,6 +137,7 @@
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
+    <Compile Include="Painter.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\CustomerRepository.cs" />
