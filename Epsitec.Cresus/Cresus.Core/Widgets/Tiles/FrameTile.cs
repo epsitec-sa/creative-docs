@@ -1,0 +1,47 @@
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Helpers;
+
+using Epsitec.Cresus.Core.Controllers;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Widgets.Tiles
+{
+	/// <summary>
+	/// Tuile simple (sans flèche) avec toujours un cadre et un fond neutre.
+	/// </summary>
+	public class FrameTile : Tile
+	{
+		public FrameTile()
+		{
+		}
+
+		public FrameTile(Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
+
+
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			Rectangle rect = this.Client.Bounds;
+			rect.Width -= TileArrow.Breadth;
+			rect.Deflate (0.5);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Tile.SurfaceSummaryColors[0]);
+
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (Tile.BorderColors[0]);
+		}
+	}
+}

@@ -599,7 +599,10 @@ namespace Epsitec.Cresus.Core
 						var summaryTile = titleTile.Items[0] as SummaryTile;
 						if (summaryTile != null)
 						{
-							summaryTile.ToggleSubView (controller.Orchestrator, controller);
+							if (!summaryTile.IsClickForDrag)
+							{
+								summaryTile.ToggleSubView (controller.Orchestrator, controller);
+							}
 						}
 					}
 				};
