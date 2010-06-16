@@ -101,6 +101,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		public override bool IsDragAndDropEnabled
+		{
+			get
+			{
+				return !this.ContainsCollectionItemTiles;
+			}
+		}
+
 		private bool HasSingleChild
 		{
 			get

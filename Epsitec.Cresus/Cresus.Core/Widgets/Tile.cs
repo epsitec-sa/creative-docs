@@ -244,10 +244,18 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#region Drag & drop
 
+		public virtual bool IsDragAndDropEnabled
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public bool IsClickForDrag
 		{
 			//	Indique si l'événement Clicked doit être ignoré parce qu'il a servi à faire du drag & drop.
-			//	On devrait pouvoir faire cela plus proprement.
+			//	On devrait pouvoir faire cela plus proprement (avec Swallowed ?).
 			get
 			{
 				return this.isClickForDrag;
@@ -445,14 +453,21 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void OnDragging(DragEventArgs e)
 		{
+			// TODO: IsDragAndDropEnabled ne joure pas dans les TitleTile
+			// TODO: IsSelected pas suffisant
+			if (this.Controller == null || !this.IsDragAndDropEnabled || this.IsSelected)
+			{
+				return;
+			}
+
 			Point mouseCursor = Tile.MouseCursorLocation;
+			mouseCursor.X = this.dragBeginPoint.X;  // essai pour forcer un déplacement vertical
 
 			if (this.dragWindowSource == null)
 			{
 				this.dragGroupId = Tile.GetGroupId (this);
 
 				double distance = Point.Distance (this.dragBeginPoint, mouseCursor);
-				//?if (this.dragGroupId != null && distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
 				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
 				{
 					this.isClickForDrag = true;
@@ -516,33 +531,57 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				Tile target = this.FindDropTarget (mouseCursor);
 
-				//?if (target == null || Tile.GetGroupId (target) != this.dragGroupId)
-				if (target == null)
+				if (target == null || Tile.GetGroupId (target) != this.dragGroupId || target.Controller == null)
 				{
 					this.dragWindowTarget.Hide ();
 				}
 				else
 				{
 					Rectangle bounds = target.MapClientToScreen (target.Client.Bounds);
-					this.dragOnTargetTop = mouseCursor.Y > bounds.Center.Y;
+					bool dragOnTargetTop = mouseCursor.Y > bounds.Center.Y;
 
-					if (target.Margins.Bottom == -1)
+					this.dragTargetIndex = target.Controller.GroupedItemIndex;
+
+					bool b = false;
+					if (this.dragTargetIndex > this.Controller.GroupedItemIndex)
 					{
-						bounds.Top--;
+						this.dragTargetIndex--;  // TODO: faux !
+						b = true;
 					}
 
-					Point location;
-					if (this.dragOnTargetTop)
+					if (!dragOnTargetTop)
 					{
-						location = bounds.TopLeft;
+						this.dragTargetIndex++;
+					}
+
+					System.Diagnostics.Debug.WriteLine (string.Format ("index={0} top={1} after={2}", this.dragTargetIndex, dragOnTargetTop, b));
+
+					if (this.dragTargetIndex == this.Controller.GroupedItemIndex)
+					{
+						this.dragWindowTarget.Hide ();
 					}
 					else
 					{
-						location = bounds.BottomLeft;
-					}
+						if (target.Margins.Bottom == -1)
+						{
+							bounds.Top--;
+						}
 
-					this.dragWindowTarget.WindowLocation = location - this.dragTargetMarker.HotSpot;
-					this.dragWindowTarget.Show ();
+						Point location;
+						if (dragOnTargetTop)
+						{
+							location = bounds.TopLeft;
+						}
+						else
+						{
+							location = bounds.BottomLeft;
+						}
+
+						this.dragWindowTarget.WindowLocation = location - this.dragTargetMarker.HotSpot;
+						this.dragWindowTarget.Show ();
+
+						this.dragTargetIndex = target.Controller.GroupedItemIndex;
+					}
 				}
 			}
 		}
@@ -551,7 +590,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (this.dragWindowSource != null)
 			{
-				bool doDrag = this.dragWindowSource.IsVisible;
+				bool doDrag = this.dragWindowTarget.IsVisible;
 
 				this.Margins = this.dragErsatzTile.Margins;
 				this.Dock    = this.dragErsatzTile.Dock;
@@ -572,7 +611,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (doDrag)
 				{
-					// TODO:
+					this.Controller.GroupedItemIndex = this.dragTargetIndex;
 				}
 			}
 		}
@@ -582,14 +621,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private static string GetGroupId(Tile tile)
 		{
-			if (tile is Tiles.GenericTile)
+			if (tile.Controller != null)
 			{
-				var genericTile = tile as Tiles.GenericTile;
-
-				if (genericTile.Controller != null)
-				{
-					return genericTile.Controller.GetGroupId ();
-				}
+				return tile.Controller.GetGroupId ();
 			}
 
 			return null;
@@ -629,8 +663,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private bool											isClickForDrag;
 		private Point											dragBeginPoint;
-		private bool											dragOnTargetTop;
 		private string											dragGroupId;
+		private int												dragTargetIndex;
 
 		private DragWindow										dragWindowSource;
 		private Point											dragWindowSourceBeginPosition;
