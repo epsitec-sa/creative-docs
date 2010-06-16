@@ -82,6 +82,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public CoreCommandDispatcher			Commands
+		{
+			get
+			{
+				return this.commands;
+			}
+		}
+
 
 		internal void CreateUI()
 		{
@@ -228,7 +236,7 @@ namespace Epsitec.Cresus.Core
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;
 		private ExceptionManager						exceptionManager;
-		private CoreCommandDispatcher							commands;
+		private CoreCommandDispatcher					commands;
 
 		private readonly List<CoreController>			controllers;
 

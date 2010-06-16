@@ -99,6 +99,7 @@ namespace Epsitec.Cresus.Core
 			{
 				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
 				context.SaveChanges ();
+				this.UpdateEditionSaveRecordCommandState ();
 				System.Diagnostics.Debug.WriteLine ("Done");
 			}
 		}
@@ -308,12 +309,15 @@ namespace Epsitec.Cresus.Core
 		private void AttachSaveStateHandler(DataContext context)
 		{
 			context.EntityContext.EntityChanged += this.HandleEntityContextEntityChanged;
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.SaveRecord, () => this.SaveDataContext (this.DataContext));
+			
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
 		private void DetachSaveStateHandler(DataContext context)
 		{
 			context.EntityContext.EntityChanged -= this.HandleEntityContextEntityChanged;
+			CoreProgram.Application.Commands.PopHandler (Res.Commands.Edition.SaveRecord);
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
