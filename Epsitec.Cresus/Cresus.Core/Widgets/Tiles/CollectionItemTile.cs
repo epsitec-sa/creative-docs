@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public override bool IsDragAndDropEnabled
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			this.SetButtonVisibility (this.EnableAddRemoveButtons);
