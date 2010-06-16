@@ -36,14 +36,28 @@ namespace Epsitec.Cresus.Core.Widgets
 			//-base.MeasureMinMax (ref min, ref max);
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override Rectangle GetFrameRectangle()
 		{
-			var adorner = Common.Widgets.Adorners.Factory.Active;
 			var margins = new Margins (0.5, TileArrow.Breadth + 0.5, 0.5, 0.5);
 			var frame   = Rectangle.Deflate (this.Client.Bounds, margins);
+			
+			return frame;
+		}
 
-			graphics.AddRectangle (frame);
-			graphics.RenderSolid (adorner.ColorBorder);
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if ((this.DrawFrameState & FrameState.Right) != 0)
+			{
+				var adorner = Common.Widgets.Adorners.Factory.Active;
+				var frame   = this.GetFrameRectangle ();
+				
+				graphics.AddLine (frame.Right+1, frame.Top, frame.Right+1, frame.Bottom);
+				graphics.RenderSolid (Color.FromAlphaColor (0.6, adorner.ColorBorder));
+				graphics.AddLine (frame.Right+2, frame.Top, frame.Right+2, frame.Bottom);
+				graphics.RenderSolid (Color.FromAlphaColor (0.3, adorner.ColorBorder));
+			}
 		}
 
 		protected override Widget TabNavigate(int index, TabNavigationDir dir, Widget[] siblings)

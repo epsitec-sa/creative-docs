@@ -349,18 +349,17 @@ using Epsitec.Common.Support.EntityEngine;
 
 				bool isItemPartOfCollection = item.AutoGroup;
 
-				if (isItemPartOfCollection)
+				switch (item.DataType)
 				{
-					switch (item.DataType)
-					{
-						case SummaryDataType.CollectionItem:
-						case SummaryDataType.EmptyItem:
-							break;
+					case SummaryDataType.CollectionItem:
+					case SummaryDataType.EmptyItem:
+						item.TitleTile.AddButtonVisibility = true;
+						break;
 
-						default:
-							isItemPartOfCollection = false;
-							break;
-					}
+					default:
+						item.TitleTile.AddButtonVisibility = false;
+						isItemPartOfCollection = false;
+						break;
 				}
 				
 				item.SummaryTile.IsCompact  = isItemPartOfCollection;
@@ -491,7 +490,7 @@ using Epsitec.Common.Support.EntityEngine;
 			{
 				if (height > 0)
 				{
-					height += 5;
+					height -= 1;
 				}
 
 				height += tile.GetFullHeight ();
@@ -506,7 +505,6 @@ using Epsitec.Common.Support.EntityEngine;
 			{
 				titleTile.Parent         = parent;
 				titleTile.Dock           = DockStyle.Top;
-				//?titleTile.Margins        = new Margins (0, 0, 0, 5);
 				titleTile.Margins        = new Margins (0, 0, 0, -1);
 				titleTile.ArrowDirection = Direction.Right;
 				titleTile.IsReadOnly     = true;

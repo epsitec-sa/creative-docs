@@ -49,11 +49,13 @@ namespace Epsitec.Cresus.Core
 
 		public TitleTile CreateEditionTitleTile(string iconUri, string title)
 		{
+			double bottomMargin = -1;
+
 			this.titleTile = new TitleTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
+				Margins = new Margins (0, 0, 0, bottomMargin),
 				ArrowDirection = Direction.Right,
 				IconUri = iconUri,
 				Title = title,
@@ -287,26 +289,15 @@ namespace Epsitec.Cresus.Core
 					tile.TileArrowHilite = false;
 				};
 
+			var controller = this.GetActiveController ();
+
 			showButton.Clicked +=
 				delegate
 				{
 					if (showButton.GlyphShape == GlyphShape.ArrowRight)
 					{
-						if (tile.IsSelected)
-						{
-							this.controller.Orchestrator.CloseSubViews (this.controller);
-							tile.SetSelected (false);
-						}
-						else
-						{
-							var newController = EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Edition, this.controller.Orchestrator);
-
-							if (newController != null)
-							{
-								this.controller.Orchestrator.ShowSubView (this.controller, newController);
-								tile.SetSelected (true);
-							}
-						}
+						tile.Controller = new AutoCompleteTextFieldTileController (entity);
+						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
 					if (showButton.GlyphShape == GlyphShape.Plus)
@@ -316,6 +307,71 @@ namespace Epsitec.Cresus.Core
 				};
 
 			return editor;
+		}
+
+		private class AutoCompleteTextFieldTileController : ITileController
+		{
+			public AutoCompleteTextFieldTileController(AbstractEntity entity)
+			{
+				this.entity = entity;
+			}
+
+
+			#region ITileController Members
+
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+			{
+				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", this.entity, ViewControllerMode.Edition, orchestrator);
+			}
+
+			#endregion
+
+			#region IGroupedItem Members
+
+			public string GetGroupId()
+			{
+				return null;
+			}
+
+			#endregion
+
+			#region IGroupedItemPosition Members
+
+			public int GroupedItemIndex
+			{
+				get
+				{
+					return 0;
+				}
+				set
+				{
+					throw new System.NotImplementedException ();
+				}
+			}
+
+			public int GroupedItemCount
+			{
+				get
+				{
+					return 0;
+				}
+			}
+
+			#endregion
+
+			private readonly AbstractEntity entity;
+		}
+
+		private CoreViewController GetActiveController()
+		{
+			if (this.nextBuilder != null)
+			{
+				return this.nextBuilder.GetActiveController ();
+			}
+			else
+			{
+				return this.controller;
+			}
 		}
 
 		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton)

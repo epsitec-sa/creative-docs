@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Controller = controller,
 				Name = string.Format ("Column{0}", this.ColumnCount),
+				DrawFrameState = FrameState.Left | FrameState.Right,
 			};
 
 			this.columns.Push (column);
