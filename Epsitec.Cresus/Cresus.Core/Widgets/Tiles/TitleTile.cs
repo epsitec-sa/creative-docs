@@ -32,6 +32,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool AddButtonVisibility
+		{
+			get;
+			set;
+		}
+
 
 		public TileCollection Items
 		{
@@ -333,7 +339,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void SetButtonVisibility(bool visibility)
 		{
-			this.buttonAdd.Visibility = visibility;
+			this.buttonAdd.Visibility = visibility && this.AddButtonVisibility;
 		}
 
 

@@ -61,43 +61,45 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void CreateUIFrame(Widget container)
 		{
 			this.frame = new FrameBox
-						{
-							Parent = container,
-							Dock = DockStyle.Fill,
-							DrawFullFrame = true,
-						};
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+				DrawFullFrame = false,
+				DrawFrameState = FrameState.None
+			};
 		}
 
 		private void CreateUILeftPanel()
 		{
 			this.leftPanel = new FrameBox
-						{
-							Parent = this.frame,
-							Name = "LeftPanel",
-							Dock = DockStyle.Left,
-							Padding = new Margins (5),
-							PreferredWidth = 150,
-						};
+			{
+				Parent = this.frame,
+				Name = "LeftPanel",
+				Dock = DockStyle.Left,
+				Padding = new Margins (5),
+				PreferredWidth = 150,
+			};
 		}
 
 		private void CreateUIRightPanel()
 		{
 			this.rightPanel = new FrameBox
-						{
-							Parent = this.frame,
-							Name = "RightPanel",
-							Dock = DockStyle.Fill,
-							Padding = new Margins (5, 0, 5, 5),
-						};
+			{
+				Parent = this.frame,
+				Name = "RightPanel",
+				Dock = DockStyle.Fill,
+				Padding = new Margins (0, 0, 0, 0),
+			};
 		}
 
 		private void CreateUISplitter()
 		{
 			this.splitter = new VSplitter
-						{
-							Parent = this.frame,
-							Dock = DockStyle.Left,
-						};
+			{
+				Parent = this.frame,
+				Dock = DockStyle.Left,
+				PreferredWidth = 8,
+			};
 		}
 		
 		private readonly CoreData data;

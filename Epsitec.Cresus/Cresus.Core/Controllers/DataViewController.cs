@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = this.scrollable.Viewport,
 				Dock = DockStyle.Fill,
+				DrawFrameState = FrameState.None,
+				Padding = new Margins (3, 0, 3, 0),
 			};
 
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);

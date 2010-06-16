@@ -76,6 +76,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual Rectangle GetFrameRectangle()
+		{
+			return Rectangle.Deflate (this.Client.Bounds, 0.5, 0.5);
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (this.BackColor.IsVisible)
@@ -83,24 +88,18 @@ namespace Epsitec.Common.Widgets
 				graphics.AddFilledRectangle (this.Client.Bounds);
 				graphics.RenderSolid (this.BackColor);
 			}
+			
+			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Rectangle rect = this.GetFrameRectangle ();
 
 			if (this.DrawFullFrame)
 			{
-				IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-				Rectangle rect = this.Client.Bounds;
-				rect.Deflate (0.5);
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
 
 			if (this.DrawDesignerFrame)
 			{
-				IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-				Rectangle rect = this.Client.Bounds;
-				rect.Deflate (0.5);
-				
 				using (Path path = new Path (rect))
 				{
 					FrameBox.DrawPathDash (graphics, path, 1, 4, 4, adorner.ColorBorder);
@@ -109,11 +108,6 @@ namespace Epsitec.Common.Widgets
 
 			if (this.DrawFrameState != FrameState.None)
 			{
-				IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-				Rectangle rect = this.Client.Bounds;
-				rect.Deflate (0.5);
-
 				using (Path path = new Path ())
 				{
 					if ((this.DrawFrameState & FrameState.Left) != 0)
