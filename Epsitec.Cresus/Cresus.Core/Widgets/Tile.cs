@@ -448,6 +448,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.dragBeginPoint = mouseCursor;
+			this.dragBeginSize  = this.PreferredSize;
 			return true;
 		}
 
@@ -584,6 +585,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.Margins = this.dragErsatzTile.Margins;
 				this.Dock    = this.dragErsatzTile.Dock;
 				this.Anchor  = this.dragErsatzTile.Anchor;
+				this.PreferredSize = this.dragBeginSize;
 
 				this.dragErsatzTile.Parent.Children[this.dragErsatzIndex] = this;  // remet la vraie tuile à sa place
 
@@ -652,6 +654,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private bool											isClickForDrag;
 		private Point											dragBeginPoint;
+		private Size											dragBeginSize;
 		private string											dragGroupId;
 		private int												dragTargetIndex;
 
