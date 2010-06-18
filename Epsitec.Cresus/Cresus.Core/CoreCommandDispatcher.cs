@@ -73,6 +73,11 @@ namespace Epsitec.Cresus.Core
 			return false;
 		}
 
+		public CommandState GetState(Command command)
+		{
+			return this.commandContext.GetCommandState (command);
+		}
+
 
 		private CommandHandlerStack GetCommandHandlerStack(Command command)
 		{

@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = this.frame,
 				Name = "LeftPanel",
 				Dock = DockStyle.Left,
-				Padding = new Margins (5),
+				Padding = new Margins (0, 0, 0, 0),
 				PreferredWidth = 150,
 			};
 		}
