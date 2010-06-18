@@ -48,11 +48,29 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.scrollList = new ScrollList ()
+			var frame = new FrameBox ()
 			{
 				Parent = container,
 				Dock = DockStyle.Fill,
+			};
+
+			//	TODO: widgets to manage the list
+			var label = new StaticText ()
+			{
+				Parent = frame,
+				Anchor = AnchorStyles.Top | AnchorStyles.LeftAndRight,
+				Text = @"<font size=""120%"">Clients</font>",
+				Margins = new Common.Drawing.Margins (0, 0, 0, 0),
+				PreferredHeight = 26,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+			};
+
+			this.scrollList = new ScrollList ()
+			{
+				Parent = frame,
+				Anchor = AnchorStyles.All,
 				ScrollListStyle = ScrollListStyle.Standard,
+				Margins = new Common.Drawing.Margins (-1, -1, 26, -1),
 			};
 
 			this.scrollList.SelectedItemChanged +=
