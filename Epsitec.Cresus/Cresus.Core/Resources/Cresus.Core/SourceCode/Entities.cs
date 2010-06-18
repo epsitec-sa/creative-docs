@@ -28,6 +28,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AB2]", typeof (Epsitec.Cresus.Core.Entities.CustomerEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AG2]", typeof (Epsitec.Cresus.Core.Entities.FolderEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AO2]", typeof (Epsitec.Cresus.Core.Entities.DocumentEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A63]", typeof (Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AA3]", typeof (Epsitec.Cresus.Core.Entities.ArticleGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AF3]", typeof (Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -35,30 +38,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Country</c> entity.
 	///	designer:cap/L0A1
 	///	</summary>
-	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class CountryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0A1/L0A2
+		///	designer:fld/L0A1/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A2]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A2]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A2]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0A1/L0A3
@@ -82,8 +81,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
@@ -108,30 +105,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Region</c> entity.
 	///	designer:cap/L0A4
 	///	</summary>
-	public partial class RegionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class RegionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0A4/L0AB
+		///	designer:fld/L0A4/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AB]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AB]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0AB]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0A4/L0AC
@@ -177,8 +170,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnCountryChanging(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
@@ -1106,6 +1097,18 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>CompatibleGenders</c> field.
+		///	designer:fld/L0AT/L0AB3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PersonGenderEntity> CompatibleGenders
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PersonGenderEntity> ("[L0AB3]");
+			}
+		}
 		
 		partial void OnShortNameChanging(string oldValue, string newValue);
 		partial void OnShortNameChanged(string oldValue, string newValue);
@@ -1133,30 +1136,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Language</c> entity.
 	///	designer:cap/L0A21
 	///	</summary>
-	public partial class LanguageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class LanguageEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0A21/L0A31
+		///	designer:fld/L0A21/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A31]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A31]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A31]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0A21/L0A41
@@ -1180,8 +1179,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
@@ -1206,7 +1203,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PersonGender</c> entity.
 	///	designer:cap/L0AA1
 	///	</summary>
-	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
+	public partial class PersonGenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -1226,28 +1223,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0AA1/L0AB1
+		///	designer:fld/L0AA1/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AB1]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AB1]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0AB1]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AA1/L0AC1
@@ -1271,8 +1264,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
@@ -1601,7 +1592,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>TelecomType</c> entity.
 	///	designer:cap/L0AV1
 	///	</summary>
-	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
+	public partial class TelecomTypeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -1621,28 +1612,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0AV1/L0A12
+		///	designer:fld/L0AV1/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A12]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A12]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A12]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AV1/L0A02
@@ -1666,8 +1653,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
@@ -1765,7 +1750,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>UriScheme</c> entity.
 	///	designer:cap/L0A62
 	///	</summary>
-	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank
+	public partial class UriSchemeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
 		#region IItemRank Members
 		///	<summary>
@@ -1785,28 +1770,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
-		///	designer:fld/L0A62/L0A72
+		///	designer:fld/L0A62/L0AD3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A72]")]
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
 		public string Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A72]");
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
 			}
 			set
 			{
-				string oldValue = this.Code;
-				if (oldValue != value)
-				{
-					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A72]", oldValue, value);
-					this.OnCodeChanged (oldValue, value);
-				}
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
 			}
 		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0A62/L0A82
@@ -1830,8 +1811,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
@@ -2348,6 +2327,423 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnRankChanged(global::Epsitec.Cresus.Core.Entities.IItemRank obj, int? oldValue, int? newValue);
 		static partial void OnRankChanging(global::Epsitec.Cresus.Core.Entities.IItemRank obj, int? oldValue, int? newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IItemRevision Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IItemRevision</c> entity.
+	///	designer:cap/L0A33
+	///	</summary>
+	public interface IItemRevision
+	{
+		///	<summary>
+		///	The <c>RevisionIsUpToDate</c> field.
+		///	designer:fld/L0A33/L0A43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A43]")]
+		bool RevisionIsUpToDate
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>RevisionUniqueId</c> field.
+		///	designer:fld/L0A33/L0A53
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A53]")]
+		string RevisionUniqueId
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IItemRevisionInterfaceImplementation
+	{
+		public static bool GetRevisionIsUpToDate(global::Epsitec.Cresus.Core.Entities.IItemRevision obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<bool> ("[L0A43]");
+		}
+		public static void SetRevisionIsUpToDate(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, bool value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			bool oldValue = obj.RevisionIsUpToDate;
+			if (oldValue != value)
+			{
+				IItemRevisionInterfaceImplementation.OnRevisionIsUpToDateChanging (obj, oldValue, value);
+				entity.SetField<bool> ("[L0A43]", oldValue, value);
+				IItemRevisionInterfaceImplementation.OnRevisionIsUpToDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnRevisionIsUpToDateChanged(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, bool oldValue, bool newValue);
+		static partial void OnRevisionIsUpToDateChanging(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, bool oldValue, bool newValue);
+		public static string GetRevisionUniqueId(global::Epsitec.Cresus.Core.Entities.IItemRevision obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[L0A53]");
+		}
+		public static void SetRevisionUniqueId(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.RevisionUniqueId;
+			if (oldValue != value)
+			{
+				IItemRevisionInterfaceImplementation.OnRevisionUniqueIdChanging (obj, oldValue, value);
+				entity.SetField<string> ("[L0A53]", oldValue, value);
+				IItemRevisionInterfaceImplementation.OnRevisionUniqueIdChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnRevisionUniqueIdChanged(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, string oldValue, string newValue);
+		static partial void OnRevisionUniqueIdChanging(global::Epsitec.Cresus.Core.Entities.IItemRevision obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ArticleDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ArticleDefinition</c> entity.
+	///	designer:cap/L0A63
+	///	</summary>
+	public partial class ArticleDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRevision
+	{
+		#region IItemRevision Members
+		///	<summary>
+		///	The <c>RevisionIsUpToDate</c> field.
+		///	designer:fld/L0A63/L0A43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A43]")]
+		public bool RevisionIsUpToDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRevisionInterfaceImplementation.GetRevisionIsUpToDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRevisionInterfaceImplementation.SetRevisionIsUpToDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>RevisionUniqueId</c> field.
+		///	designer:fld/L0A63/L0A53
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A53]")]
+		public string RevisionUniqueId
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRevisionInterfaceImplementation.GetRevisionUniqueId (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRevisionInterfaceImplementation.SetRevisionUniqueId (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>ShortDescription</c> field.
+		///	designer:fld/L0A63/L0A73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A73]")]
+		public string ShortDescription
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A73]");
+			}
+			set
+			{
+				string oldValue = this.ShortDescription;
+				if (oldValue != value)
+				{
+					this.OnShortDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[L0A73]", oldValue, value);
+					this.OnShortDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LongDescription</c> field.
+		///	designer:fld/L0A63/L0A83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A83]")]
+		public string LongDescription
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A83]");
+			}
+			set
+			{
+				string oldValue = this.LongDescription;
+				if (oldValue != value)
+				{
+					this.OnLongDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[L0A83]", oldValue, value);
+					this.OnLongDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ArticleGroups</c> field.
+		///	designer:fld/L0A63/L0A93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A93]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ArticleGroupEntity> ArticleGroups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ArticleGroupEntity> ("[L0A93]");
+			}
+		}
+		///	<summary>
+		///	The <c>ArticleParameters</c> field.
+		///	designer:fld/L0A63/L0AH3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AH3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity> ArticleParameters
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity> ("[L0AH3]");
+			}
+		}
+		
+		partial void OnShortDescriptionChanging(string oldValue, string newValue);
+		partial void OnShortDescriptionChanged(string oldValue, string newValue);
+		partial void OnLongDescriptionChanging(string oldValue, string newValue);
+		partial void OnLongDescriptionChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 102);	// [L0A63]
+		public static readonly new string EntityStructuredTypeKey = "[L0A63]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ArticleGroup Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ArticleGroup</c> entity.
+	///	designer:cap/L0AA3
+	///	</summary>
+	public partial class ArticleGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AA3/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AA3/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AA3/L0AE3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AE3]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AE3]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AE3]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ArticleGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ArticleGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 106);	// [L0AA3]
+		public static readonly new string EntityStructuredTypeKey = "[L0AA3]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IItemCode Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IItemCode</c> entity.
+	///	designer:cap/L0AC3
+	///	</summary>
+	public interface IItemCode
+	{
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AC3/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		string Code
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IItemCodeInterfaceImplementation
+	{
+		public static string GetCode(global::Epsitec.Cresus.Core.Entities.IItemCode obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<string> ("[L0AD3]");
+		}
+		public static void SetCode(global::Epsitec.Cresus.Core.Entities.IItemCode obj, string value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			string oldValue = obj.Code;
+			if (oldValue != value)
+			{
+				IItemCodeInterfaceImplementation.OnCodeChanging (obj, oldValue, value);
+				entity.SetField<string> ("[L0AD3]", oldValue, value);
+				IItemCodeInterfaceImplementation.OnCodeChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnCodeChanged(global::Epsitec.Cresus.Core.Entities.IItemCode obj, string oldValue, string newValue);
+		static partial void OnCodeChanging(global::Epsitec.Cresus.Core.Entities.IItemCode obj, string oldValue, string newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.AbstractArticleParameterDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>AbstractArticleParameterDefinition</c> entity.
+	///	designer:cap/L0AF3
+	///	</summary>
+	public partial class AbstractArticleParameterDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0AF3/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AF3/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AF3/L0AG3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AG3]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AG3]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AG3]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 111);	// [L0AF3]
+		public static readonly new string EntityStructuredTypeKey = "[L0AF3]";
 	}
 }
 #endregion
