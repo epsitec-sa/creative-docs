@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityDataCache = new EntityDataCache ();
 			this.tableBulkLoaded = new Dictionary<string, bool> ();
 			this.dataLoadedEntities = new HashSet<AbstractEntity> ();
+			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.relationLoadedEntity = new Dictionary<Druid, HashSet<AbstractEntity>> ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
@@ -198,6 +199,24 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				this.entitiesToDelete.Add (entity);
 			}
+		}
+
+
+		public void RegisterEmptyEntity(AbstractEntity entity)
+		{
+			System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+			this.emptyEntities.Add (entity);
+		}
+
+		public void UnregisterEmptyEntity(AbstractEntity entity)
+		{
+			System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+			this.emptyEntities.Remove (entity);
+		}
+
+		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)
+		{
+			return this.emptyEntities.Contains (entity);
 		}
 
 
@@ -1567,6 +1586,10 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
 			}
+			if (EntityNullReferenceVirtualizer.IsEmptyEntityContext (e.OldContext))
+			{
+				this.RegisterEmptyEntity (entity);
+			}
 
 			Druid entityId      = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId  = this.EntityContext.GetRootEntityId (entityId);
@@ -1594,6 +1617,7 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly EntityDataCache entityDataCache;
 		private readonly Dictionary<string, bool> tableBulkLoaded;
 		private readonly HashSet<AbstractEntity> dataLoadedEntities;
+		private readonly HashSet<AbstractEntity> emptyEntities;
 		private readonly Dictionary<Druid, HashSet<AbstractEntity>> relationLoadedEntity;
 		private readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		private readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
