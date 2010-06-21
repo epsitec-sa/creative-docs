@@ -201,7 +201,9 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactRoleEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
 		{
-			LegalPersonEntity company = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity company1 = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity company2 = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+
 			NaturalPersonEntity person1 = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
 			NaturalPersonEntity person2 = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
 
@@ -248,7 +250,7 @@ namespace Epsitec.Cresus.Core
 			mail1.Complement = "Direction";
 			mail1.Comments.Add (comment1);
 			mail1.Roles.Add (role1);
-			mail1.LegalPerson = company;
+			mail1.LegalPerson = company1;
 			mail1.NaturalPerson = person1;
 
 			MailContactEntity mail2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
@@ -258,7 +260,7 @@ namespace Epsitec.Cresus.Core
 
 			TelecomContactEntity telecom1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecom1.TelecomType = telecomType1;
-			telecom1.LegalPerson = company;
+			telecom1.LegalPerson = company1;
 			telecom1.Number = "+41 848 27 37 87";
 			telecom1.Roles.Add (role1);
 			telecom1.Roles.Add (role2);
@@ -271,35 +273,38 @@ namespace Epsitec.Cresus.Core
 
 			TelecomContactEntity telecom3 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecom3.TelecomType = telecomType3;
-			telecom3.LegalPerson = company;
+			telecom3.LegalPerson = company1;
 			telecom3.NaturalPerson = person1;
 			telecom3.Number = "+41 24 425 08 30";
 			telecom3.Roles.Add (role2);
 
 			UriContactEntity uri1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri1.LegalPerson = company;
+			uri1.LegalPerson = company1;
 			uri1.Uri = "epsitec@epsitec.ch";
 			uri1.UriScheme = uriScheme1;
 			uri1.Roles.Add (role2);
 			uri1.Roles.Add (role3);
 
 			UriContactEntity uri2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri2.LegalPerson = company;
+			uri2.LegalPerson = company1;
 			uri2.Uri = "arnaud@epsitec.ch";
 			uri2.UriScheme = uriScheme1;
 			uri2.Roles.Add (role3);
 
 			UriContactEntity uri3 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri3.LegalPerson = company;
+			uri3.LegalPerson = company1;
 			uri3.Uri = "perre.arnaud@opac.ch";
 			uri3.UriScheme = uriScheme1;
 			uri3.Roles.Add (role3);
 
-			company.Complement = "Logiciels de gestion Crésus";
-			company.Name = "Epsitec SA";
-			company.Contacts.Add (mail1);
-			company.Contacts.Add (telecom3);
-			company.Contacts.Add (uri1);
+			company1.Complement = "Logiciels de gestion Crésus";
+			company1.Name = "Epsitec SA";
+			company1.Contacts.Add (mail1);
+			company1.Contacts.Add (telecom3);
+			company1.Contacts.Add (uri1);
+
+			company2.Complement = "Le géant de l'alimentation";
+			company2.Name = "Migros SA";
 
 			person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
 			person1.Firstname = "Pierre";
@@ -320,7 +325,8 @@ namespace Epsitec.Cresus.Core
 
 			yield return person1;
 			yield return person2;
-			yield return company;
+			yield return company1;
+			yield return company2;
 		}
 		
 		private IEnumerable<CustomerEntity> InsertCustomersInDatabase(IEnumerable<AbstractPersonEntity> persons)
