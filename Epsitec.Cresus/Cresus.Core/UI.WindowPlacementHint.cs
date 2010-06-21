@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-			public static readonly WindowPlacementHint Empty;
+			public static readonly WindowPlacementHint Empty = new WindowPlacementHint ();
 
 			#region IEquatable<WindowPlacementHint> Members
 

@@ -159,7 +159,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public event EventHandler LayoutChanged;
 
-		private static readonly double minimalWidth = 220;
 		private static readonly double reducedWidth = Widgets.Tiles.TitleTile.MinimumTileWidth + Widgets.TileArrow.Breadth;
 
 

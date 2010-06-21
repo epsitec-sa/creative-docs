@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, bottomMargin),
 				ArrowDirection = Direction.Right,
-				IconUri = iconUri,
+				TitleIconUri = iconUri,
 				Title = title,
 				IsReadOnly = false,
 				TabIndex = ++this.tabIndex,
