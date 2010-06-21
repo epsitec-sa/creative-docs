@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile, 0, "Prénom", Marshaler.Create (() => this.Entity.Firstname, x => this.Entity.Firstname = x));
 			builder.CreateTextField (tile, 0, "Nom",    Marshaler.Create (() => this.Entity.Lastname,  x => this.Entity.Lastname = x));
-			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateMargin    (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUIGender(UIBuilder builder)
