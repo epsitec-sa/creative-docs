@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData
 	{
+		public IEnumerable<LegalPersonEntity> GetLegalPersons()
+		{
+			return new LegalPersonRepository (this.DataContext).GetAllLegalPersons ();
+		}
+
 		public IEnumerable<CountryEntity> GetCountries()
 		{
 			return new CountryRepository (this.DataContext).GetAllCountries ();
@@ -238,18 +243,18 @@ namespace Epsitec.Cresus.Core
 			CommentEntity comment1 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
 			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
 
-			MailContactEntity contact1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
-			contact1.Address = address1;
-			contact1.Complement = "Direction";
-			contact1.Comments.Add (comment1);
-			contact1.Roles.Add (role1);
-			contact1.LegalPerson = company;
-			contact1.NaturalPerson = person1;
+			MailContactEntity mail1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			mail1.Address = address1;
+			mail1.Complement = "Direction";
+			mail1.Comments.Add (comment1);
+			mail1.Roles.Add (role1);
+			mail1.LegalPerson = company;
+			mail1.NaturalPerson = person1;
 
-			MailContactEntity contact2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
-			contact2.Address = address2;
-			contact2.Roles.Add (role3);
-			contact2.NaturalPerson = person1;
+			MailContactEntity mail2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			mail2.Address = address2;
+			mail2.Roles.Add (role3);
+			mail2.NaturalPerson = person1;
 
 			TelecomContactEntity telecom1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecom1.TelecomType = telecomType1;
@@ -292,7 +297,7 @@ namespace Epsitec.Cresus.Core
 
 			company.Complement = "Logiciels de gestion Crésus";
 			company.Name = "Epsitec SA";
-			company.Contacts.Add (contact1);
+			company.Contacts.Add (mail1);
 			company.Contacts.Add (telecom3);
 			company.Contacts.Add (uri1);
 
@@ -300,8 +305,8 @@ namespace Epsitec.Cresus.Core
 			person1.Firstname = "Pierre";
 			person1.Lastname = "Arnaud";
 			person1.Title = title1;
-			person1.Contacts.Add (contact1);
-			person1.Contacts.Add (contact2);
+			person1.Contacts.Add (mail1);
+			person1.Contacts.Add (mail2);
 			person1.Contacts.Add (telecom1);
 			person1.Contacts.Add (telecom2);
 			person1.Contacts.Add (telecom3);
