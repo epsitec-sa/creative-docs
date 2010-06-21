@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates the conditions based on the previous <c>AddCondition</c>
 		/// calls and using the expected revision.
 		/// </summary>
-		/// <param name="fields">The collection to which the conditions will be added.</param>
+		/// <returns>The <see cref="SqlField"/> or null.</returns>
 		internal override SqlField CreateSqlField()
 		{
 			SqlField result = null;

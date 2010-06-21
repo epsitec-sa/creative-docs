@@ -22,15 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data = data;
 
 			this.viewControllers = new Stack<CoreViewController> ();
-			this.orchestrator = new Orchestrators.DataViewOrchestrator (this);
-		}
-
-		public Orchestrators.DataViewOrchestrator Orchestrator
-		{
-			get
-			{
-				return this.orchestrator;
-			}
+			this.Orchestrator = new Orchestrators.DataViewOrchestrator (this);
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -265,7 +257,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private EntityViewController CreateCompactEntityViewController()
 		{
-			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.orchestrator);
+			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator);
 		}
 
 		private CoreViewController GetParentController(int depth)
@@ -288,7 +280,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly CoreData data;
 		private readonly Stack<CoreViewController> viewControllers;
-		private readonly Orchestrators.DataViewOrchestrator orchestrator;
 		
 		private ViewLayoutController viewLayoutController;
 		private FrameBox frame;

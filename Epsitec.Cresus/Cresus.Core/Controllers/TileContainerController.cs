@@ -446,7 +446,7 @@ using Epsitec.Common.Support.EntityEngine;
 				item.TitleTile.Title     = item.DefaultTitle.ToString ();
 			}
 
-			item.TitleTile.IconUri = item.IconUri;
+			item.TitleTile.TitleIconUri = item.IconUri;
 		}
 
 		private IEnumerable<TitleTile> GetTitleTiles()

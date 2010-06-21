@@ -263,7 +263,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// type is not yet known, register it with the database.
 		/// </summary>
 		/// <param name="type">The type.</param>
-		/// <returns>The <see cref="DbTypeDef"/> instance or <c>null</c>.</returns>
+		/// <param name="options">The field options.</param>
+		/// <returns>
+		/// The <see cref="DbTypeDef"/> instance or <c>null</c>.
+		/// </returns>
 		private DbTypeDef CreateTypeDef(INamedType type, FieldOptions options)
 		{
 			this.AssertTransaction ();
