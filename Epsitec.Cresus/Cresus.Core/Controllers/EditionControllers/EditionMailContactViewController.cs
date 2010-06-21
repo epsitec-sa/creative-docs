@@ -29,13 +29,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIRoles (builder);
 
-				//?this.CreateTabBook (container, builder);
+				this.CreateTabBook (builder);
+
+				//	Crée le contenu de la page "local".
+				this.localPageContent = new List<Common.Widgets.Widget> ();
+				builder.ContentList = this.localPageContent;
 
 				this.CreateUILegalPerson (builder);
 				this.CreateUIMargin      (builder);
 				this.CreateUICountry     (builder);
 				this.CreateUIMain        (builder);
 				this.CreateUILocation    (builder);
+
+				//	Crée le contenu de la page "global".
+				this.globalPageContent = new List<Common.Widgets.Widget> ();
+				builder.ContentList = this.globalPageContent;
+
+				//	TODO:
+
+				builder.ContentList = null;
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -54,26 +66,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
 		}
 
-		private void CreateTabBook(TileContainer container, UIBuilder builder)
+		private void CreateTabBook(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
-			var tabBook = builder.CreateTabBook (tile);
 
-			var page1 = new Common.Widgets.TabPage ()
-			{
-				TabTitle = "Adresse spécifique",
-				Name = "Local",
-			};
-
-			var page2 = new Common.Widgets.TabPage ()
-			{
-				TabTitle = "Adresse existante",
-				Name = "Global",
-			};
-
-			tabBook.Items.Add (page1);
-			tabBook.Items.Add (page2);
-			tabBook.ActivePage = page1;
+			List<string> texts = new List<string>();
+			texts.Add ("Local.Adresse spécifique");
+			texts.Add ("Global.Adresse existante");
+			builder.CreateTabBook (tile, texts, "Local");
 		}
 
 		private void CreateUILegalPerson(UIBuilder builder)
@@ -135,5 +135,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name),
 				});
 		}
+
+
+		private List<Common.Widgets.Widget> localPageContent;
+		private List<Common.Widgets.Widget> globalPageContent;
 	}
 }

@@ -38,6 +38,28 @@ namespace Epsitec.Cresus.Core
 			UIBuilder.current = this;
 		}
 
+
+		public List<Widget> ContentList
+		{
+			get
+			{
+				return this.contentList;
+			}
+			set
+			{
+				this.contentList = value;
+			}
+		}
+
+		private void ContentListAdd(Widget widget)
+		{
+			if (this.contentList != null)
+			{
+				this.contentList.Add (widget);
+			}
+		}
+
+
 		public TitleTile CurrentTitleTile
 		{
 			get
@@ -83,14 +105,49 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public TabBook CreateTabBook(EditionTile tile)
+		public void CreateTabBook(EditionTile tile, List<string> texts, string defaultName)
 		{
-			var tabBook = new TabBook
+			var container = new FrameBox
 			{
 				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
 			};
 
-			return tabBook;
+			foreach (string mix in texts)
+			{
+				string[] parts = mix.Split ('.');
+				System.Diagnostics.Debug.Assert (parts.Length == 2);
+				string name = parts[0];
+				string text = parts[1];
+
+				var button = new Button
+				{
+					Parent = container,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					PreferredWidth = 100,
+					Dock = DockStyle.Left,
+					Name = name,
+					Text = text,
+				};
+
+				if (name == defaultName)
+				{
+					button.ActiveState = ActiveState.Yes;
+				}
+
+#if false
+				button.Clicked +=
+				delegate
+					{
+						foreach (Button b in container.Childrens)
+						{
+							b.ActiveState = (b.Name == button.Name) ? ActiveState.Yes : ActiveState.No;
+						}
+					};
+#endif
+			}
 		}
 
 
@@ -159,6 +216,8 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 10, 10),
 			};
 
+			this.ContentListAdd (staticText);
+
 			return staticText;
 		}
 
@@ -183,6 +242,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (textField);
 
 			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
 
@@ -220,6 +282,9 @@ namespace Epsitec.Cresus.Core
 				ScrollerVisibility = false,
 				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
 			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (textField);
 
 			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
 
@@ -282,6 +347,9 @@ namespace Epsitec.Cresus.Core
 				Enable = false,
 				AutoFocus = false,
 			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (container);
 
 			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, showButton);
 
@@ -453,6 +521,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (combo);
+
 			return combo;
 		}
 
@@ -488,6 +559,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (combo);
+
 			return combo;
 		}
 
@@ -503,6 +577,8 @@ namespace Epsitec.Cresus.Core
 					Margins = new Margins (0, 10, 10, 10),
 					PreferredHeight = 1,
 				};
+
+				this.ContentListAdd (separator);
 			}
 			else
 			{
@@ -512,6 +588,8 @@ namespace Epsitec.Cresus.Core
 					Dock = DockStyle.Top,
 					PreferredHeight = 10,
 				};
+
+				this.ContentListAdd (frame);
 			}
 		}
 
@@ -673,6 +751,7 @@ namespace Epsitec.Cresus.Core
 		private readonly UIBuilder nextBuilder;
 		private int tabIndex;
 		private TitleTile titleTile;
+		private List<Widget> contentList;
 	}
 	
 	static class StringExtension
