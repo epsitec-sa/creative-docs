@@ -161,6 +161,7 @@
     <Compile Include="ClipboardReadData.cs" />
     <Compile Include="ClipboardDataFormat.cs" />
     <Compile Include="ClipboardDataChangedEventArgs.cs" />
+    <Compile Include="EntityEngine\EntityContextEventArgs.cs" />
     <Compile Include="EntityEngine\EntityChangedEventArgs.cs" />
     <Compile Include="EntityEngine\EntityNullReferenceVirtualizer.cs" />
     <Compile Include="EntityEngine\IEntityPersistenceManager.cs" />

@@ -80,6 +80,18 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Determines whether the specified context is an empty entity context.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified context is an empty entity context; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsEmptyEntityContext(EntityContext context)
+		{
+			return context is EmptyEntityContext;
+		}
+
+		/// <summary>
 		/// Determines whether the specified entity was patched using <see cref="PatchNullReferences"/>
 		/// and still is unchanged.
 		/// </summary>

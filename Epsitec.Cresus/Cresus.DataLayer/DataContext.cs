@@ -1557,7 +1557,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private void HandleEntityCreated(object sender, EntityEventArgs e)
+		private void HandleEntityCreated(object sender, EntityContextEventArgs e)
 		{
 			AbstractEntity entity = e.Entity;
 

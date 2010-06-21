@@ -775,14 +775,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (this.context != null)
 				{
-					this.context.NotifyEntityDetached (this);
+					this.context.NotifyEntityDetached (this, newContext);
 				}
 
 				this.context = newContext;
 
 				if (this.context != null)
 				{
-					this.context.NotifyEntityAttached (this);
+					this.context.NotifyEntityAttached (this, oldContext);
 				}
 			}
 		}

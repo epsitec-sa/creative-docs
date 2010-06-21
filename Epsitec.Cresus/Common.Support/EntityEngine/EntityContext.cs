@@ -520,7 +520,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityAttached (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
 			return entity;
 		}
 
@@ -549,7 +549,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 
-			this.OnEntityAttached (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
 			return entity;
 		}
 
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				EntityContext.Pop ();
 			}
 			
-			this.OnEntityAttached (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityContextEventArgs (entity, null, this));
 			return entity;
 		}
 
@@ -873,14 +873,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal void NotifyEntityAttached(AbstractEntity entity)
+		internal void NotifyEntityAttached(AbstractEntity entity, EntityContext oldContext)
 		{
-			this.OnEntityAttached (new EntityEventArgs (entity));
+			this.OnEntityAttached (new EntityContextEventArgs (entity, oldContext, this));
 		}
 
-		internal void NotifyEntityDetached(AbstractEntity entity)
+		internal void NotifyEntityDetached(AbstractEntity entity, EntityContext newContext)
 		{
-			this.OnEntityDetached (new EntityEventArgs (entity));
+			this.OnEntityDetached (new EntityContextEventArgs (entity, this, newContext));
 		}
 
 		internal void NotifyEntityChanged(AbstractEntity entity, string id, object oldValue, object newValue)
@@ -889,9 +889,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.OnEntityChanged (new EntityChangedEventArgs (entity, id, oldValue, newValue));
 		}
 
-		protected virtual void OnEntityAttached(EntityEventArgs e)
+		protected virtual void OnEntityAttached(EntityContextEventArgs e)
 		{
-			EventHandler<EntityEventArgs> handler;
+			EventHandler<EntityContextEventArgs> handler;
 
 			lock (this.eventExclusion)
 			{
@@ -904,9 +904,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual void OnEntityDetached(EntityEventArgs e)
+		protected virtual void OnEntityDetached(EntityContextEventArgs e)
 		{
-			EventHandler<EntityEventArgs> handler;
+			EventHandler<EntityContextEventArgs> handler;
 
 			lock (this.eventExclusion)
 			{
@@ -1110,7 +1110,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public event EventHandler<EntityEventArgs> EntityAttached
+		public event EventHandler<EntityContextEventArgs> EntityAttached
 		{
 			add
 			{
@@ -1128,7 +1128,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public event EventHandler<EntityEventArgs> EntityDetached
+		public event EventHandler<EntityContextEventArgs> EntityDetached
 		{
 			add
 			{
@@ -1172,8 +1172,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private readonly object eventExclusion = new object ();
 
-		private EventHandler<EntityEventArgs> entityAttachedEvent;
-        private EventHandler<EntityEventArgs> entityDetachedEvent;
+		private EventHandler<EntityContextEventArgs> entityAttachedEvent;
+		private EventHandler<EntityContextEventArgs> entityDetachedEvent;
         private EventHandler<EntityChangedEventArgs> entityChangedEvent;
 
 		private readonly IStructuredTypeResolver resourceManager;
