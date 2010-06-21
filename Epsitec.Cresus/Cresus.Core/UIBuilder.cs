@@ -83,6 +83,17 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public TabBook CreateTabBook(EditionTile tile)
+		{
+			var tabBook = new TabBook
+			{
+				Parent = tile.Container,
+			};
+
+			return tabBook;
+		}
+
+
 		public void CreateHeaderEditorTile()
 		{
 			if (this.container.Controller != this.controller)
