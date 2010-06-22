@@ -296,7 +296,7 @@ using Epsitec.Common.Support.EntityEngine;
 					this.GenerateTiles ();
 				};
 
-				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem;
+				tile.EnableAddRemoveButtons = item.DataType == SummaryDataType.CollectionItem && item.AutoGroup;
 				item.SummaryTile = tile;
 
 				if (item.AutoGroup)
