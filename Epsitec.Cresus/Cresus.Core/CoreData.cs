@@ -27,7 +27,6 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabasebCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
-			this.dataContextPool = new DataContextPool ();
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -48,14 +47,6 @@ namespace Epsitec.Cresus.Core
 				}
 
 				return this.activeDataContext;
-			}
-		}
-
-		public DataContextPool DataContextPool
-		{
-			get
-			{
-				return this.dataContextPool;
 			}
 		}
 
@@ -111,14 +102,14 @@ namespace Epsitec.Cresus.Core
 				EnableEntityNullReferenceVirtualizer = true,
 			};
 
-			this.dataContextPool.Add (context);
+			DataContextPool.Instance.Add (context);
 
 			return context;
 		}
 
 		public void DisposeDataContext(DataContext context)
 		{
-			if (this.dataContextPool.Remove (context))
+			if (DataContextPool.Instance.Remove (context))
 			{
 				context.Dispose ();
 
@@ -341,7 +332,6 @@ namespace Epsitec.Cresus.Core
 		public event EventHandler DataContextChanged;
 
 		private readonly DbInfrastructure dbInfrastructure;
-		private readonly DataContextPool dataContextPool;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 	}
