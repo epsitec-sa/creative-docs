@@ -168,7 +168,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			IEnumerable<Entities.AddressEntity> addressGetter = this.Entity.LegalPerson.Contacts
 				.Where (x => x is Entities.MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
 				.Cast<Entities.MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
-				.Select (x => x.Address);						// on s'intéresse à l'entité Address de MailContact
+				.Select (x => x.Address)						// on s'intéresse à l'entité Address de MailContact
+				.ToList ();										// on veut une liste statique
 
 			builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
 				new SelectionController<Entities.AddressEntity>
