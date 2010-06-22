@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.DataLayer
 {
 	public sealed class DataContextPool : IEnumerable<DataContext>
 	{
-		public DataContextPool()
+		private DataContextPool()
 		{
 			this.dataContexts = new HashSet<DataContext> ();
 		}
@@ -71,6 +71,15 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
+		public static DataContextPool Instance
+		{
+			get
+			{
+				return DataContextPool.instance;
+			}
+		}
+
+		private static readonly DataContextPool instance = new DataContextPool ();
 		private readonly HashSet<DataContext> dataContexts;
 	}
 }

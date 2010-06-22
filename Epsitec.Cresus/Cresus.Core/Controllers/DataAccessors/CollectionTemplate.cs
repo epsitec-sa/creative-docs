@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public CollectionTemplate(string name)
 			: base (name)
 		{
-			this.DefineCreateItem (() => EntityContext.Current.CreateEmptyEntity<T> ());
+			this.DefineCreateItem (CollectionTemplate<T>.CreateEmptyItem);
 			this.DefineDeleteItem (item => { });
 		}
 
@@ -170,20 +170,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			T source = entity as T;
 
-			data.EntityAccessor		  = () => source;
-			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
-			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source);
-			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
-			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source);
-			data.DataType			  = SummaryDataType.CollectionItem;
+			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
 
-			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
+			if ((context != null) &&
+				(context.IsRegisteredAsEmptyEntity (entity)))
 			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
-				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
+				this.BindEmptyEntitySummaryData (data, source);
 			}
-
-			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
+			else
+			{
+				this.BindRealEntitySummaryData (data, source, collectionAccessor);
+			}
 		}
 
 		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
@@ -205,7 +202,40 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.GenericDeleteItem (item as T);
 		}
 
+		private static T CreateEmptyItem()
+		{
+			T entity = EntityContext.Current.CreateEmptyEntity<T> ();
+			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
 
+			context.RegisterEmptyEntity (entity);
+
+			return entity;
+		}
+
+		private void BindEmptyEntitySummaryData(SummaryData data, T source)
+		{
+			data.EntityAccessor = () => source;
+			data.DataType		= SummaryDataType.CollectionItem;
+			data.Text           = UIBuilder.FormatText ("<i>Définition en cours</i>");
+		}
+
+		private void BindRealEntitySummaryData(SummaryData data, T source, ICollectionAccessor collectionAccessor)
+		{
+			data.EntityAccessor		  = () => source;
+			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
+			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source);
+			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
+			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source);
+			data.DataType			  = SummaryDataType.CollectionItem;
+
+			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
+			{
+				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
+				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
+			}
+
+			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
+		}
 		private T GenericCreateItem()
 		{
 			var item = this.createItem ();
