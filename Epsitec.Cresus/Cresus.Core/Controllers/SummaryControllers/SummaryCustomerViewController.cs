@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Controllers;
@@ -33,6 +34,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			containerController.GenerateTiles ();
 		}
 
+		protected override void AboutToCloseUI()
+		{
+			this.UpdateCustomerDefaultAddress ();
+
+			base.AboutToCloseUI ();
+		}
 
 		private void CreateUICustomer(SummaryDataItems data)
 		{
@@ -122,6 +129,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIUriContacts(SummaryDataItems data)
 		{
 			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Person.Contacts);
+		}
+		
+		private void UpdateCustomerDefaultAddress()
+		{
+			var customer   = this.Entity;
+			var oldAddress = EntityNullReferenceVirtualizer.UnwrapNullEntity (customer.DefaultAddress);
+			var newAddress = EntityNullReferenceVirtualizer.UnwrapNullEntity (customer.Person.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address).FirstOrDefault ());
+
+			if (oldAddress != newAddress)
+			{
+				customer.DefaultAddress = newAddress;
+			}
 		}
 	}
 }
