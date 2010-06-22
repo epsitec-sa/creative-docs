@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public FrameBox CreateTabBook(EditionTile tile, List<string> texts, string defaultName, System.Action<string> action)
+		public FrameBox CreateTabBook(EditionTile tile, List<string> pagesDescription, string defaultName, System.Action<string> action)
 		{
 			var container = new FrameBox
 			{
@@ -117,9 +117,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			for (int i = 0; i < texts.Count; i++)
+			for (int i = 0; i < pagesDescription.Count; i++)
 			{
-				string[] parts = texts[i].Split ('.');
+				string[] parts = pagesDescription[i].Split ('.');
 				System.Diagnostics.Debug.Assert (parts.Length == 2);
 				string name = parts[0];
 				string text = parts[1];
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core
 					Name = name,
 					Text = text,
 					PreferredHeight = 24 + Widgets.TileArrow.Breadth,
-					Margins = new Margins (0, (i == texts.Count-1) ? 0 : -1, 0, 0),
+					Margins = new Margins (0, (i == pagesDescription.Count-1) ? 0 : -1, 0, 0),
 					Dock = DockStyle.StackFill,
 				};
 

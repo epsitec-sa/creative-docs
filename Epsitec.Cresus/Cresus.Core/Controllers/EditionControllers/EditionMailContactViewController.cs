@@ -21,6 +21,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
+		//	Si this.Entity.NaturalPerson existe et this.Entity.LegalPerson nul :
+		//		Les onglets sont présents et réglés sur "Adresse spécifique".
+		//		On définit l'adresse spécifique d'une personne physique.
+		//	
+		//	Si this.Entity.NaturalPerson existe et this.Entity.LegalPerson existe :
+		//		Les onglets sont présents et réglés sur "Adresse existante".
+		//		On définit l'adresse existante (entreprise) d'une personne physique.
+		//	
+		//	Si this.Entity.NaturalPerson nul et this.Entity.LegalPerson existe :
+		//		Pas d'onglets. On définit l'adresse spécifique d'une entreprise.
+
 		protected override void CreateUI(TileContainer container)
 		{
 			using (var builder = new UIBuilder (container, this))
@@ -100,10 +111,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			List<string> texts = new List<string>();
-			texts.Add ("local.Adresse spécifique");
-			texts.Add ("global.Adresse existante");
-			this.tabBookContainer = builder.CreateTabBook (tile, texts, "local", this.HandleTabBookAction);
+			List<string> pagesDescription = new List<string>();
+			pagesDescription.Add ("local.Adresse spécifique");
+			pagesDescription.Add ("global.Adresse existante");
+			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "local", this.HandleTabBookAction);
 		}
 
 		private void SelectTabPage(string tabPageName)
@@ -154,14 +165,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIAddress(UIBuilder builder)
 		{
-			IEnumerable<Entities.AddressEntity> xx = this.Entity.LegalPerson.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address);
+			IEnumerable<Entities.AddressEntity> addressGetter = this.Entity.LegalPerson.Contacts
+				.Where (x => x is Entities.MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
+				.Cast<Entities.MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
+				.Select (x => x.Address);						// on s'intéresse à l'entité Address de MailContact
 
 			builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
 				new SelectionController<Entities.AddressEntity>
 				{
 					ValueGetter = () => this.Entity.Address,
 					ValueSetter = x => this.Entity.Address = x,
-					PossibleItemsGetter = () => xx,
+					PossibleItemsGetter = () => addressGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
