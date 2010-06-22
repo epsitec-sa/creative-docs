@@ -6,7 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
-	public class Accessor
+	/// <summary>
+	/// The <c>Accessor</c> class implements a getter which uses two functions to
+	/// return a result: the first one gets the source object and the second one
+	/// extracts the result from the source object.
+	/// </summary>
+	public abstract class Accessor
 	{
 		public static Accessor<TResult> Create<T, TResult>(System.Func<T> sourceValueFunction, System.Func<T, TResult> resultValueFunction)
 			where T : new ()
@@ -36,32 +41,5 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		private readonly System.Func<TResult> getter;
-	}
-	
-	public class AccessorWithDefaultValue<TResult> : Accessor<TResult>
-	{
-		public AccessorWithDefaultValue(System.Func<TResult> getter, TResult defaultResult, System.Predicate<TResult> isEmptyPredicate)
-			: base (getter)
-		{
-			this.defaultResult    = defaultResult;
-			this.isEmptyPredicate = isEmptyPredicate;
-		}
-
-		public override TResult ExecuteGetter()
-		{
-			TResult result = base.ExecuteGetter ();
-
-			if (this.isEmptyPredicate (result))
-			{
-				return this.defaultResult;
-			}
-			else
-			{
-				return result;
-			}
-		}
-
-		private readonly TResult defaultResult;
-		private readonly System.Predicate<TResult> isEmptyPredicate;
 	}
 }

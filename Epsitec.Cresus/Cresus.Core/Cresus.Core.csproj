@@ -97,6 +97,7 @@
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />
+    <Compile Include="Controllers\DataAccessors\AccessorWithDefaultValue.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
