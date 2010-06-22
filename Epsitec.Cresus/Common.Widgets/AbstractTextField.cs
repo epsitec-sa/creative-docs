@@ -981,7 +981,7 @@ namespace Epsitec.Common.Widgets
 			//	We use the text as it is displayed on screen, not as it is stored
 			//	internally, since we must account for possible prefixes/suffixes
 			//	related to the HintText property :
-			
+
 			bool ok = layout.DetectIndex (pos, select, out index, out after);
 			int len = this.Text.Length;
 
@@ -1101,6 +1101,7 @@ namespace Epsitec.Common.Widgets
 
 			this.lastMousePos = pos;
 			pos = this.Client.Bounds.Constrain (pos);
+			//?pos.X -= this.margins.Left;
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos += this.scrollOffset;

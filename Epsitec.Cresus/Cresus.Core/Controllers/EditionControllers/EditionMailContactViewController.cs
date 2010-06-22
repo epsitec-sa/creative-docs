@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
+			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
 				new SelectionController<Entities.LegalPersonEntity>
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
@@ -161,26 +161,46 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToTextArrayConverter     = x => new string[] { x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name),
 				});
+
+			textField.SelectedItemChanged +=
+				delegate
+				{
+					System.Diagnostics.Debug.Assert (this.addressTextField != null);
+					this.addressTextField.Text = null;
+					this.addressTextField.Items.Clear ();
+
+					var addressGetter = this.LegalPersonAddressGetter;
+					foreach (var item in addressGetter)
+					{
+						this.addressTextField.Items.Add (item);
+					}
+				};
 		}
 
 		private void CreateUIAddress(UIBuilder builder)
 		{
-			IEnumerable<Entities.AddressEntity> addressGetter = this.Entity.LegalPerson.Contacts
-				.Where (x => x is Entities.MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
-				.Cast<Entities.MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
-				.Select (x => x.Address)						// on s'intéresse à l'entité Address de MailContact
-				.ToList ();										// on veut une liste statique
-
-			builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
+			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
 				new SelectionController<Entities.AddressEntity>
 				{
 					ValueGetter = () => this.Entity.Address,
 					ValueSetter = x => this.Entity.Address = x,
-					PossibleItemsGetter = () => addressGetter,
+					PossibleItemsGetter = () => this.LegalPersonAddressGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
 				});
+		}
+
+		private IEnumerable<Entities.AddressEntity> LegalPersonAddressGetter
+		{
+			get
+			{
+				return this.Entity.LegalPerson.Contacts
+					.Where (x => x is Entities.MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
+					.Cast<Entities.MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
+					.Select (x => x.Address)						// on s'intéresse à l'entité Address de MailContact
+					.ToList ();										// on veut une liste statique
+			}
 		}
 
 
@@ -252,5 +272,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private Common.Widgets.FrameBox			tabBookContainer;
 		private List<Common.Widgets.Widget>		localPageContent;
 		private List<Common.Widgets.Widget>		globalPageContent;
+		private AutoCompleteTextField			addressTextField;
 	}
 }
