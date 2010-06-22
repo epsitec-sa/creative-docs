@@ -243,6 +243,12 @@ using Epsitec.Common.Support.EntityEngine;
 						new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 						new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
 				};
+			tile.RemoveClicked += (sender, e) =>
+				{
+					this.controller.Orchestrator.CloseSubViews (this.controller);
+					item.DeleteItem ();
+					this.GenerateTiles ();
+				};
 
 		}
 
