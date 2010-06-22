@@ -8,14 +8,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	public class SummaryDataItems : IEnumerable<SummaryData>
 	{
-		public SummaryDataItems()
+		public SummaryDataItems(EntityViewController controller)
 		{
+			this.controller = controller;
 			this.simpleItems = new List<SummaryData> ();
 			this.emptyItems  = new List<SummaryData> ();
 			this.collectionItems = new List<SummaryData> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
 		}
 
+
+		public EntityViewController Controller
+		{
+			get
+			{
+				return this.controller;
+			}
+		}
 
 		public IList<SummaryData> SimpleItems
 		{
@@ -158,6 +167,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private readonly object exclusion = new object ();
 
+		private readonly EntityViewController controller;
 		private readonly List<SummaryData> simpleItems;
 		private readonly List<SummaryData> emptyItems;
 		private readonly List<SummaryData> collectionItems;

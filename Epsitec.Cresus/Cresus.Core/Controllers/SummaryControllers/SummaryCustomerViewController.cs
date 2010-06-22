@@ -4,9 +4,10 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +38,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void AboutToCloseUI()
 		{
 			this.UpdateCustomerDefaultAddress ();
-
 			base.AboutToCloseUI ();
+		}
+
+		protected override void OnChildItemCreated(AbstractEntity entity)
+		{
+			this.SetupNewContact (entity as AbstractContactEntity);
+			base.OnChildItemCreated (entity);
 		}
 
 		private void CreateUICustomer(SummaryDataItems data)
@@ -140,6 +146,27 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			if (oldAddress != newAddress)
 			{
 				customer.DefaultAddress = newAddress;
+			}
+		}
+
+		private void SetupNewContact(AbstractContactEntity contact)
+		{
+			if (contact != null)
+			{
+				var naturalPerson = this.Entity.Person as NaturalPersonEntity;
+				var legalPerson   = this.Entity.Person as LegalPersonEntity;
+
+				//	Attach the contact to the customer's person entity, which can be either a natural
+				//	person or a legal person:
+
+				if (naturalPerson != null)
+				{
+					contact.NaturalPerson = naturalPerson;
+				}
+				if (legalPerson != null)
+				{
+					contact.LegalPerson = legalPerson;
+				}
 			}
 		}
 	}

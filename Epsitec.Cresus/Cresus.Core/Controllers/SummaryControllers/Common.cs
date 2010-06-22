@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.MailContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("MailContact")
+			var template = new CollectionTemplate<T3> ("MailContact", data.Controller)
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineText			(x => UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name))
 				.DefineCompactText	(x => UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name));
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.TelecomContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("TelecomContact")
+			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller)
 				.DefineTitle		(x => UIBuilder.FormatText (x.TelecomType.Name))
 				.DefineText			(x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText  (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.UriContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("UriContact", filter: x => x.UriScheme.Code == "mailto")
+			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, filter: x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri))
 				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));

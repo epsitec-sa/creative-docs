@@ -27,11 +27,11 @@ using Epsitec.Common.Support.EntityEngine;
 	/// </summary>
 	public class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(CoreViewController controller, TileContainer container)
+		public TileContainerController(EntityViewController controller, TileContainer container)
 		{
 			this.controller  = controller;
 			this.container   = container;
-			this.dataItems   = new SummaryDataItems ();
+			this.dataItems   = new SummaryDataItems (controller);
 			this.activeItems = new List<SummaryData> ();
 			this.entityContext = EntityContext.Current;
 			this.refreshTimer = new Timer ()
@@ -566,7 +566,7 @@ using Epsitec.Common.Support.EntityEngine;
 		}
 
 		private readonly Widget					container;
-		private readonly CoreViewController		controller;
+		private readonly EntityViewController	controller;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		activeItems;
 		private readonly EntityContext			entityContext;

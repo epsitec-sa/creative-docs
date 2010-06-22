@@ -50,15 +50,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	public class CollectionTemplate<T> : CollectionTemplate
 			where T : AbstractEntity, new ()
 	{
-		public CollectionTemplate(string name)
+		public CollectionTemplate(string name, EntityViewController controller)
 			: base (name)
 		{
-			this.DefineCreateItem (CollectionTemplate<T>.CreateEmptyItem);
-			this.DefineDeleteItem (item => { });
+			this.DefineCreateItem (() => controller.NotifyChildItemCreated (CollectionTemplate<T>.CreateEmptyItem ()));
+			this.DefineDeleteItem (item => controller.NotifyChildItemDeleted (item));
 		}
 
-		public CollectionTemplate(string name, System.Predicate<T> filter)
-			: this (name)
+		public CollectionTemplate(string name, EntityViewController controller, System.Predicate<T> filter)
+			: this (name, controller)
 		{
 			this.Filter = filter;
 		}

@@ -30,6 +30,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected abstract void CreateUI(TileContainer container);
 
+		public T NotifyChildItemCreated<T>(T entity)
+			where T : AbstractEntity
+		{
+			this.OnChildItemCreated (entity);
+			return entity;
+		}
+
+		public void NotifyChildItemDeleted<T>(T entity)
+			where T : AbstractEntity
+		{
+		}
 
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
@@ -43,6 +54,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			controller.Orchestrator = orchestrator;
 
 			return controller;
+		}
+
+
+		protected virtual void OnChildItemCreated(AbstractEntity entity)
+		{
 		}
 
 		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
@@ -90,7 +106,8 @@ namespace Epsitec.Cresus.Core.Controllers
 	}
 
 
-	public abstract class EntityViewController<T> : EntityViewController where T : AbstractEntity
+	public abstract class EntityViewController<T> : EntityViewController
+		where T : AbstractEntity
 	{
 		protected EntityViewController(string name, T entity)
 			: base (name)
