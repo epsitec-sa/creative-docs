@@ -22,11 +22,46 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.getter = getter;
 		}
 
-		public TResult ExecuteGetter()
+		public System.Func<TResult> Getter
+		{
+			get
+			{
+				return this.getter;
+			}
+		}
+
+		public virtual TResult ExecuteGetter()
 		{
 			return this.getter ();
 		}
 
 		private readonly System.Func<TResult> getter;
+	}
+	
+	public class AccessorWithDefaultValue<TResult> : Accessor<TResult>
+	{
+		public AccessorWithDefaultValue(System.Func<TResult> getter, TResult defaultResult, System.Predicate<TResult> isEmptyPredicate)
+			: base (getter)
+		{
+			this.defaultResult    = defaultResult;
+			this.isEmptyPredicate = isEmptyPredicate;
+		}
+
+		public override TResult ExecuteGetter()
+		{
+			TResult result = base.ExecuteGetter ();
+
+			if (this.isEmptyPredicate (result))
+			{
+				return this.defaultResult;
+			}
+			else
+			{
+				return result;
+			}
+		}
+
+		private readonly TResult defaultResult;
+		private readonly System.Predicate<TResult> isEmptyPredicate;
 	}
 }

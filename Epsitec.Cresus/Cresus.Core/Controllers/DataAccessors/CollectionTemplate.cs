@@ -41,6 +41,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
 
+		public static readonly FormattedText DefaultEmptyText = UIBuilder.FormatText ("<i>vide</i>");
+		public static readonly FormattedText DefaultDefinitionInProgressText = UIBuilder.FormatText ("<i>définition en cours</i>");
+
 		private readonly string name;
 	}
 
@@ -170,6 +173,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			T source = entity as T;
 
+			data.EntityAccessor = () => source;
+			data.DataType		= SummaryDataType.CollectionItem;
+			
 			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
 
 			if ((context != null) &&
@@ -222,19 +228,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void BindEmptyEntitySummaryData(SummaryData data, T source)
 		{
-			data.EntityAccessor = () => source;
-			data.DataType		= SummaryDataType.CollectionItem;
-			data.Text           = UIBuilder.FormatText ("<i>Définition en cours</i>");
+			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
+			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
+			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
+			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
 		}
 
 		private void BindRealEntitySummaryData(SummaryData data, T source, ICollectionAccessor collectionAccessor)
 		{
-			data.EntityAccessor		  = () => source;
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
-			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source);
+			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
-			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source);
-			data.DataType			  = SummaryDataType.CollectionItem;
+			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
 		}
 		
 		private T GenericCreateItem()

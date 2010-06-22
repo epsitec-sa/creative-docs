@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Mail",
 					Title		 = UIBuilder.FormatText ("Adresse"),
 					CompactTitle = UIBuilder.FormatText ("Adresse"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
+					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			data.Add (CollectionAccessor.Create (source, collectionResolver, template));
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Telecom",
 					Title		 = UIBuilder.FormatText ("Téléphone"),
 					CompactTitle = UIBuilder.FormatText ("Téléphone"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
+					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			data.Add (CollectionAccessor.Create (source, collectionResolver, template));
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Uri",
 					Title		 = UIBuilder.FormatText ("E-Mail"),
 					CompactTitle = UIBuilder.FormatText ("E-Mail"),
-					Text		 = UIBuilder.FormatText ("<i>vide</i>")
+					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			data.Add (CollectionAccessor.Create (source, collectionResolver, template));
