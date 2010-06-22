@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static HintComparerResult Compare(string text, string typed)
 		{
-			int index = text.IndexOf (typed);
+			int index = (text == null) ? -1 : text.IndexOf (typed);
 
 			if (index == -1)
 			{
