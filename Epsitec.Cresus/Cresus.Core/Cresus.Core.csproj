@@ -94,6 +94,8 @@
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\ICommandHandler.cs" />
+    <Compile Include="Controllers\BrowserSettingsController.cs" />
+    <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />

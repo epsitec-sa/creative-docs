@@ -34,6 +34,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield break;
 		}
 
+		public FrameBox SettingsPanel
+		{
+			get
+			{
+				return this.settingsPanel;
+			}
+		}
+
 		private static T GetActiveItem<T>(IList<T> collection, int index)
 		{
 			if (index < 0)
@@ -54,7 +62,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Fill,
 			};
 
-			//	TODO: widgets to manage the list
+			this.settingsPanel = new FrameBox
+			{
+				Parent = frame,
+				Dock = DockStyle.Top,
+				PreferredHeight = 26,
+			};
+
+#if false
 			var label = new StaticText ()
 			{
 				Parent = frame,
@@ -64,13 +79,20 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredHeight = 26,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 			};
+#endif
+
+			var listFrame = new FrameBox
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+			};
 
 			this.scrollList = new ScrollList ()
 			{
-				Parent = frame,
+				Parent = listFrame,
 				Anchor = AnchorStyles.All,
 				ScrollListStyle = ScrollListStyle.Standard,
-				Margins = new Common.Drawing.Margins (-1, -1, 26, -1),
+				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
 			};
 
 			this.scrollList.SelectedItemChanged +=
@@ -210,5 +232,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private ScrollList scrollList;
 		private EntityKey activeEntityKey;
+		private FrameBox settingsPanel;
 	}
 }
