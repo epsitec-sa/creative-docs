@@ -31,11 +31,25 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public AutoCompleteTextField()
 		{
+			this.ButtonShowCondition = ButtonShowCondition.Always;
+
 			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
 			this.ComboMenuReasonableItemsLimit = 100;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
+
+			this.button = new GlyphButton
+			{
+				GlyphShape = GlyphShape.Menu,
+				ButtonStyle = ButtonStyle.Combo,
+				Name = "Open",
+			};
+
+			this.button.Pressed += this.HandleButtonPressed;
+
+			this.defaultButtonWidth = this.button.PreferredWidth;
+			this.margins.Left       = this.button.PreferredWidth;
 
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.selectedRow = -1;
@@ -58,6 +72,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (disposing)
 			{
 				this.CloseComboMenu ();
+
+				this.button.Pressed -= this.HandleButtonPressed;
+				this.button.Dispose ();
 			}
 
 			base.Dispose (disposing);
@@ -254,6 +271,93 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		#endregion
+
+
+		#region Button
+		public override Rectangle GetButtonBounds()
+		{
+			//	Retourne le rectangle à utiliser pour les boutons Accept/Reject.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Rectangle rect = new Rectangle ();
+
+			rect.Left   = adorner.GeometryComboRightMargin;
+			rect.Right  = adorner.GeometryComboRightMargin + this.margins.Left;
+			rect.Bottom = adorner.GeometryComboBottomMargin;
+			rect.Top    = this.ActualHeight - adorner.GeometryComboTopMargin;
+
+			return rect;
+		}
+
+		protected override void UpdateButtonGeometry()
+		{
+			//	Met à jour la position du bouton; la marge gauche de la ligne
+			//	éditable est ajustée pour tenir compte de la présence (ou non)
+			//	du bouton.
+			base.UpdateButtonGeometry ();
+
+			if (this.button != null)
+			{
+				this.margins.Left = this.button.Visibility ? this.defaultButtonWidth : 0;
+				this.button.SetManualBounds (this.GetButtonBounds ());
+			}
+		}
+
+		protected override void UpdateButtonVisibility()
+		{
+			this.SetButtonVisibility (this.ComputeButtonVisibility ());
+		}
+
+
+		protected bool ComputeButtonVisibility()
+		{
+			bool show = false;
+
+			switch (this.ButtonShowCondition)
+			{
+				case ButtonShowCondition.Always:
+					show = true;
+					break;
+				case ButtonShowCondition.Never:
+					show = false;
+					break;
+				case ButtonShowCondition.WhenFocused:
+					show = this.IsFocused;
+					break;
+				case ButtonShowCondition.WhenKeyboardFocused:
+					show = this.KeyboardFocus;
+					break;
+				case ButtonShowCondition.WhenModified:
+					show = this.HasEditedText;
+					break;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+			}
+
+			return show;
+		}
+
+		protected void SetButtonVisibility(bool visibility)
+		{
+			if (this.button != null)
+			{
+				if (this.button.Visibility != visibility)
+				{
+					this.button.Visibility = visibility;
+
+					this.UpdateButtonGeometry ();
+					this.UpdateTextLayout ();
+					this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
+				}
+			}
+		}
+
+		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		{
+			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
+			this.OpenComboMenu ();
+		}
 		#endregion
 
 
@@ -471,7 +575,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string GetItemText(int index)
 		{
-			if (this.ValueToDescriptionConverter == null)
+			if (this.ValueToDescriptionConverter == null || index == -1)
 			{
 				return null;
 			}
@@ -677,6 +781,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
+
+		private readonly GlyphButton button;
+		private double defaultButtonWidth;
 
 		private readonly Common.Widgets.Collections.StringCollection items;
 		private int selectedRow;

@@ -93,10 +93,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 			
-			widget.HintComparer            = (value, text) => this.MatchUserText (value as T, text);
+			widget.HintComparer = (value, text) => this.MatchUserText (value as T, text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			widget.SelectedItemIndex       = widget.Items.FindIndexByValue (this.GetValue ());
+			widget.SelectedItemIndex = widget.Items.FindIndexByValue (this.GetValue ());
 
 			widget.SelectedItemChanged +=
 				delegate
