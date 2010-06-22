@@ -113,15 +113,13 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
+				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
 				TabIndex = ++this.tabIndex,
 			};
 
-			//?double pageWidth = System.Math.Floor (tile.Container.PreferredWidth / texts.Count);
-			double pageWidth = System.Math.Floor (242.0 / texts.Count);  // TODO: Comment obtenir la largeur ?
-
-			foreach (string mix in texts)
+			for (int i = 0; i < texts.Count; i++)
 			{
-				string[] parts = mix.Split ('.');
+				string[] parts = texts[i].Split ('.');
 				System.Diagnostics.Debug.Assert (parts.Length == 2);
 				string name = parts[0];
 				string text = parts[1];
@@ -131,9 +129,9 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					Name = name,
 					Text = text,
-					PreferredSize = new Size (pageWidth, 24+Widgets.TileArrow.Breadth),
-					Margins = new Margins (0, -1, 0, 0),
-					Dock = DockStyle.Left,
+					PreferredHeight = 24 + Widgets.TileArrow.Breadth,
+					Margins = new Margins (0, (i == texts.Count-1) ? 0 : -1, 0, 0),
+					Dock = DockStyle.StackFill,
 				};
 
 				if (name == defaultName)
