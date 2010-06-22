@@ -99,13 +99,14 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.ContentListAdd (tile);
 			this.titleTile.Items.Add (tile);
 
 			return tile;
 		}
 
 
-		public void CreateTabBook(EditionTile tile, List<string> texts, string defaultName)
+		public FrameBox CreateTabBook(EditionTile tile, List<string> texts, string defaultName, System.Action<string> action)
 		{
 			var container = new FrameBox
 			{
@@ -114,6 +115,9 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
 			};
+
+			//?double pageWidth = System.Math.Floor (tile.Container.PreferredWidth / texts.Count);
+			double pageWidth = System.Math.Floor (242.0 / texts.Count);  // TODO: Comment obtenir la largeur ?
 
 			foreach (string mix in texts)
 			{
@@ -127,7 +131,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					Name = name,
 					Text = text,
-					PreferredSize = new Size (110, 24+Widgets.TileArrow.Breadth),
+					PreferredSize = new Size (pageWidth, 24+Widgets.TileArrow.Breadth),
 					Margins = new Margins (0, -1, 0, 0),
 					Dock = DockStyle.Left,
 				};
@@ -144,8 +148,12 @@ namespace Epsitec.Cresus.Core
 					{
 						t.SetSelected (t.Name == tilePage.Name);
 					}
+
+					action (tilePage.Name);
 				};
 			}
+
+			return container;
 		}
 
 

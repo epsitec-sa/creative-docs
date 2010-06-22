@@ -140,12 +140,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				if (this.IsEntered || this.IsSelected)
-				{
-					return Tile.BorderColors;
-				}
-
-				return null;
+				return Tile.BorderColors;
 			}
 		}
 

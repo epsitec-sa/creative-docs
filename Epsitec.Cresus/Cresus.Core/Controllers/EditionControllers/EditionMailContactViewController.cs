@@ -29,25 +29,41 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIRoles (builder);
 
-				this.CreateTabBook (builder);
+				if (true)
+				{
+					this.CreateTabBook (builder);
 
-				//	Crée le contenu de la page "local".
-				this.localPageContent = new List<Common.Widgets.Widget> ();
-				builder.ContentList = this.localPageContent;
+					//	Crée le contenu de la page "local".
+					this.localPageContent = new List<Common.Widgets.Widget> ();
+					builder.ContentList = this.localPageContent;
 
-				this.CreateUILegalPerson (builder);
-				this.CreateUIMargin      (builder);
-				this.CreateUICountry     (builder);
-				this.CreateUIMain        (builder);
-				this.CreateUILocation    (builder);
+					this.CreateUICountry  (builder);
+					this.CreateUIMain     (builder);
+					this.CreateUILocation (builder);
 
-				//	Crée le contenu de la page "global".
-				this.globalPageContent = new List<Common.Widgets.Widget> ();
-				builder.ContentList = this.globalPageContent;
+					//	Crée le contenu de la page "global".
+					this.globalPageContent = new List<Common.Widgets.Widget> ();
+					builder.ContentList = this.globalPageContent;
 
-				//	TODO:
+					this.CreateUILegalPerson (builder);
 
-				builder.ContentList = null;
+					builder.ContentList = null;
+
+					if (this.IsMailUsedByLegalPerson)
+					{
+						this.SelectTabPage ("global");  // montre l'onglet "global"
+					}
+					else
+					{
+						this.SelectTabPage ("local");  // montre l'onglet "local"
+					}
+				}
+				else
+				{
+					this.CreateUICountry  (builder);
+					this.CreateUIMain     (builder);
+					this.CreateUILocation (builder);
+				}
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -66,19 +82,47 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
 		}
 
+
 		private void CreateTabBook(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			List<string> texts = new List<string>();
-			texts.Add ("Local.Adresse spécifique");
-			texts.Add ("Global.Adresse existante");
-			builder.CreateTabBook (tile, texts, "Local");
+			texts.Add ("local.Adresse spécifique");
+			texts.Add ("global.Adresse existante");
+			this.tabBookContainer = builder.CreateTabBook (tile, texts, "local", this.HandleTabBookAction);
 		}
+
+		private void SelectTabPage(string tabPageName)
+		{
+			foreach (TilePage page in this.tabBookContainer.Children)
+			{
+				if (page != null)
+				{
+					page.SetSelected (page.Name == tabPageName);
+				}
+			}
+
+			this.HandleTabBookAction (tabPageName);
+		}
+
+		private void HandleTabBookAction(string tabPageName)
+		{
+			foreach (var widget in this.localPageContent)
+			{
+				widget.Visibility = tabPageName == "local";
+			}
+
+			foreach (var widget in this.globalPageContent)
+			{
+				widget.Visibility = tabPageName == "global";
+			}
+		}
+
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Entreprise",
+			builder.CreateAutoCompleteTextField ("Personne morale (entreprise)",
 				new SelectionController<Entities.LegalPersonEntity>
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
@@ -88,13 +132,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToTextArrayConverter     = x => new string[] { x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name),
 				});
-		}
-
-		private void CreateUIMargin(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, true);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
@@ -137,7 +174,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private List<Common.Widgets.Widget> localPageContent;
-		private List<Common.Widgets.Widget> globalPageContent;
+		private bool IsMailUsedByLegalPerson
+		{
+			get
+			{
+				if (this.Entity.LegalPerson != null)
+				{
+					foreach (var contact in this.Entity.LegalPerson.Contacts)
+					{
+						if (contact is Entities.MailContactEntity)
+						{
+							var mail = contact as Entities.MailContactEntity;
+
+							if (mail.Address == this.Entity.Address)
+							{
+								return true;
+							}
+						}
+					}
+				}
+
+				return false;
+			}
+		}
+
+
+		private Common.Widgets.FrameBox			tabBookContainer;
+		private List<Common.Widgets.Widget>		localPageContent;
+		private List<Common.Widgets.Widget>		globalPageContent;
 	}
 }
