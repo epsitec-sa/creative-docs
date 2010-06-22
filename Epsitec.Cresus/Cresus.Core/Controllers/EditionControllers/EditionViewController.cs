@@ -3,11 +3,11 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
+
+using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -43,17 +43,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void AboutToCloseUI()
 		{
+			this.UpgradeEmptyEntity ();
+			base.AboutToCloseUI ();
+		}
+
+		/// <summary>
+		/// If the current entity was registered in the <see cref="DataContext"/> as an empty
+		/// entity, upgrade it to a real entity if its content is valid.
+		/// </summary>
+		private void UpgradeEmptyEntity()
+		{
 			var entity  = this.Entity;
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
+			var context = DataContextPool.Instance.FindDataContext (entity);
 
 			if ((context.IsRegisteredAsEmptyEntity (entity)) &&
 				(this.EditionStatus == EditionControllers.EditionStatus.Valid))
 			{
 				context.UnregisterEmptyEntity (entity);
 			}
-			
-			base.AboutToCloseUI ();
 		}
-
 	}
 }
