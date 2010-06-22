@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (entity is CustomerEntity)
 			{
 				var customer = entity as CustomerEntity;
-				return BrowserViewController.GetEntityDisplayText (customer.Person);
+				return UIBuilder.FormatText (BrowserViewController.GetEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
 			}
 			
 			return FormattedText.Empty;
