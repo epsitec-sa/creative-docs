@@ -256,16 +256,25 @@ namespace Epsitec.Cresus.Core
 			mailEpsitec1.Comments.Add (commentEpsitec);
 			mailEpsitec1.Roles.Add (roleFact);
 
+			CommentEntity commentEpsitecT1 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			commentEpsitecT1.Text = "Administration et vente";
+
 			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecomEpsitec1.LegalPerson = companyEpsitec;
 			telecomEpsitec1.TelecomType = telecomTypeFix;
 			telecomEpsitec1.Number = "+41 848 27 37 87";
+			telecomEpsitec1.Comments.Add (commentEpsitecT1);
 			telecomEpsitec1.Roles.Add (roleProf);
+			telecomEpsitec1.Roles.Add (roleFact);
+
+			CommentEntity commentEpsitecT2 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			commentEpsitecT2.Text = "Assistance technique (hotline)";
 
 			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecomEpsitec2.LegalPerson = companyEpsitec;
 			telecomEpsitec2.TelecomType = telecomTypeFix;
 			telecomEpsitec2.Number = "+41 848 27 37 89";
+			telecomEpsitec2.Comments.Add (commentEpsitecT2);
 			telecomEpsitec2.Roles.Add (roleProf);
 
 			UriContactEntity uriEpsitec1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
@@ -300,7 +309,7 @@ namespace Epsitec.Cresus.Core
 			mailPA1.LegalPerson = companyEpsitec;
 			mailPA1.Address = addressEpsitec;
 			mailPA1.Complement = "Direction";
-			mailPA1.Roles.Add (roleFact);
+			mailPA1.Roles.Add (roleProf);
 
 			MailContactEntity mailPA2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
 			mailPA2.NaturalPerson = personPA;
@@ -310,14 +319,22 @@ namespace Epsitec.Cresus.Core
 			TelecomContactEntity telecomPA1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecomPA1.NaturalPerson = personPA;
 			telecomPA1.TelecomType = telecomTypeMobile;
-			telecomPA1.Number = "+41 79 555 55 55";
+			telecomPA1.Number = "+41 79 367 45 97";
 			telecomPA1.Roles.Add (rolePrive);
+			telecomPA1.Roles.Add (roleProf);
 
 			TelecomContactEntity telecomPA2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
 			telecomPA2.NaturalPerson = personPA;
-			telecomPA2.TelecomType = telecomTypeFax;
-			telecomPA2.Number = "+41 24 425 08 30";
+			telecomPA2.TelecomType = telecomTypeFix;
+			telecomPA2.Number = "+41 24 425 08 09";
 			telecomPA2.Roles.Add (roleProf);
+
+			TelecomContactEntity telecomPA3 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			telecomPA3.NaturalPerson = personPA;
+			telecomPA3.TelecomType = telecomTypeFax;
+			telecomPA3.Number = "+41 24 555 83 59";
+			telecomPA3.Roles.Add (rolePrive);
+			telecomPA3.Roles.Add (roleProf);
 
 			UriContactEntity uriPA1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
 			uriPA1.NaturalPerson = personPA;
@@ -339,6 +356,7 @@ namespace Epsitec.Cresus.Core
 			personPA.Contacts.Add (mailPA2);
 			personPA.Contacts.Add (telecomPA1);
 			personPA.Contacts.Add (telecomPA2);
+			personPA.Contacts.Add (telecomPA3);
 			personPA.Contacts.Add (uriPA1);
 			personPA.Contacts.Add (uriPA2);
 			
