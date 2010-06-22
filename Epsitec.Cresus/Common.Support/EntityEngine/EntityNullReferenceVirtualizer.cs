@@ -119,6 +119,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Unwraps the entity. If it maps to a null entity, then return <c>null</c>.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns><c>null</c> if the entity maps to a null entity; otherwise, the entity.</returns>
+		public static T UnwrapNullEntity<T>(T entity)
+			where T : AbstractEntity
+		{
+			if (EntityNullReferenceVirtualizer.IsNullEntity (entity))
+			{
+				return null;
+			}
+			else
+			{
+				return entity;
+			}
+		}
+
 
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.
