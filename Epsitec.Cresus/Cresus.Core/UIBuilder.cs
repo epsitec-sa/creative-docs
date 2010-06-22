@@ -122,31 +122,29 @@ namespace Epsitec.Cresus.Core
 				string name = parts[0];
 				string text = parts[1];
 
-				var button = new Button
+				var tilePage = new Widgets.TilePage
 				{
 					Parent = container,
-					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
-					PreferredWidth = 100,
-					Dock = DockStyle.Left,
 					Name = name,
 					Text = text,
+					PreferredSize = new Size (110, 24+Widgets.TileArrow.Breadth),
+					Margins = new Margins (0, -1, 0, 0),
+					Dock = DockStyle.Left,
 				};
 
 				if (name == defaultName)
 				{
-					button.ActiveState = ActiveState.Yes;
+					tilePage.SetSelected (true);
 				}
 
-#if false
-				button.Clicked +=
+				tilePage.Clicked +=
 				delegate
+				{
+					foreach (Widgets.TilePage t in container.Children)
 					{
-						foreach (Button b in container.Childrens)
-						{
-							b.ActiveState = (b.Name == button.Name) ? ActiveState.Yes : ActiveState.No;
-						}
-					};
-#endif
+						t.SetSelected (t.Name == tilePage.Name);
+					}
+				};
 			}
 		}
 
