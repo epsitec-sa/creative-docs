@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
-	/// Elle affiche une icône en haut à gauche (TopLeftIconUri) et un titre (Title).
+	/// Elle affiche une icône en haut à gauche (TitleIconUri) et un titre (Title).
 	/// </summary>
 	public class TitleTile : Tile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
 	{
@@ -293,10 +293,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			this.CreateLeftPanel ();
 			this.CreateLeftPanelIcon ();
-			this.CreateLeftPanelButtons ();
 			this.CreateRightPanel ();
 			this.CreateRightPanelText ();
 			this.CreateRightPanelContainer ();
+			this.CreateButtons ();
 		}
 
 		private void CreateLeftPanel()
@@ -321,9 +321,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			};
 		}
 
-		private void CreateLeftPanelButtons()
+		private void CreateButtons()
 		{
 			this.CreateAddButton ();
+			this.CreateRemoveButton ();
 		}
 
 		private void CreateRightPanel()
@@ -364,22 +365,39 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.buttonAdd = new GlyphButton
 			{
-				Parent			= this.leftPanel,
+				Parent			= this,
 				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
 				GlyphShape		= Common.Widgets.GlyphShape.Plus,
 				Anchor			= AnchorStyles.BottomLeft,
 				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
-				Margins			= new Margins (0, 0, TitleTile.iconSize - TitleTile.buttonSize, 0),
+				Margins			= new Margins (0, 0, 0, 0),
 				Visibility		= false,
 			};
 
 			this.buttonAdd.Clicked += (sender, e) => this.OnAddClicked (e);
 		}
 
+		private void CreateRemoveButton()
+		{
+			this.buttonRemove = new GlyphButton
+			{
+				Parent			= this,
+				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
+				GlyphShape		= Common.Widgets.GlyphShape.Minus,
+				Anchor			= AnchorStyles.BottomRight,
+				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
+				Margins			= new Margins (0, TileArrow.Breadth, 0, 0),
+				Visibility		= false,
+			};
+
+			this.buttonRemove.Clicked += (sender, e) => this.OnRemoveClicked (e);
+		}
+
 
 		private void SetButtonVisibility(bool visibility)
 		{
 			this.buttonAdd.Visibility = visibility && this.ContainsCollectionItemTiles;
+			this.buttonRemove.Visibility = this.buttonAdd.Visibility && this.ContainsFrozenTiles;
 		}
 
 
@@ -576,6 +594,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				handler (this, e);
 			}
 		}
+
+		protected virtual void OnRemoveClicked(MessageEventArgs e)
+		{
+			var handler = this.RemoveClicked;
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
 		
 		static TitleTile()
 		{
@@ -588,6 +616,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 		public event EventHandler<MessageEventArgs> AddClicked;
+		public event EventHandler<MessageEventArgs> RemoveClicked;
 
 
 		private static readonly double iconSize		= 32;
@@ -606,6 +635,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private FrameBox mainPanel;
 		
 		private GlyphButton buttonAdd;
+		private GlyphButton buttonRemove;
 
 		private StaticText staticTextIcon;
 		private StaticText staticTextTitle;
