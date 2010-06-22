@@ -181,6 +181,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				this.BindRealEntitySummaryData (data, source, collectionAccessor);
 			}
+			
+			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
+			{
+				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
+				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
+			}
+
+			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
 		}
 
 		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
@@ -227,15 +235,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
 			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source);
 			data.DataType			  = SummaryDataType.CollectionItem;
-
-			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
-			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
-				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
-			}
-
-			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
 		}
+		
 		private T GenericCreateItem()
 		{
 			var item = this.createItem ();
