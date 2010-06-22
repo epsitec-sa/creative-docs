@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					}
 					else
 					{
-						return null;
+						return Tile.SurfaceSummaryColors;
 					}
 				}
 			}

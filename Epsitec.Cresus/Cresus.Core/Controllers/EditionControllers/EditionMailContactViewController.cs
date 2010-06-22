@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
@@ -27,9 +28,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Mail", "Adresse");
 
-				this.CreateUIRoles (builder);
+				this.CreateUIRoles  (builder);
+				this.CreateUICommon (builder);
 
-				if (true)
+				if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.NaturalPerson) &&
+					!EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.LegalPerson))
+				//?if (this.IsMailUsedByLegalPerson)
+				{
+					this.CreateUICountry  (builder);
+					this.CreateUIMain     (builder);
+					this.CreateUILocation (builder);
+				}
+				else
 				{
 					this.CreateTabBook (builder);
 
@@ -46,23 +56,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					builder.ContentList = this.globalPageContent;
 
 					this.CreateUILegalPerson (builder);
+					this.CreateUIAddress     (builder);
 
 					builder.ContentList = null;
 
-					if (this.IsMailUsedByLegalPerson)
-					{
-						this.SelectTabPage ("global");  // montre l'onglet "global"
-					}
-					else
+					if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.LegalPerson))
 					{
 						this.SelectTabPage ("local");  // montre l'onglet "local"
 					}
-				}
-				else
-				{
-					this.CreateUICountry  (builder);
-					this.CreateUIMain     (builder);
-					this.CreateUILocation (builder);
+					else
+					{
+						this.SelectTabPage ("global");  // montre l'onglet "global"
+					}
 				}
 
 				builder.CreateFooterEditorTile ();
@@ -80,6 +85,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			};
 
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
+		}
+
+		private void CreateUICommon(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextFieldMulti (tile, 52, "Complément 1", Marshaler.Create (() => this.Entity.Complement, x => this.Entity.Complement = x));
+			builder.CreateMargin         (tile, false);
 		}
 
 
@@ -122,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Personne morale (entreprise)",
+			builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
 				new SelectionController<Entities.LegalPersonEntity>
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
@@ -134,14 +147,31 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
+		private void CreateUIAddress(UIBuilder builder)
+		{
+			IEnumerable<Entities.AddressEntity> xx = this.Entity.LegalPerson.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address);
+
+			builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
+				new SelectionController<Entities.AddressEntity>
+				{
+					ValueGetter = () => this.Entity.Address,
+					ValueSetter = x => this.Entity.Address = x,
+					PossibleItemsGetter = () => xx,
+
+					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
+				});
+		}
+
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin         (tile, true);
-			builder.CreateTextField      (tile,  0, "Rue",                     Marshaler.Create (() => this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x));
-			builder.CreateTextFieldMulti (tile, 52, "Complément de l'adresse", Marshaler.Create (() => this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x));
-			builder.CreateTextField      (tile,  0, "Boîte postale",           Marshaler.Create (() => this.Entity.Address.PostBox.Number,    x => this.Entity.Address.PostBox.Number = x));
+			builder.CreateTextField      (tile,  0, "Rue",           Marshaler.Create (() => this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x));
+			builder.CreateTextFieldMulti (tile, 52, "Complément 2",  Marshaler.Create (() => this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x));
+			builder.CreateTextField      (tile,  0, "Boîte postale", Marshaler.Create (() => this.Entity.Address.PostBox.Number,    x => this.Entity.Address.PostBox.Number = x));
 			builder.CreateMargin         (tile, true);
 		}
 

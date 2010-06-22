@@ -201,132 +201,157 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactRoleEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
 		{
-			LegalPersonEntity company1 = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
-			LegalPersonEntity company2 = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity companyEpsitec = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity companyMigros  = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
 
-			NaturalPersonEntity person1 = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
-			NaturalPersonEntity person2 = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity personPA = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity personDR = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
 
-			ContactRoleEntity role1 = roles.Where (x => x.Name == "facturation").First ();
-			ContactRoleEntity role2 = roles.Where (x => x.Name == "professionnel").First ();
-			ContactRoleEntity role3 = roles.Where (x => x.Name == "privé").First ();
+			ContactRoleEntity roleFact  = roles.Where (x => x.Name == "facturation").First ();
+			ContactRoleEntity roleProf  = roles.Where (x => x.Name == "professionnel").First ();
+			ContactRoleEntity rolePrive = roles.Where (x => x.Name == "privé").First ();
 
-			TelecomTypeEntity telecomType1 = telecomTypes.Where (x => x.Code == "fixnet").First ();
-			TelecomTypeEntity telecomType2 = telecomTypes.Where (x => x.Code == "mobile").First ();
-			TelecomTypeEntity telecomType3 = telecomTypes.Where (x => x.Code == "fixnet").First ();
+			TelecomTypeEntity telecomTypeFix    = telecomTypes.Where (x => x.Code == "fixnet").First ();
+			TelecomTypeEntity telecomTypeMobile = telecomTypes.Where (x => x.Code == "mobile").First ();
+			TelecomTypeEntity telecomTypeFax    = telecomTypes.Where (x => x.Code == "fax").First ();
 
-			UriSchemeEntity uriScheme1 = uriSchemes.Where (x => x.Code == "mailto").First ();
+			UriSchemeEntity uriSchemeMailto = uriSchemes.Where (x => x.Code == "mailto").First ();
 
-			LocationEntity location1 = locations.Where (x => x.PostalCode == "1400").First ();
+			LocationEntity locationYverdon = locations.Where (x => x.PostalCode == "1400").First ();
 
-			PersonTitleEntity title1 = personTitles.Where (x => x.ShortName == "M.").First ();
-			PersonGenderEntity gender1 = personGenders.Where (x => x.Code == "♂").First ();
+			PersonTitleEntity titleMonsieur = personTitles.Where (x => x.ShortName == "M.").First ();
+			PersonGenderEntity genderHomme = personGenders.Where (x => x.Code == "♂").First ();
 
-			StreetEntity street1 = this.DataContext.CreateEmptyEntity<StreetEntity> ();
-			street1.StreetName = "Ch. du Fontenay 3";
-			street1.Complement = "2ème étage";
+			// addressEpsitec
 
-			StreetEntity street2 = this.DataContext.CreateEmptyEntity<StreetEntity> ();
-			street2.StreetName = "Ch. du Fontenay 6";
+			StreetEntity streetEpsitec = this.DataContext.CreateEmptyEntity<StreetEntity> ();
+			streetEpsitec.StreetName = "Ch. du Fontenay 3";
+			streetEpsitec.Complement = "2ème étage";
 
-			PostBoxEntity postbox1 = this.DataContext.CreateEmptyEntity<PostBoxEntity> ();
-			postbox1.Number = "Case postale 1234";
+			PostBoxEntity postboxEpsitec = this.DataContext.CreateEmptyEntity<PostBoxEntity> ();
+			postboxEpsitec.Number = "Case postale 1234";
 
+			AddressEntity addressEpsitec = this.DataContext.CreateEmptyEntity<AddressEntity> ();
+			addressEpsitec.Location = locationYverdon;
+			addressEpsitec.Street = streetEpsitec;
+			addressEpsitec.PostBox = postboxEpsitec;
 
-			AddressEntity address1 = this.DataContext.CreateEmptyEntity<AddressEntity> ();
-			address1.Location = location1;
-			address1.Street = street1;
-			address1.PostBox = postbox1;
+			// addressPA
 
-			AddressEntity address2 = this.DataContext.CreateEmptyEntity<AddressEntity> ();
-			address2.Location = location1;
-			address2.Street = street2;
+			StreetEntity streetPA = this.DataContext.CreateEmptyEntity<StreetEntity> ();
+			streetPA.StreetName = "Ch. du Fontenay 6";
 
-			CommentEntity comment1 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
-			comment1.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
+			AddressEntity addressPA = this.DataContext.CreateEmptyEntity<AddressEntity> ();
+			addressPA.Location = locationYverdon;
+			addressPA.Street = streetPA;
 
-			MailContactEntity mail1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
-			mail1.Address = address1;
-			mail1.Complement = "Direction";
-			mail1.Comments.Add (comment1);
-			mail1.Roles.Add (role1);
-			mail1.LegalPerson = company1;
-			mail1.NaturalPerson = person1;
+			// companyEpsitec
 
-			MailContactEntity mail2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
-			mail2.Address = address2;
-			mail2.Roles.Add (role3);
-			mail2.NaturalPerson = person1;
+			CommentEntity commentEpsitec = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			commentEpsitec.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
 
-			TelecomContactEntity telecom1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom1.TelecomType = telecomType1;
-			telecom1.LegalPerson = company1;
-			telecom1.Number = "+41 848 27 37 87";
-			telecom1.Roles.Add (role1);
-			telecom1.Roles.Add (role2);
+			MailContactEntity mailEpsitec1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			mailEpsitec1.LegalPerson = companyEpsitec;
+			mailEpsitec1.Address = addressEpsitec;
+			mailEpsitec1.Comments.Add (commentEpsitec);
+			mailEpsitec1.Roles.Add (roleFact);
 
-			TelecomContactEntity telecom2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom2.TelecomType = telecomType2;
-			telecom2.NaturalPerson = person1;
-			telecom2.Number = "+41 79 555 55 55";
-			telecom2.Roles.Add (role3);
+			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			telecomEpsitec1.LegalPerson = companyEpsitec;
+			telecomEpsitec1.TelecomType = telecomTypeFix;
+			telecomEpsitec1.Number = "+41 848 27 37 87";
+			telecomEpsitec1.Roles.Add (roleProf);
 
-			TelecomContactEntity telecom3 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
-			telecom3.TelecomType = telecomType3;
-			telecom3.LegalPerson = company1;
-			telecom3.NaturalPerson = person1;
-			telecom3.Number = "+41 24 425 08 30";
-			telecom3.Roles.Add (role2);
+			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			telecomEpsitec2.LegalPerson = companyEpsitec;
+			telecomEpsitec2.TelecomType = telecomTypeFix;
+			telecomEpsitec2.Number = "+41 848 27 37 89";
+			telecomEpsitec2.Roles.Add (roleProf);
 
-			UriContactEntity uri1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri1.LegalPerson = company1;
-			uri1.Uri = "epsitec@epsitec.ch";
-			uri1.UriScheme = uriScheme1;
-			uri1.Roles.Add (role2);
-			uri1.Roles.Add (role3);
+			UriContactEntity uriEpsitec1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			uriEpsitec1.LegalPerson = companyEpsitec;
+			uriEpsitec1.Uri = "epsitec@epsitec.ch";
+			uriEpsitec1.UriScheme = uriSchemeMailto;
+			uriEpsitec1.Roles.Add (roleProf);
 
-			UriContactEntity uri2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri2.LegalPerson = company1;
-			uri2.Uri = "arnaud@epsitec.ch";
-			uri2.UriScheme = uriScheme1;
-			uri2.Roles.Add (role3);
+			UriContactEntity uriEpsitec2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			uriEpsitec2.LegalPerson = companyEpsitec;
+			uriEpsitec2.Uri = "support@epsitec.ch";
+			uriEpsitec2.UriScheme = uriSchemeMailto;
+			uriEpsitec2.Roles.Add (roleProf);
 
-			UriContactEntity uri3 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
-			uri3.LegalPerson = company1;
-			uri3.Uri = "perre.arnaud@opac.ch";
-			uri3.UriScheme = uriScheme1;
-			uri3.Roles.Add (role3);
+			companyEpsitec.Complement = "Logiciels de gestion Crésus";
+			companyEpsitec.Name = "Epsitec SA";
+			companyEpsitec.Contacts.Add (mailEpsitec1);
+			companyEpsitec.Contacts.Add (telecomEpsitec1);
+			companyEpsitec.Contacts.Add (telecomEpsitec2);
+			companyEpsitec.Contacts.Add (uriEpsitec1);
+			companyEpsitec.Contacts.Add (uriEpsitec2);
 
-			company1.Complement = "Logiciels de gestion Crésus";
-			company1.Name = "Epsitec SA";
-			company1.Contacts.Add (mail1);
-			company1.Contacts.Add (telecom3);
-			company1.Contacts.Add (uri1);
+			// companyMigros
 
-			company2.Complement = "Le géant de l'alimentation";
-			company2.Name = "Migros SA";
+			companyMigros.Complement = "Le géant de l'alimentation";
+			companyMigros.Name = "Migros SA";
 
-			person1.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-			person1.Firstname = "Pierre";
-			person1.Lastname = "Arnaud";
-			person1.Title = title1;
-			person1.Contacts.Add (mail1);
-			person1.Contacts.Add (mail2);
-			person1.Contacts.Add (telecom1);
-			person1.Contacts.Add (telecom2);
-			person1.Contacts.Add (telecom3);
-			person1.Contacts.Add (uri1);
-			person1.Contacts.Add (uri2);
-			person1.Contacts.Add (uri3);
+			// personPA
+
+			MailContactEntity mailPA1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			mailPA1.NaturalPerson = personPA;
+			mailPA1.LegalPerson = companyEpsitec;
+			mailPA1.Address = addressEpsitec;
+			mailPA1.Complement = "Direction";
+			mailPA1.Roles.Add (roleFact);
+
+			MailContactEntity mailPA2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			mailPA2.NaturalPerson = personPA;
+			mailPA2.Address = addressPA;
+			mailPA2.Roles.Add (rolePrive);
+
+			TelecomContactEntity telecomPA1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			telecomPA1.NaturalPerson = personPA;
+			telecomPA1.TelecomType = telecomTypeMobile;
+			telecomPA1.Number = "+41 79 555 55 55";
+			telecomPA1.Roles.Add (rolePrive);
+
+			TelecomContactEntity telecomPA2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			telecomPA2.NaturalPerson = personPA;
+			telecomPA2.TelecomType = telecomTypeFax;
+			telecomPA2.Number = "+41 24 425 08 30";
+			telecomPA2.Roles.Add (roleProf);
+
+			UriContactEntity uriPA1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			uriPA1.NaturalPerson = personPA;
+			uriPA1.Uri = "arnaud@epsitec.ch";
+			uriPA1.UriScheme = uriSchemeMailto;
+			uriPA1.Roles.Add (rolePrive);
+
+			UriContactEntity uriPA2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			uriPA2.NaturalPerson = personPA;
+			uriPA2.Uri = "perre.arnaud@opac.ch";
+			uriPA2.UriScheme = uriSchemeMailto;
+			uriPA2.Roles.Add (rolePrive);
+
+			personPA.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
+			personPA.Firstname = "Pierre";
+			personPA.Lastname = "Arnaud";
+			personPA.Title = titleMonsieur;
+			personPA.Contacts.Add (mailPA1);
+			personPA.Contacts.Add (mailPA2);
+			personPA.Contacts.Add (telecomPA1);
+			personPA.Contacts.Add (telecomPA2);
+			personPA.Contacts.Add (uriPA1);
+			personPA.Contacts.Add (uriPA2);
 			
-			person2.Firstname = "Daniel";
-			person2.Lastname  = "Roux";
-			person2.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
+			// personDR
 
-			yield return person1;
-			yield return person2;
-			yield return company1;
-			yield return company2;
+			personDR.Firstname = "Daniel";
+			personDR.Lastname  = "Roux";
+			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
+
+			yield return personPA;
+			yield return personDR;
+			yield return companyEpsitec;
+			yield return companyMigros;
 		}
 		
 		private IEnumerable<CustomerEntity> InsertCustomersInDatabase(IEnumerable<AbstractPersonEntity> persons)
