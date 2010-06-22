@@ -187,6 +187,7 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
     <Compile Include="Widgets\TileArrow.cs" />
@@ -331,6 +332,7 @@
     <EmbeddedResource Include="Images\Data.Document.icon" />
     <EmbeddedResource Include="Images\Data.Folder.icon" />
     <EmbeddedResource Include="Images\Edition.SaveRecord.icon" />
+    <EmbeddedResource Include="Images\Edition.NewRecord.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

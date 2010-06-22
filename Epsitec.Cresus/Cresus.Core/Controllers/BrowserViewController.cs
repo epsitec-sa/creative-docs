@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = frame,
 				Dock = DockStyle.Top,
-				PreferredHeight = 26,
+				PreferredHeight = 28,
 			};
 
 #if false

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public MainViewController(CoreData data)
 			: base ("MainView")
 		{
-			this.data     = data;
+			this.data = data;
 
 			this.browserController = new BrowserViewController ("Browser", data);
 			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserController);
@@ -75,36 +75,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.BrowserSettingsMode = Controllers.BrowserSettingsMode.Compact;
 		}
 
-
-		private void UpdateBrowserSettingsPanel()
-		{
-			var expandedPanel = this.topPanel;
-			var compactPanel  = this.browserController.SettingsPanel;
-			
-			switch (this.browserSettingsMode)
-			{
-				case Controllers.BrowserSettingsMode.Hidden:
-					expandedPanel.Visibility = false;
-					compactPanel.Visibility  = false;
-					this.browserSettingsPanel.Parent = null;
-					break;
-
-				case Controllers.BrowserSettingsMode.Compact:
-					expandedPanel.Visibility = false;
-					compactPanel.Visibility  = true;
-					this.browserSettingsPanel.Parent = compactPanel;
-					break;
-
-				case Controllers.BrowserSettingsMode.Expanded:
-					expandedPanel.Visibility = true;
-					compactPanel.Visibility  = false;
-					this.browserSettingsPanel.Parent = expandedPanel;
-					break;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("BrowserSettingsMode.{0} not supported", this.browserSettingsMode));
-			}
-		}
 
 		private void CreateUIFrame(Widget container)
 		{
@@ -176,6 +146,37 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = 8,
 			};
 		}
+
+		private void UpdateBrowserSettingsPanel()
+		{
+			var expandedPanel = this.topPanel;
+			var compactPanel  = this.browserController.SettingsPanel;
+
+			switch (this.browserSettingsMode)
+			{
+				case Controllers.BrowserSettingsMode.Hidden:
+					expandedPanel.Visibility = false;
+					compactPanel.Visibility  = false;
+					this.browserSettingsPanel.Parent = null;
+					break;
+
+				case Controllers.BrowserSettingsMode.Compact:
+					expandedPanel.Visibility = false;
+					compactPanel.Visibility  = true;
+					this.browserSettingsPanel.Parent = compactPanel;
+					break;
+
+				case Controllers.BrowserSettingsMode.Expanded:
+					expandedPanel.Visibility = true;
+					compactPanel.Visibility  = false;
+					this.browserSettingsPanel.Parent = expandedPanel;
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("BrowserSettingsMode.{0} not supported", this.browserSettingsMode));
+			}
+		}
+
 		
 		private readonly CoreData data;
 		private readonly BrowserViewController browserController;
