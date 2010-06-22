@@ -130,6 +130,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				widget.Visibility = tabPageName == "global";
 			}
+
+			if (tabPageName == "local")
+			{
+				// TODO:
+			}
 		}
 
 
