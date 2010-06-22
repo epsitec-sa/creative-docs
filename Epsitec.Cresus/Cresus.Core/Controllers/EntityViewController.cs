@@ -121,47 +121,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateUI (container as TileContainer);
 		}
 
-#if false
-		private void CreateEntity(GenericTile tile)
-		{
-			var accessor = tile.EntitiesAccessor;
-			var newEntity = accessor.Create ();
-			CoreViewController controller = EntityViewController.CreateEntityViewController ("ViewController", newEntity, tile.ChildrenMode, this.Orchestrator);
-
-			this.Orchestrator.RebuildView ();
-			this.Orchestrator.ShowSubView (this, controller);
-		}
-
-		private void RemoveEntity(GenericTile tile)
-		{
-			var accessor = tile.EntitiesAccessor;
-
-			Common.Dialogs.DialogResult result = Common.Dialogs.MessageDialog.ShowQuestion (accessor.RemoveQuestion, tile.Window);
-
-			if (result == Common.Dialogs.DialogResult.Yes)
-			{
-				accessor.Remove ();
-
-				this.Orchestrator.RebuildView ();
-			}
-		}
-#endif
-
-		private void HandleTileCreateEntity(object sender)
-		{
-			//	Appelé lorsque le bouton "+" d'une tuile est cliqué.
-			var tile = sender as GenericTile;
-//-			this.CreateEntity (tile);
-		}
-
-		private void HandleTileRemoveEntity(object sender)
-		{
-			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
-			var tile = sender as GenericTile;
-//-			this.RemoveEntity (tile);
-		}
-
-
 		private readonly T entity;
 	}
 }

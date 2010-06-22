@@ -41,5 +41,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Unknown;
 		}
 
+		protected override void AboutToCloseUI()
+		{
+			var entity  = this.Entity;
+			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
+
+			if ((context.IsRegisteredAsEmptyEntity (entity)) &&
+				(this.EditionStatus == EditionControllers.EditionStatus.Valid))
+			{
+				context.UnregisterEmptyEntity (entity);
+			}
+			
+			base.AboutToCloseUI ();
+		}
+
 	}
 }
