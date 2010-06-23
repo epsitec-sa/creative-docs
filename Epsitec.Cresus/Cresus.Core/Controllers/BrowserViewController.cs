@@ -79,7 +79,35 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.UpdateCollection ();
 		}
 
-		
+		public void CreateNewItem()
+		{
+			var dataContext = this.data.DataContext;
+			AbstractEntity item = null;
+
+			switch (this.DataSetName)
+			{
+				case "Customers":
+					item = this.CreateCustomerItem (dataContext);
+					break;
+			}
+
+			if (item != null)
+			{
+				dataContext.SaveChanges ();
+				this.UpdateCollection ();
+			}
+		}
+
+
+		private static AbstractEntity CreateCustomerItem(DataContext dataContext)
+		{
+			var item = dataContext.CreateEmptyEntity<CustomerEntity> ();
+
+			item.CustomerSince = Date.Today;
+			item.Id = "x";
+
+			return item;
+		}
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -145,6 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 			}
 		}
+		
 		private void UpdateCollection()
 		{
 			if (this.collectionGetter != null)
