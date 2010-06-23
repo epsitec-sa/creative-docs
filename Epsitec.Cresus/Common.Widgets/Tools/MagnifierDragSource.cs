@@ -33,37 +33,38 @@ namespace Epsitec.Common.Widgets.Tools
 				return this.color;
 			}
 		}
-		
+
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
 		{
 			double dx = this.Client.Size.Width;
 			double dy = this.Client.Size.Height;
 			double cx = dx / 2;
 			double cy = dy / 2;
-			
+
 			double r = System.Math.Min (cx, cy) - 1;
-			
+
 			Drawing.Color color1 = Drawing.Color.FromAlphaRgb (0.3, 0.3, 0.8, 1.0);
 			Drawing.Color color2 = Drawing.Color.FromRgb (0, 0, 0.7);
-			
-			if ((this.PaintState & WidgetPaintState.Enabled) == 0)
+
+			WidgetPaintState paintState = this.GetPaintState ();
+			if ((paintState & WidgetPaintState.Enabled) == 0)
 			{
 				double bright = color1.GetBrightness ();
-				
+
 				color1 = Drawing.Color.FromAlphaRgb (color1.A, bright, bright, bright);
 				color2 = Adorners.Factory.Active.ColorTextFieldBorder (false);
 			}
-			
+
 			graphics.AddFilledCircle (cx, cy, r);
 			graphics.RenderSolid (color1);
 			graphics.LineWidth = 0.5;
 			graphics.AddCircle (cx, cy, r);
-			
+
 			double sx = 5;
 			double sy = 5;
 			double ox = cx - sx/2 - 0.5;
 			double oy = cy - sy/2 - 0.5;
-			
+
 			using (Drawing.Path path = new Drawing.Path ())
 			{
 				path.MoveTo (ox+2, oy+0);
@@ -78,10 +79,10 @@ namespace Epsitec.Common.Widgets.Tools
 				path.MoveTo (ox+sx+1-0, oy+2);
 				path.LineTo (ox+sx+1-0, oy+0);
 				path.LineTo (ox+sx+1-2, oy+0);
-				
+
 				graphics.Rasterizer.AddOutline (path, 0.5);
 			}
-			
+
 			graphics.RenderSolid (color2);
 		}
 		

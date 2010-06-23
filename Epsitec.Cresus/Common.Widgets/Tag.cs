@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetPaintState       state   = this.PaintState;
+			WidgetPaintState       state   = this.GetPaintState ();
 			
 			adorner.PaintTagBackground (graphics, rect, state, this.color, this.direction);
 			adorner.PaintGlyph (graphics, rect, state, this.GlyphShape, PaintTextStyle.Button);

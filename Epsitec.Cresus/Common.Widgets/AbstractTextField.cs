@@ -1826,7 +1826,7 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetPaintState  state     = this.PaintState & ~WidgetPaintState.Selected;
+			WidgetPaintState  state     = this.GetPaintState () & ~WidgetPaintState.Selected;
 			Drawing.Point     pos       = this.GetTextOriginLocation ();
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.browser = browser;
-			this.browser.CurrentChanged += this.HandleBrowserCurrentChanged;
+			this.browser.DataSetSelected += this.HandleBrowserDataSetSelected;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -48,15 +48,17 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		private void HandleBrowserCurrentChanged(object sender)
+		private void HandleBrowserDataSetSelected(object sender)
 		{
 			this.UpdateNewItemIconButton ();
 		}
 
 		private void UpdateNewItemIconButton()
 		{
+			string name = "Base." + this.browser.DataSetName;
+
 			this.newItemIconButton.ClearOverlays ();
-			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Base.Customers"), new Size (20, 20));
+			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri (name), new Size (20, 20));
 		}
 
 		private readonly BrowserViewController browser;

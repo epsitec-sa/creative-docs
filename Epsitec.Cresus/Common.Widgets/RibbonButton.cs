@@ -99,8 +99,9 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			adorner.PaintRibbonButtonBackground(graphics, rect, this.PaintState, this.ActiveState);
-			adorner.PaintRibbonButtonTextLayout(graphics, rect, this.TextLayout, this.PaintState, this.ActiveState);
+			WidgetPaintState paintState = this.GetPaintState ();
+			adorner.PaintRibbonButtonBackground (graphics, rect, paintState, this.ActiveState);
+			adorner.PaintRibbonButtonTextLayout (graphics, rect, this.TextLayout, paintState, this.ActiveState);
 		}
 
 

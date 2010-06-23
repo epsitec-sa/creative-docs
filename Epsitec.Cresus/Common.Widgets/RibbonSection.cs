@@ -83,8 +83,8 @@ namespace Epsitec.Common.Widgets
 
 			Rectangle textRect = rect;
 			textRect.Top = textRect.Bottom+RibbonSection.LabelHeight;
-			
-			adorner.PaintRibbonSectionBackground(graphics, rect, userRect, textRect, this.title, this.PaintState);
+
+			adorner.PaintRibbonSectionBackground (graphics, rect, userRect, textRect, this.title, this.GetPaintState ());
 		}
 
 

@@ -2086,7 +2086,7 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetPaintState state   = this.PaintState;
+			WidgetPaintState state   = this.GetPaintState ();
 
 			adorner.PaintArrayBackground (graphics, rect, state);
 
@@ -2239,7 +2239,7 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
-			WidgetPaintState state   = this.PaintState;
+			WidgetPaintState state   = this.GetPaintState ();
 
 			adorner.PaintArrayForeground (graphics, rect, state);
 		}

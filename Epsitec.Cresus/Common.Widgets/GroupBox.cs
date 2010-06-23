@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine le texte.
 			IAdorner    adorner = Widgets.Adorners.Factory.Active;
-			WidgetPaintState state   = this.PaintState;
+			WidgetPaintState state   = this.GetPaintState ();
 			
 #if false
 			Drawing.Rectangle rect  = this.Client.Bounds;

@@ -1990,7 +1990,7 @@ namespace Epsitec.Common.Widgets
 
 			//	Dessine le cadre et le fond du tableau.
 			Drawing.Rectangle rect = this.Client.Bounds;
-			WidgetPaintState state = this.PaintState;
+			WidgetPaintState state = this.GetPaintState ();
 			adorner.PaintArrayBackground(graphics, rect, state);
 
 #if false
@@ -2011,7 +2011,7 @@ namespace Epsitec.Common.Widgets
 			//	Dessine la grille par-dessus.
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
-			WidgetPaintState state = this.PaintState;
+			WidgetPaintState state = this.GetPaintState ();
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.GetInternalPadding());
 			rect.Inflate(-0.5, -0.5);

@@ -471,7 +471,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected InternalState InternalState
+		protected InternalState						InternalState
 		{
 			get
 			{
@@ -3536,6 +3536,11 @@ namespace Epsitec.Common.Widgets
 				cycles = Drawing.Agg.Library.Cycles - cycles;
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} us @ 1.7GHz", this.ToString (), cycles/1700));
 			}
+		}
+
+		protected virtual WidgetPaintState GetPaintState()
+		{
+			return this.PaintState;
 		}
 		
 		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

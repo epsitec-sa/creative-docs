@@ -190,7 +190,7 @@ namespace Epsitec.Common.Widgets
 			var adorner = Widgets.Adorners.Factory.Active;
 
 			var rect  = this.Client.Bounds;
-			var state = Widget.ConstrainPaintState (this.PaintState);
+			var state = Widget.ConstrainPaintState (this.GetPaintState ());
 			var pos   = this.GetTextLayoutOffset ();
 
 			if (this.BackColor.IsTransparent)

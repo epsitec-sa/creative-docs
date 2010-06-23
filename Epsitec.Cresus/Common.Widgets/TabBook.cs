@@ -725,7 +725,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Dessine le groupe d'onglets.
 			IAdorner          adorner = Widgets.Adorners.Factory.Active;
-			WidgetPaintState  state   = this.PaintState;
+			WidgetPaintState  state   = this.GetPaintState ();
 			Drawing.Rectangle part    = Drawing.Rectangle.Deflate (this.Client.Bounds, new Drawing.Margins (0, 0, this.TabHeight, 0));
 			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
