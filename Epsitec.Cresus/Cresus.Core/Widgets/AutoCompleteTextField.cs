@@ -44,6 +44,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.hintSelected = -1;
 
 			this.hintWordSeparators = new List<string> ();
+
+			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 
 		public AutoCompleteTextField(Widget embedder)
@@ -57,6 +59,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (disposing)
 			{
+				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
+
 				this.CloseComboMenu ();
 			}
 
@@ -293,7 +297,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.OpenComboMenu ();
+					this.OpenComboMenu (completeMenu: false);
 				}
 			}
 		}
@@ -322,7 +326,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					var value = this.items.GetValue (i);
 
-					string full = this.ValueToDescriptionConverter (value).ToSimpleText ();
+					string full = this.ValueToDescriptionConverter (value).ToString ();
 					if (full == original)  // trouvé exactement ?
 					{
 						list1.Clear ();
@@ -350,6 +354,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
+		private void HandleIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			bool focused = (bool) e.NewValue;
+
+			if (focused)
+			{
+			}
+			else
+			{
+				this.CloseComboMenu ();
+			}
+		}
 
 		protected virtual void OnSelectedItemChanged()
 		{
@@ -478,12 +495,17 @@ namespace Epsitec.Cresus.Core.Widgets
 			else
 			{
 				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value).ToSimpleText ();
+				return this.ValueToDescriptionConverter (value).ToString ();
 			}
 		}
 
 
 		#region Combo menu
+		public void OpenComboMenu()
+		{
+			this.OpenComboMenu (completeMenu: true);
+		}
+
 		private bool IsComboMenuOpen
 		{
 			get
@@ -492,22 +514,59 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void OpenComboMenu()
+		private void OpenComboMenu(bool completeMenu)
 		{
 			if (this.IsComboMenuOpen)
 			{
-				return;
+				if (completeMenu)
+				{
+					this.CloseComboMenu ();
+
+					if (this.completeMenu)
+					{
+						return;
+					}
+				}
+				else
+				{
+					return;
+				}
 			}
 
-			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
+			this.completeMenu = completeMenu;
+
+			if (this.completeMenu)
 			{
-				return;
-			}
+				this.HintUpdateList (this.Text);
 
-			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+				if (this.hintListIndex.Count == 0)
+				{
+					this.hintSelected = -1;
+				}
+				else
+				{
+					this.hintSelected = this.hintListIndex[0];
+				}
+
+				this.hintListIndex.Clear ();
+
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					this.hintListIndex.Add (i);
+				}
+			}
+			else
+			{
+				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
+				{
+					return;
+				}
+
+				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
 				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
-			{
-				return;
+				{
+					return;
+				}
 			}
 
 			this.window = new Common.Widgets.Window ();
@@ -535,11 +594,14 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+			if (!this.completeMenu)
 			{
-				this.CloseComboMenu ();
-				return;
+				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+				{
+					this.CloseComboMenu ();
+					return;
+				}
 			}
 
 			this.UpdateScrollListContent ();
@@ -689,6 +751,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Window window;
 		private ScrollList scrollList;
 
+		private bool completeMenu;
 		private bool ignoreChange;
 	}
 }
