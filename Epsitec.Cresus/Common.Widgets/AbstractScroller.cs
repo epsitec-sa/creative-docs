@@ -537,7 +537,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
 			Widgets.Direction dir   = this.isVertical ? Direction.Up : Direction.Left;
-			WidgetPaintState       state = this.PaintState;
+			WidgetPaintState       state = this.GetPaintState ();
 
 			//	Dessine le fond.
 			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetPaintState.Entered, dir);

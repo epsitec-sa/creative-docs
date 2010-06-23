@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
 			var rect  = this.Client.Bounds;
-			var state = Widget.ConstrainPaintState (this.PaintState);
+			var state = Widget.ConstrainPaintState (this.GetPaintState ());
 
 			if ((state & WidgetPaintState.Enabled) == 0)
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if ((this.PaintState & WidgetPaintState.Selected) == 0)
+			if ((this.GetPaintState () & WidgetPaintState.Selected) == 0)
 			{
 				return;
 			}

@@ -1,9 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -41,13 +42,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreProgram.Application.PersistanceManager.Register (this.ribbonBook);
 		}
 
+		private static RibbonPage CreateRibbonPage(RibbonBook book, string name, string title)
+		{
+			return new RibbonPage (book)
+			{
+				Name = name,
+				RibbonTitle = title,
+				PreferredHeight = 78,
+			};
+		}
+
 		private void CreateRibbonHomePage()
 		{
-			this.ribbonPageHome = new RibbonPage (this.ribbonBook)
-			{
-				Name = "Home",
-				RibbonTitle = "Principal"
-			};
+			this.ribbonPageHome = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
 
 			this.CreateRibbonEditSection ();
 			this.CreateRibbonDatabaseSection ();
@@ -99,18 +106,25 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, double dx = 31.0)
+		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int dx = 31)
 		{
 			if (handler != null)
 			{
 				CoreProgram.Application.CommandDispatcher.Register (command, handler);
 			}
 
-			return new IconButton (command, new Epsitec.Common.Drawing.Size (dx, 31), dockStyle)
+			double buttonDx = 2 * ((dx + 1) / 2 + 5);
+
+			return new RibbonIconButton
 			{
+				CommandObject = command,
+				PreferredIconSize = new Size (dx, 31),
+				PreferredSize = new Size (buttonDx, buttonDx),
+				Dock = dockStyle,
 				Name = command.Name,
-				VerticalAlignment = VerticalAlignment.Center,
-				HorizontalAlignment = HorizontalAlignment.Center
+				VerticalAlignment = VerticalAlignment.Top,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				AutoFocus = false,
 			};
 		}
 

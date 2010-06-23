@@ -37,6 +37,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public string DataSetName
+		{
+			get
+			{
+				return this.dataSetName;
+			}
+		}
 
 
 		public AbstractEntity GetActiveEntity()
@@ -55,13 +62,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			return entity;
 		}
 
-		public void SelectBase(string baseName)
+		public void SelectDataSet(string dataSetName)
 		{
-			switch (baseName)
+			if (this.dataSetName != dataSetName)
 			{
-				case "Customers":
-					this.SetContents (() => this.data.GetCustomers ());
-					break;
+				this.dataSetName = dataSetName;
+
+				this.UpdateDataSet ();
+				this.OnDataSetSelected ();
 			}
 		}
 		
@@ -127,7 +135,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshScrollList ();
 		}
 
-		
+
+		private void UpdateDataSet()
+		{
+			switch (this.dataSetName)
+			{
+				case "Customers":
+					this.SetContents (() => this.data.GetCustomers ());
+					break;
+			}
+		}
 		private void UpdateCollection()
 		{
 			if (this.collectionGetter != null)
@@ -156,6 +173,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (handler != null)
 			{
 				handler (this, e);
+			}
+		}
+
+		protected void OnDataSetSelected()
+		{
+			var handler = this.DataSetSelected;
+
+			if (handler != null)
+			{
+				handler (this);
 			}
 		}
 
@@ -228,8 +255,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
+		public event EventHandler				DataSetSelected;
+
 		private readonly CoreData data;
 		private readonly List<AbstractEntity> collection;
+		private string dataSetName;
 		private System.Func<IEnumerable<AbstractEntity>> collectionGetter;
 		private int suspendUpdates;
 

@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout == null )  return;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
+			WidgetPaintState       state = this.GetPaintState ();
 			Drawing.Point     pos   = new Drawing.Point();
 			
 			if ( this.BackColor.IsVisible )

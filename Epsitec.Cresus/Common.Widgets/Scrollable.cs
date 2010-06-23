@@ -639,7 +639,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			WidgetPaintState state = this.PaintState;
+			WidgetPaintState state = this.GetPaintState ();
 
 			var rect = this.GetSurfaceRectangle ();
 

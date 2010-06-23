@@ -32,6 +32,9 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		private void SetupDatabaseCommands()
 		{
+			//	Make sure all command objects are properly initialized before trying
+			//	to iterate on the available commands in SetupDatabaseCommandStates :
+
 			Res.Initialize ();
 		}
 		
@@ -51,7 +54,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 			this.UpdateActiveCommandState (activeState);
 			
-			controller.SelectBase (databaseName);
+			controller.SelectDataSet (databaseName);
 		}
 
 		private void UpdateActiveCommandState(CommandState activeState)

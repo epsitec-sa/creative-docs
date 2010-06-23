@@ -191,6 +191,7 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
+    <Compile Include="Widgets\RibbonIconButton.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
     <Compile Include="Widgets\TileArrow.cs" />
     <Compile Include="Widgets\Tile.cs" />

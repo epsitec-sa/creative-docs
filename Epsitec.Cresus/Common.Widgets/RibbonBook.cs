@@ -231,7 +231,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 			rect.Bottom = rect.Top-RibbonBook.TabHeight;
-			adorner.PaintRibbonTabBackground(graphics, rect, this.PaintState);
+			adorner.PaintRibbonTabBackground (graphics, rect, this.GetPaintState ());
 		}
 		
 		protected override void ProcessMessage(Message message, Point pos)

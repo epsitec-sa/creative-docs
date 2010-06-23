@@ -124,42 +124,51 @@ namespace Epsitec.Common.Widgets
 		{
 			return Widgets.Adorners.Factory.Active.GeometryToolShapeMargins;
 		}
-		
-		
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Rectangle glyphBounds = this.GlyphBounds;
 
-			if ( this.ButtonStyle != ButtonStyle.None )
+			WidgetPaintState paintState = this.GetPaintState ();
+			if (this.ButtonStyle != ButtonStyle.None)
 			{
 				Direction dir = Direction.None;
-				switch ( this.shape )
+				switch (this.shape)
 				{
-					case GlyphShape.ArrowUp:     dir = Direction.Up;     break;
-					case GlyphShape.ArrowDown:   dir = Direction.Down;   break;
-					case GlyphShape.ArrowLeft:   dir = Direction.Left;   break;
-					case GlyphShape.ArrowRight:  dir = Direction.Right;  break;
+					case GlyphShape.ArrowUp:
+						dir = Direction.Up;
+						break;
+					case GlyphShape.ArrowDown:
+						dir = Direction.Down;
+						break;
+					case GlyphShape.ArrowLeft:
+						dir = Direction.Left;
+						break;
+					case GlyphShape.ArrowRight:
+						dir = Direction.Right;
+						break;
 				}
 
 				if (this.glyphSize.IsEmpty)
 				{
-					adorner.PaintButtonBackground(graphics, this.Client.Bounds, this.PaintState, dir, this.ButtonStyle);
+					adorner.PaintButtonBackground (graphics, this.Client.Bounds, paintState, dir, this.ButtonStyle);
 				}
 				else
 				{
-					WidgetPaintState state = this.PaintState;
+					WidgetPaintState state = paintState;
 					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 					{
 						state |=  WidgetPaintState.InheritedEnter;  // mode spécial pour le groupe d'un combo
 					}
-					adorner.PaintButtonBackground(graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
+					adorner.PaintButtonBackground (graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
 
-					adorner.PaintButtonBackground(graphics, glyphBounds, this.PaintState, dir, this.ButtonStyle);
+					adorner.PaintButtonBackground (graphics, glyphBounds, paintState, dir, this.ButtonStyle);
 				}
 			}
 
-			adorner.PaintGlyph(graphics, glyphBounds, this.PaintState, this.shape, PaintTextStyle.Button);
+			adorner.PaintGlyph (graphics, glyphBounds, paintState, this.shape, PaintTextStyle.Button);
 		}
 
 		protected Rectangle GlyphBounds
