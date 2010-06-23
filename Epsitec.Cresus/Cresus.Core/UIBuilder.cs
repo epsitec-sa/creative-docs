@@ -340,7 +340,8 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var button = new GlyphButton
+			//	Ce bouton vient tout à droite.
+			var tileButton = new GlyphButton
 			{
 				Parent = container,
 				GlyphShape = GlyphShape.ArrowRight,
@@ -352,21 +353,42 @@ namespace Epsitec.Cresus.Core
 				AutoFocus = false,
 			};
 
+			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
+			var menuButton = new GlyphButton
+			{
+				Parent = container,
+				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+				GlyphShape = GlyphShape.Menu,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (-1, 0, 0, 0),
+				AutoFocus = false,
+			};
+
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, button);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
 
-			button.Entered +=
+			menuButton.Clicked +=
+				delegate
+				{
+					editor.SelectAll ();
+					editor.Focus ();
+					editor.OpenComboMenu ();
+				};
+
+			tileButton.Entered +=
 				delegate
 				{
 					tile.TileArrowHilite = true;
 				};
 
-			button.Exited +=
+			tileButton.Exited +=
 				delegate
 				{
 					tile.TileArrowHilite = false;
@@ -374,16 +396,16 @@ namespace Epsitec.Cresus.Core
 
 			var controller = this.GetActiveController ();
 
-			button.Clicked +=
+			tileButton.Clicked +=
 				delegate
 				{
-					if (button.GlyphShape == GlyphShape.ArrowRight)
+					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new AutoCompleteTextFieldTileController (entity);
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
-					if (button.GlyphShape == GlyphShape.Plus)
+					if (tileButton.GlyphShape == GlyphShape.Plus)
 					{
 						// TODO:
 					}
