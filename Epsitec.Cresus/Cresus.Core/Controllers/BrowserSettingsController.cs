@@ -45,12 +45,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Left,
 				IconUri = Misc.GetResourceIconUri ("Edition.NewRecord"),
 			};
+
+			this.newItemIconButton.Clicked += this.HandleNewItemClicked;
 		}
 
 		
 		private void HandleBrowserDataSetSelected(object sender)
 		{
 			this.UpdateNewItemIconButton ();
+		}
+
+		private void HandleNewItemClicked(object sender, MessageEventArgs e)
+		{
+			this.browser.CreateNewItem ();
 		}
 
 		private void UpdateNewItemIconButton()
