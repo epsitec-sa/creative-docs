@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void SetButtonVisibility(bool show)
+		private void SetButtonVisibility(bool show)
 		{
 			if (this.acceptRejectBehavior == null)
 			{

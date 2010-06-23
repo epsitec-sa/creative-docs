@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var showButton = new GlyphButton
+			var button = new GlyphButton
 			{
 				Parent = container,
 				GlyphShape = GlyphShape.ArrowRight,
@@ -355,18 +355,18 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, showButton);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, button);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
 
-			showButton.Entered +=
+			button.Entered +=
 				delegate
 				{
 					tile.TileArrowHilite = true;
 				};
 
-			showButton.Exited +=
+			button.Exited +=
 				delegate
 				{
 					tile.TileArrowHilite = false;
@@ -374,16 +374,16 @@ namespace Epsitec.Cresus.Core
 
 			var controller = this.GetActiveController ();
 
-			showButton.Clicked +=
+			button.Clicked +=
 				delegate
 				{
-					if (showButton.GlyphShape == GlyphShape.ArrowRight)
+					if (button.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new AutoCompleteTextFieldTileController (entity);
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
-					if (showButton.GlyphShape == GlyphShape.Plus)
+					if (button.GlyphShape == GlyphShape.Plus)
 					{
 						// TODO:
 					}
