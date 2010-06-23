@@ -677,6 +677,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			ScreenInfo screenInfo  = ScreenInfo.Find (hot);
 			Rectangle workingArea = screenInfo.WorkingArea;
 
+			double menuButtonWidth = item.ActualHeight - 1;
+
 			double maxHeight = pos.Y - workingArea.Bottom;
 
 			if (maxHeight > size.Height || maxHeight > 100)
@@ -686,7 +688,9 @@ namespace Epsitec.Cresus.Core.Widgets
 				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
 				AutoCompleteTextField.AdjustSize (scrollList);
 
-				size = scrollList.PreferredSize;
+				size.Height = scrollList.PreferredHeight;
+				size.Width  = System.Math.Max (size.Width+menuButtonWidth, scrollList.PreferredWidth);
+
 				location = new Point(pos.X, pos.Y+1);
 			}
 			else
@@ -701,7 +705,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				pos.Y += scrollList.PreferredHeight;
 
-				size = scrollList.PreferredSize;
+				size.Height = scrollList.PreferredHeight;
+				size.Width  = System.Math.Max (size.Width+menuButtonWidth, scrollList.PreferredWidth);
+
 				location = pos;
 			}
 
