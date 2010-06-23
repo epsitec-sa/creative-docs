@@ -210,8 +210,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetButtonVisibility (this.ComputeButtonVisibility ());
 		}
-		
-		
+
+
 		protected bool ComputeButtonVisibility()
 		{
 			bool show = false;
@@ -230,8 +230,8 @@ namespace Epsitec.Common.Widgets
 			
 			return show;
 		}
-		
-		protected void SetButtonVisibility(bool visibility)
+
+		private void SetButtonVisibility(bool visibility)
 		{
 			if (this.button != null)
 			{

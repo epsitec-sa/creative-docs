@@ -1100,10 +1100,15 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.lastMousePos = pos;
+#if false
 			pos = this.Client.Bounds.Constrain (pos);
-			//?pos.X -= this.margins.Left;
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+#else
+			Drawing.Rectangle inner = this.InnerTextBounds;
+			pos = inner.Constrain (pos);
+			pos -= inner.BottomLeft;
+#endif
 			pos += this.scrollOffset;
 
 			switch (message.MessageType)
@@ -1127,7 +1132,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						if (this.UpdateMouseCursor (pos))
+						if (this.UpdateMouseCursor (this.lastMousePos))
 						{
 							message.Consumer = this;
 						}
@@ -1513,6 +1518,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
+
+			this.UpdateButtonVisibility ();
 		}
 
 		protected override void OnTextChanged()
