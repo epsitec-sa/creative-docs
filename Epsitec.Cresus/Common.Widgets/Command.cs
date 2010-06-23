@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Collections;
 
 using System.Collections.Generic;
+using System.Linq;
 
 [assembly: DependencyClass (typeof (Command), Converter = typeof (Command.SerializationConverter))]
 
@@ -420,10 +421,13 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Command state;
-			
-			if (Command.commands.TryGetValue (id, out state))
+
+			lock (Command.commands)
 			{
-				return state;
+				if (Command.commands.TryGetValue (id, out state))
+				{
+					return state;
+				}
 			}
 			
 			return null;
@@ -443,18 +447,27 @@ namespace Epsitec.Common.Widgets
 
 
 		/// <summary>
-		/// Finds and enumerates the commands matching the specified shortcut.
+		/// Finds all commands matching the specified shortcut. The order in which
+		/// the items are returned is not defined.
 		/// </summary>
 		/// <param name="shortcut">The command shortcut.</param>
-		/// <returns>The command enumeration.</returns>
-		public static IEnumerable<Command> Find(Shortcut shortcut)
+		/// <returns>The collection of matching commands.</returns>
+		public static IEnumerable<Command> FindAll(Shortcut shortcut)
 		{
-			foreach (Command command in Command.commands.Values)
+			return Command.FindAll (command => command.Shortcuts.Contains (shortcut));
+		}
+
+		/// <summary>
+		/// Finds all commands which match the specified predicate. The order in
+		/// wich the items are returned is not defined.
+		/// </summary>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns>The collection of matching commands.</returns>
+		public static IEnumerable<Command> FindAll(System.Predicate<Command> predicate)
+		{
+			lock (Command.commands)
 			{
-				if (command.Shortcuts.Contains (shortcut))
-				{
-					yield return command;
-				}
+				return Command.commands.Values.Where (command => predicate (command)).ToList ();
 			}
 		}
 
