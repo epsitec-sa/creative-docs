@@ -31,26 +31,11 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public AutoCompleteTextField()
 		{
-			this.ButtonShowCondition = ButtonShowCondition.WhenKeyboardFocused;
-
 			this.HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable;
 			this.ComboMenuReasonableItemsLimit = 100;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
-
-			this.menuBbutton = new GlyphButton
-			{
-				Parent = this,
-				GlyphShape = GlyphShape.Menu,
-				ButtonStyle = ButtonStyle.Combo,
-				Name = "Open",
-			};
-
-			this.menuBbutton.Pressed += this.HandleButtonPressed;
-
-			this.defaultMenuButtonWidth = this.menuBbutton.PreferredWidth;
-			this.margins.Left           = this.menuBbutton.PreferredWidth;
 
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.selectedRow = -1;
@@ -59,10 +44,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.hintSelected = -1;
 
 			this.hintWordSeparators = new List<string> ();
-
-			this.UpdateButtonVisibility ();
-
-			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 
 		public AutoCompleteTextField(Widget embedder)
@@ -76,12 +57,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			if (disposing)
 			{
-				this.IsFocusedChanged -= this.HandleIsFocusedChanged;
-
 				this.CloseComboMenu ();
-
-				this.menuBbutton.Pressed -= this.HandleButtonPressed;
-				this.menuBbutton.Dispose ();
 			}
 
 			base.Dispose (disposing);
@@ -281,97 +257,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		#endregion
 
 
-		#region Menu Button
-		public Rectangle GetMenuButtonBounds()
-		{
-			//	Retourne le rectangle à utiliser pour les boutons Accept/Reject.
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Rectangle rect = new Rectangle ();
-
-			rect.Left   = adorner.GeometryComboRightMargin;
-			rect.Right  = adorner.GeometryComboRightMargin + this.margins.Left;
-			rect.Bottom = adorner.GeometryComboBottomMargin;
-			rect.Top    = this.ActualHeight - adorner.GeometryComboTopMargin;
-
-			return rect;
-		}
-
-		protected override void UpdateButtonGeometry()
-		{
-			//	Met à jour la position du bouton; la marge gauche de la ligne
-			//	éditable est ajustée pour tenir compte de la présence (ou non)
-			//	du bouton.
-			base.UpdateButtonGeometry ();
-
-			if (this.menuBbutton != null)
-			{
-				this.margins.Left = this.menuBbutton.Visibility ? this.defaultMenuButtonWidth : 0;
-				this.menuBbutton.SetManualBounds (this.GetMenuButtonBounds ());
-			}
-		}
-
-		protected override void UpdateButtonVisibility()
-		{
-			this.SetMenuButtonVisibility (this.ComputeMenuButtonVisibility ());
-		}
-
-
-		private bool ComputeMenuButtonVisibility()
-		{
-			bool show = false;
-
-			switch (this.ButtonShowCondition)
-			{
-				case ButtonShowCondition.Always:
-					show = true;
-					break;
-
-				case ButtonShowCondition.Never:
-					show = false;
-					break;
-
-				case ButtonShowCondition.WhenFocused:
-					show = this.IsFocused || this.IsComboMenuOpen;
-					break;
-
-				case ButtonShowCondition.WhenKeyboardFocused:
-					show = this.KeyboardFocus || this.IsComboMenuOpen;
-					break;
-
-				case ButtonShowCondition.WhenModified:
-					show = this.HasEditedText;
-					break;
-
-				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
-			}
-
-			return show;
-		}
-
-		private void SetMenuButtonVisibility(bool visibility)
-		{
-			if (this.menuBbutton != null)
-			{
-				if (this.menuBbutton.Visibility != visibility)
-				{
-					this.menuBbutton.Visibility = visibility;
-
-					this.UpdateButtonGeometry ();
-					this.UpdateTextLayout ();
-					this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
-				}
-			}
-		}
-
-		private void HandleButtonPressed(object sender, MessageEventArgs e)
-		{
-			//	L'utilisateur a cliqué dans le bouton d'ouverture de la liste.
-			this.OpenComboMenu (completeMenu: true);
-		}
-		#endregion
-
-
 		private void HintSearching(string typed)
 		{
 			if (this.ValueToDescriptionConverter == null || this.HintComparer == null)
@@ -408,7 +293,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.OpenComboMenu (completeMenu: false);
+					this.OpenComboMenu ();
 				}
 			}
 		}
@@ -465,19 +350,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-
-		private void HandleIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			bool focused = (bool) e.NewValue;
-
-			if (focused)
-			{
-			}
-			else
-			{
-				this.CloseComboMenu ();
-			}
-		}
 
 		protected virtual void OnSelectedItemChanged()
 		{
@@ -599,14 +471,14 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string GetItemText(int index)
 		{
-			if (this.ValueToDescriptionConverter == null || index == -1)
+			if (this.ValueToDescriptionConverter == null)
 			{
 				return null;
 			}
 			else
 			{
 				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value).ToString ();
+				return this.ValueToDescriptionConverter (value).ToSimpleText ();
 			}
 		}
 
@@ -620,52 +492,22 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void OpenComboMenu(bool completeMenu)
+		private void OpenComboMenu()
 		{
-			this.completeMenu = completeMenu;
-
 			if (this.IsComboMenuOpen)
 			{
-				if (this.completeMenu)
-				{
-					this.CloseComboMenu ();
-				}
-
 				return;
 			}
 
-			if (this.completeMenu)
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
 			{
-				this.HintUpdateList (this.Text);
-
-				if (this.hintListIndex.Count == 0)
-				{
-					this.hintSelected = -1;
-				}
-				else
-				{
-					this.hintSelected = this.hintListIndex[0];
-				}
-
-				this.hintListIndex.Clear ();
-
-				for (int i = 0; i < this.items.Count; i++)
-				{
-					this.hintListIndex.Add (i);
-				}
+				return;
 			}
-			else
-			{
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.Never)
-				{
-					return;
-				}
 
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
-				{
-					return;
-				}
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+			{
+				return;
 			}
 
 			this.window = new Common.Widgets.Window ();
@@ -684,8 +526,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.UpdateComboMenuContent ();
 
 			this.window.Show ();
-
-			this.UpdateButtonVisibility ();
 		}
 
 		private void UpdateComboMenuContent()
@@ -695,14 +535,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			if (!this.completeMenu)
+			if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
+				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
 			{
-				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
-				{
-					this.CloseComboMenu ();
-					return;
-				}
+				this.CloseComboMenu ();
+				return;
 			}
 
 			this.UpdateScrollListContent ();
@@ -743,8 +580,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.scrollList.SelectionActivated -= new EventHandler (this.HandleScrollListSelectionActivated);
 			this.scrollList = null;
-
-			this.UpdateButtonVisibility ();
 		}
 
 
@@ -758,10 +593,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				string key = this.items.GetKey (i);
 				string text = this.GetItemText (i);
-
-				if (text.Contains ("&"))
-				{
-				}
 
 				this.scrollList.Items.Add (key, text);
 			}
@@ -847,9 +678,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 
-		private readonly GlyphButton menuBbutton;
-		private double defaultMenuButtonWidth;
-
 		private readonly Common.Widgets.Collections.StringCollection items;
 		private int selectedRow;
 
@@ -861,7 +689,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private Window window;
 		private ScrollList scrollList;
 
-		private bool completeMenu;
 		private bool ignoreChange;
 	}
 }

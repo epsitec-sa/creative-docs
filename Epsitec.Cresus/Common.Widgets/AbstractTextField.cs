@@ -981,7 +981,7 @@ namespace Epsitec.Common.Widgets
 			//	We use the text as it is displayed on screen, not as it is stored
 			//	internally, since we must account for possible prefixes/suffixes
 			//	related to the HintText property :
-
+			
 			bool ok = layout.DetectIndex (pos, select, out index, out after);
 			int len = this.Text.Length;
 
@@ -1100,15 +1100,9 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.lastMousePos = pos;
-#if false
 			pos = this.Client.Bounds.Constrain (pos);
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
-#else
-			Drawing.Rectangle inner = this.InnerTextBounds;
-			pos = inner.Constrain (pos);
-			pos -= inner.BottomLeft;
-#endif
 			pos += this.scrollOffset;
 
 			switch (message.MessageType)
@@ -1132,7 +1126,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						if (this.UpdateMouseCursor (this.lastMousePos))
+						if (this.UpdateMouseCursor (pos))
 						{
 							message.Consumer = this;
 						}
@@ -1518,8 +1512,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
-
-			this.UpdateButtonVisibility ();
 		}
 
 		protected override void OnTextChanged()
