@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				delegate
 				{
 					System.Diagnostics.Debug.Assert (this.addressTextField != null);
-					this.addressTextField.Text = null;
+					this.addressTextField.Text = null;  // on efface l'adresse si on change d'entreprise
 					this.addressTextField.Items.Clear ();
 
 					var addressGetter = this.LegalPersonAddressGetter;
@@ -193,6 +193,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private IEnumerable<Entities.AddressEntity> LegalPersonAddressGetter
 		{
+			//	Retourne les adresses de l'entreprise choisie.
 			get
 			{
 				return this.Entity.LegalPerson.Contacts
@@ -215,32 +216,57 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin         (tile, true);
 		}
 
+
 		private void CreateUICountry(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Nom et code du pays",
+			var textField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
 				new SelectionController<Entities.CountryEntity>
 				{
 					ValueGetter = () => this.Entity.Address.Location.Country,
 					ValueSetter = x => this.Entity.Address.Location.Country = x,
+					// TODO: Lorsqu'on modifie le pays, on ne peut pas modifier le pays de la ville en cours !!! Comment faire ?
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
 				});
+
+			textField.SelectedItemChanged +=
+				delegate
+				{
+					System.Diagnostics.Debug.Assert (this.addressTextField != null);
+					this.locationTextField.Text = null;  // on efface la ville si on change de pays
+					this.locationTextField.Items.Clear ();
+
+					var locationGetter = this.LocationGetter;
+					foreach (var item in locationGetter)
+					{
+						this.locationTextField.Items.Add (item);
+					}
+				};
 		}
 
 		private void CreateUILocation(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Numéro postal et ville",
+			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville",
 				new SelectionController<Entities.LocationEntity>
 				{
 					ValueGetter = () => this.Entity.Address.Location,
 					ValueSetter = x => this.Entity.Address.Location = x,
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
+					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.PostalCode, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name),
 				});
+		}
+
+		private IEnumerable<Entities.LocationEntity> LocationGetter
+		{
+			//	Retourne les localités du pays choisi.
+			get
+			{
+				return CoreProgram.Application.Data.GetLocations (this.Entity.Address.Location.Country);
+			}
 		}
 
 
@@ -273,5 +299,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private List<Common.Widgets.Widget>		localPageContent;
 		private List<Common.Widgets.Widget>		globalPageContent;
 		private AutoCompleteTextField			addressTextField;
+		private AutoCompleteTextField			locationTextField;
 	}
 }

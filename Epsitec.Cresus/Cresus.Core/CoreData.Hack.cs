@@ -31,6 +31,11 @@ namespace Epsitec.Cresus.Core
 			return new LocationRepository (this.DataContext).GetAllLocations ();
 		}
 
+		public IEnumerable<LocationEntity> GetLocations(CountryEntity country)
+		{
+			return new LocationRepository (this.DataContext).GetLocationsByCountry (country);
+		}
+
 		public IEnumerable<ContactRoleEntity> GetRoles()
 		{
 			return new ContactRoleRepository (this.DataContext).GetAllContactRoles ();
@@ -105,14 +110,27 @@ namespace Epsitec.Cresus.Core
 		{
 			CountryEntity swiss = countries.First (c => c.Code == "CH");
 
-			for (int i = 0; i < CoreData.locations.Length; i += 2)
+			for (int i = 0; i < CoreData.swissLocations.Length; i += 2)
 			{
-				LocationEntity location = this.DataContext.CreateEmptyEntity<LocationEntity>();
-				
+				LocationEntity location = this.DataContext.CreateEmptyEntity<LocationEntity> ();
+
 				location.Country = swiss;
-				location.PostalCode = CoreData.locations[i + 0];
-				location.Name = CoreData.locations[i + 1];
-				
+				location.PostalCode = CoreData.swissLocations[i + 0];
+				location.Name = CoreData.swissLocations[i + 1];
+
+				yield return location;
+			}
+
+			CountryEntity french = countries.First (c => c.Code == "FR");
+
+			for (int i = 0; i < CoreData.frenchLocations.Length; i += 2)
+			{
+				LocationEntity location = this.DataContext.CreateEmptyEntity<LocationEntity> ();
+
+				location.Country = french;
+				location.PostalCode = CoreData.frenchLocations[i + 0];
+				location.Name = CoreData.frenchLocations[i + 1];
+
 				yield return location;
 			}
 		}

@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core
 #endregion
 		};
 
-		private static readonly string[] locations =
+		private static readonly string[] swissLocations =
 		{
 #region Textes
 			"1000", "Lausanne",
@@ -5524,6 +5524,26 @@ namespace Epsitec.Cresus.Core
 			"1905", "Dorénaz PA",
 			"1951", "Sion Retours",
 			"2013", "Boudry SDD",
+#endregion
+		};
+
+		private static readonly string[] frenchLocations =
+		{
+#region Textes
+			"03200", "Brest",
+			"06000", "Nice",
+			"06400", "Cannes",
+			"13000", "Marseille",
+			"21000", "Dijon",
+			"31000", "Toulouse",
+			"38000", "Grenoble",
+			"44000", "Nantes",
+			"62100", "Calais",
+			"67000", "Strasbourg",
+			"69000", "Lyon",
+			"75000", "Paris",
+			"76000", "Rouen",
+			"83000", "Toulon",
 #endregion
 		};
 	}
