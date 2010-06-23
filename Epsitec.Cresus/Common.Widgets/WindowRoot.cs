@@ -257,7 +257,7 @@ namespace Epsitec.Common.Widgets
 					Widget widget = focused == null ? this : focused;
 					Window window = this.window;
 
-					List<Command> commands = Types.Collection.ToList (Widgets.Command.Find (shortcut));
+					List<Command> commands = Types.Collection.ToList (Widgets.Command.FindAll (shortcut));
 					
 					if (commands.Count > 0)
 					{
