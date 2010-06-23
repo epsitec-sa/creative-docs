@@ -26,13 +26,14 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			this.controllers = new List<CoreController> ();
 			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData (false);
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
+			
+			this.mainWindowController = new MainWindowController (this.data);
 		}
 
 
@@ -90,11 +91,32 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public MainWindowController				MainWindowController
+		{
+			get
+			{
+				return this.mainWindowController;
+			}
+		}
+
+
+		public static T GetController<T>(CommandContext context)
+			where T : CoreController
+		{
+			var root = CoreProgram.Application.MainWindowController;
+
+			if (root is T)
+			{
+				return root as T;
+			}
+
+			return root.GetAllSubControllers ().Where (item => item is T).FirstOrDefault () as T;
+		}
+
 
 		internal void CreateUI()
 		{
 			this.CreateUIMainWindow ();
-			this.CreateUIRootBoxes ();
 			this.CreateUIControllers ();
 			
 			this.RestoreApplicationState ();
@@ -126,8 +148,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (disposing)
 			{
-				this.controllers.ForEach (controller => controller.Dispose ());
-				this.controllers.Clear ();
+				this.mainWindowController.Dispose ();
 
 				if (this.data != null)
 				{
@@ -164,33 +185,9 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
-		private void CreateUIRootBoxes()
-		{
-			this.ribbonBox = new FrameBox ()
-			{
-				Parent = this.Window.Root,
-				Name = "RibbonBox",
-				Dock = DockStyle.Top,
-			};
-
-			this.contentBox = new FrameBox ()
-			{
-				Parent = this.Window.Root,
-				Name = "ContentBox",
-				Dock = DockStyle.Fill,
-			};
-		}
-
 		private void CreateUIControllers()
 		{
-			var ribbonController   = new RibbonViewController ();
-			var mainViewController = new MainViewController (this.data);
-
-			this.controllers.Add (ribbonController);
-			this.controllers.Add (mainViewController);
-
-			ribbonController.CreateUI (this.ribbonBox);
-			mainViewController.CreateUI (this.contentBox);
+			this.mainWindowController.CreateUI (this.Window.Root);
 		}
 
 		private void RestoreApplicationState()
@@ -238,7 +235,7 @@ namespace Epsitec.Cresus.Core
 		private ExceptionManager						exceptionManager;
 		private CoreCommandDispatcher					commands;
 
-		private readonly List<CoreController>			controllers;
+		private MainWindowController					mainWindowController;
 
 		private FrameBox								ribbonBox;
 		private FrameBox								contentBox;

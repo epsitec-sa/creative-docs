@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class BrowserViewController : CoreViewController, INotifyCurrentChanged
+	public class BrowserViewController : CoreViewController, INotifyCurrentChanged
 	{
 		public BrowserViewController(string name, CoreData data)
 			: base (name)
@@ -29,11 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
-		}
-
 		public FrameBox SettingsPanel
 		{
 			get
@@ -42,16 +37,44 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static T GetActiveItem<T>(IList<T> collection, int index)
+
+
+		public AbstractEntity GetActiveEntity()
 		{
-			if (index < 0)
+			if (this.activeEntityKey.IsEmpty)
 			{
-				return default (T);
+				return null;
 			}
-			else
+
+			int active   = this.scrollList.SelectedItemIndex;
+			var entity   = BrowserViewController.GetActiveItem (this.collection, active);
+			var entityId = entity.GetEntityStructuredTypeId ();
+
+			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey);
+
+			return entity;
+		}
+
+		public void SelectBase(string baseName)
+		{
+			switch (baseName)
 			{
-				return collection[index];
+				case "Customers":
+					this.SetContents (() => this.data.GetCustomers ());
+					break;
 			}
+		}
+		
+		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
+		{
+			this.collectionGetter = collectionGetter;
+			this.UpdateCollection ();
+		}
+
+		
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			yield break;
 		}
 
 		public override void CreateUI(Widget container)
@@ -68,18 +91,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				PreferredHeight = 28,
 			};
-
-#if false
-			var label = new StaticText ()
-			{
-				Parent = frame,
-				Anchor = AnchorStyles.Top | AnchorStyles.LeftAndRight,
-				Text = @"<font size=""120%"">Clients</font>",
-				Margins = new Common.Drawing.Margins (0, 0, 0, 0),
-				PreferredHeight = 26,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-			};
-#endif
 
 			var listFrame = new FrameBox
 			{
@@ -104,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						var entity = BrowserViewController.GetActiveItem (this.collection, active);
 						var key    = DataContextPool.Instance.FindEntityKey (entity);
 
-						if (this.activeEntityKey != key )
+						if (this.activeEntityKey != key)
 						{
 							this.activeEntityKey = key;
 							this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
@@ -112,40 +123,20 @@ namespace Epsitec.Cresus.Core.Controllers
 						}
 					}
 				};
-			
+
 			this.RefreshScrollList ();
 		}
 
-
-		public AbstractEntity GetActiveEntity()
-		{
-			if (this.activeEntityKey.IsEmpty)
-			{
-				return null;
-			}
-
-			int active   = this.scrollList.SelectedItemIndex;
-			var entity   = BrowserViewController.GetActiveItem (this.collection, active);
-			var entityId = entity.GetEntityStructuredTypeId ();
-
-			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey);
-
-			return entity;
-		}
-
-
-		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
-		{
-			this.collectionGetter = collectionGetter;
-			this.UpdateCollection ();
-		}
-
+		
 		private void UpdateCollection()
 		{
-			this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-			this.collection.Clear ();
-			this.collection.AddRange (this.collectionGetter ());
-			this.RefreshScrollList ();
+			if (this.collectionGetter != null)
+			{
+				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+				this.collection.Clear ();
+				this.collection.AddRange (this.collectionGetter ());
+				this.RefreshScrollList ();
+			}
 		}
 		
 		protected void OnCurrentChanged()
@@ -188,6 +179,18 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.suspendUpdates--;
 				
 				this.scrollList.SelectedItemIndex = newActive;
+			}
+		}
+
+		private static T GetActiveItem<T>(IList<T> collection, int index)
+		{
+			if (index < 0)
+			{
+				return default (T);
+			}
+			else
+			{
+				return collection[index];
 			}
 		}
 
