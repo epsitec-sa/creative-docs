@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core
 		private void CreateCommandHandlers()
 		{
 			this.commandHandlers.Add (new CommandHandlers.CoreCommandHandler (this));
+			this.commandHandlers.Add (new CommandHandlers.DatabaseCommandHandler (this));
 		}
 
 		private void RegisterCommandHandlers()

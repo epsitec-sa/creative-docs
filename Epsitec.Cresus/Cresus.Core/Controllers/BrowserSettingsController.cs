@@ -31,13 +31,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.CreateUIMainIcon (container);
+			this.CreateUINewItemIconButton (container);
 		}
 
-		private void CreateUIMainIcon(Widget container)
+		private void CreateUINewItemIconButton(Widget container)
 		{
-			this.iconBackground = new LayeredIconButton
+			this.newItemIconButton = new LayeredIconButton
 			{
+				Name = "CreateNewItem",
 				Parent = container,
 				PreferredSize = new Size (28, 28),
 				PreferredIconSize = new Size (24, 24),
@@ -49,18 +50,17 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private void HandleBrowserCurrentChanged(object sender)
 		{
-			this.UpdateStaticTextIcon ();
+			this.UpdateNewItemIconButton ();
 		}
 
-		private void UpdateStaticTextIcon()
+		private void UpdateNewItemIconButton()
 		{
-			this.iconBackground.ClearOverlays ();
-			this.iconBackground.AddOverlay (Misc.GetResourceIconUri ("Base.Customers"), new Size (20, 20));
+			this.newItemIconButton.ClearOverlays ();
+			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Base.Customers"), new Size (20, 20));
 		}
 
 		private readonly BrowserViewController browser;
 
-		private StaticImage iconOverlay;
-		private LayeredIconButton iconBackground;
+		private LayeredIconButton newItemIconButton;
 	}
 }

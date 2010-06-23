@@ -39,16 +39,6 @@ namespace Epsitec.Cresus.Core.CommandHandlers
             }
 		}
 
-		[Command (Core.Res.CommandIds.Base.ShowCustomers)]
-		public void ProcessBaseShowCustomers(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			var command = e.Command;
-			var state = this.commandDispatcher.GetState (command);
-			state.ActiveState = ActiveState.Yes;
-			
-			//	TODO : ...
-		}
-
 
 		[Command (Core.Res.CommandIds.Test.Crash)]
 		public void ProcessTestCrash()

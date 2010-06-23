@@ -21,22 +21,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data = data;
 
-			this.browserController = new BrowserViewController ("Browser", data);
-			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserController);
+			this.browserViewController = new BrowserViewController ("Browser", data);
+			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserViewController);
 			this.dataViewController = new DataViewController ("Data", data);
 
-			this.browserController.SetContents (() => this.data.GetCustomers ());
-			
-			this.browserController.CurrentChanging +=
+			this.browserViewController.CurrentChanging +=
 				delegate
 				{
 					this.dataViewController.ClearActiveEntity ();
 				};
 
-			this.browserController.CurrentChanged +=
+			this.browserViewController.CurrentChanged +=
 				delegate
 				{
-					this.dataViewController.SetActiveEntity (this.browserController.GetActiveEntity ());
+					this.dataViewController.SetActiveEntity (this.browserViewController.GetActiveEntity ());
 				};
 		}
 
@@ -56,10 +54,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public BrowserViewController BrowserViewController
+		{
+			get
+			{
+				return this.browserViewController;
+			}
+		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			yield return this.browserController;
+			yield return this.browserViewController;
 			yield return this.browserSettingsController;
 			yield return this.dataViewController;
 		}
@@ -68,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.CreateUIFrame (container);
 
-			this.browserController.CreateUI (this.leftPanel);
+			this.browserViewController.CreateUI (this.leftPanel);
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
 			this.dataViewController.CreateUI (this.rightPanel);
 
@@ -150,7 +155,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateBrowserSettingsPanel()
 		{
 			var expandedPanel = this.topPanel;
-			var compactPanel  = this.browserController.SettingsPanel;
+			var compactPanel  = this.browserViewController.SettingsPanel;
 
 			switch (this.browserSettingsMode)
 			{
@@ -179,7 +184,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		
 		private readonly CoreData data;
-		private readonly BrowserViewController browserController;
+		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;
 
