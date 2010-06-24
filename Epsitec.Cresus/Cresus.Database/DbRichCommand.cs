@@ -1310,6 +1310,8 @@ namespace Epsitec.Cresus.Database
 
 		public void Update(DbTransaction transaction, DbTable table, SqlFieldList fields, SqlFieldList conditions)
 		{
+			// TODO Use the data sets so that we don't mess up the synchronization process.
+			
 			transaction.SqlBuilder.Clear ();
 
 			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, conditions);
