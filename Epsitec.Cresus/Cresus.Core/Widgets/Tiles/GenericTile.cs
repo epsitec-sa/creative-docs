@@ -216,9 +216,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				IEnumerable<Color> surfaceColors = this.SurfaceColors;
-
-				return surfaceColors != null && surfaceColors.First () == Tile.SurfaceHilitedColors.First ();
+				return Misc.ColorsCompare (this.SurfaceColors, Tile.SurfaceHilitedColors);
 			}
 		}
 
