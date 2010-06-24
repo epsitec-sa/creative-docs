@@ -1496,6 +1496,11 @@ namespace Epsitec.Common.Widgets
 		
 		internal static void UpdateEntered(Window window, Widget widget, Message message)
 		{
+			if (widget == null)
+			{
+				return;
+			}
+
 			Drawing.Point pointInWidget = widget.MapRootToClient (message.Cursor);
 			
 			if ((widget.Window != window) ||

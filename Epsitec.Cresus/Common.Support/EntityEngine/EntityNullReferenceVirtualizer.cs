@@ -138,6 +138,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Creates an empty entity which will be considered equal to a null reference
+		/// when calling <see cref="IsNullEntity"/>.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <returns>The empty entity created the same way as the automatically generated entity produced by the virtualizer.</returns>
 		public static T CreateEmptyEntity<T>()
 			where T : AbstractEntity, new ()
 		{
