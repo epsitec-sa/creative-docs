@@ -746,7 +746,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.hintSelected = this.scrollList.SelectedItemIndex;
 			this.UseSelectedHint ();
 
-			//?this.Text = this.HintText;
 			this.StartEdition ();
 			this.TextNavigator.TextLayout.Text = this.HintText;
 			this.OnTextEdited ();
