@@ -1,9 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Widgets;
@@ -155,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.LegalPersonEntity>
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
-					ValueSetter = x => this.Entity.LegalPerson = x,
+					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
@@ -183,7 +182,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.AddressEntity>
 				{
 					ValueGetter = () => this.Entity.Address,
-					ValueSetter = x => this.Entity.Address = x,
+					ValueSetter = x => this.Entity.Address = x.WrapNullEntity (),
 					PossibleItemsGetter = () => this.LegalPersonAddressGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
@@ -225,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.CountryEntity>
 				{
 					ValueGetter = () => this.Country,
-					ValueSetter = x => this.Country = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.CountryEntity> (),
+					ValueSetter = x => this.Country = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -255,7 +254,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.LocationEntity>
 				{
 					ValueGetter = () => this.Location,
-					ValueSetter = x => this.Location = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> (),
+					ValueSetter = x => this.Location = x.WrapNullEntity (),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },

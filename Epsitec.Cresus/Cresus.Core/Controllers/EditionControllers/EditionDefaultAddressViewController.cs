@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.CountryEntity>
 				{
 					ValueGetter = () => this.Entity.Location.Country,
-					ValueSetter = x => this.Entity.Location.Country = x,
+					ValueSetter = x => this.Entity.Location.Country = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.LocationEntity>
 				{
 					ValueGetter = () => this.Entity.Location,
-					ValueSetter = x => this.Entity.Location = x,
+					ValueSetter = x => this.Entity.Location = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
 
 					ToTextArrayConverter     = x => new string[] { x.PostalCode, x.Name },

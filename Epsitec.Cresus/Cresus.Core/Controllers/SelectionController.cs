@@ -5,6 +5,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.DataLayer;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,6 +56,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		public System.Func<T, FormattedText> ToFormattedTextConverter
+		{
+			get;
+			set;
+		}
+
+		public System.Func<DataContext, T> ValueCreator
 		{
 			get;
 			set;
