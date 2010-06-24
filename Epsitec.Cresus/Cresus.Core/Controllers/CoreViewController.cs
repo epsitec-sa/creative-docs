@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public Epsitec.Cresus.DataLayer.DataContext DataContext
+		public virtual Epsitec.Cresus.DataLayer.DataContext DataContext
 		{
 			get;
 			set;

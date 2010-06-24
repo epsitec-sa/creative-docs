@@ -12,22 +12,13 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationStatus
-		where T : AbstractEntity
+		where T : AbstractEntity, new ()
 	{
 		protected CreationViewController(string name, T entity)
 			: base (name, entity)
 		{
 		}
 
-		protected override void AboutToCloseUI()
-		{
-			base.AboutToCloseUI ();
-
-			if (this.CreationStatus == CreationStatus.Empty)
-			{
-				this.DataContext.DeleteEntity (this.Entity);
-			}
-		}
 
 		#region ICreationStatus Members
 
@@ -48,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			var orchestrator = this.Orchestrator;
 			var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, ViewControllerMode.Summary, orchestrator);
 
-			controller.DataContext = this.DataContext;
+			controller.DataContext = orchestrator.DataContext;
 
 			orchestrator.ReplaceView (this, controller);
 		}
@@ -56,6 +47,21 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		protected virtual CreationStatus GetCreationStatus()
 		{
 			return CreationStatus.Unknown;
+		}
+
+		protected void CreateRealEntity(System.Action<DataContext, T> initializer = null)
+		{
+			var orchestrator = this.Orchestrator;
+			var context      = orchestrator.DataContext;
+			var entity       = context.CreateEmptyEntity<T> ();
+
+			if (initializer != null)
+			{
+				initializer (context, entity);
+			}
+
+			this.ReplaceEntity (entity);
+			this.ValidateCreation ();
 		}
 	}
 }

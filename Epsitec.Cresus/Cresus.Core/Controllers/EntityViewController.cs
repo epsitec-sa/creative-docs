@@ -150,10 +150,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public sealed override void CreateUI(Widget container)
 		{
-			System.Diagnostics.Debug.Assert (this.DataContext.Contains (this.Entity));
+			var context = this.DataContext;
+			var entity  = this.Entity;
+			
+			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
+			
 			this.CreateUI (container as TileContainer);
 		}
 
-		private readonly T entity;
+		protected void ReplaceEntity(T entity)
+		{
+			this.entity = entity;
+		}
+
+		private T entity;
 	}
 }

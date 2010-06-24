@@ -221,11 +221,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICountry(UIBuilder builder)
 		{
+			this.selectedCountry = this.Entity.Address.Location.Country;
+
 			var textField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
 				new SelectionController<Entities.CountryEntity>
 				{
-					ValueGetter = () => this.Entity.Address.Location.Country,
-					ValueSetter = x => this.selectedCountry = x,
+					ValueGetter = () => this.selectedCountry,
+					ValueSetter = x => this.selectedCountry = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.CountryEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -253,7 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.LocationEntity>
 				{
 					ValueGetter = () => this.Entity.Address.Location,
-					ValueSetter = x => this.Entity.Address.Location = x,
+					ValueSetter = x => this.Entity.Address.Location = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> (),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },

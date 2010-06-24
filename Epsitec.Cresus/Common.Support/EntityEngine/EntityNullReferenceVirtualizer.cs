@@ -138,6 +138,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static T CreateEmptyEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			var context = EntityNullReferenceVirtualizer.GetEmptyEntitiesContext ();
+			var entity  = context.CreateEmptyEntity<T> ();
+
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+			
+			return entity;
+		}
+
 
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.

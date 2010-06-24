@@ -28,20 +28,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.personController != null)
-                {
-					this.personController.Dispose ();
-					this.personController = null;
-                }
-			}
-			
-			base.Dispose (disposing);
-		}
-
 		protected override void CreateUI(TileContainer container)
 		{
 			using (var builder = new UIBuilder (container, this))

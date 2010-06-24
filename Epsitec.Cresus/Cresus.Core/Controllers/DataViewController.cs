@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>DataViewController</c> class manages several <see cref="CoreViewController"/>
+	/// instances which have a parent/child relationship. The <see cref="ViewLayoutController"/>
+	/// is used for the layout.
+	/// </summary>
 	public class DataViewController : CoreViewController
 	{
 		public DataViewController(string name, CoreData data)
@@ -28,6 +34,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
+
+		/// <summary>
+		/// Gets the data context of the leaf sub view or the active one taken from the
+		/// associated <see cref="CoreData"/>.
+		/// </summary>
+		/// <value>The data context.</value>
+		public override DataContext DataContext
+		{
+			get
+			{
+				var leafController = this.GetLeafController ();
+
+				if (leafController == null)
+				{
+					return this.data.DataContext;
+				}
+				else
+				{
+					return leafController.DataContext ?? this.data.DataContext;
+				}
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("Cannot set DataContext on DataViewController");
+			}
+		}
+
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			return this.viewControllers;
@@ -53,7 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateViewLayoutHandler ();
 		}
 
-
 		/// <summary>
 		/// Sets the active entity visible in the data view. This will collapse everything
 		/// back to just one root view controller.
@@ -66,7 +99,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (entity != null)
 			{
 				this.entity = entity;
-				this.PushViewController (this.CreateCompactEntityViewController ());
+
+				var context    = this.DataContext;
+				var controller = this.CreateCompactEntityViewController ();
+
+				controller.DataContext = context;
+
+				this.PushViewController (controller);
 			}
 		}
 
@@ -75,11 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		public void ClearActiveEntity()
 		{
-			while (this.viewControllers.Count > 0)
-			{
-				this.PopViewController ();
-			}
-
+			this.PopAllViewControllers ();
 			this.entity = null;
 		}
 
@@ -93,19 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
 
-			if (controller.DataContext == null)
-			{
-				var leafController = this.GetLeafController ();
-
-				if (leafController == null)
-				{
-					controller.DataContext = this.data.DataContext;
-				}
-				else
-				{
-					controller.DataContext = leafController.DataContext ?? this.data.DataContext;
-				}
-			}
+			this.InheritLeafControllerDataContext (controller);
 
 			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);
@@ -116,7 +139,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		/// <summary>
 		/// Disposes the leaf view controller. The default is to remove the rightmost
-		/// column of the data view.
+		/// column of the data view. In the case of a <see cref="DataContext"/> change
+		/// between two controllers, automatically save and dispose the popped context.
 		/// </summary>
 		public void PopViewController()
 		{
@@ -124,14 +148,18 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var lastController = this.viewControllers.Pop ();
 			var leafController = this.GetLeafController ();
+			var lastContext    = lastController.DataContext;
 
 			lastController.CloseUI (this.viewLayoutController.LastColumn);
 
-			if ((leafController == null) ||
-				(leafController.DataContext != lastController.DataContext))
+			if (lastContext != null)
 			{
-				this.data.SaveDataContext (lastController.DataContext);
-				this.data.DisposeDataContext (lastController.DataContext);
+				if ((leafController == null) ||
+					(leafController.DataContext != lastController.DataContext))
+				{
+					this.data.SaveDataContext (lastContext);
+					this.data.DisposeDataContext (lastContext);
+				}
 			}
 
 			lastController.Dispose ();
@@ -152,7 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (controller == null)
 			{
-				this.ClearActiveEntity ();
+				this.PopAllViewControllers ();
 			}
 			else
 			{
@@ -165,32 +193,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Disposes all leaf views, until all are closed.
+		/// </summary>
+		public void PopAllViewControllers()
+		{
+			while (this.viewControllers.Count > 0)
+			{
+				this.PopViewController ();
+			}
+		}
+
 		public void ReplaceViewController(CoreViewController oldViewController, CoreViewController newViewController)
 		{
 			this.PopViewControllersUntil (oldViewController);
-			
-			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
-
-			var lastController = this.viewControllers.Pop ();
-			var leafController = newViewController;
-
-			lastController.CloseUI (this.viewLayoutController.LastColumn);
-
-			if ((leafController == null) ||
-				(leafController.DataContext != lastController.DataContext))
-			{
-				this.data.SaveDataContext (lastController.DataContext);
-				this.data.DisposeDataContext (lastController.DataContext);
-			}
-
-			lastController.Dispose ();
-
-			//	Remove the rightmost column in the layout:
-
-			var column = this.viewLayoutController.DeleteColumn ();
-
-			this.DetachColumn (column);
+			this.PopViewController ();
 			this.PushViewController (newViewController);
+		}
+
+		private void InheritLeafControllerDataContext(CoreViewController controller)
+		{
+			if (controller.DataContext != null)
+			{
+				return;
+			}
+				
+			var leafController = this.GetLeafController ();
+
+			if (leafController == null)
+            {
+				return;
+            }
+			
+			controller.DataContext = leafController.DataContext;
 		}
 
 		private void CreateViewLayoutHandler()

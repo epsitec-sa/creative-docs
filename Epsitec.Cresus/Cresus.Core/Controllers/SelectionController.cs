@@ -105,6 +105,10 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
 					}
+					else
+					{
+						this.ValueSetter (null);
+					}
 				};
 		}
 
