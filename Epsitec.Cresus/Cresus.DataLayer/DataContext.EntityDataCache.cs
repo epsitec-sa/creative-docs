@@ -175,40 +175,20 @@ namespace Epsitec.Cresus.DataLayer
 				//	We cannot use an iterator here, since the list might grow while we
 				//	are enumerating it ...
 
-				this.isIteratingList++;
-
-				for (int i = 0; i < this.mappings.Count; i++)
+				try
 				{
-					AbstractEntity entity = this.mappings[i].Entity;
-					yield return entity;
-				}
+					this.isIteratingList++;
 
-				this.isIteratingList--;
-			}
-
-			/// <summary>
-			/// Gets the entities stored in the cache.
-			/// </summary>
-			/// <param name="predicate">The filtering predicate.</param>
-			/// <returns>The collection of entities.</returns>
-			public IEnumerable<AbstractEntity> GetEntities(System.Predicate<AbstractEntity> predicate)
-			{
-				//	We cannot use an iterator here, since the list might grow while we
-				//	are enumerating it ...
-
-				this.isIteratingList++;
-
-				for (int i = 0; i < this.mappings.Count; i++)
-				{
-					AbstractEntity entity = this.mappings[i].Entity;
-
-					if (predicate (entity))
+					for (int i = 0; i < this.mappings.Count; i++)
 					{
+						AbstractEntity entity = this.mappings[i].Entity;
 						yield return entity;
 					}
 				}
-
-				this.isIteratingList--;
+				finally
+				{
+					this.isIteratingList--;
+				}
 			}
 
 			/// <summary>
