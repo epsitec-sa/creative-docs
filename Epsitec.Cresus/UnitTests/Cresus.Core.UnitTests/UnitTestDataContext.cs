@@ -50,6 +50,79 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
+		public void DiscardEmptyEntities()
+		{
+			TestHelper.PrintStartTest ("Discard empty entities");
+
+			this.DiscardEmptyEntities (false);
+			this.DiscardEmptyEntities (true);
+		}
+
+
+		public void DiscardEmptyEntities(bool bulkMode)
+		{
+			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				var emptyContact1 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+				var emptyContact2 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+
+				alfred.Contacts.Add (emptyContact1);
+
+				dataContext.RegisterEmptyEntity (emptyContact1);
+				dataContext.RegisterEmptyEntity (emptyContact2);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				var dataBrowser = new DataBrowser (dataContext);
+
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var contacts = dataBrowser.GetByExample (new AbstractContactEntity ());
+
+				Assert.IsTrue (alfred.Contacts.Count == 2);
+				Assert.IsTrue (contacts.Count () == 4);
+			}
+
+			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				var emptyContact1 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+				var emptyContact2 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+
+				alfred.Contacts.Add (emptyContact1);
+
+				dataContext.RegisterEmptyEntity (emptyContact1);
+				dataContext.RegisterEmptyEntity (emptyContact2);
+
+				dataContext.SaveChanges ();
+
+				dataContext.UnregisterEmptyEntity (emptyContact1);
+				dataContext.UnregisterEmptyEntity (emptyContact2);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				var dataBrowser = new DataBrowser (dataContext);
+
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var contacts = dataBrowser.GetByExample (new AbstractContactEntity ());
+
+				Assert.IsTrue (alfred.Contacts.Count == 2);
+				Assert.IsTrue (contacts.Count () == 6);
+			}
+
+			this.CreateDatabase (false);
+		}
+
+
+		[TestMethod]
 		public void SaveWithoutChanges1()
 		{
 			TestHelper.PrintStartTest ("Save without changes 1");

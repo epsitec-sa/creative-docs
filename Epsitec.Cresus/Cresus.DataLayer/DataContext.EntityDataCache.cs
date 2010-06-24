@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 
 					System.Diagnostics.Debug.Assert (this.entities.Contains (mapping.Entity));
-					
+
 					this.idToEntityMapping.Remove (entitySerialId);
 					this.mappings.Remove (mapping);
 					this.entities.Remove (mapping.Entity);
@@ -203,11 +203,11 @@ namespace Epsitec.Cresus.DataLayer
 				return this.entities.Contains (entity);
 			}
 
-			readonly Dictionary<long, EntityDataMapping> idToEntityMapping;
-			readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;			//	we cannot use a HashSet because we need to be able to quickly retrieve an item from the dictionary based on a partial key
-			readonly List<EntityDataMapping> mappings;
-			readonly HashSet<AbstractEntity> entities;
-			int isIteratingList;
+			private readonly Dictionary<long, EntityDataMapping> idToEntityMapping;
+			private readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;			//	we cannot use a HashSet because we need to be able to quickly retrieve an item from the dictionary based on a partial key
+			private readonly List<EntityDataMapping> mappings;
+			private readonly HashSet<AbstractEntity> entities;
+			private int isIteratingList;
 		}
 	}
 }
