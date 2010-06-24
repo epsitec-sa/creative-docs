@@ -280,7 +280,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			set
 			{
-				if (this.selectedCountry != value)
+				//?if (this.selectedCountry != value)
+				if (Misc.CompareEntities (this.selectedCountry, value) == false)
 				{
 					this.selectedCountry = value;
 
@@ -307,7 +308,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			set
 			{
-				if (this.Entity.Address.Location != value)
+				//?if (this.Entity.Address.Location != value)
+				if (Misc.CompareEntities (this.Entity.Address.Location, value) == false)
 				{
 					this.Entity.Address.Location = value;
 
