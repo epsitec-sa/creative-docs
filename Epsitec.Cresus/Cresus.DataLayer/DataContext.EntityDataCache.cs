@@ -11,8 +11,12 @@ using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 
+
 namespace Epsitec.Cresus.DataLayer
 {
+	// TODO This class is not threadsafe.
+
+	
 	/// <summary>
 	/// The <c>DataContext</c> class provides a context in which entities can
 	/// be loaded from the database, modified and then saved back.
@@ -24,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// maintaining relations between entity instances in memory and in the
 		/// database.
 		/// </summary>
-		class EntityDataCache
+		private class EntityDataCache
 		{
 			/// <summary>
 			/// Initializes a new instance of the <see cref="EntityDataCache"/> class.
@@ -35,6 +39,8 @@ namespace Epsitec.Cresus.DataLayer
 				this.lookup = new Dictionary<EntityDataMapping, EntityDataMapping> ();
 				this.mappings = new List<EntityDataMapping> ();
 				this.entities = new HashSet<AbstractEntity> ();
+
+				this.isIteratingList = 0;
 			}
 
 			/// <summary>
