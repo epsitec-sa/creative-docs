@@ -5,6 +5,8 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Orchestrators;
 
+using Epsitec.Cresus.DataLayer;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +25,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public DataViewOrchestrator(DataViewController dataViewController)
 		{
 			this.dataViewController = dataViewController;
+		}
+
+
+		/// <summary>
+		/// Gets the data context of the leaf sub view or the active one taken from the
+		/// associated <see cref="CoreData"/>.
+		/// </summary>
+		/// <value>The data context.</value>
+		public DataContext DataContext
+		{
+			get
+			{
+				return this.dataViewController.DataContext;
+			}
 		}
 
 

@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			switch (this.DataSetName)
 			{
 				case "Customers":
-					item = BrowserViewController.CreateCustomerItem (dataContext);
+					item = this.CreateCustomerItem ();
 					break;
 			}
 
@@ -101,9 +101,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static AbstractEntity CreateCustomerItem(DataContext dataContext)
+		private AbstractEntity CreateCustomerItem()
 		{
-			var item = dataContext.CreateEmptyEntity<CustomerEntity> ();
+			var item = this.data.CreateIndependentEmptyEntity<CustomerEntity> ();
 
 			item.CustomerSince = Date.Today;
 			item.Id = "x";

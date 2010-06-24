@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabasebCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
+			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -93,6 +94,12 @@ namespace Epsitec.Cresus.Core
 				this.UpdateEditionSaveRecordCommandState ();
 				System.Diagnostics.Debug.WriteLine ("Done");
 			}
+		}
+
+		public T CreateIndependentEmptyEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			return this.independentEntityContext.CreateEmptyEntity<T> ();
 		}
 
 		public DataContext CreateDataContext()
@@ -332,6 +339,7 @@ namespace Epsitec.Cresus.Core
 		public event EventHandler DataContextChanged;
 
 		private readonly DbInfrastructure dbInfrastructure;
+		private readonly EntityContext independentEntityContext;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 	}

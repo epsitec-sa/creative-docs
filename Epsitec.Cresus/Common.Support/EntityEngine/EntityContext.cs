@@ -553,7 +553,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
-		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
+		public T CreateEmptyEntity<T>()
+			where T : AbstractEntity, new ()
 		{
 			T entity;
 			

@@ -43,8 +43,11 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			button.Clicked +=
 				delegate
 				{
-					this.Entity.Person = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
-					this.ValidateCreation ();
+					this.CreateRealEntity (
+						(context, customer) =>
+						{
+							customer.Person = context.CreateEmptyEntity<NaturalPersonEntity> ();
+						});
 				};
 			
 			builder.Add (button);
@@ -61,8 +64,11 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			button.Clicked +=
 				delegate
 				{
-					this.Entity.Person = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
-					this.ValidateCreation ();
+					this.CreateRealEntity (
+						(context, customer) =>
+						{
+							customer.Person = context.CreateEmptyEntity<LegalPersonEntity> ();
+						});
 				};
 			
 			builder.Add (button);
