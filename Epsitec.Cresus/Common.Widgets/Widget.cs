@@ -1,8 +1,10 @@
 //	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Linq;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Widget))]
 
@@ -2517,104 +2519,28 @@ namespace Epsitec.Common.Widgets
 			int iterations = 0;
 			return this.FindTabWidget (dir, mode, false, false, ref iterations);
 		}
-		
-		
+
+
 		private Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode, bool disableFirstEnter, bool acceptFocus, ref int iterations)
 		{
 			if (iterations > 2)
 			{
 				return null;
 			}
-			
+
 			if (this.ProcessTab (dir, mode))
 			{
 				return this;
 			}
-			
+
 			Widget find = null;
 			
-			if (this.AutoRadio)
+			find = this.FindTabWidgetAutoRadio (dir, mode)
+				?? this.FindTabWidgetEnterChildren (dir, mode, disableFirstEnter, acceptFocus, ref iterations);
+
+			if (find != null)
 			{
-				if (mode == TabNavigationMode.ActivateOnCursorX)
-				{
-					Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
-					
-					find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
-					
-					if ((find == null) &&
-						(controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
-					{
-						//	L'utilisateur demande un déplacement horizontal bien que la disposition
-						//	soit purement verticale. On corrige pour lui :
-						
-						find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
-					}
-					
-					if (find != null)
-					{
-						find.ActiveState = ActiveState.Yes;
-						return find;
-					}
-				}
-				
-				if (mode == TabNavigationMode.ActivateOnCursorY)
-				{
-					Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
-					
-					find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
-					
-					if ((find == null) &&
-						(controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
-					{
-						//	L'utilisateur demande un déplacement vertical bien que la disposition
-						//	soit purement horizontale. On corrige pour lui :
-						
-						find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
-					}
-					
-					if (find != null)
-					{
-						find.ActiveState = ActiveState.Yes;
-						return find;
-					}
-				}
-			}
-			
-			if ((!disableFirstEnter) &&
-				((this.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
-				(this.HasChildren))
-			{
-				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
-				//	touche TAB.
-
-				System.Diagnostics.Debug.Assert (find == null);
-
-				find = Widget.TabNavigateEnterOverride (this, dir, mode, ref iterations);
-
-				if (find != null)
-				{
-					return find;
-				}
-
-				Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
-				
-				for (int i = 0; i < candidates.Length; i++)
-				{
-					if (dir == TabNavigationDir.Forwards)
-					{
-						find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
-					}
-					else if (acceptFocus)
-					{
-						int count = candidates.Length;
-						find = candidates[count-i-1].FindTabWidget (dir, mode, false, true, ref iterations);
-					}
-					
-					if (find != null)
-					{
-						return find;
-					}
-				}
+				return find;
 			}
 			
 			if (acceptFocus)
@@ -2634,10 +2560,224 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
-			
+
 			//	Cherche parmi les frères...
 
 			System.Diagnostics.Debug.Assert (find == null);
+
+			find = this.FindTabWidgetOverride (dir, mode, ref iterations);
+
+			if (find != null)
+			{
+				return find;
+			}
+
+			var tabSiblings = this.GetTabNavigationSiblings (dir, mode).ToArray ();
+			int index = this.FindIndex (tabSiblings);
+
+			find = ((index == -1) ? this.FindTabWidgetInChildren (dir, mode)
+				/* */             : this.FindTabWidgetInSiblings (dir, mode, ref iterations, tabSiblings, index))
+				?? this.FindTabWidgetInParent (dir, mode, ref iterations)
+				?? this.FindTabWidgetWarp (dir, mode, ref iterations, tabSiblings);
+			
+			if (find != null)
+			{
+				System.Diagnostics.Debug.Assert ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) == 0);
+			}
+
+			return find;
+		}
+
+		private int FindIndex(Widget[] tabSiblings)
+		{
+			for (int i = 0; i < tabSiblings.Length; i++)
+			{
+				if (tabSiblings[i] == this)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private Widget FindTabWidgetEnterChildren(TabNavigationDir dir, TabNavigationMode mode, bool disableFirstEnter, bool acceptFocus, ref int iterations)
+		{
+			if ((!disableFirstEnter) &&
+				((this.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
+				(this.HasChildren))
+			{
+				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
+				//	touche TAB.
+
+				Widget find = Widget.TabNavigateEnterOverride (this, dir, mode, ref iterations);
+
+				if (find != null)
+				{
+					return find;
+				}
+
+				Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
+
+				for (int i = 0; i < candidates.Length; i++)
+				{
+					if (dir == TabNavigationDir.Forwards)
+					{
+						find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
+					}
+					else if (acceptFocus)
+					{
+						int count = candidates.Length;
+						find = candidates[count-i-1].FindTabWidget (dir, mode, false, true, ref iterations);
+					}
+
+					if (find != null)
+					{
+						return find;
+					}
+				}
+			}
+			
+			return null;
+		}
+		private Widget FindTabWidgetAutoRadio(TabNavigationDir dir, TabNavigationMode mode)
+		{
+			if (this.AutoRadio == false)
+			{
+				return null;
+			}
+			
+			Widget find = null;
+
+			if (mode == TabNavigationMode.ActivateOnCursorX)
+			{
+				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+
+				find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+
+				if ((find == null) &&
+								(controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
+				{
+					//	L'utilisateur demande un déplacement horizontal bien que la disposition
+					//	soit purement verticale. On corrige pour lui :
+
+					find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+				}
+
+				if (find != null)
+				{
+					find.ActiveState = ActiveState.Yes;
+					return find;
+				}
+			}
+
+			if (mode == TabNavigationMode.ActivateOnCursorY)
+			{
+				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+
+				find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+
+				if ((find == null) &&
+								(controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
+				{
+					//	L'utilisateur demande un déplacement vertical bien que la disposition
+					//	soit purement horizontale. On corrige pour lui :
+
+					find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+				}
+
+				if (find != null)
+				{
+					find.ActiveState = ActiveState.Yes;
+					return find;
+				}
+			}
+			return null;
+		}
+		
+		private Widget FindTabWidgetWarp(TabNavigationDir dir, TabNavigationMode mode, ref int iterations, Widget[] tabSiblings)
+		{
+			if (tabSiblings.Length > 1)
+			{
+				switch (dir)
+				{
+					case TabNavigationDir.Forwards:
+						return tabSiblings[0].FindTabWidget (dir, mode, false, true, ref iterations);
+
+					case TabNavigationDir.Backwards:
+						return tabSiblings[tabSiblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
+				}
+			}
+
+			return null;
+		}
+
+		private Widget FindTabWidgetInParent(TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		{
+			Widget find   = null;
+			Widget parent = this.Parent;
+
+			if (parent != null)
+			{
+				if (parent.ProcessTabChildrenExit (dir, mode, out find))
+				{
+					return find;
+				}
+
+				if ((parent.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
+				{
+					bool accept;
+
+					switch (dir)
+					{
+						case TabNavigationDir.Backwards:
+							accept = (parent.TabNavigationMode & TabNavigationMode.ForwardOnly) == 0;
+							return parent.FindTabWidget (dir, mode, true, accept, ref iterations);
+
+						case TabNavigationDir.Forwards:
+							accept = false;
+							return parent.FindTabWidget (dir, mode, true, accept, ref iterations);
+					}
+				}
+				else
+				{
+					return parent.FindTabWidget (dir, mode, true, false, ref iterations);
+				}
+			}
+			else if (this.HasChildren)
+			{
+				//	Il n'y a plus de parents au-dessus. C'est donc vraisemblablement WindowRoot et
+				//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
+				//	premier descendant trouvé :
+
+				Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
+				iterations++;
+
+				for (int i = 0; i < candidates.Length; i++)
+				{
+					if (dir == TabNavigationDir.Forwards)
+					{
+						find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
+					}
+					else
+					{
+						int count = candidates.Length;
+						find = candidates[count-1-i].FindTabWidget (dir, mode, false, true, ref iterations);
+					}
+
+					if (find != null)
+					{
+						return find;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		private Widget FindTabWidgetOverride(TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		{
+			Widget find = null;
 
 			switch (dir)
 			{
@@ -2653,159 +2793,67 @@ namespace Epsitec.Common.Widgets
 			if (find != null)
 			{
 				find = Widget.TabNavigateSibling (find, dir, mode, ref iterations);
+			}
+
+			return find;
+		}
+
+		private Widget FindTabWidgetInChildren(TabNavigationDir dir, TabNavigationMode mode)
+		{
+			Widget find = this;
+
+			while (true)
+			{
+				if (dir == TabNavigationDir.Forwards)
+				{
+					find = this.Children.FindNext (find) as Widget;
+				}
+				else if (dir == TabNavigationDir.Backwards)
+				{
+					find = this.Children.FindPrevious (find) as Widget;
+				}
+
+				if (find == null)
+				{
+					return null;
+				}
+
+				if ((find.TabNavigationMode & mode) != 0)
+				{
+					return find;
+				}
+			}
+		}
+
+		private Widget FindTabWidgetInSiblings(TabNavigationDir dir, TabNavigationMode mode, ref int iterations, Widget[] tabSiblings, int i)
+		{
+			Widget find = null;
+
+			while (true)
+			{
+				switch (dir)
+				{
+					case TabNavigationDir.Backwards:
+						find = this.TabNavigate (i--, dir, tabSiblings);
+						break;
+
+					case TabNavigationDir.Forwards:
+						find = this.TabNavigate (i++, dir, tabSiblings);
+						break;
+				}
+
+				if (find == null)
+				{
+					return find;
+				}
+
+				find = Widget.TabNavigateSibling (find, dir, mode, ref iterations);
 
 				if (find != null)
 				{
 					return find;
 				}
 			}
-
-			Widget[] tabSiblings = this.GetTabNavigationSiblings (dir, mode).ToArray ();
-			bool     searchZ    = true;
-			
-			for (int i = 0; i < tabSiblings.Length; i++)
-			{
-				if (tabSiblings[i] == this)
-				{
-					//	On vient de trouver notre position dans la liste des widgets activables
-					//	par la touche TAB.
-					
-					searchZ = false;
-					
-					switch (dir)
-					{
-						case TabNavigationDir.Backwards:
-							find = this.TabNavigate (i, dir, tabSiblings);
-							break;
-						
-						case TabNavigationDir.Forwards:
-							find = this.TabNavigate (i, dir, tabSiblings);
-							break;
-					}
-
-					find = Widget.TabNavigateSibling (find, dir, mode, ref iterations);
-					
-					break;
-				}
-			}
-			
-			if (searchZ)
-			{
-				find = this;
-				
-				while (true)
-				{
-					if (dir == TabNavigationDir.Forwards)
-					{
-						find = this.Children.FindNext (find) as Widget;
-					}
-					else if (dir == TabNavigationDir.Backwards)
-					{
-						find = this.Children.FindPrevious (find) as Widget;
-					}
-					if ((find == null) ||
-						((find.TabNavigationMode & mode) != 0))
-					{
-						break;
-					}
-				}
-			}
-
-			Widget parent = this.Parent;
-			
-			if (find == null)
-			{
-				//	Toujours rien trouvé. On a demandé aux enfants et aux frères. Il ne nous
-				//	reste plus qu'à transmettre au père.
-				
-				if (parent != null)
-				{
-					if (parent.ProcessTabChildrenExit (dir, mode, out find))
-					{
-						return find;
-					}
-					
-					find = null;
-
-					if ((parent.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
-					{
-						bool accept;
-						
-						switch (dir)
-						{
-							case TabNavigationDir.Backwards:
-								accept = (parent.TabNavigationMode & TabNavigationMode.ForwardOnly) == 0;
-								find   = parent.FindTabWidget (dir, mode, true, accept, ref iterations);
-								break;
-							
-							case TabNavigationDir.Forwards:
-								accept = false;
-								find   = parent.FindTabWidget (dir, mode, true, accept, ref iterations);
-								break;
-						}
-					}
-					else
-					{
-						find = parent.FindTabWidget (dir, mode, true, false, ref iterations);
-					}
-				}
-				else if (this.HasChildren)
-				{
-					//	Il n'y a plus de parents au-dessus. C'est donc vraisemblablement WindowRoot et
-					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
-					//	premier descendant trouvé :
-
-					Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
-					iterations++;
-					
-					for (int i = 0; i < candidates.Length; i++)
-					{
-						if (dir == TabNavigationDir.Forwards)
-						{
-							find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
-						}
-						else//? if (acceptFocus)
-						{
-							int count = candidates.Length;
-							find = candidates[count-1-i].FindTabWidget (dir, mode, false, true, ref iterations);
-						}
-						
-						if (find != null)
-						{
-							return find;
-						}
-					}
-				}
-			}
-			
-			if (find == null)
-			{
-				//	On ne peut plus avancer, donc on tente de boucler.
-				
-				if (tabSiblings.Length > 1)
-				{
-					switch (dir)
-					{
-						case TabNavigationDir.Forwards:
-							find = tabSiblings[0].FindTabWidget (dir, mode, false, true, ref iterations);
-							break;
-						
-						case TabNavigationDir.Backwards:
-//?							if (acceptFocus)
-							{
-								find = tabSiblings[tabSiblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
-							}
-							break;
-					}
-				}
-			}
-
-			if (find != null)
-			{
-				System.Diagnostics.Debug.Assert ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) == 0);
-			}
-			
-			return find;
 		}
 
 		

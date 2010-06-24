@@ -89,6 +89,8 @@ namespace Epsitec.Cresus.Core
 			widget.Parent = this.Container;
 			widget.TabIndex = ++this.tabIndex;
 			widget.Dock = DockStyle.Top;
+
+			this.ContentListAdd (widget);
 		}
 		
 		public PanelTitleTile CreatePanelTitleTile(string iconUri, string title)
