@@ -569,6 +569,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
+			if (this.hintListIndex.Count == 0)
+			{
+				return;  // on n'ouvre pas un menu vide !
+			}
+
 			this.window = new Common.Widgets.Window ();
 
 			this.window.Owner = this.Window;
