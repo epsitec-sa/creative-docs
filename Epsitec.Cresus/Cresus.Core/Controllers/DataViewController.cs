@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.viewControllers = new Stack<CoreViewController> ();
 			this.Orchestrator = new Orchestrators.DataViewOrchestrator (this);
+			
+			this.frame = new FrameBox ();
+			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -42,31 +45,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.scrollable.Viewport.IsAutoFitting = true;
 
-			this.frame = new FrameBox ()
-			{
-				Parent = this.scrollable.Viewport,
-				Dock = DockStyle.Fill,
-				DrawFrameState = FrameState.None,
-				Padding = new Margins (3, 0, 3, 0),
-			};
-
-			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
+			this.frame.Parent = this.scrollable.Viewport;
+			this.frame.Dock = DockStyle.Fill;
+			this.frame.DrawFrameState = FrameState.None;
+			this.frame.Padding = new Margins (3, 0, 3, 0);
 
 			this.CreateViewLayoutHandler ();
-		}
-
-		private void CreateViewLayoutHandler()
-		{
-			this.viewLayoutController.LayoutChanged +=
-				delegate
-				{
-					LayoutContext.SyncArrange (this.scrollable.Viewport);
-					
-					var startValue = this.scrollable.ViewportOffsetX;
-					var endValue   = this.scrollable.HorizontalScroller.MaxValue;
-
-					this.scrollable.HorizontalScroller.Value = endValue;
-				};
 		}
 
 
@@ -177,19 +161,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		internal void RebuildLeafViewController()
+		private void CreateViewLayoutHandler()
 		{
-			if (this.viewControllers.Count > 0)
-			{
-				var controller = this.GetLeafController ();
-				var column = this.viewLayoutController.LastColumn;
+			this.viewLayoutController.LayoutChanged +=
+				delegate
+				{
+					LayoutContext.SyncArrange (this.scrollable.Viewport);
 
-				//	TODO: remove this -- it can't work reliably, since we don't dispose the previous
-				//	controller (and we cannot, by the way)
+					var startValue = this.scrollable.ViewportOffsetX;
+					var endValue   = this.scrollable.HorizontalScroller.MaxValue;
 
-				column.Children.Clear ();
-				controller.CreateUI (column);
-			}
+					this.scrollable.HorizontalScroller.Value = endValue;
+				};
 		}
 
 		private void AttachColumn(TileContainer column)
@@ -280,11 +263,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly CoreData data;
 		private readonly Stack<CoreViewController> viewControllers;
+		private readonly ViewLayoutController viewLayoutController;
+		private readonly FrameBox frame;
 		
-		private ViewLayoutController viewLayoutController;
-		private FrameBox frame;
 		private Scrollable scrollable;
-		
 		private AbstractEntity entity;
 	}
 }

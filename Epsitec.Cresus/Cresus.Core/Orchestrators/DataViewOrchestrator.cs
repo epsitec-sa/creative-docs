@@ -58,14 +58,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.dataViewController.PopViewController ();
 		}
 
-		/// <summary>
-		/// Reconstruit le contenu de la vue, par exemple suite à la création d'une nouvelle entité.
-		/// </summary>
-		public void RebuildView()
-		{
-			this.dataViewController.RebuildLeafViewController ();
-		}
-
 		
 		private readonly DataViewController dataViewController;
 	}
