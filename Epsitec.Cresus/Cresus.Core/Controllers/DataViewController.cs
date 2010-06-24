@@ -165,6 +165,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public void ReplaceViewController(CoreViewController oldViewController, CoreViewController newViewController)
+		{
+			this.PopViewControllersUntil (oldViewController);
+			
+			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
+
+			var lastController = this.viewControllers.Pop ();
+			var leafController = newViewController;
+
+			lastController.CloseUI (this.viewLayoutController.LastColumn);
+
+			if ((leafController == null) ||
+				(leafController.DataContext != lastController.DataContext))
+			{
+				this.data.SaveDataContext (lastController.DataContext);
+				this.data.DisposeDataContext (lastController.DataContext);
+			}
+
+			lastController.Dispose ();
+
+			//	Remove the rightmost column in the layout:
+
+			var column = this.viewLayoutController.DeleteColumn ();
+
+			this.DetachColumn (column);
+			this.PushViewController (newViewController);
+		}
+
 		private void CreateViewLayoutHandler()
 		{
 			this.viewLayoutController.LayoutChanged +=

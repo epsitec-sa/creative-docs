@@ -58,6 +58,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.dataViewController.PopViewController ();
 		}
 
+
+		public void ReplaceView(CoreViewController oldViewController, CoreViewController newViewController)
+		{
+			this.dataViewController.ReplaceViewController (oldViewController, newViewController);
+		}
 		
 		private readonly DataViewController dataViewController;
 	}

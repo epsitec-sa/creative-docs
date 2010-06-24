@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
@@ -24,22 +25,59 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			{
 				builder.CreatePanelTitleTile ("Data.Customer", "Client à créer...");
 
-				var button1 = new ConfirmationButton
-				{
-					Text = ConfirmationButton.FormatContent ("Personne privée", "Crée un client de type personne privée"),
-					PreferredHeight = 52,
-				};
-
-				var button2 = new ConfirmationButton
-				{
-					Text = ConfirmationButton.FormatContent ("Entreprise", "Crée un client de type entreprise"),
-					PreferredHeight = 52,
-				};
-				
-				builder.Add (button1);
-				builder.Add (button2);
+				this.CreateUINewNaturalPersonButton (builder);
+				this.CreateUINewLegalPersonButton (builder);	
 				
 				builder.EndPanelTitleTile ();
+			}
+		}
+
+		private void CreateUINewNaturalPersonButton(UIBuilder builder)
+		{
+			var button = new ConfirmationButton
+			{
+				Text = ConfirmationButton.FormatContent ("Personne privée", "Crée un client de type personne privée"),
+				PreferredHeight = 52,
+			};
+
+			button.Clicked +=
+				delegate
+				{
+					this.Entity.Person = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+					this.ValidateCreation ();
+				};
+			
+			builder.Add (button);
+		}
+
+		private void CreateUINewLegalPersonButton(UIBuilder builder)
+		{
+			var button = new ConfirmationButton
+			{
+				Text = ConfirmationButton.FormatContent ("Entreprise", "Crée un client de type entreprise"),
+				PreferredHeight = 52,
+			};
+
+			button.Clicked +=
+				delegate
+				{
+					this.Entity.Person = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+					this.ValidateCreation ();
+				};
+			
+			builder.Add (button);
+		}
+
+		
+		protected override CreationStatus GetCreationStatus()
+		{
+			if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.Person))
+			{
+				return CreationStatus.Empty;
+			}
+			else
+			{
+				return CreationStatus.Ready;
 			}
 		}
 	}
