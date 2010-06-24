@@ -134,14 +134,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get
 			{
-				List<Color> surfaceColors = this.SurfaceColors;
+				IEnumerable<Color> surfaceColors = this.SurfaceColors;
 
-				return surfaceColors != null && surfaceColors.Count > 0 &&
-					   (surfaceColors[0] == Tile.SurfaceHilitedColors[0] || surfaceColors[0] == Tile.SurfaceHilitedSelectedColors[0]);
+				return surfaceColors != null &&
+					   (surfaceColors.First () == Tile.SurfaceHilitedColors.First () || surfaceColors.First () == Tile.SurfaceHilitedSelectedColors.First ());
 			}
 		}
 
-		private List<Color> SurfaceColors
+		private IEnumerable<Color> SurfaceColors
 		{
 			get
 			{
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private List<Color> OutlineColors
+		private IEnumerable<Color> OutlineColors
 		{
 			get
 			{
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private List<Color> ThicknessColors
+		private IEnumerable<Color> ThicknessColors
 		{
 			get
 			{
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private List<Color> ReverseSurfaceColors
+		private IEnumerable<Color> ReverseSurfaceColors
 		{
 			get
 			{
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private List<Color> ReverseOutlineColors
+		private IEnumerable<Color> ReverseOutlineColors
 		{
 			get
 			{
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		private List<Color> ReverseThicknessColors
+		private IEnumerable<Color> ReverseThicknessColors
 		{
 			get
 			{

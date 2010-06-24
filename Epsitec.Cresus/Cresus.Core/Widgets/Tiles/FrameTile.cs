@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			rect.Deflate (0.5);
 
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Tile.SurfaceSummaryColors[0]);
+			graphics.RenderSolid (Tile.SurfaceSummaryColors.First ());
 
 			graphics.AddRectangle (rect);
-			graphics.RenderSolid (Tile.BorderColors[0]);
+			graphics.RenderSolid (Tile.BorderColors.First ());
 		}
 	}
 }
