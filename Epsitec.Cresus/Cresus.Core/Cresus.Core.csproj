@@ -198,6 +198,7 @@
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Widgets\TilePage.cs" />
+    <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
     <Compile Include="Widgets\Tiles\FrameTile.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />
     <Compile Include="Widgets\ItemPicker.cs" />

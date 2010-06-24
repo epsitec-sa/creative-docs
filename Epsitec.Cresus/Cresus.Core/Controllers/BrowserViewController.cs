@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			switch (this.DataSetName)
 			{
 				case "Customers":
-					item = this.CreateCustomerItem (dataContext);
+					item = BrowserViewController.CreateCustomerItem (dataContext);
 					break;
 			}
 

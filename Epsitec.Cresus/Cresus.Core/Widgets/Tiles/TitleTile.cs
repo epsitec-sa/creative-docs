@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TitleIconUri) et un titre (Title).
 	/// </summary>
-	public class TitleTile : Tile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
+	public class TitleTile : StaticTitleTile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
 	{
 		public TitleTile()
 		{
@@ -166,60 +166,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 	
 
-		/// <summary>
-		/// Icône visible en haut à gauche de la tuile.
-		/// Si on donne un seul caractère, il est affiché tel quel.
-		/// </summary>
-		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string TitleIconUri
-		{
-			get
-			{
-				return this.iconUri;
-			}
-			set
-			{
-				if (this.iconUri != value)
-				{
-					this.iconUri = value;
-
-					if (string.IsNullOrEmpty (this.iconUri))
-					{
-						this.staticTextIcon.Text = "";
-					}
-					else if (this.iconUri.Length == 1)  // un seul caractère ?
-					{
-						this.staticTextIcon.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
-					}
-					else
-					{
-						this.staticTextIcon.Text = Misc.GetResourceIconImageTag (value);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// Titre affiché en haut de la tuile.
-		/// </summary>
-		/// <value>The title.</value>
-		public string Title
-		{
-			get
-			{
-				return this.title;
-			}
-			set
-			{
-				if (this.title != value)
-				{
-					this.title = value;
-					this.staticTextTitle.Text = string.Concat ("<b><font size=\"120%\">", this.title, "</font></b>");
-				}
-			}
-		}
-
-
 		public double GetFullHeight()
 		{
 			double height = TitleTile.titleHeight;
@@ -289,76 +235,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private void CreateUI()
 		{
-			this.PreferredWidth = TitleTile.iconSize+TitleTile.iconMargins*2;
-
-			this.CreateLeftPanel ();
-			this.CreateLeftPanelIcon ();
-			this.CreateRightPanel ();
-			this.CreateRightPanelText ();
-			this.CreateRightPanelContainer ();
 			this.CreateButtons ();
-		}
-
-		private void CreateLeftPanel()
-		{
-			this.leftPanel = new FrameBox
-			{
-				Parent = this,
-				PreferredWidth = TitleTile.iconSize+TitleTile.iconMargins*2,
-				Dock = DockStyle.Left,
-			};
-		}
-
-		private void CreateLeftPanelIcon()
-		{
-			this.staticTextIcon = new StaticText
-			{
-				Parent = this.leftPanel,
-				Margins = new Margins (TitleTile.iconMargins),
-				PreferredSize = new Size (TitleTile.iconSize, TitleTile.iconSize),
-				Dock = DockStyle.Top,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-			};
 		}
 
 		private void CreateButtons()
 		{
 			this.CreateAddButton ();
 			this.CreateRemoveButton ();
-		}
-
-		private void CreateRightPanel()
-		{
-			this.rightPanel = new FrameBox
-			{
-				Parent = this,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-			};
-		}
-
-		private void CreateRightPanelText()
-		{
-			this.staticTextTitle = new StaticText
-			{
-				Parent = this.rightPanel,
-				PreferredHeight = TitleTile.titleHeight,
-				PreferredWidth = 0,
-				Dock = DockStyle.Top,
-				Margins = new Margins (GenericTile.leftRightGap, TileArrow.Breadth, 0, 0),
-				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-			};
-		}
-		
-		private void CreateRightPanelContainer()
-		{
-			this.mainPanel = new FrameBox
-			{
-				Parent = this.rightPanel,
-				PreferredWidth = 0,
-				Dock = DockStyle.Fill,
-			};
 		}
 
 		private void CreateAddButton()
@@ -619,10 +502,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		public event EventHandler<MessageEventArgs> RemoveClicked;
 
 
-		private static readonly double iconSize		= 32;
-		private static readonly double iconMargins	= 2;
-		private static readonly double titleHeight	= 20;
-
 		private static readonly double buttonSize	= 16;
 
 		private readonly TileCollection items;
@@ -630,14 +509,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private string iconUri;
 		private string title;
 		
-		private FrameBox leftPanel;
-		private FrameBox rightPanel;
-		private FrameBox mainPanel;
-		
 		private GlyphButton buttonAdd;
 		private GlyphButton buttonRemove;
-
-		private StaticText staticTextIcon;
-		private StaticText staticTextTitle;
 	}
 }
