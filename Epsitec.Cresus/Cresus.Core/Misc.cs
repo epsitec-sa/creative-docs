@@ -13,6 +13,35 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
+		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
+		{
+			if (colors1 == null && colors2 == null)
+			{
+				return true;
+			}
+
+			if (colors1 == null || colors2 == null)
+			{
+				return false;
+			}
+
+			if (colors1.Count () != colors2.Count ())
+			{
+				return false;
+			}
+
+			for (int i = 0; i < colors1.Count (); i++)
+			{
+				if (colors1.ElementAt (i) != colors2.ElementAt (i))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+
 		public static bool IsPunctuationMark(char c)
 		{
 			switch (c)
