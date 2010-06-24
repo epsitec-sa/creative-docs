@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public void SetSurfaceColors(List<Color> colors)
+		public void SetSurfaceColors(IEnumerable<Color> colors)
 		{
 			this.surfaceColors.Clear ();
 
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public void SetOutlineColors(List<Color> colors)
+		public void SetOutlineColors(IEnumerable<Color> colors)
 		{
 			this.outlineColors.Clear ();
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public void SetThicknessColors(List<Color> colors)
+		public void SetThicknessColors(IEnumerable<Color> colors)
 		{
 			this.thicknessColors.Clear ();
 
