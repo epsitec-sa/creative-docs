@@ -255,8 +255,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueSetter = x => this.Entity.Address.Location = x,
 					PossibleItemsGetter = () => this.LocationGetter,
 
-					ToTextArrayConverter     = x => new string[] { x.PostalCode, x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name),
+					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
 				});
 		}
 
