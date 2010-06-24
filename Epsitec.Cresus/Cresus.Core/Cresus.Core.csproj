@@ -98,6 +98,7 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
     <Compile Include="Controllers\ITileController.cs" />
     <Compile Include="Widgets\TilePage.cs" />
+    <Compile Include="Widgets\Tiles\PanelTitleTile.cs" />
     <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
     <Compile Include="Widgets\Tiles\FrameTile.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />

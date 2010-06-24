@@ -75,15 +75,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		public void ClearActiveEntity()
 		{
-			if (this.entity != null)
+			while (this.viewControllers.Count > 0)
 			{
-				while (this.viewControllers.Count > 0)
-				{
-					this.PopViewController ();
-				}
-
-				this.entity = null;
+				this.PopViewController ();
 			}
+
+			this.entity = null;
 		}
 
 
@@ -150,14 +147,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Disposes the leaf views until we reach the specified controller, which will
 		/// be left untouched. This disposes all sub-views of the specified controller.
 		/// </summary>
-		/// <param name="controller">The controller.</param>
+		/// <param name="controller">The view controller (or <c>null</c> to close all views).</param>
 		public void PopViewControllersUntil(CoreViewController controller)
 		{
-			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
-
-			while (this.GetLeafController () != controller)
+			if (controller == null)
 			{
-				this.PopViewController ();
+				this.ClearActiveEntity ();
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
+
+				while (this.GetLeafController () != controller)
+				{
+					this.PopViewController ();
+				}
 			}
 		}
 

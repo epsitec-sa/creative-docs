@@ -61,9 +61,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		private static string GetViewControllerPrefix(ViewControllerMode mode)
+		{
+			switch (mode)
+			{
+				case ViewControllerMode.Summary:
+					return "Summary";
+				case ViewControllerMode.Edition:
+					return "Edition";
+				case ViewControllerMode.Creation:
+					return "Creation";
+
+				default:
+					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
+			}
+		}
 		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
 		{
-			var baseTypePrefix = mode == ViewControllerMode.Summary ? "Summary" : "Edition";
+			var baseTypePrefix = EntityViewController.GetViewControllerPrefix (mode);
 			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
 
 			//	Find all concrete classes which use either the generic SummaryViewController or the
@@ -88,6 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				case ViewControllerMode.Summary:
 				case ViewControllerMode.Edition:
+				case ViewControllerMode.Creation:
 					break;
 
 				default:

@@ -21,9 +21,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data = data;
 
+			this.dataViewController = new DataViewController ("Data", data);
 			this.browserViewController = new BrowserViewController ("Browser", data);
 			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserViewController);
-			this.dataViewController = new DataViewController ("Data", data);
+
+			this.browserViewController.Orchestrator = this.dataViewController.Orchestrator;
 
 			this.browserViewController.CurrentChanging +=
 				delegate

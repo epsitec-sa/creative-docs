@@ -13,8 +13,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Widgets.Tiles
 {
 	/// <summary>
-	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
-	/// Elle affiche une icône en haut à gauche (TitleIconUri) et un titre (Title).
+	/// The <c>StaticTitleTile</c> class implements a basic title tile which has
+	/// just an icon and a title text. See <see cref="TitleTile"/> for a specialized
+	/// version which manages sub-tiles.
 	/// </summary>
 	public class StaticTitleTile : Tile
 	{
@@ -23,15 +24,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.CreateUI ();
 		}
 
-
-		public static double MinimumTileWidth
-		{
-			get
-			{
-				return StaticTitleTile.iconSize + 2 * StaticTitleTile.iconMargins;
-			}
-		}
-	
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.

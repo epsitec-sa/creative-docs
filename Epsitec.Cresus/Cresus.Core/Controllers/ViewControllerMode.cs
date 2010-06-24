@@ -23,5 +23,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Use the edition view controller (read write).
 		/// </summary>
 		Edition,
+
+		/// <summary>
+		/// Une the creation view controller (read only).
+		/// </summary>
+		Creation,
 	}
 }
