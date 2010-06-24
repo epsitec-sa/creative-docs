@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+			this.selectedCountry = this.Entity.Address.Location.Country;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -223,8 +225,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.CountryEntity>
 				{
 					ValueGetter = () => this.Entity.Address.Location.Country,
-					ValueSetter = x => this.Entity.Address.Location.Country = x,
-					// TODO: Lorsqu'on modifie le pays, on ne peut pas modifier le pays de la ville en cours !!! Comment faire ?
+					ValueSetter = x => this.selectedCountry = x,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -265,7 +266,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Retourne les localités du pays choisi.
 			get
 			{
-				return CoreProgram.Application.Data.GetLocations (this.Entity.Address.Location.Country);
+				return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
 			}
 		}
 
@@ -300,5 +301,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private List<Common.Widgets.Widget>		globalPageContent;
 		private AutoCompleteTextField			addressTextField;
 		private AutoCompleteTextField			locationTextField;
+		private Entities.CountryEntity			selectedCountry;
 	}
 }
