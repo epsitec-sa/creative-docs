@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
@@ -81,6 +81,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void CreateNewItem()
 		{
+			this.Orchestrator.CloseSubViews ();
+
 			var dataContext = this.data.DataContext;
 			AbstractEntity item = null;
 
@@ -93,8 +95,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (item != null)
 			{
-				dataContext.SaveChanges ();
-				this.UpdateCollection ();
+				var controller = EntityViewController.CreateEntityViewController ("Creation", item, ViewControllerMode.Creation, this.Orchestrator);
+				this.Orchestrator.ShowSubView (null, controller);
 			}
 		}
 
@@ -223,7 +225,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				foreach (var entity in this.collection)
 				{
-					updatedList.Add (BrowserViewController.GetEntityDisplayText (entity));
+					var text = BrowserViewController.GetEntityDisplayText (entity);
+
+					if (text.IsNullOrEmpty)
+					{
+						text = CollectionTemplate.DefaultEmptyText;
+					}
+
+					updatedList.Add (text);
 				}
 
 				int oldActive = this.scrollList.SelectedItemIndex;
@@ -233,7 +242,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.scrollList.Items.Clear ();
 				this.scrollList.Items.AddRange (updatedList.Select (x => x.ToString ()));
 				this.suspendUpdates--;
-				
+
 				this.scrollList.SelectedItemIndex = newActive;
 			}
 		}

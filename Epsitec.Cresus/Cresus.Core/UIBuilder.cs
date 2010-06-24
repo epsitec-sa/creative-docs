@@ -51,6 +51,21 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public Widget Container
+		{
+			get
+			{
+				if (this.panelTitleTile != null)
+				{
+					return this.panelTitleTile.Panel;
+				}
+				else
+				{
+					return this.container;
+				}
+			}
+		}
+
 		private void ContentListAdd(Widget widget)
 		{
 			if (this.contentList != null)
@@ -69,13 +84,44 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public void Add(Widget widget)
+		{
+			widget.Parent = this.Container;
+			widget.TabIndex = ++this.tabIndex;
+			widget.Dock = DockStyle.Top;
+		}
+		
+		public PanelTitleTile CreatePanelTitleTile(string iconUri, string title)
+		{
+			double bottomMargin = -1;
+
+			this.panelTitleTile = new PanelTitleTile
+			{
+				Parent = this.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, bottomMargin),
+				TitleIconUri = iconUri,
+				Title = title,
+				IsReadOnly = true,
+				TabIndex = ++this.tabIndex,
+			};
+
+			return this.panelTitleTile;
+		}
+
+		public void EndPanelTitleTile()
+		{
+			this.panelTitleTile = null;
+		}
+
+
 		public TitleTile CreateEditionTitleTile(string iconUri, string title)
 		{
 			double bottomMargin = -1;
 
 			this.titleTile = new TitleTile
 			{
-				Parent = this.container,
+				Parent = this.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, bottomMargin),
 				ArrowDirection = Direction.Right,
@@ -157,7 +203,9 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
-			if (this.container.Controller != this.controller)
+			var controller = this.container.Controller;
+
+			if (controller != this.controller)
 			{
 				//	The header is not being created by the main controller; we can safely skip it,
 				//	since we create only one header for every container.
@@ -165,12 +213,15 @@ namespace Epsitec.Cresus.Core
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (this.container.HasChildren == false);
+			System.Diagnostics.Debug.Assert (this.Container.HasChildren == false);
 		}
 
 		public void CreateFooterEditorTile()
 		{
-			if (this.container.Controller != this.controller)
+			var controller   = this.container.Controller;
+			var orchestrator = controller.Orchestrator;
+
+			if (controller != this.controller)
 			{
 				//	This method is not being called by the main controller; we can safely skip the
 				//	creation of the footer, since we create only one footer for every container and
@@ -179,11 +230,11 @@ namespace Epsitec.Cresus.Core
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (this.container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
+			System.Diagnostics.Debug.Assert (this.Container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
 
 			var closeButton = new GlyphButton
 			{
-				Parent = this.container,
+				Parent = this.Container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
 				GlyphShape = GlyphShape.Close,
 				Anchor = AnchorStyles.TopRight,
@@ -191,9 +242,6 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
 				Name = "ColumnTileCloseButton",
 			};
-
-			var controller   = this.container.Controller;
-			var orchestrator = controller.Orchestrator;
 
 			closeButton.Clicked +=
 			delegate
@@ -758,7 +806,7 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
-			UI.SetInitialFocus (this.container);
+			UI.SetInitialFocus (this.Container);
 
 			if (this.nextBuilder != null)
 			{
@@ -777,6 +825,7 @@ namespace Epsitec.Cresus.Core
 		private readonly UIBuilder nextBuilder;
 		private int tabIndex;
 		private TitleTile titleTile;
+		private PanelTitleTile panelTitleTile;
 		private List<Widget> contentList;
 	}
 	

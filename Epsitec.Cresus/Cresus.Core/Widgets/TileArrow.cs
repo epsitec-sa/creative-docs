@@ -289,7 +289,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			switch (arrowLocation)
 			{
-				default:
 				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileArrow.Breadth, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
 					pick2 = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
@@ -300,6 +299,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					pick3 = Point.Move (pick, box.BottomLeft, thickness);
 					break;
 
+				default:
 				case Direction.Right:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-TileArrow.Breadth, bounds.Height);
 					pick2 = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
