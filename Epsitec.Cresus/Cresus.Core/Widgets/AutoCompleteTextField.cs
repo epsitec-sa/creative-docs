@@ -106,6 +106,13 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public double MenuButtonWidth
+		{
+			get;
+			set;
+		}
+
+
 		public bool HasItemValue
 		{
 			get
@@ -488,7 +495,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string GetItemText(int index)
 		{
-			if (this.ValueToDescriptionConverter == null)
+			if (this.ValueToDescriptionConverter == null || index == -1)
 			{
 				return null;
 			}
@@ -615,7 +622,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			Size size = new Size (this.ActualWidth, bestSize.Height);
 
 			Point location;
-			AutoCompleteTextField.GetMenuDisposition (this, this.scrollList, ref size, out location);
+			this.GetMenuDisposition (this.scrollList, ref size, out location);
 
 			this.window.WindowLocation = location;
 			this.window.WindowSize = size;
@@ -675,14 +682,12 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private static void GetMenuDisposition(Widget item, ScrollList scrollList, ref Size size, out Point location)
+		private void GetMenuDisposition(ScrollList scrollList, ref Size size, out Point location)
 		{
-			Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
-			Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (item, new Point (0, 0));
+			Point pos = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (this, new Point (0, 0));
+			Point hot = Common.Widgets.Helpers.VisualTree.MapVisualToScreen (this, new Point (0, 0));
 			ScreenInfo screenInfo  = ScreenInfo.Find (hot);
 			Rectangle workingArea = screenInfo.WorkingArea;
-
-			double menuButtonWidth = item.ActualHeight - 1;
 
 			double maxHeight = pos.Y - workingArea.Bottom;
 
@@ -694,14 +699,14 @@ namespace Epsitec.Cresus.Core.Widgets
 				AutoCompleteTextField.AdjustSize (scrollList);
 
 				size.Height = scrollList.PreferredHeight;
-				size.Width  = System.Math.Max (size.Width+menuButtonWidth, scrollList.PreferredWidth);
+				size.Width  = System.Math.Max (size.Width+this.MenuButtonWidth, scrollList.PreferredWidth);
 
 				location = new Point(pos.X, pos.Y+1);
 			}
 			else
 			{
 				//	Il faut dérouler le menu vers le haut.
-				pos.Y += item.ActualHeight-1;
+				pos.Y += this.ActualHeight-1;
 
 				maxHeight = workingArea.Top - pos.Y;
 
@@ -711,7 +716,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				pos.Y += scrollList.PreferredHeight;
 
 				size.Height = scrollList.PreferredHeight;
-				size.Width  = System.Math.Max (size.Width+menuButtonWidth, scrollList.PreferredWidth);
+				size.Width  = System.Math.Max (size.Width+this.MenuButtonWidth, scrollList.PreferredWidth);
 
 				location = pos;
 			}
@@ -740,9 +745,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.hintSelected = this.scrollList.SelectedItemIndex;
 			this.UseSelectedHint ();
-			this.Text = this.HintText;
+
+			//?this.Text = this.HintText;
+			this.StartEdition ();
+			this.TextNavigator.TextLayout.Text = this.HintText;
+			this.OnTextEdited ();
 			this.SelectAll ();
-			this.OnEditionAccepted ();
 
 			this.CloseComboMenu ();
 		}

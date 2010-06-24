@@ -34,8 +34,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.selectedCountry = this.Entity.Address.Location.Country;
-
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -223,18 +221,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
-			var textField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
+			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
 				new SelectionController<Entities.CountryEntity>
 				{
-					ValueGetter = () => this.selectedCountry,
-					ValueSetter = x => this.selectedCountry = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.CountryEntity> (),
+					ValueGetter = () => this.Country,
+					ValueSetter = x => this.Country = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.CountryEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
 				});
 
-			textField.SelectedItemChanged +=
+#if false
+			this.countryTextField.SelectedItemChanged +=
 				delegate
 				{
 					System.Diagnostics.Debug.Assert (this.addressTextField != null);
@@ -247,6 +246,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						this.locationTextField.Items.Add (item);
 					}
 				};
+#endif
 		}
 
 		private void CreateUILocation(UIBuilder builder)
@@ -254,8 +254,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville",
 				new SelectionController<Entities.LocationEntity>
 				{
-					ValueGetter = () => this.Entity.Address.Location,
-					ValueSetter = x => this.Entity.Address.Location = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> (),
+					ValueGetter = () => this.Location,
+					ValueSetter = x => this.Location = x ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> (),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
@@ -269,6 +269,50 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			get
 			{
 				return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
+			}
+		}
+
+		private Entities.CountryEntity Country
+		{
+			get
+			{
+				return this.selectedCountry;
+			}
+			set
+			{
+				if (this.selectedCountry != value)
+				{
+					this.selectedCountry = value;
+
+					// On efface la ville si on change de pays.
+					this.Entity.Address.Location = EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> ();
+					this.locationTextField.Text = null;
+
+					this.locationTextField.Items.Clear ();
+
+					var locationGetter = this.LocationGetter;
+					foreach (var item in locationGetter)
+					{
+						this.locationTextField.Items.Add (item);
+					}
+				}
+			}
+		}
+
+		private Entities.LocationEntity Location
+		{
+			get
+			{
+				return this.Entity.Address.Location;
+			}
+			set
+			{
+				if (this.Entity.Address.Location != value)
+				{
+					this.Entity.Address.Location = value;
+
+					this.countryTextField.SelectedItemIndex = this.countryTextField.Items.FindIndexByValue (this.Entity.Address.Location.Country);
+				}
 			}
 		}
 
@@ -302,6 +346,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private List<Common.Widgets.Widget>		localPageContent;
 		private List<Common.Widgets.Widget>		globalPageContent;
 		private AutoCompleteTextField			addressTextField;
+		private AutoCompleteTextField			countryTextField;
 		private AutoCompleteTextField			locationTextField;
 		private Entities.CountryEntity			selectedCountry;
 	}

@@ -380,9 +380,12 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			double buttonWidth = 14;
+
 			var editor = new Widgets.AutoCompleteTextField
 			{
 				Parent = container,
+				MenuButtonWidth = buttonWidth-1,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
@@ -395,10 +398,10 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				GlyphShape = GlyphShape.ArrowRight,
-				PreferredWidth = 20,
+				PreferredWidth = buttonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (3, 0, 0, 0),
 				Enable = false,
 				AutoFocus = false,
 			};
@@ -409,7 +412,7 @@ namespace Epsitec.Cresus.Core
 				Parent = container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
-				PreferredWidth = 20,
+				PreferredWidth = buttonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),

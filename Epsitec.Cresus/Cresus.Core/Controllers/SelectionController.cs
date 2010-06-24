@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			widget.SelectedItemIndex = widget.Items.FindIndexByValue (this.GetValue ());
 
-			widget.SelectedItemChanged +=
+			widget.AcceptingEdition +=
 				delegate
 				{
 					if (widget.SelectedItemIndex > -1)

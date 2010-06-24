@@ -25,12 +25,15 @@ namespace Epsitec.Cresus.Core
 				return false;
 			}
 
-			if (colors1.Count () != colors2.Count ())
+			int count1 = colors1.Count ();
+			int count2 = colors2.Count ();
+
+			if (count1 != count2)
 			{
 				return false;
 			}
 
-			for (int i = 0; i < colors1.Count (); i++)
+			for (int i = 0; i < count1; i++)
 			{
 				if (colors1.ElementAt (i) != colors2.ElementAt (i))
 				{
