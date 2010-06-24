@@ -205,13 +205,17 @@ namespace Epsitec.Cresus.DataLayer
 		public void RegisterEmptyEntity(AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+			
 			this.emptyEntities.Add (entity);
 		}
 
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+			
 			this.emptyEntities.Remove (entity);
+
+			entity.UpdateDataGeneration ();
 		}
 
 		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)
@@ -232,14 +236,15 @@ namespace Epsitec.Cresus.DataLayer
 				containsChanges = true;
 			}
 
-			var deletedEntities = this.deletedEntities.ToArray ();
-
 			this.deletedEntities.Clear ();
 
-			foreach (AbstractEntity entity in this.GetModifiedEntities ().Except (deletedEntities))
+			foreach (AbstractEntity entity in this.GetModifiedEntities ())
 			{
-				this.SerializeEntity (entity);
-				containsChanges = true;
+				if (this.CheckIfEntityCanBeSaved (entity))
+				{
+					this.SerializeEntity (entity);
+					containsChanges = true;
+				}
 			}
 
 			if (containsChanges)
@@ -250,17 +255,24 @@ namespace Epsitec.Cresus.DataLayer
 			return containsChanges;
 		}
 
+
 		public bool ContainsChanges()
 		{
-			if (this.entitiesToDelete.Count > 0)
-			{
-				return true;
-			}
-			else
-			{
-				return this.GetModifiedEntities ().Any (x => true);
-			}
+			bool containsDeletedEntities = this.entitiesToDelete.Count > 0;
+			bool containsChangedEntities = this.GetModifiedEntities ().Any ();
+
+			return containsDeletedEntities || containsChangedEntities;
 		}
+
+
+		private bool CheckIfEntityCanBeSaved(AbstractEntity entity)
+		{
+			bool isDeleted = this.deletedEntities.Contains (entity);
+			bool isEmpty = this.emptyEntities.Contains (entity);
+
+			return !isDeleted && !isEmpty;
+		}
+
 		
 		public void SaveChanges()
 		{
@@ -924,7 +936,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Data.DataRow[] relationRows = DbRichCommand.FilterExistingRows (this.RichCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToArray ();
 
-			if (targetEntity != null && !this.entitiesToDelete.Contains (targetEntity))
+			if (targetEntity != null && this.CheckIfEntityCanBeSaved (targetEntity))
 			{
 				System.Diagnostics.Debug.Assert (targetMapping != null);
 
@@ -978,7 +990,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				AbstractEntity targetEntity  = collection[i] as AbstractEntity;
 
-				if (!this.entitiesToDelete.Contains (targetEntity))
+				if (this.CheckIfEntityCanBeSaved (targetEntity))
 				{
 					EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
 
