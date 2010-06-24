@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -13,6 +14,18 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
+		public static bool CompareEntities(AbstractEntity entity1, AbstractEntity entity2)
+		{
+			if (EntityNullReferenceVirtualizer.IsNullEntity (entity1) &&
+				EntityNullReferenceVirtualizer.IsNullEntity (entity2))
+			{
+				return true;
+			}
+
+			return entity1 == entity2;
+		}
+
+
 		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
 		{
 			if (colors1 == null && colors2 == null)
