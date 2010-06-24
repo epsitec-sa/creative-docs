@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer;
 
 namespace Epsitec.Cresus.Core
 {
@@ -352,14 +353,14 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), x => controller.SetValue (x as T));
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator);
 
 			controller.Attach (autoCompleteTextField);
 
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, AbstractEntity> valueCreator)
 		{
 			tile.AllowSelection = true;
 
@@ -460,7 +461,12 @@ namespace Epsitec.Cresus.Core
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
 					{
-						// TODO:
+						if (valueCreator != null)
+						{
+							var newEntity = valueCreator (controller.DataContext);
+							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, ViewControllerMode.Creation, controller.Orchestrator);
+							tile.OpenSubView (controller.Orchestrator, controller, newController);
+						}
 					}
 				};
 

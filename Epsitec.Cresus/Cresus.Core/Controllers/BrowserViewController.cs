@@ -81,35 +81,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void CreateNewItem()
 		{
-			this.Orchestrator.CloseSubViews ();
-
-			var dataContext = this.data.DataContext;
-			AbstractEntity item = null;
-
-			switch (this.DataSetName)
-			{
-				case "Customers":
-					item = this.CreateCustomerItem ();
-					break;
-			}
+			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
 
 			if (item != null)
 			{
-				var controller = EntityViewController.CreateEntityViewController ("Creation", item, ViewControllerMode.Creation, this.Orchestrator);
+				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
 				this.Orchestrator.ShowSubView (null, controller);
 			}
 		}
 
 
-		private AbstractEntity CreateCustomerItem()
-		{
-			var item = this.data.CreateIndependentEmptyEntity<CustomerEntity> ();
-
-			item.CustomerSince = Date.Today;
-			item.Id = "x";
-
-			return item;
-		}
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;

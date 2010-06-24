@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null)
 		{
-			var controller = this.CreateSubViewController (orchestrator);
+			var controller = subViewController ?? this.CreateSubViewController (orchestrator);
 
 			if (controller != null)
 			{

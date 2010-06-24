@@ -204,6 +204,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		/// <summary>
+		/// Replaces a specific view controller with another one.
+		/// </summary>
+		/// <param name="oldViewController">The old view controller.</param>
+		/// <param name="newViewController">The new view controller.</param>
 		public void ReplaceViewController(CoreViewController oldViewController, CoreViewController newViewController)
 		{
 			this.PopViewControllersUntil (oldViewController);
@@ -211,6 +216,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PushViewController (newViewController);
 		}
 
+		
 		private void InheritLeafControllerDataContext(CoreViewController controller)
 		{
 			if (controller.DataContext != null)

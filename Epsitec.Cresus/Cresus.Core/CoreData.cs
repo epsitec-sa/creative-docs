@@ -17,7 +17,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-
+	public enum EntityCreationScope
+	{
+		CurrentContext,
+		Independent,
+	}
 
 	public sealed partial class CoreData : System.IDisposable
 	{
@@ -96,12 +100,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public T CreateIndependentEmptyEntity<T>()
-			where T : AbstractEntity, new ()
-		{
-			return this.independentEntityContext.CreateEmptyEntity<T> ();
-		}
-
 		public DataContext CreateDataContext()
 		{
 			var context = new DataContext (this.dbInfrastructure)
@@ -131,6 +129,43 @@ namespace Epsitec.Cresus.Core
 				throw new System.InvalidOperationException ("Context does not belong to the pool");
 			}
 		}
+
+
+		public AbstractEntity CreateNewEntity(string dataSetName, EntityCreationScope entityCreationScope)
+		{
+			var context = this.GetEntityContext (entityCreationScope);
+
+			switch (dataSetName)
+			{
+				case "Customers":
+					return CoreData.CreateNewCustomer (context);
+
+				default:
+					return null;
+			}
+		}
+
+		private EntityContext GetEntityContext(EntityCreationScope entityCreationScope)
+		{
+			switch (entityCreationScope)
+			{
+				case EntityCreationScope.Independent:
+					return this.independentEntityContext;
+
+				case EntityCreationScope.CurrentContext:
+					return this.DataContext.EntityContext;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("EntityCreationScope.{0} not supported", entityCreationScope));
+			}
+		}
+
+		private static AbstractEntity CreateNewCustomer(EntityContext context)
+		{
+			return context.CreateEmptyEntity<CustomerEntity> ();
+		}
+		
+
 
 		#region IDisposable Members
 

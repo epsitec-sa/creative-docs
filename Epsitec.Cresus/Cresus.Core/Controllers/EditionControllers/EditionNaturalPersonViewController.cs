@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
@@ -43,7 +43,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.PersonTitleEntity>
 				{
 					ValueGetter = () => this.Entity.Title,
-					ValueSetter = x => this.Entity.Title = x,
+					ValueSetter = x => this.Entity.Title = x.WrapNullEntity (),
+					ValueCreator = context => context.CreateEmptyEntity<Entities.PersonTitleEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SelectionController<Entities.PersonGenderEntity>
 				{
 					ValueGetter = () => this.Entity.Gender,
-					ValueSetter = x => this.Entity.Gender = x,
+					ValueSetter = x => this.Entity.Gender = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },

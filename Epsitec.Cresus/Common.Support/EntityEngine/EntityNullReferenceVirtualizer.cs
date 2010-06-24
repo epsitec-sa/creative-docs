@@ -138,6 +138,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static T WrapNullEntity<T>(this T entity)
+			where T : AbstractEntity, new ()
+		{
+			if (entity == null)
+			{
+				return EntityNullReferenceVirtualizer.CreateEmptyEntity<T> ();
+			}
+			else
+			{
+				return entity;
+			}
+		}
+
 		/// <summary>
 		/// Creates an empty entity which will be considered equal to a null reference
 		/// when calling <see cref="IsNullEntity"/>.
