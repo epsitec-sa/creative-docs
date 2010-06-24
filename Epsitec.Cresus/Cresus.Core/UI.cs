@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Core
 			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");
 			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
 		}
         
