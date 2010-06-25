@@ -102,14 +102,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override void UpgradeEmptyEntity(DataContext context, MailContactEntity entity)
+		protected override void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
-			context.UnregisterEmptyEntity (entity);
+			var contact = this.Entity;
 
-			context.UpdateEmptyEntityStatus (entity.Address,
-				context.UpdateEmptyEntityStatus (entity.Address.Street,  x => x.IsEmpty ()),
-				context.UpdateEmptyEntityStatus (entity.Address.PostBox, x => x.IsEmpty ()),
-				entity.Address.Location.IsEmpty ());
+			context.UpdateEmptyEntityStatus (contact, isEmpty);
+
+			context.UpdateEmptyEntityStatus (contact.Address,
+				context.UpdateEmptyEntityStatus (contact.Address.Street,  x => x.IsEmpty ()),
+				context.UpdateEmptyEntityStatus (contact.Address.PostBox, x => x.IsEmpty ()),
+				contact.Address.Location.IsEmpty ());
 		}
 
 		private void CreateUIRoles(UIBuilder builder)

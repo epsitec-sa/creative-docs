@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -13,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionTitleViewController : EditionViewController<Entities.PersonTitleEntity>
+	public class EditionTitleViewController : EditionViewController<PersonTitleEntity>
 	{
-		public EditionTitleViewController(string name, Entities.PersonTitleEntity entity)
+		public EditionTitleViewController(string name, PersonTitleEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -35,8 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (string.IsNullOrWhiteSpace (this.Entity.Name) ||
-				string.IsNullOrWhiteSpace (this.Entity.ShortName))
+			if (this.Entity.IsEmpty ())
 			{
 				return EditionStatus.Empty;
 			}
@@ -44,6 +44,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				return EditionStatus.Valid;
 			}
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var title = this.Entity;
+			
+			context.UpdateEmptyEntityStatus (title, isEmpty);
 		}
 
 		private void CreateUIMain(UIBuilder builder)

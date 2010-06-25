@@ -62,15 +62,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var entity  = this.Entity;
 			var context = DataContextPool.Instance.FindDataContext (entity);
 
-			if (this.EditionStatus == EditionControllers.EditionStatus.Valid)
-			{
-				this.UpgradeEmptyEntity (context, entity);
-			}
+			bool isEmpty = this.EditionStatus == EditionControllers.EditionStatus.Empty;
+
+			this.UpdateEmptyEntityStatus (context, isEmpty);
 		}
 
-		protected virtual void UpgradeEmptyEntity(DataContext context, T entity)
+		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
-			context.UnregisterEmptyEntity (entity);
 		}
 	}
 }

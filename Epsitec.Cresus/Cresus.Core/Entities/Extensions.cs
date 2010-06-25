@@ -78,5 +78,16 @@ namespace Epsitec.Cresus.Core.Entities
 				&& string.IsNullOrWhiteSpace (entity.Name)
 				&& entity.Country.IsEmpty ();
 		}
+
+		public static bool IsEmpty(this PersonTitleEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			return string.IsNullOrWhiteSpace (entity.Name)
+				&& string.IsNullOrWhiteSpace (entity.ShortName);
+		}
 	}
 }
