@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextFieldMulti (tile, 52, "Complément 1", Marshaler.Create (() => this.Entity.Complement, x => this.Entity.Complement = x));
-			builder.CreateMargin         (tile, false);
+			builder.CreateMargin         (tile, horizontalSeparator: false);
 		}
 
 
@@ -249,11 +249,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,  0, "Rue",           Marshaler.Create (() => this.Entity.Address.Street.StreetName, x => this.Entity.Address.Street.StreetName = x));
 			builder.CreateTextFieldMulti (tile, 52, "Complément 2",  Marshaler.Create (() => this.Entity.Address.Street.Complement, x => this.Entity.Address.Street.Complement = x));
 			builder.CreateTextField      (tile,  0, "Boîte postale", Marshaler.Create (() => this.Entity.Address.PostBox.Number,    x => this.Entity.Address.PostBox.Number = x));
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 		}
 
 
@@ -272,22 +272,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
 				});
-
-#if false
-			this.countryTextField.SelectedItemChanged +=
-				delegate
-				{
-					System.Diagnostics.Debug.Assert (this.addressTextField != null);
-					this.locationTextField.Text = null;  // on efface la ville si on change de pays
-					this.locationTextField.Items.Clear ();
-
-					var locationGetter = this.LocationGetter;
-					foreach (var item in locationGetter)
-					{
-						this.locationTextField.Items.Add (item);
-					}
-				};
-#endif
 		}
 
 		private void CreateUILocation(UIBuilder builder)
@@ -297,7 +281,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Location,
 					ValueSetter = x => this.Location = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.LocationEntity> (),
+					ValueCreator = context => this.CreateNewLocation (context),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
@@ -312,6 +296,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
 			}
+		}
+
+		private LocationEntity CreateNewLocation(DataContext context)
+		{
+			LocationEntity location = context.CreateRegisteredEmptyEntity<Entities.LocationEntity> ();
+
+			location.Country = this.selectedCountry;
+
+			return location;
 		}
 
 		private CountryEntity Country

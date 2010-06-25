@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -26,9 +27,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Mail", "Ville");
+				builder.CreateEditionTitleTile ("Data.Location", "Ville");
 
-				this.CreateUIMain (builder);
+				this.CreateUIWarning (builder);
+				this.CreateUICountry (builder);
+				this.CreateUIMain    (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -53,13 +56,42 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
 		}
 
+
+		private void CreateUIWarning(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateWarning (tile);
+		}
+
+		private void CreateUICountry(UIBuilder builder)
+		{
+			this.selectedCountry = this.Entity.Country;
+
+			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
+				new SelectionController<CountryEntity>
+				{
+					ValueGetter = () => this.Entity.Country,
+					ValueSetter = x => this.Entity.Country = x.WrapNullEntity (),
+					//?ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.CountryEntity> (),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
+
+					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
+				});
+		}
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateWarning   (tile);
+			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 100, "Numéro postal", Marshaler.Create (() => this.Entity.PostalCode, x => this.Entity.PostalCode = x));
-			builder.CreateTextField (tile,   0, "Ville",         Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
+			builder.CreateTextField (tile, 0, "Ville", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 		}
+
+
+		private AutoCompleteTextField			countryTextField;
+		private CountryEntity					selectedCountry;
 	}
 }

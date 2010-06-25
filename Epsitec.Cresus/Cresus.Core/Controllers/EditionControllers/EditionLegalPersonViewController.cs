@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField      (tile,   0, "Nom complet", Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
 			builder.CreateTextField      (tile, 150, "Nom court",   Marshaler.Create (() => this.Entity.ShortName,  x => this.Entity.ShortName = x));
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextFieldMulti (tile, 100, "Complément",  Marshaler.Create (() => this.Entity.Complement, x => this.Entity.Complement = x));
 		}
 	}
