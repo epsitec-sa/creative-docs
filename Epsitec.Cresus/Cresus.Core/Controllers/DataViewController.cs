@@ -2,8 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Widgets;
@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.data = data;
+			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
 
 			this.viewControllers = new Stack<CoreViewController> ();
 			this.Orchestrator = new Orchestrators.DataViewOrchestrator (this);
@@ -216,7 +217,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PushViewController (newViewController);
 		}
 
-		
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.data.AboutToSaveDataContext -= this.HandleAboutToSaveDataContext;
+			}
+
+			base.Dispose (disposing);
+		}
+
 		private void InheritLeafControllerDataContext(CoreViewController controller)
 		{
 			if (controller.DataContext != null)
@@ -309,6 +320,11 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				}
 			}
+		}
+
+		private void HandleAboutToSaveDataContext(object sender, DataContextEventArgs e)
+		{
+			this.viewControllers.ForEach (controller => controller.AboutToSave (e.DataContext));
 		}
 
 		private EntityViewController CreateCompactEntityViewController()

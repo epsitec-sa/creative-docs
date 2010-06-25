@@ -210,20 +210,51 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void RegisterEmptyEntity(AbstractEntity entity)
+		public void RegisterEmptyEntity<T>(T entity)
+			where T : AbstractEntity
 		{
 			System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 			
 			this.emptyEntities.Add (entity);
 		}
 
-		public void UnregisterEmptyEntity(AbstractEntity entity)
+		public void UnregisterEmptyEntity<T>(T entity)
+			where T : AbstractEntity
 		{
-			System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
-			
-			this.emptyEntities.Remove (entity);
+			if (this.emptyEntities.Remove (entity))
+			{
+				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+				entity.UpdateDataGeneration ();
+			}
+		}
 
-			entity.UpdateDataGeneration ();
+		public bool UpdateEmptyEntityStatus<T>(T entity, bool isEmpty)
+			where T : AbstractEntity
+		{
+			if (isEmpty)
+			{
+				this.RegisterEmptyEntity (entity);
+				return true;
+			}
+			else
+			{
+				this.UnregisterEmptyEntity (entity);
+				return false;
+			}
+		}
+
+		public bool UpdateEmptyEntityStatus<T>(T entity, params bool[] emptyPredicateResults)
+			where T : AbstractEntity
+		{
+			System.Diagnostics.Debug.Assert (emptyPredicateResults.Length > 0);
+
+			return this.UpdateEmptyEntityStatus (entity, emptyPredicateResults.All (x => x));
+		}
+
+		public bool UpdateEmptyEntityStatus<T>(T entity, System.Predicate<T> emptyPredicate)
+			where T : AbstractEntity
+		{
+			return this.UpdateEmptyEntityStatus (entity, emptyPredicate (entity));
 		}
 
 		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)

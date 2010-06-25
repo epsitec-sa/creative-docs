@@ -47,6 +47,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			base.AboutToCloseUI ();
 		}
 
+		protected override void AboutToSave()
+		{
+			this.UpgradeEmptyEntity ();
+			base.AboutToSave ();
+		}
+
 		/// <summary>
 		/// If the current entity was registered in the <see cref="DataContext"/> as an empty
 		/// entity, upgrade it to a real entity if its content is valid.
@@ -56,11 +62,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var entity  = this.Entity;
 			var context = DataContextPool.Instance.FindDataContext (entity);
 
-			if ((context.IsRegisteredAsEmptyEntity (entity)) &&
-				(this.EditionStatus == EditionControllers.EditionStatus.Valid))
+			if (this.EditionStatus == EditionControllers.EditionStatus.Valid)
 			{
-				context.UnregisterEmptyEntity (entity);
+				this.UpgradeEmptyEntity (context, entity);
 			}
+		}
+
+		protected virtual void UpgradeEmptyEntity(DataContext context, T entity)
+		{
+			context.UnregisterEmptyEntity (entity);
 		}
 	}
 }
