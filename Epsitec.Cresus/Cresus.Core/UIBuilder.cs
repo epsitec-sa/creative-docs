@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, AbstractEntity> valueCreator)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator)
 		{
 			tile.AllowSelection = true;
 
@@ -463,13 +463,15 @@ namespace Epsitec.Cresus.Core
 					{
 						if (valueCreator != null)
 						{
-							var newEntity = valueCreator (controller.DataContext);
-							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, ViewControllerMode.Creation, controller.Orchestrator);
+							var newValue = valueCreator (controller.DataContext);
+							var newEntity = newValue.GetEditionEntity ();
+							var refEntity = newValue.GetReferenceEntity ();
+							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
 							tile.OpenSubView (controller.Orchestrator, controller, newController);
-							editor.SelectedItemIndex = editor.Items.Add (newEntity);
-							valueSetter (newEntity);
+							editor.SelectedItemIndex = editor.Items.Add (refEntity);
+							valueSetter (refEntity);
 
-							new AutoCompleteItemSynchronizer (editor, newController);
+							new AutoCompleteItemSynchronizer (editor, newController, refEntity);
 						}
 					}
 				};
@@ -480,11 +482,11 @@ namespace Epsitec.Cresus.Core
 
 		class AutoCompleteItemSynchronizer
 		{
-			public AutoCompleteItemSynchronizer(AutoCompleteTextField field, EntityViewController controller)
+			public AutoCompleteItemSynchronizer(AutoCompleteTextField field, EntityViewController controller, AbstractEntity entity)
 			{
 				this.field = field;
 				this.controller = controller;
-				this.entity = controller.GetEntity ();
+				this.entity = entity;
 
 				this.entity.AttachListener ("*", this.HandleEntityChanged);
 				this.controller.Disposing += this.HandleControllerDisposing;
