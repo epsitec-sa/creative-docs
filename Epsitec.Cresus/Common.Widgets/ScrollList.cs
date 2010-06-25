@@ -21,6 +21,7 @@ namespace Epsitec.Common.Widgets
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
+			this.AutomaticScrollEnable = true;
 
 			this.selectItemBehavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);
 			this.autoScrollBehavior = new Behaviors.AutoScrollBehavior (this, this.AutomaticScroll);
@@ -105,6 +106,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.allRowsHaveSameWidth = value;
 			}
+		}
+
+		public bool								AutomaticScrollEnable
+		{
+			get;
+			set;
 		}
 
 		public AbstractScroller					Scroller
@@ -343,7 +350,12 @@ namespace Epsitec.Common.Widgets
 					if (this.mouseDown)
 					{
 						this.MouseSelect (pos);
-						this.autoScrollBehavior.ProcessEvent (Point.Zero);
+
+						if (this.AutomaticScrollEnable)
+						{
+							this.autoScrollBehavior.ProcessEvent (Point.Zero);
+						}
+
 						this.OnSelectionActivated ();
 						this.MouseSelectEnd ();
 					}
@@ -351,9 +363,13 @@ namespace Epsitec.Common.Widgets
 
 				case MessageType.MouseWheel:
 					if (message.Wheel < 0)
+					{
 						this.FirstVisibleRow++;
+					}
 					if (message.Wheel > 0)
+					{
 						this.FirstVisibleRow--;
+					}
 					break;
 
 				case MessageType.KeyDown:
@@ -402,19 +418,22 @@ namespace Epsitec.Common.Widgets
 			double x = pos.X - this.margins.Left;
 			double h = this.visibleRows * this.rowHeight;
 
-			if (y < 0)
+			if (this.AutomaticScrollEnable)
 			{
-				this.autoScrollBehavior.ProcessEvent (new Point (0, -1));
-				return false;
-			}
-			else if (y >= h)
-			{
-				this.autoScrollBehavior.ProcessEvent (new Point (0, 1));
-				return false;
-			}
-			else
-			{
-				this.autoScrollBehavior.ProcessEvent (Point.Zero);
+				if (y < 0)
+				{
+					this.autoScrollBehavior.ProcessEvent (new Point (0, -1));
+					return false;
+				}
+				else if (y >= h)
+				{
+					this.autoScrollBehavior.ProcessEvent (new Point (0, 1));
+					return false;
+				}
+				else
+				{
+					this.autoScrollBehavior.ProcessEvent (Point.Zero);
+				}
 			}
 
 			int line = (int) (y / this.rowHeight);

@@ -579,6 +579,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.scrollList = new ScrollList ();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+			this.scrollList.AutomaticScrollEnable = false;
 			
 			menu.Contents = this.scrollList;
 			
