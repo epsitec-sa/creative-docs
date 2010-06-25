@@ -5,17 +5,20 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
+using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionMailContactViewController : EditionViewController<Entities.MailContactEntity>
+	public class EditionMailContactViewController : EditionViewController<MailContactEntity>
 	{
-		public EditionMailContactViewController(string name, Entities.MailContactEntity entity)
+		public EditionMailContactViewController(string name, MailContactEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -86,10 +89,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if ((string.IsNullOrEmpty (this.Entity.Address.Street.Complement)) &&
-				(string.IsNullOrEmpty (this.Entity.Address.Street.StreetName)) &&
-				(string.IsNullOrEmpty (this.Entity.Address.PostBox.Number)) &&
-				(this.Entity.Address.Location.UnwrapNullEntity () == null))
+			if ((string.IsNullOrWhiteSpace (this.Entity.Complement)) &&
+				(this.Entity.Roles.Count == 0) &&
+				(this.Entity.Comments.Count == 0) &&
+				(this.Entity.Address.IsEmpty ()))
 			{
 				return EditionControllers.EditionStatus.Empty;
 			}
@@ -99,9 +102,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		protected override void UpgradeEmptyEntity(DataContext context, MailContactEntity entity)
+		{
+			context.UnregisterEmptyEntity (entity);
+
+			context.UpdateEmptyEntityStatus (entity.Address,
+				context.UpdateEmptyEntityStatus (entity.Address.Street,  x => x.IsEmpty ()),
+				context.UpdateEmptyEntityStatus (entity.Address.PostBox, x => x.IsEmpty ()),
+				entity.Address.Location.IsEmpty ());
+		}
+
 		private void CreateUIRoles(UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.ContactRoleEntity>
+			var controller = new SelectionController<ContactRoleEntity>
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
@@ -165,7 +178,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
 			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
-				new SelectionController<Entities.LegalPersonEntity>
+				new SelectionController<LegalPersonEntity>
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
@@ -193,7 +206,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIAddress(UIBuilder builder)
 		{
 			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
-				new SelectionController<Entities.AddressEntity>
+				new SelectionController<AddressEntity>
 				{
 					ValueGetter = () => this.Entity.Address,
 					ValueSetter = x => this.Entity.Address = x.WrapNullEntity (),
@@ -204,14 +217,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
-		private IEnumerable<Entities.AddressEntity> LegalPersonAddressGetter
+		private IEnumerable<AddressEntity> LegalPersonAddressGetter
 		{
 			//	Retourne les adresses de l'entreprise choisie.
 			get
 			{
 				return this.Entity.LegalPerson.Contacts
-					.Where (x => x is Entities.MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
-					.Cast<Entities.MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
+					.Where (x => x is MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
+					.Cast<MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
 					.Select (x => x.Address)						// on s'intéresse à l'entité Address de MailContact
 					.ToList ();										// on veut une liste statique
 			}
@@ -235,7 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
-				new SelectionController<Entities.CountryEntity>
+				new SelectionController<CountryEntity>
 				{
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
@@ -265,7 +278,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUILocation(UIBuilder builder)
 		{
 			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville",
-				new SelectionController<Entities.LocationEntity>
+				new SelectionController<LocationEntity>
 				{
 					ValueGetter = () => this.Location,
 					ValueSetter = x => this.Location = x.WrapNullEntity (),
@@ -276,7 +289,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
-		private IEnumerable<Entities.LocationEntity> LocationGetter
+		private IEnumerable<LocationEntity> LocationGetter
 		{
 			//	Retourne les localités du pays choisi.
 			get
@@ -285,7 +298,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private Entities.CountryEntity Country
+		private CountryEntity Country
 		{
 			get
 			{
@@ -298,7 +311,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.selectedCountry = value;
 
 					// On efface la ville si on change de pays.
-					this.Entity.Address.Location = EntityNullReferenceVirtualizer.CreateEmptyEntity<Entities.LocationEntity> ();
+					this.Entity.Address.Location = EntityNullReferenceVirtualizer.CreateEmptyEntity<LocationEntity> ();
 					this.locationTextField.Text = null;
 
 					this.locationTextField.Items.Clear ();
@@ -312,7 +325,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private Entities.LocationEntity Location
+		private LocationEntity Location
 		{
 			get
 			{
@@ -341,9 +354,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					foreach (var contact in this.Entity.LegalPerson.Contacts)
 					{
-						if (contact is Entities.MailContactEntity)
+						if (contact is MailContactEntity)
 						{
-							var mail = contact as Entities.MailContactEntity;
+							var mail = contact as MailContactEntity;
 
 							if (mail.Address == this.Entity.Address)
 							{
@@ -364,6 +377,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private AutoCompleteTextField			addressTextField;
 		private AutoCompleteTextField			countryTextField;
 		private AutoCompleteTextField			locationTextField;
-		private Entities.CountryEntity			selectedCountry;
+		private CountryEntity					selectedCountry;
 	}
 }

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -67,6 +68,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.AboutToCloseUI ();
 		}
 
+
+		internal void AboutToSave(DataLayer.DataContext dataContext)
+		{
+			this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ().ForEach (x => x.AboutToSave (dataContext));
+
+			if (this.DataContext == dataContext)
+			{
+				this.AboutToSave ();
+			}
+		}
+
+
 		private void ReleaseUIFocus(Widget container)
 		{
 			if (container.ContainsKeyboardFocus)
@@ -80,6 +93,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 		
 		protected virtual void AboutToCloseUI()
+		{
+		}
+
+		protected virtual void AboutToSave()
 		{
 		}
 		

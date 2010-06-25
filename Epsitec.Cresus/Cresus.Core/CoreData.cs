@@ -94,6 +94,7 @@ namespace Epsitec.Cresus.Core
 			if (context != null)
 			{
 				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
+				this.OnAboutToSaveDataContext (context);
 				context.SaveChanges ();
 				this.UpdateEditionSaveRecordCommandState ();
 				System.Diagnostics.Debug.WriteLine ("Done");
@@ -329,13 +330,23 @@ namespace Epsitec.Cresus.Core
 
 					if (handler != null)
 					{
-						handler (this);
+						handler (this, new DataContextEventArgs (oldDataContext));
 					}
 				}
 			}
 			finally
 			{
 				System.Threading.Interlocked.Decrement (ref this.dataContextChangedLevel);
+			}
+		}
+
+		private void OnAboutToSaveDataContext(DataContext context)
+		{
+			var handler = this.AboutToSaveDataContext;
+
+			if (handler != null)
+			{
+				handler (this, new DataContextEventArgs (context));
 			}
 		}
 
@@ -371,7 +382,10 @@ namespace Epsitec.Cresus.Core
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
 			}
 		}
-		public event EventHandler DataContextChanged;
+		
+		public event EventHandler<DataContextEventArgs> DataContextChanged;
+
+		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;
 
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly EntityContext independentEntityContext;
