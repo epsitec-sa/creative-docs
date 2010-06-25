@@ -26,10 +26,21 @@ namespace Epsitec.Cresus.Core.Data
 			return this.GetEntitiesByExample<CountryEntity> (example);
 		}
 
+		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<CountryEntity> (example, constrainer);
+		}
+
 
 		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<CountryEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<CountryEntity> (example, constrainer, index, count);
 		}
 		
 

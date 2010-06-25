@@ -24,9 +24,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<LanguageEntity> GetLanguagesByExample(LanguageEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<LanguageEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<LanguageEntity> GetLanguagesByExample(LanguageEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<LanguageEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<LanguageEntity> GetLanguagesByExample(LanguageEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<LanguageEntity> (example, constrainer, index, count);
 		}
 
 

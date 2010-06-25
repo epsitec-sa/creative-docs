@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetGenericContactsByExample<MailContactEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, int index, int count)
 		{
 			return this.GetGenericContactsByExample<MailContactEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetGenericContactsByExample<MailContactEntity> (example, constrainer, index, count);
 		}
 
 

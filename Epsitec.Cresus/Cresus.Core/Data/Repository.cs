@@ -35,15 +35,31 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example) where T : AbstractEntity
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example)
+			where T : AbstractEntity
 		{
 			return this.dataBrowser.GetByExample<T> (example, true);
 		}
 
 
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count) where T : AbstractEntity
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, EntityConstrainer constrainer)
+			where T : AbstractEntity
+		{
+			return this.dataBrowser.GetByExample<T> (example, constrainer, true);
+		}
+
+
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count)
+			where T : AbstractEntity
 		{
 			return this.dataBrowser.GetByExample<T> (example, true).Skip (index + 1).Take (count);
+		}
+
+
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, EntityConstrainer constrainer, int index, int count)
+			where T : AbstractEntity
+		{
+			return this.dataBrowser.GetByExample<T> (example, constrainer, true).Skip (index + 1).Take (count);
 		}
 
 

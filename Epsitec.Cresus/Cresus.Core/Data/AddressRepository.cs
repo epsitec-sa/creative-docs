@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<AddressEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<AddressEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<AddressEntity> (example, constrainer, index, count);
 		}
 
 

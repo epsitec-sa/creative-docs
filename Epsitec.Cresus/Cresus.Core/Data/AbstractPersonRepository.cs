@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, int index, int count)
 		{
 			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, constrainer, index, count);
 		}
 
 
@@ -77,9 +89,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, EntityConstrainer constrainer) where T : AbstractPersonEntity
+		{
+			return this.GetEntitiesByExample<T> (example, constrainer);
+		}
+
+
 		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, int index, int count) where T : AbstractPersonEntity
 		{
 			return this.GetEntitiesByExample<T> (example, index, count);
+		}
+
+
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, EntityConstrainer constrainer, int index, int count) where T : AbstractPersonEntity
+		{
+			return this.GetEntitiesByExample<T> (example, constrainer, index, count);
 		}
 
 
