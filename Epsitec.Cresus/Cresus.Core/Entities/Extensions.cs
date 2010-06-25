@@ -90,6 +90,29 @@ namespace Epsitec.Cresus.Core.Entities
 				&& string.IsNullOrWhiteSpace (entity.ShortName);
 		}
 
+		public static bool IsEmpty(this NaturalPersonEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			return string.IsNullOrWhiteSpace (entity.Firstname)
+				&& string.IsNullOrWhiteSpace (entity.Lastname);
+		}
+
+		public static bool IsEmpty(this LegalPersonEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			return string.IsNullOrWhiteSpace (entity.Name)
+				&& string.IsNullOrWhiteSpace (entity.ShortName);
+		}
+
+
 		public static bool IsNull(this AbstractEntity entity)
 		{
 			return entity.UnwrapNullEntity () == null;
@@ -99,6 +122,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return entity.UnwrapNullEntity () != null;
 		}
+
 
 		public static bool CompareWith(this AbstractEntity that, AbstractEntity other)
 		{

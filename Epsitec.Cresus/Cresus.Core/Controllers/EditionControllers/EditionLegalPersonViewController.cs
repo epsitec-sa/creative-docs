@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -33,6 +34,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (this.Entity.IsEmpty ())
+			{
+				return EditionStatus.Empty;
+			}
+			else
+			{
+				return EditionStatus.Valid;
+			}
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{
