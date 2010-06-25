@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<DataContext, T> ValueCreator
+		public System.Func<DataContext, NewValue<AbstractEntity>> ValueCreator
 		{
 			get;
 			set;
@@ -246,5 +246,49 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return result;
 		}
+	}
+
+	public class NewValue<T>
+		where T : AbstractEntity
+	{
+		public NewValue(T referenceEntity)
+		{
+			this.referenceEntity = referenceEntity;
+			this.editionEntity   = referenceEntity;
+			this.CreationControllerMode = ViewControllerMode.Creation;
+		}
+
+		public NewValue(T referenceEntity, AbstractEntity editionEntity)
+		{
+			this.referenceEntity = referenceEntity;
+			this.editionEntity   = editionEntity;
+			this.CreationControllerMode = ViewControllerMode.Summary;
+		}
+
+		public ViewControllerMode CreationControllerMode
+		{
+			get;
+			set;
+		}
+
+		public T GetReferenceEntity()
+		{
+			return this.referenceEntity;
+		}
+
+		public AbstractEntity GetEditionEntity()
+		{
+			return this.editionEntity;
+		}
+
+
+		public static implicit operator NewValue<T>(T value)
+		{
+			return new NewValue<T> (value);
+		}
+
+
+		private readonly T referenceEntity;
+		private readonly AbstractEntity editionEntity;
 	}
 }

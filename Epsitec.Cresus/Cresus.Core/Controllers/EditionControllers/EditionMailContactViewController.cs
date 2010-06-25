@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
@@ -183,7 +184,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.LegalPersonEntity> (),
+					ValueCreator = this.CreateLegalPersonCustomer,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
@@ -232,6 +233,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		private NewValue<AbstractEntity> CreateLegalPersonCustomer(DataContext context)
+		{
+			var customer = context.CreateRegisteredEmptyEntity<CustomerEntity> ();
+			var person   = context.CreateRegisteredEmptyEntity<LegalPersonEntity> ();
+
+			customer.Person = person;
+			customer.CustomerSince = Date.Today;
+
+			return new NewValue<AbstractEntity> (person, customer);
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{
