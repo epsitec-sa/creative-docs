@@ -98,11 +98,10 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\CreationPersonTitleViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationStatus.cs" />
-    <Compile Include="Controllers\CreationControllers\ICreationStatus.cs" />
+    <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
     <Compile Include="Controllers\DataAccessors\AccessorBinding.cs" />

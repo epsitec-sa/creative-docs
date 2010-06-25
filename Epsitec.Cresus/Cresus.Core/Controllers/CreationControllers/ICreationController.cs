@@ -7,16 +7,25 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	/// <summary>
-	/// The <c>ICreationStatus</c> interface returns the creation status for an
-	/// entity.
+	/// The <c>ICreationController</c> interface provides some creation related
+	/// methods, independently of the underlying entity type.
 	/// </summary>
-	public interface ICreationStatus
+	public interface ICreationController
 	{
 		/// <summary>
 		/// Gets the creation status of the entity.
 		/// </summary>
 		/// <value>The creation status.</value>
 		CreationStatus CreationStatus
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the upgrade controller mode based on the active entity.
+		/// </summary>
+		/// <value>The upgrade controller mode.</value>
+		ViewControllerMode UpgradeControllerMode
 		{
 			get;
 		}

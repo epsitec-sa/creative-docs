@@ -33,6 +33,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrWhiteSpace (this.Entity.Name) ||
+				string.IsNullOrWhiteSpace (this.Entity.ShortName))
+			{
+				return EditionStatus.Empty;
+			}
+			else
+			{
+				return EditionStatus.Valid;
+			}
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{

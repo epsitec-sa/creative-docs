@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateEmptyEntity<Entities.PersonTitleEntity> (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.PersonTitleEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },

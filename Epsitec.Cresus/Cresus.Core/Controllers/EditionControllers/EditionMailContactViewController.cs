@@ -84,6 +84,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		protected override EditionStatus GetEditionStatus()
+		{
+			if ((string.IsNullOrEmpty (this.Entity.Address.Street.Complement)) &&
+				(string.IsNullOrEmpty (this.Entity.Address.Street.StreetName)) &&
+				(string.IsNullOrEmpty (this.Entity.Address.PostBox.Number)) &&
+				(this.Entity.Address.Location.UnwrapNullEntity () == null))
+			{
+				return EditionControllers.EditionStatus.Empty;
+			}
+			else
+			{
+				return EditionControllers.EditionStatus.Valid;
+			}
+		}
 
 		private void CreateUIRoles(UIBuilder builder)
 		{

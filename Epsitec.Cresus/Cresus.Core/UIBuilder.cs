@@ -466,12 +466,47 @@ namespace Epsitec.Cresus.Core
 							var newEntity = valueCreator (controller.DataContext);
 							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, ViewControllerMode.Creation, controller.Orchestrator);
 							tile.OpenSubView (controller.Orchestrator, controller, newController);
+							editor.SelectedItemIndex = editor.Items.Add (newEntity);
+							valueSetter (newEntity);
+
+							new AutoCompleteItemSynchronizer (editor, newController);
 						}
 					}
 				};
 
 			return editor;
 		}
+
+
+		class AutoCompleteItemSynchronizer
+		{
+			public AutoCompleteItemSynchronizer(AutoCompleteTextField field, EntityViewController controller)
+			{
+				this.field = field;
+				this.controller = controller;
+				this.entity = controller.GetEntity ();
+
+				this.entity.AttachListener ("*", this.HandleEntityChanged);
+				this.controller.Disposing += this.HandleControllerDisposing;
+			}
+
+			private void HandleControllerDisposing(object sender)
+			{
+				this.entity.DetachListener ("*", this.HandleEntityChanged);
+				this.field.RefreshTextBasedOnSelectedItem ();
+			}
+
+			private void HandleEntityChanged(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				this.field.RefreshTextBasedOnSelectedItem ();
+			}
+
+
+			private readonly AutoCompleteTextField field;
+			private readonly EntityViewController controller;
+			private readonly IStructuredData entity;
+		}
+
 
 		private class AutoCompleteTextFieldTileController : ITileController
 		{

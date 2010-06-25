@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
-	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationStatus
+	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationController
 		where T : AbstractEntity, new ()
 	{
 		protected CreationViewController(string name, T entity)
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		}
 
 
-		#region ICreationStatus Members
+		#region ICreationController Members
 
 		public CreationStatus CreationStatus
 		{
@@ -30,23 +30,53 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
+		public ViewControllerMode UpgradeControllerMode
+		{
+			get
+			{
+				return this.GetUpgradeControllerMode ();
+			}
+		}
+
 		#endregion
 
-		protected void ValidateCreation()
+		protected void UpgradeController()
 		{
 			System.Diagnostics.Debug.Assert (this.CreationStatus == CreationStatus.Ready);
 
-			var orchestrator = this.Orchestrator;
-			var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, ViewControllerMode.Summary, orchestrator);
+			var upgradeMode = this.UpgradeControllerMode;
 
-			controller.DataContext = orchestrator.DataContext;
+			if (upgradeMode == ViewControllerMode.Creation)
+			{
+				//	Do not upgrade the controller: we are already the creation mode controller
+			}
+			else
+			{
+				var orchestrator = this.Orchestrator;
+				var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator);
 
-			orchestrator.ReplaceView (this, controller);
+				controller.DataContext = orchestrator.DataContext;
+
+				orchestrator.ReplaceView (this, controller);
+			}
 		}
 
 		protected virtual CreationStatus GetCreationStatus()
 		{
 			return CreationStatus.Unknown;
+		}
+
+		protected virtual ViewControllerMode GetUpgradeControllerMode()
+		{
+			switch (this.CreationStatus)
+			{
+				case CreationStatus.Empty:
+				default:
+					return ViewControllerMode.Creation;
+
+				case CreationControllers.CreationStatus.Ready:
+					return ViewControllerMode.Summary;
+			}
 		}
 
 		protected void CreateRealEntity(System.Action<DataContext, T> initializer = null)
@@ -61,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 
 			this.ReplaceEntity (entity);
-			this.ValidateCreation ();
+			this.UpgradeController ();
 		}
 	}
 }
