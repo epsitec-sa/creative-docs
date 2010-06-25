@@ -24,9 +24,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<CustomerEntity> GetCustomersByExample(CustomerEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<CustomerEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<CustomerEntity> GetCustomersByExample(CustomerEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<CustomerEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<CustomerEntity> GetCustomersByExample(CustomerEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<CustomerEntity> (example, constrainer, index, count);
 		}
 
 
@@ -44,10 +56,15 @@ namespace Epsitec.Cresus.Core.Data
 
 			return this.GetCustomersByExample (example, index, count);
 		}
+
 		
 		public CustomerEntity CreateCustomerExample()
 		{
 			return this.CreateExample<CustomerEntity> ();
 		}
+
+
 	}
+
+
 }

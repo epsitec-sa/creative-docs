@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetGenericContactsByExample<AbstractContactEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, int index, int count)
 		{
 			return this.GetGenericContactsByExample<AbstractContactEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetGenericContactsByExample<AbstractContactEntity> (example, constrainer, index, count);
 		}
 
 
@@ -101,9 +113,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, EntityConstrainer constrainer) where T : AbstractContactEntity
+		{
+			return this.GetEntitiesByExample<T> (example, constrainer);
+		}
+
+
 		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, int index, int count) where T : AbstractContactEntity
 		{
 			return this.GetEntitiesByExample<T> (example, index, count);
+		}
+
+
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, EntityConstrainer constrainer, int index, int count) where T : AbstractContactEntity
+		{
+			return this.GetEntitiesByExample<T> (example, constrainer, index, count);
 		}
 
 

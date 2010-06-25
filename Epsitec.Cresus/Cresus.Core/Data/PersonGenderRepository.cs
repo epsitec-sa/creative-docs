@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByExample(PersonGenderEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<PersonGenderEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<PersonGenderEntity> GetPersonGendersByExample(PersonGenderEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<PersonGenderEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByExample(PersonGenderEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<PersonGenderEntity> (example, constrainer, index, count);
 		}
 
 

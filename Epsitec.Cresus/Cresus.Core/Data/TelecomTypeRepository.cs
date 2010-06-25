@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByExample(TelecomTypeEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<TelecomTypeEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByExample(TelecomTypeEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<TelecomTypeEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByExample(TelecomTypeEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<TelecomTypeEntity> (example, constrainer, index, count);
 		}
 
 

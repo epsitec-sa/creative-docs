@@ -23,9 +23,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByExample(UriSchemeEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<UriSchemeEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<UriSchemeEntity> GetUriSchemesByExample(UriSchemeEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<UriSchemeEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByExample(UriSchemeEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<UriSchemeEntity> (example, constrainer, index, count);
 		}
 
 

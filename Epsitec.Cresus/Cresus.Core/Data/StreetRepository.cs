@@ -22,9 +22,21 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public IEnumerable<StreetEntity> GetStreetsByExample(StreetEntity example, EntityConstrainer constrainer)
+		{
+			return this.GetEntitiesByExample<StreetEntity> (example, constrainer);
+		}
+
+
 		public IEnumerable<StreetEntity> GetStreetsByExample(StreetEntity example, int index, int count)
 		{
 			return this.GetEntitiesByExample<StreetEntity> (example, index, count);
+		}
+
+
+		public IEnumerable<StreetEntity> GetStreetsByExample(StreetEntity example, EntityConstrainer constrainer, int index, int count)
+		{
+			return this.GetEntitiesByExample<StreetEntity> (example, constrainer, index, count);
 		}
 
 
