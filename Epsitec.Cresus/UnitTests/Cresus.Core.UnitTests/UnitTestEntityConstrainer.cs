@@ -7,6 +7,10 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.Core
 {
@@ -87,6 +91,300 @@ namespace Epsitec.Cresus.Core
 			Assert.IsTrue (this.IsExceptionThrown (() =>
 				entityConstrainer.AddLocalConstraint (title, new BinaryOperation (new UnaryComparison (new Field (new Druid ("[L0A61]")), UnaryComparator.IsNotNull), BinaryOperator.Or, new UnaryComparison (new Field (new Druid ("[L0AS1]")), UnaryComparator.IsNotNull)))
 			));
+		}
+
+
+
+		[TestMethod]
+		public void UnaryComparison()
+		{
+			TestHelper.PrintStartTest ("Unary comparison");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+				entityConstrainer.AddLocalConstraint (example,
+					new UnaryComparison (
+						new Field (new Druid ("[L0A01]")),
+						UnaryComparator.IsNotNull
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 3);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => Database2.CheckHans (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void BinaryComparisonFieldWithValue()
+		{
+			TestHelper.PrintStartTest ("Binary comparison field with value");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AV]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Alfred")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void BinaryComparisonFieldWithField()
+		{
+			TestHelper.PrintStartTest ("Binary comparison field with field");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithField (
+						new Field (new Druid ("[L0AV]")),
+						BinaryComparator.IsEqual,
+						new Field (new Druid ("[L0A01]"))
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 0);
+			}
+		}
+
+
+		[TestMethod]
+		public void UnaryOperation()
+		{
+			TestHelper.PrintStartTest ("Unary operation");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+				entityConstrainer.AddLocalConstraint (example,
+					new UnaryOperation (
+						UnaryOperator.Not,
+						new BinaryComparisonFieldWithValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsEqual,
+							new Constant (Type.String, "Hans")
+						)
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 2);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void BinaryOperation()
+		{
+			TestHelper.PrintStartTest ("Binary operation");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryOperation (
+						new BinaryComparisonFieldWithValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsNotEqual,
+							new Constant (Type.String, "Hans")
+						),
+						BinaryOperator.And,
+						new BinaryComparisonFieldWithValue (
+							new Field (new Druid ("[L0AV]")),
+							BinaryComparator.IsNotEqual,
+							new Constant (Type.String, "Gertrude")
+						)
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void DoubleRequest1()
+		{
+			TestHelper.PrintStartTest ("Double request 1");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AV]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Alfred")
+					)
+				);
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A01]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Dupond")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+		[TestMethod]
+		public void DoubleRequest2()
+		{
+			TestHelper.PrintStartTest ("Double request 2");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AV]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Alfred")
+					)
+				);
+
+				entityConstrainer.AddLocalConstraint (example.Gender,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AC1]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Male")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void InnerRequest()
+		{
+			TestHelper.PrintStartTest ("Inner request");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example.Gender,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AC1]")),
+						BinaryComparator.IsEqual,
+						new Constant (Type.String, "Male")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void LikeRequest()
+		{
+			TestHelper.PrintStartTest ("Like request");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example.Gender,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0AC1]")),
+						BinaryComparator.IsLike,
+						new Constant (Type.String, "%ale")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 2);
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+			}
 		}
 
 

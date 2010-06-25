@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.DataLayer
 			Dictionary<DbKey, EntityCollectionDataContainer> collectionData = new Dictionary<DbKey, EntityCollectionDataContainer> ();
 
 			Druid entityId = example.GetEntityStructuredTypeId ();
-
+		
 			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entityId))
 			{
 				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
@@ -341,10 +341,13 @@ namespace Epsitec.Cresus.DataLayer
 			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
 			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
 
+			Druid leafEntityId = heritedEntityIds.First ();
+			Druid rootEntityId = heritedEntityIds.Last ();
+
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
-				bool isLeafType = currentEntityId == heritedEntityIds.First();
-				bool isRootType = currentEntityId == heritedEntityIds.Last ();
+				bool isLeafType = currentEntityId == leafEntityId;
+				bool isRootType = currentEntityId == rootEntityId;
 
 				tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
 
@@ -369,19 +372,25 @@ namespace Epsitec.Cresus.DataLayer
 
 			foreach (Expression constraint in entityConstrainer.GetLocalConstraints (example))
 			{
-				this.AddConditionForLocalConstraint (tableAliasManager, reader, example, constraint);
+				this.AddConditionForLocalConstraint (tableAliasManager, reader, entityId, example, constraint);
 			}
 		}
 
 
-		private void AddConditionForLocalConstraint(TableAliasManager tableAliasManager, DbReader reader, AbstractEntity example, Expression constraint)
+		private void AddConditionForLocalConstraint(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, Expression constraint)
 		{
 			DbSelectCondition selectCondition = new DbSelectCondition ()
 			{
-				Condition = constraint.CreateDbAbstractCondition (example, d =>
+				Condition = constraint.CreateDbAbstractCondition (example, fieldId =>
 				{
-					// TODO
-					return null;
+					Druid currentEntityId = this.EntityContext.GetLocalEntityId (example.GetEntityStructuredTypeId (), fieldId);
+
+					this.AddOrReuseJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, entityId, currentEntityId, example);
+
+					string tableAlias = tableAliasManager.GetCurrentSubtypeAlias ();
+					string columnName = fieldId.ToResourceId ();
+
+					return this.GetEntityTableColumn (currentEntityId, tableAlias, columnName);
 				}),
 			};
 
@@ -539,6 +548,27 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		private void AddOrReuseJoinFromSubEntityTableToSuperEntityTable(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, Druid currentEntityId, AbstractEntity example)
+		{
+			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
+			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
+			StructuredTypeField[] localValueFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (field => field.Relation == FieldRelation.None).ToArray ();
+
+			bool isLeafType = currentEntityId == heritedEntityIds.First ();
+			bool isRootType = currentEntityId == heritedEntityIds.Last ();
+
+			if (isRootType || isLeafType || localValueFields.Any (field => definedFieldIds.Contains (field.Id)))
+			{
+				tableAliasManager.GetNextSubtypeAlias (currentEntityId.ToResourceId ());
+			}
+			else
+			{
+				tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
+				this.AddJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, currentEntityId, heritedEntityIds.Last ());
+			}
+		}
+
+
 		private void AddJoinFromEntityTableToRelationTable(TableAliasManager tableAliasManager, DbReader reader, Druid sourceEntityId, StructuredTypeField sourcefield, SqlJoinCode joinType)
 		{
 			DbJoin join = this.BuildJoinFromEntityTableToRelationTable (tableAliasManager, reader, sourceEntityId, sourcefield, joinType);
@@ -605,32 +635,18 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddQueryForValues(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example)
 		{
-			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
 			Druid[] heritedEntityIds = this.EntityContext.GetInheritedEntityIds (entityId).ToArray ();
 
 			foreach (Druid currentEntityId in heritedEntityIds)
 			{
-				bool isLeafType = currentEntityId == heritedEntityIds.First ();
-				bool isRootType = currentEntityId == heritedEntityIds.Last ();
+				this.AddOrReuseJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, entityId, currentEntityId, example);
 
-				StructuredTypeField[] localValueFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (field => field.Relation == FieldRelation.None).ToArray ();
-
-				if (isRootType || isLeafType || localValueFields.Any (field => definedFieldIds.Contains (field.Id)))
-				{
-					tableAliasManager.GetNextSubtypeAlias (currentEntityId.ToResourceId ());
-				}
-				else
-				{
-					tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
-					this.AddJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, currentEntityId, heritedEntityIds.Last ());
-				}
-
-				foreach (StructuredTypeField field in localValueFields)
+				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (field => field.Relation == FieldRelation.None).ToArray ())
 				{
 					this.AddEntityQueryField (tableAliasManager, reader, currentEntityId, field.Id);
 				}
-
-				if (isRootType)
+				
+				if (currentEntityId == heritedEntityIds.Last ())
 				{
 					this.AddEntityQueryField (tableAliasManager, reader, currentEntityId, DataBrowser.typeColumn);
 					this.AddEntityQueryField (tableAliasManager, reader, currentEntityId, DataBrowser.idColumn);
