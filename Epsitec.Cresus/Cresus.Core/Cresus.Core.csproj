@@ -343,6 +343,9 @@
     <EmbeddedResource Include="Images\Data.Folder.icon" />
     <EmbeddedResource Include="Images\Edition.SaveRecord.icon" />
     <EmbeddedResource Include="Images\Edition.NewRecord.icon" />
+    <EmbeddedResource Include="Images\Data.Country.icon" />
+    <EmbeddedResource Include="Images\Data.Location.icon" />
+    <EmbeddedResource Include="Images\Data.Title.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

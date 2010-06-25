@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Mail", "Pays");
+				builder.CreateEditionTitleTile ("Data.Country", "Pays");
 
 				this.CreateUIMain (builder);
 

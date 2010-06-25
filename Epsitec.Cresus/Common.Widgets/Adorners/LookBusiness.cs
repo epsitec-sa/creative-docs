@@ -14,38 +14,29 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected override void RefreshColors()
 		{
 			//	Initialise les couleurs en fonction des réglages de Windows.
-			double r,g,b;
-
-			this.colorBlack           = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorGlyph           = Drawing.Color.FromRgb( 91.0/255.0, 100.0/255.0, 115.0/255.0);
-			this.colorWindow          = Drawing.Color.FromRgb(235.0/255.0, 233.0/255.0, 237.0/255.0);
-			this.colorFrame           = Drawing.Color.FromRgb(250.0/255.0, 251.0/255.0, 255.0/255.0);
-			this.colorControl         = Drawing.Color.FromRgb(107.0/255.0, 144.0/255.0, 189.0/255.0);
-			this.colorGreen           = Drawing.Color.FromRgb( 33.0/255.0, 161.0/255.0,  33.0/255.0);
-			this.colorBorder          = Drawing.Color.FromRgb(133.0/255.0, 153.0/255.0, 177.0/255.0);
-			this.colorBorderLight     = Drawing.Color.FromRgb(210.0/255.0, 210.0/255.0, 212.0/255.0);
-			this.colorBorderButton    = Drawing.Color.FromRgb( 43.0/255.0,  79.0/255.0, 130.0/255.0);
-			this.colorEntered         = Drawing.Color.FromRgb(255.0/255.0, 200.0/255.0,  60.0/255.0);
-			this.colorDefault         = Drawing.Color.FromRgb(101.0/255.0, 151.0/255.0, 210.0/255.0);
-			this.colorDisabled        = Drawing.Color.FromRgb(198.0/255.0, 197.0/255.0, 201.0/255.0);
-			this.colorCaption         = Drawing.Color.FromRgb(255.0/255.0, 214.0/255.0, 114.0/255.0);  // orange
-			this.colorCaptionText     = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorCaptionProposal = Drawing.Color.FromRgb(154.0/255.0, 119.0/255.0,  74.0/255.0);
-			this.colorHilite          = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);
-			this.colorWhite           = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorTextBackground  = Drawing.Color.FromRgb(247.0/255.0, 246.0/255.0, 248.0/255.0);
-			this.colorInfo            = Drawing.Color.FromName("Info");
-
-			r = 1-(1-this.colorCaption.R)*0.25;
-			g = 1-(1-this.colorCaption.G)*0.25;
-			b = 1-(1-this.colorCaption.B)*0.25;
-			this.colorCaptionLight = Drawing.Color.FromRgb(r,g,b);
-
-			r = 1-(1-this.colorCaption.R)*0.5;
-			g = 1-(1-this.colorCaption.G)*0.5;
-			b = 1-(1-this.colorCaption.B)*0.5;
-			this.colorCaptionNF = Drawing.Color.FromRgb(r,g,b);
+			this.colorBlack           = Drawing.Color.FromHexa ("000000");  // noir
+			this.colorGlyph           = Drawing.Color.FromHexa ("5b6473");  // violet foncé
+			this.colorWindow          = Drawing.Color.FromHexa ("ebe9ed");  // violet très clair
+			this.colorFrame           = Drawing.Color.FromHexa ("fafbff");  // violet très très clair
+			this.colorControl         = Drawing.Color.FromHexa ("6b90bd");  // bleu sombre
+			this.colorGreen           = Drawing.Color.FromHexa ("21a121");  // vert foncé
+			this.colorBorder          = Drawing.Color.FromHexa ("8599b1");  // bleu terne
+			this.colorBorderLight     = Drawing.Color.FromHexa ("d2d2d4");  // gris-bleu clair
+			this.colorBorderButton    = Drawing.Color.FromHexa ("2b4f82");  // bleu foncé
+			this.colorEntered         = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
+			this.colorDefault         = Drawing.Color.FromHexa ("ffba01");  // orange
+			this.colorSelected        = Drawing.Color.FromHexa ("ffba01");  // orange
+			this.colorDisabled        = Drawing.Color.FromHexa ("c6c5c9");  // gris-bleu
+			this.colorCaption         = Drawing.Color.FromHexa ("ffd672");  // orange
+			this.colorCaptionNF       = Drawing.Color.FromHexa ("ffba49");  // orange soutenu
+			this.colorCaptionLight    = Drawing.Color.FromHexa ("ffe39d");  // orange léger
+			this.colorCaptionText     = Drawing.Color.FromHexa ("000000");  // noir
+			this.colorCaptionProposal = Drawing.Color.FromHexa ("9a774a");  // brun
+			this.colorHilite          = Drawing.Color.FromHexa ("afc6e1");  // bleu léger
+			this.colorWhite           = Drawing.Color.FromHexa ("ffffff");  // blanc
+			this.colorError           = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
+			this.colorTextBackground  = Drawing.Color.FromHexa ("f7f6f8");  // violet très très clair
+			this.colorInfo            = Drawing.Color.FromName ("Info");
 		}
 		
 
@@ -597,10 +588,22 @@ namespace Epsitec.Common.Widgets.Adorners
 
 					if ( (state&WidgetPaintState.Entered) != 0 )  // bouton survolé ?
 					{
-						double radius = this.RetRadiusScroller(rect);
-						Drawing.Path pTitle = this.PathRoundRectangle(rect, radius);
-						graphics.Rasterizer.AddOutline(pTitle, 1.0);
-						graphics.RenderSolid(this.colorBorderButton);
+						if (rect.Width > 10 && rect.Height > 10)
+						{
+							rect.Deflate (1.0);
+							double radius = this.RetRadius (rect);
+							Drawing.Path pTitle = this.PathRoundRectangle (rect, radius);
+							graphics.Rasterizer.AddOutline (pTitle, 3.0);
+							graphics.RenderSolid (this.colorEntered);
+							rect.Inflate (1.0);
+						}
+
+						{
+							double radius = this.RetRadiusScroller (rect);
+							Drawing.Path pTitle = this.PathRoundRectangle (rect, radius);
+							graphics.Rasterizer.AddOutline (pTitle, 1.0);
+							graphics.RenderSolid (this.colorBorderButton);
+						}
 					}
 					else
 					{
@@ -1378,7 +1381,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				rHilite.Bottom = rHilite.Top-3;
 				Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
 				graphics.Rasterizer.AddSurface(pHilite);
-				graphics.RenderSolid(this.colorHilite);
+				graphics.RenderSolid(this.colorSelected);
 
 				graphics.Rasterizer.AddOutline(pTitle, 1);
 				graphics.RenderSolid(this.colorBorder);
@@ -1922,7 +1925,7 @@ namespace Epsitec.Common.Widgets.Adorners
 					rHilite.Bottom = rHilite.Top-3;
 					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
 					graphics.Rasterizer.AddSurface(pHilite);
-					graphics.RenderSolid(this.colorHilite);
+					graphics.RenderSolid (this.colorSelected);
 
 					graphics.Rasterizer.AddOutline(pTitle, 1);
 					graphics.RenderSolid(this.colorBorder);
@@ -2738,5 +2741,6 @@ namespace Epsitec.Common.Widgets.Adorners
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorTextBackground;
+		protected Drawing.Color		colorSelected;
 	}
 }

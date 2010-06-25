@@ -41,18 +41,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin (tile, true);
+			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,  0, "Rue",                     Marshaler.Create (() => this.Entity.Street.StreetName, x => this.Entity.Street.StreetName = x));
 			builder.CreateTextFieldMulti (tile, 52, "Complément de l'adresse", Marshaler.Create (() => this.Entity.Street.Complement, x => this.Entity.Street.Complement = x));
 			builder.CreateTextField      (tile,  0, "Boîte postale",           Marshaler.Create (() => this.Entity.PostBox.Number,    x => this.Entity.PostBox.Number = x));
-			builder.CreateMargin         (tile, true);
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUICountry(UIBuilder builder)
