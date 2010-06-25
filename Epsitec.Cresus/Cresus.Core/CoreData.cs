@@ -25,10 +25,10 @@ namespace Epsitec.Cresus.Core
 
 	public sealed partial class CoreData : System.IDisposable
 	{
-		public CoreData(bool forceDatabasebCreation)
+		public CoreData(bool forceDatabaseCreation)
 		{
 			this.IsReady = false;
-			this.ForceDatabaseCreation = forceDatabasebCreation;
+			this.ForceDatabaseCreation = forceDatabaseCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
