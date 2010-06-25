@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorEntered         = Drawing.Color.FromRgb(255.0/255.0, 200.0/255.0,  60.0/255.0);
 			this.colorDefault         = Drawing.Color.FromRgb(101.0/255.0, 151.0/255.0, 210.0/255.0);
 			this.colorDisabled        = Drawing.Color.FromRgb(198.0/255.0, 197.0/255.0, 201.0/255.0);
-			this.colorCaption         = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,  73.0/255.0);  // orange
+			this.colorCaption         = Drawing.Color.FromRgb(255.0/255.0, 214.0/255.0, 114.0/255.0);  // orange
 			this.colorCaptionText     = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorCaptionProposal = Drawing.Color.FromRgb(154.0/255.0, 119.0/255.0,  74.0/255.0);
 			this.colorHilite          = Drawing.Color.FromRgb(255.0/255.0, 186.0/255.0,   1.0/255.0);

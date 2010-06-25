@@ -595,6 +595,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.scrollList = new ScrollList ();
 			this.scrollList.Parent = window.Root;
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
+			this.scrollList.AutomaticScrollEnable = false;
 			this.scrollList.Dock = DockStyle.Fill;
 			this.scrollList.SelectionActivated += new EventHandler (this.HandleScrollListSelectionActivated);
 
