@@ -165,6 +165,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Adorners\LookBusiness.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Behaviors\AutoScrollBehavior.cs" />
     <Compile Include="ClippingMode.cs" />
@@ -806,6 +807,7 @@
     <EmbeddedResource Include="Images\TableEdition.icon" />
     <EmbeddedResource Include="Images\TableReadOnly.icon" />
     <EmbeddedResource Include="Images\TableSearch.icon" />
+    <EmbeddedResource Include="Adorners\Resources\LookBusiness.png" />
     <Content Include="Resources\Common.Widgets\Strings.00.resource" />
     <Content Include="Resources\Common.Widgets\Strings.en.resource" />
   </ItemGroup>
