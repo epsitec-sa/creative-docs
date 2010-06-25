@@ -428,6 +428,8 @@ namespace Epsitec.Cresus.Core
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
 
+			changeHandler ();  // met à jour tout de suite le bouton '>/+' selon l'état actuel
+
 			menuButton.Clicked +=
 				delegate
 				{
