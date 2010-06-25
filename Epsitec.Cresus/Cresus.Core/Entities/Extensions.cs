@@ -89,5 +89,20 @@ namespace Epsitec.Cresus.Core.Entities
 			return string.IsNullOrWhiteSpace (entity.Name)
 				&& string.IsNullOrWhiteSpace (entity.ShortName);
 		}
+
+		public static bool IsNull(this AbstractEntity entity)
+		{
+			return entity.UnwrapNullEntity () == null;
+		}
+
+		public static bool IsActive(this AbstractEntity entity)
+		{
+			return entity.UnwrapNullEntity () != null;
+		}
+
+		public static bool CompareWith(this AbstractEntity that, AbstractEntity other)
+		{
+			return that.UnwrapNullEntity () == other.UnwrapNullEntity ();
+		}
 	}
 }
