@@ -398,12 +398,10 @@ namespace Epsitec.Cresus.Core
 			var tileButton = new GlyphButton
 			{
 				Parent = container,
-				GlyphShape = GlyphShape.ArrowRight,
 				PreferredWidth = buttonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (3, 0, 0, 0),
-				Enable = false,
 				AutoFocus = false,
 			};
 
@@ -423,7 +421,7 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, createEnabled: valueCreator != null);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
@@ -575,27 +573,27 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton)
+		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, bool createEnabled)
 		{
 			return
 				delegate
 				{
-					if (editor.InError)
+					if (!editor.InError && editor.HasItemValue)
 					{
-						showButton.GlyphShape = GlyphShape.Plus;
+						showButton.GlyphShape = GlyphShape.ArrowRight;
 						showButton.Enable = true;
 					}
 					else
 					{
-						if (editor.HasItemValue)
+						if (createEnabled)
 						{
-							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.GlyphShape = GlyphShape.Plus;
 							showButton.Enable = true;
 						}
 						else
 						{
-							showButton.GlyphShape = GlyphShape.Plus;
-							showButton.Enable = true;
+							showButton.GlyphShape = GlyphShape.ArrowRight;
+							showButton.Enable = false;
 						}
 					}
 				};
