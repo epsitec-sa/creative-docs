@@ -125,7 +125,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <typeparam name="T">The entity type.</typeparam>
 		/// <param name="entity">The entity.</param>
 		/// <returns><c>null</c> if the entity maps to a null entity; otherwise, the entity.</returns>
-		public static T UnwrapNullEntity<T>(T entity)
+		public static T UnwrapNullEntity<T>(this T entity)
 			where T : AbstractEntity
 		{
 			if (EntityNullReferenceVirtualizer.IsNullEntity (entity))

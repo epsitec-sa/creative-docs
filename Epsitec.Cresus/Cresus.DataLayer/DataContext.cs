@@ -140,6 +140,14 @@ namespace Epsitec.Cresus.DataLayer
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
+		public TEntity CreateRegisteredEmptyEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
+		{
+			var entity = this.CreateEmptyEntity<TEntity> ();
+			this.RegisterEmptyEntity (entity);
+			return entity;
+		}
+
 		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
 			return this.ResolveEntity (entityKey.RowKey, entityKey.EntityId);

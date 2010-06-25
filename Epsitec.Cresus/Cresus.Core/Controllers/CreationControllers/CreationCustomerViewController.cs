@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		
 		protected override CreationStatus GetCreationStatus()
 		{
-			if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.Person))
+			if (this.Entity.Person.UnwrapNullEntity () == null)
 			{
 				return CreationStatus.Empty;
 			}

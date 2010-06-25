@@ -123,6 +123,13 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public void RefreshTextBasedOnSelectedItem()
+		{
+			this.ignoreChange = true;
+			this.Text = this.GetItemText (this.selectedRow);
+			this.ignoreChange = false;
+		}
+		
 		public static HintComparerResult Compare(string text, string typed)
 		{
 			int index = (text == null) ? -1 : text.IndexOf (typed);
@@ -225,10 +232,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					this.selectedRow = value;
 
-					this.ignoreChange = true;
-					this.Text = this.GetItemText (this.selectedRow);
-					this.ignoreChange = false;
-
+					this.RefreshTextBasedOnSelectedItem ();
 					this.OnSelectedItemChanged ();
 				}
 			}

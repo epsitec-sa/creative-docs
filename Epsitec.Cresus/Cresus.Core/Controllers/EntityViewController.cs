@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -27,6 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			yield break;
 		}
+
+		public abstract AbstractEntity GetEntity();
 
 		protected abstract void CreateUI(TileContainer container);
 
@@ -44,10 +47,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
-			EntityViewController controller = EntityViewController.ResolveEntityViewController (name, entity, mode);
+			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode);
 
 			if (controller == null)
 			{
+				if (mode == ViewControllerMode.Creation)
+				{
+					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Edition, orchestrator);
+				}
+
 				return null;
 			}
 
@@ -76,6 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
 		}
+		
 		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
 		{
 			var baseTypePrefix = EntityViewController.GetViewControllerPrefix (mode);
@@ -114,6 +123,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (type == null)
 			{
+				if (mode == ViewControllerMode.Creation)
+				{
+					return null;
+				}
+
 				throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
 			}
 
@@ -156,6 +170,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
 			
 			this.CreateUI (container as TileContainer);
+		}
+
+		public sealed override AbstractEntity GetEntity()
+		{
+			return this.Entity;
 		}
 
 		protected void ReplaceEntity(T entity)
