@@ -183,6 +183,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.LegalPersonEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
@@ -253,6 +254,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.CountryEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -283,6 +285,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Location,
 					ValueSetter = x => this.Location = x.WrapNullEntity (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.LocationEntity> (),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },

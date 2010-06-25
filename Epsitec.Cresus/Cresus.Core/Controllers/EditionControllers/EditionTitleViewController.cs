@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
 		{
-			var title = this.Entity;
-			
-			context.UpdateEmptyEntityStatus (title, isEmpty);
+			var entity = this.Entity;
+
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
