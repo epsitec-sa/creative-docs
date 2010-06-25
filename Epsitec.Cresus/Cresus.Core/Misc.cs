@@ -14,24 +14,6 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
-		/// <summary>
-		/// Compare deux entités, en les considérant comme identiques si elles sont les deux 'nulles'.
-		/// </summary>
-		/// <param name="entity1"></param>
-		/// <param name="entity2"></param>
-		/// <returns></returns>
-		public static bool CompareEntities(AbstractEntity entity1, AbstractEntity entity2)
-		{
-			if (EntityNullReferenceVirtualizer.IsNullEntity (entity1) &&
-				EntityNullReferenceVirtualizer.IsNullEntity (entity2))
-			{
-				return true;
-			}
-
-			return entity1 == entity2;
-		}
-
-
 		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
 		{
 			if (colors1 == null && colors2 == null)

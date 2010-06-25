@@ -44,9 +44,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIRoles  (builder);
 				this.CreateUICommon (builder);
 
-				if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.NaturalPerson) &&
-					!EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.LegalPerson))
-				//?if (this.IsMailUsedByLegalPerson)
+				if (this.Entity.NaturalPerson.IsNull () &&
+					this.Entity.LegalPerson.IsActive ())
 				{
 					this.CreateUICountry  (builder);
 					this.CreateUIMain     (builder);
@@ -73,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					builder.ContentList = null;
 
-					if (EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.LegalPerson))
+					if (this.Entity.LegalPerson.IsNull ())
 					{
 						this.SelectTabPage ("local");  // montre l'onglet "local"
 					}
@@ -226,9 +225,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				return this.Entity.LegalPerson.Contacts
 					.Where (x => x is MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
-					.Cast<MailContactEntity> ()			// les AbstractContactEntity deviennent des MailContactEntity
-					.Select (x => x.Address)						// on s'intéresse à l'entité Address de MailContact
-					.ToList ();										// on veut une liste statique
+					.Cast<MailContactEntity> ()				// les AbstractContactEntity deviennent des MailContactEntity
+					.Select (x => x.Address)				// on s'intéresse à l'entité Address de MailContact
+					.ToList ();								// on veut une liste statique
 			}
 		}
 
@@ -308,7 +307,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			set
 			{
-				if (Misc.CompareEntities (this.selectedCountry, value) == false)
+				if (this.selectedCountry.CompareWith (value) == false)
 				{
 					this.selectedCountry = value;
 
@@ -335,11 +334,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			set
 			{
-				if (Misc.CompareEntities (this.Entity.Address.Location, value) == false)
+				if (this.Entity.Address.Location.CompareWith (value) == false)
 				{
 					this.Entity.Address.Location = value;
 
-					if (!EntityNullReferenceVirtualizer.IsNullEntity (this.Entity.Address.Location))
+					if (this.Entity.Address.Location.IsActive ())
 					{
 						this.countryTextField.SelectedItemIndex = this.countryTextField.Items.FindIndexByValue (this.Entity.Address.Location.Country);
 					}
