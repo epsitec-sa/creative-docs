@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		protected override void RefreshColors()
 		{
-			//	Initialise les couleurs en fonction des réglages de Windows.
+			//	Initialise les couleurs.
 			this.colorBlack           = Drawing.Color.FromHexa ("000000");  // noir
 			this.colorGlyph           = Drawing.Color.FromHexa ("5b6473");  // violet foncé
 			this.colorWindow          = Drawing.Color.FromHexa ("ebe9ed");  // violet très clair
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorWhite           = Drawing.Color.FromHexa ("ffffff");  // blanc
 			this.colorError           = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
 			this.colorTextBackground  = Drawing.Color.FromHexa ("f7f6f8");  // violet très très clair
-			this.colorInfo            = Drawing.Color.FromName ("Info");
+			this.colorInfo            = Drawing.Color.FromName ("Info");  // jaune pâle
 		}
 		
 
