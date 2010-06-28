@@ -17,12 +17,12 @@ namespace Epsitec.Cresus.Services
 			: base (engine)
 		{
 			this.orchestrator    = this.Engine.Orchestrator;
-			this.execution_queue = this.orchestrator.ExecutionQueue;
-			this.client_changes  = new System.Collections.Hashtable ();
+			this.executionQueue = this.orchestrator.ExecutionQueue;
+			this.clientChanges  = new System.Collections.Hashtable ();
 
 			this.orchestrator.RequestExecuted += this.HandleOrchestratorRequestExecuted;
 
-			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
+			System.Diagnostics.Debug.Assert (this.executionQueue.IsRunningAsServer);
 		}
 
 
@@ -52,18 +52,18 @@ namespace Epsitec.Cresus.Services
 			
 			if (n > 1)
 			{
-				int client_id = ids[0].ClientId;
+				int clientId = ids[0].ClientId;
 				
 				for (int i = 1; i < n; i++)
 				{
-					if (ids[i].ClientId != client_id)
+					if (ids[i].ClientId != clientId)
 					{
-						throw new System.InvalidOperationException (string.Format ("Request {0} has ID {1}/{2}; client ID should be {3}.", i, ids[i].ClientId, ids[i].LocalId, client_id));
+						throw new System.InvalidOperationException (string.Format ("Request {0} has ID {1}/{2}; client ID should be {3}.", i, ids[i].ClientId, ids[i].LocalId, clientId));
 					}
 				}
 			}
 			
-			this.execution_queue.Enqueue (null, data, ids);
+			this.executionQueue.Enqueue (null, data, ids);
 		}
 		
 		RequestState[] IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client)
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Services
 			return this.InternalQueryRequestStates (client);
 		}
 		
-		int IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, int change_id, out RequestState[] states)
+		int IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, out RequestState[] states)
 		{
 			//	Retourne les informations sur les états uniquement en cas de changement
 			//	ou si le temps imparti est écoulé.
@@ -85,17 +85,17 @@ namespace Epsitec.Cresus.Services
 			//	Attend jusqu'à ce que l'état soit différent de 'change_id' (ou que le temps
 			//	imparti soit écoulé) :
 			
-			info.WaitChange (change_id);
+			info.WaitChange (changeId);
 			
 			//	L'appelant va être informé de la nouvelle valeur du compteur de changements.
 			//	Il faut considérer ce compteur comme une valeur "opaque"; il n'a pas de sens
 			//	à l'extérieur du serveur !
 			
-			change_id = info.ChangeId;
+			changeId = info.ChangeId;
 			
 			states = this.InternalQueryRequestStates (client);
 			
-			return change_id;
+			return changeId;
 		}
 
 		void IRequestExecutionService.WakeUpQueryRequestStatesUsingFilter(ClientIdentity client)
@@ -110,10 +110,10 @@ namespace Epsitec.Cresus.Services
 			//	Supprime de la queue les requêtes dont l'état correspond à celui
 			//	décrit.
 			
-			lock (this.execution_queue)
+			lock (this.executionQueue)
 			{
 				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-				System.Data.DataRow[]     rows = this.execution_queue.GetDateTimeSortedRows ();
+				System.Data.DataRow[]     rows = this.executionQueue.GetDateTimeSortedRows ();
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveRequestStates: ");
 				
@@ -124,27 +124,27 @@ namespace Epsitec.Cresus.Services
 				
 				for (int i = 0; i < rows.Length; i++)
 				{
-					Database.DbKey row_key   = new Database.DbKey (rows[i]);
-					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					Database.DbKey rowKey   = new Database.DbKey (rows[i]);
+					ExecutionState rowState = this.executionQueue.GetRequestExecutionState (rows[i]);
 						
 					//	Comme l'exécution est faite sur le serveur, il faut ajuster l'état d'exécution
 					//	de manière à refléter la réalité :
 					
-					switch (row_state)
+					switch (rowState)
 					{
 						case Requests.ExecutionState.ExecutedByClient:
-							row_state = Requests.ExecutionState.ExecutedByServer;
+							rowState = Requests.ExecutionState.ExecutedByServer;
 							break;
 						
 						case Requests.ExecutionState.Conflicting:
-							row_state = Requests.ExecutionState.ConflictingOnServer;
+							rowState = Requests.ExecutionState.ConflictingOnServer;
 							break;
 					}
 					
 					for (int j = 0; j < states.Length; j++)
 					{
-						if ((states[j].RequestId == row_key.Id.Value) &&
-							(states[j].State == (int)row_state))
+						if ((states[j].RequestId == rowKey.Id.Value) &&
+							(states[j].State == (int)rowState))
 						{
 							list.Add (rows[i]);
 							
@@ -173,24 +173,24 @@ namespace Epsitec.Cresus.Services
 			end:
 				if (list.Count > 0)
 				{
-					this.execution_queue.RemoveRequestRows (list);
+					this.executionQueue.RemoveRequestRows (list);
 				}
 			}
 		}
 		
 		void IRequestExecutionService.RemoveAllRequestStates(ClientIdentity client)
 		{
-			lock (this.execution_queue)
+			lock (this.executionQueue)
 			{
 				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-				System.Data.DataRow[]     rows = this.execution_queue.GetDateTimeSortedRows ();
+				System.Data.DataRow[]     rows = this.executionQueue.GetDateTimeSortedRows ();
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveAllRequestStates for client " + client.ToString ());
 				
 				for (int i = 0; i < rows.Length; i++)
 				{
 					Database.DbKey row_key   = new Database.DbKey (rows[i]);
-					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					ExecutionState row_state = this.executionQueue.GetRequestExecutionState (rows[i]);
 					
 					if (row_key.Id.ClientId == client.Id)
 					{
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Services
 				}
 				if (list.Count > 0)
 				{
-					this.execution_queue.RemoveRequestRows (list);
+					this.executionQueue.RemoveRequestRows (list);
 				}
 			}
 		}
@@ -213,17 +213,17 @@ namespace Epsitec.Cresus.Services
 
 			List<RequestState> list = new List<RequestState> ();
 			
-			lock (this.execution_queue)
+			lock (this.executionQueue)
 			{
-				System.Data.DataRow[] rows = this.execution_queue.GetDateTimeSortedRows ();
+				System.Data.DataRow[] rows = this.executionQueue.GetDateTimeSortedRows ();
 				
 				for (int i = 0; i < rows.Length; i++)
 				{
-					Database.DbKey row_key = new Database.DbKey (rows[i]);
+					Database.DbKey rowKey = new Database.DbKey (rows[i]);
 					
-					if (row_key.Id.ClientId == client.Id)
+					if (rowKey.Id.ClientId == client.Id)
 					{
-						Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
+						Requests.ExecutionState state = this.executionQueue.GetRequestExecutionState (rows[i]);
 						
 						//	Comme l'exécution a été faite sur le serveur, il faut ajuster l'état d'exécution
 						//	de manière à refléter la réalité :
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Services
 								break;
 						}
 						
-						list.Add (new RequestState (row_key.Id.Value, (int) state));
+						list.Add (new RequestState (rowKey.Id.Value, (int) state));
 					}
 				}
 			}
@@ -247,20 +247,20 @@ namespace Epsitec.Cresus.Services
 			return list.ToArray ();
 		}
 		
-		private ClientChangeInfo GetClientChangeInfo(int client_id)
+		private ClientChangeInfo GetClientChangeInfo(int clientId)
 		{
 			ClientChangeInfo info;
 			
-			lock (this.client_changes)
+			lock (this.clientChanges)
 			{
-				if (this.client_changes.Contains (client_id))
+				if (this.clientChanges.Contains (clientId))
 				{
-					info = this.client_changes[client_id] as ClientChangeInfo;
+					info = this.clientChanges[clientId] as ClientChangeInfo;
 				}
 				else
 				{
-					info = new ClientChangeInfo (client_id);
-					this.client_changes[client_id] = info;
+					info = new ClientChangeInfo (clientId);
+					this.clientChanges[clientId] = info;
 				}
 			}
 			
@@ -268,13 +268,13 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
-		private void HandleOrchestratorRequestExecuted(Orchestrator sender, Database.DbId request_id)
+		private void HandleOrchestratorRequestExecuted(Orchestrator sender, Database.DbId requestId)
 		{
 			//	Une requête vient d'être exécutée par l'orchestrateur. Si un client
 			//	est en attente de modifications d'état de ses requêtes, il faut le
 			//	réveiller.
 			
-			ClientChangeInfo info = this.GetClientChangeInfo (request_id.ClientId);
+			ClientChangeInfo info = this.GetClientChangeInfo (requestId.ClientId);
 			
 			info.NotifyChange ();
 		}
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Services
 		#endregion
 		
 		private Orchestrator					orchestrator;
-		private ExecutionQueue					execution_queue;
-		private System.Collections.Hashtable	client_changes;
+		private ExecutionQueue					executionQueue;
+		private System.Collections.Hashtable	clientChanges;
 	}
 }

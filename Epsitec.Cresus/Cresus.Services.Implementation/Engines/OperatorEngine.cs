@@ -69,9 +69,8 @@ namespace Epsitec.Cresus.Services
 		{
 			public CreateRoamingClientOperation(OperatorEngine oper, string name)
 			{
-//-				System.Diagnostics.Debugger.Break ();
 				this.oper = oper;
-				this.client_name = name;
+				this.clientName = name;
 				this.Start ();
 			}
 			
@@ -88,7 +87,7 @@ namespace Epsitec.Cresus.Services
 			{
 				get
 				{
-					return this.client_id;
+					return this.clientId;
 				}
 			}
 			
@@ -96,7 +95,7 @@ namespace Epsitec.Cresus.Services
 			{
 				get
 				{
-					return this.client_name;
+					return this.clientName;
 				}
 			}
 			
@@ -109,10 +108,10 @@ namespace Epsitec.Cresus.Services
 
 					this.temp = new Epsitec.Common.IO.TemporaryFile (path);
 					
-					this.Add (this.Step_CreateClient);
-					this.Add (this.Step_CopyDatabase);
-					this.Add (this.Step_CompressDatabase);
-					this.Add (this.Step_Finished);
+					this.Add (this.StepCreateClient);
+					this.Add (this.StepCopyDatabase);
+					this.Add (this.StepCompressDatabase);
+					this.Add (this.StepFinished);
 					
 					base.ProcessOperation ();
 				}
@@ -129,24 +128,24 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			
-			private void Step_CreateClient()
+			private void StepCreateClient()
 			{
 				Database.DbInfrastructure infrastructure = this.oper.Engine.Orchestrator.Infrastructure;
-				Database.DbClientManager  client_manager = infrastructure.ClientManager;
+				Database.DbClientManager  clientManager = infrastructure.ClientManager;
 				
 				using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
 				{
 					infrastructure.Logger.CreatePermanentEntry (transaction);
 					
-					this.client_id = client_manager.CreateAndInsertNewClient (this.client_name).ClientId;
+					this.clientId = clientManager.CreateAndInsertNewClient (this.clientName).ClientId;
 					
-					client_manager.PersistToBase (transaction);
+					clientManager.PersistToBase (transaction);
 					
 					transaction.Commit ();
 				}
 			}
 			
-			private void Step_CopyDatabase()
+			private void StepCopyDatabase()
 			{
 				Database.DbInfrastructure infrastructure = this.oper.Engine.Orchestrator.Infrastructure;
 				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
@@ -159,7 +158,7 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 			
-			private void Step_CompressDatabase()
+			private void StepCompressDatabase()
 			{
 				System.Diagnostics.Debug.WriteLine ("Compressing...");
 				
@@ -167,7 +166,7 @@ namespace Epsitec.Cresus.Services
 				System.IO.MemoryStream memory     = new System.IO.MemoryStream ();
 				System.IO.Stream       compressed = Common.IO.Compression.CreateDeflateStream (memory, 9);
 				
-				int total_read = 0;
+				int totalRead = 0;
 				
 				for (;;)
 				{
@@ -180,7 +179,7 @@ namespace Epsitec.Cresus.Services
 					}
 					
 					compressed.Write (buffer, 0, read);
-					total_read += read;
+					totalRead += read;
 				}
 				
 				compressed.Close ();
@@ -190,7 +189,7 @@ namespace Epsitec.Cresus.Services
 				this.data = memory.ToArray ();
 			}
 			
-			private void Step_Finished()
+			private void StepFinished()
 			{
 				System.Diagnostics.Debug.WriteLine ("Ready for data transfer.");
 			}
@@ -200,8 +199,8 @@ namespace Epsitec.Cresus.Services
 			Epsitec.Common.IO.TemporaryFile		temp;
 			OperatorEngine						oper;
 			byte[]								data;
-			int									client_id;
-			string								client_name;
+			int									clientId;
+			string								clientName;
 		}
 		#endregion
 	}

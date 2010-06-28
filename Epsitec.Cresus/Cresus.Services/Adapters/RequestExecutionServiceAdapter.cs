@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Services.Adapters
 
 		public void WakeUpQueryRequestStatesUsingFilter(ClientIdentity client)
 		{
-			this.WakeUpQueryRequestStatesUsingFilter (client);
+			this.target.WakeUpQueryRequestStatesUsingFilter (client);
 		}
 
 		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)

@@ -67,15 +67,7 @@ namespace Epsitec.Cresus.Replication
 		/// </returns>
 		public bool Contains(Database.DbId tableId)
 		{
-			for (int i = 0; i < chunks.Length; i++)
-			{
-				if (chunks[i].TableId == tableId)
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return this.chunks.Any (c => c.TableId == tableId);
 		}
 
 		/// <summary>

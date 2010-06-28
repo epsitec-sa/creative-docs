@@ -43,12 +43,13 @@ namespace Epsitec.Cresus.Replication
 			long syncIdMin = syncStartId.Value;
 			long syncIdMax = syncEndId.Value;
 			
-			DbSelectCondition condition = new DbSelectCondition ();
-
 			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
 			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnRefLog]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
 
-			condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2),
+			};
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -63,13 +64,14 @@ namespace Epsitec.Cresus.Replication
 			
 			System.Diagnostics.Debug.Assert (DbId.GetClass (syncIdMin) == DbIdClass.Standard);
 			System.Diagnostics.Debug.Assert (DbId.GetClass (syncIdMax) == DbIdClass.Standard);
-			
-			DbSelectCondition condition = new DbSelectCondition ();
 
 			DbAbstractCondition part1 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.GreaterThanOrEqual, syncIdMin);
 			DbAbstractCondition part2 = DbSimpleCondition.CreateCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbSimpleConditionOperator.LessThanOrEqual, syncIdMax);
 
-			condition.Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2);
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = new DbConditionCombiner (DbConditionCombinerOperator.And, part1, part2)
+			};
 
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -79,21 +81,20 @@ namespace Epsitec.Cresus.Replication
 		
 		public System.Data.DataTable ExtractDataUsingIds(DbTable table, IEnumerable<long> ids)
 		{
-			DbSelectCondition condition = new DbSelectCondition ();
 			DbColumn          idColumn  = table.Columns[Tags.ColumnId];
 			DbTableColumn     tableCol  = new DbTableColumn (idColumn);
 
-			DbConditionCombiner conditionCombiner = new DbConditionCombiner ()
-			{
-				Combiner = DbConditionCombinerOperator.Or,
-			};
-						
+			DbConditionCombiner conditionCombiner = new DbConditionCombiner (DbConditionCombinerOperator.Or);
+	
 			foreach (long id in ids)
 			{
 				conditionCombiner.AddCondition (DbSimpleCondition.CreateCondition (tableCol, DbSimpleConditionOperator.Equal, id));
 			}
 
-			condition.Condition = conditionCombiner;
+			DbSelectCondition condition = new DbSelectCondition ()
+			{
+				Condition = conditionCombiner
+			};
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
