@@ -18,6 +18,9 @@ namespace Epsitec.Common.Types.Converters
 			var getterFunc = getter.Compile ();
 			var marshaler  = Marshaler.Create (() => getterFunc (source)[index], null);
 
+			marshaler.getterExpression = getter;
+			marshaler.collectionIndex = index;
+
 			return marshaler;
 		}
 
@@ -25,6 +28,8 @@ namespace Epsitec.Common.Types.Converters
 		{
 			var getterFunc = getter.Compile ();
 			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
+
+			marshaler.getterExpression = getter;
 
 			return marshaler;
 		}
@@ -35,6 +40,8 @@ namespace Epsitec.Common.Types.Converters
 			var getterFunc = getter.Compile ();
 			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
 
+			marshaler.getterExpression = getter;
+			
 			return marshaler;
 		}
 
@@ -107,7 +114,20 @@ namespace Epsitec.Common.Types.Converters
 			return default (T);
 		}
 
+		public Expression GetGetterExpression()
+		{
+			return this.getterExpression;
+		}
+
+		public int GetCollectionIndex()
+		{
+			return this.collectionIndex;
+		}
+
 		protected abstract object GetObjectValue();
+
+		private Expression getterExpression;
+		private int collectionIndex = -1;
 	}
 
 	public abstract class Marshaler<T> : Marshaler

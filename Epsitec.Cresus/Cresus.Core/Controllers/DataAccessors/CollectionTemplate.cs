@@ -174,8 +174,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			T source = entity as T;
 
-			data.EntityAccessor = marshaler;
-			data.DataType		= SummaryDataType.CollectionItem;
+			data.EntityMarshaler = marshaler;
+			data.DataType		 = SummaryDataType.CollectionItem;
 			
 			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (source);
 

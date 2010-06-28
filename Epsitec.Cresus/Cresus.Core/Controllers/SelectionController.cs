@@ -9,6 +9,7 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -37,10 +38,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<T> ValueGetter
+		public Expression<System.Func<T>> ValueGetter
 		{
-			get;
-			set;
+			set
+			{
+				this.valueGetterExpression = value;
+				this.valueGetter = null;
+			}
 		}
 
 		public System.Func<ValueProxy> ValueProxyGetter
@@ -76,14 +80,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public T GetValue()
 		{
-			if (this.ValueGetter == null)
+			if (this.valueGetterExpression == null)
 			{
 				return null;
 			}
-			else
+			if (this.valueGetter == null)
 			{
-				return this.ValueGetter ();
+				this.valueGetter = this.valueGetterExpression.Compile ();
 			}
+
+
+			return this.valueGetter ();
+		}
+
+		public Expression<System.Func<T>> GetValueExpression()
+		{
+			return this.valueGetterExpression;
 		}
 
 		public void SetValue(T value)
@@ -166,7 +178,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.AttachMultipleValueSelector (widget);
 			}
-			else if ((this.ValueGetter != null) &&
+			else if ((this.valueGetterExpression != null) &&
 					 (this.ValueSetter != null))
 			{
 				this.AttachSingleValueSelector (widget);
@@ -260,6 +272,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return result;
 		}
+
+
+		private Expression<System.Func<T>> valueGetterExpression;
+		private System.Func<T> valueGetter;
 	}
 
 	public class ValueProxy

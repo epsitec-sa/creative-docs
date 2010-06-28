@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.entity = entity;
 
 				var context    = this.DataContext;
-				var controller = this.CreateCompactEntityViewController ();
+				var controller = this.CreateRootSummaryViewController ();
 
 				controller.DataContext = context;
 
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewControllers.ForEach (controller => controller.AboutToSave (e.DataContext));
 		}
 
-		private EntityViewController CreateCompactEntityViewController()
+		private EntityViewController CreateRootSummaryViewController()
 		{
 			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator);
 		}

@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 
-		public Marshaler						EntityAccessor
+		public Marshaler						EntityMarshaler
 		{
 			get;
 			set;
@@ -293,14 +293,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
 		{
-			if (this.EntityAccessor != null)
+			if (this.EntityMarshaler != null)
 			{
-				var entity = this.EntityAccessor.GetValue<AbstractEntity> ();
-
-				if (entity != null)
-				{
-					return EntityViewController.CreateEntityViewController ("ViewController", entity, ViewControllerMode.Edition, orchestrator);
-				}
+				return EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator);
 			}
 
 			return null;
