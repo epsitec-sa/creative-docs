@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				switch (row.RowState)
 				{
+					case System.Data.DataRowState.Detached:
 					case System.Data.DataRowState.Unchanged:
 						break;
 

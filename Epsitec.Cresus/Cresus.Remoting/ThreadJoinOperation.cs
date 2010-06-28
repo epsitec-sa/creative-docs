@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Remoting
 			{
 				return true;
 			}
+
 			if (minimumProgress > 100)
 			{
 				System.Threading.Thread.Sleep (timeout);
@@ -41,15 +42,7 @@ namespace Epsitec.Cresus.Remoting
 			}
 			
 			//	Simply wait on the join, using the specified timeout value.
-
-			if (this.thread.Join (timeout))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return this.thread.Join (timeout);
 		}
 
 		

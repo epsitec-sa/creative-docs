@@ -67,17 +67,25 @@
     <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelper.cs" />
+    <Compile Include="UnitTestDbInfrastructure.cs" />
     <Compile Include="UnitTestEntityConstrainer.cs" />
     <Compile Include="UnitTestPerformance.cs" />
     <Compile Include="UnitTestDataBrowser.cs" />
     <Compile Include="UnitTestDataContext.cs" />
     <Compile Include="UnitTestEntities.cs" />
     <Compile Include="UnitTestFormState.cs" />
+    <Compile Include="UnitTestReplication.cs" />
+    <Compile Include="UnitTestRequest.cs" />
+    <Compile Include="UnitTestRequestFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common.Dialogs\Common.Dialogs.csproj">
       <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
       <Name>Common.Dialogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
@@ -106,6 +114,30 @@
     <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
+      <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
+      <Name>Cresus.Remoting.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj">
+      <Project>{3F7AF584-156E-4805-9CE7-9440C9F225D0}</Project>
+      <Name>Cresus.Remoting.KernelInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Remoting\Cresus.Remoting.csproj">
+      <Project>{C3C59295-14DD-4AF7-B22A-0F8045DA671C}</Project>
+      <Name>Cresus.Remoting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Replication\Cresus.Replication.csproj">
+      <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>
+      <Name>Cresus.Replication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Requests\Cresus.Requests.csproj">
+      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
+      <Name>Cresus.Requests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Services\Cresus.Services.csproj">
+      <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
+      <Name>Cresus.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

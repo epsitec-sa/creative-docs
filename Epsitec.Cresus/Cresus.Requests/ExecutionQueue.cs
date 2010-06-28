@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Requests
 		public ExecutionQueue(DbInfrastructure infrastructure, IDbAbstraction database)
 		{
 			this.infrastructure      = infrastructure;
-			this.database            = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
+			this.database            = database ?? this.infrastructure.DefaultDbAbstraction;
 			this.queueChangedEvent   = new AutoResetEvent (false);
 			this.stateChangedEvent   = new AutoResetEvent (false);
 			this.isServer            = this.infrastructure.LocalSettings.IsServer;
