@@ -176,7 +176,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			leaf = null;
 			id   = null;
-			
+
 			if (last < 0)
 			{
 				return false;
@@ -186,12 +186,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			for (int i = 0; i < last; i++)
 			{
-				string fieldId = EntityFieldPath.ParseFieldId (fields[i]);
+				string rawId   = fields[i];
+				string fieldId = EntityFieldPath.ParseFieldId (rawId);
 
 				switch (node.InternalGetFieldRelation (fieldId))
 				{
 					case FieldRelation.Collection:
-						node = EntityFieldPath.NavigateCollection (node, fieldId, EntityFieldPath.ParseCollectionIndex (fields[i]));
+						node = EntityFieldPath.NavigateCollection (node, fieldId, EntityFieldPath.ParseCollectionIndex (rawId));
 						break;
 
 					case FieldRelation.Reference:
@@ -202,7 +203,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						node = null;
 						break;
 				}
-				
+
 				if (node == null)
 				{
 					return false;
@@ -222,9 +223,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="leaf">The leaf entity id.</param>
 		/// <param name="id">The id of the field in the leaf entity.</param>
 		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
-		public bool Navigate(Druid root, out Druid leaf, out string id)
+		public bool NavigateSchema(Druid root, out Druid leaf, out string id)
 		{
-			return this.Navigate (EntityContext.Current, root, out leaf, out id);
+			return this.NavigateSchema (EntityContext.Current, root, out leaf, out id);
 		}
 
 		/// <summary>
@@ -235,9 +236,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="leaf">The leaf entity id.</param>
 		/// <param name="id">The id of the field in the leaf entity.</param>
 		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
-		public bool Navigate(out Druid leaf, out string id)
+		public bool NavigateSchema(out Druid leaf, out string id)
 		{
-			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
+			return this.NavigateSchema (EntityContext.Current, this.entityId, out leaf, out id);
 		}
 
 		/// <summary>
@@ -251,9 +252,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>
 		/// 	<c>true</c> if the path could be resolved; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Navigate(EntityContext context, out Druid leaf, out string id)
+		public bool NavigateSchema(EntityContext context, out Druid leaf, out string id)
 		{
-			return this.Navigate (EntityContext.Current, this.entityId, out leaf, out id);
+			return this.NavigateSchema (EntityContext.Current, this.entityId, out leaf, out id);
 		}
 
 		/// <summary>
@@ -266,7 +267,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>
 		/// 	<c>true</c> if the path could be resolved; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Navigate(EntityContext context, Druid root, out Druid leaf, out string id)
+		public bool NavigateSchema(EntityContext context, Druid root, out Druid leaf, out string id)
 		{
 			if (root.IsEmpty)
 			{
@@ -345,7 +346,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="root">The root entity.</param>
 		/// <returns>The field or <c>null</c>.</returns>
-		public StructuredTypeField NavigateReadField(AbstractEntity root)
+		public StructuredTypeField NavigateReadSchema(AbstractEntity root)
 		{
 			AbstractEntity leaf;
 			string id;

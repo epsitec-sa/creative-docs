@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Common.Types.Converters
 {
@@ -12,6 +13,31 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	public abstract class Marshaler
 	{
+		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> getter, int index)
+		{
+			var getterFunc = getter.Compile ();
+			var marshaler  = Marshaler.Create (() => getterFunc (source)[index], null);
+
+			return marshaler;
+		}
+
+		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2>> getter, System.Action<T1, T2> setter)
+		{
+			var getterFunc = getter.Compile ();
+			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
+
+			return marshaler;
+		}
+		
+		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getter, System.Action<T1, T2?> setter)
+			where T2 : struct
+		{
+			var getterFunc = getter.Compile ();
+			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
+
+			return marshaler;
+		}
+
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
@@ -19,7 +45,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="getter">The getter.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
-		public static Marshaler Create<T>(System.Func<T> getter, System.Action<T> setter)
+		public static Marshaler<T> Create<T>(System.Func<T> getter, System.Action<T> setter)
 		{
 			return new Marshalers.NonNullableMarshaler<T>
 			{
@@ -36,7 +62,7 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="getter">The getter.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
-		public static Marshaler Create<T>(System.Func<T?> getter, System.Action<T?> setter)
+		public static Marshaler<T?> Create<T>(System.Func<T?> getter, System.Action<T?> setter)
 			where T : struct
 		{
 			return new Marshalers.NullableMarshaler<T>
@@ -68,5 +94,31 @@ namespace Epsitec.Common.Types.Converters
 		/// 	<c>true</c> if the specified text can be converted; otherwise, <c>false</c>.
 		/// </returns>
 		public abstract bool CanConvert(string text);
+		
+		public T GetValue<T>()
+		{
+			object value = this.GetObjectValue ();
+
+			if (value is T)
+			{
+				return (T) value;
+			}
+
+			return default (T);
+		}
+
+		protected abstract object GetObjectValue();
+	}
+
+	public abstract class Marshaler<T> : Marshaler
+	{
+		public abstract void SetValue(T value);
+
+		public abstract T GetValue();
+
+		protected override object GetObjectValue()
+		{
+			return this.GetValue ();
+		}
 	}
 }

@@ -10,18 +10,19 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	internal static class Common
 	{
-		public static void CreateUIMailContacts<T1>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>> collectionResolver)
+		public static void CreateUIMailContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIMailContacts<T1, Entities.AbstractContactEntity, Entities.MailContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIMailContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver)
+		private static void InternalCreateUIMailContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.MailContactEntity, T2, new ()
@@ -46,13 +47,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUITelecomContacts<T1>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>> collectionResolver)
+		public static void CreateUITelecomContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUITelecomContacts<T1, Entities.AbstractContactEntity, Entities.TelecomContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUITelecomContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver)
+		private static void InternalCreateUITelecomContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.TelecomContactEntity, T2, new ()
@@ -77,13 +78,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIUriContacts<T1>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>> collectionResolver)
+		public static void CreateUIUriContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIUriContacts<T1, Entities.AbstractContactEntity, Entities.UriContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIUriContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver)
+		private static void InternalCreateUIUriContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : Entities.UriContactEntity, T2, new ()

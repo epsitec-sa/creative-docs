@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Controllers;
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTitle		= UIBuilder.FormatText ("Pays"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Pays: ", x.Name, "\n", "Code: ", x.Code)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")),
-					EntityAccessor		= this.EntityGetter,
+					EntityAccessor		= this.EntityMarshaler,
 				});
 
 			containerController.GenerateTiles ();

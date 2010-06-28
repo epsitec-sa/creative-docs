@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTitle		= UIBuilder.FormatText ("Ville"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Numéro postal: ", x.PostalCode, "\n", "Ville: ", x.Name)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.PostalCode, " ", x.Name)),
-					EntityAccessor		= this.EntityGetter,
+					EntityAccessor		= this.EntityMarshaler,
 				});
 
 			containerController.GenerateTiles ();

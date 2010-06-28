@@ -274,7 +274,7 @@ namespace Epsitec.Common.Dialogs
 						return false;
 					}
 
-					path.Navigate (this.defaultContext, rootId, out entityId, out fieldId);
+					path.NavigateSchema (this.defaultContext, rootId, out entityId, out fieldId);
 
 					if (this.defaultContext.IsNullable (entityId, fieldId) == false)
 					{
