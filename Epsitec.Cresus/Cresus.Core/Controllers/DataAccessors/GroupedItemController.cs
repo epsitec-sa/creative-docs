@@ -64,10 +64,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
 		public bool SetItemIndex(int newIndex)
 		{
-			int oldIndex = this.GetItemIndex ();
+			int oldIndex  = this.GetItemIndex ();
+			int itemCount = this.GetItemCount ();
 
+			//	Be careful: the caller is specifying an index relative to the CompatibleItems
+			//	collection, not relative to all items. We have to map from the index in the
+			//	filtered array to the one in the real array :
+			
 			int realOldIndex = this.items.IndexOf (this.item);
-			int realNewIndex = newIndex - oldIndex + realOldIndex;
+			int realNewIndex = newIndex == itemCount ? this.items.Count : this.items.IndexOf (this.CompatibleItems.ElementAt (newIndex));
 
 			System.Diagnostics.Debug.Assert (realOldIndex >= 0);
 
