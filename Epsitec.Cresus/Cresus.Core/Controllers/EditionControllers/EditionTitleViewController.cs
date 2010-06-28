@@ -36,12 +36,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (this.Entity.IsEmpty ())
+			var entity = this.Entity;
+
+			if (entity.IsEmpty ())
 			{
 				return EditionStatus.Empty;
 			}
 			else
 			{
+				if (string.IsNullOrWhiteSpace (entity.Name))
+				{
+					return EditionStatus.Invalid;
+				}
+
 				return EditionStatus.Valid;
 			}
 		}
@@ -58,7 +65,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateWarning   (tile);
-			builder.CreateTextField (tile, 0, "Titre", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			builder.CreateTextField (tile, 0, "Titre abrégé", Marshaler.Create (() => this.Entity.ShortName, x => this.Entity.ShortName = x));
+			builder.CreateTextField (tile, 0, "Titre complet", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 		}
 	}
 }

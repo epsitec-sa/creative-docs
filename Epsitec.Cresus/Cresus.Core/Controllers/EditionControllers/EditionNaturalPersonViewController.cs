@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Gender,
 					ValueSetter = x => this.Entity.Gender = x.WrapNullEntity (),
+					ValueProxyGetter = () => new ValueProxy (null, ViewControllerMode.None),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },

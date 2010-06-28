@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (mode == ViewControllerMode.Creation)
 				{
-//-					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Edition, orchestrator);
+					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Summary, orchestrator);
 				}
 
 				return null;

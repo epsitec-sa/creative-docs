@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.NaturalPerson",
 					Title				= UIBuilder.FormatText ("Titre"),
 					CompactTitle		= UIBuilder.FormatText ("Titre"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Abrégé: ", x.ShortName, "\n", "Complet: ", x.Name)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
 					EntityAccessor		= this.EntityGetter,
 				});

@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
-					ValueProxy   = this.ProxyLegalPersonToCustomer,
+					ValueProxyGetter = this.ProxyLegalPersonToCustomer,
 					ValueCreator = this.CreateLegalPersonCustomer,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private AbstractEntity ProxyLegalPersonToCustomer()
+		private ValueProxy ProxyLegalPersonToCustomer()
 		{
 			var person = this.Entity.LegalPerson;
 
@@ -245,7 +245,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			else
 			{
-				return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
+				var customer = CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
+				return new ValueProxy (customer, ViewControllerMode.Summary);
 			}
 		}
 
