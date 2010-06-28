@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			
 			System.Diagnostics.Debug.Assert (data.DataType == SummaryDataType.Undefined);
 			
-			if (data.EntityAccessor == null)
+			if (data.EntityMarshaler == null)
 			{
 				data.DataType = SummaryDataType.EmptyItem;
 				this.EmptyItems.Add (data);

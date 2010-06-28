@@ -65,6 +65,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			var entity = marshaler.GetValue<AbstractEntity> ();
+			System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + marshaler.GetGetterExpression ().ToString () + " [ " + marshaler.GetCollectionIndex ().ToString () + " ]");
+			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
+		}
+
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
 			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode);

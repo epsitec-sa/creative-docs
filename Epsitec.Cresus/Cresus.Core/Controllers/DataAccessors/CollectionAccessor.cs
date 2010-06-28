@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					var name = SummaryData.BuildName (this.template.NamePrefix, index);
 					var data = summaryDataGetter (name, index);
 
-					var marshaler = Marshaler.Create (source, this.collectionResolverExpression, index); 
+					var marshaler = Marshaler.Create (source, this.collectionResolverExpression, collection.IndexOf (item));
 
 					this.template.BindSummaryData (data, item, marshaler, this);
 
