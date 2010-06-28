@@ -257,9 +257,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				var person = entity as NaturalPersonEntity;
 				return UIBuilder.FormatText (person.Firstname, person.Lastname);
 			}
-			if (entity is CustomerEntity)
+			if (entity is RelationEntity)
 			{
-				var customer = entity as CustomerEntity;
+				var customer = entity as RelationEntity;
 				return UIBuilder.FormatText (BrowserViewController.GetEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
 			}
 			

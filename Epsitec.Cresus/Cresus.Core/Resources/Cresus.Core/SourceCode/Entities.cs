@@ -25,7 +25,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AV1]", typeof (Epsitec.Cresus.Core.Entities.TelecomTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A52]", typeof (Epsitec.Cresus.Core.Entities.UriContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A62]", typeof (Epsitec.Cresus.Core.Entities.UriSchemeEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AB2]", typeof (Epsitec.Cresus.Core.Entities.CustomerEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AB2]", typeof (Epsitec.Cresus.Core.Entities.RelationEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AG2]", typeof (Epsitec.Cresus.Core.Entities.FolderEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AO2]", typeof (Epsitec.Cresus.Core.Entities.DocumentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A63]", typeof (Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity))]
@@ -1838,14 +1838,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.Customer Entity
+#region Epsitec.Cresus.Core.Relation Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>Customer</c> entity.
+	///	The <c>Relation</c> entity.
 	///	designer:cap/L0AB2
 	///	</summary>
-	public partial class CustomerEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class RelationEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>Id</c> field.
@@ -1936,11 +1936,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>CustomerSince</c> field.
+		///	The <c>FirstContactDate</c> field.
 		///	designer:fld/L0AB2/L0AF2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AF2]")]
-		public global::Epsitec.Common.Types.Date? CustomerSince
+		public global::Epsitec.Common.Types.Date? FirstContactDate
 		{
 			get
 			{
@@ -1948,12 +1948,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.Date? oldValue = this.CustomerSince;
+				global::Epsitec.Common.Types.Date? oldValue = this.FirstContactDate;
 				if (oldValue != value)
 				{
-					this.OnCustomerSinceChanging (oldValue, value);
+					this.OnFirstContactDateChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0AF2]", oldValue, value);
-					this.OnCustomerSinceChanged (oldValue, value);
+					this.OnFirstContactDateChanged (oldValue, value);
 				}
 			}
 		}
@@ -1978,16 +1978,16 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultAddressChanged(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
 		partial void OnSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
-		partial void OnCustomerSinceChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnCustomerSinceChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnFirstContactDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnFirstContactDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.CustomerEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.RelationEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.CustomerEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.RelationEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 75);	// [L0AB2]
 		public static readonly new string EntityStructuredTypeKey = "[L0AB2]";
@@ -2075,19 +2075,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AG2/L0AL2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AL2]")]
-		public global::Epsitec.Cresus.Core.Entities.CustomerEntity Customer
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity Customer
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.CustomerEntity> ("[L0AL2]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AL2]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue = this.Customer;
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Customer;
 				if (oldValue != value)
 				{
 					this.OnCustomerChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.CustomerEntity> ("[L0AL2]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AL2]", oldValue, value);
 					this.OnCustomerChanged (oldValue, value);
 				}
 			}
@@ -2167,8 +2167,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExternalReferenceChanged(string oldValue, string newValue);
 		partial void OnInternalReferenceChanging(string oldValue, string newValue);
 		partial void OnInternalReferenceChanged(string oldValue, string newValue);
-		partial void OnCustomerChanging(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
-		partial void OnCustomerChanged(global::Epsitec.Cresus.Core.Entities.CustomerEntity oldValue, global::Epsitec.Cresus.Core.Entities.CustomerEntity newValue);
+		partial void OnCustomerChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnCustomerChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);

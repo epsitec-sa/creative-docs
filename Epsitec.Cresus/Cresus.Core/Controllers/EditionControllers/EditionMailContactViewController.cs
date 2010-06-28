@@ -185,8 +185,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
-					ValueProxyGetter = this.ProxyLegalPersonToCustomer,
-					ValueCreator = this.CreateLegalPersonCustomer,
+					ValueProxyGetter = this.ProxyLegalPersonToRelation,
+					ValueCreator = this.CreateLegalPersonRelation,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private ValueProxy ProxyLegalPersonToCustomer()
+		private ValueProxy ProxyLegalPersonToRelation()
 		{
 			var person = this.Entity.LegalPerson;
 
@@ -250,13 +250,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private NewValue<AbstractEntity> CreateLegalPersonCustomer(DataContext context)
+		private NewValue<AbstractEntity> CreateLegalPersonRelation(DataContext context)
 		{
-			var customer = context.CreateRegisteredEmptyEntity<CustomerEntity> ();
+			var customer = context.CreateRegisteredEmptyEntity<RelationEntity> ();
 			var person   = context.CreateRegisteredEmptyEntity<LegalPersonEntity> ();
 
 			customer.Person = person;
-			customer.CustomerSince = Date.Today;
+			customer.FirstContactDate = Date.Today;
 
 			return new NewValue<AbstractEntity> (person, customer);
 		}

@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Core.Entities
 				&& naturalPerson.IsEmpty ();
 		}
 
-		public static bool IsEmpty(this CustomerEntity entity)
+		public static bool IsEmpty(this RelationEntity entity)
 		{
 			if (entity.UnwrapNullEntity () == null)
 			{
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return string.IsNullOrWhiteSpace (entity.Id)
-				&& entity.CustomerSince.HasValue == false
+				&& entity.FirstContactDate.HasValue == false
 				&& entity.Folders.Count == 0
 				&& entity.Person.IsEmpty ()
 				&& entity.SalesRepresentative.IsEmpty ();

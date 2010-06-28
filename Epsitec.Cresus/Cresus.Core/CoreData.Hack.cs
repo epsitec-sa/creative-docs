@@ -71,17 +71,17 @@ namespace Epsitec.Cresus.Core
 			return new PersonGenderRepository (this.DataContext).GetAllPersonGenders ();
 		}
 
-		public IEnumerable<CustomerEntity> GetCustomers()
+		public IEnumerable<RelationEntity> GetCustomers()
 		{
-			return new CustomerRepository (this.DataContext).GetAllCustomers ();
+			return new RelationRepository (this.DataContext).GetAllRelations ();
 		}
 
-		public IEnumerable<CustomerEntity> GetCustomers(AbstractPersonEntity person)
+		public IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)
 		{
-			var repository = new CustomerRepository (this.DataContext);
-			var example = repository.CreateCustomerExample ();
+			var repository = new RelationRepository (this.DataContext);
+			var example = repository.CreateRelationExample ();
 			example.Person = person;
-			return repository.GetCustomersByExample (example);
+			return repository.GetRelationsByExample (example);
 		}
 
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core
 			PersonTitleEntity[] personTitles = this.InsertPersonTitlesInDatabase ().ToArray ();
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
-			CustomerEntity[] customers = this.InsertCustomersInDatabase (abstractPersons).ToArray ();
+			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
 
 			this.DataContext.SaveChanges ();
 		}
@@ -397,20 +397,20 @@ namespace Epsitec.Cresus.Core
 			yield return companyEpsitec;
 			yield return companyMigros;
 		}
-		
-		private IEnumerable<CustomerEntity> InsertCustomersInDatabase(IEnumerable<AbstractPersonEntity> persons)
+
+		private IEnumerable<RelationEntity> InsertRelationsInDatabase(IEnumerable<AbstractPersonEntity> persons)
 		{
 			int id = 1000;
 
 			foreach (var person in persons)
 			{
-				CustomerEntity customer = this.DataContext.CreateEmptyEntity<CustomerEntity> ();
+				RelationEntity relation = this.DataContext.CreateEmptyEntity<RelationEntity> ();
 
-				customer.Id = (id++).ToString ();
-				customer.Person = person;
-				customer.CustomerSince = Common.Types.Date.Today;
+				relation.Id = (id++).ToString ();
+				relation.Person = person;
+				relation.FirstContactDate = Common.Types.Date.Today;
 
-				yield return customer;
+				yield return relation;
 			}
 		}
 	}
