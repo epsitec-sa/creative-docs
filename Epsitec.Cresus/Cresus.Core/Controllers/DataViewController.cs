@@ -133,6 +133,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);
+
+			controller = controller.GetReplacementController ();
 			controller.CreateUI (column);
 
 			this.AttachColumn (column);
@@ -185,9 +187,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
+				System.Diagnostics.Debug.Assert (this.ContainsViewController (controller));
 
-				while (this.GetLeafController () != controller)
+				while (this.GetLeafController ().Matches (controller) == false)
 				{
 					this.PopViewController ();
 				}
@@ -215,6 +217,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PopViewControllersUntil (oldViewController);
 			this.PopViewController ();
 			this.PushViewController (newViewController);
+		}
+
+
+		public bool ContainsViewController(CoreViewController controller)
+		{
+			return this.viewControllers.Any (x => x.Matches (controller));
 		}
 
 

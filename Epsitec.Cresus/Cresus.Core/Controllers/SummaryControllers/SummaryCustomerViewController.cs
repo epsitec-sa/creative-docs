@@ -35,16 +35,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			containerController.GenerateTiles ();
 		}
 
-		protected override void AboutToCloseUI()
-		{
-			this.UpdateCustomerDefaultAddress ();
-			base.AboutToCloseUI ();
-		}
-
 		protected override void OnChildItemCreated(AbstractEntity entity)
 		{
 			this.SetupNewContact (entity as AbstractContactEntity);
 			base.OnChildItemCreated (entity);
+		}
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			var entity = this.Entity;
+			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			
+			this.UpdateCustomerDefaultAddress ();
+			
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+			context.UpdateEmptyEntityStatus (entity.Person, x => x.IsEmpty ());
 		}
 
 		private void CreateUICustomer(SummaryDataItems data)

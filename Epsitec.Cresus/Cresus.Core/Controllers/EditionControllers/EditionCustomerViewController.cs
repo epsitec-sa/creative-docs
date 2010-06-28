@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionCustomerViewController : EditionViewController<Entities.CustomerEntity>
+	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
 	{
 		public EditionCustomerViewController(string name, Entities.CustomerEntity entity)
 			: base (name, entity)
@@ -45,6 +46,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+		protected override EditionStatus GetEditionStatus()
+		{
+			var entity = this.Entity;
+			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
 
 		private void CreateUIMain(UIBuilder builder)
 		{

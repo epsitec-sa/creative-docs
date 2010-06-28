@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.referenceEntity = referenceEntity;
 			this.editionEntity   = editionEntity;
-			this.CreationControllerMode = ViewControllerMode.Summary;
+			this.CreationControllerMode = ViewControllerMode.Creation;
 		}
 
 		public ViewControllerMode CreationControllerMode
