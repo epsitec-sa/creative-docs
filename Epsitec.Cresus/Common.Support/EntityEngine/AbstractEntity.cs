@@ -1218,6 +1218,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Updates the data generation for this entity to match the one of the
+		/// associated context, and notifies the <see cref="EntityContext"/>
+		/// about the change.
+		/// </summary>
+		internal void UpdateDataGenerationAndNotifyEntityContextAboutChange()
+		{
+			this.UpdateDataGeneration ();
+			this.context.NotifyEntityChanged (this, "*", null, null);
+		}
+
 
 		#region Helper Classes
 

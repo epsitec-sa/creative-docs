@@ -214,8 +214,11 @@ namespace Epsitec.Cresus.DataLayer
 			where T : AbstractEntity
 		{
 			System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
-			
-			this.emptyEntities.Add (entity);
+
+			if (this.emptyEntities.Add (entity))
+			{
+				entity.UpdateDataGenerationAndNotifyEntityContextAboutChange ();
+			}
 		}
 
 		public void UnregisterEmptyEntity<T>(T entity)
@@ -224,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer
 			if (this.emptyEntities.Remove (entity))
 			{
 				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
-				entity.UpdateDataGeneration ();
+				entity.UpdateDataGenerationAndNotifyEntityContextAboutChange ();
 			}
 		}
 

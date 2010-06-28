@@ -106,6 +106,11 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
+		public void ForceRefresh()
+		{
+			this.refreshNeeded = true;
+		}
+
 
 		#region IDisposable Members
 
