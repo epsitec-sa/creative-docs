@@ -594,7 +594,8 @@ namespace Epsitec.Cresus.Core
 				{
 					var valueProxy = valueProxyGetter ();
 
-					if (!editor.InError && editor.HasItemValue)
+					if ((!editor.InError) &&
+						(editor.SelectedItemIndex >= 0))
 					{
 						showButton.GlyphShape = GlyphShape.ArrowRight;
 						showButton.Enable = valueProxy == null ? true : valueProxy.Mode != ViewControllerMode.None;
