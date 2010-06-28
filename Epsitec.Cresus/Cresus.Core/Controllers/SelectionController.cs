@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<AbstractEntity> ValueProxy
+		public System.Func<ValueProxy> ValueProxyGetter
 		{
 			get;
 			set;
@@ -253,6 +253,36 @@ namespace Epsitec.Cresus.Core.Controllers
 			return result;
 		}
 	}
+
+	public class ValueProxy
+	{
+		public ValueProxy(AbstractEntity entity, ViewControllerMode mode)
+		{
+			this.entity = entity;
+			this.mode   = mode;
+		}
+
+
+		public AbstractEntity Entity
+		{
+			get
+			{
+				return this.entity;
+			}
+		}
+
+		public ViewControllerMode Mode
+		{
+			get
+			{
+				return this.mode;
+			}
+		}
+
+		private readonly AbstractEntity entity;
+		private readonly ViewControllerMode mode;
+	}
+
 
 	public class NewValue<T>
 		where T : AbstractEntity
