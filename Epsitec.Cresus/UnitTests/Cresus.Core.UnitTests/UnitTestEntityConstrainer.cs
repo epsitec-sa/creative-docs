@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void UnaryComparison()
+		public void UnaryComparisonTest()
 		{
 			TestHelper.PrintStartTest ("Unary comparison");
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void BinaryComparisonFieldWithValue()
+		public void BinaryComparisonFieldWithValueTest()
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with value");
 
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void BinaryComparisonFieldWithField()
+		public void BinaryComparisonFieldWithFieldTest()
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with field");
 
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void UnaryOperation()
+		public void UnaryOperationTest()
 		{
 			TestHelper.PrintStartTest ("Unary operation");
 
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core
 
 
 		[TestMethod]
-		public void BinaryOperation()
+		public void BinaryOperationTest()
 		{
 			TestHelper.PrintStartTest ("Binary operation");
 
@@ -384,6 +384,139 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (persons.Count () == 2);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
 				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void LikeEscapeRequest()
+		{
+			TestHelper.PrintStartTest ("Like escape request");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				CountryEntity country1 = Database.CreateCountry (dataContext, "c1", "test%test");
+				CountryEntity country2 = Database.CreateCountry (dataContext, "c2", "test_test");
+				CountryEntity country3 = Database.CreateCountry (dataContext, "c2", "test#test");
+				CountryEntity country4 = Database.CreateCountry (dataContext, "c3", "testxxtest");
+
+				dataContext.SaveChanges ();
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				CountryEntity example = new CountryEntity ();
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A3]")),
+						BinaryComparator.IsLike,
+						new Constant (Type.String, "test%test")
+					)
+				);
+
+				CountryEntity[] countries = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (countries.Count () == 4);
+				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+				Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				CountryEntity example = new CountryEntity ();
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A3]")),
+						BinaryComparator.IsLike,
+						new Constant (Type.String, "test_test")
+					)
+				);
+
+				CountryEntity[] countries = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (countries.Count () == 3);
+				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				CountryEntity example = new CountryEntity ();
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				string value = BinaryComparisonFieldWithValue.Escape ("test%test");
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A3]")),
+						BinaryComparator.IsLikeEscape,
+						new Constant (Type.String, value)
+					)
+				);
+
+				CountryEntity[] countries = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (countries.Count () == 1);
+				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				CountryEntity example = new CountryEntity ();
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				string value = BinaryComparisonFieldWithValue.Escape ("test_test");
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A3]")),
+						BinaryComparator.IsLikeEscape,
+						new Constant (Type.String, value)
+					)
+				);
+
+				CountryEntity[] countries = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (countries.Count () == 1);
+				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
+			}
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				CountryEntity example = new CountryEntity ();
+				EntityConstrainer entityConstrainer = new EntityConstrainer ();
+
+				string value = BinaryComparisonFieldWithValue.Escape ("test#test");
+
+				entityConstrainer.AddLocalConstraint (example,
+					new BinaryComparisonFieldWithValue (
+						new Field (new Druid ("[L0A3]")),
+						BinaryComparator.IsLikeEscape,
+						new Constant (Type.String, value)
+					)
+				);
+
+				CountryEntity[] countries = dataBrowser.GetByExample (example, entityConstrainer).ToArray ();
+
+				Assert.IsTrue (countries.Count () == 1);
+				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
 			}
 		}
 

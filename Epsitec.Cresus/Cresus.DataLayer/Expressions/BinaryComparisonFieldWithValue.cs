@@ -4,6 +4,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -42,6 +43,17 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		internal override IEnumerable<Druid> GetFields()
 		{
 			return new Druid[] { this.Left.FieldId, };
+		}
+
+
+		public static string Escape(string value)
+		{
+			string escapeChar = DbSqlStandard.CompareLikeEscape;
+			
+			string pattern = "([%_" + escapeChar + "])";
+			string replacement = escapeChar + "$1";
+
+			return Regex.Replace (value, pattern, replacement);
 		}
 
 

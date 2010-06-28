@@ -4,7 +4,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
-using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
