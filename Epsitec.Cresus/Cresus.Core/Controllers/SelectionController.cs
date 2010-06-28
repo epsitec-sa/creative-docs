@@ -221,16 +221,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		private FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
+			
+			entity = entity.UnwrapNullEntity ();
 
 			if ((entity == null) ||
 				(this.ToFormattedTextConverter == null))
 			{
 				return FormattedText.Empty;
 			}
-			else
+
+			var context = DataContextPool.Instance.FindDataContext (entity);
+
+			if ((context != null) &&
+				(context.IsRegisteredAsEmptyEntity (entity)))
 			{
-				return this.ToFormattedTextConverter (entity);
+				return Epsitec.Cresus.Core.Controllers.DataAccessors.CollectionTemplate.DefaultDefinitionInProgressText;
 			}
+			
+			return this.ToFormattedTextConverter (entity);
 		}
 
 		private Widgets.HintComparerResult MatchUserText(T entity, string userText)
