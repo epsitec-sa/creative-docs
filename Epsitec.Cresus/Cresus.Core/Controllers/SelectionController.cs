@@ -43,6 +43,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public System.Func<AbstractEntity> ValueProxy
+		{
+			get;
+			set;
+		}
+
 		public System.Func<System.Collections.Generic.IList<T>> CollectionValueGetter
 		{
 			get;
