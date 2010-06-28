@@ -50,6 +50,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public ViewControllerMode Mode
+		{
+			get;
+			protected set;
+		}
+
+
+		public bool Matches(CoreViewController controller)
+		{
+			return (this == controller)
+				|| (this.GetReplacementController () == controller);
+		}
 		
 		/// <summary>
 		/// Creates the UI managed by this controller.
@@ -66,6 +78,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.ReleaseUIFocus (container);
 			this.AboutToCloseUI ();
+		}
+
+		public virtual CoreViewController GetReplacementController()
+		{
+			return this;
 		}
 
 

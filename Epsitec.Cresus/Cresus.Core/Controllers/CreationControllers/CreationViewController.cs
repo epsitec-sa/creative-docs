@@ -19,6 +19,14 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 		}
 
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			if (this.replacementController != null)
+            {
+				yield return this.replacementController;
+            }
+		}
+
 
 		#region ICreationController Members
 
@@ -32,6 +40,37 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#endregion
 
+		public override CoreViewController GetReplacementController()
+		{
+			var upgradeMode = this.UpgradeControllerMode;
+
+			if (upgradeMode == ViewControllerMode.Creation)
+			{
+				return base.GetReplacementController ();
+			}
+			else
+			{
+				if ((this.replacementController != null) &&
+					(this.replacementController.Mode != upgradeMode))
+				{
+					this.replacementController.Dispose ();
+					this.replacementController = null;
+				}
+
+				if (this.replacementController == null)
+				{
+					var orchestrator = this.Orchestrator;
+					var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator);
+
+					controller.DataContext = orchestrator.DataContext;
+
+					this.replacementController = controller;
+				}
+				
+				return this.replacementController;
+			}
+		}
+
 		protected void UpgradeController()
 		{
 			var upgradeMode = this.UpgradeControllerMode;
@@ -43,11 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			else
 			{
 				var orchestrator = this.Orchestrator;
-				var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator);
-
-				controller.DataContext = orchestrator.DataContext;
-
-				orchestrator.ReplaceView (this, controller);
+				orchestrator.ReplaceView (this, this);
 			}
 		}
 
@@ -56,11 +91,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			switch (this.EditionStatus)
 			{
 				case EditionStatus.Empty:
-				default:
 					return ViewControllerMode.Creation;
 
+				case EditionStatus.Invalid:
 				case EditionStatus.Valid:
 					return ViewControllerMode.Summary;
+
+				case EditionStatus.Unknown:
+				default:
+					throw new System.InvalidOperationException (string.Format ("EditionStatus may not be set to {0}", this.EditionStatus));
 			}
 		}
 
@@ -78,5 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			this.ReplaceEntity (entity);
 			this.UpgradeController ();
 		}
+
+		protected EntityViewController replacementController;
 	}
 }

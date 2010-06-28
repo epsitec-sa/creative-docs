@@ -112,6 +112,35 @@ namespace Epsitec.Cresus.Core.Entities
 				&& string.IsNullOrWhiteSpace (entity.ShortName);
 		}
 
+		public static bool IsEmpty(this AbstractPersonEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			var legalPerson   = entity as LegalPersonEntity;
+			var naturalPerson = entity as NaturalPersonEntity;
+
+			return legalPerson.IsEmpty ()
+				&& naturalPerson.IsEmpty ();
+		}
+
+		public static bool IsEmpty(this CustomerEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			return string.IsNullOrWhiteSpace (entity.Id)
+				&& entity.CustomerSince.HasValue == false
+				&& entity.Folders.Count == 0
+				&& entity.Person.IsEmpty ()
+				&& entity.SalesRepresentative.IsEmpty ();
+		}
+
+
 
 		public static bool IsNull(this AbstractEntity entity)
 		{

@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
+using Epsitec.Cresus.DataLayer;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -37,7 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -72,13 +72,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (mode == ViewControllerMode.Creation)
 				{
-					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Edition, orchestrator);
+//-					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Edition, orchestrator);
 				}
 
 				return null;
 			}
 
 			controller.Orchestrator = orchestrator;
+			controller.Mode = mode;
 
 			return controller;
 		}
@@ -199,6 +200,37 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected void ReplaceEntity(T entity)
 		{
 			this.entity = entity;
+		}
+
+
+		protected override void AboutToCloseUI()
+		{
+			this.UpgradeEmptyEntity ();
+			base.AboutToCloseUI ();
+		}
+
+		protected override void AboutToSave()
+		{
+			this.UpgradeEmptyEntity ();
+			base.AboutToSave ();
+		}
+
+		/// <summary>
+		/// If the current entity was registered in the <see cref="DataContext"/> as an empty
+		/// entity, upgrade it to a real entity if its content is valid.
+		/// </summary>
+		private void UpgradeEmptyEntity()
+		{
+			var entity  = this.Entity;
+			var context = DataContextPool.Instance.FindDataContext (entity);
+
+			bool isEmpty = this.EditionStatus == EditionStatus.Empty;
+
+			this.UpdateEmptyEntityStatus (context, isEmpty);
+		}
+
+		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
+		{
 		}
 
 		private T entity;
