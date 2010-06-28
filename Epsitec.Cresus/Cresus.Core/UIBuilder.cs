@@ -453,6 +453,8 @@ namespace Epsitec.Cresus.Core
 			tileButton.Clicked +=
 				delegate
 				{
+					editor.DefocusAndAcceptOrReject ();
+					
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new AutoCompleteTextFieldTileController (entity);
@@ -469,7 +471,7 @@ namespace Epsitec.Cresus.Core
 							}
 							else
 							{
-								var newValue = valueCreator (controller.DataContext);
+								var newValue  = valueCreator (controller.DataContext);
 								var newEntity = newValue.GetEditionEntity ();
 								var refEntity = newValue.GetReferenceEntity ();
 								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);

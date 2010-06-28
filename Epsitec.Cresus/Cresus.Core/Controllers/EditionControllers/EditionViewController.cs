@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public abstract class EditionViewController<T> : EntityViewController<T>, IEditionStatus
+	public abstract class EditionViewController<T> : EntityViewController<T>
 		where T : AbstractEntity
 	{
 		protected EditionViewController(string name, T entity)
@@ -19,27 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-
-		#region IEditionStatus Members
-
-		/// <summary>
-		/// Gets the edition status of the entity.
-		/// </summary>
-		/// <value>The edition status.</value>
-		public EditionStatus EditionStatus
-		{
-			get
-			{
-				return this.GetEditionStatus ();
-			}
-		}
-
-		#endregion
-		
-		protected virtual EditionStatus GetEditionStatus()
-		{
-			return EditionStatus.Unknown;
-		}
 
 		protected override void AboutToCloseUI()
 		{
@@ -62,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var entity  = this.Entity;
 			var context = DataContextPool.Instance.FindDataContext (entity);
 
-			bool isEmpty = this.EditionStatus == EditionControllers.EditionStatus.Empty;
+			bool isEmpty = this.EditionStatus == EditionStatus.Empty;
 
 			this.UpdateEmptyEntityStatus (context, isEmpty);
 		}

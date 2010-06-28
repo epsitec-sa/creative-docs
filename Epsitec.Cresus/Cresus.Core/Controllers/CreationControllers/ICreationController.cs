@@ -13,15 +13,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	public interface ICreationController
 	{
 		/// <summary>
-		/// Gets the creation status of the entity.
-		/// </summary>
-		/// <value>The creation status.</value>
-		CreationStatus CreationStatus
-		{
-			get;
-		}
-
-		/// <summary>
 		/// Gets the upgrade controller mode based on the active entity.
 		/// </summary>
 		/// <value>The upgrade controller mode.</value>

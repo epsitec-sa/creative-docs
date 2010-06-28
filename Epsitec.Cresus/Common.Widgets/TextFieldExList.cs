@@ -256,38 +256,11 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 
-		protected override void DefocusAndAcceptOrReject()
+		public override void DefocusAndAcceptOrReject()
 		{
 			if (this.Mode == TextFieldExListMode.EditActive)
 			{
-				switch (this.DefocusAction)
-				{
-					case DefocusAction.AcceptEdition:
-						this.AcceptEdition ();
-						break;
-					
-					case DefocusAction.RejectEdition:
-						this.AutoRejectEdition (false);
-						break;
-					
-					case DefocusAction.Modal:
-					case DefocusAction.AutoAcceptOrRejectEdition:
-						if (this.IsValid)
-						{
-							this.AcceptEdition ();
-						}
-						else
-						{
-							this.AutoRejectEdition (false);
-						}
-						break;
-					
-					case DefocusAction.None:
-						break;
-					
-					default:
-						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
-				}
+				base.DefocusAndAcceptOrReject ();
 			}
 		}
 		

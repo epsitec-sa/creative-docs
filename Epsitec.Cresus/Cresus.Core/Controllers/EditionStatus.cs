@@ -1,11 +1,11 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
 	/// The <c>EditionStatus</c> identifies the status of an entity. See also
-	/// <see cref="EditionViewController&lt;T&gt;"/>.
+	/// <see cref="EntityViewController"/>.
 	/// </summary>
 	public enum EditionStatus
 	{

@@ -74,18 +74,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (string.IsNullOrEmpty (this.Entity.Number) &&
 				string.IsNullOrEmpty (this.Entity.Extension))
 			{
-				return EditionControllers.EditionStatus.Empty;
+				return EditionStatus.Empty;
 			}
 
 			if (string.IsNullOrEmpty (this.Entity.Number) &&
 				!string.IsNullOrEmpty (this.Entity.Extension))
 			{
-				return EditionControllers.EditionStatus.Invalid;
+				return EditionStatus.Invalid;
 			}
 
 			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
 
-			return EditionControllers.EditionStatus.Valid;
+			return EditionStatus.Valid;
 		}
 	}
 }

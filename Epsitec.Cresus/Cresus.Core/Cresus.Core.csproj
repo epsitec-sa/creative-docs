@@ -100,7 +100,6 @@
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\CreationStatus.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor.cs" />
@@ -122,8 +121,7 @@
     <Compile Include="Controllers\EditionControllers\EditionLegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionStatus.cs" />
-    <Compile Include="Controllers\EditionControllers\IEditionStatus.cs" />
+    <Compile Include="Controllers\EditionStatus.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
