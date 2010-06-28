@@ -1226,7 +1226,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		internal void UpdateDataGenerationAndNotifyEntityContextAboutChange()
 		{
 			this.UpdateDataGeneration ();
-			this.context.NotifyEntityChanged (this, "*", null, null);
+
+			this.NotifyEventHandlers ("*", null, null);
+			this.NotifyContextEventHandlers ("*", null, null);
 		}
 
 
