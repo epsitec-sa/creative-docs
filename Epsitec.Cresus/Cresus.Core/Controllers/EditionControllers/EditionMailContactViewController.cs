@@ -185,6 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
+					ValueProxy   = this.ProxyLegalPersonToCustomer,
 					ValueCreator = this.CreateLegalPersonCustomer,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
@@ -231,6 +232,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					.Cast<MailContactEntity> ()				// les AbstractContactEntity deviennent des MailContactEntity
 					.Select (x => x.Address)				// on s'intéresse à l'entité Address de MailContact
 					.ToList ();								// on veut une liste statique
+			}
+		}
+
+		private AbstractEntity ProxyLegalPersonToCustomer()
+		{
+			var person = this.Entity.LegalPerson;
+
+			if (person.UnwrapNullEntity () == null)
+			{
+				return null;
+			}
+			else
+			{
+				return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
 			}
 		}
 

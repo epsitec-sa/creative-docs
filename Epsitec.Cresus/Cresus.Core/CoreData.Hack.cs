@@ -76,6 +76,14 @@ namespace Epsitec.Cresus.Core
 			return new CustomerRepository (this.DataContext).GetAllCustomers ();
 		}
 
+		public IEnumerable<CustomerEntity> GetCustomers(AbstractPersonEntity person)
+		{
+			var repository = new CustomerRepository (this.DataContext);
+			var example = repository.CreateCustomerExample ();
+			example.Person = person;
+			return repository.GetCustomersByExample (example);
+		}
+
 
 		private void PopulateDatabaseHack()
 		{

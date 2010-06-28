@@ -353,14 +353,14 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator);
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator, controller.ValueProxy);
 
 			controller.Attach (autoCompleteTextField);
 
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, AbstractEntity entity, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, System.Func<AbstractEntity> valueProxy)
 		{
 			tile.AllowSelection = true;
 
@@ -457,7 +457,7 @@ namespace Epsitec.Cresus.Core
 					
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
-						tile.Controller = new AutoCompleteTextFieldTileController (entity);
+						tile.Controller = new AutoCompleteTextFieldTileController (entity, valueProxy);
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
@@ -471,6 +471,8 @@ namespace Epsitec.Cresus.Core
 							}
 							else
 							{
+								tileButton.GlyphShape = GlyphShape.ArrowRight;
+
 								var newValue  = valueCreator (controller.DataContext);
 								var newEntity = newValue.GetEditionEntity ();
 								var refEntity = newValue.GetReferenceEntity ();
@@ -521,9 +523,10 @@ namespace Epsitec.Cresus.Core
 
 		private class AutoCompleteTextFieldTileController : ITileController
 		{
-			public AutoCompleteTextFieldTileController(AbstractEntity entity)
+			public AutoCompleteTextFieldTileController(AbstractEntity entity, System.Func<AbstractEntity> valueProxy, ViewControllerMode mode = ViewControllerMode.Summary)
 			{
-				this.entity = entity;
+				this.entity = valueProxy == null ? entity : valueProxy ();
+				this.mode   = mode;
 			}
 
 
@@ -531,7 +534,7 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
 			{
-				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", this.entity, ViewControllerMode.Edition, orchestrator);
+				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", this.entity, this.mode, orchestrator);
 			}
 
 			#endregion
@@ -570,6 +573,7 @@ namespace Epsitec.Cresus.Core
 			#endregion
 
 			private readonly AbstractEntity entity;
+			private readonly ViewControllerMode mode;
 		}
 
 		private CoreViewController GetActiveController()
