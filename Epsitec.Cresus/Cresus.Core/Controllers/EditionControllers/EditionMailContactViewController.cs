@@ -95,11 +95,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				(this.Entity.Comments.Count == 0) &&
 				(this.Entity.Address.IsEmpty ()))
 			{
-				return EditionControllers.EditionStatus.Empty;
+				return EditionStatus.Empty;
 			}
 			else
 			{
-				return EditionControllers.EditionStatus.Valid;
+				return EditionStatus.Valid;
 			}
 		}
 

@@ -24,12 +24,31 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+
+		/// <summary>
+		/// Gets the edition status of the entity.
+		/// </summary>
+		/// <value>The edition status.</value>
+		public EditionStatus EditionStatus
+		{
+			get
+			{
+				return this.GetEditionStatus ();
+			}
+		}
+
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
 		}
 
 		public abstract AbstractEntity GetEntity();
+
+		protected virtual EditionStatus GetEditionStatus()
+		{
+			return EditionStatus.Unknown;
+		}
 
 		protected abstract void CreateUI(TileContainer container);
 

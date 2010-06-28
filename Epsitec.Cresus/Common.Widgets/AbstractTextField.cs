@@ -1438,7 +1438,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 
-		protected virtual void DefocusAndAcceptOrReject()
+		public virtual void DefocusAndAcceptOrReject()
 		{
 			switch (this.DefocusAction)
 			{

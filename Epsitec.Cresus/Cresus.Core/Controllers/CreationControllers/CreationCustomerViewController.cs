@@ -75,15 +75,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		}
 
 		
-		protected override CreationStatus GetCreationStatus()
+		protected override EditionStatus GetEditionStatus()
 		{
 			if (this.Entity.Person.UnwrapNullEntity () == null)
 			{
-				return CreationStatus.Empty;
+				return EditionStatus.Empty;
 			}
 			else
 			{
-				return CreationStatus.Ready;
+				return EditionStatus.Valid;
 			}
 		}
 	}

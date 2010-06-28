@@ -22,14 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#region ICreationController Members
 
-		public CreationStatus CreationStatus
-		{
-			get
-			{
-				return this.GetCreationStatus ();
-			}
-		}
-
 		public ViewControllerMode UpgradeControllerMode
 		{
 			get
@@ -42,8 +34,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		protected void UpgradeController()
 		{
-			System.Diagnostics.Debug.Assert (this.CreationStatus == CreationStatus.Ready);
-
 			var upgradeMode = this.UpgradeControllerMode;
 
 			if (upgradeMode == ViewControllerMode.Creation)
@@ -61,20 +51,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
-		protected virtual CreationStatus GetCreationStatus()
-		{
-			return CreationStatus.Unknown;
-		}
-
 		protected virtual ViewControllerMode GetUpgradeControllerMode()
 		{
-			switch (this.CreationStatus)
+			switch (this.EditionStatus)
 			{
-				case CreationStatus.Empty:
+				case EditionStatus.Empty:
 				default:
 					return ViewControllerMode.Creation;
 
-				case CreationControllers.CreationStatus.Ready:
+				case EditionStatus.Valid:
 					return ViewControllerMode.Summary;
 			}
 		}
