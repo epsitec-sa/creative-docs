@@ -138,6 +138,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Wraps the entity. If it is <c>null</c>, then create a virtualized empty entity.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The wrapped entity.</returns>
 		public static T WrapNullEntity<T>(this T entity)
 			where T : AbstractEntity, new ()
 		{
