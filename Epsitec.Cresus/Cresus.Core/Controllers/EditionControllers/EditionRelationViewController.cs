@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionCustomerViewController : EditionViewController<CustomerEntity>
+	public class EditionRelationViewController : EditionViewController<RelationEntity>
 	{
-		public EditionCustomerViewController(string name, Entities.CustomerEntity entity)
+		public EditionRelationViewController(string name, Entities.RelationEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -62,8 +62,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 150, "Numéro de client", Marshaler.Create (() => this.Entity.Id,            x => this.Entity.Id = x));
-			builder.CreateTextField (tile,  90, "Client depuis le", Marshaler.Create (() => this.Entity.CustomerSince, x => this.Entity.CustomerSince = x));
+			builder.CreateTextField (tile, 150, "Numéro de client", Marshaler.Create (() => this.Entity.Id,           x => this.Entity.Id = x));
+			builder.CreateTextField (tile,  90, "Client depuis le", Marshaler.Create (() => this.Entity.FirstContactDate, x => this.Entity.FirstContactDate = x));
 		}
 
 

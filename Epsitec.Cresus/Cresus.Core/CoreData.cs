@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Core
 
 		private static AbstractEntity CreateNewCustomer(EntityContext context)
 		{
-			return context.CreateEmptyEntity<CustomerEntity> ();
+			return context.CreateEmptyEntity<RelationEntity> ();
 		}
 		
 
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
-			this.DataContext.CreateSchema<CustomerEntity> ();
+			this.DataContext.CreateSchema<RelationEntity> ();
 			this.DataContext.CreateSchema<NaturalPersonEntity> ();
 			this.DataContext.CreateSchema<AbstractPersonEntity> ();
 			this.DataContext.CreateSchema<MailContactEntity> ();

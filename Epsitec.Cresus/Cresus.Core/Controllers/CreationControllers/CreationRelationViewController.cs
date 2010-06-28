@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
-	public class CreationCustomerViewController : CreationViewController<CustomerEntity>
+	public class CreationRelationViewController : CreationViewController<RelationEntity>
 	{
-		public CreationCustomerViewController(string name, Entities.CustomerEntity entity)
+		public CreationRelationViewController(string name, Entities.RelationEntity entity)
 			: base (name, entity)
 		{
 		}

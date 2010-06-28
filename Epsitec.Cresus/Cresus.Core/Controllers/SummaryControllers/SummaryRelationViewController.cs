@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
-	public class SummaryCustomerViewController : SummaryViewController<Entities.CustomerEntity>
+	public class SummaryRelationViewController : SummaryViewController<Entities.RelationEntity>
 	{
-		public SummaryCustomerViewController(string name, Entities.CustomerEntity entity)
+		public SummaryRelationViewController(string name, Entities.RelationEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
-			this.CreateUICustomer (data);
+			this.CreateUIRelation (data);
 			this.CreateUIMailContacts (data);
 			this.CreateUITelecomContacts (data);
 			this.CreateUIUriContacts (data);
@@ -51,13 +51,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var entity = this.Entity;
 			
-			this.UpdateCustomerDefaultAddress ();
+			this.UpdateRelationDefaultAddress ();
 			
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
 			context.UpdateEmptyEntityStatus (entity.Person, x => x.IsEmpty ());
 		}
 
-		private void CreateUICustomer(SummaryDataItems data)
+		private void CreateUIRelation(SummaryDataItems data)
 		{
 			data.Add (
 				new SummaryData
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Customer",
 					Title				= UIBuilder.FormatText ("Client"),
 					CompactTitle		= UIBuilder.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Client depuis: ~", x.CustomerSince, "\n", "Représentant: ~", this.SalesRepresentativeText)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Client depuis: ~", x.FirstContactDate, "\n", "Représentant: ~", this.SalesRepresentativeText)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonCompactText)),
 					EntityAccessor		= this.EntityGetter,
 				});
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Person.Contacts);
 		}
 		
-		private void UpdateCustomerDefaultAddress()
+		private void UpdateRelationDefaultAddress()
 		{
 			var customer   = this.Entity;
 			var oldAddress = EntityNullReferenceVirtualizer.UnwrapNullEntity (customer.DefaultAddress);

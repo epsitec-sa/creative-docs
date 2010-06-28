@@ -98,7 +98,7 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionRelationViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDefaultAddressViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTitleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionLocationViewController.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryCustomerViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryRelationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryLocationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryCountryViewController.cs" />
@@ -149,7 +149,7 @@
     <Compile Include="Painter.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />
-    <Compile Include="Data\CustomerRepository.cs" />
+    <Compile Include="Data\RelationRepository.cs" />
     <Compile Include="Data\CoreDataBrowser.cs" />
     <Compile Include="Data\AbstractContactRepository.cs" />
     <Compile Include="Data\AddressRepository.cs" />
