@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract bool IsCompatible(AbstractEntity entity);
 
-		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor);
+		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
 
 		public abstract AbstractEntity CreateItem();
 		
@@ -169,17 +170,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public override void BindSummaryData(SummaryData data, AbstractEntity entity, ICollectionAccessor collectionAccessor)
+		public override void BindSummaryData(SummaryData data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor)
 		{
 			T source = entity as T;
 
-			data.EntityAccessor = () => source;
+			data.EntityAccessor = marshaler;
 			data.DataType		= SummaryDataType.CollectionItem;
 			
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
+			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (source);
 
 			if ((context != null) &&
-				(context.IsRegisteredAsEmptyEntity (entity)))
+				(context.IsRegisteredAsEmptyEntity (source)))
 			{
 				this.BindEmptyEntitySummaryData (data, source);
 			}

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
-	public abstract class GenericMarshaler<T1, T2> : Marshaler
+	public abstract class GenericMarshaler<T1, T2> : Marshaler<T1>
 	{
 		public System.Func<T1> ValueGetter
 		{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		}
 
 
-		public T1 GetValue()
+		public override T1 GetValue()
 		{
 			if (this.ValueGetter == null)
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
-		public void SetValue(T1 value)
+		public override void SetValue(T1 value)
 		{
 			if (this.ValueSetter == null)
 			{

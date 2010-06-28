@@ -1094,7 +1094,7 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					entityId   = this.searchRootPath.NavigateReadField (this.searchRootData).TypeId;
+					entityId   = this.searchRootPath.NavigateReadSchema (this.searchRootData).TypeId;
 					entityData = this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
 				}
 
@@ -1399,7 +1399,7 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					return new Druid[] { this.searchRootPath.NavigateReadField (this.searchRootData).TypeId };
+					return new Druid[] { this.searchRootPath.NavigateReadSchema (this.searchRootData).TypeId };
 				}
 			}
 

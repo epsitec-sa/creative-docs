@@ -141,11 +141,11 @@
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
     <Compile Include="Controllers\TileContainerController.cs" />
-    <Compile Include="Controllers\TileController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="Entities\Extensions.cs" />
+    <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="CoreData.Hack.Constants.cs" />
     <Compile Include="CoreData.Hack.cs" />

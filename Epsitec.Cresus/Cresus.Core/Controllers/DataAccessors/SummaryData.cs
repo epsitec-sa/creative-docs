@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -192,7 +193,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 
 
-		public System.Func<AbstractEntity>		EntityAccessor
+		public Marshaler						EntityAccessor
 		{
 			get;
 			set;
@@ -294,7 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (this.EntityAccessor != null)
 			{
-				var entity = this.EntityAccessor ();
+				var entity = this.EntityAccessor.GetValue<AbstractEntity> ();
 
 				if (entity != null)
 				{

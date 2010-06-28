@@ -780,7 +780,7 @@ namespace Epsitec.Common.FormEngine
 			EntityFieldPath fieldPath = field.GetFieldPath ();
 			Druid  leafEntityId;
 			string leafFieldId;
-			fieldPath.Navigate (this.entityContext, entityId, out leafEntityId, out leafFieldId);
+			fieldPath.NavigateSchema (this.entityContext, entityId, out leafEntityId, out leafFieldId);
 
 			StructuredType entityDef = this.GetEntityDefinition (leafEntityId);
 			StructuredTypeField fieldDef = entityDef.GetField (leafFieldId);
