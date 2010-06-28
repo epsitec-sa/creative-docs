@@ -1,9 +1,4 @@
-﻿using Epsitec.Common.Support;
-
-using System.Collections.Generic;
-
-
-namespace Epsitec.Cresus.DataLayer.Expressions
+﻿namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
