@@ -175,9 +175,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (this.Entity.LegalPerson.IsActive ())
 				{
-					// TODO: Pourquoi cela ne fonctionne-t-il pas (dans SummaryController.Common, LegalPerson est null) ?
 					this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
 					this.Entity.Address = this.DataContext.CreateRegisteredEmptyEntity<AddressEntity> ();
+					// TODO: Vider les champs éditables...
 				}
 			}
 		}
@@ -282,6 +282,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICountry(UIBuilder builder)
 		{
+			var countries = CoreProgram.Application.Data.GetCountries ();
+
+			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.Name))  // pays indéfini ?
+			{
+				foreach (var country in countries)
+				{
+					if (country.Code == "CH")
+					{
+						this.Entity.Address.Location.Country = country;  // met la Suisse par défaut
+						break;
+					}
+				}
+			}
+
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
@@ -290,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (creator: this.CreateNewCountry),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
+					PossibleItemsGetter = () => countries,
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
