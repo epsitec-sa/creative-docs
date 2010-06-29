@@ -4,8 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
@@ -16,16 +15,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	internal static class Common
 	{
-		public static void CreateUIMailContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
+		public static void CreateUIMailContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIMailContacts<T1, Entities.AbstractContactEntity, Entities.MailContactEntity> (data, source, collectionResolver);
+			Common.InternalCreateUIMailContacts<T1, AbstractContactEntity, MailContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIMailContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
+		private static void InternalCreateUIMailContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
-			where T3 : Entities.MailContactEntity, T2, new ()
+			where T3 : MailContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller)
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
@@ -47,16 +46,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUITelecomContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
+		public static void CreateUITelecomContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUITelecomContacts<T1, Entities.AbstractContactEntity, Entities.TelecomContactEntity> (data, source, collectionResolver);
+			Common.InternalCreateUITelecomContacts<T1, AbstractContactEntity, TelecomContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUITelecomContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
+		private static void InternalCreateUITelecomContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
-			where T3 : Entities.TelecomContactEntity, T2, new ()
+			where T3 : TelecomContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller)
 				.DefineTitle		(x => UIBuilder.FormatText (x.TelecomType.Name))
@@ -78,16 +77,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIUriContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<Entities.AbstractContactEntity>>> collectionResolver)
+		public static void CreateUIUriContacts<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIUriContacts<T1, Entities.AbstractContactEntity, Entities.UriContactEntity> (data, source, collectionResolver);
+			Common.InternalCreateUIUriContacts<T1, AbstractContactEntity, UriContactEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIUriContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver)
+		private static void InternalCreateUIUriContacts<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
-			where T3 : Entities.UriContactEntity, T2, new ()
+			where T3 : UriContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, filter: x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
