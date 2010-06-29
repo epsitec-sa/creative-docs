@@ -24,9 +24,7 @@ namespace Epsitec.Cresus.Remoting
 			this.PollState ();
 			base.RefreshProgressInformation ();
 		}
-		
 
-		
 		
 		public override bool WaitForProgress(int minimumProgress, System.TimeSpan timeout)
 		{
@@ -48,14 +46,13 @@ namespace Epsitec.Cresus.Remoting
 		
 		private void PollState()
 		{
-			if ((this.thread == null) ||
-				(this.thread.IsAlive == false))
+			if (this.thread == null || !this.thread.IsAlive)
 			{
 				this.SetProgress (100);
 			}
 		}
 		
 		
-		readonly System.Threading.Thread			thread;
+		private readonly System.Threading.Thread thread;
 	}
 }

@@ -77,9 +77,6 @@ namespace Epsitec.Cresus.Remoting
 			{
 				this.SetFailed (string.Concat (exception.Message, "\n", exception.StackTrace));
 			}
-			finally
-			{
-			}
 		}
 
 

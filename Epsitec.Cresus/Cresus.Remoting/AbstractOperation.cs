@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Remoting
 		/// <summary>
 		/// Cancels the operation asynchronously.
 		/// </summary>
-		/// <returns>Returns the operation which is cancelling or <c>null</c> if the cancellation was immediate.</returns>
+		/// <returns>Returns the operation which is canceling or <c>null</c> if the cancellation was immediate.</returns>
 		public virtual AbstractOperation CancelOperationAsync()
 		{
 			return null;
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Remoting
 					return true;
 				}
 			}
-
+			
 			bool infinite = (timeout.Ticks < 0);
 
 			System.DateTime startTime = AbstractOperation.GetNowUtc ();
@@ -371,16 +371,17 @@ namespace Epsitec.Cresus.Remoting
 		}
 
 
-		readonly object							monitor = new object ();
-		long									operationId;
-		
-		readonly System.DateTime				startTime;
-		System.DateTime							stopTime;
-		int										progressPercent;
-		ProgressState							progressState;
-		int										currentStep;
-		int										expectedLastStep;
-		System.TimeSpan							expectedDuration;
-		string									failureMessage;
+		private readonly object							monitor = new object ();
+		private long									operationId;
+
+		private readonly System.DateTime				startTime;
+		private System.DateTime							stopTime;
+
+		private int										progressPercent;
+		private ProgressState							progressState;
+		private int										currentStep;
+		private int										expectedLastStep;
+		private System.TimeSpan							expectedDuration;
+		private string									failureMessage;
 	}
 }
