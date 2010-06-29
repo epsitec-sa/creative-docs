@@ -716,7 +716,7 @@ namespace Epsitec.Cresus.DataLayer
 					return this.DeserializeEntity (rowKey, entityId);
 
 				case EntityResolutionMode.DelayLoad:
-					return new Helpers.EntityKeyProxy (this, rowKey, entityId);
+					return new Proxies.EntityKeyProxy (this, rowKey, entityId);
 
 				default:
 					throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
@@ -773,14 +773,14 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
+						object target1 = new Proxies.EntityFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target1);
 
 						break;
 
 					case FieldRelation.Collection:
 
-						object target2 = new Helpers.EntityCollectionFieldProxy (this, entity, field);
+						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target2);
 
 						break;
@@ -797,21 +797,21 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						object value = new Helpers.ValueFieldProxy (this, entity, entityId, rowKey, field);
+						object value = new Proxies.ValueFieldProxy (this, entity, entityId, rowKey, field);
 						entity.InternalSetValue (field.Id, value);
 
 						break;
 
 					case FieldRelation.Reference:
 
-						object target1 = new Helpers.EntityFieldProxy (this, entity, field);
+						object target1 = new Proxies.EntityFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target1);
 
 						break;
 
 					case FieldRelation.Collection:
 
-						object target2 = new Helpers.EntityCollectionFieldProxy (this, entity, field);
+						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field);
 						entity.InternalSetValue (field.Id, target2);
 
 						break;

@@ -166,21 +166,21 @@
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="TableAlias\TopLevelNode.cs" />
     <Compile Include="EntityData\EntityValueDataContainer.cs" />
-    <Compile Include="Helpers\EntityCollectionFieldProxy.cs" />
-    <Compile Include="Helpers\EntityFieldProxy.cs" />
+    <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
+    <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="TableAlias\SubLevelNode.cs" />
     <Compile Include="TableAlias\Node.cs" />
     <Compile Include="TableAlias\TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
-    <Compile Include="Helpers\ValueFieldProxy.cs" />
+    <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataContext.cs" />
     <Compile Include="EntityResolutionMode.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
-    <Compile Include="Helpers\EntityKeyProxy.cs" />
+    <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="Helpers\TemporaryRowCollection.cs" />
     <Compile Include="RequestFactory.cs">

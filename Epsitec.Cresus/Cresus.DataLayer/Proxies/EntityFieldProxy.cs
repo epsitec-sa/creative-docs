@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+namespace Epsitec.Cresus.DataLayer.Proxies
 {
 
 
