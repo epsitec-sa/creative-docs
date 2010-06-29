@@ -7,23 +7,16 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Epsitec.Cresus.Services;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Requests
 {
-
-
-	/*
-	 * The following code comes directly from the old test and has not been checked or tested. It
-	 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
-	 * this comment. Marc
-	 */
-
-
-#if false
 
 
 	[TestClass]
 	public class UnitTestRequest
 	{
+
+
+#if true
 
 
 		[TestMethod]
@@ -46,7 +39,6 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual (1, group.Count);
 			Assert.AreEqual (req, group[0]);
 		}
-
 
 		[TestMethod]
 		[ExpectedException (typeof (System.ArgumentNullException))]
@@ -487,6 +479,8 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+#endif
+
 
 		[TestMethod]
 		public void Check12ServiceServer()
@@ -495,7 +489,7 @@ namespace Epsitec.Cresus.Core
 
 			infrastructure.LocalSettings.IsServer = true;
 
-			EngineHost host = new Epsitec.Cresus.Services.EngineHost (12345);
+			EngineHost host = new EngineHost (12345);
 			Engine engine = new Engine (infrastructure, System.Guid.Empty);
 
 			host.AddEngine (engine);
@@ -514,6 +508,16 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.WriteLine ("Aborting server...");
 			Common.Support.Globals.SignalAbort ();
 		}
+
+
+		/*
+		 * The following code comes directly from the old test and has not been checked or tested. It
+		 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
+		 * this comment. Marc
+		 */
+
+
+#if false
 
 
 		[TestMethod]
@@ -897,6 +901,10 @@ namespace Epsitec.Cresus.Core
 			//-				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
 			//-			}
 		}
+		
+
+
+#endif
 
 
 		private static readonly string TestTableName = "ST";
@@ -1002,9 +1010,6 @@ namespace Epsitec.Cresus.Core
 
 
 	}
-
-
-#endif
 
 
 }

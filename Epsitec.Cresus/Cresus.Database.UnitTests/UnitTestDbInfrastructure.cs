@@ -1,10 +1,9 @@
-﻿using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Exceptions;
+﻿using Epsitec.Cresus.Core;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Database
 {
 
 
@@ -692,7 +691,7 @@ namespace Epsitec.Cresus.Core
 		#region Support Code
 
 
-		internal static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
+		public static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
 			DbAccess db_access = DbInfrastructure.CreateDatabaseAccess (name);
