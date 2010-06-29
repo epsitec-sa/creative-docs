@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 					this.CreateRealEntity (
 						(context, customer) =>
 						{
+							customer.FirstContactDate = Date.Today;
 							customer.Person = context.CreateEmptyEntity<NaturalPersonEntity> ();
 						});
 				};
@@ -67,6 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 					this.CreateRealEntity (
 						(context, customer) =>
 						{
+							customer.FirstContactDate = Date.Today;
 							customer.Person = context.CreateEmptyEntity<LegalPersonEntity> ();
 						});
 				};

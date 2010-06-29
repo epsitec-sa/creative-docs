@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
 		}
 
-		private NewValue<AbstractEntity> CreateNewTitle(DataContext context)
+		private NewEntityReference CreateNewTitle(DataContext context)
 		{
 			var title = context.CreateRegisteredEmptyEntity<PersonTitleEntity> ();
 			return title;

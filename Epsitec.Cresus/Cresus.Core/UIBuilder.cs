@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController, createEnabled: referenceController.ValueCreator != null);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController, createEnabled: referenceController.HasCreator);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Core
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
 					{
-						if (referenceController.ValueCreator != null)
+						if (referenceController.HasCreator)
 						{
 							if (tile.IsSelected)
 							{

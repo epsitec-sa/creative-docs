@@ -272,17 +272,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		private System.Func<T> valueGetter;
 	}
 
-	public class NewValue<T>
-		where T : AbstractEntity
+	public class NewEntityReference
 	{
-		public NewValue(T referenceEntity)
+		public NewEntityReference(AbstractEntity referenceEntity)
 		{
 			this.referenceEntity = referenceEntity;
 			this.editionEntity   = referenceEntity;
 			this.CreationControllerMode = ViewControllerMode.Creation;
 		}
 
-		public NewValue(T referenceEntity, AbstractEntity editionEntity)
+		public NewEntityReference(AbstractEntity referenceEntity, AbstractEntity editionEntity)
 		{
 			this.referenceEntity = referenceEntity;
 			this.editionEntity   = editionEntity;
@@ -295,7 +294,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public T GetReferenceEntity()
+		public AbstractEntity GetReferenceEntity()
 		{
 			return this.referenceEntity;
 		}
@@ -306,13 +305,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public static implicit operator NewValue<T>(T value)
+		public static implicit operator NewEntityReference(AbstractEntity value)
 		{
-			return new NewValue<T> (value);
+			return new NewEntityReference (value);
 		}
 
 
-		private readonly T referenceEntity;
+		private readonly AbstractEntity referenceEntity;
 		private readonly AbstractEntity editionEntity;
 	}
 }

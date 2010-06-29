@@ -237,42 +237,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private ReferenceController GetLegalPersonReferenceController()
 		{
-			return new ReferenceController (
-				delegate
-				{
-					var person = this.Entity.LegalPerson;
-
-					if (person.UnwrapNullEntity () == null)
-					{
-						return null;
-					}
-					else
-					{
-						return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
-					}
-				},
+			return ReferenceController.Create (
+				() => this.Entity.LegalPerson,
+				person => CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault (),
 				creator: this.CreateNewLegalPerson);
 		}
 
 		private ReferenceController GetAddressReferenceController()
 		{
-			return new ReferenceController (
-				delegate
-				{
-					var person = this.Entity.LegalPerson;
-
-					if (person.UnwrapNullEntity () == null)
-					{
-						return null;
-					}
-					else
-					{
-						return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
-					}
-				});
+			return ReferenceController.Create (
+				() => this.Entity.LegalPerson,
+				person => CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ());
 		}
 
-		private NewValue<AbstractEntity> CreateNewLegalPerson(DataContext context)
+		private NewEntityReference CreateNewLegalPerson(DataContext context)
 		{
 			var customer = context.CreateRegisteredEmptyEntity<RelationEntity> ();
 			var person   = context.CreateRegisteredEmptyEntity<LegalPersonEntity> ();
@@ -280,7 +258,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			customer.Person = person;
 			customer.FirstContactDate = Date.Today;
 
-			return new NewValue<AbstractEntity> (person, customer);
+			return new NewEntityReference (person, customer);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
@@ -336,14 +314,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private NewValue<AbstractEntity> CreateNewCountry(DataContext context)
+		private NewEntityReference CreateNewCountry(DataContext context)
 		{
 			var country = context.CreateRegisteredEmptyEntity<CountryEntity> ();
 
 			return country;
 		}
 
-		private NewValue<AbstractEntity> CreateNewLocation(DataContext context)
+		private NewEntityReference CreateNewLocation(DataContext context)
 		{
 			var location = context.CreateRegisteredEmptyEntity<LocationEntity> ();
 
