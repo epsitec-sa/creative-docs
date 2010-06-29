@@ -135,7 +135,8 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return string.IsNullOrWhiteSpace (entity.Id)
 				&& entity.FirstContactDate.HasValue == false
-				&& entity.Folders.Count == 0
+				&& entity.Affairs.Count == 0
+				&& entity.Cases.Count == 0
 				&& entity.Person.IsEmpty ()
 				&& entity.SalesRepresentative.IsEmpty ();
 		}
