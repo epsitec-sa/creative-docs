@@ -22,11 +22,30 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
 		/// </summary>
 		/// <param name="dataViewController">The associated data view controller.</param>
-		public DataViewOrchestrator(DataViewController dataViewController)
+		public DataViewOrchestrator()
 		{
-			this.dataViewController = dataViewController;
 		}
 
+		public DataViewController Controller
+		{
+			get
+			{
+				return this.dataViewController;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert (this.dataViewController == null);
+				this.dataViewController = value;
+			}
+		}
+
+		public NavigationOrchestrator Navigator
+		{
+			get
+			{
+				return this.Controller.Navigator;
+			}
+		}
 
 		/// <summary>
 		/// Gets the data context of the leaf sub view or the active one taken from the
@@ -80,6 +99,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.dataViewController.ReplaceViewController (oldViewController, newViewController);
 		}
 		
-		private readonly DataViewController dataViewController;
+		private DataViewController dataViewController;
 	}
 }
