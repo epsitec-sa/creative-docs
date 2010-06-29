@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, ReferenceController valueProxy)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, ReferenceController referenceController)
 		{
 			tile.AllowSelection = true;
 
@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, valueProxy, createEnabled: valueCreator != null);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController ?? new ReferenceController (), createEnabled: valueCreator != null);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
@@ -458,8 +458,7 @@ namespace Epsitec.Cresus.Core
 					
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
-						var entity = entityGetter ();
-						tile.Controller = new AutoCompleteTextFieldTileController (entity, valueProxy);
+						tile.Controller = new AutoCompleteTextFieldTileController (referenceController ?? new ReferenceController (entityGetter: entityGetter));
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
@@ -523,10 +522,9 @@ namespace Epsitec.Cresus.Core
 
 		private class AutoCompleteTextFieldTileController : ITileController
 		{
-			public AutoCompleteTextFieldTileController(AbstractEntity entity, ReferenceController valueProxy)
+			public AutoCompleteTextFieldTileController(ReferenceController referenceController)
 			{
-				this.entity = valueProxy == null ? entity : valueProxy.Entity;
-				this.mode   = valueProxy == null ? ViewControllerMode.Summary : valueProxy.Mode;
+				this.referenceController = referenceController;
 			}
 
 
@@ -534,7 +532,10 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
 			{
-				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", this.entity, this.mode, orchestrator);
+				var entity = this.referenceController.Entity;
+				var mode   = this.referenceController.Mode;
+
+				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", entity, mode, orchestrator);
 			}
 
 			#endregion
@@ -572,8 +573,7 @@ namespace Epsitec.Cresus.Core
 
 			#endregion
 
-			private readonly AbstractEntity entity;
-			private readonly ViewControllerMode mode;
+			private readonly ReferenceController referenceController;
 		}
 
 		private CoreViewController GetActiveController()
@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController valueProxy, bool createEnabled)
+		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
 		{
 			return
 				delegate
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.Core
 						(editor.SelectedItemIndex >= 0))
 					{
 						showButton.GlyphShape = GlyphShape.ArrowRight;
-						showButton.Enable = valueProxy == null ? true : valueProxy.Mode != ViewControllerMode.None;
+						showButton.Enable = referenceController.Mode != ViewControllerMode.None;
 					}
 					else
 					{

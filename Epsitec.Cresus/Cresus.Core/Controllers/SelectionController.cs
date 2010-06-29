@@ -278,36 +278,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private System.Func<T> valueGetter;
 	}
 
-	public class ReferenceController
-	{
-		public ReferenceController(System.Func<AbstractEntity> entityGetter = null, ViewControllerMode mode = ViewControllerMode.Summary)
-		{
-			this.entityGetter = entityGetter;
-			this.mode         = mode;
-		}
-
-
-		public AbstractEntity Entity
-		{
-			get
-			{
-				return this.entityGetter == null ? null : this.entityGetter ();
-			}
-		}
-
-		public ViewControllerMode Mode
-		{
-			get
-			{
-				return this.mode;
-			}
-		}
-
-		private readonly System.Func<AbstractEntity> entityGetter;
-		private readonly ViewControllerMode mode;
-	}
-
-
 	public class NewValue<T>
 		where T : AbstractEntity
 	{
