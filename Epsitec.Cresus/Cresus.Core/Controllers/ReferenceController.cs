@@ -35,10 +35,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.creator            = creator;
 		}
 
-		
+
 		/// <summary>
 		/// Creates a new instance of the <see cref="ReferenceController"/> class.
 		/// </summary>
+		/// <typeparam name="T1">The type of the root entity.</typeparam>
+		/// <typeparam name="T2">The type of the field entity.</typeparam>
+		/// <typeparam name="T3">The type of the final entity.</typeparam>
+		/// <param name="rootEntityGetter">The getter for the root entity.</param>
+		/// <param name="rootToFieldMapper">The mapper used to reach the field entity (the one which is referenced) from the root entity.</param>
+		/// <param name="rootToFinalMapper">The mapper used to reach the final entity (the one which will be displayed in the UI) from the root entity.</param>
+		/// <param name="creator">The creator.</param>
+		/// <param name="mode">The mode.</param>
+		/// <returns></returns>
 		public static ReferenceController Create<T1, T2, T3>(System.Func<T1> rootEntityGetter, Expression<System.Func<T1, T2>> rootToFieldMapper, System.Func<T1, T3> rootToFinalMapper,
 			System.Func<DataContext, NewEntityReference> creator = null,
 			ViewControllerMode mode = ViewControllerMode.Summary)

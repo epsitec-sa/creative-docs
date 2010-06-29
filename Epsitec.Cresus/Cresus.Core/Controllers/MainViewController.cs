@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,26 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data = data;
 
-			this.dataViewController = new DataViewController ("Data", data);
-			this.browserViewController = new BrowserViewController ("Browser", data);
-			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserViewController);
+			this.navigator = new NavigationOrchestrator ();
+			this.Orchestrator = new DataViewOrchestrator ();
 
-			this.browserViewController.Orchestrator = this.dataViewController.Orchestrator;
+			this.dataViewController = new DataViewController ("Data", data)
+			{
+				Orchestrator = this.Orchestrator,
+				Navigator = this.Navigator,
+			};
+
+			this.browserViewController = new BrowserViewController ("Browser", data)
+			{
+				Orchestrator = this.Orchestrator,
+			};
+
+			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserViewController)
+			{
+				Orchestrator = this.Orchestrator,
+			};
+
+			this.Orchestrator.Controller = this.dataViewController;
 
 			this.browserViewController.CurrentChanging +=
 				delegate
@@ -38,6 +54,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					this.dataViewController.SetActiveEntity (this.browserViewController.GetActiveEntity ());
 				};
+		}
+
+		public NavigationOrchestrator Navigator
+		{
+			get
+			{
+				return this.navigator;
+			}
 		}
 
 		public BrowserSettingsMode BrowserSettingsMode
@@ -189,6 +213,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;
+		private readonly NavigationOrchestrator navigator;
 
 		private FrameBox frame;
 

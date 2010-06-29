@@ -40,6 +40,8 @@ using Epsitec.Common.Support.EntityEngine;
 				Delay = 0.5,
 			};
 
+			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
+
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
 			this.container.SizeChanged += this.HandleContainerSizeChanged;
 
@@ -168,6 +170,7 @@ using Epsitec.Common.Support.EntityEngine;
 			this.RefreshTitleTilesFreezeMode ();
 			this.RefreshLayout ();
 			this.SetDataTilesParent (this.container);
+			this.SetCloseButtonVisibility ();
 		}
 
 		private void RefreshLayout()
@@ -527,6 +530,22 @@ using Epsitec.Common.Support.EntityEngine;
 			Window.RefreshEnteredWidgets ();
 		}
 
+		private void SetCloseButtonVisibility()
+		{
+			var navigator = this.controller.Navigator;
+
+			if ((navigator != null) &&
+				(navigator.GetLevel (this.controller) > 0))
+			{
+				this.closeButton.ZOrder = 0;
+				this.closeButton.Visibility = true;
+			}
+			else
+			{
+				this.closeButton.Visibility = false;
+			}
+		}
+
 		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
 		{
 			var tile = TileContainerController.GetNextActiveSummaryTile (tiles);
@@ -570,12 +589,14 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
-		private readonly Widget					container;
+		private readonly TileContainer			container;
 		private readonly EntityViewController	controller;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		activeItems;
 		private readonly EntityContext			entityContext;
 		private readonly Timer					refreshTimer;
+
+		private readonly Button					closeButton;
 
 		private bool							refreshNeeded;
 	}

@@ -32,6 +32,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public Orchestrators.NavigationOrchestrator Navigator
+		{
+			get
+			{
+				return this.Orchestrator == null ? null : this.Orchestrator.Navigator;
+			}
+		}
+
 		public virtual Epsitec.Cresus.DataLayer.DataContext DataContext
 		{
 			get;

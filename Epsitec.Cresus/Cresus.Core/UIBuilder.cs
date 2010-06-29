@@ -222,23 +222,31 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateFooterEditorTile()
 		{
-			var controller   = this.container.Controller;
-			var orchestrator = controller.Orchestrator;
+			var controller = this.container.Controller;
 
 			if (controller != this.controller)
 			{
 				//	This method is not being called by the main controller; we can safely skip the
 				//	creation of the footer, since we create only one footer for every container and
 				//	the main controller will do it later on...
-				
+
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (this.Container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
+			UIBuilder.CreateColumnTileCloseButton (this.container);
+		}
+
+
+		public static Button CreateColumnTileCloseButton(TileContainer container)
+		{
+			System.Diagnostics.Debug.Assert (container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
+
+			var controller   = container.Controller;
+			var orchestrator = controller.Orchestrator;
 
 			var closeButton = new GlyphButton
 			{
-				Parent = this.Container,
+				Parent = container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
 				GlyphShape = GlyphShape.Close,
 				Anchor = AnchorStyles.TopRight,
@@ -248,13 +256,15 @@ namespace Epsitec.Cresus.Core
 			};
 
 			closeButton.Clicked +=
-			delegate
+						delegate
 				{
 					orchestrator.CloseView (controller);
 				};
+
+			return closeButton;
 		}
-
-
+		
+		
 		public StaticText CreateWarning(EditionTile tile)
 		{
 			return this.CreateStaticText (tile, 60, "<i><b>ATTENTION:</b><br/>Les modifications effectuées ici seront répercutées<br/>dans tous les enregistrements.</i>");

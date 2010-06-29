@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.DataLayer;
 
@@ -29,7 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
 
 			this.viewControllers = new Stack<CoreViewController> ();
-			this.Orchestrator = new Orchestrators.DataViewOrchestrator (this);
 			
 			this.frame = new FrameBox ();
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
@@ -62,6 +62,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public NavigationOrchestrator Navigator
+		{
+			get;
+			set;
+		}
 		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
@@ -131,6 +136,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.InheritLeafControllerDataContext (controller);
 
+			var leaf   = this.GetLeafController ();
 			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);
 
@@ -138,6 +144,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			controller.CreateUI (column);
 
 			this.AttachColumn (column);
+
+			this.Navigator.Add (leaf, controller);
 		}
 
 		/// <summary>
@@ -152,6 +160,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			var lastController = this.viewControllers.Pop ();
 			var leafController = this.GetLeafController ();
 			var lastContext    = lastController.DataContext;
+
+			this.Navigator.Remove (leafController, lastController);
 
 			lastController.CloseUI (this.viewLayoutController.LastColumn);
 
