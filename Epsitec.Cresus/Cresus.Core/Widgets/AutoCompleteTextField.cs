@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.hintSelected = 0;  // la première proposition
 			}
 
-			this.UseSelectedHint ();
+			this.UseSelectedHint (startEdition: false);
 
 			//	Gère le combo menu.
 			if (this.hintListIndex.Count <= 1)
@@ -437,6 +437,13 @@ namespace Epsitec.Cresus.Core.Widgets
 				case KeyCode.ArrowDown:
 					this.Navigate (1);
 					return true;
+
+				case KeyCode.Escape:
+					if (this.IsComboMenuOpen)
+					{
+						this.CloseComboMenu ();
+					}
+					break;
 			}
 
 			return base.ProcessKeyDown (message, pos);
@@ -446,29 +453,64 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			//	Cherche le nom suivant ou précédent dans la comboList, même si elle
 			//	n'est pas "déroulée".
-			if (this.hintListIndex.Count != 0)
+			if (this.IsComboMenuOpen)
 			{
-				int sel = this.hintSelected + dir;
-
-				if (sel < 0)
+				if (this.hintListIndex.Count != 0)  // pas de menu ?
 				{
-					sel = this.hintListIndex.Count-1;
-				}
+					int sel = this.hintSelected + dir;
 
-				if (sel >= this.hintListIndex.Count)
+					if (sel < 0)
+					{
+						sel = this.hintListIndex.Count-1;
+					}
+
+					if (sel >= this.hintListIndex.Count)
+					{
+						sel = 0;
+					}
+
+					this.hintSelected = sel;
+
+					this.UpdateComboMenuSelection ();
+					this.UseSelectedHint (startEdition: true);
+				}
+			}
+			else
+			{
+				this.HintUpdateList (this.Text);
+
+				if (this.hintListIndex.Count != 0)
 				{
-					sel = 0;
+					int sel = this.hintListIndex[0] + dir;
+
+					this.hintListIndex.Clear ();
+					for (int i = 0; i < this.items.Count; i++)
+					{
+						this.hintListIndex.Add (i);
+					}
+
+					if (sel < 0)
+					{
+						sel = this.hintListIndex.Count-1;
+					}
+
+					if (sel >= this.hintListIndex.Count)
+					{
+						sel = 0;
+					}
+
+					this.hintSelected = sel;
+					this.UseSelectedHint (startEdition: true);
+
+					this.hintListIndex.Clear ();
 				}
-
-				this.hintSelected = sel;
-
-				this.UpdateComboMenuSelection ();
-				this.UseSelectedHint ();
 			}
 		}
 
-		private void UseSelectedHint()
+		private void UseSelectedHint(bool startEdition)
 		{
+			this.ignoreChange = true;
+
 			if (this.hintSelected >= 0 && this.hintSelected < this.hintListIndex.Count)
 			{
 				int i = this.hintListIndex[this.hintSelected];
@@ -483,6 +525,16 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.HintText = null;
 				this.SetError (!string.IsNullOrEmpty (this.Text));
 			}
+
+			if (startEdition)
+			{
+				this.StartEdition ();
+				this.TextNavigator.TextLayout.Text = this.HintText;
+				this.OnTextEdited ();
+				this.SelectAll ();
+			}
+
+			this.ignoreChange = false;
 		}
 
 		// (*)	Il ne faut surtout pas utiliser SelectedItemIndex = i, car il ne faut surtout
@@ -560,7 +612,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 
 				this.hintListIndex.Clear ();
-
 				for (int i = 0; i < this.items.Count; i++)
 				{
 					this.hintListIndex.Add (i);
@@ -749,12 +800,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.hintSelected = this.scrollList.SelectedItemIndex;
-			this.UseSelectedHint ();
-
-			this.StartEdition ();
-			this.TextNavigator.TextLayout.Text = this.HintText;
-			this.OnTextEdited ();
-			this.SelectAll ();
+			this.UseSelectedHint (startEdition: true);
 
 			this.CloseComboMenu ();
 		}
