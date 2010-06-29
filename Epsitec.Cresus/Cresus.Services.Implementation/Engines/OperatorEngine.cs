@@ -181,12 +181,12 @@ namespace Epsitec.Cresus.Services
 					compressed.Write (buffer, 0, read);
 					totalRead += read;
 				}
-				
+
+				this.data = memory.ToArray ();
+
 				compressed.Close ();
 				source.Close ();
 				memory.Close ();
-				
-				this.data = memory.ToArray ();
 			}
 			
 			private void StepFinished()
@@ -196,11 +196,11 @@ namespace Epsitec.Cresus.Services
 			
 			
 			
-			Epsitec.Common.IO.TemporaryFile		temp;
-			OperatorEngine						oper;
-			byte[]								data;
-			int									clientId;
-			string								clientName;
+			private Epsitec.Common.IO.TemporaryFile		temp;
+			private OperatorEngine						oper;
+			private byte[]								data;
+			private int									clientId;
+			private string								clientName;
 		}
 		#endregion
 	}

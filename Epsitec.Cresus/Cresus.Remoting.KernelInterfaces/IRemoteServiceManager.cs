@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Remoting
 		/// </summary>
 		/// <param name="operationId">The operation id.</param>
 		/// <param name="minimumProgress">The minimum progress before a notification should
-		/// be issuded.</param>
+		/// be issued.</param>
 		/// <param name="timeout">The timeout.</param>
 		/// <returns><c>true</c> if there was progress within the specified time interval; otherwise, <c>false</c>.</returns>
 		[OperationContract]
