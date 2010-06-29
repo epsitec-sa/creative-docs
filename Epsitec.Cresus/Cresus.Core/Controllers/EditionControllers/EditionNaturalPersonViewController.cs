@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionNaturalPersonViewController : EditionViewController<Entities.NaturalPersonEntity>
+	public class EditionNaturalPersonViewController : EditionViewController<NaturalPersonEntity>
 	{
-		public EditionNaturalPersonViewController(string name, Entities.NaturalPersonEntity entity)
+		public EditionNaturalPersonViewController(string name, NaturalPersonEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -60,11 +60,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUITitle(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Titre",
-				new SelectionController<Entities.PersonTitleEntity>
+				new SelectionController<PersonTitleEntity>
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.PersonTitleEntity> (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<PersonTitleEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
@@ -84,11 +84,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIGender(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Sexe",
-				new SelectionController<Entities.PersonGenderEntity>
+				new SelectionController<PersonGenderEntity>
 				{
 					ValueGetter = () => this.Entity.Gender,
 					ValueSetter = x => this.Entity.Gender = x.WrapNullEntity (),
-					ValueProxyGetter = () => new ValueProxy (null, ViewControllerMode.None),
+					ReferenceController = new ReferenceController (mode: ViewControllerMode.None),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },
