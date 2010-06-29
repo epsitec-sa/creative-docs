@@ -17,6 +17,7 @@ namespace Epsitec.Common.Widgets
 		public Message()
 		{
 			this.tickCount = System.Environment.TickCount;
+			this.messageId = Message.nextMessageId++;
 			
 			Message.state.buttons   = (MouseButtons) (int) System.Windows.Forms.Control.MouseButtons;
 			Message.state.modifiers = (ModifierKeys) (int) System.Windows.Forms.Control.ModifierKeys;
@@ -49,7 +50,6 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.filterOnlyOnHit; }
 		}
-		
 		
 		public bool							Captured
 		{
@@ -149,11 +149,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.type; }
 		}
-		
+
+		public long							MessageId
+		{
+			get
+			{
+				return this.messageId;
+			}
+		}
+
 		public int							TickCount
 		{
 			get { return this.tickCount; }
 		}
+
 		
 		public string						Command
 		{
@@ -1056,6 +1065,7 @@ namespace Epsitec.Common.Widgets
 		
 		private MessageType					type;
 		private int							tickCount;
+		private long						messageId;
 		private Drawing.Point				cursor;
 		
 		private MouseButtons				button;
@@ -1069,5 +1079,6 @@ namespace Epsitec.Common.Widgets
 		private static KeyCode				lastCode;
 		private static Message				lastMessage;
 		private static Message.State		state;
+		private static long					nextMessageId = 1;
 	}
 }

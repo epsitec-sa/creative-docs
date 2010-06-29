@@ -504,9 +504,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		private readonly TileCollection items;
 
-		private string iconUri;
-		private string title;
-		
 		private GlyphButton buttonAdd;
 		private GlyphButton buttonRemove;
 	}

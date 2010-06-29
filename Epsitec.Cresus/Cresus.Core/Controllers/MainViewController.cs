@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		public NavigationOrchestrator Navigator
+		public new NavigationOrchestrator Navigator
 		{
 			get
 			{
