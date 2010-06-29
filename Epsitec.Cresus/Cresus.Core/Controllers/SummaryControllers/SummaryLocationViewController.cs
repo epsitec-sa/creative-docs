@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					Name				= "Location",
-//?					IconUri				= "Data.Location",
-					IconUri				= "Data.Mail",
+					IconUri				= "Data.Location",
 					Title				= UIBuilder.FormatText ("Ville"),
 					CompactTitle		= UIBuilder.FormatText ("Ville"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Numéro postal: ", x.PostalCode, "\n", "Ville: ", x.Name)),
