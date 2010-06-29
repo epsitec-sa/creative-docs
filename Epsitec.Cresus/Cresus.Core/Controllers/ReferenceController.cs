@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="mode">The view controller mode.</param>
 		private ReferenceController(System.Func<AbstractEntity> entityGetter = null, System.Func<AbstractEntity, AbstractEntity> entityMapper = null, System.Func<DataContext, NewEntityReference> creator = null, ViewControllerMode mode = ViewControllerMode.Summary)
 		{
-			this.entityGetter       = entityGetter;
+			this.entityGetter       = entityGetter ?? (() => null);
 			this.entityMapper       = entityMapper;
 			this.viewControllerMode = mode;
 			this.creator            = creator;
@@ -60,14 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		private AbstractEntity Entity
-		{
-			get
-			{
-				return this.entityGetter == null ? null : this.entityGetter ();
-			}
-		}
-
 		public ViewControllerMode Mode
 		{
 			get
@@ -84,6 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		
 		public NewEntityReference CreateNewValue(DataContext context)
 		{
 			if (this.creator == null)
@@ -96,16 +89,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		
 		public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
 		{
-			var entity = ReferenceController.Apply (this.Entity, this.entityMapper);
+			var entity = ReferenceController.Apply (this.entityGetter (), this.entityMapper);
 			var mode   = this.Mode;
 			var ctrl   = EntityViewController.CreateEntityViewController ("ReferenceViewController", entity, mode, orchestrator);
 
 			return ctrl;
 		}
 
+		
 		private static T2 Apply<T1, T2>(T1 value, System.Func<T1, T2> map1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity

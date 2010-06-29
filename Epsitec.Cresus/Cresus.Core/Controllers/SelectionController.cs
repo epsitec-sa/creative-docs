@@ -271,47 +271,4 @@ namespace Epsitec.Cresus.Core.Controllers
 		private Expression<System.Func<T>> valueGetterExpression;
 		private System.Func<T> valueGetter;
 	}
-
-	public class NewEntityReference
-	{
-		public NewEntityReference(AbstractEntity referenceEntity)
-		{
-			this.referenceEntity = referenceEntity;
-			this.editionEntity   = referenceEntity;
-			this.CreationControllerMode = ViewControllerMode.Creation;
-		}
-
-		public NewEntityReference(AbstractEntity referenceEntity, AbstractEntity editionEntity)
-		{
-			this.referenceEntity = referenceEntity;
-			this.editionEntity   = editionEntity;
-			this.CreationControllerMode = ViewControllerMode.Creation;
-		}
-
-		public ViewControllerMode CreationControllerMode
-		{
-			get;
-			set;
-		}
-
-		public AbstractEntity GetReferenceEntity()
-		{
-			return this.referenceEntity;
-		}
-
-		public AbstractEntity GetEditionEntity()
-		{
-			return this.editionEntity;
-		}
-
-
-		public static implicit operator NewEntityReference(AbstractEntity value)
-		{
-			return new NewEntityReference (value);
-		}
-
-
-		private readonly AbstractEntity referenceEntity;
-		private readonly AbstractEntity editionEntity;
-	}
 }
