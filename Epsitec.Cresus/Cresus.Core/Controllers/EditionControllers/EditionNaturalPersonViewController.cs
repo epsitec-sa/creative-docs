@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<PersonTitleEntity> (),
+					ReferenceController = new ReferenceController (creator: this.CreateNewTitle),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
@@ -100,6 +101,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 			builder.CreateTextField (tile, 90, "Date de naissance", Marshaler.Create (() => this.Entity.BirthDate, x => this.Entity.BirthDate = x));
+		}
+
+		private NewValue<AbstractEntity> CreateNewTitle(DataContext context)
+		{
+			var title = context.CreateRegisteredEmptyEntity<PersonTitleEntity> ();
+			return title;
 		}
 	}
 }

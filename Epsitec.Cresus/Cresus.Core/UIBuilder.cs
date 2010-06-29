@@ -354,14 +354,19 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, () => controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator, controller.ReferenceController ?? default (ReferenceController));
+
+			System.Func<AbstractEntity>   entityGetter = () => controller.GetValue ();
+			System.Action<AbstractEntity> entitySetter = x => controller.SetValue (x as T);
+
+			var referenceController = controller.ReferenceController ?? new ReferenceController (entityGetter: entityGetter);
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, entityGetter, entitySetter, referenceController);
 
 			controller.Attach (autoCompleteTextField);
 
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, ReferenceController referenceController)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
 			tile.AllowSelection = true;
 
@@ -422,7 +427,7 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController ?? new ReferenceController (), createEnabled: valueCreator != null);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController, createEnabled: referenceController.ValueCreator != null);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
@@ -458,13 +463,13 @@ namespace Epsitec.Cresus.Core
 					
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
-						tile.Controller = new AutoCompleteTextFieldTileController (referenceController ?? new ReferenceController (entityGetter: entityGetter));
+						tile.Controller = new ReferenceTileController (referenceController);
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
 					{
-						if (valueCreator != null)
+						if (referenceController.ValueCreator != null)
 						{
 							if (tile.IsSelected)
 							{
@@ -472,7 +477,7 @@ namespace Epsitec.Cresus.Core
 							}
 							else
 							{
-								var newValue  = valueCreator (controller.DataContext);
+								var newValue  = referenceController.ValueCreator (controller.DataContext);
 								var newEntity = newValue.GetEditionEntity ();
 								var refEntity = newValue.GetReferenceEntity ();
 								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
@@ -519,10 +524,11 @@ namespace Epsitec.Cresus.Core
 			private readonly IStructuredData entity;
 		}
 
+		#region ReferenceTileController Class
 
-		private class AutoCompleteTextFieldTileController : ITileController
+		private class ReferenceTileController : ITileController
 		{
-			public AutoCompleteTextFieldTileController(ReferenceController referenceController)
+			public ReferenceTileController(ReferenceController referenceController)
 			{
 				this.referenceController = referenceController;
 			}
@@ -532,10 +538,7 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
 			{
-				var entity = this.referenceController.Entity;
-				var mode   = this.referenceController.Mode;
-
-				return EntityViewController.CreateEntityViewController ("AutoCompleteTextFieldEditionViewController", entity, mode, orchestrator);
+				return this.referenceController.CreateSubViewController (orchestrator);
 			}
 
 			#endregion
@@ -575,6 +578,8 @@ namespace Epsitec.Cresus.Core
 
 			private readonly ReferenceController referenceController;
 		}
+
+		#endregion
 
 		private CoreViewController GetActiveController()
 		{
