@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	public abstract class CollectionAccessor : ICollectionAccessor
 	{
-		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
+		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : T2, new ()
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
 	{
-		public CollectionAccessor(System.Func<T1> source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
+		public CollectionAccessor(System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
 		{
 			this.source = source;
 			this.collectionResolver = collectionResolver.Compile ();
@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		private readonly System.Func<T1> source;
-		private readonly System.Func<T1, System.Collections.Generic.IList<T2>> collectionResolver;
-		private readonly Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> collectionResolverExpression;
+		private readonly System.Func<T1, IList<T2>> collectionResolver;
+		private readonly Expression<System.Func<T1, IList<T2>>> collectionResolverExpression;
 		private readonly CollectionTemplate<T3> template;
 	}
 }
