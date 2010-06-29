@@ -71,12 +71,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<DataContext, NewValue<AbstractEntity>> ValueCreator
-		{
-			get;
-			set;
-		}
-
 
 		public T GetValue()
 		{

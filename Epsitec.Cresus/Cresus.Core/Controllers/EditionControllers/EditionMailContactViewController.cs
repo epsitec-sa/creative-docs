@@ -186,7 +186,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
 					ReferenceController = this.GetLegalPersonReferenceController (),
-					ValueCreator = this.CreateLegalPersonRelation,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
@@ -251,7 +250,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					{
 						return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
 					}
-				});
+				},
+				creator: this.CreateNewLegalPerson);
 		}
 
 		private ReferenceController GetAddressReferenceController()
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
-		private NewValue<AbstractEntity> CreateLegalPersonRelation(DataContext context)
+		private NewValue<AbstractEntity> CreateNewLegalPerson(DataContext context)
 		{
 			var customer = context.CreateRegisteredEmptyEntity<RelationEntity> ();
 			var person   = context.CreateRegisteredEmptyEntity<LegalPersonEntity> ();
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<CountryEntity> (),
+					ReferenceController = new ReferenceController (creator: this.CreateNewCountry),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Location,
 					ValueSetter = x => this.Location = x.WrapNullEntity (),
-					ValueCreator = context => this.CreateNewLocation (context),
+					ReferenceController = new ReferenceController (creator: this.CreateNewLocation),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
@@ -336,9 +336,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private LocationEntity CreateNewLocation(DataContext context)
+		private NewValue<AbstractEntity> CreateNewCountry(DataContext context)
 		{
-			LocationEntity location = context.CreateRegisteredEmptyEntity<LocationEntity> ();
+			var country = context.CreateRegisteredEmptyEntity<CountryEntity> ();
+
+			return country;
+		}
+
+		private NewValue<AbstractEntity> CreateNewLocation(DataContext context)
+		{
+			var location = context.CreateRegisteredEmptyEntity<LocationEntity> ();
 
 			location.Country = this.selectedCountry;
 
