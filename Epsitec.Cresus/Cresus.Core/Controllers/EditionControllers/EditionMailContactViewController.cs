@@ -238,16 +238,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private ReferenceController GetLegalPersonReferenceController()
 		{
 			return ReferenceController.Create (
-				() => this.Entity.LegalPerson,
-				person => CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault (),
+				this.EntityGetter,
+				entity => entity.LegalPerson,
+				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault (),
 				creator: this.CreateNewLegalPerson);
 		}
 
 		private ReferenceController GetAddressReferenceController()
 		{
 			return ReferenceController.Create (
-				() => this.Entity.LegalPerson,
-				person => CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ());
+				this.EntityGetter,
+				entity => entity.Address,
+				entity => CoreProgram.Application.Data.GetCustomers (entity.LegalPerson).FirstOrDefault ());
 		}
 
 		private NewEntityReference CreateNewLegalPerson(DataContext context)

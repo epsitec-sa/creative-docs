@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Core
 			System.Func<AbstractEntity>   entityGetter = () => controller.GetValue ();
 			System.Action<AbstractEntity> entitySetter = x => controller.SetValue (x as T);
 
-			var referenceController = controller.ReferenceController ?? new ReferenceController (entityGetter: entityGetter);
+			var referenceController = controller.ReferenceController ?? new ReferenceController (entityGetter);
 			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, entityGetter, entitySetter, referenceController);
 
 			controller.Attach (autoCompleteTextField);
@@ -477,7 +477,7 @@ namespace Epsitec.Cresus.Core
 							}
 							else
 							{
-								var newValue  = referenceController.ValueCreator (controller.DataContext);
+								var newValue  = referenceController.CreateNewValue (controller.DataContext);
 								var newEntity = newValue.GetEditionEntity ();
 								var refEntity = newValue.GetReferenceEntity ();
 								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
