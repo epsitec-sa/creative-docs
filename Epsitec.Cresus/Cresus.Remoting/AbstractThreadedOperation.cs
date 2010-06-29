@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Remoting
 
 		/// <summary>
 		/// Gets the thread cancel event. If it does not yet exist, create it.
-		/// Signalling the cancel event will cancel the threaded operation, as
+		/// Signaling the cancel event will cancel the threaded operation, as
 		/// soon as the thread has the opportunity to do so.
 		/// </summary>
 		/// <value>The thread cancel event.</value>
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Remoting
 			{
 				if (this.thread != null)
 				{
-					//	First, ask politely to cancel the opration, then be rude if this
+					//	First, ask politely to cancel the operation, then be rude if this
 					//	fails, by interrupting the thread.
 					
 					if (this.CancelOperation (this.waitBeforeAbortInMilliseconds) == false)

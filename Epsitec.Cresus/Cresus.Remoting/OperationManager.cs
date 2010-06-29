@@ -96,37 +96,6 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 
-#if false
-		internal static bool WaitForProgress(long operationId, int percent, System.TimeSpan timeout)
-		{
-			if (operationId == 0)
-			{
-				return true;
-			}
-
-			OperationManager manager = OperationManager.instance;
-			AbstractOperation operation;
-
-			lock (manager.exclusion)
-			{
-				if (operationId >= manager.nextOperationId)
-				{
-					throw new System.ArgumentException ("Invalid operation ID");
-				}
-
-				manager.operations.TryGetValue (operationId, out operation);
-			}
-
-			if (operation == null)
-			{
-				//	Operation finished a long time ago... no need to wait.
-
-				return true;
-			}
-
-			return operation.WaitForProgress (percent, timeout);
-		}
-#endif
 
 		/// <summary>
 		/// Sets the AppDomain specific id. This gets called by the <c>Engine</c> class in
