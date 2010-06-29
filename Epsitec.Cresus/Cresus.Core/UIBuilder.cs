@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public TextField CreateTextField(EditionTile tile, int width, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		public TextField CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
 		{
 			var staticText = new StaticText
 			{
@@ -302,7 +302,6 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldEx
 			{
 				Parent = tile.Container,
-				Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ()),
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
@@ -312,20 +311,19 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (textField);
 
-			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
-
 			if (width > 0)
 			{
 				textField.HorizontalAlignment = HorizontalAlignment.Left;
 				textField.PreferredWidth = width;
 			}
 
-			UIBuilder.CreateTextFieldHandler (textField, marshaler);
+			var valueController = new TextValueController (marshaler);
+			valueController.Attach (textField);
 
 			return textField;
 		}
 
-		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, int height, string label, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, int height, string label, Marshaler marshaler)
 		{
 			var staticText = new StaticText
 			{
@@ -339,7 +337,6 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldMultiEx
 			{
 				Parent = tile.Container,
-				Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ()),
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
@@ -352,9 +349,8 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (textField);
 
-			var validator = new Epsitec.Common.Widgets.Validators.MarshalerValidator (textField, marshaler);
-
-			UIBuilder.CreateTextFieldHandler (textField, marshaler);
+			var valueController = new TextValueController (marshaler);
+			valueController.Attach (textField);
 
 			return textField;
 		}
@@ -846,18 +842,6 @@ namespace Epsitec.Cresus.Core
 						}
 					}
 				};
-		}
-
-		private static void CreateTextFieldHandler(AbstractTextField textField, Epsitec.Common.Types.Converters.Marshaler marshaler)
-		{
-			textField.AcceptingEdition +=
-				delegate
-				{
-					string text = TextConverter.ConvertToSimpleText (textField.Text);
-					marshaler.SetStringValue (text);
-				};
-
-			textField.KeyboardFocusChanged += (sender, e) => textField.Text = TextConverter.ConvertToTaggedText (marshaler.GetStringValue ());
 		}
 
 		private static void CreateComboHandler(Widget widget, System.Action<string> valueSetter, System.Func<string, bool> validator, System.Func<string, string> converter)
