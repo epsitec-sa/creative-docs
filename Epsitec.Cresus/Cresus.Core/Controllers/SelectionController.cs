@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// the item picker widgets.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class SelectionController<T>
+	public class SelectionController<T> : IWidgetUpdater
 		where T : AbstractEntity
 	{
 		public SelectionController()
@@ -108,17 +108,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(Widgets.AutoCompleteTextField widget)
 		{
-			foreach (var item in this.PossibleItemsGetter ())
-			{
-				widget.Items.Add (item);
-			}
+			this.attachedWidget = widget;
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
-			
+
 			widget.HintComparer = (value, text) => this.MatchUserText (value as T, text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			widget.SelectedItemIndex = widget.Items.FindIndexByValue (this.GetValue ());
+			this.Update ();
 
 			widget.AcceptingEdition +=
 				delegate
@@ -134,6 +131,21 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			foreach (var item in this.PossibleItemsGetter ())
+			{
+				this.attachedWidget.Items.Add (item);
+			}
+
+			this.attachedWidget.SelectedItemIndex = this.attachedWidget.Items.FindIndexByValue (this.GetValue ());
+		}
+
+		#endregion
+
+	
 		static int CompareItems(T a, T b)
 		{
 			var ra = a as Entities.IItemRank;
@@ -272,42 +284,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Expression<System.Func<T>> valueGetterExpression;
 		private System.Func<T> valueGetter;
-	}
-
-	public class TextValueController
-	{
-		public TextValueController(Marshaler marshaler)
-		{
-			this.marshaler = marshaler;
-		}
-
-
-		public void Attach(AbstractTextField widget)
-		{
-			this.widget = widget;
-			this.UpdateWidget ();
-			
-			new MarshalerValidator (this.widget, this.marshaler);
-
-			widget.AcceptingEdition +=
-				delegate
-				{
-					string text = TextConverter.ConvertToSimpleText (widget.Text);
-					this.marshaler.SetStringValue (text);
-				};
-
-			widget.KeyboardFocusChanged += (sender, e) => this.UpdateWidget ();
-		}
-
-		private void UpdateWidget()
-		{
-			if (this.widget != null)
-			{
-				this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
-			}
-		}
-		
-		private readonly Marshaler marshaler;
-		private Widget widget;
+		private Widgets.AutoCompleteTextField attachedWidget;
 	}
 }
