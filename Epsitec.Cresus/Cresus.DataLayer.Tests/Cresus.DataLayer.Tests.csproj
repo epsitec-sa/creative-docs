@@ -209,7 +209,6 @@
     <Compile Include="..\Demo\Resources\Demo5juin\SourceCode\Entities.cs">
       <Link>Demo5juin\Entities.cs</Link>
     </Compile>
-    <Compile Include="AdapterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -218,7 +217,6 @@
     <Compile Include="EntityCodeGeneratorTest.cs" />
     <Compile Include="Helpers.EntityDataMapping.cs" />
     <Compile Include="SchemaEngineTest.cs" />
-    <Compile Include="DataBrokerTest.cs" />
     <Compile Include="RequestFactoryTest.cs">
       <SubType>Code</SubType>
     </Compile>

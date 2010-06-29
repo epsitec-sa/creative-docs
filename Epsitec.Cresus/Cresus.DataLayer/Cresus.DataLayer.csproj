@@ -174,15 +174,10 @@
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
     <Compile Include="Helpers\ValueFieldProxy.cs" />
-    <Compile Include="Retired sources\Adapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Retired sources\DataBroker.cs" />
-    <Compile Include="Retired sources\DataBrokerRecord.cs" />
     <Compile Include="DataContext.cs" />
-    <Compile Include="Retired sources\DataTableBroker.cs" />
-    <Compile Include="Retired sources\DataBrokerItem.cs" />
     <Compile Include="EntityResolutionMode.cs" />
     <Compile Include="Helpers\EntityDataMapping.cs" />
     <Compile Include="Helpers\EntityKeyProxy.cs" />
