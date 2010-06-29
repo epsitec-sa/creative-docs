@@ -6,11 +6,11 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</ProjectGuid>
+    <ProjectGuid>{477069EF-0771-4682-BC3D-D18C939E1CFD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
-    <AssemblyName>Cresus.Core.Tests</AssemblyName>
+    <RootNamespace>Epsitec.Cresus.Requests</RootNamespace>
+    <AssemblyName>Cresus.Requests.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -23,7 +23,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,27 +32,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FirebirdSql.Data.FirebirdClient, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3750abcc3150b00c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\External\FirebirdSql.Data.FirebirdClient.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -61,78 +47,54 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityPersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestHelper.cs" />
-    <Compile Include="UnitTestEntities.cs" />
-    <Compile Include="UnitTestFormState.cs" />
+    <Compile Include="UnitTestRequest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Dialogs\Common.Dialogs.csproj">
-      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
-      <Name>Common.Dialogs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.IO\Common.IO.csproj">
-      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
-      <Name>Common.IO</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.Support.Implementation\Common.Support.Implementation.csproj">
-      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
-      <Name>Common.Support.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.Support\Common.Support.csproj">
-      <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
-      <Name>Common.Support</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Common.Types\Common.Types.csproj">
+    <ProjectReference Include="..\Common.Types\Common.Types.csproj">
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
+    <ProjectReference Include="..\Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj">
+      <Project>{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}</Project>
+      <Name>Cresus.Database.UnitTests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Name>Cresus.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
+    <ProjectReference Include="..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
       <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
       <Name>Cresus.Remoting.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj">
+    <ProjectReference Include="..\Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj">
       <Project>{3F7AF584-156E-4805-9CE7-9440C9F225D0}</Project>
       <Name>Cresus.Remoting.KernelInterfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Remoting\Cresus.Remoting.csproj">
+    <ProjectReference Include="..\Cresus.Remoting\Cresus.Remoting.csproj">
       <Project>{C3C59295-14DD-4AF7-B22A-0F8045DA671C}</Project>
       <Name>Cresus.Remoting</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Replication\Cresus.Replication.csproj">
+    <ProjectReference Include="..\Cresus.Replication\Cresus.Replication.csproj">
       <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>
       <Name>Cresus.Replication</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Requests\Cresus.Requests.csproj">
+    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
       <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
       <Name>Cresus.Requests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Services\Cresus.Services.csproj">
+    <ProjectReference Include="..\Cresus.Services\Cresus.Services.csproj">
       <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
       <Name>Cresus.Services</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Epsitec.Cresus.snk">
-      <Link>Epsitec.Cresus.snk</Link>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
