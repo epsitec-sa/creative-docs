@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					Name				= "PersonTitle",
-					IconUri				= "Data.NaturalPerson",
+					IconUri				= "Data.Title",
 					Title				= UIBuilder.FormatText ("Titre"),
 					CompactTitle		= UIBuilder.FormatText ("Titre"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Abrégé: ", x.ShortName, "\n", "Complet: ", x.Name)),
