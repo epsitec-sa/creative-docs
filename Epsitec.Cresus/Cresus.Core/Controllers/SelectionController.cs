@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public System.Func<ValueProxy> ValueProxyGetter
+		public ReferenceController ReferenceController
 		{
 			get;
 			set;
@@ -278,12 +278,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		private System.Func<T> valueGetter;
 	}
 
-	public class ValueProxy
+	public class ReferenceController
 	{
-		public ValueProxy(AbstractEntity entity, ViewControllerMode mode)
+		public ReferenceController(System.Func<AbstractEntity> entityGetter = null, ViewControllerMode mode = ViewControllerMode.Summary)
 		{
-			this.entity = entity;
-			this.mode   = mode;
+			this.entityGetter = entityGetter;
+			this.mode         = mode;
 		}
 
 
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.entity;
+				return this.entityGetter == null ? null : this.entityGetter ();
 			}
 		}
 
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private readonly AbstractEntity entity;
+		private readonly System.Func<AbstractEntity> entityGetter;
 		private readonly ViewControllerMode mode;
 	}
 

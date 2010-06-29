@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.LegalPerson,
 					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
-					ValueProxyGetter = this.ProxyLegalPersonToRelation,
+					ReferenceController = this.GetLegalPersonReferenceController (),
 					ValueCreator = this.CreateLegalPersonRelation,
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
@@ -215,6 +215,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Address,
 					ValueSetter = x => this.Entity.Address = x.WrapNullEntity (),
+					ReferenceController = this.GetAddressReferenceController (),
 					PossibleItemsGetter = () => this.LegalPersonAddressGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
@@ -235,19 +236,40 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private ValueProxy ProxyLegalPersonToRelation()
+		private ReferenceController GetLegalPersonReferenceController()
 		{
-			var person = this.Entity.LegalPerson;
+			return new ReferenceController (
+				delegate
+				{
+					var person = this.Entity.LegalPerson;
 
-			if (person.UnwrapNullEntity () == null)
-			{
-				return null;
-			}
-			else
-			{
-				var customer = CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
-				return new ValueProxy (customer, ViewControllerMode.Summary);
-			}
+					if (person.UnwrapNullEntity () == null)
+					{
+						return null;
+					}
+					else
+					{
+						return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
+					}
+				});
+		}
+
+		private ReferenceController GetAddressReferenceController()
+		{
+			return new ReferenceController (
+				delegate
+				{
+					var person = this.Entity.LegalPerson;
+
+					if (person.UnwrapNullEntity () == null)
+					{
+						return null;
+					}
+					else
+					{
+						return CoreProgram.Application.Data.GetCustomers (person).FirstOrDefault ();
+					}
+				});
 		}
 
 		private NewValue<AbstractEntity> CreateLegalPersonRelation(DataContext context)
@@ -282,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
-					ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.CountryEntity> (),
+					ValueCreator = context => context.CreateRegisteredEmptyEntity<CountryEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -316,7 +338,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private LocationEntity CreateNewLocation(DataContext context)
 		{
-			LocationEntity location = context.CreateRegisteredEmptyEntity<Entities.LocationEntity> ();
+			LocationEntity location = context.CreateRegisteredEmptyEntity<LocationEntity> ();
 
 			location.Country = this.selectedCountry;
 

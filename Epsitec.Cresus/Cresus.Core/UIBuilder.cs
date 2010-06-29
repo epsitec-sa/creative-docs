@@ -354,14 +354,14 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, () => controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator, controller.ValueProxyGetter ?? (() => default (ValueProxy)));
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, () => controller.GetValue (), x => controller.SetValue (x as T), controller.ValueCreator, controller.ReferenceController ?? default (ReferenceController));
 
 			controller.Attach (autoCompleteTextField);
 
 			return autoCompleteTextField;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, System.Func<ValueProxy> valueProxyGetter)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, System.Func<DataContext, NewValue<AbstractEntity>> valueCreator, ReferenceController valueProxy)
 		{
 			tile.AllowSelection = true;
 
@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
-			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, valueProxyGetter, createEnabled: valueCreator != null);
+			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, valueProxy, createEnabled: valueCreator != null);
 
 			editor.SelectedItemChanged += sender => changeHandler ();
 			editor.TextChanged         += sender => changeHandler ();
@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Core
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						var entity = entityGetter ();
-						tile.Controller = new AutoCompleteTextFieldTileController (entity, valueProxyGetter ());
+						tile.Controller = new AutoCompleteTextFieldTileController (entity, valueProxy);
 						tile.ToggleSubView (controller.Orchestrator, controller);
 					}
 
@@ -523,7 +523,7 @@ namespace Epsitec.Cresus.Core
 
 		private class AutoCompleteTextFieldTileController : ITileController
 		{
-			public AutoCompleteTextFieldTileController(AbstractEntity entity, ValueProxy valueProxy)
+			public AutoCompleteTextFieldTileController(AbstractEntity entity, ReferenceController valueProxy)
 			{
 				this.entity = valueProxy == null ? entity : valueProxy.Entity;
 				this.mode   = valueProxy == null ? ViewControllerMode.Summary : valueProxy.Mode;
@@ -588,13 +588,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, System.Func<ValueProxy> valueProxyGetter, bool createEnabled)
+		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController valueProxy, bool createEnabled)
 		{
 			return
 				delegate
 				{
-					var valueProxy = valueProxyGetter ();
-
 					if ((!editor.InError) &&
 						(editor.SelectedItemIndex >= 0))
 					{
