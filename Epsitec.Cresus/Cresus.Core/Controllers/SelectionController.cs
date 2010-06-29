@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Validators;
 
 using Epsitec.Cresus.DataLayer;
 
@@ -270,5 +272,42 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Expression<System.Func<T>> valueGetterExpression;
 		private System.Func<T> valueGetter;
+	}
+
+	public class TextValueController
+	{
+		public TextValueController(Marshaler marshaler)
+		{
+			this.marshaler = marshaler;
+		}
+
+
+		public void Attach(AbstractTextField widget)
+		{
+			this.widget = widget;
+			this.UpdateWidget ();
+			
+			new MarshalerValidator (this.widget, this.marshaler);
+
+			widget.AcceptingEdition +=
+				delegate
+				{
+					string text = TextConverter.ConvertToSimpleText (widget.Text);
+					this.marshaler.SetStringValue (text);
+				};
+
+			widget.KeyboardFocusChanged += (sender, e) => this.UpdateWidget ();
+		}
+
+		private void UpdateWidget()
+		{
+			if (this.widget != null)
+			{
+				this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
+			}
+		}
+		
+		private readonly Marshaler marshaler;
+		private Widget widget;
 	}
 }
