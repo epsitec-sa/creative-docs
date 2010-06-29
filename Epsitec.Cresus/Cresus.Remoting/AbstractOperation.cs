@@ -51,6 +51,16 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 
+
+		public long OperationId
+		{
+			get
+			{
+				return this.operationId;
+			}
+		}
+
+
 		/// <summary>
 		/// Gets the failure message.
 		/// </summary>
@@ -362,7 +372,7 @@ namespace Epsitec.Cresus.Remoting
 
 
 		readonly object							monitor = new object ();
-		/*readonly*/ long						operationId;
+		long									operationId;
 		
 		readonly System.DateTime				startTime;
 		System.DateTime							stopTime;
