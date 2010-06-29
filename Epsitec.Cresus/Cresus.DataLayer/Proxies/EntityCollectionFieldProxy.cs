@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+namespace Epsitec.Cresus.DataLayer.Proxies
 {
 
 

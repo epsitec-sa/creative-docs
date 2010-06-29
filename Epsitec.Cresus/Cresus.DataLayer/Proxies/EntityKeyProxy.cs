@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+namespace Epsitec.Cresus.DataLayer.Proxies
 {
 	/// <summary>
 	/// The <c>EntityDataProxy</c> class automatically loads entities on demand.

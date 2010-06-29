@@ -4,7 +4,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+namespace Epsitec.Cresus.DataLayer.Proxies
 {
 
 
