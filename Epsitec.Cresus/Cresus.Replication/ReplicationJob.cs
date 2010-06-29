@@ -21,48 +21,30 @@ namespace Epsitec.Cresus.Replication
 		/// Gets or sets the client indentity.
 		/// </summary>
 		/// <value>The client identity.</value>
-		public Remoting.ClientIdentity			Client
+		public Remoting.ClientIdentity Client
 		{
-			get
-			{
-				return this.client;
-			}
-			set
-			{
-				this.client = value;
-			}
+			get;
+			set;
 		}
 
 		/// <summary>
 		/// Gets or sets the synchronization start id.
 		/// </summary>
 		/// <value>The synchronization start id.</value>
-		public Database.DbId					SyncStartId
+		public Database.DbId SyncStartId
 		{
-			get
-			{
-				return this.syncStartId;
-			}
-			set
-			{
-				this.syncStartId = value;
-			}
+			get;
+			set;
 		}
 
 		/// <summary>
 		/// Gets or sets the synchronization end id.
 		/// </summary>
 		/// <value>The synchronization end id.</value>
-		public Database.DbId					SyncEndId
+		public Database.DbId SyncEndId
 		{
-			get
-			{
-				return this.syncEndId;
-			}
-			set
-			{
-				this.syncEndId = value;
-			}
+			get;
+			set;
 		}
 
 		/// <summary>
@@ -93,16 +75,10 @@ namespace Epsitec.Cresus.Replication
 		/// Gets or sets the pull arguments.
 		/// </summary>
 		/// <value>The pull arguments.</value>
-		public PullArguments					PullArguments
+		public PullArguments PullArguments
 		{
-			get
-			{
-				return this.pullArgs;
-			}
-			set
-			{
-				this.pullArgs = value;
-			}
+			get;
+			set;
 		}
 		
 		
@@ -139,11 +115,7 @@ namespace Epsitec.Cresus.Replication
 		
 		
 		
-		private Remoting.ClientIdentity			client;
-		private Database.DbId					syncStartId;
-		private Database.DbId					syncEndId;
 		private byte[]							syncData;
 		private string							syncError;
-		private PullArguments					pullArgs;
 	}
 }
