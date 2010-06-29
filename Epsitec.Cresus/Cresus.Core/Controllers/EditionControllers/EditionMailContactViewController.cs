@@ -173,7 +173,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (tabPageName == "local")
 			{
-				// TODO:
+				if (this.Entity.LegalPerson.IsActive ())
+				{
+					// TODO: Pourquoi cela ne fonctionne-t-il pas (dans SummaryController.Common, LegalPerson est null) ?
+					this.Entity.LegalPerson = null;
+					this.Entity.Address = this.DataContext.CreateRegisteredEmptyEntity<AddressEntity> ();
+				}
 			}
 		}
 
