@@ -736,6 +736,7 @@ namespace Epsitec.Cresus.Database
 			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTableDef, oldKey, newKey);
+			this.tableCache[oldKey] = null;
 		}
 
 		/// <summary>
@@ -1028,6 +1029,8 @@ namespace Epsitec.Cresus.Database
 			DbKey newKey = new DbKey (oldKey.Id, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, oldKey, newKey);
+
+			this.typeCache[oldKey] = null;
 		}
 
 		/// <summary>
@@ -2064,6 +2067,7 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TABLE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TABLE", Tags.ColumnDisplayName));
 			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TABLE", Tags.ColumnInfoXml));
+			query.Fields.Add ("T_STAT", SqlField.CreateName ("T_TABLE", Tags.ColumnStatus));
 			
 			//	Column related informations :
 			
@@ -2106,33 +2110,40 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				long currentRowId = InvariantConverter.ToLong (row["T_ID"]);
+				int status = InvariantConverter.ToInt (row["T_STAT"]);
+
+				if (status != 0)
+				{
+					continue;
+				}
 				
+				long currentRowId = InvariantConverter.ToLong (row["T_ID"]);
+
 				if (rowId != currentRowId)
 				{
 					//	Found a new table definition :
-					
+
 					rowId   = currentRowId;
 					dbTable = null;
-					
+
 					string tableInfo = InvariantConverter.ToString (row["T_INFO"]);
 					string tableName = InvariantConverter.ToString (row["T_NAME"]);
 					string tableDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
 					
 					dbTable = this.tableCache[tableKey];
-					
+
 					if (dbTable == null)
 					{
 						//	The table is not yet loaded in the cache, so deserialize
 						//	it and initialize it, then put it into the cache :
-						
+
 						dbTable = DbTools.DeserializeFromXml<DbTable> (tableInfo);
 						recycle = false;
 
 						dbTable.DefineDisplayName (tableDisplayName);
 						dbTable.DefineKey (tableKey);
-						
+
 						if ((tableKey.Status == DbRowStatus.Live) ||
 							(tableKey.Status == DbRowStatus.Copied))
 						{
@@ -2144,7 +2155,7 @@ namespace Epsitec.Cresus.Database
 						System.Diagnostics.Debug.WriteLine (string.Format ("Recycling known table {0}", dbTable.Name));
 						recycle = true;
 					}
-					
+
 					tables.Add (dbTable);
 				}
 				
@@ -2311,6 +2322,7 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TYPE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnDisplayName));
 			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
+			query.Fields.Add ("T_STAT", SqlField.CreateName ("T_TYPE", Tags.ColumnStatus));
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
 			
@@ -2325,27 +2337,31 @@ namespace Epsitec.Cresus.Database
 			
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 1);
 			List<DbTypeDef> types = new List<DbTypeDef> ();
-			
+
 			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
 				long   typeId          = InvariantConverter.ToLong (row["T_ID"]);
 				string typeName        = InvariantConverter.ToString (row["T_NAME"]);
 				string typeDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
 				string typeInfo        = InvariantConverter.ToString (row["T_INFO"]);
-				
-				DbTypeDef typeDef = this.typeCache[typeKey];
+				int    status          = InvariantConverter.ToInt (row["T_STAT"]);
 
-				if (typeDef == null)
+				if (status == 0)
 				{
-					typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
+					DbTypeDef typeDef = this.typeCache[typeKey];
 
-					typeDef.DefineDisplayName (typeDisplayName);
-					typeDef.DefineKey (new DbKey (typeId));
+					if (typeDef == null)
+					{
+						typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
 
-					this.typeCache[typeKey] = typeDef;
+						typeDef.DefineDisplayName (typeDisplayName);
+						typeDef.DefineKey (new DbKey (typeId));
+
+						this.typeCache[typeKey] = typeDef;
+					}
+
+					types.Add (typeDef);
 				}
-				
-				types.Add (typeDef);
 			}
 			
 			return types;

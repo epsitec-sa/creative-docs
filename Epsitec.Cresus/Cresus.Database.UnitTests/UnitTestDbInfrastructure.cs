@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.Core;
 
+using Epsitec.Cresus.Database.Exceptions;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -16,16 +18,6 @@ namespace Epsitec.Cresus.Database
 		{
 			TestHelper.Initialize ();
 		}
-
-
-		/*
-		 * The following code comes directly from the old test and has not been checked or tested. It
-		 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
-		 * this comment. Marc
-		 */
-
-
-#if false
 
 
 		[TestMethod]
@@ -46,19 +38,19 @@ namespace Epsitec.Cresus.Database
 				table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
 
 				Assert.IsNotNull (table);
-				Assert.AreEqual (1000000000001L, table.Key.Id);
+				Assert.AreEqual (new DbId (1000000000001L), table.Key.Id);
 				Assert.AreEqual (7, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_COLUMN_DEF");
 
 				Assert.IsNotNull (table);
-				Assert.AreEqual (1000000000002L, table.Key.Id);
+				Assert.AreEqual (new DbId (1000000000002L), table.Key.Id);
 				Assert.AreEqual (9, table.Columns.Count);
 
 				table = infrastructure.ResolveDbTable ("CR_TYPE_DEF");
 
 				Assert.IsNotNull (table);
-				Assert.AreEqual (1000000000003L, table.Key.Id);
+				Assert.AreEqual (new DbId (1000000000003L), table.Key.Id);
 				Assert.AreEqual (6, table.Columns.Count);
 
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
@@ -143,15 +135,14 @@ namespace Epsitec.Cresus.Database
 
 				infrastructure.UnregisterDbType (db_type_1);
 				infrastructure.UnregisterDbType (db_type_2);
-				//				infrastructure.UnregisterDbType (db_type_3);
 
 				db_type_1 = infrastructure.ResolveDbType ("Nom");
 				db_type_2 = infrastructure.ResolveDbType ("NUPO");
-				//				db_type_3 = infrastructure.ResolveDbType ("Titre");
+				db_type_3 = infrastructure.ResolveDbType ("IsMale");
 
 				Assert.IsNull (db_type_1);
 				Assert.IsNull (db_type_2);
-				//				Assert.IsNull (db_type_3);
+				Assert.IsNotNull (db_type_3);
 			}
 		}
 
@@ -234,7 +225,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys.Count, db_table2.PrimaryKeys.Count);
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name, db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count, db_table2.Columns.Count);
-				Assert.AreEqual (1000000000013L, db_table2.Key.Id);
+				Assert.AreEqual (new DbId (1000000000013L), db_table2.Key.Id);
 
 				//	Now try to put data into the table...
 
@@ -415,7 +406,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (db_table);
 
 				Assert.IsNotNull (infrastructure.ResolveDbTable (db_table.Name));
-				Assert.AreEqual (1000000000014L, db_table.Key.Id);
+				Assert.AreEqual (new DbId (1000000000014L), db_table.Key.Id);
 				Assert.AreEqual (DbRowStatus.Live, db_table.Key.Status);
 			}
 		}
@@ -683,9 +674,6 @@ namespace Epsitec.Cresus.Database
 				cm.Insert (client_2);
 			}
 		}
-
-
-#endif
 
 
 		#region Support Code
