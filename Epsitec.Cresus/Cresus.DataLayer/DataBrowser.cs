@@ -349,7 +349,9 @@ namespace Epsitec.Cresus.DataLayer
 				bool isLeafType = currentEntityId == leafEntityId;
 				bool isRootType = currentEntityId == rootEntityId;
 
-				tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
+				TableAliasManager.AliasCreationMode creationMode = (isRootType) ? TableAliasManager.AliasCreationMode.UseCurrentTopLevelAlias : TableAliasManager.AliasCreationMode.UseNewAlias;
+
+				tableAliasManager.CreateSubLevelAlias (currentEntityId.ToResourceId (), creationMode);
 
 				StructuredTypeField[] localDefinedFields = this.EntityContext.GetEntityLocalFieldDefinitions (currentEntityId).Where (field => definedFieldIds.Contains (field.Id)).ToArray ();
 				StructuredTypeField[] localDefinedValueFields = localDefinedFields.Where (field => field.Relation == FieldRelation.None).ToArray ();
@@ -387,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					this.AddOrReuseJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, entityId, currentEntityId, example);
 
-					string tableAlias = tableAliasManager.GetCurrentSubtypeAlias ();
+					string tableAlias = tableAliasManager.GetCurrentSubLevelAlias ();
 					string columnName = fieldId.ToResourceId ();
 
 					return this.GetEntityTableColumn (currentEntityId, tableAlias, columnName);
@@ -400,7 +402,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddConditionForEntityStatus(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId)
 		{
-			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), DataBrowser.statusColumn);
+			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubLevelAlias (), DataBrowser.statusColumn);
 
 			DbSelectCondition condition = new DbSelectCondition ()
 			{
@@ -433,7 +435,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddConditionForValue(TableAliasManager tableAliasManager, DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field)
 		{
-			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubtypeAlias (), field.Id);
+			DbTableColumn tableColumn = this.GetEntityTableColumn (currentEntityId, tableAliasManager.GetCurrentSubLevelAlias (), field.Id);
 			
 			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
 			AbstractType fieldType = field.Type as AbstractType;
@@ -504,8 +506,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			this.AddConditionsForEntity (tableAliasManager, reader, targetEntityId, targetExample, entityConstrainer);
 
-			tableAliasManager.GetPreviousEntityAlias ();
-			tableAliasManager.GetPreviousEntityAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
 		}
 
 
@@ -515,7 +517,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			this.AddJoinFromEntityTableToRelationTable (tableAliasManager, reader, sourceEntityId, sourceField, SqlJoinCode.Inner, mapping.RowKey);
 
-			tableAliasManager.GetPreviousEntityAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
 		}
 
 
@@ -530,8 +532,8 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddJoinFromSubEntityTableToSuperEntityTable(TableAliasManager tableAliasManager, DbReader reader, Druid subTypeEntityId, Druid rootTypeEntityId)
 		{
-			string subTypeTableAlias = tableAliasManager.GetCurrentSubtypeAlias ();
-			string rootTypeTableAlias = tableAliasManager.GetCurrentEntityAlias ();
+			string subTypeTableAlias = tableAliasManager.GetCurrentSubLevelAlias ();
+			string rootTypeTableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
 
 			DbTableColumn subEntityIdColumn = this.GetEntityTableColumn (subTypeEntityId, subTypeTableAlias, DataBrowser.idColumn);
 			DbTableColumn subEntityStatusColumn = this.GetEntityTableColumn (subTypeEntityId, subTypeTableAlias, DataBrowser.statusColumn);
@@ -559,11 +561,13 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (isRootType || isLeafType || localValueFields.Any (field => definedFieldIds.Contains (field.Id)))
 			{
-				tableAliasManager.GetNextSubtypeAlias (currentEntityId.ToResourceId ());
+				tableAliasManager.NavigateToChildLevelAlias (currentEntityId.ToResourceId ());
 			}
 			else
 			{
-				tableAliasManager.CreateSubtypeAlias (currentEntityId.ToResourceId (), isRootType);
+				TableAliasManager.AliasCreationMode creationMode = (isRootType) ? TableAliasManager.AliasCreationMode.UseCurrentTopLevelAlias : TableAliasManager.AliasCreationMode.UseNewAlias;
+
+				tableAliasManager.CreateSubLevelAlias (currentEntityId.ToResourceId (), creationMode);
 				this.AddJoinFromSubEntityTableToSuperEntityTable (tableAliasManager, reader, currentEntityId, heritedEntityIds.Last ());
 			}
 		}
@@ -581,7 +585,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbJoin join = this.BuildJoinFromEntityTableToRelationTable (tableAliasManager, reader, sourceEntityId, sourcefield, joinType);
 
-			string relationTableAlias = tableAliasManager.GetCurrentEntityAlias ();
+			string relationTableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
 			DbTableColumn relationTargetIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationTargetColumn);
 
 			DbAbstractCondition part1 = join.Condition;
@@ -597,8 +601,8 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			Druid rootSourceEntityId = this.EntityContext.GetRootEntityId (sourceEntityId);
 
-			string sourceTableAlias = tableAliasManager.GetCurrentEntityAlias ();
-			string relationTableAlias = tableAliasManager.CreateEntityAlias (sourcefield.Id);
+			string sourceTableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
+			string relationTableAlias = tableAliasManager.CreateTopLevelAlias (sourcefield.Id);
 
 			DbTableColumn sourceIdColumn = this.GetEntityTableColumn (rootSourceEntityId, sourceTableAlias, DataBrowser.idColumn);
 			DbTableColumn relationSourceIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationSourceColumn);
@@ -617,8 +621,8 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			Druid rootTargetEntityId = this.EntityContext.GetRootEntityId (targetEntityId);
 
-			string relationTableAlias = tableAliasManager.GetCurrentEntityAlias ();
-			string targetTableAlias = tableAliasManager.CreateEntityAlias (targetEntityId.ToResourceId ());
+			string relationTableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
+			string targetTableAlias = tableAliasManager.CreateTopLevelAlias (targetEntityId.ToResourceId ());
 
 			DbTableColumn relationTargetIdColumn = this.GetRelationTableColumn (sourceEntityId, Druid.Parse (sourcefield.Id), relationTableAlias, DataBrowser.relationTargetColumn);
 			DbTableColumn targetIdColumn = this.GetEntityTableColumn (rootTargetEntityId, targetTableAlias, DataBrowser.idColumn);
@@ -685,12 +689,12 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				tableAliasManager.GetNextEntityAlias (field.Id);
+				tableAliasManager.NavigateToChildTopLevelAlias (field.Id);
 			}
 
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationTargetColumn);
 
-			tableAliasManager.GetPreviousEntityAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
 		}
 
 
@@ -701,7 +705,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationTargetColumn);
 			this.AddRelationQueryField (tableAliasManager, reader, entityId, field, DataBrowser.relationRankColumn);
 
-			tableAliasManager.GetPreviousEntityAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
 
 			this.AddEntityQueryField (tableAliasManager, reader, this.EntityContext.GetRootEntityId (entityId), DataBrowser.idColumn);
 		}
@@ -713,26 +717,26 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (definedFieldIds.Contains (field.Id))
 			{
-				tableAliasManager.GetNextEntityAlias (field.Id, 1);
+				tableAliasManager.NavigateToChildTopLevelAlias (field.Id, 1);
 			}
 			else
 			{
-				tableAliasManager.GetNextEntityAlias (field.Id, 0);
+				tableAliasManager.NavigateToChildTopLevelAlias (field.Id, 0);
 			}
 
-			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
+			string tableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
 
 			DbTableColumn column = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationRankColumn);
 
 			reader.AddSortOrder (column, SqlSortOrder.Ascending);
 
-			tableAliasManager.GetPreviousEntityAlias ();
+			tableAliasManager.NavigateToParentTopLevelAlias ();
 		}
 
 
 		private void AddRelationQueryField(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, StructuredTypeField field, string columnName)
 		{
-			string tableAlias = tableAliasManager.GetCurrentEntityAlias ();
+			string tableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
 			DbTableColumn tableColumnRank = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, columnName);
 
 			reader.AddQueryField (tableColumnRank);
@@ -741,7 +745,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddEntityQueryField(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, string columnName)
 		{
-			string tableAlias = tableAliasManager.GetCurrentSubtypeAlias ();
+			string tableAlias = tableAliasManager.GetCurrentSubLevelAlias ();
 			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, tableAlias, columnName);
 
 			reader.AddQueryField (tableColumn);
