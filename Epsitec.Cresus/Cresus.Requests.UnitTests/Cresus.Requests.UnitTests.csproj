@@ -91,6 +91,10 @@
       <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
       <Name>Cresus.Requests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Services.Implementation\Cresus.Services.Implementation.csproj">
+      <Project>{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}</Project>
+      <Name>Cresus.Services.Implementation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Services\Cresus.Services.csproj">
       <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
       <Name>Cresus.Services</Name>

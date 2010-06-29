@@ -10,13 +10,20 @@ using Epsitec.Cresus.Services;
 namespace Epsitec.Cresus.Requests
 {
 
+	
+	/*
+	 * The following code comes directly from the old test and has not been checked or tested. It
+	 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
+	 * this comment. Marc
+	 */
+
 
 	[TestClass]
 	public class UnitTestRequest
 	{
 
 
-#if true
+#if false
 
 
 		[TestMethod]
@@ -482,6 +489,9 @@ namespace Epsitec.Cresus.Requests
 #endif
 
 
+#if false
+
+
 		[TestMethod]
 		public void Check12ServiceServer()
 		{
@@ -501,7 +511,7 @@ namespace Epsitec.Cresus.Requests
 
 			System.Diagnostics.Debug.WriteLine ("Server ready. Running for 5 seconds.");
 
-			System.Threading.Thread.Sleep (1000*5);
+			System.Threading.Thread.Sleep (1000 * 5);
 
 			UnitTestRequest.DeleteTestTable (infrastructure, UnitTestRequest.TestTableName);
 
@@ -509,13 +519,7 @@ namespace Epsitec.Cresus.Requests
 			Common.Support.Globals.SignalAbort ();
 		}
 
-
-		/*
-		 * The following code comes directly from the old test and has not been checked or tested. It
-		 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
-		 * this comment. Marc
-		 */
-
+#endif
 
 #if false
 
@@ -531,11 +535,6 @@ namespace Epsitec.Cresus.Requests
 				infrastructure.Logger.CreateTemporaryEntry (null);
 				UnitTestRequest.CreateTestTable (infrastructure, UnitTestRequest.TestTableName);
 			}
-
-			//-			using (DbInfrastructure infrastructure = UnitTestDbInfrastructure.GetInfrastructureFromBase ("cresus", false))
-			//-			{
-			//-				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
-			//-			}
 		}
 
 
@@ -666,7 +665,7 @@ namespace Epsitec.Cresus.Requests
 
 			System.Data.DataRow data_row;
 
-			DbRichCommand.CreateRow (table, out data_row);
+			data_row = DbRichCommand.CreateRow (table);
 
 			data_row.BeginEdit ();
 			data_row[0] = DbId.CreateId (1, 1000).Value;
@@ -678,7 +677,7 @@ namespace Epsitec.Cresus.Requests
 
 			factory.GenerateRequests (table);
 
-			byte[] serialized_1 = Requests.AbstractRequest.SerializeToMemory (factory.CreateGroup ());
+			byte[] serialized_1 = Requests.AbstractRequest.SerializeToMemory (factory.CreateRequestCollection () );
 
 			table.AcceptChanges ();
 			table.Rows[0][3] = "Pierre Arnaud-Roost";
@@ -687,7 +686,7 @@ namespace Epsitec.Cresus.Requests
 			factory.Clear ();
 			factory.GenerateRequests (table);
 
-			byte[] serialized_2 = Requests.AbstractRequest.SerializeToMemory (factory.CreateGroup ());
+			byte[] serialized_2 = Requests.AbstractRequest.SerializeToMemory (factory.CreateRequestCollection ());
 
 			service.EnqueueRequest (client, new Remoting.SerializedRequest[] { new Remoting.SerializedRequest (DbId.CreateId (100, 1000).Value, serialized_1),
                 /**/														   new Remoting.SerializedRequest (DbId.CreateId (101, 1000).Value, serialized_2) });
@@ -698,12 +697,12 @@ namespace Epsitec.Cresus.Requests
 
 			for (; ; )
 			{
-				service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+				states = service.QueryRequestStates (client);
 				System.Diagnostics.Debug.WriteLine ("1/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 
 				for (int i = 0; i < states.Length; i++)
 				{
-					System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+					System.Diagnostics.Debug.WriteLine ("-- " + states[i].RequestId + ", state = " + (Requests.ExecutionState) states[i].State);
 				}
 
 				if (states[0].State != (int) Requests.ExecutionState.Pending)
@@ -712,29 +711,29 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 
-			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			states = service.QueryRequestStates (client);
 			System.Diagnostics.Debug.WriteLine ("2/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].RequestId + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 
 			service.RemoveRequestStates (client, new Remoting.RequestState[] { states[0] });
-			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			states = service.QueryRequestStates (client);
 			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].RequestId + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 
-			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			states = service.QueryRequestStates (client);
 			System.Diagnostics.Debug.WriteLine ("4/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].RequestId + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 		}
 
@@ -796,22 +795,21 @@ namespace Epsitec.Cresus.Requests
 
 				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} rows in table {1}.", table.Rows.Count, table.TableName));
 
-				System.Data.DataRow data_row;
-				command.CreateNewRow (UnitTestRequest.TestTableName, out data_row);
+				System.Data.DataRow data_row = command.CreateRow (UnitTestRequest.TestTableName);
 
 				data_row.BeginEdit ();
 				data_row[3] = "Albert Einstein";
 				data_row[4] = new System.DateTime (1904, 5, 14);
 				data_row.EndEdit ();
 
-				command.CreateNewRow (UnitTestRequest.TestTableName, out data_row);
+				data_row = command.CreateRow (UnitTestRequest.TestTableName);
 
 				data_row.BeginEdit ();
 				data_row[3] = "Max Planck";
 				data_row[4] = new System.DateTime (1858, 4, 23);
 				data_row.EndEdit ();
 
-				command.CreateNewRow (UnitTestRequest.TestTableName, out data_row);
+				data_row = command.CreateRow (UnitTestRequest.TestTableName);
 
 				data_row.BeginEdit ();
 				data_row[3] = "Niels Bohr";
@@ -834,9 +832,13 @@ namespace Epsitec.Cresus.Requests
 
 				System.Diagnostics.Debug.WriteLine ("Enqueue request.");
 
-				lock (orchestrator.ExecutionQueue)
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+					lock (orchestrator.ExecutionQueue)
+					{
+						orchestrator.ExecutionQueue.Enqueue (transaction, factory.CreateRequestCollection ());
+						transaction.Commit ();
+					}
 				}
 
 				System.Diagnostics.Debug.WriteLine ("Waiting for requests to be executed.");
@@ -889,6 +891,10 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
+
+#endif
+
+
 		[TestMethod]
 		public void Check99ServiceServer_Kill()
 		{
@@ -896,15 +902,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				UnitTestRequest.DeleteTestTable (infrastructure, UnitTestRequest.TestTableName);
 			}
-			//-			using (DbInfrastructure infrastructure = UnitTestDbInfrastructure.GetInfrastructureFromBase ("cresus", false))
-			//-			{
-			//-				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
-			//-			}
 		}
-		
-
-
-#endif
 
 
 		private static readonly string TestTableName = "ST";

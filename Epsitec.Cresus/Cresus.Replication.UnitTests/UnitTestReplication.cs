@@ -1,5 +1,5 @@
 ﻿using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Exceptions;
+
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 
-			Remoting.IOperation operation;
+			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
 			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Replication.ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (buffer) as Replication.ReplicationData;
 
-				foreach (Replication.PackedTableData packed_table in data.TableData)
+				foreach (Replication.PackedTableData packed_table in data.PackedTableData)
 				{
 					System.Console.WriteLine ("Table {0} contains {1} changed rows:", packed_table.Name, packed_table.RowCount);
 
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 
-			Remoting.IOperation operation;
+			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
 			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
@@ -390,11 +390,11 @@ namespace Epsitec.Cresus.Core
 
 				using (DbInfrastructure infrastructure = new DbInfrastructure ())
 				{
-					DbAccess db_access = DbInfrastructure.CreateDbAccess ("replitest");
+					DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("replitest");
 
 					infrastructure.CreateDatabase (db_access);
-					Replication.ClientEngine client = new Replication.ClientEngine (infrastructure, service);
-					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
+					Replication.ClientReplicationEngine client = new Replication.ClientReplicationEngine (infrastructure, service);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
 				}
 			}
 		}
@@ -412,10 +412,10 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (1, 1);
 
-			Remoting.PullReplicationArgs[] args = new Remoting.PullReplicationArgs[1];
-			args[0] = new Remoting.PullReplicationArgs (1000000000010, new long[] { 1000000000004, 1000000000005, 1000000000006 });
+			Remoting.PullReplicationChunk[] args = new Remoting.PullReplicationChunk[1];
+			args[0] = new Remoting.PullReplicationChunk (1000000000010, new long[] { 1000000000004, 1000000000005, 1000000000006 });
 
-			Remoting.IOperation operation;
+			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
 			service.PullReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, args, out operation);
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
@@ -441,11 +441,11 @@ namespace Epsitec.Cresus.Core
 
 				using (DbInfrastructure infrastructure = new DbInfrastructure ())
 				{
-					DbAccess db_access = DbInfrastructure.CreateDbAccess ("replitest");
+					DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("replitest");
 
 					infrastructure.CreateDatabase (db_access);
-					Replication.ClientEngine client = new Replication.ClientEngine (infrastructure, service);
-					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
+					Replication.ClientReplicationEngine client = new Replication.ClientReplicationEngine (infrastructure, service);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
 				}
 			}
 		}
