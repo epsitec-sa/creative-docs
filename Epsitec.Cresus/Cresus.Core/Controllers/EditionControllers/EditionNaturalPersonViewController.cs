@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Title,
 					ValueSetter = x => this.Entity.Title = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (creator: this.CreateNewTitle),
+					ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Entity.Gender,
 					ValueSetter = x => this.Entity.Gender = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (mode: ViewControllerMode.None),
+					ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },

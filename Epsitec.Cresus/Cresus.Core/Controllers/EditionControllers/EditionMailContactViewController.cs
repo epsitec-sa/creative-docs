@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (creator: this.CreateNewCountry),
+					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
 					PossibleItemsGetter = () => countries,
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					ValueGetter = () => this.Location,
 					ValueSetter = x => this.Location = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (creator: this.CreateNewLocation),
+					ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
