@@ -192,7 +192,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphConnector.Win32", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphConnector", "Cresus.Graph\GraphConnector\GraphConnector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
 EndProject
@@ -201,6 +201,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.UnitTests", "UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj", "{F18C2336-9F85-4717-99B9-A1C30E8C463E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Core.PerformanceTests", "X.Core.PerformanceTests\X.Core.PerformanceTests.csproj", "{3AC57C6D-2E15-4B39-9D8A-916757680A31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.UnitTests", "Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj", "{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -1161,6 +1163,18 @@ Global
 		{3AC57C6D-2E15-4B39-9D8A-916757680A31}.Release|Win32.ActiveCfg = Release|x86
 		{3AC57C6D-2E15-4B39-9D8A-916757680A31}.Release|x86.ActiveCfg = Release|x86
 		{3AC57C6D-2E15-4B39-9D8A-916757680A31}.Release|x86.Build.0 = Release|x86
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Win32.ActiveCfg = Release|Any CPU
+		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,18 +1,16 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;
-using Epsitec.Common.Support.EntityEngine;
-using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.DataLayer
 {
 
 
@@ -528,7 +526,7 @@ namespace Epsitec.Cresus.Core
 				action ();
 				return false;
 			}
-			catch (System.Exception e)
+			catch (System.Exception)
 			{
 				return true;
 			}

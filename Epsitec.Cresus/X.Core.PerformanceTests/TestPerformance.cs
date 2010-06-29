@@ -18,15 +18,15 @@ namespace Epsitec.Cresus.Core
 
 			if (createAndPopulateDatabase)
 			{
-				Database.CreateAndConnectToDatabase ();
+				Epsitec.Cresus.DataLayer.Database.CreateAndConnectToDatabase ();
 				Database1.PopulateDatabase (DatabaseSize.Large);
 			}
 			else
 			{
-				Database.ConnectToDatabase ();
+				Epsitec.Cresus.DataLayer.Database.ConnectToDatabase ();
 			}
 
-			this.dbInfrastructure = Database.DbInfrastructure;
+			this.dbInfrastructure = Epsitec.Cresus.DataLayer.Database.DbInfrastructure;
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveAllData<EntityType>(bool bulkMode) where EntityType : AbstractEntity, new ()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 				repository.GetByExample<EntityType> (new EntityType ()).Count ();
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetUriContactWithGivenUriSchemeReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetUriContactWithGivenUriSchemeValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLocationsGivenCountryReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLocationsGivenCountryValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonsGivenTypeReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonsGivenTypeValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetContactsGivenPersonReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetContactsGivenPersonValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetPersonGivenLocationReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetPersonGivenLocationValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressGivenLegalPersonReference(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressGivenLegalPersonValue(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressReferencers(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
@@ -372,7 +372,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonReferencers(bool bulkMode)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
 				DataBrowser repository = new DataBrowser (dataContext);
 
