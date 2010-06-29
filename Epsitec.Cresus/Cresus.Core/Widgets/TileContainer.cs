@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public TileContainer()
 		{
+			this.widgetUpdaters = new List<IWidgetUpdater> ();
+
 			this.TabNavigationMode = Common.Widgets.TabNavigationMode.ForwardTabActive | Common.Widgets.TabNavigationMode.ForwardToChildren;
 			this.TabIndex = 1;
 		}
@@ -29,6 +31,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get;
 			set;
+		}
+
+		public List<IWidgetUpdater> WidgetUpdaters
+		{
+			get
+			{
+				return this.widgetUpdaters;
+			}
 		}
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
@@ -100,5 +110,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		public event EventHandler<TabNavigateEventArgs>		TabNavigating;
+
+		private List<IWidgetUpdater> widgetUpdaters;
 	}
 }

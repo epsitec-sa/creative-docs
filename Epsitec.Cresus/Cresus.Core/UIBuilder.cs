@@ -319,6 +319,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (textField);
+			this.container.WidgetUpdaters.Add (valueController);
 
 			return textField;
 		}
@@ -351,6 +352,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (textField);
+			this.container.WidgetUpdaters.Add (valueController);
 
 			return textField;
 		}
@@ -368,6 +370,7 @@ namespace Epsitec.Cresus.Core
 			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, entityGetter, entitySetter, referenceController);
 
 			controller.Attach (autoCompleteTextField);
+			this.container.WidgetUpdaters.Add (controller);
 
 			return autoCompleteTextField;
 		}
@@ -739,6 +742,27 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (frame);
 			}
 		}
+
+
+#if false
+		public static void ClearAllEditionFields(Widget container)
+		{
+			//	Vide tous les champs éditables des tuiles.
+			foreach (var widget in container.Children)
+			{
+				if (widget is AbstractTextField)
+				{
+					var textField = widget as AbstractTextField;
+					textField.Text = null;
+				}
+
+				if (widget.Children != null && widget.Children.Count > 0)
+				{
+					UIBuilder.ClearAllEditionFields (widget as Widget);
+				}
+			}
+		}
+#endif
 
 
 		public static FormattedText FormatText(params object[] values)

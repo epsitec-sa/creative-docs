@@ -98,6 +98,7 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\IWidgetUpdater.cs" />
     <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryNaturalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
+    <Compile Include="Controllers\TextValueController.cs" />
     <Compile Include="Controllers\TileContainerController.cs" />
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />

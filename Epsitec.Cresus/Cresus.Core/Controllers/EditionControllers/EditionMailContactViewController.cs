@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+			this.tileContainer = container;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -142,7 +144,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			List<string> pagesDescription = new List<string>();
 			pagesDescription.Add ("local.Adresse spécifique");
-			pagesDescription.Add ("global.Adresse existante");
+			pagesDescription.Add ("global.Entreprise existante");
 			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "local", this.HandleTabBookAction);
 		}
 
@@ -177,7 +179,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
 					this.Entity.Address = this.DataContext.CreateRegisteredEmptyEntity<AddressEntity> ();
-					// TODO: Vider les champs éditables...
+					this.InitializeDefaultCountry ();  // met "Suisse" si rien
+					this.selectedCountry = this.Entity.Address.Location.Country;
+
+					//	Grace aux WidgetUpdaters, on peut remettre à jour tous les widgets éditables en
+					//	fonction du nouveau contenu de l'entité.
+					foreach (var updater in this.tileContainer.WidgetUpdaters)
+					{
+						updater.Update ();
+					}
 				}
 			}
 		}
@@ -204,7 +214,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.addressTextField.Text = null;  // on efface l'adresse si on change d'entreprise
 					this.addressTextField.Items.Clear ();
 
-					var addressGetter = this.LegalPersonAddressGetter;
+					var addressGetter = this.GetLegalPersonAddressGetter ();
 					foreach (var item in addressGetter)
 					{
 						this.addressTextField.Items.Add (item);
@@ -220,24 +230,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Entity.Address,
 					ValueSetter = x => this.Entity.Address = x.WrapNullEntity (),
 					ReferenceController = this.GetAddressReferenceController (),
-					PossibleItemsGetter = () => this.LegalPersonAddressGetter,
+					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
 				});
 		}
 
-		private IEnumerable<AddressEntity> LegalPersonAddressGetter
+		private IEnumerable<AddressEntity> GetLegalPersonAddressGetter()
 		{
 			//	Retourne les adresses de l'entreprise choisie.
-			get
-			{
-				return this.Entity.LegalPerson.Contacts
-					.Where (x => x is MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
-					.Cast<MailContactEntity> ()				// les AbstractContactEntity deviennent des MailContactEntity
-					.Select (x => x.Address)				// on s'intéresse à l'entité Address de MailContact
-					.ToList ();								// on veut une liste statique
-			}
+			return this.Entity.LegalPerson.Contacts
+				.Where (x => x is MailContactEntity)	// on exclut les TelecomContactEntity et UriContactEntity
+				.Cast<MailContactEntity> ()				// les AbstractContactEntity deviennent des MailContactEntity
+				.Select (x => x.Address)				// on s'intéresse à l'entité Address de MailContact
+				.ToList ();								// on veut une liste statique
 		}
 
 		private ReferenceController GetLegalPersonReferenceController()
@@ -282,20 +289,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICountry(UIBuilder builder)
 		{
-			var countries = CoreProgram.Application.Data.GetCountries ();
-
-			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.Name))  // pays indéfini ?
-			{
-				foreach (var country in countries)
-				{
-					if (country.Code == "CH")
-					{
-						this.Entity.Address.Location.Country = country;  // met la Suisse par défaut
-						break;
-					}
-				}
-			}
-
+			this.InitializeDefaultCountry ();  // met "Suisse" si rien
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
@@ -304,7 +298,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
-					PossibleItemsGetter = () => countries,
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
@@ -349,6 +343,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			location.Country = this.selectedCountry;
 
 			return location;
+		}
+
+		private void InitializeDefaultCountry()
+		{
+			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.Code))  // pays indéfini ?
+			{
+				foreach (var country in CoreProgram.Application.Data.GetCountries ().ToList ())
+				{
+					if (country.Code == "CH")
+					{
+						this.Entity.Address.Location.Country = country;  // met la Suisse par défaut
+						break;
+					}
+				}
+			}
 		}
 
 		private CountryEntity Country
@@ -424,6 +433,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private TileContainer					tileContainer;
 		private Common.Widgets.FrameBox			tabBookContainer;
 		private List<Common.Widgets.Widget>		localPageContent;
 		private List<Common.Widgets.Widget>		globalPageContent;
