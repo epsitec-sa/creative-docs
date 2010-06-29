@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (this.Entity.LegalPerson.IsActive ())
 				{
 					// TODO: Pourquoi cela ne fonctionne-t-il pas (dans SummaryController.Common, LegalPerson est null) ?
-					this.Entity.LegalPerson = null;
+					this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
 					this.Entity.Address = this.DataContext.CreateRegisteredEmptyEntity<AddressEntity> ();
 				}
 			}
