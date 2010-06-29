@@ -17,6 +17,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {
+	/// <summary>
+	/// The <c>NavigationOrchestrator</c> class manages basic navigation tasks between
+	/// view controllers. It is tightly related to <see cref="DataViewController"/>.
+	/// </summary>
 	public class NavigationOrchestrator
 	{
 		public NavigationOrchestrator()
@@ -26,10 +30,16 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public void Add(CoreViewController parentController, CoreViewController controller)
 		{
+			System.Diagnostics.Debug.Assert (parentController != controller);
+			System.Diagnostics.Debug.Assert (controller != null);
+
+			this.RecordCurrentState ();
+
 			this.nodes.Add (new Node ()
 			{
 				Parent = parentController,
-				Item = controller
+				Item = controller,
+				Id = this.currentActionId,
 			});
 
 			this.MakeDirty ();
@@ -37,6 +47,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public void Remove(CoreViewController parentController, CoreViewController controller)
 		{
+			System.Diagnostics.Debug.Assert (parentController != controller);
+			System.Diagnostics.Debug.Assert (controller != null);
+			
+			this.RecordCurrentState ();
+			
 			this.nodes.RemoveAll (node => node.Item == controller);
 			this.MakeDirty ();
 		}
@@ -51,7 +66,44 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
-		
+
+		private void RecordCurrentState()
+		{
+			var actionId = NavigationOrchestrator.GetCurrentActionId ();
+
+			if (this.currentActionId != actionId)
+			{
+				this.currentActionId  = actionId;
+				this.RecordTopNode ();
+			}
+		}
+
+		private void RecordTopNode()
+		{
+			if (this.recordedHistoryId != this.currentHistoryId)
+			{
+				this.recordedHistoryId = this.currentHistoryId;
+
+				var sorted = from node in this.nodes
+							 orderby node.Id descending
+							 select node;
+
+				this.RecordTopNode (sorted.FirstOrDefault ());
+			}
+		}
+
+		private void RecordTopNode(Node node)
+		{
+			if (node == null)
+			{
+				System.Diagnostics.Debug.WriteLine ("History: no nodes");
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("History: node = " + node.Item.GetType ().Name);
+			}
+		}
+
 		private IEnumerable<Node> WalkToRoot(CoreViewController controller)
 		{
 			this.Refresh ();
@@ -67,6 +119,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		private void MakeDirty()
 		{
+			this.currentHistoryId++;
 			this.isDirty = true;
 		}
 
@@ -89,11 +142,21 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			public Node Link;
 			public CoreViewController Parent;
 			public CoreViewController Item;
+			public long Id;
+		}
+
+		private static long GetCurrentActionId()
+		{
+			var message = Epsitec.Common.Widgets.Message.GetLastMessage ();
+			return message == null ? 0 : message.MessageId;
 		}
 
 
 		private readonly List<Node> nodes;
 		private bool isDirty;
+		private long currentActionId;
+		private long currentHistoryId;
+		private long recordedHistoryId;
 	}
 
 	public class NavigationFieldNode

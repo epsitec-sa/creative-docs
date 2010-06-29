@@ -62,7 +62,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public NavigationOrchestrator Navigator
+		/// <summary>
+		/// Gets or sets the navigator associated with all the view controllers.
+		/// </summary>
+		/// <value>The navigator.</value>
+		public new NavigationOrchestrator Navigator
 		{
 			get;
 			set;
