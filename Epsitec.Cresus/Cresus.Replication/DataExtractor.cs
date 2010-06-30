@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Replication
 	/// The <c>DataExtractor</c> class provides support to extract data sets from
 	/// a table, matching a single log id, a range of log ids, or specific row ids.
 	/// </summary>
-	internal sealed class DataExtractor
+	public sealed class DataExtractor
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataExtractor"/> class.
@@ -100,109 +100,9 @@ namespace Epsitec.Cresus.Replication
 			{
 				return command.DataTable;
 			}
-		}
+		}		
 		
-#if false
-		public TableRowSet[] ExtractRowSetsUsingLogId(DbId logId)
-		{
-			return this.ExtractRowSetsUsingLogId (logId, DbElementCat.Any);
-		}
-		
-		public TableRowSet[] ExtractRowSetsUsingLogId(DbId logId, DbElementCat category)
-		{
-			DbTable[] tables = this.infrastructure.FindDbTables (this.transaction, category, DbRowSearchMode.All);
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			for (int i = 0; i < tables.Length; i++)
-			{
-				if (tables[i].Name == Tags.TableLog)
-				{
-					continue;
-				}
-				
-				System.Data.DataTable data = this.ExtractDataUsingLogId (tables[i], logId);
-				
-				if (data.Rows.Count > 0)
-				{
-					list.Add (new TableRowSet (tables[i], data));
-				}
-			}
-			
-			TableRowSet[] sets = new TableRowSet[list.Count];
-			list.CopyTo (sets);
-			return sets;
-		}
-		
-		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId syncStartId, DbId syncEndId)
-		{
-			return this.ExtractRowSetsUsingLogIds (syncStartId, syncEndId, DbElementCat.Any);
-		}
-		
-		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId syncStartId, DbId syncEndId, DbElementCat category)
-		{
-			DbTable[] tables = this.infrastructure.FindDbTables (this.transaction, category, DbRowSearchMode.All);
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			for (int i = 0; i < tables.Length; i++)
-			{
-				if (tables[i].Name == Tags.TableLog)
-				{
-					continue;
-				}
-				
-				System.Data.DataTable data = this.ExtractDataUsingLogIds (tables[i], syncStartId, syncEndId);
-				
-				if (data.Rows.Count > 0)
-				{
-					list.Add (new TableRowSet (tables[i], data));
-				}
-			}
-			
-			TableRowSet[] sets = new TableRowSet[list.Count];
-			list.CopyTo (sets);
-			return sets;
-		}
-		
-		
-		public sealed class TableRowSet
-		{
-			public TableRowSet(DbTable table, System.Data.DataTable data)
-			{
-				this.table = table;
-				this.ids   = new long[data.Rows.Count];
-				
-				for (int i = 0; i < data.Rows.Count; i++)
-				{
-					this.ids[i] = (long) data.Rows[i][0];
-				}
-			}
-			
-			
-			public DbTable						Table
-			{
-				get
-				{
-					return this.table;
-				}
-			}
-			
-			public long[]						RowIds
-			{
-				get
-				{
-					return this.ids;
-				}
-			}
-			
-			
-			readonly DbTable					table;
-			readonly long[]						ids;
-		}
-#endif		
-		
-		readonly DbInfrastructure				infrastructure;
-		readonly DbTransaction					transaction;
+		private readonly DbInfrastructure				infrastructure;
+		private readonly DbTransaction					transaction;
 	}
 }

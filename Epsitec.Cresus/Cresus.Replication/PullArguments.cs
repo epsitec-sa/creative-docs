@@ -1,5 +1,8 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.Remoting;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +19,7 @@ namespace Epsitec.Cresus.Replication
 		/// Initializes a new instance of the <see cref="PullArguments"/> class.
 		/// </summary>
 		/// <param name="chunks">The raw replication chunks.</param>
-		public PullArguments(IEnumerable<Remoting.PullReplicationChunk> chunks)
+		public PullArguments(IEnumerable<PullReplicationChunk> chunks)
 		{
 			this.chunks = chunks.ToArray ();
 		}
@@ -27,19 +30,11 @@ namespace Epsitec.Cresus.Replication
 		/// specified table.
 		/// </summary>
 		/// <value>The replication chunk.</value>
-		public Remoting.PullReplicationChunk this[Database.DbId tableId]
+		public PullReplicationChunk this[DbId tableId]
 		{
 			get
 			{
-				for (int i = 0; i < chunks.Length; i++)
-				{
-					if (chunks[i].TableId == tableId)
-					{
-						return chunks[i];
-					}
-				}
-
-				return Remoting.PullReplicationChunk.Empty;
+				return this.chunks.FirstOrDefault (c => c.TableId == tableId);
 			}
 		}
 
@@ -48,7 +43,7 @@ namespace Epsitec.Cresus.Replication
 		/// specified table.
 		/// </summary>
 		/// <value>The replication chunk.</value>
-		public Remoting.PullReplicationChunk this[Database.DbTable table]
+		public PullReplicationChunk this[DbTable table]
 		{
 			get
 			{
@@ -65,7 +60,7 @@ namespace Epsitec.Cresus.Replication
 		/// <returns>
 		/// 	<c>true</c> if there is such a table; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Contains(Database.DbId tableId)
+		public bool Contains(DbId tableId)
 		{
 			return this.chunks.Any (c => c.TableId == tableId);
 		}
@@ -78,12 +73,12 @@ namespace Epsitec.Cresus.Replication
 		/// <returns>
 		/// 	<c>true</c> if there is such a table; otherwise, <c>false</c>.
 		/// </returns>
-		public bool Contains(Database.DbTable table)
+		public bool Contains(DbTable table)
 		{
 			return this.Contains (table.Key.Id);
 		}
 
 
-		readonly Remoting.PullReplicationChunk[]	chunks;
+		readonly PullReplicationChunk[]	chunks;
 	}
 }

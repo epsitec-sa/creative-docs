@@ -88,21 +88,10 @@ namespace Epsitec.Cresus.Replication
 		public bool HasNullValues(int column)
 		{
 			this.UnpackNullFlags ();
-			
-			if (this.columnDataRows[column] == null)
-			{
-				//	No data => everything is null
-				return true;
-			}
-			else if (this.columnNullFlags[column] != null)
-			{
-				//	There are null flags => there is at least one null value
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+
+			//	No data => everything is null
+			//	There are null flags => there is at least one null value
+			return (this.columnDataRows[column] == null) || (this.columnNullFlags[column] != null);
 		}
 
 		/// <summary>
@@ -114,14 +103,7 @@ namespace Epsitec.Cresus.Replication
 		/// </returns>
 		public bool HasNonNullValues(int column)
 		{
-			if (this.columnDataRows[column] == null)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return (this.columnDataRows[column] != null);
 		}
 
 
@@ -242,7 +224,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="nullValues">An array of flags; one flag for every null values.</param>
 		/// <param name="nullCount">The number of null values.</param>
 		/// <returns>A native array containing the column data.</returns>
-		static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
+		private static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
 		{
 			//	Handles following native types :
 			//
@@ -297,7 +279,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="columnCount">The total number of columns.</param>
 		/// <param name="array">The native array.</param>
 		/// <param name="nullValues">The null values.</param>
-		static void UnpackColumnFromNativeArray(object[][] values, int column, int columnCount, System.Array array, bool[] nullValues)
+		private static void UnpackColumnFromNativeArray(object[][] values, int column, int columnCount, System.Array array, bool[] nullValues)
 		{
 			//	Access the values through values[row][column]
 
@@ -306,8 +288,7 @@ namespace Epsitec.Cresus.Replication
 
 			int n = values.Length;
 
-			if ((nullValues != null) &&
-				(nullValues.Length > 0))
+			if (nullValues != null && nullValues.Length > 0)
 			{
 				//	Some values are null, but not all.
 
@@ -330,38 +311,34 @@ namespace Epsitec.Cresus.Replication
 					}
 				}
 			}
+			else if (array == null || array.Length == 0)
+			{
+				//	All values are null.
+
+				for (int i = 0; i < n; i++)
+				{
+					if (values[i] == null)
+					{
+						values[i] = new object[columnCount];
+					}
+
+					values[i][column] = System.DBNull.Value;
+				}
+			}
 			else
 			{
-				if ((array == null) ||
-					(array.Length == 0))
+				//	No values are null.
+
+				System.Diagnostics.Debug.Assert (array.Length == n);
+
+				for (int i = 0; i < n; i++)
 				{
-					//	All values are null.
-
-					for (int i = 0; i < n; i++)
+					if (values[i] == null)
 					{
-						if (values[i] == null)
-						{
-							values[i] = new object[columnCount];
-						}
-
-						values[i][column] = System.DBNull.Value;
+						values[i] = new object[columnCount];
 					}
-				}
-				else
-				{
-					//	No values are null.
 
-					System.Diagnostics.Debug.Assert (array.Length == n);
-
-					for (int i = 0; i < n; i++)
-					{
-						if (values[i] == null)
-						{
-							values[i] = new object[columnCount];
-						}
-
-						values[i][column] = array.GetValue (i);
-					}
+					values[i][column] = array.GetValue (i);
 				}
 			}
 		}
@@ -375,8 +352,7 @@ namespace Epsitec.Cresus.Replication
 		/// <returns>The value.</returns>
 		static object UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues)
 		{
-			if ((nullValues != null) &&
-				(nullValues.Length > 0))
+			if (nullValues != null && nullValues.Length > 0)
 			{
 				//	Some values might be null.
 
@@ -389,19 +365,17 @@ namespace Epsitec.Cresus.Replication
 					return array.GetValue (row);
 				}
 			}
+			else if (array == null || array.Length == 0)
+			{
+				//	All values are null.
+
+				return System.DBNull.Value;
+			}
 			else
 			{
-				if ((array == null) ||
-					(array.Length == 0))
-				{
-					//	All values are null.
+				// No value is null.
 
-					return System.DBNull.Value;
-				}
-				else
-				{
-					return array.GetValue (row);
-				}
+				return array.GetValue (row);
 			}
 		}
 
@@ -416,7 +390,7 @@ namespace Epsitec.Cresus.Replication
 			int n = values.Length;
 
 			int nFullBytes = n / 8;
-			int nPartBits  = n - 8 * nFullBytes;
+			int nPartBits  = n - (8 * nFullBytes);
 			int nBytes     = (nPartBits == 0) ? (nFullBytes) : (nFullBytes + 1);
 
 			byte[] packed = new byte[nBytes];
@@ -427,7 +401,7 @@ namespace Epsitec.Cresus.Replication
 
 				for (int bit = 0; bit < 8; bit++)
 				{
-					if (values[i*8+bit])
+					if (values[i * 8 + bit])
 					{
 						value |= (byte) (1 << bit);
 					}
@@ -442,7 +416,7 @@ namespace Epsitec.Cresus.Replication
 
 				for (int bit = 0; bit < nPartBits; bit++)
 				{
-					if (values[nFullBytes*8 + bit])
+					if (values[nFullBytes * 8 + bit])
 					{
 						value |= (byte) (1 << bit);
 					}
@@ -464,7 +438,7 @@ namespace Epsitec.Cresus.Replication
 			int n = values.Length;
 
 			int nFullBytes = n / 8;
-			int nPartBits  = n - 8 * nFullBytes;
+			int nPartBits  = n - (8 * nFullBytes);
 			int nBytes     = (nPartBits == 0) ? (nFullBytes) : (nFullBytes + 1);
 
 			System.Diagnostics.Debug.Assert (nBytes == packed.Length);
@@ -475,7 +449,7 @@ namespace Epsitec.Cresus.Replication
 
 				for (int bit = 0; bit < 8; bit++)
 				{
-					values[i*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
+					values[i * 8 + bit] = ((value & (1 << bit)) != 0);
 				}
 			}
 
@@ -485,7 +459,7 @@ namespace Epsitec.Cresus.Replication
 
 				for (int bit = 0; bit < nPartBits; bit++)
 				{
-					values[nFullBytes*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
+					values[nFullBytes * 8 + bit] = ((value & (1 << bit)) != 0);
 				}
 			}
 		}
@@ -514,8 +488,7 @@ namespace Epsitec.Cresus.Replication
 			{
 				object value = rows[i][column];
 
-				if ((value == System.DBNull.Value) ||
-					(value == null))
+				if (value == System.DBNull.Value || value == null)
 				{
 					nullValues[i] = true;
 					data[i]       = default (T);
@@ -656,11 +629,11 @@ namespace Epsitec.Cresus.Replication
 		}
 
 
-		readonly List<System.Array>				columnDataRows;
-		readonly List<System.Array>				columnNullFlags;
-		readonly string							tableName;
-		readonly DbId							tableKey;
-		readonly int							rowCount;
-		private bool							isNullFlagsArrayPacked;
+		private readonly List<System.Array>				columnDataRows;
+		private readonly List<System.Array>				columnNullFlags;
+		private readonly string							tableName;
+		private readonly DbId							tableKey;
+		private readonly int							rowCount;
+		private bool									isNullFlagsArrayPacked;
 	}
 }

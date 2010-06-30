@@ -1,10 +1,12 @@
 ﻿using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.Remoting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Epsitec.Cresus.Services;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Replication
 {
 
 
@@ -15,26 +17,26 @@ namespace Epsitec.Cresus.Core
 	 */
 
 
-#if false
-
-
 	[TestClass]
 	public class UnitTestReplication
 	{
 
 
 		[ClassInitialize]
-		public void Initialize()
+		public void Initialize(TestContext testContext)
 		{
 			this.infrastructure = UnitTestDbInfrastructure.GetInfrastructureFromBase ("fiche", true);
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.infrastructure.Logger.CreatePermanentEntry (transaction);
-				DbTypeDef type_1 = this.infrastructure.CreateDbType ("TypeFixed"+System.DateTime.Now.Ticks.ToString (), 1000, true);
-				DbTypeDef type_2 = this.infrastructure.CreateDbType ("TypeNum"+System.DateTime.Now.Ticks.ToString (), new DbNumDef (5, 1));
-				this.infrastructure.RegisterNewDbType (transaction, type_1);
-				this.infrastructure.RegisterNewDbType (transaction, type_2);
+				
+				DbTypeDef type1 = new DbTypeDef ("TypeFixed" + System.DateTime.Now.Ticks, DbSimpleType.Null, new DbNumDef () { MaxValue = 1000 }, 1, true, DbNullability.Undefined);
+				DbTypeDef type2 = new DbTypeDef ("TypeNum" + System.DateTime.Now.Ticks, DbSimpleType.Null, new DbNumDef (5, 1), 1, true, DbNullability.Undefined);
+
+				this.infrastructure.RegisterNewDbType (transaction, type1);
+				this.infrastructure.RegisterNewDbType (transaction, type2);
+
 				transaction.Commit ();
 			}
 		}
@@ -47,22 +49,20 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private DbInfrastructure infrastructure;
-
-
 		[TestMethod]
-		public void Check01DataCruncherExtractData()
+		public void Check01DataExtractorExtractData()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
+				DataExtractor extractpr = new DataExtractor (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 
-				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
+				System.Data.DataTable data = extractpr.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
 
 				foreach (System.Data.DataRow row in data.Rows)
 				{
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
 					bool first = true;
 
 					foreach (object x in row.ItemArray)
@@ -76,20 +76,16 @@ namespace Epsitec.Cresus.Core
 							buffer.Append (", ");
 						}
 
-						if (x == System.DBNull.Value)
-						{
-							buffer.Append ("<DBNull>");
-						}
-						else
-						{
-							buffer.Append (x.ToString ());
-						}
+						buffer.Append (x == System.DBNull.Value ? "<DBNull>" : x.ToString ());
 					}
 
-					System.Console.WriteLine (buffer.ToString ());
+					System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 				}
 			}
 		}
+
+
+#if false
 
 
 		[TestMethod]
@@ -97,7 +93,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
+				DataExtractor cruncher = new DataExtractor (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 
 				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
@@ -108,7 +104,7 @@ namespace Epsitec.Cresus.Core
 					bool[] null_array;
 					int    null_count;
 
-					Replication.DataCruncher.PackColumnToNativeArray (data, i, out array, out null_array, out null_count);
+					array = PackedTableData.PackColumnToNativeArray (data, i, out null_array, out null_count);
 
 					System.Console.WriteLine ("Column {0}: type {1}, {2} rows, {3} are null.", i, array.GetType (), array.Length, null_count);
 				}
@@ -121,7 +117,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
+				DataExtractor cruncher = new DataExtractor (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 
 				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
@@ -134,8 +130,8 @@ namespace Epsitec.Cresus.Core
 					bool[] null_array;
 					int    null_count;
 
-					Replication.DataCruncher.PackColumnToNativeArray (data, i, out array, out null_array, out null_count);
-					Replication.DataCruncher.UnpackColumnFromNativeArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
+					array = PackedTableData.PackColumnToNativeArray (data, i, out null_array, out null_count);
+					PackedTableData.UnpackColumnFromNativeArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
 				}
 
 				for (int r = 0; r < data.Rows.Count; r++)
@@ -146,30 +142,6 @@ namespace Epsitec.Cresus.Core
 						object b = store[r][i];
 
 						Assert.AreEqual (a, b, string.Format ("Row {0}, Column {1} mismatch: {2}, {3}", r, i, a, b));
-					}
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void Check04DataCruncherExtractRowSets()
-		{
-			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
-				Replication.DataCruncher.TableRowSet[] sets = cruncher.ExtractRowSetsUsingLogIds (DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
-
-				for (int i = 0; i < sets.Length; i++)
-				{
-					Replication.DataCruncher.TableRowSet row_set = sets[i];
-					System.Text.StringBuilder            buffer  = new System.Text.StringBuilder ();
-
-					System.Console.WriteLine ("{0} - Table {1} ({2}) :", i, row_set.Table.Name, row_set.Table.CreateSqlName ());
-
-					for (int r = 0; r < row_set.RowIds.Length; r++)
-					{
-						System.Console.WriteLine ("  {0,3} : {1}", r, row_set.RowIds[r]);
 					}
 				}
 			}
@@ -201,7 +173,7 @@ namespace Epsitec.Cresus.Core
 
 			int count;
 
-			Replication.DataCruncher.PackColumnToNativeArray (table_a, 0, out a_0, out n_0, out count);
+			a_0 = PackedTableData.PackColumnToNativeArray (table_a, 0, out n_0, out count);
 
 			Assert.AreEqual (0, count);
 			Assert.AreEqual (4, n_0.Length);
@@ -210,7 +182,7 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual (false, n_0[2]);
 			Assert.AreEqual (false, n_0[3]);
 
-			Replication.DataCruncher.PackColumnToNativeArray (table_a, 1, out a_1, out n_1, out count);
+			a_1 = PackedTableData.PackColumnToNativeArray (table_a, 1, out n_1, out count);
 
 			Assert.AreEqual (1, count);
 			Assert.AreEqual (4, n_1.Length);
@@ -219,7 +191,7 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual (true, n_1[2]);
 			Assert.AreEqual (false, n_1[3]);
 
-			Replication.DataCruncher.PackColumnToNativeArray (table_a, 2, out a_2, out n_2, out count);
+			a_2 = PackedTableData.PackColumnToNativeArray (table_a, 2, out n_2, out count);
 
 			Assert.AreEqual (1, count);
 			Assert.AreEqual (4, n_2.Length);
@@ -228,7 +200,7 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual (false, n_2[2]);
 			Assert.AreEqual (true, n_2[3]);
 
-			Replication.DataCruncher.PackColumnToNativeArray (table_a, 3, out a_3, out n_3, out count);
+			a_3 = PackedTableData.PackColumnToNativeArray (table_a, 3, out n_3, out count);
 
 			Assert.AreEqual (4, count);
 			Assert.AreEqual (4, n_3.Length);
@@ -247,7 +219,7 @@ namespace Epsitec.Cresus.Core
 
 			db_table.DefineKey (new DbKey ());
 
-			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (db_table, table_a);
+			PackedTableData packed = PackedTableData.CreateFromTable (db_table, table_a);
 
 			Assert.IsFalse (packed.HasNullValues (0));
 			Assert.IsTrue (packed.HasNullValues (1));
@@ -280,7 +252,7 @@ namespace Epsitec.Cresus.Core
 
 			System.Console.WriteLine ("Packed table has {0} bytes.", packed_bytes.Length);
 
-			packed = Common.IO.Serialization.DeserializeAndDecompressFromMemory (packed_bytes) as Replication.PackedTableData;
+			packed = Common.IO.Serialization.DeserializeAndDecompressFromMemory (packed_bytes) as PackedTableData;
 
 			table_b = table_a.Clone ();
 
@@ -304,7 +276,7 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Check06ServerEngine()
 		{
-			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+			IReplicationService service = Engine.GetRemoteReplicationService ("localhost", 1234);
 
 			Assert.IsNotNull (service);
 
@@ -313,20 +285,21 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 
-			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
-			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
+			ProgressInformation info = service.AcceptReplication (new ClientIdentity ("test", 1000), from_id, to_id);
+
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
-			service.GetReplicationData (operation, out buffer);
+			buffer = service.GetReplicationData (info.OperationId);
+
 			System.Diagnostics.Debug.WriteLine ("Server reply received.");
 
 			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
 
 			if (buffer != null)
 			{
-				Replication.ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (buffer) as Replication.ReplicationData;
+				ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (buffer) as ReplicationData;
 
-				foreach (Replication.PackedTableData packed_table in data.PackedTableData)
+				foreach (PackedTableData packed_table in data.PackedTableData)
 				{
 					System.Console.WriteLine ("Table {0} contains {1} changed rows:", packed_table.Name, packed_table.RowCount);
 
@@ -355,7 +328,7 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Check07ClientEngine()
 		{
-			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+			IReplicationService service = Engine.GetRemoteReplicationService ("localhost", 1234);
 
 			Assert.IsNotNull (service);
 
@@ -364,11 +337,12 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 
-			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
-			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
+			ProgressInformation info = service.AcceptReplication (new ClientIdentity ("test", 1000), from_id, to_id);
+
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
-			service.GetReplicationData (operation, out buffer);
+			buffer = service.GetReplicationData (info.OperationId);
+
 			System.Diagnostics.Debug.WriteLine ("Server reply received.");
 
 			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
@@ -393,8 +367,8 @@ namespace Epsitec.Cresus.Core
 					DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("replitest");
 
 					infrastructure.CreateDatabase (db_access);
-					Replication.ClientReplicationEngine client = new Replication.ClientReplicationEngine (infrastructure, service);
-					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
+					ClientReplicationEngine client = new ClientReplicationEngine (infrastructure, service);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, info.OperationId);
 				}
 			}
 		}
@@ -403,7 +377,7 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Check08ClientEnginePull()
 		{
-			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+			IReplicationService service = Engine.GetRemoteReplicationService ("localhost", 1234);
 
 			Assert.IsNotNull (service);
 
@@ -412,14 +386,15 @@ namespace Epsitec.Cresus.Core
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (1, 1);
 
-			Remoting.PullReplicationChunk[] args = new Remoting.PullReplicationChunk[1];
-			args[0] = new Remoting.PullReplicationChunk (1000000000010, new long[] { 1000000000004, 1000000000005, 1000000000006 });
+			PullReplicationChunk[] args = new PullReplicationChunk[1];
+			args[0] = new PullReplicationChunk (1000000000010, new long[] { 1000000000004, 1000000000005, 1000000000006 });
 
-			Remoting.AbstractOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
-			service.PullReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, args, out operation);
+			ProgressInformation info = service.PullReplication (new ClientIdentity ("test", 1000), from_id, to_id, args);
+
 			System.Diagnostics.Debug.WriteLine ("Waiting...");
-			service.GetReplicationData (operation, out buffer);
+			buffer = service.GetReplicationData (info.OperationId);
+
 			System.Diagnostics.Debug.WriteLine ("Server reply received.");
 
 			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
@@ -444,17 +419,20 @@ namespace Epsitec.Cresus.Core
 					DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("replitest");
 
 					infrastructure.CreateDatabase (db_access);
-					Replication.ClientReplicationEngine client = new Replication.ClientReplicationEngine (infrastructure, service);
-					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
+					ClientReplicationEngine client = new ClientReplicationEngine (infrastructure, service);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, info.OperationId);
 				}
 			}
 		}
 
+#endif
+
+
+
+		private DbInfrastructure infrastructure;
+
 
 	}
-
-
-#endif
 
 
 }

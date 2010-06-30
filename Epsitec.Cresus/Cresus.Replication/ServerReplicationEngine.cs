@@ -4,7 +4,10 @@
 using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Data;
+
 
 namespace Epsitec.Cresus.Replication
 {
@@ -131,7 +134,7 @@ namespace Epsitec.Cresus.Replication
 				{
 					if (this.queue.Count > 0)
 					{
-						job = this.queue.Dequeue () as ReplicationJob;
+						job = this.queue.Dequeue ();
 					}
 				}
 				
@@ -193,11 +196,11 @@ namespace Epsitec.Cresus.Replication
 				tables.AddRange (this.infrastructure.FindDbTables (transaction, DbElementCat.Any));
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} tables. Extracting from {1} to {2}.", tables.Count, syncStart, syncEnd));
-				
-				DbTable defTableTable  = ServerReplicationEngine.FindTable (tables, Tags.TableTableDef);
-				DbTable defColumnTable = ServerReplicationEngine.FindTable (tables, Tags.TableColumnDef);
-				DbTable defTypeTable   = ServerReplicationEngine.FindTable (tables, Tags.TableTypeDef);
-				DbTable logTable       = ServerReplicationEngine.FindTable (tables, Tags.TableLog);
+
+				DbTable defTableTable  = tables.FirstOrDefault (t => t.Name == Tags.TableTableDef);
+				DbTable defColumnTable = tables.FirstOrDefault (t => t.Name == Tags.TableColumnDef);
+				DbTable defTypeTable   = tables.FirstOrDefault (t => t.Name == Tags.TableTypeDef);
+				DbTable logTable       = tables.FirstOrDefault (t => t.Name == Tags.TableLog);
 				
 				//	We don't replicate these tables through the standard replication mechanism;
 				//	remove them from the list of tables :
@@ -254,36 +257,34 @@ namespace Epsitec.Cresus.Replication
 		{
 			//	Get all the data which changed between the two sync ids :
 
-			System.Data.DataTable dataTable = extractor.ExtractDataUsingLogIds (table, syncStart, syncEnd);
-					
-			
+			DataTable dataTable = extractor.ExtractDataUsingLogIds (table, syncStart, syncEnd);
+
 			//	Is more data required ?
-			
-			if ((pull != null) &&
-				(pull.Contains (table)))
+
+			if (pull != null && pull.Contains (table))
 			{
 				List<long> ids = ServerReplicationEngine.FindUnknownRowIds (dataTable, pull[table].RowIds);
-				
+
 				if (ids.Count > 0)
 				{
 					//	The author of the replication job also wants some explicit rows of this table to
 					//	be included in the replication; include them in the data table :
-					
-					System.Data.DataTable dataMerge = extractor.ExtractDataUsingIds (table, ids);
-					
+
+					DataTable dataMerge = extractor.ExtractDataUsingIds (table, ids);
+
 					dataTable.BeginLoadData ();
-					
-					foreach (System.Data.DataRow row in dataMerge.Rows)
+
+					foreach (DataRow row in dataMerge.Rows)
 					{
 						dataTable.LoadDataRow (row.ItemArray, false);
 					}
-					
+
 					dataTable.EndLoadData ();
 				}
 			}
-			
+
 			//	If the table contains any data, pack it into the replication buffer :
-			
+
 			if (dataTable.Rows.Count > 0)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", dataTable.TableName, dataTable.Rows.Count));
@@ -302,8 +303,8 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="buffer">The buffer for the replication data.</param>
 		static void ReplicateLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
 		{
-			System.Data.DataTable dataTable = extractor.ExtractDataUsingIds (table, syncStart, syncEnd);
-					
+			DataTable dataTable = extractor.ExtractDataUsingIds (table, syncStart, syncEnd);
+
 			if (dataTable.Rows.Count > 0)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", dataTable.TableName, dataTable.Rows.Count));
@@ -319,48 +320,12 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="table">The source data table.</param>
 		/// <param name="ids">The collection of ids.</param>
 		/// <returns>The collection of ids of the rows found in the table which are not found in the collection.</returns>
-		static List<long> FindUnknownRowIds(System.Data.DataTable table, IEnumerable<long> ids)
+		static List<long> FindUnknownRowIds(DataTable table, IEnumerable<long> ids)
 		{
-			List<long> list = new List<long> (ids);
+			HashSet<long> idsCopy = new HashSet<long> (ids);
+			HashSet<long> dataTableIds = new HashSet<long> (table.AsEnumerable ().Select (r => (long) r[0]));
 
-			if (list.Count > 0)
-			{
-				foreach (System.Data.DataRow row in table.Rows)
-				{
-					long id = (long) row[0];
-
-					if (list.Contains (id))
-					{
-						list.Remove (id);
-						
-						if (list.Count == 0)
-						{
-							break;
-						}
-					}
-				}
-			}
-
-			return list;
-		}
-
-		/// <summary>
-		/// Finds the specified table.
-		/// </summary>
-		/// <param name="tables">A collection of tables.</param>
-		/// <param name="name">The table name.</param>
-		/// <returns>The table or <c>null</c>.</returns>
-		static DbTable FindTable(IEnumerable<DbTable> tables, string name)
-		{
-			foreach (DbTable table in tables)
-			{
-				if (table.Name == name)
-				{
-					return table;
-				}
-			}
-			
-			return null;
+			return idsCopy.Except (dataTableIds).ToList ();
 		}
 
 		/// <summary>

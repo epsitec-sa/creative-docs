@@ -59,12 +59,8 @@ namespace Epsitec.Cresus.Replication
 		{
 			info.AddValue (Strings.Tables, this.PackedTableData.ToArray ());
 		}
-		
-		#endregion
 
-		#region Strings Class
-
-		static class Strings
+		private static class Strings
 		{
 			public const string Tables = "Tables";
 		}

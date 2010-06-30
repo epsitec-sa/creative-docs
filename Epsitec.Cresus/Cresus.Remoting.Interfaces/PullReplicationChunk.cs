@@ -10,9 +10,7 @@ namespace Epsitec.Cresus.Remoting
 	/// The <c>PullReplicationChunk</c> structure describes which rows of a given
 	/// table must be replicated by <see cref="IReplicationService.PullReplication"/>.
 	/// </summary>
-	
 	[System.Serializable]
-	
 	public struct PullReplicationChunk
 	{
 		/// <summary>

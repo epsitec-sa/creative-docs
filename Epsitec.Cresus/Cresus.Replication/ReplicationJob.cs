@@ -1,12 +1,17 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.Remoting;
+
+
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
 	/// The <c>ReplicationJob</c> class represents a single replication job.
 	/// </summary>
-	public sealed class ReplicationJob : Remoting.AbstractOperation
+	public sealed class ReplicationJob : AbstractOperation
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ReplicationJob"/> class.
@@ -21,7 +26,7 @@ namespace Epsitec.Cresus.Replication
 		/// Gets or sets the client indentity.
 		/// </summary>
 		/// <value>The client identity.</value>
-		public Remoting.ClientIdentity Client
+		public ClientIdentity Client
 		{
 			get;
 			set;
@@ -31,7 +36,7 @@ namespace Epsitec.Cresus.Replication
 		/// Gets or sets the synchronization start id.
 		/// </summary>
 		/// <value>The synchronization start id.</value>
-		public Database.DbId SyncStartId
+		public DbId SyncStartId
 		{
 			get;
 			set;
@@ -41,7 +46,7 @@ namespace Epsitec.Cresus.Replication
 		/// Gets or sets the synchronization end id.
 		/// </summary>
 		/// <value>The synchronization end id.</value>
-		public Database.DbId SyncEndId
+		public DbId SyncEndId
 		{
 			get;
 			set;
@@ -82,7 +87,6 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		
 		internal void WaitForReady()
 		{
 			this.WaitForProgress (100);
@@ -112,7 +116,6 @@ namespace Epsitec.Cresus.Replication
 			
 			this.SetFailed (message);
 		}
-		
 		
 		
 		private byte[]							syncData;
