@@ -477,33 +477,35 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
+				int sel = 0;
+
 				this.HintUpdateList (this.Text);
 
 				if (this.hintListIndex.Count != 0)
 				{
-					int sel = this.hintListIndex[0] + dir;
-
-					this.hintListIndex.Clear ();
-					for (int i = 0; i < this.items.Count; i++)
-					{
-						this.hintListIndex.Add (i);
-					}
-
-					if (sel < 0)
-					{
-						sel = this.hintListIndex.Count-1;
-					}
-
-					if (sel >= this.hintListIndex.Count)
-					{
-						sel = 0;
-					}
-
-					this.hintSelected = sel;
-					this.UseSelectedHint (startEdition: true);
-
-					this.hintListIndex.Clear ();
+					sel = this.hintListIndex[0] + dir;
 				}
+
+				this.hintListIndex.Clear ();
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					this.hintListIndex.Add (i);
+				}
+
+				if (sel < 0)
+				{
+					sel = this.hintListIndex.Count-1;
+				}
+
+				if (sel >= this.hintListIndex.Count)
+				{
+					sel = 0;
+				}
+
+				this.hintSelected = sel;
+				this.UseSelectedHint (startEdition: true);
+
+				this.hintListIndex.Clear ();
 			}
 		}
 
