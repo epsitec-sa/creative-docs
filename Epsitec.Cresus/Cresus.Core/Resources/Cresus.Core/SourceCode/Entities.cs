@@ -2060,6 +2060,84 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>VatCalculationMode</c> field.
+		///	designer:fld/L0AB2/L0AN7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AN7]")]
+		public string VatCalculationMode
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AN7]");
+			}
+			set
+			{
+				string oldValue = this.VatCalculationMode;
+				if (oldValue != value)
+				{
+					this.OnVatCalculationModeChanging (oldValue, value);
+					this.SetField<string> ("[L0AN7]", oldValue, value);
+					this.OnVatCalculationModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultDebtorBookAccount</c> field.
+		///	designer:fld/L0AB2/L0AK7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AK7]")]
+		public string DefaultDebtorBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AK7]");
+			}
+			set
+			{
+				string oldValue = this.DefaultDebtorBookAccount;
+				if (oldValue != value)
+				{
+					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[L0AK7]", oldValue, value);
+					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultDiscounts</c> field.
+		///	designer:fld/L0AB2/L0AL7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AL7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DiscountEntity> DefaultDiscounts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DiscountEntity> ("[L0AL7]");
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultCurrencyCode</c> field.
+		///	designer:fld/L0AB2/L0AM7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AM7]")]
+		public string DefaultCurrencyCode
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AM7]");
+			}
+			set
+			{
+				string oldValue = this.DefaultCurrencyCode;
+				if (oldValue != value)
+				{
+					this.OnDefaultCurrencyCodeChanging (oldValue, value);
+					this.SetField<string> ("[L0AM7]", oldValue, value);
+					this.OnDefaultCurrencyCodeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
@@ -2071,6 +2149,12 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnFirstContactDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnVatNumberChanging(string oldValue, string newValue);
 		partial void OnVatNumberChanged(string oldValue, string newValue);
+		partial void OnVatCalculationModeChanging(string oldValue, string newValue);
+		partial void OnVatCalculationModeChanged(string oldValue, string newValue);
+		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
+		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
+		partial void OnDefaultCurrencyCodeChanging(string oldValue, string newValue);
+		partial void OnDefaultCurrencyCodeChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2275,6 +2359,28 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CaseEventEntity> ("[L0A95]");
 			}
 		}
+		///	<summary>
+		///	The <c>DefaultDebtorBookAccount</c> field.
+		///	designer:fld/L0AG2/L0AO7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AO7]")]
+		public string DefaultDebtorBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AO7]");
+			}
+			set
+			{
+				string oldValue = this.DefaultDebtorBookAccount;
+				if (oldValue != value)
+				{
+					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[L0AO7]", oldValue, value);
+					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
@@ -2284,6 +2390,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
+		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2308,6 +2416,28 @@ namespace Epsitec.Cresus.Core.Entities
 	///	</summary>
 	public partial class DocumentEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
+		///	<summary>
+		///	The <c>DocumentSource</c> field.
+		///	designer:fld/L0AO2/L0AP3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AP3]")]
+		public string DocumentSource
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AP3]");
+			}
+			set
+			{
+				string oldValue = this.DocumentSource;
+				if (oldValue != value)
+				{
+					this.OnDocumentSourceChanging (oldValue, value);
+					this.SetField<string> ("[L0AP3]", oldValue, value);
+					this.OnDocumentSourceChanged (oldValue, value);
+				}
+			}
+		}
 		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/L0AO2/L0AP2
@@ -2375,28 +2505,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DocumentSource</c> field.
-		///	designer:fld/L0AO2/L0AP3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AP3]")]
-		public string DocumentSource
-		{
-			get
-			{
-				return this.GetField<string> ("[L0AP3]");
-			}
-			set
-			{
-				string oldValue = this.DocumentSource;
-				if (oldValue != value)
-				{
-					this.OnDocumentSourceChanging (oldValue, value);
-					this.SetField<string> ("[L0AP3]", oldValue, value);
-					this.OnDocumentSourceChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Comments</c> field.
 		///	designer:fld/L0AO2/L0A87
 		///	</summary>
@@ -2453,14 +2561,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnDocumentSourceChanging(string oldValue, string newValue);
+		partial void OnDocumentSourceChanged(string oldValue, string newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnFileNameChanging(string oldValue, string newValue);
 		partial void OnFileNameChanged(string oldValue, string newValue);
 		partial void OnMimeTypeChanging(string oldValue, string newValue);
 		partial void OnMimeTypeChanged(string oldValue, string newValue);
-		partial void OnDocumentSourceChanging(string oldValue, string newValue);
-		partial void OnDocumentSourceChanged(string oldValue, string newValue);
 		partial void OnCreationDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnCreationDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnLastModificationDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
@@ -4468,7 +4576,31 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CaseEntity> ("[L0AF5]");
 			}
 		}
+		///	<summary>
+		///	The <c>DefaultDebtorBookAccount</c> field.
+		///	designer:fld/L0AD5/L0AP7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AP7]")]
+		public string DefaultDebtorBookAccount
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AP7]");
+			}
+			set
+			{
+				string oldValue = this.DefaultDebtorBookAccount;
+				if (oldValue != value)
+				{
+					this.OnDefaultDebtorBookAccountChanging (oldValue, value);
+					this.SetField<string> ("[L0AP7]", oldValue, value);
+					this.OnDefaultDebtorBookAccountChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
+		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
