@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 		}
