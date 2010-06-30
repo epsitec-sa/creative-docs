@@ -8,10 +8,10 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 
 	/// <summary>
-	/// The <c>TopLevelNode</c> class represents the <see cref="Node"/> that can have two kind of
+	/// The <c>TopLevelNode</c> class represents the <see cref="AbstractNode"/> that can have two kind of
 	/// children, other <c>TopLevelNode</c> and <c>SubLevelNode</c>.
 	/// </summary>
-	internal class TopLevelNode : Node
+	internal class TopLevelNode : AbstractNode
 	{
 
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 		/// <summary>
 		/// Gets the <see cref="TopLevelNode"/> child of this instance whose name is
-		/// <paramref name="name"/> and whose index among its sibling is <see cref="index"/>.
+		/// <paramref name="name"/> and whose index among its sibling is <paramref name="index"/>.
 		/// </summary>
 		/// <param name="name">The SQL name of the <see cref="TopLevelNode"/>.</param>
 		/// <param name="index">

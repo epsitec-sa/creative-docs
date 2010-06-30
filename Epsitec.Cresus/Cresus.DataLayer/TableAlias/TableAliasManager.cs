@@ -14,11 +14,11 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 	/// generated and need to be reused in some cases. This class manages the creation of this tree,
 	/// stores it, and let the <see cref="DataBrowser"/> explore it again.
 	/// 
-	/// The tree of aliases, is composed of <see cref="Node"/>. Every <see cref="Node"/> contains
-	/// the name of the table it refers to and the value of its alias. In addition, it contains a
-	/// reference to its parent <see cref="Node"/> in the tree.
+	/// The tree of aliases, is composed of <see cref="AbstractNode"/>. Every <see cref="AbstractNode"/>
+	/// contains the name of the table it refers to and the value of its alias. In addition, it
+	/// contains a reference to its parent <see cref="AbstractNode"/> in the tree.
 	/// 
-	/// There are two kind of <see cref="Node"/>:
+	/// There are two kind of <see cref="AbstractNode"/>:
 	/// 
 	///	- <see cref="TopLevelNode"/> for the aliases of the top level tables (which are the root
 	///	entity SQL tables and the relation SQL tables). They contain two list of references, one for
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		/// <see cref="TopLevelNode"/>.
 		/// </summary>
 		/// <param name="name">The name of the table.</param>
-		/// <param name="useCurrentTopLevelAlias">Tells</param>
+		/// <param name="aliasCreationMode">Tells how the new alias is created.</param>
 		/// <returns>The alias of the newly created <see cref="SubLevelNode"/>.</returns>
 		public string CreateSubLevelAlias(string name, AliasCreationMode aliasCreationMode)
 		{
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 
 		/// <summary>
-		/// Gets the alias of the current <see cref="TopLevelNode."/>
+		/// Gets the alias of the current <see cref="TopLevelNode"/>.
 		/// </summary>
 		/// <returns>The alias of the current <see cref="TopLevelNode"/>.</returns>
 		public string GetCurrentTopLevelAlias()

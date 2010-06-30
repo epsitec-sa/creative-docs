@@ -3,9 +3,9 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 
 	/// <summary>
-	/// The <c>SubLevelNode</c> class represent the <see cref="Node"/> that cannot have any children.
+	/// The <c>SubLevelNode</c> class represent the <see cref="AbstractNode"/> that cannot have any children.
 	/// </summary>
-	internal class SubLevelNode : Node
+	internal class SubLevelNode : AbstractNode
 	{
 
 
