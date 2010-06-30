@@ -654,7 +654,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			var rootEntityId = this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
-			var entity = this.entityDataCache.FindEntity (entityData.Key, entityData.RealEntityId, rootEntityId);
+			var entity = this.entityDataCache.FindEntity (entityData.Key, entityData.ConcreteEntityId, rootEntityId);
 
 			if ((entity == null) &&
 				(loadFromDatabase))
@@ -670,13 +670,13 @@ namespace Epsitec.Cresus.DataLayer
 
 		private AbstractEntity InternalResolveEntityBasedOnDataLoadedFromDatabase(EntityDataContainer entityData)
 		{
-			var entity = this.EntityContext.CreateEmptyEntity (entityData.RealEntityId);
+			var entity = this.EntityContext.CreateEmptyEntity (entityData.ConcreteEntityId);
 
 			this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), entityData.Key);
 
 			using (entity.DefineOriginalValues ())
 			{
-				Druid[] entityIds = this.EntityContext.GetInheritedEntityIds (entityData.RealEntityId).ToArray ();
+				Druid[] entityIds = this.EntityContext.GetInheritedEntityIds (entityData.ConcreteEntityId).ToArray ();
 
 				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 				{
@@ -828,9 +828,9 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						if (entityData.ValueData.Contains (field))
+						if (entityData.ValueData.Contains (field.CaptionId))
 						{
-							object value = this.GetFieldValue (entity, field, entityData.ValueData[field]);
+							object value = this.GetFieldValue (entity, field, entityData.ValueData[field.CaptionId]);
 							entity.InternalSetValue (field.Id, value);
 						}
 
@@ -838,9 +838,9 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						if (entityData.ReferenceData.Contains (field))
+						if (entityData.ReferenceData.Contains (field.CaptionId))
 						{
-							object target1 = this.InternalResolveEntity (entityData.ReferenceData[field], field.TypeId, EntityResolutionMode.DelayLoad);
+							object target1 = this.InternalResolveEntity (entityData.ReferenceData[field.CaptionId], field.TypeId, EntityResolutionMode.DelayLoad);
 							entity.InternalSetValue (field.Id, target1);
 						}
 
@@ -850,7 +850,7 @@ namespace Epsitec.Cresus.DataLayer
 
 						IList collection = entity.InternalGetFieldCollection (field.Id);
 
-						foreach (DbKey key in entityData.CollectionData[field])
+						foreach (DbKey key in entityData.CollectionData[field.CaptionId])
 						{
 							object target2 = this.InternalResolveEntity (key, field.TypeId, EntityResolutionMode.DelayLoad);
 							collection.Add (target2);

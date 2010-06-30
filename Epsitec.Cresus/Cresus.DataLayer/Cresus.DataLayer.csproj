@@ -144,9 +144,9 @@
     <Compile Include="DataContextEventArgs.cs" />
     <Compile Include="EntityConstrainer.cs" />
     <Compile Include="DataContextPool.cs" />
-    <Compile Include="EntityData\EntityCollectionDataContainer.cs" />
+    <Compile Include="EntityData\EntityCollectionData.cs" />
     <Compile Include="EntityData\EntityDataContainer.cs" />
-    <Compile Include="EntityData\EntityReferenceDataContainer.cs" />
+    <Compile Include="EntityData\EntityReferenceData.cs" />
     <Compile Include="EntityKey.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithField.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
@@ -165,11 +165,11 @@
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="TableAlias\TopLevelNode.cs" />
-    <Compile Include="EntityData\EntityValueDataContainer.cs" />
+    <Compile Include="EntityData\EntityValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="TableAlias\SubLevelNode.cs" />
-    <Compile Include="TableAlias\Node.cs" />
+    <Compile Include="TableAlias\AbstractNode.cs" />
     <Compile Include="TableAlias\TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />

@@ -3,9 +3,9 @@
 
 
 	/// <summary>
-	/// The <c>Node</c> class is the base class for all the alias nodes in the tree of aliases.
+	/// The <c>AbstractNode</c> class is the base class for all the alias nodes in the tree of aliases.
 	/// </summary>
-	internal abstract class Node
+	internal abstract class AbstractNode
 	{
 
 
@@ -32,12 +32,12 @@
 
 
 		/// <summary>
-		/// Creates a new instance of <see cref="Node"/>.
+		/// Creates a new instance of <c>AbstractNode</c>.
 		/// </summary>
 		/// <param name="parentNode">The parent of the node.</param>
 		/// <param name="name">The SLQ name of the table of the node.</param>
 		/// <param name="alias">The alias of the node.</param>
-		protected Node(TopLevelNode parentNode, string name, string alias)
+		protected AbstractNode(TopLevelNode parentNode, string name, string alias)
 		{
 			this.parentNode = parentNode;
 			
