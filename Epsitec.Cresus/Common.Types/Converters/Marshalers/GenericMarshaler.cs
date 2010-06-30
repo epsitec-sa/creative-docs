@@ -6,27 +6,19 @@ using System.Linq;
 
 namespace Epsitec.Common.Types.Converters.Marshalers
 {
+	/// <summary>
+	/// The <c>GenericMarshaler{T1, T2}</c> class is used as a base class by
+	/// the <see cref="NonNullableMarshaler{T}"/> and <see cref="NullableMarshaler{T}"/>.
+	/// </summary>
+	/// <typeparam name="T1">The real type (either <c>T2</c> or <c>T2?</c>).</typeparam>
+	/// <typeparam name="T2">The non-nullable type.</typeparam>
 	public abstract class GenericMarshaler<T1, T2> : Marshaler<T1>
 	{
-		public System.Func<T1> ValueGetter
-		{
-			get;
-			set;
-		}
-
-		public System.Action<T1> ValueSetter
-		{
-			get;
-			set;
-		}
-
-		public T1 InitialValue
-		{
-			get;
-			set;
-		}
-
-		public bool UsesNullableType
+		/// <summary>
+		/// Gets a value indicating whether this marshaler uses a nullable type <c>T1</c>.
+		/// </summary>
+		/// <value><c>true</c> if type <c>T1</c> is a nullable type; otherwise, <c>false</c>.</value>
+		public override bool UsesNullableType
 		{
 			get
 			{
@@ -34,6 +26,11 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+		/// <summary>
+		/// Gets the converter which can be used to convert between type <c>T2</c>
+		/// and <c>string</c> (in both directions).
+		/// </summary>
+		/// <value>The converter.</value>
 		public GenericConverter<T2> Converter
 		{
 			get
@@ -43,6 +40,10 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		}
 
 
+		/// <summary>
+		/// Gets the value using the value getter.
+		/// </summary>
+		/// <returns>The value.</returns>
 		public override T1 GetValue()
 		{
 			if (this.ValueGetter == null)
@@ -55,6 +56,10 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 			}
 		}
 
+		/// <summary>
+		/// Sets the value using the value setter.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public override void SetValue(T1 value)
 		{
 			if (this.ValueSetter == null)

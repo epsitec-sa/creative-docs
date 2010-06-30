@@ -13,6 +13,16 @@ namespace Epsitec.Common.Types.Converters
 	/// </summary>
 	public abstract class Marshaler
 	{
+		/// <summary>
+		/// Gets a value indicating whether this marshaler operates on a nullable
+		/// type.
+		/// </summary>
+		/// <value><c>true</c> if this marshaler operates on a nullable type; otherwise, <c>false</c>.</value>
+		public abstract bool UsesNullableType
+		{
+			get;
+		}
+
 		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> getter, int index)
 		{
 			var getterFunc = getter.Compile ();
@@ -132,6 +142,24 @@ namespace Epsitec.Common.Types.Converters
 
 	public abstract class Marshaler<T> : Marshaler
 	{
+		public System.Func<T> ValueGetter
+		{
+			get;
+			internal set;
+		}
+
+		public System.Action<T> ValueSetter
+		{
+			get;
+			internal set;
+		}
+
+		public T InitialValue
+		{
+			get;
+			internal set;
+		}
+
 		public abstract void SetValue(T value);
 
 		public abstract T GetValue();

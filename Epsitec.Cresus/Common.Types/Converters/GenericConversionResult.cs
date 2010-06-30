@@ -8,8 +8,8 @@ namespace Epsitec.Common.Types.Converters
 {
 	/// <summary>
 	/// The <c>GenericConversionResult</c> class stores a conversion result. See
-	/// also <see cref="GenericConverter&lt;T&gt;.GetConversionResult"/> and
-	/// <see cref="ConversionResult"/>
+	/// also method <see cref="GenericConverter{T}.ConvertFromString"/> and class
+	/// <see cref="ConversionResult{T}"/>.
 	/// </summary>
 	public abstract class GenericConversionResult
 	{
