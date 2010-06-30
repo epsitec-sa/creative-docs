@@ -2,22 +2,31 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.Remoting;
+
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Replication
 {
+
+
 	/// <summary>
 	/// The <c>ClientReplicationEngine</c> class runs on the client side and knows how
 	/// to apply changes received from the server to replicate a data set.
 	/// </summary>
 	public sealed class ClientReplicationEngine
 	{
+
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ClientReplicationEngine"/> class.
 		/// </summary>
 		/// <param name="infrastructure">The infrastructure.</param>
 		/// <param name="service">The service.</param>
-		public ClientReplicationEngine(DbInfrastructure infrastructure, Remoting.IReplicationService service)
+		public ClientReplicationEngine(DbInfrastructure infrastructure, IReplicationService service)
 		{
 			this.infrastructure = infrastructure;
 			this.replicationService = service;
@@ -48,6 +57,7 @@ namespace Epsitec.Cresus.Replication
 			this.ApplyChanges (database, operationId, null);
 		}
 
+
 		/// <summary>
 		/// Applies the changes associated with a given operation.
 		/// </summary>
@@ -59,15 +69,15 @@ namespace Epsitec.Cresus.Replication
 			byte[] compressedData = this.replicationService.GetReplicationData (operationId);
 
 			this.ApplyChanges (database, Common.IO.Serialization.DeserializeAndDecompressFromMemory<ReplicationData> (compressedData),
-				delegate (DbTransaction transaction)
+				transaction => 
 				{
 					if (beforeCommitCallback != null)
 					{
 						beforeCommitCallback (this, transaction);
 					}
-				});
+				}
+			);
 		}
-
 
 
 		/// <summary>
@@ -86,11 +96,11 @@ namespace Epsitec.Cresus.Replication
 			List<PackedTableData> list = new List<PackedTableData> ();
 			
 			list.AddRange (data.PackedTableData);
-			
-			PackedTableData defTable   = ClientReplicationEngine.FindPackedTable (list, Tags.TableTableDef);
-			PackedTableData defColumn  = ClientReplicationEngine.FindPackedTable (list, Tags.TableColumnDef);
-			PackedTableData defType    = ClientReplicationEngine.FindPackedTable (list, Tags.TableTypeDef);
-			PackedTableData logTable   = ClientReplicationEngine.FindPackedTable (list, Tags.TableLog);
+
+			PackedTableData defTable   = list.FirstOrDefault (t => t.Name == Tags.TableTableDef);
+			PackedTableData defColumn  = list.FirstOrDefault (t => t.Name == Tags.TableColumnDef);
+			PackedTableData defType    = list.FirstOrDefault (t => t.Name == Tags.TableTypeDef);
+			PackedTableData logTable   = list.FirstOrDefault (t => t.Name == Tags.TableLog);
 			
 			if (logTable != null)
 			{
@@ -100,9 +110,7 @@ namespace Epsitec.Cresus.Replication
 			//	First apply the changes to the internal schema tables (if any), before we try to apply
 			//	any other changes :
 			
-			if ((defTable != null) ||
-				(defColumn != null) ||
-				(defType != null))
+			if (defTable != null || defColumn != null || defType != null)
 			{
 				//	We need to globally lock the database to be able to do these changes...
 				
@@ -360,29 +368,10 @@ namespace Epsitec.Cresus.Replication
 				System.Diagnostics.Debug.WriteLine ("Persisted SyncLogId.");
 			}
 		}
-
-		/// <summary>
-		/// Finds the matching packed table.
-		/// </summary>
-		/// <param name="list">The collection of packed tables.</param>
-		/// <param name="name">The name.</param>
-		/// <returns></returns>
-		private static PackedTableData FindPackedTable(IEnumerable<PackedTableData> list, string name)
-		{
-			foreach (PackedTableData packedTable in list)
-			{
-				if (packedTable.Name == name)
-				{
-					return packedTable;
-				}
-			}
-			
-			return null;
-		}
 		
 		
 		readonly DbInfrastructure				infrastructure;
-		readonly Remoting.IReplicationService	replicationService;
+		readonly IReplicationService	replicationService;
 		
 		private DbId							largestLogId;
 	}
