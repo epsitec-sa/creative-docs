@@ -10,25 +10,40 @@ using Epsitec.Cresus.DataLayer;
 
 namespace Epsitec.Cresus.DataLayer.Proxies
 {
+
+
 	/// <summary>
-	/// The <c>EntityDataProxy</c> class automatically loads entities on demand.
+	/// The <c>EntityKeyProxy</c> class is used as a placeholder for an <see cref="AbstractEntity"/>.
+	/// It contains the <see cref="DbKey"/> and the <see cref="Druid"/> as a reference to the
+	/// <see cref="AbstractEntity"/> that it represents.
 	/// </summary>
+	/// <remarks>
+	/// There is some consistency issue with this proxy. The problem is that if one is builded, and
+	/// the <see cref="AbstractEntity"/> to which it refers is removed from the database, there will
+	/// be some "undefined" problems. Use this class with caution.
+	/// </remarks>
 	internal class EntityKeyProxy : IEntityProxy
 	{
+
+
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityKeyProxy"/> class.
+		/// Builds a new <c>EntityKeyProxy</c> which represents the <see cref="AbstractEntity"/> with
+		/// the <see cref="Druid"/> <paramref name="entityId"/> and the <see cref="DbKey"/>
+		/// <paramref name="rowKey"/>.
 		/// </summary>
-		/// <param name="context">The context.</param>
-		/// <param name="rowKey">The row key.</param>
-		/// <param name="entityId">The entity id.</param>
-		public EntityKeyProxy(DataContext context, DbKey rowKey, Druid entityId)
+		/// <param name="dataContext">The <see cref="DataContext"></see> responsible of <paramref name="entity"></paramref>.</param>
+		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
+		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the data base.</param>
+		public EntityKeyProxy(DataContext dataContext, Druid entityId, DbKey rowKey)
 		{
-			this.context = context;
-			this.rowKey = rowKey;
+			this.dataContext = dataContext;
 			this.entityId = entityId;
+			this.rowKey = rowKey;
 		}
 
+		
 		#region IEntityProxy Members
+
 
 		/// <summary>
 		/// Gets the real instance to be used when reading on this proxy.
@@ -44,6 +59,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			return value;
 		}
 
+
 		/// <summary>
 		/// Gets the real instance to be used when writing on this proxy.
 		/// </summary>
@@ -54,6 +70,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			return this;
 		}
+
 
 		/// <summary>
 		/// Checks if the write to the specified entity value should proceed
@@ -77,14 +94,35 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public object PromoteToRealInstance()
 		{
-			return this.context.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
+			return this.dataContext.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
 		}
+
 
 		#endregion
 
-		readonly DataContext context;
-		readonly DbKey rowKey;
-		readonly Druid entityId;
+
+		/// <summary>
+		/// The <see cref="DataContext"/> responsible of the <see cref="AbstractEntity"/> of this
+		/// instance.
+		/// </summary>
+		private readonly DataContext dataContext;
+
+
+		/// <summary>
+		/// The <see cref="Druid"/> representing the type of the <see cref="AbstractEntity"/> of this
+		/// instance.
+		/// </summary>
+		private readonly Druid entityId;
+
+
+		/// <summary>
+		/// The <see cref="DbKey"/> of the row in the database to which the <see cref="AbstractEntity"/>
+		/// of this instance corresponds.
+		/// </summary>
+		private readonly DbKey rowKey;
+
 
 	}
+
+
 }

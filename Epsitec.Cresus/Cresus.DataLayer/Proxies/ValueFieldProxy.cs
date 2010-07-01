@@ -1,46 +1,69 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.DataLayer.Proxies
 {
 
 
-	internal class ValueFieldProxy : IFieldProxy
+	/// <summary>
+	/// The <c>ValueFieldProxy</c> class is a placeholder for the value of a value field of an
+	/// <see cref="AbstractEntity"/>.
+	/// </summary>
+	internal class ValueFieldProxy : IValueProxy
 	{
 
 
-		public ValueFieldProxy(DataContext context, AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField field)
+		/// <summary>
+		/// Builds a new <c>ValueFieldProxy</c>, which represents the value of the field with the id
+		/// <paramref name="fieldId"/> of the <see cref="AbstractEntity"/> given by
+		/// <paramref name="entity"/>.
+		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> responsible of <paramref name="entity"/>.</param>
+		/// <param name="entity">The entity.</param>
+		/// <param name="fieldId">The id of the field.</param>
+		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
-			this.context = context;
+			this.dataContext = dataContext;
 			this.entity = entity;
-			this.entityId = entityId;
-			this.rowKey = rowKey;
-			this.field = field;
+			this.fieldId = fieldId;
 		}
 
 
+		#region IEntityProxy Members
+
+
+		/// <summary>
+		/// Gets the real value represented by the current instance.
+		/// </summary>
+		/// <returns></returns>
 		public object GetValue()
 		{
-			return this.context.GetFieldValue (entity, entityId, rowKey, field);
+			return this.dataContext.GetFieldValue (entity, fieldId);
 		}
 
 
-		private readonly DataContext context;
+		#endregion
 
 
+		/// <summary>
+		/// The <see cref="DataContext"/> responsible of the <see cref="AbstractEntity"/> of this
+		/// instance.
+		/// </summary>
+		private readonly DataContext dataContext;
+
+
+		/// <summary>
+		/// The <see cref="AbstractEntity"/> whose one of the field is represented by this instance.
+		/// </summary>
 		private readonly AbstractEntity entity;
 
 
-		private readonly Druid entityId;
+		/// <summary>
+		/// The id of the field represented by this instance.
+		/// </summary>
+		private readonly Druid fieldId;
 
-
-		private readonly DbKey rowKey;
-
-
-		private readonly StructuredTypeField field;
 	
 	}
 
