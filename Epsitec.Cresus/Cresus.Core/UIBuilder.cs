@@ -360,6 +360,7 @@ namespace Epsitec.Cresus.Core
 
 		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, System.Func<string[], FormattedText> getUserText)
 		{
+			//	possibleItems[0] doit obligatoirement être la 'key' !
 			var staticText = new StaticText
 			{
 				Parent = tile.Container,
