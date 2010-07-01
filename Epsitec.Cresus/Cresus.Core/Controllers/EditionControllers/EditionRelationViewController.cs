@@ -62,8 +62,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 150, "Numéro de client", Marshaler.Create (this.Entity, x => x.Id, (x, v) => x.Id = v));
-			builder.CreateTextField (tile,  90, "Client depuis le", Marshaler.Create (this.Entity, x => x.FirstContactDate, (x, v) => x.FirstContactDate = v));
+			builder.CreateTextField (tile, 150, "Numéro de client",           Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
+			builder.CreateTextField (tile, 150, "Numéro externe",             Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
+			builder.CreateTextField (tile, 150, "Numéro interne",             Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
+			builder.CreateMargin    (tile, horizontalSeparator: false);
+			builder.CreateTextField (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
+			builder.CreateMargin    (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile, 120, "Numéro de TVA",              Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
+			builder.CreateTextField (tile,  90, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v));
+			builder.CreateTextField (tile,  90, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
+			builder.CreateTextField (tile,  60, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v));
 		}
 
 
