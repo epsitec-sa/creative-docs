@@ -11,19 +11,9 @@ namespace Epsitec.Cresus.Requests
 {
 
 	
-	/*
-	 * The following code comes directly from the old test and has not been checked or tested. It
-	 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
-	 * this comment. Marc
-	 */
-
-
 	[TestClass]
 	public class UnitTestRequest
 	{
-
-
-#if false
 
 
 		[TestMethod]
@@ -486,7 +476,11 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-#endif
+		/*
+		 * The following code comes directly from the old test and has not been checked or tested. It
+		 * is very likely to fail when run. If I have time to clean it once, I'll do it and I'll erase
+		 * this comment. Marc
+		 */
 
 
 #if false
@@ -519,10 +513,6 @@ namespace Epsitec.Cresus.Requests
 			Common.Support.Globals.SignalAbort ();
 		}
 
-#endif
-
-#if false
-
 
 		[TestMethod]
 		public void Check12ServiceServer_Create()
@@ -536,8 +526,8 @@ namespace Epsitec.Cresus.Requests
 				UnitTestRequest.CreateTestTable (infrastructure, UnitTestRequest.TestTableName);
 			}
 		}
-
-
+	
+		
 		[TestMethod]
 		public void Check13ConnectionClient()
 		{
@@ -891,10 +881,6 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-
-#endif
-
-
 		[TestMethod]
 		public void Check99ServiceServer_Kill()
 		{
@@ -903,6 +889,9 @@ namespace Epsitec.Cresus.Requests
 				UnitTestRequest.DeleteTestTable (infrastructure, UnitTestRequest.TestTableName);
 			}
 		}
+
+
+#endif
 
 
 		private static readonly string TestTableName = "ST";
