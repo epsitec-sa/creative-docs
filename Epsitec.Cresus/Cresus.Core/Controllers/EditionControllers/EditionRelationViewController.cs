@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public EditionRelationViewController(string name, Entities.RelationEntity entity)
 			: base (name, entity)
 		{
+			//?this.InitializeDefaultValues ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -61,6 +62,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private void InitializeDefaultValues()
+		{
+			if (string.IsNullOrWhiteSpace (this.Entity.VatCalculationMode))
+			{
+				this.Entity.VatCalculationMode = "TVA";
+			}
+
+			if (string.IsNullOrWhiteSpace (this.Entity.DefaultCurrencyCode))
+			{
+				this.Entity.DefaultCurrencyCode = "CHF";
+			}
+		}
+
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
@@ -72,40 +87,52 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField             (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150, "Numéro de TVA",              Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
-			builder.CreateAutoCompleteTextField (tile,  87, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v),  this.PossibleItemsVatCalculationMode);
-			builder.CreateTextField             (tile, 100, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateAutoCompleteTextField (tile,  87, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.PossibleItemsDefaultCurrencyCode);
+			builder.CreateAutoCompleteTextField (tile, 137, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v),  this.PossibleItemsVatCalculationMode,  this.GetUserTextVatCalculationMode);
+			builder.CreateTextField             (tile, 150, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
+			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.PossibleItemsDefaultCurrencyCode, this.GetUserTextDefaultCurrencyCode);
 		}
 
-		private Common.Widgets.Collections.StringCollection PossibleItemsVatCalculationMode
+		private IEnumerable<string[]> PossibleItemsVatCalculationMode
 		{
 			get
 			{
-				var list = new Common.Widgets.Collections.StringCollection (null);
+				var list = new List<string[]> ()
+				{
+					new string[] { "TVA",    "Taux TVA standard" },
+					new string[] { "TVARED", "Taux TVA réduit" },
+				};
+				
+				return list;
+			}
+		}
 
-				list.Add ("ABC", "ABC");
-				list.Add ("DEF", "DEF");
-				list.Add ("XYZ", "XYZ");
+		private FormattedText GetUserTextVatCalculationMode(string[] value)
+		{
+			return UIBuilder.FormatText (value[1]);  // par exemple "Taux TVA standard"
+		}
+
+
+		private IEnumerable<string[]> PossibleItemsDefaultCurrencyCode
+		{
+			get
+			{
+				var list = new List<string[]> ()
+				{
+					new string[] { "CHF", "Franc suisse" },
+					new string[] { "EUR", "Euro" },
+					new string[] { "USD", "Dollar américain" },
+					new string[] { "GBP", "Livre anglaise" },
+					new string[] { "JPY", "Yen japonais" },
+					new string[] { "CNY", "Yuan chinois" },
+				};
 
 				return list;
 			}
 		}
 
-		private Common.Widgets.Collections.StringCollection PossibleItemsDefaultCurrencyCode
+		private FormattedText GetUserTextDefaultCurrencyCode(string[] value)
 		{
-			get
-			{
-				var list = new Common.Widgets.Collections.StringCollection (null);
-
-				list.Add ("CHF", "CHF");
-				list.Add ("EUR", "EUR");
-				list.Add ("USD", "USD");
-				list.Add ("GBP", "GBP");
-				list.Add ("JPY", "JPY");
-				list.Add ("CNY", "CNY");
-
-				return list;
-			}
+			return UIBuilder.FormatText (value[0], "-", value[1]);  // par exemple "CHF - Franc suisse"
 		}
 
 

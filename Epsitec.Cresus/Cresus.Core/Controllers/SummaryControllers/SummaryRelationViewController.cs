@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Customer",
 					Title				= UIBuilder.FormatText ("Client"),
 					CompactTitle		= UIBuilder.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Client depuis: ~", x.FirstContactDate, "\n", "Représentant: ~", this.SalesRepresentativeText)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Représentant: ~", this.SalesRepresentativeText)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonCompactText)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});

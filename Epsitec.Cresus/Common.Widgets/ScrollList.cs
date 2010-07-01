@@ -438,8 +438,8 @@ namespace Epsitec.Common.Widgets
 
 			int line = (int) (y / this.rowHeight);
 
-			System.Diagnostics.Debug.Assert (line >= 0.0);
-			System.Diagnostics.Debug.Assert (line < this.visibleRows);
+			line = System.Math.Max (line, 0);
+			line = System.Math.Min (line, this.visibleRows-1);
 
 			this.MouseSelectRow (this.firstRow+line);
 			

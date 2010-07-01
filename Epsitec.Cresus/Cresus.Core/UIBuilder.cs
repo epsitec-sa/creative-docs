@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, Common.Widgets.Collections.StringCollection possibleItems)
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, System.Func<string[], FormattedText> getUserText)
 		{
 			var staticText = new StaticText
 			{
@@ -432,11 +432,6 @@ namespace Epsitec.Cresus.Core
 				};
 			}
 
-			foreach (var item in possibleItems)
-			{
-				textField.Items.Add (item);
-			}
-
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
@@ -448,7 +443,7 @@ namespace Epsitec.Cresus.Core
 				textField.OpenComboMenu ();
 			};
 
-			var valueController = new TextValueController (marshaler);
+			var valueController = new TextValueController (marshaler, possibleItems, getUserText);
 			valueController.Attach (textField);
 			this.container.WidgetUpdaters.Add (valueController);
 
