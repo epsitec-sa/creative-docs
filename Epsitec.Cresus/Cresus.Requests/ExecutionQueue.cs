@@ -1,6 +1,7 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Extensions;
 
@@ -8,14 +9,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
+
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>ExecutionQueue</c> class manages the queue of requests waiting for
 	/// execution.
 	/// </summary>
 	public sealed class ExecutionQueue : IPersistable, System.IDisposable
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ExecutionQueue"/> class.
 		/// </summary>
@@ -49,7 +55,7 @@ namespace Epsitec.Cresus.Requests
 		/// or else, events will be lost.
 		/// </summary>
 		/// <value>The queue changed wait event.</value>
-		internal AutoResetEvent					QueueChangedWaitEvent
+		internal AutoResetEvent QueueChangedWaitEvent
 		{
 			get
 			{
@@ -57,12 +63,13 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the execution state wait event. This must be used by a single thread,
 		/// or else, events will be lost.
 		/// </summary>
 		/// <value>The execution state wait event.</value>
-		internal AutoResetEvent					ExecutionStateWaitEvent
+		internal AutoResetEvent ExecutionStateWaitEvent
 		{
 			get
 			{
@@ -70,7 +77,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		internal System.Data.DataTable			QueueDataTable
+
+		internal System.Data.DataTable QueueDataTable
 		{
 			get
 			{
@@ -79,7 +87,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public bool								IsRunningAsServer
+		public bool IsRunningAsServer
 		{
 			get
 			{
@@ -87,7 +95,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
-		public bool								IsRunningAsClient
+
+		public bool IsRunningAsClient
 		{
 			get
 			{
@@ -96,7 +105,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public bool								HasPending
+		public bool HasPending
 		{
 			get
 			{
@@ -106,8 +115,9 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 		}
+
 		
-		public bool								HasConflicting
+		public bool HasConflicting
 		{
 			get
 			{
@@ -117,8 +127,9 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 		}
+
 		
-		public bool								HasConflictResolved
+		public bool HasConflictResolved
 		{
 			get
 			{
@@ -128,8 +139,9 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 		}
+
 		
-		public bool								HasExecutedByClient
+		public bool HasExecutedByClient
 		{
 			get
 			{
@@ -140,7 +152,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public bool								HasSentToServer
+
+		public bool HasSentToServer
 		{
 			get
 			{
@@ -150,8 +163,9 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 		}
+
 		
-		public bool								HasExecutedByServer
+		public bool HasExecutedByServer
 		{
 			get
 			{
@@ -162,7 +176,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public bool								HasConflictingOnServer
+
+		public bool HasConflictingOnServer
 		{
 			get
 			{
@@ -173,7 +188,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
-		public int								QueueChangeCounter
+
+		public int QueueChangeCounter
 		{
 			get
 			{
@@ -198,6 +214,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+
 		/// <summary>
 		/// Gets the data rows in the queue, sorted by their date and time.
 		/// </summary>
@@ -214,6 +231,7 @@ namespace Epsitec.Cresus.Requests
 				return rows.ToArray ();
 			}
 		}
+
 
 		/// <summary>
 		/// Allows the caller to execute an atomic check on the queue.
@@ -257,6 +275,7 @@ namespace Epsitec.Cresus.Requests
 
 			this.SignalQueueChanged ();
 		}
+
 
 		/// <summary>
 		/// Adds the specified requests into the queue. The requests are provided in a serialized
@@ -365,6 +384,7 @@ namespace Epsitec.Cresus.Requests
 			return this.WaitForQueueChange (waitPredicate, System.TimeSpan.FromMilliseconds (-1));
 		}
 
+
 		/// <summary>
 		/// Waits for the queue to change.
 		/// </summary>
@@ -402,6 +422,7 @@ namespace Epsitec.Cresus.Requests
 			this.SignalQueueChanged ();
 		}
 
+
 		/// <summary>
 		/// Removes the request rows.
 		/// </summary>
@@ -420,6 +441,7 @@ namespace Epsitec.Cresus.Requests
 
 			this.SignalQueueChanged ();
 		}
+
 
 		/// <summary>
 		/// Gets the request from a row. The request gets deserialized from the row
@@ -443,6 +465,7 @@ namespace Epsitec.Cresus.Requests
 			return Epsitec.Common.IO.Serialization.DeserializeFromMemory<AbstractRequest> (buffer);
 		}
 
+
 		/// <summary>
 		/// Gets the execution state of the request, based on a row.
 		/// </summary>
@@ -456,6 +479,7 @@ namespace Epsitec.Cresus.Requests
 				return ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 			}
 		}
+
 
 		/// <summary>
 		/// Sets the execution state of the request, based on a row. This method
@@ -492,6 +516,7 @@ namespace Epsitec.Cresus.Requests
 			this.SignalStateChanged ();
 		}
 
+
 		/// <summary>
 		/// Sets the orchestrator worker thread; this is used to make sure that the
 		/// <see cref="SetRequestExecutionState"/> method only gets called by the
@@ -506,13 +531,16 @@ namespace Epsitec.Cresus.Requests
 
 		#region IDisposable Members
 
+
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
 
+
 		#endregion
+
 
 		private void SignalQueueChanged()
 		{
@@ -546,8 +574,10 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		#region IPersistable Members
 
+		
 		/// <summary>
 		/// Loads the instance data from the database.
 		/// </summary>
@@ -567,6 +597,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Persists the instance data to the database.
 		/// </summary>
@@ -584,6 +615,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+
 		#endregion
 		
 		
@@ -591,6 +623,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			return (ExecutionState) value;
 		}
+
 		
 		internal static ExecutionState ConvertToExecutionState(object value)
 		{
@@ -603,6 +636,7 @@ namespace Epsitec.Cresus.Requests
 			
 			throw new System.InvalidCastException ("Invalid ExecutionState value.");
 		}
+
 		
 		internal static object ConvertFromExecutionState(ExecutionState value)
 		{
@@ -620,6 +654,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			return this.CreateRequestRow (transaction, Epsitec.Common.IO.Serialization.SerializeToMemory (request), logId);
 		}
+
 
 		/// <summary>
 		/// Creates the request row.
@@ -668,6 +703,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Checks that the row is valid.
 		/// </summary>
@@ -688,6 +724,7 @@ namespace Epsitec.Cresus.Requests
 				throw new System.ArgumentException ("Invalid row specified.", "row");
 			}
 		}
+
 
 		/// <summary>
 		/// Updates the counts for each state.
@@ -716,16 +753,16 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-		readonly object							exclusion = new object ();
-		readonly object							queueChangeMonitor = new object ();
-		
-		readonly DbInfrastructure				infrastructure;
-		readonly IDbAbstraction					database;
-		readonly DbTable						queueDbTable;
+		private readonly object							exclusion = new object ();
+		private readonly object							queueChangeMonitor = new object ();
 
-		readonly AutoResetEvent					queueChangedEvent;
-		readonly AutoResetEvent					stateChangedEvent;
-		readonly bool							isServer;
+		private readonly DbInfrastructure				infrastructure;
+		private readonly IDbAbstraction					database;
+		private readonly DbTable						queueDbTable;
+
+		private readonly AutoResetEvent					queueChangedEvent;
+		private readonly AutoResetEvent					stateChangedEvent;
+		private readonly bool							isServer;
 		
 		private DbRichCommand					queueCommand;
 		private System.Data.DataSet				queueDataSet;
