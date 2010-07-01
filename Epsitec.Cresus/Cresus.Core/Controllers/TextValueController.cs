@@ -54,8 +54,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.AcceptingEdition +=
 				delegate
 				{
-					string text = TextConverter.ConvertToSimpleText (widget.Text);
-					this.marshaler.SetStringValue (text);
+					if (this.widget is AutoCompleteTextField)
+					{
+						var auto = this.widget as AutoCompleteTextField;
+
+						string[] texts = auto.Items.GetValue (auto.SelectedItemIndex) as string[];
+						this.marshaler.SetStringValue (texts[0]);  // utilise key
+					}
+					else
+					{
+						string text = TextConverter.ConvertToSimpleText (widget.Text);
+						this.marshaler.SetStringValue (text);
+					}
 				};
 
 			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
@@ -87,7 +97,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.widget != null)
 			{
-				this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
+				if (this.widget is AutoCompleteTextField)
+				{
+					var auto = this.widget as AutoCompleteTextField;
+
+					auto.SelectedItemIndex = auto.Items.FindIndexByKey (this.marshaler.GetStringValue ());
+				}
+				else
+				{
+					this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
+				}
 			}
 		}
 
