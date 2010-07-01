@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public EditionRelationViewController(string name, Entities.RelationEntity entity)
 			: base (name, entity)
 		{
-			//?this.InitializeDefaultValues ();
+			this.InitializeDefaultValues ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -96,6 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
+				//	possibleItems[0] doit obligatoirement être la 'key' !
 				var list = new List<string[]> ()
 				{
 					new string[] { "TVA",    "Taux TVA standard" },
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
+				//	possibleItems[0] doit obligatoirement être la 'key' !
 				var list = new List<string[]> ()
 				{
 					new string[] { "CHF", "Franc suisse" },
