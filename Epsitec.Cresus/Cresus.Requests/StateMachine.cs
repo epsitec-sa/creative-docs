@@ -3,12 +3,16 @@
 
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>StateMachine</c> class checks that the state transitions for a
 	/// given state machine are valid.
 	/// </summary>
 	internal static class StateMachine
 	{
+		
+		
 		/// <summary>
 		/// Checks that the transition from one state to another is allowed.
 		/// </summary>
@@ -35,5 +39,9 @@ namespace Epsitec.Cresus.Requests
 			
 			return false;
 		}
+
+
 	}
+
+
 }

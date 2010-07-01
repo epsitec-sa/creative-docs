@@ -1,6 +1,7 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
@@ -10,15 +11,19 @@ using Epsitec.Cresus.Remoting;
 using System.Threading;
 using System.Collections.Generic;
 
+
 namespace Epsitec.Cresus.Requests
 {
 
+	
 	/// <summary>
 	/// The <c>Orchestrator</c> class receives requests, puts them into an execution queue
 	/// and then processes them sequentially.
 	/// </summary>
 	public sealed class Orchestrator : System.IDisposable
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Orchestrator"/> class.
 		/// </summary>
@@ -49,7 +54,7 @@ namespace Epsitec.Cresus.Requests
 		/// Gets the execution queue.
 		/// </summary>
 		/// <value>The execution queue.</value>
-		public ExecutionQueue					ExecutionQueue
+		public ExecutionQueue ExecutionQueue
 		{
 			get
 			{
@@ -57,11 +62,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the execution engine.
 		/// </summary>
 		/// <value>The execution engine.</value>
-		public ExecutionEngine					ExecutionEngine
+		public ExecutionEngine ExecutionEngine
 		{
 			get
 			{
@@ -69,11 +75,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the database infrastructure.
 		/// </summary>
 		/// <value>The database infrastructure.</value>
-		public DbInfrastructure					Infrastructure
+		public DbInfrastructure Infrastructure
 		{
 			get
 			{
@@ -81,11 +88,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the database abstraction.
 		/// </summary>
 		/// <value>The database abstraction.</value>
-		public IDbAbstraction					Database
+		public IDbAbstraction Database
 		{
 			get
 			{
@@ -93,11 +101,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the remoting service.
 		/// </summary>
 		/// <value>The remoting service.</value>
-		public IRequestExecutionService			RemotingService
+		public IRequestExecutionService RemotingService
 		{
 			get
 			{
@@ -105,11 +114,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the client identity.
 		/// </summary>
 		/// <value>The client identity.</value>
-		public ClientIdentity					ClientIdentity
+		public ClientIdentity ClientIdentity
 		{
 			get
 			{
@@ -117,11 +127,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the orchestrator state.
 		/// </summary>
 		/// <value>The orchestrator state.</value>
-		public OrchestratorState				State
+		public OrchestratorState State
 		{
 			get
 			{
@@ -162,22 +173,26 @@ namespace Epsitec.Cresus.Requests
 		
 		#region IDisposable Members
 		
+
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
 		
+
 		#endregion
 		
+
 		#region WaiterThread Implementation
+
 
 		/// <summary>
 		/// The waiter thread waits for the arrival of requests on the request execution
 		/// service, i.e. on the server request queue; whenever requests arrive, their
 		/// state gets recorded and the worker thread is started.
 		/// </summary>
-		void WaiterThread()
+		private void WaiterThread()
 		{
 			try
 			{
@@ -219,11 +234,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		#endregion
 		
+
 		#region WorkerThread Implementation
 
-		static class WaitEvents
+
+		private static class WaitEvents
 		{
 			public const int QueueChanged = 0;
 			public const int StateChanged = 1;
@@ -235,7 +253,7 @@ namespace Epsitec.Cresus.Requests
 		/// The worker thread walks through all pending requests and executes them
 		/// sequentially.
 		/// </summary>
-		void WorkerThread()
+		private void WorkerThread()
 		{
 			try
 			{
@@ -256,8 +274,7 @@ namespace Epsitec.Cresus.Requests
 					
 					int handleIndex = Common.Support.Sync.Wait (waitEvents);
 					
-					if ((handleIndex < 0) ||
-						(handleIndex >= WaitEvents.Abort))
+					if (handleIndex < 0 || handleIndex >= WaitEvents.Abort)
 					{
 						//	The event does not belong to those which require work; this means
 						//	we have to abort the worker thread.
@@ -322,6 +339,7 @@ namespace Epsitec.Cresus.Requests
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread terminated.");
 			}
 		}
+
 		
 		#endregion
 

@@ -1,25 +1,30 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Collections;
+
 
 namespace Epsitec.Cresus.Requests
 {
-	using SqlFieldList = Epsitec.Cresus.Database.Collections.SqlFieldList;
-
+	
+	
 	/// <summary>
 	/// The <c>ExecutionEngine</c> class executes requests which modify the
 	/// database.
 	/// </summary>
 	public sealed class ExecutionEngine : System.IDisposable
 	{
+
+
 		public ExecutionEngine(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
 		}
 		
 		
-		public DbInfrastructure					Infrastructure
+		public DbInfrastructure Infrastructure
 		{
 			get
 			{
@@ -27,7 +32,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public DbId								CurrentLogId
+
+		public DbId CurrentLogId
 		{
 			get
 			{
@@ -35,7 +41,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public DbTransaction					CurrentTransaction
+
+		public DbTransaction CurrentTransaction
 		{
 			get
 			{
@@ -43,7 +50,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public ISqlBuilder						CurrentSqlBuilder
+
+		public ISqlBuilder CurrentSqlBuilder
 		{
 			get
 			{
@@ -113,6 +121,7 @@ namespace Epsitec.Cresus.Requests
 			this.expectedRowsChanged++;
 		}
 
+
 		/// <summary>
 		/// Generates an update data command. The data is converted to a format compatible
 		/// with the underlying database. The command updates a single row.
@@ -163,7 +172,9 @@ namespace Epsitec.Cresus.Requests
 			this.expectedRowsChanged++;
 		}
 
+
 		#region IDisposable Members
+
 
 		public void Dispose()
 		{
@@ -171,9 +182,11 @@ namespace Epsitec.Cresus.Requests
 			System.GC.SuppressFinalize (this);
 		}
 
+
 		private void Dispose(bool disposing)
 		{
 		}
+
 
 		#endregion
 
@@ -181,18 +194,19 @@ namespace Epsitec.Cresus.Requests
 		/// <summary>
 		/// Defines the current log id by using the active one, provided by the logger.
 		/// </summary>
-		void DefineCurrentLogId()
+		private void DefineCurrentLogId()
 		{
 			System.Diagnostics.Debug.Assert (this.currentLogId.Value == 0);
 
 			this.currentLogId = this.infrastructure.Logger.CurrentId;
 		}
 
+
 		/// <summary>
 		/// Defines the current transaction.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		void DefineCurrentTransaction(DbTransaction transaction)
+		private void DefineCurrentTransaction(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (this.currentTransaction == null);
 
@@ -200,13 +214,14 @@ namespace Epsitec.Cresus.Requests
 			this.currentSqlBuilder  = transaction.SqlBuilder.NewSqlBuilder ();
 		}
 
+
 		/// <summary>
 		/// Finds the specified table definition.
 		/// </summary>
 		/// <exception cref="System.ArgumentException">Thrown if the table cannot be found.</exception>
 		/// <param name="tableName">Name of the table.</param>
 		/// <returns>The table definition.</returns>
-		DbTable FindTable(string tableName)
+		private DbTable FindTable(string tableName)
 		{
 			DbTable table = this.infrastructure.ResolveDbTable (this.currentTransaction, tableName);
 
@@ -214,17 +229,15 @@ namespace Epsitec.Cresus.Requests
 			{
 				throw new System.ArgumentException (string.Concat ("Cannot find table ", tableName, "."));
 			}
-			else
-			{
-				return table;
-			}
+
+			return table;
 		}
 
 		
 		/// <summary>
 		/// Prepares the context for a new command.
 		/// </summary>
-		void PrepareCommand()
+		private void PrepareCommand()
 		{
 			System.Diagnostics.Debug.Assert (this.currentTransaction != null);
 			System.Diagnostics.Debug.Assert (this.currentSqlBuilder != null);
@@ -241,10 +254,11 @@ namespace Epsitec.Cresus.Requests
 			this.pendingCommands++;
 		}
 
+
 		/// <summary>
 		/// Cleans up after execution of a request.
 		/// </summary>
-		void CleanUp()
+		private void CleanUp()
 		{
 			System.Diagnostics.Debug.Assert (this.currentTransaction != null);
 
@@ -272,10 +286,11 @@ namespace Epsitec.Cresus.Requests
 		/// <returns>
 		/// 	<c>true</c> if a log id is needed for the specified table; otherwise, <c>false</c>.
 		/// </returns>
-		static bool IsLogIdNeededForTable(DbTable table)
+		private static bool IsLogIdNeededForTable(DbTable table)
 		{
 			return table.Columns.Contains (Tags.ColumnRefLog);
 		}
+
 
 		/// <summary>
 		/// Fixes the log id in the incoming fields by using the current log id instead
@@ -285,7 +300,7 @@ namespace Epsitec.Cresus.Requests
 		/// <param name="columnNames">The column names.</param>
 		/// <param name="fields">The fields.</param>
 		/// <param name="currentLogId">The current log id.</param>
-		static void FixLogId(DbTable table, string[] columnNames, SqlFieldList fields, DbId currentLogId)
+		private static void FixLogId(DbTable table, string[] columnNames, SqlFieldList fields, DbId currentLogId)
 		{
 			for (int i = 0; i < columnNames.Length; i++)
 			{
@@ -312,6 +327,7 @@ namespace Epsitec.Cresus.Requests
 			fields.Add (alias, field);
 		}
 
+
 		/// <summary>
 		/// Creates the SQL column definitions.
 		/// </summary>
@@ -319,7 +335,7 @@ namespace Epsitec.Cresus.Requests
 		/// <param name="table">The table.</param>
 		/// <param name="columnNames">The column names.</param>
 		/// <returns>An array of SQL column definitions.</returns>
-		static SqlColumn[] CreateSqlColumns(DbInfrastructure infrastructure, DbTable table, string[] columnNames)
+		private static SqlColumn[] CreateSqlColumns(DbInfrastructure infrastructure, DbTable table, string[] columnNames)
 		{
 			SqlColumn[]    columns   = new SqlColumn[columnNames.Length];
 			ITypeConverter converter = infrastructure.Converter;
@@ -334,6 +350,7 @@ namespace Epsitec.Cresus.Requests
 			return columns;
 		}
 
+
 		/// <summary>
 		/// Creates the SQL values and returns them as a field list.
 		/// </summary>
@@ -343,7 +360,7 @@ namespace Epsitec.Cresus.Requests
 		/// <returns>
 		/// The field list of the converted SQL values.
 		/// </returns>
-		static SqlFieldList CreateSqlValues(DbInfrastructure infrastructure, SqlColumn[] columns, object[] values)
+		private static SqlFieldList CreateSqlValues(DbInfrastructure infrastructure, SqlColumn[] columns, object[] values)
 		{
 			SqlFieldList fields = new SqlFieldList ();
 			
@@ -362,13 +379,16 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-		
-		readonly DbInfrastructure				infrastructure;
-		
-		DbId									currentLogId;
-		DbTransaction							currentTransaction;
-		ISqlBuilder								currentSqlBuilder;
-		int										pendingCommands;
-		int										expectedRowsChanged;
+		private readonly DbInfrastructure				infrastructure;
+
+		private DbId									currentLogId;
+		private DbTransaction							currentTransaction;
+		private ISqlBuilder								currentSqlBuilder;
+		private int										pendingCommands;
+		private int										expectedRowsChanged;
+	
+	
 	}
+
+
 }
