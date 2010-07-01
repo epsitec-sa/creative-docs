@@ -2,7 +2,10 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+
 using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Replication
 {
@@ -188,11 +191,13 @@ namespace Epsitec.Cresus.Replication
 			
 			for (int i = 0; i < colCount; i++)
 			{
-				bool[] nullFlags;
-				int    nullCount;
-				
-				System.Array array = PackedTableData.PackColumnToNativeArray (dataTable, i, out nullFlags, out nullCount);
-				
+				var result = PackedTableData.PackColumnToNativeArray (dataTable, i);
+
+				object[] array = result.Item1;
+				bool[] nullFlags = result.Item2;
+				int    nullCount = result.Item3;
+
+
 				if (nullCount == 0)
 				{
 					nullFlags = null;
@@ -224,7 +229,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="nullValues">An array of flags; one flag for every null values.</param>
 		/// <param name="nullCount">The number of null values.</param>
 		/// <returns>A native array containing the column data.</returns>
-		private static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
+		private static System.Tuple<object[], bool[], int> PackColumnToNativeArray(System.Data.DataTable table, int column)
 		{
 			//	Handles following native types :
 			//
@@ -235,39 +240,47 @@ namespace Epsitec.Cresus.Replication
 
 			if (type == typeof (bool))
 			{
-				return PackColumnToArray<bool> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<bool> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (short))
 			{
-				return PackColumnToArray<short> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<short> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (int))
 			{
-				return PackColumnToArray<int> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<int> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (long))
 			{
-				return PackColumnToArray<long> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<long> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (decimal))
 			{
-				return PackColumnToArray<decimal> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<decimal> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (string))
 			{
-				return PackColumnToArray<string> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<string> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (System.DateTime))
 			{
-				return PackColumnToArray<System.DateTime> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<System.DateTime> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else if (type == typeof (byte[]))
 			{
-				return PackColumnToArray<byte[]> (table, column, out nullValues, out nullCount);
+				var result = PackColumnToArray<byte[]> (table, column);
+				return System.Tuple.Create (result.Item1.Cast<object> ().ToArray (), result.Item2, result.Item3);
 			}
 			else
 			{
-				return PackColumnToArray<object> (table, column, out nullValues, out nullCount);
+				return PackColumnToArray<object> (table, column);
 			}
 		}
 
@@ -350,7 +363,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="array">The column array.</param>
 		/// <param name="nullValues">The null values for the column.</param>
 		/// <returns>The value.</returns>
-		static object UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues)
+		private static object UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues)
 		{
 			if (nullValues != null && nullValues.Length > 0)
 			{
@@ -385,7 +398,7 @@ namespace Epsitec.Cresus.Replication
 		/// inferred from the bitmap (the caller will have to remember it).
 		/// </summary>
 		/// <param name="values">The boolean array.</param>
-		static byte[] PackBooleanArray(bool[] values)
+		private static byte[] PackBooleanArray(bool[] values)
 		{
 			int n = values.Length;
 
@@ -474,12 +487,12 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="nullValues">The null values (or <c>null</c> if all values are non-null).</param>
 		/// <param name="nullCount">The number of null values.</param>
 		/// <returns>The native array.</returns>
-		static System.Array PackColumnToArray<T>(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
+		private static System.Tuple<T[], bool[], int> PackColumnToArray<T>(System.Data.DataTable table, int column)
 		{
 			int n = table.Rows.Count;
 
-			nullValues = new bool[n];
-			nullCount  = 0;
+			bool[] nullValues = new bool[n];
+			int nullCount  = 0;
 
 			T[] data = new T[n];
 			var rows = table.Rows;
@@ -501,7 +514,7 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 
-			return data;
+			return System.Tuple.Create (data, nullValues, nullCount);
 		}
 
 		

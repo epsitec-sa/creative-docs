@@ -85,9 +85,6 @@ namespace Epsitec.Cresus.Replication
 		}
 
 
-#if false
-
-
 		[TestMethod]
 		public void Check02DataCruncherPackColumnToNativeArray()
 		{
@@ -100,13 +97,12 @@ namespace Epsitec.Cresus.Replication
 
 				for (int i = 0; i < data.Columns.Count; i++)
 				{
-					System.Array array;
-					bool[] null_array;
-					int    null_count;
+					var result = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", data, i);
 
-					array = PackedTableData.PackColumnToNativeArray (data, i, out null_array, out null_count);
-
-					System.Console.WriteLine ("Column {0}: type {1}, {2} rows, {3} are null.", i, array.GetType (), array.Length, null_count);
+					object[] array = result.Item1;
+					int null_count = result.Item3;
+					
+					System.Diagnostics.Debug.WriteLine ("Column {0}: type {1}, {2} rows, {3} are null.", i, array.GetType (), array.Length, null_count);
 				}
 			}
 		}
@@ -126,12 +122,13 @@ namespace Epsitec.Cresus.Replication
 
 				for (int i = 0; i < data.Columns.Count; i++)
 				{
-					System.Array array;
-					bool[] null_array;
-					int    null_count;
+					var result = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", data, i);
 
-					array = PackedTableData.PackColumnToNativeArray (data, i, out null_array, out null_count);
-					PackedTableData.UnpackColumnFromNativeArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
+					object[] array = result.Item1;
+					bool[] null_array = result.Item2;
+					int null_count = result.Item3;
+					
+					this.privatePackedTableData.InvokeStatic ("UnpackColumnFromNativeArray", store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
 				}
 
 				for (int r = 0; r < data.Rows.Count; r++)
@@ -168,41 +165,48 @@ namespace Epsitec.Cresus.Replication
 			table_a.Rows.Add (new object[] { 2, null, 30.0M, System.DBNull.Value });
 			table_a.Rows.Add (new object[] { 3, "Xyz", System.DBNull.Value, System.DBNull.Value });
 
-			System.Array a_0, a_1, a_2, a_3;
-			bool[] n_0, n_1, n_2, n_3;
+			var result0 = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", table_a, 0);
 
-			int count;
+			bool[] n_0 = result0.Item2;
+			int count_0 = result0.Item3;
 
-			a_0 = PackedTableData.PackColumnToNativeArray (table_a, 0, out n_0, out count);
-
-			Assert.AreEqual (0, count);
+			Assert.AreEqual (0, count_0);
 			Assert.AreEqual (4, n_0.Length);
 			Assert.AreEqual (false, n_0[0]);
 			Assert.AreEqual (false, n_0[1]);
 			Assert.AreEqual (false, n_0[2]);
 			Assert.AreEqual (false, n_0[3]);
 
-			a_1 = PackedTableData.PackColumnToNativeArray (table_a, 1, out n_1, out count);
+			var result1 = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", table_a, 1);
 
-			Assert.AreEqual (1, count);
+			bool[] n_1 = result1.Item2;
+			int count_1 = result1.Item3;
+
+			Assert.AreEqual (1, count_1);
 			Assert.AreEqual (4, n_1.Length);
 			Assert.AreEqual (false, n_1[0]);
 			Assert.AreEqual (false, n_1[1]);
 			Assert.AreEqual (true, n_1[2]);
 			Assert.AreEqual (false, n_1[3]);
 
-			a_2 = PackedTableData.PackColumnToNativeArray (table_a, 2, out n_2, out count);
+			var result2 = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", table_a, 2);
 
-			Assert.AreEqual (1, count);
+			bool[] n_2 = result2.Item2;
+			int count_2 = result2.Item3;
+
+			Assert.AreEqual (1, count_2);
 			Assert.AreEqual (4, n_2.Length);
 			Assert.AreEqual (false, n_2[0]);
 			Assert.AreEqual (false, n_2[1]);
 			Assert.AreEqual (false, n_2[2]);
 			Assert.AreEqual (true, n_2[3]);
 
-			a_3 = PackedTableData.PackColumnToNativeArray (table_a, 3, out n_3, out count);
+			var result3 = (System.Tuple<object[], bool[], int>) this.privatePackedTableData.InvokeStatic ("PackColumnToNativeArray", table_a, 3);
 
-			Assert.AreEqual (4, count);
+			bool[] n_3 = result3.Item2;
+			int count_3 = result3.Item3;
+
+			Assert.AreEqual (4, count_3);
 			Assert.AreEqual (4, n_3.Length);
 			Assert.AreEqual (true, n_3[0]);
 			Assert.AreEqual (true, n_3[1]);
@@ -271,6 +275,9 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 		}
+
+
+#if false
 
 
 		[TestMethod]
@@ -430,6 +437,9 @@ namespace Epsitec.Cresus.Replication
 
 
 		private DbInfrastructure infrastructure;
+
+
+		private PrivateType privatePackedTableData = new PrivateType (typeof (PackedTableData));
 
 
 	}
