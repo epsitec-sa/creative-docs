@@ -239,12 +239,17 @@ namespace Epsitec.Cresus.Core
 
 		public static Button CreateColumnTileCloseButton(TileContainer container)
 		{
-			System.Diagnostics.Debug.Assert (container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) == null);
+			Button closeButton = container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) as Button;
+
+			if (closeButton != null)
+			{
+				//?return closeButton;
+			}
 
 			var controller   = container.Controller;
 			var orchestrator = controller.Orchestrator;
 
-			var closeButton = new GlyphButton
+			closeButton = new GlyphButton
 			{
 				Parent = container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
@@ -256,7 +261,7 @@ namespace Epsitec.Cresus.Core
 			};
 
 			closeButton.Clicked +=
-						delegate
+				delegate
 				{
 					orchestrator.CloseView (controller);
 				};

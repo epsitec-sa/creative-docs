@@ -27,10 +27,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
-			this.CreateUIRelation (data);
-			this.CreateUIMailContacts (data);
+			this.CreateUIRelation        (data);
+			this.CreateUIMailContacts    (data);
 			this.CreateUITelecomContacts (data);
-			this.CreateUIUriContacts (data);
+			this.CreateUIUriContacts     (data);
+			this.CreateUIAffairs         (data);
 
 			containerController.GenerateTiles ();
 		}
@@ -146,7 +147,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Person.Contacts);
 		}
-		
+
+
+		private void CreateUIAffairs(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "Affair",
+					IconUri		 = "Data.Affair",
+					Title		 = UIBuilder.FormatText ("Affaires"),
+					CompactTitle = UIBuilder.FormatText ("Affaires"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller)
+				.DefineText        (x => UIBuilder.FormatText (x.Id))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
+		}
+
+
 		private void UpdateRelationDefaultAddress()
 		{
 			var customer   = this.Entity;

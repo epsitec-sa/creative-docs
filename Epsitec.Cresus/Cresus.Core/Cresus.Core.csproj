@@ -98,6 +98,9 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionCaseViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
     <Compile Include="Controllers\IWidgetUpdater.cs" />
     <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
@@ -348,6 +351,8 @@
     <EmbeddedResource Include="Images\Data.Country.icon" />
     <EmbeddedResource Include="Images\Data.Location.icon" />
     <EmbeddedResource Include="Images\Data.Title.icon" />
+    <EmbeddedResource Include="Images\Data.Affair.icon" />
+    <EmbeddedResource Include="Images\Data.Case.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
