@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Requests
 			this.queueChangedEvent   = new AutoResetEvent (false);
 			this.stateChangedEvent   = new AutoResetEvent (false);
 			this.isServer            = this.infrastructure.LocalSettings.IsServer;
-			
-			int n = (int) ExecutionState.Count;
+
+			int n = System.Enum.GetValues (typeof (ExecutionState)).Length;
 			this.stateCountCache = new int[n];
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
@@ -694,7 +694,7 @@ namespace Epsitec.Cresus.Requests
 		/// </summary>
 		void UpdateCounts()
 		{
-			int   n     = (int) ExecutionState.Count;
+			int   n     = System.Enum.GetValues (typeof (ExecutionState)).Length;
 			int[] count = new int[n];
 			
 			foreach (System.Data.DataRow row in this.queueDataTable.Rows)

@@ -1,60 +1,77 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types.Collections;
+
+using System.Collections.ObjectModel;
+
+using System.Runtime.Serialization;
+
 
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>UpdateDynamicDataRequest</c> class describes a dynamic data update.
 	/// The data is computed on the fly.
 	/// </summary>
-	
 	[System.Serializable]
-	
-	public class UpdateDynamicDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
+	public class UpdateDynamicDataRequest : AbstractDataRequest
 	{
+
+
 		public UpdateDynamicDataRequest()
 		{
+			throw new System.NotImplementedException ();
 		}
 
 
-		public override ReadOnlyList<string>	ColumnNames
+		public override ReadOnlyCollection<string> ColumnNames
 		{
 			get
 			{
-				return ReadOnlyList<string>.Empty;
+				throw new System.NotImplementedException ();
 			}
 		}
-		
-		public override ReadOnlyList<object>	ColumnValues
+
+
+		public override ReadOnlyCollection<object> ColumnValues
 		{
 			get
 			{
-				return ReadOnlyList<object>.Empty;
+				throw new System.NotImplementedException ();
 			}
 		}
 		
 		
 		public override void Execute(ExecutionEngine engine)
 		{
-			//	TODO: à compléter...
-
 			throw new System.NotImplementedException ();
 		}
 		
 		
 		#region ISerializable Members
-		
-		protected UpdateDynamicDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+
+		protected UpdateDynamicDataRequest(SerializationInfo info, StreamingContext context)
+			: base (info, context)
 		{
+			throw new System.NotImplementedException ();
 		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);
+
+			throw new System.NotImplementedException ();
 		}
 		
+
 		#endregion
+	
+	
 	}
+
+
 }
