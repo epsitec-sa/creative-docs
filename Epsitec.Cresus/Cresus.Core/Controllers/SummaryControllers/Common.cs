@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name		 = "MailContact",
 					IconUri		 = "Data.Mail",
-					Title		 = UIBuilder.FormatText ("Adresse"),
-					CompactTitle = UIBuilder.FormatText ("Adresse"),
+					Title		 = UIBuilder.FormatText ("Adresses"),
+					CompactTitle = UIBuilder.FormatText ("Adresses"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
 					IconUri		 = "Data.Telecom",
-					Title		 = UIBuilder.FormatText ("Téléphone"),
-					CompactTitle = UIBuilder.FormatText ("Téléphone"),
+					Title		 = UIBuilder.FormatText ("Téléphones"),
+					CompactTitle = UIBuilder.FormatText ("Téléphones"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
@@ -99,8 +99,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "UriContact",
 					IconUri		 = "Data.Uri",
-					Title		 = UIBuilder.FormatText ("E-Mail"),
-					CompactTitle = UIBuilder.FormatText ("E-Mail"),
+					Title		 = UIBuilder.FormatText ("Emails"),
+					CompactTitle = UIBuilder.FormatText ("Emails"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 

@@ -27,10 +27,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
-			this.CreateUIPerson (data);
-			this.CreateUIMailContacts (data);
+			this.CreateUIPerson          (data);
+			this.CreateUIMailContacts    (data);
 			this.CreateUITelecomContacts (data);
-			this.CreateUIUriContacts (data);
+			this.CreateUIUriContacts     (data);
 
 			containerController.GenerateTiles ();
 		}
@@ -71,7 +71,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Contacts);
 		}
-		
+
+
 		private void SetupNewContact(AbstractContactEntity contact)
 		{
 			if (contact != null)
