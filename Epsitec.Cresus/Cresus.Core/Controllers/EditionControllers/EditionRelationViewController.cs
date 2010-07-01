@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -46,6 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
+
 		protected override EditionStatus GetEditionStatus()
 		{
 			var entity = this.Entity;
@@ -58,20 +60,52 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
 		}
 
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 150, "Numéro de client",           Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
-			builder.CreateTextField (tile, 150, "Numéro externe",             Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
-			builder.CreateTextField (tile, 150, "Numéro interne",             Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
-			builder.CreateMargin    (tile, horizontalSeparator: false);
-			builder.CreateTextField (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
-			builder.CreateMargin    (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile, 120, "Numéro de TVA",              Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
-			builder.CreateTextField (tile,  90, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v));
-			builder.CreateTextField (tile,  90, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateTextField (tile,  60, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v));
+			builder.CreateTextField             (tile, 150, "Numéro de client",           Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
+			builder.CreateTextField             (tile, 150, "Numéro externe",             Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
+			builder.CreateTextField             (tile, 150, "Numéro interne",             Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
+			builder.CreateMargin                (tile, horizontalSeparator: false);
+			builder.CreateTextField             (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
+			builder.CreateMargin                (tile, horizontalSeparator: true);
+			builder.CreateTextField             (tile, 150, "Numéro de TVA",              Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
+			builder.CreateAutoCompleteTextField (tile,  87, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v),  this.PossibleItemsVatCalculationMode);
+			builder.CreateTextField             (tile, 100, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
+			builder.CreateAutoCompleteTextField (tile,  87, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.PossibleItemsDefaultCurrencyCode);
+		}
+
+		private Common.Widgets.Collections.StringCollection PossibleItemsVatCalculationMode
+		{
+			get
+			{
+				var list = new Common.Widgets.Collections.StringCollection (null);
+
+				list.Add ("ABC", "ABC");
+				list.Add ("DEF", "DEF");
+				list.Add ("XYZ", "XYZ");
+
+				return list;
+			}
+		}
+
+		private Common.Widgets.Collections.StringCollection PossibleItemsDefaultCurrencyCode
+		{
+			get
+			{
+				var list = new Common.Widgets.Collections.StringCollection (null);
+
+				list.Add ("CHF", "CHF");
+				list.Add ("EUR", "EUR");
+				list.Add ("USD", "USD");
+				list.Add ("GBP", "GBP");
+				list.Add ("JPY", "JPY");
+				list.Add ("CNY", "CNY");
+
+				return list;
+			}
 		}
 
 
