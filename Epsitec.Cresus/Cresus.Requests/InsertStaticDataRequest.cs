@@ -1,30 +1,36 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types.Collections;
+
+using System.Collections.ObjectModel;
+
+using System.Runtime.Serialization;
+
 
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>InsertStaticDataRequest</c> class describes a static data insertion.
 	/// The data provided is plain static data which needs not be recomputed but
 	/// can be used as is.
 	/// </summary>
-	
 	[System.Serializable]
-	
-	public class InsertStaticDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
+	public class InsertStaticDataRequest : AbstractDataRequest
 	{
-		public InsertStaticDataRequest()
+		
+		
+		public InsertStaticDataRequest() : base()
 		{
 		}
 
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="InsertStaticDataRequest"/> class.
 		/// </summary>
 		/// <param name="row">The source data row.</param>
-		public InsertStaticDataRequest(System.Data.DataRow row)
-			: this ()
+		public InsertStaticDataRequest(System.Data.DataRow row) : this ()
 		{
 			System.Diagnostics.Debug.Assert (row != null);
 			System.Diagnostics.Debug.Assert (row.Table != null);
@@ -34,7 +40,7 @@ namespace Epsitec.Cresus.Requests
 
 			int n = columns.Count;
 
-			this.DefineTableName (table.TableName);
+			this.TableName = table.TableName;
 
 			this.columnNames  = new string[n];
 			this.columnValues = (object[]) row.ItemArray.Clone ();
@@ -50,11 +56,11 @@ namespace Epsitec.Cresus.Requests
 		/// Gets the column names.
 		/// </summary>
 		/// <value>The column names.</value>
-		public override ReadOnlyList<string>	ColumnNames
+		public override ReadOnlyCollection<string>	ColumnNames
 		{
 			get
 			{
-				return new ReadOnlyList<string> (this.columnNames);
+				return new ReadOnlyCollection<string> (this.columnNames);
 			}
 		}
 
@@ -62,15 +68,13 @@ namespace Epsitec.Cresus.Requests
 		/// Gets the column values.
 		/// </summary>
 		/// <value>The column values.</value>
-		public override ReadOnlyList<object>	ColumnValues
+		public override ReadOnlyCollection<object>	ColumnValues
 		{
 			get
 			{
-				return new ReadOnlyList<object> (this.columnValues);
+				return new ReadOnlyCollection<object> (this.columnValues);
 			}
 		}
-
-
 
 
 		/// <summary>
@@ -84,24 +88,44 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		
-		protected InsertStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+
+		protected InsertStaticDataRequest(SerializationInfo info, StreamingContext context) : base (info, context)
 		{
-			this.columnNames  = info.GetValue (Strings.ColumnNames, typeof (string[])) as string[];
-			this.columnValues = info.GetValue (Strings.ColumnValues, typeof (object[])) as object[];
+			this.columnNames = info.GetValue (SerializationKeys.ColumnNames, typeof (string[])) as string[];
+			this.columnValues = info.GetValue (SerializationKeys.ColumnValues, typeof (object[])) as object[];
 		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);
-			
-			info.AddValue (Strings.ColumnNames, this.columnNames);
-			info.AddValue (Strings.ColumnValues, this.columnValues);
+
+			info.AddValue (SerializationKeys.ColumnNames, this.columnNames);
+			info.AddValue (SerializationKeys.ColumnValues, this.columnValues);
 		}
 		
 		#endregion
-		
-		readonly string[]						columnNames;
-		readonly object[]						columnValues;
+
+
+		#region SerializationKeys Class
+
+
+		private static class SerializationKeys
+		{
+			public const string ColumnNames = "C.Names";
+			public const string ColumnValues = "C.Values";
+		}
+
+
+		#endregion
+
+
+		private readonly string[]						columnNames;
+		private readonly object[]						columnValues;
+	
+	
 	}
+
+
 }

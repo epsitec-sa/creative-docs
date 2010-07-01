@@ -1,26 +1,32 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types.Collections;
+
+using System.Collections.ObjectModel;
+
+using System.Runtime.Serialization;
+
 
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>UpdateStaticDataRequest</c> class describes a static data update.
 	/// The data provided is plain static data which needs not be recomputed but
 	/// can be used as is..
 	/// </summary>
-	
 	[System.Serializable]
-	
-	public class UpdateStaticDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
+	public class UpdateStaticDataRequest : AbstractDataRequest
 	{
-		public UpdateStaticDataRequest()
+		
+		
+		public UpdateStaticDataRequest() : base()
 		{
 		}
 
-		public UpdateStaticDataRequest(System.Data.DataRow row, UpdateMode mode)
-			: this ()
+
+		public UpdateStaticDataRequest(System.Data.DataRow row, UpdateMode mode) : this ()
 		{
 			//	Selon le mode de mise à jour spécifié, on ne va enregistrer que les
 			//	colonnes modifiées (et les colonnes servant d'index) ou alors tout
@@ -31,7 +37,7 @@ namespace Epsitec.Cresus.Requests
 
 			int n = columns.Count;
 
-			this.DefineTableName (table.TableName);
+			this.TableName = table.TableName;
 
 			switch (mode)
 			{
@@ -116,43 +122,46 @@ namespace Epsitec.Cresus.Requests
 		/// Gets the column names.
 		/// </summary>
 		/// <value>The column names.</value>
-		public override ReadOnlyList<string>	ColumnNames
+		public override ReadOnlyCollection<string> ColumnNames
 		{
 			get
 			{
-				return new ReadOnlyList<string> (this.columnNames);
+				return new ReadOnlyCollection<string> (this.columnNames);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the column values.
 		/// </summary>
 		/// <value>The column values.</value>
-		public override ReadOnlyList<object>	ColumnValues
+		public override ReadOnlyCollection<object> ColumnValues
 		{
 			get
 			{
-				return new ReadOnlyList<object> (this.columnCurrentValues);
+				return new ReadOnlyCollection<object> (this.columnCurrentValues);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the column original values.
 		/// </summary>
 		/// <value>The column original values.</value>
-		public ReadOnlyList<object>				ColumnOriginalValues
+		public ReadOnlyCollection<object> ColumnOriginalValues
 		{
 			get
 			{
-				return new ReadOnlyList<object> (this.columnOriginalValues);
+				return new ReadOnlyCollection<object> (this.columnOriginalValues);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether this request contains any data.
 		/// </summary>
 		/// <value><c>true</c> if this request contains any data; otherwise, <c>false</c>.</value>
-		public bool								ContainsData
+		public bool ContainsData
 		{
 			get
 			{
@@ -175,29 +184,49 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		
-		protected UpdateStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+
+		protected UpdateStaticDataRequest(SerializationInfo info, StreamingContext context) : base (info, context)
 		{
-			System.Diagnostics.Debug.Assert (Epsitec.Common.Support.Serialization.Helper.FindElement (info, Strings.ColumnNames));
-			
-			this.columnNames  = info.GetValue (Strings.ColumnNames, typeof (string[])) as string[];
-			this.columnCurrentValues = info.GetValue (Strings.ColumnValues, typeof (object[])) as object[];
-			this.columnOriginalValues = info.GetValue (Strings.ColumnOriginals, typeof (object[])) as object[];
+			this.columnNames = info.GetValue (SerializationKeys.ColumnNames, typeof (string[])) as string[];
+			this.columnCurrentValues = info.GetValue (SerializationKeys.ColumnValues, typeof (object[])) as object[];
+			this.columnOriginalValues = info.GetValue (SerializationKeys.ColumnOriginals, typeof (object[])) as object[];
 		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);
-			
-			info.AddValue (Strings.ColumnNames, this.columnNames);
-			info.AddValue (Strings.ColumnValues, this.columnCurrentValues);
-			info.AddValue (Strings.ColumnOriginals, this.columnOriginalValues);
+
+			info.AddValue (SerializationKeys.ColumnNames, this.columnNames);
+			info.AddValue (SerializationKeys.ColumnValues, this.columnCurrentValues);
+			info.AddValue (SerializationKeys.ColumnOriginals, this.columnOriginalValues);
 		}
 		
+
 		#endregion
-		
+
+
+		#region SerializationKeys Class
+
+
+		private static class SerializationKeys
+		{
+			public const string ColumnNames = "C.Names";
+			public const string ColumnValues = "C.Values";
+			public const string ColumnOriginals = "C.Origs";
+		}
+
+
+		#endregion
+
+
 		private string[]						columnNames;
 		private object[]						columnCurrentValues;
 		private object[]						columnOriginalValues;
+
+
 	}
+
+
 }

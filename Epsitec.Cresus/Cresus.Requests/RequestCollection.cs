@@ -1,24 +1,32 @@
 //	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using System.Collections;
 using System.Collections.Generic;
+
+using System.Runtime.Serialization;
+
 
 namespace Epsitec.Cresus.Requests
 {
+	
+	
 	/// <summary>
 	/// The <c>RequestCollection</c> class groups logically related requests into a
 	/// single meta request.
 	/// </summary>
-	
 	[System.Serializable]
-	
-	public sealed class RequestCollection : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, IEnumerable<AbstractRequest>, ICollection<AbstractRequest>
+	public sealed class RequestCollection : AbstractRequest, IDeserializationCallback, IEnumerable<AbstractRequest>, ICollection<AbstractRequest>, ICollection, IEnumerable
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RequestCollection"/> class.
 		/// </summary>
-		public RequestCollection()
+		public RequestCollection() : base()
 		{
+			this.requests = new List<AbstractRequest> ();
 		}
 
 
@@ -26,17 +34,16 @@ namespace Epsitec.Cresus.Requests
 		/// Gets the <see cref="AbstractRequest"/> at the specified index.
 		/// </summary>
 		/// <value>The request.</value>
-		public AbstractRequest					this[int index]
+		public AbstractRequest this[int index]
 		{
 			get
 			{
-				if ((this.requests != null) &&
-					(this.requests.Count > index))
+				if (index < 0 || index >= this.requests.Count)
 				{
-					return this.requests[index];
+					throw new System.ArgumentException ("Index invalid.");
 				}
-				
-				throw new System.ArgumentException ("Index invalid.");
+
+				return this.requests[index];
 			}
 		}
 
@@ -52,13 +59,9 @@ namespace Epsitec.Cresus.Requests
 				throw new System.ArgumentNullException ("request", "Null request provided");
 			}
 			
-			if (this.requests == null)
-			{
-				this.requests = new List<AbstractRequest> ();
-			}
-			
 			this.requests.Add (request);
 		}
+
 
 		/// <summary>
 		/// Adds the specified range of requests to the collection.
@@ -68,11 +71,6 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (requests != null)
 			{
-				if (this.requests == null)
-				{
-					this.requests = new List<AbstractRequest> ();
-				}
-				
 				this.requests.AddRange (requests);
 			}
 		}
@@ -93,95 +91,93 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		
-		RequestCollection(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+
+
+		RequestCollection(SerializationInfo info, StreamingContext context) : base (info, context)
 		{
-			AbstractRequest[] array = (AbstractRequest[]) info.GetValue (Strings.Array, typeof (AbstractRequest[]));
-			
-			System.Diagnostics.Debug.Assert ((array == null) || (array.Length > 0));
-			
+			AbstractRequest[] array = info.GetValue (SerializationKeys.Array, typeof (AbstractRequest[])) as AbstractRequest[];
+
+			System.Diagnostics.Debug.Assert (array != null);
+
 			//	The references to the requests have not yet been deserialized and we must
 			//	therefore keep the reference to the array until the point where method
 			//	OnDeserialization gets called :
-			
+
 			this.deserializationArray = array;
 		}
-		
-		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);
-			
-			AbstractRequest[] array = null;
-			
-			if ((this.requests != null) &&
-				(this.requests.Count > 0))
-			{
-				array = this.requests.ToArray ();
-			}
 
-			info.AddValue (Strings.Array, array);
+			info.AddValue (SerializationKeys.Array, this.requests.ToArray ());
 		}
+
 		
 		#endregion
-		
+
+
+		#region Strings Class
+
+		private static class SerializationKeys
+		{
+			public const string Array = "Array";
+		}
+
+		#endregion
+
+
 		#region IDeserializationCallback Members
 		
-		void System.Runtime.Serialization.IDeserializationCallback.OnDeserialization(object sender)
+
+		void IDeserializationCallback.OnDeserialization(object sender)
 		{
-			if ((deserializationArray != null) &&
-				(deserializationArray.Length > 0))
+			if (this.deserializationArray != null && this.deserializationArray.Length > 0)
 			{
-				//	Instanciates the real collection :
+				//	Instantiates the real collection :
 
 				this.requests = new List<AbstractRequest> (this.deserializationArray);
 				this.deserializationArray = null;
 			}
 		}
 		
+
 		#endregion
+
 
 		#region IEnumerable<AbstractRequest> Members
 
+
 		IEnumerator<AbstractRequest> IEnumerable<AbstractRequest>.GetEnumerator()
 		{
-			if (this.requests == null)
-			{
-				return Epsitec.Common.Support.EmptyEnumerator<AbstractRequest>.Instance;
-			}
-			else
-			{
-				return this.requests.GetEnumerator ();
-			}
+			return this.requests.GetEnumerator ();
 		}
+
 
 		#endregion
 
+
 		#region ICollection<AbstractRequest> Members
+
 
 		public void Clear()
 		{
-			this.requests = null;
+			this.requests.Clear ();
 		}
+
 
 		public bool Contains(AbstractRequest item)
 		{
-			if (this.requests != null)
-			{
-				return this.requests.Contains (item);
-			}
-			else
-			{
-				return false;
-			}
+			return this.requests.Contains (item);
 		}
+
 
 		public void CopyTo(AbstractRequest[] array, int arrayIndex)
 		{
-			if (this.requests != null)
-			{
-				this.requests.CopyTo (array, arrayIndex);
-			}
+			this.requests.CopyTo (array, arrayIndex);
 		}
+
 
 		public bool IsReadOnly
 		{
@@ -191,40 +187,32 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+
 		public bool Remove(AbstractRequest item)
 		{
-			if (this.requests != null)
-			{
-				return this.requests.Remove (item);
-			}
-			else
-			{
-				return false;
-			}
+			return this.requests.Remove (item);
 		}
+
 
 		#endregion
 		
+
 		#region IEnumerable Members
-		
-		public System.Collections.IEnumerator GetEnumerator()
+
+
+		public IEnumerator GetEnumerator()
 		{
-			if (this.requests == null)
-			{
-				return Epsitec.Common.Support.EmptyEnumerator<AbstractRequest>.Instance;
-			}
-			else
-			{
-				System.Collections.IEnumerable enumerable = this.requests;
-				return enumerable.GetEnumerator ();
-			}
+			return this.requests.GetEnumerator ();
 		}
 		
+
 		#endregion
 		
+
 		#region ICollection Members
 		
-		public bool								IsSynchronized
+
+		public bool IsSynchronized
 		{
 			get
 			{
@@ -232,51 +220,40 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
-		public object							SyncRoot
+
+		public object SyncRoot
 		{
 			get
 			{
-				if (this.requests == null)
-				{
-					return this;
-				}
-				else
-				{
-					return this.requests;
-				}
+				return this.requests;
 			}
 		}
 		
-		public int								Count
+
+		public int Count
 		{
 			get
 			{
-				return (this.requests == null) ? 0 : this.requests.Count;
+				return this.requests.Count;
 			}
 		}
 
 		
 		public void CopyTo(System.Array array, int index)
 		{
-			if (this.requests != null)
-			{
-				System.Collections.ICollection collection = this.requests;
-				collection.CopyTo (array, index);
-			}
+			(this.requests as ICollection).CopyTo (array, index);
 		}
 		
 		#endregion
 
-		#region Strings Class
 
-		static class Strings
-		{
-			public const string Array = "Array";
-		}
+		private List<AbstractRequest> requests;
 
-		#endregion
 
-		List<AbstractRequest>					requests;
-		AbstractRequest[]						deserializationArray;
+		private AbstractRequest[] deserializationArray;
+
+
 	}
+
+
 }

@@ -43,11 +43,6 @@ namespace Epsitec.Cresus.Requests
 		/// Transient, a conflict has been identified on the server.
 		/// </summary>
 		ConflictingOnServer	= 6,
-
-		/// <summary>
-		/// The number of states is currently 7.
-		/// </summary>
-		Count
 	}
 	
 	//	The following transitions are currently supported :

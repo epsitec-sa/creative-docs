@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// the <see cref="Druid"/> <paramref name="entityId"/> and the <see cref="DbKey"/>
 		/// <paramref name="rowKey"/>.
 		/// </summary>
-		/// <param name="dataContext">The <see cref="DataContext"></see> responsible of <paramref name="entity"></paramref>.</param>
+		/// <param name="dataContext">The <see cref="DataContext"></see> responsible the <see cref="AbstractEntity"/>.</param>
 		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
 		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the data base.</param>
 		public EntityKeyProxy(DataContext dataContext, Druid entityId, DbKey rowKey)
