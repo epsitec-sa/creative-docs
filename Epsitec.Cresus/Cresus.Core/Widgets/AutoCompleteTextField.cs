@@ -553,14 +553,21 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string GetItemText(int index)
 		{
-			if (this.ValueToDescriptionConverter == null || index == -1)
+			if (index == -1)
 			{
 				return null;
 			}
 			else
 			{
-				object value = this.items.GetValue (index);
-				return this.ValueToDescriptionConverter (value).ToString ();
+				if (this.ValueToDescriptionConverter == null)
+				{
+					return this.items.GetValue (index).ToString ();
+				}
+				else
+				{
+					object value = this.items.GetValue (index);
+					return this.ValueToDescriptionConverter (value).ToString ();
+				}
 			}
 		}
 
@@ -627,7 +634,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 
 				if (this.HintEditorComboMenu == Widgets.HintEditorComboMenu.IfReasonable &&
-				this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
+					this.hintListIndex.Count >= this.ComboMenuReasonableItemsLimit)
 				{
 					return;
 				}

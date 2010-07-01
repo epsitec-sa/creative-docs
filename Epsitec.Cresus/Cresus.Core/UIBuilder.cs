@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public TextField CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
+		public TextFieldEx CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
 		{
 			var staticText = new StaticText
 			{
@@ -349,6 +349,104 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (staticText);
 			this.ContentListAdd (textField);
+
+			var valueController = new TextValueController (marshaler);
+			valueController.Attach (textField);
+			this.container.WidgetUpdaters.Add (valueController);
+
+			return textField;
+		}
+
+
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, Common.Widgets.Collections.StringCollection possibleItems)
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var container = new FrameBox
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
+			};
+
+			Widgets.AutoCompleteTextField textField;
+			GlyphButton menuButton;
+
+			double buttonWidth = 14;
+
+			if (width == 0)
+			{
+				textField = new Widgets.AutoCompleteTextField
+				{
+					Parent = container,
+					MenuButtonWidth = buttonWidth-1,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 0, 0, 0),
+					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					TabIndex = ++this.tabIndex,
+				};
+
+				menuButton = new GlyphButton
+				{
+					Parent = container,
+					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+					GlyphShape = GlyphShape.Menu,
+					PreferredWidth = buttonWidth,
+					PreferredHeight = 20,
+					Dock = DockStyle.Right,
+					Margins = new Margins (-1, 0, 0, 0),
+					AutoFocus = false,
+				};
+			}
+			else
+			{
+				textField = new Widgets.AutoCompleteTextField
+				{
+					Parent = container,
+					MenuButtonWidth = buttonWidth-1,
+					PreferredWidth = width,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+					TabIndex = ++this.tabIndex,
+				};
+
+				menuButton = new GlyphButton
+				{
+					Parent = container,
+					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+					GlyphShape = GlyphShape.Menu,
+					PreferredWidth = buttonWidth,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (-1, 0, 0, 0),
+					AutoFocus = false,
+				};
+			}
+
+			foreach (var item in possibleItems)
+			{
+				textField.Items.Add (item);
+			}
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (container);
+
+			menuButton.Clicked +=
+			delegate
+			{
+				textField.SelectAll ();
+				textField.Focus ();
+				textField.OpenComboMenu ();
+			};
 
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (textField);
