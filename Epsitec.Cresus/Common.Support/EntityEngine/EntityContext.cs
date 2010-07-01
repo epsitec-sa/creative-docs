@@ -992,7 +992,7 @@ namespace Epsitec.Common.Support.EntityEngine
 							}
 						}
 
-						IFieldProxy fieldProxy = value as IFieldProxy;
+						IValueProxy fieldProxy = value as IValueProxy;
 
 						if (fieldProxy != null)
 						{

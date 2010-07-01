@@ -691,7 +691,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			return entity;
 		}
-		
+
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
 			if (this.isDisposed)
@@ -706,7 +706,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				return entity;
 			}
-			
+
 			switch (mode)
 			{
 				case EntityResolutionMode.Find:
@@ -716,7 +716,7 @@ namespace Epsitec.Cresus.DataLayer
 					return this.DeserializeEntity (rowKey, entityId);
 
 				case EntityResolutionMode.DelayLoad:
-					return new Proxies.EntityKeyProxy (this, rowKey, entityId);
+					return new Proxies.EntityKeyProxy (this, entityId, rowKey);
 
 				default:
 					throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
@@ -773,14 +773,14 @@ namespace Epsitec.Cresus.DataLayer
 
 					case FieldRelation.Reference:
 
-						object target1 = new Proxies.EntityFieldProxy (this, entity, field);
+						object target1 = new Proxies.EntityFieldProxy (this, entity, field.CaptionId);
 						entity.InternalSetValue (field.Id, target1);
 
 						break;
 
 					case FieldRelation.Collection:
 
-						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field);
+						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field.CaptionId);
 						entity.InternalSetValue (field.Id, target2);
 
 						break;
@@ -797,21 +797,21 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					case FieldRelation.None:
 
-						object value = new Proxies.ValueFieldProxy (this, entity, entityId, rowKey, field);
+						object value = new Proxies.ValueFieldProxy (this, entity, field.CaptionId);
 						entity.InternalSetValue (field.Id, value);
 
 						break;
 
 					case FieldRelation.Reference:
 
-						object target1 = new Proxies.EntityFieldProxy (this, entity, field);
+						object target1 = new Proxies.EntityFieldProxy (this, entity, field.CaptionId);
 						entity.InternalSetValue (field.Id, target1);
 
 						break;
 
 					case FieldRelation.Collection:
 
-						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field);
+						object target2 = new Proxies.EntityCollectionFieldProxy (this, entity, field.CaptionId);
 						entity.InternalSetValue (field.Id, target2);
 
 						break;
@@ -1141,8 +1141,12 @@ namespace Epsitec.Cresus.DataLayer
 			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
 
-		public object GetFieldValue(AbstractEntity entity, Druid entityId, DbKey rowKey, StructuredTypeField fieldDef)
+		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
 		{
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+			StructuredTypeField fieldDef = entity.GetEntityContext ().GetEntityFieldDefinition (entityId, fieldId.ToResourceId ());
+			
+			DbKey rowKey = this.entityDataCache.FindMapping (entity.GetEntitySerialId ()).RowKey;
 			System.Data.DataRow dataRow = this.LoadDataRow(entity, rowKey, entityId);
 
 			return this.GetFieldValue (entity, fieldDef, dataRow);
