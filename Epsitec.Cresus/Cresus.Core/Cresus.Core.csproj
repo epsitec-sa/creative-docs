@@ -98,7 +98,6 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCaseEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />

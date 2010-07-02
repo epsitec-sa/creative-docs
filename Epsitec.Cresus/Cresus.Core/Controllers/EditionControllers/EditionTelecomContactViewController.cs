@@ -82,22 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "Comment",
-					IconUri		 = "Data.Comment",
-					Title		 = UIBuilder.FormatText ("Commentaires"),
-					CompactTitle = UIBuilder.FormatText ("Commentaires"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<CommentEntity> ("Comment", data.Controller)
-				.DefineText (x => UIBuilder.FormatText (x.Text))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Text));
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Comments, template));
+			SummaryControllers.Common.CreateUIComments (data, this.EntityGetter, x => x.Comments);
 		}
 
 
