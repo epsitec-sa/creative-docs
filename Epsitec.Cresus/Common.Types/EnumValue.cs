@@ -102,7 +102,8 @@ namespace Epsitec.Common.Types
 					}
 					else
 					{
-						Caption caption = Support.Resources.DefaultManager.GetCaption (this.captionId);
+						var manager = TypeRosetta.ActiveCaptionResolver;
+						Caption caption = manager.GetCaption (this.captionId);
 
 						if (caption != null)
 						{

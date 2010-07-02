@@ -13,6 +13,14 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public static class TypeRosetta
 	{
+		public static Support.ICaptionResolver ActiveCaptionResolver
+		{
+			get
+			{
+				return TypeRosetta.creatingCaptionResolver ?? Support.Resources.DefaultManager;
+			}
+		}
+
 		/// <summary>
 		/// Gets the system type from type object.
 		/// </summary>
@@ -666,7 +674,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return TypeRosetta.CreateTypeObject (manager.GetCaption (druid), cache);
+				return TypeRosetta.CreateTypeObject (manager.GetCaption (druid), cache, manager);
 			}
 		}
 
@@ -690,8 +698,13 @@ namespace Epsitec.Common.Types
 		/// <returns>
 		/// The type object or <c>null</c> if the type object cannot be created.
 		/// </returns>
-		public static AbstractType CreateTypeObject(Caption caption, bool cache)
+		public static AbstractType CreateTypeObject(Caption caption, bool cache, Support.ICaptionResolver captionResolver = null)
 		{
+			if (captionResolver == null)
+			{
+				captionResolver = Support.Resources.DefaultManager;
+			}
+
 			if (caption == null)
 			{
 				return null;
@@ -709,6 +722,7 @@ namespace Epsitec.Common.Types
 				try
 				{
 					TypeRosetta.creatingTypeObject++;
+					TypeRosetta.creatingCaptionResolver = captionResolver;
 					TypeRosetta.pendingTypes[caption.Id] = true;
 					
 					return TypeRosetta.LockedCreateTypeObject (caption, cache);
@@ -717,6 +731,7 @@ namespace Epsitec.Common.Types
 				{
 					TypeRosetta.pendingTypes.Remove (caption.Id);
 					TypeRosetta.creatingTypeObject--;
+					TypeRosetta.creatingCaptionResolver = null;
 				}
 			}
 		}
@@ -1283,5 +1298,6 @@ namespace Epsitec.Common.Types
 		private static Dictionary<Support.Druid, bool> pendingTypes = new Dictionary<Epsitec.Common.Support.Druid, bool> ();
 		private static Queue<Support.SimpleCallback> fixUpQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
 		private static int creatingTypeObject;
+		private static Support.ICaptionResolver creatingCaptionResolver;
 	}
 }
