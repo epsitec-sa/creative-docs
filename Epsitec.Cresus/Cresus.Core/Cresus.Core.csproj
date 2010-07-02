@@ -99,6 +99,7 @@
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionCaseEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCaseViewController.cs" />
@@ -356,6 +357,7 @@
     <EmbeddedResource Include="Images\Data.Affair.icon" />
     <EmbeddedResource Include="Images\Data.Case.icon" />
     <EmbeddedResource Include="Images\Data.Comment.icon" />
+    <EmbeddedResource Include="Images\Data.CaseEvent.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
