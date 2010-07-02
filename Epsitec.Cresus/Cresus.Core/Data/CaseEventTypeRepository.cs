@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Data
 		private CaseEventTypeEntity CreateCaseEventTypeExampleByName(string name)
 		{
 			CaseEventTypeEntity example = this.CreateCaseEventTypeExample ();
-			//?example.Name = name;
+			example.Code = name;
 
 			return example;
 		}
