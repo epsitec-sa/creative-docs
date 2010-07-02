@@ -156,7 +156,17 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<CaseEventTypeEntity> InsertCaseEventTypesInDatabase()
 		{
-			string[] names = new string[] { "envoi d'une offre", "envoi d'un bulletin de livraison", "envoi d'une facture", "réception d'un courrier", "téléphone entrant", "téléphone sortant" };
+			string[] names = new string[]
+			{
+				"Réception d'une demande",
+				"Envoi d'une offre",
+				"Envoi d'un bulletin de livraison",
+				"Envoi d'une facture",
+				"Réception d'un courrier",
+				"Téléphone entrant",
+				"Téléphone sortant"
+			};
+
 			int rank = 0;
 
 			foreach (string name in names)

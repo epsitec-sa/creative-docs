@@ -167,11 +167,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 
 			var template = new CollectionTemplate<CaseEventEntity> ("CaseEvent", data.Controller)
-//?				.DefineText        (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code, "\n", x.Description))
-				.DefineText        (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code))
+				.DefineText        (x => UIBuilder.FormatText (GetCaseEventsSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
+		}
+
+		private static string GetCaseEventsSummary(CaseEventEntity caseEventEntity)
+		{
+			string date = Misc.GetDateTimeShortDescription (caseEventEntity.Date);
+			int count = caseEventEntity.Documents.Count;
+
+			if (count < 2)
+			{
+				return string.Format ("{0} {1}", date, caseEventEntity.EventType.Code);
+			}
+			else
+			{
+				return string.Format ("{0} {1} ({2} documents)", date, caseEventEntity.EventType.Code, count);
+			}
 		}
 	}
 }

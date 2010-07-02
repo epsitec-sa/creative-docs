@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionDetailedRadio (0, "Type de l'événement", controller);
 		}
 
+
 		private void CreateUIDocuments(SummaryDataItems data)
 		{
 			data.Add (

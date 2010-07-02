@@ -163,10 +163,30 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 
 			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller)
-				.DefineText        (x => UIBuilder.FormatText (x.Id))
+				.DefineText        (x => UIBuilder.FormatText (GetAffairsSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
+		}
+
+		private static string GetAffairsSummary(AffairEntity affairEntity)
+		{
+			int count = affairEntity.Cases.Count;
+
+			if (count == 0)
+			{
+				return affairEntity.Id;
+			}
+			else
+			{
+				string date = null;
+				if (affairEntity.Cases[0].Events.Count != 0)
+				{
+					date = string.Concat(Misc.GetDateTimeShortDescription (affairEntity.Cases[0].Events[0].Date), " ");  // date du premier événement
+				}
+
+				return string.Format ("{0}{1} ({2} cas)", date, affairEntity.Id, count);
+			}
 		}
 
 

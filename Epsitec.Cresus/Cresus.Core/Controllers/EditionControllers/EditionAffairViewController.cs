@@ -100,10 +100,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 
 			var template = new CollectionTemplate<CaseEntity> ("Case", data.Controller)
-				.DefineText (x => UIBuilder.FormatText (x.Id))
+				.DefineText        (x => UIBuilder.FormatText (GetCasesSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Cases, template));
+		}
+
+		private static string GetCasesSummary(CaseEntity caseEntity)
+		{
+			int count = caseEntity.Events.Count;
+
+			if (count == 0)
+			{
+				return caseEntity.Id;
+			}
+			else
+			{
+				string date = Misc.GetDateTimeShortDescription (caseEntity.Events[0].Date);  // date du premier événement
+				return string.Format ("{0} {1} ({2} événement{3})", date, caseEntity.Id, count, count>1?"s":"");
+			}
 		}
 	}
 }
