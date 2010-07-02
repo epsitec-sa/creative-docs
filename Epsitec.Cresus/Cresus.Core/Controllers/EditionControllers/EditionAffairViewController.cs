@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateFooterEditorTile ();
 			}
 
+			//	Summary:
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
