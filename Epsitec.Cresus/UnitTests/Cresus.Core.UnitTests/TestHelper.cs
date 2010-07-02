@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core
 		public static void PrintStartTest(string name)
 		{
 			System.Diagnostics.Debug.WriteLine ("===========================================================================================================================================================");
-			System.Diagnostics.Debug.WriteLine ("Starting test: " + name);
+			System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\t Starting test: " + name);
 			System.Diagnostics.Debug.WriteLine ("===========================================================================================================================================================");
 		}
 

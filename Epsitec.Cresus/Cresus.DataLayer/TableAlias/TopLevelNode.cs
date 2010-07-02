@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 
 namespace Epsitec.Cresus.DataLayer.TableAlias
@@ -24,8 +23,8 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		public TopLevelNode(TopLevelNode parentNode, string name, string alias)
 			: base (parentNode, name, alias)
 		{
-			this.topLevelNodes = new List<TopLevelNode> ();
-			this.subLevelNodes = new List<SubLevelNode> ();
+			this.topLevelNodes = new Dictionary<string, List<TopLevelNode>> ();
+			this.subLevelNodes = new Dictionary<string, SubLevelNode> ();
 		}
 
 
@@ -40,7 +39,12 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		{
 			TopLevelNode node = new TopLevelNode (this, name, alias);
 
-			this.topLevelNodes.Add (node);
+			if (!this.topLevelNodes.ContainsKey (name))
+			{
+				this.topLevelNodes[name] = new List<TopLevelNode> ();
+			}
+
+			this.topLevelNodes[name].Add (node);
 
 			return node;
 		}
@@ -57,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		{
 			SubLevelNode node = new SubLevelNode (this, name, alias);
 
-			this.subLevelNodes.Add (node);
+			this.subLevelNodes[name] = node;
 
 			return node;
 		}
@@ -76,18 +80,6 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 
 		/// <summary>
-		/// Gets the first <see cref="SubLevelNode"/> child of this instance whose name is
-		/// <paramref name="name"/>.
-		/// </summary>
-		/// <param name="name">The SQL name of the <see cref="SubLevelNode"/> to get.</param>
-		/// <returns>The <see cref="SubLevelNode"/>.</returns>
-		public SubLevelNode GetSubLevelNode(string name)
-		{
-			return this.subLevelNodes.Where (n => n.Name == name).FirstOrDefault ();
-		}
-
-
-		/// <summary>
 		/// Gets the <see cref="TopLevelNode"/> child of this instance whose name is
 		/// <paramref name="name"/> and whose index among its sibling is <paramref name="index"/>.
 		/// </summary>
@@ -99,14 +91,40 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		/// <returns>The <see cref="TopLevelNode"/></returns>
 		public TopLevelNode GetTopLevelNode(string name, int index)
 		{
-			return this.topLevelNodes.Where (n => n.Name == name).ElementAtOrDefault (index);
+			return this.topLevelNodes[name][index];
 		}
 
 
-		private List<TopLevelNode> topLevelNodes;
+		/// <summary>
+		/// Gets the last <see cref="TopLevelNode"/> child of this instance whose name is
+		/// <paramref name="name"/>.
+		/// </summary>
+		/// <param name="name">The SQL name of the <see cref="TopLevelNode"/> to get.</param>
+		/// <returns>The <see cref="TopLevelNode"/>.</returns>
+		public TopLevelNode GetTopLevelNodeLast(string name)
+		{
+			int index = this.topLevelNodes[name].Count - 1;
+
+			return this.GetTopLevelNode(name, index);
+		}
 
 
-		private List<SubLevelNode> subLevelNodes;
+		/// <summary>
+		/// Gets the first <see cref="SubLevelNode"/> child of this instance whose name is
+		/// <paramref name="name"/>.
+		/// </summary>
+		/// <param name="name">The SQL name of the <see cref="SubLevelNode"/> to get.</param>
+		/// <returns>The <see cref="SubLevelNode"/>.</returns>
+		public SubLevelNode GetSubLevelNode(string name)
+		{
+			return this.subLevelNodes[name];
+		}
+
+
+		private Dictionary<string, List<TopLevelNode>> topLevelNodes;
+
+
+		private Dictionary<string, SubLevelNode> subLevelNodes;
 
 
 	}

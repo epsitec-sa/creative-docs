@@ -165,12 +165,12 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 
 
 		/// <summary>
-		/// Sets the <see cref="SubLevelNode"/> child of the current <see cref="TopLevelNode"/>
+		/// Sets the first <see cref="SubLevelNode"/> child of the current <see cref="TopLevelNode"/>
 		/// whose SQL table name is <paramref name="name"/> as the current <see cref="SubLevelNode"/>.
 		/// </summary>
 		/// <param name="name">The name of the SQL table.</param>
 		/// <returns>The alias of the child <see cref="SubLevelNode"/>.</returns>
-		public string NavigateToChildLevelAlias(string name)
+		public string NavigateToChildSubLevelAlias(string name)
 		{
 			SubLevelNode currentSubtypeNode = this.currentTopLevelNode.GetSubLevelNode (name);
 
@@ -195,6 +195,21 @@ namespace Epsitec.Cresus.DataLayer.TableAlias
 		public string NavigateToChildTopLevelAlias(string name, int index)
 		{
 			this.currentTopLevelNode = this.currentTopLevelNode.GetTopLevelNode (name, index);
+			this.currentSubLevelNodes.Push (null);
+
+			return this.GetCurrentTopLevelAlias ();
+		}
+
+
+		/// <summary>
+		/// Sets the last <see cref="SubLevelNode"/> child of the current <see cref="TopLevelNode"/>
+		/// whose SQL table name is <paramref name="name"/> as the current <see cref="SubLevelNode"/>.
+		/// </summary>
+		/// <param name="name">The name of the SQL table.</param>
+		/// <returns>The alias of the child <see cref="SubLevelNode"/>.</returns>
+		public string NavigateToChildTopLevelAliasLast(string name)
+		{
+			this.currentTopLevelNode = this.currentTopLevelNode.GetTopLevelNodeLast (name);
 			this.currentSubLevelNodes.Push (null);
 
 			return this.GetCurrentTopLevelAlias ();

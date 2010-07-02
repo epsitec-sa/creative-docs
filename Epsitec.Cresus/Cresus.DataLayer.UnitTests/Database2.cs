@@ -190,6 +190,24 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public static NaturalPersonEntity GetCorrectExample5()
+		{
+			NaturalPersonEntity example = new NaturalPersonEntity ();
+
+			example.Contacts.Add (new UriContactEntity ()
+			{
+				Uri = "alfred@blabla.com",
+			});
+
+			example.Contacts.Add (new UriContactEntity ()
+			{
+				Uri = "alfred@coucou.com",
+			});
+
+			return example;
+		}
+
+
 		public static NaturalPersonEntity GetIncorrectExample1()
 		{
 			NaturalPersonEntity example = new NaturalPersonEntity ()
