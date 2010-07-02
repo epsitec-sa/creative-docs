@@ -31,27 +31,11 @@ namespace Epsitec.Designer
 			pool.SetupDefaultRootPaths ();
 			pool.ScanForAllModules ();
 
-#if false
-			if (Epsitec.Common.Support.Globals.IsDebugBuild)
-			{
-				paths = new List<string> (new string[]
-				{
-					@"S:\Epsitec.Cresus\Demo\Resources",
-					@"S:\Epsitec.Cresus\Common.Dialogs\Resources",
-					@"S:\Epsitec.Cresus\Common.Designer\Resources",
-					@"S:\Epsitec.Cresus\Common.Document\Resources",
-					@"S:\Epsitec.Cresus\Common.Support\Resources",
-					@"S:\Epsitec.Cresus\Common.Types\Resources",
-					@"S:\Epsitec.Cresus\Common.Widgets\Resources",
-					@"S:\Epsitec.Cresus\Common.DocumentEditor\Resources"
-				});
-			}
-			else
-#endif
-			{
-				paths = new List<string> ();
-				paths.Add (System.IO.Path.Combine (execPath, "Resources"));
-			}
+			paths = new List<string> ();
+			paths.Add (System.IO.Path.Combine (execPath, "Resources"));
+
+			//	Juste pour forcer le chargement des ressources manifest:... correspondantes.
+			var loadCresusCoreApplication = typeof (Epsitec.Cresus.Core.CoreApplication);
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;

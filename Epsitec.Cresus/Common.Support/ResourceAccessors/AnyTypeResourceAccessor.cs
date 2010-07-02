@@ -420,7 +420,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		{
 			base.FillDataFromCaption (item, data, caption, mode);
 
-			AbstractType type = TypeRosetta.CreateTypeObject (caption, false);
+			AbstractType type = TypeRosetta.CreateTypeObject (caption, false, this.ResourceManager);
 			TypeCode code = type == null ? TypeCode.Invalid : type.TypeCode;
 
 			string controller          = type == null ? null : type.DefaultController;
