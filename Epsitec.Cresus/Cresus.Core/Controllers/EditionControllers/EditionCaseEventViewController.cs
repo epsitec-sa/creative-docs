@@ -20,8 +20,35 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public EditionCaseEventViewController(string name, Entities.CaseEventEntity entity)
 			: base (name, entity)
 		{
+			this.InitializeDefaultValues ();
 		}
 
+
+		private void InitializeDefaultValues()
+		{
+			if (this.Entity.Date.Ticks == 0)
+			{
+				this.Entity.Date = System.DateTime.Now;  // TODO: n'apparaît pas dans le champ initial !
+			}
+		}
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrEmpty (this.Entity.Description))
+			{
+				return EditionStatus.Empty;
+			}
+
+			return EditionStatus.Valid;
+		}
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
+
+	
 		protected override void CreateUI(TileContainer container)
 		{
 			using (var builder = new UIBuilder (container, this))
@@ -48,8 +75,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile, 150, "Date et heure", Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
-			builder.CreateTextFieldMulti (tile, 150, "Description",   Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField             (tile, 150, "Date et heure",       Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
+//?			builder.CreateAutoCompleteTextField (tile, 137, "Type de l'événement", Marshaler.Create (() => this.Entity.EventType,   x => this.Entity.EventType = x),  this.PossibleItemsEventType,  this.GetUserTextEventType);
+			builder.CreateTextFieldMulti        (tile, 150, "Description",         Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 		}
 
 		private void CreateUIDocuments(SummaryDataItems data)
@@ -73,14 +101,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		protected override EditionStatus GetEditionStatus()
+		private IEnumerable<string[]> PossibleItemsEventType
 		{
-			if (string.IsNullOrEmpty (this.Entity.Description))
+			get
 			{
-				return EditionStatus.Empty;
-			}
+				//	possibleItems[0] doit obligatoirement être la 'key' !
+				var list = new List<string[]> ()
+				{
+					new string[] { "Offre",    "Offre" },
+					new string[] { "BL",       "Bulletin de livraison" },
+					new string[] { "Facture",  "Facture" },
+					new string[] { "Tel",      "Téléphone" },
+				};
 
-			return EditionStatus.Valid;
+				return list;
+			}
+		}
+
+		private FormattedText GetUserTextEventType(string[] value)
+		{
+			return UIBuilder.FormatText (value[1]);  // par exemple "Facture"
 		}
 	}
 }

@@ -20,7 +20,37 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		public EditionDocumentViewController(string name, Entities.DocumentEntity entity)
 			: base (name, entity)
 		{
+			this.InitializeDefaultValues ();
 		}
+
+
+		private void InitializeDefaultValues()
+		{
+			if (this.Entity.CreationDate.Ticks == 0)
+			{
+				this.Entity.CreationDate = System.DateTime.Now;  // TODO: n'apparaît pas dans le champ initial !
+			}
+		}
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrEmpty (this.Entity.Description))
+			{
+				return EditionStatus.Empty;
+			}
+
+			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
+
+			return EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
+
 
 		protected override void CreateUI(TileContainer container)
 		{
@@ -55,19 +85,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile,   0, "Description",                               Marshaler.Create (() => this.Entity.Description,          x => this.Entity.Description = x));
 			builder.CreateTextField (tile, 150, "Date et heure de la dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate, x => this.Entity.LastModificationDate = x));
-		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (string.IsNullOrEmpty (this.Entity.Description))
-			{
-				return EditionStatus.Empty;
-			}
-
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-			return EditionStatus.Valid;
 		}
 	}
 }
