@@ -4,6 +4,9 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -32,6 +35,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				builder.CreateFooterEditorTile ();
 			}
+
+			//	Summary:
+			var containerController = new TileContainerController (this, container);
+			var data = containerController.DataItems;
+
+			this.CreateUIComments (data);
+
+			containerController.GenerateTiles ();
 		}
 
 
@@ -66,6 +77,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile, 150, "Numéro de téléphone", Marshaler.Create (() => this.Entity.Number,    x => this.Entity.Number = x));
 			builder.CreateTextField (tile, 100, "Numéro interne",      Marshaler.Create (() => this.Entity.Extension, x => this.Entity.Extension = x));
+		}
+
+
+		private void CreateUIComments(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "Comment",
+					IconUri		 = "Data.Comment",
+					Title		 = UIBuilder.FormatText ("Commentaires"),
+					CompactTitle = UIBuilder.FormatText ("Commentaires"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<CommentEntity> ("Comment", data.Controller)
+				.DefineText (x => UIBuilder.FormatText (x.Text))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Text));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Comments, template));
 		}
 
 
