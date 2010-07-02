@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.Core
 			return new LocationRepository (this.DataContext).GetLocationsByCountry (country);
 		}
 
+		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypes()
+		{
+			return new CaseEventTypeRepository (this.DataContext).GetAllCaseEventTypes ();
+		}
+
 		public IEnumerable<ContactRoleEntity> GetRoles()
 		{
 			return new ContactRoleRepository (this.DataContext).GetAllContactRoles ();
@@ -89,6 +94,7 @@ namespace Epsitec.Cresus.Core
 		{
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
+			CaseEventTypeEntity[] eventTypes = this.InsertCaseEventTypesInDatabase ().ToArray ();
 			ContactRoleEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
 			UriSchemeEntity[] uriSchemes = this.InsertUriSchemesInDatabase ().ToArray ();
 			TelecomTypeEntity[] telecomTypes = this.InsertTelecomTypesInDatabase ().ToArray ();
@@ -140,6 +146,22 @@ namespace Epsitec.Cresus.Core
 				location.Name = CoreData.frenchLocations[i + 1];
 
 				yield return location;
+			}
+		}
+
+		private IEnumerable<CaseEventTypeEntity> InsertCaseEventTypesInDatabase()
+		{
+			string[] names = new string[] { "offre", "bulletin de livraison", "facture", "téléphone" };
+			int rank = 0;
+
+			foreach (string name in names)
+			{
+				CaseEventTypeEntity eventType = this.DataContext.CreateEmptyEntity<CaseEventTypeEntity> ();
+
+				//?eventType.Name = name;
+				//?eventType.Rank = rank++;
+
+				yield return eventType;
 			}
 		}
 

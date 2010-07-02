@@ -56,7 +56,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.CaseEvent", "Evénement");
 
-				this.CreateUIMain (builder);
+//?				this.CreateUICaseEventTypes (builder);
+				this.CreateUIMain           (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -75,9 +76,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField             (tile, 150, "Date et heure",       Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
-//?			builder.CreateAutoCompleteTextField (tile, 137, "Type de l'événement", Marshaler.Create (() => this.Entity.EventType,   x => this.Entity.EventType = x),  this.PossibleItemsEventType,  this.GetUserTextEventType);
-			builder.CreateTextFieldMulti        (tile, 150, "Description",         Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField      (tile, 150, "Date et heure", Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
+			builder.CreateTextFieldMulti (tile, 150, "Description",   Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+		}
+
+		private void CreateUICaseEventTypes(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var controller = new SelectionController<Entities.CaseEventTypeEntity>
+			{
+				ValueGetter              = () => this.Entity.EventType,
+				ValueSetter              = x => this.Entity.EventType = x,
+				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetCaseEventTypes (),
+				//?ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+			};
+
+			builder.CreateEditionDetailedRadio (0, "Type de l'événement", controller);
 		}
 
 		private void CreateUIDocuments(SummaryDataItems data)
@@ -98,29 +111,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.DefineCompactText (x => UIBuilder.FormatText (x.Description));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Documents, template));
-		}
-
-
-		private IEnumerable<string[]> PossibleItemsEventType
-		{
-			get
-			{
-				//	possibleItems[0] doit obligatoirement être la 'key' !
-				var list = new List<string[]> ()
-				{
-					new string[] { "Offre",    "Offre" },
-					new string[] { "BL",       "Bulletin de livraison" },
-					new string[] { "Facture",  "Facture" },
-					new string[] { "Tel",      "Téléphone" },
-				};
-
-				return list;
-			}
-		}
-
-		private FormattedText GetUserTextEventType(string[] value)
-		{
-			return UIBuilder.FormatText (value[1]);  // par exemple "Facture"
 		}
 	}
 }
