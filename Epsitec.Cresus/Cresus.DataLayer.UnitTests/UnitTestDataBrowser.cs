@@ -210,6 +210,34 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[TestMethod]
+		public void GetObjectsWithCorrectCollectionExample3()
+		{
+			TestHelper.PrintStartTest ("Get objects with correct collection example 3");
+
+
+			this.GetObjectsWithCorrectCollectionExample3 (false);
+			this.GetObjectsWithCorrectCollectionExample3 (true);
+		}
+
+
+		public void GetObjectsWithCorrectCollectionExample3(bool bulkMode)
+		{
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = Database2.GetCorrectExample5 ();
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByExample<NaturalPersonEntity> (example).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
 		public void GetObjectsWithIncorrectValueExample()
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect value example");

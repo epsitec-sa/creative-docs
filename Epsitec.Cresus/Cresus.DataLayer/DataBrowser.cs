@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public DbInfrastructure DbInfrastructure
+		private DbInfrastructure DbInfrastructure
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public EntityContext EntityContext
+		private EntityContext EntityContext
 		{
 			get
 			{
@@ -329,8 +329,8 @@ namespace Epsitec.Cresus.DataLayer
 			TableAliasManager tableAliasManager = new TableAliasManager (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
 
 			this.AddConditionsForEntity (tableAliasManager, reader, entityId, example, entityConstrainer);
-			this.AddQueryForCollection (tableAliasManager, reader, entityId, example, field);
-			this.AddSortOrderOnRank (tableAliasManager, reader, entityId, example, field);
+			this.AddQueryForCollection(tableAliasManager, reader, entityId, field);
+			this.AddSortOrderOnRank(tableAliasManager, reader, entityId, field);
 
 			return reader;
 		}
@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (isRootType || isLeafType || localValueFields.Any (field => definedFieldIds.Contains (field.Id)))
 			{
-				tableAliasManager.NavigateToChildLevelAlias (currentEntityId.ToResourceId ());
+				tableAliasManager.NavigateToChildSubLevelAlias (currentEntityId.ToResourceId ());
 			}
 			else
 			{
@@ -698,7 +698,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddQueryForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private void AddQueryForCollection(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, StructuredTypeField field)
 		{
 			this.AddJoinFromEntityTableToRelationTable (tableAliasManager, reader, entityId, field, SqlJoinCode.Inner);
 
@@ -711,20 +711,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		private void AddSortOrderOnRank(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
+		private void AddSortOrderOnRank(TableAliasManager tableAliasManager, DbReader reader, Druid entityId, StructuredTypeField field)
 		{
-			string[] definedFieldIds = this.EntityContext.GetDefinedFieldIds (example).ToArray ();
-
-			if (definedFieldIds.Contains (field.Id))
-			{
-				tableAliasManager.NavigateToChildTopLevelAlias (field.Id, 1);
-			}
-			else
-			{
-				tableAliasManager.NavigateToChildTopLevelAlias (field.Id, 0);
-			}
-
-			string tableAlias = tableAliasManager.GetCurrentTopLevelAlias ();
+			string tableAlias = tableAliasManager.NavigateToChildTopLevelAliasLast (field.Id);
 
 			DbTableColumn column = this.GetRelationTableColumn (entityId, Druid.Parse (field.Id), tableAlias, DataBrowser.relationRankColumn);
 
@@ -798,6 +787,7 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		private static string statusColumn = "[" + Tags.ColumnStatus + "]";
+
 
 	}
 
