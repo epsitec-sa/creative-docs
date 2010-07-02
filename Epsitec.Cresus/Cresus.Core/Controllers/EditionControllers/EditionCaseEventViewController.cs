@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			if (this.Entity.Date.Ticks == 0)
 			{
-				this.Entity.Date = System.DateTime.Now;  // TODO: n'apparaît pas dans le champ initial !
+				this.Entity.Date = System.DateTime.Now;
 			}
 		}
 
