@@ -251,9 +251,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Parent			= this,
 				ButtonStyle		= Common.Widgets.ButtonStyle.Normal,
 				GlyphShape		= Common.Widgets.GlyphShape.Plus,
-				Anchor			= AnchorStyles.BottomLeft,
-				PreferredSize	= new Size (TitleTile.buttonSize, TitleTile.buttonSize),
-				Margins			= new Margins (0, 0, 0, 0),
+				Anchor			= AnchorStyles.TopLeft,
+				PreferredSize	= new Size (TitleTile.iconSize, TitleTile.iconSize),
+				Margins			= new Margins (TitleTile.iconMargins, 0, TitleTile.iconMargins, 0),
 				Visibility		= false,
 			};
 

@@ -22,6 +22,37 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrEmpty (this.Entity.Id) &&
+				string.IsNullOrEmpty (this.Entity.External) &&
+				string.IsNullOrEmpty (this.Entity.Internal) &&
+				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount))
+			{
+				return EditionStatus.Empty;
+			}
+
+			if (string.IsNullOrEmpty (this.Entity.Id) &&
+				(!string.IsNullOrEmpty (this.Entity.External) ||
+				 !string.IsNullOrEmpty (this.Entity.Internal) ||
+				 !string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount)))
+			{
+				return EditionStatus.Invalid;
+			}
+
+			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
+
+			return EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
+
+	
 		protected override void CreateUI(TileContainer container)
 		{
 			using (var builder = new UIBuilder (container, this))
@@ -73,30 +104,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Cases, template));
-		}
-
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			if (string.IsNullOrEmpty (this.Entity.Id) &&
-				string.IsNullOrEmpty (this.Entity.External) &&
-				string.IsNullOrEmpty (this.Entity.Internal) &&
-				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount))
-			{
-				return EditionStatus.Empty;
-			}
-
-			if (string.IsNullOrEmpty (this.Entity.Id) &&
-				(!string.IsNullOrEmpty (this.Entity.External) ||
-				 !string.IsNullOrEmpty (this.Entity.Internal) ||
-				 !string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount)))
-			{
-				return EditionStatus.Invalid;
-			}
-
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
-			return EditionStatus.Valid;
 		}
 	}
 }
