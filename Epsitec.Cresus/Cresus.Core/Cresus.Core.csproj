@@ -156,6 +156,7 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
+    <Compile Include="Data\CaseEventTypeRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
     <Compile Include="Painter.cs" />

@@ -1,25 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
-	ProjectSection(SolutionItems) = preProject
-		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
-		Epsitec.Cresus.snk = Epsitec.Cresus.snk
-		Epsitec.Cresus.vsmdi = Epsitec.Cresus.vsmdi
-		Local.testsettings = Local.testsettings
-		Performance1.psess = Performance1.psess
-		TODO.txt = TODO.txt
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-		External\uac.manifest = External\uac.manifest
-		Visual.bat = Visual.bat
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{9A0E2839-7E47-4A4F-9AB9-4F191CCFB4B9}"
-	ProjectSection(SolutionItems) = preProject
-		Properties\AssemblyInfo.CrDocVer.cs = Properties\AssemblyInfo.CrDocVer.cs
-		Properties\AssemblyInfo.Solution.cs = Properties\AssemblyInfo.Solution.cs
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleRepository Projects", "ModuleRepository Projects", "{6A7B11D1-01AA-4A74-B944-480A6A60A34D}"
 	ProjectSection(SolutionItems) = preProject
 		ModuleRepository\ModuleRespository.AssemblyInfo.cs = ModuleRepository\ModuleRespository.AssemblyInfo.cs
@@ -192,7 +173,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphConnector.Win32", "Cre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphConnector", "Cresus.Graph\GraphConnector\GraphConnector.csproj", "{D4CE4659-71D4-49B3-89F6-50A543F601FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.BanquePiguet\App.BanquePiguet.csproj", "{BEF06147-ACD1-4DD0-937F-BF55544F07BF}"
 EndProject
@@ -209,6 +190,25 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Replication.UnitTests", "Cresus.Replication.UnitTests\Cresus.Replication.UnitTests.csproj", "{6078516F-2262-45A2-825E-BD04DCC0859C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
+	ProjectSection(SolutionItems) = preProject
+		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
+		Epsitec.Cresus.snk = Epsitec.Cresus.snk
+		Epsitec.Cresus.vsmdi = Epsitec.Cresus.vsmdi
+		Local.testsettings = Local.testsettings
+		Performance1.psess = Performance1.psess
+		TODO.txt = TODO.txt
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+		External\uac.manifest = External\uac.manifest
+		Visual.bat = Visual.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{9A0E2839-7E47-4A4F-9AB9-4F191CCFB4B9}"
+	ProjectSection(SolutionItems) = preProject
+		Properties\AssemblyInfo.CrDocVer.cs = Properties\AssemblyInfo.CrDocVer.cs
+		Properties\AssemblyInfo.Solution.cs = Properties\AssemblyInfo.Solution.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -1222,7 +1222,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9A0E2839-7E47-4A4F-9AB9-4F191CCFB4B9} = {9D718549-67C4-4FEE-BA97-10F50E189F83}
 		{F7F8C913-085B-41B2-98AC-9859BED201F1} = {6A7B11D1-01AA-4A74-B944-480A6A60A34D}
 		{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C} = {6A7B11D1-01AA-4A74-B944-480A6A60A34D}
 		{EC31ACEA-8F8A-43E8-9A26-584D8B22552C} = {6A7B11D1-01AA-4A74-B944-480A6A60A34D}
@@ -1249,6 +1248,7 @@ Global
 		{6DEB5DF9-EDAB-4943-9B19-48A57E6AEAEC} = {E06FC39B-5046-4004-A16F-4774981EC20E}
 		{D4CE4659-71D4-49B3-89F6-50A543F601FD} = {E06FC39B-5046-4004-A16F-4774981EC20E}
 		{BC0605F1-C986-4B52-AE21-AAE545FCB970} = {E06FC39B-5046-4004-A16F-4774981EC20E}
+		{9A0E2839-7E47-4A4F-9AB9-4F191CCFB4B9} = {9D718549-67C4-4FEE-BA97-10F50E189F83}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
