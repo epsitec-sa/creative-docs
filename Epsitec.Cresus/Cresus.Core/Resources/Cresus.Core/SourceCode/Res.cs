@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Core
 		
 		
 		
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings

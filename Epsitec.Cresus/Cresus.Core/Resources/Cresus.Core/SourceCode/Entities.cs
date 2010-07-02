@@ -4913,6 +4913,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RestockingThreshold</c> field.
+		///	designer:fld/L0AQ5/L0AQ7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQ7]")]
+		public global::System.Decimal? RestockingThreshold
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AQ7]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.RestockingThreshold;
+				if (oldValue != value)
+				{
+					this.OnRestockingThresholdChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AQ7]", oldValue, value);
+					this.OnRestockingThresholdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SupplierRelation</c> field.
 		///	designer:fld/L0AQ5/L0AV5
 		///	</summary>
@@ -4973,6 +4995,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnStockLocationChanged(global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity newValue);
 		partial void OnRestockingDelayChanging(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
 		partial void OnRestockingDelayChanged(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
+		partial void OnRestockingThresholdChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnRestockingThresholdChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnSupplierRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnSupplierRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnSupplierArticleIdChanging(string oldValue, string newValue);
@@ -5708,21 +5732,11 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AC7/L0AE7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AE7]")]
-		public global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity DefaultAccounting
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity> DefaultAccounting
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity> ("[L0AE7]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity oldValue = this.DefaultAccounting;
-				if (oldValue != value)
-				{
-					this.OnDefaultAccountingChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity> ("[L0AE7]", oldValue, value);
-					this.OnDefaultAccountingChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity> ("[L0AE7]");
 			}
 		}
 		
@@ -5730,8 +5744,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnDefaultVatCodeChanging(string oldValue, string newValue);
 		partial void OnDefaultVatCodeChanged(string oldValue, string newValue);
-		partial void OnDefaultAccountingChanging(global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity newValue);
-		partial void OnDefaultAccountingChanged(global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

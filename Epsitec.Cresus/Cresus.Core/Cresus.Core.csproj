@@ -91,6 +91,8 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
+    <Compile Include="BusinessLogic\Finance\VatCode.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
+    <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
     <Compile Include="Painter.cs" />
