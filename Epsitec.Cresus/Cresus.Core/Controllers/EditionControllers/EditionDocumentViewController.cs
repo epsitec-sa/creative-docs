@@ -45,22 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "Comment",
-					IconUri		 = "Data.Comment",
-					Title		 = UIBuilder.FormatText ("Commentaires"),
-					CompactTitle = UIBuilder.FormatText ("Commentaires"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<CommentEntity> ("Comment", data.Controller)
-				.DefineText        (x => UIBuilder.FormatText (x.Text))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Text));
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Comments, template));
+			SummaryControllers.Common.CreateUIComments (data, this.EntityGetter, x => x.Comments);
 		}
 
 
@@ -69,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField (tile,  0, "Description",                      Marshaler.Create (() => this.Entity.Description,          x => this.Entity.Description = x));
-			builder.CreateTextField (tile, 90, "Date de la dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate, x => this.Entity.LastModificationDate = x));
+//?			builder.CreateTextField (tile, 90, "Date de la dernière modification", Marshaler.Create (() => this.Entity.LastModificationDate, x => this.Entity.LastModificationDate = x));
 		}
 
 

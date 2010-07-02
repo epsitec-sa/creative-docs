@@ -18,14 +18,30 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		public static void CreateUIComments<T1>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<CommentEntity>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIComments<T1, CommentEntity> (data, source, collectionResolver);
+			Common.InternalCreateUIComments<T1, CommentEntity, CommentEntity> (data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIComments<T1, T2>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
+		private static void InternalCreateUIComments<T1, T2, T3>(SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : CommentEntity, new ()
+			where T3 : CommentEntity, T2, new ()
 		{
-			//	...
+			var template = new CollectionTemplate<T3> ("Comment", data.Controller)
+				.DefineText        (x => UIBuilder.FormatText (x.Text))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Text));
+
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "Comment",
+					IconUri		 = "Data.Comment",
+					Title		 = UIBuilder.FormatText ("Commentaires"),
+					CompactTitle = UIBuilder.FormatText ("Commentaires"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			data.Add (CollectionAccessor.Create (source, collectionResolver, template));
 		}
 		
 		
