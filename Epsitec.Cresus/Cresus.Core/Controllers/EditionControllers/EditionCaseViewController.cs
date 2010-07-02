@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
-			this.CreateUIDocuments (data);
+			this.CreateUICaseEvents (data);
 
 			containerController.GenerateTiles ();
 		}
@@ -55,24 +55,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 150, "Numéro de compte à débiter",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 		}
 
-		private void CreateUIDocuments(SummaryDataItems data)
+		private void CreateUICaseEvents(SummaryDataItems data)
 		{
 			data.Add (
 				new SummaryData
 				{
 					AutoGroup    = true,
-					Name		 = "Document",
-					IconUri		 = "Data.Document",
-					Title		 = UIBuilder.FormatText ("Documents"),
-					CompactTitle = UIBuilder.FormatText ("Documents"),
+					Name		 = "CaseEvent",
+					IconUri		 = "Data.CaseEvent",
+					Title		 = UIBuilder.FormatText ("Evénements"),
+					CompactTitle = UIBuilder.FormatText ("Evénements"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<DocumentEntity> ("Document", data.Controller)
-				.DefineText (x => UIBuilder.FormatText (x.Description))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Description));
+			var template = new CollectionTemplate<CaseEventEntity> ("CaseEvent", data.Controller)
+				.DefineText        (x => UIBuilder.FormatText (x.Date, "\n", x.Description))
+				.DefineCompactText (x => UIBuilder.FormatText (x.Date));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Documents, template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}
 
 
