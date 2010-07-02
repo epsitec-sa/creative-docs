@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.CreateTabBook (builder);
 
 					//	Crée le contenu de la page "local".
-					this.localPageContent = new List<Common.Widgets.Widget> ();
+					this.localPageContent = new List<Epsitec.Common.Widgets.Widget> ();
 					builder.ContentList = this.localPageContent;
 
 					this.CreateUICountry  (builder);
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.CreateUILocation (builder);
 
 					//	Crée le contenu de la page "global".
-					this.globalPageContent = new List<Common.Widgets.Widget> ();
+					this.globalPageContent = new List<Epsitec.Common.Widgets.Widget> ();
 					builder.ContentList = this.globalPageContent;
 
 					this.CreateUILegalPerson (builder);
@@ -420,6 +420,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
+#if false
+			Common.CreateUIComments<CommentEntity> (data, this.Entity.Comments);
+#else
 			data.Add (
 				new SummaryData
 				{
@@ -436,6 +439,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.DefineCompactText (x => UIBuilder.FormatText (x.Text));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Comments, template));
+#endif
 		}
 
 
@@ -464,13 +468,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer					tileContainer;
-		private Common.Widgets.FrameBox			tabBookContainer;
-		private List<Common.Widgets.Widget>		localPageContent;
-		private List<Common.Widgets.Widget>		globalPageContent;
-		private AutoCompleteTextField			addressTextField;
-		private AutoCompleteTextField			countryTextField;
-		private AutoCompleteTextField			locationTextField;
-		private CountryEntity					selectedCountry;
+		private TileContainer							tileContainer;
+		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
+		private List<Epsitec.Common.Widgets.Widget>		localPageContent;
+		private List<Epsitec.Common.Widgets.Widget>		globalPageContent;
+		private AutoCompleteTextField					addressTextField;
+		private AutoCompleteTextField					countryTextField;
+		private AutoCompleteTextField					locationTextField;
+		private CountryEntity							selectedCountry;
 	}
 }
