@@ -14,6 +14,19 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
+		public static string GetDateTimeShortDescription(System.DateTime dateTime)
+		{
+			if (dateTime == null)
+			{
+				return null;
+			}
+			else
+			{
+				return dateTime.ToString ("dd.MM.yyyy");  // par exemple 31.03.2010
+			}
+		}
+
+
 		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
 		{
 			if (colors1 == null && colors2 == null)

@@ -167,8 +167,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 
 			var template = new CollectionTemplate<CaseEventEntity> ("CaseEvent", data.Controller)
-				.DefineText        (x => UIBuilder.FormatText (x.Date, "\n", x.Description))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Date));
+//?				.DefineText        (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code, "\n", x.Description))
+				.DefineText        (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code))
+				.DefineCompactText (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}
