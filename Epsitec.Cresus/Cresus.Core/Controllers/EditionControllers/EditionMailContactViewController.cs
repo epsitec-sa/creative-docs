@@ -208,8 +208,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
 				new SelectionController<LegalPersonEntity>
 				{
-					ValueGetter = () => this.Entity.LegalPerson,
-					ValueSetter = x => this.Entity.LegalPerson = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.LegalPerson,
+					ValueSetter         = x => this.Entity.LegalPerson = x.WrapNullEntity (),
 					ReferenceController = this.GetLegalPersonReferenceController (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
@@ -237,8 +237,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
 				new SelectionController<AddressEntity>
 				{
-					ValueGetter = () => this.Entity.Address,
-					ValueSetter = x => this.Entity.Address = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.Address,
+					ValueSetter         = x => this.Entity.Address = x.WrapNullEntity (),
 					ReferenceController = this.GetAddressReferenceController (),
 					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 

@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.CaseEvent", "Evénement");
 
-//?				this.CreateUICaseEventTypes (builder);
+				this.CreateUICaseEventTypes (builder);
 				this.CreateUIMain           (builder);
 
 				builder.CreateFooterEditorTile ();
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter              = () => this.Entity.EventType,
 				ValueSetter              = x => this.Entity.EventType = x,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetCaseEventTypes (),
-				//?ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Code)
 			};
 
 			builder.CreateEditionDetailedRadio (0, "Type de l'événement", controller);

@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData
 	{
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersons()
+		{
+			return new NaturalPersonRepository (this.DataContext).GetAllNaturalPersons ();
+		}
+
 		public IEnumerable<LegalPersonEntity> GetLegalPersons()
 		{
 			return new LegalPersonRepository (this.DataContext).GetAllLegalPersons ();
@@ -151,14 +156,14 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<CaseEventTypeEntity> InsertCaseEventTypesInDatabase()
 		{
-			string[] names = new string[] { "offre", "bulletin de livraison", "facture", "téléphone" };
+			string[] names = new string[] { "envoi d'une offre", "envoi d'un bulletin de livraison", "envoi d'une facture", "réception d'un courrier", "téléphone entrant", "téléphone sortant" };
 			int rank = 0;
 
 			foreach (string name in names)
 			{
 				CaseEventTypeEntity eventType = this.DataContext.CreateEmptyEntity<CaseEventTypeEntity> ();
 
-				//?eventType.Name = name;
+				eventType.Code = name;
 				//?eventType.Rank = rank++;
 
 				yield return eventType;
