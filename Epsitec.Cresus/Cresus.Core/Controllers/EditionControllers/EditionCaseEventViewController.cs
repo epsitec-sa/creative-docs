@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-//?			builder.CreateTextField      (tile,  90, "Date",        Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
-			builder.CreateTextFieldMulti (tile, 150, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField      (tile, 150, "Date et heure", Marshaler.Create (() => this.Entity.Date,        x => this.Entity.Date = x));
+			builder.CreateTextFieldMulti (tile, 150, "Description",   Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 		}
 
 		private void CreateUIDocuments(SummaryDataItems data)
