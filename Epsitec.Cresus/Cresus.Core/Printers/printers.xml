@@ -2,7 +2,7 @@
 <printers>
   <printer>
     <name>HP Color LaserJet 3600</name>
-    <tray> Bac 1</tray>
+    <tray> Sélection automatique</tray>
     <horizontal>true</horizontal>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
@@ -11,6 +11,14 @@
   <printer>
     <name>EPSON Stylus Photo 2100</name>
     <tray></tray>
+    <horizontal>true</horizontal>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
+    <comment></comment>
+  </printer>
+  <printer>
+    <name>Adobe PDF</name>
+    <tray>Sélection automatique</tray>
     <horizontal>true</horizontal>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
