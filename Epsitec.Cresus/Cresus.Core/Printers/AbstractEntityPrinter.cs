@@ -50,6 +50,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
 		{
+			if (entity is RelationEntity)
+			{
+				return new RelationEntityPrinter (entity);
+			}
+
 			if (entity is NaturalPersonEntity)
 			{
 				return new NaturalPersonEntityPrinter (entity);
