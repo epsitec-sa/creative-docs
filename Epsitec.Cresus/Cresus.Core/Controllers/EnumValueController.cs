@@ -11,7 +11,6 @@ using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -93,48 +92,5 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
 		private readonly System.Func<EnumKeyValues<T>, FormattedText> getUserText;
 		private AutoCompleteTextField widget;
-	}
-
-	public abstract class EnumKeyValues
-	{
-		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
-		{
-			return new EnumKeyValues<T> (key, values);
-		}
-
-		public abstract string[] Values
-		{
-			get;
-		}
-	}
-
-	public class EnumKeyValues<T> : EnumKeyValues
-	{
-		public EnumKeyValues(T key, params string[] values)
-		{
-			this.key = key;
-			this.values = values;
-		}
-
-		
-		public T Key
-		{
-			get
-			{
-				return this.key;
-			}
-		}
-
-		public override string[] Values
-		{
-			get
-			{
-				return this.values;
-			}
-		}
-
-
-		private readonly T key;
-		private readonly string[] values;
 	}
 }
