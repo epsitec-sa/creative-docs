@@ -2397,19 +2397,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO2/L0AP3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AP3]")]
-		public string DocumentSource
+		public global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource DocumentSource
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AP3]");
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource> ("[L0AP3]");
 			}
 			set
 			{
-				string oldValue = this.DocumentSource;
+				global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource oldValue = this.DocumentSource;
 				if (oldValue != value)
 				{
 					this.OnDocumentSourceChanging (oldValue, value);
-					this.SetField<string> ("[L0AP3]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource> ("[L0AP3]", oldValue, value);
 					this.OnDocumentSourceChanged (oldValue, value);
 				}
 			}
@@ -2537,8 +2537,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnDocumentSourceChanging(string oldValue, string newValue);
-		partial void OnDocumentSourceChanged(string oldValue, string newValue);
+		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource newValue);
+		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnFileNameChanging(string oldValue, string newValue);

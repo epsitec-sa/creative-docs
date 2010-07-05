@@ -91,6 +91,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\DocumentSource.cs" />
     <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
