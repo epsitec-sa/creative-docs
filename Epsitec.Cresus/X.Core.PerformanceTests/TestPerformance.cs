@@ -1,10 +1,12 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
+
 using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
 

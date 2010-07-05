@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example, EntityConstrainer constrainer)
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, Request constrainer)
 			where T : AbstractEntity
 		{
 			return this.dataBrowser.GetByExample<T> (example, constrainer, true);
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example, EntityConstrainer constrainer, int index, int count)
+		protected IEnumerable<T> GetEntitiesByExample<T>(T example, Request constrainer, int index, int count)
 			where T : AbstractEntity
 		{
 			return this.dataBrowser.GetByExample<T> (example, constrainer, true).Skip (index + 1).Take (count);

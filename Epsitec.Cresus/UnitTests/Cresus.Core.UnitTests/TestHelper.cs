@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Database;
+using Epsitec.Common.IO;
 
 namespace Epsitec.Cresus.Core
 {
@@ -97,9 +98,27 @@ namespace Epsitec.Cresus.Core
 
 		public static void PrintStartTest(string name)
 		{
-			System.Diagnostics.Debug.WriteLine ("===========================================================================================================================================================");
-			System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\t Starting test: " + name);
-			System.Diagnostics.Debug.WriteLine ("===========================================================================================================================================================");
+			string message = TestHelper.GetStartTestString (name);
+
+			System.Diagnostics.Debug.WriteLine (message);
+		}
+
+
+		public static void WriteStartTest(string name, string file)
+		{
+			string message = TestHelper.GetStartTestString (name);
+
+			Logger.Log (message, file);
+
+			TestHelper.PrintStartTest (name);
+		}
+
+
+		private static string GetStartTestString(string name)
+		{
+			return "==========================================================================================================================================================="
+				 + "[" + System.DateTime.Now + "]\t Starting test: " + name
+				 + "===========================================================================================================================================================";
 		}
 
 
@@ -123,6 +142,25 @@ namespace Epsitec.Cresus.Core
 			watch.Stop ();
 
 			System.Diagnostics.Debug.WriteLine (message + "\t\t\t\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count);
+		}
+
+
+		public static void MeasureAndWriteTime(string message, string file, System.Action action, int count)
+		{
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+
+			watch.Start ();
+
+			for (int i = 0; i < count; i++)
+			{
+				action ();
+			}
+
+			watch.Stop ();
+
+			string text = message + "\t\t\t\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count;
+
+			Logger.Log (text, file);
 		}
 
 

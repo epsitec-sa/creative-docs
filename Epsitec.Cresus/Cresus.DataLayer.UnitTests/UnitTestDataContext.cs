@@ -7,6 +7,8 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Browser;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Linq;

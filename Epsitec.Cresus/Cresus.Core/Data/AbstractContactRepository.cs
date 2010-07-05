@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, EntityConstrainer constrainer)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, Request constrainer)
 		{
 			return this.GetGenericContactsByExample<AbstractContactEntity> (example, constrainer);
 		}
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, EntityConstrainer constrainer, int index, int count)
+		public IEnumerable<AbstractContactEntity> GetAbstractContactsByExample(AbstractContactEntity example, Request constrainer, int index, int count)
 		{
 			return this.GetGenericContactsByExample<AbstractContactEntity> (example, constrainer, index, count);
 		}
@@ -113,7 +115,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, EntityConstrainer constrainer) where T : AbstractContactEntity
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, Request constrainer) where T : AbstractContactEntity
 		{
 			return this.GetEntitiesByExample<T> (example, constrainer);
 		}
@@ -125,7 +127,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, EntityConstrainer constrainer, int index, int count) where T : AbstractContactEntity
+		protected IEnumerable<T> GetGenericContactsByExample<T>(T example, Request constrainer, int index, int count) where T : AbstractContactEntity
 		{
 			return this.GetEntitiesByExample<T> (example, constrainer, index, count);
 		}

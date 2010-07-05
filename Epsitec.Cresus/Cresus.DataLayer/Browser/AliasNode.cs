@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 
 
-namespace Epsitec.Cresus.DataLayer.TableAlias
+namespace Epsitec.Cresus.DataLayer.Browser
 {
 
 

@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 
@@ -22,7 +24,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, EntityConstrainer constrainer)
+		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, Request constrainer)
 		{
 			return this.GetEntitiesByExample<LocationEntity> (example, constrainer);
 		}
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, EntityConstrainer constrainer, int index, int count)
+		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, Request constrainer, int index, int count)
 		{
 			return this.GetEntitiesByExample<LocationEntity> (example, constrainer, index, count);
 		}
