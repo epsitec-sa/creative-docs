@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Printers;
 
 using System.Collections.Generic;
 using System.Linq;

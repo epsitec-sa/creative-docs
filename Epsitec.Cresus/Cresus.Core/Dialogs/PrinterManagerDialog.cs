@@ -9,6 +9,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
+using Epsitec.Cresus.Core.Printers;
+
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
