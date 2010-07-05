@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByExample(StreetEntity example, Request constrainer)
+		public IEnumerable<StreetEntity> GetStreetsByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<StreetEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<StreetEntity> (request);
 		}
 
 
@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByExample(StreetEntity example, Request constrainer, int index, int count)
+		public IEnumerable<StreetEntity> GetStreetsByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<StreetEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<StreetEntity> (request, index, count);
 		}
 
 

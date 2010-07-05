@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<ContactRoleEntity> GetContactRolesByExample(ContactRoleEntity example, Request constrainer)
+		public IEnumerable<ContactRoleEntity> GetContactRolesByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<ContactRoleEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<ContactRoleEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<ContactRoleEntity> GetContactRolesByExample(ContactRoleEntity example, Request constrainer, int index, int count)
+		public IEnumerable<ContactRoleEntity> GetContactRolesByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<ContactRoleEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<ContactRoleEntity> (request, index, count);
 		}
 
 

@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, Request constrainer)
+		public IEnumerable<LocationEntity> GetLocationsByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<LocationEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<LocationEntity> (request);
 		}
 
 
@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByExample(LocationEntity example, Request constrainer, int index, int count)
+		public IEnumerable<LocationEntity> GetLocationsByByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<LocationEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<LocationEntity> (request, index, count);
 		}
 
 

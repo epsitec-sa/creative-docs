@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, Request constrainer)
+		public IEnumerable<CommentEntity> GetCommentsByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<CommentEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<CommentEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, Request constrainer, int index, int count)
+		public IEnumerable<CommentEntity> GetCommentsByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<CommentEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<CommentEntity> (request, index, count);
 		}
 
 

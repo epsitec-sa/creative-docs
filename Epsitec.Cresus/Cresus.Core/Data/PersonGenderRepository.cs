@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonGenderEntity> GetPersonGendersByExample(PersonGenderEntity example, Request constrainer)
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<PersonGenderEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<PersonGenderEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonGenderEntity> GetPersonGendersByExample(PersonGenderEntity example, Request constrainer, int index, int count)
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<PersonGenderEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<PersonGenderEntity> (request, index, count);
 		}
 
 

@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RegionEntity> GetRegionsByExample(RegionEntity example, Request constrainer)
+		public IEnumerable<RegionEntity> GetRegionsByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<RegionEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<RegionEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RegionEntity> GetRegionsByExample(RegionEntity example, Request constrainer, int index, int count)
+		public IEnumerable<RegionEntity> GetRegionsByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<RegionEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<RegionEntity> (request, index, count);
 		}
 
 

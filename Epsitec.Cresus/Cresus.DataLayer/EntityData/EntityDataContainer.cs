@@ -3,6 +3,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Browser;
+
 
 namespace Epsitec.Cresus.DataLayer.EntityData
 {

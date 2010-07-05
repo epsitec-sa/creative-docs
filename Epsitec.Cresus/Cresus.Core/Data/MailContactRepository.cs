@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, Request constrainer)
+		public IEnumerable<MailContactEntity> GetMailContactsByRequest(Request request)
 		{
-			return this.GetGenericContactsByExample<MailContactEntity> (example, constrainer);
+			return this.GetGenericContactsByRequest<MailContactEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactsByExample(MailContactEntity example, Request constrainer, int index, int count)
+		public IEnumerable<MailContactEntity> GetMailContactsByRequest(Request request, int index, int count)
 		{
-			return this.GetGenericContactsByExample<MailContactEntity> (example, constrainer, index, count);
+			return this.GetGenericContactsByRequest<MailContactEntity> (request, index, count);
 		}
 
 
