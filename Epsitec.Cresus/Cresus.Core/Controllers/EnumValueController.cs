@@ -15,9 +15,9 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class TextValueController : IWidgetUpdater
+	public class EnumValueController<T> : IWidgetUpdater
 	{
-		public TextValueController(Marshaler marshaler, IEnumerable<string[]> possibleItems = null, System.Func<string[], FormattedText> getUserText = null)
+		public EnumValueController(Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems = null, System.Func<string[], FormattedText> getUserText = null)
 		{
 			this.marshaler     = marshaler;
 			this.possibleItems = possibleItems;
@@ -34,38 +34,25 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in possibleItems)
 			{
-				widget.Items.Add (item[0], item);
+				var key    = EnumConverter<T>.ConvertToNumericString (item.Key);
+				var values = item.Values;
+
+				widget.Items.Add (key, values);
 			}
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as string[]);
-			widget.HintComparer = (value, text) => TextValueController.MatchUserText (value as string[], text);
+			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as string[], text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			this.Attach (widget as AbstractTextField);
-		}
-
-		public void Attach(AbstractTextField widget)
-		{
 			this.widget = widget;
 			this.Update ();
 
-			new MarshalerValidator (this.widget, this.marshaler);
-
 			widget.AcceptingEdition +=
-				delegate
+						delegate
 				{
-					if (this.widget is AutoCompleteTextField)
-					{
-						var auto = this.widget as AutoCompleteTextField;
-
-						string[] texts = auto.Items.GetValue (auto.SelectedItemIndex) as string[];
-						this.marshaler.SetStringValue (texts[0]);  // utilise key
-					}
-					else
-					{
-						string text = TextConverter.ConvertToSimpleText (widget.Text);
-						this.marshaler.SetStringValue (text);
-					}
+					int    index = widget.SelectedItemIndex;
+					string key   = index < 0 ? null : widget.Items.GetKey (index);
+					this.marshaler.SetStringValue (key);
 				};
 
 			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
@@ -97,24 +84,58 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.widget != null)
 			{
-				if (this.widget is AutoCompleteTextField)
-				{
-					var auto = this.widget as AutoCompleteTextField;
-
-					auto.SelectedItemIndex = auto.Items.FindIndexByKey (this.marshaler.GetStringValue ());
-				}
-				else
-				{
-					this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
-				}
+				this.widget.SelectedItemIndex = this.widget.Items.FindIndexByKey (this.marshaler.GetStringValue ());
 			}
 		}
 
 		#endregion
 
 		private readonly Marshaler marshaler;
-		private readonly IEnumerable<string[]> possibleItems;
+		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
 		private readonly System.Func<string[], FormattedText> getUserText;
-		private Widget widget;
+		private AutoCompleteTextField widget;
+	}
+
+	public class EnumKeyValues
+	{
+		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
+		{
+			return new EnumKeyValues<T> (key, values);
+		}
+	}
+
+	public class EnumKeyValues<T>
+	{
+		public EnumKeyValues(T key, params string[] values)
+		{
+			this.key = key;
+			this.values = values;
+		}
+
+		
+		public T Key
+		{
+			get
+			{
+				return this.key;
+			}
+		}
+
+		public string[] Values
+		{
+			get
+			{
+				return this.values;
+			}
+		}
+
+
+		public static implicit operator System.Tuple<T, string[]>(EnumKeyValues<T> value)
+		{
+			return new System.Tuple<T, string[]> (value.key, value.values);
+		}
+
+		private readonly T key;
+		private readonly string[] values;
 	}
 }

@@ -11,6 +11,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Finance
 	[DesignerVisible]
 	public enum TaxMode
 	{
+		None			= 0,
+
 		LiableForVat	= 1,										//	assujetti à la TVA
 		NotLiableForVat	= 2,										//	non assujetti à la TVA
 

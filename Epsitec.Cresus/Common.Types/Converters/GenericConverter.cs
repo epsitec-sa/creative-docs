@@ -69,6 +69,52 @@ namespace Epsitec.Common.Types.Converters
 			{
 				GenericConverter<T>.Instance = System.Activator.CreateInstance (converterType) as GenericConverter<T>;
 			}
+			else if (typeof (T).IsEnum)
+			{
+				GenericConverter<T>.Instance = new EnumConverter<T> (typeof (T));
+			}
 		}
+	}
+
+	public class EnumConverter<T> : GenericConverter<T>
+	{
+		public EnumConverter(System.Type systemType)
+		{
+			this.enumType = EnumType.GetDefault (systemType);
+		}
+
+		public override string ConvertToString(T value)
+		{
+			return EnumConverter<T>.ConvertToNumericString (value);
+		}
+
+		public override ConversionResult<T> ConvertFromString(string text)
+		{
+			if (string.IsNullOrWhiteSpace (text))
+            {
+				return new ConversionResult<T> ()
+				{
+					IsNull = true,
+				};
+            }
+			return new ConversionResult<T> ()
+			{
+				Value = InvariantConverter.ToEnum<T> (text)
+			};
+		}
+
+		public override bool CanConvertFromString(string text)
+		{
+			return this.enumType.IsValidValue (text);
+		}
+
+
+		public static string ConvertToNumericString(T value)
+		{
+			object boxedValue = value;
+			return InvariantConverter.ToString (EnumType.ConvertToInt ((System.Enum) boxedValue));
+		}
+		
+		private readonly EnumType enumType;
 	}
 }
