@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonEditSection ();
 			this.CreateRibbonDatabaseSection ();
 			this.CreateRibbonStateSection ();
+			this.CreateRibbonSettingsSection ();
 		}
 
 		private void CreateRibbonEditSection()
@@ -104,6 +105,20 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
+		}
+
+		private void CreateRibbonSettingsSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Settings",
+				Title = "Réglages",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Right,
+				PreferredWidth = 50,
+			};
+
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
 		}
 
 		

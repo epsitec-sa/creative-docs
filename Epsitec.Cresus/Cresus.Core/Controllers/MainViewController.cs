@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.navigator = new NavigationOrchestrator ();
 			this.Orchestrator = new DataViewOrchestrator ();
-			this.printer = new Printer ();
+			this.printEngine = new PrintEngine ();
 
 			this.dataViewController = new DataViewController ("Data", data)
 			{
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void Print()
 		{
-			this.printer.Print (this.browserViewController.GetActiveEntity ());
+			this.printEngine.Print (this.browserViewController.GetActiveEntity ());
 		}
 
 		
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;
 		private readonly NavigationOrchestrator navigator;
-		private readonly Printer printer;
+		private readonly PrintEngine printEngine;
 
 		private FrameBox frame;
 

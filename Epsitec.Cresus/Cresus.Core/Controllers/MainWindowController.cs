@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.CreateUIRootBoxes (container);
 			this.CreateUIControllers ();
+
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Global.Settings, () => this.Settings ());
 		}
 
 		private void CreateUIRootBoxes(Widget container)
@@ -59,6 +61,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ribbonController.CreateUI (this.ribbonBox);
 			this.contentController.CreateUI (this.contentBox);
 		}
+
+
+		private void Settings()
+		{
+			var manager = new Dialogs.PrinterManagerDialog (CoreProgram.Application);
+			manager.OpenDialog ();
+		}
+
 
 		private readonly CoreData				data;
 		private readonly RibbonViewController	ribbonController;
