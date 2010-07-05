@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 150, "Numéro externe", Marshaler.Create (() => this.Entity.External, x => this.Entity.External = x));
 			builder.CreateTextField (tile, 150, "Numéro interne", Marshaler.Create (() => this.Entity.Internal, x => this.Entity.Internal = x));
 			builder.CreateMargin    (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile, 150, "Numéro de compte à débiter",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
+			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)", Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 		}
 

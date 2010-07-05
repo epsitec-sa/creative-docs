@@ -1927,6 +1927,18 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Comments</c> field.
+		///	designer:fld/L0AB2/L0AU8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AU8]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0AU8]");
+			}
+		}
+		///	<summary>
 		///	The <c>Person</c> field.
 		///	designer:fld/L0AB2/L0AD2
 		///	</summary>
@@ -2027,18 +2039,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Cases</c> field.
-		///	designer:fld/L0AB2/L0AH2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AH2]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CaseEntity> Cases
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CaseEntity> ("[L0AH2]");
-			}
-		}
-		///	<summary>
 		///	The <c>VatNumber</c> field.
 		///	designer:fld/L0AB2/L0AC5
 		///	</summary>
@@ -2065,7 +2065,7 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AB2/L0AN7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AN7]")]
-		public string VatCalculationMode
+		public string TaxMode
 		{
 			get
 			{
@@ -2073,7 +2073,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.VatCalculationMode;
+				string oldValue = this.TaxMode;
 				if (oldValue != value)
 				{
 					this.OnVatCalculationModeChanging (oldValue, value);
@@ -2248,6 +2248,18 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Comments</c> field.
+		///	designer:fld/L0AG2/L0AT8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AT8]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0AT8]");
+			}
+		}
+		///	<summary>
 		///	The <c>Relation</c> field.
 		///	designer:fld/L0AG2/L0AL2
 		///	</summary>
@@ -2266,28 +2278,6 @@ namespace Epsitec.Cresus.Core.Entities
 					this.OnRelationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0AL2]", oldValue, value);
 					this.OnRelationChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Affair</c> field.
-		///	designer:fld/L0AG2/L0AL5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AL5]")]
-		public global::Epsitec.Cresus.Core.Entities.AffairEntity Affair
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0AL5]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue = this.Affair;
-				if (oldValue != value)
-				{
-					this.OnAffairChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.AffairEntity> ("[L0AL5]", oldValue, value);
-					this.OnAffairChanged (oldValue, value);
 				}
 			}
 		}
@@ -2336,18 +2326,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Documents</c> field.
-		///	designer:fld/L0AG2/L0AT2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AT2]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DocumentEntity> Documents
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0AT2]");
-			}
-		}
-		///	<summary>
 		///	The <c>Events</c> field.
 		///	designer:fld/L0AG2/L0A95
 		///	</summary>
@@ -2384,8 +2362,6 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
-		partial void OnAffairChanging(global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue, global::Epsitec.Cresus.Core.Entities.AffairEntity newValue);
-		partial void OnAffairChanged(global::Epsitec.Cresus.Core.Entities.AffairEntity oldValue, global::Epsitec.Cresus.Core.Entities.AffairEntity newValue);
 		partial void OnSalesRepresentativeChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnSalesRepresentativeChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
@@ -4564,6 +4540,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		///	<summary>
+		///	The <c>Comments</c> field.
+		///	designer:fld/L0AD5/L0AS8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AS8]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0AS8]");
+			}
+		}
 		///	<summary>
 		///	The <c>Cases</c> field.
 		///	designer:fld/L0AD5/L0AF5
