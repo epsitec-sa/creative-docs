@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core
 
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
+			this.printer = new Printer ();
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -98,6 +99,15 @@ namespace Epsitec.Cresus.Core
 				context.SaveChanges ();
 				this.UpdateEditionSaveRecordCommandState ();
 				System.Diagnostics.Debug.WriteLine ("Done");
+			}
+		}
+
+		public void PrintDataContext(DataContext context)
+		{
+			if (context != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("About to print context #" + context.UniqueId);
+				this.printer.Print (context);
 			}
 		}
 
@@ -309,6 +319,7 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
+
 		private void OnDataContextChanged(DataContext oldDataContext)
 		{
 			var newDataContext = this.activeDataContext;
@@ -316,10 +327,12 @@ namespace Epsitec.Cresus.Core
 			if (oldDataContext != null)
 			{
 				this.DetachSaveStateHandler (oldDataContext);
+				this.DetachPrintStateHandler (oldDataContext);
 			}
 			if (newDataContext != null)
             {
 				this.AttachSaveStateHandler (newDataContext);
+				this.AttachPrintStateHandler (newDataContext);
             }
 
 			try
@@ -350,6 +363,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
 		private void AttachSaveStateHandler(DataContext context)
 		{
 			context.EntityContext.EntityChanged += this.HandleEntityContextEntityChanged;
@@ -365,15 +379,34 @@ namespace Epsitec.Cresus.Core
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
+
+		private void AttachPrintStateHandler(DataContext context)
+		{
+			context.EntityContext.EntityChanged += this.HandleEntityContextEntityChanged;
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.PrintDataContext (this.DataContext));
+
+			this.UpdateEditionPrintCommandState ();
+		}
+
+		private void DetachPrintStateHandler(DataContext context)
+		{
+			context.EntityContext.EntityChanged -= this.HandleEntityContextEntityChanged;
+			CoreProgram.Application.Commands.PopHandler (Res.Commands.Edition.Print);
+			this.UpdateEditionPrintCommandState ();
+		}
+
+
 		private void HandleEntityContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
 			this.UpdateEditionSaveRecordCommandState ();
+			this.UpdateEditionPrintCommandState ();
 		}
+
 
 		private void UpdateEditionSaveRecordCommandState()
 		{
-			if ((this.activeDataContext != null) &&
-				(this.activeDataContext.ContainsChanges ()))
+			if (this.activeDataContext != null &&
+				this.activeDataContext.ContainsChanges ())
 			{
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
 			}
@@ -382,13 +415,26 @@ namespace Epsitec.Cresus.Core
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
 			}
 		}
+
+		private void UpdateEditionPrintCommandState()
+		{
+			if (this.activeDataContext != null)
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.Print, true);
+			}
+			else
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.Print, false);
+			}
+		}
+
 		
 		public event EventHandler<DataContextEventArgs> DataContextChanged;
-
 		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;
 
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly EntityContext independentEntityContext;
+		private readonly Printer printer;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 	}
