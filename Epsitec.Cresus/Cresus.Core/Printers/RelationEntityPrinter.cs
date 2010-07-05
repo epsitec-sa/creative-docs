@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Size (210, 297);  // A4 vertical
+				return new Size (pageWidth, pageHeight);  // A4 vertical
 			}
 		}
 
@@ -50,19 +50,19 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (entity.Person is NaturalPersonEntity)
 			{
-				var naturalPerson = entity.Person as NaturalPersonEntity;
+				var x = entity.Person as NaturalPersonEntity;
 
-				text = naturalPerson.Firstname + " " + naturalPerson.Lastname;  // TODO: provisoire
+				text = UIBuilder.FormatText ("N°", this.Entity.Id, "\n", x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate).ToSimpleText ();
 			}
 
 			if (entity.Person is LegalPersonEntity)
 			{
-				var legalPerson = entity.Person as LegalPersonEntity;
+				var x = entity.Person as LegalPersonEntity;
 
-				text = legalPerson.Name;  // TODO: provisoire
+				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
-			port.PaintText (10, 10, text, Font.DefaultFont, Font.DefaultFontSize);
+			port.PaintText (10, pageHeight-10-fontSize, text, Font.DefaultFont, fontSize);
 		}
 
 
@@ -73,5 +73,11 @@ namespace Epsitec.Cresus.Core.Printers
 				return this.entity as RelationEntity;
 			}
 		}
+
+
+		private static readonly double pageWidth  = 210;
+		private static readonly double pageHeight = 297;  // A4 vertical
+
+		private static readonly double fontSize = 4;
 	}
 }

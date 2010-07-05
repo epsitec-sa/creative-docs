@@ -29,71 +29,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 	{
 		public PrintDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
 		{
-			this.Application = application;
+			this.application = application;
 			this.entityPrinter = entityPrinter;
 			this.entities = entities;
-			this.Printers = printers;
+			this.printers = printers;
 		}
 
-		/// <summary>
-		/// Gets or sets the <see cref="Application"/> who created this instance.
-		/// </summary>
-		/// <value>The <see cref="Application"/> who created this instance.</value>
-		protected Application Application
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the list of <see cref="Printer"/>s available to the user.
-		/// </summary>
-		/// <value>The list of <see cref="Printer"/>s available to the user.</value>
-		protected List<Printer> Printers
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the <see cref="Button"/> used to print the bv.
-		/// </summary>
-		/// <value>The <see cref="Button"/> used to prints the bv.</value>
-		protected Button PrintButton
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the <see cref="Button"/> used to close the window.
-		/// </summary>
-		/// <value>The <see cref="Button"/> used to close the window.</value>
-		protected Button CancelButton
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the <see cref="TextFieldUpDown"/> used for the number of copies.
-		/// </summary>
-		/// <value>The <see cref="TextFieldUpDown"/> used for the number of copies.</value>
-		protected TextFieldUpDown NbCopiesTextField
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the <see cref="TextFieldCombo"/> used for the printer selection.
-		/// </summary>
-		/// <value>The <see cref="TextFieldCombo"/> used for the printer selection.</value>
-		protected TextFieldCombo PrinterTextField
-		{
-			get;
-			set;
-		}
 
 		/// <summary>
 		/// Creates a <see cref="Window"/> for the current dialog.
@@ -122,8 +63,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// </remarks>
 		protected void SetupWindow(Window window)
 		{
-			this.OwnerWindow = this.Application.Window;
-			window.Icon = this.Application.Window.Icon;
+			this.OwnerWindow = this.application.Window;
+			window.Icon = this.application.Window.Icon;
 			window.Text = "Imprimer";
 			window.WindowSize = new Size (100, 100);
 			window.MakeFixedSizeWindow ();
@@ -157,7 +98,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			this.PrinterTextField = new TextFieldCombo ()
+			this.printerTextField = new TextFieldCombo ()
 			{
 				Dock = DockStyle.Stacked,
 				Parent = printerGroupBox,
@@ -166,18 +107,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 				IsReadOnly = true,
 			};
 
-			this.Printers.ForEach (printer => this.PrinterTextField.Items.Add (printer.Name));
+			this.printers.ForEach (printer => this.printerTextField.Items.Add (printer.Name));
 
 			string preferredPrinter;
 			bool preferredPrinterDefined = Settings.Load ().TryGetValue ("preferredPrinter", out preferredPrinter);
 
-			if (preferredPrinterDefined && this.Printers.Any (printer => printer.Name == preferredPrinter))
+			if (preferredPrinterDefined && this.printers.Any (printer => printer.Name == preferredPrinter))
 			{
-				this.PrinterTextField.Text = FormattedText.Escape (preferredPrinter);
+				this.printerTextField.Text = FormattedText.Escape (preferredPrinter);
 			}
 			else
 			{
-				this.PrinterTextField.Text = FormattedText.Escape (this.Printers[0].Name);
+				this.printerTextField.Text = FormattedText.Escape (this.printers[0].Name);
 			}
 
 			GroupBox nbPagesGroupBox = new GroupBox ()
@@ -191,7 +132,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 2,
 			};
 
-			this.NbCopiesTextField = new TextFieldUpDown ()
+			this.nbCopiesTextField = new TextFieldUpDown ()
 			{
 				Dock = DockStyle.Stacked,
 				Parent = nbPagesGroupBox,
@@ -212,7 +153,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 3,
 			};
 
-			this.PrintButton = new Button ()
+			this.printButton = new Button ()
 			{
 				Dock = DockStyle.StackFill,
 				Margins = new Margins (10, 10, 0, 10),
@@ -221,7 +162,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			this.CancelButton = new Button ()
+			this.cancelButton = new Button ()
 			{
 				Dock = DockStyle.StackFill,
 				Margins = new Margins (0, 10, 0, 10),
@@ -240,11 +181,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// </remarks>
 		protected void SetupEvents(Window window)
 		{
-			this.PrinterTextField.TextChanged += (sender) => this.UpdateNbPagesRange ();
-			this.PrinterTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
-			this.NbCopiesTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
-			this.CancelButton.Clicked += (sender, e) => this.CloseDialog ();
-			this.PrintButton.Clicked += (sender, e) => this.Print ();
+			this.printerTextField.TextChanged += (sender) => this.UpdateNbPagesRange ();
+			this.printerTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
+			this.nbCopiesTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
+			this.cancelButton.Clicked += (sender, e) => this.CloseDialog ();
+			this.printButton.Clicked += (sender, e) => this.Print ();
 		}
 
 		/// <summary>
@@ -256,10 +197,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// </remarks>
 		protected void UpdateNbPagesRange()
 		{
-			PrinterSettings printer = PrinterSettings.FindPrinter(FormattedText.Unescape (this.PrinterTextField.Text));
+			PrinterSettings printer = PrinterSettings.FindPrinter(FormattedText.Unescape (this.printerTextField.Text));
 
-			this.NbCopiesTextField.MinValue = 1;
-			this.NbCopiesTextField.MaxValue = printer.MaximumCopies;
+			this.nbCopiesTextField.MinValue = 1;
+			this.nbCopiesTextField.MaxValue = printer.MaximumCopies;
 		}
 
 		/// <summary>
@@ -272,12 +213,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// </remarks>
 		protected void CheckPrintEnabled()
 		{
-			this.PrintButton.Enable = this.NbCopiesTextField.IsValid;	
+			this.printButton.Enable = this.nbCopiesTextField.IsValid;	
 		}
 
 		protected void Print()
 		{
-			Printer printer = this.Printers.Find (p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
+			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
 			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.Name);
 			
 			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
@@ -301,7 +242,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				finally
 				{
 					Settings settings = Settings.Load ();
-					settings["preferredPrinter"] = FormattedText.Unescape (this.PrinterTextField.Text);
+					settings["preferredPrinter"] = FormattedText.Unescape (this.printerTextField.Text);
 					settings.Save ();
 					this.CloseDialog ();
 				}
@@ -316,13 +257,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void PrintEntities(Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
-			Printer printer = this.Printers.Find (p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
+			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
 
-#if true
 			printDocument.DocumentName = entityPrinter.JobName;
 			printDocument.SelectPrinter(printer.Name);
-			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.NbCopiesTextField.Text), CultureInfo.InvariantCulture);
+			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.nbCopiesTextField.Text), CultureInfo.InvariantCulture);
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
 
@@ -343,7 +283,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Transform transform = Transform.Identity.RotateDeg (90);
 				PrintPort.PrintSinglePage (painter => entityPrinter.Print (painter, new Rectangle (-yOffset, -xOffset, width, height)), printDocument, transform);
 			}
-#endif
 		}
 
 		protected void LogPrint()
@@ -351,7 +290,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private IEnumerable<AbstractEntity> entities;
-		private Printers.AbstractEntityPrinter entityPrinter;
+		private readonly Application application;
+		private readonly IEnumerable<AbstractEntity> entities;
+		private readonly Printers.AbstractEntityPrinter entityPrinter;
+		private readonly List<Printer> printers;
+
+		private Button printButton;
+		private Button cancelButton;
+		private TextFieldUpDown nbCopiesTextField;
+		private TextFieldCombo printerTextField;
 	}
 }

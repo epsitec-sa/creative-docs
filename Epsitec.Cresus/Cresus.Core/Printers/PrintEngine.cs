@@ -33,7 +33,11 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Print(AbstractEntity entity)
 		{
 			var entities = new List<AbstractEntity> ();
-			entities.Add (entity);
+
+			if (entity != null)
+			{
+				entities.Add (entity);
+			}
 
 			this.Print (entities);
 		}
