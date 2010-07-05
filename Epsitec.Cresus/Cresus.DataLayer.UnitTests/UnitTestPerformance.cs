@@ -169,16 +169,18 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
+				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001)));
+
 		        UriContactEntity example = new UriContactEntity ()
 		        {
-		            UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001))),
+		            UriScheme = uriScheme,
 		        };
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
-		            () => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
+					() => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
-		        );
+				);
 		    }
 		}
 
@@ -225,12 +227,14 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
+				CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001)));
+
 		        LocationEntity example = new LocationEntity ()
 		        {
-		            Country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001))),
+		            Country = country,
 		        };
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => dataBrowser.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -281,12 +285,14 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-		        LegalPersonEntity example = new LegalPersonEntity ()
-		        {
-		            LegalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001))),
+				LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001)));
+
+				LegalPersonEntity example = new LegalPersonEntity ()
+				{
+					LegalPersonType = legalPersonType,
 		        };
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => dataBrowser.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -337,12 +343,14 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-		        AbstractContactEntity example = new AbstractContactEntity ()
-		        {
-		            NaturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001))),
+				NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+
+				AbstractContactEntity example = new AbstractContactEntity ()
+				{
+					NaturalPerson = naturalPerson,
 		        };
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => dataBrowser.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -382,8 +390,8 @@ namespace Epsitec.Cresus.DataLayer
 		    this.GetPersonGivenLocationReference (false);
 			this.GetPersonGivenLocationReference (true);
 
-			this.GetPersonGivenLocationValue (false);
-			this.GetPersonGivenLocationValue (true);
+			UnitTestPerformance.GetPersonGivenLocationValue (false);
+			UnitTestPerformance.GetPersonGivenLocationValue (true);
 		}
 
 
@@ -393,17 +401,19 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-		        NaturalPersonEntity example = new NaturalPersonEntity ();
-		        example.Contacts.Add (new MailContactEntity ()
-		            {
-		                Address = new AddressEntity ()
-		                {
-		                    Location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001))),
+				LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001)));
+
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+				example.Contacts.Add (new MailContactEntity ()
+					{
+						Address = new AddressEntity ()
+						{
+							Location = location,
 		                }
 		            }
 		        );
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => dataBrowser.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -412,7 +422,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetPersonGivenLocationValue(bool bulkMode)
+		public static void GetPersonGivenLocationValue(bool bulkMode)
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
@@ -459,12 +469,14 @@ namespace Epsitec.Cresus.DataLayer
 		    {
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 
-		        MailContactEntity example = new MailContactEntity ()
-		        {
-					LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize]))),
+				LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
+
+				MailContactEntity example = new MailContactEntity ()
+				{
+					LegalPerson = legalPerson,
 		        };
 
-		        TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndDisplayTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
 		            () => dataBrowser.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns

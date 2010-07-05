@@ -29,8 +29,10 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Create database");
 
+			System.Console.WriteLine ("coucou");
+			System.Diagnostics.Debug.WriteLine ("blabla");
+
 			this.CreateDatabase (false);
-			this.CreateDatabase (true);
 		}
 
 

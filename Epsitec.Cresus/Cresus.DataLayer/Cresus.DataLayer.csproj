@@ -164,13 +164,10 @@
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
-    <Compile Include="TableAlias\TopLevelNode.cs" />
+    <Compile Include="TableAlias\AliasNode.cs" />
     <Compile Include="EntityData\EntityValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
-    <Compile Include="TableAlias\SubLevelNode.cs" />
-    <Compile Include="TableAlias\AbstractNode.cs" />
-    <Compile Include="TableAlias\TableAliasManager.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
     <Compile Include="DataBrowser.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
