@@ -10,7 +10,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Printers
 {
 
 	/// <summary>

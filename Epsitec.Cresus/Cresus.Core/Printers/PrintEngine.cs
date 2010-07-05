@@ -21,7 +21,7 @@ using System.Linq;
 using Epsitec.Cresus.DataLayer;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Printers
 {
 	public sealed class PrintEngine
 	{
@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.Core
 
 		public void Print(IEnumerable<AbstractEntity> entities)
 		{
+			if (entities == null || entities.Count () == 0)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à imprimer.").OpenDialog ();
+				return;
+			}
+
 			List<Printer> printers = new List<Printer>
 			(
 				from printer in Printer.Load ()
@@ -47,17 +53,22 @@ namespace Epsitec.Cresus.Core
 				select printer
 			);
 
-			bool checkPrintersList = (printers.Count > 0);
-
-			if (!checkPrintersList)
+			if (printers.Count == 0)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
+				return;
 			}
-			else
+
+			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.First ());
+
+			if (entityPrinter == null)
 			{
-				var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entities, printers);
-				printDialog.OpenDialog ();
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Ce type de donnée ne peut pas être imprimé.").OpenDialog ();
+				return;
 			}
+
+			var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
+			printDialog.OpenDialog ();
 		}
 	}
 }

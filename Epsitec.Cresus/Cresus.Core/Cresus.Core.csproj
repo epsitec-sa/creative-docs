@@ -161,9 +161,11 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
+    <Compile Include="Printers\AbstractEntityPrinter.cs" />
+    <Compile Include="Printers\NaturalPersonEntityPrinter.cs" />
     <Compile Include="Dialogs\PrintDialog.cs" />
     <Compile Include="Dialogs\PrinterManagerDialog.cs" />
-    <Compile Include="PrintEngine.cs" />
+    <Compile Include="Printers\PrintEngine.cs" />
     <Compile Include="Data\CaseEventTypeRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
@@ -198,7 +200,7 @@
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
-    <Compile Include="Printer.cs" />
+    <Compile Include="Printers\Printer.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="CoreApplication.Paths.cs" />

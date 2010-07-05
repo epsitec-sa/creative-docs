@@ -12,6 +12,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Printers;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,18 +27,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintDialog : AbstractDialog
 	{
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="PrintDialog"/> class.
-		/// </summary>
-		/// <param name="application">The <see cref="Application"/> creating this instance.</param>
-		/// <param name="bvWidget">The <see cref="BvWidget"/> containing the bv data.</param>
-		/// <param name="printers">The list of <see cref="Printer"/>s that the user might select.</param>
-		public PrintDialog(Application application, IEnumerable<AbstractEntity> entities, List<Printer> printers)
+		public PrintDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
 		{
 			this.Application = application;
+			this.entityPrinter = entityPrinter;
 			this.entities = entities;
-			;
 			this.Printers = printers;
 		}
 
@@ -281,11 +275,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.PrintButton.Enable = this.NbCopiesTextField.IsValid;	
 		}
 
-		/// <summary>
-		/// Prints <see cref="PrintDialog.BvWidget"/> with the printer given by <see cref="PrintDialog.PrinterTextField"/>
-		/// with the number of copies given by <see cref="PrintDialog.NbCopiesTextField"/> and logs what has been printed
-		/// to the log file.
-		/// </summary>
 		protected void Print()
 		{
 			Printer printer = this.Printers.Find (p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
@@ -297,7 +286,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				try
 				{
-					this.PrintEntities ();
+					foreach (var entity in this.entities)
+					{
+						this.PrintEntities (this.entityPrinter, entity);
+					}
+
 					this.LogPrint ();
 				}
 				catch (System.Exception e)
@@ -321,23 +314,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		/// <summary>
-		/// Prints the bv corresponding to the data contained in <see cref="PrintDialog.BvWidget"/>.
-		/// </summary>
-		protected void PrintEntities()
+		protected void PrintEntities(Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
 			Printer printer = this.Printers.Find (p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
 
-#if false
-			printDocument.DocumentName = string.Format ("bv {0}", this.BvWidget.BeneficiaryIban);
+#if true
+			printDocument.DocumentName = entityPrinter.JobName;
 			printDocument.SelectPrinter(printer.Name);
 			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.NbCopiesTextField.Text), CultureInfo.InvariantCulture);
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
 
-			double height = this.BvWidget.BvSize.Height;
-			double width = this.BvWidget.BvSize.Width;
+			Size size = entityPrinter.PageSize;
+			double height = size.Height;
+			double width  = size.Width;
 
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
@@ -345,25 +336,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (printer.Horizontal)
 			{
 				Transform transform = Transform.Identity;
-				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, 192 - yOffset, width, height)), printDocument, transform);
+				PrintPort.PrintSinglePage (painter => entityPrinter.Print (painter, new Rectangle (xOffset, -yOffset, width, height)), printDocument, transform);
 			}
 			else
 			{
 				Transform transform = Transform.Identity.RotateDeg (90);
-				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (86 - yOffset, -159 - xOffset, width, height)), printDocument, transform);
+				PrintPort.PrintSinglePage (painter => entityPrinter.Print (painter, new Rectangle (-yOffset, -xOffset, width, height)), printDocument, transform);
 			}
 #endif
 		}
 
-		/// <summary>
-		/// Logs the values of <see cref="PrintDialog.PrinterTextField"/> and <see cref="PrintDialog.NbCopiesTextField"/>
-		/// as well as part of the data of <see cref="PrintDialog.BvWidget"/>.
-		/// </summary>
 		protected void LogPrint()
 		{
 		}
 
 
 		private IEnumerable<AbstractEntity> entities;
+		private Printers.AbstractEntityPrinter entityPrinter;
 	}
 }
