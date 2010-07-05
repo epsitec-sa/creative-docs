@@ -219,7 +219,14 @@ namespace Epsitec.Cresus.Database
 			}
 			else if (systemType.IsEnum)
 			{
-				return DbSimpleType.String;
+				if (TypeConverter.IsLongEnum (systemType))
+				{
+					return TypeConverter.GetSimpleType (LongIntegerType.Default, out numDef);
+				}
+				else
+				{
+					return TypeConverter.GetSimpleType (IntegerType.Default, out numDef);
+				}
 			}
 			else
 			{
@@ -230,19 +237,26 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Get the raw type for a native type.
 		/// </summary>
-		/// <param name="type">The native type.</param>
+		/// <param name="systemType">The native type.</param>
 		/// <returns>The raw type or <c>DbRawType.Unknown</c> if no mapping exists.</returns>
-		public static DbRawType GetRawType(System.Type type)
+		public static DbRawType GetRawType(System.Type systemType)
 		{
 			DbRawType rawType;
 
-			if (TypeConverter.sysTypeToRawType.TryGetValue (type, out rawType))
+			if (TypeConverter.sysTypeToRawType.TryGetValue (systemType, out rawType))
 			{
 				return rawType;
 			}
-			else if (type.IsEnum)
+			else if (systemType.IsEnum)
 			{
-				return DbRawType.String;
+				if (TypeConverter.IsLongEnum (systemType))
+				{
+					return DbRawType.Int64;
+				}
+				else
+				{
+					return DbRawType.Int32;
+				}
 			}
 			else
 			{
@@ -320,20 +334,27 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Determines whether a native type is compatible to the specified simple type.
 		/// </summary>
-		/// <param name="type">The native type.</param>
+		/// <param name="systemType">The native type.</param>
 		/// <param name="simpleType">The simple type.</param>
 		/// <returns>
 		/// 	<c>true</c> if the types are compatible; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool IsCompatibleToSimpleType(System.Type type, DbSimpleType simpleType)
+		public static bool IsCompatibleToSimpleType(System.Type systemType, DbSimpleType simpleType)
 		{
-			if (TypeConverter.sysTypeToSimpleType.ContainsKey (type))
+			if (TypeConverter.sysTypeToSimpleType.ContainsKey (systemType))
 			{
-				return TypeConverter.sysTypeToSimpleType[type] == simpleType;
+				return TypeConverter.sysTypeToSimpleType[systemType] == simpleType;
 			}
-			else if (type.IsEnum)
+			else if (systemType.IsEnum)
 			{
-				return simpleType == DbSimpleType.String;
+				if (TypeConverter.IsLongEnum (systemType))
+				{
+					return TypeConverter.IsCompatibleToSimpleType (typeof (long), simpleType);
+				}
+				else
+				{
+					return TypeConverter.IsCompatibleToSimpleType (typeof (int), simpleType);
+				}
 			}
 			else
 			{
@@ -531,15 +552,8 @@ namespace Epsitec.Cresus.Database
 					return i64;
 				
 				case DbSimpleType.String:
-					if (value.GetType ().IsEnum)
-					{
-						return InvariantConverter.ToString (EnumType.ConvertToInt ((System.Enum) value));
-					}
-					else
-					{
-						System.Diagnostics.Debug.Assert (value is string || value is FormattedText);
-						return FormattedText.CastToString (value);
-					}
+					System.Diagnostics.Debug.Assert (value is string || value is FormattedText);
+					return FormattedText.CastToString (value);
 				
 				case DbSimpleType.Date:
 				case DbSimpleType.Time:
@@ -637,6 +651,29 @@ namespace Epsitec.Cresus.Database
 			{
 				return System.Globalization.CultureInfo.InvariantCulture;
 			}
+		}
+
+
+
+		/// <summary>
+		/// Determines whether the specified type is an <c>enum</c> which needs 64-bit to
+		/// store its values.
+		/// </summary>
+		/// <param name="systemType">Type of the system.</param>
+		/// <exception cref="System.ArgumentException">When the type is not an <c>enum</c>.</exception>
+		/// <returns>
+		/// 	<c>true</c> if the specified type is an <c>enum</c> which needs 64-bit to store its values; otherwise, <c>false</c>.
+		/// </returns>
+		private static bool IsLongEnum(System.Type systemType)
+		{
+			if (systemType.IsEnum)
+			{
+				systemType = systemType.GetEnumUnderlyingType ();
+				System.Diagnostics.Debug.Assert (systemType != typeof (ulong));
+				return systemType == typeof (long);
+			}
+
+			throw new System.ArgumentException ("Type not an Enum", "systemType");
 		}
 
 
