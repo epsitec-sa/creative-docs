@@ -92,22 +92,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.GetGetAllPossibleItemsDefaultCurrencyCodes (), this.GetUserTextDefaultCurrencyCode);
 		}
 
-		private IEnumerable<string[]> GetAllPossibleItemsTaxModes()
+		private IEnumerable<EnumKeyValues<BusinessLogic.Finance.TaxMode>> GetAllPossibleItemsTaxModes()
 		{
-			//	possibleItems[0] doit obligatoirement être la 'key' !
-			var list = new List<string[]> ()
-			{
-				new string[] { "1", "Assujetti à la TVA" },
-				new string[] { "2", "Non-assujetti à la TVA" },
-				new string[] { "3", "Exonéré" },
-			};
-
-			return list;
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.LiableForVat, "Assujetti à la TVA");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.ExemptFromVat, "Exonéré");
 		}
 
-		private FormattedText GetUserTextTaxMode(string[] value)
+		private FormattedText GetUserTextTaxMode(EnumKeyValues value)
 		{
-			return UIBuilder.FormatText (value[1]);  // par exemple "Assujetti à la TVA"
+			return UIBuilder.FormatText (value.Values);  // par exemple "Assujetti à la TVA"
 		}
 
 
@@ -121,9 +115,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
 		}
 
-		private FormattedText GetUserTextDefaultCurrencyCode(string[] value)
+		private FormattedText GetUserTextDefaultCurrencyCode(EnumKeyValues value)
 		{
-			return UIBuilder.FormatText (value[0], "-", value[1]);  // par exemple "CHF - Franc suisse"
+			return UIBuilder.FormatText (value.Values[0], "-", value.Values[1]);  // par exemple "CHF - Franc suisse"
 		}
 
 

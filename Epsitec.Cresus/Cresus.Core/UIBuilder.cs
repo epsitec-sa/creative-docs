@@ -457,7 +457,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, System.Func<string[], FormattedText> getUserText)
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, System.Func<EnumKeyValues<T>, FormattedText> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
 			var staticText = new StaticText

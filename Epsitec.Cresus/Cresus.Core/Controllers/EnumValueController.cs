@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class EnumValueController<T> : IWidgetUpdater
 	{
-		public EnumValueController(Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems = null, System.Func<string[], FormattedText> getUserText = null)
+		public EnumValueController(Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems = null, System.Func<EnumKeyValues<T>, FormattedText> getUserText = null)
 		{
 			this.marshaler     = marshaler;
 			this.possibleItems = possibleItems;
@@ -34,13 +34,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var item in possibleItems)
 			{
-				var key    = EnumConverter<T>.ConvertToNumericString (item.Key);
-				var values = item.Values;
+				var key = EnumConverter<T>.ConvertToNumericString (item.Key);
 
-				widget.Items.Add (key, values);
+				widget.Items.Add (key, item);
 			}
 
-			widget.ValueToDescriptionConverter = value => this.getUserText (value as string[]);
+			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
 			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as string[], text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
@@ -48,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Update ();
 
 			widget.AcceptingEdition +=
-						delegate
+				delegate
 				{
 					int    index = widget.SelectedItemIndex;
 					string key   = index < 0 ? null : widget.Items.GetKey (index);
@@ -92,19 +91,24 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly Marshaler marshaler;
 		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
-		private readonly System.Func<string[], FormattedText> getUserText;
+		private readonly System.Func<EnumKeyValues<T>, FormattedText> getUserText;
 		private AutoCompleteTextField widget;
 	}
 
-	public class EnumKeyValues
+	public abstract class EnumKeyValues
 	{
 		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
 		{
 			return new EnumKeyValues<T> (key, values);
 		}
+
+		public abstract string[] Values
+		{
+			get;
+		}
 	}
 
-	public class EnumKeyValues<T>
+	public class EnumKeyValues<T> : EnumKeyValues
 	{
 		public EnumKeyValues(T key, params string[] values)
 		{
@@ -121,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public string[] Values
+		public override string[] Values
 		{
 			get
 			{
@@ -129,11 +133,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
-		public static implicit operator System.Tuple<T, string[]>(EnumKeyValues<T> value)
-		{
-			return new System.Tuple<T, string[]> (value.key, value.values);
-		}
 
 		private readonly T key;
 		private readonly string[] values;
