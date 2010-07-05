@@ -62,19 +62,28 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		public IEnumerable<T> GetByExample<T>(T example, bool loadFromDatabase = true)
+		public IEnumerable<T> GetByExample<T>(T example)
 			where T : AbstractEntity
 		{
-			return this.GetByExample<T> (example, new Request (), loadFromDatabase);
+			Request request = new Request ()
+			{
+				RootEntity = example,
+				RequestedEntity = example,
+				LoadFromDatabase = true,
+				IsRootEntityReference = false,
+			};
+
+			return this.GetByRequest<T> (request);
 		}
 
 
-		public IEnumerable<T> GetByExample<T>(T example, Request searchData, bool loadFromDatabase = true)
+
+		public IEnumerable<T> GetByRequest<T>(Request request)
 			where T : AbstractEntity
 		{
-			foreach (EntityDataContainer entityData in this.GetEntitiesData (example, searchData))
+			foreach (EntityDataContainer entityData in this.GetEntitiesData (request))
 			{
-				T entity = this.DataContext.ResolveEntity (entityData, loadFromDatabase) as T;
+				T entity = this.DataContext.ResolveEntity (entityData, request.LoadFromDatabase) as T;
 
 				if (entity != null)
 				{
@@ -124,11 +133,17 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				}
 			}
 
-			return this.GetByExample (example, loadFromDatabase).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
+			Request request = new Request ()
+			{
+				RootEntity = example,
+				LoadFromDatabase = loadFromDatabase,
+			};
+
+			return this.GetByRequest<AbstractEntity> (request).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
 		}
 
 
-		private IEnumerable<EntityDataContainer> GetEntitiesData(AbstractEntity example, Request searchData)
+		private IEnumerable<EntityDataContainer> GetEntitiesData(Request request)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valuesData;
 			Dictionary<DbKey, EntityReferenceData> referencesData;
@@ -136,16 +151,16 @@ namespace Epsitec.Cresus.DataLayer.Browser
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesData = this.GetValueData (transaction, example, searchData);
-				referencesData = this.GetReferenceData (transaction, example, searchData);
-				collectionsData = this.GetCollectionData (transaction, example, searchData);
+				valuesData = this.GetValueData (transaction, request);
+				referencesData = this.GetReferenceData (transaction, request);
+				collectionsData = this.GetCollectionData (transaction, request);
 
 				transaction.Commit ();
 			}
 
 			foreach (DbKey entityKey in valuesData.Keys)
 			{
-				Druid loadedEntityId = example.GetEntityStructuredTypeId ();
+				Druid loadedEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 				Druid realEntityId = valuesData[entityKey].Item1;
 				EntityValueData entityValueData = valuesData[entityKey].Item2;
 				EntityReferenceData entityReferenceData = referencesData[entityKey];
@@ -156,11 +171,11 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> GetValueData(DbTransaction transaction, AbstractEntity example, Request searchData)
+		private Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> GetValueData(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> ();
 
-			Druid leafEntityId = example.GetEntityStructuredTypeId ();
+			Druid leafEntityId = request.RootEntity.GetEntityStructuredTypeId ();
 
 			var fieldIds = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.None)
@@ -169,7 +184,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				.OrderBy (field => field.ToResourceId ())
 				.ToList ();
 
-			using (DbReader reader = this.CreateValuesReader (leafEntityId, example, searchData))
+			using (DbReader reader = this.CreateValuesReader (request))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -195,7 +210,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private DbReader CreateValuesReader(Druid entityId, AbstractEntity example, Request searchData)
+		private DbReader CreateValuesReader(Request request)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -203,20 +218,23 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				IncludeRowKeys  = false,
 			};
 
-			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			
+			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
 
-			this.AddConditionsForEntity (reader, example, searchData, entityRootAliasNode);
-			this.AddQueryForValues (reader, example, entityRootAliasNode);
+			this.AddConditionsForEntity (reader, entity, request, entityRootAliasNode);
+			this.AddQueryForValues (reader, entity, entityRootAliasNode);
 			
 			return reader;
 		}
 
 
-		private Dictionary<DbKey, EntityReferenceData> GetReferenceData(DbTransaction transaction, AbstractEntity example, Request searchData)
+		private Dictionary<DbKey, EntityReferenceData> GetReferenceData(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, EntityReferenceData> references = new Dictionary<DbKey, EntityReferenceData> ();
 
-			Druid leafEntityId = example.GetEntityStructuredTypeId ();
+			Druid leafEntityId = request.RootEntity.GetEntityStructuredTypeId ();
 
 			var fieldIds = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.Reference)
@@ -225,7 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				.OrderBy (field => field.ToResourceId ())
 				.ToList ();
 
-			using (DbReader reader = this.CreateReferencesReader (leafEntityId, example, searchData))
+			using (DbReader reader = this.CreateReferencesReader (request))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -251,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private DbReader CreateReferencesReader(Druid entityId, AbstractEntity example, Request searchData)
+		private DbReader CreateReferencesReader(Request request)
 		{
 			DbReader dbReader = new DbReader (this.DbInfrastructure)
 			{
@@ -259,26 +277,30 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				IncludeRowKeys  = false,
 			};
 
-			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			this.AddConditionsForEntity (dbReader, example, searchData, entityRootAliasNode);
-			this.AddQueryForReferences (dbReader, example, entityRootAliasNode);
+			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
+
+			this.AddConditionsForEntity (dbReader, entity, request, entityRootAliasNode);
+			this.AddQueryForReferences (dbReader, entity, entityRootAliasNode);
 
 			return dbReader;
 		}
 
 
-		private Dictionary<DbKey, EntityCollectionData> GetCollectionData(DbTransaction transaction, AbstractEntity example, Request searchData)
+		private Dictionary<DbKey, EntityCollectionData> GetCollectionData(DbTransaction transaction, Request request)
 		{
 			Dictionary<DbKey, EntityCollectionData> collectionData = new Dictionary<DbKey, EntityCollectionData> ();
 
-			Druid entityId = example.GetEntityStructuredTypeId ();
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 		
-			foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entityId))
+			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
 			{
-				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (currentId).Where (f => f.Relation == FieldRelation.Collection))
+				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId).Where (f => f.Relation == FieldRelation.Collection))
 				{
-					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, currentId, example, field, searchData))
+					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, request, field))
 					{
 						if (!collectionData.ContainsKey (relation.Item1))
 						{
@@ -294,9 +316,9 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Druid entityId, AbstractEntity example, StructuredTypeField field, Request searchData)
+		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Request request, StructuredTypeField field)
 		{
-			using (DbReader reader = this.CreateCollectionReader (entityId, example, field, searchData))
+			using (DbReader reader = this.CreateCollectionReader (request, field))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -311,7 +333,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private DbReader CreateCollectionReader(Druid entityId, AbstractEntity example, StructuredTypeField field, Request searchData)
+		private DbReader CreateCollectionReader(Request request, StructuredTypeField field)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -319,22 +341,25 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				IncludeRowKeys  = false,
 			};
 
-			AliasNode rootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (entityId).ToResourceId ());
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			this.AddConditionsForEntity (reader, example, searchData, rootAliasNode);
-			this.AddQueryForCollection (reader, example, rootAliasNode, field.CaptionId);
-			this.AddSortOrderOnRank (reader, example, rootAliasNode, field.CaptionId);
+			AliasNode rootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
+
+			this.AddConditionsForEntity (reader, entity, request, rootAliasNode);
+			this.AddQueryForCollection (reader, entity, rootAliasNode, field.CaptionId);
+			this.AddSortOrderOnRank (reader, entity, rootAliasNode, field.CaptionId);
 
 			return reader;
 		}
 
 
-		private void AddConditionsForEntity(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias)
+		private void AddConditionsForEntity(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
 			this.AddConditionForRootEntityStatus (dbReader, entity, rootEntityAlias);
 			this.AddJoinToSubEntities (dbReader, entity, rootEntityAlias);
-			this.AddConditionForFields (dbReader, entity, searchData, rootEntityAlias);
-			this.AddConditionsForLocalConstraints (dbReader, entity, searchData, rootEntityAlias);
+			this.AddConditionForFields (dbReader, entity, request, rootEntityAlias);
+			this.AddConditionsForLocalConstraints (dbReader, entity, request, rootEntityAlias);
 		}
 
 
@@ -400,7 +425,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private void AddConditionForFields(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias)
+		private void AddConditionForFields(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
 			var definedFieldIds = this.EntityContext.GetDefinedFieldIds (entity)
 				.Select<string, Druid> (id => Druid.Parse (id))
@@ -408,12 +433,12 @@ namespace Epsitec.Cresus.DataLayer.Browser
 
 			foreach (Druid fieldId in definedFieldIds)
 			{
-				this.AddConditionForField (dbReader, entity, searchData, rootEntityAlias, fieldId);
+				this.AddConditionForField (dbReader, entity, request, rootEntityAlias, fieldId);
 			}
 		}
 
 
-		private void AddConditionForField(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias, Druid fieldId)
+		private void AddConditionForField(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, Druid fieldId)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldId.ToResourceId ());
@@ -425,12 +450,12 @@ namespace Epsitec.Cresus.DataLayer.Browser
 					break;
 
 				case FieldRelation.Reference:
-					this.AddConditionForReference (dbReader, entity, searchData, rootEntityAlias, field);
+					this.AddConditionForReference (dbReader, entity, request, rootEntityAlias, field);
 					break;
 
 
 				case FieldRelation.Collection:
-					this.AddConditionForCollection (dbReader, entity, searchData, rootEntityAlias, field);
+					this.AddConditionForCollection (dbReader, entity, request, rootEntityAlias, field);
 					break;
 			}
 		}
@@ -492,21 +517,21 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private void AddConditionForReference(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias, StructuredTypeField field)
+		private void AddConditionForReference(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field)
 		{
 			AbstractEntity target = entity.GetField<AbstractEntity> (field.Id);
 
-			this.AddConditionForRelation (dbReader, entity, searchData, rootEntityAlias, field, target);
+			this.AddConditionForRelation (dbReader, entity, request, rootEntityAlias, field, target);
 		}
 
 
-		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
+		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
 			EntityDataMapping mapping = this.DataContext.FindEntityDataMapping (target);
 
 			if (mapping == null)
 			{
-				this.AddConditionForRelationByValue (dbReader, entity, searchData, rootEntityAlias, field, target);
+				this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
 			}
 			else
 			{
@@ -515,7 +540,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private void AddConditionForRelationByValue(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
+		private void AddConditionForRelationByValue(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
 			Druid fieldId = field.CaptionId;
 
@@ -531,7 +556,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			this.AddJoinToTarget (dbReader, localEntityId, fieldId, rootTargetId, relationAlias, SqlJoinCode.Inner);
 			AliasNode targetAlias = relationAlias.GetChild (rootTargetId.ToResourceId ());
 
-			this.AddConditionsForEntity (dbReader, target, searchData, targetAlias);
+			this.AddConditionsForEntity (dbReader, target, request, targetAlias);
 		}
 
 
@@ -548,11 +573,11 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private void AddConditionForCollection(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias, StructuredTypeField field)
+		private void AddConditionForCollection(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field)
 		{
 			foreach (AbstractEntity target in entity.GetFieldCollection<AbstractEntity> (field.Id))
 			{
-				this.AddConditionForRelation (dbReader, entity, searchData, rootEntityAlias, field, target);
+				this.AddConditionForRelation (dbReader, entity, request, rootEntityAlias, field, target);
 			}
 		}
 
@@ -635,9 +660,9 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private void AddConditionsForLocalConstraints(DbReader dbReader, AbstractEntity entity, Request searchData, AliasNode rootEntityAlias)
+		private void AddConditionsForLocalConstraints(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
-			foreach (Expression constraint in searchData.GetLocalConstraints (entity))
+			foreach (Expression constraint in request.GetLocalConstraints (entity))
 			{
 				this.AddConditionForLocalConstraint (dbReader, entity, constraint, rootEntityAlias);
 			}

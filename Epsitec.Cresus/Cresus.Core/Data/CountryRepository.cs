@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Data
 			return this.GetEntitiesByExample<CountryEntity> (example);
 		}
 
-		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example, Request constrainer)
+		public IEnumerable<CountryEntity> GetCountriesByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<CountryEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<CountryEntity> (request);
 		}
 
 
@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CountryEntity> GetCountriesByExample(CountryEntity example, Request constrainer, int index, int count)
+		public IEnumerable<CountryEntity> GetCountriesByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<CountryEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<CountryEntity> (request, index, count);
 		}
 		
 

@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RelationEntity> GetRelationsByExample(RelationEntity example, Request constrainer)
+		public IEnumerable<RelationEntity> GetRelationsByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<RelationEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<RelationEntity> (request);
 		}
 
 
@@ -38,9 +38,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RelationEntity> GetRelationsByExample(RelationEntity example, Request constrainer, int index, int count)
+		public IEnumerable<RelationEntity> GetRelationsByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<RelationEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<RelationEntity> (request, index, count);
 		}
 
 

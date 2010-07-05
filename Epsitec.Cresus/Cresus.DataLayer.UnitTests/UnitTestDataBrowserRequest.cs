@@ -105,7 +105,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
 				request.AddLocalConstraint (example,
 					new UnaryComparison (
 						new Field (new Druid ("[L0A01]")),
@@ -113,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 3);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -134,7 +139,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AV]")),
@@ -143,7 +153,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -162,7 +172,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithField (
 						new Field (new Druid ("[L0AV]")),
@@ -171,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -189,7 +204,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
 				request.AddLocalConstraint (example,
 					new UnaryOperation (
 						UnaryOperator.Not,
@@ -201,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -221,7 +241,12 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
 				request.AddLocalConstraint (example,
 					new BinaryOperation (
 						new BinaryComparisonFieldWithValue (
@@ -238,7 +263,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -257,7 +282,11 @@ namespace Epsitec.Cresus.DataLayer
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithValue (
@@ -275,7 +304,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -296,7 +325,11 @@ namespace Epsitec.Cresus.DataLayer
 					Gender = new PersonGenderEntity (),
 				};
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithValue (
@@ -314,7 +347,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -336,7 +369,11 @@ namespace Epsitec.Cresus.DataLayer
 					Gender = new PersonGenderEntity (),
 				};
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example.Gender,
 					new BinaryComparisonFieldWithValue (
@@ -346,7 +383,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -368,7 +405,11 @@ namespace Epsitec.Cresus.DataLayer
 					Gender = new PersonGenderEntity (),
 				};
 
-				Request request = new Request ();
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example.Gender,
 					new BinaryComparisonFieldWithValue (
@@ -378,7 +419,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByExample (example, request).ToArray ();
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -407,7 +448,12 @@ namespace Epsitec.Cresus.DataLayer
 				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				CountryEntity example = new CountryEntity ();
-				Request request = new Request ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithValue (
@@ -417,7 +463,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByExample (example, request).ToArray ();
+				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 4);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -431,7 +477,12 @@ namespace Epsitec.Cresus.DataLayer
 				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				CountryEntity example = new CountryEntity ();
-				Request request = new Request ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				request.AddLocalConstraint (example,
 					new BinaryComparisonFieldWithValue (
@@ -441,7 +492,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByExample (example, request).ToArray ();
+				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 3);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -454,7 +505,12 @@ namespace Epsitec.Cresus.DataLayer
 				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				CountryEntity example = new CountryEntity ();
-				Request request = new Request ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				string value = BinaryComparisonFieldWithValue.Escape ("test%test");
 
@@ -466,7 +522,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByExample (example, request).ToArray ();
+				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -477,7 +533,12 @@ namespace Epsitec.Cresus.DataLayer
 				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				CountryEntity example = new CountryEntity ();
-				Request request = new Request ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				string value = BinaryComparisonFieldWithValue.Escape ("test_test");
 
@@ -489,7 +550,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByExample (example, request).ToArray ();
+				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
@@ -500,7 +561,12 @@ namespace Epsitec.Cresus.DataLayer
 				DataBrowser dataBrowser = new DataBrowser (dataContext);
 
 				CountryEntity example = new CountryEntity ();
-				Request request = new Request ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
 
 				string value = BinaryComparisonFieldWithValue.Escape ("test#test");
 
@@ -512,7 +578,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByExample (example, request).ToArray ();
+				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));

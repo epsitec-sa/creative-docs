@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<UriContactEntity> GetUriContactsByExample(UriContactEntity example, Request constrainer)
+		public IEnumerable<UriContactEntity> GetUriContactsByRequest(Request request)
 		{
-			return this.GetGenericContactsByExample<UriContactEntity> (example, constrainer);
+			return this.GetGenericContactsByRequest<UriContactEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<UriContactEntity> GetUriContactsByExample(UriContactEntity example, Request constrainer, int index, int count)
+		public IEnumerable<UriContactEntity> GetUriContactsByRequest(Request request, int index, int count)
 		{
-			return this.GetGenericContactsByExample<UriContactEntity> (example, constrainer, index, count);
+			return this.GetGenericContactsByRequest<UriContactEntity> (request, index, count);
 		}
 
 

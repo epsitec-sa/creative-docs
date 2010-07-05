@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<TelecomContactEntity> GetTelecomContactsByExample(TelecomContactEntity example, Request constrainer)
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByRequest(Request request)
 		{
-			return this.GetGenericContactsByExample<TelecomContactEntity> (example, constrainer);
+			return this.GetGenericContactsByRequest<TelecomContactEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<TelecomContactEntity> GetTelecomContactsByExample(TelecomContactEntity example, Request constrainer, int index, int count)
+		public IEnumerable<TelecomContactEntity> GetTelecomContactsByRequest(Request request, int index, int count)
 		{
-			return this.GetGenericContactsByExample<TelecomContactEntity> (example, constrainer, index, count);
+			return this.GetGenericContactsByRequest<TelecomContactEntity> (request, index, count);
 		}
 
 

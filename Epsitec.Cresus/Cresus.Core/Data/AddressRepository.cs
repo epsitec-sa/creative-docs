@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, Request constrainer)
+		public IEnumerable<AddressEntity> GetAddressesByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<AddressEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<AddressEntity> (request);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AddressEntity> GetAddressesByExample(AddressEntity example, Request constrainer, int index, int count)
+		public IEnumerable<AddressEntity> GetAddressesByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<AddressEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<AddressEntity> (request, index, count);
 		}
 
 

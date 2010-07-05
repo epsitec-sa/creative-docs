@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypesByExample(CaseEventTypeEntity example, Request constrainer)
+		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypesByRequest(Request request)
 		{
-			return this.GetEntitiesByExample<CaseEventTypeEntity> (example, constrainer);
+			return this.GetEntitiesByRequest<CaseEventTypeEntity> (request);
 		}
 
 
@@ -38,9 +38,9 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypesByExample(CaseEventTypeEntity example, Request constrainer, int index, int count)
+		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypesByRequest(Request request, int index, int count)
 		{
-			return this.GetEntitiesByExample<CaseEventTypeEntity> (example, constrainer, index, count);
+			return this.GetEntitiesByRequest<CaseEventTypeEntity> (request, index, count);
 		}
 
 
