@@ -8,17 +8,43 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.Browser
 {
 	
 	
-	public class EntityConstrainer
+	public class Request
 	{
 
 
-		public EntityConstrainer()
+		public Request()
 		{
 			this.localConstraints = new Dictionary<AbstractEntity, List<Expression>> ();
+
+			this.RootEntity = null;
+			this.RequestedEntity = null;
+
+			this.IsRootEntityReference = false;
+		}
+
+
+		public AbstractEntity RootEntity
+		{
+			internal get;
+			set;
+		}
+
+
+		public AbstractEntity RequestedEntity
+		{
+			internal get;
+			set;
+		}
+
+
+		public bool IsRootEntityReference
+		{
+			internal get;
+			set;
 		}
 
 		

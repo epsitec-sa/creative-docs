@@ -9,10 +9,13 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Browser;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 
 namespace Epsitec.Cresus.DataLayer
@@ -28,6 +31,7 @@ namespace Epsitec.Cresus.DataLayer
 		public void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+			File.Delete (UnitTestPerformance.logFile);
 		}
 
 
@@ -36,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (UnitTestPerformance.createDatabase)
 			{
-				TestHelper.PrintStartTest ("Database creation");
+				TestHelper.WriteStartTest ("Database creation", UnitTestPerformance.logFile);
 							
 				Database.CreateAndConnectToDatabase ();
 
@@ -47,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				TestHelper.PrintStartTest ("Database connection");
+				TestHelper.WriteStartTest ("Database connection", UnitTestPerformance.logFile);
 
 				Database.ConnectToDatabase ();
 			}
@@ -57,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void RetrieveAllDataWithWarmup()
 		{
-		    TestHelper.PrintStartTest ("Retrieve all data");
+			TestHelper.WriteStartTest ("Retrieve all data", UnitTestPerformance.logFile);
 
 			this.RetrieveAllData<AbstractPersonEntity> (false);
 		    this.RetrieveAllData<AbstractPersonEntity> (true);
@@ -123,9 +127,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		public void RetrieveAllData<EntityType>(bool bulkMode) where EntityType : AbstractEntity, new()
 		{
-		    TestHelper.MeasureAndDisplayTime (
+			TestHelper.MeasureAndWriteTime (
 		        TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: false\tbulkMode: " + bulkMode,
-		        () =>
+		        UnitTestPerformance.logFile,
+				() =>
 		        {
 		            using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 		            {
@@ -141,8 +146,9 @@ namespace Epsitec.Cresus.DataLayer
 		        DataBrowser dataBrowser = new DataBrowser (dataContext);
 		        dataBrowser.GetByExample<EntityType> (new EntityType ()).Count ();
 
-		        TestHelper.MeasureAndDisplayTime (
-		            TestHelper.extendString (new EntityType().GetType().Name, 30) + "\twarmup: true\tbulkMode: " + bulkMode,
+				TestHelper.MeasureAndWriteTime (
+					TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: true\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<EntityType> (new EntityType ()).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -153,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetUriContactWithGivenUriSchemeReference()
 		{
-		    TestHelper.PrintStartTest ("Retrieve uri contacts with uri scheme");
+			TestHelper.WriteStartTest ("Retrieve uri contacts with uri scheme", UnitTestPerformance.logFile);
 
 			this.GetUriContactWithGivenUriSchemeReference (false);
 			this.GetUriContactWithGivenUriSchemeReference (true);
@@ -176,8 +182,9 @@ namespace Epsitec.Cresus.DataLayer
 		            UriScheme = uriScheme,
 		        };
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -199,8 +206,9 @@ namespace Epsitec.Cresus.DataLayer
 					},
 				};
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -211,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetLocationsGivenCountry()
 		{
-		    TestHelper.PrintStartTest ("Retrieve locations given country");
+			TestHelper.WriteStartTest ("Retrieve locations given country", UnitTestPerformance.logFile);
 
 		    this.GetLocationsGivenCountryReference (false);
 		    this.GetLocationsGivenCountryReference (true);
@@ -234,8 +242,9 @@ namespace Epsitec.Cresus.DataLayer
 		            Country = country,
 		        };
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -257,8 +266,9 @@ namespace Epsitec.Cresus.DataLayer
 					},
 				};
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -269,7 +279,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetLegalPersonsGivenType()
 		{
-		    TestHelper.PrintStartTest ("Retrieve legal persons given type");
+			TestHelper.WriteStartTest ("Retrieve legal persons given type", UnitTestPerformance.logFile);
 
 		    this.GetLegalPersonsGivenTypeReference (false);
 		    this.GetLegalPersonsGivenTypeReference (true);
@@ -292,8 +302,9 @@ namespace Epsitec.Cresus.DataLayer
 					LegalPersonType = legalPersonType,
 		        };
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -315,8 +326,9 @@ namespace Epsitec.Cresus.DataLayer
 					},
 				};
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -327,7 +339,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetContactsGivenPerson()
 		{
-		    TestHelper.PrintStartTest ("Retrieve contacts given person");
+			TestHelper.WriteStartTest ("Retrieve contacts given person", UnitTestPerformance.logFile);
 
 		    this.GetContactsGivenPersonReference (false);
 		    this.GetContactsGivenPersonReference (true);
@@ -350,8 +362,9 @@ namespace Epsitec.Cresus.DataLayer
 					NaturalPerson = naturalPerson,
 		        };
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -373,8 +386,9 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				};
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -385,7 +399,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetPersonGivenLocation()
 		{
-		    TestHelper.PrintStartTest ("Retrieve person given location");
+			TestHelper.WriteStartTest ("Retrieve person given location", UnitTestPerformance.logFile);
 
 		    this.GetPersonGivenLocationReference (false);
 			this.GetPersonGivenLocationReference (true);
@@ -413,8 +427,9 @@ namespace Epsitec.Cresus.DataLayer
 		            }
 		        );
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -441,8 +456,9 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				);
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -453,7 +469,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetAddressGivenLegalPerson()
 		{
-		    TestHelper.PrintStartTest ("Retrieve address given legal person");
+			TestHelper.WriteStartTest ("Retrieve address given legal person", UnitTestPerformance.logFile);
 
 		    this.GetAddressGivenLegalPersonReference (false);
 			this.GetAddressGivenLegalPersonReference (true);
@@ -476,8 +492,9 @@ namespace Epsitec.Cresus.DataLayer
 					LegalPerson = legalPerson,
 		        };
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: reference\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 		            () => dataBrowser.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
 		        );
@@ -499,8 +516,9 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				};
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"mode: value\t\t\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -511,7 +529,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetAddressReferencers()
 		{
-			TestHelper.PrintStartTest ("Retrieve address referencers");
+			TestHelper.WriteStartTest ("Retrieve address referencers", UnitTestPerformance.logFile);
 
 			this.GetAddressReferencers (false);
 			this.GetAddressReferencers (true);
@@ -526,8 +544,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"bulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetReferencers (address).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -538,7 +557,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void GetLegalPersonReferencers()
 		{
-			TestHelper.PrintStartTest ("Retrieve legal person referencers");
+			TestHelper.WriteStartTest ("Retrieve legal person referencers", UnitTestPerformance.logFile);
 
 			this.GetLegalPersonReferencers (false);
 			this.GetLegalPersonReferencers (true);
@@ -553,8 +572,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					"bulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() => dataBrowser.GetReferencers (person).Count (),
 					UnitTestPerformance.nbRuns
 				);
@@ -565,7 +585,7 @@ namespace Epsitec.Cresus.DataLayer
 		[TestMethod]
 		public void DeleteEntities()
 		{
-			TestHelper.PrintStartTest ("DeleteEntities");
+			TestHelper.WriteStartTest ("DeleteEntities", UnitTestPerformance.logFile);
 
 			if (UnitTestPerformance.runDeleteTests)
 			{
@@ -590,8 +610,9 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (id)));
 
-				TestHelper.MeasureAndDisplayTime (
+				TestHelper.MeasureAndWriteTime (
 					TestHelper.extendString (entity.GetType ().Name, 30) + "\tbulkMode: " + bulkMode,
+					UnitTestPerformance.logFile,
 					() =>
 					{
 						dataContext.DeleteEntity (entity);
@@ -622,6 +643,9 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		private readonly static DatabaseSize databaseSize = DatabaseSize.Small;
+
+
+		private readonly static string logFile = @"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests\bin\Debug\results.txt";
 
 
 	}

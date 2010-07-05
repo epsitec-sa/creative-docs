@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, EntityConstrainer constrainer)
+		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, Request constrainer)
 		{
 			return this.GetEntitiesByExample<CommentEntity> (example, constrainer);
 		}
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, EntityConstrainer constrainer, int index, int count)
+		public IEnumerable<CommentEntity> GetCommentsByExample(CommentEntity example, Request constrainer, int index, int count)
 		{
 			return this.GetEntitiesByExample<CommentEntity> (example, constrainer, index, count);
 		}

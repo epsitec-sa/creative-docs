@@ -1,7 +1,9 @@
 ﻿using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 
@@ -25,7 +27,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByExample(NaturalPersonEntity example, EntityConstrainer constrainer)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByExample(NaturalPersonEntity example, Request constrainer)
 		{
 			return this.GetGenericPersonsByExample<NaturalPersonEntity> (example, constrainer);
 		}
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByExample(NaturalPersonEntity example, EntityConstrainer constrainer, int index, int count)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByExample(NaturalPersonEntity example, Request constrainer, int index, int count)
 		{
 			return this.GetGenericPersonsByExample<NaturalPersonEntity> (example, constrainer, index, count);
 		}

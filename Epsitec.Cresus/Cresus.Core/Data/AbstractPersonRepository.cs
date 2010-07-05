@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 
 using System.Collections.Generic;
 
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, EntityConstrainer constrainer)
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, Request constrainer)
 		{
 			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, constrainer);
 		}
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, EntityConstrainer constrainer, int index, int count)
+		public IEnumerable<AbstractPersonEntity> GetAbstractPersonsByExample(AbstractPersonEntity example, Request constrainer, int index, int count)
 		{
 			return this.GetGenericPersonsByExample<AbstractPersonEntity> (example, constrainer, index, count);
 		}
@@ -89,7 +91,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, EntityConstrainer constrainer) where T : AbstractPersonEntity
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, Request constrainer) where T : AbstractPersonEntity
 		{
 			return this.GetEntitiesByExample<T> (example, constrainer);
 		}
@@ -101,7 +103,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, EntityConstrainer constrainer, int index, int count) where T : AbstractPersonEntity
+		protected IEnumerable<T> GetGenericPersonsByExample<T>(T example, Request constrainer, int index, int count) where T : AbstractPersonEntity
 		{
 			return this.GetEntitiesByExample<T> (example, constrainer, index, count);
 		}

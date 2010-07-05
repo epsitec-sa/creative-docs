@@ -7,13 +7,15 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
+
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Browser;
 using Epsitec.Cresus.DataLayer.EntityData;
 using Epsitec.Cresus.DataLayer.Helpers;
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 namespace Epsitec.Cresus.DataLayer
 {

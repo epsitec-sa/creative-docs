@@ -142,7 +142,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="DataContextEventArgs.cs" />
-    <Compile Include="EntityConstrainer.cs" />
+    <Compile Include="Browser\Request.cs" />
     <Compile Include="DataContextPool.cs" />
     <Compile Include="EntityData\EntityCollectionData.cs" />
     <Compile Include="EntityData\EntityDataContainer.cs" />
@@ -164,12 +164,12 @@
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
-    <Compile Include="TableAlias\AliasNode.cs" />
+    <Compile Include="Browser\AliasNode.cs" />
     <Compile Include="EntityData\EntityValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="DataContext.EntityDataCache.cs" />
-    <Compile Include="DataBrowser.cs" />
+    <Compile Include="Browser\DataBrowser.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
