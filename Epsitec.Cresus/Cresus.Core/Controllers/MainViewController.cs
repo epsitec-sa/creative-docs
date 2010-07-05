@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.navigator = new NavigationOrchestrator ();
 			this.Orchestrator = new DataViewOrchestrator ();
+			this.printer = new Printer ();
 
 			this.dataViewController = new DataViewController ("Data", data)
 			{
@@ -104,6 +105,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.dataViewController.CreateUI (this.rightPanel);
 
 			this.BrowserSettingsMode = Controllers.BrowserSettingsMode.Compact;
+
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.Print ());
 		}
 
 
@@ -208,12 +211,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		private void Print()
+		{
+			this.printer.Print (this.browserViewController.GetActiveEntity ());
+		}
+
 		
 		private readonly CoreData data;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;
 		private readonly NavigationOrchestrator navigator;
+		private readonly Printer printer;
 
 		private FrameBox frame;
 
