@@ -62,7 +62,16 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
-			port.PaintText (10, pageHeight-10-fontSize, text, Font.DefaultFont, fontSize);
+			var textLayout = new TextLayout ();
+			textLayout.JustifMode = TextJustifMode.AllButLast;
+			textLayout.BreakMode = TextBreakMode.Ellipsis;
+			textLayout.DefaultFont = Font.DefaultFont;
+			textLayout.DefaultFontSize = fontSize;
+			textLayout.LayoutSize = new Size (150, 150);
+			textLayout.DefaultRichColor = RichColor.FromBrightness (0);
+			textLayout.Text = text.Replace ("\n", "<br/>");
+
+			textLayout.Paint (new Point (10, pageHeight-10-150), port);
 		}
 
 
