@@ -364,6 +364,7 @@
     <EmbeddedResource Include="Images\Data.Case.icon" />
     <EmbeddedResource Include="Images\Data.Comment.icon" />
     <EmbeddedResource Include="Images\Data.CaseEvent.icon" />
+    <EmbeddedResource Include="Images\Print.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
