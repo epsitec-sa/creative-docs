@@ -217,6 +217,10 @@ namespace Epsitec.Cresus.Database
 
 				return simpleType;
 			}
+			else if (systemType.IsEnum)
+			{
+				return DbSimpleType.String;
+			}
 			else
 			{
 				return DbSimpleType.Unknown;
@@ -236,8 +240,14 @@ namespace Epsitec.Cresus.Database
 			{
 				return rawType;
 			}
-
-			return DbRawType.Unknown;
+			else if (type.IsEnum)
+			{
+				return DbRawType.String;
+			}
+			else
+			{
+				return DbRawType.Unknown;
+			}
 		}
 
 		/// <summary>
@@ -320,6 +330,10 @@ namespace Epsitec.Cresus.Database
 			if (TypeConverter.sysTypeToSimpleType.ContainsKey (type))
 			{
 				return TypeConverter.sysTypeToSimpleType[type] == simpleType;
+			}
+			else if (type.IsEnum)
+			{
+				return simpleType == DbSimpleType.String;
 			}
 			else
 			{
@@ -517,8 +531,15 @@ namespace Epsitec.Cresus.Database
 					return i64;
 				
 				case DbSimpleType.String:
-					System.Diagnostics.Debug.Assert (value is string || value is FormattedText);
-					return FormattedText.CastToString (value);
+					if (value.GetType ().IsEnum)
+					{
+						return InvariantConverter.ToString (EnumType.ConvertToInt ((System.Enum) value));
+					}
+					else
+					{
+						System.Diagnostics.Debug.Assert (value is string || value is FormattedText);
+						return FormattedText.CastToString (value);
+					}
 				
 				case DbSimpleType.Date:
 				case DbSimpleType.Time:
