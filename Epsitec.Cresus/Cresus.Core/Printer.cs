@@ -27,7 +27,12 @@ namespace Epsitec.Cresus.Core
 		{
 		}
 
-		public void Print(DataContext context)
+
+		public void Print(IEnumerable<AbstractEntity> entities)
+		{
+		}
+
+		public void Print(AbstractEntity entity)
 		{
 		}
 	}
