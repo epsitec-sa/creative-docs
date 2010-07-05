@@ -34,6 +34,16 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97));
 			}
 			
+			public static class Global
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0K1
+				public static readonly global::Epsitec.Common.Widgets.Command Settings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+			}
+			
 			public static class Test
 			{
 				internal static void _Initialize()
@@ -48,6 +58,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Base._Initialize ();
 				Edition._Initialize ();
+				Global._Initialize ();
 				Test._Initialize ();
 			}
 		}
@@ -66,6 +77,12 @@ namespace Epsitec.Cresus.Core
 				public const long Print = 0x1500014000000L;
 				//	designer:cap/L0A13
 				public const long SaveRecord = 0x150000A000061L;
+			}
+			
+			public static class Global
+			{
+				//	designer:cap/L0K1
+				public const long Settings = 0x1500014000001L;
 			}
 			
 			public static class Test

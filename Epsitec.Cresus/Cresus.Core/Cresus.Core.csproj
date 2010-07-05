@@ -159,7 +159,9 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
-    <Compile Include="Printer.cs" />
+    <Compile Include="Dialogs\PrintDialog.cs" />
+    <Compile Include="Dialogs\PrinterManagerDialog.cs" />
+    <Compile Include="PrintEngine.cs" />
     <Compile Include="Data\CaseEventTypeRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
@@ -194,6 +196,7 @@
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
+    <Compile Include="Printer.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
@@ -232,6 +235,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
+    <EmbeddedResource Include="Images\Settings.icon" />
+    <None Include="Printers\printers.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Resources\Cresus.Core\module.info">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -268,6 +275,14 @@
     <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
       <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
       <Name>Common.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
+      <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
+      <Name>Common.Printing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
       <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
