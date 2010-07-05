@@ -106,6 +106,7 @@
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCaseViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
+    <Compile Include="Controllers\EnumValueController.cs" />
     <Compile Include="Controllers\IWidgetUpdater.cs" />
     <Compile Include="Controllers\CreationControllers\CreationRelationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />

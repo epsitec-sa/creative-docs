@@ -2061,24 +2061,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>VatCalculationMode</c> field.
+		///	The <c>TaxMode</c> field.
 		///	designer:fld/L0AB2/L0AN7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AN7]")]
-		public string TaxMode
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? TaxMode
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AN7]");
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode?> ("[L0AN7]");
 			}
 			set
 			{
-				string oldValue = this.TaxMode;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? oldValue = this.TaxMode;
 				if (oldValue != value)
 				{
-					this.OnVatCalculationModeChanging (oldValue, value);
-					this.SetField<string> ("[L0AN7]", oldValue, value);
-					this.OnVatCalculationModeChanged (oldValue, value);
+					this.OnTaxModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode?> ("[L0AN7]", oldValue, value);
+					this.OnTaxModeChanged (oldValue, value);
 				}
 			}
 		}
@@ -2121,19 +2121,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AB2/L0AM7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AM7]")]
-		public string DefaultCurrencyCode
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? DefaultCurrencyCode
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AM7]");
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode?> ("[L0AM7]");
 			}
 			set
 			{
-				string oldValue = this.DefaultCurrencyCode;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? oldValue = this.DefaultCurrencyCode;
 				if (oldValue != value)
 				{
 					this.OnDefaultCurrencyCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0AM7]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode?> ("[L0AM7]", oldValue, value);
 					this.OnDefaultCurrencyCodeChanged (oldValue, value);
 				}
 			}
@@ -2149,12 +2149,12 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnFirstContactDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnVatNumberChanging(string oldValue, string newValue);
 		partial void OnVatNumberChanged(string oldValue, string newValue);
-		partial void OnVatCalculationModeChanging(string oldValue, string newValue);
-		partial void OnVatCalculationModeChanged(string oldValue, string newValue);
+		partial void OnTaxModeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? newValue);
+		partial void OnTaxModeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.TaxMode? newValue);
 		partial void OnDefaultDebtorBookAccountChanging(string oldValue, string newValue);
 		partial void OnDefaultDebtorBookAccountChanged(string oldValue, string newValue);
-		partial void OnDefaultCurrencyCodeChanging(string oldValue, string newValue);
-		partial void OnDefaultCurrencyCodeChanged(string oldValue, string newValue);
+		partial void OnDefaultCurrencyCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? newValue);
+		partial void OnDefaultCurrencyCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

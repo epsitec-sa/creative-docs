@@ -64,14 +64,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void InitializeDefaultValues()
 		{
-			if (string.IsNullOrWhiteSpace (this.Entity.TaxMode))
+			if (!this.Entity.TaxMode.HasValue)
 			{
-//-				this.Entity.TaxMode = "1";
+				this.Entity.TaxMode = BusinessLogic.Finance.TaxMode.None;
 			}
 
-			if (string.IsNullOrWhiteSpace (this.Entity.DefaultCurrencyCode))
+			if (!this.Entity.DefaultCurrencyCode.HasValue)
 			{
-				this.Entity.DefaultCurrencyCode = "CHF";
+				this.Entity.DefaultCurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
 			}
 		}
 
@@ -111,20 +111,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private IEnumerable<string[]> GetGetAllPossibleItemsDefaultCurrencyCodes()
+		private IEnumerable<EnumKeyValues<BusinessLogic.Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
 		{
-			//	possibleItems[0] doit obligatoirement être la 'key' !
-			var list = new List<string[]>
-			{
-				new string[] { "CHF", "Franc suisse" },
-				new string[] { "EUR", "Euro" },
-				new string[] { "USD", "Dollar américain" },
-				new string[] { "GBP", "Livre anglaise" },
-				new string[] { "JPY", "Yen japonais" },
-				new string[] { "CNY", "Yuan chinois" }
-			};
-			
-			return list;
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Eur, "EUR", "Euro");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Usd, "USD", "Dollar américain");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
 		}
 
 		private FormattedText GetUserTextDefaultCurrencyCode(string[] value)
