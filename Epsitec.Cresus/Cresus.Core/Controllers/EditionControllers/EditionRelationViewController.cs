@@ -87,37 +87,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField             (tile,  90, "Client depuis le",                Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150, "Numéro de TVA",                   Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,                  (x, v) => x.TaxMode = v), this.GetAllPossibleItemsTaxModes (), this.GetUserTextTaxMode);
+			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,                  (x, v) => x.TaxMode = v),                   BusinessLogic.Enumerations.GetAllPossibleItemsTaxModes (),  x => UIBuilder.FormatText (x.Values[0]));
 			builder.CreateTextField             (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.GetGetAllPossibleItemsDefaultCurrencyCodes (), this.GetUserTextDefaultCurrencyCode);
-		}
-
-		private IEnumerable<EnumKeyValues<BusinessLogic.Finance.TaxMode>> GetAllPossibleItemsTaxModes()
-		{
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.LiableForVat, "Assujetti à la TVA");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.ExemptFromVat, "Exonéré");
-		}
-
-		private FormattedText GetUserTextTaxMode(EnumKeyValues value)
-		{
-			return UIBuilder.FormatText (value.Values);  // par exemple "Assujetti à la TVA"
-		}
-
-
-		private IEnumerable<EnumKeyValues<BusinessLogic.Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
-		{
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Eur, "EUR", "Euro");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Usd, "USD", "Dollar américain");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
-		}
-
-		private FormattedText GetUserTextDefaultCurrencyCode(EnumKeyValues value)
-		{
-			return UIBuilder.FormatText (value.Values[0], "-", value.Values[1]);  // par exemple "CHF - Franc suisse"
+			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v),       BusinessLogic.Enumerations.GetGetAllPossibleItemsDefaultCurrencyCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 
