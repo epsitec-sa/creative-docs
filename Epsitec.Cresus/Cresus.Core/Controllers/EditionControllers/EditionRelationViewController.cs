@@ -80,16 +80,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField             (tile, 150, "Numéro de client",           Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
-			builder.CreateTextField             (tile, 150, "Numéro externe",             Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
-			builder.CreateTextField             (tile, 150, "Numéro interne",             Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
+			builder.CreateTextField             (tile, 150, "Numéro de client",                Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
+			builder.CreateTextField             (tile, 150, "Numéro externe",                  Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
+			builder.CreateTextField             (tile, 150, "Numéro interne",                  Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
 			builder.CreateMargin                (tile, horizontalSeparator: false);
-			builder.CreateTextField             (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
+			builder.CreateTextField             (tile,  90, "Client depuis le",                Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
-			builder.CreateTextField             (tile, 150, "Numéro de TVA",                   Marshaler.Create (this.Entity, x => x.VatNumber,           (x, v) => x.VatNumber = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,             (x, v) => x.TaxMode = v), this.GetAllPossibleItemsTaxModes (), this.GetUserTextTaxMode);
+			builder.CreateTextField             (tile, 150, "Numéro de TVA",                   Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
+			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,                  (x, v) => x.TaxMode = v), this.GetAllPossibleItemsTaxModes (), this.GetUserTextTaxMode);
 			builder.CreateTextField             (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode, (x, v) => x.DefaultCurrencyCode = v), this.GetGetAllPossibleItemsDefaultCurrencyCodes (), this.GetUserTextDefaultCurrencyCode);
+			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.GetGetAllPossibleItemsDefaultCurrencyCodes (), this.GetUserTextDefaultCurrencyCode);
 		}
 
 		private IEnumerable<string[]> GetAllPossibleItemsTaxModes()

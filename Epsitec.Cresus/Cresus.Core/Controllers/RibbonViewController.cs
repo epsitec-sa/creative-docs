@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Print));
 
 			new FrameBox ()
 			{
