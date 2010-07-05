@@ -92,6 +92,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
+    <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />

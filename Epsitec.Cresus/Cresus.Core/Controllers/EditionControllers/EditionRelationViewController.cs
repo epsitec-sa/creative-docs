@@ -64,9 +64,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void InitializeDefaultValues()
 		{
-			if (string.IsNullOrWhiteSpace (this.Entity.VatCalculationMode))
+			if (string.IsNullOrWhiteSpace (this.Entity.TaxMode))
 			{
-				this.Entity.VatCalculationMode = "TVA";
+//-				this.Entity.TaxMode = "1";
 			}
 
 			if (string.IsNullOrWhiteSpace (this.Entity.DefaultCurrencyCode))
@@ -86,50 +86,45 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin                (tile, horizontalSeparator: false);
 			builder.CreateTextField             (tile,  90, "Client depuis le",           Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
-			builder.CreateTextField             (tile, 150, "Numéro de TVA",              Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Mode de TVA",                Marshaler.Create (this.Entity, x => x.VatCalculationMode,       (x, v) => x.VatCalculationMode = v),  this.PossibleItemsVatCalculationMode,  this.GetUserTextVatCalculationMode);
-			builder.CreateTextField             (tile, 150, "Numéro de compte à débiter", Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie standard",           Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v), this.PossibleItemsDefaultCurrencyCode, this.GetUserTextDefaultCurrencyCode);
+			builder.CreateTextField             (tile, 150, "Numéro de TVA",                   Marshaler.Create (this.Entity, x => x.VatNumber,           (x, v) => x.VatNumber = v));
+			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,             (x, v) => x.TaxMode = v), this.GetAllPossibleItemsTaxModes (), this.GetUserTextTaxMode);
+			builder.CreateTextField             (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
+			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode, (x, v) => x.DefaultCurrencyCode = v), this.GetGetAllPossibleItemsDefaultCurrencyCodes (), this.GetUserTextDefaultCurrencyCode);
 		}
 
-		private IEnumerable<string[]> PossibleItemsVatCalculationMode
+		private IEnumerable<string[]> GetAllPossibleItemsTaxModes()
 		{
-			get
+			//	possibleItems[0] doit obligatoirement être la 'key' !
+			var list = new List<string[]> ()
 			{
-				//	possibleItems[0] doit obligatoirement être la 'key' !
-				var list = new List<string[]> ()
-				{
-					new string[] { "TVA",    "Taux TVA standard" },
-					new string[] { "TVARED", "Taux TVA réduit" },
-				};
-				
-				return list;
-			}
+				new string[] { "1", "Assujetti à la TVA" },
+				new string[] { "2", "Non-assujetti à la TVA" },
+				new string[] { "3", "Exonéré" },
+			};
+
+			return list;
 		}
 
-		private FormattedText GetUserTextVatCalculationMode(string[] value)
+		private FormattedText GetUserTextTaxMode(string[] value)
 		{
-			return UIBuilder.FormatText (value[1]);  // par exemple "Taux TVA standard"
+			return UIBuilder.FormatText (value[1]);  // par exemple "Assujetti à la TVA"
 		}
 
 
-		private IEnumerable<string[]> PossibleItemsDefaultCurrencyCode
+		private IEnumerable<string[]> GetGetAllPossibleItemsDefaultCurrencyCodes()
 		{
-			get
+			//	possibleItems[0] doit obligatoirement être la 'key' !
+			var list = new List<string[]>
 			{
-				//	possibleItems[0] doit obligatoirement être la 'key' !
-				var list = new List<string[]> ()
-				{
-					new string[] { "CHF", "Franc suisse" },
-					new string[] { "EUR", "Euro" },
-					new string[] { "USD", "Dollar américain" },
-					new string[] { "GBP", "Livre anglaise" },
-					new string[] { "JPY", "Yen japonais" },
-					new string[] { "CNY", "Yuan chinois" },
-				};
-
-				return list;
-			}
+				new string[] { "CHF", "Franc suisse" },
+				new string[] { "EUR", "Euro" },
+				new string[] { "USD", "Dollar américain" },
+				new string[] { "GBP", "Livre anglaise" },
+				new string[] { "JPY", "Yen japonais" },
+				new string[] { "CNY", "Yuan chinois" }
+			};
+			
+			return list;
 		}
 
 		private FormattedText GetUserTextDefaultCurrencyCode(string[] value)

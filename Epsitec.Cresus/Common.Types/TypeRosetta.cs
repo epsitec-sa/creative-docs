@@ -695,6 +695,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="caption">The caption used to store the type object definition.</param>
 		/// <param name="cache">If set to <c>true</c>, cache the resulting type object.</param>
+		/// <param name="captionResolver">The caption resolver (if any).</param>
 		/// <returns>
 		/// The type object or <c>null</c> if the type object cannot be created.
 		/// </returns>
