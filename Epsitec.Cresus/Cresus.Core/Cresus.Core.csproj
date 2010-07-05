@@ -162,6 +162,7 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
+    <Compile Include="Printers\RelationEntityPrinter.cs" />
     <Compile Include="Printers\NaturalPersonEntityPrinter.cs" />
     <Compile Include="Dialogs\PrintDialog.cs" />
     <Compile Include="Dialogs\PrinterManagerDialog.cs" />
