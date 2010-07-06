@@ -64,6 +64,30 @@ namespace Epsitec.Cresus.Core.Printers
 			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
 
 #if true
+			var table = new ObjectTable ();
+			table.ColumnsCount = 4;
+			table.RowsCount = 3;
+
+			table.SetText (0, 0, "Lundi");
+			table.SetText (1, 0, "Mardi");
+			table.SetText (2, 0, "Mercredi");
+			table.SetText (3, 0, "Jeudi");
+
+			table.SetText (0, 1, "Gauche");
+			table.SetText (1, 1, "");
+			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester...");
+			table.SetText (3, 1, "Droite");
+
+			table.SetText (0, 2, "Rouge");
+			table.SetText (1, 2, "Vert");
+			table.SetText (2, 2, "Bleu");
+			table.SetText (3, 2, "Jaune");
+
+			table.Bounds = new Rectangle(10, 100, 150, 150);
+			table.Paint (port);
+#endif
+
+#if false
 			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
 			Point pos;
 			int firstLine;
@@ -140,6 +164,16 @@ namespace Epsitec.Cresus.Core.Printers
 				pos.X += 50+1;
 			}
 #endif
+		}
+
+		private void PaintMailContacts(IPaintPort port, Rectangle bounds)
+		{
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is MailContactEntity)
+				{
+				}
+			}
 		}
 
 

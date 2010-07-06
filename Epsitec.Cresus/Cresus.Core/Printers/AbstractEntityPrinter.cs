@@ -87,59 +87,21 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize, ContentAlignment alignment = ContentAlignment.TopLeft, TextJustifMode justif = TextJustifMode.None, TextBreakMode breakMode = TextBreakMode.Hyphenate)
 		{
-			//	Dessine un texte dans un pavé à partir d'une ligne donnée. Retourne le numéro de la première ligne
-			//	pour le pavé suivant, ou -1 s'il n'y en a pas.
-			if (firstLine == -1)
+			var textBox = new ObjectTextBox ()
 			{
-				return -1;
-			}
-
-			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
-			//	de toutes les lignes.
-			var textLayout = new TextLayout ()
-			{
-				Alignment = alignment,
-				JustifMode = justif,
-				BreakMode = breakMode,
-				DefaultFont = font,
-				DefaultFontSize = fontSize,
-				LayoutSize = new Size (bounds.Width, double.MaxValue),
-				DefaultUnderlineWidth = 0.1,
-				DefaultWaveWidth = 0.75,
 				Text = text,
+				FirstLine = firstLine,
+				Bounds = bounds,
+				Font = font,
+				FontSize = fontSize,
+				Alignment = alignment,
+				Justif = justif,
+				BreakMode = breakMode,
 			};
 
-			int lineCount = textLayout.TotalLineCount;
-			double[] heights = new double[lineCount];
+			textBox.Paint (port);
 
-			for (int i = 0; i < lineCount; i++)
-			{
-				heights[i] = textLayout.GetLineHeight (i);
-			}
-
-			//	Calcule la distance verticale correspondant aux lignes à ne pas afficher.
-			double verticalOffset = 0;
-			for (int i = 0; i < firstLine; i++)
-			{
-				verticalOffset += heights[i];
-			}
-
-			Rectangle clipRect = bounds;  // clipping sur le rectangle demandé
-			bounds.Top += verticalOffset;  // remonte le début, qui sera clippé
-
-			//	Adapte le pavé avec les données réelles et dessine-le.
-			textLayout.LayoutSize = bounds.Size;
-			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
-
-			//	Calcul l'index de la première ligne du pavé suivant.
-			firstLine = textLayout.VisibleLineCount;
-
-			if (firstLine >= lineCount)
-			{
-				return -1;
-			}
-
-			return firstLine;
+			return textBox.FirstLine;
 		}
 		#endregion
 	}
