@@ -1882,7 +1882,6 @@ namespace Epsitec.Common.Widgets
 					if (block.WaveColor.IsEmpty)
 					{
 						graphics.Color = this.WaveColor;
-						;
 					}
 					else
 					{
@@ -1894,7 +1893,9 @@ namespace Epsitec.Common.Widgets
 				if (block.LineBreak)
 				{
 					if (!listEncounter)
+					{
 						listValue = 0.0;
+					}
 					listEncounter = false;
 
 					if (this.ShowLineBreak)
@@ -2446,7 +2447,21 @@ namespace Epsitec.Common.Widgets
 			
 			return Drawing.Point.Zero;
 		}
-		
+
+		public double GetLineHeight(int line)
+		{
+			this.UpdateLayout ();
+
+			if (line >= 0 && line < this.lines.Count)
+			{
+				JustifLine info = (JustifLine) this.lines[line];
+
+				return info.Height;
+			}
+
+			return 0;
+		}
+
 		public bool GetLineGeometry(int line, out Drawing.Point pos, out double ascender, out double descender, out double width)
 		{
 			this.UpdateLayout();

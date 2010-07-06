@@ -711,10 +711,13 @@ namespace Epsitec.Common.Printing
 					
 					for (int j = 0; j < texts.Length; j++)
 					{
-						double w = this.PaintText (x, y, texts[j], font, size) + spaceW;
+						this.PaintText (x, y, texts[j], font, size);
+
+						//	La largeur rendue par this.PaintText est fausse. Il faut la recalculer !
+						double w = font.GetTextAdvance (texts[j]) * size + spaceW;
 						
 						totalW += w;
-						x       += w;
+						x      += w;
 					}
 					
 					return totalW - spaceW;
