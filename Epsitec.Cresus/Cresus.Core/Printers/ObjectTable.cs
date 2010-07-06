@@ -148,6 +148,9 @@ namespace Epsitec.Cresus.Core.Printers
 					height = System.Math.Max (height, textBox.RequiredHeight);
 				}
 
+				height += this.CellMargins.Top;
+				height += this.CellMargins.Bottom;
+
 				y -= height;
 
 				double x = this.Bounds.Left;

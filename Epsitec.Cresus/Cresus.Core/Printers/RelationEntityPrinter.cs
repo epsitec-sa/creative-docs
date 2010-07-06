@@ -63,15 +63,15 @@ namespace Epsitec.Cresus.Core.Printers
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
 
-#if false
+#if true
 			var table = new ObjectTable ();
 			table.ColumnsCount = 4;
 			table.RowsCount = 3;
 
-			table.SetText (0, 0, "Lundi");
-			table.SetText (1, 0, "Mardi");
-			table.SetText (2, 0, "Mercredi");
-			table.SetText (3, 0, "Jeudi");
+			table.SetText (0, 0, "<b>Lundi</b>");
+			table.SetText (1, 0, "<b>Mardi</b>");
+			table.SetText (2, 0, "<b>Mercredi</b>");
+			table.SetText (3, 0, "<b>Jeudi</b>");
 
 			table.SetText (0, 1, "Gauche");
 			table.SetText (1, 1, "");
@@ -79,9 +79,11 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (3, 1, "Droite");
 
 			table.SetText (0, 2, "Rouge");
-			table.SetText (1, 2, "Vert");
-			table.SetText (2, 2, "Bleu");
-			table.SetText (3, 2, "Jaune");
+			table.SetText (1, 2, "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.");
+			table.SetText (2, 2, "Vert");
+			table.SetText (3, 2, "Bleu");
+
+			table.SetRelativeColumWidth (1, 1.5);
 
 			table.Bounds = new Rectangle(10, 100, 150, 150);
 			table.Paint (port);
@@ -92,7 +94,7 @@ namespace Epsitec.Cresus.Core.Printers
 			Point pos;
 			int firstLine;
 
-			pos = new Point (10, 200);
+			pos = new Point (10, 100);
 			firstLine = 0;
 			while (true)
 			{
@@ -110,7 +112,7 @@ namespace Epsitec.Cresus.Core.Printers
 				pos.X += 50+1;
 			}
 
-			pos = new Point (10, 200-25-2);
+			pos = new Point (10, 100-25-2);
 			firstLine = 0;
 			while (true)
 			{
@@ -128,7 +130,7 @@ namespace Epsitec.Cresus.Core.Printers
 				pos.X += 30+1;
 			}
 
-			pos = new Point (10, 200-25-2-25-2);
+			pos = new Point (10, 100-25-2-25-2);
 			firstLine = 0;
 			while (true)
 			{
@@ -146,7 +148,7 @@ namespace Epsitec.Cresus.Core.Printers
 				pos.X += 20+1;
 			}
 
-			pos = new Point (10, 200-25-2-25-2-25-2);
+			pos = new Point (10, 100-25-2-25-2-25-2);
 			firstLine = 0;
 			while (true)
 			{
