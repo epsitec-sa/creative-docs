@@ -42,7 +42,8 @@ namespace Epsitec.Common.Support
 			
 			RegexFactory.alphaName     = new Regex (@"^[a-zA-Z]+$", options);
 			RegexFactory.alphaNumName = new Regex (@"^[a-zA-Z_][a-zA-Z0-9_]*$", options);
-			RegexFactory.alphaDotName = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
+			RegexFactory.alphaNumDotName1 = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
+			RegexFactory.alphaNumDotName2 = new Regex (@"^[a-zA-Z0-9_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
 			RegexFactory.fileName      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
 			RegexFactory.pathName      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
 			RegexFactory.rFullName    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
@@ -211,7 +212,7 @@ namespace Epsitec.Common.Support
 			{
 				case PredefinedRegex.Alpha:					return RegexFactory.AlphaName;
 				case PredefinedRegex.AlphaNum:				return RegexFactory.AlphaNumName;
-				case PredefinedRegex.AlphaNumDot:			return RegexFactory.AlphaNumDotName;
+				case PredefinedRegex.AlphaNumDot:			return RegexFactory.AlphaNumDotName1;
 				case PredefinedRegex.FileName:				return RegexFactory.FileName;
 				case PredefinedRegex.PathName:				return RegexFactory.PathName;
 				case PredefinedRegex.ResourceFullName:		return RegexFactory.ResourceFullName;
@@ -242,11 +243,19 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static Regex						AlphaNumDotName
+		public static Regex						AlphaNumDotName1
 		{
 			get
 			{
-				return RegexFactory.alphaDotName;
+				return RegexFactory.alphaNumDotName1;
+			}
+		}
+
+		public static Regex AlphaNumDotName2
+		{
+			get
+			{
+				return RegexFactory.alphaNumDotName2;
 			}
 		}
 
@@ -327,7 +336,8 @@ namespace Epsitec.Common.Support
 		
 		private static Regex					alphaName;
 		private static Regex					alphaNumName;
-		private static Regex					alphaDotName;
+		private static Regex					alphaNumDotName1;
+		private static Regex					alphaNumDotName2;
 		private static Regex					fileName;
 		private static Regex					pathName;
 		private static Regex					rFullName;

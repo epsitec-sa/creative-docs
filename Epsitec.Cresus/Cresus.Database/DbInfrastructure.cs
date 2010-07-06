@@ -306,6 +306,15 @@ namespace Epsitec.Cresus.Database
 			return true;
 		}
 
+		public void DropDatabase()
+		{
+			IDbAbstraction abstraction = this.abstraction;
+			
+			this.Dispose ();
+			
+			abstraction.DropDatabase ();
+		}
+
 		/// <summary>
 		/// Attaches to an existing database. This is only possible if the
 		/// <c>DbInfrastructure</c> is not yet connected to any database.
