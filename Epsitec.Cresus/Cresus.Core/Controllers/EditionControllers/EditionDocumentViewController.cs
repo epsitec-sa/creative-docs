@@ -26,12 +26,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void InitializeDefaultValues()
 		{
-			if (this.Entity.CreationDate.Ticks == 0)
+			if (this.Entity.CreationDate.HasValue == false)
 			{
 				this.Entity.CreationDate = System.DateTime.Now;
 			}
 
-			if (this.Entity.LastModificationDate.Ticks == 0)
+			if (this.Entity.LastModificationDate.HasValue == false)
 			{
 				this.Entity.LastModificationDate = System.DateTime.Now;
 			}
