@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Printers
 			if (entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.Id, "\n", x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate).ToSimpleText ();
+				text = UIBuilder.FormatText ("N°", this.entity.Id, "<br/>", x.Title.Name, "<br/>", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "<br/>", x.BirthDate).ToString ();
 			}
 
 			if (entity.Person is LegalPersonEntity)
@@ -59,12 +59,11 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
-			text = text.Replace ("\n", "<br/>");
 			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), Font.DefaultFont, fontSize);
 
 #if true
 			Point pos = new Point (10, 200);
-			string t = "Ceci est un texte bidon mais assez long, pour permettre de tester le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/>Et voilà la suite et la fin de ce chef d'œuvre littéraire sur une nouvelle ligne.";
+			string t = "Ceci est un texte bidon mais assez long, pour permettre de tester le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/>Et voilà la suite et la fin de ce chef d'œuvre littéraire sur une toute nouvelle ligne.";
 			int firstLine = 0;
 
 			while (true)
@@ -81,6 +80,25 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				pos.X += 50+1;
+			}
+
+			pos = new Point (10, 200-25-2);
+			firstLine = 0;
+
+			while (true)
+			{
+				Rectangle b = new Rectangle (pos.X, pos.Y, 30, 25);
+				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, Font.DefaultFont, fontSize);
+
+				port.LineWidth = 0.1;
+				port.PaintOutline (Path.FromRectangle (b));
+
+				if (firstLine == -1)
+				{
+					break;
+				}
+
+				pos.X += 30+1;
 			}
 #endif
 		}
