@@ -79,6 +79,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		#region Painting tools
 		public static void PaintText(IPaintPort port, string text, Rectangle bounds, Font font, double fontSize)
 		{
 			PaintText (port, text, 0, bounds, font, fontSize);
@@ -86,11 +87,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize)
 		{
+			//	Dessine un texte à partir d'une ligne donnée. Retourne le numéro de la première ligne pour le
+			//	pavé suivant, ou -1 s'il n'y en a pas.
 			if (firstLine == -1)
 			{
 				return -1;
 			}
 
+			//	Crée un pavé de hauteur infinie, pour pouvoir calculer les index de tous les
+			//	débuts de ligne.
 			var textLayout = new TextLayout ()
 			{
 				Alignment = ContentAlignment.TopLeft,
@@ -110,10 +115,12 @@ namespace Epsitec.Cresus.Core.Printers
 				return -1;
 			}
 
+			//	Adapte le pavé avec les données réelles et dessine-le.
 			textLayout.Text = text.Substring (index[firstLine]);
 			textLayout.LayoutSize = bounds.Size;
 			textLayout.Paint (bounds.BottomLeft, port);
 
+			//	Calcul l'index de la première ligne suivante.
 			firstLine += textLayout.VisibleLineCount;
 
 			if (firstLine >= index.Length)
@@ -123,6 +130,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return firstLine;
 		}
+		#endregion
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter
