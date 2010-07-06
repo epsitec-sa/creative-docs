@@ -195,8 +195,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdateContent()
 		{
 			this.content.Clear ();
-			this.relativeColumnsWidth.Clear ();
-
 			for (int row = 0; row < this.rowsCount; row++)
 			{
 				List<ObjectTextBox> line = new List<ObjectTextBox> ();
@@ -208,7 +206,11 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				this.content.Add (line);
+			}
 
+			this.relativeColumnsWidth.Clear ();
+			for (int column = 0; column < this.columnsCount; column++)
+			{
 				this.relativeColumnsWidth.Add (1.0);
 			}
 		}

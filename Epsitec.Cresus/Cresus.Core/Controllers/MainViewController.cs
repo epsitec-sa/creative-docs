@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.BrowserSettingsMode = Controllers.BrowserSettingsMode.Compact;
 
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.Print ());
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Preview, () => this.Preview ());
 		}
 
 
@@ -216,6 +217,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void Print()
 		{
 			this.printEngine.Print (this.browserViewController.GetActiveEntity ());
+		}
+
+		private void Preview()
+		{
+			this.printEngine.Preview (this.browserViewController.GetActiveEntity ());
 		}
 
 		

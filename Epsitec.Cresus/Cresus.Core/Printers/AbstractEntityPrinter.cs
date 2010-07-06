@@ -89,13 +89,13 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var textBox = new ObjectTextBox ()
 			{
-				Text = text,
+				Text      = text,
 				FirstLine = firstLine,
-				Bounds = bounds,
-				Font = font,
-				FontSize = fontSize,
+				Bounds    = bounds,
+				Font      = font,
+				FontSize  = fontSize,
 				Alignment = alignment,
-				Justif = justif,
+				Justif    = justif,
 				BreakMode = breakMode,
 			};
 
