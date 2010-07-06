@@ -18,7 +18,7 @@
   </printer>
   <printer>
     <name>Adobe PDF</name>
-    <tray>Sélection automatique</tray>
+    <tray>Automatically Select</tray>
     <horizontal>true</horizontal>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
