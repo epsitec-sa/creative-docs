@@ -20,9 +20,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class AbstractEntityPrinter
+	public class AbstractEntityPrinter<T> where T : AbstractEntity
 	{
-		public AbstractEntityPrinter(AbstractEntity entity)
+		public AbstractEntityPrinter(T entity)
 		{
 			this.entity = entity;
 		}
@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+#if false
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
 		{
 			if (entity is RelationEntity)
@@ -62,8 +63,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return null;
 		}
+#endif
 
 
-		protected AbstractEntity entity;
+		protected T entity;
 	}
 }

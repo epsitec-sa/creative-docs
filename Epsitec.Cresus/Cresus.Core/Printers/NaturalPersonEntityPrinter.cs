@@ -20,9 +20,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class NaturalPersonEntityPrinter : AbstractEntityPrinter
+	public class NaturalPersonEntityPrinter<T> : AbstractEntityPrinter<NaturalPersonEntity>
 	{
-		public NaturalPersonEntityPrinter(AbstractEntity entity)
+		public NaturalPersonEntityPrinter(NaturalPersonEntity entity)
 			: base(entity)
 		{
 		}
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return "Personne physique";
+				return UIBuilder.FormatText ("Client", this.entity.Firstname, this.entity.Lastname).ToSimpleText ();
 			}
 		}
 
@@ -45,19 +45,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
-			var entity = this.Entity;
-			string text = entity.Firstname + " " + entity.Lastname;  // TODO: provisoire
+			string text = UIBuilder.FormatText (this.entity.Firstname, this.entity.Lastname).ToSimpleText ();  // TODO: provisoire
 
 			port.PaintText (10, 10, text, Font.DefaultFont, Font.DefaultFontSize);
-		}
-
-
-		private NaturalPersonEntity Entity
-		{
-			get
-			{
-				return this.entity as NaturalPersonEntity;
-			}
 		}
 	}
 }

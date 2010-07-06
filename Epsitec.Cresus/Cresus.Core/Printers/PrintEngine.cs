@@ -63,7 +63,8 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.First ());
+			var entityPrinter = new Printers.AbstractEntityPrinter<T> (entities.First ());
+			//?var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.First ());
 
 			if (entityPrinter == null)
 			{

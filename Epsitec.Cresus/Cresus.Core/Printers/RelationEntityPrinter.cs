@@ -20,9 +20,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class RelationEntityPrinter : AbstractEntityPrinter
+	public class RelationEntityPrinter<T> : AbstractEntityPrinter<RelationEntity>
 	{
-		public RelationEntityPrinter(AbstractEntity entity)
+		public RelationEntityPrinter(RelationEntity entity)
 			: base (entity)
 		{
 		}
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return string.Format("Client {0}", this.Entity.Id);
+				return UIBuilder.FormatText ("Client", this.entity.Id).ToSimpleText ();
 			}
 		}
 
@@ -45,19 +45,18 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
-			var entity = this.Entity;
 			string text = "?";
 
 			if (entity.Person is NaturalPersonEntity)
 			{
-				var x = entity.Person as NaturalPersonEntity;
+				var x = this.entity.Person as NaturalPersonEntity;
 
-				text = UIBuilder.FormatText ("N°", this.Entity.Id, "\n", x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate).ToSimpleText ();
+				text = UIBuilder.FormatText ("N°", this.entity.Id, "\n", x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate).ToSimpleText ();
 			}
 
 			if (entity.Person is LegalPersonEntity)
 			{
-				var x = entity.Person as LegalPersonEntity;
+				var x = this.entity.Person as LegalPersonEntity;
 
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
@@ -72,15 +71,6 @@ namespace Epsitec.Cresus.Core.Printers
 			textLayout.Text = text.Replace ("\n", "<br/>");
 
 			textLayout.Paint (new Point (10, pageHeight-10-150), port);
-		}
-
-
-		private RelationEntity Entity
-		{
-			get
-			{
-				return this.entity as RelationEntity;
-			}
 		}
 
 

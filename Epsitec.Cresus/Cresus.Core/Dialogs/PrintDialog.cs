@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintDialog : AbstractDialog
 	{
-		public PrintDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
+		public PrintDialog(Application application, Printers.AbstractEntityPrinter<T> entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
 		{
 			this.application = application;
 			this.entityPrinter = entityPrinter;
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		protected void PrintEntities(Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		protected void PrintEntities(Printers.AbstractEntityPrinter<T> entityPrinter, AbstractEntity entity)
 		{
 			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private readonly Application application;
 		private readonly IEnumerable<AbstractEntity> entities;
-		private readonly Printers.AbstractEntityPrinter entityPrinter;
+		private readonly Printers.AbstractEntityPrinter<T> entityPrinter;
 		private readonly List<Printer> printers;
 
 		private Button printButton;
