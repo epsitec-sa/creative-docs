@@ -274,6 +274,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = Color.FromBrightness (1),
 			};
 
+			bool groupVisibility = false;
+
+#if DEBUG
+			groupVisibility = true;
+#endif
+
 			var groupFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Right,
@@ -282,7 +288,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = Color.FromBrightness (1.0),
 				PreferredWidth = 200,
 				Padding = new Margins (0, 0, 1, 0),
-				Visibility = false,
+				Visibility = groupVisibility,
 			};
 
 			var splitter1 = new VSplitter ()
@@ -290,7 +296,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Right,
 				Parent = topFrame,
 				PreferredWidth = 3,
-				Visibility = false,
+				Visibility = groupVisibility,
 			};
 
 			//	Bottom half of the workspace : book with preview and output
