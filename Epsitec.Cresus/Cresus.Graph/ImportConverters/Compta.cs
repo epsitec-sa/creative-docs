@@ -101,8 +101,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
             {
 				if (this.compta == null)
 				{
-					var path = this.Meta["Path"];
-					this.compta = new Epsitec.CresusToolkit.CresusComptaDocument (path);
+					if (this.Meta.ContainsKey ("Path"))
+					{
+						var path = this.Meta["Path"];
+						this.compta = new Epsitec.CresusToolkit.CresusComptaDocument (path);
+					}
 				}
 
 				if (this.compta != null)
