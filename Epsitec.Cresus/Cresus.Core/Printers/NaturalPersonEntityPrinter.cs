@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
-			string text = UIBuilder.FormatText (this.entity.Firstname, this.entity.Lastname).ToSimpleText ();  // TODO: provisoire
+			string text = UIBuilder.FormatText (this.entity.Firstname, this.entity.Lastname).ToString ();  // TODO: provisoire
 
 			port.PaintText (10, 10, text, Font.DefaultFont, Font.DefaultFontSize);
 		}

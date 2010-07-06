@@ -62,8 +62,9 @@ namespace Epsitec.Cresus.Core.Printers
 			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), Font.DefaultFont, fontSize);
 
 #if true
-			Point pos = new Point (10, 200);
 			string t = "Ceci est un texte bidon mais assez long, pour permettre de tester le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/>Et voilà la suite et la fin de ce chef d'œuvre littéraire sur une toute nouvelle ligne.";
+
+			Point pos = new Point (10, 200);
 			int firstLine = 0;
 
 			while (true)
@@ -99,6 +100,44 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				pos.X += 30+1;
+			}
+
+			pos = new Point (10, 200-25-2-25-2);
+			firstLine = 0;
+
+			while (true)
+			{
+				Rectangle b = new Rectangle (pos.X, pos.Y, 20, 25);
+				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, Font.DefaultFont, fontSize);
+
+				port.LineWidth = 0.1;
+				port.PaintOutline (Path.FromRectangle (b));
+
+				if (firstLine == -1)
+				{
+					break;
+				}
+
+				pos.X += 20+1;
+			}
+
+			pos = new Point (10, 200-25-2-25-2-25-2);
+			firstLine = 0;
+
+			while (true)
+			{
+				Rectangle b = new Rectangle (pos.X, pos.Y, 50, 25);
+				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, Font.DefaultFont, fontSize, ContentAlignment.TopLeft, TextJustifMode.AllButLast, TextBreakMode.Hyphenate);
+
+				port.LineWidth = 0.1;
+				port.PaintOutline (Path.FromRectangle (b));
+
+				if (firstLine == -1)
+				{
+					break;
+				}
+
+				pos.X += 50+1;
 			}
 #endif
 		}

@@ -85,22 +85,22 @@ namespace Epsitec.Cresus.Core.Printers
 			PaintText (port, text, 0, bounds, font, fontSize);
 		}
 
-		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize)
+		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize, ContentAlignment alignment = ContentAlignment.TopLeft, TextJustifMode justif = TextJustifMode.None, TextBreakMode breakMode = TextBreakMode.Hyphenate)
 		{
-			//	Dessine un texte à partir d'une ligne donnée. Retourne le numéro de la première ligne pour le
-			//	pavé suivant, ou -1 s'il n'y en a pas.
+			//	Dessine un texte dans un pavé à partir d'une ligne donnée. Retourne le numéro de la première ligne
+			//	pour le pavé suivant, ou -1 s'il n'y en a pas.
 			if (firstLine == -1)
 			{
 				return -1;
 			}
 
-			//	Crée un pavé de hauteur infinie, pour pouvoir calculer les index de tous les
-			//	débuts de ligne.
+			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les index
+			//	de tous les débuts de ligne.
 			var textLayout = new TextLayout ()
 			{
-				Alignment = ContentAlignment.TopLeft,
-				JustifMode = TextJustifMode.None,
-				BreakMode = TextBreakMode.Hyphenate,
+				Alignment = alignment,
+				JustifMode = justif,
+				BreakMode = breakMode,
 				DefaultFont = font,
 				DefaultFontSize = fontSize,
 				LayoutSize = new Size (bounds.Width, double.MaxValue),
