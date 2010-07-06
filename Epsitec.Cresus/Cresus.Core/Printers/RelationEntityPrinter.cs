@@ -59,11 +59,12 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
-			Font font = Font.GetFont ("Arial", "Regular");
+			//?Font font = Font.GetFont ("Arial", "Regular");
+			Font font = Font.GetFont ("Times New Roman", "Regular");
 			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
 
 #if true
-			string t = "Ceci est un texte bidon mais <b>assez long</b>, pour permettre de tester le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la suite et la fin de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
+			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
 			Point pos;
 			int firstLine;
 

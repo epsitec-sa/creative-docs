@@ -104,7 +104,8 @@ namespace Epsitec.Cresus.Core.Printers
 				DefaultFont = font,
 				DefaultFontSize = fontSize,
 				LayoutSize = new Size (bounds.Width, double.MaxValue),
-				DefaultRichColor = RichColor.FromBrightness (0),
+				DefaultUnderlineWidth = 0.1,
+				DefaultWaveWidth = 0.75,
 				Text = text,
 			};
 
@@ -128,9 +129,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Adapte le pavé avec les données réelles et dessine-le.
 			textLayout.LayoutSize = bounds.Size;
-			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
 
-			//	Calcul l'index de la première ligne suivante.
+			//	Calcul l'index de la première ligne du pavé suivant.
 			firstLine = textLayout.VisibleLineCount;
 
 			if (firstLine >= lineCount)

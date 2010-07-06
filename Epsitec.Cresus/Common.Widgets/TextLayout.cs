@@ -46,6 +46,8 @@ namespace Epsitec.Common.Widgets
 		public TextLayout()
 			: this (Drawing.TextStyle.Default)
 		{
+			this.DefaultUnderlineWidth = 1.0;
+			this.DefaultWaveWidth = 0.75;
 		}
 
 		/// <summary>
@@ -226,6 +228,18 @@ namespace Epsitec.Common.Widgets
 					this.style.FontSize = value;
 				}
 			}
+		}
+
+		public double							DefaultUnderlineWidth
+		{
+			get;
+			set;
+		}
+
+		public double							DefaultWaveWidth
+		{
+			get;
+			set;
 		}
 
 		public Drawing.RichColor				DefaultRichColor
@@ -1869,7 +1883,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Point p1, p2;
 					this.UnderlinePoints (graphics, block, pos, out p1, out p2);
-					graphics.LineWidth = 1.0;
+					graphics.LineWidth = this.DefaultUnderlineWidth;
 					graphics.RichColor = color;
 					graphics.PaintOutline (Drawing.Path.FromLine (p1, p2));
 				}
@@ -1878,7 +1892,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Point p1, p2;
 					this.UnderlinePoints (graphics, block, pos, out p1, out p2);
-					graphics.LineWidth = 0.75;
+					graphics.LineWidth = this.DefaultWaveWidth;
 					if (block.WaveColor.IsEmpty)
 					{
 						graphics.Color = this.WaveColor;
