@@ -19,14 +19,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-
-	public class AbstractEntityPrinter<T> where T : AbstractEntity
+	public abstract class AbstractEntityPrinter
 	{
-		public AbstractEntityPrinter(T entity)
-		{
-			this.entity = entity;
-		}
-
 		public virtual string JobName
 		{
 			get
@@ -48,23 +42,42 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-#if false
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
 		{
-			if (entity is RelationEntity)
+			var type = AbstractEntityPrinter.FindType (entity.GetType ());
+
+			if (type == null)
 			{
-				return new RelationEntityPrinter (entity);
+				return null;
 			}
 
-			if (entity is NaturalPersonEntity)
-			{
-				return new NaturalPersonEntityPrinter (entity);
-			}
-
-			return null;
+			return System.Activator.CreateInstance (type, new object[] { entity }) as AbstractEntityPrinter;
 		}
-#endif
+		
+		private static System.Type FindType(System.Type entityType)
+		{
+			var baseTypeName = "AbstractEntityPrinter`1";
 
+			//	Find all concrete classes which use either the generic AbstractEntityPrinter base classes,
+			//	which match the entity type (usually, there should be exactly one such type).
+
+			var types = from type in typeof (AbstractEntityPrinter).Assembly.GetTypes ()
+						where type.IsClass && !type.IsAbstract
+						let baseType = type.BaseType
+						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
+						select type;
+
+			return types.FirstOrDefault ();
+		}
+	}
+
+	public class AbstractEntityPrinter<T> : AbstractEntityPrinter
+		where T : AbstractEntity
+	{
+		public AbstractEntityPrinter(T entity)
+		{
+			this.entity = entity;
+		}
 
 		protected T entity;
 	}
