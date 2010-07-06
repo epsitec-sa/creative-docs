@@ -108,22 +108,34 @@ namespace Epsitec.Cresus.Core.Printers
 				Text = text,
 			};
 
-			int[] index = textLayout.GetLinesIndex ();
+			int lineCount = textLayout.TotalLineCount;
+			double[] heights = new double[lineCount];
 
-			if (firstLine >= index.Length)
+			for (int i = 0; i < lineCount; i++)
 			{
-				return -1;
+				Point pos;
+				double ascender, descender, width;
+				textLayout.GetLineGeometry (i, out pos, out ascender, out descender, out width);
+				heights[i] = ascender - descender;
 			}
 
+			double verticalOffset = 0;
+			for (int i = 0; i < firstLine; i++)
+			{
+				verticalOffset += heights[i];
+			}
+
+			Rectangle clipRect = bounds;
+			bounds.Top += verticalOffset;
+
 			//	Adapte le pavé avec les données réelles et dessine-le.
-			textLayout.Text = text.Substring (index[firstLine]);
 			textLayout.LayoutSize = bounds.Size;
-			textLayout.Paint (bounds.BottomLeft, port);
+			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.FromBrightness (0), GlyphPaintStyle.Normal);
 
 			//	Calcul l'index de la première ligne suivante.
-			firstLine += textLayout.VisibleLineCount;
+			firstLine = textLayout.VisibleLineCount;
 
-			if (firstLine >= index.Length)
+			if (firstLine >= lineCount)
 			{
 				return -1;
 			}

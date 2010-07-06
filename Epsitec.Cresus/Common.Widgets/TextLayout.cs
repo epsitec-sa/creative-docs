@@ -2471,27 +2471,6 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-
-		public int[] GetLinesIndex()
-		{
-			//	Retourne les index dans le texte de tous les débuts de lignes.
-			this.UpdateLayout ();
-
-			int[] list = new int[this.lines.Count];
-
-			for (int i=0; i<this.lines.Count; i++)
-			{
-				var line = this.lines[i];
-
-				int n = line.FirstBlock;
-
-				list[i] = this.FindOffsetFromIndex (this.blocks[n].BeginIndex);
-			}
-
-			return list;
-		}
-		
-		
 		
 		public bool FindTextCursor(TextLayoutContext context, out Drawing.Point p1, out Drawing.Point p2)
 		{
