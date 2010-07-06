@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Core.Printers
 				return -1;
 			}
 
-			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les index
-			//	de tous les débuts de ligne.
+			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
+			//	de toutes les lignes.
 			var textLayout = new TextLayout ()
 			{
 				Alignment = alignment,
@@ -113,20 +113,18 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int i = 0; i < lineCount; i++)
 			{
-				Point pos;
-				double ascender, descender, width;
-				textLayout.GetLineGeometry (i, out pos, out ascender, out descender, out width);
-				heights[i] = ascender - descender;
+				heights[i] = textLayout.GetLineHeight (i);
 			}
 
+			//	Calcule la distance verticale correspondant aux lignes à ne pas afficher.
 			double verticalOffset = 0;
 			for (int i = 0; i < firstLine; i++)
 			{
 				verticalOffset += heights[i];
 			}
 
-			Rectangle clipRect = bounds;
-			bounds.Top += verticalOffset;
+			Rectangle clipRect = bounds;  // clipping sur le rectangle demandé
+			bounds.Top += verticalOffset;  // remonte le début, qui sera clippé
 
 			//	Adapte le pavé avec les données réelles et dessine-le.
 			textLayout.LayoutSize = bounds.Size;
