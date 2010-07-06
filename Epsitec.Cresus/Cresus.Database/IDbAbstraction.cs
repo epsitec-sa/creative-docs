@@ -123,5 +123,8 @@ namespace Epsitec.Cresus.Database
 		/// Releases the connection.
 		/// </summary>
 		void ReleaseConnection();
+
+		void DropDatabase();
+
 	}
 }

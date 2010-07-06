@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Implementation;
 using Epsitec.Common.IO;
 
 namespace Epsitec.Cresus.Core
@@ -35,29 +36,61 @@ namespace Epsitec.Cresus.Core
 		/// Returns a clean database infrastructure instance.
 		/// </summary>
 		/// <returns>The infrastructure.</returns>
-		public static DbInfrastructure CreateDbInfrastructure()
+		public static DbInfrastructure CreateAndConnectToDatabase()
+		{
+			TestHelper.DeleteDatabase ();
+			TestHelper.CreateDatabase ();
+			return TestHelper.ConnectToDatabase ();
+		}
+
+
+		public static void CreateDatabase()
+		{
+			TestHelper.DisposeInfrastructure ();
+
+			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			{
+				DbAccess access = TestHelper.CreateDbAccess ();
+				infrastructure.CreateDatabase (access);
+			}
+		}
+
+
+		public static DbInfrastructure ConnectToDatabase()
+		{
+			TestHelper.DisposeInfrastructure ();
+			
+			DbAccess dbAccess = TestHelper.CreateDbAccess ();
+
+			TestHelper.infrastructure = new DbInfrastructure ();
+			TestHelper.infrastructure.AttachToDatabase (dbAccess);
+
+			return TestHelper.infrastructure;
+		}
+
+		public static void DisposeInfrastructure()
 		{
 			if (TestHelper.infrastructure != null)
 			{
 				TestHelper.infrastructure.Dispose ();
 				TestHelper.infrastructure = null;
-				
+
 				System.Threading.Thread.Sleep (100);
 			}
+		}
 
-			const string databaseName = "CORETEST";
-            
-			TestHelper.DeleteDatabase (databaseName);
 
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				infrastructure.CreateDatabase (DbInfrastructure.CreateDatabaseAccess (databaseName));
-			}
+		public static DbAccess CreateDbAccess()
+		{
+			// local machine
+			string dbHost = "localhost";
 
-			TestHelper.infrastructure = new DbInfrastructure ();
-			TestHelper.infrastructure.AttachToDatabase (DbInfrastructure.CreateDatabaseAccess (databaseName));
+			// Marc's virtual machine
+			//string dbHost = "192.168.1.50";
 
-			return TestHelper.infrastructure;
+			string dbName = "CORETEST";
+			
+			return new DbAccess ("Firebird", dbName, dbHost, "sysdba", "masterkey", false);
 		}
 
 		
@@ -65,32 +98,16 @@ namespace Epsitec.Cresus.Core
 		/// Deletes the database files on disk. This works for Firebird.
 		/// </summary>
 		/// <param name="name">The database name.</param>
-		public static void DeleteDatabase(string name)
+		public static void DeleteDatabase()
 		{
-			DbAccess access = DbInfrastructure.CreateDatabaseAccess (name);
-			string path = Epsitec.Common.Types.Collection.GetFirst (DbFactory.GetDatabaseFilePaths (access));
+			TestHelper.DisposeInfrastructure ();
 
-			try
+			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-				}
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
-				System.Threading.Thread.Sleep (5000);
+				DbAccess access = TestHelper.CreateDbAccess ();
 
-				try
-				{
-					System.IO.File.Delete (path);
-					System.Console.Out.WriteLine ("Finally succeeded");
-				}
-				catch
-				{
-					System.Console.Out.WriteLine ("Failed again, giving up");
-				}
+				infrastructure.AttachToDatabase (access);
+				infrastructure.DropDatabase ();
 			}
 		}
 
@@ -116,8 +133,8 @@ namespace Epsitec.Cresus.Core
 
 		private static string GetStartTestString(string name)
 		{
-			return "==========================================================================================================================================================="
-				 + "[" + System.DateTime.Now + "]\t Starting test: " + name
+			return "===========================================================================================================================================================\n"
+				 + "[" + System.DateTime.Now + "]\t Starting test: " + name + "\n"
 				 + "===========================================================================================================================================================";
 		}
 

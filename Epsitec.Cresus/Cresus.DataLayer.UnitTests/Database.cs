@@ -30,14 +30,13 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static void CreateAndConnectToDatabase()
 		{
-			Database.dbInfrastructure = TestHelper.CreateDbInfrastructure ();
+			Database.dbInfrastructure = TestHelper.CreateAndConnectToDatabase ();
 		}
 
 
 		public static void ConnectToDatabase()
 		{
-			Database.dbInfrastructure = new DbInfrastructure ();
-			Database.dbInfrastructure.AttachToDatabase (DbInfrastructure.CreateDatabaseAccess ("CORETEST"));
+			Database.dbInfrastructure = TestHelper.ConnectToDatabase ();
 		}
 
 

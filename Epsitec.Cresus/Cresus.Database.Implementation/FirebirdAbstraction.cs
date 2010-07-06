@@ -185,6 +185,21 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 
+		public void DropDatabase()
+		{
+			string path = this.GetDbFilePath ();
+			string connection = FirebirdAbstraction.MakeConnectionString (this.dbAccess, path, this.serverType);
+
+			// HACK This waits a little bit of time, hoping that at the end, there is no transaction
+			// or lock around and that the drop can be done. It would be nice to do this in a proper
+			// way.
+			System.Threading.Thread.Sleep (5000);
+
+			FbConnection.DropDatabase (connection);
+		}
+
+
+
 		internal string GetDbFilePath()
 		{
 			return FirebirdAbstraction.MakeDbFilePath (this.dbAccess, this.engineType);
@@ -327,7 +342,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("Name is to long (length={0})", name));
 			}
 			
-			if (RegexFactory.AlphaNumName.IsMatch (name) == false)
+			if (RegexFactory.AlphaNumDotName2.IsMatch (name) == false)
 			{
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
 			}
