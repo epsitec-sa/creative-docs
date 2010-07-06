@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public virtual Margins PageMargins
+		{
+			get
+			{
+				return new Margins (10);
+			}
+		}
+
 		public virtual void Print(IPaintPort port, Rectangle bounds)
 		{
 		}
@@ -68,6 +76,52 @@ namespace Epsitec.Cresus.Core.Printers
 						select type;
 
 			return types.FirstOrDefault ();
+		}
+
+
+		public static void PaintText(IPaintPort port, string text, Rectangle bounds, Font font, double fontSize)
+		{
+			PaintText (port, text, 0, bounds, font, fontSize);
+		}
+
+		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize)
+		{
+			if (firstLine == -1)
+			{
+				return -1;
+			}
+
+			var textLayout = new TextLayout ()
+			{
+				Alignment = ContentAlignment.TopLeft,
+				JustifMode = TextJustifMode.None,
+				BreakMode = TextBreakMode.Hyphenate,
+				DefaultFont = font,
+				DefaultFontSize = fontSize,
+				LayoutSize = new Size (bounds.Width, double.MaxValue),
+				DefaultRichColor = RichColor.FromBrightness (0),
+				Text = text,
+			};
+
+			int[] index = textLayout.GetLinesIndex ();
+
+			if (firstLine >= index.Length)
+			{
+				return -1;
+			}
+
+			textLayout.Text = text.Substring (index[firstLine]);
+			textLayout.LayoutSize = bounds.Size;
+			textLayout.Paint (bounds.BottomLeft, port);
+
+			firstLine += textLayout.VisibleLineCount;
+
+			if (firstLine >= index.Length)
+			{
+				return -1;
+			}
+
+			return firstLine;
 		}
 	}
 

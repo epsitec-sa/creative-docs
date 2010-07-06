@@ -50,27 +50,39 @@ namespace Epsitec.Cresus.Core.Printers
 			if (entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-
 				text = UIBuilder.FormatText ("N°", this.entity.Id, "\n", x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate).ToSimpleText ();
 			}
 
 			if (entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
-			var textLayout = new TextLayout ();
-			textLayout.JustifMode = TextJustifMode.AllButLast;
-			textLayout.BreakMode = TextBreakMode.Ellipsis;
-			textLayout.DefaultFont = Font.DefaultFont;
-			textLayout.DefaultFontSize = fontSize;
-			textLayout.LayoutSize = new Size (150, 150);
-			textLayout.DefaultRichColor = RichColor.FromBrightness (0);
-			textLayout.Text = text.Replace ("\n", "<br/>");
+			text = text.Replace ("\n", "<br/>");
+			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), Font.DefaultFont, fontSize);
 
-			textLayout.Paint (new Point (10, pageHeight-10-150), port);
+#if true
+			Point pos = new Point (10, 200);
+			string t = "Ceci est un texte bidon mais assez long, pour permettre de tester le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/>Et voilà la suite et la fin de ce chef d'œuvre littéraire sur une nouvelle ligne.";
+			int firstLine = 0;
+
+			while (true)
+			{
+				Rectangle b = new Rectangle (pos.X, pos.Y, 50, 25);
+				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, Font.DefaultFont, fontSize);
+
+				port.LineWidth = 0.1;
+				port.PaintOutline (Path.FromRectangle (b));
+
+				if (firstLine == -1)
+				{
+					break;
+				}
+
+				pos.X += 50+1;
+			}
+#endif
 		}
 
 
