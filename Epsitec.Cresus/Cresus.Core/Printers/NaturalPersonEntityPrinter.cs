@@ -20,7 +20,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	public class NaturalPersonEntityPrinter<T> : AbstractEntityPrinter<NaturalPersonEntity>
+	public class NaturalPersonEntityPrinter : AbstractEntityPrinter<NaturalPersonEntity>
 	{
 		public NaturalPersonEntityPrinter(NaturalPersonEntity entity)
 			: base(entity)
