@@ -29,10 +29,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 	{
 		public PrintDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
 		{
-			this.application = application;
+			this.application   = application;
 			this.entityPrinter = entityPrinter;
-			this.entities = entities;
-			this.printers = printers;
+			this.entities      = entities;
+			this.printers      = printers;
 		}
 
 

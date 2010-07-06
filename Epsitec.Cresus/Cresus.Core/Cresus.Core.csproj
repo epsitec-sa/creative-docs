@@ -163,6 +163,7 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
+    <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractObject.cs" />
     <Compile Include="Printers\ObjectTable.cs" />
@@ -222,6 +223,7 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\PreviewEntity.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
@@ -246,6 +248,7 @@
   <ItemGroup>
     <Content Include="app.ico" />
     <EmbeddedResource Include="Images\Settings.icon" />
+    <EmbeddedResource Include="Images\Preview.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

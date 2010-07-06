@@ -63,8 +63,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			//?var entityPrinter = new Printers.AbstractEntityPrinter<T> (entities.First ());
-			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.First ());
+			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
 
 			if (entityPrinter == null)
 			{
@@ -72,8 +71,41 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
-			printDialog.OpenDialog ();
+			var dialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
+			dialog.OpenDialog ();
+		}
+
+
+		public void Preview(AbstractEntity entity)
+		{
+			var entities = new List<AbstractEntity> ();
+
+			if (entity != null)
+			{
+				entities.Add (entity);
+			}
+
+			this.Preview (entities);
+		}
+
+		public void Preview(IEnumerable<AbstractEntity> entities)
+		{
+			if (entities == null || entities.Count () == 0)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à montrer.").OpenDialog ();
+				return;
+			}
+
+			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
+
+			if (entityPrinter == null)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Ce type de donnée ne peut pas être montré.").OpenDialog ();
+				return;
+			}
+
+			var dialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
+			dialog.OpenDialog ();
 		}
 	}
 }
