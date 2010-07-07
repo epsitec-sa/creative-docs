@@ -167,8 +167,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Core.PerformanceTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.UnitTests", "Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj", "{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
 	ProjectSection(SolutionItems) = preProject
 		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
@@ -1053,18 +1051,6 @@ Global
 		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|Win32.ActiveCfg = Release|Any CPU
 		{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}.Release|x86.ActiveCfg = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|Win32.ActiveCfg = Release|Any CPU
-		{4FE8CC45-F4BB-4EE0-94E3-7AEB82EC2099}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
