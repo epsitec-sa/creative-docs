@@ -46,10 +46,11 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
 			double top =  this.PageSize.Height-this.PageMargins.Top;
-			top = this.PaintSummary  (port,                            top) - 10.0;
-			top = this.PaintContacts (port, this.PaintMailContacts,    top) -  5.0;
-			top = this.PaintContacts (port, this.PaintTelecomContacts, top) -  5.0;
-			top = this.PaintContacts (port, this.PaintUriContacts,     top) -  5.0;
+			top = this.PaintTitle    (port,                            top) - 5.0;
+			top = this.PaintSummary  (port,                            top) - 5.0;
+			top = this.PaintContacts (port, this.PaintMailContacts,    top) - 5.0;
+			top = this.PaintContacts (port, this.PaintTelecomContacts, top) - 5.0;
+			top = this.PaintContacts (port, this.PaintUriContacts,     top) - 5.0;
 
 #if false
 			var t = new ObjectTextBox ();
@@ -169,21 +170,50 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private double PaintTitle(IPaintPort port, double top)
+		{
+			//	Dessine le titre et retourne la hauteur utilisée.
+			string text = "?";
+
+			if (this.entity.Person is NaturalPersonEntity)
+			{
+				var x = this.entity.Person as NaturalPersonEntity;
+				text = UIBuilder.FormatText ("N°", this.entity.Id, "-", x.Firstname, x.Lastname).ToString ();
+			}
+
+			if (this.entity.Person is LegalPersonEntity)
+			{
+				var x = this.entity.Person as LegalPersonEntity;
+				text = UIBuilder.FormatText ("N°", this.entity.Id, "-", x.Name).ToString ();
+			}
+
+			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
+			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
+
+			var textBox = new ObjectTextBox ();
+			textBox.Text = string.Concat("<b>", text, "</b>");
+			textBox.FontSize = 6.0;
+			textBox.Bounds = bounds;
+			textBox.Paint (port);
+
+			return top - textBox.RequiredHeight;
+		}
+
 		private double PaintSummary(IPaintPort port, double top)
 		{
 			//	Dessine le résumé et retourne la hauteur utilisée.
 			string text = "?";
 
-			if (entity.Person is NaturalPersonEntity)
+			if (this.entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.Id, "<br/>", x.Title.Name, "<br/>", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "<br/>", x.BirthDate).ToString ();
+				text = UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate).ToString ();
 			}
 
-			if (entity.Person is LegalPersonEntity)
+			if (this.entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
+				text = UIBuilder.FormatText (x.Name).ToString ();
 			}
 
 			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
