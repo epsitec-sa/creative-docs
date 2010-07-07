@@ -95,11 +95,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUISalesRepresentative(UIBuilder builder)
 		{
-			var textField = builder.CreateAutoCompleteTextField ("Représentant (personne physique)",
+			var textField = builder.CreateAutoCompleteTextField ("Représentant (personne)",
 				new SelectionController<NaturalPersonEntity>
 				{
-					ValueGetter         = () => this.Entity.SalesRepresentative,
-					ValueSetter         = x => this.Entity.SalesRepresentative = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.ActiveSalesRepresentative,
+					ValueSetter         = x => this.Entity.ActiveSalesRepresentative = x.WrapNullEntity (),
 					ReferenceController = this.GetSalesRepresentativeReferenceController (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetNaturalPersons (),
 
@@ -110,11 +110,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIOwner(UIBuilder builder)
 		{
-			var textField = builder.CreateAutoCompleteTextField ("Propriétaire (personne physique)",
+			var textField = builder.CreateAutoCompleteTextField ("Responsable du dossier (personne)",
 				new SelectionController<NaturalPersonEntity>
 				{
-					ValueGetter         = () => this.Entity.Owner,
-					ValueSetter         = x => this.Entity.Owner = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.ActiveOwner,
+					ValueSetter         = x => this.Entity.ActiveOwner = x.WrapNullEntity (),
 					ReferenceController = this.GetOwnerReferenceController (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetNaturalPersons (),
 
@@ -127,8 +127,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return ReferenceController.Create (
 				this.EntityGetter,
-				entity => entity.SalesRepresentative,
-				entity => CoreProgram.Application.Data.GetCustomers (entity.SalesRepresentative).FirstOrDefault (),
+				entity => entity.ActiveSalesRepresentative,
+				entity => CoreProgram.Application.Data.GetCustomers (entity.ActiveSalesRepresentative).FirstOrDefault (),
 				creator: this.CreateNewNaturalPerson);
 		}
 
@@ -136,8 +136,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return ReferenceController.Create (
 				this.EntityGetter,
-				entity => entity.Owner,
-				entity => CoreProgram.Application.Data.GetCustomers (entity.Owner).FirstOrDefault (),
+				entity => entity.ActiveOwner,
+				entity => CoreProgram.Application.Data.GetCustomers (entity.ActiveOwner).FirstOrDefault (),
 				creator: this.CreateNewNaturalPerson);
 		}
 

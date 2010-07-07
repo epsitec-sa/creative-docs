@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0A3C
+				public static readonly global::Epsitec.Common.Widgets.Command Preview = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 387));
 				//	designer:cap/L0K
 				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/L0A13
@@ -73,6 +75,8 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Edition
 			{
+				//	designer:cap/L0A3C
+				public const long Preview = 0x150000A000183L;
 				//	designer:cap/L0K
 				public const long Print = 0x1500014000000L;
 				//	designer:cap/L0A13
