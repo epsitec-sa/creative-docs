@@ -142,7 +142,11 @@ namespace Epsitec.Cresus.Core.Printers
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					ObjectTextBox textBox = this.GetTextBox (column, row);
+
 					double width = this.GetAbsoluteColumnWidth (column);
+					width -= this.CellMargins.Left;
+					width -= this.CellMargins.Right;
+
 					textBox.Bounds = new Rectangle (0, 0, width, 0);
 
 					height = System.Math.Max (height, textBox.RequiredHeight);
@@ -158,7 +162,11 @@ namespace Epsitec.Cresus.Core.Printers
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					ObjectTextBox textBox = this.GetTextBox (column, row);
+
 					double width = this.GetAbsoluteColumnWidth (column);
+					width -= this.CellMargins.Left;
+					width -= this.CellMargins.Right;
+
 					Rectangle bounds = new Rectangle (x, y, width, height);
 
 					Rectangle textBounds = bounds;
