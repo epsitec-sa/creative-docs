@@ -46,6 +46,13 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
+		public virtual double RequiredHeight
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
 		public virtual void Paint(IPaintPort port)
 		{

@@ -60,22 +60,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public double RequiredHeight
+		public override double RequiredHeight
 		{
 			get
 			{
-				var textLayout = new TextLayout ()
-				{
-					Alignment             = this.Alignment,
-					JustifMode            = this.Justif,
-					BreakMode             = this.BreakMode,
-					DefaultFont           = this.Font,
-					DefaultFontSize       = this.FontSize,
-					LayoutSize            = new Size (this.Bounds.Width, double.MaxValue),
-					DefaultUnderlineWidth = 0.1,
-					DefaultWaveWidth      = 0.75,
-					Text                  = this.Text,
-				};
+				var textLayout = this.CreateTextLayout ();
 
 				double height = 0;
 
@@ -101,18 +90,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
 			//	de toutes les lignes.
-			var textLayout = new TextLayout ()
-			{
-				Alignment             = this.Alignment,
-				JustifMode            = this.Justif,
-				BreakMode             = this.BreakMode,
-				DefaultFont           = this.Font,
-				DefaultFontSize       = this.FontSize,
-				LayoutSize            = new Size (this.Bounds.Width, double.MaxValue),
-				DefaultUnderlineWidth = 0.1,
-				DefaultWaveWidth      = 0.75,
-				Text                  = this.Text,
-			};
+			var textLayout = this.CreateTextLayout ();
 
 			int lineCount = textLayout.TotalLineCount;
 
@@ -152,6 +130,24 @@ namespace Epsitec.Cresus.Core.Printers
 				this.FirstLine = -1;
 				return;
 			}
+		}
+
+		private TextLayout CreateTextLayout()
+		{
+			var textLayout = new TextLayout ()
+			{
+				Alignment             = this.Alignment,
+				JustifMode            = this.Justif,
+				BreakMode             = this.BreakMode,
+				DefaultFont           = this.Font,
+				DefaultFontSize       = this.FontSize,
+				LayoutSize            = new Size (this.Bounds.Width, double.MaxValue),
+				DefaultUnderlineWidth = 0.1,
+				DefaultWaveWidth      = 0.75,
+				Text                  = this.Text,
+			};
+
+			return textLayout;
 		}
 	}
 }
