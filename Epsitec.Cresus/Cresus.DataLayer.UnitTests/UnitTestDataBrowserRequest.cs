@@ -586,6 +586,86 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		[TestMethod]
+		public void RequestedEntityRequest1()
+		{
+			TestHelper.PrintStartTest ("Requested entity request 1");
+			
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Length == 2);
+
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void RequestedEntityRequest2()
+		{
+			TestHelper.PrintStartTest ("Requested entity request 2");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example.Contacts[0],
+				};
+
+				UriContactEntity[] contacts = dataBrowser.GetByRequest<UriContactEntity> (request).ToArray ();
+
+				Assert.IsTrue (contacts.Length == 3);
+
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+			}
+		}
+
+
+		[TestMethod]
+		public void RequestedEntityRequest3()
+		{
+			TestHelper.PrintStartTest ("Requested entity request 3");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = (example.Contacts[0] as UriContactEntity).UriScheme,
+				};
+
+				UriSchemeEntity[] uriSchemes = dataBrowser.GetByRequest<UriSchemeEntity> (request).ToArray ();
+
+				Assert.IsTrue (uriSchemes.Length == 1);
+
+				Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+			}
+		}
+
+
 		private bool IsExceptionThrown(System.Action action)
 		{
 			try

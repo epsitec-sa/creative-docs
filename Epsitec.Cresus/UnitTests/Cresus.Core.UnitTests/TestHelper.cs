@@ -88,6 +88,9 @@ namespace Epsitec.Cresus.Core
 			// Marc's virtual machine
 			//string dbHost = "192.168.1.50";
 
+			// Mathieu's machine
+			//string dbHost = "DevBox2-PC";
+
 			string dbName = "CORETEST";
 			
 			return new DbAccess ("Firebird", dbName, dbHost, "sysdba", "masterkey", false);
