@@ -487,7 +487,7 @@ namespace Epsitec.Cresus.Core
 			var accountingDef = this.DataContext.CreateEmptyEntity<ArticleAccountingDefinitionEntity> ();
 
 			accountingDef.BeginDate = new System.DateTime (2010, 1, 1);
-			accountingDef.EndDate   = null;
+			accountingDef.EndDate   = new System.DateTime (2099, 1, 1);
 			accountingDef.SellingBookAccount = "3200";
 			accountingDef.SellingDiscountBookAccount = "3900";
 			accountingDef.PurchaseBookAccount = "4200";
