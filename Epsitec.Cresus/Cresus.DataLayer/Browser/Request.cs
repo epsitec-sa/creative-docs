@@ -23,28 +23,21 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			this.RootEntity = null;
 			this.RequestedEntity = null;
 
-			this.IsRootEntityReference = false;
 			this.LoadFromDatabase = true;
 		}
 
 
 		public AbstractEntity RootEntity
 		{
-			internal get
-			{
-				AbstractEntity entity = this.rootEntity ?? this.requestedEntity;
+			internal get;
+			set;
+		}
 
-				if (entity == null)
-				{
-					throw new System.NullReferenceException ("RootEntity is null");
-				}
 
-				return entity;
-			}
-			set
-			{
-				this.rootEntity = value;
-			}
+		public AbstractEntity RootEntityReference
+		{
+			internal get;
+			set;
 		}
 
 
@@ -52,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		{
 			internal get
 			{
-				AbstractEntity entity = this.requestedEntity ?? this.rootEntity;
+				AbstractEntity entity = this.requestedEntity ?? this.RootEntity;
 
 				if (entity == null)
 				{
@@ -65,13 +58,6 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			{
 				this.requestedEntity = value;
 			}
-		}
-
-
-		public bool IsRootEntityReference
-		{
-			internal get;
-			set;
 		}
 
 
@@ -141,9 +127,6 @@ namespace Epsitec.Cresus.DataLayer.Browser
 
 
 		private readonly Dictionary<AbstractEntity, List<Expression>> localConstraints;
-
-
-		private AbstractEntity rootEntity;
 
 
 		private AbstractEntity requestedEntity;

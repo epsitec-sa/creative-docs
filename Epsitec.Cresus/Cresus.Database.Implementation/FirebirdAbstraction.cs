@@ -341,11 +341,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("Name is to long (length={0})", name));
 			}
-			
-			if (RegexFactory.AlphaNumDotName2.IsMatch (name) == false)
-			{
-				throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
-			}
+
+			// TODO This check is too restrictive, it should be relaxed. In the meantime, I disabled
+			// it.
+			//if (RegexFactory.AlphaNumDotName2.IsMatch (name) == false)
+			//{
+			//    throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
+			//}
 		}
 
 		#region IDisposable Members

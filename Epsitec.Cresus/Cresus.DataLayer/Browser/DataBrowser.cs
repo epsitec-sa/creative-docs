@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 
@@ -70,7 +71,6 @@ namespace Epsitec.Cresus.DataLayer.Browser
 				RootEntity = example,
 				RequestedEntity = example,
 				LoadFromDatabase = true,
-				IsRootEntityReference = false,
 			};
 
 			return this.GetByRequest<T> (request);
@@ -81,6 +81,16 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		public IEnumerable<T> GetByRequest<T>(Request request)
 			where T : AbstractEntity
 		{
+			if (request.RootEntity == null)
+			{
+				throw new System.Exception ("No root entity in request.");
+			}
+
+			if (request.RequestedEntity == null)
+			{
+				throw new System.Exception ("No requested entity in request.");
+			}
+			
 			foreach (EntityDataContainer entityData in this.GetEntitiesData (request))
 			{
 				T entity = this.DataContext.ResolveEntity (entityData, request.LoadFromDatabase) as T;
@@ -175,7 +185,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		{
 			Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> valueData = new Dictionary<DbKey, System.Tuple<Druid, EntityValueData>> ();
 
-			Druid leafEntityId = request.RootEntity.GetEntityStructuredTypeId ();
+			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 
 			var fieldIds = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.None)
@@ -222,9 +232,17 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			
 			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
-
 			this.AddConditionsForEntity (reader, entity, request, entityRootAliasNode);
-			this.AddQueryForValues (reader, entity, entityRootAliasNode);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, entityRootAliasNode);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			this.AddQueryForValues (reader, requestedEntity, requestedAlias);
 			
 			return reader;
 		}
@@ -234,7 +252,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		{
 			Dictionary<DbKey, EntityReferenceData> references = new Dictionary<DbKey, EntityReferenceData> ();
 
-			Druid leafEntityId = request.RootEntity.GetEntityStructuredTypeId ();
+			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 
 			var fieldIds = this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				.Where (field => field.Relation == FieldRelation.Reference)
@@ -281,9 +299,17 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
-
 			this.AddConditionsForEntity (dbReader, entity, request, entityRootAliasNode);
-			this.AddQueryForReferences (dbReader, entity, entityRootAliasNode);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, entityRootAliasNode);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			this.AddQueryForReferences (dbReader, requestedEntity, requestedAlias);
 
 			return dbReader;
 		}
@@ -293,32 +319,34 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		{
 			Dictionary<DbKey, EntityCollectionData> collectionData = new Dictionary<DbKey, EntityCollectionData> ();
 
-			AbstractEntity entity = request.RootEntity;
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-		
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
-			{
-				foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId).Where (f => f.Relation == FieldRelation.Collection))
-				{
-					foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, request, field))
-					{
-						if (!collectionData.ContainsKey (relation.Item1))
-						{
-							collectionData[relation.Item1] = new EntityCollectionData ();
-						}
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			Druid leafRequestedEntityId = requestedEntity.GetEntityStructuredTypeId();
 
-						collectionData[relation.Item1][field.CaptionId].Add (relation.Item2);
-					}
-				}
+			var definedFieldIds = this.EntityContext.GetEntityFieldDefinitions (leafRequestedEntityId)
+				.Where (f => f.Relation == FieldRelation.Collection)
+				.Select (f => f.CaptionId)
+				.ToList ();
+
+			foreach (Druid fieldId in definedFieldIds)
+			{
+			    foreach (System.Tuple<DbKey, DbKey> relation in this.GetCollectionData (transaction, request, fieldId))
+			    {
+			        if (!collectionData.ContainsKey (relation.Item1))
+			        {
+			            collectionData[relation.Item1] = new EntityCollectionData ();
+			        }
+
+			        collectionData[relation.Item1][fieldId].Add (relation.Item2);
+			    }
 			}
 
 			return collectionData;
 		}
 
 
-		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Request request, StructuredTypeField field)
+		private IEnumerable<System.Tuple<DbKey, DbKey>> GetCollectionData(DbTransaction transaction, Request request, Druid fieldId)
 		{
-			using (DbReader reader = this.CreateCollectionReader (request, field))
+			using (DbReader reader = this.CreateCollectionReader (request, fieldId))
 			{
 				reader.CreateDataReader (transaction);
 
@@ -333,7 +361,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		}
 
 
-		private DbReader CreateCollectionReader(Request request, StructuredTypeField field)
+		private DbReader CreateCollectionReader(Request request, Druid fieldId)
 		{
 			DbReader reader = new DbReader (this.DbInfrastructure)
 			{
@@ -344,11 +372,20 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			AbstractEntity entity = request.RootEntity;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			AliasNode rootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
+			AliasNode entityRootAliasNode = new AliasNode (this.EntityContext.GetRootEntityId (leafEntityId).ToResourceId ());
+			this.AddConditionsForEntity (reader, entity, request, entityRootAliasNode);
 
-			this.AddConditionsForEntity (reader, entity, request, rootAliasNode);
-			this.AddQueryForCollection (reader, entity, rootAliasNode, field.CaptionId);
-			this.AddSortOrderOnRank (reader, entity, rootAliasNode, field.CaptionId);
+			AbstractEntity requestedEntity = request.RequestedEntity;
+
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, entityRootAliasNode);
+
+			if (requestedAlias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			this.AddQueryForCollection (reader, requestedEntity, requestedAlias, fieldId);
+			this.AddSortOrderOnRank (reader, requestedEntity, requestedAlias, fieldId);
 
 			return reader;
 		}
@@ -838,6 +875,76 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			else
 			{
 				return rootEntityAlias.GetChild (name);
+			}
+		}
+
+
+		private AliasNode RetreiveRequestedEntityAlias(Request request, AliasNode rootEntityAlias)
+		{
+			AbstractEntity rootEntity = request.RootEntity;
+			AbstractEntity requestedEntity = request.RequestedEntity;
+
+			return this.RetreiveRequestedEntityAliasRec (rootEntity, requestedEntity, rootEntityAlias);
+		}
+
+
+		private AliasNode RetreiveRequestedEntityAliasRec(AbstractEntity entity, AbstractEntity requestedEntity, AliasNode entityAliasNode)
+		{
+			if (entity == requestedEntity)
+			{
+				return entityAliasNode;
+			}
+			else
+			{
+				AliasNode requestedEntityAlias = null;
+
+				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				List<string> definedFieldIds = this.EntityContext.GetDefinedFieldIds (entity).ToList ();
+
+				for (int i = 0; i < definedFieldIds.Count && requestedEntityAlias == null; i++)
+				{
+					string fieldId = definedFieldIds[i];
+					StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
+
+					switch (field.Relation)
+					{
+						case FieldRelation.Reference:
+						{
+							AbstractEntity targetEntity = entity.GetField<AbstractEntity> (fieldId);
+
+							Druid leafTargetId = targetEntity.GetEntityStructuredTypeId ();
+							Druid rootTargetId = this.EntityContext.GetRootEntityId (leafTargetId);
+							
+							AliasNode targetAlias = entityAliasNode.GetChild (fieldId).GetChild (rootTargetId.ToResourceId ());
+
+							requestedEntityAlias = this.RetreiveRequestedEntityAliasRec (targetEntity, requestedEntity, targetAlias);
+
+							break;
+						}
+						case FieldRelation.Collection:
+						{
+
+							IList<AbstractEntity> targetEntities = entity.GetFieldCollection<AbstractEntity> (fieldId);
+							ReadOnlyCollection<AliasNode> targetAliases = entityAliasNode.GetChildren (fieldId);
+
+							for (int j = 0; j < targetEntities.Count && requestedEntityAlias == null; j++)
+							{
+								AbstractEntity targetEntity = targetEntities[j];
+
+								Druid leafTargetId = targetEntity.GetEntityStructuredTypeId ();
+								Druid rootTargetId = this.EntityContext.GetRootEntityId (leafTargetId);
+
+								AliasNode targetAlias = targetAliases[j].GetChild (rootTargetId.ToResourceId ());
+
+								requestedEntityAlias = this.RetreiveRequestedEntityAliasRec (targetEntity, requestedEntity, targetAlias);
+							}
+
+							break;
+						}
+					}
+				}
+
+				return requestedEntityAlias;
 			}
 		}
 
