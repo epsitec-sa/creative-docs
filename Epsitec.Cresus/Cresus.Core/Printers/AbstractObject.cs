@@ -28,12 +28,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public Rectangle Bounds
-		{
-			get;
-			set;
-		}
-
 		public Font Font
 		{
 			get;
@@ -46,15 +40,26 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public virtual double RequiredHeight
+
+		public virtual double RequiredHeight(double width)
+		{
+			return 0;
+		}
+
+
+		public virtual void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		{
+		}
+
+		public virtual int PageCount
 		{
 			get
 			{
-				return 0;
+				return 1;
 			}
 		}
 
-		public virtual void Paint(IPaintPort port)
+		public virtual void Paint(IPaintPort port, int page, Point topLeft)
 		{
 		}
 	}
