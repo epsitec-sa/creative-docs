@@ -45,30 +45,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
-			string text = "?";
-
-			if (entity.Person is NaturalPersonEntity)
-			{
-				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.Id, "<br/>", x.Title.Name, "<br/>", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "<br/>", x.BirthDate).ToString ();
-			}
-
-			if (entity.Person is LegalPersonEntity)
-			{
-				var x = this.entity.Person as LegalPersonEntity;
-				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
-			}
-
-			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
-
-			//?Font font = Font.GetFont ("Arial", "Regular");
-			Font font = Font.GetFont ("Times New Roman", "Regular");
-			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-100, width, 100), font, fontSize);
-
-			double top =  this.PageSize.Height-this.PageMargins.Top-50;
-			top = this.PaintContacts (port, this.PaintMailContacts,    top) - 5.0;
-			top = this.PaintContacts (port, this.PaintTelecomContacts, top) - 5.0;
-			top = this.PaintContacts (port, this.PaintUriContacts,     top) - 5.0;
+			double top =  this.PageSize.Height-this.PageMargins.Top;
+			top = this.PaintSummary  (port,                            top) - 10.0;
+			top = this.PaintContacts (port, this.PaintMailContacts,    top) -  5.0;
+			top = this.PaintContacts (port, this.PaintTelecomContacts, top) -  5.0;
+			top = this.PaintContacts (port, this.PaintUriContacts,     top) -  5.0;
 
 #if false
 			var t = new ObjectTextBox ();
@@ -187,18 +168,51 @@ namespace Epsitec.Cresus.Core.Printers
 #endif
 		}
 
+
+		private double PaintSummary(IPaintPort port, double top)
+		{
+			//	Dessine le résumé et retourne la hauteur utilisée.
+			string text = "?";
+
+			if (entity.Person is NaturalPersonEntity)
+			{
+				var x = this.entity.Person as NaturalPersonEntity;
+				text = UIBuilder.FormatText ("N°", this.entity.Id, "<br/>", x.Title.Name, "<br/>", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "<br/>", x.BirthDate).ToString ();
+			}
+
+			if (entity.Person is LegalPersonEntity)
+			{
+				var x = this.entity.Person as LegalPersonEntity;
+				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
+			}
+
+			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
+			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
+
+			var textBox = new ObjectTextBox ();
+			textBox.Text = text;
+			textBox.FontSize = 4.0;
+			textBox.Bounds = bounds;
+			textBox.Paint (port);
+
+			return top - textBox.RequiredHeight;
+		}
+
+
 		private double PaintContacts(IPaintPort port, System.Func<IPaintPort, Rectangle, double> painter, double top)
 		{
+			//	Dessine un contact et retourne la position 'top' suivante.
 			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
 			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
 
 			double h = painter (port, bounds);
 
-			return top-h;
+			return top - h;
 		}
 
 		private double PaintMailContacts(IPaintPort port, Rectangle bounds)
 		{
+			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -262,6 +276,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private double PaintTelecomContacts(IPaintPort port, Rectangle bounds)
 		{
+			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -319,6 +334,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private double PaintUriContacts(IPaintPort port, Rectangle bounds)
 		{
+			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
