@@ -141,6 +141,20 @@ namespace Epsitec.Cresus.Core.Entities
 				&& entity.SalesRepresentative.IsEmpty ();
 		}
 
+		public static bool IsEmpty(this ArticleDefinitionEntity entity)
+		{
+			if (entity.UnwrapNullEntity () == null)
+			{
+				return true;
+			}
+
+			return string.IsNullOrWhiteSpace (entity.Id)
+				&& string.IsNullOrWhiteSpace (entity.ShortDescription)
+				&& string.IsNullOrWhiteSpace (entity.LongDescription);
+
+			//	TODO: compléter...
+		}
+
 
 
 		public static bool IsNull(this AbstractEntity entity)

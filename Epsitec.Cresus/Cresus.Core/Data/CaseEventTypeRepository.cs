@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Browser;
@@ -8,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
 	public class CaseEventTypeRepository : Repository
 	{
-
-
 		public CaseEventTypeRepository(DataContext dataContext)
 			: base (dataContext)
 		{
@@ -89,9 +88,5 @@ namespace Epsitec.Cresus.Core.Data
 
 			return example;
 		}
-
-
 	}
-
-
 }
