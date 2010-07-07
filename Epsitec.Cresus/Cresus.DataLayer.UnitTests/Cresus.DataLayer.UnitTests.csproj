@@ -55,7 +55,6 @@
     <Compile Include="UnitTestDataContext.cs" />
     <Compile Include="UnitTestDataBrowserRequest.cs" />
     <Compile Include="UnitTestPerformance.cs" />
-    <Compile Include="UnitTestRequestFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
@@ -85,10 +84,6 @@
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Name>Cresus.Requests</Name>
     </ProjectReference>
     <ProjectReference Include="..\UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj">
       <Project>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</Project>

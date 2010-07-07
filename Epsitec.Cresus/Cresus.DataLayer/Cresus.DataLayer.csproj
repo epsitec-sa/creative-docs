@@ -131,11 +131,6 @@
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Name>Cresus.Requests</Name>
-      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
@@ -180,9 +175,6 @@
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
     <Compile Include="Helpers\TemporaryRowCollection.cs" />
-    <Compile Include="RequestFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="SchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -179,31 +179,6 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
-      <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
-      <Name>Cresus.Remoting.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Remoting\Cresus.Remoting.csproj">
-      <Project>{C3C59295-14DD-4AF7-B22A-0F8045DA671C}</Project>
-      <Name>Cresus.Remoting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Replication\Cresus.Replication.csproj">
-      <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>
-      <Name>Cresus.Replication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Name>Cresus.Requests</Name>
-      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Services.Implementation\Cresus.Services.Implementation.csproj">
-      <Project>{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}</Project>
-      <Name>Cresus.Services.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Services\Cresus.Services.csproj">
-      <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
-      <Name>Cresus.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Demo\Resources\Demo5juin\SourceCode\Entities.cs">
@@ -217,9 +192,6 @@
     <Compile Include="EntityCodeGeneratorTest.cs" />
     <Compile Include="Helpers.EntityDataMapping.cs" />
     <Compile Include="SchemaEngineTest.cs" />
-    <Compile Include="RequestFactoryTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Res.cs" />
     <Compile Include="TestSupport\Database.cs" />
     <Compile Include="TestSupport\Tool.cs" />
