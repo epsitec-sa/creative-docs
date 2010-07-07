@@ -132,29 +132,29 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public override double RequiredHeight
+		{
+			get
+			{
+				double height = 0;
+
+				for (int row = 0; row < this.rowsCount; row++)
+				{
+					height += this.GetRowHeight (row);
+				}
+
+				return height;
+			}
+		}
+
+
 		public override void Paint(IPaintPort port)
 		{
 			double y = this.Bounds.Top;
 
 			for (int row = 0; row < this.rowsCount; row++)
 			{
-				double height = 0;
-				for (int column = 0; column < this.columnsCount; column++)
-				{
-					ObjectTextBox textBox = this.GetTextBox (column, row);
-
-					double width = this.GetAbsoluteColumnWidth (column);
-					width -= this.CellMargins.Left;
-					width -= this.CellMargins.Right;
-
-					textBox.Bounds = new Rectangle (0, 0, width, 0);
-
-					height = System.Math.Max (height, textBox.RequiredHeight);
-				}
-
-				height += this.CellMargins.Top;
-				height += this.CellMargins.Bottom;
-
+				double height = this.GetRowHeight (row);
 				y -= height;
 
 				double x = this.Bounds.Left;
@@ -164,9 +164,6 @@ namespace Epsitec.Cresus.Core.Printers
 					ObjectTextBox textBox = this.GetTextBox (column, row);
 
 					double width = this.GetAbsoluteColumnWidth (column);
-					width -= this.CellMargins.Left;
-					width -= this.CellMargins.Right;
-
 					Rectangle bounds = new Rectangle (x, y, width, height);
 
 					Rectangle textBounds = bounds;
@@ -180,6 +177,29 @@ namespace Epsitec.Cresus.Core.Printers
 					x += width;
 				}
 			}
+		}
+
+		private double GetRowHeight(int row)
+		{
+			//	Calcule la hauteur pour la ligne, selon la plus haute cellule.
+			double height = 0;
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				ObjectTextBox textBox = this.GetTextBox (column, row);
+
+				double width = this.GetAbsoluteColumnWidth (column);
+				width -= this.CellMargins.Left;
+				width -= this.CellMargins.Right;
+
+				textBox.Bounds = new Rectangle (0, 0, width, 0);
+
+				height = System.Math.Max (height, textBox.RequiredHeight);
+			}
+
+			height += this.CellMargins.Top;
+			height += this.CellMargins.Bottom;
+
+			return height;
 		}
 
 		private double GetAbsoluteColumnWidth(int column)

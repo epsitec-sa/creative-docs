@@ -59,9 +59,16 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToSimpleText ();
 			}
 
+			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
+
 			//?Font font = Font.GetFont ("Arial", "Regular");
 			Font font = Font.GetFont ("Times New Roman", "Regular");
-			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
+			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-100, width, 100), font, fontSize);
+
+			double top =  this.PageSize.Height-this.PageMargins.Top-50;
+			top = this.PaintContacts (port, this.PaintMailContacts,    top) - 5.0;
+			top = this.PaintContacts (port, this.PaintTelecomContacts, top) - 5.0;
+			top = this.PaintContacts (port, this.PaintUriContacts,     top) - 5.0;
 
 #if false
 			var t = new ObjectTextBox ();
@@ -75,7 +82,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintOutline (Path.FromRectangle (bb));
 #endif
 
-#if true
+#if false
 			var table = new ObjectTable ();
 			table.ColumnsCount = 4;
 			table.RowsCount = 3;
@@ -101,7 +108,7 @@ namespace Epsitec.Cresus.Core.Printers
 			table.Paint (port);
 #endif
 
-#if true
+#if false
 			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
 			Point pos;
 			int firstLine;
@@ -180,14 +187,188 @@ namespace Epsitec.Cresus.Core.Printers
 #endif
 		}
 
-		private void PaintMailContacts(IPaintPort port, Rectangle bounds)
+		private double PaintContacts(IPaintPort port, System.Func<IPaintPort, Rectangle, double> painter, double top)
 		{
+			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
+			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
+
+			double h = painter (port, bounds);
+
+			return top-h;
+		}
+
+		private double PaintMailContacts(IPaintPort port, Rectangle bounds)
+		{
+			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
 				if (contact is MailContactEntity)
 				{
+					count++;
 				}
 			}
+
+			if (count == 0)
+			{
+				return 0;
+			}
+
+			var title = new ObjectTextBox ();
+			title.Text = "<b>Adresses</b>";
+			title.FontSize = 4.5;
+			title.Bounds = bounds;
+			title.Paint (port);
+
+			double titleHeight = title.RequiredHeight;
+
+			var table = new ObjectTable ();
+			table.ColumnsCount = 5;
+			table.RowsCount = 1+count;
+
+			table.SetRelativeColumWidth (0, 1.5);
+			table.SetRelativeColumWidth (1, 2.0);
+			table.SetRelativeColumWidth (2, 0.3);
+			table.SetRelativeColumWidth (3, 1.0);
+			table.SetRelativeColumWidth (4, 0.8);
+
+			int index = 0;
+			table.SetText (0, index, "<b>Rôles</b>");
+			table.SetText (1, index, "<b>Adresse</b>");
+			table.SetText (2, index, "<b>NPA</b>");
+			table.SetText (3, index, "<b>Ville</b>");
+			table.SetText (4, index, "<b>Pays</b>");
+			index++;
+
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is MailContactEntity)
+				{
+					var x = contact as MailContactEntity;
+
+					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name).ToString ());
+					table.SetText (2, index, x.Address.Location.PostalCode);
+					table.SetText (3, index, x.Address.Location.Name);
+					table.SetText (4, index, x.Address.Location.Country.Name);
+					index++;
+				}
+			}
+
+			table.Bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight);
+			table.Paint (port);
+
+			return titleHeight + table.RequiredHeight;
+		}
+
+		private double PaintTelecomContacts(IPaintPort port, Rectangle bounds)
+		{
+			int count = 0;
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is TelecomContactEntity)
+				{
+					count++;
+				}
+			}
+
+			if (count == 0)
+			{
+				return 0;
+			}
+
+			var title = new ObjectTextBox ();
+			title.Text = "<b>Téléphones</b>";
+			title.FontSize = 4.5;
+			title.Bounds = bounds;
+			title.Paint (port);
+
+			double titleHeight = title.RequiredHeight;
+
+			var table = new ObjectTable ();
+			table.ColumnsCount = 3;
+			table.RowsCount = 1+count;
+
+			table.SetRelativeColumWidth (0, 1.5);
+			table.SetRelativeColumWidth (1, 1.5);
+			table.SetRelativeColumWidth (2, 2.0+0.3+1.0+0.8-1.5);
+
+			int index = 0;
+			table.SetText (0, index, "<b>Rôles</b>");
+			table.SetText (1, index, "<b>Type</b>");
+			table.SetText (2, index, "<b>Numéro</b>");
+			index++;
+
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is TelecomContactEntity)
+				{
+					var x = contact as TelecomContactEntity;
+
+					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, UIBuilder.FormatText (x.TelecomType.Name).ToString ());
+					table.SetText (2, index, UIBuilder.FormatText (x.Number).ToString ());
+					index++;
+				}
+			}
+
+			table.Bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight);
+			table.Paint (port);
+
+			return titleHeight + table.RequiredHeight;
+		}
+
+		private double PaintUriContacts(IPaintPort port, Rectangle bounds)
+		{
+			int count = 0;
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is UriContactEntity)
+				{
+					count++;
+				}
+			}
+
+			if (count == 0)
+			{
+				return 0;
+			}
+
+			var title = new ObjectTextBox ();
+			title.Text = "<b>Emails</b>";
+			title.FontSize = 4.5;
+			title.Bounds = bounds;
+			title.Paint (port);
+
+			double titleHeight = title.RequiredHeight;
+
+			var table = new ObjectTable ();
+			table.ColumnsCount = 2;
+			table.RowsCount = 1+count;
+
+			table.SetRelativeColumWidth (0, 1.5);
+			table.SetRelativeColumWidth (1, 2.0+0.3+1.0+0.8);
+
+			int index = 0;
+			table.SetText (0, index, "<b>Rôles</b>");
+			table.SetText (1, index, "<b>Adresses électroniques</b>");
+			index++;
+
+			foreach (var contact in this.entity.Person.Contacts)
+			{
+				if (contact is UriContactEntity)
+				{
+					var x = contact as UriContactEntity;
+
+					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, UIBuilder.FormatText (x.Uri).ToString ());
+					index++;
+				}
+			}
+
+			table.Bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-titleHeight);
+			table.Paint (port);
+
+			return titleHeight + table.RequiredHeight;
 		}
 
 
