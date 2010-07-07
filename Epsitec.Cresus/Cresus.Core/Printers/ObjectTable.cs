@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.content = new List<List<ObjectTextBox>> ();
 			this.relativeColumnsWidth = new List<double> ();
+			this.pagesInfo = new List<PageInfo> ();
 		}
 
 
@@ -162,52 +163,41 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Paint(IPaintPort port, int page, Point topLeft)
 		{
-#if false
-			if (this.CurrentRow == -1)
+			if (page < 0 || page >= this.pagesInfo.Count)
 			{
 				return;
 			}
 
-			double y = this.Bounds.Top;
+			var pageInfo = this.pagesInfo[page];
+			double y = topLeft.Y;
 
-			for (int row = 0; row < this.rowsCount; row++)
+			for (int row = pageInfo.FirstRow; row < pageInfo.FirstRow+pageInfo.RowCount; row++)
 			{
-				double height = this.GetRowHeight (row);
-
-				if (y-height > this.Bounds.Bottom)  // dépasse en bas ?
-				{
-					height = y - this.Bounds.Bottom;  // limite la hauteur
-				}
-
-				y -= height;
-
-				double x = this.Bounds.Left;
+				var rowInfo = pageInfo.RowsInfo[row-pageInfo.FirstRow];
+				double x = topLeft.X;
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					ObjectTextBox textBox = this.GetTextBox (column, row);
-
 					double width = this.GetAbsoluteColumnWidth (column);
-					Rectangle bounds = new Rectangle (x, y, width, height);
 
-					Rectangle textBounds = bounds;
-					textBounds.Deflate (this.CellMargins);
-					textBox.Bounds = textBounds;
-					textBox.Paint (port);
+					textBox.Paint (port, rowInfo.FirstLine, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top));
 
 					port.LineWidth = this.CellBorderWidth;
-					port.PaintOutline (Path.FromRectangle (bounds));
+					port.Color = Color.FromBrightness (0);
+					port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
 
 					x += width;
 				}
+
+				y -= rowInfo.Height;
 			}
-#endif
 		}
 
 
 		private double GetRowHeight(int row)
 		{
-			//	Calcule la hauteur pour la ligne, selon la plus haute cellule.
+			//	Calcule la hauteur nécessaire pour la ligne, qui est celle de la plus haute cellule.
 			double height = 0;
 			for (int column = 0; column < this.columnsCount; column++)
 			{
@@ -271,10 +261,42 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private class PageInfo
+		{
+			public PageInfo(int firstRow, int rowCount, double height)
+			{
+				this.FirstRow  = firstRow;
+				this.RowCount  = rowCount;
+				this.Height    = height;
+				this.RowsInfo = new List<RowInfo> ();
+			}
+
+			public int				FirstRow;
+			public int				RowCount;
+			public double			Height;
+			public List<RowInfo>	RowsInfo;
+		}
+
+		private class RowInfo
+		{
+			public RowInfo(int firstLine, int lineCount, double height)
+			{
+				this.FirstLine = firstLine;
+				this.LineCount = lineCount;
+				this.Height    = height;
+			}
+
+			public int		FirstLine;
+			public int		LineCount;
+			public double	Height;
+		}
+
+
 		private double width;
 		private int columnsCount;
 		private int rowsCount;
 		private List<List<ObjectTextBox>> content;
 		private List<double> relativeColumnsWidth;
+		private List<PageInfo> pagesInfo;
 	}
 }

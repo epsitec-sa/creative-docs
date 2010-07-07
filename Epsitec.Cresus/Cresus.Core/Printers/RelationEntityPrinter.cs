@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Core.Printers
 			textBox.Font = font;
 			textBox.FontSize = fontSize;
 			textBox.Text = t;
-			textBox.PaintFrame = true;
+			textBox.DebugPaintFrame = true;
 
 			double top = 120;
 			double initialHeight = 15;

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public bool PaintFrame
+		public bool DebugPaintFrame
 		{
 			get;
 			set;
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Core.Printers
 			textLayout.LayoutSize = bounds.Size;
 			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
 
-			if (this.PaintFrame)
+			if (this.DebugPaintFrame)
 			{
 				if (clipRect.Height == 0)
 				{
