@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Printers
 			this.Alignment = ContentAlignment.TopLeft;
 			this.Justif    = TextJustifMode.None;
 			this.BreakMode = TextBreakMode.Hyphenate;
+
+			this.pagesInfo = new List<PageInfo> ();
 		}
 
 
@@ -53,87 +55,182 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public int FirstLine
+		public bool PaintFrame
 		{
 			get;
 			set;
 		}
 
 
-		public override double RequiredHeight
+		public override double RequiredHeight(double width)
 		{
-			get
+			this.width = width;
+			var textLayout = this.CreateTextLayout ();
+
+			double height = 0;
+
+			int lineCount = textLayout.TotalLineCount;
+			for (int i = 0; i < lineCount; i++)
 			{
-				var textLayout = this.CreateTextLayout ();
-
-				double height = 0;
-
-				int lineCount = textLayout.TotalLineCount;
-				for (int i = 0; i < lineCount; i++)
-				{
-					height += textLayout.GetLineHeight (i);
-				}
-
-				return height;
+				height += textLayout.GetLineHeight (i);
 			}
+
+			return height;
 		}
 
 
-		public override void Paint(IPaintPort port)
+		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
-			//	Dessine un texte dans un pavé à partir d'une ligne donnée. Retourne le numéro de la première ligne
-			//	pour le pavé suivant, ou -1 s'il n'y en a pas.
-			if (this.FirstLine == -1)
-			{
-				return;
-			}
+			this.width = width;
+			this.pagesInfo.Clear ();
 
 			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
 			//	de toutes les lignes.
 			var textLayout = this.CreateTextLayout ();
 
-			int lineCount = textLayout.TotalLineCount;
-
-			if (this.FirstLine >= lineCount)
-			{
-				this.FirstLine = -1;
-				return;
-			}
-
-			double[] heights = new double[lineCount];
-
-			for (int i = 0; i < lineCount; i++)
+			int totalLineCount = textLayout.TotalLineCount;
+			double[] heights = new double[totalLineCount];
+			for (int i = 0; i < totalLineCount; i++)
 			{
 				heights[i] = textLayout.GetLineHeight (i);
 			}
 
-			//	Calcule la distance verticale correspondant aux lignes à ne pas afficher.
-			double verticalOffset = 0;
-			for (int i = 0; i < this.FirstLine; i++)
+			//	Essaie de tout mettre sur la première page.
+			int lineCount;
+			double height;
+			if (ObjectTextBox.PageCompute (heights, 0, initialHeight, out lineCount, out height))
 			{
-				verticalOffset += heights[i];
+				this.pagesInfo.Add (new PageInfo(0, lineCount, height));
+				return;
 			}
 
-			Rectangle clipRect = this.Bounds;  // clipping sur le rectangle demandé
-			Rectangle bounds = this.Bounds;
-			bounds.Top += verticalOffset;  // remonte le début, qui sera clippé
-
-			//	Adapte le pavé avec les données réelles et dessine-le.
-			textLayout.LayoutSize = bounds.Size;
-			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
-
-			//	Calcul l'index de la première ligne du pavé suivant.
-			this.FirstLine = textLayout.VisibleLineCount;
-
-			if (this.FirstLine >= lineCount)
+			//	Essaie de tout mettre sur la première et la dernière page, sans pages intermédiaires.
+			int lineCount2;
+			double height2;
+			if (ObjectTextBox.PageCompute (heights, lineCount, finalHeight, out lineCount2, out height2))
 			{
-				this.FirstLine = -1;
+				this.pagesInfo.Add (new PageInfo (0, lineCount, height));
+				this.pagesInfo.Add (new PageInfo (lineCount, lineCount2, height2));
 				return;
+			}
+
+			//	Met tout avec des pages intermédiaires.
+			this.pagesInfo.Add (new PageInfo (0, lineCount, height));
+
+			for (int middlePageCount = 1; middlePageCount < 100; middlePageCount++)
+			{
+				int index = lineCount;
+
+				//	Essaie avec middlePageCount pages intermédiaires.
+				for (int i = 0; i < middlePageCount; i++)
+				{
+					ObjectTextBox.PageCompute (heights, index, middleheight, out lineCount2, out height2);
+					index += lineCount2;
+				}
+
+				//	Essaie avec la dernière page.
+				if (ObjectTextBox.PageCompute (heights, index, finalHeight, out lineCount2, out height2))
+				{
+					index = lineCount;
+
+					//	Met les pages intermédiaires
+					for (int i = 0; i < middlePageCount; i++)
+					{
+						ObjectTextBox.PageCompute (heights, index, middleheight, out lineCount2, out height2);
+						this.pagesInfo.Add (new PageInfo (index, lineCount2, height2));
+						index += lineCount2;
+					}
+
+					//	Met la dernière page.
+					ObjectTextBox.PageCompute (heights, index, finalHeight, out lineCount2, out height2);
+					this.pagesInfo.Add (new PageInfo (index, lineCount2, height2));
+					return;
+				}
+			}
+
+			//	On ne devrait jamais arriver ici !
+		}
+
+		private static bool PageCompute(double[] heights, int startIndex, double maxHeight, out int lineCount, out double height)
+		{
+			//	Essaie de mettre un maximum de lignes sur une page donnée.
+			//	Retourne true s'il y a assez de place pour tout mettre (donc jusquà la fin).
+			height = 0;
+
+			for (int i = startIndex; i < heights.Length; i++)
+			{
+				height += heights[i];
+
+				if (height > maxHeight)
+				{
+					lineCount = i-startIndex;
+					height -= heights[i];
+					return false;  // il reste encore des données
+				}
+
+				if (i == heights.Length-1)
+				{
+					lineCount = i-startIndex+1;
+					return true;  // tout est casé
+				}
+			}
+
+			lineCount = 0;
+			height = 0;
+			return true;  // tout est casé
+		}
+
+		public override int PageCount
+		{
+			get
+			{
+				return this.pagesInfo.Count;
 			}
 		}
 
+		public override void Paint(IPaintPort port, int page, Point topLeft)
+		{
+			if (page < 0 || page >= this.pagesInfo.Count)
+			{
+				return;
+			}
+
+			var pageInfo = this.pagesInfo[page];
+
+			Rectangle clipRect = new Rectangle (topLeft.X, topLeft.Y-pageInfo.Height, this.width, pageInfo.Height);
+
+			//	Calcule la distance verticale correspondant aux lignes à ne pas afficher.
+			double verticalOffset = 0;
+			for (int i = page-1; i >= 0; i--)
+			{
+				verticalOffset += this.pagesInfo[i].Height;
+			}
+
+			Rectangle bounds = clipRect;
+			bounds.Top += verticalOffset;  // remonte le début, qui sera clippé
+
+			//	Crée le TextLayout avec les données réelles et dessine-le.
+			var textLayout = this.CreateTextLayout ();
+			textLayout.LayoutSize = bounds.Size;
+			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+
+			if (this.PaintFrame)
+			{
+				if (clipRect.Height == 0)
+				{
+					clipRect.Bottom -= 1.0;  // pour voir qq chose
+				}
+
+				port.LineWidth = 0.1;
+				port.Color = Color.FromBrightness (0);
+				port.PaintOutline (Path.FromRectangle (clipRect));
+			}
+		}
+
+	
 		private TextLayout CreateTextLayout()
 		{
+			//	Crée un TextLayout à la bonne largeur mais de hauteur infinie.
 			var textLayout = new TextLayout ()
 			{
 				Alignment             = this.Alignment,
@@ -141,7 +238,7 @@ namespace Epsitec.Cresus.Core.Printers
 				BreakMode             = this.BreakMode,
 				DefaultFont           = this.Font,
 				DefaultFontSize       = this.FontSize,
-				LayoutSize            = new Size (this.Bounds.Width, double.MaxValue),
+				LayoutSize            = new Size (this.width, double.MaxValue),
 				DefaultUnderlineWidth = 0.1,
 				DefaultWaveWidth      = 0.75,
 				Text                  = this.Text,
@@ -149,5 +246,24 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return textLayout;
 		}
+
+
+		private class PageInfo
+		{
+			public PageInfo(int firstLine, int lineCount, double height)
+			{
+				this.FirstLine = firstLine;
+				this.LineCount = lineCount;
+				this.Height    = height;
+			}
+
+			public int		FirstLine;
+			public int		LineCount;
+			public double	Height;
+		}
+
+
+		private double width;
+		private List<PageInfo> pagesInfo;
 	}
 }

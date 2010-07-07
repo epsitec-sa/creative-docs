@@ -77,33 +77,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return types.FirstOrDefault ();
 		}
-
-
-		#region Painting tools
-		public static void PaintText(IPaintPort port, string text, Rectangle bounds, Font font, double fontSize)
-		{
-			PaintText (port, text, 0, bounds, font, fontSize);
-		}
-
-		public static int PaintText(IPaintPort port, string text, int firstLine, Rectangle bounds, Font font, double fontSize, ContentAlignment alignment = ContentAlignment.TopLeft, TextJustifMode justif = TextJustifMode.None, TextBreakMode breakMode = TextBreakMode.Hyphenate)
-		{
-			var textBox = new ObjectTextBox ()
-			{
-				Text      = text,
-				FirstLine = firstLine,
-				Bounds    = bounds,
-				Font      = font,
-				FontSize  = fontSize,
-				Alignment = alignment,
-				Justif    = justif,
-				BreakMode = breakMode,
-			};
-
-			textBox.Paint (port);
-
-			return textBox.FirstLine;
-		}
-		#endregion
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter

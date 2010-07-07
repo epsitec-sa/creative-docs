@@ -132,29 +132,53 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public override double RequiredHeight
+		public override double RequiredHeight(double width)
 		{
-			get
+			this.width = width;
+
+			double height = 0;
+
+			for (int row = 0; row < this.rowsCount; row++)
 			{
-				double height = 0;
-
-				for (int row = 0; row < this.rowsCount; row++)
-				{
-					height += this.GetRowHeight (row);
-				}
-
-				return height;
+				height += this.GetRowHeight (row);
 			}
+
+			return height;
 		}
 
 
-		public override void Paint(IPaintPort port)
+		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
+			this.width = width;
+		}
+
+		public override int PageCount
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
+		public override void Paint(IPaintPort port, int page, Point topLeft)
+		{
+#if false
+			if (this.CurrentRow == -1)
+			{
+				return;
+			}
+
 			double y = this.Bounds.Top;
 
 			for (int row = 0; row < this.rowsCount; row++)
 			{
 				double height = this.GetRowHeight (row);
+
+				if (y-height > this.Bounds.Bottom)  // dépasse en bas ?
+				{
+					height = y - this.Bounds.Bottom;  // limite la hauteur
+				}
+
 				y -= height;
 
 				double x = this.Bounds.Left;
@@ -177,7 +201,9 @@ namespace Epsitec.Cresus.Core.Printers
 					x += width;
 				}
 			}
+#endif
 		}
+
 
 		private double GetRowHeight(int row)
 		{
@@ -191,9 +217,7 @@ namespace Epsitec.Cresus.Core.Printers
 				width -= this.CellMargins.Left;
 				width -= this.CellMargins.Right;
 
-				textBox.Bounds = new Rectangle (0, 0, width, 0);
-
-				height = System.Math.Max (height, textBox.RequiredHeight);
+				height = System.Math.Max (height, textBox.RequiredHeight (width));
 			}
 
 			height += this.CellMargins.Top;
@@ -204,7 +228,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private double GetAbsoluteColumnWidth(int column)
 		{
-			return this.GetRelativeColumnWidth (column) * this.Bounds.Width / this.TotalRelativeColumsWidth;
+			return this.GetRelativeColumnWidth (column) * this.width / this.TotalRelativeColumsWidth;
 		}
 
 		private double TotalRelativeColumsWidth
@@ -247,6 +271,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private double width;
 		private int columnsCount;
 		private int rowsCount;
 		private List<List<ObjectTextBox>> content;

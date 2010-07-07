@@ -45,127 +45,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
+#if false
 			double top =  this.PageSize.Height-this.PageMargins.Top;
 			top = this.PaintTitle    (port,                            top) - 5.0;
 			top = this.PaintSummary  (port,                            top) - 5.0;
 			top = this.PaintContacts (port, this.PaintMailContacts,    top) - 5.0;
 			top = this.PaintContacts (port, this.PaintTelecomContacts, top) - 5.0;
 			top = this.PaintContacts (port, this.PaintUriContacts,     top) - 5.0;
-
-#if false
-			var t = new ObjectTextBox ();
-			t.Text = "Ceci est un texte plus long que les autres, pour tester...";
-			t.Bounds = new Rectangle (10, 50, 35.5, 150);
-			t.Paint (port);
-
-			double h = t.RequiredHeight;
-			Rectangle bb = new Rectangle (t.Bounds.Left, t.Bounds.Top-h, t.Bounds.Width, h);
-			port.LineWidth = 0.1;
-			port.PaintOutline (Path.FromRectangle (bb));
-#endif
-
-#if false
-			var table = new ObjectTable ();
-			table.ColumnsCount = 4;
-			table.RowsCount = 3;
-
-			table.SetText (0, 0, "<b>Lundi</b>");
-			table.SetText (1, 0, "<b>Mardi</b>");
-			table.SetText (2, 0, "<b>Mercredi</b>");
-			table.SetText (3, 0, "<b>Jeudi</b>");
-
-			table.SetText (0, 1, "Gauche");
-			table.SetText (1, 1, "");
-			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester...");
-			table.SetText (3, 1, "Droite");
-
-			table.SetText (0, 2, "Rouge");
-			table.SetText (1, 2, "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.");
-			table.SetText (2, 2, "Vert");
-			table.SetText (3, 2, "Bleu");
-
-			//?table.SetRelativeColumWidth (1, 1.5);
-
-			table.Bounds = new Rectangle(10, 100, 150, 150);
-			table.Paint (port);
-#endif
-
-#if false
-			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
-			Point pos;
-			int firstLine;
-
-			pos = new Point (10, 100);
-			firstLine = 0;
-			while (true)
-			{
-				Rectangle b = new Rectangle (pos.X, pos.Y, 50, 25);
-				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, font, fontSize);
-
-				port.LineWidth = 0.1;
-				port.PaintOutline (Path.FromRectangle (b));
-
-				if (firstLine == -1)
-				{
-					break;
-				}
-
-				pos.X += 50+1;
-			}
-
-			pos = new Point (10, 100-25-2);
-			firstLine = 0;
-			while (true)
-			{
-				Rectangle b = new Rectangle (pos.X, pos.Y, 30, 25);
-				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, font, fontSize);
-
-				port.LineWidth = 0.1;
-				port.PaintOutline (Path.FromRectangle (b));
-
-				if (firstLine == -1)
-				{
-					break;
-				}
-
-				pos.X += 30+1;
-			}
-
-			pos = new Point (10, 100-25-2-25-2);
-			firstLine = 0;
-			while (true)
-			{
-				Rectangle b = new Rectangle (pos.X, pos.Y, 20, 25);
-				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, font, fontSize);
-
-				port.LineWidth = 0.1;
-				port.PaintOutline (Path.FromRectangle (b));
-
-				if (firstLine == -1)
-				{
-					break;
-				}
-
-				pos.X += 20+1;
-			}
-
-			pos = new Point (10, 100-25-2-25-2-25-2);
-			firstLine = 0;
-			while (true)
-			{
-				Rectangle b = new Rectangle (pos.X, pos.Y, 50, 25);
-				firstLine = AbstractEntityPrinter.PaintText (port, t, firstLine, b, font, fontSize, ContentAlignment.TopLeft, TextJustifMode.AllButLast, TextBreakMode.Hyphenate);
-
-				port.LineWidth = 0.1;
-				port.PaintOutline (Path.FromRectangle (b));
-
-				if (firstLine == -1)
-				{
-					break;
-				}
-
-				pos.X += 50+1;
-			}
+#else
+			this.PaintTest (port);
 #endif
 		}
 
@@ -188,15 +76,15 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
-			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
+			double height = top - this.PageMargins.Bottom;
 
 			var textBox = new ObjectTextBox ();
 			textBox.Text = string.Concat("<b>", text, "</b>");
 			textBox.FontSize = 6.0;
-			textBox.Bounds = bounds;
-			textBox.Paint (port);
+			textBox.InitializePages (width, height, height, height);
+			textBox.Paint (port, 0, new Point (this.PageMargins.Left, top));
 
-			return top - textBox.RequiredHeight;
+			return top - textBox.RequiredHeight (width);
 		}
 
 		private double PaintSummary(IPaintPort port, double top)
@@ -217,15 +105,15 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
-			Rectangle bounds = new Rectangle (this.PageMargins.Left, this.PageMargins.Bottom, width, top-this.PageMargins.Bottom);
+			double height = top - this.PageMargins.Bottom;
 
 			var textBox = new ObjectTextBox ();
 			textBox.Text = text;
 			textBox.FontSize = 4.0;
-			textBox.Bounds = bounds;
-			textBox.Paint (port);
+			textBox.InitializePages (width, height, height, height);
+			textBox.Paint (port, 0, new Point (this.PageMargins.Left, top));
 
-			return top - textBox.RequiredHeight;
+			return top - textBox.RequiredHeight (width);
 		}
 
 
@@ -243,6 +131,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private double PaintMailContacts(IPaintPort port, Rectangle bounds)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
+#if false
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -302,11 +191,15 @@ namespace Epsitec.Cresus.Core.Printers
 			table.Paint (port);
 
 			return titleHeight + table.RequiredHeight;
+#else
+			return 0;
+#endif
 		}
 
 		private double PaintTelecomContacts(IPaintPort port, Rectangle bounds)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
+#if false
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -360,11 +253,15 @@ namespace Epsitec.Cresus.Core.Printers
 			table.Paint (port);
 
 			return titleHeight + table.RequiredHeight;
+#else
+			return 0;
+#endif
 		}
 
 		private double PaintUriContacts(IPaintPort port, Rectangle bounds)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
+#if false
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -415,6 +312,76 @@ namespace Epsitec.Cresus.Core.Printers
 			table.Paint (port);
 
 			return titleHeight + table.RequiredHeight;
+#else
+			return 0;
+#endif
+		}
+
+
+		private void PaintTest(IPaintPort port)
+		{
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+
+#if false
+			var table = new ObjectTable ();
+			table.ColumnsCount = 4;
+			table.RowsCount = 3;
+
+			table.SetText (0, 0, "<b>Lundi</b>");
+			table.SetText (1, 0, "<b>Mardi</b>");
+			table.SetText (2, 0, "<b>Mercredi</b>");
+			table.SetText (3, 0, "<b>Jeudi</b>");
+
+			table.SetText (0, 1, "Gauche");
+			table.SetText (1, 1, "");
+			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester...");
+			table.SetText (3, 1, "Droite");
+
+			table.SetText (0, 2, "Rouge");
+			table.SetText (1, 2, "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.");
+			table.SetText (2, 2, "Vert");
+			table.SetText (3, 2, "Bleu");
+
+			//?table.SetRelativeColumWidth (1, 1.5);
+
+			table.Bounds = new Rectangle(10, 100, 150, 150);
+			table.Paint (port);
+#endif
+
+#if true
+			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
+
+			var textBox = new ObjectTextBox ();
+			textBox.Font = font;
+			textBox.FontSize = fontSize;
+			textBox.Text = t;
+			textBox.PaintFrame = true;
+
+			double top = 120;
+			double initialHeight = 15;
+			double middleHeight = 25;
+			double finalHeight = 16;
+
+			for (int width = 50; width >= 20; width-=10)
+			{
+				textBox.InitializePages (width, initialHeight, middleHeight, finalHeight);
+
+				for (int i = 0; i < textBox.PageCount; i++)
+				{
+					textBox.Paint (port, i, new Point (10+(width+1)*i, top));
+				}
+
+				port.LineWidth = 0.1;
+				port.Color = Color.FromName ("Blue");
+				port.PaintOutline (Path.FromRectangle (new Rectangle (10, top-middleHeight, 190, middleHeight)));
+				port.Color = Color.FromName ("Green");
+				port.PaintOutline (Path.FromLine (10, top-initialHeight, 200, top-initialHeight));
+				port.Color = Color.FromName ("Red");
+				port.PaintOutline (Path.FromLine (10, top-finalHeight, 200, top-finalHeight));
+
+				top -= middleHeight+2;
+			}
+#endif
 		}
 
 
