@@ -107,6 +107,7 @@ namespace Epsitec.Cresus.Core
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
+			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase ().ToArray ();
 
 			this.DataContext.SaveChanges ();
 		}
@@ -449,6 +450,128 @@ namespace Epsitec.Cresus.Core
 
 				yield return relation;
 			}
+		}
+
+		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase()
+		{
+			var uomUnit1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
+
+			uomUnit1.Code = "pce";
+			uomUnit1.Name = "Pièce";
+			uomUnit1.DivideRatio = 1;
+			uomUnit1.MultiplyRatio = 1;
+			uomUnit1.SmallestIncrement = 1;
+			uomUnit1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+
+			uomUnit2.Code = "box";
+			uomUnit2.Name = "Carton de 6";
+			uomUnit2.DivideRatio = 1;
+			uomUnit2.MultiplyRatio = 6;
+			uomUnit2.SmallestIncrement = 1;
+			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+
+			var uomGroup = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			uomGroup.Name = "Unités d'emballage soft/standard";
+			uomGroup.Description = "Unités d'emballage pour les logiciels Crésus standard";
+			uomGroup.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup.Units.Add (uomUnit1);
+			uomGroup.Units.Add (uomUnit2);
+
+			var articleGroup1 = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
+
+			articleGroup1.Rank = 0;
+			articleGroup1.Code = "SOFT";
+			articleGroup1.Name = "Logiciels";
+
+			var accountingDef = this.DataContext.CreateEmptyEntity<ArticleAccountingDefinitionEntity> ();
+
+			accountingDef.BeginDate = new System.DateTime (2010, 1, 1);
+			accountingDef.EndDate   = null;
+			accountingDef.SellingBookAccount = "3200";
+			accountingDef.SellingDiscountBookAccount = "3900";
+			accountingDef.PurchaseBookAccount = "4200";
+			accountingDef.PurchaseDiscountBookAccount = "4900";
+			accountingDef.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+
+			var priceRoundingMode = this.DataContext.CreateEmptyEntity<PriceRoundingModeEntity> ();
+
+			priceRoundingMode.Name = "Arrondi à 5ct";
+			priceRoundingMode.Modulo = 0.05M;
+			priceRoundingMode.AddBeforeModulo = 0.025M;
+			priceRoundingMode.PriceRoundingPolicy = BusinessLogic.Finance.RoundingPolicy.OnFinalPriceAfterTax;
+
+			var articleCategory = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
+
+			articleCategory.Name = "Logiciels Crésus";
+			articleCategory.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory.DefaultAccounting.Add (accountingDef);
+			articleCategory.DefaultRoundingMode = priceRoundingMode;
+
+			var articlePriceGroup1 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup2 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup3 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
+
+			articlePriceGroup1.Code = "USER";
+			articlePriceGroup1.Name = "Prix catalogue";
+
+			articlePriceGroup2.Code = "RSLR";
+			articlePriceGroup2.Name = "Revendeur agréé";
+			articlePriceGroup2.MultiplyRatio = 0.70M;
+			articlePriceGroup2.DivideRatio = 1.00M;
+
+			articlePriceGroup3.Code = "CRTR";
+			articlePriceGroup3.Name = "Revendeur certifié";
+			articlePriceGroup3.MultiplyRatio = 0.70M;
+			articlePriceGroup3.DivideRatio = 1.00M;
+
+			var articleDef1 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
+			var articleDef2 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
+			var articleDef3 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
+
+			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
+			articleDef1.LongDescription  = "Crésus Comptabilité PRO<br/>Logiciel de comptabilité pour PME, artisans et indépendants.<br/>Jusqu'à 64'000 écritures par année.";
+			articleDef1.ArticleGroups.Add (articleGroup1);
+			articleDef1.ArticleCategory = articleCategory;
+			articleDef1.BillingUnit = uomUnit1;
+			articleDef1.Units = uomGroup;
+			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 446.10M));
+
+			articleDef2.ShortDescription = "Crésus Salaires PRO";
+			articleDef2.LongDescription  = "Crésus Salaires PRO<br/>Logiciel de comptabilité salariale.<br/>Jusqu'à 20 salaires par mois.";
+			articleDef2.ArticleGroups.Add (articleGroup1);
+			articleDef2.ArticleCategory = articleCategory;
+			articleDef2.BillingUnit = uomUnit1;
+			articleDef2.Units = uomGroup;
+			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 446.10M));
+
+			articleDef3.ShortDescription = "Crésus Facturation LARGO";
+			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.";
+			articleDef3.ArticleGroups.Add (articleGroup1);
+			articleDef3.ArticleCategory = articleCategory;
+			articleDef3.BillingUnit = uomUnit1;
+			articleDef3.Units = uomGroup;
+			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 892.20M));
+
+			yield return articleDef1;
+			yield return articleDef2;
+			yield return articleDef3;
+		}
+
+		private ArticlePriceEntity CreateArticlePrice(ArticlePriceGroupEntity articlePriceGroup1, ArticlePriceGroupEntity articlePriceGroup2, ArticlePriceGroupEntity articlePriceGroup3, decimal price)
+		{
+			var articlePrice1 = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
+
+			articlePrice1.BeginDate = new System.DateTime (2010, 1, 1);
+			articlePrice1.EndDate = new System.DateTime (2010, 12, 31);
+			articlePrice1.MinQuantity = 1;
+			articlePrice1.MaxQuantity = null;
+			articlePrice1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			articlePrice1.ValueBeforeTax = price;
+			articlePrice1.PriceGroups.Add (articlePriceGroup1);
+			articlePrice1.PriceGroups.Add (articlePriceGroup2);
+			articlePrice1.PriceGroups.Add (articlePriceGroup3);
+			return articlePrice1;
 		}
 	}
 }
