@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-
 		protected override EditionStatus GetEditionStatus()
 		{
 			var entity = this.Entity;

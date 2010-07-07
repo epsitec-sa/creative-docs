@@ -274,12 +274,18 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateDatabaseSchemas()
 		{
-			this.DataContext.CreateSchema<RelationEntity> ();
-			this.DataContext.CreateSchema<NaturalPersonEntity> ();
-			this.DataContext.CreateSchema<AbstractPersonEntity> ();
-			this.DataContext.CreateSchema<MailContactEntity> ();
-			this.DataContext.CreateSchema<TelecomContactEntity> ();
-			this.DataContext.CreateSchema<UriContactEntity> ();
+			var dataContext = this.DataContext;
+
+			dataContext.CreateSchema<RelationEntity> ();
+			dataContext.CreateSchema<NaturalPersonEntity> ();
+			dataContext.CreateSchema<AbstractPersonEntity> ();
+			dataContext.CreateSchema<MailContactEntity> ();
+			dataContext.CreateSchema<TelecomContactEntity> ();
+			dataContext.CreateSchema<UriContactEntity> ();
+			dataContext.CreateSchema<ArticleDefinitionEntity> ();
+			dataContext.CreateSchema<InvoiceDocumentEntity> ();
+			
+			dataContext.CreateSchema<PaymentDetailEventEntity> ();
 		}
 
 		private void PopulateDatabase()
