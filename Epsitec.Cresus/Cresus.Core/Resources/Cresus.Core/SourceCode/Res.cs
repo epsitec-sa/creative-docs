@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0AMC
+				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
 				//	designer:cap/L0A23
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 			}
@@ -69,6 +71,8 @@ namespace Epsitec.Cresus.Core
 		{
 			public static class Base
 			{
+				//	designer:cap/L0AMC
+				public const long ShowArticleDefinitions = 0x150000A000196L;
 				//	designer:cap/L0A23
 				public const long ShowCustomers = 0x150000A000062L;
 			}

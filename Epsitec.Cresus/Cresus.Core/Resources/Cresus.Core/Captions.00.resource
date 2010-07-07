@@ -239,7 +239,7 @@
   <data name="Val.VatCode.StandardTaxOnTurnover" id="AO8">&lt;s:data id="_0" f:Name="StandardTaxOnTurnover" f:Labels="{Collection {Text 'TVA'}}" /&gt;</data>
   <data name="Val.VatCode.ReducedTaxOnTurnover" id="AP8">&lt;s:data id="_0" f:Name="ReducedTaxOnTurnover" f:Labels="{Collection {Text 'TVARED'}}" /&gt;</data>
   <data name="Val.VatCode.SpecialTaxOnTurnover" id="AQ8">&lt;s:data id="_0" f:Name="SpecialTaxOnTurnover" f:Labels="{Collection {Text 'TVAHEB'}}" /&gt;</data>
-  <data name="Typ.VatCode" id="AE8">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="VatCode" f:_1.SystemType="E:Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0AF8]'}, {Text '1 [L0AG8]'}, {Text '2 [L0AH8]'}, {Text '3 [L0AI8]'}, {Text '4 [L0AJ8]'}, {Text '5 [L0AK8]'}, {Text '6 [L0AL8]'}, {Text '7 [L0AM8]'}, {Text '8 [L0AN8]'}, {Text '9 [L0AO8]'}, {Text '10 [L0AP8]'}, {Text '11 [L0AQ8]'}}" f:Labels="{Collection {Text 'Code TVA'}}" /&gt;</data>
+  <data name="Typ.VatCode" id="AE8">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="VatCode" f:_1.SystemType="E:Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0AF8]'}, {Text '1 [L0AG8]'}, {Text '2 [L0AH8]'}, {Text '3 [L0AI8]'}, {Text '4 [L0AJ8]'}, {Text '5 [L0AK8]'}, {Text '6 [L0AL8]'}, {Text '7 [L0AM8]'}, {Text '8 [L0AN8]'}, {Text '9 [L0AO8]'}, {Text '10 [L0AP8]'}, {Text '11 [L0AQ8]'}, {Text '12 [L0AJC]'}, {Text '13 [L0AKC]'}, {Text '14 [L0ALC]'}}" f:Labels="{Collection {Text 'Code TVA'}}" /&gt;</data>
   <data name="Typ.BookAccount" id="AR8">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:data id="_0" f:Name="BookAccount" f:_1.SystemType="C:System.String" f:_1.DefaultController="String" f:_1.DefaultControllerParameters="" f:Labels="{Collection {Text 'Compte comptable'}}" /&gt;</data>
   <data name="Fld.Affair.Comments" id="AS8">&lt;s:data id="_0" f:Name="Comments" /&gt;</data>
   <data name="Fld.Case.Comments" id="AT8">&lt;s:data id="_0" f:Name="Comments" /&gt;</data>
@@ -355,4 +355,8 @@
   <data name="Fld.UnitOfMeasure.Name" id="AGC">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
   <data name="Fld.ArticleCategory.NeverApplyDiscount" id="AHC">&lt;s:data id="_0" f:Name="NeverApplyDiscount" /&gt;</data>
   <data name="Fld.TotalDocumentItem.Text" id="AIC">&lt;s:data id="_0" f:Name="Text" /&gt;</data>
+  <data name="Val.VatCode.StandardTax" id="AJC">&lt;s:data id="_0" f:Name="StandardTax" f:Labels="{Collection {Text 'Taux normal'}}" /&gt;</data>
+  <data name="Val.VatCode.ReducedTax" id="AKC">&lt;s:data id="_0" f:Name="ReducedTax" f:Labels="{Collection {Text 'Taux réduit'}}" /&gt;</data>
+  <data name="Val.VatCode.SpecialTax" id="ALC">&lt;s:data id="_0" f:Name="SpecialTax" f:Labels="{Collection {Text 'Taux spécial'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowArticleDefinitions" id="AMC">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowArticleDefinitions" f:Description="Montre la base des articles" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.ArticleDefinitions.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Articles'}}" /&gt;</data>
 </bundle>

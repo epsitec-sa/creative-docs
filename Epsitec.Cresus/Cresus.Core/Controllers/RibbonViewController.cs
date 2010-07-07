@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
 		}
 
 		private void CreateRibbonStateSection()

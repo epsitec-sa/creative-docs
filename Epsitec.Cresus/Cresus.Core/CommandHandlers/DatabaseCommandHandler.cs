@@ -29,6 +29,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.SelectDatabase ("Customers", e);
 		}
 
+		[Command (Core.Res.CommandIds.Base.ShowArticleDefinitions)]
+		public void ProcessBaseShowArticleDefinitions(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectDatabase ("ArticleDefinitions", e);
+		}
+
 
 		private void SetupDatabaseCommands()
 		{

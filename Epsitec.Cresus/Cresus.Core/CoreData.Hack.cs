@@ -87,6 +87,11 @@ namespace Epsitec.Cresus.Core
 			return new RelationRepository (this.DataContext).GetAllRelations ();
 		}
 
+		public IEnumerable<ArticleDefinitionEntity> GetArticleDefinitions()
+		{
+			return new ArticleDefinitionRepository (this.DataContext).GetAllArticleDefinitions ();
+		}
+
 		public IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)
 		{
 			var repository = new RelationRepository (this.DataContext);

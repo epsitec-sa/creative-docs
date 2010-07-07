@@ -154,6 +154,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				case "Customers":
 					this.SetContents (() => this.data.GetCustomers ());
 					break;
+
+				case "ArticleDefinitions":
+					this.SetContents (() => this.data.GetArticleDefinitions ());
+					break;
 			}
 		}
 		
@@ -261,6 +265,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var customer = entity as RelationEntity;
 				return UIBuilder.FormatText (BrowserViewController.GetEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
+			}
+			if (entity is ArticleDefinitionEntity)
+			{
+				var article = entity as ArticleDefinitionEntity;
+				return UIBuilder.FormatText (article.ShortDescription);
 			}
 			
 			return FormattedText.Empty;
