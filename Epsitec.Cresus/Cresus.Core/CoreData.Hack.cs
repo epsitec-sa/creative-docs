@@ -11,6 +11,7 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core
 {
@@ -108,6 +109,7 @@ namespace Epsitec.Cresus.Core
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase ().ToArray ();
+			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, articleDefs).ToArray ();
 
 			this.DataContext.SaveChanges ();
 		}
@@ -501,12 +503,18 @@ namespace Epsitec.Cresus.Core
 			priceRoundingMode.AddBeforeModulo = 0.025M;
 			priceRoundingMode.PriceRoundingPolicy = BusinessLogic.Finance.RoundingPolicy.OnFinalPriceAfterTax;
 
-			var articleCategory = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
+			var articleCategory1 = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
 
-			articleCategory.Name = "Logiciels Crésus";
-			articleCategory.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
-			articleCategory.DefaultAccounting.Add (accountingDef);
-			articleCategory.DefaultRoundingMode = priceRoundingMode;
+			articleCategory1.Name = "Logiciels Crésus";
+			articleCategory1.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory1.DefaultAccounting.Add (accountingDef);
+			articleCategory1.DefaultRoundingMode = priceRoundingMode;
+
+			var articleCategory2 = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
+
+			articleCategory2.Name = "Ports/emballages";
+			articleCategory2.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory2.NeverApplyDiscount = true;
 
 			var articlePriceGroup1 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup2 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
@@ -528,37 +536,211 @@ namespace Epsitec.Cresus.Core
 			var articleDef1 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
 			var articleDef2 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
 			var articleDef3 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
+			var articleDef4 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
 
+			articleDef1.Id = "CR-CP";
 			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
 			articleDef1.LongDescription  = "Crésus Comptabilité PRO<br/>Logiciel de comptabilité pour PME, artisans et indépendants.<br/>Jusqu'à 64'000 écritures par année.";
 			articleDef1.ArticleGroups.Add (articleGroup1);
-			articleDef1.ArticleCategory = articleCategory;
+			articleDef1.ArticleCategory = articleCategory1;
 			articleDef1.BillingUnit = uomUnit1;
 			articleDef1.Units = uomGroup;
-			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 446.10M));
+			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
+			articleDef2.Id = "CR-SP";
 			articleDef2.ShortDescription = "Crésus Salaires PRO";
 			articleDef2.LongDescription  = "Crésus Salaires PRO<br/>Logiciel de comptabilité salariale.<br/>Jusqu'à 20 salaires par mois.";
 			articleDef2.ArticleGroups.Add (articleGroup1);
-			articleDef2.ArticleCategory = articleCategory;
+			articleDef2.ArticleCategory = articleCategory1;
 			articleDef2.BillingUnit = uomUnit1;
 			articleDef2.Units = uomGroup;
-			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 446.10M));
+			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
+			articleDef3.Id = "CR-FL";
 			articleDef3.ShortDescription = "Crésus Facturation LARGO";
 			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.";
 			articleDef3.ArticleGroups.Add (articleGroup1);
-			articleDef3.ArticleCategory = articleCategory;
+			articleDef3.ArticleCategory = articleCategory1;
 			articleDef3.BillingUnit = uomUnit1;
 			articleDef3.Units = uomGroup;
-			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (articlePriceGroup1, articlePriceGroup2, articlePriceGroup3, 892.20M));
+			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (892.20M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
+
+			articleDef4.Id = "EMB";
+			articleDef4.ShortDescription = "Port et emballage";
+			articleDef4.ArticleCategory = articleCategory2;
+			articleDef4.ArticlePrices.Add (this.CreateArticlePrice (11.15M));
 
 			yield return articleDef1;
 			yield return articleDef2;
 			yield return articleDef3;
+			yield return articleDef4;
 		}
 
-		private ArticlePriceEntity CreateArticlePrice(ArticlePriceGroupEntity articlePriceGroup1, ArticlePriceGroupEntity articlePriceGroup2, ArticlePriceGroupEntity articlePriceGroup3, decimal price)
+		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentInDatabase(MailContactEntity billingAddress, ArticleDefinitionEntity[] articleDefs)
+		{
+			decimal vatRate = 0.076M;
+
+			var billingA = this.DataContext.CreateEmptyEntity<BillingDetailsEntity> ();
+			var invoiceA = this.DataContext.CreateEmptyEntity<InvoiceDocumentEntity> ();
+
+			invoiceA.Id = "1000";
+			invoiceA.DocumentSource = BusinessLogic.DocumentSource.Generated;
+			invoiceA.Description = "Facture de test #1000";
+			invoiceA.CreationDate = new System.DateTime (2010, 7, 8);
+			invoiceA.LastModificationDate = System.DateTime.Now;
+			invoiceA.BillingMailContact = billingAddress;
+			invoiceA.ShippingMailContact = billingAddress;
+			invoiceA.OtherPartyBillingMode = BusinessLogic.Finance.BillingMode.IncludingTax;
+			invoiceA.OtherPartyTaxMode = BusinessLogic.Finance.TaxMode.LiableForVat;
+			invoiceA.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			invoiceA.BillingStatus = BusinessLogic.Finance.BillingStatus.DebtorBillOpen;
+			invoiceA.BillingDetails.Add (billingA);
+			invoiceA.DebtorBookAccount = "1100";
+
+			var textA1 = this.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+
+			textA1.Visibility = true;
+			textA1.Text = "Logiciels";
+
+			var lineA1 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			var quantityA1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+
+			lineA1.Visibility = true;
+			lineA1.IndentationLevel = 0;
+			lineA1.BeginDate = invoiceA.CreationDate;
+			lineA1.EndDate = invoiceA.CreationDate;
+			lineA1.ArticleDefinition = articleDefs.Where (x => x.Id == "CR-CP").FirstOrDefault ();
+			lineA1.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
+			lineA1.NeverApplyDiscount = false;
+			lineA1.FinalLinePriceBeforeTax = (int) lineA1.PrimaryUnitPriceBeforeTax;
+			lineA1.FinalLineTax = lineA1.FinalLinePriceBeforeTax * vatRate;
+			lineA1.ArticleShortDescription = lineA1.ArticleDefinition.ShortDescription;
+			lineA1.ArticleLongDescription = lineA1.ArticleDefinition.LongDescription;
+			
+			quantityA1.Code = "livré";
+			quantityA1.Quantity = 3;
+			quantityA1.Unit = lineA1.ArticleDefinition.BillingUnit;
+			quantityA1.ExpectedDate = new Date (2010, 7, 8);
+
+			lineA1.ArticleQuantities.Add (quantityA1);
+
+			var lineA2 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			var quantityA2_1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var quantityA2_2 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+
+			lineA2.Visibility = true;
+			lineA2.IndentationLevel = 0;
+			lineA2.BeginDate = invoiceA.CreationDate;
+			lineA2.EndDate = invoiceA.CreationDate;
+			lineA2.ArticleDefinition = articleDefs.Where (x => x.Id == "CR-FL").FirstOrDefault ();
+			lineA2.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
+			lineA2.NeverApplyDiscount = false;
+			lineA2.FinalLinePriceBeforeTax = (int) lineA2.PrimaryUnitPriceBeforeTax;
+			lineA2.FinalLineTax = lineA2.FinalLinePriceBeforeTax * vatRate;
+			lineA2.ArticleShortDescription = lineA2.ArticleDefinition.ShortDescription;
+			lineA2.ArticleLongDescription = lineA2.ArticleDefinition.LongDescription;
+
+			quantityA2_1.Code = "livré";
+			quantityA2_1.Quantity = 1;
+			quantityA2_1.Unit = lineA2.ArticleDefinition.BillingUnit;
+			quantityA2_1.ExpectedDate = new Date (2010, 7, 8);
+
+			quantityA2_2.Code = "suivra";
+			quantityA2_2.Quantity = 1;
+			quantityA2_2.Unit = lineA2.ArticleDefinition.BillingUnit;
+			quantityA2_2.ExpectedDate = new Date (2010, 7, 19);
+
+			lineA2.ArticleQuantities.Add (quantityA2_1);
+			lineA2.ArticleQuantities.Add (quantityA2_2);
+
+			var lineA3 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+			lineA3.Visibility = true;
+			lineA3.IndentationLevel = 0;
+			lineA3.BeginDate = invoiceA.CreationDate;
+			lineA3.EndDate = invoiceA.CreationDate;
+			lineA3.ArticleDefinition = articleDefs.Where (x => x.Id == "EMB").FirstOrDefault ();
+			lineA3.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax;
+			lineA3.NeverApplyDiscount = true;
+			lineA3.FinalLinePriceBeforeTax = (int) lineA3.PrimaryUnitPriceBeforeTax;
+			lineA3.FinalLineTax = lineA3.FinalLinePriceBeforeTax * vatRate;
+			lineA3.ArticleShortDescription = lineA3.ArticleDefinition.ShortDescription;
+			lineA3.ArticleLongDescription = lineA3.ArticleDefinition.LongDescription;
+
+			var discountA1 = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
+
+			discountA1.Description = "Rabais de quantité";
+			discountA1.DiscountRate = 0.20M;
+
+			var totalA1 = this.DataContext.CreateEmptyEntity<TotalDocumentItemEntity> ();
+
+			//	Total avec rabais; devrait s'imprimer ainsi :
+			//
+			//	Rabais de quantité ............................... xx
+			//	Total après rabais ............................. xxxx
+
+			totalA1.Visibility = true;
+			totalA1.Discount = discountA1;
+			totalA1.FinalPriceBeforeTax = (lineA1.PrimaryLinePriceBeforeTax + lineA2.PrimaryLinePriceBeforeTax) * (1.0M - discountA1.DiscountRate);
+			totalA1.FinalTax = totalA1.FinalPriceBeforeTax * vatRate;
+			totalA1.Text = "Total après rabais";
+
+			var totalA2 = this.DataContext.CreateEmptyEntity<TotalDocumentItemEntity> ();
+
+			totalA2.Visibility = true;
+			totalA2.FixedPriceBeforeTax = (int) ((totalA1.FinalPriceBeforeTax + lineA3.PrimaryLinePriceBeforeTax) / 10) * 10M;
+			totalA2.FinalPriceBeforeTax = totalA2.FixedPriceBeforeTax;
+			totalA2.FinalTax = totalA2.FinalPriceBeforeTax * vatRate;
+			totalA2.Text = "Total arrêté";
+
+			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
+			//	lignes d'articles qui peuvent être soumis à un rabais :
+
+			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA3.PrimaryLinePriceBeforeTax) / totalA1.FinalPriceBeforeTax.Value;
+			var decimalType = DecimalType.Default;
+
+			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.FinalLinePriceBeforeTax * fixedPriceDiscount);
+			lineA1.FinalLineTax = decimalType.Range.ConstrainToZero (lineA1.FinalLineTax * fixedPriceDiscount);
+			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.FinalLinePriceBeforeTax * fixedPriceDiscount);
+			lineA2.FinalLineTax = decimalType.Range.ConstrainToZero (lineA2.FinalLineTax * fixedPriceDiscount);
+
+			invoiceA.Lines.Add (textA1);		//	Logiciels
+			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3
+			invoiceA.Lines.Add (lineA2);		//	  Crésus Fact LARGO x 1 (et 1 qui sera livré le 19/07/2010)
+			invoiceA.Lines.Add (totalA1);		//	Rabais de quantité et sous-total après rabais
+			invoiceA.Lines.Add (lineA3);		//	  Frais de port
+			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1790.00
+
+			var paymentMode = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+
+			paymentMode.Code = "BILL";
+			paymentMode.Name = "BVR à 30 jours net";
+			paymentMode.Description = "Facture payable au moyen du bulletin de versement ci-joint.\nConditions: 30 jours net.";
+			paymentMode.BookAccount = "1010";
+			paymentMode.StandardPaymentTerm = 30;
+
+			var paymentA = this.DataContext.CreateEmptyEntity<PaymentDetailEntity> ();
+
+			paymentA.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
+			paymentA.PaymentMode = paymentMode;
+			paymentA.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value;
+			paymentA.Date = new Date (2010, 08, 06);
+
+			billingA.Title = "Votre commande du 5 juillet 2010";
+			billingA.AmountDue = paymentA;
+			billingA.EsrCustomerNumber = "01-69444-3";										//	compte BVR
+			billingA.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";				//	n° de réf BVR lié
+
+			yield return invoiceA;
+		}
+
+		private ArticlePriceEntity CreateArticlePrice(decimal price, ArticlePriceGroupEntity articlePriceGroup1 = null, ArticlePriceGroupEntity articlePriceGroup2 = null, ArticlePriceGroupEntity articlePriceGroup3 = null)
 		{
 			var articlePrice1 = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
 
@@ -568,9 +750,9 @@ namespace Epsitec.Cresus.Core
 			articlePrice1.MaxQuantity = null;
 			articlePrice1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
 			articlePrice1.ValueBeforeTax = price;
-			articlePrice1.PriceGroups.Add (articlePriceGroup1);
-			articlePrice1.PriceGroups.Add (articlePriceGroup2);
-			articlePrice1.PriceGroups.Add (articlePriceGroup3);
+			if (articlePriceGroup1 != null) articlePrice1.PriceGroups.Add (articlePriceGroup1);
+			if (articlePriceGroup2 != null) articlePrice1.PriceGroups.Add (articlePriceGroup2);
+			if (articlePriceGroup3 != null) articlePrice1.PriceGroups.Add (articlePriceGroup3);
 			return articlePrice1;
 		}
 	}
