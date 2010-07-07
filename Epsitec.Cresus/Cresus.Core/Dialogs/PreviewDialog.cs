@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
-			window.Text = "Aperçu";
-			window.WindowSize = new Size (800, 1000);
+			window.Text = "Aperçu avant impression";
+			window.WindowSize = new Size (210*3, 297*3+40);
 			window.MakeFloatingWindow ();
 		}
 

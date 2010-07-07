@@ -156,10 +156,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printButton = new Button ()
 			{
 				Dock = DockStyle.StackFill,
-				Margins = new Margins (10, 10, 0, 10),
+				Margins = new Margins (10, 2, 0, 10),
 				Parent = buttonsFrameBox,
 				Text = "Imprimer",
 				TabIndex = 1,
+			};
+
+			this.previewButton = new Button ()
+			{
+				Dock = DockStyle.StackFill,
+				Margins = new Margins (0, 12, 0, 10),
+				Parent = buttonsFrameBox,
+				Text = "Aperçu",
+				TabIndex = 2,
 			};
 
 			this.cancelButton = new Button ()
@@ -168,7 +177,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 10, 0, 10),
 				Parent = buttonsFrameBox,
 				Text = "Annuler",
-				TabIndex = 2,
+				TabIndex = 3,
 			};
 		}
 
@@ -186,6 +195,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.nbCopiesTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
 			this.cancelButton.Clicked += (sender, e) => this.CloseDialog ();
 			this.printButton.Clicked += (sender, e) => this.Print ();
+			this.previewButton.Clicked += (sender, e) => this.Preview ();
 		}
 
 		/// <summary>
@@ -254,7 +264,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-
 		protected void PrintEntities(Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
 			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
@@ -285,6 +294,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		protected void Preview()
+		{
+			this.CloseDialog ();
+
+			var dialog = new Dialogs.PreviewDialog (CoreProgram.Application, this.entityPrinter, this.entities);
+			dialog.OpenDialog ();
+		}
+
+
 		protected void LogPrint()
 		{
 		}
@@ -296,6 +314,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<Printer> printers;
 
 		private Button printButton;
+		private Button previewButton;
 		private Button cancelButton;
 		private TextFieldUpDown nbCopiesTextField;
 		private TextFieldCombo printerTextField;

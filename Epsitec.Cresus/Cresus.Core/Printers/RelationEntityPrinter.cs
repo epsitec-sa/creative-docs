@@ -61,7 +61,19 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//?Font font = Font.GetFont ("Arial", "Regular");
 			Font font = Font.GetFont ("Times New Roman", "Regular");
-			AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
+			//?AbstractEntityPrinter.PaintText (port, text, new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top-150, 150, 150), font, fontSize);
+
+#if true
+			var t = new ObjectTextBox ();
+			t.Text = "Ceci est un texte plus long que les autres, pour tester...";
+			t.Bounds = new Rectangle (10, 50, 35.5, 150);
+			t.Paint (port);
+
+			double h = t.RequiredHeight;
+			Rectangle bb = new Rectangle (t.Bounds.Left, t.Bounds.Top-h, t.Bounds.Width, h);
+			port.LineWidth = 0.1;
+			port.PaintOutline (Path.FromRectangle (bb));
+#endif
 
 #if true
 			var table = new ObjectTable ();
@@ -83,13 +95,13 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (2, 2, "Vert");
 			table.SetText (3, 2, "Bleu");
 
-			table.SetRelativeColumWidth (1, 1.5);
+			//?table.SetRelativeColumWidth (1, 1.5);
 
 			table.Bounds = new Rectangle(10, 100, 150, 150);
 			table.Paint (port);
 #endif
 
-#if true
+#if false
 			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
 			Point pos;
 			int firstLine;
