@@ -394,6 +394,7 @@ namespace Epsitec.Cresus.DataLayer.Browser
 		private void AddConditionsForEntity(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
 			this.AddConditionForRootEntityStatus (dbReader, entity, rootEntityAlias);
+			this.AddConditionForRootEntityId (dbReader, entity, request, rootEntityAlias);
 			this.AddJoinToSubEntities (dbReader, entity, rootEntityAlias);
 			this.AddConditionForFields (dbReader, entity, request, rootEntityAlias);
 			this.AddConditionsForLocalConstraints (dbReader, entity, request, rootEntityAlias);
@@ -421,6 +422,29 @@ namespace Epsitec.Cresus.DataLayer.Browser
 			};
 
 			dbReader.AddCondition (condition);
+		}
+
+
+		private void AddConditionForRootEntityId(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
+		{
+			AbstractEntity rootEntityReference = request.RootEntityReference;
+			
+			if (rootEntityReference != null && entity == request.RootEntity)
+			{
+				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
+				EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (rootEntityReference);
+
+				long id = mapping.RowKey.Id.Value;
+				DbTableColumn columnId = this.GetEntityColumn (rootEntityId, rootEntityAlias.Alias, DataBrowser.idColumn);
+
+				DbSelectCondition condition = new DbSelectCondition ()
+				{
+					Condition = DbSimpleCondition.CreateCondition(columnId, DbSimpleConditionOperator.Equal, id),
+				};
+
+				dbReader.AddCondition (condition);
+			}
 		}
 
 

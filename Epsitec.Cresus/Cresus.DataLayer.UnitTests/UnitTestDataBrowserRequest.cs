@@ -666,6 +666,99 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		[TestMethod]
+		public void RootEntityReferenceRequest1()
+		{
+			TestHelper.PrintStartTest ("Root entity reference request 1.");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example = Database2.GetCorrectExample1();
+				NaturalPersonEntity alfred = dataBrowser.GetByExample<NaturalPersonEntity> (example).First ();
+
+				Request request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity(),
+					RootEntityReference = alfred,
+				};
+
+				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Length == 1);
+
+				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void RootEntityReferenceRequest2()
+		{
+			TestHelper.PrintStartTest ("Root entity reference request 2.");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity alfred1 = dataBrowser.GetByExample<NaturalPersonEntity> (example1).First ();
+
+				NaturalPersonEntity example2 = new NaturalPersonEntity ();
+				example2.Contacts.Add (new UriContactEntity ()
+				{
+					UriScheme = new UriSchemeEntity ()
+				});
+
+				Request request = new Request ()
+				{
+					RootEntity = example2,
+					RootEntityReference = alfred1,
+					RequestedEntity = (example2.Contacts[0] as UriContactEntity).UriScheme,
+				};
+
+				UriSchemeEntity[] uriSchemes = dataBrowser.GetByRequest<UriSchemeEntity> (request).ToArray ();
+
+				Assert.IsTrue (uriSchemes.Length == 1);
+
+				Assert.IsTrue (uriSchemes.Any (s => s.Code == "mailto:" && s.Name == "email"));
+			}
+		}
+
+
+		[TestMethod]
+		public void RootEntityReferenceRequest3()
+		{
+			TestHelper.PrintStartTest ("Root entity reference request 3.");
+
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			{
+				DataBrowser dataBrowser = new DataBrowser (dataContext);
+
+				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity alfred1 = dataBrowser.GetByExample<NaturalPersonEntity> (example1).First ();
+
+				NaturalPersonEntity example2 = new NaturalPersonEntity ();
+				example2.Contacts.Add (new AbstractContactEntity ());
+
+				Request request = new Request ()
+				{
+					RootEntity = example2,
+					RootEntityReference = alfred1,
+					RequestedEntity = example2.Contacts[0],
+				};
+
+				UriContactEntity[] contacts = dataBrowser.GetByRequest<UriContactEntity> (request).ToArray ();
+
+				Assert.IsTrue (contacts.Length == 2);
+
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+			}
+		}
+
+
 		private bool IsExceptionThrown(System.Action action)
 		{
 			try
