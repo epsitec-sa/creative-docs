@@ -284,6 +284,10 @@ namespace Epsitec.Cresus.Core
 			dataContext.CreateSchema<UriContactEntity> ();
 			dataContext.CreateSchema<ArticleDefinitionEntity> ();
 			dataContext.CreateSchema<InvoiceDocumentEntity> ();
+
+			dataContext.CreateSchema<ArticleDocumentItemEntity> ();
+			dataContext.CreateSchema<TextDocumentItemEntity> ();
+			dataContext.CreateSchema<TotalDocumentItemEntity> ();
 			
 			dataContext.CreateSchema<PaymentDetailEventEntity> ();
 		}

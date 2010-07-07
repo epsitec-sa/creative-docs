@@ -128,6 +128,18 @@ namespace Epsitec.Common.Types
 		}
 
 
+		public decimal? Constrain(decimal? value)
+		{
+			if (value.HasValue)
+			{
+				return this.Constrain (value.Value);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public decimal Constrain(decimal value)
 		{
 			//	Tronque la précision de la valeur à la résolution courante,
@@ -193,6 +205,18 @@ namespace Epsitec.Common.Types
 			return this.Constrain ((decimal) value);
 		}
 
+
+		public decimal? ConstrainToZero(decimal? value)
+		{
+			if (value.HasValue)
+			{
+				return this.ConstrainToZero (value.Value);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		public decimal ConstrainToZero(decimal value)
 		{
