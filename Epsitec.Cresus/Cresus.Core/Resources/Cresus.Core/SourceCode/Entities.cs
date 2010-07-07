@@ -5104,19 +5104,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ5/L0AU5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AU5]")]
-		public global::Epsitec.Common.Types.DateSpan? RestockingDelay
+		public int? RestockingDelay
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.DateSpan?> ("[L0AU5]");
+				return this.GetField<int?> ("[L0AU5]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.DateSpan? oldValue = this.RestockingDelay;
+				int? oldValue = this.RestockingDelay;
 				if (oldValue != value)
 				{
 					this.OnRestockingDelayChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.DateSpan?> ("[L0AU5]", oldValue, value);
+					this.SetField<int?> ("[L0AU5]", oldValue, value);
 					this.OnRestockingDelayChanged (oldValue, value);
 				}
 			}
@@ -5202,8 +5202,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnStockLocationChanging(global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity newValue);
 		partial void OnStockLocationChanged(global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleStockLocationEntity newValue);
-		partial void OnRestockingDelayChanging(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
-		partial void OnRestockingDelayChanged(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
+		partial void OnRestockingDelayChanging(int? oldValue, int? newValue);
+		partial void OnRestockingDelayChanged(int? oldValue, int? newValue);
 		partial void OnRestockingThresholdChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnRestockingThresholdChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnSupplierRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
@@ -5660,19 +5660,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AL6/L0AJB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJB]")]
-		public global::Epsitec.Common.Types.DateSpan? StandardPaymentTerm
+		public int? StandardPaymentTerm
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.DateSpan?> ("[L0AJB]");
+				return this.GetField<int?> ("[L0AJB]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.DateSpan? oldValue = this.StandardPaymentTerm;
+				int? oldValue = this.StandardPaymentTerm;
 				if (oldValue != value)
 				{
 					this.OnStandardPaymentTermChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.DateSpan?> ("[L0AJB]", oldValue, value);
+					this.SetField<int?> ("[L0AJB]", oldValue, value);
 					this.OnStandardPaymentTermChanged (oldValue, value);
 				}
 			}
@@ -5684,8 +5684,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnBookAccountChanging(string oldValue, string newValue);
 		partial void OnBookAccountChanged(string oldValue, string newValue);
-		partial void OnStandardPaymentTermChanging(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
-		partial void OnStandardPaymentTermChanged(global::Epsitec.Common.Types.DateSpan? oldValue, global::Epsitec.Common.Types.DateSpan? newValue);
+		partial void OnStandardPaymentTermChanging(int? oldValue, int? newValue);
+		partial void OnStandardPaymentTermChanged(int? oldValue, int? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
