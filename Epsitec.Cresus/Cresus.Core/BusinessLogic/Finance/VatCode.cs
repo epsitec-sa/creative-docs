@@ -13,9 +13,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Finance
 	{
 		None = 0,
 
-		Excluded = 10,											//	EXCLU, exclu de l'impôt LTVA art. 21 (http://www.admin.ch/ch/f/rs/641_20/index.html) et (http://www.epsitec.ch/support/faq/cc-tva-06)
-		ZeroRated = 11,											//	EXONERE et EXPORT, exonéré LTVA art. 23
+		Excluded    = 10,										//	EXCLU, exclu de l'impôt LTVA art. 21 (http://www.admin.ch/ch/f/rs/641_20/index.html) et (http://www.epsitec.ch/support/faq/cc-tva-06)
+		ZeroRated   = 11,										//	EXONERE et EXPORT, exonéré LTVA art. 23
 		
+		StandardTax = 12,										//	taux normal (IPM/IPI/TVA selon le contexte)
+		ReducedTax  = 13,										//	taux réduit (IPMRED/IPIRED/TVARED selon le contexte)
+		SpecialTax  = 14,										//	taux spécial (IPMHEB/IPIHEB/TVAHEB selon le contexte)
+
 
 		StandardInputTaxOnMaterialOrServiceExpenses = 20,		//	IPM
 		ReducedInputTaxOnMaterialOrServiceExpenses = 21,		//	IPMRED

@@ -3810,26 +3810,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticlePriceGroup</c> entity.
 	///	designer:cap/L0AC4
 	///	</summary>
-	public partial class ArticlePriceGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class ArticlePriceGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
-		#region IItemRank Members
-		///	<summary>
-		///	The <c>Rank</c> field.
-		///	designer:fld/L0AC4/L0A03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
-		public int? Rank
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
-			}
-		}
-		#endregion
 		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
@@ -6070,26 +6052,8 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>UnitOfMeasure</c> entity.
 	///	designer:cap/L0A99
 	///	</summary>
-	public partial class UnitOfMeasureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class UnitOfMeasureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
-		#region IItemRank Members
-		///	<summary>
-		///	The <c>Rank</c> field.
-		///	designer:fld/L0A99/L0A03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
-		public int? Rank
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
-			}
-		}
-		#endregion
 		#region IItemCode Members
 		///	<summary>
 		///	The <c>Code</c> field.
@@ -6196,6 +6160,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0A99/L0AGC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AGC]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AGC]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AGC]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDivideRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDivideRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -6205,6 +6191,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSmallestIncrementChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory newValue);
 		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory newValue);
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
