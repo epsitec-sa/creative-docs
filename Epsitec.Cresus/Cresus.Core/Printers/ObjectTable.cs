@@ -151,6 +151,31 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			this.width = width;
+			this.pagesInfo.Clear ();
+
+			//	Essaie de tout mettre sur la première page.
+			this.ComputeRow (0, initialHeight, middleheight, finalHeight);
+
+
+		}
+
+		private bool ComputeRow(int startRow, double initialHeight, double middleheight, double finalHeight)
+		{
+			//	Essaie de mettre un maximum de lignes sur une page donnée.
+			//	Retourne true s'il y a assez de place pour tout mettre (donc jusquà la fin).
+			int pageCount = 0;
+
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				ObjectTextBox textBox = this.GetTextBox (column, startRow);
+				double width = this.GetAbsoluteColumnWidth (column);
+
+				textBox.InitializePages (width, initialHeight, middleheight, finalHeight);
+
+				pageCount = System.Math.Max (pageCount, textBox.PageCount);
+			}
+
+			return true;
 		}
 
 		public override int PageCount
@@ -173,24 +198,26 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int row = pageInfo.FirstRow; row < pageInfo.FirstRow+pageInfo.RowCount; row++)
 			{
-				var rowInfo = pageInfo.RowsInfo[row-pageInfo.FirstRow];
 				double x = topLeft.X;
+				double height = 0;
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
+					var cellInfo = pageInfo.CellsInfo[row-pageInfo.FirstRow][column];
 					ObjectTextBox textBox = this.GetTextBox (column, row);
 					double width = this.GetAbsoluteColumnWidth (column);
 
-					textBox.Paint (port, rowInfo.FirstLine, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top));
+					textBox.Paint (port, cellInfo.FirstLine, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top));
 
 					port.LineWidth = this.CellBorderWidth;
 					port.Color = Color.FromBrightness (0);
-					port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
+					port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-cellInfo.Height, width, cellInfo.Height)));
 
 					x += width;
+					height = System.Math.Max (height, cellInfo.Height);
 				}
 
-				y -= rowInfo.Height;
+				y -= height;
 			}
 		}
 
@@ -268,18 +295,18 @@ namespace Epsitec.Cresus.Core.Printers
 				this.FirstRow  = firstRow;
 				this.RowCount  = rowCount;
 				this.Height    = height;
-				this.RowsInfo = new List<RowInfo> ();
+				this.CellsInfo = new List<List<CellInfo>> ();
 			}
 
-			public int				FirstRow;
-			public int				RowCount;
-			public double			Height;
-			public List<RowInfo>	RowsInfo;
+			public int					FirstRow;
+			public int					RowCount;
+			public double				Height;
+			public List<List<CellInfo>>	CellsInfo;
 		}
 
-		private class RowInfo
+		private class CellInfo
 		{
-			public RowInfo(int firstLine, int lineCount, double height)
+			public CellInfo(int firstLine, int lineCount, double height)
 			{
 				this.FirstLine = firstLine;
 				this.LineCount = lineCount;
@@ -292,11 +319,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private double width;
-		private int columnsCount;
-		private int rowsCount;
-		private List<List<ObjectTextBox>> content;
-		private List<double> relativeColumnsWidth;
-		private List<PageInfo> pagesInfo;
+		private double						width;
+		private int							columnsCount;
+		private int							rowsCount;
+		private List<List<ObjectTextBox>>	content;
+		private List<double>				relativeColumnsWidth;
+		private List<PageInfo>				pagesInfo;
 	}
 }
