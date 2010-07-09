@@ -81,6 +81,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
+			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
+			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
+			System.Diagnostics.Debug.Assert (finalHeight   <= middleheight);
+
 			this.width = width;
 			this.pagesInfo.Clear ();
 
@@ -95,63 +99,34 @@ namespace Epsitec.Cresus.Core.Printers
 				heights[i] = textLayout.GetLineHeight (i);
 			}
 
-			//	Essaie de tout mettre sur la première page.
+			//	Découpe le texte en tranches verticales, la première ayant une hauteur de initialHeight et les suivante
+			//	de middleheight.
+			int line = 0;
 			int lineCount;
-			double height;
-			if (ObjectTextBox.PageCompute (heights, 0, initialHeight, out lineCount, out height))
+			double heightUsed;
+			bool first = true;
+			bool ending;
+			do
 			{
-				this.pagesInfo.Add (new PageInfo(0, lineCount, height));
-				return;
-			}
+				double heightAvailable = first ? initialHeight : middleheight;
+				ending = ObjectTextBox.ComputePage (heights, line, heightAvailable, out lineCount, out heightUsed);
+				this.pagesInfo.Add (new PageInfo (line, lineCount, heightUsed));
 
-			//	Essaie de tout mettre sur la première et la dernière page, sans pages intermédiaires.
-			int lineCount2;
-			double height2;
-			if (ObjectTextBox.PageCompute (heights, lineCount, finalHeight, out lineCount2, out height2))
+				line += lineCount;
+				first = false;
+			}
+			while (!ending);
+
+			//	Si la dernière tranche occupe plus de place que finalHeight, on crée une dernière page vide.
+			if (finalHeight < middleheight &&
+				this.pagesInfo.Count > 1 &&
+				this.pagesInfo[this.pagesInfo.Count-1].Height > finalHeight)
 			{
-				this.pagesInfo.Add (new PageInfo (0, lineCount, height));
-				this.pagesInfo.Add (new PageInfo (lineCount, lineCount2, height2));
-				return;
+				this.pagesInfo.Add (new PageInfo (line, lineCount, 0));
 			}
-
-			//	Met tout avec des pages intermédiaires.
-			this.pagesInfo.Add (new PageInfo (0, lineCount, height));
-
-			for (int middlePageCount = 1; middlePageCount < 100; middlePageCount++)
-			{
-				int index = lineCount;
-
-				//	Essaie avec middlePageCount pages intermédiaires.
-				for (int i = 0; i < middlePageCount; i++)
-				{
-					ObjectTextBox.PageCompute (heights, index, middleheight, out lineCount2, out height2);
-					index += lineCount2;
-				}
-
-				//	Essaie avec la dernière page.
-				if (ObjectTextBox.PageCompute (heights, index, finalHeight, out lineCount2, out height2))
-				{
-					index = lineCount;
-
-					//	Met les pages intermédiaires
-					for (int i = 0; i < middlePageCount; i++)
-					{
-						ObjectTextBox.PageCompute (heights, index, middleheight, out lineCount2, out height2);
-						this.pagesInfo.Add (new PageInfo (index, lineCount2, height2));
-						index += lineCount2;
-					}
-
-					//	Met la dernière page.
-					ObjectTextBox.PageCompute (heights, index, finalHeight, out lineCount2, out height2);
-					this.pagesInfo.Add (new PageInfo (index, lineCount2, height2));
-					return;
-				}
-			}
-
-			//	On ne devrait jamais arriver ici !
 		}
 
-		private static bool PageCompute(double[] heights, int startIndex, double maxHeight, out int lineCount, out double height)
+		private static bool ComputePage(double[] heights, int startIndex, double maxHeight, out int lineCount, out double height)
 		{
 			//	Essaie de mettre un maximum de lignes sur une page donnée.
 			//	Retourne true s'il y a assez de place pour tout mettre (donc jusquà la fin).
@@ -263,7 +238,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private double width;
-		private List<PageInfo> pagesInfo;
+		private double			width;
+		private List<PageInfo>	pagesInfo;
 	}
 }
