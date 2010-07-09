@@ -57,9 +57,10 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A7A]", typeof (Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A9A]", typeof (Epsitec.Cresus.Core.Entities.ArticleDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A8B]", typeof (Epsitec.Cresus.Core.Entities.TextDocumentItemEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAB]", typeof (Epsitec.Cresus.Core.Entities.TotalDocumentItemEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AAB]", typeof (Epsitec.Cresus.Core.Entities.PriceDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQB]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A0C]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQC]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2816,6 +2817,18 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Comments</c> field.
+		///	designer:fld/L0A63/L0AED
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AED]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.CommentEntity> Comments
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.CommentEntity> ("[L0AED]");
+			}
+		}
+		///	<summary>
 		///	The <c>ShortDescription</c> field.
 		///	designer:fld/L0A63/L0A73
 		///	</summary>
@@ -4244,11 +4257,35 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ExchangeRateSource</c> field.
+		///	designer:fld/L0AP4/L0ASC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASC]")]
+		public global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity ExchangeRateSource
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity> ("[L0ASC]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue = this.ExchangeRateSource;
+				if (oldValue != value)
+				{
+					this.OnExchangeRateSourceChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity> ("[L0ASC]", oldValue, value);
+					this.OnExchangeRateSourceChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnCurrencyCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode newValue);
 		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode newValue);
 		partial void OnExchangeRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnExchangeRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnExchangeRateSourceChanging(global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue, global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity newValue);
+		partial void OnExchangeRateSourceChanged(global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity oldValue, global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6145,6 +6182,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0A99/L0AGC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AGC]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AGC]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AGC]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DivideRatio</c> field.
 		///	designer:fld/L0A99/L0AA9
 		///	</summary>
@@ -6232,29 +6291,9 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/L0A99/L0AGC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AGC]")]
-		public string Name
-		{
-			get
-			{
-				return this.GetField<string> ("[L0AGC]");
-			}
-			set
-			{
-				string oldValue = this.Name;
-				if (oldValue != value)
-				{
-					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AGC]", oldValue, value);
-					this.OnNameChanged (oldValue, value);
-				}
-			}
-		}
 		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnDivideRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDivideRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMultiplyRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -6263,8 +6302,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSmallestIncrementChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory newValue);
 		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6865,6 +6902,50 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ResultingLinePriceBeforeTax</c> field.
+		///	designer:fld/L0A9A/L0ACD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ACD]")]
+		public global::System.Decimal? ResultingLinePriceBeforeTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ACD]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingLinePriceBeforeTax;
+				if (oldValue != value)
+				{
+					this.OnResultingLinePriceBeforeTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ACD]", oldValue, value);
+					this.OnResultingLinePriceBeforeTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ResultingLineTax</c> field.
+		///	designer:fld/L0A9A/L0ADD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADD]")]
+		public global::System.Decimal? ResultingLineTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ADD]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingLineTax;
+				if (oldValue != value)
+				{
+					this.OnResultingLineTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ADD]", oldValue, value);
+					this.OnResultingLineTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>FinalLinePriceBeforeTax</c> field.
 		///	designer:fld/L0A9A/L0A4B
 		///	</summary>
@@ -6909,11 +6990,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ArticleShortDescription</c> field.
+		///	The <c>ArticleShortDescriptionCache</c> field.
 		///	designer:fld/L0A9A/L0AVA
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AVA]")]
-		public string ArticleShortDescription
+		public string ArticleShortDescriptionCache
 		{
 			get
 			{
@@ -6921,21 +7002,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.ArticleShortDescription;
+				string oldValue = this.ArticleShortDescriptionCache;
 				if (oldValue != value)
 				{
-					this.OnArticleShortDescriptionChanging (oldValue, value);
+					this.OnArticleShortDescriptionCacheChanging (oldValue, value);
 					this.SetField<string> ("[L0AVA]", oldValue, value);
-					this.OnArticleShortDescriptionChanged (oldValue, value);
+					this.OnArticleShortDescriptionCacheChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>ArticleLongDescription</c> field.
+		///	The <c>ArticleLongDescriptionCache</c> field.
 		///	designer:fld/L0A9A/L0A0B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A0B]")]
-		public string ArticleLongDescription
+		public string ArticleLongDescriptionCache
 		{
 			get
 			{
@@ -6943,12 +7024,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.ArticleLongDescription;
+				string oldValue = this.ArticleLongDescriptionCache;
 				if (oldValue != value)
 				{
-					this.OnArticleLongDescriptionChanging (oldValue, value);
+					this.OnArticleLongDescriptionCacheChanging (oldValue, value);
 					this.SetField<string> ("[L0A0B]", oldValue, value);
-					this.OnArticleLongDescriptionChanged (oldValue, value);
+					this.OnArticleLongDescriptionCacheChanged (oldValue, value);
 				}
 			}
 		}
@@ -6989,14 +7070,18 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
 		partial void OnFixedLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingLineTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLineTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLineTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnArticleShortDescriptionChanging(string oldValue, string newValue);
-		partial void OnArticleShortDescriptionChanged(string oldValue, string newValue);
-		partial void OnArticleLongDescriptionChanging(string oldValue, string newValue);
-		partial void OnArticleLongDescriptionChanged(string oldValue, string newValue);
+		partial void OnArticleShortDescriptionCacheChanging(string oldValue, string newValue);
+		partial void OnArticleShortDescriptionCacheChanged(string oldValue, string newValue);
+		partial void OnArticleLongDescriptionCacheChanging(string oldValue, string newValue);
+		partial void OnArticleLongDescriptionCacheChanged(string oldValue, string newValue);
 		partial void OnReplacementTextChanging(string oldValue, string newValue);
 		partial void OnReplacementTextChanged(string oldValue, string newValue);
 		
@@ -7063,21 +7148,43 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.TotalDocumentItem Entity
+#region Epsitec.Cresus.Core.PriceDocumentItem Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>TotalDocumentItem</c> entity.
+	///	The <c>PriceDocumentItem</c> entity.
 	///	designer:cap/L0AAB
 	///	</summary>
-	public partial class TotalDocumentItemEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity
+	public partial class PriceDocumentItemEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity
 	{
 		///	<summary>
-		///	The <c>Text</c> field.
+		///	The <c>DisplayModes</c> field.
+		///	designer:fld/L0AAB/L0A4D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A4D]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes DisplayModes
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes> ("[L0A4D]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue = this.DisplayModes;
+				if (oldValue != value)
+				{
+					this.OnDisplayModesChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes> ("[L0A4D]", oldValue, value);
+					this.OnDisplayModesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TextForPrimaryPrice</c> field.
 		///	designer:fld/L0AAB/L0AIC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AIC]")]
-		public string Text
+		public string TextForPrimaryPrice
 		{
 			get
 			{
@@ -7085,12 +7192,78 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.Text;
+				string oldValue = this.TextForPrimaryPrice;
 				if (oldValue != value)
 				{
-					this.OnTextChanging (oldValue, value);
+					this.OnTextForPrimaryPriceChanging (oldValue, value);
 					this.SetField<string> ("[L0AIC]", oldValue, value);
-					this.OnTextChanged (oldValue, value);
+					this.OnTextForPrimaryPriceChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TextForResultingPrice</c> field.
+		///	designer:fld/L0AAB/L0ABD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ABD]")]
+		public string TextForResultingPrice
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ABD]");
+			}
+			set
+			{
+				string oldValue = this.TextForResultingPrice;
+				if (oldValue != value)
+				{
+					this.OnTextForResultingPriceChanging (oldValue, value);
+					this.SetField<string> ("[L0ABD]", oldValue, value);
+					this.OnTextForResultingPriceChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TextForFixedPrice</c> field.
+		///	designer:fld/L0AAB/L0A6D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A6D]")]
+		public string TextForFixedPrice
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A6D]");
+			}
+			set
+			{
+				string oldValue = this.TextForFixedPrice;
+				if (oldValue != value)
+				{
+					this.OnTextForFixedPriceChanging (oldValue, value);
+					this.SetField<string> ("[L0A6D]", oldValue, value);
+					this.OnTextForFixedPriceChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TextForTax</c> field.
+		///	designer:fld/L0AAB/L0A5D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A5D]")]
+		public string TextForTax
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A5D]");
+			}
+			set
+			{
+				string oldValue = this.TextForTax;
+				if (oldValue != value)
+				{
+					this.OnTextForTaxChanging (oldValue, value);
+					this.SetField<string> ("[L0A5D]", oldValue, value);
+					this.OnTextForTaxChanged (oldValue, value);
 				}
 			}
 		}
@@ -7117,6 +7290,94 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PrimaryPriceBeforeTax</c> field.
+		///	designer:fld/L0AAB/L0A7D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7D]")]
+		public global::System.Decimal? PrimaryPriceBeforeTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0A7D]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.PrimaryPriceBeforeTax;
+				if (oldValue != value)
+				{
+					this.OnPrimaryPriceBeforeTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0A7D]", oldValue, value);
+					this.OnPrimaryPriceBeforeTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PrimaryTax</c> field.
+		///	designer:fld/L0AAB/L0A8D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A8D]")]
+		public global::System.Decimal? PrimaryTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0A8D]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.PrimaryTax;
+				if (oldValue != value)
+				{
+					this.OnPrimaryTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0A8D]", oldValue, value);
+					this.OnPrimaryTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ResultingPriceBeforeTax</c> field.
+		///	designer:fld/L0AAB/L0A9D
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9D]")]
+		public global::System.Decimal? ResultingPriceBeforeTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0A9D]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingPriceBeforeTax;
+				if (oldValue != value)
+				{
+					this.OnResultingPriceBeforeTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0A9D]", oldValue, value);
+					this.OnResultingPriceBeforeTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ResultingTax</c> field.
+		///	designer:fld/L0AAB/L0AAD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAD]")]
+		public global::System.Decimal? ResultingTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AAD]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingTax;
+				if (oldValue != value)
+				{
+					this.OnResultingTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AAD]", oldValue, value);
+					this.OnResultingTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>FixedPriceBeforeTax</c> field.
 		///	designer:fld/L0AAB/L0ACB
 		///	</summary>
@@ -7135,6 +7396,28 @@ namespace Epsitec.Cresus.Core.Entities
 					this.OnFixedPriceBeforeTaxChanging (oldValue, value);
 					this.SetField<global::System.Decimal?> ("[L0ACB]", oldValue, value);
 					this.OnFixedPriceBeforeTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FixedPriceAfterTax</c> field.
+		///	designer:fld/L0AAB/L0ATC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATC]")]
+		public global::System.Decimal? FixedPriceAfterTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ATC]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.FixedPriceAfterTax;
+				if (oldValue != value)
+				{
+					this.OnFixedPriceAfterTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ATC]", oldValue, value);
+					this.OnFixedPriceAfterTaxChanged (oldValue, value);
 				}
 			}
 		}
@@ -7183,12 +7466,30 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTextChanging(string oldValue, string newValue);
-		partial void OnTextChanged(string oldValue, string newValue);
+		partial void OnDisplayModesChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes newValue);
+		partial void OnDisplayModesChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes newValue);
+		partial void OnTextForPrimaryPriceChanging(string oldValue, string newValue);
+		partial void OnTextForPrimaryPriceChanged(string oldValue, string newValue);
+		partial void OnTextForResultingPriceChanging(string oldValue, string newValue);
+		partial void OnTextForResultingPriceChanged(string oldValue, string newValue);
+		partial void OnTextForFixedPriceChanging(string oldValue, string newValue);
+		partial void OnTextForFixedPriceChanged(string oldValue, string newValue);
+		partial void OnTextForTaxChanging(string oldValue, string newValue);
+		partial void OnTextForTaxChanged(string oldValue, string newValue);
 		partial void OnDiscountChanging(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
 		partial void OnDiscountChanged(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
+		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFixedPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFixedPriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -7196,11 +7497,11 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.TotalDocumentItemEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.PriceDocumentItemEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.TotalDocumentItemEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.PriceDocumentItemEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 362);	// [L0AAB]
 		public static readonly new string EntityStructuredTypeKey = "[L0AAB]";
@@ -7398,6 +7699,55 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 384);	// [L0A0C]
 		public static readonly new string EntityStructuredTypeKey = "[L0A0C]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ExchangeRateSource Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ExchangeRateSource</c> entity.
+	///	designer:cap/L0AQC
+	///	</summary>
+	public partial class ExchangeRateSourceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AQC/L0ARC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARC]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ARC]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0ARC]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 410);	// [L0AQC]
+		public static readonly new string EntityStructuredTypeKey = "[L0AQC]";
 	}
 }
 #endregion

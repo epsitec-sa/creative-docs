@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core
 
 			dataContext.CreateSchema<ArticleDocumentItemEntity> ();
 			dataContext.CreateSchema<TextDocumentItemEntity> ();
-			dataContext.CreateSchema<TotalDocumentItemEntity> ();
+			dataContext.CreateSchema<PriceDocumentItemEntity> ();
 			
 			dataContext.CreateSchema<PaymentDetailEventEntity> ();
 		}

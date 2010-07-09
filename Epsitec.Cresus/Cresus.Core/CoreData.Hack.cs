@@ -583,6 +583,7 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentInDatabase(MailContactEntity billingAddress, ArticleDefinitionEntity[] articleDefs)
 		{
+			var decimalType = DecimalType.Default;
 			decimal vatRate = 0.076M;
 
 			var billingA = this.DataContext.CreateEmptyEntity<BillingDetailsEntity> ();
@@ -619,10 +620,10 @@ namespace Epsitec.Cresus.Core
 			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
 			lineA1.NeverApplyDiscount = false;
-			lineA1.FinalLinePriceBeforeTax = (int) lineA1.PrimaryUnitPriceBeforeTax;
-			lineA1.FinalLineTax = lineA1.FinalLinePriceBeforeTax * vatRate;
-			lineA1.ArticleShortDescription = lineA1.ArticleDefinition.ShortDescription;
-			lineA1.ArticleLongDescription = lineA1.ArticleDefinition.LongDescription;
+			lineA1.ResultingLinePriceBeforeTax = (int) lineA1.PrimaryLinePriceBeforeTax;
+			lineA1.ResultingLineTax = lineA1.ResultingLinePriceBeforeTax * vatRate;
+			lineA1.ArticleShortDescriptionCache = lineA1.ArticleDefinition.ShortDescription;
+			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.LongDescription;
 			
 			quantityA1.Code = "livré";
 			quantityA1.Quantity = 3;
@@ -644,10 +645,10 @@ namespace Epsitec.Cresus.Core
 			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
 			lineA2.NeverApplyDiscount = false;
-			lineA2.FinalLinePriceBeforeTax = (int) lineA2.PrimaryUnitPriceBeforeTax;
-			lineA2.FinalLineTax = lineA2.FinalLinePriceBeforeTax * vatRate;
-			lineA2.ArticleShortDescription = lineA2.ArticleDefinition.ShortDescription;
-			lineA2.ArticleLongDescription = lineA2.ArticleDefinition.LongDescription;
+			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryUnitPriceBeforeTax;
+			lineA2.ResultingLineTax = lineA2.ResultingLinePriceBeforeTax * vatRate;
+			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.ShortDescription;
+			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
 
 			quantityA2_1.Code = "livré";
 			quantityA2_1.Quantity = 1;
@@ -673,47 +674,82 @@ namespace Epsitec.Cresus.Core
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax;
 			lineA3.NeverApplyDiscount = true;
-			lineA3.FinalLinePriceBeforeTax = (int) lineA3.PrimaryUnitPriceBeforeTax;
-			lineA3.FinalLineTax = lineA3.FinalLinePriceBeforeTax * vatRate;
-			lineA3.ArticleShortDescription = lineA3.ArticleDefinition.ShortDescription;
-			lineA3.ArticleLongDescription = lineA3.ArticleDefinition.LongDescription;
+			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryUnitPriceBeforeTax;
+			lineA3.ResultingLineTax = lineA3.ResultingLinePriceBeforeTax * vatRate;
+			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
+			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
 
 			var discountA1 = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
 
 			discountA1.Description = "Rabais de quantité";
 			discountA1.DiscountRate = 0.20M;
 
-			var totalA1 = this.DataContext.CreateEmptyEntity<TotalDocumentItemEntity> ();
+			var totalA1 = this.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
 
 			//	Total avec rabais; devrait s'imprimer ainsi :
 			//
+			//	Total avant rabais ............................. xxxx
 			//	Rabais de quantité ............................... xx
 			//	Total après rabais ............................. xxxx
 
+			//	Voici comment ça fonctionne :
+
+			//	1. On calcule le total HT et le total TVA en entrée (résultat par ex. des lignes
+			//	   précédentes) --> PrimaryPriceBeforeTax / PrimaryTax
+			//
+			//	2. On applique un rabais, un arrondi ou un prix arrêté (FixedPrice) qui peut être
+			//	   soit HT, soit TTC (en règle générale, c'est un prix TTC que l'on arrête)
+			//
+			//	3. Cela donne le prix HT et la TVA résultants --> ResultingPriceBeforeTax /
+			//	   ResultingTax.
+			//
+			//	Plus tard, quand on a fini la facture, on doit appliquer les rabais à l'envers
+			//	en remontant du pied de la facture pour arriver aux articles, afin de savoir à
+			//	quel prix réel chaque article a été vendu; ces infos de 'remontée' sont alors
+			//	stockées dans FinalPriceBeforeTax et FinalTax et servent à la comptabilisation
+			//	uniquement, mais pas à l'impression d'une facture.
+
 			totalA1.Visibility = true;
 			totalA1.Discount = discountA1;
-			totalA1.FinalPriceBeforeTax = (lineA1.PrimaryLinePriceBeforeTax + lineA2.PrimaryLinePriceBeforeTax) * (1.0M - discountA1.DiscountRate);
-			totalA1.FinalTax = totalA1.FinalPriceBeforeTax * vatRate;
-			totalA1.Text = "Total après rabais";
+			totalA1.PrimaryPriceBeforeTax = (lineA1.ResultingLinePriceBeforeTax + lineA2.ResultingLinePriceBeforeTax);
+			totalA1.PrimaryTax = totalA1.PrimaryPriceBeforeTax * vatRate;
+			totalA1.ResultingPriceBeforeTax = totalA1.PrimaryPriceBeforeTax * (1.0M - discountA1.DiscountRate);
+			totalA1.ResultingTax = totalA1.FinalPriceBeforeTax * vatRate;
+			totalA1.TextForPrimaryPrice = "Total avant rabais";
+			totalA1.TextForResultingPrice = "Total après rabais";
+			totalA1.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.Discount | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal;
 
-			var totalA2 = this.DataContext.CreateEmptyEntity<TotalDocumentItemEntity> ();
+			var totalA2 = this.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+
+			//	TVA ............................................ xx
+			//	Total arrêté ................................. xxxx
 
 			totalA2.Visibility = true;
-			totalA2.FixedPriceBeforeTax = (int) ((totalA1.FinalPriceBeforeTax + lineA3.PrimaryLinePriceBeforeTax) / 10) * 10M;
-			totalA2.FinalPriceBeforeTax = totalA2.FixedPriceBeforeTax;
-			totalA2.FinalTax = totalA2.FinalPriceBeforeTax * vatRate;
-			totalA2.Text = "Total arrêté";
+			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA3.ResultingLinePriceBeforeTax;
+			totalA2.PrimaryTax = totalA1.ResultingTax + lineA3.PrimaryLinePriceBeforeTax;
+			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceBeforeTax * (1+vatRate) / 10) * 10M;
+			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));
+			totalA2.ResultingTax = decimalType.Range.ConstrainToZero (totalA2.ResultingPriceBeforeTax * vatRate);
+			totalA2.TextForFixedPrice = "Total arrêté";
+			totalA2.TextForTax = "TVA";
 
 			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
 			//	lignes d'articles qui peuvent être soumis à un rabais :
 
-			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA3.PrimaryLinePriceBeforeTax) / totalA1.FinalPriceBeforeTax.Value;
-			var decimalType = DecimalType.Default;
+			totalA2.FinalPriceBeforeTax = totalA2.ResultingPriceBeforeTax;
+			totalA2.FinalTax = decimalType.Range.ConstrainToZero (totalA2.FinalPriceBeforeTax * vatRate);
 
-			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.FinalLinePriceBeforeTax * fixedPriceDiscount);
-			lineA1.FinalLineTax = decimalType.Range.ConstrainToZero (lineA1.FinalLineTax * fixedPriceDiscount);
-			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.FinalLinePriceBeforeTax * fixedPriceDiscount);
-			lineA2.FinalLineTax = decimalType.Range.ConstrainToZero (lineA2.FinalLineTax * fixedPriceDiscount);
+			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA3.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
+
+			totalA1.FinalPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA1.ResultingPriceBeforeTax * fixedPriceDiscount);
+			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
+
+			lineA1.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLinePriceBeforeTax * fixedPriceDiscount);
+			lineA1.FinalLineTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax * fixedPriceDiscount);
+			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLinePriceBeforeTax * fixedPriceDiscount);
+			lineA2.FinalLineTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax * fixedPriceDiscount);
+			lineA3.FinalLinePriceBeforeTax = lineA3.ResultingLinePriceBeforeTax;
+			lineA3.FinalLineTax = lineA3.ResultingLineTax;
 
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3
