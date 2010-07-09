@@ -89,23 +89,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Parses the replication mode.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <returns>The value or <c>DbReplicationMode.Unknown</c> if the text is empty.</returns>
-		public static DbReplicationMode ParseReplicationMode(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return DbReplicationMode.Unknown;
-			}
-			else
-			{
-				return (DbReplicationMode) InvariantConverter.ParseInt (text);
-			}
-		}
-
-		/// <summary>
 		/// Parses the column class.
 		/// </summary>
 		/// <param name="text">The text.</param>
@@ -318,21 +301,6 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (value != DbRevisionMode.Unknown);
 			
 			if (value == DbRevisionMode.IgnoreChanges)
-			{
-				return null;
-			}
-			
-			return InvariantConverter.ToString ((int) value);
-		}
-
-		/// <summary>
-		/// Converts the value to a string.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <returns>The textual representation of the value or <c>null</c> if it is the default value.</returns>
-		public static string ReplicationModeToString(DbReplicationMode value)
-		{
-			if (value == DbReplicationMode.Unknown)
 			{
 				return null;
 			}

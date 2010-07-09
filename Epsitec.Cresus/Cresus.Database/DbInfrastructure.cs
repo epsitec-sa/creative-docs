@@ -134,21 +134,6 @@ namespace Epsitec.Cresus.Database
 				return this.logger;
 			}
 		}
-		
-		public DbClientManager					ClientManager
-		{
-			get
-			{
-				if (this.LocalSettings.IsServer)
-				{
-					return this.clientManager;
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
 
 		public DbAccess							Access
 		{
@@ -163,22 +148,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.globalLock.IsWriterLockHeld;
-			}
-		}
-		
-		public Settings.Globals					GlobalSettings
-		{
-			get
-			{
-				return this.globals;
-			}
-		}
-		
-		public Settings.Locals					LocalSettings
-		{
-			get
-			{
-				return this.locals;
 			}
 		}
 
@@ -257,8 +226,6 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
 				helper.CreateTableLog ();
-				helper.CreateTableRequestQueue ();
-				helper.CreateTableClientDef ();
 				
 				transaction.Commit ();
 			}
@@ -272,30 +239,6 @@ namespace Epsitec.Cresus.Database
 			{
 				this.SetupTables (transaction);
 				
-				transaction.Commit ();
-			}
-
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.IgnoreChanges, DbReplicationMode.Automatic);
-				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.IgnoreChanges, DbReplicationMode.None);
-				
-				transaction.Commit ();
-			}
-			
-			//	Create the default values for the global and local settings :
-			
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				Settings.Globals globals = new Settings.Globals (this, transaction);
-				Settings.Locals  locals  = new Settings.Locals (this, transaction);
-				
-				locals.ClientId = this.clientId;
-				locals.IsServer = isServer;
-
-				globals.PersistToBase (transaction);
-				locals.PersistToBase (transaction);
-
 				transaction.Commit ();
 			}
 			
@@ -350,8 +293,6 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableRequestQueue));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -384,12 +325,6 @@ namespace Epsitec.Cresus.Database
 					
 					this.ResetColumnData (transaction, this.internalTables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, clientId));
 					
-					//	Clear tables which should not be replicated between the server and the
-					//	client databases :
-					
-					this.ClearTable (transaction, this.internalTables[Tags.TableRequestQueue]);
-					this.ClearTable (transaction, this.internalTables[Tags.TableClientDef]);
-					
 					//	Update the logger in order to use the new client id instead of the
 					//	id found in the copied database :
 					
@@ -402,12 +337,6 @@ namespace Epsitec.Cresus.Database
 					this.logger.CreateInitialEntry (transaction);
 					
 					//	Define local settings based on the client :
-					
-					this.LocalSettings.ClientId  = clientId;
-					this.LocalSettings.IsServer  = false;
-					this.LocalSettings.SyncLogId = lastServerId.Value;
-					
-					this.LocalSettings.PersistToBase (transaction);
 					
 					transaction.Commit ();
 					
@@ -648,7 +577,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
 				
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, revisionMode, DbReplicationMode.Automatic);
+					return this.CreateTable(name, category, revisionMode);
 				
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
@@ -671,7 +600,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", captionId));
 
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable (captionId, category, revisionMode, DbReplicationMode.Automatic);
+					return this.CreateTable (captionId, category, revisionMode);
 
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, captionId));
@@ -1245,13 +1174,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="revisionMode">The table revision mode.</param>
-		/// <param name="replicationMode">The table replication mode.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode)
 		{
 			DbTable table = new DbTable (name);
 
-			this.DefineBasicTable (table, category, revisionMode, replicationMode);
+			this.DefineBasicTable (table, category, revisionMode);
 
 			return table;
 		}
@@ -1262,22 +1190,20 @@ namespace Epsitec.Cresus.Database
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="revisionMode">The table revision mode.</param>
-		/// <param name="replicationMode">The table replication mode.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode)
 		{
 			DbTable table = new DbTable (captionId);
 
-			this.DefineBasicTable (table, category, revisionMode, replicationMode);
+			this.DefineBasicTable (table, category, revisionMode);
 
 			return table;
 		}
 
-		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode, DbReplicationMode replicationMode)
+		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode)
 		{
 			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
-			System.Diagnostics.Debug.Assert (replicationMode != DbReplicationMode.Unknown);
-
+			
 			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
 
 			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable);
@@ -1286,7 +1212,6 @@ namespace Epsitec.Cresus.Database
 
 			table.DefineCategory (category);
 			table.DefineRevisionMode (revisionMode);
-			table.DefineReplicationMode (replicationMode);
 
 			table.Columns.Add (colId);
 			table.Columns.Add (colStat);
@@ -1666,20 +1591,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			return null;
-		}
-
-		/// <summary>
-		/// Executes the specified rich command. This is called by <c>DbRichCommand</c>
-		/// when the command is initially created through its <c>CreateFromTables</c>
-		/// method.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="command">The command.</param>
-		internal void Execute(DbTransaction transaction, DbRichCommand command)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			this.sqlEngine.Execute (command, this, transaction);
 		}
 
 		/// <summary>
@@ -2520,17 +2431,8 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.globals = new Settings.Globals (this, transaction);
-				this.locals  = new Settings.Locals (this, transaction);
-				
-				this.clientId = this.locals.ClientId;
 				this.SetupLogger (transaction);
 
-				this.clientManager = new DbClientManager ();
-
-				this.clientManager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
-				this.clientManager.LoadFromBase (transaction);
-				
 				transaction.Commit ();
 			}
 		}
@@ -2610,7 +2512,6 @@ namespace Epsitec.Cresus.Database
 			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTableDef], tableKeyId);
 			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableColumnDef], columnKeyId);
 			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTypeDef], typeKeyId);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableClientDef], clientKeyId);
 			
 			//	Now that everything is properly defined, we may attach the
 			//	logger to the database :
@@ -2852,7 +2753,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal)
 					};
 
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
+				this.CreateTable (table, columns);
 			}
 			
 			public void CreateTableColumnDef()
@@ -2872,7 +2773,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
+				this.CreateTable (table, columns);
 			}
 			
 			public void CreateTableTypeDef()
@@ -2889,7 +2790,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
+				this.CreateTable (table, columns);
 			}
 			
 			public void CreateTableLog()
@@ -2903,47 +2804,11 @@ namespace Epsitec.Cresus.Database
 					};
 				
 				//	TODO: add a column recording the nature of the change and the author of the change...
-				
-				this.CreateTable (table, columns, DbReplicationMode.Manual);
+
+				this.CreateTable (table, columns);
 			}
 			
-			public void CreateTableRequestQueue()
-			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableRequestQueue);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		  DbColumnClass.KeyId,		 DbElementCat.Internal, DbRevisionMode.Immutable),
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	  DbColumnClass.KeyStatus,	 DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		  DbColumnClass.RefInternal, DbElementCat.Internal),
-						new DbColumn (Tags.ColumnReqExState,  types.ReqExecState, DbColumnClass.Data,		 DbElementCat.Internal),
-						new DbColumn (Tags.ColumnReqData,	  types.ReqData,	  DbColumnClass.Data,		 DbElementCat.Internal),
-						new DbColumn (Tags.ColumnDateTime,    types.DateTime,     DbColumnClass.Data,		 DbElementCat.Internal)
-					};
-				
-				this.CreateTable (table, columns, DbReplicationMode.None);
-			}
-			
-			public void CreateTableClientDef()
-			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableClientDef);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,			types.KeyId,	 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
-						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, DbColumnClass.KeyStatus,	DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 DbColumnClass.RefInternal, DbElementCat.Internal),
-						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnClientName,	types.Name,      DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  DbColumnClass.Data,		DbElementCat.Internal)
-					};
-				
-				this.CreateTable (table, columns, DbReplicationMode.None);
-			}
-			
-			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replicationMode)
+			private void CreateTable(DbTable table, DbColumn[] columns)
 			{
 				for (int i = 0; i < columns.Length; i++)
 				{
@@ -2954,7 +2819,6 @@ namespace Epsitec.Cresus.Database
 				
 				table.DefineCategory (DbElementCat.Internal);
 				table.DefinePrimaryKey (columns[0]);
-				table.DefineReplicationMode (replicationMode);
 				
 				this.infrastructure.internalTables.Add (table);
 				
@@ -3191,10 +3055,6 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
-		private DbClientManager					clientManager;
-		
-		private Settings.Globals				globals;
-		private Settings.Locals					locals;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();

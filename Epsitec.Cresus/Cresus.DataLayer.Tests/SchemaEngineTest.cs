@@ -53,24 +53,6 @@ namespace Epsitec.Cresus.DataLayer
 			engine.Dispose ();
 		}
 
-		[Test]
-		public void Check03LoadTableSchema()
-		{
-			DataContext context = new DataContext (this.infrastructure);
-
-			DbTable table = context.SchemaEngine.FindTableDefinition (this.articleEntityId);
-
-			Assert.AreEqual (0, context.RichCommand.DataSet.Tables.Count);
-
-			context.LoadTableSchema (table);
-
-			Assert.AreEqual (6, context.RichCommand.DataSet.Tables.Count);
-
-			TestSupport.Database.DumpDataSet (context.RichCommand.DataSet);
-
-			context.Dispose ();
-		}
-
 		private readonly DbInfrastructure infrastructure = TestSupport.Database.NewInfrastructure ();
 
 		private readonly Druid articleEntityId = Druid.Parse ("[630Q]");

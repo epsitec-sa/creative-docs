@@ -159,9 +159,6 @@
     <Compile Include="DbColumnTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbDictTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DbFactoryTest.cs">
       <SubType>Code</SubType>
     </Compile>

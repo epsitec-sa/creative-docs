@@ -176,23 +176,17 @@
     <Compile Include="SqlFunctionCode.cs" />
     <Compile Include="DbNullability.cs" />
     <Compile Include="SqlAggregateFunction.cs" />
-    <Compile Include="IReplaceOptions.cs" />
     <Compile Include="DbLogEntry.cs" />
-    <Compile Include="DbClientRecord.cs" />
     <Compile Include="IXmlSerializable.cs" />
     <Compile Include="DbTypeDef.cs" />
     <Compile Include="DbColumnClass.cs" />
     <Compile Include="DbColumnLocalization.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbIdClass.cs" />
-    <Compile Include="Options\ReplaceIgnoreColumns.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="SqlSortOrder.cs" />
     <Compile Include="SqlFieldType.cs" />
     <Compile Include="DbAccess.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbClientManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbColumn.cs">
@@ -205,9 +199,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbConditionCombinerOperator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbDict.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbElementCat.cs">
@@ -235,9 +226,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbRawType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DbReplicationMode.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DbRevisionMode.cs">
@@ -334,15 +322,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ITypeConverter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Settings\AbstractBase.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Settings\Globals.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Settings\Locals.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SqlAggregate.cs">

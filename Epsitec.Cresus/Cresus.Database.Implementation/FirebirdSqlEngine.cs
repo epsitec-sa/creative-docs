@@ -109,54 +109,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(DbRichCommand richCommand, DbInfrastructure infrastructure, DbTransaction transaction)
-		{
-			int numCommands = richCommand.Commands.Count;
-			
-			var adapters = new System.Data.IDbDataAdapter[numCommands];
-			var builders = new System.Data.Common.DbCommandBuilder[numCommands];
-			
-			for (int i = 0; i < numCommands; i++)
-			{
-				System.Data.IDbCommand command = richCommand.Commands[i];
-				
-				FbDataAdapter    adapter = this.fb.NewDataAdapter (command) as FbDataAdapter;
-				FbCommandBuilder builder = new FbCommandBuilder (adapter);
-
-				adapters[i] = adapter;
-				builders[i] = builder;
-
-#if true
-				//	HACK: find another way of doing this
-				//	TODO: set transaction on the update command too in DbRichCommand.SetCommandTransaction
-
-				//	FbCommandBuilder.RowUpdatingHandler pourrait bénéficier du rajout
-				//	suivant: e.Command.Transaction = this.DataAdapter.SelectCommand.Transaction
-				//	ce qui permettrait de garantir que l'on utilise le bon objet de transaction;
-				//	en attendant, on détecte la mise à jour via la commande et on s'assure nous-
-				//	même que la transaction est bien correcte :
-
-				int index = i;
-
-				adapter.RowUpdating +=
-					delegate (object sender, FbRowUpdatingEventArgs e)
-					{
-						var activeTransaction = richCommand.GetActiveTransaction ().Transaction as FbTransaction;
-						var activeBuilder     = builders[index];
-
-						if ((e.Command != null) &&
-							(e.Command.Transaction != activeTransaction))
-						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("Fixed missing transaction for command:\n   {0}", e.Command.CommandText));
-							e.Command.Transaction = activeTransaction;
-						}
-					};
-#endif
-			}
-				
-			richCommand.InternalFillDataSet (this.fb.DbAccess, transaction, adapters, builders);
-		}
-		
 		#endregion
 			
 		#region IDisposable Members

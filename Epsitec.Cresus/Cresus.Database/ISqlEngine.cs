@@ -37,13 +37,5 @@ namespace Epsitec.Cresus.Database
 		/// <param name="commandCount">The number of commands.</param>
 		/// <param name="dataSet">The execution result.</param>
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out System.Data.DataSet dataSet);
-
-		/// <summary>
-		/// Executes the specified rich command in the given context.
-		/// </summary>
-		/// <param name="command">The command.</param>
-		/// <param name="infrastructure">The associated database infrastructure.</param>
-		/// <param name="transaction">The associated transaction.</param>
-		void Execute(DbRichCommand command, DbInfrastructure infrastructure, DbTransaction transaction);
 	}
 }

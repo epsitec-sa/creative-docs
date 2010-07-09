@@ -314,18 +314,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the replication mode for this table.
-		/// </summary>
-		/// <value>The replication mode.</value>
-		public DbReplicationMode				ReplicationMode
-		{
-			get
-			{
-				return this.replicationMode;
-			}
-		}
-
-		/// <summary>
 		/// Gets the key for the table, used internally to identify the table
 		/// metadata.
 		/// </summary>
@@ -462,28 +450,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Defines the replication mode for the table. A repliaction mode may not be changed
-		/// after it has been defined.
-		/// </summary>
-		/// <param name="replicationMode">The replication mode.</param>
-		public void DefineReplicationMode(DbReplicationMode replicationMode)
-		{
-			if (this.replicationMode == replicationMode)
-			{
-				return;
-			}
-
-			if (this.replicationMode == DbReplicationMode.Unknown)
-			{
-				this.replicationMode = replicationMode;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new replication mode", this.Name));
-			}
-		}
-
-		/// <summary>
 		/// Defines the key for the table metadata. A key may not be changed
 		/// after it has been defined.
 		/// </summary>
@@ -569,8 +535,6 @@ namespace Epsitec.Cresus.Database
 		/// <returns>An SQL table definition.</returns>
 		public SqlTable CreateSqlTable(ITypeConverter converter)
 		{
-			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
-
 			SqlTable sqlTable = new SqlTable (this.GetSqlName ());
 
 			sqlTable.Comment = this.Comment;
@@ -841,7 +805,6 @@ namespace Epsitec.Cresus.Database
 
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
 			DbTools.WriteAttribute (xmlWriter, "rev", DbTools.RevisionModeToString (this.RevisionMode));
-			DbTools.WriteAttribute (xmlWriter, "rep", DbTools.ReplicationModeToString (this.replicationMode));
 			DbTools.WriteAttribute (xmlWriter, "l10n", DbTools.StringToString (this.localizations));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
@@ -981,7 +944,6 @@ namespace Epsitec.Cresus.Database
 
 				table.category                = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				table.revisionMode            = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
-				table.replicationMode         = DbTools.ParseReplicationMode (xmlReader.GetAttribute ("rep"));
 				table.localizations           = DbTools.ParseString (xmlReader.GetAttribute ("l10n"));
 				table.captionId               = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
 				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
@@ -1092,7 +1054,6 @@ namespace Epsitec.Cresus.Database
 			relationTable.Comment = sourceTable.DisplayName + ":" + sourceColumn.DisplayName;
 
 			relationTable.DefineCategory (DbElementCat.Relation);
-			relationTable.DefineReplicationMode (DbReplicationMode.Automatic);
 			relationTable.relationSourceTableName = sourceTableName;
 			relationTable.relationTargetTableName = targetTableName;
 
@@ -1145,7 +1106,6 @@ namespace Epsitec.Cresus.Database
 		private string							serializedIndexTuples;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
-		private DbReplicationMode				replicationMode;
 		private string							relationSourceTableName;
 		private string							relationTargetTableName;
 	}

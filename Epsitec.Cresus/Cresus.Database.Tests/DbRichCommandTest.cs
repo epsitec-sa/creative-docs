@@ -3,6 +3,8 @@ using FirebirdSql.Data.FirebirdClient;
 
 namespace Epsitec.Cresus.Database
 {
+#if false
+	
 	[TestFixture] public class DbRichCommandTest
 	{
 		[Test]
@@ -391,4 +393,5 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 	}
+#endif
 }

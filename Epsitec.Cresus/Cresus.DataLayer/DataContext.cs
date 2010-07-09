@@ -33,7 +33,6 @@ namespace Epsitec.Cresus.DataLayer
 			this.BulkMode = bulkMode;
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
-			this.RichCommand = new DbRichCommand (this.DbInfrastructure);
 			this.entityContext = EntityContext.Current;
 			this.entityDataCache = new EntityDataCache ();
 			this.tableBulkLoaded = new Dictionary<string, bool> ();

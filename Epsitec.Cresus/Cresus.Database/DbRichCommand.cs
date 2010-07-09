@@ -10,6 +10,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
+#if false
 	/// <summary>
 	/// The <c>DbRichCommand</c> class manages one or several commands which can
 	/// be executed with <c>ISqlEngine</c>. It handles the select, update, insert
@@ -2105,4 +2106,5 @@ namespace Epsitec.Cresus.Database
 		// the DataSet in InternalFillDataSet in some cases.
 		private bool fillDataSet;
 	}
+#endif
 }
