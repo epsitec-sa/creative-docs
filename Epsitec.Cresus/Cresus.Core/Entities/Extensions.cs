@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Id)
+			return string.IsNullOrWhiteSpace (entity.IdA)
 				&& entity.FirstContactDate.HasValue == false
 				&& entity.Affairs.Count == 0
 				&& entity.Comments.Count == 0
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Id)
+			return string.IsNullOrWhiteSpace (entity.IdA)
 				&& string.IsNullOrWhiteSpace (entity.ShortDescription)
 				&& string.IsNullOrWhiteSpace (entity.LongDescription);
 

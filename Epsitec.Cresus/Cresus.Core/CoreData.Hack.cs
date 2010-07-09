@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.Core
 			{
 				RelationEntity relation = this.DataContext.CreateEmptyEntity<RelationEntity> ();
 
-				relation.Id = (id++).ToString ();
+				relation.IdA = (id++).ToString ();
 				relation.Person = person;
 				relation.FirstContactDate = Common.Types.Date.Today;
 
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Core
 			var articleDef3 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
 			var articleDef4 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
 
-			articleDef1.Id = "CR-CP";
+			articleDef1.IdA = "CR-CP";
 			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
 			articleDef1.LongDescription  = "Crésus Comptabilité PRO<br/>Logiciel de comptabilité pour PME, artisans et indépendants.<br/>Jusqu'à 64'000 écritures par année.";
 			articleDef1.ArticleGroups.Add (articleGroup1);
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Core
 			articleDef1.Units = uomGroup;
 			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
-			articleDef2.Id = "CR-SP";
+			articleDef2.IdA = "CR-SP";
 			articleDef2.ShortDescription = "Crésus Salaires PRO";
 			articleDef2.LongDescription  = "Crésus Salaires PRO<br/>Logiciel de comptabilité salariale.<br/>Jusqu'à 20 salaires par mois.";
 			articleDef2.ArticleGroups.Add (articleGroup1);
@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Core
 			articleDef2.Units = uomGroup;
 			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
-			articleDef3.Id = "CR-FL";
+			articleDef3.IdA = "CR-FL";
 			articleDef3.ShortDescription = "Crésus Facturation LARGO";
 			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.";
 			articleDef3.ArticleGroups.Add (articleGroup1);
@@ -570,7 +570,7 @@ namespace Epsitec.Cresus.Core
 			articleDef3.Units = uomGroup;
 			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (892.20M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
-			articleDef4.Id = "EMB";
+			articleDef4.IdA = "EMB";
 			articleDef4.ShortDescription = "Port et emballage";
 			articleDef4.ArticleCategory = articleCategory2;
 			articleDef4.ArticlePrices.Add (this.CreateArticlePrice (11.15M));
@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.Core
 			var billingA = this.DataContext.CreateEmptyEntity<BillingDetailsEntity> ();
 			var invoiceA = this.DataContext.CreateEmptyEntity<InvoiceDocumentEntity> ();
 
-			invoiceA.Id = "1000";
+			invoiceA.IdA = "1000";
 			invoiceA.DocumentSource = BusinessLogic.DocumentSource.Generated;
 			invoiceA.Description = "Facture de test #1000";
 			invoiceA.CreationDate = new System.DateTime (2010, 7, 8);
@@ -614,7 +614,7 @@ namespace Epsitec.Cresus.Core
 			lineA1.IndentationLevel = 0;
 			lineA1.BeginDate = invoiceA.CreationDate;
 			lineA1.EndDate = invoiceA.CreationDate;
-			lineA1.ArticleDefinition = articleDefs.Where (x => x.Id == "CR-CP").FirstOrDefault ();
+			lineA1.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-CP").FirstOrDefault ();
 			lineA1.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
 			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
@@ -639,7 +639,7 @@ namespace Epsitec.Cresus.Core
 			lineA2.IndentationLevel = 0;
 			lineA2.BeginDate = invoiceA.CreationDate;
 			lineA2.EndDate = invoiceA.CreationDate;
-			lineA2.ArticleDefinition = articleDefs.Where (x => x.Id == "CR-FL").FirstOrDefault ();
+			lineA2.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-FL").FirstOrDefault ();
 			lineA2.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
 			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
@@ -668,7 +668,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.IndentationLevel = 0;
 			lineA3.BeginDate = invoiceA.CreationDate;
 			lineA3.EndDate = invoiceA.CreationDate;
-			lineA3.ArticleDefinition = articleDefs.Where (x => x.Id == "EMB").FirstOrDefault ();
+			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
 			lineA3.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax;

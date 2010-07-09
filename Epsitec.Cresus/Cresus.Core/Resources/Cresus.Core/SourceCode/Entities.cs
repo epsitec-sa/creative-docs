@@ -1886,51 +1886,51 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		#region IReferenceNumber Members
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0AB2/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string Id
+		public string IdA
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetId (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetId (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0AB2/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string External
+		public string IdB
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetExternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetExternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0AB2/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string Internal
+		public string IdC
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetInternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetInternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -2231,51 +2231,51 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		#region IReferenceNumber Members
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0AG2/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string Id
+		public string IdA
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetId (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetId (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0AG2/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string External
+		public string IdB
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetExternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetExternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0AG2/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string Internal
+		public string IdC
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetInternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetInternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -2402,51 +2402,51 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		#region IReferenceNumber Members
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0AO2/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string Id
+		public string IdA
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetId (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetId (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0AO2/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string External
+		public string IdB
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetExternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetExternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0AO2/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string Internal
+		public string IdC
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetInternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetInternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -2767,51 +2767,51 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		#region IReferenceNumber Members
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0A63/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string Id
+		public string IdA
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetId (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetId (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0A63/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string External
+		public string IdB
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetExternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetExternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0A63/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string Internal
+		public string IdC
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetInternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetInternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -4336,11 +4336,11 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.BusinessEvent Entity
+#region Epsitec.Cresus.Core.AbstractBusinessEvent Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>BusinessEvent</c> entity.
+	///	The <c>AbstractBusinessEvent</c> entity.
 	///	designer:cap/L0A05
 	///	</summary>
 	public partial class AbstractBusinessEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
@@ -4633,51 +4633,51 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		#region IReferenceNumber Members
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0AD5/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		public string Id
+		public string IdA
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetId (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdA (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetId (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdA (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0AD5/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		public string External
+		public string IdB
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetExternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdB (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetExternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdB (this, value);
 			}
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0AD5/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		public string Internal
+		public string IdC
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetInternal (this);
+				return global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.GetIdC (this);
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetInternal (this, value);
+				global::Epsitec.Cresus.Core.Entities.IReferenceNumberInterfaceImplementation.SetIdC (this, value);
 			}
 		}
 		#endregion
@@ -4851,31 +4851,31 @@ namespace Epsitec.Cresus.Core.Entities
 	public interface IReferenceNumber
 	{
 		///	<summary>
-		///	The <c>Id</c> field.
+		///	The <c>IdA</c> field.
 		///	designer:fld/L0AG5/L0AH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH5]")]
-		string Id
+		string IdA
 		{
 			get;
 			set;
 		}
 		///	<summary>
-		///	The <c>External</c> field.
+		///	The <c>IdB</c> field.
 		///	designer:fld/L0AG5/L0AI5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI5]")]
-		string External
+		string IdB
 		{
 			get;
 			set;
 		}
 		///	<summary>
-		///	The <c>Internal</c> field.
+		///	The <c>IdC</c> field.
 		///	designer:fld/L0AG5/L0AJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ5]")]
-		string Internal
+		string IdC
 		{
 			get;
 			set;
@@ -4883,60 +4883,60 @@ namespace Epsitec.Cresus.Core.Entities
 	}
 	public static partial class IReferenceNumberInterfaceImplementation
 	{
-		public static string GetId(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		public static string GetIdA(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[L0AH5]");
 		}
-		public static void SetId(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		public static void SetIdA(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.Id;
+			string oldValue = obj.IdA;
 			if (oldValue != value)
 			{
-				IReferenceNumberInterfaceImplementation.OnIdChanging (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdAChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AH5]", oldValue, value);
-				IReferenceNumberInterfaceImplementation.OnIdChanged (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdAChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnIdChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
-		static partial void OnIdChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
-		public static string GetExternal(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		static partial void OnIdAChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdAChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		public static string GetIdB(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[L0AI5]");
 		}
-		public static void SetExternal(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		public static void SetIdB(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.External;
+			string oldValue = obj.IdB;
 			if (oldValue != value)
 			{
-				IReferenceNumberInterfaceImplementation.OnExternalChanging (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdBChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AI5]", oldValue, value);
-				IReferenceNumberInterfaceImplementation.OnExternalChanged (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdBChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnExternalChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
-		static partial void OnExternalChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
-		public static string GetInternal(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
+		static partial void OnIdBChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdBChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		public static string GetIdC(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetField<string> ("[L0AJ5]");
 		}
-		public static void SetInternal(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
+		public static void SetIdC(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string value)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			string oldValue = obj.Internal;
+			string oldValue = obj.IdC;
 			if (oldValue != value)
 			{
-				IReferenceNumberInterfaceImplementation.OnInternalChanging (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdCChanging (obj, oldValue, value);
 				entity.SetField<string> ("[L0AJ5]", oldValue, value);
-				IReferenceNumberInterfaceImplementation.OnInternalChanged (obj, oldValue, value);
+				IReferenceNumberInterfaceImplementation.OnIdCChanged (obj, oldValue, value);
 			}
 		}
-		static partial void OnInternalChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
-		static partial void OnInternalChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdCChanged(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
+		static partial void OnIdCChanging(global::Epsitec.Cresus.Core.Entities.IReferenceNumber obj, string oldValue, string newValue);
 	}
 }
 #endregion
