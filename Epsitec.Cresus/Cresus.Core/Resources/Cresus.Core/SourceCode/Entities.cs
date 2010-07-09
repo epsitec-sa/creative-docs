@@ -7162,19 +7162,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AAB/L0A4D
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A4D]")]
-		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes DisplayModes
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? DisplayModes
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes> ("[L0A4D]");
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes?> ("[L0A4D]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue = this.DisplayModes;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? oldValue = this.DisplayModes;
 				if (oldValue != value)
 				{
 					this.OnDisplayModesChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes> ("[L0A4D]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes?> ("[L0A4D]", oldValue, value);
 					this.OnDisplayModesChanged (oldValue, value);
 				}
 			}
@@ -7466,8 +7466,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnDisplayModesChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes newValue);
-		partial void OnDisplayModesChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes newValue);
+		partial void OnDisplayModesChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? newValue);
+		partial void OnDisplayModesChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? newValue);
 		partial void OnTextForPrimaryPriceChanging(string oldValue, string newValue);
 		partial void OnTextForPrimaryPriceChanged(string oldValue, string newValue);
 		partial void OnTextForResultingPriceChanging(string oldValue, string newValue);
