@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionCaseEventViewController : EditionViewController<Entities.CaseEventEntity>
+	public class EditionBusinessEventViewController : EditionViewController<Entities.AbstractBusinessEventEntity>
 	{
-		public EditionCaseEventViewController(string name, Entities.CaseEventEntity entity)
+		public EditionBusinessEventViewController(string name, Entities.AbstractBusinessEventEntity entity)
 			: base (name, entity)
 		{
 			this.InitializeDefaultValues ();
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.CaseEvent", "Evénement");
+				builder.CreateEditionTitleTile ("Data.BusinessEvent", "Evénement");
 
 				this.CreateUICaseEventTypes (builder);
 				this.CreateUIMain           (builder);
