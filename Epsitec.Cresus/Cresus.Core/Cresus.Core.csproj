@@ -97,6 +97,7 @@
     <Compile Include="BusinessLogic\Finance\BillingStatus.cs" />
     <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
     <Compile Include="BusinessLogic\Finance\PaymentDetailType.cs" />
+    <Compile Include="BusinessLogic\Finance\PriceDisplayModes.cs" />
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
