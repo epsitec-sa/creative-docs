@@ -107,10 +107,9 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionCaseEventViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionBusinessEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionCaseViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAffairViewController.cs" />
     <Compile Include="Controllers\EnumKeyValues.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
@@ -398,7 +397,7 @@
     <EmbeddedResource Include="Images\Data.Affair.icon" />
     <EmbeddedResource Include="Images\Data.Case.icon" />
     <EmbeddedResource Include="Images\Data.Comment.icon" />
-    <EmbeddedResource Include="Images\Data.CaseEvent.icon" />
+    <EmbeddedResource Include="Images\Data.BusinessEvent.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
   </ItemGroup>
   <ItemGroup>

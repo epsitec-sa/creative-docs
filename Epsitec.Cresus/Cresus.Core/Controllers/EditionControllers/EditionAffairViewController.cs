@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var containerController = new TileContainerController (this, container);
 			var data = containerController.DataItems;
 
-			this.CreateUICases (data);
+			this.CreateUICaseEvents (data);
 
 			containerController.GenerateTiles ();
 		}
@@ -86,38 +86,38 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 		}
 
-		private void CreateUICases(SummaryDataItems data)
+		private void CreateUICaseEvents(SummaryDataItems data)
 		{
 			data.Add (
 				new SummaryData
 				{
 					AutoGroup    = true,
-					Name		 = "Case",
-					IconUri		 = "Data.Case",
-					Title		 = UIBuilder.FormatText ("Cas"),
-					CompactTitle = UIBuilder.FormatText ("Cas"),
+					Name		 = "BusinessEvent",
+					IconUri		 = "Data.BusinessEvent",
+					Title		 = UIBuilder.FormatText ("Evénements"),
+					CompactTitle = UIBuilder.FormatText ("Evénements"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<CaseEntity> ("Case", data.Controller)
-				.DefineText        (x => UIBuilder.FormatText (GetCasesSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
+			var template = new CollectionTemplate<AbstractBusinessEventEntity> ("BusinessEvent", data.Controller)
+				.DefineText (x => UIBuilder.FormatText (GetCaseEventsSummary (x)))
+				.DefineCompactText (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Cases, template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}
-
-		private static string GetCasesSummary(CaseEntity caseEntity)
+		
+		private static string GetCaseEventsSummary(AbstractBusinessEventEntity caseEventEntity)
 		{
-			int count = caseEntity.Events.Count;
+			string date = Misc.GetDateTimeShortDescription (caseEventEntity.Date);
+			int count = caseEventEntity.Documents.Count;
 
-			if (count == 0)
+			if (count < 2)
 			{
-				return caseEntity.Id;
+				return string.Format ("{0} {1}", date, caseEventEntity.EventType.Code);
 			}
 			else
 			{
-				string date = Misc.GetDateTimeShortDescription (caseEntity.Events[0].Date);  // date du premier événement
-				return string.Format ("{0} {1} ({2} événement{3})", date, caseEntity.Id, count, count>1?"s":"");
+				return string.Format ("{0} {1} ({2} documents)", date, caseEventEntity.EventType.Code, count);
 			}
 		}
 	}

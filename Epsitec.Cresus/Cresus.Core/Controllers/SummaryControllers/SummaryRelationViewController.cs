@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static string GetAffairsSummary(AffairEntity affairEntity)
 		{
-			int count = affairEntity.Cases.Count;
+			int count = affairEntity.Events.Count;
 
 			if (count == 0)
 			{
@@ -180,12 +180,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			else
 			{
 				string date = null;
-				if (affairEntity.Cases[0].Events.Count != 0)
-				{
-					date = string.Concat(Misc.GetDateTimeShortDescription (affairEntity.Cases[0].Events[0].Date), " ");  // date du premier événement
-				}
+				date = string.Concat(Misc.GetDateTimeShortDescription (affairEntity.Events[0].Date), " ");  // date du premier événement
 
-				return string.Format ("{0}{1} ({2} cas)", date, affairEntity.Id, count);
+				return string.Format ("{0}{1} ({2} év.)", date, affairEntity.Id, count);
 			}
 		}
 
