@@ -3,10 +3,11 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.DataLayer.Browser;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
-namespace Epsitec.Cresus.DataLayer.EntityData
+namespace Epsitec.Cresus.DataLayer.Data
 {
 
 
@@ -20,14 +21,34 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 	/// its base type might be loaded and stored in a <c>EntityDataContainer</c>.
 	/// 
 	/// If <see cref="LoadedEntityId"/> and <see cref="ConcreteEntityId"/> are equal, then the data
-	/// of an <see cref="AbstractEntity"/> is fully stored in the <see cref="EntityDataContainer"/>.
+	/// of an <see cref="AbstractEntity"/> is fully stored in the <see cref="EntityData"/>.
 	/// If they are not equal, the data of the type represented by <see cref="LoadedEntityId"/> until
-	/// the type at the top of the inheritance chain are stored in the <see cref="EntityDataContainer"/>
+	/// the type at the top of the inheritance chain are stored in the <see cref="EntityData"/>
 	/// but the data of the all the types that are lower in the inheritance chain is not stored in
-	/// the <see cref="EntityDataContainer"/>.
+	/// the <see cref="EntityData"/>.
 	/// </remarks>
-	internal class EntityDataContainer
+	internal sealed class EntityData
 	{
+
+
+		/// <summary>
+		/// Creates a new <c>EntityDataContainer</c> for an <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="key">The key of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="concreteEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
+		public EntityData(DbKey key, Druid loadedEntityId, Druid concreteEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		{
+			this.Key = key;
+			this.LoadedEntityId = loadedEntityId;
+			this.ConcreteEntityId = concreteEntityId;
+			this.ValueData = valueData;
+			this.ReferenceData = referenceData;
+			this.CollectionData = collectionData;
+		}
 
 
 		/// <summary>
@@ -69,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 		/// Gets or sets the value data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The value data of the <see cref="AbstractEntity"/>.</value>
-		public EntityValueData ValueData
+		public ValueData ValueData
 		{
 			get;
 			private set;
@@ -80,7 +101,7 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 		/// Gets or sets the reference data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The reference data of the <see cref="AbstractEntity"/>.</value>
-		public EntityReferenceData ReferenceData
+		public ReferenceData ReferenceData
 		{
 			get;
 			private set;
@@ -91,30 +112,10 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 		/// Gets or sets the collection data of the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The collection data of the <see cref="AbstractEntity"/>.</value>
-		public EntityCollectionData CollectionData
+		public CollectionData CollectionData
 		{
 			get;
 			private set;
-		}
-
-
-		/// <summary>
-		/// Creates a new <c>EntityDataContainer</c> for an <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="key">The key of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="concreteEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
-		public EntityDataContainer(DbKey key, Druid loadedEntityId, Druid concreteEntityId, EntityValueData valueData, EntityReferenceData referenceData, EntityCollectionData collectionData)
-		{
-			this.Key = key;
-			this.LoadedEntityId = loadedEntityId;
-			this.ConcreteEntityId = concreteEntityId;
-			this.ValueData = valueData;
-			this.ReferenceData = referenceData;
-			this.CollectionData = collectionData;
 		}
 
 

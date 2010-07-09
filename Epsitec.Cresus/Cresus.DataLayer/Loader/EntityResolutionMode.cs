@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.Context
 {
 	/// <summary>
 	/// The <c>EntityResolutionMode</c> specifies how entity references should

@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns></returns>
 		public object GetValue()
 		{
-			return this.dataContext.GetFieldValue (entity, fieldId);
+			return this.dataContext.DataLoader.GetFieldValue (entity, fieldId);
 		}
 
 

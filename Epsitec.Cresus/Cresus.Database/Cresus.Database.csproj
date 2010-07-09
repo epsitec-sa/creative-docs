@@ -160,7 +160,6 @@
     <Compile Include="DbConditionModifier.cs" />
     <Compile Include="DbConditionModifierOperator.cs" />
     <Compile Include="DbSimpleCondition.cs" />
-    <Compile Include="DbDataTableMapping.cs" />
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />
     <Compile Include="DbReader.cs" />
@@ -304,9 +303,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IDbServiceTools.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IPersistable.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IRawTypeConverter.cs">

@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.DataLayer.Proxies
 {
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public object PromoteToRealInstance()
 		{
-			return this.dataContext.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
+			return this.dataContext.DataLoader.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
 		}
 
 

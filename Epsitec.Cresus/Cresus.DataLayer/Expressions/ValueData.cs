@@ -4,7 +4,7 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.EntityData
+namespace Epsitec.Cresus.DataLayer.Data
 {
 
 
@@ -13,8 +13,17 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 	/// value data of an <see cref="AbstractEntity"/> is defined as the data which is stored directly
 	/// in the tables of the <see cref="AbstractEntity"/>.
 	/// </summary>
-	internal class EntityValueData
+	internal sealed class ValueData
 	{
+
+
+		/// <summary>
+		/// Initializes a new instance of the <c>EntityValueData</c> class.
+		/// </summary>
+		public ValueData()
+		{
+			this.values = new Dictionary<Druid, object> ();
+		}
 
 
 		/// <summary>
@@ -32,15 +41,6 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 			{
 				this.values[fieldId] = value;
 			}
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the <c>EntityValueData</c> class.
-		/// </summary>
-		public EntityValueData()
-		{
-			this.values = new Dictionary<Druid, object> ();
 		}
 
 

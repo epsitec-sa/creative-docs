@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 
 
-namespace Epsitec.Cresus.DataLayer.Browser
+namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 

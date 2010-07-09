@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Support;
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.Context
 {
 	public class DataContextEventArgs : EventArgs
 	{

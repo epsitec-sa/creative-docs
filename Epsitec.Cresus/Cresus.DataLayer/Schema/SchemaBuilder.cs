@@ -6,30 +6,47 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+
+namespace Epsitec.Cresus.DataLayer.Schema
 {
+	
+	
 	/// <summary>
 	/// The <c>SchemaEngineTableBuilder</c> class is used internally to build
 	/// one or more <see cref="DbTable"/> instances based on entity ids.
 	/// </summary>
-	internal class SchemaEngineTableBuilder
+	internal class SchemaBuilder
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SchemaEngineTableBuilder"/> class.
 		/// </summary>
 		/// <param name="engine">The schema engine.</param>
-		public SchemaEngineTableBuilder(SchemaEngine engine)
+		public SchemaBuilder(SchemaEngine schemaEngine)
 		{
-			this.engine = engine;
+			this.schemaEngine = schemaEngine;
+			
 			this.tables = new List<DbTable> ();
 			this.newTables = new List<DbTable> ();
+
 			this.tablesDictionary = new Dictionary<Druid, DbTable> ();
 			this.typesDictionary = new Dictionary<Druid, DbTypeDef> ();
 		}
+
+
+		public void CreateSchema(Druid entityId)
+		{
+			using (this.BeginTransaction ())
+			{
+				this.Add (entityId);
+				this.CommitTransaction ();
+			}
+		}
+
 
 		/// <summary>
 		/// Starts a transaction. This will inherit the currently active
@@ -38,15 +55,14 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// </summary>
 		/// <returns>A <see cref="System.IDisposable"/> object which must be
 		/// disposed of when the transaction block ends.</returns>
-		public System.IDisposable BeginTransaction()
+		private System.IDisposable BeginTransaction()
 		{
-			if ((this.transaction != null) &&
-				(this.transaction.IsActive))
+			if (this.transaction != null && this.transaction.IsActive)
 			{
 				throw new System.InvalidOperationException ("SchemaEngineTableBuilder already has an active transaction");
 			}
 
-			this.transaction = this.engine.Infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite);
+			this.transaction = this.schemaEngine.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite);
 
 			return this.transaction;
 		}
@@ -55,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// Commits the active transaction, which must have been started
 		/// with the <see cref="BeginTransaction"/> method.
 		/// </summary>
-		public void CommitTransaction()
+		private void CommitTransaction()
 		{
 			this.transaction.Commit ();
 			this.transaction = null;
@@ -74,44 +90,26 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			foreach (DbTable table in this.newTables)
 			{
-				this.engine.Infrastructure.RegisterNewDbTable (this.transaction, table);
+				this.schemaEngine.DbInfrastructure.RegisterNewDbTable (this.transaction, table);
 			}
 			foreach (DbTable table in this.newTables)
 			{
-				this.engine.Infrastructure.RegisterColumnRelations (this.transaction, table);
+				this.schemaEngine.DbInfrastructure.RegisterColumnRelations (this.transaction, table);
 			}
 
 			this.newTables.Clear ();
 		}
 
-		/// <summary>
-		/// Gets the root table.
-		/// </summary>
-		/// <returns>The root <see cref="DbTable"/> instance or <c>null</c>.</returns>
-		public DbTable GetRootTable()
+
+		public Dictionary<Druid, DbTable> GetNewTableDefinitions()
 		{
-			if (this.tables.Count > 0)
-			{
-				return this.tables[0];
-			}
-			else
-			{
-				return null;
-			}
+			return this.tablesDictionary;
 		}
 
 
-
-		public void UpdateCache()
+		public Dictionary<Druid, DbTypeDef> GetNewTypeDefinitions()
 		{
-			foreach (KeyValuePair<Druid, DbTable> entry in this.tablesDictionary)
-			{
-				this.engine.AddTableDefinitionToCache (entry.Key, entry.Value);
-			}
-			foreach (KeyValuePair<Druid, DbTypeDef> entry in this.typesDictionary)
-			{
-				this.engine.AddTypeDefinitionToCache (entry.Key, entry.Value);
-			}
+			return this.typesDictionary;
 		}
 
 
@@ -133,7 +131,8 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				return table;
 			}
 
-			StructuredType entityType = this.engine.GetEntityType (entityId);
+			ResourceManager manager = this.schemaEngine.DbInfrastructure.DefaultContext.ResourceManager;
+			StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
 			
 			if (entityType == null)
 			{
@@ -142,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			
 			this.AssertTransaction ();
 
-			table = this.engine.FindTableDefinition (entityId);
+			table = this.schemaEngine.GetTableDefinition (entityId);
 
 			if (table != null)
 			{
@@ -153,9 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				return table;
 			}
 
-			DbInfrastructure infrastructure = this.engine.Infrastructure;
-
-			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			table = this.schemaEngine.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			table.Comment = table.DisplayName;
 			this.newTables.Add (table);
@@ -168,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				//	need to add a special identification column, which can be used
 				//	to map a row to its proper derived entity class.
 
-				DbTypeDef typeDef = infrastructure.ResolveDbType (this.transaction, Tags.TypeKeyId);
+				DbTypeDef typeDef = this.schemaEngine.DbInfrastructure.ResolveDbType (this.transaction, Tags.TypeKeyId);
 				DbColumn column = new DbColumn (Tags.ColumnInstanceType, typeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
 				
 				table.Columns.Add (column);
@@ -253,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			System.Diagnostics.Debug.Assert (field.Type is StructuredType);
 
 			DbTable  target = this.CreateTable (field.TypeId);
-			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.engine.Infrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
+			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.schemaEngine.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 
 			table.Columns.Add (column);
 		}
@@ -290,14 +287,14 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				return typeDef;
 			}
 
-			typeDef = this.engine.FindTypeDefinition (type);
+			typeDef = this.schemaEngine.GetTypeDefinition (type);
 
 			if (typeDef != null)
 			{
 				return typeDef;
 			}
 
-			DbInfrastructure infrastructure = this.engine.Infrastructure;
+			DbInfrastructure infrastructure = this.schemaEngine.DbInfrastructure;
 			typeDef = infrastructure.ResolveDbType (this.transaction, type);
 
 			if (typeDef == null)
@@ -329,11 +326,18 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			}
 		}
 
-		SchemaEngine engine;
-		List<DbTable> tables;
-		List<DbTable> newTables;
-		Dictionary<Druid, DbTable> tablesDictionary;
-		Dictionary<Druid, DbTypeDef> typesDictionary;
-		DbTransaction transaction;
+
+		private SchemaEngine schemaEngine;
+		private DbTransaction transaction;
+
+		private List<DbTable> tables;
+		private List<DbTable> newTables;
+
+		private Dictionary<Druid, DbTable> tablesDictionary;
+		private Dictionary<Druid, DbTypeDef> typesDictionary;
+
+
 	}
+
+
 }

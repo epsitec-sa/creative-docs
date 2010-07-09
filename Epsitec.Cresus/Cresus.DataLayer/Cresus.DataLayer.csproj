@@ -136,13 +136,14 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="DataContextEventArgs.cs" />
-    <Compile Include="Browser\Request.cs" />
-    <Compile Include="DataContextPool.cs" />
-    <Compile Include="EntityData\EntityCollectionData.cs" />
-    <Compile Include="EntityData\EntityDataContainer.cs" />
-    <Compile Include="EntityData\EntityReferenceData.cs" />
-    <Compile Include="EntityKey.cs" />
+    <Compile Include="Context\DataContextEventArgs.cs" />
+    <Compile Include="Loader\DataLoader.cs" />
+    <Compile Include="Loader\Request.cs" />
+    <Compile Include="Context\DataContextPool.cs" />
+    <Compile Include="Data\CollectionData.cs" />
+    <Compile Include="Data\EntityData.cs" />
+    <Compile Include="Data\ReferenceData.cs" />
+    <Compile Include="Context\EntityKey.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithField.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
@@ -159,23 +160,23 @@
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
-    <Compile Include="Browser\AliasNode.cs" />
-    <Compile Include="EntityData\EntityValueData.cs" />
+    <Compile Include="Loader\AliasNode.cs" />
+    <Compile Include="Expressions\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
-    <Compile Include="DataContext.EntityDataCache.cs" />
-    <Compile Include="Browser\DataBrowser.cs" />
+    <Compile Include="Context\EntityDataCache.cs" />
+    <Compile Include="Loader\DataBrowser.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataContext.cs" />
-    <Compile Include="EntityResolutionMode.cs" />
-    <Compile Include="Helpers\EntityDataMapping.cs" />
+    <Compile Include="Context\DataContext.cs" />
+    <Compile Include="Loader\EntityResolutionMode.cs" />
+    <Compile Include="Context\EntityDataMapping.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
-    <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
-    <Compile Include="Helpers\TemporaryRowCollection.cs" />
-    <Compile Include="SchemaEngine.cs" />
+    <Compile Include="Saver\DataSaver.cs" />
+    <Compile Include="Schema\SchemaBuilder.cs" />
+    <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

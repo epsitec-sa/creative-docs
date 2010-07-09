@@ -6,7 +6,7 @@ using Epsitec.Cresus.Database;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.EntityData
+namespace Epsitec.Cresus.DataLayer.Data
 {
 
 	/// <summary>
@@ -14,8 +14,17 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 	/// The collection data of an <see cref="AbstractEntity"/> is defined as the data which is stored
 	/// as a list of references to other <see cref="AbstractEntity"/>.
 	/// </summary>
-	internal class EntityCollectionData
+	internal sealed class CollectionData
 	{
+
+
+		/// <summary>
+		/// Initializes a new instance of the <c>EntityCollectionData</c> class.
+		/// </summary>
+		public CollectionData()
+		{
+			this.collectionKeys = new Dictionary<Druid, List<DbKey>> ();
+		}
 
 
 		/// <summary>
@@ -35,15 +44,6 @@ namespace Epsitec.Cresus.DataLayer.EntityData
 		
 				return this.collectionKeys[fieldId];
 			}
-		}
-
-
-		/// <summary>
-		/// Initializes a new instance of the <c>EntityCollectionData</c> class.
-		/// </summary>
-		public EntityCollectionData()
-		{
-			this.collectionKeys = new Dictionary<Druid, List<DbKey>> ();
 		}
 
 

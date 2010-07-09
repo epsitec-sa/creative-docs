@@ -8,7 +8,7 @@ using Epsitec.Cresus.Database;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.Context
 {
 	/// <summary>
 	/// The <c>EntityKey</c> structure encodes the identity of an entity in

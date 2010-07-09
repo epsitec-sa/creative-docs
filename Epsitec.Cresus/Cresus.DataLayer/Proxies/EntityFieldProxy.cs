@@ -3,6 +3,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 			StructuredTypeField field = entityContext.GetEntityFieldDefinition (entityId, this.fieldId.ToResourceId ());
 
-			return this.dataContext.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load).FirstOrDefault ();
+			return this.dataContext.DataLoader.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load).FirstOrDefault ();
 		}
 
 

@@ -7,11 +7,10 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.DataLayer.Helpers
+namespace Epsitec.Cresus.DataLayer.Context
 {
 	/// <summary>
 	/// The <c>EntityDataMapping</c> class maps entity instances with their data

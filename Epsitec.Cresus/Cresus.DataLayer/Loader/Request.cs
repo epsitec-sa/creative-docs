@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.Browser
+namespace Epsitec.Cresus.DataLayer.Loader
 {
 	
 	

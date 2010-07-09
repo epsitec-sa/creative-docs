@@ -3,6 +3,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			
 			using (this.entity.DefineOriginalValues ())
 			{
-				foreach (object item in this.dataContext.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load))
+				foreach (object item in this.dataContext.DataLoader.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load))
 				{
 					targets.Add (item);
 				}
