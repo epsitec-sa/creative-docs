@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			var browser = new CoreDataBrowser<RelationEntity> ();
 
-			browser.AddColumn (customer => customer.Id);
+			browser.AddColumn (customer => customer.IdA);
 			browser.AddColumn (customer => customer.DefaultAddress.Location.PostalCode);
 			browser.AddColumn (customer => customer.DefaultAddress.Location.Name);
 			browser.AddColumn (customer => customer.Person.CastTo<LegalPersonEntity> ().Name);

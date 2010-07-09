@@ -79,9 +79,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField             (tile, 150, "Numéro de client",                Marshaler.Create (this.Entity, x => x.Id,                       (x, v) => x.Id = v));
-			builder.CreateTextField             (tile, 150, "Numéro externe",                  Marshaler.Create (this.Entity, x => x.External,                 (x, v) => x.External = v));
-			builder.CreateTextField             (tile, 150, "Numéro interne",                  Marshaler.Create (this.Entity, x => x.Internal,                 (x, v) => x.Internal = v));
+			builder.CreateTextField             (tile, 150, "Numéro de client",                Marshaler.Create (this.Entity, x => x.IdA,                       (x, v) => x.IdA = v));
+			builder.CreateTextField             (tile, 150, "Numéro externe",                  Marshaler.Create (this.Entity, x => x.IdB,		                (x, v) => x.IdB = v));
+			builder.CreateTextField             (tile, 150, "Numéro interne",                  Marshaler.Create (this.Entity, x => x.IdC,				        (x, v) => x.IdC = v));
 			builder.CreateMargin                (tile, horizontalSeparator: false);
 			builder.CreateTextField             (tile,  90, "Client depuis le",                Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);

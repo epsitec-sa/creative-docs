@@ -25,17 +25,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (string.IsNullOrEmpty (this.Entity.Id) &&
-				string.IsNullOrEmpty (this.Entity.External) &&
-				string.IsNullOrEmpty (this.Entity.Internal) &&
+			if (string.IsNullOrEmpty (this.Entity.IdA) &&
+				string.IsNullOrEmpty (this.Entity.IdB) &&
+				string.IsNullOrEmpty (this.Entity.IdC) &&
 				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount))
 			{
 				return EditionStatus.Empty;
 			}
 
-			if (string.IsNullOrEmpty (this.Entity.Id) &&
-				(!string.IsNullOrEmpty (this.Entity.External) ||
-				 !string.IsNullOrEmpty (this.Entity.Internal) ||
+			if (string.IsNullOrEmpty (this.Entity.IdA) &&
+				(!string.IsNullOrEmpty (this.Entity.IdB) ||
+				 !string.IsNullOrEmpty (this.Entity.IdC) ||
 				 !string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount)))
 			{
 				return EditionStatus.Invalid;
@@ -79,9 +79,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 150, "Numéro de l'affaire", Marshaler.Create (() => this.Entity.Id,       x => this.Entity.Id = x));
-			builder.CreateTextField (tile, 150, "Numéro externe",      Marshaler.Create (() => this.Entity.External, x => this.Entity.External = x));
-			builder.CreateTextField (tile, 150, "Numéro interne",      Marshaler.Create (() => this.Entity.Internal, x => this.Entity.Internal = x));
+			builder.CreateTextField (tile, 150, "Numéro de l'affaire", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
+			builder.CreateTextField (tile, 150, "Numéro externe",      Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField (tile, 150, "Numéro interne",      Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 		}

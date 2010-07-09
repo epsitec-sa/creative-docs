@@ -67,8 +67,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Customer",
 					Title				= UIBuilder.FormatText ("Client"),
 					CompactTitle		= UIBuilder.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonText, "\n", "Représentant: ~", this.SalesRepresentativeText)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.Id, "\n", this.PersonCompactText)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA, "\n", this.PersonText, "\n", "Représentant: ~", this.SalesRepresentativeText)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA, "\n", this.PersonCompactText)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller)
 				.DefineText        (x => UIBuilder.FormatText (GetAffairsSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
+				.DefineCompactText (x => UIBuilder.FormatText (x.IdA));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
 		}
@@ -175,14 +175,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (count == 0)
 			{
-				return affairEntity.Id;
+				return affairEntity.IdA;
 			}
 			else
 			{
-				string date = null;
-				date = string.Concat(Misc.GetDateTimeShortDescription (affairEntity.Events[0].Date), " ");  // date du premier événement
+				string date = Misc.GetDateTimeShortDescription (affairEntity.Events[0].Date);  // date du premier événement
 
-				return string.Format ("{0}{1} ({2} év.)", date, affairEntity.Id, count);
+				return string.Format ("{0} {1} ({2} év.)", date, affairEntity.IdA, count);
 			}
 		}
 

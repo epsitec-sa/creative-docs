@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return UIBuilder.FormatText ("Client", this.entity.Id).ToSimpleText ();
+				return UIBuilder.FormatText ("Client", this.entity.IdA).ToSimpleText ();
 			}
 		}
 
@@ -66,13 +66,13 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.Id, "-", x.Firstname, x.Lastname).ToString ();
+				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Firstname, x.Lastname).ToString ();
 			}
 
 			if (this.entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.Id, "-", x.Name).ToString ();
+				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Name).ToString ();
 			}
 
 			double width = this.PageSize.Width - this.PageMargins.Left - this.PageMargins.Right;
