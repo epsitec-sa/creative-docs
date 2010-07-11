@@ -85,34 +85,18 @@ namespace Epsitec.Cresus.Core.Printers
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
 			System.Diagnostics.Debug.Assert (finalHeight   <= middleheight);
 
-			this.width = width;
-			this.pagesInfo.Clear ();
+			this.JustifInitialize (width);
 
-			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
-			//	de toutes les lignes.
-			var textLayout = this.CreateTextLayout ();
-
-			int totalLineCount = textLayout.TotalLineCount;
-			double[] heights = new double[totalLineCount];
-			for (int i = 0; i < totalLineCount; i++)
-			{
-				heights[i] = textLayout.GetLineHeight (i);
-			}
-
-			//	Découpe le texte en tranches verticales, la première ayant une hauteur de initialHeight et les suivante
-			//	de middleheight.
+			//	Découpe le texte en tranches verticales, la première ayant une hauteur de initialHeight et les
+			//	suivantes de middleheight.
 			int line = 0;
-			int lineCount;
-			double heightUsed;
 			bool first = true;
 			bool ending;
 			do
 			{
 				double heightAvailable = first ? initialHeight : middleheight;
-				ending = ObjectTextBox.ComputePage (heights, line, heightAvailable, out lineCount, out heightUsed);
-				this.pagesInfo.Add (new PageInfo (line, lineCount, heightUsed));
+				ending = this.JustifOnePage (ref line, heightAvailable);
 
-				line += lineCount;
 				first = false;
 			}
 			while (!ending);
@@ -122,38 +106,101 @@ namespace Epsitec.Cresus.Core.Printers
 				this.pagesInfo.Count > 1 &&
 				this.pagesInfo[this.pagesInfo.Count-1].Height > finalHeight)
 			{
-				this.pagesInfo.Add (new PageInfo (line, lineCount, 0));
+				this.pagesInfo.Add (new PageInfo (line, 0, 0));
 			}
 		}
 
-		private static bool ComputePage(double[] heights, int startIndex, double maxHeight, out int lineCount, out double height)
+		public void JustifInitialize(double width)
+		{
+			this.width = width;
+			this.pagesInfo.Clear ();
+
+			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
+			//	de toutes les lignes.
+			var textLayout = this.CreateTextLayout ();
+
+			int totalLineCount = textLayout.TotalLineCount;
+			this.heights = new double[totalLineCount];
+			for (int i = 0; i < totalLineCount; i++)
+			{
+				this.heights[i] = textLayout.GetLineHeight (i);
+			}
+		}
+
+		public bool JustifOnePage(ref int line, double maxHeight)
 		{
 			//	Essaie de mettre un maximum de lignes sur une page donnée.
-			//	Retourne true s'il y a assez de place pour tout mettre (donc jusquà la fin).
-			height = 0;
+			//	Retourne true s'il y a assez de place pour tout mettre (donc jusqu'à la fin).
+			double height = 0;
 
-			for (int i = startIndex; i < heights.Length; i++)
+			for (int i = line; i < this.heights.Length; i++)
 			{
-				height += heights[i];
+				height += this.heights[i];
 
 				if (height > maxHeight)
 				{
-					lineCount = i-startIndex;
-					height -= heights[i];
+					int lineCount = i-line;
+					height -= this.heights[i];
+					this.pagesInfo.Add (new PageInfo (line, lineCount, height));
+
+					line += lineCount;
 					return false;  // il reste encore des données
 				}
 
-				if (i == heights.Length-1)
+				if (i == this.heights.Length-1)
 				{
-					lineCount = i-startIndex+1;
+					int lineCount = i-line+1;
+					this.pagesInfo.Add (new PageInfo (line, lineCount, height));
+
+					line += lineCount;
 					return true;  // tout est casé
 				}
 			}
 
-			lineCount = 0;
-			height = 0;
+			this.pagesInfo.Add (new PageInfo (line, 0, 0));
 			return true;  // tout est casé
 		}
+
+
+		public int LastFirstLine
+		{
+			get
+			{
+				if (this.pagesInfo.Count > 0)
+				{
+					return this.pagesInfo[this.pagesInfo.Count-1].FirstLine;
+				}
+
+				return 0;
+			}
+		}
+
+		public int LastLineCount
+		{
+			get
+			{
+				if (this.pagesInfo.Count > 0)
+				{
+					return this.pagesInfo[this.pagesInfo.Count-1].LineCount;
+				}
+
+				return 0;
+			}
+		}
+
+		public double LastHeight
+		{
+			get
+			{
+				if (this.pagesInfo.Count > 0)
+				{
+					return this.pagesInfo[this.pagesInfo.Count-1].Height;
+				}
+
+				return 0;
+			}
+		}
+
 
 		public override int PageCount
 		{
@@ -216,8 +263,10 @@ namespace Epsitec.Cresus.Core.Printers
 				LayoutSize            = new Size (this.width, double.MaxValue),
 				DefaultUnderlineWidth = 0.1,
 				DefaultWaveWidth      = 0.75,
-				Text                  = this.Text,
+				//?Text                  = this.Text,
 			};
+
+			textLayout.Text = this.Text;
 
 			return textLayout;
 		}
@@ -238,7 +287,8 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private double			width;
-		private List<PageInfo>	pagesInfo;
+		private double				width;
+		private List<PageInfo>		pagesInfo;
+		private double[]			heights;
 	}
 }
