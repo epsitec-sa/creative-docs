@@ -7,7 +7,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
 
-namespace Epsitec.Cresus.DataLayer.Data
+namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 

@@ -140,9 +140,9 @@
     <Compile Include="Loader\DataLoader.cs" />
     <Compile Include="Loader\Request.cs" />
     <Compile Include="Context\DataContextPool.cs" />
-    <Compile Include="Data\CollectionData.cs" />
-    <Compile Include="Data\EntityData.cs" />
-    <Compile Include="Data\ReferenceData.cs" />
+    <Compile Include="Loader\CollectionData.cs" />
+    <Compile Include="Loader\EntityData.cs" />
+    <Compile Include="Loader\ReferenceData.cs" />
     <Compile Include="Context\EntityKey.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithField.cs" />
     <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
@@ -161,7 +161,7 @@
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="Loader\AliasNode.cs" />
-    <Compile Include="Expressions\ValueData.cs" />
+    <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="Context\EntityDataCache.cs" />
@@ -171,7 +171,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Context\DataContext.cs" />
-    <Compile Include="Loader\EntityResolutionMode.cs" />
     <Compile Include="Context\EntityDataMapping.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Saver\DataSaver.cs" />
@@ -182,6 +181,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
