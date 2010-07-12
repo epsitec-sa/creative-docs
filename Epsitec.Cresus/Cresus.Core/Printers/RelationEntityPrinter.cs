@@ -334,14 +334,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 			table.SetText (0, 1, "Gauche");
 			table.SetText (1, 1, "");
-//?			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester...");
-			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester... Blabla, suite de ce texte débile, en espérant qu'il occupe plusieurs cellules du tableau, pour vérifier mes algorithmes.");
+			table.SetText (2, 1, "Ceci est un texte plus long que les autres, pour tester...");
 			table.SetText (3, 1, "Droite");
 
 			table.SetText (0, 2, "Rouge");
 			table.SetText (1, 2, "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.");
 			table.SetText (2, 2, "<font size=\"2\">L'histoire en Grèce antique conserve certains de ces aspects en développant parallèlement des préoccupations littéraires et scientifiques comme en témoignent les oeuvres d'Hérodote, de Thucydide et de Polybe. Hérodote (-484 ou -482, -425) est un savant grec qui parcourt durant sa vie l'Égypte actuelle et le Moyen-Orient, allant jusqu'à Babylone. Dans ses Enquêtes, il veut faire oeuvre de mémorialiste et raconte des événements récents, les guerres médiques, « <i>afin que le temps n'abolisse pas les travaux des hommes</i> ». Il se place donc dans une perspective historique qui fait qu'on a pu le qualifier de « <i>père de l'histoire</i> ».</font>");
-			table.SetText (3, 2, "Bleu");
+			table.SetText (3, 2, "MotTropLongPourLaCellule");
 
 			table.SetRelativeColumWidth (1, 1.5);
 			table.DebugPaintFrame = true;
