@@ -234,7 +234,18 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Crée le TextLayout avec les données réelles et dessine-le.
 			var textLayout = this.CreateTextLayout ();
 			textLayout.LayoutSize = bounds.Size;
-			textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+
+			if (textLayout.TotalRectangle.IsEmpty && !string.IsNullOrEmpty(textLayout.Text))
+			{
+				port.LineWidth = 0.1;
+				port.Color = Color.FromBrightness (0);
+				port.PaintOutline (Path.FromLine (clipRect.BottomLeft, clipRect.TopRight));
+				port.PaintOutline (Path.FromLine (clipRect.TopLeft, clipRect.BottomRight));
+			}
+			else
+			{
+				textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+			}
 
 			if (this.DebugPaintFrame)
 			{
@@ -263,10 +274,8 @@ namespace Epsitec.Cresus.Core.Printers
 				LayoutSize            = new Size (this.width, double.MaxValue),
 				DefaultUnderlineWidth = 0.1,
 				DefaultWaveWidth      = 0.75,
-				//?Text                  = this.Text,
+				Text                  = this.Text,
 			};
-
-			textLayout.Text = this.Text;
 
 			return textLayout;
 		}
