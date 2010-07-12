@@ -68,6 +68,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private DataLoader DataLoader
+		{
+			get
+			{
+				return this.DataContext.DataLoader;
+			}
+		}
+
+
 		public IEnumerable<T> GetByExample<T>(T example)
 			where T : AbstractEntity
 		{
@@ -98,7 +107,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			foreach (EntityData entityData in this.GetEntitiesData (request))
 			{
-				T entity = this.DataContext.ResolveEntity (entityData, request.LoadFromDatabase) as T;
+				T entity = this.DataLoader.ResolveEntity (entityData) as T;
 
 				if (entity != null)
 				{
@@ -110,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, bool loadFromDatabase = true)
 		{
-			EntityDataMapping targetMapping = this.DataContext.FindEntityDataMapping (target);
+			EntityDataMapping targetMapping = this.DataContext.GetEntityDataMapping (target);
 
 			if (targetMapping != null)
 			{
@@ -593,7 +602,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
-			EntityDataMapping mapping = this.DataContext.FindEntityDataMapping (target);
+			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (target);
 
 			if (mapping == null)
 			{
@@ -857,8 +866,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private DbTableColumn GetEntityColumn(Druid entityId, string entityAlias, string columName)
 		{
-			DbTable dbTable = this.SchemaEngine.FindTableDefinition (entityId);
-			DbColumn dbColumn = dbTable.Columns[SchemaHelper.GetDataColumnName (columName)];
+			DbTable dbTable = this.SchemaEngine.GetTableDefinition (entityId);
+			DbColumn dbColumn = dbTable.Columns[this.SchemaEngine.GetDataColumnName (columName)];
 
 			return new DbTableColumn (dbColumn)
 			{
@@ -878,12 +887,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private DbTableColumn GetRelationColumn(Druid localEntityId, Druid fieldId, string relationAlias, string columName)
 		{
-			string sourceTableName = SchemaHelper.GetDataTableName (localEntityId);
-			string sourceColumnName = SchemaHelper.GetDataColumnName (fieldId.ToString ());
+			string sourceTableName = this.SchemaEngine.GetDataTableName (localEntityId);
+			string sourceColumnName = this.SchemaEngine.GetDataColumnName (fieldId.ToString ());
 			string relationTableName = DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 
 			DbTable dbRelationTable = this.DbInfrastructure.ResolveDbTable (relationTableName);
-			DbColumn dbColumn = dbRelationTable.Columns[SchemaHelper.GetDataColumnName (columName)];
+			DbColumn dbColumn = dbRelationTable.Columns[this.SchemaEngine.GetDataColumnName (columName)];
 
 			return new DbTableColumn (dbColumn)
 			{

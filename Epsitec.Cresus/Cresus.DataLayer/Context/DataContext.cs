@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using System.Linq;
 
@@ -41,17 +42,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.EnableEntityNullReferenceVirtualizer = false;
 
-			this.entityDataCache = new EntityDataCache ();
+			this.entitiesCache = new EntityDataCache ();
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
-			this.deletedEntities = new HashSet<AbstractEntity> ();
+			this.entitiesDeleted = new HashSet<AbstractEntity> ();
 			
 			this.EntityContext.EntityAttached += this.HandleEntityCreated;
 			this.EntityContext.PersistenceManagers.Add (this);
 		}
 
 
-		internal int UniqueId
+		public int UniqueId
 		{
 			get;
 			private set;
@@ -65,14 +66,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		internal SchemaEngine SchemaEngine
+		public EntityContext EntityContext
 		{
 			get;
 			private set;
 		}
 
 
-		internal EntityContext EntityContext
+		internal SchemaEngine SchemaEngine
 		{
 			get;
 			private set;
@@ -105,7 +106,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
-
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			return this.EntityContext.CreateEmptyEntity (entityId);
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public bool Contains(AbstractEntity entity)
 		{
-			return this.entityDataCache.ContainsEntity (entity);
+			return this.entitiesCache.ContainsEntity (entity);
 		}
 
 
@@ -145,19 +145,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		internal AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId, Druid rootEntityId)
 		{
-			return this.entityDataCache.FindEntity (rowKey, leafEntityId, rootEntityId);
+			return this.entitiesCache.FindEntity (rowKey, leafEntityId, rootEntityId);
 		}
 
 		internal void DefineRowKey(EntityDataMapping mapping, DbKey key)
 		{
-			this.entityDataCache.DefineRowKey (mapping, key);
+			this.entitiesCache.DefineRowKey (mapping, key);
 		}
 
 
 		public bool ContainsChanges()
 		{
 			bool containsDeletedEntities = this.entitiesToDelete.Any();
-			bool containsChangedEntities = this.GetModifiedEntities ().Any ();
+			bool containsChangedEntities = this.GetEntitiesModified ().Any ();
 
 			return containsDeletedEntities || containsChangedEntities;
 		}
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return result;
 		}
 
-		public bool UpdateEmptyEntityStatusAbstractEntity<T>(T entity, System.Predicate<T> emptyPredicate) where T : AbstractEntity
+		public bool UpdateEmptyEntityStatus<T>(T entity, System.Predicate<T> emptyPredicate) where T : AbstractEntity
 		{
 			bool result = emptyPredicate (entity);
 			
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public void DeleteEntity(AbstractEntity entity)
 		{
-			if (!this.deletedEntities.Contains (entity))
+			if (!this.entitiesDeleted.Contains (entity))
 			{
 				this.entitiesToDelete.Add (entity);
 			}
@@ -235,21 +235,33 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public bool IsDeleted(AbstractEntity entity)
 		{
-			return this.deletedEntities.Contains (entity);
+			return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
 		}
 
 
-		internal IEnumerable<AbstractEntity> GetManagedEntities()
+		internal IEnumerable<AbstractEntity> GetEntities()
 		{
-			return this.entityDataCache.GetEntities ();
+			return this.entitiesCache.GetEntities ();
 		}
 
 
-		internal IEnumerable<AbstractEntity> GetModifiedEntities()
+		internal IEnumerable<AbstractEntity> GetEntitiesModified()
 		{
-			return from AbstractEntity entity in this.GetManagedEntities ()
+			return from AbstractEntity entity in this.GetEntities ()
 				   where entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration
 				   select entity;
+		}
+
+
+		internal IEnumerable<AbstractEntity> GetEntitiesDeleted()
+		{
+			return this.entitiesDeleted;
+		}
+
+
+		internal IEnumerable<AbstractEntity> GetEntitiesToDelete()
+		{
+			return this.entitiesToDelete;
 		}
 
 		
@@ -261,8 +273,71 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 			else
 			{
-				return this.entityDataCache.FindMapping (entity.GetEntitySerialId ());
+				return this.entitiesCache.FindMapping (entity.GetEntitySerialId ());
 			}
+		}
+
+
+		internal void MarkAsDeleted(AbstractEntity entity)
+		{
+			this.entitiesDeleted.Add (entity);
+			this.entitiesCache.Remove (entity.GetEntitySerialId ());
+		}
+
+
+		internal void ClearEntitiesToDelete()
+		{
+			this.entitiesToDelete.Clear ();
+		}
+
+
+		public IEnumerable<T> GetByExample<T>(T example) where T : AbstractEntity
+		{
+			return this.DataLoader.GetByExample<T> (example);
+		}
+
+
+		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
+		{
+			return this.DataLoader.GetByRequest<T> (request);
+		}
+
+
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		{
+			return this.DataLoader.GetReferencers (target);
+		}
+
+
+		public TEntity ResolveEntity<TEntity>(EntityKey entityKey) where TEntity : AbstractEntity, new()
+		{
+			return this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId) as TEntity;
+		}
+
+
+		public AbstractEntity ResolveEntity(EntityKey entityKey)
+		{
+			return this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+		}
+
+
+		public TEntity ResolveEntity<TEntity>(DbKey entityKey) where TEntity : AbstractEntity, new ()
+		{
+			throw new System.NotImplementedException ();
+			// TODO
+		}
+
+
+		public void SaveChanges()
+		{
+			this.DataSaver.SaveChanges ();
+		}
+
+
+		public void CreateSchema<TEntity>() where TEntity : AbstractEntity
+		{
+			throw new System.NotImplementedException ();
+			// TODO
 		}
 
 
@@ -398,7 +473,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			
 			long entitySerialId = entity.GetEntitySerialId ();
 
-			this.entityDataCache.Add (entitySerialId, entityMapping);
+			this.entitiesCache.Add (entitySerialId, entityMapping);
 
 			try
 			{
@@ -406,7 +481,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 			catch
 			{
-				this.entityDataCache.Remove (entitySerialId);
+				this.entitiesCache.Remove (entitySerialId);
 				throw;
 			}
 		}
@@ -415,7 +490,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private bool isDisposed;
 
 
-		private readonly EntityDataCache entityDataCache;
+		private readonly EntityDataCache entitiesCache;
 
 
 		private readonly HashSet<AbstractEntity> emptyEntities;
@@ -424,7 +499,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly HashSet<AbstractEntity> entitiesToDelete;
 
 
-		private readonly HashSet<AbstractEntity> deletedEntities;
+		private readonly HashSet<AbstractEntity> entitiesDeleted;
 
 
 		private static int nextUniqueId;

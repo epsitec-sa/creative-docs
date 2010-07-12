@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -101,8 +102,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -118,7 +117,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 3);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -135,8 +134,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -153,7 +150,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -168,8 +165,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -186,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
@@ -200,8 +195,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -221,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -237,8 +230,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -263,7 +254,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -278,8 +269,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
 				Request request = new Request ()
@@ -304,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -318,8 +307,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
 					Gender = new PersonGenderEntity (),
@@ -347,7 +334,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -362,8 +349,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
 					Gender = new PersonGenderEntity (),
@@ -383,7 +368,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -398,8 +383,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
 					Gender = new PersonGenderEntity (),
@@ -419,7 +402,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
 				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
@@ -445,8 +428,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				CountryEntity example = new CountryEntity ();
 
 				Request request = new Request ()
@@ -463,7 +444,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
+				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 4);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -474,8 +455,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				CountryEntity example = new CountryEntity ();
 
 				Request request = new Request ()
@@ -492,7 +471,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
+				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 3);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -502,8 +481,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				CountryEntity example = new CountryEntity ();
 
 				Request request = new Request ()
@@ -522,7 +499,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
+				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
@@ -530,8 +507,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				CountryEntity example = new CountryEntity ();
 
 				Request request = new Request ()
@@ -550,7 +525,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
+				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
@@ -558,8 +533,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				CountryEntity example = new CountryEntity ();
 
 				Request request = new Request ()
@@ -578,7 +551,7 @@ namespace Epsitec.Cresus.DataLayer
 					)
 				);
 
-				CountryEntity[] countries = dataBrowser.GetByRequest<CountryEntity> (request).ToArray ();
+				CountryEntity[] countries = dataContext.GetByRequest<CountryEntity> (request).ToArray ();
 
 				Assert.IsTrue (countries.Count () == 1);
 				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
@@ -593,8 +566,6 @@ namespace Epsitec.Cresus.DataLayer
 			
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
 				Request request = new Request ()
@@ -602,7 +573,7 @@ namespace Epsitec.Cresus.DataLayer
 					RootEntity = example,
 				};
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Length == 2);
 
@@ -619,8 +590,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
 				Request request = new Request ()
@@ -629,7 +598,7 @@ namespace Epsitec.Cresus.DataLayer
 					RequestedEntity = example.Contacts[0],
 				};
 
-				UriContactEntity[] contacts = dataBrowser.GetByRequest<UriContactEntity> (request).ToArray ();
+				UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
 
 				Assert.IsTrue (contacts.Length == 3);
 
@@ -647,8 +616,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
 				Request request = new Request ()
@@ -657,7 +624,7 @@ namespace Epsitec.Cresus.DataLayer
 					RequestedEntity = (example.Contacts[0] as UriContactEntity).UriScheme,
 				};
 
-				UriSchemeEntity[] uriSchemes = dataBrowser.GetByRequest<UriSchemeEntity> (request).ToArray ();
+				UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
 
 				Assert.IsTrue (uriSchemes.Length == 1);
 
@@ -673,10 +640,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = Database2.GetCorrectExample1();
-				NaturalPersonEntity alfred = dataBrowser.GetByExample<NaturalPersonEntity> (example).First ();
+				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (example).First ();
 
 				Request request = new Request ()
 				{
@@ -684,7 +649,7 @@ namespace Epsitec.Cresus.DataLayer
 					RootEntityReference = alfred,
 				};
 
-				NaturalPersonEntity[] persons = dataBrowser.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Length == 1);
 
@@ -700,10 +665,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred1 = dataBrowser.GetByExample<NaturalPersonEntity> (example1).First ();
+				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
 				NaturalPersonEntity example2 = new NaturalPersonEntity ();
 				example2.Contacts.Add (new UriContactEntity ()
@@ -718,7 +681,7 @@ namespace Epsitec.Cresus.DataLayer
 					RequestedEntity = (example2.Contacts[0] as UriContactEntity).UriScheme,
 				};
 
-				UriSchemeEntity[] uriSchemes = dataBrowser.GetByRequest<UriSchemeEntity> (request).ToArray ();
+				UriSchemeEntity[] uriSchemes = dataContext.GetByRequest<UriSchemeEntity> (request).ToArray ();
 
 				Assert.IsTrue (uriSchemes.Length == 1);
 
@@ -734,10 +697,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
 			{
-				DataBrowser dataBrowser = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred1 = dataBrowser.GetByExample<NaturalPersonEntity> (example1).First ();
+				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
 				NaturalPersonEntity example2 = new NaturalPersonEntity ();
 				example2.Contacts.Add (new AbstractContactEntity ());
@@ -749,7 +710,7 @@ namespace Epsitec.Cresus.DataLayer
 					RequestedEntity = example2.Contacts[0],
 				};
 
-				UriContactEntity[] contacts = dataBrowser.GetByRequest<UriContactEntity> (request).ToArray ();
+				UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
 
 				Assert.IsTrue (contacts.Length == 2);
 

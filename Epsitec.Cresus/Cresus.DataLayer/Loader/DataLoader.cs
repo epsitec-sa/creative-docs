@@ -27,10 +27,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public DataLoader(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
+			this.DataBrowser = new DataBrowser (dataContext);
 		}
 
 
 		private DataContext DataContext
+		{
+			get;
+			set;
+		}
+
+
+		private DataBrowser DataBrowser
 		{
 			get;
 			set;
@@ -52,6 +60,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return this.DataContext.SchemaEngine;
 			}
+		}
+
+
+		public IEnumerable<T> GetByExample<T>(T example) where T : AbstractEntity
+		{
+			return this.DataBrowser.GetByExample<T> (example);
+		}
+
+
+		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
+		{
+			return this.DataBrowser.GetByRequest<T> (request);
+		}
+
+
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		{
+			return this.DataBrowser.GetReferencers (target);
 		}
 
 

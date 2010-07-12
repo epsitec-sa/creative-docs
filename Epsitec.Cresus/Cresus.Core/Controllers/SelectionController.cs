@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return FormattedText.Empty;
 			}
 
-			var context = DataContextPool.Instance.FindDataContext (entity);
+			var context = DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (entity)))

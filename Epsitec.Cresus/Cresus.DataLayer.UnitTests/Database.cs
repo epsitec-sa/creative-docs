@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer
@@ -378,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static CommentEntity CreateComment(DataContext dataContext, string text)
 		{
-			CommentEntity comment = dataContext.CreateEmptyEntity<CommentEntity> ();
+			CommentEntity comment = dataContext.CreateEntity<CommentEntity> ();
 
 			comment.Text = text;
 
@@ -388,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static ContactRoleEntity CreateContactRole(DataContext dataContext, string name)
 		{
-			ContactRoleEntity contactRole = dataContext.CreateEmptyEntity<ContactRoleEntity> ();
+			ContactRoleEntity contactRole = dataContext.CreateEntity<ContactRoleEntity> ();
 
 			contactRole.Name = name;
 
@@ -398,7 +399,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static MailContactEntity CreateMailContact(DataContext dataContext, string complement, AddressEntity address)
 		{
-			MailContactEntity mailContact = dataContext.CreateEmptyEntity<MailContactEntity> ();
+			MailContactEntity mailContact = dataContext.CreateEntity<MailContactEntity> ();
 
 			mailContact.Complement = complement;
 			mailContact.Address = address;
@@ -409,7 +410,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static AddressEntity CreateAddresss(DataContext dataContext, string complement, StreetEntity street, PostBoxEntity postBox, LocationEntity location)
 		{
-			AddressEntity address = dataContext.CreateEmptyEntity<AddressEntity> ();
+			AddressEntity address = dataContext.CreateEntity<AddressEntity> ();
 
 			address.Street = street;
 			address.PostBox = postBox;
@@ -421,7 +422,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static StreetEntity CreateStreet(DataContext dataContext, string complement, string streetName)
 		{
-			StreetEntity location = dataContext.CreateEmptyEntity<StreetEntity> ();
+			StreetEntity location = dataContext.CreateEntity<StreetEntity> ();
 
 			location.Complement = complement;
 			location.StreetName = streetName;
@@ -432,7 +433,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static PostBoxEntity CreatePostBox(DataContext dataContext, string number)
 		{
-			PostBoxEntity location = dataContext.CreateEmptyEntity<PostBoxEntity> ();
+			PostBoxEntity location = dataContext.CreateEntity<PostBoxEntity> ();
 
 			location.Number = number;
 
@@ -442,7 +443,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static LocationEntity CreateLocation(DataContext dataContext, string postalCode, string name, CountryEntity country, RegionEntity region)
 		{
-			LocationEntity location = dataContext.CreateEmptyEntity<LocationEntity> ();
+			LocationEntity location = dataContext.CreateEntity<LocationEntity> ();
 
 			location.PostalCode = postalCode;
 			location.Name = name;
@@ -455,7 +456,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static RegionEntity CreateRegion(DataContext dataContext, string code, string name, CountryEntity country)
 		{
-			RegionEntity region = dataContext.CreateEmptyEntity<RegionEntity> ();
+			RegionEntity region = dataContext.CreateEntity<RegionEntity> ();
 
 			region.Code = code;
 			region.Name = name;
@@ -467,7 +468,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static CountryEntity CreateCountry(DataContext dataContext, string code, string name)
 		{
-			CountryEntity country = dataContext.CreateEmptyEntity<CountryEntity> ();
+			CountryEntity country = dataContext.CreateEntity<CountryEntity> ();
 
 			country.Code = code;
 			country.Name = name;
@@ -478,7 +479,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static TelecomTypeEntity CreateTelecomType(DataContext dataContext, string code, string name)
 		{
-			TelecomTypeEntity telecomType = dataContext.CreateEmptyEntity<TelecomTypeEntity> ();
+			TelecomTypeEntity telecomType = dataContext.CreateEntity<TelecomTypeEntity> ();
 
 			telecomType.Code = code;
 			telecomType.Name = name;
@@ -489,7 +490,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static TelecomContactEntity CreateTelecomContact(DataContext dataContext, string number, string extension, TelecomTypeEntity telecomType)
 		{
-			TelecomContactEntity contact = dataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity contact = dataContext.CreateEntity<TelecomContactEntity> ();
 
 			contact.Number = number;
 			contact.Extension = extension;
@@ -501,7 +502,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static UriSchemeEntity CreateUriScheme(DataContext dataContext, string code, string name)
 		{
-			UriSchemeEntity uriScheme = dataContext.CreateEmptyEntity<UriSchemeEntity> ();
+			UriSchemeEntity uriScheme = dataContext.CreateEntity<UriSchemeEntity> ();
 
 			uriScheme.Code = code;
 			uriScheme.Name = name;
@@ -512,7 +513,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static UriContactEntity CreateUriContact(DataContext dataContext, string uri, UriSchemeEntity uriScheme)
 		{
-			UriContactEntity contact = dataContext.CreateEmptyEntity<UriContactEntity> ();
+			UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
 
 			contact.Uri = uri;
 			contact.UriScheme = uriScheme;
@@ -523,7 +524,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static LanguageEntity CreateLanguage(DataContext dataContext, string code, string name)
 		{
-			LanguageEntity language = dataContext.CreateEmptyEntity<LanguageEntity> ();
+			LanguageEntity language = dataContext.CreateEntity<LanguageEntity> ();
 
 			language.Code = code;
 			language.Name = name;
@@ -534,7 +535,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static PersonGenderEntity CreatePersonGender(DataContext dataContext, string code, string name)
 		{
-			PersonGenderEntity gender = dataContext.CreateEmptyEntity<PersonGenderEntity> ();
+			PersonGenderEntity gender = dataContext.CreateEntity<PersonGenderEntity> ();
 
 			gender.Code = code;
 			gender.Name = name;
@@ -545,7 +546,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static PersonTitleEntity CreatePersonTitle(DataContext dataContext, string name, string shortName)
 		{
-			PersonTitleEntity title = dataContext.CreateEmptyEntity<PersonTitleEntity> ();
+			PersonTitleEntity title = dataContext.CreateEntity<PersonTitleEntity> ();
 
 			title.ShortName = shortName;
 			title.Name = name;
@@ -556,7 +557,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static LegalPersonTypeEntity CreateLegalPersonType(DataContext dataContext, string name, string shortName)
 		{
-			LegalPersonTypeEntity type = dataContext.CreateEmptyEntity<LegalPersonTypeEntity> ();
+			LegalPersonTypeEntity type = dataContext.CreateEntity<LegalPersonTypeEntity> ();
 
 			type.ShortName = shortName;
 			type.Name = name;
@@ -567,7 +568,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static NaturalPersonEntity CreateNaturalPerson(DataContext dataContext, string firstName, string lastName, Date birthday, LanguageEntity language, PersonTitleEntity title, PersonGenderEntity gender)
 		{
-			NaturalPersonEntity person = dataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
 			person.Firstname = firstName;
 			person.Lastname = lastName;
@@ -582,7 +583,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static LegalPersonEntity CreateLegalPerson(DataContext dataContext, string name, string shortName, string complement, LegalPersonTypeEntity type, LanguageEntity language)
 		{
-			LegalPersonEntity person = dataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity person = dataContext.CreateEntity<LegalPersonEntity> ();
 
 			person.Name = name;
 			person.ShortName = shortName;

@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = SummaryDataType.CollectionItem;
 			
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (source);
+			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (source);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (source)))
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private static T CreateEmptyItem()
 		{
 			T entity = EntityContext.Current.CreateEmptyEntity<T> ();
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
+			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
 
 			context.RegisterEmptyEntity (entity);
 

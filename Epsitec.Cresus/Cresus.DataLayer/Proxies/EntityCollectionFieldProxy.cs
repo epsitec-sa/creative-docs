@@ -4,6 +4,7 @@ using Epsitec.Common.Types;
 
 using System.Collections;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -90,21 +91,31 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			EntityContext entityContext = this.entity.GetEntityContext ();
 
-			Druid entityId = this.entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = entityContext.GetLocalEntityId (entityId, this.fieldId);
-			StructuredTypeField field = entityContext.GetEntityFieldDefinition (entityId, this.fieldId.ToResourceId ());
+			Druid leafEntityId = this.entity.GetEntityStructuredTypeId ();
+			string fieldId = this.fieldId.ToResourceId ();
+			StructuredTypeField field = entityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
 
-			IList targets = new EntityCollection<AbstractEntity> (this.fieldId.ToResourceId (), this.entity, false) as IList;
-			
-			using (this.entity.DefineOriginalValues ())
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
+
+			rootExample.SetField<AbstractEntity> (fieldId, targetExample);
+
+			Request request = new Request ()
 			{
-				foreach (object item in this.dataContext.DataLoader.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load))
-				{
-					targets.Add (item);
-				}
+				RootEntity = rootExample,
+				RootEntityReference = this.entity,
+				RequestedEntity = targetExample,
+			};
+
+			var targetsIn = this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request);
+			var targetsOut = new EntityCollection<AbstractEntity> (fieldId, this.entity, false);
+
+			foreach (AbstractEntity target in targetsIn)
+			{
+				targetsOut.Add (target);
 			}
 
-			return targets;
+			return targetsOut;
 		}
 
 

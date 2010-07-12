@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (this.Entity.LegalPerson.IsActive ())
 				{
 					this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
-					this.Entity.Address = this.DataContext.CreateRegisteredEmptyEntity<AddressEntity> ();
+					this.Entity.Address = this.DataContext.CreateEmptyEntity<AddressEntity> ();
 					this.InitializeDefaultCountry ();  // met "Suisse" si rien
 					this.selectedCountry = this.Entity.Address.Location.Country;
 
@@ -277,8 +277,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewLegalPerson(DataContext context)
 		{
-			var customer = context.CreateRegisteredEmptyEntity<RelationEntity> ();
-			var person   = context.CreateRegisteredEmptyEntity<LegalPersonEntity> ();
+			var customer = context.CreateEmptyEntity<RelationEntity> ();
+			var person   = context.CreateEmptyEntity<LegalPersonEntity> ();
 
 			customer.Person = person;
 			customer.FirstContactDate = Date.Today;
@@ -342,14 +342,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewCountry(DataContext context)
 		{
-			var country = context.CreateRegisteredEmptyEntity<CountryEntity> ();
+			var country = context.CreateEmptyEntity<CountryEntity> ();
 
 			return country;
 		}
 
 		private NewEntityReference CreateNewLocation(DataContext context)
 		{
-			var location = context.CreateRegisteredEmptyEntity<LocationEntity> ();
+			var location = context.CreateEmptyEntity<LocationEntity> ();
 
 			location.Country = this.selectedCountry;
 

@@ -4,6 +4,7 @@ using Epsitec.Common.Types;
 
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -90,12 +91,23 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			EntityContext entityContext = this.entity.GetEntityContext ();
 
-			Druid entityId = this.entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = entityContext.GetLocalEntityId (entityId, this.fieldId);
+			Druid leafEntityId = this.entity.GetEntityStructuredTypeId ();
+			string fieldId = this.fieldId.ToResourceId ();
+			StructuredTypeField field = entityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
 
-			StructuredTypeField field = entityContext.GetEntityFieldDefinition (entityId, this.fieldId.ToResourceId ());
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
-			return this.dataContext.DataLoader.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load).FirstOrDefault ();
+			rootExample.SetField<AbstractEntity> (fieldId, targetExample);
+
+			Request request = new Request ()
+			{
+				RootEntity = rootExample,
+				RootEntityReference = this.entity,
+				RequestedEntity = targetExample,
+			};
+
+			return this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
 		}
 
 

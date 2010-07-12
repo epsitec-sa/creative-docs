@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	
 	
 	/// <summary>
-	/// The <c>SchemaEngineTableBuilder</c> class is used internally to build
+	/// The <c>SchemaBuilder</c> class is used internally to build
 	/// one or more <see cref="DbTable"/> instances based on entity ids.
 	/// </summary>
 	internal class SchemaBuilder
@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SchemaEngineTableBuilder"/> class.
+		/// Initializes a new instance of the <see cref="SchemaBuilder"/> class.
 		/// </summary>
-		/// <param name="engine">The schema engine.</param>
+		/// <param name="schemaEngine">The schema engine.</param>
 		public SchemaBuilder(SchemaEngine schemaEngine)
 		{
 			this.schemaEngine = schemaEngine;

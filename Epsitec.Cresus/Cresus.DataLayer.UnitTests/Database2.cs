@@ -2,7 +2,7 @@
 
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer

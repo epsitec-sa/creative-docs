@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewNaturalPerson(DataContext context)
 		{
-			var customer = context.CreateRegisteredEmptyEntity<RelationEntity> ();
-			var person   = context.CreateRegisteredEmptyEntity<NaturalPersonEntity> ();
+			var customer = context.CreateEmptyEntity<RelationEntity> ();
+			var person   = context.CreateEmptyEntity<NaturalPersonEntity> ();
 
 			customer.Person = person;
 			customer.FirstContactDate = Date.Today;

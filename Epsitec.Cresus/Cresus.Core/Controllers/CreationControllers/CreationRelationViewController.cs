@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 						(context, customer) =>
 						{
 							customer.FirstContactDate = Date.Today;
-							customer.Person = context.CreateEmptyEntity<NaturalPersonEntity> ();
+							customer.Person = context.CreateEntity<NaturalPersonEntity> ();
 						});
 				};
 			
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 						(context, customer) =>
 						{
 							customer.FirstContactDate = Date.Today;
-							customer.Person = context.CreateEmptyEntity<LegalPersonEntity> ();
+							customer.Person = context.CreateEntity<LegalPersonEntity> ();
 						});
 				};
 			

@@ -6,7 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using NUnit.Framework;
 
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			EntityDataMapping mapping = new EntityDataMapping (entity, entity.GetEntityStructuredTypeId (), context.GetRootEntityId (entity.GetEntityStructuredTypeId ()));
 
 			Assert.AreEqual (entity, mapping.Entity);
-			Assert.AreEqual (Druid.Parse ("[630Q]"), mapping.EntityId);
+			Assert.AreEqual (Druid.Parse ("[630Q]"), mapping.LeafEntityId);
 			Assert.AreEqual (DbKey.Empty, mapping.RowKey);
 
 			Assert.IsFalse ((mapping as IReadOnly).IsReadOnly);

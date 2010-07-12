@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public object PromoteToRealInstance()
 		{
-			return this.dataContext.DataLoader.InternalResolveEntity (this.rowKey, this.entityId, EntityResolutionMode.Load);
+			return this.dataContext.DataLoader.ResolveEntity (this.rowKey, this.entityId);
 		}
 
 

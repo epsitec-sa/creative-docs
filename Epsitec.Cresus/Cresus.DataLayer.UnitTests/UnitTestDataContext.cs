@@ -7,6 +7,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,8 +66,8 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-				var emptyContact1 = dataContext.CreateEmptyEntity<UriContactEntity> ();
-				var emptyContact2 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
+				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
 
 				alfred.Contacts.Add (emptyContact1);
 
@@ -78,10 +79,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				var dataBrowser = new DataBrowser (dataContext);
-
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
-				var contacts = dataBrowser.GetByExample (new AbstractContactEntity ());
+				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 				Assert.IsTrue (alfred.Contacts.Count == 2);
 				Assert.IsTrue (contacts.Count () == 4);
@@ -91,8 +90,8 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
-				var emptyContact1 = dataContext.CreateEmptyEntity<UriContactEntity> ();
-				var emptyContact2 = dataContext.CreateEmptyEntity<UriContactEntity> ();
+				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
+				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
 
 				alfred.Contacts.Add (emptyContact1);
 
@@ -109,10 +108,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				var dataBrowser = new DataBrowser (dataContext);
-
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
-				var contacts = dataBrowser.GetByExample (new AbstractContactEntity ());
+				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 				Assert.IsTrue (alfred.Contacts.Count == 2);
 				Assert.IsTrue (contacts.Count () == 6);
@@ -214,7 +211,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
 			{
-				NaturalPersonEntity freshPerson1 = dataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+				NaturalPersonEntity freshPerson1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 
 				freshPerson1.Firstname = "Albert";
 				freshPerson1.Lastname = "Levert";

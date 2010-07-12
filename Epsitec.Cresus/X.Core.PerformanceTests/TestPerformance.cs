@@ -5,6 +5,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Linq;
@@ -107,8 +108,7 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-				repository.GetByExample<EntityType> (new EntityType ()).Count ();
+				dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
 			};
 		}
 
@@ -143,14 +143,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				UriContactEntity example = new UriContactEntity ()
 				{
 					UriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001))),
 				};
 
-				repository.GetByExample<UriContactEntity> (example).Count ();
+				dataContext.GetByExample<UriContactEntity> (example).Count ();
 			}
 		}
 
@@ -159,8 +157,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				UriContactEntity example = new UriContactEntity ()
 				{
 					UriScheme = new UriSchemeEntity ()
@@ -169,7 +165,7 @@ namespace Epsitec.Cresus.Core
 					},
 				};
 
-				repository.GetByExample<UriContactEntity> (example).Count ();
+				dataContext.GetByExample<UriContactEntity> (example).Count ();
 			}
 		}
 
@@ -178,14 +174,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				LocationEntity example = new LocationEntity ()
 				{
 					Country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001))),
 				};
 
-				repository.GetByExample<LocationEntity> (example).Count ();
+				dataContext.GetByExample<LocationEntity> (example).Count ();
 			}
 		}
 
@@ -194,8 +188,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				LocationEntity example = new LocationEntity ()
 				{
 					Country = new CountryEntity ()
@@ -204,7 +196,7 @@ namespace Epsitec.Cresus.Core
 					},
 				};
 
-				repository.GetByExample<LocationEntity> (example).Count ();
+				dataContext.GetByExample<LocationEntity> (example).Count ();
 			}
 		}
 
@@ -213,14 +205,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
 					LegalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001))),
 				};
 
-				repository.GetByExample<LegalPersonEntity> (example).Count ();
+				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
 			}
 		}
 
@@ -229,8 +219,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
 					LegalPersonType = new LegalPersonTypeEntity ()
@@ -239,7 +227,7 @@ namespace Epsitec.Cresus.Core
 					},
 				};
 
-				repository.GetByExample<LegalPersonEntity> (example).Count ();
+				dataContext.GetByExample<LegalPersonEntity> (example).Count ();
 			}
 		}
 
@@ -248,14 +236,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
 					NaturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001))),
 				};
 
-				repository.GetByExample<AbstractContactEntity> (example).Count ();
+				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
 			}
 		}
 
@@ -264,8 +250,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
 					NaturalPerson = new NaturalPersonEntity ()
@@ -274,7 +258,7 @@ namespace Epsitec.Cresus.Core
 					}
 				};
 
-				repository.GetByExample<AbstractContactEntity> (example).Count ();
+				dataContext.GetByExample<AbstractContactEntity> (example).Count ();
 			}
 		}
 
@@ -283,8 +267,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
 				{
@@ -295,7 +277,7 @@ namespace Epsitec.Cresus.Core
 				}
 				);
 
-				repository.GetByExample<NaturalPersonEntity> (example).Count ();
+				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
 			}
 		}
 
@@ -304,8 +286,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
 				{
@@ -319,7 +299,7 @@ namespace Epsitec.Cresus.Core
 				}
 				);
 
-				repository.GetByExample<NaturalPersonEntity> (example).Count ();
+				dataContext.GetByExample<NaturalPersonEntity> (example).Count ();
 			}
 		}
 
@@ -328,14 +308,12 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				MailContactEntity example = new MailContactEntity ()
 				{
 					LegalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001))),
 				};
 
-				repository.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
 			}
 		}
 
@@ -344,8 +322,6 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				MailContactEntity example = new MailContactEntity ()
 				{
 					LegalPerson = new LegalPersonEntity ()
@@ -354,7 +330,7 @@ namespace Epsitec.Cresus.Core
 					}
 				};
 
-				repository.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
+				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
 			}
 		}
 
@@ -363,11 +339,9 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
-				repository.GetReferencers (address).Count ();
+				dataContext.GetReferencers (address).Count ();
 			}
 		}
 
@@ -376,11 +350,9 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
 			{
-				DataBrowser repository = new DataBrowser (dataContext);
-
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001)));
 
-				repository.GetReferencers (person).Count ();
+				dataContext.GetReferencers (person).Count ();
 			}
 		}
 

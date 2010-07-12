@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 			var orchestrator = this.Orchestrator;
 			var context      = orchestrator.DataContext;
-			var entity       = context.CreateEmptyEntity<T> ();
+			var entity       = context.CreateEntity<T> ();
 
 			if (initializer != null)
 			{
