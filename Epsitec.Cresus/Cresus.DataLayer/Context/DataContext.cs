@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public TEntity CreateEntity<TEntity>()	where TEntity : AbstractEntity, new ()
+		public TEntity CreateEntity<TEntity>() where TEntity : AbstractEntity, new ()
 		{
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
@@ -222,13 +222,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public IEnumerable<AbstractEntity> GetManagedEntities()
+		internal IEnumerable<AbstractEntity> GetManagedEntities()
 		{
 			return this.entityDataCache.GetEntities ();
 		}
 
 
-		public IEnumerable<AbstractEntity> GetModifiedEntities()
+		internal IEnumerable<AbstractEntity> GetModifiedEntities()
 		{
 			return from AbstractEntity entity in this.GetManagedEntities ()
 				   where entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration

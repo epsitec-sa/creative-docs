@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 	
 
-	public class DataBrowser
+	internal class DataBrowser
 	{
 
 		

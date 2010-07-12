@@ -10,8 +10,11 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 
+
 namespace Epsitec.Cresus.DataLayer.Context
 {
+	
+	
 	/// <summary>
 	/// The <c>EntityDataMapping</c> class maps entity instances with their data
 	/// row(s) in the <see cref="System.Data.DataSet"/> associated with the live
@@ -19,33 +22,40 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// </summary>
 	internal sealed class EntityDataMapping : System.IEquatable<EntityDataMapping>, IReadOnly
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="leafEntityId">The entity id.</param>
 		/// <param name="rootEntityId">The root entity id.</param>
-		public EntityDataMapping(AbstractEntity entity, Druid entityId, Druid rootEntityId)
+		public EntityDataMapping(AbstractEntity entity, Druid leafEntityId, Druid rootEntityId)
 		{
 			this.entity = entity;
-			this.entityId = entityId;
+
+			this.leafEntityId = leafEntityId;
 			this.rootEntityId = rootEntityId;
+
 			this.rowKey = new DbKey ();
 		}
 
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
 		/// </summary>
 		/// <param name="rowKey">The row key.</param>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="leafEntityId">The entity id.</param>
 		/// <param name="rootEntityId">The root entity id.</param>
-		public EntityDataMapping(DbKey rowKey, Druid entityId, Druid rootEntityId)
+		public EntityDataMapping(DbKey rowKey, Druid leafEntityId, Druid rootEntityId)
 		{
-			this.entityId = entityId;
+			this.leafEntityId = leafEntityId;
 			this.rootEntityId = rootEntityId;
+
 			this.rowKey = rowKey;
 		}
 
+		
 		/// <summary>
 		/// Gets the associated entity.
 		/// </summary>
@@ -58,15 +68,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets the associated entity id.
 		/// </summary>
 		/// <value>The entity id.</value>
-		public Druid EntityId
+		public Druid LeafEntityId
 		{
 			get
 			{
-				return this.entityId;
+				return this.leafEntityId;
 			}
 		}
 
@@ -82,6 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Gets or sets the serialization generation.
 		/// </summary>
@@ -91,6 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			set;
 		}
+
 
 		/// <summary>
 		/// Gets or sets the row key for the associated entity.
@@ -106,24 +119,31 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 			set
 			{
-				if ((this.rowKey.IsEmpty) ||
-					(this.rowKey.IsTemporary && value.IsDefinitive))
-				{
-					this.rowKey = value;
-				}
-				else
+				if (!this.rowKey.IsEmpty || !this.rowKey.IsTemporary || !value.IsDefinitive)
 				{
 					throw new System.InvalidOperationException ("RowKey cannot be further modified");
 				}
+				
+				this.rowKey = value;
 			}
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this instance is read only.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
-		/// </value>
+
+		#region IEquatable<EntityDataMapping> Members
+
+
+		public bool Equals(EntityDataMapping other)
+		{
+			return (this.rootEntityId == other.rootEntityId) && (this.rowKey == other.rowKey);
+		}
+
+
+		#endregion
+
+
+		#region IReadOnly Members
+
+
 		public bool IsReadOnly
 		{
 			get
@@ -132,27 +152,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-		#region IEquatable<EntityDataMapping> Members
-
-		public bool Equals(EntityDataMapping other)
-		{
-			return this.rootEntityId == other.rootEntityId
-				&& this.rowKey == other.rowKey;
-		}
 
 		#endregion
 
-		#region IReadOnly Members
-
-		bool IReadOnly.IsReadOnly
-		{
-			get
-			{
-				return this.IsReadOnly;
-			}
-		}
-
-		#endregion
 
 		/// <summary>
 		/// Compares this instance with the specified row key and entity id pair.
@@ -163,9 +165,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// id pair; otherwise, <c>false</c>.</returns>
 		public bool Equals(DbKey rowKey, Druid rootEntityId)
 		{
-			return this.rowKey.Id == rowKey.Id
-				&& this.rootEntityId == rootEntityId;
+			return (this.rowKey.Id == rowKey.Id) && (this.rootEntityId == rootEntityId);
 		}
+
 		
 		public override bool Equals(object obj)
 		{
@@ -181,6 +183,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		public override int GetHashCode()
 		{
 			if (this.IsReadOnly)
@@ -193,9 +196,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		private readonly AbstractEntity entity;
-		private readonly Druid entityId;
+
+
+		private readonly Druid leafEntityId;
 		private readonly Druid rootEntityId;
+		
+
 		private DbKey rowKey;
 	}
 }

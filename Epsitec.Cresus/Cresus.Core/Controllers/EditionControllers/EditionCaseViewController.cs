@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 			context.UpdateEmptyEntityStatus (entity, isEmpty);

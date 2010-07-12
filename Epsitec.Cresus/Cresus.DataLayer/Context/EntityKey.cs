@@ -8,14 +8,19 @@ using Epsitec.Cresus.Database;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Epsitec.Cresus.DataLayer.Context
 {
+
+
 	/// <summary>
 	/// The <c>EntityKey</c> structure encodes the identity of an entity in
 	/// the database using a <see cref="DbKey"/> and entity id pair.
 	/// </summary>
 	public struct EntityKey : System.IEquatable<EntityKey>
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityKey"/> struct.
 		/// </summary>
@@ -26,6 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.rowKey   = rowKey;
 			this.entityId = entityId;
 		}
+
 
 		/// <summary>
 		/// Gets the row key in the database.
@@ -39,6 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the entity id.
 		/// </summary>
@@ -50,6 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.entityId;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether this key is empty.
@@ -63,22 +71,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		#region IEquatable<EntityKey> Members
+
 
 		public bool Equals(EntityKey other)
 		{
-			if ((this.rowKey == other.RowKey) &&
-				(this.entityId == other.EntityId))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return (this.rowKey == other.RowKey) && (this.entityId == other.EntityId);
 		}
 
+
 		#endregion
+
 
 		public override bool Equals(object obj)
 		{
@@ -92,6 +96,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		public override int GetHashCode()
 		{
 			return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
@@ -103,15 +108,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return a.Equals (b);
 		}
 
+
 		public static bool operator!=(EntityKey a, EntityKey b)
 		{
 			return !a.Equals (b);
 		}
 
 
-		public static readonly EntityKey Empty = new EntityKey ();
-
 		private readonly DbKey rowKey;
 		private readonly Druid entityId;
+
+
+		public static readonly EntityKey Empty = new EntityKey ();
+
+
 	}
+
+
 }

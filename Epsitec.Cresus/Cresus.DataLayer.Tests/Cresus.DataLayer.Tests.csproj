@@ -187,7 +187,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataBrowserTest.cs" />
     <Compile Include="DataContextTest.cs" />
     <Compile Include="EntityCodeGeneratorTest.cs" />
     <Compile Include="Helpers.EntityDataMapping.cs" />

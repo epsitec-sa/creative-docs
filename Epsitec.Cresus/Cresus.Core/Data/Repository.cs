@@ -4,7 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Browser;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
