@@ -106,6 +106,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		public AbstractEntity CreateEntity(Druid entityId)
+		{
+			return this.EntityContext.CreateEmptyEntity (entityId);
+		}
+
+
 		public TEntity CreateEmptyEntity<TEntity>() where TEntity : AbstractEntity, new ()
 		{
 			TEntity entity = this.CreateEntity<TEntity> ();
@@ -113,6 +119,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.RegisterEmptyEntity (entity);
 
 			return entity;
+		}
+
+
+		public bool Contains(AbstractEntity entity)
+		{
+			return this.entityDataCache.ContainsEntity (entity);
 		}
 
 
@@ -131,9 +143,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public bool Contains(AbstractEntity entity)
+		internal AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId, Druid rootEntityId)
 		{
-			return this.entityDataCache.ContainsEntity (entity);
+			return this.entityDataCache.FindEntity (rowKey, leafEntityId, rootEntityId);
+		}
+
+		internal void DefineRowKey(EntityDataMapping mapping, DbKey key)
+		{
+			this.entityDataCache.DefineRowKey (mapping, key);
 		}
 
 

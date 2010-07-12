@@ -978,22 +978,22 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static string relationSourceColumn = "[" + Tags.ColumnRefSourceId + "]";
+		private static readonly string relationSourceColumn = "[" + Tags.ColumnRefSourceId + "]";
 
 
-		private static string relationTargetColumn = "[" + Tags.ColumnRefTargetId + "]";
+		private static readonly string relationTargetColumn = "[" + Tags.ColumnRefTargetId + "]";
 
 
-		private static string relationRankColumn = "[" + Tags.ColumnRefRank + "]";
-
-		
-		private static string idColumn = "[" + Tags.ColumnId + "]";
+		private static readonly string relationRankColumn = "[" + Tags.ColumnRefRank + "]";
 
 
-		private static string typeColumn = "[" + Tags.ColumnInstanceType + "]";
+		private static readonly string idColumn = "[" + Tags.ColumnId + "]";
 
 
-		private static string statusColumn = "[" + Tags.ColumnStatus + "]";
+		private static readonly string typeColumn = "[" + Tags.ColumnInstanceType + "]";
+
+
+		private static readonly string statusColumn = "[" + Tags.ColumnStatus + "]";
 
 
 	}
