@@ -45,6 +45,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void Print(IPaintPort port, Rectangle bounds)
 		{
+			base.Print (port, bounds);
+
 #if false
 			double top =  this.PageSize.Height-this.PageMargins.Top;
 			top = this.PaintTitle    (port,                            top) - 5.0;
@@ -345,12 +347,17 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetRelativeColumWidth (1, 1.5);
 			table.DebugPaintFrame = true;
 
-			double height = 20;
-			table.InitializePages (90, height, height, height);
+			double height = 20+this.DebugParam1;
+			table.InitializePages (90+this.DebugParam2, height, height, height);
 
 			for (int i = 0; i < table.PageCount; i++)
 			{
-				table.Paint (port, i, new Point (10, 210-(height+1)*i));
+				double y = 280-(height+2)*i;
+
+				table.Paint (port, i, new Point (10, y));
+
+				port.Color = Color.FromBrightness (0);
+				port.PaintSurface (Path.FromRectangle (8, y-height, 1, height));
 			}
 #endif
 

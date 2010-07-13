@@ -45,8 +45,50 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public int DebugParam1
+		{
+			get
+			{
+				return this.debugParam1;
+			}
+			set
+			{
+				if (this.debugParam1 != value)
+				{
+					this.debugParam1 = value;
+
+					if (this.debugPort != null)
+					{
+						this.Print (this.debugPort, this.debugBounds);
+					}
+				}
+			}
+		}
+
+		public int DebugParam2
+		{
+			get
+			{
+				return this.debugParam2;
+			}
+			set
+			{
+				if (this.debugParam2 != value)
+				{
+					this.debugParam2 = value;
+
+					if (this.debugPort != null)
+					{
+						this.Print (this.debugPort, this.debugBounds);
+					}
+				}
+			}
+		}
+
 		public virtual void Print(IPaintPort port, Rectangle bounds)
 		{
+			this.debugPort = port;
+			this.debugBounds = bounds;
 		}
 
 
@@ -77,6 +119,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return types.FirstOrDefault ();
 		}
+
+
+		private int debugParam1;
+		private int debugParam2;
+		private IPaintPort debugPort;
+		private Rectangle debugBounds;
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter

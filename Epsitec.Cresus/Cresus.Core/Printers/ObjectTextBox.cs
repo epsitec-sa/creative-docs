@@ -161,6 +161,15 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;  // tout est casé
 		}
 
+		public void JustifRemoveLastPage()
+		{
+			//	Annule la dernière page justifiée.
+			if (this.pagesInfo.Count != 0)
+			{
+				this.pagesInfo.RemoveAt (this.pagesInfo.Count-1);
+			}
+		}
+
 
 		public int LastFirstLine
 		{
@@ -210,13 +219,21 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void Paint(IPaintPort port, int page, Point topLeft)
+		/// <summary>
+		/// Dessine une page de l'objet à une position donnée.
+		/// </summary>
+		/// <param name="port">Port graphique</param>
+		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="topLeft">Coin supérieur gauche</param>
+		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
+		public override bool Paint(IPaintPort port, int page, Point topLeft)
 		{
 			if (page < 0 || page >= this.pagesInfo.Count)
 			{
-				return;
+				return true;
 			}
 
+			var ok = true;
 			var pageInfo = this.pagesInfo[page];
 
 			Rectangle clipRect = new Rectangle (topLeft.X, topLeft.Y-pageInfo.Height, this.width, pageInfo.Height);
@@ -237,10 +254,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (textLayout.TotalRectangle.IsEmpty && !string.IsNullOrEmpty(textLayout.Text))
 			{
+				//	Dessine une grande croix 'x'.
 				port.LineWidth = 0.1;
 				port.Color = Color.FromBrightness (0);
 				port.PaintOutline (Path.FromLine (clipRect.BottomLeft, clipRect.TopRight));
 				port.PaintOutline (Path.FromLine (clipRect.TopLeft, clipRect.BottomRight));
+
+				ok = false;
 			}
 			else
 			{
@@ -258,6 +278,8 @@ namespace Epsitec.Cresus.Core.Printers
 				port.Color = Color.FromBrightness (0);
 				port.PaintOutline (Path.FromRectangle (clipRect));
 			}
+
+			return ok;
 		}
 
 	
