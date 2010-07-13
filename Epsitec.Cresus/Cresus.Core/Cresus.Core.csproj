@@ -150,6 +150,7 @@
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryRelationViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryTitleViewController.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
+    <Compile Include="Data\InvoiceDocumentRepository.cs" />
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractObject.cs" />
@@ -255,6 +257,7 @@
     <EmbeddedResource Include="Images\Preview.icon" />
     <EmbeddedResource Include="Images\Base.ArticleDefinitions.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDefinition.icon" />
+    <EmbeddedResource Include="Images\Base.Invoice.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

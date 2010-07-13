@@ -35,6 +35,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.SelectDatabase ("ArticleDefinitions", e);
 		}
 
+		[Command (Core.Res.CommandIds.Base.ShowInvoiceDocuments)]
+		public void ProcessBaseShowInvoiceDocuments(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectDatabase ("InvoiceDocuments", e);
+		}
+
 
 		private void SetupDatabaseCommands()
 		{

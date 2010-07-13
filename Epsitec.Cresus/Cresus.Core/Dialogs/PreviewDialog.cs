@@ -64,85 +64,145 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Entity = this.entities.FirstOrDefault (),
 			};
 
-			this.preview.Invalidate ();  // pour forcer le dessin
-
-#if true
-			var debugPrevButton1 = new GlyphButton
+			this.footer = new FrameBox
 			{
 				Parent = window.Root,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+				Margins = new Margins (10, 10, 0, 10),
+			};
+
+			this.preview.Invalidate ();  // pour forcer le dessin
+
+			this.pagePrevButton = new GlyphButton
+			{
+				Parent = this.footer,
+				GlyphShape = Common.Widgets.GlyphShape.ArrowLeft,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.pageRank = new StaticText
+			{
+				Parent = this.footer,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				PreferredWidth = 30,
+				PreferredHeight = 20,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.pageNextButton = new GlyphButton
+			{
+				Parent = this.footer,
+				GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			this.UpdatePage ();
+
+#if true
+			this.debugPrevButton1 = new GlyphButton
+			{
+				Parent = this.footer,
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (50, 0, 0, 0),
 			};
 
 			this.debugParam1 = new StaticText
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				PreferredWidth = 30,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10+20, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var debugNextButton1 = new GlyphButton
+			this.debugNextButton1 = new GlyphButton
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				GlyphShape = Common.Widgets.GlyphShape.Plus,
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10+20+30, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var debugPrevButton2 = new GlyphButton
+
+			this.debugPrevButton2 = new GlyphButton
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10+20+30+50, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (20, 0, 0, 0),
 			};
 
 			this.debugParam2 = new StaticText
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				PreferredWidth = 30,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10+20+30+50+20, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var debugNextButton2 = new GlyphButton
+			this.debugNextButton2 = new GlyphButton
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				GlyphShape = Common.Widgets.GlyphShape.Plus,
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (10+20+30+50+20+30, 0, 0, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
 			};
-
-			debugPrevButton1.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton1_Clicked);
-			debugNextButton1.Clicked += new EventHandler<MessageEventArgs> (debugNextButton1_Clicked);
-			debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
-			debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
 
 			this.UpdateDebug ();
 #endif
 			
 			this.closeButton = new Button ()
 			{
-				Parent = window.Root,
+				Parent = this.footer,
 				Text = "Fermer",
-				Anchor = AnchorStyles.BottomRight,
-				Margins = new Margins (0, 10, 0, 10),
+				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};
+		}
+
+		protected void SetupEvents(Window window)
+		{
+			this.pagePrevButton.Clicked += new EventHandler<MessageEventArgs> (pagePrevButton_Clicked);
+			this.pageNextButton.Clicked += new EventHandler<MessageEventArgs> (pageNextButton_Clicked);
+
+			this.debugPrevButton1.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton1_Clicked);
+			this.debugNextButton1.Clicked += new EventHandler<MessageEventArgs> (debugNextButton1_Clicked);
+			this.debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
+			this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
+
+			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
+		}
+
+		private void pagePrevButton_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.ShowedPage -= GetStep (e);
+			this.UpdatePage ();
+		}
+
+		private void pageNextButton_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.ShowedPage += GetStep (e);
+			this.UpdatePage ();
 		}
 
 		private void debugPrevButton1_Clicked(object sender, MessageEventArgs e)
@@ -186,6 +246,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return step;
 		}
 
+		private void UpdatePage()
+		{
+			this.pageRank.Text = (this.entityPrinter.ShowedPage+1).ToString ();
+
+			this.preview.Invalidate ();
+		}
+
 		private void UpdateDebug()
 		{
 			this.debugParam1.Text = this.entityPrinter.DebugParam1.ToString ();
@@ -196,19 +263,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		protected void SetupEvents(Window window)
-		{
-			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
-		}
-
 
 		private readonly Application application;
 		private readonly IEnumerable<AbstractEntity> entities;
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 
 		private Widgets.PreviewEntity preview;
-		private Button closeButton;
+		private FrameBox footer;
+
+		private GlyphButton pagePrevButton;
+		private StaticText pageRank;
+		private GlyphButton pageNextButton;
+
+		private GlyphButton debugPrevButton1;
 		private StaticText debugParam1;
+		private GlyphButton debugNextButton1;
+
+		private GlyphButton debugPrevButton2;
 		private StaticText debugParam2;
+		private GlyphButton debugNextButton2;
+		
+		private Button closeButton;
 	}
 }

@@ -47,8 +47,17 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public virtual void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		/// <summary>
+		/// Effectue la justification verticale pour découper le contenu en pages.
+		/// </summary>
+		/// <param name="width">Largeur sur toutes les pages</param>
+		/// <param name="initialHeight">Hauteur de la première page</param>
+		/// <param name="middleheight">Hauteur des pages suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
+		public virtual bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
+			return true;
 		}
 
 		public virtual int PageCount

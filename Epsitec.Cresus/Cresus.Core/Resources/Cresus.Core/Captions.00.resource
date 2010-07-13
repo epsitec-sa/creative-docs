@@ -370,7 +370,7 @@
   <data name="Val.PriceDisplayModes.Total" id="A1D">&lt;s:data id="_0" f:Name="Total" f:Labels="{Collection {Text 'Total'}}" /&gt;</data>
   <data name="Val.PriceDisplayModes.FixedPrice" id="A2D">&lt;s:data id="_0" f:Name="FixedPrice" f:Labels="{Collection {Text 'Prix arrêté'}}" /&gt;</data>
   <data name="Val.PriceDisplayModes.Tax" id="A3D">&lt;s:data id="_0" f:Name="Tax" f:Labels="{Collection {Text 'Taxe'}}" /&gt;</data>
-  <data name="Typ.PriceDisplayModes" id="AUC">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PriceDisplayModes" f:_1.SystemType="E:Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0AVC]'}, {Text '1 [L0A0D]'}, {Text '2 [L0A1D]'}, {Text '3 [L0A2D]'}, {Text '4 [L0A3D]'}}" f:Labels="{Collection {Text 'Modes d&amp;amp;apos;affichage de prix'}}" /&gt;</data>
+  <data name="Typ.PriceDisplayModes" id="AUC">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PriceDisplayModes" f:_1.SystemType="E:Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0AVC]'}, {Text '1 [L0A0D]'}, {Text '2 [L0K2]'}, {Text '3 [L0A1D]'}, {Text '4 [L0A2D]'}, {Text '5 [L0A3D]'}, {Text '6 [L0K3]'}}" f:Labels="{Collection {Text 'Modes d&amp;amp;apos;affichage de prix'}}" /&gt;</data>
   <data name="Fld.PriceDocumentItem.DisplayModes" id="A4D">&lt;s:data id="_0" f:Name="DisplayModes" /&gt;</data>
   <data name="Fld.PriceDocumentItem.TextForTax" id="A5D">&lt;s:data id="_0" f:Name="TextForTax" /&gt;</data>
   <data name="Fld.PriceDocumentItem.TextForFixedPrice" id="A6D">&lt;s:data id="_0" f:Name="TextForFixedPrice" /&gt;</data>
@@ -382,4 +382,7 @@
   <data name="Fld.ArticleDocumentItem.ResultingLinePriceBeforeTax" id="ACD">&lt;s:data id="_0" f:Name="ResultingLinePriceBeforeTax" /&gt;</data>
   <data name="Fld.ArticleDocumentItem.ResultingLineTax" id="ADD">&lt;s:data id="_0" f:Name="ResultingLineTax" /&gt;</data>
   <data name="Fld.ArticleDefinition.Comments" id="AED">&lt;s:data id="_0" f:Name="Comments" /&gt;</data>
+  <data name="Val.PriceDisplayModes.PrimaryTotal" id="K2">&lt;s:data id="_0" f:Name="PrimaryTotal" /&gt;</data>
+  <data name="Val.PriceDisplayModes.ResultingTotal" id="K3">&lt;s:data id="_0" f:Name="ResultingTotal" /&gt;</data>
+  <data name="Cmd.Base.ShowInvoiceDocuments" id="K4">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowInvoiceDocuments" f:Description="Montre la base des factures" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.Invoice.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Factures'}}" /&gt;</data>
 </bundle>

@@ -79,7 +79,15 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		/// <summary>
+		/// Effectue la justification verticale pour découper le texte en pages.
+		/// </summary>
+		/// <param name="width">Largeur sur toutes les pages</param>
+		/// <param name="initialHeight">Hauteur de la première page</param>
+		/// <param name="middleheight">Hauteur des pages suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
+		public override bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
@@ -108,6 +116,8 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.pagesInfo.Add (new PageInfo (line, 0, 0));
 			}
+
+			return true;
 		}
 
 		public void JustifInitialize(double width)

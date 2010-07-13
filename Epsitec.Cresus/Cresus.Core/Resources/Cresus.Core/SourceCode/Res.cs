@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
 				//	designer:cap/L0A23
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
+				//	designer:cap/L0K4
+				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
 			}
 			
 			public static class Edition
@@ -75,6 +77,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowArticleDefinitions = 0x150000A000196L;
 				//	designer:cap/L0A23
 				public const long ShowCustomers = 0x150000A000062L;
+				//	designer:cap/L0K4
+				public const long ShowInvoiceDocuments = 0x1500014000004L;
 			}
 			
 			public static class Edition

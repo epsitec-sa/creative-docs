@@ -45,6 +45,26 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public int ShowedPage
+		{
+			get
+			{
+				return this.showedPage;
+			}
+			set
+			{
+				if (this.showedPage != value)
+				{
+					this.showedPage = value;
+
+					if (this.debugPort != null)
+					{
+						this.Print (this.debugPort, this.debugBounds);
+					}
+				}
+			}
+		}
+
 		public int DebugParam1
 		{
 			get
@@ -121,6 +141,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private int showedPage;
 		private int debugParam1;
 		private int debugParam2;
 		private IPaintPort debugPort;
