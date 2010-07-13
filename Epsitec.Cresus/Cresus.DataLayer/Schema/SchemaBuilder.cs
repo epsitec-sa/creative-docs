@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				this.schemaEngine.DbInfrastructure.RegisterNewDbTable (this.transaction, table);
 			}
+
 			foreach (DbTable table in this.newTables)
 			{
 				this.schemaEngine.DbInfrastructure.RegisterColumnRelations (this.transaction, table);
@@ -287,7 +288,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				return typeDef;
 			}
 
-			typeDef = this.schemaEngine.GetTypeDefinition (type);
+			typeDef = this.schemaEngine.GetTypeDefinition (typeId);
 
 			if (typeDef != null)
 			{

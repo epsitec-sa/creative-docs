@@ -1,10 +1,17 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Collections;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Types;
+using Epsitec.Cresus.DataLayer.Schema;
+
+using System.Collections.Generic;
+using System.Collections;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Saver
@@ -37,77 +44,120 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public DbKey GetNewDbKey(AbstractEntity entity)
+		private DbInfrastructure DbInfrastructure
 		{
-			// Gets the root entity Id.
-			// Ask the DbInfrastructure to reserve a new DbKey for this Id.
-			// Return this DbKey.
-
-			throw new System.NotImplementedException ();
-		}
-
-
-		public void InsertEntityValues(AbstractEntity entity)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			get
 			{
-				this.InsertEntityValues (entity, localEntityId, dbKey);
+				return this.DataContext.DbInfrastructure;
 			}
 		}
 
 
-		private void InsertEntityValues(AbstractEntity entity, Druid localEntityId, DbKey dbKey)
+		private SchemaEngine SchemaEngine
 		{
-			// Generate SQL request
-			// Execute SQL request
-
-			throw new System.NotImplementedException ();
-		}
-
-
-		public void UpdateEntityValues(AbstractEntity entity)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			get
 			{
-				this.UpdateEntityValues (entity, localEntityId, dbKey);
+				return this.DataContext.SchemaEngine;
 			}
 		}
 
 
-		private void UpdateEntityValues(AbstractEntity entity, Druid localEntityId, DbKey dbKey)
+		public DbKey GetNewDbKey(DbTransaction transaction, AbstractEntity entity)
 		{
-			// Generate SQL request
-			// Execute SQL request
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
 
-			throw new System.NotImplementedException ();
+			DbTable table = this.SchemaEngine.GetTableDefinition (rootEntityId);
+
+			long newId = this.DbInfrastructure.NewRowIdInTable (transaction, table, 1);
+
+			return new DbKey (new DbId (newId));
 		}
 
 
-		public void DeleteEntityValues(AbstractEntity entity)
+		public void InsertEntityValues(DbTransaction transaction, AbstractEntity entity)
 		{
+			DbKey dbKey = this.GetDbKey (entity);
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
 			{
-				this.DeleteEntityValues (localEntityId, dbKey);
+				this.InsertEntityValues (transaction, entity, localEntityId, dbKey);
 			}
 		}
 
 
-		private void DeleteEntityValues(Druid localEntityId, DbKey dbKey)
+		private void InsertEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
+		{
+			string tableName = this.SchemaEngine.GetDataTableName (localEntityId);
+
+			SqlFieldList fields = new SqlFieldList ();
+			
+			var fieldIds = from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+						   where field.Relation == FieldRelation.None
+						   select field.CaptionId;
+
+			fields.AddRange(this.CreateSqlFields (entity, localEntityId, fieldIds));
+
+			fields.Add (this.CreateSqlFieldForKey (dbKey));
+			fields.Add (this.CreateSqlFieldForStatus (DbRowStatus.Live));
+
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+
+			if (rootEntityId == localEntityId)
+			{
+				fields.Add (this.CreateSqlFieldForType (leafEntityId));
+			}
+
+			transaction.SqlBuilder.InsertData (tableName, fields);
+
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
+		}
+
+
+		public void UpdateEntityValues(DbTransaction transaction, AbstractEntity entity)
+		{
+			DbKey dbKey = this.GetDbKey (entity);
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+
+			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			{
+				this.UpdateEntityValues (transaction, entity, localEntityId, dbKey);
+			}
+		}
+
+
+		private void UpdateEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
 		{
 			// Generate SQL request
-			// Execute SQL request
-
+			
+			
 			throw new System.NotImplementedException ();
 		}
 
 
-		public void InsertEntityRelations(AbstractEntity entity)
+		public void DeleteEntityValues(DbTransaction transaction, AbstractEntity entity)
+		{
+			DbKey dbKey = this.GetDbKey (entity);
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+
+			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			{
+				this.DeleteEntityValues (transaction, localEntityId, dbKey);
+			}
+		}
+
+
+		private void DeleteEntityValues(DbTransaction transaction, Druid localEntityId, DbKey dbKey)
+		{
+			// Generate SQL request
+			
+			throw new System.NotImplementedException ();
+		}
+
+
+		public void InsertEntityRelations(DbTransaction transaction, AbstractEntity entity)
 		{
 			// TODO
 
@@ -115,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void UpdateEntityRelations(AbstractEntity entity)
+		public void UpdateEntityRelations(DbTransaction transaction, AbstractEntity entity)
 		{
 			// TODO
 
@@ -123,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void DeleteEntityTargetRelations(AbstractEntity entity)
+		public void DeleteEntityTargetRelations(DbTransaction transaction, AbstractEntity entity)
 		{
 			// TODO
 
@@ -131,12 +181,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void DeleteEntitySourceRelations(AbstractEntity entity)
+		public void DeleteEntitySourceRelations(DbTransaction transaction, AbstractEntity entity)
 		{
 			// TODO
 
 			throw new System.NotImplementedException ();
 		}
+
+
 		private void RemoveEntityValueData(AbstractEntity entity, DbKey entityKey)
 		{
 			//foreach (Druid currentId in this.EntityContext.GetInheritedEntityIds (entity.GetEntityStructuredTypeId ()))
@@ -488,53 +540,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		//}
 
 
-		private object ConvertToInternal(object value, string tableName, string columnName)
-		{
-			//    if (value == System.DBNull.Value)
-			//    {
-			//        //	Nothing to convert : a DBNull value stays a DBNull value.
-			//    }
-			//    else
-			//    {
-			//        System.Diagnostics.Debug.Assert (value != null);
-
-			//        DbTable   tableDef  = this.RichCommand.Tables[tableName];
-			//        DbColumn  columnDef = tableDef.Columns[columnName];
-
-			//        value = DataSaver.ConvertToInternal (value, columnDef);
-			//    }
-
-			return value;
-		}
-
-
-		private static object ConvertToInternal(object value, DbColumn columnDef)
-		{
-			//if (value != System.DBNull.Value)
-			//{
-			//    DbTypeDef typeDef = columnDef.Type;
-
-			//    if (typeDef.SimpleType == DbSimpleType.Decimal)
-			//    {
-			//        decimal decimalValue;
-
-			//        if (InvariantConverter.Convert (value, out decimalValue))
-			//        {
-			//            value = decimalValue;
-			//        }
-			//        else
-			//        {
-			//            throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
-			//        }
-			//    }
-
-			//    value = TypeConverter.ConvertFromSimpleType (value, typeDef.SimpleType, typeDef.NumDef);
-			//}
-
-			return value;
-		}
-
-
 		//private void UpdateRelationRow(System.Data.DataRow relationRow, EntityDataMapping sourceMapping, EntityDataMapping targetMapping)
 		//{
 		//    System.Diagnostics.Debug.Assert (sourceMapping.RowKey.Id.Value == (long) relationRow[Tags.ColumnRefSourceId]);
@@ -584,7 +589,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		///// data only for the locally defined fields of the given entity.
 		///// </summary>
 		///// <param name="mapping">The entity mapping.</param>
-		///// <param name="entityId">The entity id.</param>
+		///// <param name="localEntityId">The entity id.</param>
 		///// <returns>A new data row with a temporary ID.</returns>
 		//private System.Data.DataRow CreateDataRow(EntityDataMapping mapping, Druid entityId)
 		//{
@@ -602,11 +607,101 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		//}
 
 
+		private IEnumerable<SqlField> CreateSqlFields(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds)
+		{
+			foreach (Druid fieldId in fieldIds)
+			{
+				object value = entity.GetField<object> (fieldId.ToResourceId ());
+				
+				yield return this.CreateSqlField (localEntityId, fieldId, value);
+			}
+		}
 
 
+		private SqlField CreateSqlFieldForKey(DbKey key)
+		{
+			string name = Tags.ColumnId;
+			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			object value = key.Id.Value;
+
+			return this.CreateSqlField (name, dbType, value);
+		}
 
 
+		private SqlField CreateSqlFieldForStatus(DbRowStatus status)
+		{
+			string name = Tags.ColumnStatus;
+			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyStatus + "]"));
+			object value = (short) status;
 
+			return this.CreateSqlField (name, dbType, value);
+		}
+
+
+		private SqlField CreateSqlFieldForType(Druid leafEntityId)
+		{
+			string name = Tags.ColumnInstanceType;
+			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			object value = leafEntityId.ToLong ();
+
+			return this.CreateSqlField (name, dbType, value);
+		}
+
+
+		private SqlField CreateSqlField(Druid localEntityId, Druid fieldId, object value)
+		{
+			string columnName = this.SchemaEngine.GetDataColumnName (fieldId.ToResourceId ());
+
+			DbTable dbTable = this.SchemaEngine.GetTableDefinition (localEntityId);
+			DbColumn dbColumn = dbTable.Columns[columnName];
+
+			return this.CreateSqlField (dbColumn.Name, dbColumn.Type, value);
+		}
+
+
+		private SqlField CreateSqlField(string name, DbTypeDef dbType, object value)
+		{
+			object convertedValue = this.ConvertToInternal (dbType, value);
+			DbRawType rawType = dbType.RawType;
+
+			SqlField SqlField = SqlField.CreateConstant (convertedValue, rawType);
+			SqlField.Alias = name;
+
+			return SqlField;
+		}
+
+
+		private object ConvertToInternal(DbTypeDef dbType, object value)
+		{
+			object newValue = value;
+			
+			if (value != System.DBNull.Value)
+			{
+				if (dbType.SimpleType == DbSimpleType.Decimal)
+				{
+					decimal decimalValue;
+
+					if (InvariantConverter.Convert (value, out decimalValue))
+					{
+						newValue = decimalValue;
+					}
+					else
+					{
+						throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
+					}
+				}
+
+				newValue = TypeConverter.ConvertFromSimpleType (value, dbType.SimpleType, dbType.NumDef);
+			}
+
+			return newValue;
+		}
+
+
+		private DbKey GetDbKey(AbstractEntity entity)
+		{
+			return this.DataContext.GetEntityDataMapping (entity).RowKey;
+		}
 
 
 	}

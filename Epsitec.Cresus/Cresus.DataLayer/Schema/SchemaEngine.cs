@@ -127,19 +127,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		
-		public DbTypeDef GetTypeDefinition(INamedType type)
+		public DbTypeDef GetTypeDefinition(Druid typeId)
 		{
-			Druid typeId = type.CaptionId;
-
 			if (!this.IsTypeDefinitionInCache (typeId))
 			{
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					DbTypeDef typeDefinition = this.DbInfrastructure.ResolveDbType (transaction, type);
+					string typeName = typeId.ToResourceId ();
+					typeName = typeName.Substring (1, typeName.Length - 2);
+
+					DbTypeDef typeDefinition = this.DbInfrastructure.ResolveDbType (transaction, typeName);
 					
 					transaction.Commit ();
 
-					this.typeDefinitionCache[type.CaptionId] = typeDefinition;
+					this.typeDefinitionCache[typeId] = typeDefinition;
 				}
 			}
 

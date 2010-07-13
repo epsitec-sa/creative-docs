@@ -4,11 +4,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Collections;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
-using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -54,15 +52,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private SchemaEngine SchemaEngine
-		{
-			get
-			{
-				return this.DataContext.SchemaEngine;
-			}
-		}
-
-
 		private SaverQueryGenerator SaverQueryGenerator
 		{
 			get;
@@ -71,17 +60,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		public void SaveChanges()
-		{
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
-			{
-				this.SerializeChanges ();
-				
-				transaction.Commit ();
-			}
-		}
-
-
-		private void SerializeChanges()
 		{
 			bool deletedEntities = this.DeleteEntities ();
 			bool savedEntities = this.SaveEntities ();
@@ -106,6 +84,69 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		private void RemoveEntity(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
+
+			if (mapping.SerialGeneration != this.EntityContext.DataGeneration)
+			{
+				mapping.SerialGeneration = this.EntityContext.DataGeneration;
+
+				if (!mapping.RowKey.IsEmpty)
+				{
+					this.DeleteEntityTargetRelationsInMemory (entity);
+
+					this.ExecuteWithTransaction (transaction =>
+					{
+						this.SaverQueryGenerator.DeleteEntityValues (transaction, entity);
+						this.SaverQueryGenerator.DeleteEntitySourceRelations (transaction, entity);
+						this.SaverQueryGenerator.DeleteEntityTargetRelations (transaction, entity);
+					});
+				}
+			}
+		}
+
+
+		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
+		{
+			// TODO Implement this without request with the DataBrowser
+
+			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
+			{
+				AbstractEntity sourceEntity = item.Item1;
+				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
+
+				using (sourceEntity.UseSilentUpdates ())
+				{
+					switch (field.Relation)
+					{
+						case FieldRelation.Reference:
+						{
+							sourceEntity.InternalSetValue (field.Id, null);
+
+							break;
+						}
+						case FieldRelation.Collection:
+						{
+							IList collection = sourceEntity.InternalGetFieldCollection (field.Id) as IList;
+
+							while (collection.Contains (entity))
+							{
+								collection.Remove (entity);
+							}
+
+							break;
+						}
+						default:
+						{
+							throw new System.InvalidOperationException ();
+						}
+					}
+				}
+			}
+		}
+
+
 		private bool SaveEntities()
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
@@ -113,7 +154,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				where this.CheckIfEntityCanBeSaved (entity)
 				select entity
 			);
-						
+
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
 				this.SaveEntity (entity);
@@ -123,12 +164,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void UpdateDataGeneration(bool containsChanges)
+		private bool CheckIfEntityCanBeSaved(AbstractEntity entity)
 		{
-			if (containsChanges)
-			{
-				this.EntityContext.NewDataGeneration ();
-			}
+			bool isDeleted = this.DataContext.IsDeleted (entity);
+			bool isEmpty = this.DataContext.IsRegisteredAsEmptyEntity (entity);
+
+			return !isDeleted && !isEmpty;
 		}
 
 
@@ -146,23 +187,49 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				return;
 			}
-			
-			mapping.SerialGeneration = this.EntityContext.DataGeneration;
-			
-			if (mapping.RowKey.IsEmpty)
-			{
-				mapping.RowKey = this.SaverQueryGenerator.GetNewDbKey (entity);
 
-				this.SaverQueryGenerator.InsertEntityValues (entity);
-				this.SaveTargetsIfNotPersisted (entity);
-				this.SaverQueryGenerator.InsertEntityRelations (entity);
+			mapping.SerialGeneration = this.EntityContext.DataGeneration;
+
+			bool isNotPersisted = mapping.RowKey.IsEmpty;
+
+			if (isNotPersisted)
+			{
+				mapping.RowKey = this.ExecuteWithTransaction (transaction =>
+				{
+					return this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
+				});
+			}
+
+			this.SaveTargetsIfNotPersisted (entity);
+
+			if (isNotPersisted)
+			{
+				this.InsertEntity (entity);
 			}
 			else
 			{
-				this.SaverQueryGenerator.UpdateEntityValues (entity);
-				this.SaveTargetsIfNotPersisted (entity);
-				this.SaverQueryGenerator.UpdateEntityRelations (entity);
+				this.UpdateEntity (entity);
 			}
+		}
+
+
+		private void InsertEntity(AbstractEntity entity)
+		{
+			this.ExecuteWithTransaction (transaction =>
+			{
+				this.SaverQueryGenerator.InsertEntityValues (transaction, entity);
+				this.SaverQueryGenerator.InsertEntityRelations (transaction, entity);
+			});
+		}
+
+
+		private void UpdateEntity(AbstractEntity entity)
+		{
+			this.ExecuteWithTransaction (transaction =>
+			{
+				this.SaverQueryGenerator.UpdateEntityValues (transaction, entity);
+				this.SaverQueryGenerator.UpdateEntityRelations (transaction, entity);
+			});
 		}
 
 
@@ -229,70 +296,46 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void RemoveEntity(AbstractEntity entity)
+		private void UpdateDataGeneration(bool containsChanges)
 		{
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
-
-			if (mapping.SerialGeneration != this.EntityContext.DataGeneration)
+			if (containsChanges)
 			{
-				mapping.SerialGeneration = this.EntityContext.DataGeneration;
-
-				if (!mapping.RowKey.IsEmpty)
-				{
-					this.DeleteEntityTargetRelationsInMemory (entity);
-
-					this.SaverQueryGenerator.DeleteEntityValues (entity);
-					this.SaverQueryGenerator.DeleteEntitySourceRelations (entity);
-					this.SaverQueryGenerator.DeleteEntityTargetRelations (entity);
-				}
-			}
-		}
-
-		// TODO Without request with the DataBrowser
-		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
-		{
-			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
-			{
-				AbstractEntity sourceEntity = item.Item1;
-				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
-
-				using (sourceEntity.UseSilentUpdates ())
-				{
-					switch (field.Relation)
-					{
-						case FieldRelation.Reference:
-						{
-							sourceEntity.InternalSetValue (field.Id, null);
-
-							break;
-						}
-						case FieldRelation.Collection:
-						{
-							IList collection = sourceEntity.InternalGetFieldCollection (field.Id) as IList;
-
-							while (collection.Contains (entity))
-							{
-								collection.Remove (entity);
-							}
-
-							break;
-						}
-						default:
-						{
-							throw new System.InvalidOperationException ();
-						}
-					}
-				}
+				this.EntityContext.NewDataGeneration ();
 			}
 		}
 
 
-		internal bool CheckIfEntityCanBeSaved(AbstractEntity entity)
+		private void ExecuteWithTransaction(System.Action<DbTransaction> query)
 		{
-			bool isDeleted = this.DataContext.IsDeleted (entity);
-			bool isEmpty = this.DataContext.IsRegisteredAsEmptyEntity (entity);
+			this.ExecuteWithTransaction<object> (transaction =>
+			{
+				query (transaction);
+				return null;
+			});
+		}
 
-			return !isDeleted && !isEmpty;
+
+		private TResult ExecuteWithTransaction<TResult>(System.Func<DbTransaction, TResult> query)
+		{
+			TResult result;
+			
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
+			{
+				try
+				{
+					result = query (transaction);
+
+					transaction.Commit ();
+				}
+				catch
+				{
+					transaction.Rollback ();
+
+					throw;
+				}
+			}
+
+			return result;
 		}
 
 
