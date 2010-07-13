@@ -60,12 +60,25 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
+		/// <summary>
+		/// Retourne le nombre total de page de l'objet.
+		/// </summary>
 		public virtual int PageCount
 		{
 			get
 			{
 				return 1;
 			}
+		}
+
+		/// <summary>
+		/// Retourne la hauteur que l'objet occupe dans une page.
+		/// </summary>
+		/// <param name="page"></param>
+		/// <returns></returns>
+		public virtual double GetPageHeight(int page)
+		{
+			return 0;
 		}
 
 		/// <summary>

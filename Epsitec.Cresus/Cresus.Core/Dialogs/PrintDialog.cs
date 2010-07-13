@@ -282,6 +282,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
 
+			entityPrinter.Build ();
+
 			if (printer.Horizontal)
 			{
 				Transform transform = Transform.Identity;

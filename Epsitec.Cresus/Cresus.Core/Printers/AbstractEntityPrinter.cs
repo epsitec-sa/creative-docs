@@ -21,6 +21,20 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public abstract class AbstractEntityPrinter
 	{
+		public AbstractEntityPrinter()
+			: base ()
+		{
+			this.documentFiller = new DocumentFiller (this.PageSize, this.PageMargins);
+		}
+
+		public DocumentFiller DocumentFiller
+		{
+			get
+			{
+				return this.documentFiller;
+			}
+		}
+
 		public virtual string JobName
 		{
 			get
@@ -105,6 +119,10 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public virtual void Build()
+		{
+		}
+
 		public virtual void Print(IPaintPort port, Rectangle bounds)
 		{
 			this.debugPort = port;
@@ -141,6 +159,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private readonly DocumentFiller documentFiller;
 		private int showedPage;
 		private int debugParam1;
 		private int debugParam2;

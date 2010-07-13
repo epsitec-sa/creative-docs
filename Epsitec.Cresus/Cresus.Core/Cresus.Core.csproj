@@ -172,6 +172,9 @@
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractObject.cs" />
+    <Compile Include="Printers\DocumentFiller.cs" />
+    <Compile Include="Printers\PageObject.cs" />
+    <Compile Include="Printers\PageContent.cs" />
     <Compile Include="Printers\ObjectTable.cs" />
     <Compile Include="Printers\ObjectTextBox.cs" />
     <Compile Include="Printers\RelationEntityPrinter.cs" />
