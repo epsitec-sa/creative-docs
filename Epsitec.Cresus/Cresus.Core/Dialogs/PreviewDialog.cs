@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 10, 10, 40),
 			};
 
-			this.preview.Build (this.entityPrinter);
+			this.preview.BuildSections (this.entityPrinter);
 
 			this.footer = new FrameBox
 			{
@@ -195,13 +195,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void pagePrevButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.entityPrinter.ShowedPage -= GetStep (e);
+			this.entityPrinter.CurrentPage -= GetStep (e);
 			this.UpdatePage ();
 		}
 
 		private void pageNextButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.entityPrinter.ShowedPage += GetStep (e);
+			this.entityPrinter.CurrentPage += GetStep (e);
 			this.UpdatePage ();
 		}
 
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePage()
 		{
-			this.pageRank.Text = (this.entityPrinter.ShowedPage+1).ToString ();
+			this.pageRank.Text = (this.entityPrinter.CurrentPage+1).ToString ();
 
 			this.preview.Invalidate ();
 		}

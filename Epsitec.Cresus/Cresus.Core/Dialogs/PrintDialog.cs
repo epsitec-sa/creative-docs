@@ -282,17 +282,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
 
-			entityPrinter.Build ();
+			entityPrinter.BuildSections ();
 
 			if (printer.Horizontal)
 			{
 				Transform transform = Transform.Identity;
-				PrintPort.PrintSinglePage (painter => entityPrinter.Print (painter, new Rectangle (xOffset, -yOffset, width, height)), printDocument, transform);
+				PrintPort.PrintSinglePage (painter => entityPrinter.PrintCurrentPage (painter, new Rectangle (xOffset, -yOffset, width, height)), printDocument, transform);
 			}
 			else
 			{
 				Transform transform = Transform.Identity.RotateDeg (90);
-				PrintPort.PrintSinglePage (painter => entityPrinter.Print (painter, new Rectangle (-yOffset, -xOffset, width, height)), printDocument, transform);
+				PrintPort.PrintSinglePage (painter => entityPrinter.PrintCurrentPage (painter, new Rectangle (-yOffset, -xOffset, width, height)), printDocument, transform);
 			}
 		}
 

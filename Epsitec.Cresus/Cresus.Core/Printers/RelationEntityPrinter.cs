@@ -43,29 +43,27 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void Build()
+		public override void BuildSections()
 		{
-			this.BuildTitle    (this.DocumentFiller);
-			this.BuildSummary  (this.DocumentFiller);
+			this.BuildTitle    (this.documentContainer);
+			this.BuildSummary  (this.documentContainer);
 
-			this.BuildContacts (this.DocumentFiller, this.BuildMailContacts);
-			this.BuildContacts (this.DocumentFiller, this.BuildTelecomContacts);
-			this.BuildContacts (this.DocumentFiller, this.BuildUriContacts);
+			this.BuildContacts (this.documentContainer, this.BuildMailContacts);
+			this.BuildContacts (this.documentContainer, this.BuildTelecomContacts);
+			this.BuildContacts (this.documentContainer, this.BuildUriContacts);
 		}
 
-		public override void Print(IPaintPort port, Rectangle bounds)
+		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
-			base.Print (port, bounds);
-
-			this.DocumentFiller.Paint (port, this.ShowedPage);
 #if true
+			this.documentContainer.Paint (port, this.CurrentPage);
 #else
 			this.PaintTest (port);
 #endif
 		}
 
 
-		private void BuildTitle(DocumentFiller document)
+		private void BuildTitle(DocumentContainer document)
 		{
 			//	Dessine le titre et retourne la hauteur utilisée.
 			string text = "?";
@@ -82,14 +80,14 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Name).ToString ();
 			}
 
-			var textBox = new ObjectTextBox ();
+			var textBox = new TextBand ();
 			textBox.Text = string.Concat("<b>", text, "</b>");
 			textBox.FontSize = 6.0;
 
 			document.AddFromTop (textBox, 5.0);
 		}
 
-		private void BuildSummary(DocumentFiller document)
+		private void BuildSummary(DocumentContainer document)
 		{
 			//	Dessine le résumé et retourne la hauteur utilisée.
 			string text = "?";
@@ -106,7 +104,7 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToString ();
 			}
 
-			var textBox = new ObjectTextBox ();
+			var textBox = new TextBand ();
 			textBox.Text = text;
 			textBox.FontSize = 4.0;
 
@@ -114,7 +112,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildContacts(DocumentFiller document, System.Func<DocumentFiller, bool> builder)
+		private void BuildContacts(DocumentContainer document, System.Func<DocumentContainer, bool> builder)
 		{
 			//	Dessine un contact et retourne la position 'top' suivante.
 			for (int i = 0; i < 10; i++)  // TODO: debug, à enlever
@@ -123,7 +121,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private bool BuildMailContacts(DocumentFiller document)
+		private bool BuildMailContacts(DocumentContainer document)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
@@ -140,12 +138,12 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			var title = new ObjectTextBox ();
+			var title = new TextBand ();
 			title.Text = "<b>Adresses</b>";
 			title.FontSize = 4.5;
 			document.AddFromTop (title, 1.0);
 
-			var table = new ObjectTable ();
+			var table = new TableBand ();
 			table.ColumnsCount = 5;
 			table.RowsCount = 1+count;
 
@@ -182,7 +180,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private bool BuildTelecomContacts(DocumentFiller document)
+		private bool BuildTelecomContacts(DocumentContainer document)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
@@ -199,12 +197,12 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			var title = new ObjectTextBox ();
+			var title = new TextBand ();
 			title.Text = "<b>Téléphones</b>";
 			title.FontSize = 4.5;
 			document.AddFromTop (title, 1.0);
 
-			var table = new ObjectTable ();
+			var table = new TableBand ();
 			table.ColumnsCount = 3;
 			table.RowsCount = 1+count;
 
@@ -235,7 +233,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private bool BuildUriContacts(DocumentFiller document)
+		private bool BuildUriContacts(DocumentContainer document)
 		{
 			//	Dessine un contact et retourne la hauteur utilisée.
 			int count = 0;
@@ -252,12 +250,12 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			var title = new ObjectTextBox ();
+			var title = new TextBand ();
 			title.Text = "<b>Emails</b>";
 			title.FontSize = 4.5;
 			document.AddFromTop (title, 1.0);
 
-			var table = new ObjectTable ();
+			var table = new TableBand ();
 			table.ColumnsCount = 2;
 			table.RowsCount = 1+count;
 
@@ -291,7 +289,7 @@ namespace Epsitec.Cresus.Core.Printers
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 
 #if true
-			var table = new ObjectTable ();
+			var table = new TableBand ();
 			table.ColumnsCount = 4;
 			table.RowsCount = 3;
 
@@ -314,9 +312,9 @@ namespace Epsitec.Cresus.Core.Printers
 			table.DebugPaintFrame = true;
 
 			double height = 20+this.DebugParam1;
-			bool ok = table.InitializePages (90+this.DebugParam2, height, height, height);
+			bool ok = table.BuildSections (90+this.DebugParam2, height, height, height);
 
-			for (int i = 0; i < table.PageCount; i++)
+			for (int i = 0; i < table.SectionCount; i++)
 			{
 				double y = 280-(height+2)*i;
 

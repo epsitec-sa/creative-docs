@@ -19,23 +19,30 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class PageObject
+	/// <summary>
+	/// Cette classe correspond à un objet graphique AbstractBand dans une page.
+	/// Toute l'information permettant de dessiner l'objet y est incluse (rang de la section
+	/// et coin supérieur/gauche).
+	/// Le même objet AbstractBand peut apparaître dans plusieurs pages, s'il contient
+	/// plusieurs sections.
+	/// </summary>
+	public class BandContainer
 	{
-		public PageObject(AbstractObject obj, int relativeObjectPageIndex, Point topLeft)
+		public BandContainer(AbstractBand band, int section, Point topLeft)
 		{
-			this.obj = obj;
-			this.relativeObjectPageIndex = relativeObjectPageIndex;
+			this.band = band;
+			this.section = section;
 			this.topLeft = topLeft;
 		}
 
 		public bool Paint(IPaintPort port)
 		{
-			return this.obj.Paint (port, this.relativeObjectPageIndex, this.topLeft);
+			return this.band.Paint (port, this.section, this.topLeft);
 		}
 
 
-		private readonly AbstractObject obj;
-		private readonly int relativeObjectPageIndex;
-		private readonly Point topLeft;
+		private readonly AbstractBand		band;
+		private readonly int				section;
+		private readonly Point				topLeft;
 	}
 }

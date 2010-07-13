@@ -19,9 +19,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public abstract class AbstractObject
+	/// <summary>
+	/// Classe abstraite pour les 'bandes', qui sont des objets ayant une largeur donnée et une hauteur infinie.
+	/// Une 'bande' est découpée en 'sections'. En principe, chaque 'section' occupera une page du document imprimé,
+	/// sauf si on cherche à faire du multi-colonnes.
+	/// </summary>
+	public abstract class AbstractBand
 	{
-		public AbstractObject()
+		public AbstractBand()
 		{
 			this.Font = Font.GetFont ("Arial", "Regular");
 			this.FontSize = 3.0;
@@ -48,22 +53,22 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// Effectue la justification verticale pour découper le contenu en pages.
+		/// Effectue la justification verticale pour découper le contenu en sections.
 		/// </summary>
-		/// <param name="width">Largeur sur toutes les pages</param>
-		/// <param name="initialHeight">Hauteur de la première page</param>
-		/// <param name="middleheight">Hauteur des pages suivantes</param>
-		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <param name="width">Largeur pour toutes les sections</param>
+		/// <param name="initialHeight">Hauteur de la première section</param>
+		/// <param name="middleheight">Hauteur des sections suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière section</param>
 		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
-		public virtual bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		public virtual bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			return true;
 		}
 
 		/// <summary>
-		/// Retourne le nombre total de page de l'objet.
+		/// Retourne le nombre total de sections de la bande.
 		/// </summary>
-		public virtual int PageCount
+		public virtual int SectionCount
 		{
 			get
 			{
@@ -72,23 +77,23 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Retourne la hauteur que l'objet occupe dans une page.
+		/// Retourne la hauteur que l'objet occupe dans une section.
 		/// </summary>
-		/// <param name="page"></param>
+		/// <param name="section"></param>
 		/// <returns></returns>
-		public virtual double GetPageHeight(int page)
+		public virtual double GetSectionHeight(int section)
 		{
 			return 0;
 		}
 
 		/// <summary>
-		/// Dessine une page de l'objet à une position donnée.
+		/// Dessine une section de l'objet à une position donnée.
 		/// </summary>
 		/// <param name="port">Port graphique</param>
-		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public virtual bool Paint(IPaintPort port, int page, Point topLeft)
+		public virtual bool Paint(IPaintPort port, int section, Point topLeft)
 		{
 			return true;
 		}

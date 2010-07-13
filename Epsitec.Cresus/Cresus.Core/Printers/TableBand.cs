@@ -19,16 +19,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class ObjectTable : AbstractObject
+	public class TableBand : AbstractBand
 	{
-		public ObjectTable() : base()
+		public TableBand() : base()
 		{
 			this.CellBorderWidth = 0.1;
 			this.CellMargins = new Margins (1.0);
 
-			this.content = new List<List<ObjectTextBox>> ();
+			this.content = new List<List<TextBand>> ();
 			this.relativeColumnsWidth = new List<double> ();
-			this.pagesInfo = new List<PageInfo> ();
+			this.sectionsInfo = new List<SectionInfo> ();
 		}
 
 
@@ -105,18 +105,18 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string GetText(int column, int row)
 		{
-			ObjectTextBox textBox = this.GetTextBox (column, row);
+			TextBand textBox = this.GetTextBox (column, row);
 			return textBox.Text;
 		}
 
 		public void SetText(int column, int row, string value)
 		{
-			ObjectTextBox textBox = this.GetTextBox (column, row);
+			TextBand textBox = this.GetTextBox (column, row);
 			textBox.Text = value;
 		}
 
 
-		public ObjectTextBox GetTextBox(int column, int row)
+		public TextBand GetTextBox(int column, int row)
 		{
 			if (column >= 0 && column < this.columnsCount && row >= 0 && row < this.rowsCount)
 			{
@@ -155,38 +155,38 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// Effectue la justification verticale pour découper le tableau en pages.
+		/// Effectue la justification verticale pour découper le tableau en sections.
 		/// </summary>
-		/// <param name="width">Largeur sur toutes les pages</param>
-		/// <param name="initialHeight">Hauteur de la première page</param>
-		/// <param name="middleheight">Hauteur des pages suivantes</param>
-		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <param name="width">Largeur pour toutes les sections</param>
+		/// <param name="initialHeight">Hauteur de la première section</param>
+		/// <param name="middleheight">Hauteur des sections suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière section</param>
 		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
-		public override bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		public override bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
 			System.Diagnostics.Debug.Assert (finalHeight   <= middleheight);
 
 			this.width = width;
-			this.pagesInfo.Clear ();
+			this.sectionsInfo.Clear ();
 
 			for (int i = 0; i < this.rowsCount; i++)
 			{
 				this.JustifInitialize (i);
 			}
 
-			int page = 0;
+			int section = 0;
 			int row = 0;
 			bool first = true;
 			bool ending;
 			do
 			{
 				double heightAvailable = first ? initialHeight : middleheight;
-				int pageCount = this.pagesInfo.Count;
-				ending = this.JustifOnePage (page++, ref row, heightAvailable);
+				int sectionCount = this.sectionsInfo.Count;
+				ending = this.JustifOneSection (section++, ref row, heightAvailable);
 
-				if (pageCount == this.pagesInfo.Count && !first)
+				if (sectionCount == this.sectionsInfo.Count && !first)
 				{
 					return false;
 				}
@@ -204,33 +204,33 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				ObjectTextBox textBox = this.GetTextBox (column, row);
+				TextBand textBox = this.GetTextBox (column, row);
 				double width = this.GetAbsoluteColumnWidth (column);
 
 				textBox.JustifInitialize (width-horizontalMargin);
 			}
 		}
 
-		private bool JustifOnePage(int page, ref int row, double height)
+		private bool JustifOneSection(int section, ref int row, double height)
 		{
-			//	Essaie de mettre un maximum de cellules sur une page donnée.
+			//	Essaie de mettre un maximum de cellules sur une section donnée.
 			//	Retourne true s'il y a assez de place pour tout mettre (donc jusqu'à la fin).
-			var newPage = new PageInfo (page, row);
+			var newSection = new SectionInfo (section, row);
 
 			//	Cherche la liste de CellInfo précédente.
 			List<CellInfo> lastCellsInfo = null;
 
-			var lastPageIndex = page-1;
+			var lastSectionIndex = section-1;
 
-			if (lastPageIndex >= 0 && lastPageIndex < this.pagesInfo.Count)
+			if (lastSectionIndex >= 0 && lastSectionIndex < this.sectionsInfo.Count)
 			{
-				var lastPageInfo = this.pagesInfo[lastPageIndex];
+				var lastSectionInfo = this.sectionsInfo[lastSectionIndex];
 
-				var lastRowIndex = lastPageInfo.RowsInfo.Count-1;
+				var lastRowIndex = lastSectionInfo.RowsInfo.Count-1;
 
-				if (lastRowIndex >= 0 && lastRowIndex < lastPageInfo.RowsInfo.Count)
+				if (lastRowIndex >= 0 && lastRowIndex < lastSectionInfo.RowsInfo.Count)
 				{
-					var lastRowsInfo = lastPageInfo.RowsInfo[lastRowIndex];
+					var lastRowsInfo = lastSectionInfo.RowsInfo[lastRowIndex];
 					lastCellsInfo = lastRowsInfo.CellsInfo;
 				}
 
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Printers
 			double verticalMargin = this.CellMargins.Bottom + this.CellMargins.Top;
 
 			int	rowCount = 0;
-			double pageHeight = 0;
+			double sectionHeight = 0;
 			bool ending = false;
 
 			while (height-verticalMargin > 0)
@@ -264,30 +264,30 @@ namespace Epsitec.Cresus.Core.Printers
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
-					ObjectTextBox textBox = this.GetTextBox (column, row);
+					TextBand textBox = this.GetTextBox (column, row);
 
-					int textPage = 0;
+					int textSection = 0;
 					int line = 0;
 					bool lastEnding = false;
 					if (lastCellsInfo != null)
 					{
-						textPage = lastCellsInfo[column].TextPage + 1;
+						textSection = lastCellsInfo[column].TextSection + 1;
 						line = lastCellsInfo[column].FirstLine + lastCellsInfo[column].LineCount;
 						lastEnding = lastCellsInfo[column].Ending;
 					}
 
 					if (lastEnding)
 					{
-						CellInfo newCell = new CellInfo (textPage, -1, 0, true, 0);
+						CellInfo newCell = new CellInfo (textSection, -1, 0, true, 0);
 						rowInfo.CellsInfo.Add (newCell);
 					}
 					else
 					{
-						bool cellEnding = textBox.JustifOnePage (ref line, height-verticalMargin);
+						bool cellEnding = textBox.JustifOneSection (ref line, height-verticalMargin);
 
 						double cellHeight = textBox.LastHeight + verticalMargin;
 
-						CellInfo newCell = new CellInfo (textPage, textBox.LastFirstLine, textBox.LastLineCount, cellEnding, cellHeight);
+						CellInfo newCell = new CellInfo (textSection, textBox.LastFirstLine, textBox.LastLineCount, cellEnding, cellHeight);
 						rowInfo.CellsInfo.Add (newCell);
 
 						maxRowHeight = System.Math.Max (maxRowHeight, cellHeight);
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core.Printers
 						if (textBox.LastLineCount == 0 && !string.IsNullOrEmpty(textBox.Text))
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
-							//	il faut rejeter cette 'row' et essayer sur une nouvelle page.
+							//	il faut rejeter cette 'row' et essayer sur une nouvelle section.
 							tooSmall = true;
 						}
 					}
@@ -310,18 +310,18 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					for (int column = 0; column < this.columnsCount; column++)
 					{
-						ObjectTextBox textBox = this.GetTextBox (column, row);
-						textBox.JustifRemoveLastPage ();
+						TextBand textBox = this.GetTextBox (column, row);
+						textBox.JustifRemoveLastSection ();
 					}
 
 					break;
 				}
 
 				rowInfo.Height = maxRowHeight;
-				newPage.RowsInfo.Add (rowInfo);
+				newSection.RowsInfo.Add (rowInfo);
 
 				rowCount++;
-				pageHeight += maxRowHeight;
+				sectionHeight += maxRowHeight;
 				height -= maxRowHeight;
 
 				if (rowEnding == false)
@@ -341,60 +341,60 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (rowCount > 0)
 			{
-				newPage.RowCount = rowCount;
-				newPage.Height = pageHeight;
+				newSection.RowCount = rowCount;
+				newSection.Height = sectionHeight;
 
-				this.pagesInfo.Add (newPage);
+				this.sectionsInfo.Add (newSection);
 			}
 
 			return ending;
 		}
 
 
-		public override int PageCount
+		public override int SectionCount
 		{
 			get
 			{
-				return this.pagesInfo.Count;
+				return this.sectionsInfo.Count;
 			}
 		}
 
 		/// <summary>
-		/// Retourne la hauteur que l'objet occupe dans une page.
+		/// Retourne la hauteur que l'objet occupe dans une section.
 		/// </summary>
-		/// <param name="page"></param>
+		/// <param name="section"></param>
 		/// <returns></returns>
-		public override double GetPageHeight(int page)
+		public override double GetSectionHeight(int section)
 		{
-			if (page >= 0 && page < this.pagesInfo.Count)
+			if (section >= 0 && section < this.sectionsInfo.Count)
 			{
-				return this.pagesInfo[page].Height;
+				return this.sectionsInfo[section].Height;
 			}
 
 			return 0;
 		}
 
 		/// <summary>
-		/// Dessine une page de l'objet à une position donnée.
+		/// Dessine une section de l'objet à une position donnée.
 		/// </summary>
 		/// <param name="port">Port graphique</param>
-		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool Paint(IPaintPort port, int page, Point topLeft)
+		public override bool Paint(IPaintPort port, int section, Point topLeft)
 		{
-			if (page < 0 || page >= this.pagesInfo.Count)
+			if (section < 0 || section >= this.sectionsInfo.Count)
 			{
 				return true;
 			}
 
-			var pageInfo = this.pagesInfo[page];
+			var sectionInfo = this.sectionsInfo[section];
 			double y = topLeft.Y;
 			var ok = true;
 
-			for (int row = pageInfo.FirstRow; row < pageInfo.FirstRow+pageInfo.RowCount; row++)
+			for (int row = sectionInfo.FirstRow; row < sectionInfo.FirstRow+sectionInfo.RowCount; row++)
 			{
-				var rowInfo = pageInfo.RowsInfo[row-pageInfo.FirstRow];
+				var rowInfo = sectionInfo.RowsInfo[row-sectionInfo.FirstRow];
 
 				double x = topLeft.X;
 
@@ -405,9 +405,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (cellInfo.FirstLine != -1)
 					{
-						ObjectTextBox textBox = this.GetTextBox (column, row);
+						TextBand textBox = this.GetTextBox (column, row);
 
-						if (!textBox.Paint (port, cellInfo.TextPage, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
+						if (!textBox.Paint (port, cellInfo.TextSection, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
 						{
 							ok = false;
 						}
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DebugPaintFrame)
 			{
-				Rectangle rect = new Rectangle (topLeft.X, topLeft.Y-pageInfo.Height, this.width, pageInfo.Height);
+				Rectangle rect = new Rectangle (topLeft.X, topLeft.Y-sectionInfo.Height, this.width, sectionInfo.Height);
 
 				port.LineWidth = 0.1;
 				port.Color = Color.FromName (ok ? "Green" : "Red");
@@ -443,7 +443,7 @@ namespace Epsitec.Cresus.Core.Printers
 			double height = 0;
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				ObjectTextBox textBox = this.GetTextBox (column, row);
+				TextBand textBox = this.GetTextBox (column, row);
 
 				double width = this.GetAbsoluteColumnWidth (column);
 				width -= this.CellMargins.Left;
@@ -484,11 +484,11 @@ namespace Epsitec.Cresus.Core.Printers
 			this.content.Clear ();
 			for (int row = 0; row < this.rowsCount; row++)
 			{
-				List<ObjectTextBox> line = new List<ObjectTextBox> ();
+				List<TextBand> line = new List<TextBand> ();
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
-					var textBox = new ObjectTextBox ();
+					var textBox = new TextBand ();
 					line.Add (textBox);
 				}
 
@@ -503,16 +503,16 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private class PageInfo
+		private class SectionInfo
 		{
-			public PageInfo(int page, int firstRow)
+			public SectionInfo(int section, int firstRow)
 			{
-				this.Page     = page;
+				this.Section  = section;
 				this.FirstRow = firstRow;
 				this.RowsInfo = new List<RowInfo> ();
 			}
 
-			public int				Page;
+			public int				Section;
 			public int				FirstRow;
 			public int				RowCount;
 			public double			Height;
@@ -534,16 +534,16 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private class CellInfo
 		{
-			public CellInfo(int textPage, int firstLine, int lineCount, bool ending, double height)
+			public CellInfo(int textSection, int firstLine, int lineCount, bool ending, double height)
 			{
-				this.TextPage  = textPage;
-				this.FirstLine = firstLine;
-				this.LineCount = lineCount;
-				this.Ending    = ending;
-				this.Height    = height;
+				this.TextSection = textSection;
+				this.FirstLine   = firstLine;
+				this.LineCount   = lineCount;
+				this.Ending      = ending;
+				this.Height      = height;
 			}
 
-			public int		TextPage;
+			public int		TextSection;
 			public int		FirstLine;
 			public int		LineCount;
 			public bool		Ending;
@@ -554,8 +554,8 @@ namespace Epsitec.Cresus.Core.Printers
 		private double						width;
 		private int							columnsCount;
 		private int							rowsCount;
-		private List<List<ObjectTextBox>>	content;
+		private List<List<TextBand>>		content;
 		private List<double>				relativeColumnsWidth;
-		private List<PageInfo>				pagesInfo;
+		private List<SectionInfo>				sectionsInfo;
 	}
 }

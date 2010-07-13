@@ -19,15 +19,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class ObjectTextBox : AbstractObject
+	public class TextBand : AbstractBand
 	{
-		public ObjectTextBox() : base()
+		public TextBand() : base()
 		{
 			this.Alignment = ContentAlignment.TopLeft;
 			this.Justif    = TextJustifMode.None;
 			this.BreakMode = TextBreakMode.Hyphenate;
 
-			this.pagesInfo = new List<PageInfo> ();
+			this.sectionsInfo = new List<SectionInfo> ();
 		}
 
 
@@ -80,14 +80,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// Effectue la justification verticale pour découper le texte en pages.
+		/// Effectue la justification verticale pour découper le texte en sections.
 		/// </summary>
-		/// <param name="width">Largeur sur toutes les pages</param>
-		/// <param name="initialHeight">Hauteur de la première page</param>
-		/// <param name="middleheight">Hauteur des pages suivantes</param>
-		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <param name="width">Largeur pour toutes les sections</param>
+		/// <param name="initialHeight">Hauteur de la première section</param>
+		/// <param name="middleheight">Hauteur des sections suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière section</param>
 		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
-		public override bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		public override bool BuildSections(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
@@ -103,18 +103,18 @@ namespace Epsitec.Cresus.Core.Printers
 			do
 			{
 				double heightAvailable = first ? initialHeight : middleheight;
-				ending = this.JustifOnePage (ref line, heightAvailable);
+				ending = this.JustifOneSection (ref line, heightAvailable);
 
 				first = false;
 			}
 			while (!ending);
 
-			//	Si la dernière tranche occupe plus de place que finalHeight, on crée une dernière page vide.
+			//	Si la dernière tranche occupe plus de place que finalHeight, on crée une dernière section vide.
 			if (finalHeight < middleheight &&
-				this.pagesInfo.Count > 1 &&
-				this.pagesInfo[this.pagesInfo.Count-1].Height > finalHeight)
+				this.sectionsInfo.Count > 1 &&
+				this.sectionsInfo[this.sectionsInfo.Count-1].Height > finalHeight)
 			{
-				this.pagesInfo.Add (new PageInfo (line, 0, 0));
+				this.sectionsInfo.Add (new SectionInfo (line, 0, 0));
 			}
 
 			return true;
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void JustifInitialize(double width)
 		{
 			this.width = width;
-			this.pagesInfo.Clear ();
+			this.sectionsInfo.Clear ();
 
 			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
 			//	de toutes les lignes.
@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool JustifOnePage(ref int line, double maxHeight)
+		public bool JustifOneSection(ref int line, double maxHeight)
 		{
-			//	Essaie de mettre un maximum de lignes sur une page donnée.
+			//	Essaie de mettre un maximum de lignes sur une section donnée.
 			//	Retourne true s'il y a assez de place pour tout mettre (donc jusqu'à la fin).
 			double height = 0;
 
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					int lineCount = i-line;
 					height -= this.heights[i];
-					this.pagesInfo.Add (new PageInfo (line, lineCount, height));
+					this.sectionsInfo.Add (new SectionInfo (line, lineCount, height));
 
 					line += lineCount;
 					return false;  // il reste encore des données
@@ -160,23 +160,23 @@ namespace Epsitec.Cresus.Core.Printers
 				if (i == this.heights.Length-1)
 				{
 					int lineCount = i-line+1;
-					this.pagesInfo.Add (new PageInfo (line, lineCount, height));
+					this.sectionsInfo.Add (new SectionInfo (line, lineCount, height));
 
 					line += lineCount;
 					return true;  // tout est casé
 				}
 			}
 
-			this.pagesInfo.Add (new PageInfo (line, 0, 0));
+			this.sectionsInfo.Add (new SectionInfo (line, 0, 0));
 			return true;  // tout est casé
 		}
 
-		public void JustifRemoveLastPage()
+		public void JustifRemoveLastSection()
 		{
-			//	Annule la dernière page justifiée.
-			if (this.pagesInfo.Count != 0)
+			//	Annule la dernière section justifiée.
+			if (this.sectionsInfo.Count != 0)
 			{
-				this.pagesInfo.RemoveAt (this.pagesInfo.Count-1);
+				this.sectionsInfo.RemoveAt (this.sectionsInfo.Count-1);
 			}
 		}
 
@@ -185,9 +185,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.pagesInfo.Count > 0)
+				if (this.sectionsInfo.Count > 0)
 				{
-					return this.pagesInfo[this.pagesInfo.Count-1].FirstLine;
+					return this.sectionsInfo[this.sectionsInfo.Count-1].FirstLine;
 				}
 
 				return 0;
@@ -198,9 +198,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.pagesInfo.Count > 0)
+				if (this.sectionsInfo.Count > 0)
 				{
-					return this.pagesInfo[this.pagesInfo.Count-1].LineCount;
+					return this.sectionsInfo[this.sectionsInfo.Count-1].LineCount;
 				}
 
 				return 0;
@@ -211,9 +211,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.pagesInfo.Count > 0)
+				if (this.sectionsInfo.Count > 0)
 				{
-					return this.pagesInfo[this.pagesInfo.Count-1].Height;
+					return this.sectionsInfo[this.sectionsInfo.Count-1].Height;
 				}
 
 				return 0;
@@ -221,53 +221,53 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public override int PageCount
+		public override int SectionCount
 		{
 			get
 			{
-				return this.pagesInfo.Count;
+				return this.sectionsInfo.Count;
 			}
 		}
 
 		/// <summary>
-		/// Retourne la hauteur que l'objet occupe dans une page.
+		/// Retourne la hauteur que l'objet occupe dans une section.
 		/// </summary>
-		/// <param name="page"></param>
+		/// <param name="section"></param>
 		/// <returns></returns>
-		public override double GetPageHeight(int page)
+		public override double GetSectionHeight(int section)
 		{
-			if (page >= 0 && page < this.pagesInfo.Count)
+			if (section >= 0 && section < this.sectionsInfo.Count)
 			{
-				return this.pagesInfo[page].Height;
+				return this.sectionsInfo[section].Height;
 			}
 
 			return 0;
 		}
 
 		/// <summary>
-		/// Dessine une page de l'objet à une position donnée.
+		/// Dessine une section de l'objet à une position donnée.
 		/// </summary>
 		/// <param name="port">Port graphique</param>
-		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool Paint(IPaintPort port, int page, Point topLeft)
+		public override bool Paint(IPaintPort port, int section, Point topLeft)
 		{
-			if (page < 0 || page >= this.pagesInfo.Count)
+			if (section < 0 || section >= this.sectionsInfo.Count)
 			{
 				return true;
 			}
 
 			var ok = true;
-			var pageInfo = this.pagesInfo[page];
+			var sectionInfo = this.sectionsInfo[section];
 
-			Rectangle clipRect = new Rectangle (topLeft.X, topLeft.Y-pageInfo.Height, this.width, pageInfo.Height);
+			Rectangle clipRect = new Rectangle (topLeft.X, topLeft.Y-sectionInfo.Height, this.width, sectionInfo.Height);
 
 			//	Calcule la distance verticale correspondant aux lignes à ne pas afficher.
 			double verticalOffset = 0;
-			for (int i = page-1; i >= 0; i--)
+			for (int i = section-1; i >= 0; i--)
 			{
-				verticalOffset += this.pagesInfo[i].Height;
+				verticalOffset += this.sectionsInfo[i].Height;
 			}
 
 			Rectangle bounds = clipRect;
@@ -328,9 +328,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private class PageInfo
+		private class SectionInfo
 		{
-			public PageInfo(int firstLine, int lineCount, double height)
+			public SectionInfo(int firstLine, int lineCount, double height)
 			{
 				this.FirstLine = firstLine;
 				this.LineCount = lineCount;
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private double				width;
-		private List<PageInfo>		pagesInfo;
+		private List<SectionInfo>	sectionsInfo;
 		private double[]			heights;
 	}
 }
