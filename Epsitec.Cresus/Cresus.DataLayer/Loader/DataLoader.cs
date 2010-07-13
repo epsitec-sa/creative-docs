@@ -18,7 +18,7 @@ using Epsitec.Cresus.DataLayer.Proxies;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
-
+	// TODO Kind of merge the DataLoader and the DataBrowser.
 	internal sealed class DataLoader
 	{
 
@@ -74,27 +74,34 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			return this.DataBrowser.GetReferencers (target);
+			return this.DataBrowser.GetReferencers (target, resolutionMode);
 		}
 
 
-		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
+		public AbstractEntity ResolveEntity(DbKey dbKey, Druid entityId)
 		{
-			// TODO Call DataBrowser
-			throw new System.NotImplementedException ();
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
+
+			Request request = new Request ()
+			{
+				RootEntity = entity,
+				RootEntityKey = dbKey,
+			};
+
+			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
 		}
 
 
-		public AbstractEntity ResolveEntity(EntityData entityData)
+		public AbstractEntity ResolveEntity(EntityData entityData, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
 			AbstractEntity entity = this.DataContext.FindEntity (entityData.Key, entityData.ConcreteEntityId, rootEntityId);
 
-			if (entity == null)
+			if (entity == null && resolutionMode == ResolutionMode.Database)
 			{
-				return this.DeserializeEntity (entityData);
+				entity = this.DeserializeEntity (entityData);
 			}
 			
 			return entity;

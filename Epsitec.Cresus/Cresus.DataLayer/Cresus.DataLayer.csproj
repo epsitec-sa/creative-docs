@@ -161,6 +161,7 @@
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="Loader\AliasNode.cs" />
+    <Compile Include="Loader\ResolutionMode.cs" />
     <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Context\EntityDataMapping.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Saver\DataSaver.cs" />
+    <Compile Include="Saver\SaverQueryGenerator.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>

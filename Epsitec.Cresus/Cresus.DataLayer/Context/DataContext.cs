@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		internal EntityKey GetEntityKey(AbstractEntity entity)
+		public EntityKey GetEntityKey(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
 
@@ -303,9 +303,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target)
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			return this.DataLoader.GetReferencers (target);
+			return this.DataLoader.GetReferencers (target, resolutionMode);
 		}
 
 
@@ -321,10 +321,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public TEntity ResolveEntity<TEntity>(DbKey entityKey) where TEntity : AbstractEntity, new ()
+		public TEntity ResolveEntity<TEntity>(DbKey rowKey) where TEntity : AbstractEntity, new ()
 		{
-			throw new System.NotImplementedException ();
-			// TODO
+			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
+			EntityKey entityKey = new EntityKey (rowKey, entityId);
+
+			return (TEntity) this.ResolveEntity (entityKey);
 		}
 
 
@@ -334,10 +336,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public void CreateSchema<TEntity>() where TEntity : AbstractEntity
+		public void CreateSchema<TEntity>() where TEntity : AbstractEntity, new()
 		{
-			throw new System.NotImplementedException ();
-			// TODO
+			this.SchemaEngine.CreateSchema<TEntity> ();
 		}
 
 

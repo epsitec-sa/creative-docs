@@ -2,6 +2,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.RootEntity = null;
 			this.RequestedEntity = null;
 
-			this.LoadFromDatabase = true;
+			this.ResolutionMode = ResolutionMode.Database;
 		}
 
 
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public AbstractEntity RootEntityReference
+		public DbKey RootEntityKey
 		{
 			internal get;
 			set;
@@ -60,8 +62,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		public bool LoadFromDatabase
+		
+		public ResolutionMode ResolutionMode
 		{
 			internal get;
 			set;

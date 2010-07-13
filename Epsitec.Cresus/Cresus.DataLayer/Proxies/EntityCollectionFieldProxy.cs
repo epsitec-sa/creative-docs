@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			Request request = new Request ()
 			{
 				RootEntity = rootExample,
-				RootEntityReference = this.entity,
+				RootEntityKey = this.dataContext.GetEntityKey (this.entity).RowKey,
 				RequestedEntity = targetExample,
 			};
 

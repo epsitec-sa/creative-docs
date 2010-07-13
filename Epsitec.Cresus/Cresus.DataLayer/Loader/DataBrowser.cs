@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				RootEntity = example,
 				RequestedEntity = example,
-				LoadFromDatabase = true,
+				ResolutionMode = ResolutionMode.Database,
 			};
 
 			return this.GetByRequest<T> (request);
@@ -103,10 +103,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				throw new System.Exception ("No requested entity in request.");
 			}
-			
+
 			foreach (EntityData entityData in this.GetEntitiesData (request))
 			{
-				T entity = this.DataLoader.ResolveEntity (entityData) as T;
+				T entity = this.DataLoader.ResolveEntity (entityData, request.ResolutionMode) as T;
 
 				if (entity != null)
 				{
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, bool loadFromDatabase = true)
+		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
 			EntityDataMapping targetMapping = this.DataContext.GetEntityDataMapping (target);
 
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				{
 					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
 					{
-						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target, loadFromDatabase))
+						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target, resolutionMode))
 						{
 							yield return item;
 						}
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target, bool loadFromDatabase)
+		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target, ResolutionMode resolutionMode)
 		{
 			Druid sourceEntityId = sourceFieldPath.EntityId;
 			string sourceFieldId = sourceFieldPath.Fields.First ();
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Request request = new Request ()
 			{
 				RootEntity = example,
-				LoadFromDatabase = loadFromDatabase,
+				ResolutionMode = resolutionMode,
 			};
 
 			return this.GetByRequest<AbstractEntity> (request).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
@@ -440,15 +440,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRootEntityId(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
-			AbstractEntity rootEntityReference = request.RootEntityReference;
-			
-			if (rootEntityReference != null && entity == request.RootEntity)
+			DbKey rootEntityKey = request.RootEntityKey;
+
+			if (!rootEntityKey.IsEmpty && entity == request.RootEntity)
 			{
 				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
-				EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (rootEntityReference);
 
-				long id = mapping.RowKey.Id.Value;
+				long id = rootEntityKey.Id.Value;
 				DbTableColumn columnId = this.GetEntityColumn (rootEntityId, rootEntityAlias.Alias, DataBrowser.idColumn);
 
 				DbSelectCondition condition = new DbSelectCondition ()
