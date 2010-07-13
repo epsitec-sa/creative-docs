@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Core.Printers
 			table.DebugPaintFrame = true;
 
 			double height = 20+this.DebugParam1;
-			table.InitializePages (90+this.DebugParam2, height, height, height);
+			bool ok = table.InitializePages (90+this.DebugParam2, height, height, height);
 
 			for (int i = 0; i < table.PageCount; i++)
 			{
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				table.Paint (port, i, new Point (10, y));
 
-				port.Color = Color.FromBrightness (0);
+				port.Color = Color.FromName (ok ? "Black" : "Red");
 				port.PaintSurface (Path.FromRectangle (8, y-height, 1, height));
 			}
 #endif

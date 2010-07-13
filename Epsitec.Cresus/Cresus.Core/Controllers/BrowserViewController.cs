@@ -158,6 +158,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				case "ArticleDefinitions":
 					this.SetContents (() => this.data.GetArticleDefinitions ());
 					break;
+
+				case "InvoiceDocuments":
+					this.SetContents (() => this.data.GetInvoiceDocuments ());
+					break;
 			}
 		}
 		
@@ -270,6 +274,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var article = entity as ArticleDefinitionEntity;
 				return UIBuilder.FormatText (article.ShortDescription);
+			}
+			if (entity is InvoiceDocumentEntity)
+			{
+				var invoice = entity as InvoiceDocumentEntity;
+				return UIBuilder.FormatText (invoice.IdA);
 			}
 			
 			return FormattedText.Empty;

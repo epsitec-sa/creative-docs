@@ -154,7 +154,15 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public override void InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
+		/// <summary>
+		/// Effectue la justification verticale pour découper le tableau en pages.
+		/// </summary>
+		/// <param name="width">Largeur sur toutes les pages</param>
+		/// <param name="initialHeight">Hauteur de la première page</param>
+		/// <param name="middleheight">Hauteur des pages suivantes</param>
+		/// <param name="finalHeight">Hauteur de la dernière page</param>
+		/// <returns>Retourne false s'il n'a pas été possible de mettre tout le contenu</returns>
+		public override bool InitializePages(double width, double initialHeight, double middleheight, double finalHeight)
 		{
 			//	initialHeight et finalHeight doivent être plus petit ou égal à middleheight.
 			System.Diagnostics.Debug.Assert (initialHeight <= middleheight);
@@ -180,12 +188,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (pageCount == this.pagesInfo.Count && !first)
 				{
-					break;
+					return false;
 				}
 
 				first = false;
 			}
 			while (!ending);
+
+			return true;
 		}
 
 		private void JustifInitialize(int row)
@@ -290,7 +300,7 @@ namespace Epsitec.Cresus.Core.Printers
 						if (textBox.LastLineCount == 0 && !string.IsNullOrEmpty(textBox.Text))
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
-							//	il faut rejeter cette 'row'.
+							//	il faut rejeter cette 'row' et essayer sur une nouvelle page.
 							tooSmall = true;
 						}
 					}
