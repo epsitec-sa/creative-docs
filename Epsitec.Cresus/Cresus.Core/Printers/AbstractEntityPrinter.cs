@@ -24,15 +24,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.documentFiller = new DocumentFiller (this.PageSize, this.PageMargins);
-		}
-
-		public DocumentFiller DocumentFiller
-		{
-			get
-			{
-				return this.documentFiller;
-			}
+			this.documentContainer = new DocumentContainer (this.PageSize, this.PageMargins);
 		}
 
 		public virtual string JobName
@@ -59,22 +51,17 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public int ShowedPage
+		public int CurrentPage
 		{
 			get
 			{
-				return this.showedPage;
+				return this.currentPage;
 			}
 			set
 			{
-				if (this.showedPage != value)
+				if (this.currentPage != value)
 				{
-					this.showedPage = value;
-
-					if (this.debugPort != null)
-					{
-						this.Print (this.debugPort, this.debugBounds);
-					}
+					this.currentPage = value;
 				}
 			}
 		}
@@ -90,11 +77,6 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.debugParam1 != value)
 				{
 					this.debugParam1 = value;
-
-					if (this.debugPort != null)
-					{
-						this.Print (this.debugPort, this.debugBounds);
-					}
 				}
 			}
 		}
@@ -110,23 +92,16 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.debugParam2 != value)
 				{
 					this.debugParam2 = value;
-
-					if (this.debugPort != null)
-					{
-						this.Print (this.debugPort, this.debugBounds);
-					}
 				}
 			}
 		}
 
-		public virtual void Build()
+		public virtual void BuildSections()
 		{
 		}
 
-		public virtual void Print(IPaintPort port, Rectangle bounds)
+		public virtual void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
-			this.debugPort = port;
-			this.debugBounds = bounds;
 		}
 
 
@@ -159,12 +134,10 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly DocumentFiller documentFiller;
-		private int showedPage;
-		private int debugParam1;
-		private int debugParam2;
-		private IPaintPort debugPort;
-		private Rectangle debugBounds;
+		protected readonly DocumentContainer	documentContainer;
+		private int								currentPage;
+		private int								debugParam1;
+		private int								debugParam2;
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter

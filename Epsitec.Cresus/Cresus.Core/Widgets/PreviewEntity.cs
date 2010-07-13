@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public void Build(Printers.AbstractEntityPrinter entityPrinter)
+		public void BuildSections(Printers.AbstractEntityPrinter entityPrinter)
 		{
 			this.entityPrinter = entityPrinter;
 
-			this.entityPrinter.Build ();
+			this.entityPrinter.BuildSections ();
 		}
 
 
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Transform initial = graphics.Transform;
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
-				this.entityPrinter.Print (graphics, this.Client.Bounds);
+				this.entityPrinter.PrintCurrentPage (graphics, this.Client.Bounds);
 
 				graphics.Transform = initial;
 			}
