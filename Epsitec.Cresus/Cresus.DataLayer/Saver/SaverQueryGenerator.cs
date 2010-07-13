@@ -9,7 +9,6 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
-using System.Collections;
 
 using System.Linq;
 
@@ -130,10 +129,23 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void UpdateEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
 		{
-			// Generate SQL request
-			
-			
-			throw new System.NotImplementedException ();
+			string tableName = this.SchemaEngine.GetDataTableName (localEntityId);
+
+			SqlFieldList fields = new SqlFieldList ();
+
+			var fieldIds = from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
+						   where field.Relation == FieldRelation.None
+						   // TODO Add condition on value changed.
+						   select field.CaptionId;
+			entity.
+			fields.AddRange (this.CreateSqlFields (entity, localEntityId, fieldIds));
+
+			SqlFieldList conditions = new SqlFieldList ();
+			conditions.Add (this.CreateConditionForId (localEntityId, dbKey));
+
+			transaction.SqlBuilder.UpdateData (tableName, fields, conditions);
+
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
 		}
 
 
@@ -151,9 +163,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityValues(DbTransaction transaction, Druid localEntityId, DbKey dbKey)
 		{
-			// Generate SQL request
+			string tableName = this.SchemaEngine.GetDataTableName (localEntityId);
+
+			SqlFieldList conditions = new SqlFieldList ();
+			conditions.Add (this.CreateConditionForId (localEntityId, dbKey));
 			
-			throw new System.NotImplementedException ();
+			transaction.SqlBuilder.RemoveData (tableName, conditions);
+
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
 		}
 
 
@@ -605,6 +622,21 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		//    return row;
 		//}
+
+
+		private SqlField CreateConditionForId(Druid localEntityId, DbKey dbKey)
+		{
+			SqlField columnField = SqlField.CreateName (Tags.ColumnId);
+			SqlField constantField = SqlField.CreateConstant(dbKey.Id, DbKey.RawTypeForId);
+
+			SqlFunction condition = new SqlFunction (
+				SqlFunctionCode.CompareEqual,
+				columnField,
+				constantField
+			);
+			
+			return SqlField.CreateFunction (condition);
+		}
 
 
 		private IEnumerable<SqlField> CreateSqlFields(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds)
