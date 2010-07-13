@@ -183,7 +183,6 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
