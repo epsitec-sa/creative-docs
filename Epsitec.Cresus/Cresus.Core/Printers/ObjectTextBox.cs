@@ -230,6 +230,21 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
+		/// Retourne la hauteur que l'objet occupe dans une page.
+		/// </summary>
+		/// <param name="page"></param>
+		/// <returns></returns>
+		public override double GetPageHeight(int page)
+		{
+			if (page >= 0 && page < this.pagesInfo.Count)
+			{
+				return this.pagesInfo[page].Height;
+			}
+
+			return 0;
+		}
+
+		/// <summary>
 		/// Dessine une page de l'objet à une position donnée.
 		/// </summary>
 		/// <param name="port">Port graphique</param>

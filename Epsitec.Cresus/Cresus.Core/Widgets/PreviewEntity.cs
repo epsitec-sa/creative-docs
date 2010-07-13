@@ -26,32 +26,26 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Printers.AbstractEntityPrinter EntityPrinter
+		public void Build(Printers.AbstractEntityPrinter entityPrinter)
 		{
-			get;
-			set;
-		}
+			this.entityPrinter = entityPrinter;
 
-		public AbstractEntity Entity
-		{
-			get;
-			set;
+			this.entityPrinter.Build ();
 		}
-
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			if (this.EntityPrinter != null && this.Entity != null)
+			if (this.entityPrinter != null)
 			{
-				double sx = this.Client.Bounds.Width  / this.EntityPrinter.PageSize.Width;
-				double sy = this.Client.Bounds.Height / this.EntityPrinter.PageSize.Height;
+				double sx = this.Client.Bounds.Width  / this.entityPrinter.PageSize.Width;
+				double sy = this.Client.Bounds.Height / this.entityPrinter.PageSize.Height;
 				double scale = System.Math.Min (sx, sy);
 
 				//	Dessine une page blanche avec son cadre.
-				Rectangle bounds = new Rectangle (0, 0, System.Math.Floor (this.EntityPrinter.PageSize.Width*scale), System.Math.Floor (this.EntityPrinter.PageSize.Height*scale));
+				Rectangle bounds = new Rectangle (0, 0, System.Math.Floor (this.entityPrinter.PageSize.Width*scale), System.Math.Floor (this.entityPrinter.PageSize.Height*scale));
 
 				graphics.AddFilledRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (1));
@@ -65,10 +59,13 @@ namespace Epsitec.Cresus.Core.Widgets
 				Transform initial = graphics.Transform;
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
-				this.EntityPrinter.Print (graphics, this.Client.Bounds);
+				this.entityPrinter.Print (graphics, this.Client.Bounds);
 
 				graphics.Transform = initial;
 			}
 		}
+
+
+		private Printers.AbstractEntityPrinter entityPrinter;
 	}
 }

@@ -60,9 +60,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = window.Root,
 				Anchor = AnchorStyles.All,
 				Margins = new Margins (10, 10, 10, 40),
-				EntityPrinter = this.entityPrinter,
-				Entity = this.entities.FirstOrDefault (),
 			};
+
+			this.preview.Build (this.entityPrinter);
 
 			this.footer = new FrameBox
 			{
