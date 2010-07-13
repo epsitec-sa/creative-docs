@@ -194,10 +194,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (isNotPersisted)
 			{
-				mapping.RowKey = this.ExecuteWithTransaction (transaction =>
+				DbKey newKey = this.ExecuteWithTransaction (transaction =>
 				{
 					return this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
 				});
+
+				this.DataContext.DefineRowKey (mapping, newKey);
 			}
 
 			this.SaveTargetsIfNotPersisted (entity);
