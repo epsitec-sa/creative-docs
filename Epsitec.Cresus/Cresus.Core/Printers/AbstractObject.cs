@@ -59,8 +59,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public virtual void Paint(IPaintPort port, int page, Point topLeft)
+		/// <summary>
+		/// Dessine une page de l'objet à une position donnée.
+		/// </summary>
+		/// <param name="port">Port graphique</param>
+		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="topLeft">Coin supérieur gauche</param>
+		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
+		public virtual bool Paint(IPaintPort port, int page, Point topLeft)
 		{
+			return true;
 		}
 	}
 }

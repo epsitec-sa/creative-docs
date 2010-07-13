@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupWidgets(Window window)
 		{
-			var preview = new Widgets.PreviewEntity
+			this.preview = new Widgets.PreviewEntity
 			{
 				Parent = window.Root,
 				Anchor = AnchorStyles.All,
@@ -64,17 +64,137 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Entity = this.entities.FirstOrDefault (),
 			};
 
-			preview.Invalidate ();  // pour forcer le dessin
+			this.preview.Invalidate ();  // pour forcer le dessin
+
+#if true
+			var debugPrevButton1 = new GlyphButton
+			{
+				Parent = window.Root,
+				GlyphShape = Common.Widgets.GlyphShape.Minus,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10, 0, 0, 10),
+			};
+
+			this.debugParam1 = new StaticText
+			{
+				Parent = window.Root,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				PreferredWidth = 30,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10+20, 0, 0, 10),
+			};
+
+			var debugNextButton1 = new GlyphButton
+			{
+				Parent = window.Root,
+				GlyphShape = Common.Widgets.GlyphShape.Plus,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10+20+30, 0, 0, 10),
+			};
+
+			var debugPrevButton2 = new GlyphButton
+			{
+				Parent = window.Root,
+				GlyphShape = Common.Widgets.GlyphShape.Minus,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10+20+30+50, 0, 0, 10),
+			};
+
+			this.debugParam2 = new StaticText
+			{
+				Parent = window.Root,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				PreferredWidth = 30,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10+20+30+50+20, 0, 0, 10),
+			};
+
+			var debugNextButton2 = new GlyphButton
+			{
+				Parent = window.Root,
+				GlyphShape = Common.Widgets.GlyphShape.Plus,
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (10+20+30+50+20+30, 0, 0, 10),
+			};
+
+			debugPrevButton1.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton1_Clicked);
+			debugNextButton1.Clicked += new EventHandler<MessageEventArgs> (debugNextButton1_Clicked);
+			debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
+			debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
+
+			this.UpdateDebug ();
+#endif
 			
 			this.closeButton = new Button ()
 			{
 				Parent = window.Root,
+				Text = "Fermer",
 				Anchor = AnchorStyles.BottomRight,
 				Margins = new Margins (0, 10, 0, 10),
-				Text = "Fermer",
 				TabIndex = 1,
 			};
 		}
+
+		private void debugPrevButton1_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.DebugParam1 -= GetStep(e);
+			this.UpdateDebug ();
+		}
+
+		private void debugNextButton1_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.DebugParam1 += GetStep (e);
+			this.UpdateDebug ();
+		}
+
+		private void debugPrevButton2_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.DebugParam2 -= GetStep (e);
+			this.UpdateDebug ();
+		}
+
+		private void debugNextButton2_Clicked(object sender, MessageEventArgs e)
+		{
+			this.entityPrinter.DebugParam2 += GetStep (e);
+			this.UpdateDebug ();
+		}
+
+		private static int GetStep(MessageEventArgs e)
+		{
+			int step = 1;
+
+			if ((e.Message.ModifierKeys & ModifierKeys.Control) != 0)
+			{
+				step *= 10;
+			}
+
+			if ((e.Message.ModifierKeys & ModifierKeys.Shift) != 0)
+			{
+				step *= 100;
+			}
+
+			return step;
+		}
+
+		private void UpdateDebug()
+		{
+			this.debugParam1.Text = this.entityPrinter.DebugParam1.ToString ();
+			this.debugParam2.Text = this.entityPrinter.DebugParam2.ToString ();
+
+			this.preview.Invalidate ();
+		}
+
+
 
 		protected void SetupEvents(Window window)
 		{
@@ -86,6 +206,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly IEnumerable<AbstractEntity> entities;
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 
+		private Widgets.PreviewEntity preview;
 		private Button closeButton;
+		private StaticText debugParam1;
+		private StaticText debugParam2;
 	}
 }

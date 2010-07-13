@@ -175,7 +175,13 @@ namespace Epsitec.Cresus.Core.Printers
 			do
 			{
 				double heightAvailable = first ? initialHeight : middleheight;
+				int pageCount = this.pagesInfo.Count;
 				ending = this.JustifOnePage (page++, ref row, heightAvailable);
+
+				if (pageCount == this.pagesInfo.Count && !first)
+				{
+					break;
+				}
 
 				first = false;
 			}
@@ -217,6 +223,20 @@ namespace Epsitec.Cresus.Core.Printers
 					var lastRowsInfo = lastPageInfo.RowsInfo[lastRowIndex];
 					lastCellsInfo = lastRowsInfo.CellsInfo;
 				}
+
+				bool allEnding = true;
+				for (int column = 0; column < this.columnsCount; column++)
+				{
+					if (!lastCellsInfo[column].Ending)
+					{
+						allEnding = false;
+					}
+				}
+
+				if (allEnding)
+				{
+					lastCellsInfo = null;
+				}
 			}
 
 			double verticalMargin = this.CellMargins.Bottom + this.CellMargins.Top;
@@ -225,11 +245,12 @@ namespace Epsitec.Cresus.Core.Printers
 			double pageHeight = 0;
 			bool ending = false;
 
-			while (true)
+			while (height-verticalMargin > 0)
 			{
 				var rowInfo = new RowInfo (row);
 				double maxRowHeight = 0;
 				bool rowEnding = true;
+				bool tooSmall = false;
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
@@ -243,10 +264,6 @@ namespace Epsitec.Cresus.Core.Printers
 						textPage = lastCellsInfo[column].TextPage + 1;
 						line = lastCellsInfo[column].FirstLine + lastCellsInfo[column].LineCount;
 						lastEnding = lastCellsInfo[column].Ending;
-					}
-
-					if (column == 2)
-					{
 					}
 
 					if (lastEnding)
@@ -269,7 +286,25 @@ namespace Epsitec.Cresus.Core.Printers
 						{
 							rowEnding = false;
 						}
+
+						if (textBox.LastLineCount == 0 && !string.IsNullOrEmpty(textBox.Text))
+						{
+							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
+							//	il faut rejeter cette 'row'.
+							tooSmall = true;
+						}
 					}
+				}
+
+				if (tooSmall)
+				{
+					for (int column = 0; column < this.columnsCount; column++)
+					{
+						ObjectTextBox textBox = this.GetTextBox (column, row);
+						textBox.JustifRemoveLastPage ();
+					}
+
+					break;
 				}
 
 				rowInfo.Height = maxRowHeight;
@@ -294,10 +329,13 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			newPage.RowCount = rowCount;
-			newPage.Height = pageHeight;
+			if (rowCount > 0)
+			{
+				newPage.RowCount = rowCount;
+				newPage.Height = pageHeight;
 
-			this.pagesInfo.Add (newPage);
+				this.pagesInfo.Add (newPage);
+			}
 
 			return ending;
 		}
@@ -311,15 +349,23 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void Paint(IPaintPort port, int page, Point topLeft)
+		/// <summary>
+		/// Dessine une page de l'objet à une position donnée.
+		/// </summary>
+		/// <param name="port">Port graphique</param>
+		/// <param name="page">Rang de la page à dessiner</param>
+		/// <param name="topLeft">Coin supérieur gauche</param>
+		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
+		public override bool Paint(IPaintPort port, int page, Point topLeft)
 		{
 			if (page < 0 || page >= this.pagesInfo.Count)
 			{
-				return;
+				return true;
 			}
 
 			var pageInfo = this.pagesInfo[page];
 			double y = topLeft.Y;
+			var ok = true;
 
 			for (int row = pageInfo.FirstRow; row < pageInfo.FirstRow+pageInfo.RowCount; row++)
 			{
@@ -336,9 +382,13 @@ namespace Epsitec.Cresus.Core.Printers
 					{
 						ObjectTextBox textBox = this.GetTextBox (column, row);
 
-						textBox.Paint (port, cellInfo.TextPage, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top));
+						if (!textBox.Paint (port, cellInfo.TextPage, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
+						{
+							ok = false;
+						}
 					}
 
+					//	Dessine le cadre de la cellule.
 					port.LineWidth = this.CellBorderWidth;
 					port.Color = Color.FromBrightness (0);
 					port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
@@ -354,9 +404,11 @@ namespace Epsitec.Cresus.Core.Printers
 				Rectangle rect = new Rectangle (topLeft.X, topLeft.Y-pageInfo.Height, this.width, pageInfo.Height);
 
 				port.LineWidth = 0.1;
-				port.Color = Color.FromName ("Red");
+				port.Color = Color.FromName (ok ? "Green" : "Red");
 				port.PaintOutline (Path.FromRectangle (rect));
 			}
+
+			return ok;
 		}
 
 
