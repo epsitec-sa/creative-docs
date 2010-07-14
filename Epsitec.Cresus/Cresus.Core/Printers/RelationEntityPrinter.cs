@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void BuildSections()
 		{
-			this.BuildTitle    (this.documentContainer);
-			this.BuildSummary  (this.documentContainer);
+			this.BuildTitle ();
+			this.BuildSummary ();
 
-			this.BuildContacts (this.documentContainer, this.BuildMailContacts);
-			this.BuildContacts (this.documentContainer, this.BuildTelecomContacts);
-			this.BuildContacts (this.documentContainer, this.BuildUriContacts);
+			this.BuildContacts (this.BuildMailContacts);
+			this.BuildContacts (this.BuildTelecomContacts);
+			this.BuildContacts (this.BuildUriContacts);
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -63,9 +63,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildTitle(DocumentContainer document)
+		private void BuildTitle()
 		{
-			//	Dessine le titre et retourne la hauteur utilisée.
+			//	Ajoute le titre dans le document.
 			string text = "?";
 
 			if (this.entity.Person is NaturalPersonEntity)
@@ -80,16 +80,16 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Name).ToString ();
 			}
 
-			var textBox = new TextBand ();
-			textBox.Text = string.Concat("<b>", text, "</b>");
-			textBox.FontSize = 6.0;
+			var band = new TextBand ();
+			band.Text = string.Concat ("<b>", text, "</b>");
+			band.FontSize = 6.0;
 
-			document.AddFromTop (textBox, 5.0);
+			this.documentContainer.AddFromTop (band, 5.0);
 		}
 
-		private void BuildSummary(DocumentContainer document)
+		private void BuildSummary()
 		{
-			//	Dessine le résumé et retourne la hauteur utilisée.
+			//	Ajoute le résumé dans le document.
 			string text = "?";
 
 			if (this.entity.Person is NaturalPersonEntity)
@@ -104,26 +104,26 @@ namespace Epsitec.Cresus.Core.Printers
 				text = UIBuilder.FormatText (x.Name).ToString ();
 			}
 
-			var textBox = new TextBand ();
-			textBox.Text = text;
-			textBox.FontSize = 4.0;
+			var band = new TextBand ();
+			band.Text = text;
+			band.FontSize = 4.0;
 
-			document.AddFromTop (textBox, 5.0);
+			this.documentContainer.AddFromTop (band, 5.0);
 		}
 
 
-		private void BuildContacts(DocumentContainer document, System.Func<DocumentContainer, bool> builder)
+		private void BuildContacts(System.Func<bool> builder)
 		{
-			//	Dessine un contact et retourne la position 'top' suivante.
+			//	Ajoute un contact dans le document.
 			for (int i = 0; i < 10; i++)  // TODO: debug, à enlever
 			{
-				builder (document);
+				builder ();
 			}
 		}
 
-		private bool BuildMailContacts(DocumentContainer document)
+		private bool BuildMailContacts()
 		{
-			//	Dessine un contact et retourne la hauteur utilisée.
+			//	Ajoute un contact dans le document.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var title = new TextBand ();
 			title.Text = "<b>Adresses</b>";
 			title.FontSize = 4.5;
-			document.AddFromTop (title, 1.0);
+			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 5;
@@ -176,13 +176,13 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			document.AddFromTop (table, 5.0);
+			this.documentContainer.AddFromTop (table, 5.0);
 			return true;
 		}
 
-		private bool BuildTelecomContacts(DocumentContainer document)
+		private bool BuildTelecomContacts()
 		{
-			//	Dessine un contact et retourne la hauteur utilisée.
+			//	Ajoute un contact dans le document.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var title = new TextBand ();
 			title.Text = "<b>Téléphones</b>";
 			title.FontSize = 4.5;
-			document.AddFromTop (title, 1.0);
+			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 3;
@@ -229,13 +229,13 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			document.AddFromTop (table, 5.0);
+			this.documentContainer.AddFromTop (table, 5.0);
 			return true;
 		}
 
-		private bool BuildUriContacts(DocumentContainer document)
+		private bool BuildUriContacts()
 		{
-			//	Dessine un contact et retourne la hauteur utilisée.
+			//	Ajoute un contact dans le document.
 			int count = 0;
 			foreach (var contact in this.entity.Person.Contacts)
 			{
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var title = new TextBand ();
 			title.Text = "<b>Emails</b>";
 			title.FontSize = 4.5;
-			document.AddFromTop (title, 1.0);
+			this.documentContainer.AddFromTop (title, 1.0);
 
 			var table = new TableBand ();
 			table.ColumnsCount = 2;
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			document.AddFromTop (table, 5.0);
+			this.documentContainer.AddFromTop (table, 5.0);
 			return true;
 		}
 

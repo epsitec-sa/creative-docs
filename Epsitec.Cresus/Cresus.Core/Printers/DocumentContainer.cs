@@ -38,6 +38,18 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
+		/// Ajoute un objet à une position absolue, dans la page courante.
+		/// </summary>
+		/// <param name="band"></param>
+		/// <param name="bounds"></param>
+		public void AddAbsolute(AbstractBand band, Rectangle bounds)
+		{
+			band.BuildSections (bounds.Width, bounds.Height, bounds.Height, bounds.Height);
+
+			this.pages[this.pages.Count-1].AddBand (band, 0, bounds.TopLeft);
+		}
+
+		/// <summary>
 		/// Ajoute un objet (qui occupera toute la largeur) depuis le haut, sur autant de
 		/// pages qu'il en faut.
 		/// </summary>
@@ -65,6 +77,18 @@ namespace Epsitec.Cresus.Core.Printers
 				this.pages[this.pages.Count-1].AddBand (band, section, new Point (this.pageMargins.Left, this.top));
 
 				this.top -= requiredHeight + bottomMargin;
+			}
+		}
+
+		public double CurrentVerticalPosition
+		{
+			get
+			{
+				return this.top;
+			}
+			set
+			{
+				this.top = value;
 			}
 		}
 
