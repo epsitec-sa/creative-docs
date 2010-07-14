@@ -124,7 +124,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private bool IsValueField(AbstractEntity entity, string fieldId)
 		{
-			return entity.GetEntityContext ().GetEntityFieldDefinition (entity.GetEntityStructuredTypeId (), fieldId).Relation == FieldRelation.None;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			StructuredTypeField field = entity.GetEntityContext ().GetEntityFieldDefinition (leafEntityId, fieldId);
+
+			return field.Relation == FieldRelation.None;
 		}
 
 

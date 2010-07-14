@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// row(s) in the <see cref="System.Data.DataSet"/> associated with the live
 	/// <see cref="DataContext"/>.
 	/// </summary>
-	internal sealed class EntityDataMapping : System.IEquatable<EntityDataMapping>, IReadOnly
+	internal sealed class EntityDataMapping
 	{
 		
 		
@@ -31,24 +31,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="leafEntityId">The entity id.</param>
 		/// <param name="rootEntityId">The root entity id.</param>
 		public EntityDataMapping(AbstractEntity entity, Druid leafEntityId, Druid rootEntityId)
+			: this (entity, leafEntityId, rootEntityId, null)
+		{
+		}
+
+
+		public EntityDataMapping(AbstractEntity entity, Druid leafEntityId, Druid rootEntityId, DbKey? rowKey)
 		{
 			this.entity = entity;
 
-			this.leafEntityId = leafEntityId;
-			this.rootEntityId = rootEntityId;
-
-			this.rowKey = new DbKey ();
-		}
-
-		
-		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
-		/// </summary>
-		/// <param name="rowKey">The row key.</param>
-		/// <param name="leafEntityId">The entity id.</param>
-		/// <param name="rootEntityId">The root entity id.</param>
-		public EntityDataMapping(DbKey rowKey, Druid leafEntityId, Druid rootEntityId)
-		{
 			this.leafEntityId = leafEntityId;
 			this.rootEntityId = rootEntityId;
 
@@ -80,6 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.leafEntityId;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the associated root entity id.
@@ -115,11 +107,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get
 			{
-				return this.rowKey;
+				return this.rowKey ?? DbKey.Empty;
 			}
 			set
 			{
-				if (!this.rowKey.IsEmpty || !this.rowKey.IsTemporary || !value.IsDefinitive)
+				if (this.rowKey != null)
 				{
 					throw new System.InvalidOperationException ("RowKey cannot be further modified");
 				}
@@ -129,81 +121,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		#region IEquatable<EntityDataMapping> Members
-
-
-		public bool Equals(EntityDataMapping other)
-		{
-			return (this.rootEntityId == other.rootEntityId) && (this.rowKey == other.rowKey);
-		}
-
-
-		#endregion
-
-
-		#region IReadOnly Members
-
-
-		public bool IsReadOnly
-		{
-			get
-			{
-				return this.rowKey.IsDefinitive;
-			}
-		}
-
-
-		#endregion
-
-
-		/// <summary>
-		/// Compares this instance with the specified row key and entity id pair.
-		/// </summary>
-		/// <param name="rowKey">The row key.</param>
-		/// <param name="rootEntityId">The root entity id.</param>
-		/// <returns><c>true</c> if this instance matches the row key and entity
-		/// id pair; otherwise, <c>false</c>.</returns>
-		public bool Equals(DbKey rowKey, Druid rootEntityId)
-		{
-			return (this.rowKey.Id == rowKey.Id) && (this.rootEntityId == rootEntityId);
-		}
-
-		
-		public override bool Equals(object obj)
-		{
-			EntityDataMapping other = obj as EntityDataMapping;
-			
-			if (other != null)
-			{
-				return this.Equals (other);
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-
-		public override int GetHashCode()
-		{
-			if (this.IsReadOnly)
-			{
-				return this.rowKey.GetHashCode () ^ this.rootEntityId.GetHashCode ();
-			}
-			else
-			{
-				throw new System.InvalidOperationException ("Unstable hash value: object is still mutable");
-			}
-		}
-
-
 		private readonly AbstractEntity entity;
 
 
 		private readonly Druid leafEntityId;
+
+
 		private readonly Druid rootEntityId;
 		
 
-		private DbKey rowKey;
+		private DbKey? rowKey;
 	}
 }

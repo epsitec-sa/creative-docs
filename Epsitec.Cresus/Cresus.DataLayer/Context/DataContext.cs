@@ -143,9 +143,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		internal AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId, Druid rootEntityId)
+		internal AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId)
 		{
-			return this.entitiesCache.FindEntity (rowKey, leafEntityId, rootEntityId);
+			return this.entitiesCache.FindEntity (rowKey, leafEntityId);
 		}
 
 		internal void DefineRowKey(EntityDataMapping mapping, DbKey key)
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				Druid entityId = entity.GetEntityStructuredTypeId ();
 				long  keyId = mapping.RowKey.Id;
-				short keyStatus = DbKey.ConvertToIntStatus (mapping.RowKey.Status);
+				short keyStatus = (short) mapping.RowKey.Status;
 
 				if (keyStatus == 0)
 				{

@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// <see cref="AbstractEntity"/> is a derived type, it might happen that only the data of some of
 	/// its base type might be loaded and stored in a <c>EntityDataContainer</c>.
 	/// 
-	/// If <see cref="LoadedEntityId"/> and <see cref="ConcreteEntityId"/> are equal, then the data
+	/// If <see cref="LoadedEntityId"/> and <see cref="LeafEntityId"/> are equal, then the data
 	/// of an <see cref="AbstractEntity"/> is fully stored in the <see cref="EntityData"/>.
 	/// If they are not equal, the data of the type represented by <see cref="LoadedEntityId"/> until
 	/// the type at the top of the inheritance chain are stored in the <see cref="EntityData"/>
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			this.Key = key;
 			this.LoadedEntityId = loadedEntityId;
-			this.ConcreteEntityId = concreteEntityId;
+			this.LeafEntityId = concreteEntityId;
 			this.ValueData = valueData;
 			this.ReferenceData = referenceData;
 			this.CollectionData = collectionData;
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// of the most derived type that it implements.
 		/// </summary>
 		/// <value>The concrete entity id of the <see cref="AbstractEntity"/>.</value>
-		public Druid ConcreteEntityId
+		public Druid LeafEntityId
 		{
 			get;
 			private set;

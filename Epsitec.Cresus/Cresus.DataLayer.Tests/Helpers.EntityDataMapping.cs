@@ -29,13 +29,13 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 			Assert.AreEqual (Druid.Parse ("[630Q]"), mapping.LeafEntityId);
 			Assert.AreEqual (DbKey.Empty, mapping.RowKey);
 
-			Assert.IsFalse ((mapping as IReadOnly).IsReadOnly);
+			Assert.IsFalse (mapping.RowKey.IsDefinitive);
 			mapping.RowKey = DbKey.Empty;
-			Assert.IsFalse ((mapping as IReadOnly).IsReadOnly);
+			Assert.IsFalse (mapping.RowKey.IsDefinitive);
 			mapping.RowKey = new DbKey (DbKey.CreateTemporaryId ());
-			Assert.IsFalse ((mapping as IReadOnly).IsReadOnly);
+			Assert.IsFalse (mapping.RowKey.IsDefinitive);
 			mapping.RowKey = new DbKey (new DbId (1000000000001L));
-			Assert.IsTrue ((mapping as IReadOnly).IsReadOnly);
+			Assert.IsTrue (mapping.RowKey.IsDefinitive);
 		}
 
 		[Test]

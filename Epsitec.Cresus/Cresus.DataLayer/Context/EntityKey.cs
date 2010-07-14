@@ -116,6 +116,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		private readonly DbKey rowKey;
+
+
 		private readonly Druid entityId;
 
 

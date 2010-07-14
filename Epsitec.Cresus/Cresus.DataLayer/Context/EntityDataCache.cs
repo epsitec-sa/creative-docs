@@ -3,16 +3,16 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
+	
+	
 	/// <summary>
 	/// The <c>EntityDataCache</c> class provides a centralized cache for
 	/// maintaining relations between entity instances in memory and in the
@@ -20,18 +20,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// </summary>
 	internal class EntityDataCache
 	{
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataCache"/> class.
 		/// </summary>
 		public EntityDataCache()
 		{
-			this.idToEntityMapping = new Dictionary<long, EntityDataMapping> ();
-			this.lookup = new Dictionary<EntityDataMapping, EntityDataMapping> ();
+			this.idToMapping = new Dictionary<long, EntityDataMapping> ();
+			this.keyToMapping = new Dictionary<EntityKey, EntityDataMapping> ();
 			this.mappings = new List<EntityDataMapping> ();
 			this.entities = new HashSet<AbstractEntity> ();
 
 			this.isIteratingList = 0;
 		}
+
 
 		/// <summary>
 		/// Finds the entity mapping for the specified entity serial id.
@@ -43,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			EntityDataMapping mapping;
 
-			if (this.idToEntityMapping.TryGetValue (entitySerialId, out mapping))
+			if (this.idToMapping.TryGetValue (entitySerialId, out mapping))
 			{
 				return mapping;
 			}
@@ -52,6 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return null;
 			}
 		}
+
 
 		/// <summary>
 		/// Adds the specified entity into the cache.
@@ -62,19 +65,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			System.Diagnostics.Debug.Assert (!this.entities.Contains (mapping.Entity));
 
-			this.idToEntityMapping.Add (entitySerialId, mapping);
 			this.mappings.Add (mapping);
 			this.entities.Add (mapping.Entity);
 
+			this.idToMapping[entitySerialId] = mapping;
+						
 			//	If the mapping is read only, then this means that the row key
 			//	is already defined and that the mapping's hash value won't
 			//	change; we can safely add it to our internal lookup table :
 
-			if (mapping.IsReadOnly)
+			if (mapping.RowKey.IsDefinitive)
 			{
-				this.lookup.Add (mapping, mapping);
+				EntityKey entityKey = this.GetEntityKey (mapping);
+
+				this.keyToMapping[entityKey] = mapping;
 			}
 		}
+
 
 		/// <summary>
 		/// Removes the specified entity from the cache.
@@ -84,7 +91,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			EntityDataMapping mapping;
 
-			if (this.idToEntityMapping.TryGetValue (entitySerialId, out mapping))
+			if (this.idToMapping.TryGetValue (entitySerialId, out mapping))
 			{
 				if (this.isIteratingList > 0)
 				{
@@ -93,16 +100,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				System.Diagnostics.Debug.Assert (this.entities.Contains (mapping.Entity));
 
-				this.idToEntityMapping.Remove (entitySerialId);
 				this.mappings.Remove (mapping);
 				this.entities.Remove (mapping.Entity);
 
-				if (mapping.IsReadOnly)
+				this.idToMapping.Remove (entitySerialId);
+
+				if (mapping.RowKey.IsDefinitive)
 				{
-					this.lookup.Remove (mapping);
+					EntityKey entityKey = this.GetEntityKey (mapping);
+
+					this.keyToMapping.Remove (entityKey);
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// Defines the database row key for the specified entity mapping.
@@ -111,22 +122,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="key">The row key.</param>
 		public void DefineRowKey(EntityDataMapping mapping, DbKey key)
 		{
-			System.Diagnostics.Debug.Assert (mapping.IsReadOnly == false);
+			System.Diagnostics.Debug.Assert (!mapping.RowKey.IsDefinitive);
 
 			mapping.RowKey = key;
 
-			System.Diagnostics.Debug.Assert (mapping.IsReadOnly);
-
-			this.lookup.Add (mapping, mapping);
+			this.DefineRowKey (mapping);
 		}
 
 
 		public void DefineRowKey(EntityDataMapping mapping)
 		{
-			System.Diagnostics.Debug.Assert (mapping.IsReadOnly == true);
+			System.Diagnostics.Debug.Assert (mapping.RowKey.IsDefinitive);
 
-			this.lookup.Add (mapping, mapping);
+			EntityKey entityKey = this.GetEntityKey (mapping);
+
+			this.keyToMapping[entityKey] = mapping;
 		}
+
 
 		/// <summary>
 		/// Gets the number of entities currently stored in the cache.
@@ -140,19 +152,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Finds the entity, based on its database identity.
 		/// </summary>
 		/// <param name="rowKey">The database row key.</param>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="leafEntityId">The entity id.</param>
 		/// <param name="baseEntityId">The base entity id.</param>
 		/// <returns>The entity or <c>null</c> if the entity is not known.</returns>
-		public AbstractEntity FindEntity(DbKey rowKey, Druid entityId, Druid baseEntityId)
+		public AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId)
 		{
-			EntityDataMapping search = new EntityDataMapping (rowKey, entityId, baseEntityId);
+			EntityKey entityKey = new EntityKey (rowKey, leafEntityId);
+
 			EntityDataMapping item;
 
-			if (this.lookup.TryGetValue (search, out item))
+			if (this.keyToMapping.TryGetValue (entityKey, out item))
 			{
 				return item.Entity;
 			}
@@ -161,6 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return null;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the entities stored in the cache.
@@ -187,6 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Determines whether the cache contains the specified entity.
 		/// </summary>
@@ -199,10 +215,37 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entities.Contains (entity);
 		}
 
-		private readonly Dictionary<long, EntityDataMapping> idToEntityMapping;
-		private readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;			//	we cannot use a HashSet because we need to be able to quickly retrieve an item from the dictionary based on a partial key
+
+		private EntityKey GetEntityKey(EntityDataMapping mapping)
+		{
+			DbKey rowKey = mapping.RowKey;
+			Druid entityId = mapping.LeafEntityId;
+
+			if (!mapping.RowKey.IsDefinitive)
+			{
+				throw new System.InvalidOperationException ();
+			}
+
+			return new EntityKey (rowKey, entityId);
+		}
+
+
+		private readonly Dictionary<long, EntityDataMapping> idToMapping;
+
+
+		private readonly Dictionary<EntityKey, EntityDataMapping> keyToMapping;
+
+
 		private readonly List<EntityDataMapping> mappings;
+
+
 		private readonly HashSet<AbstractEntity> entities;
+
+
 		private int isIteratingList;
+
+
 	}
+
+
 }

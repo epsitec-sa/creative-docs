@@ -98,32 +98,32 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public AbstractEntity ResolveEntity(EntityData entityData, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (entityData.LoadedEntityId);
-			AbstractEntity entity = this.DataContext.FindEntity (entityData.Key, entityData.ConcreteEntityId, rootEntityId);
+			Druid leafEntityId = entityData.LeafEntityId;
+			AbstractEntity entity = this.DataContext.FindEntity (entityData.Key, leafEntityId);
 
 			if (entity == null && resolutionMode == ResolutionMode.Database)
 			{
 				entity = this.DeserializeEntity (entityData);
 			}
-			
+
 			return entity;
 		}
 
 
 		private AbstractEntity DeserializeEntity(EntityData entityData)
 		{
-			AbstractEntity entity = this.DataContext.CreateEntity (entityData.ConcreteEntityId);
+			AbstractEntity entity = this.DataContext.CreateEntity (entityData.LeafEntityId);
 
 			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
 			this.DataContext.DefineRowKey (mapping, entityData.Key);
 
 			using (entity.DefineOriginalValues ())
 			{
-				List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entityData.ConcreteEntityId).ToList ();
+				List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entityData.LeafEntityId).ToList ();
 
 				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 				{
-					this.DeserializeEntityLocal (entity, currentId, entityData.Key);
+					this.DeserializeEntityLocal (entity, currentId);
 				}
 
 				foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
@@ -136,84 +136,96 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private void DeserializeEntityLocal(AbstractEntity entity, Druid entityId, DbKey rowKey)
+		private void DeserializeEntityLocal(AbstractEntity entity, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
-				object proxy;
-
-				switch (field.Relation)
-				{
-					case FieldRelation.None:
-					{
-						proxy = new ValueFieldProxy (this.DataContext, entity, field.CaptionId);
-						break;
-					}
-					case FieldRelation.Reference:
-					{
-						proxy = new EntityFieldProxy (this.DataContext, entity, field.CaptionId);
-						break;
-					}
-					case FieldRelation.Collection:
-					{
-						proxy = new EntityCollectionFieldProxy (this.DataContext, entity, field.CaptionId);
-						break;
-					}
-					default:
-					{
-						throw new System.NotImplementedException ();
-					}
-				}
+				object proxy = GetProxyForField (entity, field);
 
 				entity.InternalSetValue (field.Id, proxy);
 			}
 		}
 
 
-		private void DeserializeEntityLocal(AbstractEntity entity, EntityData entityData, Druid entityId)
+
+		private object GetProxyForField(AbstractEntity entity, StructuredTypeField field)
 		{
-			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
+			switch (field.Relation)
 			{
-				switch (field.Relation)
-				{
-					case FieldRelation.None:
-					{
-						Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				case FieldRelation.None:
+					return new ValueFieldProxy (this.DataContext, entity, field.CaptionId);
+				
+				case FieldRelation.Reference:
+					return new EntityFieldProxy (this.DataContext, entity, field.CaptionId);
+					
+				case FieldRelation.Collection:
+					return new EntityCollectionFieldProxy (this.DataContext, entity, field.CaptionId);
+					
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
 
-						object valueData = entityData.ValueData[field.CaptionId];
-						object value = this.GetFieldValue (leafEntityId, field, valueData);
-							
-						entity.InternalSetValue (field.Id, value);
+		private void DeserializeEntityLocal(AbstractEntity entity, EntityData entityData, Druid localEntityId)
+		{
+			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId))
+			{
+				this.DeserializeEntityLocalField (entity, entityData, field);
+			}
+		}
 
-						break;
-					}
-					case FieldRelation.Reference:
-					{
-						DbKey targetKey = entityData.ReferenceData[field.CaptionId];
-						object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
-							
-						entity.InternalSetValue (field.Id, target);
 
-						break;
-					}
-					case FieldRelation.Collection:
-					{
-						IList targets = entity.InternalGetFieldCollection (field.Id);
+		private void DeserializeEntityLocalField(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
+		{
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+					this.DeserializeEntityLocalFieldValue (entity, entityData, field);
+					break;
 
-						foreach (DbKey targetKey in entityData.CollectionData[field.CaptionId])
-						{
-							object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
+				case FieldRelation.Reference:
+					this.DeserializeEntityLocalFieldReference (entity, entityData, field);
+					break;
 
-							targets.Add (target);
-						}
+				case FieldRelation.Collection:
+					this.DeserializeEntityLocalFieldCollection (entity, entityData, field);
+					break;
 
-						break;
-					}
-					default:
-					{
-						throw new System.NotImplementedException ();
-					}
-				}
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+
+		private void DeserializeEntityLocalFieldValue(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+
+			object valueData = entityData.ValueData[field.CaptionId];
+			object value = this.GetFieldValue (leafEntityId, field, valueData);
+
+			entity.InternalSetValue (field.Id, value);
+		}
+
+
+		private void DeserializeEntityLocalFieldReference(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
+		{
+			DbKey targetKey = entityData.ReferenceData[field.CaptionId];
+			object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
+
+			entity.InternalSetValue (field.Id, target);
+		}
+
+
+		private void DeserializeEntityLocalFieldCollection(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
+		{
+			IList targets = entity.InternalGetFieldCollection (field.Id);
+
+			foreach (DbKey targetKey in entityData.CollectionData[field.CaptionId])
+			{
+				object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
+
+				targets.Add (target);
 			}
 		}
 
@@ -222,6 +234,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			// TODO Implement this method with a call to the DataBrowser.
 			// Marc
+
 			throw new System.NotImplementedException ();
 		}
 

@@ -253,10 +253,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		private readonly Dictionary<Druid, DbTable> tableDefinitionCache;
+
+
 		private readonly Dictionary<Druid, DbTypeDef> typeDefinitionCache;
 
 
-		private static Dictionary<DbInfrastructure, SchemaEngine> instances;
+		private readonly static Dictionary<DbInfrastructure, SchemaEngine> instances;
 
 
 	}

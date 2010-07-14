@@ -329,12 +329,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		private SchemaEngine schemaEngine;
+
+
 		private DbTransaction transaction;
 
+
 		private List<DbTable> tables;
+
+
 		private List<DbTable> newTables;
 
+
 		private Dictionary<Druid, DbTable> tablesDictionary;
+
+
 		private Dictionary<Druid, DbTypeDef> typesDictionary;
 
 
