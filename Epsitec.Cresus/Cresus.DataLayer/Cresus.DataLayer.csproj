@@ -166,7 +166,7 @@
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="Context\EntityDataCache.cs" />
-    <Compile Include="Loader\DataBrowser.cs" />
+    <Compile Include="Loader\LoaderQueryGenerator.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

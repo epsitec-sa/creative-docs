@@ -108,7 +108,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
 		{
 			// TODO This method might be optimized by doing the same thing without using the
-			// DataBrowser. This would save some queries to the database.
+			// DataBrowser, i.e. by looping over all the managed entities in the DataContext. This
+			// would save some queries to the database.
 			// Marc
 
 			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))

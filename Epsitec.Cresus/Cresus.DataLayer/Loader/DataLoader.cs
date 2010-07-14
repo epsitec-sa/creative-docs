@@ -18,9 +18,7 @@ using Epsitec.Cresus.DataLayer.Proxies;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
-	// TODO I'm sure that the DataLoader and the DataBrowser could be merged together or that their
-	// separation could be better. Therefore, it would be nice to kind of merge these classes.
-	// Marc
+	
 	internal sealed class DataLoader
 	{
 
@@ -28,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public DataLoader(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
-			this.DataBrowser = new DataBrowser (dataContext);
+			this.LoaderQueryGenerator = new LoaderQueryGenerator (dataContext);
 		}
 
 
@@ -39,7 +37,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private DataBrowser DataBrowser
+		private DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return this.DataContext.DbInfrastructure;
+			}
+		}
+
+
+		private LoaderQueryGenerator LoaderQueryGenerator
 		{
 			get;
 			set;
@@ -66,19 +73,88 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<T> GetByExample<T>(T example) where T : AbstractEntity
 		{
-			return this.DataBrowser.GetByExample<T> (example);
+			Request request = new Request ()
+			{
+				RootEntity = example,
+				RequestedEntity = example,
+				ResolutionMode = ResolutionMode.Database,
+			};
+
+			return this.GetByRequest<T> (request);
 		}
 
 
 		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
 		{
-			return this.DataBrowser.GetByRequest<T> (request);
+			if (request.RootEntity == null)
+			{
+				throw new System.Exception ("No root entity in request.");
+			}
+
+			if (request.RequestedEntity == null)
+			{
+				throw new System.Exception ("No requested entity in request.");
+			}
+
+			foreach (EntityData entityData in this.LoaderQueryGenerator.GetEntitiesData (request))
+			{
+				T entity = this.ResolveEntity (entityData, request.ResolutionMode) as T;
+
+				if (entity != null)
+				{
+					yield return entity;
+				}
+			}
 		}
 
 
 		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			return this.DataBrowser.GetReferencers (target, resolutionMode);
+			EntityDataMapping targetMapping = this.DataContext.GetEntityDataMapping (target);
+
+			if (targetMapping != null)
+			{
+				foreach (Druid targetEntityId in this.EntityContext.GetInheritedEntityIds (target.GetEntityStructuredTypeId ()))
+				{
+					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
+					{
+						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target, resolutionMode))
+						{
+							yield return item;
+						}
+					}
+				}
+			}
+		}
+
+
+		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target, ResolutionMode resolutionMode)
+		{
+			Druid sourceEntityId = sourceFieldPath.EntityId;
+			string sourceFieldId = sourceFieldPath.Fields.First ();
+
+			AbstractEntity example = this.EntityContext.CreateEmptyEntity (sourceEntityId);
+			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (example, sourceFieldId);
+
+			using (example.DefineOriginalValues ())
+			{
+				if (field.Relation == FieldRelation.Reference)
+				{
+					example.SetField<object> (field.Id, target);
+				}
+				else if (field.Relation == FieldRelation.Collection)
+				{
+					example.InternalGetFieldCollection (field.Id).Add (target);
+				}
+			}
+
+			Request request = new Request ()
+			{
+				RootEntity = example,
+				ResolutionMode = resolutionMode,
+			};
+
+			return this.GetByRequest<AbstractEntity> (request).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
 		}
 
 
@@ -232,10 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
 		{
-			// TODO Implement this method with a call to the DataBrowser.
-			// Marc
-
-			throw new System.NotImplementedException ();
+			return this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
 		}
 
 
