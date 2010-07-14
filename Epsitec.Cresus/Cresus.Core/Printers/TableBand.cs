@@ -116,6 +116,45 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public ContentAlignment GetAlignment(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.Alignment;
+		}
+
+		public void SetAlignment(int column, int row, ContentAlignment value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.Alignment = value;
+		}
+
+
+		public TextJustifMode GetJustif(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.Justif;
+		}
+
+		public void SetJustif(int column, int row, TextJustifMode value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.Justif = value;
+		}
+
+
+		public TextBreakMode GetBreakMode(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.BreakMode;
+		}
+
+		public void SetBreakMode(int column, int row, TextBreakMode value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.BreakMode = value;
+		}
+
+
 		public TextBand GetTextBox(int column, int row)
 		{
 			if (column >= 0 && column < this.columnsCount && row >= 0 && row < this.rowsCount)
