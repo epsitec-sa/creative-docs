@@ -66,76 +66,56 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve all data", UnitTestPerformance.logFile);
 
-			this.RetrieveAllData<AbstractPersonEntity> (false);
-		    this.RetrieveAllData<AbstractPersonEntity> (true);
+			this.RetrieveAllData<AbstractPersonEntity> ();
 
-		    this.RetrieveAllData<NaturalPersonEntity> (false);
-		    this.RetrieveAllData<NaturalPersonEntity> (true);
+		    this.RetrieveAllData<NaturalPersonEntity> ();
 
-		    this.RetrieveAllData<LegalPersonEntity> (false);
-		    this.RetrieveAllData<LegalPersonEntity> (true);
+		    this.RetrieveAllData<LegalPersonEntity> ();
 
-		    this.RetrieveAllData<LegalPersonTypeEntity> (false);
-		    this.RetrieveAllData<LegalPersonTypeEntity> (true);
+		    this.RetrieveAllData<LegalPersonTypeEntity> ();
 
-		    this.RetrieveAllData<PersonTitleEntity> (false);
-		    this.RetrieveAllData<PersonTitleEntity> (true);
+		    this.RetrieveAllData<PersonTitleEntity> ();
 
-		    this.RetrieveAllData<PersonGenderEntity> (false);
-		    this.RetrieveAllData<PersonGenderEntity> (true);
+		    this.RetrieveAllData<PersonGenderEntity> ();
 
-		    this.RetrieveAllData<AbstractContactEntity> (false);
-		    this.RetrieveAllData<AbstractContactEntity> (true);
+		    this.RetrieveAllData<AbstractContactEntity> ();
 
-		    this.RetrieveAllData<ContactRoleEntity> (false);
-		    this.RetrieveAllData<ContactRoleEntity> (true);
+		    this.RetrieveAllData<ContactRoleEntity> ();
 
-		    this.RetrieveAllData<CommentEntity> (false);
-		    this.RetrieveAllData<CommentEntity> (true);
+			this.RetrieveAllData<CommentEntity> ();
 
-		    this.RetrieveAllData<MailContactEntity> (false);
-		    this.RetrieveAllData<MailContactEntity> (true);
+		    this.RetrieveAllData<MailContactEntity> ();
 
-		    this.RetrieveAllData<AddressEntity> (false);
-		    this.RetrieveAllData<AddressEntity> (true);
+		    this.RetrieveAllData<AddressEntity> ();
 
-		    this.RetrieveAllData<StreetEntity> (false);
-		    this.RetrieveAllData<StreetEntity> (true);
+		    this.RetrieveAllData<StreetEntity> ();
 
-		    this.RetrieveAllData<PostBoxEntity> (false);
-		    this.RetrieveAllData<PostBoxEntity> (true);
+		    this.RetrieveAllData<PostBoxEntity> ();
 
-		    this.RetrieveAllData<LocationEntity> (false);
-		    this.RetrieveAllData<LocationEntity> (true);
+		    this.RetrieveAllData<LocationEntity> ();
 
-		    this.RetrieveAllData<RegionEntity> (false);
-		    this.RetrieveAllData<RegionEntity> (true);
+		    this.RetrieveAllData<RegionEntity> ();
 
-		    this.RetrieveAllData<CountryEntity> (false);
-		    this.RetrieveAllData<CountryEntity> (true);
+		    this.RetrieveAllData<CountryEntity> ();
 
-		    this.RetrieveAllData<TelecomContactEntity> (false);
-		    this.RetrieveAllData<TelecomContactEntity> (true);
+		    this.RetrieveAllData<TelecomContactEntity> ();
 
-		    this.RetrieveAllData<TelecomTypeEntity> (false);
-		    this.RetrieveAllData<TelecomTypeEntity> (true);
+		    this.RetrieveAllData<TelecomTypeEntity> ();
 
-		    this.RetrieveAllData<UriContactEntity> (false);
-		    this.RetrieveAllData<UriContactEntity> (true);
+		    this.RetrieveAllData<UriContactEntity> ();
 
-		    this.RetrieveAllData<UriSchemeEntity> (false);
-		    this.RetrieveAllData<UriSchemeEntity> (true);
+		    this.RetrieveAllData<UriSchemeEntity> ();
 		}
 
 
-		public void RetrieveAllData<EntityType>(bool bulkMode) where EntityType : AbstractEntity, new()
+		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new()
 		{
 			TestHelper.MeasureAndWriteTime (
-		        TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: false\tbulkMode: " + bulkMode,
+		        TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: false",
 		        UnitTestPerformance.logFile,
 				() =>
 		        {
-		            using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		            using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		            {
 		               dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
 		            }
@@ -143,12 +123,12 @@ namespace Epsitec.Cresus.DataLayer
 				UnitTestPerformance.nbRuns
 		    );
 			
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
 
 				TestHelper.MeasureAndWriteTime (
-					TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: true\tbulkMode: " + bulkMode,
+					TestHelper.extendString (new EntityType ().GetType ().Name, 30) + "\twarmup: true",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<EntityType> (new EntityType ()).Count (),
 					UnitTestPerformance.nbRuns
@@ -158,21 +138,19 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[TestMethod]
-		public void GetUriContactWithGivenUriSchemeReference()
+		public void GetUriContactWithGivenUriScheme()
 		{
 			TestHelper.WriteStartTest ("Retrieve uri contacts with uri scheme", UnitTestPerformance.logFile);
 
-			this.GetUriContactWithGivenUriSchemeReference (false);
-			this.GetUriContactWithGivenUriSchemeReference (true);
+			this.GetUriContactWithGivenUriSchemeReference ();
 
-			this.GetUriContactWithGivenUriSchemeValue (false);
-			this.GetUriContactWithGivenUriSchemeValue (true);
+			this.GetUriContactWithGivenUriSchemeValue ();
 		}
 
 
-		public void GetUriContactWithGivenUriSchemeReference(bool bulkMode)
+		public void GetUriContactWithGivenUriSchemeReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -182,7 +160,7 @@ namespace Epsitec.Cresus.DataLayer
 		        };
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -191,9 +169,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetUriContactWithGivenUriSchemeValue(bool bulkMode)
+		public void GetUriContactWithGivenUriSchemeValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -204,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer
 				};
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<UriContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -218,17 +196,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve locations given country", UnitTestPerformance.logFile);
 
-		    this.GetLocationsGivenCountryReference (false);
-		    this.GetLocationsGivenCountryReference (true);
+		    this.GetLocationsGivenCountryReference ();
 
-			this.GetLocationsGivenCountryValue (false);
-			this.GetLocationsGivenCountryValue (true);
+			this.GetLocationsGivenCountryValue ();
 		}
 
 
-		public void GetLocationsGivenCountryReference(bool bulkMode)
+		public void GetLocationsGivenCountryReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -238,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer
 		        };
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -247,9 +223,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetLocationsGivenCountryValue(bool bulkMode)
+		public void GetLocationsGivenCountryValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				LocationEntity example = new LocationEntity ()
 				{
@@ -260,7 +236,7 @@ namespace Epsitec.Cresus.DataLayer
 				};
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<LocationEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -274,17 +250,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve legal persons given type", UnitTestPerformance.logFile);
 
-		    this.GetLegalPersonsGivenTypeReference (false);
-		    this.GetLegalPersonsGivenTypeReference (true);
+		    this.GetLegalPersonsGivenTypeReference ();
 
-			this.GetLegalPersonsGivenTypeValue (false);
-			this.GetLegalPersonsGivenTypeValue (true);
+			this.GetLegalPersonsGivenTypeValue ();
 		}
 
 
-		public void GetLegalPersonsGivenTypeReference(bool bulkMode)
+		public void GetLegalPersonsGivenTypeReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -294,7 +268,7 @@ namespace Epsitec.Cresus.DataLayer
 		        };
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -303,9 +277,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetLegalPersonsGivenTypeValue(bool bulkMode)
+		public void GetLegalPersonsGivenTypeValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -316,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer
 				};
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<LegalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -330,17 +304,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve contacts given person", UnitTestPerformance.logFile);
 
-		    this.GetContactsGivenPersonReference (false);
-		    this.GetContactsGivenPersonReference (true);
+		    this.GetContactsGivenPersonReference ();
 
-			this.GetContactsGivenPersonValue (false);
-			this.GetContactsGivenPersonValue (true);
+			this.GetContactsGivenPersonValue ();
 		}
 
 
-		public void GetContactsGivenPersonReference(bool bulkMode)
+		public void GetContactsGivenPersonReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -350,7 +322,7 @@ namespace Epsitec.Cresus.DataLayer
 		        };
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -359,9 +331,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetContactsGivenPersonValue(bool bulkMode)
+		public void GetContactsGivenPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -372,7 +344,7 @@ namespace Epsitec.Cresus.DataLayer
 				};
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<AbstractContactEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -386,17 +358,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve person given location", UnitTestPerformance.logFile);
 
-		    this.GetPersonGivenLocationReference (false);
-			this.GetPersonGivenLocationReference (true);
+		    this.GetPersonGivenLocationReference ();
 
-			UnitTestPerformance.GetPersonGivenLocationValue (false);
-			UnitTestPerformance.GetPersonGivenLocationValue (true);
+			UnitTestPerformance.GetPersonGivenLocationValue ();
 		}
 
 
-		public void GetPersonGivenLocationReference(bool bulkMode)
+		public void GetPersonGivenLocationReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -411,7 +381,7 @@ namespace Epsitec.Cresus.DataLayer
 		        );
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -420,9 +390,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public static void GetPersonGivenLocationValue(bool bulkMode)
+		public static void GetPersonGivenLocationValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -438,7 +408,7 @@ namespace Epsitec.Cresus.DataLayer
 				);
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<NaturalPersonEntity> (example).Count (),
 					UnitTestPerformance.nbRuns
@@ -452,17 +422,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve address given legal person", UnitTestPerformance.logFile);
 
-		    this.GetAddressGivenLegalPersonReference (false);
-			this.GetAddressGivenLegalPersonReference (true);
+		    this.GetAddressGivenLegalPersonReference ();
 
-			this.GetAddressGivenLegalPersonValue (false);
-			this.GetAddressGivenLegalPersonValue (true);
+			this.GetAddressGivenLegalPersonValue ();
 		}
 
 
-		public void GetAddressGivenLegalPersonReference(bool bulkMode)
+		public void GetAddressGivenLegalPersonReference()
 		{
-		    using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
 		        LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
@@ -472,7 +440,7 @@ namespace Epsitec.Cresus.DataLayer
 		        };
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: reference\t\tbulkMode: " + bulkMode,
+					"mode: reference",
 					UnitTestPerformance.logFile,
 		            () => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
@@ -481,9 +449,9 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-		public void GetAddressGivenLegalPersonValue(bool bulkMode)
+		public void GetAddressGivenLegalPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -494,7 +462,7 @@ namespace Epsitec.Cresus.DataLayer
 				};
 
 				TestHelper.MeasureAndWriteTime (
-					"mode: value\t\t\tbulkMode: " + bulkMode,
+					"mode: value",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count (),
 					UnitTestPerformance.nbRuns
@@ -508,19 +476,12 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve address referencers", UnitTestPerformance.logFile);
 
-			this.GetAddressReferencers (false);
-			this.GetAddressReferencers (true);
-		}
-
-
-		public void GetAddressReferencers(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
 				TestHelper.MeasureAndWriteTime (
-					"bulkMode: " + bulkMode,
+					"",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetReferencers (address).Count (),
 					UnitTestPerformance.nbRuns
@@ -534,19 +495,12 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.WriteStartTest ("Retrieve legal person referencers", UnitTestPerformance.logFile);
 
-			this.GetLegalPersonReferencers (false);
-			this.GetLegalPersonReferencers (true);
-		}
-
-
-		public void GetLegalPersonReferencers(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
 
 				TestHelper.MeasureAndWriteTime (
-					"bulkMode: " + bulkMode,
+					"results",
 					UnitTestPerformance.logFile,
 					() => dataContext.GetReferencers (person).Count (),
 					UnitTestPerformance.nbRuns
@@ -562,29 +516,25 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (UnitTestPerformance.runDeleteTests)
 			{
-				this.DeleteEntity<NaturalPersonEntity> (1000000000001, false);
-				this.DeleteEntity<NaturalPersonEntity> (1000000000002, true);
+				this.DeleteEntity<NaturalPersonEntity> (1000000000001);
 
-				this.DeleteEntity<AbstractContactEntity> (1000000000001, false);
-				this.DeleteEntity<AbstractContactEntity> (1000000000002, true);
+				this.DeleteEntity<AbstractContactEntity> (1000000000001);
 
-				this.DeleteEntity<RegionEntity> (1000000000001, false);
-				this.DeleteEntity<RegionEntity> (1000000000002, true);
+				this.DeleteEntity<RegionEntity> (1000000000001);
 
-				this.DeleteEntity<ContactRoleEntity> (1000000000001, false);
-				this.DeleteEntity<ContactRoleEntity> (1000000000002, true);
+				this.DeleteEntity<ContactRoleEntity> (1000000000001);
 			}
 		}
 
 
-		public void DeleteEntity<EntityType>(long id, bool bulkMode) where EntityType : AbstractEntity, new()
+		public void DeleteEntity<EntityType>(long id) where EntityType : AbstractEntity, new()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				EntityType entity = dataContext.ResolveEntity<EntityType> (new DbKey (new DbId (id)));
 
 				TestHelper.MeasureAndWriteTime (
-					TestHelper.extendString (entity.GetType ().Name, 30) + "\tbulkMode: " + bulkMode,
+					TestHelper.extendString (entity.GetType ().Name, 30),
 					UnitTestPerformance.logFile,
 					() =>
 					{

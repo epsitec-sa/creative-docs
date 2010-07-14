@@ -158,7 +158,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="rowKey">The database row key.</param>
 		/// <param name="leafEntityId">The entity id.</param>
-		/// <param name="baseEntityId">The base entity id.</param>
 		/// <returns>The entity or <c>null</c> if the entity is not known.</returns>
 		public AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId)
 		{

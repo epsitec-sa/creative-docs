@@ -8,7 +8,6 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -35,18 +34,17 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Create database");
 
-			this.CreateDatabase (false);
-			this.CreateDatabase (true);
+			this.CreateDatabaseHelper ();
 		}
 
 
-		public void CreateDatabase(bool bulkMode)
+		private void CreateDatabaseHelper()
 		{
 			Database.CreateAndConnectToDatabase ();
 
 			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
 
-			Database2.PupulateDatabase (bulkMode);
+			Database2.PupulateDatabase ();
 		}
 
 
@@ -55,14 +53,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Discard empty entities");
 
-			this.DiscardEmptyEntities (false);
-			this.DiscardEmptyEntities (true);
-		}
-
-
-		public void DiscardEmptyEntities(bool bulkMode)
-		{
-			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -77,7 +68,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -86,7 +77,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.Count () == 4);
 			}
 
-			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -106,7 +97,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			using (var dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -115,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.Count () == 6);
 			}
 
-			this.CreateDatabase (false);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -124,14 +115,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Save without changes 1");
 
-			this.SaveWithoutChanges1 (false);
-			this.SaveWithoutChanges1 (true);
-		}
-
-
-		public void SaveWithoutChanges1(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
 				dataContext.SaveChanges ();
@@ -144,14 +128,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Save without changes 2");
 
-			this.SaveWithoutChanges2 (false);
-			this.SaveWithoutChanges2 (true);
-		}
-
-
-		public void SaveWithoutChanges2(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -177,14 +154,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Resolve");
 
-			this.Resolve (false);
-			this.Resolve (true);
-		}
-
-
-		public void Resolve(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
@@ -202,14 +172,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get fresh object");
 
-			this.GetFreshObject (false);
-			this.GetFreshObject (true);
-		}
-
-
-		public void GetFreshObject(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity freshPerson1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -225,7 +188,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			this.CreateDatabase (false);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -234,14 +197,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Relation Reference");
 
-			this.DeleteRelationReference (false);
-			this.DeleteRelationReference (true);
-		}
-
-
-		public void DeleteRelationReference(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -254,14 +210,14 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
 				Assert.IsTrue (alfred.Gender == null);
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -270,14 +226,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Relation Collection");
 
-			this.DeleteRelationCollection (false);
-			this.DeleteRelationCollection (true);
-		}
-
-
-		public void DeleteRelationCollection(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -291,7 +240,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -299,7 +248,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -308,14 +257,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Entity Collection Target In Memory");
 
-			this.DeleteEntityCollectionTargetInMemory (false);
-			this.DeleteEntityCollectionTargetInMemory (true);
-		}
-
-
-		public void DeleteEntityCollectionTargetInMemory(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -329,7 +271,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -337,7 +279,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -346,14 +288,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Entity Reference Target In Memory");
 
-			this.DeleteEntityReferenceTargetInMemory (false);
-			this.DeleteEntityReferenceTargetInMemory (true);
-		}
-
-
-		public void DeleteEntityReferenceTargetInMemory(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -370,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -380,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -389,14 +324,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Entity Collection Target In Database");
 
-			this.DeleteEntityCollectionTargetInDatabase (false);
-			this.DeleteEntityCollectionTargetInDatabase (true);
-		}
-
-
-		public void DeleteEntityCollectionTargetInDatabase(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001)));
 				dataContext.DeleteEntity (contact);
@@ -409,7 +337,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -417,7 +345,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -426,14 +354,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Delete Entity Reference Target In Database");
 
-			this.DeleteEntityReferenceTargetInDatabase (false);
-			this.DeleteEntityReferenceTargetInDatabase (true);
-		}
-
-
-		public void DeleteEntityReferenceTargetInDatabase(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
 				dataContext.DeleteEntity (alfred);
@@ -448,7 +369,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
@@ -458,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 

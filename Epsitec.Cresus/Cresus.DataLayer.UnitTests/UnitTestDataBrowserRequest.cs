@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.Initialize ();
 			Database.CreateAndConnectToDatabase ();
-			Database2.PupulateDatabase (false);
+			Database2.PupulateDatabase();
 		}
 
 
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Unary comparison");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with value");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with field");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Unary operation");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Binary operation");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Double request 1");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Double request 2");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Inner request");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Like request");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Like escape request");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity country1 = Database.CreateCountry (dataContext, "c1", "test%test");
 				CountryEntity country2 = Database.CreateCountry (dataContext, "c2", "test_test");
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -531,7 +531,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -564,7 +564,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Requested entity request 1");
 			
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Requested entity request 2");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
@@ -614,7 +614,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Requested entity request 3");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
@@ -638,7 +638,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 1.");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1();
 				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (example).First ();
@@ -663,7 +663,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 2.");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
@@ -695,7 +695,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 3.");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, false))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();

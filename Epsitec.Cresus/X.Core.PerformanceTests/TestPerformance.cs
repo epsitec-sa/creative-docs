@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveNaturalPerson()
 		{
-			using (DataContext context =  new DataContext (this.dbInfrastructure))
+			using (DataContext context =  new DataContext(this.dbInfrastructure))
 			{
 				System.Diagnostics.Trace.WriteLine ("About to retrieve a natural person entity");
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveLocation()
 		{
-			using (DataContext context =  new DataContext (this.dbInfrastructure))
+			using (DataContext context =  new DataContext(this.dbInfrastructure))
 			{
 				System.Diagnostics.Trace.WriteLine ("About to retrieve a location entity");
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -81,32 +81,32 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveAllData()
 		{
-			this.RetrieveAllData<AbstractPersonEntity> (false);
-			this.RetrieveAllData<NaturalPersonEntity> (false);
-			this.RetrieveAllData<LegalPersonEntity> (false);
-			this.RetrieveAllData<LegalPersonTypeEntity> (false);
-			this.RetrieveAllData<PersonTitleEntity> (false);
-			this.RetrieveAllData<PersonGenderEntity> (false);
-			this.RetrieveAllData<AbstractContactEntity> (false);
-			this.RetrieveAllData<ContactRoleEntity> (false);
-			this.RetrieveAllData<CommentEntity> (false);
-			this.RetrieveAllData<MailContactEntity> (false);
-			this.RetrieveAllData<AddressEntity> (false);
-			this.RetrieveAllData<StreetEntity> (false);
-			this.RetrieveAllData<PostBoxEntity> (false);
-			this.RetrieveAllData<LocationEntity> (false);
-			this.RetrieveAllData<RegionEntity> (false);
-			this.RetrieveAllData<CountryEntity> (false);
-			this.RetrieveAllData<TelecomContactEntity> (false);
-			this.RetrieveAllData<TelecomTypeEntity> (false);
-			this.RetrieveAllData<UriContactEntity> (false);
-			this.RetrieveAllData<UriSchemeEntity> (false);
+			this.RetrieveAllData<AbstractPersonEntity> ();
+			this.RetrieveAllData<NaturalPersonEntity> ();
+			this.RetrieveAllData<LegalPersonEntity> ();
+			this.RetrieveAllData<LegalPersonTypeEntity> ();
+			this.RetrieveAllData<PersonTitleEntity> ();
+			this.RetrieveAllData<PersonGenderEntity> ();
+			this.RetrieveAllData<AbstractContactEntity> ();
+			this.RetrieveAllData<ContactRoleEntity> ();
+			this.RetrieveAllData<CommentEntity> ();
+			this.RetrieveAllData<MailContactEntity> ();
+			this.RetrieveAllData<AddressEntity> ();
+			this.RetrieveAllData<StreetEntity> ();
+			this.RetrieveAllData<PostBoxEntity> ();
+			this.RetrieveAllData<LocationEntity> ();
+			this.RetrieveAllData<RegionEntity> ();
+			this.RetrieveAllData<CountryEntity> ();
+			this.RetrieveAllData<TelecomContactEntity> ();
+			this.RetrieveAllData<TelecomTypeEntity> ();
+			this.RetrieveAllData<UriContactEntity> ();
+			this.RetrieveAllData<UriSchemeEntity> ();
 		}
 
 
-		public void RetrieveAllData<EntityType>(bool bulkMode) where EntityType : AbstractEntity, new ()
+		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new ()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
 			};
@@ -115,33 +115,33 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveRequestedData()
 		{
-			this.GetUriContactWithGivenUriSchemeReference (false);
-			this.GetUriContactWithGivenUriSchemeValue (false);
+			this.GetUriContactWithGivenUriSchemeReference ();
+			this.GetUriContactWithGivenUriSchemeValue ();
 
-			this.GetLocationsGivenCountryReference (false);
-			this.GetLocationsGivenCountryValue (false);
+			this.GetLocationsGivenCountryReference ();
+			this.GetLocationsGivenCountryValue ();
 
-			this.GetLegalPersonsGivenTypeReference (false);
-			this.GetLegalPersonsGivenTypeValue (false);
+			this.GetLegalPersonsGivenTypeReference ();
+			this.GetLegalPersonsGivenTypeValue ();
 
-			this.GetContactsGivenPersonReference (false);
-			this.GetContactsGivenPersonValue (false);
+			this.GetContactsGivenPersonReference ();
+			this.GetContactsGivenPersonValue ();
 
-			this.GetPersonGivenLocationReference (false);
-			this.GetPersonGivenLocationValue (false);
+			this.GetPersonGivenLocationReference ();
+			this.GetPersonGivenLocationValue ();
 
-			this.GetAddressGivenLegalPersonReference (false);
-			this.GetAddressGivenLegalPersonValue (false);
+			this.GetAddressGivenLegalPersonReference ();
+			this.GetAddressGivenLegalPersonValue ();
 
-			this.GetAddressReferencers (false);
+			this.GetAddressReferencers ();
 			
-			this.GetLegalPersonReferencers (false);
+			this.GetLegalPersonReferencers ();
 		}
 
 
-		public void GetUriContactWithGivenUriSchemeReference(bool bulkMode)
+		public void GetUriContactWithGivenUriSchemeReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -153,9 +153,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetUriContactWithGivenUriSchemeValue(bool bulkMode)
+		public void GetUriContactWithGivenUriSchemeValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -170,9 +170,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetLocationsGivenCountryReference(bool bulkMode)
+		public void GetLocationsGivenCountryReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				LocationEntity example = new LocationEntity ()
 				{
@@ -184,9 +184,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetLocationsGivenCountryValue(bool bulkMode)
+		public void GetLocationsGivenCountryValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				LocationEntity example = new LocationEntity ()
 				{
@@ -201,9 +201,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetLegalPersonsGivenTypeReference(bool bulkMode)
+		public void GetLegalPersonsGivenTypeReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -215,9 +215,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetLegalPersonsGivenTypeValue(bool bulkMode)
+		public void GetLegalPersonsGivenTypeValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -232,9 +232,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetContactsGivenPersonReference(bool bulkMode)
+		public void GetContactsGivenPersonReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -246,9 +246,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetContactsGivenPersonValue(bool bulkMode)
+		public void GetContactsGivenPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -263,9 +263,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetPersonGivenLocationReference(bool bulkMode)
+		public void GetPersonGivenLocationReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -282,9 +282,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetPersonGivenLocationValue(bool bulkMode)
+		public void GetPersonGivenLocationValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -304,9 +304,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetAddressGivenLegalPersonReference(bool bulkMode)
+		public void GetAddressGivenLegalPersonReference()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -318,9 +318,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetAddressGivenLegalPersonValue(bool bulkMode)
+		public void GetAddressGivenLegalPersonValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -335,9 +335,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetAddressReferencers(bool bulkMode)
+		public void GetAddressReferencers()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -346,9 +346,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void GetLegalPersonReferencers(bool bulkMode)
+		public void GetLegalPersonReferencers()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.Database.DbInfrastructure))
 			{
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001)));
 

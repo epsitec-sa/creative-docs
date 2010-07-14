@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public static void PopulateDatabase(DatabaseSize size)
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				dataContext.CreateSchema<AbstractPersonEntity> ();
 				dataContext.CreateSchema<MailContactEntity> ();

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	{
 
 
-		public DataContext(DbInfrastructure infrastructure, bool bulkMode = false)
+		public DataContext(DbInfrastructure infrastructure)
 		{
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DbInfrastructure = infrastructure;

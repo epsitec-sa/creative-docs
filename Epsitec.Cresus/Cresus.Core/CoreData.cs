@@ -104,10 +104,7 @@ namespace Epsitec.Cresus.Core
 
 		public DataContext CreateDataContext()
 		{
-			var context = new DataContext (this.dbInfrastructure)
-			{
-				EnableEntityNullReferenceVirtualizer = true,
-			};
+			var context = new DataContext(this.dbInfrastructure) { EnableEntityNullReferenceVirtualizer = true };
 
 			DataContextPool.Instance.Add (context);
 

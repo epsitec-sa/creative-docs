@@ -32,20 +32,16 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Create database");
 
-			System.Console.WriteLine ("coucou");
-			System.Diagnostics.Debug.WriteLine ("blabla");
-
-			this.CreateDatabase (false);
+			this.CreateDatabaseHelper ();
 		}
 
-
-		public void CreateDatabase(bool bulkMode)
+		private void CreateDatabaseHelper()
 		{
 			Database.CreateAndConnectToDatabase ();
 
 			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
 
-			Database2.PupulateDatabase (bulkMode);
+			Database2.PupulateDatabase ();
 		}
 
 
@@ -54,14 +50,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects");
 
-			this.GetObjects (false);
-			this.GetObjects (true);
-		}
-
-
-		public void GetObjects(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity[] persons = dataContext.GetByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
 
@@ -80,14 +69,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with cast");
 
-			this.GetObjectsWithCast (false);
-			this.GetObjectsWithCast (true);
-		}
-
-
-		public void GetObjectsWithCast(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity[] persons = dataContext.GetByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
 
@@ -105,14 +87,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with correct value example");
 
-			this.GetObjectsWithCorrectValueExample (false);
-			this.GetObjectsWithCorrectValueExample (true);
-		}
-
-
-		public void GetObjectsWithCorrectValueExample(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -130,14 +105,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with correct reference example");
 
-			this.GetObjectsWithCorrectReferenceExample (false);
-			this.GetObjectsWithCorrectReferenceExample (true);
-		}
-
-
-		public void GetObjectsWithCorrectReferenceExample(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample2 ();
 
@@ -155,14 +123,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with correct collection example 1");
 
-			this.GetObjectsWithCorrectCollectionExample1 (false);
-			this.GetObjectsWithCorrectCollectionExample1 (true);
-		}
-
-
-		public void GetObjectsWithCorrectCollectionExample1(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
 
@@ -181,15 +142,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with correct collection example 2");
 
-
-			this.GetObjectsWithCorrectCollectionExample2 (false);
-			this.GetObjectsWithCorrectCollectionExample2 (true);
-		}
-
-
-		public void GetObjectsWithCorrectCollectionExample2(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample4 ();
 
@@ -207,15 +160,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with correct collection example 3");
 
-
-			this.GetObjectsWithCorrectCollectionExample3 (false);
-			this.GetObjectsWithCorrectCollectionExample3 (true);
-		}
-
-
-		public void GetObjectsWithCorrectCollectionExample3(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample5 ();
 
@@ -233,14 +178,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect value example");
 
-			this.GetObjectsWithIncorrectValueExample (false);
-			this.GetObjectsWithIncorrectValueExample (true);
-		}
-
-
-		public void GetObjectsWithIncorrectValueExample(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetIncorrectExample1 ();
 
@@ -256,14 +194,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect reference example");
 
-			this.GetObjectsWithIncorrectReferenceExample (false);
-			this.GetObjectsWithIncorrectReferenceExample (true);
-		}
-
-
-		public void GetObjectsWithIncorrectReferenceExample(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetIncorrectExample2 ();
 
@@ -279,13 +210,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect collection example 1");
 
-			this.GetObjectsWithIncorrectCollectionExample1 (false);
-			this.GetObjectsWithIncorrectCollectionExample1 (true);
-		}
-
-		public void GetObjectsWithIncorrectCollectionExample1(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetIncorrectExample3 ();
 
@@ -301,14 +226,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with incorrect collection example 2");
 
-			this.GetObjectsWithIncorrectCollectionExample2 (false);
-			this.GetObjectsWithIncorrectCollectionExample2 (true);
-		}
-
-
-		public void GetObjectsWithIncorrectCollectionExample2(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetIncorrectExample4 ();
 
@@ -324,14 +242,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with entity equality");
 
-			this.GetObjectsWithEntityEquality (false);
-			this.GetObjectsWithEntityEquality (true);
-		}
-
-
-		public void GetObjectsWithEntityEquality(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -354,14 +265,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get fresh object");
 
-			this.GetFreshObject (false);
-			this.GetFreshObject (true);
-		}
-
-
-		public void GetFreshObject(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity freshPerson1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -383,7 +287,7 @@ namespace Epsitec.Cresus.DataLayer
 				dataContext.SaveChanges ();
 			}
 
-			this.CreateDatabase (false);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -392,14 +296,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects by reference reference");
 
-			this.GetObjectByReferenceReference (false);
-			this.GetObjectByReferenceReference (true);
-		}
-
-
-		public void GetObjectByReferenceReference(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (alfredExample).FirstOrDefault ();
@@ -426,14 +323,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects by collection reference");
 
-			this.GetObjectByCollectionReference (false);
-			this.GetObjectByCollectionReference (true);
-		}
-
-
-		public void GetObjectByCollectionReference(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity contactExample = new UriContactEntity ()
 				{
@@ -457,14 +347,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get referencers reference");
 
-			this.GetReferencersReference (false);
-			this.GetReferencersReference (true);
-		}
-
-
-		public void GetReferencersReference(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity alfredExample = Database2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (alfredExample).FirstOrDefault ();
@@ -484,14 +367,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get referencers collection");
 
-			this.GetReferencersCollection (false);
-			this.GetReferencersCollection (true);
-		}
-
-
-		public void GetReferencersCollection(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity contactExample = new UriContactEntity ()
 				{
@@ -513,14 +389,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with deleted entity");
 
-			this.GetObjectsWithDeletedEntity (false);
-			this.GetObjectsWithDeletedEntity (true);
-		}
-
-
-		public void GetObjectsWithDeletedEntity(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -538,7 +407,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (persons2.Count () == 0);
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -547,7 +416,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (persons.Count () == 0);
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 
@@ -556,14 +425,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			TestHelper.PrintStartTest ("Get objects with deleted relation");
 
-			this.GetObjectsWithDeletedRelation (false);
-			this.GetObjectsWithDeletedRelation (true);
-		}
-
-
-		public void GetObjectsWithDeletedRelation(bool bulkMode)
-		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -586,7 +448,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (persons2[0].Gender == null);
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				NaturalPersonEntity example = Database2.GetCorrectExample1 ();
 
@@ -597,7 +459,7 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.IsTrue (persons[0].Gender == null);
 			}
 
-			this.CreateDatabase (bulkMode);
+			this.CreateDatabaseHelper ();
 		}
 
 

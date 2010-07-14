@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 	/// <summary>
 	/// The <c>EntityDataContainer</c> class is used to store the data of an <see cref="AbstractEntity"/>
-	/// and to transfer this data from the <see cref="DataBrowser"/> to the <see cref="DataContext"/>.
+	/// and to transfer this data from the <see cref="LoaderQueryGenerator"/> to the <see cref="DataLoader"/>.
 	/// </summary>
 	/// <remarks>
 	/// Note that this class might be used to store incomplete data. If the type of the

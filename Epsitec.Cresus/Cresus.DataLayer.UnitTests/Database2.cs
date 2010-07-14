@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.DataLayer
 	{
 
 
-		public static void PupulateDatabase(bool bulkMode)
+		public static void PupulateDatabase()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure, bulkMode))
+			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				dataContext.CreateSchema<NaturalPersonEntity> ();
 				dataContext.CreateSchema<MailContactEntity> ();
