@@ -98,9 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 					this.ExecuteWithTransaction (transaction =>
 					{
-						this.SaverQueryGenerator.DeleteEntityValues (transaction, entity);
-						this.SaverQueryGenerator.DeleteEntitySourceRelations (transaction, entity);
-						this.SaverQueryGenerator.DeleteEntityTargetRelations (transaction, entity);
+						this.SaverQueryGenerator.DeleteEntity (transaction, entity);
 					});
 				}
 			}
@@ -219,8 +217,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			this.ExecuteWithTransaction (transaction =>
 			{
-				this.SaverQueryGenerator.InsertEntityValues (transaction, entity);
-				this.SaverQueryGenerator.InsertEntityRelations (transaction, entity);
+				this.SaverQueryGenerator.InsertEntity (transaction, entity);
 			});
 		}
 
@@ -229,8 +226,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			this.ExecuteWithTransaction (transaction =>
 			{
-				this.SaverQueryGenerator.UpdateEntityValues (transaction, entity);
-				this.SaverQueryGenerator.UpdateEntityRelations (transaction, entity);
+				this.SaverQueryGenerator.UpdateEntity (transaction, entity);
 			});
 		}
 

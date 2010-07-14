@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			
 			this.AssertTransaction ();
 
-			table = this.schemaEngine.GetTableDefinition (entityId);
+			table = this.schemaEngine.GetEntityTableDefinition (entityId);
 
 			if (table != null)
 			{

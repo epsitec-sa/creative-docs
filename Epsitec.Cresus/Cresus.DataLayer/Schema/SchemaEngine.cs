@@ -7,7 +7,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 
@@ -46,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			Druid entityId = new TEntity ().GetEntityStructuredTypeId ();
 
-			bool createTable = (this.GetTableDefinition (entityId) == null);
+			bool createTable = (this.GetEntityTableDefinition (entityId) == null);
 
 			if (createTable)
 			{
@@ -76,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			while(localEntityId.IsValid &&  !this.IsTableDefinitionInCache (entityId))
 			{
-				DbTable tableDefinition = this.GetTableDefinition (entityId);
+				DbTable tableDefinition = this.GetEntityTableDefinition (entityId);
 
 				this.LoadRelations (tableDefinition);
 
@@ -90,11 +89,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private void LoadRelations(DbTable tableDefinition)
 		{
-			using (DbTransaction transaction = DbInfrastructure.BeginTransaction())
+			using (DbTransaction transaction = DbInfrastructure.BeginTransaction ())
 			{
 				foreach (DbColumn columnDefinition in tableDefinition.Columns)
 				{
-					if (columnDefinition.Cardinality != DbCardinality.None)
+					DbCardinality cardinality = columnDefinition.Cardinality;
+
+					if (cardinality == DbCardinality.Reference || cardinality == DbCardinality.Collection)
 					{
 						string relationTableName = tableDefinition.GetRelationTableName (columnDefinition);
 						DbTable relationTableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
@@ -108,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 		
-		public DbTable GetTableDefinition(Druid entityId)
+		public DbTable GetEntityTableDefinition(Druid entityId)
 		{
 			if (!this.IsTableDefinitionInCache (entityId))
 			{
@@ -125,6 +126,24 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			return this.GetTableDefinitionFromCache (entityId);
 		}
 
+
+		public DbTable GetRelationTableDefinition(Druid localEntityId, Druid fieldId)
+		{
+			if (!this.IsTableDefinitionInCache (fieldId))
+			{
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					string relationTableName = this.GetRelationTableName (localEntityId, fieldId);
+					DbTable tableDefinition = this.DbInfrastructure.ResolveDbTable (transaction, relationTableName);
+
+					transaction.Commit ();
+
+					this.AddTableDefinitionToCache (fieldId, tableDefinition);
+				}
+			}
+
+			return this.GetTableDefinitionFromCache (fieldId);
+		}
 
 		
 		public DbTypeDef GetTypeDefinition(Druid typeId)
@@ -184,18 +203,27 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		public string GetDataTableName(Druid entityId)
+		public string GetEntityTableName(Druid entityId)
 		{
-			return this.GetTableDefinition (entityId).Name;
+			return this.GetEntityTableDefinition (entityId).Name;
 		}
 
 
-		public string GetDataColumnName(string fieldId)
+		public string GetEntityColumnName(string fieldId)
 		{
 			System.Diagnostics.Debug.Assert (fieldId.StartsWith ("["));
 			System.Diagnostics.Debug.Assert (fieldId.EndsWith ("]"));
 
 			return fieldId.Substring (1, fieldId.Length - 2);
+		}
+
+
+		public string GetRelationTableName(Druid localEntityId, Druid fieldId)
+		{
+			string sourceTableName = this.GetEntityTableName (localEntityId);
+			string sourceColumnName = this.GetEntityColumnName (fieldId.ToString ());
+
+			return DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
 		}
 		
 		

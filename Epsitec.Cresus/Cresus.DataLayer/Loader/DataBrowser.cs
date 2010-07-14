@@ -864,8 +864,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private DbTableColumn GetEntityColumn(Druid entityId, string entityAlias, string columName)
 		{
-			DbTable dbTable = this.SchemaEngine.GetTableDefinition (entityId);
-			DbColumn dbColumn = dbTable.Columns[this.SchemaEngine.GetDataColumnName (columName)];
+			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (entityId);
+			DbColumn dbColumn = dbTable.Columns[this.SchemaEngine.GetEntityColumnName (columName)];
 
 			return new DbTableColumn (dbColumn)
 			{
@@ -885,12 +885,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private DbTableColumn GetRelationColumn(Druid localEntityId, Druid fieldId, string relationAlias, string columName)
 		{
-			string sourceTableName = this.SchemaEngine.GetDataTableName (localEntityId);
-			string sourceColumnName = this.SchemaEngine.GetDataColumnName (fieldId.ToString ());
-			string relationTableName = DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
-
-			DbTable dbRelationTable = this.DbInfrastructure.ResolveDbTable (relationTableName);
-			DbColumn dbColumn = dbRelationTable.Columns[this.SchemaEngine.GetDataColumnName (columName)];
+			DbTable dbRelationTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			DbColumn dbColumn = dbRelationTable.Columns[this.SchemaEngine.GetEntityColumnName (columName)];
 
 			return new DbTableColumn (dbColumn)
 			{

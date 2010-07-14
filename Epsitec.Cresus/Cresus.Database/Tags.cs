@@ -34,15 +34,8 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnDateTime		= "CR_DATETIME";
 		public const string ColumnInstanceType	= "CR_TYPE";
 		
-		public const string ColumnDictKey		= "CR_DICT_KEY";
-		public const string ColumnDictValue		= "CR_DICT_VALUE";
-		
-		public const string ColumnReqData		= "CR_RQ_DATA";
-		public const string ColumnReqExState	= "CR_RQ_EX_STATE";
-		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
-		public const string	ColumnRefColumn		= "CREF_COLUMN";
 		public const string	ColumnRefTarget		= "CREF_TARGET_TABLE";
 		public const string ColumnRefLog		= "CREF_LOG";
 		public const string ColumnRefId			= "CREF_ID";

@@ -241,9 +241,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				else
 				{
 					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
-					string columnName = this.SchemaEngine.GetDataColumnName (field.Id);
+					string columnName = this.SchemaEngine.GetEntityColumnName (field.Id);
 
-					DbTable dbTable = this.SchemaEngine.GetTableDefinition (localEntityId);
+					DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 					DbColumn dbColumn = dbTable.Columns[columnName];
 									
 					//	The conversion is a two step process:
