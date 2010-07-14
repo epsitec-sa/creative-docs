@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				SchemaBuilder tableBuilder = new SchemaBuilder(this);
 				
-				tableBuilder.Add(entityId);
+				tableBuilder.CreateSchema (entityId);
 
 				foreach (var item in tableBuilder.GetNewTableDefinitions ())
 				{

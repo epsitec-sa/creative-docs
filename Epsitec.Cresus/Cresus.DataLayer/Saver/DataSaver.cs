@@ -36,10 +36,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private EntityContext EntityContext
+		private SaverQueryGenerator SaverQueryGenerator
 		{
 			get;
 			set;
+		}
+
+
+		private EntityContext EntityContext
+		{
+			get
+			{
+				return this.DataContext.EntityContext;
+			}
 		}
 
 
@@ -49,13 +58,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				return this.DataContext.DbInfrastructure;
 			}
-		}
-
-
-		private SaverQueryGenerator SaverQueryGenerator
-		{
-			get;
-			set;
 		}
 
 
@@ -314,17 +316,23 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
 			{
+				// TODO Uncomment the catch clause and remove the finaly clause at the end of the
+				// tests.
+
 				try
 				{
 					result = query (transaction);
 
 					transaction.Commit ();
 				}
-				catch
-				{
-					transaction.Rollback ();
+				//catch
+				//{
+				//    transaction.Rollback ();
 
-					throw;
+				//    throw;
+				//}
+				finally
+				{
 				}
 			}
 

@@ -42,7 +42,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			using (this.BeginTransaction ())
 			{
-				this.Add (entityId);
+				System.Diagnostics.Debug.Assert (this.newTables.Count == 0);
+
+				this.CreateTable (entityId);
+
+				foreach (DbTable table in this.newTables)
+				{
+					this.schemaEngine.DbInfrastructure.RegisterNewDbTable (this.transaction, table);
+				}
+
+				foreach (DbTable table in this.newTables)
+				{
+					this.schemaEngine.DbInfrastructure.RegisterColumnRelations (this.transaction, table);
+				}
+
 				this.CommitTransaction ();
 			}
 		}
@@ -75,30 +88,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			this.transaction.Commit ();
 			this.transaction = null;
-		}
-
-
-		/// <summary>
-		/// Adds the table graph required to store data for the specified entity.
-		/// </summary>
-		/// <param name="entityId">The entity id.</param>
-		public void Add(Druid entityId)
-		{
-			System.Diagnostics.Debug.Assert (this.newTables.Count == 0);
-
-			this.CreateTable (entityId);
-
-			foreach (DbTable table in this.newTables)
-			{
-				this.schemaEngine.DbInfrastructure.RegisterNewDbTable (this.transaction, table);
-			}
-
-			foreach (DbTable table in this.newTables)
-			{
-				this.schemaEngine.DbInfrastructure.RegisterColumnRelations (this.transaction, table);
-			}
-
-			this.newTables.Clear ();
 		}
 
 

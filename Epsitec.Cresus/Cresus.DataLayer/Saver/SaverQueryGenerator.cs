@@ -613,24 +613,26 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private object ConvertToInternal(DbTypeDef dbType, object value)
 		{
 			object newValue = value;
-			
+
 			if (value != System.DBNull.Value)
 			{
 				if (dbType.SimpleType == DbSimpleType.Decimal)
 				{
 					decimal decimalValue;
 
-					if (InvariantConverter.Convert (value, out decimalValue))
-					{
-						newValue = decimalValue;
-					}
-					else
+					bool success = InvariantConverter.Convert (value, out decimalValue);
+
+					if (!success)
 					{
 						throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
 					}
-				}
 
-				newValue = TypeConverter.ConvertFromSimpleType (value, dbType.SimpleType, dbType.NumDef);
+					newValue = decimalValue;
+				}
+				else
+				{
+					newValue = TypeConverter.ConvertFromSimpleType (value, dbType.SimpleType, dbType.NumDef);
+				}
 			}
 
 			return newValue;
