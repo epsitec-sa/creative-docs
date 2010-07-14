@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				fields.AddRange (this.CreateSqlFields (entity, localEntityId, fieldIds));
 
 				SqlFieldList conditions = new SqlFieldList ();
-				conditions.Add (this.CreateConditionForId (localEntityId, dbKey));
+				conditions.Add (this.CreateConditionForRowId (dbKey));
 
 				string tableName = this.SchemaEngine.GetEntityTableName (localEntityId);
 
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			string tableName = this.SchemaEngine.GetEntityTableName (localEntityId);
 
 			SqlFieldList conditions = new SqlFieldList ();
-			conditions.Add (this.CreateConditionForId (localEntityId, dbKey));
+			conditions.Add (this.CreateConditionForRowId (dbKey));
 			
 			transaction.SqlBuilder.RemoveData (tableName, conditions);
 
@@ -241,9 +241,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void InsertEntityReference(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
-			// TODO
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
+
+			if (this.DataContext.CheckIfEntityCanBeSaved (target))
+			{
+				List<DbKey> targetKeys = new List<DbKey> () { this.GetDbKey (target) };
+
+				this.InsertEntityRelation (transaction, localEntityId, fieldId, dbKey, targetKeys);
+			}
 		}
 
 
@@ -257,16 +265,26 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				this.InsertEntityReference (transaction, entity, fieldId, dbKey);
+				this.InsertEntityCollection (transaction, entity, fieldId, dbKey);
 			}
 		}
 
 
 		private void InsertEntityCollection(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
-			// TODO
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			List<DbKey> targetKeys = new List<DbKey> (
+				from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
+				where this.DataContext.CheckIfEntityCanBeSaved (target)
+				select this.GetDbKey (target)
+			);
+
+			if (targetKeys.Any ())
+			{
+				this.InsertEntityRelation (transaction, localEntityId, fieldId, dbKey, targetKeys);
+			}
 		}
 
 
@@ -289,65 +307,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void UpdateEntityReference(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
-			// TODO
+			// TODO This function might be optimized in the following way. I'm not too sure if it
+			// would be better than the current implementation.
+			// - If target is null => remove the row in the database
+			// - If target is not null and a row exists in the database => update the row in the database
+			// - If target is not null and a row does not exist in the database => create the row in the database
+			// Marc
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, dbKey);
+
+			this.InsertEntityReference (transaction, entity, fieldId, dbKey);
 		}
-
-
-		//private void WriteFieldReference(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
-		//{
-		//    AbstractEntity targetEntity = sourceEntity.InternalGetValue (fieldDef.Id) as AbstractEntity;
-
-		//    if ((EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (targetEntity)) ||
-		//        (EntityNullReferenceVirtualizer.IsNullEntity (targetEntity)))
-		//    {
-		//        targetEntity = null;
-		//    }
-
-		//    EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
-		//    EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
-
-		//    string relationTableName = this.GetRelationTableName (entityId, fieldDef);
-
-		//    System.Data.DataRow[] relationRows = DbRichCommand.FilterExistingRows (this.RichCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToArray ();
-
-		//    if (targetEntity != null && this.CheckIfEntityCanBeSaved (targetEntity))
-		//    {
-		//        System.Diagnostics.Debug.Assert (targetMapping != null);
-
-		//        if (targetMapping.RowKey.IsEmpty)
-		//        {
-		//            this.SaveEntity (targetEntity);
-		//        }
-
-		//        if (relationRows.Length == 0)
-		//        {
-		//            this.CreateRelationRow (relationTableName, sourceMapping, targetMapping);
-		//        }
-		//        else if (relationRows.Length == 1)
-		//        {
-		//            this.UpdateRelationRow (relationRows[0], sourceMapping, targetMapping);
-		//        }
-		//        else
-		//        {
-		//            throw new System.InvalidOperationException ();
-		//        }
-		//    }
-		//    else
-		//    {
-		//        if (relationRows.Length == 1)
-		//        {
-		//            this.DeleteRelationRow (relationRows[0]);
-		//        }
-		//        else if (relationRows.Length > 1)
-		//        {
-		//            throw new System.InvalidOperationException ();
-		//        }
-		//    }
-
-		//    this.RelationRowIsLoaded (sourceEntity, fieldDef.CaptionId);
-		//}
 
 
 		private void UpdateEntityCollections(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
@@ -369,84 +341,22 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void UpdateEntityCollection(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
-			// TODO
+			// TODO This function might be optimized by having a better policy to delete/update/Insert
+			// the relation rows. It could take advantage to what already exists in the database, which
+			// would have the following two advantages:
+			// - It might require less queries
+			// - If another user has modified the data and our version of the relations is not up to
+			//   date, it might do less overwrite.
 
-			throw new System.NotImplementedException ();
-		}		//private void WriteFieldCollection(AbstractEntity sourceEntity, Druid entityId, StructuredTypeField fieldDef)
-		//{
-		//    IList collection = sourceEntity.InternalGetFieldCollection (fieldDef.Id);
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-		//    System.Diagnostics.Debug.Assert (collection != null);
+			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, dbKey);
 
-		//    EntityDataMapping sourceMapping = this.GetEntityDataMapping (sourceEntity);
-
-		//    string relationTableName = this.GetRelationTableName (entityId, fieldDef);
-
-		//    List<System.Data.DataRow> relationRows = DbRichCommand.FilterExistingRows (this.RichCommand.FindRelationRows (relationTableName, sourceMapping.RowKey.Id)).ToList ();
-		//    List<System.Data.DataRow> resultingRows = new List<System.Data.DataRow> ();
-
-		//    for (int i = 0; i < collection.Count; i++)
-		//    {
-		//        AbstractEntity targetEntity  = collection[i] as AbstractEntity;
-
-		//        if (this.CheckIfEntityCanBeSaved (targetEntity))
-		//        {
-		//            EntityDataMapping targetMapping = this.GetEntityDataMapping (targetEntity);
-
-		//            System.Diagnostics.Debug.Assert (targetMapping != null);
-
-		//            if (targetMapping.RowKey.IsEmpty)
-		//            {
-		//                this.SaveEntity (targetEntity);
-		//            }
-
-		//            long targetRowId = targetMapping.RowKey.Id.Value;
-
-		//            System.Diagnostics.Debug.Assert (targetEntity != null);
-		//            System.Diagnostics.Debug.Assert (targetMapping != null);
-
-		//            System.Data.DataRow row = relationRows.FirstOrDefault (r => targetRowId == (long) r[Tags.ColumnRefTargetId]);
-
-		//            if (row == null)
-		//            {
-		//                resultingRows.Add (this.CreateRelationRow (relationTableName, sourceMapping, targetMapping));
-		//            }
-		//            else
-		//            {
-		//                relationRows.Remove (row);
-		//                resultingRows.Add (row);
-		//            }
-		//        }
-		//    }
-
-		//    foreach (System.Data.DataRow row in relationRows)
-		//    {
-		//        this.DeleteRelationRow (row);
-		//    }
-
-		//    int rank = -1;
-
-		//    foreach (System.Data.DataRow row in resultingRows)
-		//    {
-		//        rank++;
-
-		//        int rowRank = (int) row[Tags.ColumnRefRank];
-
-		//        if ((rowRank < rank) ||
-		//            (rowRank > rank+1000))
-		//        {
-		//            row[Tags.ColumnRefRank] = rank;
-		//        }
-		//        else if (rowRank > rank)
-		//        {
-		//            rank = rowRank;
-		//        }
-		//    }
-
-		//    this.RelationRowIsLoaded (sourceEntity, fieldDef.CaptionId);
-		//}
-
-
+			this.InsertEntityCollection (transaction, entity, fieldId, dbKey);
+		}
+			
+		
 		private void DeleteEntitySourceRelations(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -458,27 +368,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				this.DeleteEntitySourceRelation(transaction, dbKey, fieldId);
+				this.DeleteEntitySourceRelation(transaction, entity, fieldId, dbKey);
 			}
 		}
 
 
-		private void DeleteEntitySourceRelation(DbTransaction transaction, DbKey dbKey, Druid fieldId)
+		private void DeleteEntitySourceRelation(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
-			// TODO
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
-
-			//Druid currentId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
-			//string relationTableName = this.GetRelationTableName (currentId, field);
-
-			//IEnumerable<System.Data.DataRow> relationRows = this.RichCommand.FindRelationRows (relationTableName, entityKey.Id);
-			//System.Data.DataRow[] existingRelationRows = DbRichCommand.FilterExistingRows (relationRows).ToArray ();
-
-			//foreach (System.Data.DataRow row in existingRelationRows)
-			//{
-			//    this.DeleteRelationRow (row);
-			//}
+			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, dbKey);
 		}
 
 
@@ -500,54 +400,68 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityTargetRelation(DbTransaction transaction, DbKey dbKey, EntityFieldPath fieldPath)
 		{
-			// TODO
-
-			throw new System.NotImplementedException ();
-
-			//SqlFieldList fields = new Database.Collections.SqlFieldList ();
-			//fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (DbKey.ConvertToIntStatus (DbRowStatus.Deleted), DbKey.RawTypeForStatus));
-
-			//SqlFieldList conditions = new Database.Collections.SqlFieldList ();
-			//SqlField nameColId = SqlField.CreateName (Tags.ColumnRefTargetId);
-			//SqlField constantId = SqlField.CreateConstant (targetMapping.RowKey.Id, DbKey.RawTypeForId);
-
-			//conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, nameColId, constantId));
-
-			//string sourceTableName = this.SchemaEngine.GetDataTableName (source.EntityId);
-			//string sourceColumnName = this.SchemaEngine.GetDataColumnName (source.Fields[0]);
-			//string relationTableName = DbTable.GetRelationTableName (sourceTableName, sourceColumnName);
-			//DbTable relationTable = this.DbInfrastructure.ResolveDbTable (relationTableName);
-
-			//this.RichCommand.Update (transaction, relationTable, fields, conditions);
-			//transaction.Commit ();
+			Druid localEntityId = fieldPath.EntityId;
+			Druid fieldId = new Druid ("[" + fieldPath.Fields.First () + "]");
+			
+			this.DeleteEntityTargetRelation (transaction, localEntityId, fieldId, dbKey);
 		}
 
 
-		private void InsertEntityRelations(Druid localEntityId, Druid fieldId, DbKey sourceKey, IEnumerable<DbKey> targetKeys)
+		private void InsertEntityRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey, IEnumerable<DbKey> targetKeys)
 		{
-			// TODO
+			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			List<DbKey> targetKeysList = targetKeys.ToList();
+			List<DbKey> dbKeys = this.GetNewDbKsys (transaction, table, targetKeysList.Count).ToList ();
+			
+			for (int rank = 0; rank < targetKeysList.Count; rank++)
+            {
+				SqlFieldList fields = new SqlFieldList ();
+
+				fields.Add (this.CreateSqlFieldForKey (dbKeys[rank]));
+				fields.Add (this.CreateSqlFieldForStatus (DbRowStatus.Live));
+				fields.Add (this.CreateSqlFieldForSourceId (sourceKey));
+				fields.Add (this.CreateSqlFieldForTargetId (targetKeysList[rank]));
+				fields.Add (this.CreateSqlFieldForRank (rank));
+
+				transaction.SqlBuilder.InsertData (table.Name, fields);
+
+				this.DbInfrastructure.ExecuteNonQuery (transaction);	
+            }
 		}
 
 
-		private void UpdateEntityRelations(Druid localEntityId, Druid fieldId, DbKey sourceId, DbKey targetId)
+		private void DeleteEntitySourceRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey)
 		{
-			// TODO
+			string tableName = this.SchemaEngine.GetRelationTableName (localEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			SqlFieldList conditions = new SqlFieldList ();
+			conditions.Add (this.CreateConditionForSourceId (sourceKey));
+
+			transaction.SqlBuilder.RemoveData (tableName, conditions);
+
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
 		}
 
 
-		private void deleteEntityRelations(Druid localEntityId, Druid fieldId, DbKey sourceKey)
+		private void DeleteEntityTargetRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey targetKey)
 		{
-			// TODO
+			string tableName = this.SchemaEngine.GetRelationTableName (localEntityId, fieldId);
 
-			throw new System.NotImplementedException ();
+			SqlFieldList conditions = new SqlFieldList ();
+			conditions.Add (this.CreateConditionForTargetId (targetKey));
+
+			transaction.SqlBuilder.RemoveData (tableName, conditions);
+
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
 		}
 
 
-		private SqlField CreateConditionForId(Druid localEntityId, DbKey dbKey)
+		// TODO Use the SchemaEngine everywhere below to get the table and column definition to the
+		// build the SqlField, for matter of consistency
+		// Marc
+
+		private SqlField CreateConditionForRowId(DbKey dbKey)
 		{
 			SqlField columnField = SqlField.CreateName (Tags.ColumnId);
 			SqlField constantField = SqlField.CreateConstant(dbKey.Id, DbKey.RawTypeForId);
@@ -558,6 +472,36 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				constantField
 			);
 			
+			return SqlField.CreateFunction (condition);
+		}
+		
+
+		private SqlField CreateConditionForSourceId(DbKey dbKey)
+		{
+			SqlField columnField = SqlField.CreateName (Tags.ColumnRefSourceId);
+			SqlField constantField = SqlField.CreateConstant (dbKey.Id, DbKey.RawTypeForId);
+
+			SqlFunction condition = new SqlFunction (
+				SqlFunctionCode.CompareEqual,
+				columnField,
+				constantField
+			);
+
+			return SqlField.CreateFunction (condition);
+		}
+
+
+		private SqlField CreateConditionForTargetId(DbKey dbKey)
+		{
+			SqlField columnField = SqlField.CreateName (Tags.ColumnRefTargetId);
+			SqlField constantField = SqlField.CreateConstant (dbKey.Id, DbKey.RawTypeForId);
+
+			SqlFunction condition = new SqlFunction (
+				SqlFunctionCode.CompareEqual,
+				columnField,
+				constantField
+			);
+
 			return SqlField.CreateFunction (condition);
 		}
 

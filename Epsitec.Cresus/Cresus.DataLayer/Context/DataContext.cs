@@ -336,6 +336,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		internal bool CheckIfEntityCanBeSaved(AbstractEntity entity)
+		{
+			bool canBeSaved =
+				    entity != null
+				&& !this.IsDeleted (entity)
+				&& !this.IsRegisteredAsEmptyEntity (entity)
+				&& !EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (entity)
+				&& !EntityNullReferenceVirtualizer.IsNullEntity (entity);
+
+			return canBeSaved;
+		}
+
+
 		public void CreateSchema<TEntity>() where TEntity : AbstractEntity, new()
 		{
 			this.SchemaEngine.CreateSchema<TEntity> ();

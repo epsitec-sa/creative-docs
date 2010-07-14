@@ -13,8 +13,6 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-	// TODO This class is not threadsafe.
-
 	/// <summary>
 	/// The <c>EntityDataCache</c> class provides a centralized cache for
 	/// maintaining relations between entity instances in memory and in the

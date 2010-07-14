@@ -107,7 +107,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
 		{
-			// TODO Implement this without request with the DataBrowser
+			// TODO This method might be optimized by doing the same thing without using the
+			// DataBrowser. This would save some queries to the database.
+			// Marc
 
 			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
 			{
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
 				from entity in this.DataContext.GetEntitiesModified ()
-				where this.CheckIfEntityCanBeSaved (entity)
+				where this.DataContext.CheckIfEntityCanBeSaved (entity)
 				select entity
 			);
 
@@ -162,20 +164,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool CheckIfEntityCanBeSaved(AbstractEntity entity)
-		{
-			bool isDeleted = this.DataContext.IsDeleted (entity);
-			bool isEmpty = this.DataContext.IsRegisteredAsEmptyEntity (entity);
-
-			return !isDeleted && !isEmpty;
-		}
-
-
 		private void SaveEntity(AbstractEntity entity)
 		{
 			if (!this.DataContext.Contains (entity))
 			{
-				//	TODO: should we propagate the serialization to another DataContext ?
+				// TODO: Should we propagate the serialization to another DataContext ?
+				// Pierre
 				return;
 			}
 

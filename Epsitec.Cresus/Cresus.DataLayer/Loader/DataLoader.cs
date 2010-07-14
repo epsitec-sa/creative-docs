@@ -18,7 +18,9 @@ using Epsitec.Cresus.DataLayer.Proxies;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
-	// TODO Kind of merge the DataLoader and the DataBrowser.
+	// TODO I'm sure that the DataLoader and the DataBrowser could be merged together or that their
+	// separation could be better. Therefore, it would be nice to kind of merge these classes.
+	// Marc
 	internal sealed class DataLoader
 	{
 
@@ -218,7 +220,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
 		{
-			// TODO Call DataBrowser to get the value.
+			// TODO Implement this method with a call to the DataBrowser.
+			// Marc
 			throw new System.NotImplementedException ();
 		}
 
