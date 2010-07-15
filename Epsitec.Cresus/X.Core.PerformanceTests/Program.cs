@@ -14,79 +14,64 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	class Program
+
+
+	public class Program
 	{
-		static void Main(string[] args)
+
+
+		public static void Main(string[] args)
 		{
 			TestHelper.Initialize ();
-			
-#if false
-			using (var test = new TestPerformance (true))
+
+			bool buildDatabase = true;
+			bool retreiveAllData = false;
+			bool retreiveRequestedData = false;
+			bool measureTime = false;
+			bool userInput = false;
+
+			using (var test = new TestPerformance (buildDatabase))
 			{
-			}
-#endif
-
-			using (var test = new TestPerformance (false))
-			{
-
-#if false
-				test.RetrieveAllData ();
-#endif
-
-
-#if true
-				test.RetrieveRequestedData ();
-#endif
-	
-#if false		
-				var schemaEngine = new SchemaEngine (test.DbInfrastructure);
-				SchemaEngine.SetSchemaEngine (test.DbInfrastructure, schemaEngine);
-
-				test.RetrieveNaturalPerson ();
-				test.RetrieveLocation ();
-
-				System.Console.ForegroundColor = System.ConsoleColor.Yellow;
-				System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
-				//System.Console.ReadKey ();
-				System.Threading.Thread.Sleep (2*1000);
-				System.Console.ResetColor ();
-
-				Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
-				Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
-#endif
-			}
-			
-#if false
-			Program.MeasureAndDisplayExecutionTime ("System.Type.GetType(...)", 1000,
-				delegate
+				if (retreiveAllData)
 				{
-					System.Type.GetType ("System.String");
-					System.Type.GetType ("System.String");
-					System.Type.GetType ("System.String");
-					System.Type.GetType ("System.String");
-					System.Type.GetType ("System.String");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Boolean");
-					System.Type.GetType ("System.Int32");
-					System.Type.GetType ("System.Int32");
-					System.Type.GetType ("System.Int32");
-					System.Type.GetType ("System.Int32");
-					System.Type.GetType ("System.Int32");
-				});
-#endif
+					test.RetrieveAllData ();
+				}
 
-			//System.Console.ReadKey ();
+				if (retreiveRequestedData)
+				{
+					test.RetrieveRequestedData ();
+				}
+
+				if (measureTime)
+				{
+					test.RetrieveNaturalPerson ();
+					test.RetrieveLocation ();
+
+					System.Console.ForegroundColor = System.ConsoleColor.Yellow;
+
+					if (userInput)
+					{
+						System.Console.WriteLine ("Ready to run the performance test. Hit a key to start.");
+						System.Console.ReadKey ();
+					}
+
+					System.Threading.Thread.Sleep (2*1000);
+					System.Console.ResetColor ();
+
+					Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
+					Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
+				}
+			}
+
+			if (userInput)
+			{
+				System.Console.WriteLine ("Done, press any key to continue...");
+				System.Console.ReadKey ();
+			}
 		}
 
-		static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)
+
+		private static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)
 		{
 			var time = Program.MeasureExecutionTimeInMilliseconds (count, action);
 			System.Console.ForegroundColor = System.ConsoleColor.Green;
@@ -94,7 +79,8 @@ namespace Epsitec.Cresus.Core
 			System.Console.ResetColor ();
 		}
 
-		static decimal MeasureExecutionTimeInMilliseconds(int count, System.Action action)
+
+		private static decimal MeasureExecutionTimeInMilliseconds(int count, System.Action action)
 		{
 			//	Warm-up first...
 			action ();
@@ -111,5 +97,9 @@ namespace Epsitec.Cresus.Core
 			watch.Stop ();
 			return ((decimal)(watch.ElapsedMilliseconds * 1000 / count)) / 1000M;
 		}
+
+
 	}
+
+
 }

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core
 			if (createAndPopulateDatabase)
 			{
 				Epsitec.Cresus.DataLayer.Database.CreateAndConnectToDatabase ();
-				Database1.PopulateDatabase (DatabaseSize.Large);
+				Database1.PopulateDatabase (DatabaseSize.Small);
 			}
 			else
 			{
