@@ -134,27 +134,30 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void InsertEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
 		{
-			string tableName = this.SchemaEngine.GetEntityTableName (localEntityId);
-
+			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+			
 			SqlFieldList fields = new SqlFieldList ();
 			
 			var fieldIds = from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
 						   where field.Relation == FieldRelation.None
 						   select field.CaptionId;
 
-			fields.AddRange(this.CreateSqlFields (entity, localEntityId, fieldIds));
+			fields.AddRange (this.CreateSqlFields (table, entity, localEntityId, fieldIds));
 
-			fields.Add (this.CreateSqlFieldForKey (dbKey));
-			fields.Add (this.CreateSqlFieldForStatus (DbRowStatus.Live));
+			fields.Add (this.CreateSqlFieldForKey (table, dbKey));
+			fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
+			fields.Add (this.CreateSqlFieldForLog (table));
 
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
 
 			if (localEntityId == rootEntityId)
 			{
-				fields.Add (this.CreateSqlFieldForType (leafEntityId));
+				fields.Add (this.CreateSqlFieldForType (table, leafEntityId));
 			}
 
+			string tableName = table.GetSqlName ();
+			
 			transaction.SqlBuilder.InsertData (tableName, fields);
 
 			this.DbInfrastructure.ExecuteNonQuery (transaction);
@@ -186,12 +189,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (fieldIds.Any ())
 			{
-				fields.AddRange (this.CreateSqlFields (entity, localEntityId, fieldIds));
+				DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+
+				fields.AddRange (this.CreateSqlFields (table, entity, localEntityId, fieldIds));
 
 				SqlFieldList conditions = new SqlFieldList ();
-				conditions.Add (this.CreateConditionForRowId (dbKey));
+				conditions.Add (this.CreateConditionForRowId (table, dbKey));
 
-				string tableName = this.SchemaEngine.GetEntityTableName (localEntityId);
+				string tableName = table.GetSqlName ();
 
 				transaction.SqlBuilder.UpdateData (tableName, fields, conditions);
 
@@ -213,11 +218,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityValues(DbTransaction transaction, Druid localEntityId, DbKey dbKey)
 		{
-			string tableName = this.SchemaEngine.GetEntityTableName (localEntityId);
-
-			SqlFieldList conditions = new SqlFieldList ();
-			conditions.Add (this.CreateConditionForRowId (dbKey));
+			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 			
+			SqlFieldList conditions = new SqlFieldList ();
+			conditions.Add (this.CreateConditionForRowId (table, dbKey));
+
+			string tableName = table.GetSqlName ();
+
 			transaction.SqlBuilder.RemoveData (tableName, conditions);
 
 			this.DbInfrastructure.ExecuteNonQuery (transaction);
@@ -411,32 +418,35 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
 
-			List<DbKey> targetKeysList = targetKeys.ToList();
+			string tableName = table.GetSqlName ();
+				
+			List<DbKey> targetKeysList = targetKeys.ToList ();
 			List<DbKey> dbKeys = this.GetNewDbKsys (transaction, table, targetKeysList.Count).ToList ();
-			
+
 			for (int rank = 0; rank < targetKeysList.Count; rank++)
-            {
+			{
 				SqlFieldList fields = new SqlFieldList ();
 
-				fields.Add (this.CreateSqlFieldForKey (dbKeys[rank]));
-				fields.Add (this.CreateSqlFieldForStatus (DbRowStatus.Live));
-				fields.Add (this.CreateSqlFieldForSourceId (sourceKey));
-				fields.Add (this.CreateSqlFieldForTargetId (targetKeysList[rank]));
-				fields.Add (this.CreateSqlFieldForRank (rank));
+				fields.Add (this.CreateSqlFieldForKey (table, dbKeys[rank]));
+				fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
+				fields.Add (this.CreateSqlFieldForSourceId (table, sourceKey));
+				fields.Add (this.CreateSqlFieldForTargetId (table, targetKeysList[rank]));
+				fields.Add (this.CreateSqlFieldForRank (table, rank));
 
-				transaction.SqlBuilder.InsertData (table.Name, fields);
+				transaction.SqlBuilder.InsertData (tableName, fields);
 
-				this.DbInfrastructure.ExecuteNonQuery (transaction);	
-            }
+				this.DbInfrastructure.ExecuteNonQuery (transaction);
+			}
 		}
 
 
 		private void DeleteEntitySourceRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey)
 		{
-			string tableName = this.SchemaEngine.GetRelationTableName (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			string tableName = table.GetSqlName ();
 
 			SqlFieldList conditions = new SqlFieldList ();
-			conditions.Add (this.CreateConditionForSourceId (sourceKey));
+			conditions.Add (this.CreateConditionForSourceId (table, sourceKey));
 
 			transaction.SqlBuilder.RemoveData (tableName, conditions);
 
@@ -446,10 +456,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityTargetRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey targetKey)
 		{
-			string tableName = this.SchemaEngine.GetRelationTableName (localEntityId, fieldId);
+			DbTable table = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
+			string tableName = table.GetSqlName ();
 
 			SqlFieldList conditions = new SqlFieldList ();
-			conditions.Add (this.CreateConditionForTargetId (targetKey));
+			conditions.Add (this.CreateConditionForTargetId (table, targetKey));
 
 			transaction.SqlBuilder.RemoveData (tableName, conditions);
 
@@ -457,29 +468,40 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		// TODO Use the SchemaEngine everywhere below to get the table and column definition to the
-		// build the SqlField, for matter of consistency
-		// Marc
-
-		private SqlField CreateConditionForRowId(DbKey dbKey)
+		private SqlField CreateConditionForRowId(DbTable table, DbKey dbKey)
 		{
-			SqlField columnField = SqlField.CreateName (Tags.ColumnId);
-			SqlField constantField = SqlField.CreateConstant(dbKey.Id, DbKey.RawTypeForId);
+			DbColumn column = table.Columns[Tags.ColumnId];
+			long value = dbKey.Id.Value;
 
-			SqlFunction condition = new SqlFunction (
-				SqlFunctionCode.CompareEqual,
-				columnField,
-				constantField
-			);
-			
-			return SqlField.CreateFunction (condition);
+			return this.CreateConditionForField (column, value);
 		}
 		
 
-		private SqlField CreateConditionForSourceId(DbKey dbKey)
+		private SqlField CreateConditionForSourceId(DbTable table, DbKey dbKey)
 		{
-			SqlField columnField = SqlField.CreateName (Tags.ColumnRefSourceId);
-			SqlField constantField = SqlField.CreateConstant (dbKey.Id, DbKey.RawTypeForId);
+			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
+			long value = dbKey.Id.Value;
+
+			return this.CreateConditionForField (column, value);
+		}
+
+
+		private SqlField CreateConditionForTargetId(DbTable table, DbKey dbKey)
+		{
+			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
+			long value = dbKey.Id.Value;
+
+			return this.CreateConditionForField (column, value);
+		}
+
+
+		private SqlField CreateConditionForField(DbColumn column, object value)
+		{
+			string columnName = column.GetSqlName ();
+			SqlField columnField = SqlField.CreateName (columnName);
+
+			DbRawType columnType = column.Type.RawType;
+			SqlField constantField = SqlField.CreateConstant (value, columnType);
 
 			SqlFunction condition = new SqlFunction (
 				SqlFunctionCode.CompareEqual,
@@ -491,22 +513,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private SqlField CreateConditionForTargetId(DbKey dbKey)
-		{
-			SqlField columnField = SqlField.CreateName (Tags.ColumnRefTargetId);
-			SqlField constantField = SqlField.CreateConstant (dbKey.Id, DbKey.RawTypeForId);
-
-			SqlFunction condition = new SqlFunction (
-				SqlFunctionCode.CompareEqual,
-				columnField,
-				constantField
-			);
-
-			return SqlField.CreateFunction (condition);
-		}
-
-
-		private IEnumerable<SqlField> CreateSqlFields(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds)
+		private IEnumerable<SqlField> CreateSqlFields(DbTable table, AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds)
 		{
 			foreach (Druid fieldId in fieldIds)
 			{
@@ -522,89 +529,95 @@ namespace Epsitec.Cresus.DataLayer.Saver
 					value = (nullableType.IsNullable) ? System.DBNull.Value : fieldType.DefaultValue;
 				}
 
-				yield return this.CreateSqlFieldForEntityValueField (localEntityId, fieldId, value);
+				yield return this.CreateSqlFieldForEntityValueField (table, fieldId, value);
 			}
 		}
 
 
-		private SqlField CreateSqlFieldForKey(DbKey key)
+		private SqlField CreateSqlFieldForKey(DbTable table, DbKey key)
 		{
-			string name = Tags.ColumnId;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			DbColumn column = table.Columns[Tags.ColumnId];
 			object value = key.Id.Value;
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForStatus(DbRowStatus status)
+		private SqlField CreateSqlFieldForStatus(DbTable table, DbRowStatus status)
 		{
-			string name = Tags.ColumnStatus;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyStatus + "]"));
+			DbColumn column = table.Columns[Tags.ColumnStatus];
 			object value = (short) status;
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForType(Druid leafEntityId)
+		private SqlField CreateSqlFieldForType(DbTable table, Druid leafEntityId)
 		{
-			string name = Tags.ColumnInstanceType;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			DbColumn column = table.Columns[Tags.ColumnInstanceType];
 			object value = leafEntityId.ToLong ();
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForSourceId(DbKey key)
+		private SqlField CreateSqlFieldForLog(DbTable table)
 		{
-			string name = Tags.ColumnRefSourceId;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			// TODO Get the real value for the log
+			// Marc
+
+			DbColumn column = table.Columns[Tags.ColumnRefLog];
+			object value = 0;
+
+			return this.CreateSqlFieldForColumn (column, value);
+		}
+
+
+		private SqlField CreateSqlFieldForSourceId(DbTable table, DbKey key)
+		{
+			DbColumn column = table.Columns[Tags.ColumnRefSourceId];
 			object value = key.Id.Value;
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForTargetId(DbKey key)
+		private SqlField CreateSqlFieldForTargetId(DbTable table, DbKey key)
 		{
-			string name = Tags.ColumnRefTargetId;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("[" + Tags.TypeKeyId + "]"));
+			DbColumn column = table.Columns[Tags.ColumnRefTargetId];
 			object value = key.Id.Value;
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForRank(int rank)
+		private SqlField CreateSqlFieldForRank(DbTable table, int rank)
 		{
-			string name = Tags.ColumnRefRank;
-			DbTypeDef dbType = this.SchemaEngine.GetTypeDefinition (new Druid ("["  + Tags.TypeCollectionRank + "]"));
-			object value = this.ConvertToInternal (dbType, rank);
+			DbColumn column = table.Columns[Tags.ColumnRefRank];
+			object value = rank;
 
-			return this.CreateSqlField (name, dbType, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlFieldForEntityValueField(Druid localEntityId, Druid fieldId, object value)
+		private SqlField CreateSqlFieldForEntityValueField(DbTable table, Druid fieldId, object value)
 		{
 			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId.ToResourceId ());
+			DbColumn column = table.Columns[columnName];
 
-			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
-			DbColumn dbColumn = dbTable.Columns[columnName];
-
-			return this.CreateSqlField (dbColumn.Name, dbColumn.Type, value);
+			return this.CreateSqlFieldForColumn (column, value);
 		}
 
 
-		private SqlField CreateSqlField(string name, DbTypeDef dbType, object value)
+		private SqlField CreateSqlFieldForColumn(DbColumn column, object value)
 		{
-			object convertedValue = this.ConvertToInternal (dbType, value);
-			DbRawType rawType = dbType.RawType;
+			DbTypeDef type = column.Type;
+
+			object convertedValue = this.ConvertToInternal (type, value);
+			DbRawType rawType = type.RawType;
 
 			SqlField SqlField = SqlField.CreateConstant (convertedValue, rawType);
-			SqlField.Alias = name;
+			SqlField.Alias = column.GetSqlName ();
 
 			return SqlField;
 		}
