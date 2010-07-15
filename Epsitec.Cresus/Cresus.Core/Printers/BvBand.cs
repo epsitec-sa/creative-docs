@@ -364,6 +364,11 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				string compact = this.CompactEsrReferenceNumber;
 
+				if (string.IsNullOrEmpty (compact))
+				{
+					return null;
+				}
+
 				if (compact.Length == 27)
 				{
 					string s1 = compact.Substring (0, 2);
@@ -387,7 +392,12 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Retourne le numéro au format "961307001000021735035673892".
 			get
 			{
-				return this.EsrReferenceNumber.Replace (" ", "");
+				if (!string.IsNullOrEmpty (this.EsrReferenceNumber))
+				{
+					return this.EsrReferenceNumber.Replace (" ", "");
+				}
+
+				return null;
 			}
 		}
 
@@ -397,6 +407,11 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				string compact = this.CompactEsrReferenceNumber;
+
+				if (string.IsNullOrEmpty (compact))
+				{
+					return null;
+				}
 
 				string ccp = this.EsrCustomerNumber;
 
@@ -451,10 +466,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static readonly Color lightPinkColor = Color.FromHexa ("fff1e5");
-		private static readonly Color darkPinkColor = Color.FromHexa ("ff9f48");
-		private static readonly Font fixFontRegular = Font.GetFont ("Arial", "Regular");
-		private static readonly Font fixFontBold = Font.GetFont ("Arial", "Bold");
-		private static readonly Font ocrFont = Font.GetFont ("OCR-B", "Bold");
+		private static readonly Color	lightPinkColor	= Color.FromHexa ("fff1e5");
+		private static readonly Color	darkPinkColor	= Color.FromHexa ("ff9f48");
+
+		private static readonly Font	fixFontRegular	= Font.GetFont ("Arial", "Regular");
+		private static readonly Font	fixFontBold		= Font.GetFont ("Arial", "Bold");
+		private static readonly Font	ocrFont			= Font.GetFont ("OCR-B", "Bold");
 	}
 }

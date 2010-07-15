@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Margins (20, 15, 10, 110);
+				return new Margins (20, 15, 10, BvBand.DefautlSize.Height+10);
 			}
 		}
 
@@ -67,55 +67,52 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildHeader()
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
-			var image = new ImageBand ();
-			image.Load("logo-cresus.png");
-			image.BuildSections (60, 50, 50, 50);
-			this.documentContainer.AddAbsolute (image, new Rectangle (20, 297-10-50, 60, 50));
+			var imageBand = new ImageBand ();
+			imageBand.Load("logo-cresus.png");
+			imageBand.BuildSections (60, 50, 50, 50);
+			this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, 297-10-50, 60, 50));
 
-			var mailContact = new TextBand ();
-			mailContact.Text = this.MailContact;
-			mailContact.Font = font;
-			mailContact.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (mailContact, new Rectangle (120, 240, 80, 25));
+			var textBand = new TextBand ();
+			textBand.Text = "<b>Les logiciels de gestion</b>";
+			textBand.Font = font;
+			textBand.FontSize = 5.0;
+			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, 297-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 
-			string textConcerne = this.Concerne;
-			if (!string.IsNullOrEmpty (textConcerne))
+			var mailContactBand = new TextBand ();
+			mailContactBand.Text = this.GetMailContact ();
+			mailContactBand.Font = font;
+			mailContactBand.FontSize = fontSize;
+			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, 240, 80, 25));
+
+			string concerne = this.GetConcerne ();
+			if (!string.IsNullOrEmpty (concerne))
 			{
-				var concerne = new TableBand ();
-				concerne.ColumnsCount = 2;
-				concerne.RowsCount = 1;
-				concerne.PaintFrame = false;
-				concerne.Font = font;
-				concerne.FontSize = fontSize;
-				concerne.CellMargins = new Margins (0);
-				concerne.SetRelativeColumWidth (0, 15);
-				concerne.SetRelativeColumWidth (1, 80);
-				concerne.SetText (0, 0, "Concerne");
-				concerne.SetText (1, 0, textConcerne);
-				this.documentContainer.AddAbsolute (concerne, new Rectangle (20, 230, 100, 15));
+				var concerneBand = new TableBand ();
+				concerneBand.ColumnsCount = 2;
+				concerneBand.RowsCount = 1;
+				concerneBand.PaintFrame = false;
+				concerneBand.Font = font;
+				concerneBand.FontSize = fontSize;
+				concerneBand.CellMargins = new Margins (0);
+				concerneBand.SetRelativeColumWidth (0, 15);
+				concerneBand.SetRelativeColumWidth (1, 80);
+				concerneBand.SetText (0, 0, "Concerne");
+				concerneBand.SetText (1, 0, concerne);
+				this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, 230, 100, 15));
 			}
 
-			var title = new TextBand ();
-			title.Text = UIBuilder.FormatText ("<b>Facture", this.entity.IdA, "/~", this.entity.IdB, "</b>").ToString ();
-			title.Font = font;
-			title.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (title, new Rectangle (20, 215, 90, 10));
+			var titleBand = new TextBand ();
+			titleBand.Text = UIBuilder.FormatText ("<b>Facture", this.entity.IdA, "/~", this.entity.IdB, "/~", this.entity.IdC, "</b>").ToString ();
+			titleBand.Font = font;
+			titleBand.FontSize = 5.0;
+			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, 215, 90, 10));
 
-			System.DateTime dt;
-			if (this.entity.LastModificationDate.HasValue)
-			{
-				dt = this.entity.LastModificationDate.Value;
-			}
-			else
-			{
-				dt = System.DateTime.Now;
-			}
-
-			var date = new TextBand ();
-			date.Text = UIBuilder.FormatText ("Crissier, le ", Misc.GetDateTimeShortDescription (dt)).ToString ();
-			date.Font = font;
-			date.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (date, new Rectangle (120, 215, 80, 10));
+			string date = this.GetDate ();
+			var dateBand = new TextBand ();
+			dateBand.Text = UIBuilder.FormatText ("Crissier, le ", date).ToString ();
+			dateBand.Font = font;
+			dateBand.FontSize = fontSize;
+			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, 215, 80, 10));
 		}
 
 		private void BuildArticles()
@@ -165,17 +162,17 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					if (line is TextDocumentItemEntity)
 					{
-						this.BuildLineText (table, row, line as TextDocumentItemEntity);
+						this.BuildTextLine (table, row, line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						this.BuildLineArticle (table, row, line as ArticleDocumentItemEntity);
+						this.BuildArticleLine (table, row, line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						this.BuildLinePrice (table, row, line as PriceDocumentItemEntity);
+						this.BuildPriceLine (table, row, line as PriceDocumentItemEntity);
 					}
 
 					row++;
@@ -185,29 +182,20 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddFromTop (table, 5.0);
 		}
 
-		private void BuildLineText(TableBand table, int row, TextDocumentItemEntity line)
+		private void BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			table.SetText (2, row, line.Text);
 		}
 
-		private void BuildLineArticle(TableBand table, int row, ArticleDocumentItemEntity line)
+		private void BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
-			decimal quantity = this.ArticleQuantity (line);
-			decimal price    = this.ArticlePrice (line);
-
-			if (quantity == 0.0M)  // les frais de port ont une quantité nulle !
-			{
-				quantity = 1.0M;
-			}
-
-			string description = line.ArticleDefinition.LongDescription;
-			if (string.IsNullOrEmpty (description))
-			{
-				description = line.ArticleDefinition.ShortDescription;
-			}
+			decimal quantity    = this.GetArticleQuantity    (line);
+			string  unit        = this.GetArticleUnit        (line);
+			decimal price       = this.GetArticlePrice       (line);
+			string  description = this.GetArticleDescription (line);
 
 			table.SetText (0, row, quantity.ToString ());
-			table.SetText (1, row, this.ArticleUnit (line));
+			table.SetText (1, row, unit);
 			table.SetText (2, row, description);
 			table.SetText (3, row, price.ToString ());
 			table.SetText (4, row, (quantity*price).ToString ());
@@ -217,7 +205,7 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetAlignment (4, row, ContentAlignment.MiddleRight);
 		}
 
-		private void BuildLinePrice(TableBand table, int row, PriceDocumentItemEntity line)
+		private void BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
 		{
 			table.SetText (2, row, line.TextForPrimaryPrice);
 			table.SetText (3, row, line.PrimaryPriceBeforeTax.ToString ());
@@ -240,13 +228,13 @@ namespace Epsitec.Cresus.Core.Printers
 				var BV = new BvBand ();
 
 				BV.PaintBvSimulator = true;
-				BV.From = this.MailContact;
+				BV.From = this.GetMailContact ();
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
 					BV.NotForUse = false;  // c'est LE vrai BV
-					BV.Price = this.Total;
+					BV.Price = this.GetTotal ();
 
 					if (this.entity.BillingDetails.Count > 0)
 					{
@@ -264,45 +252,64 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private string MailContact
+		private string GetDate()
 		{
-			get
+			System.DateTime date;
+			if (this.entity.LastModificationDate.HasValue)
 			{
-				string legal = "";
-				string natural = "";
-
-				if (this.entity.BillingMailContact != null)
-				{
-					if (this.entity.BillingMailContact.LegalPerson.IsActive ())
-					{
-						var x = this.entity.BillingMailContact.LegalPerson;
-						legal = UIBuilder.FormatText (x.Name).ToString ();
-					}
-
-					if (this.entity.BillingMailContact.NaturalPerson.IsActive ())
-					{
-						var x = this.entity.BillingMailContact.NaturalPerson;
-						natural = UIBuilder.FormatText (x.Title.Name, "~\n", x.Firstname, x.Lastname).ToString ();
-					}
-
-					return UIBuilder.FormatText (legal, "~\n", natural, "~\n", this.entity.BillingMailContact.Address.Street.StreetName, "\n", this.entity.BillingMailContact.Address.Location.PostalCode, this.entity.BillingMailContact.Address.Location.Name).ToString ();
-				}
-
-				return null;
+				date = this.entity.LastModificationDate.Value;
 			}
+			else
+			{
+				date = System.DateTime.Now;
+			}
+
+			return Misc.GetDateTimeShortDescription (date);
 		}
 
-		private decimal ArticleQuantity(ArticleDocumentItemEntity article)
+		private string GetMailContact()
+		{
+			string legal = "";
+			string natural = "";
+
+			if (this.entity.BillingMailContact != null)
+			{
+				if (this.entity.BillingMailContact.LegalPerson.IsActive ())
+				{
+					var x = this.entity.BillingMailContact.LegalPerson;
+					legal = UIBuilder.FormatText (x.Name).ToString ();
+				}
+
+				if (this.entity.BillingMailContact.NaturalPerson.IsActive ())
+				{
+					var x = this.entity.BillingMailContact.NaturalPerson;
+					natural = UIBuilder.FormatText (x.Title.Name, "~\n", x.Firstname, x.Lastname).ToString ();
+				}
+
+				return UIBuilder.FormatText (legal, "~\n", natural, "~\n", this.entity.BillingMailContact.Address.Street.StreetName, "\n", this.entity.BillingMailContact.Address.Location.PostalCode, this.entity.BillingMailContact.Address.Location.Name).ToString ();
+			}
+
+			return null;
+		}
+
+		private decimal GetArticleQuantity(ArticleDocumentItemEntity article)
 		{
 			if (article.ArticleQuantities.Count != 0)
 			{
-				return article.ArticleQuantities[0].Quantity;
+				decimal quantity = article.ArticleQuantities[0].Quantity;
+
+				if (quantity == 0.0M)  // les frais de port ont une quantité nulle !
+				{
+					quantity = 1.0M;
+				}
+
+				return quantity;
 			}
 
 			return 0;
 		}
 
-		private string ArticleUnit(ArticleDocumentItemEntity article)
+		private string GetArticleUnit(ArticleDocumentItemEntity article)
 		{
 			if (article.ArticleQuantities.Count != 0)
 			{
@@ -312,7 +319,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return null;
 		}
 
-		private decimal ArticlePrice(ArticleDocumentItemEntity article)
+		private decimal GetArticlePrice(ArticleDocumentItemEntity article)
 		{
 			if (article.ArticleDefinition.ArticlePrices.Count != 0)
 			{
@@ -322,30 +329,36 @@ namespace Epsitec.Cresus.Core.Printers
 			return 0;
 		}
 
-		private string Concerne
+		private string GetArticleDescription(ArticleDocumentItemEntity article)
 		{
-			get
-			{
-				if (this.entity.BillingDetails.Count > 0)
-				{
-					return this.entity.BillingDetails[0].Title;
-				}
+			string description = article.ArticleDefinition.LongDescription;
 
-				return null;
+			if (string.IsNullOrEmpty (description))
+			{
+				description = article.ArticleDefinition.ShortDescription;  // description courte s'il n'existe pas de longue
 			}
+
+			return description;
 		}
 
-		private decimal Total
+		private string GetConcerne()
 		{
-			get
+			if (this.entity.BillingDetails.Count > 0)
 			{
-				if (this.entity.BillingDetails.Count > 0)
-				{
-					return this.entity.BillingDetails[0].AmountDue.Amount;
-				}
-
-				return 0;
+				return this.entity.BillingDetails[0].Title;
 			}
+
+			return null;
+		}
+
+		private decimal GetTotal()
+		{
+			if (this.entity.BillingDetails.Count > 0)
+			{
+				return this.entity.BillingDetails[0].AmountDue.Amount;
+			}
+
+			return 0;
 		}
 
 
