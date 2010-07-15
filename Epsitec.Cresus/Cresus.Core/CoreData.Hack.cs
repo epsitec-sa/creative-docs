@@ -767,7 +767,7 @@ namespace Epsitec.Cresus.Core
 
 			paymentMode.Code = "BILL";
 			paymentMode.Name = "BVR à 30 jours net";
-			paymentMode.Description = "Facture payable au moyen du bulletin de versement ci-joint.\nConditions: 30 jours net.";
+			paymentMode.Description = "Facture payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
 			paymentMode.BookAccount = "1010";
 			paymentMode.StandardPaymentTerm = 30;
 
@@ -778,7 +778,7 @@ namespace Epsitec.Cresus.Core
 			paymentA.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value;
 			paymentA.Date = new Date (2010, 08, 06);
 
-			billingA.Title = "Votre commande du 5 juillet 2010";
+			billingA.Title = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
 			billingA.AmountDue = paymentA;
 			billingA.EsrCustomerNumber = "01-69444-3";										//	compte BVR
 			billingA.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";				//	n° de réf BVR lié

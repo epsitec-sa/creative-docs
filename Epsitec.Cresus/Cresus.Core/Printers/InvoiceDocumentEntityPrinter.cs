@@ -67,15 +67,39 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildHeader()
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
+			var image = new ImageBand ();
+			image.Load("logo-cresus.png");
+			image.BuildSections (60, 50, 50, 50);
+			this.documentContainer.AddAbsolute (image, new Rectangle (20, 297-10-50, 60, 50));
+
 			var mailContact = new TextBand ();
 			mailContact.Text = this.MailContact;
+			mailContact.Font = font;
 			mailContact.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContact, new Rectangle (120, 240, 80, 25));
 
+			string textConcerne = this.Concerne;
+			if (!string.IsNullOrEmpty (textConcerne))
+			{
+				var concerne = new TableBand ();
+				concerne.ColumnsCount = 2;
+				concerne.RowsCount = 1;
+				concerne.PaintFrame = false;
+				concerne.Font = font;
+				concerne.FontSize = fontSize;
+				concerne.CellMargins = new Margins (0);
+				concerne.SetRelativeColumWidth (0, 15);
+				concerne.SetRelativeColumWidth (1, 80);
+				concerne.SetText (0, 0, "Concerne");
+				concerne.SetText (1, 0, textConcerne);
+				this.documentContainer.AddAbsolute (concerne, new Rectangle (20, 230, 100, 15));
+			}
+
 			var title = new TextBand ();
 			title.Text = UIBuilder.FormatText ("<b>Facture", this.entity.IdA, "/~", this.entity.IdB, "</b>").ToString ();
+			title.Font = font;
 			title.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (title, new Rectangle (20, 205, 90, 10));
+			this.documentContainer.AddAbsolute (title, new Rectangle (20, 215, 90, 10));
 
 			System.DateTime dt;
 			if (this.entity.LastModificationDate.HasValue)
@@ -89,14 +113,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 			var date = new TextBand ();
 			date.Text = UIBuilder.FormatText ("Crissier, le ", Misc.GetDateTimeShortDescription (dt)).ToString ();
+			date.Font = font;
 			date.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (date, new Rectangle (120, 205, 80, 10));
+			this.documentContainer.AddAbsolute (date, new Rectangle (120, 215, 80, 10));
 		}
 
 		private void BuildArticles()
 		{
 			//	Ajoute les articles dans le document.
-			this.documentContainer.CurrentVerticalPosition = 190;
+			this.documentContainer.CurrentVerticalPosition = 210;
 
 			var table = new TableBand ();
 			table.ColumnsCount = 5;
@@ -146,6 +171,42 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.documentContainer.AddFromTop (table, 5.0);
 		}
+
+		private void BuildBv()
+		{
+			//	Met un BV en bas de chaque page.
+			var bounds = new Rectangle (Point.Zero, BvBand.DefautlSize);
+
+			for (int page = 0; page < this.documentContainer.PageCount; page++)
+			{
+				this.documentContainer.CurrentPage = page;
+
+				var BV = new BvBand ();
+
+				BV.PaintBvSimulator = true;
+				BV.From = this.MailContact;
+				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
+
+				if (page == this.documentContainer.PageCount-1)  // dernière page ?
+				{
+					BV.NotForUse = false;  // c'est LE vrai BV
+					BV.Price = this.Total;
+
+					if (this.entity.BillingDetails.Count > 0)
+					{
+						BV.EsrCustomerNumber  = this.entity.BillingDetails[0].EsrCustomerNumber;
+						BV.EsrReferenceNumber = this.entity.BillingDetails[0].EsrReferenceNumber;
+					}
+				}
+				else  // faux BV ?
+				{
+					BV.NotForUse = true;  // pour imprimer "XXXXX XX"
+				}
+
+				this.documentContainer.AddAbsolute (BV, bounds);
+			}
+		}
+
 
 		private string MailContact
 		{
@@ -205,46 +266,38 @@ namespace Epsitec.Cresus.Core.Printers
 			return 0;
 		}
 
-
-		private void BuildBv()
+		private string Concerne
 		{
-			//	Met un BV en bas de chaque page.
-			var bounds = new Rectangle (0, 0, 210, 106);
-
-			for (int page = 0; page < this.documentContainer.PageCount; page++)
+			get
 			{
-				this.documentContainer.CurrentPage = page;
-
-				var BV = new BvBand ();
-
-				BV.PaintBvSimulator = true;
-				BV.From = this.MailContact;
-				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
-
-				if (page == this.documentContainer.PageCount-1)  // dernière page ?
+				if (this.entity.BillingDetails.Count > 0)
 				{
-					BV.Price = 106.20M;
-					BV.NotForUse = false;
-
-					if (this.entity.BillingDetails.Count > 0)
-					{
-						BV.EsrCustomerNumber  = this.entity.BillingDetails[0].EsrCustomerNumber;
-						BV.EsrReferenceNumber = this.entity.BillingDetails[0].EsrReferenceNumber;
-					}
-				}
-				else
-				{
-					BV.NotForUse = true;  // pour imprimer "XXXXX XX"
+					return this.entity.BillingDetails[0].Title;
 				}
 
-				this.documentContainer.AddAbsolute (BV, bounds);
+				return null;
 			}
 		}
+
+		private decimal Total
+		{
+			get
+			{
+				if (this.entity.BillingDetails.Count > 0)
+				{
+					return this.entity.BillingDetails[0].AmountDue.Amount;
+				}
+
+				return 0;
+			}
+		}
+
 
 
 		private static readonly double pageWidth  = 210;
 		private static readonly double pageHeight = 297;  // A4 vertical
 
-		private static readonly double fontSize = 4;
+		private static readonly Font font = Font.GetFont ("Arial", "Regular");
+		private static readonly double fontSize = 3.0;
 	}
 }

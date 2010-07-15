@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.CellBorderWidth = 0.1;
 			this.CellMargins = new Margins (1.0);
+			this.PaintFrame = true;
 
 			this.content = new List<List<TextBand>> ();
 			this.relativeColumnsWidth = new List<double> ();
@@ -39,6 +40,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		public Margins CellMargins
+		{
+			get;
+			set;
+		}
+
+		public bool PaintFrame
 		{
 			get;
 			set;
@@ -113,6 +120,32 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			TextBand textBox = this.GetTextBox (column, row);
 			textBox.Text = value;
+		}
+
+
+		public Font GetFont(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.Font;
+		}
+
+		public void SetFont(int column, int row, Font value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.Font = value;
+		}
+
+
+		public double GetFontSize(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.FontSize;
+		}
+
+		public void SetFontSize(int column, int row, double value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.FontSize = value;
 		}
 
 
@@ -452,10 +485,13 @@ namespace Epsitec.Cresus.Core.Printers
 						}
 					}
 
-					//	Dessine le cadre de la cellule.
-					port.LineWidth = this.CellBorderWidth;
-					port.Color = Color.FromBrightness (0);
-					port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
+					if (this.PaintFrame)
+					{
+						//	Dessine le cadre de la cellule.
+						port.LineWidth = this.CellBorderWidth;
+						port.Color = Color.FromBrightness (0);
+						port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
+					}
 
 					x += width;
 				}
@@ -528,6 +564,9 @@ namespace Epsitec.Cresus.Core.Printers
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					var textBox = new TextBand ();
+					textBox.Font = this.Font;
+					textBox.FontSize = this.FontSize;
+					
 					line.Add (textBox);
 				}
 
@@ -595,6 +634,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private int							rowsCount;
 		private List<List<TextBand>>		content;
 		private List<double>				relativeColumnsWidth;
-		private List<SectionInfo>				sectionsInfo;
+		private List<SectionInfo>			sectionsInfo;
 	}
 }

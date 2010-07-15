@@ -218,6 +218,16 @@ namespace Epsitec.Cresus.Core
 			return string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}.icon", icon);
 		}
 
+		/// <summary>
+		/// Retourne le nom complet d'une image contenue dans les ressources.
+		/// </summary>
+		/// <param name="icon">Nom de l'image, avec extension.</param>
+		/// <returns></returns>
+		public static string GetResourceImage(string filename)
+		{
+			return string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}", filename);
+		}
+
 
 		public static string RemoveAccentsToLower(string text)
 		{

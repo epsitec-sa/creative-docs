@@ -27,6 +27,15 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public static Size DefautlSize
+		{
+			get
+			{
+				return new Size (210, 106);
+			}
+		}
+
+
 		/// <summary>
 		/// true  -> Dessine un faux BV orangé sur du papier vierge. A n'utiliser que pour l'aperçu avant impression.
 		/// false -> Ne dessine que les informations réelles sur du papier avec un BV préimprimé.
@@ -96,7 +105,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override double RequiredHeight(double width)
 		{
-			return 106;
+			return BvBand.DefautlSize.Height;
 		}
 
 
@@ -130,7 +139,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			if (section == 0)
 			{
-				return 106;
+				return BvBand.DefautlSize.Height;
 			}
 
 			return 0;
