@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Margins (20, 15, 10, 10);
+				return new Margins (20, 15, 10, 110);
 			}
 		}
 
@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.BuildHeader ();
 			this.BuildArticles ();
+			this.BuildBv ();
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -87,7 +88,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var date = new TextBand ();
-			date.Text = UIBuilder.FormatText ("Aubonne, le ", Misc.GetDateTimeShortDescription (dt)).ToString ();
+			date.Text = UIBuilder.FormatText ("Crissier, le ", Misc.GetDateTimeShortDescription (dt)).ToString ();
 			date.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (date, new Rectangle (120, 205, 80, 10));
 		}
@@ -204,6 +205,41 @@ namespace Epsitec.Cresus.Core.Printers
 			return 0;
 		}
 
+
+		private void BuildBv()
+		{
+			//	Met un BV en bas de chaque page.
+			var bounds = new Rectangle (0, 0, 210, 106);
+
+			for (int page = 0; page < this.documentContainer.PageCount; page++)
+			{
+				this.documentContainer.CurrentPage = page;
+
+				var BV = new BvBand ();
+
+				BV.PaintBvSimulator = true;
+				BV.From = this.MailContact;
+				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
+
+				if (page == this.documentContainer.PageCount-1)  // dernière page ?
+				{
+					BV.Price = 106.20M;
+					BV.NotForUse = false;
+
+					if (this.entity.BillingDetails.Count > 0)
+					{
+						BV.EsrCustomerNumber  = this.entity.BillingDetails[0].EsrCustomerNumber;
+						BV.EsrReferenceNumber = this.entity.BillingDetails[0].EsrReferenceNumber;
+					}
+				}
+				else
+				{
+					BV.NotForUse = true;  // pour imprimer "XXXXX XX"
+				}
+
+				this.documentContainer.AddAbsolute (BV, bounds);
+			}
+		}
 
 
 		private static readonly double pageWidth  = 210;

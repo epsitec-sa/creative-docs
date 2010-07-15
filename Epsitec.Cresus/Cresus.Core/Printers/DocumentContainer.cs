@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pages = new List<PageContainer> ();
 			this.pages.Add (new PageContainer (0));  // crée la première page
 
-			this.top = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+			this.currentPage = 0;
+			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
 		}
 
 		/// <summary>
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			band.BuildSections (bounds.Width, bounds.Height, bounds.Height, bounds.Height);
 
-			this.pages[this.pages.Count-1].AddBand (band, 0, bounds.TopLeft);
+			this.pages[this.currentPage].AddBand (band, 0, bounds.TopLeft);
 		}
 
 		/// <summary>
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			double width  = this.pageSize.Width  - this.pageMargins.Left - this.pageMargins.Right;
 			double height = this.pageSize.Height - this.pageMargins.Top  - this.pageMargins.Bottom;
-			double rest = this.top - this.pageMargins.Bottom;
+			double rest = this.currentVerticalPosition - this.pageMargins.Bottom;
 
 			band.BuildSections (width, rest, height, height);
 
@@ -68,15 +69,32 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double requiredHeight = band.GetSectionHeight (section);
 
-				if (this.top - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
+				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.top = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
 					this.pages.Add (new PageContainer (this.pages.Count));  // crée la page
+
+					this.currentPage++;
+					this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
 				}
 
-				this.pages[this.pages.Count-1].AddBand (band, section, new Point (this.pageMargins.Left, this.top));
+				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
 
-				this.top -= requiredHeight + bottomMargin;
+				this.currentVerticalPosition -= requiredHeight + bottomMargin;
+			}
+		}
+
+		public int CurrentPage
+		{
+			get
+			{
+				return this.currentPage;
+			}
+			set
+			{
+				value = System.Math.Max (value, 0);
+				value = System.Math.Min (value, this.pages.Count-1);
+
+				this.currentPage = value;
 			}
 		}
 
@@ -84,11 +102,11 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.top;
+				return this.currentVerticalPosition;
 			}
 			set
 			{
-				this.top = value;
+				this.currentVerticalPosition = value;
 			}
 		}
 
@@ -123,6 +141,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly Size					pageSize;
 		private readonly Margins				pageMargins;
 		private readonly List<PageContainer>	pages;
-		private double							top;
+		private int								currentPage;
+		private double							currentVerticalPosition;
 	}
 }
