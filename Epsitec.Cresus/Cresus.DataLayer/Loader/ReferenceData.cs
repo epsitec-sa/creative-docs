@@ -33,15 +33,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="fieldId">The id of the field whose reference to set or get.</param>
 		/// <value>The reference of the field with the id <paramref name="fieldId"/>.</value>
-		public DbKey this[Druid fieldId]
+		public DbKey? this[Druid fieldId]
 		{
 			get
 			{
-				return this.referenceKeys.ContainsKey (fieldId) ? this.referenceKeys[fieldId] : DbKey.Empty;
+				if (this.referenceKeys.ContainsKey (fieldId))
+				{
+					return this.referenceKeys[fieldId];
+				}
+				else
+				{
+					return null;
+				}
 			}
 			set
 			{
-				this.referenceKeys[fieldId] = value;
+				if (!value.HasValue)
+				{
+					throw new System.ArgumentNullException ("fieldId");
+				}
+
+				this.referenceKeys[fieldId] = value.Value;
 			}
 		}
 

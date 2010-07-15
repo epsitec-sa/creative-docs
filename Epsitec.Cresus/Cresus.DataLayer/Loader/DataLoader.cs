@@ -160,6 +160,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public AbstractEntity ResolveEntity(DbKey dbKey, Druid entityId)
 		{
+			// TODO Change this method so that it takes an EntityKey as argument
+			// Marc
+
 			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
 
 			Request request = new Request ()
@@ -199,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 				{
-					this.DeserializeEntityLocal (entity, currentId);
+					this.DeserializeEntityLocalWithProxies (entity, currentId);
 				}
 
 				foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
@@ -212,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private void DeserializeEntityLocal(AbstractEntity entity, Druid entityId)
+		private void DeserializeEntityLocalWithProxies(AbstractEntity entity, Druid entityId)
 		{
 			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
 			{
@@ -221,7 +224,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				entity.InternalSetValue (field.Id, proxy);
 			}
 		}
-
 
 
 		private object GetProxyForField(AbstractEntity entity, StructuredTypeField field)
@@ -286,10 +288,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void DeserializeEntityLocalFieldReference(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
-			DbKey targetKey = entityData.ReferenceData[field.CaptionId];
-			object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
+			DbKey? targetKey = entityData.ReferenceData[field.CaptionId];
 
-			entity.InternalSetValue (field.Id, target);
+			if (targetKey.HasValue)
+			{
+				object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey.Value);
+
+				entity.InternalSetValue (field.Id, target);
+			}
 		}
 
 
