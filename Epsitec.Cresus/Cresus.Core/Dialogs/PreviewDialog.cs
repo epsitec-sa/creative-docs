@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdatePage ();
 
-#if true
+#if false
 			this.debugPrevButton1 = new GlyphButton
 			{
 				Parent = this.footer,
@@ -185,10 +185,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.pagePrevButton.Clicked += new EventHandler<MessageEventArgs> (pagePrevButton_Clicked);
 			this.pageNextButton.Clicked += new EventHandler<MessageEventArgs> (pageNextButton_Clicked);
 
-			this.debugPrevButton1.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton1_Clicked);
-			this.debugNextButton1.Clicked += new EventHandler<MessageEventArgs> (debugNextButton1_Clicked);
-			this.debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
-			this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
+			if (this.debugPrevButton1 != null)
+			{
+				this.debugPrevButton1.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton1_Clicked);
+				this.debugNextButton1.Clicked += new EventHandler<MessageEventArgs> (debugNextButton1_Clicked);
+				this.debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
+				this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
+			}
 
 			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
 		}
@@ -248,6 +251,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePage()
 		{
+			this.pagePrevButton.Enable = this.entityPrinter.CurrentPage > 0;
+			this.pageNextButton.Enable = this.entityPrinter.CurrentPage < this.entityPrinter.PageCount-1;
 			this.pageRank.Text = (this.entityPrinter.CurrentPage+1).ToString ();
 
 			this.preview.Invalidate ();

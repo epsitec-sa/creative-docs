@@ -51,6 +51,14 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public int PageCount
+		{
+			get
+			{
+				return this.documentContainer.PageCount;
+			}
+		}
+
 		public int CurrentPage
 		{
 			get
@@ -103,6 +111,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public virtual void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
 		}
+
 
 
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
