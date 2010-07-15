@@ -465,35 +465,68 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			AbstractEntity entity = e.Entity;
 
-			System.Diagnostics.Debug.Assert (this.EntityContext == entity.GetEntityContext ());
-
-			if (this.EnableNullVirtualization)
-			{
-				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
-			}
-
-			if (EntityNullReferenceVirtualizer.IsEmptyEntityContext (e.OldContext))
-			{
-				this.RegisterEmptyEntity (entity);
-			}
-
-			Druid entityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (entityId);
-			EntityDataMapping entityMapping = new EntityDataMapping (entity, entityId, rootEntityId);
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
 			
 			long entitySerialId = entity.GetEntitySerialId ();
-
-			this.entitiesCache.Add (entitySerialId, entityMapping);
+					
+			this.OnCreationPatchEntity (entity);
+			this.OnCreationRegisterAsEmptyEntity (entity, e);
+			this.OnCreationAddToCache (entity, leafEntityId, rootEntityId, entitySerialId);
 
 			try
 			{
-				this.SchemaEngine.LoadSchema (entityId);
+				this.OnCreationLoadSchema (leafEntityId);
 			}
 			catch
 			{
-				this.entitiesCache.Remove (entitySerialId);
+				this.OnCreationRemoveFromCache (entitySerialId);
 				throw;
 			}
+		}
+
+
+		private void OnCreationPatchEntity(AbstractEntity entity)
+		{
+			bool entityIsNotPatched = !EntityNullReferenceVirtualizer.IsPatchedEntity (entity);
+
+			if (this.EnableNullVirtualization && entityIsNotPatched)
+			{
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
+			}
+		}
+
+
+		private void OnCreationRegisterAsEmptyEntity(AbstractEntity entity, EntityContextEventArgs e)
+		{
+			bool entityWasNullVirtualized = EntityNullReferenceVirtualizer.IsEmptyEntityContext (e.OldContext);
+			bool entityIsNullVirtualized = EntityNullReferenceVirtualizer.IsNullEntity (entity);
+			bool entityIsStillUnchanged = EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (entity);
+
+			if (entityWasNullVirtualized && (entityIsNullVirtualized || entityIsStillUnchanged))
+			{
+				this.RegisterEmptyEntity (entity);
+			}
+		}
+
+		
+		private void OnCreationAddToCache(AbstractEntity entity, Druid leafEntityId, Druid rootEntityId, long entitySerialId)
+		{
+			EntityDataMapping entityMapping = new EntityDataMapping (entity, leafEntityId, rootEntityId);
+
+			this.entitiesCache.Add (entitySerialId, entityMapping);
+		}
+
+
+		private void OnCreationRemoveFromCache(long entitySerialId)
+		{
+			this.entitiesCache.Remove (entitySerialId);
+		}
+
+
+		private void OnCreationLoadSchema(Druid leafEntityId)
+		{
+			this.SchemaEngine.LoadSchema (leafEntityId);
 		}
 
 

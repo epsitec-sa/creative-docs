@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.DataLayer
 		private readonly static bool runDeleteTests = true;
 
 
-		private readonly static DatabaseSize databaseSize = DatabaseSize.Large;
+		private readonly static DatabaseSize databaseSize = DatabaseSize.Small;
 
 
 		private readonly static string logFile = @"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests\bin\Debug\results.txt";

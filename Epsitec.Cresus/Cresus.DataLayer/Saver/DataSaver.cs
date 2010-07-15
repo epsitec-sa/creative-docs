@@ -274,9 +274,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private bool CheckIfTargetMustBeSaved(AbstractEntity target)
 		{
+			// Do not change the order of the following calls. The call to GetEntityDataMapping(...)
+			// returns null in some cases where the call to CheckIfEntityCanBeSaved returns false. If
+			// you change the order, you might get some NullReferenceException.
+			// Marc
+
 			bool mustBeSaved = target != null
-				&& this.DataContext.GetEntityDataMapping (target).RowKey.IsEmpty
-				&& this.DataContext.CheckIfEntityCanBeSaved (target);
+				&& this.DataContext.CheckIfEntityCanBeSaved (target)
+				&& this.DataContext.GetEntityDataMapping (target).RowKey.IsEmpty;
 			
 			return mustBeSaved;
 		}
