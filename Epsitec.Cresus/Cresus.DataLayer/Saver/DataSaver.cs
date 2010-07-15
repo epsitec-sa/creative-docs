@@ -63,20 +63,32 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		public void SaveChanges()
 		{
-			bool deletedEntities = this.DeleteEntities ();
-			bool savedEntities = this.SaveEntities ();
+			bool containsChanges;
 
-			this.UpdateDataGeneration (deletedEntities || savedEntities);
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				bool deletedEntities = this.DeleteEntities (transaction);
+				bool savedEntities = this.SaveEntities (transaction);
+
+				containsChanges = deletedEntities || savedEntities;
+
+				transaction.Commit ();
+			}
+
+			if (containsChanges)
+			{
+				this.UpdateDataGeneration ();
+			}
 		}
 
 
-		private bool DeleteEntities()
+		private bool DeleteEntities(DbTransaction transaction)
 		{
 			List<AbstractEntity> entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			
 			foreach (AbstractEntity entity in entitiesToDelete)
 			{
-				this.RemoveEntity (entity);
+				this.RemoveEntity (transaction, entity);
 				this.DataContext.MarkAsDeleted (entity);
 			}
 
@@ -86,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void RemoveEntity(AbstractEntity entity)
+		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
 
@@ -97,11 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				if (!mapping.RowKey.IsEmpty)
 				{
 					this.DeleteEntityTargetRelationsInMemory (entity);
-
-					this.ExecuteWithTransaction (transaction =>
-					{
-						this.SaverQueryGenerator.DeleteEntity (transaction, entity);
-					});
+					this.SaverQueryGenerator.DeleteEntity (transaction, entity);
 				}
 			}
 		}
@@ -150,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool SaveEntities()
+		private bool SaveEntities(DbTransaction transaction)
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
 				from entity in this.DataContext.GetEntitiesModified ()
@@ -160,14 +168,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
-				this.SaveEntity (entity);
+				this.SaveEntity (transaction, entity);
 			}
 
 			return entitiesToSave.Any ();
 		}
 
 
-		private void SaveEntity(AbstractEntity entity)
+		private void SaveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
 			if (!this.DataContext.Contains (entity))
 			{
@@ -189,46 +197,37 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (isNotPersisted)
 			{
-				DbKey newKey = this.ExecuteWithTransaction (transaction =>
-				{
-					return this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
-				});
+				DbKey newKey = this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
 
 				this.DataContext.DefineRowKey (mapping, newKey);
 			}
 
-			this.SaveTargetsIfNotPersisted (entity);
+			this.SaveTargetsIfNotPersisted (transaction, entity);
 
 			if (isNotPersisted)
 			{
-				this.InsertEntity (entity);
+				this.InsertEntity (transaction, entity);
 			}
 			else
 			{
-				this.UpdateEntity (entity);
+				this.UpdateEntity (transaction, entity);
 			}
 		}
 
 
-		private void InsertEntity(AbstractEntity entity)
+		private void InsertEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.ExecuteWithTransaction (transaction =>
-			{
-				this.SaverQueryGenerator.InsertEntity (transaction, entity);
-			});
+			this.SaverQueryGenerator.InsertEntity (transaction, entity);
 		}
 
 
-		private void UpdateEntity(AbstractEntity entity)
+		private void UpdateEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.ExecuteWithTransaction (transaction =>
-			{
-				this.SaverQueryGenerator.UpdateEntity (transaction, entity);
-			});
+			this.SaverQueryGenerator.UpdateEntity (transaction, entity);
 		}
 
 
-		private void SaveTargetsIfNotPersisted(AbstractEntity source)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, AbstractEntity source)
 		{
 			Druid leafEntityId = source.GetEntityStructuredTypeId ();
 
@@ -239,12 +238,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (StructuredTypeField field in relations)
 			{
-				this.SaveTargetsIfNotPersisted (source, field);
+				this.SaveTargetsIfNotPersisted (transaction, source, field);
 			}
 		}
 
 
-		private void SaveTargetsIfNotPersisted(AbstractEntity source, StructuredTypeField field)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, AbstractEntity source, StructuredTypeField field)
 		{
 			List<AbstractEntity> targets = new List<AbstractEntity> ();
 			
@@ -268,7 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
 			{
-				this.SaveEntity (target);
+				this.SaveEntity (transaction, target);
 			}
 		}
 
@@ -283,52 +282,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void UpdateDataGeneration(bool containsChanges)
+		private void UpdateDataGeneration()
 		{
-			if (containsChanges)
-			{
-				this.EntityContext.NewDataGeneration ();
-			}
-		}
-
-
-		private void ExecuteWithTransaction(System.Action<DbTransaction> query)
-		{
-			this.ExecuteWithTransaction<object> (transaction =>
-			{
-				query (transaction);
-				return null;
-			});
-		}
-
-
-		private TResult ExecuteWithTransaction<TResult>(System.Func<DbTransaction, TResult> query)
-		{
-			TResult result;
-			
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
-			{
-				// TODO Uncomment the catch clause and remove the finally clause at the end of the
-				// tests.
-
-				try
-				{
-					result = query (transaction);
-
-					transaction.Commit ();
-				}
-				//catch
-				//{
-				//    transaction.Rollback ();
-
-				//    throw;
-				//}
-				finally
-				{
-				}
-			}
-
-			return result;
+			this.EntityContext.NewDataGeneration ();
 		}
 
 
