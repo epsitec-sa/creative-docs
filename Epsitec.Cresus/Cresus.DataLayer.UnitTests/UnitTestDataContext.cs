@@ -48,7 +48,10 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
 
-			Database2.PupulateDatabase ();
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			{
+				Database2.PupulateDatabase (dataContext);
+			}
 		}
 
 
