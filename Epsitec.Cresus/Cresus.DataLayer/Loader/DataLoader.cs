@@ -277,12 +277,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void DeserializeEntityLocalFieldValue(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid fieldId = field.CaptionId;
 
-			object valueData = entityData.ValueData[field.CaptionId];
-			object value = this.GetFieldValue (leafEntityId, field, valueData);
+			object internalValue = entityData.ValueData[fieldId];
+			object externalValue = this.GetFieldValue (entity, fieldId, internalValue);
 
-			entity.InternalSetValue (field.Id, value);
+			entity.InternalSetValue (field.Id, externalValue);
 		}
 
 
@@ -314,11 +314,23 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
 		{
-			return this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
+			object value = this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
+
+			return this.GetFieldValue (entity, fieldId, value);
 		}
 
 
-		private object GetFieldValue(Druid leafEntityId, StructuredTypeField field, object value)
+		private object GetFieldValue(AbstractEntity entity, Druid fieldId, object value)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			string fieldName = fieldId.ToResourceId ();
+			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
+
+			return this.ConvertFromInternal (leafEntityId, field, value);
+		}
+
+
+		private object ConvertFromInternal(Druid leafEntityId, StructuredTypeField field, object value)
 		{
 			object newValue = value;
 
