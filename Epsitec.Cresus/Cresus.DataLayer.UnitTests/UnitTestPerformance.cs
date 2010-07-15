@@ -67,44 +67,25 @@ namespace Epsitec.Cresus.DataLayer
 			TestHelper.WriteStartTest ("Retrieve all data", UnitTestPerformance.logFile);
 
 			this.RetrieveAllData<AbstractPersonEntity> ();
-
-		    this.RetrieveAllData<NaturalPersonEntity> ();
-
-		    this.RetrieveAllData<LegalPersonEntity> ();
-
-		    this.RetrieveAllData<LegalPersonTypeEntity> ();
-
-		    this.RetrieveAllData<PersonTitleEntity> ();
-
-		    this.RetrieveAllData<PersonGenderEntity> ();
-
-		    this.RetrieveAllData<AbstractContactEntity> ();
-
-		    this.RetrieveAllData<ContactRoleEntity> ();
-
+			this.RetrieveAllData<NaturalPersonEntity> ();
+			this.RetrieveAllData<LegalPersonEntity> ();
+			this.RetrieveAllData<LegalPersonTypeEntity> ();
+			this.RetrieveAllData<PersonTitleEntity> ();
+			this.RetrieveAllData<PersonGenderEntity> ();
+			this.RetrieveAllData<AbstractContactEntity> ();
+			this.RetrieveAllData<ContactRoleEntity> ();
 			this.RetrieveAllData<CommentEntity> ();
-
-		    this.RetrieveAllData<MailContactEntity> ();
-
-		    this.RetrieveAllData<AddressEntity> ();
-
-		    this.RetrieveAllData<StreetEntity> ();
-
-		    this.RetrieveAllData<PostBoxEntity> ();
-
-		    this.RetrieveAllData<LocationEntity> ();
-
-		    this.RetrieveAllData<RegionEntity> ();
-
-		    this.RetrieveAllData<CountryEntity> ();
-
-		    this.RetrieveAllData<TelecomContactEntity> ();
-
-		    this.RetrieveAllData<TelecomTypeEntity> ();
-
-		    this.RetrieveAllData<UriContactEntity> ();
-
-		    this.RetrieveAllData<UriSchemeEntity> ();
+			this.RetrieveAllData<MailContactEntity> ();
+			this.RetrieveAllData<AddressEntity> ();
+			this.RetrieveAllData<StreetEntity> ();
+			this.RetrieveAllData<PostBoxEntity> ();
+			this.RetrieveAllData<LocationEntity> ();
+			this.RetrieveAllData<RegionEntity> ();
+			this.RetrieveAllData<CountryEntity> ();
+			this.RetrieveAllData<TelecomContactEntity> ();
+			this.RetrieveAllData<TelecomTypeEntity> ();
+			this.RetrieveAllData<UriContactEntity> ();
+			this.RetrieveAllData<UriSchemeEntity> ();
 		}
 
 
@@ -152,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
-				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000000001)));
+				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1)));
 
 		        UriContactEntity example = new UriContactEntity ()
 		        {
@@ -206,7 +187,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
-		        CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000000001)));
+		        CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1)));
 
 		        LocationEntity example = new LocationEntity ()
 		        {
@@ -260,7 +241,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
-		        LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000000001)));
+		        LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1)));
 
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -314,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
-		        NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+		        NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -368,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		    using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 		    {
-		        LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000000001)));
+		        LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1)));
 
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -478,7 +459,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
+				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1)));
 
 				TestHelper.MeasureAndWriteTime (
 					"",
@@ -516,13 +497,10 @@ namespace Epsitec.Cresus.DataLayer
 
 			if (UnitTestPerformance.runDeleteTests)
 			{
-				this.DeleteEntity<NaturalPersonEntity> (1000000000001);
-
-				this.DeleteEntity<AbstractContactEntity> (1000000000001);
-
-				this.DeleteEntity<RegionEntity> (1000000000001);
-
-				this.DeleteEntity<ContactRoleEntity> (1000000000001);
+				this.DeleteEntity<NaturalPersonEntity> (1);
+				this.DeleteEntity<AbstractContactEntity> (1);
+				this.DeleteEntity<RegionEntity> (1);
+				this.DeleteEntity<ContactRoleEntity> (1);
 			}
 		}
 
@@ -549,10 +527,10 @@ namespace Epsitec.Cresus.DataLayer
 
 		private readonly static Dictionary<DatabaseSize, long> legalPersonId = new Dictionary<DatabaseSize, long> ()
 		{
-			{DatabaseSize.Small,	1000000000101},
-			{DatabaseSize.Medium,	1000000001001},
-			{DatabaseSize.Large,	1000000010001},
-			{DatabaseSize.Huge,		1000000100001},
+			{DatabaseSize.Small,	101},
+			{DatabaseSize.Medium,  1001},
+			{DatabaseSize.Large,  10001},
+			{DatabaseSize.Huge,  100001},
 		};
 
 

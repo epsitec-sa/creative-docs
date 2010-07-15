@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
 				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 				Assert.IsTrue (alfred.Contacts.Count == 2);
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
 				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (var dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
 				Assert.IsTrue (alfred.Contacts.Count == 2);
@@ -131,10 +131,10 @@ namespace Epsitec.Cresus.DataLayer
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000003))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000004))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (3))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4))),
 				};
 
 				Assert.IsTrue (contacts.Length == 4);
@@ -156,9 +156,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
-				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000002)));
-				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000003)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
 				Assert.IsTrue (Database2.CheckGertrude (gertrude));
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer
 
 				dataContext.SaveChanges ();
 
-				NaturalPersonEntity freshPerson2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000004)));
+				NaturalPersonEntity freshPerson2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
 				Assert.IsTrue (freshPerson1 == freshPerson2);
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Gender != null);
 
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Gender == null);
 			}
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
 
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (Database2.CheckAlfred (alfred));
 
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -291,11 +291,11 @@ namespace Epsitec.Cresus.DataLayer
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
 				};
 
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				dataContext.DeleteEntity (alfred);
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == alfred));
@@ -308,8 +308,8 @@ namespace Epsitec.Cresus.DataLayer
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
 				};
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
@@ -326,12 +326,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001)));
+				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
 				dataContext.DeleteEntity (contact);
 
 				dataContext.SaveChanges ();
 
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
@@ -356,14 +356,14 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
-				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000000001)));
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				dataContext.DeleteEntity (alfred);
 
 				dataContext.SaveChanges ();
 
 				UriContactEntity[] contacts = {
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
 				};
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
@@ -372,8 +372,8 @@ namespace Epsitec.Cresus.DataLayer
 			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000001))),
-					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000000002))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (2))),
 				};
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
