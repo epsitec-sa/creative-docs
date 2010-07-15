@@ -2184,7 +2184,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Data.DataTable dataTable;
 			
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = this.BuildSourceReferenceResolverQuery ();
 
