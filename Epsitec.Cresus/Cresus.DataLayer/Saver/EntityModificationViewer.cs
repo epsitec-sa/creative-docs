@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			object originalValue = this.GetOriginalValue (entity, fieldId);
 			object modifiedValue = this.GetModifiedValue (entity, fieldId);
 
-			return (originalValue != modifiedValue);
+			return (modifiedValue != UndefinedValue.Value && originalValue != modifiedValue);
 		}
 
 
@@ -45,16 +45,31 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			object originalValue = this.GetOriginalValue (entity, fieldId);
 			object modifiedValue = this.GetModifiedValue (entity, fieldId);
 
-			return (originalValue != modifiedValue);
+			return (modifiedValue != UndefinedValue.Value && originalValue != modifiedValue);
 		}
 
 
 		public bool HasCollectionChanged(AbstractEntity entity, Druid fieldId)
 		{
-			IList<object> originalValues = (IList<object>) this.GetOriginalValue (entity, fieldId);
-			IList<object> modifiedValues = (IList<object>) this.GetModifiedValue (entity, fieldId);
+			object originalValue = this.GetOriginalValue (entity, fieldId);
+			object modifiedValue = this.GetModifiedValue (entity, fieldId);
 
-			return originalValues.SequenceEqual (modifiedValues);
+			bool originalIsUndefined = originalValue == UndefinedValue.Value;
+			bool modifiedIsUndefined = modifiedValue == UndefinedValue.Value;
+
+			if (originalIsUndefined || modifiedIsUndefined)
+			{
+				bool modifiedIsDefined = !modifiedIsUndefined;
+
+				return modifiedIsDefined;
+			}
+			else
+			{
+				IList<object> originalValues = (IList<object>) originalValue;
+				IList<object> modifiedValues = (IList<object>) modifiedValue;
+
+				return !originalValues.SequenceEqual (modifiedValues);
+			}
 		}
 		
 

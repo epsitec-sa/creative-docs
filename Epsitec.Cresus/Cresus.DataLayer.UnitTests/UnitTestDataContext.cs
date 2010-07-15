@@ -15,6 +15,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer
 {
+	
+	
+	// TODO Create a test which updates entities for the values, reference and collections.
+	// Marc
 
 
 	[TestClass]

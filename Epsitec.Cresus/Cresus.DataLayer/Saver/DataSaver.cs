@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
 			{
-				// TODO Uncomment the catch clause and remove the finaly clause at the end of the
+				// TODO Uncomment the catch clause and remove the finally clause at the end of the
 				// tests.
 
 				try
