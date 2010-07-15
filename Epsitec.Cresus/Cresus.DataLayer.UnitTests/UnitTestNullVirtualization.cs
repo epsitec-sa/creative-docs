@@ -98,30 +98,63 @@ namespace Epsitec.Cresus.DataLayer
 				System.Diagnostics.Debug.Assert (gertrude.PreferredLanguage == language);
 			}
 
-			//this.CreateDatabaseHelper ();
-		}
-
-
-		[TestMethod]
-		public void ModifyNullCollectionData()
-		{
-			//this.CreateDatabaseHelper ();
+			this.CreateDatabaseHelper ();
 		}
 
 
 		[TestMethod]
 		public void ReplaceNullReferenceEntity()
 		{
+			using (DataContext dataContext = this.CreateDataContext ())
+			{
+				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-			//this.CreateDatabaseHelper ();
-		}
+				System.Diagnostics.Debug.Assert (gertrude != null);
+				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
+				LanguageEntity language1 = gertrude.PreferredLanguage;
 
-		[TestMethod]
-		public void ReplaceNullCollectionEntity()
-		{
+				System.Diagnostics.Debug.Assert (language1 != null);
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language1));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language1));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsNullEntity (language1));
 
-			//this.CreateDatabaseHelper ();
+				LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
+
+				language2.Code = "1337";
+				language2.Name = "1337 5|*34|<";
+
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language2));
+
+				dataContext.SaveChanges ();
+			}
+
+			using (DataContext dataContext = this.CreateDataContext ())
+			{
+				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
+
+				System.Diagnostics.Debug.Assert (gertrude != null);
+				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
+
+				System.Diagnostics.Debug.Assert (language != null);
+				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+				System.Diagnostics.Debug.Assert (language.Code == "1337");
+				System.Diagnostics.Debug.Assert (language.Name == "1337 5|*34|<");
+
+				System.Diagnostics.Debug.Assert (gertrude.PreferredLanguage == language);
+			}
+
+			this.CreateDatabaseHelper ();
 		}
 
 		private DataContext CreateDataContext()
