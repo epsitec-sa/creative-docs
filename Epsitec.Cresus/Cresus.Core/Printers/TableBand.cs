@@ -175,6 +175,32 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public double GetCellBorderWidth(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.TableCellBorderWidth;
+		}
+
+		public void SetCellBorderWidth(int column, int row, double value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.TableCellBorderWidth = value;
+		}
+
+
+		public Color GetBackground(int column, int row)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			return textBox.TableCellBackground;
+		}
+
+		public void SetBackground(int column, int row, Color value)
+		{
+			TextBand textBox = this.GetTextBox (column, row);
+			textBox.TableCellBackground = value;
+		}
+
+
 		public TextBreakMode GetBreakMode(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
@@ -474,23 +500,33 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var cellInfo = rowInfo.CellsInfo[column];
 					double width = this.GetAbsoluteColumnWidth (column);
+					Rectangle cellBounds = new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height);
+					double cellBorderWidth = double.NaN;
 
 					if (cellInfo.FirstLine != -1)
 					{
 						TextBand textBox = this.GetTextBox (column, row);
 
+						if (textBox.TableCellBackground.IsValid)
+						{
+							port.Color = textBox.TableCellBackground;
+							port.PaintSurface (Path.FromRectangle (cellBounds));
+						}
+
 						if (!textBox.Paint (port, cellInfo.TextSection, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
 						{
 							ok = false;
 						}
+
+						cellBorderWidth = textBox.TableCellBorderWidth;
 					}
 
 					if (this.PaintFrame)
 					{
 						//	Dessine le cadre de la cellule.
-						port.LineWidth = this.CellBorderWidth;
+						port.LineWidth = double.IsNaN (cellBorderWidth) ? this.CellBorderWidth : cellBorderWidth;
 						port.Color = Color.FromBrightness (0);
-						port.PaintOutline (Path.FromRectangle (new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height)));
+						port.PaintOutline (Path.FromRectangle (cellBounds));
 					}
 
 					x += width;
