@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (line is PriceDocumentItemEntity)
 					{
-						this.BuildPriceLine (table, row, line as PriceDocumentItemEntity);
+						this.BuildPriceLine (table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
 					}
 
 					row++;
@@ -197,22 +197,37 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (0, row, quantity.ToString ());
 			table.SetText (1, row, unit);
 			table.SetText (2, row, description);
-			table.SetText (3, row, price.ToString ());
-			table.SetText (4, row, (quantity*price).ToString ());
+			table.SetText (3, row, Misc.DecimalToString (price));
+			table.SetText (4, row, Misc.DecimalToString (quantity*price));
 
 			table.SetAlignment (0, row, ContentAlignment.MiddleRight);
 			table.SetAlignment (3, row, ContentAlignment.MiddleRight);
 			table.SetAlignment (4, row, ContentAlignment.MiddleRight);
 		}
 
-		private void BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
+		private void BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
 		{
+			decimal p1 = Misc.CentRound (line.PrimaryPriceBeforeTax.Value);
+			decimal p2 = Misc.CentRound (line.ResultingPriceBeforeTax.Value);
+
+			string price = Misc.DecimalToString (p2);
+
+			if (lastLine)
+			{
+				price = string.Concat ("<b>", price, "</b>");
+			}
+
 			table.SetText (2, row, line.TextForPrimaryPrice);
-			table.SetText (3, row, line.PrimaryPriceBeforeTax.ToString ());
-			table.SetText (4, row, line.ResultingPriceBeforeTax.ToString ());
+			table.SetText (3, row, Misc.DecimalToString (p1));
+			table.SetText (4, row, price);
 
 			table.SetAlignment (3, row, ContentAlignment.MiddleRight);
 			table.SetAlignment (4, row, ContentAlignment.MiddleRight);
+
+			if (lastLine)
+			{
+				table.SetCellBorderWidth (4, row, 0.5);  // met un cadre épais
+			}
 		}
 
 
@@ -264,7 +279,7 @@ namespace Epsitec.Cresus.Core.Printers
 				date = System.DateTime.Now;
 			}
 
-			return Misc.GetDateTimeShortDescription (date);
+			return Misc.GetDateTimeDescription (date);
 		}
 
 		private string GetMailContact()
@@ -294,19 +309,19 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private decimal GetArticleQuantity(ArticleDocumentItemEntity article)
 		{
+			decimal quantity = 0.0M;
+
 			if (article.ArticleQuantities.Count != 0)
 			{
-				decimal quantity = article.ArticleQuantities[0].Quantity;
-
-				if (quantity == 0.0M)  // les frais de port ont une quantité nulle !
-				{
-					quantity = 1.0M;
-				}
-
-				return quantity;
+				quantity = article.ArticleQuantities[0].Quantity;
 			}
 
-			return 0;
+			if (quantity == 0.0M)  // les frais de port ont une quantité nulle !
+			{
+				quantity = 1.0M;
+			}
+
+			return quantity;
 		}
 
 		private string GetArticleUnit(ArticleDocumentItemEntity article)
@@ -355,7 +370,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			if (this.entity.BillingDetails.Count > 0)
 			{
-				return this.entity.BillingDetails[0].AmountDue.Amount;
+				return Misc.CentRound (this.entity.BillingDetails[0].AmountDue.Amount);
 			}
 
 			return 0;

@@ -27,6 +27,9 @@ namespace Epsitec.Cresus.Core.Printers
 			this.Justif    = TextJustifMode.None;
 			this.BreakMode = TextBreakMode.Hyphenate;
 
+			this.TableCellBorderWidth = double.NaN;
+			this.TableCellBackground = Color.Empty;
+
 			this.sectionsInfo = new List<SectionInfo> ();
 		}
 
@@ -51,6 +54,20 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public TextBreakMode BreakMode
 		{
+			get;
+			set;
+		}
+
+		public double TableCellBorderWidth
+		{
+			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
+			get;
+			set;
+		}
+
+		public Color TableCellBackground
+		{
+			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
 			get;
 			set;
 		}

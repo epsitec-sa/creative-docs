@@ -14,6 +14,28 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
+		/// <summary>
+		/// Effectue un arrondi au 5 centimes le plus proche.
+		/// </summary>
+		/// <param name="value">Montant en francs et centimes</param>
+		/// <returns>Valeur arrondie au 5 centimes le plus proche</returns>
+		public static decimal CentRound(decimal value, decimal round=0.05M)
+		{
+			decimal factor = 1.0M / round;
+			decimal adjust = round / 2.0M;
+
+			return System.Math.Floor ((value+adjust)*factor) / factor;
+		}
+
+		public static string DecimalToString(decimal value)
+		{
+			int franc = decimal.ToInt32 (value);
+			int cent  = decimal.ToInt32 (value * 100) - decimal.ToInt32 (value) * 100;
+
+			return string.Concat (franc.ToString (), ".", cent.ToString ("D2"));
+		}
+
+
 		public static string GetDateTimeShortDescription(System.DateTime dateTime)
 		{
 			if (dateTime == null)
@@ -23,6 +45,18 @@ namespace Epsitec.Cresus.Core
 			else
 			{
 				return dateTime.ToString ("dd.MM.yyyy");  // par exemple 31.03.2010
+			}
+		}
+
+		public static string GetDateTimeDescription(System.DateTime dateTime)
+		{
+			if (dateTime == null)
+			{
+				return null;
+			}
+			else
+			{
+				return dateTime.ToString ("dd MMMM yyyy");  // par exemple 31 mars 2010
 			}
 		}
 
