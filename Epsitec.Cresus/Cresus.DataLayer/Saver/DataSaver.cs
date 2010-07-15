@@ -246,30 +246,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void SaveTargetsIfNotPersisted(AbstractEntity source, StructuredTypeField field)
 		{
+			List<AbstractEntity> targets = new List<AbstractEntity> ();
+			
 			switch (field.Relation)
 			{
 				case FieldRelation.Reference:
 				{
-					AbstractEntity target = source.GetField<AbstractEntity> (field.Id);
-
-					if (target != null)
-					{
-						this.SaveTargetIfNotPersisted (target);
-					}
-
+					targets.Add (source.GetField<AbstractEntity> (field.Id));
 					break;
 				}
 				case FieldRelation.Collection:
 				{
-					var targets = from target in source.GetFieldCollection<AbstractEntity> (field.Id)
-								  where target != null
-								  select target;
-
-					foreach (AbstractEntity target in targets)
-					{
-						this.SaveTargetIfNotPersisted (target);
-					}
-					
+					targets.AddRange (source.GetFieldCollection<AbstractEntity> (field.Id));
 					break;
 				}
 				default:
@@ -277,17 +265,21 @@ namespace Epsitec.Cresus.DataLayer.Saver
 					throw new System.InvalidOperationException ();
 				}
 			}
-		}
 
-
-		private void SaveTargetIfNotPersisted(AbstractEntity target)
-		{
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (target);
-
-			if (mapping.RowKey.IsEmpty)
+			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
 			{
 				this.SaveEntity (target);
 			}
+		}
+
+
+		private bool CheckIfTargetMustBeSaved(AbstractEntity target)
+		{
+			bool mustBeSaved = target != null
+				&& this.DataContext.GetEntityDataMapping (target).RowKey.IsEmpty
+				&& this.DataContext.CheckIfEntityCanBeSaved (target);
+			
+			return mustBeSaved;
 		}
 
 
