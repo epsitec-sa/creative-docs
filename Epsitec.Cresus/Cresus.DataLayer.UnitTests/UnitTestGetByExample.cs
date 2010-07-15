@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer
 
 
 	[TestClass]
-	public class UnitTestDataBrowser
+	public class UnitTestGetByExample
 	{
 
 

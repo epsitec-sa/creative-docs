@@ -4,8 +4,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
@@ -13,7 +11,6 @@ using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using System.Linq;
 
@@ -40,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
 
-			this.EnableEntityNullReferenceVirtualizer = false;
+			this.EnableNullVirtualization = false;
 
 			this.entitiesCache = new EntityDataCache ();
 			this.emptyEntities = new HashSet<AbstractEntity> ();
@@ -94,7 +91,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public bool EnableEntityNullReferenceVirtualizer
+		public bool EnableNullVirtualization
 		{
 			get;
 			set;
@@ -470,7 +467,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			System.Diagnostics.Debug.Assert (this.EntityContext == entity.GetEntityContext ());
 
-			if (this.EnableEntityNullReferenceVirtualizer)
+			if (this.EnableNullVirtualization)
 			{
 				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
 			}

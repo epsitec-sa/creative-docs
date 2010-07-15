@@ -225,7 +225,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// The <c>Store</c> class implements the <c>GetValue</c> and <c>SetValue</c> accessors used
 		/// by the entity class to access its internal data store; <c>Store.GetValue</c> handles undefined
 		/// references by instantiating empty entities on the fly, whereas <c>Store.SetValue</c> on such
-		/// an empty entity will transform it into a real entity. Warning: avanced magic is going on here.
+		/// an empty entity will transform it into a real entity. Warning: advanced magic is going on here.
 		/// </summary>
 		class Store : IValueStore
 		{

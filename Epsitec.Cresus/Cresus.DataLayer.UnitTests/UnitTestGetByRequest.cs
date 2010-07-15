@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 
 
 	[TestClass]
-	public class UnitTestDataBrowserRequest
+	public class UnitTestGetByRequest
 	{
 
 
@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[TestMethod]
-		public void ValidEntityContainer()
+		public void ValidRequest()
 		{
-			TestHelper.PrintStartTest ("Valid Entity Container");
+			TestHelper.PrintStartTest ("Valid request");
 
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
@@ -92,9 +92,9 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[TestMethod]
-		public void InvalidEntityContainer()
+		public void InvalidRequest()
 		{
-			TestHelper.PrintStartTest ("Invalid Entity Container");
+			TestHelper.PrintStartTest ("Invalid request");
 
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
