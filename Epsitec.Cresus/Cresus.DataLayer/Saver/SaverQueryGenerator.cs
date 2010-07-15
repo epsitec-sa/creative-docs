@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private void DeleteEntityTargetRelation(DbTransaction transaction, DbKey dbKey, EntityFieldPath fieldPath)
 		{
 			Druid localEntityId = fieldPath.EntityId;
-			Druid fieldId = new Druid ("[" + fieldPath.Fields.First () + "]");
+			Druid fieldId = new Druid (fieldPath.Fields.First ());
 			
 			this.DeleteEntityTargetRelation (transaction, localEntityId, fieldId, dbKey);
 		}
