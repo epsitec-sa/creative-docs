@@ -27,6 +27,12 @@ namespace Epsitec.Cresus.Core
 			return System.Math.Floor ((value+adjust)*factor) / factor;
 		}
 
+		public static string PercentToString(decimal value)
+		{
+			int i = (int) (value*100);
+			return string.Concat (i.ToString (), "%");
+		}
+
 		public static string DecimalToString(decimal value)
 		{
 			int franc = decimal.ToInt32 (value);
@@ -113,8 +119,8 @@ namespace Epsitec.Cresus.Core
 
 		public static string FormatUnit(decimal quantity, string unit)
 		{
-			//	1, "Pièce"		-> "1 pièce"
-			//	2, "Pièce"		-> "2 pièces"
+			//	1, "pce"		-> "1 pce"
+			//	2, "pce"		-> "2 pces"
 			//	3, "km"			-> "3 km"
 			//	0.5, "Litre"	-> "0.5 litres"
 			if (string.IsNullOrEmpty (unit))
@@ -125,11 +131,6 @@ namespace Epsitec.Cresus.Core
 			{
 				//	Si l'unité a 1 ou 2 caractères, on n'y touche pas ("m", "cm", "m2", "kg", "t", etc.).
 				//	TODO: Faire mieux et gérer les pluriels en "x" !
-				if (unit.Length > 2)
-				{
-					unit = unit.ToLower();
-				}
-
 				if (quantity != 1.0M && unit.Length > 2)
 				{
 					unit = string.Concat (unit.ToLower(), "s");
