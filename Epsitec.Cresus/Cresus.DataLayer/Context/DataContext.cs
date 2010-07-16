@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.EnableNullVirtualization = false;
 
-			this.entitiesCache = new EntityDataCache ();
+			this.entitiesCache = new EntityCache ();
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
@@ -56,14 +56,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		internal DbInfrastructure DbInfrastructure
+		// TODO Make this field internal and apply the changes in core data.
+		// Marc
+
+		public EntityContext EntityContext
 		{
 			get;
 			private set;
 		}
 
 
-		public EntityContext EntityContext
+		internal DbInfrastructure DbInfrastructure
 		{
 			get;
 			private set;
@@ -103,7 +106,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
-		public AbstractEntity CreateEntity(Druid entityId)
+
+		internal AbstractEntity CreateEntity(Druid entityId)
 		{
 			return this.EntityContext.CreateEmptyEntity (entityId);
 		}
@@ -125,29 +129,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public EntityKey GetEntityKey(AbstractEntity entity)
+		public EntityKey? GetEntityKey(AbstractEntity entity)
 		{
-			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
-
-			if (mapping == null)
-			{
-				return EntityKey.Empty;
-			}
-			else
-			{
-				return new EntityKey (mapping.RowKey, entity.GetEntityStructuredTypeId ());
-			}
+			return this.entitiesCache.GetEntityKey (entity);
 		}
 
 
-		internal AbstractEntity FindEntity(DbKey rowKey, Druid leafEntityId)
+		internal AbstractEntity GetEntity(EntityKey entityKey)
 		{
-			return this.entitiesCache.FindEntity (rowKey, leafEntityId);
+			return this.entitiesCache.GetEntity (entityKey);
 		}
 
-		internal void DefineRowKey(EntityDataMapping mapping, DbKey key)
+
+		internal void DefineRowKey(AbstractEntity entity, DbKey key)
 		{
-			this.entitiesCache.DefineRowKey (mapping, key);
+			this.entitiesCache.DefineRowKey (entity, key);
 		}
 
 
@@ -200,6 +196,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		// TODO Remove the two methods below which are kind of strange and replace the call by calls
+		// to the method just above.
+		// Marc
+
+
 		public bool UpdateEmptyEntityStatus(AbstractEntity entity, params bool[] emptyPredicateResults)
 		{
 			System.Diagnostics.Debug.Assert (emptyPredicateResults.Length > 0);
@@ -210,6 +211,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return result;
 		}
+
 
 		public bool UpdateEmptyEntityStatus<T>(T entity, System.Predicate<T> emptyPredicate) where T : AbstractEntity
 		{
@@ -261,24 +263,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entitiesToDelete;
 		}
 
-		
-		internal EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.entitiesCache.FindMapping (entity.GetEntitySerialId ());
-			}
-		}
-
 
 		internal void MarkAsDeleted(AbstractEntity entity)
 		{
 			this.entitiesDeleted.Add (entity);
-			this.entitiesCache.Remove (entity.GetEntitySerialId ());
+			this.entitiesCache.Remove (entity);
 		}
 
 
@@ -306,15 +295,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public TEntity ResolveEntity<TEntity>(EntityKey entityKey) where TEntity : AbstractEntity, new()
-		{
-			return this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId) as TEntity;
-		}
-
-
 		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
-			return this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+			AbstractEntity entity = this.entitiesCache.GetEntity (entityKey);
+
+			if (entity == null)
+			{
+				entity = this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+			}
+
+			return entity;
 		}
 
 
@@ -365,9 +355,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		
 		private void Dipose(bool disposing)
 		{
-			if (disposing)
+			if (!this.isDisposed)
 			{
 				this.isDisposed = true;
+
 				this.EntityContext.EntityAttached -= this.HandleEntityCreated;
 				this.EntityContext.PersistenceManagers.Remove (this);
 			}
@@ -379,40 +370,38 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public string GetPersistedId(AbstractEntity entity)
 		{
-			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
-
-			if (mapping != null && !mapping.RowKey.IsEmpty)
+			string persistedId = null;
+			
+			if (this.IsPersistent (entity))
 			{
-				Druid entityId = entity.GetEntityStructuredTypeId ();
-				long  keyId = mapping.RowKey.Id;
-				short keyStatus = (short) mapping.RowKey.Status;
+				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+				DbKey key = this.GetEntityKey (entity).Value.RowKey;
 
-				if (keyStatus == 0)
+				if (key.Status == DbRowStatus.Live)
 				{
-					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", entityId, keyId);
+					persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", leafEntityId, key.Id);
 				}
 				else
 				{
-					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}:{2}", entityId, keyId, keyStatus);
+					persistedId = string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}:{2}", leafEntityId, key.Id, (short) key.Status);
 				}
 			}
 
-			return null;
+			return persistedId;
 		}
 
 
 		public AbstractEntity GetPeristedEntity(string id)
 		{
-			if (string.IsNullOrEmpty (id))
-			{
-				return null;
-			}
-			else if (id.StartsWith ("db:"))
+			AbstractEntity entity = null;
+			
+			if (!string.IsNullOrEmpty (id) && id.StartsWith ("db:"))
 			{
 				string[] args = id.Split (':');
-				DbKey key = DbKey.Empty;
 
+				DbKey key = DbKey.Empty;
 				Druid entityId = Druid.Empty;
+
 				long  keyId;
 				short keyStatus;
 
@@ -440,13 +429,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 						break;
 				}
 
-				if (!key.IsEmpty)
+				if (!key.IsEmpty && !entityId.IsEmpty)
 				{
-					return this.DataLoader.ResolveEntity (key, entityId);
+					EntityKey entityKey = new EntityKey (key, entityId);
+
+					entity = this.ResolveEntity (entityKey);;
 				}
 			}
 
-			return null;
+			return entity;
 		}
 
 
@@ -455,9 +446,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public bool IsPersistent(AbstractEntity entity)
 		{
-			EntityDataMapping mapping = this.GetEntityDataMapping (entity);
+			EntityKey? key = this.GetEntityKey (entity);
 
-			return mapping != null && !mapping.RowKey.IsEmpty;
+			return key != null && !key.Value.RowKey.IsEmpty;
 		}
 
 
@@ -466,13 +457,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			AbstractEntity entity = e.Entity;
 
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
-			
-			long entitySerialId = entity.GetEntitySerialId ();
 					
 			this.OnCreationPatchEntity (entity);
 			this.OnCreationRegisterAsEmptyEntity (entity, e);
-			this.OnCreationAddToCache (entity, leafEntityId, rootEntityId, entitySerialId);
+			this.OnCreationAddToCache (entity);
 
 			try
 			{
@@ -480,7 +468,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 			catch
 			{
-				this.OnCreationRemoveFromCache (entitySerialId);
+				this.OnCreationRemoveFromCache (entity);
 				throw;
 			}
 		}
@@ -510,17 +498,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		
-		private void OnCreationAddToCache(AbstractEntity entity, Druid leafEntityId, Druid rootEntityId, long entitySerialId)
+		private void OnCreationAddToCache(AbstractEntity entity)
 		{
-			EntityDataMapping entityMapping = new EntityDataMapping (entity, leafEntityId, rootEntityId);
-
-			this.entitiesCache.Add (entitySerialId, entityMapping);
+			this.entitiesCache.Add (entity);
 		}
 
 
-		private void OnCreationRemoveFromCache(long entitySerialId)
+		private void OnCreationRemoveFromCache(AbstractEntity entity)
 		{
-			this.entitiesCache.Remove (entitySerialId);
+			this.entitiesCache.Remove (entity);
 		}
 
 
@@ -533,7 +519,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private bool isDisposed;
 
 
-		private readonly EntityDataCache entitiesCache;
+		private readonly EntityCache entitiesCache;
 
 
 		private readonly HashSet<AbstractEntity> emptyEntities;

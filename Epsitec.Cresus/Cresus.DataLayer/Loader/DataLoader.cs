@@ -110,9 +110,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			EntityDataMapping targetMapping = this.DataContext.GetEntityDataMapping (target);
-
-			if (targetMapping != null)
+			if (this.DataContext.GetEntityKey (target) != null)
 			{
 				foreach (Druid targetEntityId in this.EntityContext.GetInheritedEntityIds (target.GetEntityStructuredTypeId ()))
 				{
@@ -178,7 +176,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public AbstractEntity ResolveEntity(EntityData entityData, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
 			Druid leafEntityId = entityData.LeafEntityId;
-			AbstractEntity entity = this.DataContext.FindEntity (entityData.Key, leafEntityId);
+			DbKey rowKey = entityData.Key;
+
+			EntityKey entityKey = new EntityKey (rowKey, leafEntityId);
+
+			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
 			if (entity == null && resolutionMode == ResolutionMode.Database)
 			{
@@ -193,8 +195,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			AbstractEntity entity = this.DataContext.CreateEntity (entityData.LeafEntityId);
 
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
-			this.DataContext.DefineRowKey (mapping, entityData.Key);
+			this.DataContext.DefineRowKey (entity, entityData.Key);
 
 			using (entity.DefineOriginalValues ())
 			{
@@ -292,7 +293,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			if (targetKey.HasValue)
 			{
-				object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey.Value);
+				EntityKey entityKey = new EntityKey (targetKey.Value, field.TypeId);
+
+				object target = new EntityKeyProxy (this.DataContext, entityKey);
 
 				entity.InternalSetValue (field.Id, target);
 			}
@@ -305,7 +308,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			foreach (DbKey targetKey in entityData.CollectionData[field.CaptionId])
 			{
-				object target = new EntityKeyProxy (this.DataContext, field.TypeId, targetKey);
+				EntityKey entityKey = new EntityKey (targetKey, field.TypeId);
+
+				object target = new EntityKeyProxy (this.DataContext, entityKey);
 
 				targets.Add (target);
 			}

@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public DbKey RootEntityKey
+		public DbKey? RootEntityKey
 		{
 			internal get;
 			set;

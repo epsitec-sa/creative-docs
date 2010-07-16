@@ -100,17 +100,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
+			// TODO Get the call to DeleteEntityTargetRelationsInMemory out of the if statement
+			// once this function does not call the DataLoader.
+			// Marc
 
-			if (mapping.SerialGeneration != this.EntityContext.DataGeneration)
+			if (this.DataContext.IsPersistent (entity))
 			{
-				mapping.SerialGeneration = this.EntityContext.DataGeneration;
-
-				if (!mapping.RowKey.IsEmpty)
-				{
-					this.DeleteEntityTargetRelationsInMemory (entity);
-					this.SaverQueryGenerator.DeleteEntity (transaction, entity);
-				}
+				this.DeleteEntityTargetRelationsInMemory (entity);
+				this.SaverQueryGenerator.DeleteEntity (transaction, entity);
 			}
 		}
 
@@ -118,8 +115,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
 		{
 			// TODO This method might be optimized by doing the same thing without using the
-			// DataBrowser, i.e. by looping over all the managed entities in the DataContext. This
-			// would save some queries to the database.
+			// DataLoader, i.e. by looping over all the managed entities in the DataContext. This
+			// would save some queries to the database. Moreover, this would remove entities off
+			// other entities in the memory even if the removed one is not persisted.
 			// Marc
 
 			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
@@ -166,17 +164,28 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				select entity
 			);
 
+			HashSet<AbstractEntity> savedEntities = new HashSet<AbstractEntity> ();
+
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
-				this.SaveEntity (transaction, entity);
+				this.SaveEntity (transaction, savedEntities, entity);
 			}
 
 			return entitiesToSave.Any ();
 		}
 
 
-		private void SaveEntity(DbTransaction transaction, AbstractEntity entity)
+		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity entity)
 		{
+			if (savedEntities.Contains (entity))
+			{
+				return;
+			}
+			else
+			{
+				savedEntities.Add (entity);
+			}
+			
 			if (!this.DataContext.Contains (entity))
 			{
 				// TODO: Should we propagate the serialization to another DataContext ?
@@ -184,33 +193,24 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				return;
 			}
 
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (entity);
+			bool isPersisted = this.DataContext.IsPersistent (entity);
 
-			if (mapping.SerialGeneration == this.EntityContext.DataGeneration)
-			{
-				return;
-			}
-
-			mapping.SerialGeneration = this.EntityContext.DataGeneration;
-
-			bool isNotPersisted = mapping.RowKey.IsEmpty;
-
-			if (isNotPersisted)
+			if (!isPersisted)
 			{
 				DbKey newKey = this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
 
-				this.DataContext.DefineRowKey (mapping, newKey);
+				this.DataContext.DefineRowKey (entity, newKey);
 			}
 
-			this.SaveTargetsIfNotPersisted (transaction, entity);
+			this.SaveTargetsIfNotPersisted (transaction, savedEntities, entity);
 
-			if (isNotPersisted)
+			if (isPersisted)
 			{
-				this.InsertEntity (transaction, entity);
+				this.UpdateEntity (transaction, entity);
 			}
 			else
 			{
-				this.UpdateEntity (transaction, entity);
+				this.InsertEntity (transaction, entity);
 			}
 		}
 
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, AbstractEntity source)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity source)
 		{
 			Druid leafEntityId = source.GetEntityStructuredTypeId ();
 
@@ -238,12 +238,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (StructuredTypeField field in relations)
 			{
-				this.SaveTargetsIfNotPersisted (transaction, source, field);
+				this.SaveTargetsIfNotPersisted (transaction, savedEntities, source, field);
 			}
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, AbstractEntity source, StructuredTypeField field)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity source, StructuredTypeField field)
 		{
 			List<AbstractEntity> targets = new List<AbstractEntity> ();
 			
@@ -267,21 +267,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
 			{
-				this.SaveEntity (transaction, target);
+				this.SaveEntity (transaction, savedEntities, target);
 			}
 		}
 
 
 		private bool CheckIfTargetMustBeSaved(AbstractEntity target)
 		{
-			// Do not change the order of the following calls. The call to GetEntityDataMapping(...)
-			// returns null in some cases where the call to CheckIfEntityCanBeSaved returns false. If
-			// you change the order, you might get some NullReferenceException.
-			// Marc
-
 			bool mustBeSaved = target != null
-				&& this.DataContext.CheckIfEntityCanBeSaved (target)
-				&& this.DataContext.GetEntityDataMapping (target).RowKey.IsEmpty;
+				&& !this.DataContext.IsPersistent (target)
+				&&  this.DataContext.CheckIfEntityCanBeSaved (target);
 			
 			return mustBeSaved;
 		}

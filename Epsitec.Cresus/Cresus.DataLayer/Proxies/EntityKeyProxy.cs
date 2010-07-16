@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 	/// <summary>
 	/// The <c>EntityKeyProxy</c> class is used as a placeholder for an <see cref="AbstractEntity"/>.
-	/// It contains the <see cref="DbKey"/> and the <see cref="Druid"/> as a reference to the
-	/// <see cref="AbstractEntity"/> that it represents.
+	/// It contains an <see cref="EntityKey"/> as the reference to the <see cref="AbstractEntity"/>
+	/// that it represents.
 	/// </summary>
 	/// <remarks>
 	/// There is some consistency issue with this proxy. The problem is that if one is builded, and
@@ -33,13 +33,11 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <paramref name="rowKey"/>.
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"></see> responsible the <see cref="AbstractEntity"/>.</param>
-		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
-		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the data base.</param>
-		public EntityKeyProxy(DataContext dataContext, Druid entityId, DbKey rowKey)
+		/// <param name="entityKey">The <see cref="EntityKey"/> describing the entity to load.</param>
+		public EntityKeyProxy(DataContext dataContext, EntityKey entityKey)
 		{
 			this.dataContext = dataContext;
-			this.entityId = entityId;
-			this.rowKey = rowKey;
+			this.entityKey = entityKey;
 		}
 
 		
@@ -95,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public object PromoteToRealInstance()
 		{
-			return this.dataContext.DataLoader.ResolveEntity (this.rowKey, this.entityId);
+			return this.dataContext.ResolveEntity (this.entityKey);
 		}
 
 
@@ -110,17 +108,9 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 
 		/// <summary>
-		/// The <see cref="Druid"/> representing the type of the <see cref="AbstractEntity"/> of this
-		/// instance.
+		/// The <see cref="EntityKey"/> representing the entity of this proxy.
 		/// </summary>
-		private readonly Druid entityId;
-
-
-		/// <summary>
-		/// The <see cref="DbKey"/> of the row in the database to which the <see cref="AbstractEntity"/>
-		/// of this instance corresponds.
-		/// </summary>
-		private readonly DbKey rowKey;
+		private readonly EntityKey entityKey;
 
 
 	}

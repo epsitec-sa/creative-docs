@@ -43,23 +43,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public EntityKey FindEntityKey(AbstractEntity entity)
+		public EntityKey? FindEntityKey(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				return EntityKey.Empty;
-			}
-
+			EntityKey? entityKey = null;
+			
 			var context = this.FindDataContext (entity);
 
-			if (context == null)
+			if (context != null)
 			{
-				return EntityKey.Empty;
+				entityKey = context.GetEntityKey (entity);
 			}
-			else
-			{
-				return context.GetEntityKey (entity);
-			}
+
+			return entityKey;
 		}
 
 

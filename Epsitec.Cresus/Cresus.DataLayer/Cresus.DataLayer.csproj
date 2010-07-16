@@ -165,14 +165,13 @@
     <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
-    <Compile Include="Context\EntityDataCache.cs" />
+    <Compile Include="Context\EntityCache.cs" />
     <Compile Include="Loader\LoaderQueryGenerator.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Context\DataContext.cs" />
-    <Compile Include="Context\EntityDataMapping.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Saver\DataSaver.cs" />
     <Compile Include="Saver\EntityModificationViewer.cs" />

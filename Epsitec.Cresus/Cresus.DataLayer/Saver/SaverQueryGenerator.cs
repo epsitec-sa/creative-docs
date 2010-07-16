@@ -701,7 +701,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private DbKey GetDbKey(AbstractEntity entity)
 		{
-			return this.DataContext.GetEntityDataMapping (entity).RowKey;
+			return this.DataContext.GetEntityKey (entity).Value.RowKey;
 		}
 
 

@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
 			AbstractEntity example = EntityClassFactory.CreateEmptyEntity (localEntityId);
-			DbKey exampleKey = this.DataContext.GetEntityKey (entity).RowKey;
+			DbKey exampleKey = this.DataContext.GetEntityKey (entity).Value.RowKey;
 
 			Request request = new Request ()
 			{
@@ -373,14 +373,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRootEntityId(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
-			DbKey rootEntityKey = request.RootEntityKey;
+			DbKey? rootEntityKey = request.RootEntityKey;
 
-			if (!rootEntityKey.IsEmpty && entity == request.RootEntity)
+			if (rootEntityKey.HasValue && entity == request.RootEntity)
 			{
 				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
 
-				long id = rootEntityKey.Id.Value;
+				long id = rootEntityKey.Value.Id.Value;
 				DbTableColumn columnId = this.GetEntityColumn (rootEntityId, rootEntityAlias.Alias, LoaderQueryGenerator.idColumn);
 
 				DbSelectCondition condition = new DbSelectCondition ()
@@ -533,15 +533,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
-			EntityDataMapping mapping = this.DataContext.GetEntityDataMapping (target);
-
-			if (mapping == null)
+			if (this.DataContext.IsPersistent (target))
 			{
-				this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
+				DbKey key = this.DataContext.GetEntityKey (target).Value.RowKey;
+
+				this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
+
 			}
 			else
 			{
-				this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, mapping);
+				this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
 			}
 		}
 
@@ -566,14 +567,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private void AddConditionForRelationByReference(DbReader dbReader, AbstractEntity entity, AliasNode rootEntityAlias, StructuredTypeField field, EntityDataMapping mapping)
+		private void AddConditionForRelationByReference(DbReader dbReader, AbstractEntity entity, AliasNode rootEntityAlias, StructuredTypeField field, DbKey key)
 		{
 			Druid fieldId = field.CaptionId;
 
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-			long targetId = mapping.RowKey.Id.Value;
+			long targetId = key.Id.Value;
 
 			this.AddJoinToRelationWithId (dbReader, localEntityId, fieldId, rootEntityAlias, SqlJoinCode.Inner, targetId);			
 		}
