@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"/> in the database.</param>
 		/// <param name="entityId">The id of the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentException">
+		/// If <paramref name="rowKey"/> or <paramref name="entityId"/> is empty.
+		/// </exception>
 		public EntityKey(DbKey rowKey, Druid entityId)
 		{
 			if (rowKey.IsEmpty)
