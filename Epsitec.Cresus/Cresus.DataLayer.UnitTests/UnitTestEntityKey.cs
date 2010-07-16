@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer
     
     
 	[TestClass]
-	public class EntityKeyUnitTest
+	public class UnitTestEntityKey
 	{
 
 
