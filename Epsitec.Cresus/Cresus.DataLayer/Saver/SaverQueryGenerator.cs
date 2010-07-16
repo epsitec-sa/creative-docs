@@ -499,9 +499,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			string columnName = column.GetSqlName ();
 			SqlField columnField = SqlField.CreateName (columnName);
+			
+			DbTypeDef columnType = column.Type;
+			object convertedValue = this.ConvertToInternal (columnType, value);
+			DbRawType convertedRawType = this.ConvertToInternal (columnType);
 
-			DbRawType columnType = column.Type.RawType;
-			SqlField constantField = SqlField.CreateConstant (value, columnType);
+			SqlField constantField = SqlField.CreateConstant (convertedValue, convertedRawType);
 
 			SqlFunction condition = new SqlFunction (
 				SqlFunctionCode.CompareEqual,
@@ -612,15 +615,21 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private SqlField CreateSqlFieldForColumn(DbColumn column, object value)
 		{
 			DbTypeDef type = column.Type;
-
+			
 			object convertedValue = this.ConvertToInternal (type, value);
-			DbRawType rawType = type.RawType;
-
-			SqlField SqlField = SqlField.CreateConstant (convertedValue, rawType);
+			DbRawType convertedRawType = this.ConvertToInternal (type);
+			
+			SqlField SqlField = SqlField.CreateConstant (convertedValue, convertedRawType);
 			SqlField.Alias = column.GetSqlName ();
 
 			return SqlField;
 		}
+
+
+		// TODO All this conversion stuff is kind of low level and should be moved elsewhere. Especially
+		// the part about converting unsupported types to supported types should be kept inside the
+		// database implementation part.
+		// Marc
 
 
 		private object ConvertToInternal(DbTypeDef dbType, object value)
@@ -642,13 +651,51 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 					newValue = decimalValue;
 				}
-				else
+
+				newValue = TypeConverter.ConvertFromSimpleType (newValue, dbType.SimpleType, dbType.NumDef);
+			}
+
+			DbRawType rawType = dbType.RawType;
+
+			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
+
+			if (!typeConverter.CheckNativeSupport (rawType))
+			{
+				IRawTypeConverter rawTypeConverter;
+				bool sucess = typeConverter.GetRawTypeConverter (rawType, out rawTypeConverter);
+
+				if (!sucess)
 				{
-					newValue = TypeConverter.ConvertFromSimpleType (value, dbType.SimpleType, dbType.NumDef);
+					throw new System.NotSupportedException ("Unable to convert unsupported raw type: " + rawType);
 				}
+
+				newValue = rawTypeConverter.ConvertToInternalType (newValue);
 			}
 
 			return newValue;
+		}
+
+
+		private DbRawType ConvertToInternal(DbTypeDef dbType)
+		{
+			DbRawType newRawType = dbType.RawType;
+						
+			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
+
+			if (!typeConverter.CheckNativeSupport (newRawType))
+			{
+				IRawTypeConverter rawTypeConverter;
+				bool sucess = typeConverter.GetRawTypeConverter (newRawType, out rawTypeConverter);
+
+				if (!sucess)
+				{
+					throw new System.NotSupportedException ("Unable to convert unsupported raw type: " + newRawType);
+				}
+
+				newRawType = rawTypeConverter.InternalType;
+			}
+
+			return newRawType;
 		}
 
 

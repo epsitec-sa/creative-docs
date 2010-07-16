@@ -330,6 +330,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		// TODO Move these two methods (and other associated with them) to LoaderQueryGenerator, as
+		// they are kind of low level. It would also be nice to move the unsupported type conversion
+		// to the database level.
+		// Marc
+
 		private object ConvertFromInternal(Druid leafEntityId, StructuredTypeField field, object value)
 		{
 			object newValue = value;
@@ -352,7 +357,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 					DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 					DbColumn dbColumn = dbTable.Columns[columnName];
-									
+					
 					//	The conversion is a two step process:
 					//	1. Convert from an ADO.NET type to a simple type (i.e. almost all numbers map to decimal)
 					//	2. Convert from the simple type to the expected field type
@@ -368,19 +373,35 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private object ConvertFromInternal(DbColumn dbColumn, object value)
 		{
-			if (value == System.DBNull.Value)
+			object newValue = value;
+			
+			DbRawType rawType = dbColumn.Type.RawType;
+
+			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
+
+			if (!typeConverter.CheckNativeSupport (rawType))
 			{
-				return value;
+				IRawTypeConverter rawTypeConverter;
+				bool sucess = typeConverter.GetRawTypeConverter (rawType, out rawTypeConverter);
+
+				if (!sucess)
+				{
+					throw new System.NotSupportedException ("Unable to convert unsupported raw type: " + rawType);
+				}
+
+				newValue = rawTypeConverter.ConvertFromInternalType (newValue);
 			}
-			else
+
+			if (value != System.DBNull.Value)
 			{
 				DbSimpleType typeDef = dbColumn.Type.SimpleType;
 				DbNumDef numDef = dbColumn.Type.NumDef;
 
 				return TypeConverter.ConvertToSimpleType (value, typeDef, numDef);
 			}
-		}
 
+			return newValue;
+		}
 
 	}
 
