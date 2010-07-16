@@ -1,12 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.UnitTests;
 
 using System.Collections.Generic;
 using System.Linq;

@@ -3,16 +3,14 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 

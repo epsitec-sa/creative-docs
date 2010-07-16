@@ -1,11 +1,10 @@
-﻿using Epsitec.Cresus.Core.Entities;
-
-using Epsitec.Cresus.DataLayer.Context;
+﻿using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 	
 	

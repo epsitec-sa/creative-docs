@@ -57,14 +57,6 @@
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.CoreLibrary\Cresus.CoreLibrary.csproj">
-      <Project>{678BC79B-6AF9-4E5E-9B59-DD78DA0A06D0}</Project>
-      <Name>Cresus.CoreLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>
@@ -80,10 +72,6 @@
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj">
-      <Project>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</Project>
-      <Name>Cresus.Core.UnitTests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

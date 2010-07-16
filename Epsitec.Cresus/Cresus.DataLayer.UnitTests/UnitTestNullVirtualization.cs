@@ -1,16 +1,14 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 
