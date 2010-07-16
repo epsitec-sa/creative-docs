@@ -568,7 +568,7 @@ namespace Epsitec.Cresus.Core
 
 			articleDef3.IdA = "CR-FL";
 			articleDef3.ShortDescription = "Crésus Facturation LARGO";
-			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.";
+			articleDef3.LongDescription  = "Crésus Facturation LARGO<br/>Logiciel de facturation avec gestion des débiteurs et des créanciers.<br/><br/>Quelques textes pour faire long :<br/>Lundi<br/>Mardi<br/>Mercredi<br/>Jeudi<br/>Vendredi<br/>Samedi<br/>Dimanche";
 			articleDef3.ArticleGroups.Add (articleGroup1);
 			articleDef3.ArticleCategory = articleCategory1;
 			articleDef3.BillingUnit = uomUnit1;

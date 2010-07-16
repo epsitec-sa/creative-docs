@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractBvBand()
 			: base ()
 		{
+			this.PaintBvSimulator = true;
+			this.PaintSpecimen = true;
 		}
 
 
@@ -44,6 +46,15 @@ namespace Epsitec.Cresus.Core.Printers
 		/// false -> Ne dessine que les informations réelles sur du papier avec un BVR/BV préimprimé.
 		/// </summary>
 		public bool PaintBvSimulator
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Indique s'il faut dessiner un gros "SPECIMEN".
+		/// </summary>
+		public bool PaintSpecimen
 		{
 			get;
 			set;
@@ -190,7 +201,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.PaintBvSimulator)
 			{
-				this.PaintFix(port, topLeft);
+				this.PaintFix (port, topLeft);
+			}
+			else
+			{
+				this.PaintSpecimenPattern (port);
 			}
 
 			this.PaintContent(port, topLeft);
@@ -209,6 +224,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Color = Color.FromBrightness (1);
 			port.PaintSurface (Path.FromRectangle (topLeft.X+60, topLeft.Y-106, 150, 25));
+
+			this.PaintSpecimenPattern (port);
 
 			//	Dessine les grandes lignes noires de séparation.
 			port.LineWidth = 0.15;
@@ -277,6 +294,25 @@ namespace Epsitec.Cresus.Core.Printers
 		protected virtual void PaintContent(IPaintPort port, Point topLeft)
 		{
 			//	Dessine tous les textes variables.
+		}
+
+
+		private void PaintSpecimenPattern(IPaintPort port)
+		{
+			//	Dessine un très gros "SPECIMEN" au travers du BV.
+			if (this.PaintSpecimen)
+			{
+				var font = Font.GetFont("Arial", "Bold");
+
+				var initial = port.Transform;
+
+				port.Transform = Transform.CreateRotationDegTransform (20, AbstractBvBand.DefautlSize.Width/2, AbstractBvBand.DefautlSize.Height/2);
+
+				port.Color = Color.FromBrightness (this.PaintBvSimulator ? 1.0 : 0.95);
+				port.PaintText (80, 80, "SPECIMEN", AbstractBvBand.fixFontBold, 100);
+
+				port.Transform = initial;
+			}
 		}
 
 
