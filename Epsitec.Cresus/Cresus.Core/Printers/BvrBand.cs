@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return Color.FromHexa ("fff1e5");  // orange très pâle
+				return Color.FromHexa ("ffebd9");  // orange très pâle
 			}
 		}
 
