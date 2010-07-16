@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		
 		[TestMethod]
-		public void EntityKeyConstructorTest()
+		public void EntityKeyConstructorTest1()
 		{
 			foreach (var data in this.GetTestData ())
 			{
@@ -44,6 +44,28 @@ namespace Epsitec.Cresus.DataLayer
 				Assert.AreEqual (data.Item1, target.RowKey);
 				Assert.AreEqual (data.Item2, target.EntityId);
 			}
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void EntityKeyConstructorTest2()
+		{
+			DbKey rowKey = DbKey.Empty;
+			Druid entityId = Druid.FromLong (1);
+
+			EntityKey entityKey = new EntityKey (rowKey, entityId);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void EntityKeyConstructorTest3()
+		{
+			DbKey rowKey = new DbKey (new DbId (1));
+			Druid entityId = Druid.Empty;
+
+			EntityKey entityKey = new EntityKey (rowKey, entityId);
 		}
 
 		
@@ -63,6 +85,7 @@ namespace Epsitec.Cresus.DataLayer
 					Assert.AreEqual (areEqual, target2.Equals (target1));
 				}
 			}
+
 		}
 
 	   
@@ -140,6 +163,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				Assert.AreEqual (isEmpty, target.IsEmpty);
 			}
+
+			Assert.AreEqual (EntityKey.Empty, new EntityKey ());
+			Assert.IsTrue (EntityKey.Empty.IsEmpty);
 		}
 
 
@@ -159,9 +185,9 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			int count = 25;
 
-			for (int i = 0; i < count; i++)
+			for (int i = 1; i <= count; i++)
 			{
-				for (int j = 0; j < count; j++)
+				for (int j = 1; j <= count; j++)
 				{
 					DbKey dbKey = new DbKey (new DbId (i));
 					Druid druid = Druid.FromLong (j);
@@ -172,8 +198,21 @@ namespace Epsitec.Cresus.DataLayer
 
 			for (int i = 0; i < count * count; i++)
 			{
-				DbKey dbKey = new DbKey (new DbId (this.dice.Next ()));
-				Druid druid = Druid.FromLong (this.dice.Next ());
+				int number1 = 0;
+				int number2 = 0;
+				
+				while (number1 == 0)
+                {
+                	number1 = this.dice.Next ();
+                }
+
+				while (number2 == 0)
+                {
+                	number2 = this.dice.Next ();
+                }
+				
+				DbKey dbKey = new DbKey (new DbId (number1));
+				Druid druid = Druid.FromLong (number2);
 
 				yield return System.Tuple.Create (dbKey, druid);
 			}

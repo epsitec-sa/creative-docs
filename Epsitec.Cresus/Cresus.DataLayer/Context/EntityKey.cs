@@ -25,6 +25,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entityId">The id of the <see cref="AbstractEntity"/>.</param>
 		public EntityKey(DbKey rowKey, Druid entityId)
 		{
+			if (rowKey.IsEmpty)
+			{
+				throw new System.ArgumentException ("rowKey cannot be empty");
+			}
+
+			if (entityId.IsEmpty)
+			{
+				throw new System.ArgumentException ("entityId cannot be empty");
+			}
+			
 			this.rowKey   = rowKey;
 			this.entityId = entityId;
 		}
