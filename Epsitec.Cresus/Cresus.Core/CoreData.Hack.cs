@@ -650,7 +650,7 @@ namespace Epsitec.Cresus.Core
 			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
 			lineA2.NeverApplyDiscount = false;
-			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryUnitPriceBeforeTax;
+			lineA2.ResultingLinePriceBeforeTax = (int) lineA2.PrimaryLinePriceBeforeTax;
 			lineA2.ResultingLineTax = lineA2.ResultingLinePriceBeforeTax * vatRate;
 			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.ShortDescription;
 			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
@@ -669,20 +669,51 @@ namespace Epsitec.Cresus.Core
 			lineA2.ArticleQuantities.Add (quantityA2_2);
 
 			var lineA3 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			var quantityA3_1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var quantityA3_2 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
 
 			lineA3.Visibility = true;
 			lineA3.IndentationLevel = 0;
 			lineA3.BeginDate = invoiceA.CreationDate;
 			lineA3.EndDate = invoiceA.CreationDate;
-			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
+			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
 			lineA3.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
-			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax;
-			lineA3.NeverApplyDiscount = true;
-			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryUnitPriceBeforeTax;
+			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax * 0;
+			lineA3.NeverApplyDiscount = false;
+			lineA3.ResultingLinePriceBeforeTax = (int) lineA3.PrimaryLinePriceBeforeTax;
 			lineA3.ResultingLineTax = lineA3.ResultingLinePriceBeforeTax * vatRate;
 			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
 			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
+
+			quantityA3_1.Code = "suivra";
+			quantityA3_1.Quantity = 2;
+			quantityA3_1.Unit = lineA3.ArticleDefinition.BillingUnit;
+			quantityA3_1.ExpectedDate = new Date (2010, 9, 1);
+
+			quantityA3_2.Code = "suivra";
+			quantityA3_2.Quantity = 1;
+			quantityA3_2.Unit = lineA3.ArticleDefinition.BillingUnit;
+			quantityA3_2.ExpectedDate = new Date (2011, 1, 31);
+
+			lineA3.ArticleQuantities.Add (quantityA3_1);
+			lineA3.ArticleQuantities.Add (quantityA3_2);
+
+			var lineA4 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+			lineA4.Visibility = true;
+			lineA4.IndentationLevel = 0;
+			lineA4.BeginDate = invoiceA.CreationDate;
+			lineA4.EndDate = invoiceA.CreationDate;
+			lineA4.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
+			lineA4.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA4.PrimaryUnitPriceBeforeTax = lineA4.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
+			lineA4.PrimaryLinePriceBeforeTax = lineA4.PrimaryUnitPriceBeforeTax;
+			lineA4.NeverApplyDiscount = true;
+			lineA4.ResultingLinePriceBeforeTax = (int) lineA4.PrimaryUnitPriceBeforeTax;
+			lineA4.ResultingLineTax = lineA4.ResultingLinePriceBeforeTax * vatRate;
+			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.ShortDescription;
+			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
 
 			var discountA1 = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
 
@@ -716,7 +747,7 @@ namespace Epsitec.Cresus.Core
 
 			totalA1.Visibility = true;
 			totalA1.Discount = discountA1;
-			totalA1.PrimaryPriceBeforeTax = (lineA1.ResultingLinePriceBeforeTax + lineA2.ResultingLinePriceBeforeTax);
+			totalA1.PrimaryPriceBeforeTax = (lineA1.ResultingLinePriceBeforeTax + lineA2.ResultingLinePriceBeforeTax + lineA3.ResultingLinePriceBeforeTax);
 			totalA1.PrimaryTax = totalA1.PrimaryPriceBeforeTax * vatRate;
 			totalA1.ResultingPriceBeforeTax = totalA1.PrimaryPriceBeforeTax * (1.0M - discountA1.DiscountRate);
 			totalA1.ResultingTax = totalA1.FinalPriceBeforeTax * vatRate;
@@ -730,8 +761,8 @@ namespace Epsitec.Cresus.Core
 			//	Total arrêté ................................. xxxx
 
 			totalA2.Visibility = true;
-			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA3.ResultingLinePriceBeforeTax;
-			totalA2.PrimaryTax = totalA1.ResultingTax + lineA3.PrimaryLinePriceBeforeTax;
+			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
+			totalA2.PrimaryTax = totalA1.ResultingTax + lineA4.PrimaryLinePriceBeforeTax;
 			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceBeforeTax * (1+vatRate) / 10) * 10M;
 			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));
 			totalA2.ResultingTax = decimalType.Range.ConstrainToZero (totalA2.ResultingPriceBeforeTax * vatRate);
@@ -744,7 +775,7 @@ namespace Epsitec.Cresus.Core
 			totalA2.FinalPriceBeforeTax = totalA2.ResultingPriceBeforeTax;
 			totalA2.FinalTax = decimalType.Range.ConstrainToZero (totalA2.FinalPriceBeforeTax * vatRate);
 
-			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA3.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
+			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA4.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
 
 			totalA1.FinalPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA1.ResultingPriceBeforeTax * fixedPriceDiscount);
 			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
@@ -753,14 +784,17 @@ namespace Epsitec.Cresus.Core
 			lineA1.FinalLineTax = decimalType.Range.ConstrainToZero (lineA1.ResultingLineTax * fixedPriceDiscount);
 			lineA2.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLinePriceBeforeTax * fixedPriceDiscount);
 			lineA2.FinalLineTax = decimalType.Range.ConstrainToZero (lineA2.ResultingLineTax * fixedPriceDiscount);
-			lineA3.FinalLinePriceBeforeTax = lineA3.ResultingLinePriceBeforeTax;
-			lineA3.FinalLineTax = lineA3.ResultingLineTax;
+			lineA3.FinalLinePriceBeforeTax = decimalType.Range.ConstrainToZero (lineA3.ResultingLinePriceBeforeTax * fixedPriceDiscount);
+			lineA3.FinalLineTax = decimalType.Range.ConstrainToZero (lineA3.ResultingLineTax * fixedPriceDiscount);
+			lineA4.FinalLinePriceBeforeTax = lineA4.ResultingLinePriceBeforeTax;
+			lineA4.FinalLineTax = lineA4.ResultingLineTax;
 
 			invoiceA.Lines.Add (textA1);		//	Logiciels
 			invoiceA.Lines.Add (lineA1);		//	  Crésus Compta PRO x 3
-			invoiceA.Lines.Add (lineA2);		//	  Crésus Fact LARGO x 1 (et 1 qui sera livré le 19/07/2010)
+			invoiceA.Lines.Add (lineA2);		//	  Crésus Facturation LARGO x 1 (et 1 qui sera livré le 19/07/2010)
+			invoiceA.Lines.Add (lineA3);		//	  Crésus Salaires PRO x 0 (et 2+1 qui seront livrés les 01/09/2010 et 31.01.2011)
 			invoiceA.Lines.Add (totalA1);		//	Rabais de quantité et sous-total après rabais
-			invoiceA.Lines.Add (lineA3);		//	  Frais de port
+			invoiceA.Lines.Add (lineA4);		//	  Frais de port
 			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1790.00
 
 			var paymentMode = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();

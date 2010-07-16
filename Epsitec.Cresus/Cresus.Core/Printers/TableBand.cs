@@ -113,104 +113,200 @@ namespace Epsitec.Cresus.Core.Printers
 		public string GetText(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.Text;
+
+			if (textBox == null)
+			{
+				return null;
+			}
+			else
+			{
+				return textBox.Text;
+			}
 		}
 
 		public void SetText(int column, int row, string value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.Text = value;
+
+			if (textBox != null)
+			{
+				textBox.Text = value;
+			}
 		}
 
 
 		public Font GetFont(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.Font;
+
+			if (textBox == null)
+			{
+				return null;
+			}
+			else
+			{
+				return textBox.Font;
+			}
 		}
 
 		public void SetFont(int column, int row, Font value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.Font = value;
+
+			if (textBox != null)
+			{
+				textBox.Font = value;
+			}
 		}
 
 
 		public double GetFontSize(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.FontSize;
+
+			if (textBox == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return textBox.FontSize;
+			}
 		}
 
 		public void SetFontSize(int column, int row, double value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.FontSize = value;
+
+			if (textBox != null)
+			{
+				textBox.FontSize = value;
+			}
 		}
 
 
 		public ContentAlignment GetAlignment(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.Alignment;
+
+			if (textBox == null)
+			{
+				return ContentAlignment.None;
+			}
+			else
+			{
+				return textBox.Alignment;
+			}
 		}
 
 		public void SetAlignment(int column, int row, ContentAlignment value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.Alignment = value;
+
+			if (textBox != null)
+			{
+				textBox.Alignment = value;
+			}
 		}
 
 
 		public TextJustifMode GetJustif(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.Justif;
+
+			if (textBox == null)
+			{
+				return TextJustifMode.None;
+			}
+			else
+			{
+				return textBox.Justif;
+			}
 		}
 
 		public void SetJustif(int column, int row, TextJustifMode value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.Justif = value;
+
+			if (textBox != null)
+			{
+				textBox.Justif = value;
+			}
 		}
 
 
 		public double GetCellBorderWidth(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.TableCellBorderWidth;
+
+			if (textBox == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return textBox.TableCellBorderWidth;
+			}
 		}
 
 		public void SetCellBorderWidth(int column, int row, double value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.TableCellBorderWidth = value;
+
+			if (textBox != null)
+			{
+				textBox.TableCellBorderWidth = value;
+			}
 		}
 
 
 		public Color GetBackground(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.TableCellBackground;
+
+			if (textBox == null)
+			{
+				return Color.Empty;
+			}
+			else
+			{
+				return textBox.TableCellBackground;
+			}
 		}
 
 		public void SetBackground(int column, int row, Color value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.TableCellBackground = value;
+
+			if (textBox != null)
+			{
+				textBox.TableCellBackground = value;
+			}
 		}
 
 
 		public TextBreakMode GetBreakMode(int column, int row)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			return textBox.BreakMode;
+
+			if (textBox == null)
+			{
+				return TextBreakMode.None;
+			}
+			else
+			{
+				return textBox.BreakMode;
+			}
 		}
 
 		public void SetBreakMode(int column, int row, TextBreakMode value)
 		{
 			TextBand textBox = this.GetTextBox (column, row);
-			textBox.BreakMode = value;
+
+			if (textBox != null)
+			{
+				textBox.BreakMode = value;
+			}
 		}
 
 
