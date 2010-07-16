@@ -19,10 +19,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 {
 	
 	
-	/// <summary>
-	/// The <c>DataContext</c> class provides a context in which entities can
-	/// be loaded from the database, modified and then saved back.
-	/// </summary>
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : System.IDisposable, IEntityPersistenceManager
 	{

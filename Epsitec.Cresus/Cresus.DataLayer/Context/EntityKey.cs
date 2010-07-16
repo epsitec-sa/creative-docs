@@ -5,27 +5,24 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Database;
 
-using System.Collections.Generic;
-using System.Linq;
-
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
 
 
 	/// <summary>
-	/// The <c>EntityKey</c> structure encodes the identity of an entity in
-	/// the database using a <see cref="DbKey"/> and entity id pair.
+	/// The <c>EntityKey</c> structure encodes the identity of an <see cref="EntityKey"/> in the
+	/// database using a <see cref="DbKey"/> and a <see cref="Druid"/>.
 	/// </summary>
 	public struct EntityKey : System.IEquatable<EntityKey>
 	{
 		
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityKey"/> struct.
+		/// Builds a new <see cref="EntityKey"/> which identifies an <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <param name="rowKey">The row key in the database.</param>
-		/// <param name="entityId">The entity id.</param>
+		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"/> in the database.</param>
+		/// <param name="entityId">The id of the <see cref="AbstractEntity"/>.</param>
 		public EntityKey(DbKey rowKey, Druid entityId)
 		{
 			this.rowKey   = rowKey;
@@ -34,9 +31,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets the row key in the database.
+		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
-		/// <value>The row key.</value>
+		/// <value>The <see cref="DbKey"/>.</value>
 		public DbKey RowKey
 		{
 			get
@@ -47,9 +44,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets the entity id.
+		/// Gets the <see cref="Druid"/> that represents the type of the <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <value>The entity id.</value>
+		/// <value>The <see cref="Druid"/>.</value>
 		public Druid EntityId
 		{
 			get
@@ -60,9 +57,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets a value indicating whether this key is empty.
+		/// Tells whether this <see cref="EntityKey"/> is empty.
 		/// </summary>
-		/// <value><c>true</c> if this key is empty; otherwise, <c>false</c>.</value>
+		/// <value><c>true</c> if this key is empty, <c>false</c> if it is not.</value>
 		public bool IsEmpty
 		{
 			get
@@ -75,52 +72,82 @@ namespace Epsitec.Cresus.DataLayer.Context
 		#region IEquatable<EntityKey> Members
 
 
-		public bool Equals(EntityKey other)
+		/// <summary>
+		/// Tells whether this <see cref="EntityKey"/> is equal to another.
+		/// </summary>
+		/// <param name="that">The other <see cref="EntityKey"/>.</param>
+		/// <returns><c>true</c> if both <see cref="EntityKey"/> are equal, false if they are not.</returns>
+		public bool Equals(EntityKey that)
 		{
-			return (this.rowKey == other.RowKey) && (this.entityId == other.EntityId);
+			return (this.rowKey == that.RowKey) && (this.entityId == that.EntityId);
 		}
 
 
 		#endregion
 
 
-		public override bool Equals(object obj)
+		/// <summary>
+		/// Tells whether this <see cref="EntityKey"/> is equal to another object.
+		/// </summary>
+		/// <param name="that">The other <see cref="object"/>.</param>
+		/// <returns><c>true</c> if both <see cref="object"/> are equal, false if they are not.</returns>
+		public override bool Equals(object that)
 		{
-			if (obj is EntityKey)
-			{
-				return base.Equals ((EntityKey) obj);
-			}
-			else
-			{
-				return false;
-			}
+			return (that is EntityKey) && this.Equals ((EntityKey) that);
 		}
 
 
+		/// <summary>
+		/// Computes the hash code of this instance.
+		/// </summary>
+		/// <returns>The hash code of this instance.</returns>
 		public override int GetHashCode()
 		{
 			return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
 		}
 
 
+		/// <summary>
+		/// Tells whether two <see cref="EntityKey"/> are equal.
+		/// </summary>
+		/// <param name="a">The first <see cref="EntityKey"/>.</param>
+		/// <param name="b">The second <see cref="EntityKey"/>.</param>
+		/// <returns><c>true</c> if both <see cref="EntityKey"/> are equal, false if they are not.</returns>
 		public static bool operator==(EntityKey a, EntityKey b)
 		{
 			return a.Equals (b);
 		}
 
 
+		/// <summary>
+		/// Tells whether two <see cref="EntityKey"/> are different.
+		/// </summary>
+		/// <param name="a">The first <see cref="EntityKey"/>.</param>
+		/// <param name="b">The second <see cref="EntityKey"/>.</param>
+		/// <returns><c>true</c> if both <see cref="EntityKey"/> are different, false if they are not.</returns>
 		public static bool operator!=(EntityKey a, EntityKey b)
 		{
 			return !a.Equals (b);
 		}
 
 
+		/// <summary>
+		/// The <see cref="DbKey"/> which tells the id of the <see cref="AbstractEntity"/> represented
+		/// by this instance.
+		/// </summary>
 		private readonly DbKey rowKey;
 
 
+		/// <summary>
+		/// The <see cref="Druid"/> which represents the type of the <see cref="AbstractEntity"/>
+		/// represented by this instance.
+		/// </summary>
 		private readonly Druid entityId;
 
 
+		/// <summary>
+		/// An instance of the empty <see cref="EntityKey"/>.
+		/// </summary>
 		public static readonly EntityKey Empty = new EntityKey ();
 
 
