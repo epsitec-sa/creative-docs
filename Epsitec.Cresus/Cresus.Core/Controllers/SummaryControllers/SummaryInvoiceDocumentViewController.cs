@@ -54,10 +54,45 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.Document",
 					Title				= UIBuilder.FormatText ("Facture"),
 					CompactTitle		= UIBuilder.FormatText ("Facture"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => this.GetText (x)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
+
+
+		private FormattedText GetText(Entities.InvoiceDocumentEntity x)
+		{
+			string date = this.GetDate (x);
+			string total = Misc.DecimalToString (this.GetTotal (x));
+
+			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, "\n", "Date: ", date, "\n", "Total: ", total);
+		}
+
+		private string GetDate(Entities.InvoiceDocumentEntity x)
+		{
+			System.DateTime date;
+			if (x.LastModificationDate.HasValue)
+			{
+				date = x.LastModificationDate.Value;
+			}
+			else
+			{
+				date = System.DateTime.Now;
+			}
+
+			return Misc.GetDateTimeDescription (date);
+		}
+
+		private decimal GetTotal(Entities.InvoiceDocumentEntity x)
+		{
+			if (x.BillingDetails.Count > 0)
+			{
+				return Misc.CentRound (x.BillingDetails[0].AmountDue.Amount);
+			}
+
+			return 0;
+		}
+
 	}
 }

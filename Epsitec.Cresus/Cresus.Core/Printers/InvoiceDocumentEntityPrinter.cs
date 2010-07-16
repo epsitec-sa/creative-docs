@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.BuildHeader ();
 			this.BuildArticles ();
+			this.BuildConditions ();
 			this.BuildBvs (bvr: true);
 		}
 
@@ -450,6 +451,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private void BuildConditions()
+		{
+			//	Met les conditions à la fin de la facture.
+			string conditions = this.GetConditions ();
+
+			if (!string.IsNullOrEmpty (conditions))
+			{
+				var band = new TextBand ();
+				band.Text = conditions;
+
+				this.documentContainer.AddFromTop (band, 0);
+			}
+		}
+
 		private void BuildBvs(bool bvr)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
@@ -471,6 +486,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				BV.PaintBvSimulator = true;
+				BV.PaintSpecimen = false;
 				BV.From = this.GetMailContact ();
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
@@ -563,6 +579,16 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.entity.BillingDetails.Count > 0)
 			{
 				return this.entity.BillingDetails[0].Title;
+			}
+
+			return null;
+		}
+
+		private string GetConditions()
+		{
+			if (this.entity.BillingDetails.Count > 0)
+			{
+				return this.entity.BillingDetails[0].AmountDue.PaymentMode.Description;
 			}
 
 			return null;
