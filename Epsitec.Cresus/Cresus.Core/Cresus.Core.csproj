@@ -173,6 +173,8 @@
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractBand.cs" />
+    <Compile Include="Printers\AbstractBvBand.cs" />
+    <Compile Include="Printers\BvrBand.cs" />
     <Compile Include="Printers\BvBand.cs" />
     <Compile Include="Printers\ImageBand.cs" />
     <Compile Include="Printers\InvoiceDocumentEntityPrinter.cs" />
