@@ -168,9 +168,6 @@
     <Compile Include="DbNumDefTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbRichCommandTest.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DbSqlStandardTest.cs">
       <SubType>Code</SubType>
     </Compile>

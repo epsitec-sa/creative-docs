@@ -230,9 +230,6 @@
     <Compile Include="DbRevisionMode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DbRichCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DbRowSearchMode.cs">
       <SubType>Code</SubType>
     </Compile>
