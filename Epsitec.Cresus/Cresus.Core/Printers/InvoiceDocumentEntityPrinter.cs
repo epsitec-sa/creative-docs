@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Margins (20, 15, 10, BvBand.DefautlSize.Height+10);
+				return new Margins (20, 15, 10, AbstractBvBand.DefautlSize.Height+10);
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.BuildHeader ();
 			this.BuildArticles ();
-			this.BuildBvs ();
+			this.BuildBvs (bvr: false);
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -231,20 +231,30 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildBvs()
+		private void BuildBvs(bool bvr)
 		{
 			//	Met un BV en bas de chaque page.
-			var bounds = new Rectangle (Point.Zero, BvBand.DefautlSize);
+			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);
 
 			for (int page = 0; page < this.documentContainer.PageCount; page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				var BV = new BvBand ();
+				AbstractBvBand BV;
+
+				if (bvr)
+				{
+					BV = new BvrBand ();
+				}
+				else
+				{
+					BV = new BvBand ();
+				}
 
 				BV.PaintBvSimulator = true;
 				BV.From = this.GetMailContact ();
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
+				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
