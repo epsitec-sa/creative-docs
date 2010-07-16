@@ -63,8 +63,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-55, topLeft.X+204, topLeft.Y-55));
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-61, topLeft.X+204, topLeft.Y-61));
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-67, topLeft.X+204, topLeft.Y-67));
-			port.LineWidth = 0.05;
-			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-73, topLeft.X+204, topLeft.Y-73));
+			BvBand.PaintDashedLine (port, new Point (topLeft.X+123, topLeft.Y-73), new Point (topLeft.X+204, topLeft.Y-73));
 
 			//	Dessine les cases pour les montants.
 			port.LineWidth = 0.1;
@@ -150,8 +149,22 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private static void PaintDashedLine(IPaintPort port, Point p1, Point p2)
+		{
+			var path = new DashedPath ();
+			path.MoveTo (p1);
+			path.LineTo (p2);
+			path.AddDash (0.15, 0.4);
+
+			using (Path dashed = path.GenerateDashedPath ())
+			{
+				port.PaintOutline (dashed);
+			}
+		}
+
 		private void PaintCell(IPaintPort port, Point pos)
 		{
+			//	Dessine un rectangle pour un digit du montant.
 			Rectangle bounds = new Rectangle (pos.X, pos.Y, 4, 5);
 			bounds.Inflate (0.2);
 

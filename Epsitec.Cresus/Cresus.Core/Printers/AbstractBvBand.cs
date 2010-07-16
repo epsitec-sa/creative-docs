@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// true  -> Dessine un faux BV orangé sur du papier vierge. A n'utiliser que pour l'aperçu avant impression.
-		/// false -> Ne dessine que les informations réelles sur du papier avec un BV préimprimé.
+		/// true  -> Dessine un faux BVR orangé ou BV rose sur du papier vierge. A n'utiliser que pour l'aperçu avant impression.
+		/// false -> Ne dessine que les informations réelles sur du papier avec un BVR/BV préimprimé.
 		/// </summary>
 		public bool PaintBvSimulator
 		{
@@ -211,16 +211,17 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintSurface (Path.FromRectangle (topLeft.X+60, topLeft.Y-106, 150, 25));
 
 			//	Dessine les grandes lignes noires de séparation.
-			port.Color = Color.FromBrightness (0);
 			port.LineWidth = 0.15;
+			port.Color = Color.FromBrightness (0.8);
+			port.PaintOutline (Path.FromLine (topLeft.X+0, topLeft.Y-0, topLeft.X+210, topLeft.Y-0));
+			port.PaintOutline (Path.FromLine (topLeft.X+60, topLeft.Y-5, topLeft.X+60, topLeft.Y-106));
+
+			port.Color = Color.FromBrightness (0);
 			port.PaintOutline (Path.FromLine (topLeft.X, topLeft.Y-5, topLeft.X+210, topLeft.Y-5));
 			port.PaintOutline (Path.FromLine (topLeft.X+60, topLeft.Y, topLeft.X+60, topLeft.Y-5));
 			port.PaintOutline (Path.FromLine (topLeft.X+121, topLeft.Y-5, topLeft.X+121, topLeft.Y-81));
 			port.PaintOutline (Path.FromLine (topLeft.X+177, topLeft.Y-5, topLeft.X+177, topLeft.Y-30));
 			port.PaintOutline (Path.FromLine (topLeft.X+121, topLeft.Y-30, topLeft.X+210, topLeft.Y-30));
-
-			port.Color = Color.FromBrightness (0.8);
-			port.PaintOutline (Path.FromLine (topLeft.X+60, topLeft.Y-5, topLeft.X+60, topLeft.Y-106));
 
 			//	Dessine les 'L' en bas à gauche et à droite.
 			port.Color = Color.FromBrightness (0);
@@ -233,8 +234,8 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Dessine les cercles.
 			port.Color = this.DarkPinkColor;
 			port.LineWidth = 0.1;
-			port.PaintOutline (Path.FromCircle (topLeft.X+194, topLeft.Y-17, 9));
-			port.PaintOutline (Path.FromCircle (topLeft.X+17, topLeft.Y-95, 9));
+			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+194, topLeft.Y-17), 9);
+			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+17, topLeft.Y-95), 9);
 
 			//	Dessine les textes.
 			port.Color = Color.FromBrightness (0);
@@ -278,6 +279,18 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Dessine tous les textes variables.
 		}
 
+
+		protected static void PaintDashedCircle(IPaintPort port, Point center, double radius)
+		{
+			var path = new DashedPath ();
+			path.AppendCircle (center, radius);
+			path.AddDash (0.2, 0.6);
+
+			using (Path dashed = path.GenerateDashedPath ())
+			{
+				port.PaintOutline (dashed);
+			}
+		}
 
 		protected static void PaintTriangle(IPaintPort port, Point pos)
 		{

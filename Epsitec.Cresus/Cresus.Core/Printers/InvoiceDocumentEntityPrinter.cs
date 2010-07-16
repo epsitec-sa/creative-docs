@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildBvs(bool bvr)
 		{
-			//	Met un BV en bas de chaque page.
+			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);
 
 			for (int page = 0; page < this.documentContainer.PageCount; page++)
@@ -244,11 +244,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (bvr)
 				{
-					BV = new BvrBand ();
+					BV = new BvrBand ();  // BVR orangé
 				}
 				else
 				{
-					BV = new BvBand ();
+					BV = new BvBand ();  // BV rose
 				}
 
 				BV.PaintBvSimulator = true;
