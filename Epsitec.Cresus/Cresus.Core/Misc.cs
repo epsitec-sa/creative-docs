@@ -110,7 +110,48 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-	
+
+		public static string FormatUnit(decimal quantity, string unit)
+		{
+			//	1, "Pièce"		-> "1 pièce"
+			//	2, "Pièce"		-> "2 pièces"
+			//	3, "km"			-> "3 km"
+			//	0.5, "Litre"	-> "0.5 litres"
+			if (string.IsNullOrEmpty (unit))
+			{
+				return quantity.ToString ();
+			}
+			else
+			{
+				//	Si l'unité a 1 ou 2 caractères, on n'y touche pas ("m", "cm", "m2", "kg", "t", etc.).
+				//	TODO: Faire mieux et gérer les pluriels en "x" !
+				if (unit.Length > 2)
+				{
+					unit = unit.ToLower();
+				}
+
+				if (quantity != 1.0M && unit.Length > 2)
+				{
+					unit = string.Concat (unit.ToLower(), "s");
+				}
+
+				return string.Concat (quantity.ToString (), " ", unit);
+			}
+		}
+
+		public static string AppendLine(string current, string text)
+		{
+			if (string.IsNullOrEmpty (current))
+			{
+				return text;
+			}
+			else
+			{
+				return string.Concat (current, "<br/>", text);
+			}
+		}
+
+
 		/// <summary>
 		/// Explose une chaîne avec un séparateur à choix en une liste.
 		/// </summary>

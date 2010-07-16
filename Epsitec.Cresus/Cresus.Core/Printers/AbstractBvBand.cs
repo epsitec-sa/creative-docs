@@ -212,9 +212,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Dessine les grandes lignes noires de séparation.
 			port.LineWidth = 0.15;
-			port.Color = Color.FromBrightness (0.8);
-			port.PaintOutline (Path.FromLine (topLeft.X+0, topLeft.Y-0, topLeft.X+210, topLeft.Y-0));
-			port.PaintOutline (Path.FromLine (topLeft.X+60, topLeft.Y-5, topLeft.X+60, topLeft.Y-106));
+			port.Color = Color.FromBrightness (0.7);
+			AbstractBvBand.PaintCutLine (port, new Point (topLeft.X+0, topLeft.Y-0), new Point (topLeft.X+210, topLeft.Y-0));
+			AbstractBvBand.PaintCutLine (port, new Point (topLeft.X+60, topLeft.Y-5), new Point (topLeft.X+60, topLeft.Y-106));
 
 			port.Color = Color.FromBrightness (0);
 			port.PaintOutline (Path.FromLine (topLeft.X, topLeft.Y-5, topLeft.X+210, topLeft.Y-5));
@@ -280,7 +280,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected static void PaintDashedCircle(IPaintPort port, Point center, double radius)
+		private static void PaintCutLine(IPaintPort port, Point p1, Point p2)
+		{
+			var path = new DashedPath ();
+			path.MoveTo (p1);
+			path.LineTo (p2);
+			path.AddDash (2.0, 1.2);
+
+			using (Path dashed = path.GenerateDashedPath ())
+			{
+				port.PaintOutline (dashed);
+			}
+		}
+
+		private static void PaintDashedCircle(IPaintPort port, Point center, double radius)
 		{
 			var path = new DashedPath ();
 			path.AppendCircle (center, radius);
@@ -292,7 +305,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		protected static void PaintTriangle(IPaintPort port, Point pos)
+		private static void PaintTriangle(IPaintPort port, Point pos)
 		{
 			//	Dessine un petit triangle 'v' dont on donne la pointe.
 			Path path = new Path ();
@@ -304,7 +317,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintSurface (path);
 		}
 
-		protected static string PriceToStringRef(decimal price)
+		private static string PriceToStringRef(decimal price)
 		{
 			//	Extrait le codage d'un prix.
 			int franc = decimal.ToInt32 (price);

@@ -50,8 +50,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.AddFilledRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (1));
 
-				bounds.Deflate (0.5);
-
 				//	Dessine l'entité dans la page.
 				Transform initial = graphics.Transform;
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
@@ -61,6 +59,9 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.Transform = initial;
 
 				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
+				bounds.Deflate (0.5);
+
+				graphics.LineWidth = 1;
 				graphics.AddRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (0));
 			}
