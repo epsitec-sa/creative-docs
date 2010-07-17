@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				new SummaryData
 				{
 					Name				= "InvoiceDocument",
-					IconUri				= "Data.Document",
+					IconUri				= "Data.InvoiceDocument",
 					Title				= UIBuilder.FormatText ("Facture"),
 					CompactTitle		= UIBuilder.FormatText ("Facture"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => SummaryInvoiceDocumentViewController.GetText (x)),
