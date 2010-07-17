@@ -109,6 +109,11 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAbstractDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
@@ -268,6 +273,16 @@
     <EmbeddedResource Include="Images\Base.ArticleDefinitions.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDefinition.icon" />
     <EmbeddedResource Include="Images\Base.InvoiceDocuments.icon" />
+    <EmbeddedResource Include="Images\Data.ArticleDocumentItem.icon" />
+    <EmbeddedResource Include="Images\Data.ArticleQuantity.icon" />
+    <EmbeddedResource Include="Images\Data.BillingDetails.icon" />
+    <EmbeddedResource Include="Images\Data.Currency.icon" />
+    <EmbeddedResource Include="Images\Data.InvoiceDocument.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentDetail.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentMode.icon" />
+    <EmbeddedResource Include="Images\Data.PriceDocumentItem.icon" />
+    <EmbeddedResource Include="Images\Data.TextDocumentItem.icon" />
+    <EmbeddedResource Include="Images\Data.DocumentItems.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

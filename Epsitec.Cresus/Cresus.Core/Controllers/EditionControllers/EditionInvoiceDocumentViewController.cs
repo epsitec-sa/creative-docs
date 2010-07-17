@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.Document", "Facture");
+				builder.CreateEditionTitleTile ("Data.InvoiceDocument", "Facture");
 
 				this.CreateUIMain (builder);
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					AutoGroup    = true,
 					Name		 = "DocumentItem",
-					IconUri		 = "Data.ArticleDefinition",
+					IconUri		 = "Data.DocumentItems",
 					Title		 = UIBuilder.FormatText ("Lignes"),
 					CompactTitle = UIBuilder.FormatText ("Lignes"),
 					Text		 = CollectionTemplate.DefaultEmptyText
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string GetTextDocumentItemSummary(TextDocumentItemEntity x)
 		{
-			return string.Concat ("Text: ", x.Text);
+			return string.Concat ("<i>Texte</i><tab/>", x.Text);
 		}
 
 		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var quantity = SummaryInvoiceDocumentViewController.GetArticleQuantity (x);
 			var desc     = SummaryInvoiceDocumentViewController.GetArticleDescription (x, shortDescription: true);
 
-			return string.Concat ("Article: ", string.Join (" ", quantity, desc));
+			return string.Concat ("<i>Article</i><tab/>", string.Join (" ", quantity, desc));
 		}
 
 		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (x.Discount.DiscountRate.HasValue)
 				{
-					return string.Concat ("Prix: Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
+					return string.Concat ("<i>Prix</i><tab/>Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
 				}
 			}
 			else
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					total = Misc.DecimalToString (x.FixedPriceAfterTax.Value);
 				}
 
-				return string.Concat ("Prix: ", desc, " ", total);
+				return string.Concat ("<i>Prix</i><tab/>", desc, " ", total);
 			}
 
 			return null;
