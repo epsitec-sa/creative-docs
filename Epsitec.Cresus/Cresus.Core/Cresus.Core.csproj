@@ -109,6 +109,7 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentViewController.cs" />
@@ -266,7 +267,7 @@
     <EmbeddedResource Include="Images\Preview.icon" />
     <EmbeddedResource Include="Images\Base.ArticleDefinitions.icon" />
     <EmbeddedResource Include="Images\Data.ArticleDefinition.icon" />
-    <EmbeddedResource Include="Images\Base.Invoice.icon" />
+    <EmbeddedResource Include="Images\Base.InvoiceDocuments.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
