@@ -1,0 +1,171 @@
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+{
+	public class EditionInvoiceDocumentViewController : EditionViewController<Entities.InvoiceDocumentEntity>
+	{
+		public EditionInvoiceDocumentViewController(string name, Entities.InvoiceDocumentEntity entity)
+			: base (name, entity)
+		{
+		}
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrEmpty (this.Entity.IdA) &&
+				string.IsNullOrEmpty (this.Entity.IdB) &&
+				string.IsNullOrEmpty (this.Entity.IdC))
+			{
+				return EditionStatus.Empty;
+			}
+
+			if (string.IsNullOrEmpty (this.Entity.IdA) &&
+				(!string.IsNullOrEmpty (this.Entity.IdB) ||
+				 !string.IsNullOrEmpty (this.Entity.IdC)))
+			{
+				return EditionStatus.Invalid;
+			}
+
+			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
+
+			return EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
+
+	
+		protected override void CreateUI(TileContainer container)
+		{
+			using (var builder = new UIBuilder (container, this))
+			{
+				builder.CreateHeaderEditorTile ();
+				builder.CreateEditionTitleTile ("Data.Document", "Facture");
+
+				this.CreateUIMain (builder);
+
+				builder.CreateFooterEditorTile ();
+			}
+
+			//	Summary:
+			var containerController = new TileContainerController (this, container);
+			var data = containerController.DataItems;
+
+			this.CreateUILines (data);
+
+			containerController.GenerateTiles ();
+		}
+
+
+		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
+			builder.CreateTextField (tile, 150, "Numéro externe",       Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField (tile, 150, "Numéro interne",       Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
+			builder.CreateMargin    (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile,   0, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+		}
+
+		private void CreateUILines(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "DocumentItem",
+					IconUri		 = "Data.ArticleDefinition",
+					Title		 = UIBuilder.FormatText ("Lignes"),
+					CompactTitle = UIBuilder.FormatText ("Lignes"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller)
+				.DefineText        (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
+				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+		}
+
+
+		private static string GetDocumentItemSummary(AbstractDocumentItemEntity documentItemEntity)
+		{
+			if (documentItemEntity is TextDocumentItemEntity)
+			{
+				return GetTextDocumentItemSummary (documentItemEntity as TextDocumentItemEntity);
+			}
+
+			if (documentItemEntity is ArticleDocumentItemEntity)
+			{
+				return GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
+			}
+
+			if (documentItemEntity is PriceDocumentItemEntity)
+			{
+				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
+			}
+
+			return null;			
+		}
+
+		private static string GetTextDocumentItemSummary(TextDocumentItemEntity x)
+		{
+			return string.Concat ("Text: ", x.Text);
+		}
+
+		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
+		{
+			var quantity = SummaryInvoiceDocumentViewController.GetArticleQuantity (x);
+			var desc     = SummaryInvoiceDocumentViewController.GetArticleDescription (x, shortDescription: true);
+
+			return string.Concat ("Article: ", string.Join (" ", quantity, desc));
+		}
+
+		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
+		{
+			if (x.Discount.IsActive ())
+			{
+				if (x.Discount.DiscountRate.HasValue)
+				{
+					return string.Concat ("Prix: Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
+				}
+			}
+			else
+			{
+				string desc = x.TextForFixedPrice;
+				if (string.IsNullOrEmpty (desc))
+				{
+					desc = "Total arrêté";
+				}
+
+				string total = null;
+				if (x.FixedPriceAfterTax.HasValue)
+				{
+					total = Misc.DecimalToString (x.FixedPriceAfterTax.Value);
+				}
+
+				return string.Concat ("Prix: ", desc, " ", total);
+			}
+
+			return null;
+		}
+	}
+}

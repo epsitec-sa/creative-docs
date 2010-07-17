@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Size (pageWidth, pageHeight);  // A4 vertical
+				return new Size (210, 297);  // A4 vertical
 			}
 		}
 
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Margins (20, 10, 10, AbstractBvBand.DefautlSize.Height+10);
+				return new Margins (20, 10, 20, AbstractBvBand.DefautlSize.Height+10);
 			}
 		}
 
@@ -57,6 +58,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.BuildHeader ();
 			this.BuildArticles ();
 			this.BuildConditions ();
+			this.BuildPages ();
 			this.BuildBvs (bvr: true);
 		}
 
@@ -81,12 +83,12 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, 297-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 
 			var mailContactBand = new TextBand ();
-			mailContactBand.Text = this.GetMailContact ();
+			mailContactBand.Text = SummaryInvoiceDocumentViewController.GetMailContact (this.entity);
 			mailContactBand.Font = font;
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, 240, 80, 25));
 
-			string concerne = this.GetConcerne ();
+			string concerne = SummaryInvoiceDocumentViewController.GetConcerne (this.entity);
 			if (!string.IsNullOrEmpty (concerne))
 			{
 				var concerneBand = new TableBand ();
@@ -104,12 +106,12 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = UIBuilder.FormatText ("<b>Facture", this.entity.IdA, "/~", this.entity.IdB, "/~", this.entity.IdC, "</b>").ToString ();
+			titleBand.Text = SummaryInvoiceDocumentViewController.GetTitle (this.entity);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, 215, 90, 10));
 
-			string date = this.GetDate ();
+			string date = SummaryInvoiceDocumentViewController.GetDate (this.entity);
 			var dateBand = new TextBand ();
 			dateBand.Text = UIBuilder.FormatText ("Crissier, le ", date).ToString ();
 			dateBand.Font = font;
@@ -313,8 +315,8 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			decimal price       = this.GetArticlePrice       (line);
-			string  description = this.GetArticleDescription (line);
+			decimal price       = SummaryInvoiceDocumentViewController.GetArticlePrice       (line);
+			string  description = SummaryInvoiceDocumentViewController.GetArticleDescription (line, shortDescription: false);
 
 			if (q1 != null)
 			{
@@ -374,7 +376,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			string desc = string.Concat (beforeText, "<br/>", afterText);
 
-			//	Génère ées 2 lignes de prix.
+			//	Génère les 2 lignes de prix.
 			string beforePrice = null;
 			if (line.PrimaryPriceBeforeTax.HasValue)
 			{
@@ -454,7 +456,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildConditions()
 		{
 			//	Met les conditions à la fin de la facture.
-			string conditions = this.GetConditions ();
+			string conditions = SummaryInvoiceDocumentViewController.GetConditions (this.entity);
 
 			if (!string.IsNullOrEmpty (conditions))
 			{
@@ -462,6 +464,33 @@ namespace Epsitec.Cresus.Core.Printers
 				band.Text = conditions;
 
 				this.documentContainer.AddFromTop (band, 0);
+			}
+		}
+
+		private void BuildPages()
+		{
+			//	Met les numéros de page.
+			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+1, 80, 5);
+			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+1, 80, 5);
+
+			for (int page = 1; page < this.documentContainer.PageCount; page++)
+			{
+				this.documentContainer.CurrentPage = page;
+
+				var leftHeader = new TextBand ();
+				leftHeader.Text = SummaryInvoiceDocumentViewController.GetTitle (this.entity);
+				leftHeader.Alignment = ContentAlignment.BottomLeft;
+				leftHeader.Font = font;
+				leftHeader.FontSize = 4.0;
+
+				var rightHeader = new TextBand ();
+				rightHeader.Text = string.Format ("page {0}", (page+1).ToString ());
+				rightHeader.Alignment = ContentAlignment.BottomRight;
+				rightHeader.Font = font;
+				rightHeader.FontSize = fontSize;
+
+				this.documentContainer.AddAbsolute (leftHeader, leftBounds);
+				this.documentContainer.AddAbsolute (rightHeader, rightBounds);
 			}
 		}
 
@@ -487,14 +516,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 				BV.PaintBvSimulator = true;
 				BV.PaintSpecimen = false;
-				BV.From = this.GetMailContact ();
+				BV.From = SummaryInvoiceDocumentViewController.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
 					BV.NotForUse = false;  // c'est LE vrai BV
-					BV.Price = this.GetTotal ();
+					BV.Price = SummaryInvoiceDocumentViewController.GetTotal (this.entity);
 
 					if (this.entity.BillingDetails.Count > 0)
 					{
@@ -512,100 +541,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private string GetDate()
-		{
-			System.DateTime date;
-			if (this.entity.LastModificationDate.HasValue)
-			{
-				date = this.entity.LastModificationDate.Value;
-			}
-			else
-			{
-				date = System.DateTime.Now;
-			}
 
-			return Misc.GetDateTimeDescription (date);
-		}
-
-		private string GetMailContact()
-		{
-			string legal = "";
-			string natural = "";
-
-			if (this.entity.BillingMailContact != null)
-			{
-				if (this.entity.BillingMailContact.LegalPerson.IsActive ())
-				{
-					var x = this.entity.BillingMailContact.LegalPerson;
-					legal = UIBuilder.FormatText (x.Name).ToString ();
-				}
-
-				if (this.entity.BillingMailContact.NaturalPerson.IsActive ())
-				{
-					var x = this.entity.BillingMailContact.NaturalPerson;
-					natural = UIBuilder.FormatText (x.Title.Name, "~\n", x.Firstname, x.Lastname).ToString ();
-				}
-
-				return UIBuilder.FormatText (legal, "~\n", natural, "~\n", this.entity.BillingMailContact.Address.Street.StreetName, "\n", this.entity.BillingMailContact.Address.Location.PostalCode, this.entity.BillingMailContact.Address.Location.Name).ToString ();
-			}
-
-			return null;
-		}
-
-		private decimal GetArticlePrice(ArticleDocumentItemEntity article)
-		{
-			if (article.ArticleDefinition.ArticlePrices.Count != 0)
-			{
-				return article.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
-			}
-
-			return 0;
-		}
-
-		private string GetArticleDescription(ArticleDocumentItemEntity article)
-		{
-			string description = article.ArticleDefinition.LongDescription;
-
-			if (string.IsNullOrEmpty (description))
-			{
-				description = article.ArticleDefinition.ShortDescription;  // description courte s'il n'existe pas de longue
-			}
-
-			return description;
-		}
-
-		private string GetConcerne()
-		{
-			if (this.entity.BillingDetails.Count > 0)
-			{
-				return this.entity.BillingDetails[0].Title;
-			}
-
-			return null;
-		}
-
-		private string GetConditions()
-		{
-			if (this.entity.BillingDetails.Count > 0)
-			{
-				return this.entity.BillingDetails[0].AmountDue.PaymentMode.Description;
-			}
-
-			return null;
-		}
-
-		private decimal GetTotal()
-		{
-			if (this.entity.BillingDetails.Count > 0)
-			{
-				return Misc.CentRound (this.entity.BillingDetails[0].AmountDue.Amount);
-			}
-
-			return 0;
-		}
-
-
-
+		/// <summary>
+		/// Représente une colonne de la table principale des articles à facturer.
+		/// Elle pourra être visible ou cachée.
+		/// </summary>
 		private class TableColumn
 		{
 			public TableColumn(string title, double width, ContentAlignment alignment)
@@ -625,9 +565,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-
-		private static readonly double pageWidth  = 210;
-		private static readonly double pageHeight = 297;  // A4 vertical
 
 		private static readonly Font font = Font.GetFont ("Arial", "Regular");
 		private static readonly double fontSize = 3.0;

@@ -384,5 +384,5 @@
   <data name="Fld.ArticleDefinition.Comments" id="AED">&lt;s:data id="_0" f:Name="Comments" /&gt;</data>
   <data name="Val.PriceDisplayModes.PrimaryTotal" id="K2">&lt;s:data id="_0" f:Name="PrimaryTotal" /&gt;</data>
   <data name="Val.PriceDisplayModes.ResultingTotal" id="K3">&lt;s:data id="_0" f:Name="ResultingTotal" /&gt;</data>
-  <data name="Cmd.Base.ShowInvoiceDocuments" id="K4">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowInvoiceDocuments" f:Description="Montre la base des factures" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.Invoice.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Factures'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowInvoiceDocuments" id="K4">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowInvoiceDocuments" f:Description="Montre la base des factures" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.InvoiceDocuments.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Factures'}}" /&gt;</data>
 </bundle>
