@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -35,6 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.CreateUIMain (builder);
 				this.CreateUIArticleDefinition (builder);
+				this.CreateUIPrice (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -45,8 +47,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 0, "LayoutSettings (provisoire)", Marshaler.Create (() => this.Entity.LayoutSettings, x => this.Entity.LayoutSettings = x));
+			builder.CreateTextField (tile, 50, "Quantité", Marshaler.Create (this.GetQuantity, this.SetQuantity));
+			builder.CreateTextField (tile, 50, "Unité",    Marshaler.Create (this.GetUnit, this.SetUnit));
 		}
+
+
+		private void CreateUIPrice(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 100, "Prix unitaire", Marshaler.Create (this.GetPrice, this.SetPrice));
+		}
+
 
 		private void CreateUIArticleDefinition(UIBuilder builder)
 		{
@@ -63,6 +75,55 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
+
+		private decimal GetQuantity()
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code != "suivra")
+				{
+					return quantity.Quantity;
+				}
+			}
+
+			return 0;
+		}
+
+
+		private void SetQuantity(decimal value)
+		{
+		}
+
+		private string GetUnit()
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code != "suivra")
+				{
+					return quantity.Unit.Code;
+				}
+			}
+
+			return null;
+		}
+
+		private void SetUnit(string value)
+		{
+		}
+
+
+		private decimal GetPrice()
+		{
+			return SummaryInvoiceDocumentViewController.GetArticlePrice (this.Entity);
+		}
+
+		private void SetPrice(decimal value)
+		{
+		}
+
+
+	
+		
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
 			var title = context.CreateRegisteredEmptyEntity<ArticleDefinitionEntity> ();

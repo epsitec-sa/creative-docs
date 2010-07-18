@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var data = containerController.DataItems;
 
 			this.CreateUILines (data);
+			this.CreateUIComments (data);
 
 			containerController.GenerateTiles ();
 		}
@@ -103,6 +104,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+		}
+
+		private void CreateUIComments(SummaryDataItems data)
+		{
+			SummaryControllers.Common.CreateUIComments (data, this.EntityGetter, x => x.Comments);
 		}
 
 
