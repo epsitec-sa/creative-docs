@@ -38,39 +38,5 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Time,      "Temps");
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Energy,    "Energie");
 		}
-
-		public static string GetUnitOfMeasureCategoryText(UnitOfMeasureCategory category)
-		{
-			//	TODO: On devrait pouvoir utiliser GetGetAllPossibleItemsUnitOfMeasureCategory !
-			switch (category)
-			{
-				case UnitOfMeasureCategory.Unrelated:
-					return "Indépendant";
-
-				case UnitOfMeasureCategory.Unit:
-					return "Unité";
-
-				case UnitOfMeasureCategory.Mass:
-					return "Masse";
-
-				case UnitOfMeasureCategory.Length:
-					return "Longueur";
-
-				case UnitOfMeasureCategory.Surface:
-					return "Surface";
-
-				case UnitOfMeasureCategory.Volume:
-					return "Volume";
-
-				case UnitOfMeasureCategory.Time:
-					return "Temps";
-
-				case UnitOfMeasureCategory.Energy:
-					return "Energie";
-
-				default:
-					return null;
-			}
-		}
 	}
 }

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -72,16 +73,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateMargin    (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile,   0, "Nom",            Marshaler.Create (() => this.Entity.Name,              x => this.Entity.Name = x));
-			builder.CreateTextField (tile, 100, "Code",           Marshaler.Create (() => this.Entity.Code,              x => this.Entity.Code = x));
-			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie", Marshaler.Create (() => this.Entity.Category, x => this.Entity.Category = x), BusinessLogic.Enumerations.GetGetAllPossibleItemsUnitOfMeasureCategory (), x => UIBuilder.FormatText (x.Values));
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField             (tile,   0, "Nom",       Marshaler.Create (() => this.Entity.Name,     x => this.Entity.Name = x));
+			builder.CreateTextField             (tile, 100, "Code",      Marshaler.Create (() => this.Entity.Code,     x => this.Entity.Code = x));
+			builder.CreateAutoCompleteTextField (tile, 100, "Catégorie", Marshaler.Create (() => this.Entity.Category, x => this.Entity.Category = x), Enumerations.GetGetAllPossibleItemsUnitOfMeasureCategory (), x => UIBuilder.FormatText (x.Values));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile,  50, "Diviseur",       Marshaler.Create (() => this.Entity.DivideRatio,       x => this.Entity.DivideRatio = x));
-			builder.CreateTextField (tile,  50, "Multiplicateur", Marshaler.Create (() => this.Entity.MultiplyRatio,     x => this.Entity.MultiplyRatio = x));
-			builder.CreateTextField (tile,  50, "Incrément",      Marshaler.Create (() => this.Entity.SmallestIncrement, x => this.Entity.SmallestIncrement = x));
+			builder.CreateTextField (tile, 50, "Diviseur",       Marshaler.Create (() => this.Entity.DivideRatio,       x => this.Entity.DivideRatio = x));
+			builder.CreateTextField (tile, 50, "Multiplicateur", Marshaler.Create (() => this.Entity.MultiplyRatio,     x => this.Entity.MultiplyRatio = x));
+			builder.CreateTextField (tile, 50, "Incrément",      Marshaler.Create (() => this.Entity.SmallestIncrement, x => this.Entity.SmallestIncrement = x));
 			
 		}
 	}
