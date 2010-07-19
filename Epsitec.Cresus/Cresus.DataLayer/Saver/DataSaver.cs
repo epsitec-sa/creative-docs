@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
 				from entity in this.DataContext.GetEntitiesModified ()
-				where this.DataContext.CheckIfEntityCanBeSaved (entity)
+				where this.CheckIfEntityCanBeSaved (entity)
 				select entity
 			);
 

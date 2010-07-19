@@ -47,6 +47,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Database1.cs" />
     <Compile Include="Database2.cs" />
+    <Compile Include="UnitTestDataContextEventArgs.cs" />
     <Compile Include="UnitTestDataContextPool.cs" />
     <Compile Include="UnitTestEntityCache.cs" />
     <Compile Include="UnitTestEntityKey.cs" />

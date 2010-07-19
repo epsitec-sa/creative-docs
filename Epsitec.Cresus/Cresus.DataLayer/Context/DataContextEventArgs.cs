@@ -5,10 +5,19 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
+	
+	
 	public class DataContextEventArgs : EventArgs
 	{
+		
+		
 		public DataContextEventArgs(DataContext dataContext)
 		{
+			if (dataContext == null)
+			{
+				throw new System.ArgumentNullException ("dataContext");
+			}
+			
 			this.dataContext = dataContext;
 		}
 
@@ -23,5 +32,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		private readonly DataContext dataContext;
+	
+	
 	}
+
+
 }

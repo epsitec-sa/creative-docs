@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
 
-			if (this.DataContext.CheckIfEntityCanBeSaved (target))
+			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
 			{
 				List<DbKey> targetKeys = new List<DbKey> () { this.GetDbKey (target) };
 
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			List<DbKey> targetKeys = new List<DbKey> (
 				from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
-				where this.DataContext.CheckIfEntityCanBeSaved (target)
+				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
 				select this.GetDbKey (target)
 			);
 
