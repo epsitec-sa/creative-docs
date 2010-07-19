@@ -10,6 +10,13 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	
 	
+	// TODO It would be nice to clean that class out of its black magic, which makes it quite
+	// difficult to understand. But, I'm not sure if this is really possible.
+	// In addition, it would be nice to remove all the stuff related to virtualizing entities in
+	// entity collections, in this class and in EntityCollection.
+	// Marc
+
+
 	/// <summary>
 	/// The <c>EntityNullReferenceVirtualizer</c> provides the mechanism used to
 	/// automatically generate empty entities when null references are dereferenced.

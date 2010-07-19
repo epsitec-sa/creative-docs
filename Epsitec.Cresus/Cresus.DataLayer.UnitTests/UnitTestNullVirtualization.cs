@@ -311,7 +311,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		// TODO Add more test methods for the following cases :
-		// - auto generated null reference virtualizer for collections.
 		// - every method of the EntityNullReferenceVirtualizer.
 
 

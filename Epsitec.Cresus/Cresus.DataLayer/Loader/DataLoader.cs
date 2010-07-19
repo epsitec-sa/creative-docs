@@ -304,15 +304,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void DeserializeEntityLocalFieldCollection(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
-			IList targets = entity.InternalGetFieldCollection (field.Id);
+			List<DbKey> collectionKeys = entityData.CollectionData[field.CaptionId];
 
-			foreach (DbKey targetKey in entityData.CollectionData[field.CaptionId])
+			if (collectionKeys.Any ())
 			{
-				EntityKey entityKey = new EntityKey (field.TypeId, targetKey);
+				IList targets = entity.InternalGetFieldCollection (field.Id);
 
-				object target = new EntityKeyProxy (this.DataContext, entityKey);
+				foreach (DbKey targetKey in collectionKeys)
+				{
+					EntityKey entityKey = new EntityKey (field.TypeId, targetKey);
 
-				targets.Add (target);
+					object target = new EntityKeyProxy (this.DataContext, entityKey);
+
+					targets.Add (target);
+				}
 			}
 		}
 
