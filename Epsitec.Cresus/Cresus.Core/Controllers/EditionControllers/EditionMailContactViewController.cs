@@ -192,12 +192,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.InitializeDefaultCountry ();  // met "Suisse" si rien
 					this.selectedCountry = this.Entity.Address.Location.Country;
 
-					//	Grace aux WidgetUpdaters, on peut remettre à jour tous les widgets éditables en
-					//	fonction du nouveau contenu de l'entité.
-					foreach (var updater in this.tileContainer.WidgetUpdaters)
-					{
-						updater.Update ();
-					}
+					this.tileContainer.UpdateAllWidgets ();
 				}
 			}
 		}

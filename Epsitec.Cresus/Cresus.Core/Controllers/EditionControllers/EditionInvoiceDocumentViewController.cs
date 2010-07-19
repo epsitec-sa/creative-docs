@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -139,8 +139,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
-			var quantity = SummaryInvoiceDocumentViewController.GetArticleQuantity (x);
-			var desc     = SummaryInvoiceDocumentViewController.GetArticleDescription (x, shortDescription: true);
+			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (x);
+			var desc     = ArticleDocumentItemHelper.GetArticleDescription (x, shortDescription: true);
 
 			return string.Concat ("<i>Article</i><tab/>", string.Join (" ", quantity, desc));
 		}

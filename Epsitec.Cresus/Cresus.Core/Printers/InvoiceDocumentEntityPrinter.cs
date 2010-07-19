@@ -11,8 +11,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Helpers;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -83,12 +83,12 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, 297-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 
 			var mailContactBand = new TextBand ();
-			mailContactBand.Text = SummaryInvoiceDocumentViewController.GetMailContact (this.entity);
+			mailContactBand.Text = InvoiceDocumentHelper.GetMailContact (this.entity);
 			mailContactBand.Font = font;
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, 240, 80, 25));
 
-			string concerne = SummaryInvoiceDocumentViewController.GetConcerne (this.entity);
+			string concerne = InvoiceDocumentHelper.GetConcerne (this.entity);
 			if (!string.IsNullOrEmpty (concerne))
 			{
 				var concerneBand = new TableBand ();
@@ -106,12 +106,12 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = SummaryInvoiceDocumentViewController.GetTitle (this.entity);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, 215, 90, 10));
 
-			string date = SummaryInvoiceDocumentViewController.GetDate (this.entity);
+			string date = InvoiceDocumentHelper.GetDate (this.entity);
 			var dateBand = new TextBand ();
 			dateBand.Text = UIBuilder.FormatText ("Crissier, le ", date).ToString ();
 			dateBand.Font = font;
@@ -317,8 +317,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			decimal price       = SummaryInvoiceDocumentViewController.GetArticlePrice       (line);
-			string  description = SummaryInvoiceDocumentViewController.GetArticleDescription (line, shortDescription: false);
+			string  description = ArticleDocumentItemHelper.GetArticleDescription (line, shortDescription: false);
 
 			if (q1 != null)
 			{
@@ -458,7 +457,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildConditions()
 		{
 			//	Met les conditions à la fin de la facture.
-			string conditions = SummaryInvoiceDocumentViewController.GetConditions (this.entity);
+			string conditions = InvoiceDocumentHelper.GetConditions (this.entity);
 
 			if (!string.IsNullOrEmpty (conditions))
 			{
@@ -480,7 +479,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = SummaryInvoiceDocumentViewController.GetTitle (this.entity);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -518,14 +517,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 				BV.PaintBvSimulator = true;
 				BV.PaintSpecimen = false;
-				BV.From = SummaryInvoiceDocumentViewController.GetMailContact (this.entity);
+				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
 					BV.NotForUse = false;  // c'est LE vrai BV
-					BV.Price = SummaryInvoiceDocumentViewController.GetTotal (this.entity);
+					BV.Price = InvoiceDocumentHelper.GetTotal (this.entity);
 
 					if (this.entity.BillingDetails.Count > 0)
 					{

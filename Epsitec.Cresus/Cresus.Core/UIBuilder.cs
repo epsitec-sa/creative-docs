@@ -10,7 +10,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -312,6 +311,7 @@ namespace Epsitec.Cresus.Core
 			var frameBox = new FrameBox
 			{
 				Parent = tile.Container,
+				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 			};
@@ -343,6 +343,7 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldEx
 			{
 				Parent = parent,
+				PreferredHeight = 20,
 				Dock = dockStyle,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
@@ -413,6 +414,7 @@ namespace Epsitec.Cresus.Core
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
+				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
@@ -429,6 +431,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					MenuButtonWidth = buttonWidth-1,
+					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
@@ -454,6 +457,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					MenuButtonWidth = buttonWidth-1,
 					PreferredWidth = width,
+					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
@@ -523,6 +527,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = container,
 					MenuButtonWidth = buttonWidth-1,
+					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
@@ -548,6 +553,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					MenuButtonWidth = buttonWidth-1,
 					PreferredWidth = width,
+					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
@@ -630,6 +636,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				MenuButtonWidth = buttonWidth-1,
+				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
