@@ -839,8 +839,8 @@ namespace Epsitec.Cresus.Core
 		{
 			var articlePrice1 = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
 
-			articlePrice1.BeginDate = new System.DateTime (2010, 1, 1);
-			articlePrice1.EndDate = new System.DateTime (2010, 12, 31);
+			articlePrice1.BeginDate = new System.DateTime (2010,  1,  1,  0,  0,  0);  // 1 janvier 00:00:00
+			articlePrice1.EndDate   = new System.DateTime (2020, 12, 31, 23, 59, 59);  // 31 décembre 23:59:59 (c'est important de donner l'heure)
 			articlePrice1.MinQuantity = 1;
 			articlePrice1.MaxQuantity = null;
 			articlePrice1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;

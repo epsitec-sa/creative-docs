@@ -41,6 +41,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public void UpdateAllWidgets()
+		{
+			foreach (var updater in this.widgetUpdaters)
+			{
+				updater.Update ();
+			}
+		}
+
+
 		protected override void MeasureMinMax(ref Size min, ref Size max)
 		{
 			//-base.MeasureMinMax (ref min, ref max);

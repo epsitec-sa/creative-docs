@@ -10,21 +10,21 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public static class Enumerations
 	{
-		public static IEnumerable<EnumKeyValues<BusinessLogic.Finance.TaxMode>> GetAllPossibleItemsTaxModes()
+		public static IEnumerable<EnumKeyValues<Finance.TaxMode>> GetAllPossibleItemsTaxModes()
 		{
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.ExemptFromVat,   "Exonéré");
+			yield return EnumKeyValues.Create (Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");
+			yield return EnumKeyValues.Create (Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
+			yield return EnumKeyValues.Create (Finance.TaxMode.ExemptFromVat,   "Exonéré");
 		}
 
-		public static IEnumerable<EnumKeyValues<BusinessLogic.Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
+		public static IEnumerable<EnumKeyValues<Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
 		{
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Eur, "EUR", "Euro");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Usd, "USD", "Dollar américain");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Eur, "EUR", "Euro");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Usd, "USD", "Dollar américain");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
+			yield return EnumKeyValues.Create (Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
 		}
 
 		public static IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> GetGetAllPossibleItemsUnitOfMeasureCategory()

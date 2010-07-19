@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.UnitOfMeasure",
 					Title				= UIBuilder.FormatText ("Unité de mesure"),
 					CompactTitle		= UIBuilder.FormatText ("Unité"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Nom: ", x.Name, "\n", "Code: ", x.Code, "\n", "Catégorie: ", GetCategory (x), "\n", "Facteurs: ", GetFactors (x))),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Nom: ", x.Name, "\n", "Code: ", x.Code, "\n", "Catégorie: ", GetCategory (x), "\n", "Valeurs: ", GetFactors (x))),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
@@ -44,9 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static string GetCategory(Entities.UnitOfMeasureEntity unit)
 		{
-			IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> possibleItems = Enumerations.GetGetAllPossibleItemsUnitOfMeasureCategory ();
-
-			foreach (var item in possibleItems)
+			foreach (var item in Enumerations.GetGetAllPossibleItemsUnitOfMeasureCategory ())
 			{
 				if (item.Key == unit.Category)
 				{
