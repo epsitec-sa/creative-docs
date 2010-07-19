@@ -39,7 +39,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
-			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as string[], text);
+			//?widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as string[], text);
+			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (this.TextList, text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
 			this.widget = widget;
@@ -54,6 +55,22 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 
 			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
+		}
+
+		private string[] TextList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				foreach (var item in possibleItems)
+				{
+					string text = this.getUserText (item).ToSimpleText ();
+					list.Add (text);
+				}
+
+				return list.ToArray ();
+			}
 		}
 
 

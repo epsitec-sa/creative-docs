@@ -293,6 +293,35 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public FrameBox CreateGroup(EditionTile tile, string label)
+		{
+			if (!string.IsNullOrEmpty (label))
+			{
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 10, 0, 2),
+				};
+
+				this.ContentListAdd (staticText);
+			}
+
+			var frameBox = new FrameBox
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			this.ContentListAdd (frameBox);
+
+			return frameBox;
+		}
+
+
 		public TextFieldEx CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
 		{
 			var staticText = new StaticText
@@ -304,16 +333,22 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
+			this.ContentListAdd (staticText);
+
+			return this.CreateTextField (tile.Container, DockStyle.Top, width, marshaler);
+		}
+
+		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, int width, Marshaler marshaler)
+		{
 			var textField = new TextFieldEx
 			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
+				Parent = parent,
+				Dock = dockStyle,
 				Margins = new Margins (0, 10, 0, 5),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 			};
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (textField);
 
 			if (width > 0)

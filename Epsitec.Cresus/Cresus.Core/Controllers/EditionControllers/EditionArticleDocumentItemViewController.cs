@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -34,29 +35,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDocumentItem", "Ligne d'article");
 
-				this.CreateUIMain (builder);
 				this.CreateUIArticleDefinition (builder);
+
+				this.CreateUIQuantity (builder);
+				this.CreateUIUnitOfMeasure (builder);
+
+				this.CreateUIDelayedQuantity1 (builder);
+				this.CreateUIDelayedUnitOfMeasure1 (builder);
+
+				this.CreateUIDelayedQuantity2 (builder);
+				this.CreateUIDelayedUnitOfMeasure2 (builder);
+
 				this.CreateUIPrice (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
-		}
-
-
-		private void CreateUIMain(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField (tile, 50, "Quantité", Marshaler.Create (this.GetQuantity, this.SetQuantity));
-			builder.CreateTextField (tile, 50, "Unité",    Marshaler.Create (this.GetUnit, this.SetUnit));
-		}
-
-
-		private void CreateUIPrice(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateTextField (tile, 100, "Prix unitaire", Marshaler.Create (this.GetPrice, this.SetPrice));
 		}
 
 
@@ -75,58 +68,330 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 		}
 
-
-		private decimal GetQuantity()
+		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-			foreach (var quantity in this.Entity.ArticleQuantities)
-			{
-				if (quantity.Code != "suivra")
+			builder.CreateAutoCompleteTextField ("Unité",
+				new SelectionController<UnitOfMeasureEntity>
 				{
-					return quantity.Quantity;
+					ValueGetter = () => this.UnitOfMeasure,
+					ValueSetter = x => this.UnitOfMeasure = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+				});
+		}
+
+		private void CreateUIDelayedUnitOfMeasure1(UIBuilder builder)
+		{
+			builder.CreateAutoCompleteTextField ("Unité",
+				new SelectionController<UnitOfMeasureEntity>
+				{
+					ValueGetter = () => this.DelayedUnitOfMeasure1,
+					ValueSetter = x => this.DelayedUnitOfMeasure1 = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure1, creator: this.CreateNewUnitOfMeasure),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+				});
+		}
+
+		private void CreateUIDelayedUnitOfMeasure2(UIBuilder builder)
+		{
+			builder.CreateAutoCompleteTextField ("Unité",
+				new SelectionController<UnitOfMeasureEntity>
+				{
+					ValueGetter = () => this.DelayedUnitOfMeasure2,
+					ValueSetter = x => this.DelayedUnitOfMeasure2 = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure2, creator: this.CreateNewUnitOfMeasure),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+				});
+		}
+
+		private void CreateUIQuantity(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			FrameBox group = builder.CreateGroup (tile, "Quantité livrée");
+			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetQuantity, this.SetQuantity));
+		}
+
+		private void CreateUIDelayedQuantity1(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			FrameBox group = builder.CreateGroup (tile, "Première quantité livrée ultérieurement et date");
+			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetDelayedQuantity1, this.SetDelayedQuantity1));
+			builder.CreateTextField (group, DockStyle.Fill,  0, Marshaler.Create (this.GetDelayedDate1, this.SetDelayedDate1));
+		}
+
+		private void CreateUIDelayedQuantity2(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			FrameBox group = builder.CreateGroup (tile, "Deuxième qantité livrée ultérieurement et date");
+			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetDelayedQuantity2, this.SetDelayedQuantity2));
+			builder.CreateTextField (group, DockStyle.Fill,  0, Marshaler.Create (this.GetDelayedDate2, this.SetDelayedDate2));
+		}
+
+		private void CreateUIPrice(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile, 100, "Prix unitaire", Marshaler.Create (this.GetPrice, this.SetPrice));
+		}
+
+
+		private ArticleDefinitionEntity ArticleDefinition
+		{
+			get
+			{
+				return this.Entity.ArticleDefinition;
+			}
+			set
+			{
+				if (this.Entity.ArticleDefinition.CompareWith (value) == false)
+				{
+					this.Entity.ArticleDefinition = value;
+
+					this.SetQuantity (1);
+					this.UnitOfMeasure = value.BillingUnit;
 				}
 			}
-
-			return 0;
 		}
 
-
-		private void SetQuantity(decimal value)
+		private UnitOfMeasureEntity UnitOfMeasure
 		{
+			get
+			{
+				return this.GetUnitOfMeasure ("livré", 0);
+			}
+			set
+			{
+				this.SetUnitOfMeasure ("livré", 0, value);
+			}
 		}
 
-		private string GetUnit()
+		private UnitOfMeasureEntity DelayedUnitOfMeasure1
+		{
+			get
+			{
+				return this.GetUnitOfMeasure ("suivra", 0);
+			}
+			set
+			{
+				this.SetUnitOfMeasure ("suivra", 0, value);
+			}
+		}
+
+		private UnitOfMeasureEntity DelayedUnitOfMeasure2
+		{
+			get
+			{
+				return this.GetUnitOfMeasure ("suivra", 1);
+			}
+			set
+			{
+				this.SetUnitOfMeasure ("suivra", 1, value);
+			}
+		}
+
+
+		private decimal? GetQuantity()
+		{
+			return this.GetQuantity ("livré", 0);
+		}
+
+
+		private void SetQuantity(decimal? value)
+		{
+			this.SetQuantity ("livré", 0, value);
+		}
+
+
+		private decimal? GetDelayedQuantity1()
+		{
+			return this.GetQuantity ("suivra", 0);
+		}
+
+
+		private void SetDelayedQuantity1(decimal? value)
+		{
+			this.SetQuantity ("suivra", 0, value);
+		}
+
+
+		private decimal? GetDelayedQuantity2()
+		{
+			return this.GetQuantity ("suivra", 1);
+		}
+
+
+		private void SetDelayedQuantity2(decimal? value)
+		{
+			this.SetQuantity ("suivra", 1, value);
+		}
+
+
+		private Date? GetDelayedDate1()
+		{
+			return this.GetDate ("suivra", 0);
+		}
+
+		private void SetDelayedDate1(Date? value)
+		{
+			this.SetDate ("suivra", 0, value);
+		}
+
+
+		private Date? GetDelayedDate2()
+		{
+			return this.GetDate ("suivra", 1);
+		}
+
+		private void SetDelayedDate2(Date? value)
+		{
+			this.SetDate ("suivra", 1, value);
+		}
+
+
+		private decimal? GetQuantity(string code, int rank)
 		{
 			foreach (var quantity in this.Entity.ArticleQuantities)
 			{
-				if (quantity.Code != "suivra")
+				if (quantity.Code == code && rank-- == 0)
 				{
-					return quantity.Unit.Code;
+					return quantity.Quantity;
 				}
 			}
 
 			return null;
 		}
 
-		private void SetUnit(string value)
+		private void SetQuantity(string code, int rank, decimal? value)
 		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code == code && rank-- == 0)
+				{
+					quantity.Quantity = value.Value;
+					return;
+				}
+			}
+
+			var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+
+			newQuantity.Code     = code;
+			newQuantity.Quantity = 1;
+			newQuantity.Unit     = this.Entity.ArticleDefinition.BillingUnit;
+
+			this.Entity.ArticleQuantities.Add (newQuantity);
 		}
 
 
-		private decimal GetPrice()
+		private UnitOfMeasureEntity GetUnitOfMeasure(string code, int rank)
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code == code && rank-- == 0)
+				{
+					return quantity.Unit;
+				}
+			}
+
+			return null;
+		}
+
+		private void SetUnitOfMeasure(string code, int rank, UnitOfMeasureEntity value)
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code == code && rank-- == 0)
+				{
+					quantity.Unit = value;
+					return;
+				}
+			}
+
+			var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+
+			newQuantity.Code     = code;
+			newQuantity.Quantity = 1;
+			newQuantity.Unit     = value;
+
+			this.Entity.ArticleQuantities.Add (newQuantity);
+		}
+
+
+		private Date? GetDate(string code, int rank)
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code == code && rank-- == 0)
+				{
+					return quantity.ExpectedDate;
+				}
+			}
+
+			return null;
+		}
+
+		private void SetDate(string code, int rank, Date? value)
+		{
+			foreach (var quantity in this.Entity.ArticleQuantities)
+			{
+				if (quantity.Code == code && rank-- == 0)
+				{
+					quantity.ExpectedDate = value;
+					return;
+				}
+			}
+
+			var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+
+			newQuantity.Code         = code;
+			newQuantity.Quantity     = 1;
+			newQuantity.Unit         = this.Entity.ArticleDefinition.BillingUnit;
+			newQuantity.ExpectedDate = value;
+
+			this.Entity.ArticleQuantities.Add (newQuantity);
+		}
+
+
+		private decimal? GetPrice()
 		{
 			return SummaryInvoiceDocumentViewController.GetArticlePrice (this.Entity);
 		}
 
-		private void SetPrice(decimal value)
+		private void SetPrice(decimal? value)
 		{
+			// TODO:
 		}
 
 
-	
-		
+
+
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
 			var title = context.CreateRegisteredEmptyEntity<ArticleDefinitionEntity> ();
+			return title;
+		}
+
+		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
+		{
+			var title = context.CreateRegisteredEmptyEntity<UnitOfMeasureEntity> ();
 			return title;
 		}
 

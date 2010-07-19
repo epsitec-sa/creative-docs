@@ -110,6 +110,7 @@
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryRelationViewController.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
+    <Compile Include="Data\UnitOfMeasureRepository.cs" />
     <Compile Include="Data\InvoiceDocumentRepository.cs" />
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
@@ -283,6 +286,7 @@
     <EmbeddedResource Include="Images\Data.PriceDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.TextDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.DocumentItems.icon" />
+    <EmbeddedResource Include="Images\Data.UnitOfMeasure.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
