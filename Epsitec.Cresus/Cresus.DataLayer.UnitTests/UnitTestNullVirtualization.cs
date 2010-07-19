@@ -47,30 +47,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ModifyNullReferenceData()
+		public void ModifyNullReferenceData1()
 		{
 			using (DataContext dataContext = this.CreateDataContext ())
 			{
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				System.Diagnostics.Debug.Assert (gertrude != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+				Assert.IsNotNull (gertrude);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
 				LanguageEntity language = gertrude.PreferredLanguage;
 
-				System.Diagnostics.Debug.Assert (language != null);
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.IsNotNull (language);
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 				language.Code = "1337";
 				language.Name = "1337 5|*34|<";
 
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 				dataContext.SaveChanges ();
 			}
@@ -78,22 +78,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			using (DataContext dataContext = this.CreateDataContext ())
 			{
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
-				
-				System.Diagnostics.Debug.Assert (gertrude != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+				Assert.IsNotNull (gertrude);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 								
 				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
 
-				System.Diagnostics.Debug.Assert (language != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				System.Diagnostics.Debug.Assert (language.Code == "1337");
-				System.Diagnostics.Debug.Assert (language.Name == "1337 5|*34|<");
+				Assert.IsNotNull (language);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+				Assert.AreEqual ("1337", language.Code);
+				Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-				System.Diagnostics.Debug.Assert (gertrude.PreferredLanguage == language);
+				Assert.AreSame (gertrude.PreferredLanguage, language);
 			}
 
 			this.CreateDatabaseHelper ();
@@ -101,32 +101,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ReplaceNullReferenceEntity()
+		public void ReplaceNullReferenceEntity2()
 		{
 			using (DataContext dataContext = this.CreateDataContext ())
 			{
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				System.Diagnostics.Debug.Assert (gertrude != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+				Assert.IsNotNull (gertrude);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
 				LanguageEntity language1 = gertrude.PreferredLanguage;
 
-				System.Diagnostics.Debug.Assert (language1 != null);
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language1));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language1));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsNullEntity (language1));
+				Assert.IsNotNull (language1);
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language1));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language1));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language1));
 
 				LanguageEntity language2 = dataContext.CreateEntity<LanguageEntity> ();
 
 				language2.Code = "1337";
 				language2.Name = "1337 5|*34|<";
 
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language2));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
+
+				gertrude.PreferredLanguage = language2;
 
 				dataContext.SaveChanges ();
 			}
@@ -135,25 +137,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 
-				System.Diagnostics.Debug.Assert (gertrude != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+				Assert.IsNotNull (gertrude);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
 				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (3)));
 
-				System.Diagnostics.Debug.Assert (language != null);
-				System.Diagnostics.Debug.Assert (!EntityNullReferenceVirtualizer.IsNullEntity (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
-				System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
-				System.Diagnostics.Debug.Assert (language.Code == "1337");
-				System.Diagnostics.Debug.Assert (language.Name == "1337 5|*34|<");
+				Assert.IsNotNull (language);
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+				Assert.AreEqual ("1337", language.Code);
+				Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-				System.Diagnostics.Debug.Assert (gertrude.PreferredLanguage == language);
+				Assert.AreSame (gertrude.PreferredLanguage, language);
 			}
 
 			this.CreateDatabaseHelper ();
 		}
+
+
+
+
+
+
+
+
 
 		private DataContext CreateDataContext()
 		{
@@ -162,7 +172,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EnableNullVirtualization = true
 			};
 		}
-                                             
+
+
+		// TODO Add more test methods for the following cases :
+		// - auto generated null reference virtualizer for collections.
+		// - every method of the EntityNullReferenceVirtualizer.
+
 
 	}
 

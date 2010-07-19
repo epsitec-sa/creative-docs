@@ -321,6 +321,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		internal bool CheckIfEntityCanBeSaved(AbstractEntity entity)
 		{
+			// TODO Move this to DataSaver?
+			// Marc
+
 			bool canBeSaved = entity != null
 				&& !this.IsDeleted (entity)
 				&& !this.IsRegisteredAsEmptyEntity (entity)
