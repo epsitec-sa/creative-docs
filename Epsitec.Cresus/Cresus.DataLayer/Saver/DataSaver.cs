@@ -276,9 +276,21 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			bool mustBeSaved = target != null
 				&& !this.DataContext.IsPersistent (target)
-				&&  this.DataContext.CheckIfEntityCanBeSaved (target);
+				&&  this.CheckIfEntityCanBeSaved (target);
 			
 			return mustBeSaved;
+		}
+
+
+		internal bool CheckIfEntityCanBeSaved(AbstractEntity entity)
+		{
+			bool canBeSaved = entity != null
+				&& !this.DataContext.IsDeleted (entity)
+				&& !this.DataContext.IsRegisteredAsEmptyEntity (entity)
+				&& !EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (entity)
+				&& !EntityNullReferenceVirtualizer.IsNullEntity (entity);
+
+			return canBeSaved;
 		}
 
 
