@@ -9,7 +9,7 @@
     <ProjectGuid>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.DataLayer</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.DataLayer.UnitTests</RootNamespace>
     <AssemblyName>Cresus.DataLayer.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,6 +47,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Database1.cs" />
     <Compile Include="Database2.cs" />
+    <Compile Include="EntityCacheUnitTest.cs" />
     <Compile Include="UnitTestEntityKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
@@ -115,6 +116,9 @@
     <Content Include="Resources\Cresus.DataLayer.UnitTests\module.info">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Shadow Include="Test References\Cresus.DataLayer.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

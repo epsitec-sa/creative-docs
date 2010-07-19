@@ -1,15 +1,17 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer
+namespace Epsitec.Cresus.DataLayer.UnitTests
 {
     
     
@@ -48,24 +50,24 @@ namespace Epsitec.Cresus.DataLayer
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
 		public void EntityKeyConstructorTest2()
 		{
-			DbKey rowKey = DbKey.Empty;
-			Druid entityId = Druid.FromLong (1);
+			List<AbstractEntity> entities = new List<AbstractEntity> () {
+				new NaturalPersonEntity (),
+				new AbstractPersonEntity (),
+				new ContactRoleEntity (),
+				new UriContactEntity (),
+				new AbstractContactEntity (),
+			};
 
-			EntityKey entityKey = new EntityKey (rowKey, entityId);
-		}
+			foreach (AbstractEntity entity in entities)
+			{
+				DbKey rowKey = new DbKey (new DbId (1));
+				EntityKey key = new EntityKey (entity, rowKey);
 
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void EntityKeyConstructorTest3()
-		{
-			DbKey rowKey = new DbKey (new DbId (1));
-			Druid entityId = Druid.Empty;
-
-			EntityKey entityKey = new EntityKey (rowKey, entityId);
+				Assert.AreEqual (key.EntityId, entity.GetEntityStructuredTypeId ());
+				Assert.AreEqual (key.RowKey, rowKey);
+			}
 		}
 
 		
@@ -159,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				EntityKey target = this.Create (data);
 
-				bool isEmpty = data.Item1.IsEmpty && data.Item2.IsEmpty;
+				bool isEmpty = data.Item1.IsEmpty || data.Item2.IsEmpty;
 
 				Assert.AreEqual (isEmpty, target.IsEmpty);
 			}
@@ -185,9 +187,9 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			int count = 25;
 
-			for (int i = 1; i <= count; i++)
+			for (int i = 0; i < count; i++)
 			{
-				for (int j = 1; j <= count; j++)
+				for (int j = 0; j < count; j++)
 				{
 					DbKey dbKey = new DbKey (new DbId (i));
 					Druid druid = Druid.FromLong (j);
@@ -224,7 +226,7 @@ namespace Epsitec.Cresus.DataLayer
 			DbKey rowKey = data.Item1;
 			Druid entityId = data.Item2;
 
-			return new EntityKey (rowKey, entityId);
+			return new EntityKey (entityId, rowKey);
 		}
 
 

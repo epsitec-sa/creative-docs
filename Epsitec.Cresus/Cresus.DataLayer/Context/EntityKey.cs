@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Common.Support.EntityEngine;
 
 
 namespace Epsitec.Cresus.DataLayer.Context
@@ -16,30 +17,37 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// </summary>
 	public struct EntityKey : System.IEquatable<EntityKey>
 	{
-		
-		
+
+
 		/// <summary>
-		/// Builds a new <see cref="EntityKey"/> which identifies an <see cref="AbstractEntity"/>.
+		/// Builds a new <see cref="EntityKey"></see> which identifies an <see cref="AbstractEntity"></see>.
 		/// </summary>
-		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"/> in the database.</param>
-		/// <param name="entityId">The id of the <see cref="AbstractEntity"/>.</param>
-		/// <exception cref="System.ArgumentException">
-		/// If <paramref name="rowKey"/> or <paramref name="entityId"/> is empty.
-		/// </exception>
-		public EntityKey(DbKey rowKey, Druid entityId)
+		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
+		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the database.</param>
+		public EntityKey(Druid entityId, DbKey rowKey)
 		{
-			if (rowKey.IsEmpty)
+			this.entityId = entityId;
+			this.rowKey = rowKey;
+		}
+
+
+		/// <summary>
+		/// Creates the <see cref="EntityKey"></see> corresponding the <paramref name="entity"></paramref> and
+		/// <paramref name="rowKey"></paramref>.
+		/// </summary>
+		/// <param name="rowKey">The <see cref="DbKey"></see> of the <see cref="AbstractEntity"></see> in the database.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"></see> whose <see cref="EntityKey"></see> to create.</param>
+		/// <returns>The corresponding <see cref="EntityKey"></see>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
+		public EntityKey(AbstractEntity entity, DbKey rowKey)
+		{
+			if (entity == null)
 			{
-				throw new System.ArgumentException ("rowKey cannot be empty");
+				throw new System.ArgumentNullException ("entity");
 			}
 
-			if (entityId.IsEmpty)
-			{
-				throw new System.ArgumentException ("entityId cannot be empty");
-			}
-			
-			this.rowKey   = rowKey;
-			this.entityId = entityId;
+			this.entityId = entity.GetEntityStructuredTypeId ();
+			this.rowKey = rowKey;
 		}
 
 
@@ -77,7 +85,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get
 			{
-				return this.RowKey.IsEmpty && this.EntityId.IsEmpty;
+				return this.RowKey.IsEmpty || this.EntityId.IsEmpty;
 			}
 		}
 

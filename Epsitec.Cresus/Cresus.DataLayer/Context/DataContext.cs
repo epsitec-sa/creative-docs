@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public TEntity ResolveEntity<TEntity>(DbKey rowKey) where TEntity : AbstractEntity, new ()
 		{
 			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
-			EntityKey entityKey = new EntityKey (rowKey, entityId);
+			EntityKey entityKey = new EntityKey (entityId, rowKey);
 
 			return (TEntity) this.ResolveEntity (entityKey);
 		}
@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public AbstractEntity GetPeristedEntity(string id)
 		{
 			AbstractEntity entity = null;
-			
+
 			if (!string.IsNullOrEmpty (id) && id.StartsWith ("db:"))
 			{
 				string[] args = id.Split (':');
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				{
 					case 3:
 						entityId = Druid.Parse (args[1]);
-						
+
 						if ((entityId.IsValid) &&
 							(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
 						{
@@ -427,9 +427,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				if (!key.IsEmpty && !entityId.IsEmpty)
 				{
-					EntityKey entityKey = new EntityKey (key, entityId);
+					EntityKey entityKey = new EntityKey (entityId, key);
 
-					entity = this.ResolveEntity (entityKey);;
+					entity = this.ResolveEntity (entityKey);
+					;
 				}
 			}
 

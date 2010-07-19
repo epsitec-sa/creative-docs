@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entityData.LeafEntityId;
 			DbKey rowKey = entityData.Key;
 
-			EntityKey entityKey = new EntityKey (rowKey, leafEntityId);
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			if (targetKey.HasValue)
 			{
-				EntityKey entityKey = new EntityKey (targetKey.Value, field.TypeId);
+				EntityKey entityKey = new EntityKey (field.TypeId, targetKey.Value);
 
 				object target = new EntityKeyProxy (this.DataContext, entityKey);
 
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			foreach (DbKey targetKey in entityData.CollectionData[field.CaptionId])
 			{
-				EntityKey entityKey = new EntityKey (targetKey, field.TypeId);
+				EntityKey entityKey = new EntityKey (field.TypeId, targetKey);
 
 				object target = new EntityKeyProxy (this.DataContext, entityKey);
 

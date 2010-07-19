@@ -14,10 +14,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 	
 
 	/// <summary>
-	/// The <see cref="EntityDataCache"/> class is used to cache <see cref="AbstractEntity"/> in
+	/// The <see cref="EntityCache"/> class is used to cache <see cref="AbstractEntity"/> in
 	/// memory and to store associated data with them.
 	/// </summary>
-	internal class EntityCache
+	internal sealed class EntityCache
 	{
 
 
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				throw new System.ArgumentException ("Entity is not yet defined cache");
 			}
 
-			EntityKey entityKey = this.CreateEntityKey (entity, key);
+			EntityKey entityKey = new EntityKey (entity, key);
 
 			this.entityIdToEntityKey[id] = entityKey;
 			this.entityKeyToEntity[entityKey] = entity;
@@ -184,21 +184,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IEnumerable<AbstractEntity> GetEntities()
 		{
 			return this.entityIdToEntity.Values;
-		}
-
-
-		/// <summary>
-		/// Creates the <see cref="EntityKey"/> corresponding the <paramref name="entity"/> and
-		/// <paramref name="key"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to create.</param>
-		/// <param name="key">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
-		/// <returns>The corresponding <see cref="EntityKey"/>.</returns>
-		private EntityKey CreateEntityKey(AbstractEntity entity, DbKey key)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-
-			return new EntityKey (key, leafEntityId);
 		}
 
 
