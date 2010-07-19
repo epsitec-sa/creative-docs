@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure);
-			this.EntityContext = EntityContext.Current;
+			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
 

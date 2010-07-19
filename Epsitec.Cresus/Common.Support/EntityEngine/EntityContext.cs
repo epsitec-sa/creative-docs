@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public class EntityContext : IEntityPersistenceManager
 	{
-		private EntityContext()
+		public EntityContext()
 			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
 		{
 		}

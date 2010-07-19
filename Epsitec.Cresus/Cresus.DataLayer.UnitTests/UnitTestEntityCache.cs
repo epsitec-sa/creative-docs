@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass ()]
-	public class EntityCacheUnitTest
+	public class UnitTestEntityCache
 	{
 
 
