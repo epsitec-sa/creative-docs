@@ -156,17 +156,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public AbstractEntity ResolveEntity(DbKey dbKey, Druid entityId)
+		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
-			// TODO Change this method so that it takes an EntityKey as argument
-			// Marc
-
-			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityKey.EntityId);
 
 			Request request = new Request ()
 			{
 				RootEntity = entity,
-				RootEntityKey = dbKey,
+				RootEntityKey = entityKey.RowKey,
 			};
 
 			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();

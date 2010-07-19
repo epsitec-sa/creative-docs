@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (entity == null)
 			{
-				entity = this.DataLoader.ResolveEntity (entityKey.RowKey, entityKey.EntityId);
+				entity = this.DataLoader.ResolveEntity (entityKey);
 			}
 
 			return entity;

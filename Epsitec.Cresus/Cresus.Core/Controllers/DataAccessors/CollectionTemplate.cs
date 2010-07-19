@@ -219,6 +219,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private static T CreateEmptyItem()
 		{
+			// TODO Replace this call by a call to the DataContext or EntityNullReferenceVirtualizer,
+			// whichever works (probably the DataContext is better). This might require modifications
+			// to other parts of the program in order to have a DataContext here.
+			// Marc
+
 			T entity = EntityContext.Current.CreateEmptyEntity<T> ();
 			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
 

@@ -109,6 +109,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		// TODO It seem to me that the four next methods are kind of extremely dangerous, because
+		// they skip the DataContext to directly talk to the EntityContext. This used to work in
+		// the previous implementation, but it seem not to really work now, and that is kind of logical,
+		// since everything regarding entities should go through the DataContext. Therefore, it would
+		// be nice to remove those four methods and replace them by call to the DataContext. Maybe the
+		// last one is ok, I must investigate, but all the other are begging for a problem to happen.
+		// Marc
+
+
 		/// <summary>
 		/// Unwraps the entity. If it maps to a null entity, then return <c>null</c>.
 		/// </summary>
