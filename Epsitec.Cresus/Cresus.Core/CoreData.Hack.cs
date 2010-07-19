@@ -87,6 +87,11 @@ namespace Epsitec.Cresus.Core
 			return new RelationRepository (this.DataContext).GetAllRelations ();
 		}
 
+		public IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
+		{
+			return new UnitOfMeasureRepository (this.DataContext).GetAllUnitOfMeasure ();
+		}
+
 		public IEnumerable<ArticleDefinitionEntity> GetArticleDefinitions()
 		{
 			return new ArticleDefinitionRepository (this.DataContext).GetAllArticleDefinitions ();
@@ -118,7 +123,8 @@ namespace Epsitec.Cresus.Core
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
-			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase ().ToArray ();
+			UnitOfMeasureEntity[] units = this.InsertUnitOfMeasureInDatabase ().ToArray ();
+			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
 			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, articleDefs).ToArray ();
 
 			this.DataContext.SaveChanges ();
@@ -464,7 +470,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase()
+		private IEnumerable<UnitOfMeasureEntity> InsertUnitOfMeasureInDatabase()
 		{
 			var uomUnit1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
@@ -482,6 +488,15 @@ namespace Epsitec.Cresus.Core
 			uomUnit2.MultiplyRatio = 6;
 			uomUnit2.SmallestIncrement = 1;
 			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+
+			yield return uomUnit1;
+			yield return uomUnit2;
+		}
+
+		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase(IEnumerable<UnitOfMeasureEntity> units)
+		{
+			var uomUnit1 = units.Where (x => x.Code == "pce").First ();
+			var uomUnit2 = units.Where (x => x.Code == "box").First ();
 
 			var uomGroup = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup.Name = "Unités d'emballage soft/standard";

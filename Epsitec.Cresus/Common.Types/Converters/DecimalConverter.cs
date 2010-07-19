@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,25 +20,45 @@ namespace Epsitec.Common.Types.Converters
 
 		public override ConversionResult<decimal> ConvertFromString(string text)
 		{
-			if (text == null)
-            {
+			if (string.IsNullOrWhiteSpace (text))
+			{
 				return new ConversionResult<decimal>
 				{
-					IsNull = true,
+					IsNull = true
 				};
-            }
+			}
+
+			decimal result;
+
+			if (decimal.TryParse (text, out result))
+			{
+				return new ConversionResult<decimal>
+				{
+					IsNull = false,
+					Value = result,
+				};
+			}
 			else
 			{
 				return new ConversionResult<decimal>
 				{
-					Value = decimal.Parse (text),  // TODO: si exception ?
+					IsInvalid = true,
 				};
 			}
 		}
 
 		public override bool CanConvertFromString(string text)
 		{
-			return true;  // TODO ...
+			decimal result;
+
+			if (decimal.TryParse (text, out result))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }

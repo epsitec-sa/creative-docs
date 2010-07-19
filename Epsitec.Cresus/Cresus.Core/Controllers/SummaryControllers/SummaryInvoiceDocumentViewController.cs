@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.Code != "suivra")
+				if (quantity.Code == "livré")
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}

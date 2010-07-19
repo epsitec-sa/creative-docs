@@ -241,16 +241,17 @@ namespace Epsitec.Cresus.Core.Printers
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
-				if (quantity.Code == "suivra")
-				{
-					this.columns["Suit"].Visible = true;
-					this.columns["Date"].Visible = true;
-				}
-				else
+				if (quantity.Code == "livré")
 				{
 					this.columns["Nb"].Visible = true;
 					this.columns["PU"].Visible = true;
 					this.columns["PT"].Visible = true;
+				}
+
+				if (quantity.Code == "suivra")
+				{
+					this.columns["Suit"].Visible = true;
+					this.columns["Date"].Visible = true;
 				}
 			}
 		}
@@ -300,6 +301,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
+				if (quantity.Code == "livré")
+				{
+					q1 = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
+				}
+
 				if (quantity.Code == "suivra")
 				{
 					q2 = Misc.AppendLine (q2, Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
@@ -308,10 +314,6 @@ namespace Epsitec.Cresus.Core.Printers
 					{
 						date = Misc.AppendLine(date, quantity.ExpectedDate.Value.ToString ());
 					}
-				}
-				else
-				{
-					q1 = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
 			}
 

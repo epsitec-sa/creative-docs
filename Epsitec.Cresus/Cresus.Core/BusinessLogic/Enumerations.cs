@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	{
 		public static IEnumerable<EnumKeyValues<BusinessLogic.Finance.TaxMode>> GetAllPossibleItemsTaxModes()
 		{
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.LiableForVat, "Assujetti à la TVA");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");
 			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
-			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.ExemptFromVat, "Exonéré");
+			yield return EnumKeyValues.Create (BusinessLogic.Finance.TaxMode.ExemptFromVat,   "Exonéré");
 		}
 
 		public static IEnumerable<EnumKeyValues<BusinessLogic.Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
@@ -25,6 +25,52 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Gbp, "GBP", "Livre anglaise");
 			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Jpy, "JPY", "Yen japonais");
 			yield return EnumKeyValues.Create (BusinessLogic.Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
+		}
+
+		public static IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> GetGetAllPossibleItemsUnitOfMeasureCategory()
+		{
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Unrelated, "Indépendant");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Unit,      "Unité");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Mass,      "Masse");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Length,    "Longueur");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Surface,   "Surface");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Volume,    "Volume");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Time,      "Temps");
+			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Energy,    "Energie");
+		}
+
+		public static string GetUnitOfMeasureCategoryText(UnitOfMeasureCategory category)
+		{
+			//	TODO: On devrait pouvoir utiliser GetGetAllPossibleItemsUnitOfMeasureCategory !
+			switch (category)
+			{
+				case UnitOfMeasureCategory.Unrelated:
+					return "Indépendant";
+
+				case UnitOfMeasureCategory.Unit:
+					return "Unité";
+
+				case UnitOfMeasureCategory.Mass:
+					return "Masse";
+
+				case UnitOfMeasureCategory.Length:
+					return "Longueur";
+
+				case UnitOfMeasureCategory.Surface:
+					return "Surface";
+
+				case UnitOfMeasureCategory.Volume:
+					return "Volume";
+
+				case UnitOfMeasureCategory.Time:
+					return "Temps";
+
+				case UnitOfMeasureCategory.Energy:
+					return "Energie";
+
+				default:
+					return null;
+			}
 		}
 	}
 }
