@@ -70,8 +70,14 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			var dialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
-			dialog.OpenDialog ();
+			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: false);
+			typeDialog.OpenDialog ();
+
+			if (typeDialog.Result == DialogResult.Accept)
+			{
+				var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
+				printDialog.OpenDialog ();
+			}
 		}
 
 
@@ -103,8 +109,14 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			var dialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
-			dialog.OpenDialog ();
+			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: true);
+			typeDialog.OpenDialog ();
+
+			if (typeDialog.Result == DialogResult.Accept)
+			{
+				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
+				printDialog.OpenDialog ();
+			}
 		}
 	}
 }

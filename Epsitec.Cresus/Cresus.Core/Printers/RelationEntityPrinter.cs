@@ -25,6 +25,22 @@ namespace Epsitec.Cresus.Core.Printers
 		public RelationEntityPrinter(RelationEntity entity)
 			: base (entity)
 		{
+			DocumentType type;
+
+			type = new DocumentType ("Summary", "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Ajoute les adresses",   true));
+			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Ajoute les téléphones", true));
+			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Ajoute les emails",     true));
+			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
+			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
+			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("Debug1", "Test #1", "Page fixe de test pour l'objet TextBand.");
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("Debug2", "Test #2", "Page fixe de test pour l'objet TableBand.");
+			this.DocumentTypes.Add (type);
 		}
 
 		public override string JobName
@@ -39,27 +55,59 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Size (pageWidth, pageHeight);  // A4 vertical
+				if (this.HasDocumentOption ("Horizontal"))
+				{
+					return new Size (297, 210);  // A4 horizontal
+				}
+				else
+				{
+					return new Size (210, 297);  // A4 vertical
+				}
 			}
 		}
 
 		public override void BuildSections()
 		{
-			this.BuildTitle ();
-			this.BuildSummary ();
+			base.BuildSections ();
 
-			this.BuildContacts (this.BuildMailContacts);
-			this.BuildContacts (this.BuildTelecomContacts);
-			this.BuildContacts (this.BuildUriContacts);
+			if (this.DocumentTypeSelected == "Summary")
+			{
+				this.BuildTitle ();
+				this.BuildSummary ();
+
+				if (this.HasDocumentOption ("Mail"))
+				{
+					this.BuildContacts (this.BuildMailContacts);
+				}
+
+				if (this.HasDocumentOption ("Telecom"))
+				{
+					this.BuildContacts (this.BuildTelecomContacts);
+				}
+
+				if (this.HasDocumentOption ("Uri"))
+				{
+					this.BuildContacts (this.BuildUriContacts);
+				}
+			}
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
-#if true
-			this.documentContainer.Paint (port, this.CurrentPage);
-#else
-			this.PaintTest (port);
-#endif
+			if (this.DocumentTypeSelected == "Summary")
+			{
+				this.documentContainer.Paint (port, this.CurrentPage);
+			}
+
+			if (this.DocumentTypeSelected == "Debug1")
+			{
+				this.PaintTest1 (port);
+			}
+
+			if (this.DocumentTypeSelected == "Debug2")
+			{
+				this.PaintTest2 (port);
+			}
 		}
 
 
@@ -284,11 +332,48 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void PaintTest(IPaintPort port)
+		private void PaintTest1(IPaintPort port)
 		{
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 
-#if true
+			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
+
+			var textBand = new TextBand ();
+			textBand.Font = font;
+			textBand.FontSize = fontSize;
+			textBand.Text = t;
+			textBand.DebugPaintFrame = true;
+
+			double top = 280;
+			double initialHeight = 15;
+			double middleHeight = 25+this.DebugParam1;
+			double finalHeight = 16;
+
+			for (int width = 50+this.DebugParam2; width >= 20; width-=10)
+			{
+				textBand.BuildSections (width, initialHeight, middleHeight, finalHeight);
+
+				for (int i = 0; i < textBand.SectionCount; i++)
+				{
+					textBand.Paint (port, i, new Point (10+(width+1)*i, top));
+				}
+
+				port.LineWidth = 0.1;
+				port.Color = Color.FromName ("Blue");
+				port.PaintOutline (Path.FromRectangle (new Rectangle (10, top-middleHeight, 190, middleHeight)));
+				port.Color = Color.FromName ("Green");
+				port.PaintOutline (Path.FromLine (10, top-initialHeight, 200, top-initialHeight));
+				port.Color = Color.FromName ("Red");
+				port.PaintOutline (Path.FromLine (10, top-finalHeight, 200, top-finalHeight));
+
+				top -= middleHeight+2;
+			}
+		}
+
+		private void PaintTest2(IPaintPort port)
+		{
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+
 			var table = new TableBand ();
 			table.ColumnsCount = 4;
 			table.RowsCount = 3;
@@ -323,47 +408,8 @@ namespace Epsitec.Cresus.Core.Printers
 				port.Color = Color.FromName (ok ? "Black" : "Red");
 				port.PaintSurface (Path.FromRectangle (8, y-height, 1, height));
 			}
-#endif
-
-#if false
-			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
-
-			var textBox = new ObjectTextBox ();
-			textBox.Font = font;
-			textBox.FontSize = fontSize;
-			textBox.Text = t;
-			textBox.DebugPaintFrame = true;
-
-			double top = 120;
-			double initialHeight = 15;
-			double middleHeight = 25;
-			double finalHeight = 16;
-
-			for (int width = 50; width >= 20; width-=10)
-			{
-				textBox.InitializePages (width, initialHeight, middleHeight, finalHeight);
-
-				for (int i = 0; i < textBox.PageCount; i++)
-				{
-					textBox.Paint (port, i, new Point (10+(width+1)*i, top));
-				}
-
-				port.LineWidth = 0.1;
-				port.Color = Color.FromName ("Blue");
-				port.PaintOutline (Path.FromRectangle (new Rectangle (10, top-middleHeight, 190, middleHeight)));
-				port.Color = Color.FromName ("Green");
-				port.PaintOutline (Path.FromLine (10, top-initialHeight, 200, top-initialHeight));
-				port.Color = Color.FromName ("Red");
-				port.PaintOutline (Path.FromLine (10, top-finalHeight, 200, top-finalHeight));
-
-				top -= middleHeight+2;
-			}
-#endif
 		}
 
-
-		private static readonly double pageWidth  = 210;
-		private static readonly double pageHeight = 297;  // A4 vertical
 
 		private static readonly double fontSize = 4;
 	}
