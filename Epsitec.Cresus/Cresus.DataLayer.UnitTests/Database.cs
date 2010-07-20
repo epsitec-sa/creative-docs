@@ -39,6 +39,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		public static void DisconnectFromDatabase()
+		{
+			TestHelper.DisposeInfrastructure ();
+		}
+
+
 		public static ContactRoleEntity[] CreateContactRoles(DataContext dataContext, int number)
 		{
 			System.Diagnostics.Debug.WriteLine ("Building contact roles");

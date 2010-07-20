@@ -29,7 +29,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+
 			File.Delete (UnitTestPerformance.logFile);
+		}
+
+
+		[ClassCleanup]
+		public void Cleanup()
+		{
+			Database.DisconnectFromDatabase ();
 		}
 
 

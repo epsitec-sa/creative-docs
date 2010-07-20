@@ -19,22 +19,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	public class UnitTestEntityKey
 	{
 
-
-		private TestContext testContextInstance;
-
-		
-		public TestContext TestContext
-		{
-			get
-			{
-				return testContextInstance;
-			}
-			set
-			{
-				testContextInstance = value;
-			}
-		}
-
 		
 		[TestMethod]
 		public void EntityKeyConstructorTest1()

@@ -21,6 +21,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+
+			Database2.CreateAndConnectToDatabase ();
+
+			using (DataContext dataContext = new DataContext (Database1.DbInfrastructure))
+			{
+				Database2.PupulateDatabase (dataContext);
+			}
+		}
+
+
+		[ClassCleanup]
+		public void Cleanup()
+		{
+			Database.DisconnectFromDatabase ();
 		}
 
 

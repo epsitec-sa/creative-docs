@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-		}
-
-
-		[TestMethod]
-		public void CreateDatabase()
-		{
-			TestHelper.PrintStartTest ("Create database");
 
 			this.CreateDatabaseHelper ();
 		}
@@ -36,14 +29,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void CreateDatabaseHelper()
 		{
-			Database.CreateAndConnectToDatabase ();
+			Database2.CreateAndConnectToDatabase ();
 
-			Assert.IsTrue (Database.DbInfrastructure.IsConnectionOpen);
+			Assert.IsTrue (Database2.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = this.CreateDataContext ())
+			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				Database2.PupulateDatabase (dataContext);
 			}
+		}
+
+
+		[ClassCleanup]
+		public void Cleanup()
+		{
+			Database.DisconnectFromDatabase ();
 		}
 
 

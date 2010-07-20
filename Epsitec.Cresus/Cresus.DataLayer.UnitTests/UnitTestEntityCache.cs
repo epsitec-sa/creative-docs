@@ -21,22 +21,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	{
 
 
-		private TestContext testContextInstance;
-
-		
-		public TestContext TestContext
-		{
-			get
-			{
-				return testContextInstance;
-			}
-			set
-			{
-				testContextInstance = value;
-			}
-		}
-
-
 		[ClassInitialize]
 		public void Initialize(TestContext testContext)
 		{
