@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -13,6 +14,7 @@ namespace Epsitec.Common.Graph.Renderers
 		public PieChartRenderer()
 		{
 			this.AdditionalRenderingPasses = 1;
+            outParts = new List<int>();
 		}
 
 		
@@ -119,7 +121,7 @@ namespace Epsitec.Common.Graph.Renderers
                 var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
 
                 // Cette partie doit être décalée
-                if (seriesIndex == this.actualIndex)
+                if (seriesIndex == this.activeIndex || this.outParts.Contains(seriesIndex))
                 {
                     txtCenter.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
                     txtCenter.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
@@ -149,9 +151,19 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-        public override void HoverIndexChanged(object oldValue, object newValue)
+        public override void OnClicked(object sender, MessageEventArgs e)
         {
-            this.actualIndex = (int) newValue;
+            if (this.activeIndex >= 0)
+            {
+                // Tries to delete to index from the list, if it is already in it
+                if (!this.outParts.Remove (this.activeIndex))
+                {
+                    // Did not succeed, try then to add it to the list
+                    this.outParts.Add (this.activeIndex);
+                }
+
+                // It acts like a toggle button
+            }
         }
 
 		
@@ -245,7 +257,7 @@ namespace Epsitec.Common.Graph.Renderers
 					continue;
 				}
 
-                if (seriesIndex == this.actualIndex)
+                if (seriesIndex == this.activeIndex || this.outParts.Contains(seriesIndex))
                 {
                     var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
                     center.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
@@ -401,9 +413,9 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
         private List<SeriesPie> pies;
+        private List<int> outParts;
 
         private const int angleToHide = 6;
-        private int actualIndex = -1;
         private double radiusProportion = 0.15;
 	}
 }

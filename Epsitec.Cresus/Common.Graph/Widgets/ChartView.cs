@@ -4,8 +4,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Common.Graph.Widgets
 {
@@ -50,6 +48,28 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+        /// <summary>
+        /// Methode called by <see cref="SeriesDetectionController"/> when the mouse is over the graph.
+        /// Allows the renderer to be noticed and it can change its appearance based on the mouse location.
+        /// Called only when <c>seriesItem</c> changes.
+        /// </summary>
+        /// <param name="oldValue">Old seriesItem</param>
+        /// <param name="newValue">New seriesItem</param>
+        public void HoverIndexChanged(object oldValue, object newValue)
+        {
+            renderer.HoverIndexChanged(oldValue, newValue);
+        }
+
+        /// <summary>
+        /// Method called by <see cref="ChartViewController"/> when there is a click on the graph.
+        /// Allows the renderer to be noticed and it can change its appearance based on the click.
+        /// </summary>
+        /// <param name="sender">Object throwing the click</param>
+        /// <param name="e">Event data</param>
+        public void OnClicked(object sender, MessageEventArgs e)
+        {
+            renderer.OnClicked(sender, e);
+        }
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
