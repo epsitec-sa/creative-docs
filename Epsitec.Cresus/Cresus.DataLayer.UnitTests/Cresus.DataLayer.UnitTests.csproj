@@ -57,6 +57,7 @@
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Res.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Proxies\UnitTestEntityKeyProxy.cs" />
+    <Compile Include="Proxies\UnitTestEntityFieldProxy.cs" />
     <Compile Include="UnitTestGetEntitiesByExample.cs" />
     <Compile Include="UnitTestBasicEntityActions.cs" />
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />
