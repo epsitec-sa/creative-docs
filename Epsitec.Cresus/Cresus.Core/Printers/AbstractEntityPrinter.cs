@@ -24,8 +24,40 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.documentContainer = new DocumentContainer (this.PageSize, this.PageMargins);
+			this.documentTypes = new List<DocumentType> ();
+			this.documentOptionsNameSelected = new List<string> ();
+
+			this.documentContainer = new DocumentContainer ();
 		}
+
+
+		public List<DocumentType> DocumentTypes
+		{
+			get
+			{
+				return this.documentTypes;
+			}
+		}
+
+		public string DocumentTypeSelected
+		{
+			get;
+			set;
+		}
+
+		public List<string> DocumentOptionsSelected
+		{
+			get
+			{
+				return this.documentOptionsNameSelected;
+			}
+		}
+
+		public bool HasDocumentOption(string name)
+		{
+			return this.documentOptionsNameSelected.Contains (name);
+		}
+
 
 		public virtual string JobName
 		{
@@ -106,6 +138,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void BuildSections()
 		{
+			this.documentContainer.PageSize    = this.PageSize;
+			this.documentContainer.PageMargins = this.PageMargins;
 		}
 
 		public virtual void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -143,6 +177,8 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private readonly List<DocumentType>		documentTypes;
+		private readonly List<string>			documentOptionsNameSelected;
 		protected readonly DocumentContainer	documentContainer;
 		private int								currentPage;
 		private int								debugParam1;

@@ -26,17 +26,41 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class DocumentContainer
 	{
-		public DocumentContainer(Size pageSize, Margins pageMargins)
+		public DocumentContainer()
 		{
-			this.pageSize = pageSize;
-			this.pageMargins = pageMargins;
-
 			this.pages = new List<PageContainer> ();
 			this.pages.Add (new PageContainer (0));  // crée la première page
 
 			this.currentPage = 0;
-			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
 		}
+
+
+		public Size PageSize
+		{
+			get
+			{
+				return this.pageSize;
+			}
+			set
+			{
+				this.pageSize = value;
+				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+			}
+		}
+
+		public Margins PageMargins
+		{
+			get
+			{
+				return this.pageMargins;
+			}
+			set
+			{
+				this.pageMargins = value;
+				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+			}
+		}
+
 
 		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
@@ -138,9 +162,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly Size					pageSize;
-		private readonly Margins				pageMargins;
 		private readonly List<PageContainer>	pages;
+		private Size							pageSize;
+		private Margins							pageMargins;
 		private int								currentPage;
 		private double							currentVerticalPosition;
 	}

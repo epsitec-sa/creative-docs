@@ -106,70 +106,71 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdatePage ();
 
-#if false
-			this.debugPrevButton1 = new GlyphButton
+			if (this.entityPrinter.DocumentTypeSelected.StartsWith ("Debug"))
 			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.Minus,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (50, 0, 0, 0),
-			};
+				this.debugPrevButton1 = new GlyphButton
+				{
+					Parent = this.footer,
+					GlyphShape = Common.Widgets.GlyphShape.Minus,
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (50, 0, 0, 0),
+				};
 
-			this.debugParam1 = new StaticText
-			{
-				Parent = this.footer,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredWidth = 30,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.debugParam1 = new StaticText
+				{
+					Parent = this.footer,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					PreferredWidth = 30,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
-			this.debugNextButton1 = new GlyphButton
-			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.Plus,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.debugNextButton1 = new GlyphButton
+				{
+					Parent = this.footer,
+					GlyphShape = Common.Widgets.GlyphShape.Plus,
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
 
-			this.debugPrevButton2 = new GlyphButton
-			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.Minus,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (20, 0, 0, 0),
-			};
+				this.debugPrevButton2 = new GlyphButton
+				{
+					Parent = this.footer,
+					GlyphShape = Common.Widgets.GlyphShape.Minus,
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (20, 0, 0, 0),
+				};
 
-			this.debugParam2 = new StaticText
-			{
-				Parent = this.footer,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredWidth = 30,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.debugParam2 = new StaticText
+				{
+					Parent = this.footer,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					PreferredWidth = 30,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
-			this.debugNextButton2 = new GlyphButton
-			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.Plus,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.debugNextButton2 = new GlyphButton
+				{
+					Parent = this.footer,
+					GlyphShape = Common.Widgets.GlyphShape.Plus,
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
-			this.UpdateDebug ();
-#endif
+				this.UpdateDebug ();
+			}
 			
 			this.closeButton = new Button ()
 			{

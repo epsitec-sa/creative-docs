@@ -179,6 +179,7 @@
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
     <Compile Include="Data\UnitOfMeasureRepository.cs" />
     <Compile Include="Data\InvoiceDocumentRepository.cs" />
+    <Compile Include="Dialogs\DocumentTypeDialog.cs" />
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
@@ -187,6 +188,8 @@
     <Compile Include="Printers\AbstractBvBand.cs" />
     <Compile Include="Printers\BvrBand.cs" />
     <Compile Include="Printers\BvBand.cs" />
+    <Compile Include="Printers\DocumentOption.cs" />
+    <Compile Include="Printers\DocumentType.cs" />
     <Compile Include="Printers\ImageBand.cs" />
     <Compile Include="Printers\InvoiceDocumentEntityPrinter.cs" />
     <Compile Include="Printers\DocumentContainer.cs" />

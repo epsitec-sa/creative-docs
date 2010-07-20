@@ -26,6 +26,39 @@ namespace Epsitec.Cresus.Core.Printers
 		public InvoiceDocumentEntityPrinter(InvoiceDocumentEntity entity)
 			: base (entity)
 		{
+			DocumentType type;
+
+			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			type.DocumentOptions.Add (new DocumentOption ("Type de bulletin de versement :"));
+			type.DocumentOptions.Add (new DocumentOption ("BVR", "bv", "BVR orange", true));
+			type.DocumentOptions.Add (new DocumentOption ("BV",  "bv", "BV rose"));
+			type.DocumentOptions.Add (new DocumentOption ("Mode d'impression du BV :"));
+			type.DocumentOptions.Add (new DocumentOption ("Simul", null, "Fac-similé complet du BV, uniquement pour des tests", true));
+			type.DocumentOptions.Add (new DocumentOption ("Spec",  null, "Ajoute la mention SPECIMEN"));
+#if false
+			type.DocumentOptions.Add (new DocumentOption ("Sous-titre :"));
+			type.DocumentOptions.Add (new DocumentOption ("ra1", "ra", "Radio A.1", true));
+			type.DocumentOptions.Add (new DocumentOption ("ra2", "ra", "Radio A.2"));
+			type.DocumentOptions.Add (new DocumentOption ("ra3", "ra", "Radio A.3"));
+			type.DocumentOptions.Add (new DocumentOption (10));
+			type.DocumentOptions.Add (new DocumentOption ("rb1", "rb", "Radio B.1"));
+			type.DocumentOptions.Add (new DocumentOption ("rb2", "rb", "Radio B.2", true));
+			type.DocumentOptions.Add (new DocumentOption ("rb3", "rb", "Radio B.3"));
+#endif
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
+			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
+			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
+			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
+			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
+			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
+			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			this.DocumentTypes.Add (type);
+
 			this.columns = new Dictionary<string, TableColumn> ();
 		}
 
@@ -41,7 +74,14 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Size (210, 297);  // A4 vertical
+				if (this.HasDocumentOption ("Horizontal"))
+				{
+					return new Size (297, 210);  // A4 horizontal
+				}
+				else
+				{
+					return new Size (210, 297);  // A4 vertical
+				}
 			}
 		}
 
@@ -49,17 +89,37 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return new Margins (20, 10, 20, AbstractBvBand.DefautlSize.Height+10);
+				if (this.DocumentTypeSelected == "BV")
+				{
+					return new Margins (20, 10, 20, AbstractBvBand.DefautlSize.Height+10);
+				}
+				else
+				{
+					return new Margins (20, 10, 20, 20);
+				}
 			}
 		}
 
 		public override void BuildSections()
 		{
-			this.BuildHeader ();
-			this.BuildArticles ();
-			this.BuildConditions ();
-			this.BuildPages ();
-			this.BuildBvs (bvr: true);
+			base.BuildSections ();
+
+			if (this.DocumentTypeSelected == "BV")
+			{
+				this.BuildHeader ();
+				this.BuildArticles ();
+				this.BuildConditions ();
+				this.BuildPages ();
+				this.BuildBvs (bvr: this.HasDocumentOption ("BVR"));
+			}
+
+			if (this.DocumentTypeSelected == "Simple")
+			{
+				this.BuildHeader ();
+				this.BuildArticles ();
+				this.BuildConditions ();
+				this.BuildPages ();
+			}
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -74,19 +134,19 @@ namespace Epsitec.Cresus.Core.Printers
 			var imageBand = new ImageBand ();
 			imageBand.Load("logo-cresus.png");
 			imageBand.BuildSections (60, 50, 50, 50);
-			this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, 297-10-50, 60, 50));
+			this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.PageSize.Height-10-50, 60, 50));
 
 			var textBand = new TextBand ();
 			textBand.Text = "<b>Les logiciels de gestion</b>";
 			textBand.Font = font;
 			textBand.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, 297-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.PageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = InvoiceDocumentHelper.GetMailContact (this.entity);
 			mailContactBand.Font = font;
 			mailContactBand.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, 240, 80, 25));
+			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.PageSize.Height-57, 80, 25));
 
 			string concerne = InvoiceDocumentHelper.GetConcerne (this.entity);
 			if (!string.IsNullOrEmpty (concerne))
@@ -102,27 +162,27 @@ namespace Epsitec.Cresus.Core.Printers
 				concerneBand.SetRelativeColumWidth (1, 80);
 				concerneBand.SetText (0, 0, "Concerne");
 				concerneBand.SetText (1, 0, concerne);
-				this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, 230, 100, 15));
+				this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, this.PageSize.Height-67, 100, 15));
 			}
 
 			var titleBand = new TextBand ();
 			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, 215, 90, 10));
+			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
 
 			string date = InvoiceDocumentHelper.GetDate (this.entity);
 			var dateBand = new TextBand ();
 			dateBand.Text = UIBuilder.FormatText ("Crissier, le ", date).ToString ();
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, 215, 80, 10));
+			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.PageSize.Height-82, 80, 10));
 		}
 
 		private void BuildArticles()
 		{
 			//	Ajoute les articles dans le document.
-			this.documentContainer.CurrentVerticalPosition = 210;
+			this.documentContainer.CurrentVerticalPosition = this.PageSize.Height-87;
 
 			this.columns.Clear ();
 			this.columns.Add ("Desc", new TableColumn ("Désignation", 70.0, ContentAlignment.MiddleLeft));
@@ -515,8 +575,8 @@ namespace Epsitec.Cresus.Core.Printers
 					BV = new BvBand ();  // BV rose
 				}
 
-				BV.PaintBvSimulator = true;
-				BV.PaintSpecimen = false;
+				BV.PaintBvSimulator = this.HasDocumentOption ("Simul");
+				BV.PaintSpecimen    = this.HasDocumentOption ("Spec");
 				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
