@@ -107,7 +107,14 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 				RequestedEntity = targetExample,
 			};
 
-			return this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+			object result = this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+
+			if (result == null)
+			{
+				result = UndefinedValue.Value;
+			}
+
+			return result;
 		}
 
 

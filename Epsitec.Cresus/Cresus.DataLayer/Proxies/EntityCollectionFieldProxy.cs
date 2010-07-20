@@ -2,7 +2,6 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using System.Collections;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -115,7 +114,14 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 				targetsOut.Add (target);
 			}
 
-			return targetsOut;
+			if (targetsOut.Count > 0)
+			{
+				return targetsOut;
+			}
+			else
+			{
+				return UndefinedValue.Value;
+			}
 		}
 
 
