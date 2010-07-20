@@ -310,10 +310,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		// TODO Add more test methods for the following cases :
-		// - every method of the EntityNullReferenceVirtualizer.
-
-
 		private DataContext CreateDataContext()
 		{
 			return new DataContext (Database.DbInfrastructure)
