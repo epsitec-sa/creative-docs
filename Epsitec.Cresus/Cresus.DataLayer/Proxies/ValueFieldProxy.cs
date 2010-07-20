@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <param name="dataContext">The <see cref="DataContext"/> responsible of <paramref name="entity"/>.</param>
 		/// <param name="entity">The entity.</param>
 		/// <param name="fieldId">The id of the field.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// If <paramref name="dataContext"/> is null.
+		/// If <paramref name="entity"/> is null.
+		/// </exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
 			if (dataContext == null)

@@ -12,10 +12,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Epsitec.Cresus.DataLayer.UnitTests
 {
-    
-    
-    [TestClass]
-	public class UnitTestValueFieldProxy
+
+
+	[TestClass]
+	public sealed class UnitTestValueFieldProxy
 	{
 
 
@@ -49,7 +49,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				Druid fieldId = Druid.Parse ("[L0AV]");
 
-				new ValueFieldProxy_Accessor (dataContext, person, fieldId);
+				var proxy = new ValueFieldProxy_Accessor (dataContext, person, fieldId);
+
+				Assert.AreSame (dataContext, proxy.dataContext);
+				Assert.AreSame (person, proxy.entity);
+				Assert.AreEqual (fieldId, proxy.fieldId);
 			}
 		}
 
@@ -92,7 +96,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-				new ValueFieldProxy_Accessor (dataContext, person, new Druid ());
+				new ValueFieldProxy_Accessor (dataContext, person, Druid.Empty);
 			}
 		}
 

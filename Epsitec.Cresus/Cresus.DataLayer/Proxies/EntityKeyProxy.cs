@@ -33,8 +33,20 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"></see> responsible the <see cref="AbstractEntity"/>.</param>
 		/// <param name="entityKey">The <see cref="EntityKey"/> describing the entity to load.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		public EntityKeyProxy(DataContext dataContext, EntityKey entityKey)
 		{
+			if (dataContext == null)
+			{
+				throw new System.ArgumentNullException ("dataContext");
+			}
+
+			if (entityKey.IsEmpty)
+			{
+				throw new System.ArgumentException ("entityKey");
+			}
+			
 			this.dataContext = dataContext;
 			this.entityKey = entityKey;
 		}
