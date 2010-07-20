@@ -28,8 +28,32 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <param name="dataContext">The <see cref="DataContext"></see> responsible of <paramref name="entity"></paramref>.</param>
 		/// <param name="entity">The <see cref="AbstractEntity"/> that references the <see cref="AbstractEntity"/> of this instance.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// If <paramref name="dataContext"/> is null.
+		/// If <paramref name="entity"/> is null.
+		/// </exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		public EntityCollectionFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
+			if (dataContext == null)
+			{
+				throw new System.ArgumentNullException ("dataContext");
+			}
+
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			if (fieldId.IsEmpty)
+			{
+				throw new System.ArgumentException ("fieldId is not valid.");
+			}
+
+			// TODO Add more test on the input arguments, such as to detect if entity is not managed
+			// by dataContext, or if fieldId is not a field of entity ?
+			// Marc
+			
 			this.dataContext = dataContext;
 			this.entity = entity;
 			this.fieldId = fieldId;
@@ -97,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
 			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
-			rootExample.SetField<AbstractEntity> (fieldId, targetExample);
+			rootExample.GetFieldCollection<AbstractEntity> (fieldId).Add (targetExample);
 
 			Request request = new Request ()
 			{

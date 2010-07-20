@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			// TODO Add more test on the input arguments, such as to detect if entity is not managed
 			// by dataContext, or if fieldId is not a field of entity ?
 			// Marc
+
 			this.dataContext = dataContext;
 			this.entity = entity;
 			this.fieldId = fieldId;
