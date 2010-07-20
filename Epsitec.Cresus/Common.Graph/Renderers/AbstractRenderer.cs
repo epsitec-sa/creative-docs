@@ -345,6 +345,13 @@ namespace Epsitec.Common.Graph.Renderers
 			this.Captions.AddSample (label, painter);
 		}
 
+        /// <summary>
+        /// Called when the MouseOver changes from one series to another
+        /// </summary>
+        /// <param name="oldValue">SeriesIndex before the change</param>
+        /// <param name="newValue">SeriesIndex after the change</param>
+        public virtual void HoverIndexChanged(object oldValue, object newValue) { }
+
 		protected abstract System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex);
 		
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
@@ -359,7 +366,6 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			return this.seriesValueLabelsList.IndexOf (label);
 		}
-
 
 		private Data.ChartSeries GetPreprocessedSeries(Data.ChartSeries series)
 		{
@@ -406,7 +412,6 @@ namespace Epsitec.Common.Graph.Renderers
 				select new Data.ChartValue (key, value));
 		}
 
-		
 		private double							minValue;
 		private double							maxValue;
 		private Rectangle						bounds;

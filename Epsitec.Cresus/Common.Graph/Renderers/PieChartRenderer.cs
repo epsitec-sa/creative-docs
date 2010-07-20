@@ -87,7 +87,8 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public override Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius)
 		{
-            return this.CreateOutlinePath(series, seriesIndex);
+            var path = this.CreateOutlinePath(series, seriesIndex);   
+            return path;
 		}
 
         public override Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex)
@@ -117,6 +118,13 @@ namespace Epsitec.Common.Graph.Renderers
 
                 var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
 
+                // Cette partie doit être décalée
+                if (seriesIndex == this.actualIndex)
+                {
+                    txtCenter.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
+                    txtCenter.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
+                }
+
                 return txtCenter;
             }
 
@@ -141,11 +149,16 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+        public override void HoverIndexChanged(object oldValue, object newValue)
+        {
+            this.actualIndex = (int) newValue;
+        }
+
 		
 		private void PaintLine(IPaintPort port, Data.ChartSeries series, int seriesIndex)
-		{
-			using (Path path = this.CreateOutlinePath (series, seriesIndex))
-			{
+        {
+            using (Path path = this.CreateOutlinePath(series, seriesIndex))
+            {
 				this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
 				
 				port.LineWidth = 2;
@@ -199,7 +212,7 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			if (series.Values.Count > 0)
 			{
-				using (Path path = this.CreateOutlinePath (series, seriesIndex))
+                using (Path path = this.CreateOutlinePath (series, seriesIndex))
 				{
 					port.Color = Color.FromBrightness (1);
 					port.LineWidth = 1;
@@ -231,6 +244,13 @@ namespace Epsitec.Common.Graph.Renderers
 				{
 					continue;
 				}
+
+                if (seriesIndex == this.actualIndex)
+                {
+                    var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
+                    center.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
+                    center.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
+                }
 				
 				path.MoveTo (center);
 				path.ArcToDeg (center, radius, radius, sector.Angle1, sector.Angle2, true);
@@ -383,5 +403,7 @@ namespace Epsitec.Common.Graph.Renderers
         private List<SeriesPie> pies;
 
         private const int angleToHide = 6;
+        private int actualIndex = -1;
+        private double radiusProportion = 0.15;
 	}
 }
