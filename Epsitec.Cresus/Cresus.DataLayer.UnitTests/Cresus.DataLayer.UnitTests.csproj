@@ -55,9 +55,9 @@
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Res.cs" />
     <Compile Include="TestHelper.cs" />
-    <Compile Include="UnitTestGetByExample.cs" />
-    <Compile Include="UnitTestDataContext.cs" />
-    <Compile Include="UnitTestGetByRequest.cs" />
+    <Compile Include="UnitTestGetEntitiesByExample.cs" />
+    <Compile Include="UnitTestBasicEntityActions.cs" />
+    <Compile Include="UnitTestGetEntitiesByRequest.cs" />
     <Compile Include="UnitTestNullVirtualization.cs" />
     <Compile Include="UnitTestPerformance.cs" />
   </ItemGroup>

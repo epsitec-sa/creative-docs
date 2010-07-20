@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestGetByRequest
+	public class UnitTestGetEntitiesByRequest
 	{
 		[ClassInitialize]
 		public void Initialize(TestContext testContext)

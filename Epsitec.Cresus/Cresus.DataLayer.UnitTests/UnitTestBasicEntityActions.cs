@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	
 	
 	[TestClass]
-	public class UnitTestDataContext
+	public class UnitTestBasicEntityActions
 	{
 
 
