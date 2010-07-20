@@ -276,11 +276,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private void DeserializeEntityLocalFieldValue(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
 			Druid fieldId = field.CaptionId;
+			object fieldValue = entityData.ValueData[fieldId];
 
-			object internalValue = entityData.ValueData[fieldId];
-			object externalValue = this.GetFieldValue (entity, fieldId, internalValue);
-
-			entity.InternalSetValue (field.Id, externalValue);
+			entity.InternalSetValue (field.Id, fieldValue);
 		}
 
 
@@ -321,94 +319,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
 		{
-			object value = this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
-
-			return this.GetFieldValue (entity, fieldId, value);
+			return this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
 		}
 
-
-		private object GetFieldValue(AbstractEntity entity, Druid fieldId, object value)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			string fieldName = fieldId.ToResourceId ();
-			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
-
-			return this.ConvertFromInternal (leafEntityId, field, value);
-		}
-
-
-		// TODO Move these two methods (and other associated with them) to LoaderQueryGenerator, as
-		// they are kind of low level. It would also be nice to move the unsupported type conversion
-		// to the database level.
-		// Marc
-
-		private object ConvertFromInternal(Druid leafEntityId, StructuredTypeField field, object value)
-		{
-			object newValue = value;
-
-			if (newValue != System.DBNull.Value)
-			{
-				IStringType stringType = field.Type as IStringType;
-
-				if (stringType != null)
-				{
-					if (stringType.UseFormattedText)
-					{
-						newValue = FormattedText.CastToFormattedText (newValue);
-					}
-				}
-				else
-				{
-					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
-					string columnName = this.SchemaEngine.GetEntityColumnName (field.Id);
-
-					DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
-					DbColumn dbColumn = dbTable.Columns[columnName];
-					
-					//	The conversion is a two step process:
-					//	1. Convert from an ADO.NET type to a simple type (i.e. almost all numbers map to decimal)
-					//	2. Convert from the simple type to the expected field type
-
-					newValue = this.ConvertFromInternal (dbColumn, newValue);
-					InvariantConverter.Convert (newValue, field, out newValue);
-				}
-			}
-
-			return newValue;
-		}
-
-
-		private object ConvertFromInternal(DbColumn dbColumn, object value)
-		{
-			object newValue = value;
-			
-			DbRawType rawType = dbColumn.Type.RawType;
-
-			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
-
-			if (!typeConverter.CheckNativeSupport (rawType))
-			{
-				IRawTypeConverter rawTypeConverter;
-				bool sucess = typeConverter.GetRawTypeConverter (rawType, out rawTypeConverter);
-
-				if (!sucess)
-				{
-					throw new System.NotSupportedException ("Unable to convert unsupported raw type: " + rawType);
-				}
-
-				newValue = rawTypeConverter.ConvertFromInternalType (newValue);
-			}
-
-			if (value != System.DBNull.Value)
-			{
-				DbSimpleType typeDef = dbColumn.Type.SimpleType;
-				DbNumDef numDef = dbColumn.Type.NumDef;
-
-				return TypeConverter.ConvertToSimpleType (value, typeDef, numDef);
-			}
-
-			return newValue;
-		}
 
 	}
 
