@@ -182,11 +182,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
             var seriesDetection = new SeriesDetectionController(chartView, captionView);
 
-            // TODO changer ça
-            seriesDetection.HoverIndexChanged +=
-                (sender, e) =>
-                    System.Diagnostics.Debug.WriteLine("kikoooooooooo {0}", e.NewValue);
-
 			this.commandBar = new CommandSelectionBar ()
 			{
 				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
