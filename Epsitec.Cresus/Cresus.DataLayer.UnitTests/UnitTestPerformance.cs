@@ -31,26 +31,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			TestHelper.Initialize ();
 
 			File.Delete (UnitTestPerformance.logFile);
-		}
 
-
-		[ClassCleanup]
-		public static void Cleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
-		}
-
-
-		[TestMethod]
-		public void CreateAndPopulateDatabase()
-		{
 			if (UnitTestPerformance.createDatabase)
 			{
 				TestHelper.WriteStartTest ("Database creation", UnitTestPerformance.logFile);
-							
+
 				DatabaseHelper.CreateAndConnectToDatabase ();
 
-				TestHelper.MeasureAndWriteTime(
+				TestHelper.MeasureAndWriteTime (
 					"database population",
 					UnitTestPerformance.logFile,
 					() => DatabaseCreator1.PopulateDatabase (UnitTestPerformance.databaseSize),
@@ -63,6 +51,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				DatabaseHelper.ConnectToDatabase ();
 			}
+		}
+
+
+		[ClassCleanup]
+		public static void Cleanup()
+		{
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
