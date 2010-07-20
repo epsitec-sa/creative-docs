@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 
-	public class Database
+	internal static class DatabaseHelper
 	{
 
 
@@ -22,20 +22,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			get
 			{
-				return Database.dbInfrastructure;
+				return DatabaseHelper.dbInfrastructure;
 			}
 		}
 
 
 		public static void CreateAndConnectToDatabase()
 		{
-			Database.dbInfrastructure = TestHelper.CreateAndConnectToDatabase ();
+			DatabaseHelper.dbInfrastructure = TestHelper.CreateAndConnectToDatabase ();
 		}
 
 
 		public static void ConnectToDatabase()
 		{
-			Database.dbInfrastructure = TestHelper.ConnectToDatabase ();
+			DatabaseHelper.dbInfrastructure = TestHelper.ConnectToDatabase ();
 		}
 
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				roles[i] = Database.CreateContactRole (dataContext, "name" + i);
+				roles[i] = DatabaseHelper.CreateContactRole (dataContext, "name" + i);
 			}
 
 			return roles;
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				comments[i] = Database.CreateComment (dataContext, "text" + i);
+				comments[i] = DatabaseHelper.CreateComment (dataContext, "text" + i);
 			}
 
 			return comments;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				uriSchemes[i] = Database.CreateUriScheme (dataContext, "code" + i, "name" + i);
+				uriSchemes[i] = DatabaseHelper.CreateUriScheme (dataContext, "code" + i, "name" + i);
 			}
 
 			return uriSchemes;
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				uriContacts[i] = Database.CreateUriContact (dataContext, "uri" + i, uriSchemes[i % uriSchemes.Length]);
+				uriContacts[i] = DatabaseHelper.CreateUriContact (dataContext, "uri" + i, uriSchemes[i % uriSchemes.Length]);
 			}
 
 			return uriContacts;
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				telecomTypes[i] = Database.CreateTelecomType (dataContext, "code" + i, "name" + i);
+				telecomTypes[i] = DatabaseHelper.CreateTelecomType (dataContext, "code" + i, "name" + i);
 			}
 
 			return telecomTypes;
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				telecomContacts[i] = Database.CreateTelecomContact (dataContext, "number" + i, "extension" + i, telecomTypes[i % telecomTypes.Length]);
+				telecomContacts[i] = DatabaseHelper.CreateTelecomContact (dataContext, "number" + i, "extension" + i, telecomTypes[i % telecomTypes.Length]);
 			}
 
 			return telecomContacts;
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				countries[i] = Database.CreateCountry (dataContext, "code" + i, "name" + i);
+				countries[i] = DatabaseHelper.CreateCountry (dataContext, "code" + i, "name" + i);
 			}
 
 			return countries;
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				regions[i] = Database.CreateRegion (dataContext, "code" + i, "name" + i, countries[i % countries.Length]);
+				regions[i] = DatabaseHelper.CreateRegion (dataContext, "code" + i, "name" + i, countries[i % countries.Length]);
 			}
 
 			return regions;
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			for (int i = 0; i < number; i++)
 			{
 				RegionEntity region = regions[i % regions.Length];
-				locations[i] = Database.CreateLocation (dataContext, "postalCode" + i, "name" + i, region.Country, region);
+				locations[i] = DatabaseHelper.CreateLocation (dataContext, "postalCode" + i, "name" + i, region.Country, region);
 			}
 
 			return locations;
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				postboxes[i] = Database.CreatePostBox (dataContext, "number" + i);
+				postboxes[i] = DatabaseHelper.CreatePostBox (dataContext, "number" + i);
 			}
 
 			return postboxes;
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				streets[i] = Database.CreateStreet (dataContext, "complement" + i, "name" + i);
+				streets[i] = DatabaseHelper.CreateStreet (dataContext, "complement" + i, "name" + i);
 			}
 
 			return streets;
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				addresses[i] = Database.CreateAddresss (dataContext, "complement" + i, streets[i % streets.Length], postBoxes[i % postBoxes.Length], locations[i % locations.Length]);
+				addresses[i] = DatabaseHelper.CreateAddresss (dataContext, "complement" + i, streets[i % streets.Length], postBoxes[i % postBoxes.Length], locations[i % locations.Length]);
 			}
 
 			return addresses;
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				mailContact[i] = Database.CreateMailContact (dataContext, "complement" + i, addresses[i % addresses.Length]);
+				mailContact[i] = DatabaseHelper.CreateMailContact (dataContext, "complement" + i, addresses[i % addresses.Length]);
 			}
 
 			return mailContact;
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				languages[i] = Database.CreateLanguage (dataContext, "code" + i, "name" + i);
+				languages[i] = DatabaseHelper.CreateLanguage (dataContext, "code" + i, "name" + i);
 			}
 
 			return languages;
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				titles[i] = Database.CreatePersonTitle (dataContext, "name" + i, "shortName" + i);
+				titles[i] = DatabaseHelper.CreatePersonTitle (dataContext, "name" + i, "shortName" + i);
 			}
 
 			return titles;
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				genders[i] = Database.CreatePersonGender (dataContext, "code" + i, "name" + i);
+				genders[i] = DatabaseHelper.CreatePersonGender (dataContext, "code" + i, "name" + i);
 			}
 
 			return genders;
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				legalPersonTypes[i] = Database.CreateLegalPersonType (dataContext, "name" + i, "shortName" + i);
+				legalPersonTypes[i] = DatabaseHelper.CreateLegalPersonType (dataContext, "name" + i, "shortName" + i);
 			}
 
 			return legalPersonTypes;
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				naturalPerson[i] = Database.CreateNaturalPerson (dataContext, "firstname" + i, "lastname" + i, new Date (1950, 12, 31), languages[i % languages.Length], titles[i % titles.Length], genders[i % genders.Length]);
+				naturalPerson[i] = DatabaseHelper.CreateNaturalPerson (dataContext, "firstname" + i, "lastname" + i, new Date (1950, 12, 31), languages[i % languages.Length], titles[i % titles.Length], genders[i % genders.Length]);
 			}
 
 			return naturalPerson;
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			for (int i = 0; i < number; i++)
 			{
-				legalPersons[i] = Database.CreateLegalPerson (dataContext, "name" + i, "shortName" + i, "complement" + i, types[i % types.Length], languages[i % languages.Length]);
+				legalPersons[i] = DatabaseHelper.CreateLegalPerson (dataContext, "name" + i, "shortName" + i, "complement" + i, types[i % types.Length], languages[i % languages.Length]);
 			}
 
 			return legalPersons;

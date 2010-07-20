@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (Database1.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ClassCleanup]
 		public void Cleanup()
 		{
-			Database.DisconnectFromDatabase ();
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Unary comparison");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -186,9 +186,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 3);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
-				Assert.IsTrue (persons.Any (p => Database2.CheckHans (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with value");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Binary comparison field with field");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Unary operation");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -283,8 +283,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
 			}
 		}
 
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Binary operation");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Double request 1");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Double request 2");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -413,7 +413,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Inner request");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 1);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Like request");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -471,8 +471,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
 
 				Assert.IsTrue (persons.Count () == 2);
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
 			}
 		}
 
@@ -482,17 +482,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Like escape request");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				CountryEntity country1 = Database.CreateCountry (dataContext, "c1", "test%test");
-				CountryEntity country2 = Database.CreateCountry (dataContext, "c2", "test_test");
-				CountryEntity country3 = Database.CreateCountry (dataContext, "c2", "test#test");
-				CountryEntity country4 = Database.CreateCountry (dataContext, "c3", "testxxtest");
+				CountryEntity country1 = DatabaseHelper.CreateCountry (dataContext, "c1", "test%test");
+				CountryEntity country2 = DatabaseHelper.CreateCountry (dataContext, "c2", "test_test");
+				CountryEntity country3 = DatabaseHelper.CreateCountry (dataContext, "c2", "test#test");
+				CountryEntity country4 = DatabaseHelper.CreateCountry (dataContext, "c3", "testxxtest");
 
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -545,7 +545,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -571,7 +571,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity example = new CountryEntity ();
 
@@ -630,9 +630,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Requested entity request 1");
 			
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
 				Request request = new Request ()
 				{
@@ -643,8 +643,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (persons.Length == 2);
 
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
-				Assert.IsTrue (persons.Any (p => Database2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
 			}
 		}
 
@@ -654,9 +654,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Requested entity request 2");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
 				Request request = new Request ()
 				{
@@ -668,9 +668,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (contacts.Length == 3);
 
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
 			}
 		}
 
@@ -680,9 +680,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Requested entity request 3");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = Database2.GetCorrectExample3 ();
+				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
 				Request request = new Request ()
 				{
@@ -704,9 +704,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 1.");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example = Database2.GetCorrectExample1();
+				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1();
 				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (example).First ();
 
 				Request request = new Request ()
@@ -719,7 +719,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (persons.Length == 1);
 
-				Assert.IsTrue (persons.Any (p => Database2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 			}
 		}
 
@@ -729,9 +729,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 2.");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
 				NaturalPersonEntity example2 = new NaturalPersonEntity ();
@@ -761,9 +761,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Root entity reference request 3.");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				NaturalPersonEntity example1 = Database2.GetCorrectExample1 ();
+				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
 				NaturalPersonEntity alfred1 = dataContext.GetByExample<NaturalPersonEntity> (example1).First ();
 
 				NaturalPersonEntity example2 = new NaturalPersonEntity ();
@@ -780,8 +780,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (contacts.Length == 2);
 
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
 			}
 		}
 

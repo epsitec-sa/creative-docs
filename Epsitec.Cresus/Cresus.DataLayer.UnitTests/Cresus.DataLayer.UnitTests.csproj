@@ -44,13 +44,13 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database.cs" />
-    <Compile Include="Database1.cs" />
-    <Compile Include="Database2.cs" />
-    <Compile Include="UnitTestDataContextEventArgs.cs" />
-    <Compile Include="UnitTestDataContextPool.cs" />
-    <Compile Include="UnitTestEntityCache.cs" />
-    <Compile Include="UnitTestEntityKey.cs" />
+    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="DatabaseCreator1.cs" />
+    <Compile Include="DatabaseCreator2.cs" />
+    <Compile Include="Context\UnitTestDataContextEventArgs.cs" />
+    <Compile Include="Context\UnitTestDataContextPool.cs" />
+    <Compile Include="Context\UnitTestEntityCache.cs" />
+    <Compile Include="Context\UnitTestEntityKey.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Res.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />
     <Compile Include="UnitTestNullVirtualization.cs" />
     <Compile Include="UnitTestPerformance.cs" />
+    <Compile Include="Proxies\UnitTestValueFieldProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
@@ -122,6 +123,7 @@
   <ItemGroup>
     <Shadow Include="Test References\Cresus.DataLayer.accessor" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -29,13 +29,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void CreateDatabaseHelper()
 		{
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			Assert.IsTrue (Database2.DbInfrastructure.IsConnectionOpen);
+			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ClassCleanup]
 		public void Cleanup()
 		{
-			Database.DisconnectFromDatabase ();
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private DataContext CreateDataContext()
 		{
-			return new DataContext (Database.DbInfrastructure)
+			return new DataContext (DatabaseHelper.DbInfrastructure)
 			{
 				EnableNullVirtualization = true
 			};

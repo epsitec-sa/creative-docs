@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ClassCleanup]
 		public void Cleanup()
 		{
-			Database.DisconnectFromDatabase ();
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 				
@@ -53,13 +53,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void CreateDatabaseHelper()
 		{
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			Assert.IsTrue (Database2.DbInfrastructure.IsConnectionOpen);
+			Assert.IsTrue (DatabaseHelper.DbInfrastructure.IsConnectionOpen);
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Discard empty entities");
 
-			using (var dataContext = new DataContext(Database.DbInfrastructure))
+			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (var dataContext = new DataContext(Database.DbInfrastructure))
+			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreEqual (4, contacts.Count ());
 			}
 
-			using (var dataContext = new DataContext(Database.DbInfrastructure))
+			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (var dataContext = new DataContext(Database.DbInfrastructure))
+			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -135,9 +135,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Save without changes 1");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
-				Database2.DbInfrastructure.GetSourceReferences (new Common.Support.Druid ());
 				dataContext.SaveChanges ();
 			}
 		}
@@ -148,7 +147,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Save without changes 2");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
@@ -159,10 +158,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreEqual (4, contacts.Length);
 				
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
-				Assert.IsTrue (contacts.Any (c => Database2.CheckUriContact (c, "nobody@nowhere.com", null)));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "gertrude@coucou.com", "Gertrude")));
+				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "nobody@nowhere.com", null)));
 
 				dataContext.SaveChanges ();
 			}
@@ -174,15 +173,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Resolve entity");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
 				NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (3)));
 
-				Assert.IsTrue (Database2.CheckAlfred (alfred));
-				Assert.IsTrue (Database2.CheckGertrude (gertrude));
-				Assert.IsTrue (Database2.CheckHans (hans));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (gertrude));
+				Assert.IsTrue (DatabaseCreator2.CheckHans (hans));
 			}
 		}
 
@@ -192,7 +191,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Insert entity");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -209,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreSame (albert1, albert2);
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -233,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Insert entity value");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -243,7 +242,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -252,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -275,7 +274,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Insert entity reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -285,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -294,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -316,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Delete entity value");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -327,7 +326,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -336,7 +335,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -358,7 +357,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Insert entity reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -368,7 +367,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -378,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -402,7 +401,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Update entity reference");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -414,7 +413,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
@@ -424,7 +423,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
@@ -450,7 +449,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1)));
@@ -462,7 +461,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				
@@ -471,7 +470,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -493,7 +492,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Create entity collection");
 			
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -503,7 +502,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -513,7 +512,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -537,7 +536,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Add entity collection");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -549,7 +548,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -560,7 +559,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -586,7 +585,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Update entity collection");
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -598,7 +597,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -609,7 +608,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (3)));
@@ -631,7 +630,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void ReorderEntityCollection()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -645,7 +644,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -658,7 +657,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 				AbstractContactEntity contact1 = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -682,7 +681,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RemoveEntityCollection()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
 				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
@@ -694,7 +693,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -703,7 +702,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				dataContext.SaveChanges ();
 			}
 
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
 
@@ -725,26 +724,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Delete entity present in collection (memory)");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-				Assert.IsTrue (Database2.CheckAlfred (alfred));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 
 				dataContext.DeleteEntity (alfred.Contacts[0]);
 
 				dataContext.SaveChanges ();
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
-				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
-				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
 			this.CreateDatabaseHelper ();
@@ -756,7 +755,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Delete entity present in reference (memory)");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
@@ -773,7 +772,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),
@@ -792,7 +791,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Delete entity present in collection (database)");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
 				dataContext.DeleteEntity (contact);
@@ -802,15 +801,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
-				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				Assert.IsTrue (alfred.Contacts.Count == 1);
-				Assert.IsTrue (alfred.Contacts.Any (c => Database2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
+				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
 
 			this.CreateDatabaseHelper ();
@@ -822,7 +821,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.PrintStartTest ("Delete entity present in reference (database)");
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				dataContext.DeleteEntity (alfred);
@@ -837,7 +836,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
 
-			using (DataContext dataContext = new DataContext(Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
 					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))),

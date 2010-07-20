@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (Database1.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -28,14 +28,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ClassCleanup]
 		public void Cleanup()
 		{
-			Database.DisconnectFromDatabase ();
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
 		[TestMethod]
 		public void DataContextEventArgsConstructorTest()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				new DataContextEventArgs (dataContext);
 			}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DataContextTest()
 		{
-			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				DataContextEventArgs eventArg = new DataContextEventArgs (dataContext);
 

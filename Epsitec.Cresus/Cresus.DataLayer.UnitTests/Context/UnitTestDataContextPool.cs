@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			TestHelper.Initialize ();
 
-			Database2.CreateAndConnectToDatabase ();
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
-			using (DataContext dataContext = new DataContext (Database1.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Database2.PupulateDatabase (dataContext);
+				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ClassCleanup]
 		public void Cleanup()
 		{
-			Database.DisconnectFromDatabase ();
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -57,16 +57,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			foreach (DataContext dataContext in dataContexts)
@@ -106,30 +106,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts1 = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			List<DataContext> dataContexts2 = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			foreach (DataContext dataContext in dataContexts1)
@@ -174,16 +174,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts1 = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			foreach (DataContext dataContext in dataContexts1)
@@ -216,16 +216,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts1 = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			foreach (DataContext dataContext in dataContexts1)
@@ -265,19 +265,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
-			DataContext dataContext11 = new DataContext (Database.DbInfrastructure);
+			DataContext dataContext11 = new DataContext (DatabaseHelper.DbInfrastructure);
 
 			foreach (DataContext dataContext in dataContexts)
 			{
@@ -308,19 +308,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
-			DataContext dataContext11 = new DataContext (Database.DbInfrastructure);
+			DataContext dataContext11 = new DataContext (DatabaseHelper.DbInfrastructure);
 
 			foreach (DataContext dataContext in dataContexts)
 			{
@@ -355,16 +355,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DataContext> dataContexts = new List<DataContext> ()
 			{
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
-				new DataContext (Database.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
+				new DataContext (DatabaseHelper.DbInfrastructure),
 			};
 
 			foreach (DataContext dataContext in dataContexts)

@@ -20,15 +20,15 @@ namespace Epsitec.Cresus.Core
 
 			if (createAndPopulateDatabase)
 			{
-				Epsitec.Cresus.DataLayer.UnitTests.Database.CreateAndConnectToDatabase ();
-				Database1.PopulateDatabase (DatabaseSize.Small);
+				DatabaseHelper.CreateAndConnectToDatabase ();
+				DatabaseCreator1.PopulateDatabase (DatabaseSize.Small);
 			}
 			else
 			{
-				Epsitec.Cresus.DataLayer.UnitTests.Database.ConnectToDatabase ();
+				DatabaseHelper.ConnectToDatabase ();
 			}
 
-			this.dbInfrastructure = Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure;
+			this.dbInfrastructure = DatabaseHelper.DbInfrastructure;
 		}
 
 		public DbInfrastructure DbInfrastructure
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core
 
 		public void RetrieveAllData<EntityType>() where EntityType : AbstractEntity, new ()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				dataContext.GetByExample<EntityType> (new EntityType ()).Count ();
 			};
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetUriContactWithGivenUriSchemeReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetUriContactWithGivenUriSchemeValue()
 		{
-			using (DataContext dataContext = new DataContext (Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity example = new UriContactEntity ()
 				{
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLocationsGivenCountryReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				LocationEntity example = new LocationEntity ()
 				{
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLocationsGivenCountryValue()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				LocationEntity example = new LocationEntity ()
 				{
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonsGivenTypeReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonsGivenTypeValue()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
 				{
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetContactsGivenPersonReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetContactsGivenPersonValue()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
 				{
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetPersonGivenLocationReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetPersonGivenLocationValue()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				example.Contacts.Add (new MailContactEntity ()
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressGivenLegalPersonReference()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressGivenLegalPersonValue()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				MailContactEntity example = new MailContactEntity ()
 				{
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetAddressReferencers()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
 
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core
 
 		public void GetLegalPersonReferencers()
 		{
-			using (DataContext dataContext = new DataContext(Epsitec.Cresus.DataLayer.UnitTests.Database.DbInfrastructure))
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001)));
 

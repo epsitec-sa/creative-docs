@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 
-	public class Database2 : Database
+	internal static class DatabaseCreator2
 	{
 
 
@@ -19,33 +19,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			dataContext.CreateSchema<TelecomContactEntity> ();
 			dataContext.CreateSchema<UriContactEntity> ();
 
-			UriSchemeEntity mailScheme = Database.CreateUriScheme (dataContext, "mailto:", "email");
+			UriSchemeEntity mailScheme = DatabaseHelper.CreateUriScheme (dataContext, "mailto:", "email");
 
-			UriContactEntity contactAlfred1 = Database.CreateUriContact (dataContext, "alfred@coucou.com", mailScheme);
-			UriContactEntity contactAlfred2 = Database.CreateUriContact (dataContext, "alfred@blabla.com", mailScheme);
-			UriContactEntity contactGertrude = Database.CreateUriContact (dataContext, "gertrude@coucou.com", mailScheme);
-			UriContactEntity contactNobody = Database.CreateUriContact (dataContext, "nobody@nowhere.com", mailScheme);
+			UriContactEntity contactAlfred1 = DatabaseHelper.CreateUriContact (dataContext, "alfred@coucou.com", mailScheme);
+			UriContactEntity contactAlfred2 = DatabaseHelper.CreateUriContact (dataContext, "alfred@blabla.com", mailScheme);
+			UriContactEntity contactGertrude = DatabaseHelper.CreateUriContact (dataContext, "gertrude@coucou.com", mailScheme);
+			UriContactEntity contactNobody = DatabaseHelper.CreateUriContact (dataContext, "nobody@nowhere.com", mailScheme);
 
-			LanguageEntity french = Database.CreateLanguage (dataContext, "Fr", "French");
-			LanguageEntity german = Database.CreateLanguage (dataContext, "Ge", "German");
+			LanguageEntity french = DatabaseHelper.CreateLanguage (dataContext, "Fr", "French");
+			LanguageEntity german = DatabaseHelper.CreateLanguage (dataContext, "Ge", "German");
 
-			PersonGenderEntity male = Database.CreatePersonGender (dataContext, "M", "Male");
-			PersonGenderEntity female = Database.CreatePersonGender (dataContext, "F", "Female");
+			PersonGenderEntity male = DatabaseHelper.CreatePersonGender (dataContext, "M", "Male");
+			PersonGenderEntity female = DatabaseHelper.CreatePersonGender (dataContext, "F", "Female");
 
-			PersonTitleEntity mister = Database.CreatePersonTitle (dataContext, "Mister", "M");
-			PersonTitleEntity lady = Database.CreatePersonTitle (dataContext, "Lady", "L");
+			PersonTitleEntity mister = DatabaseHelper.CreatePersonTitle (dataContext, "Mister", "M");
+			PersonTitleEntity lady = DatabaseHelper.CreatePersonTitle (dataContext, "Lady", "L");
 
-			NaturalPersonEntity alfred = Database.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, null, male);
+			NaturalPersonEntity alfred = DatabaseHelper.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, null, male);
 			alfred.Contacts.Add (contactAlfred1);
 			alfred.Contacts.Add (contactAlfred2);
 			contactAlfred1.NaturalPerson = alfred;
 			contactAlfred2.NaturalPerson = alfred;
 
-			NaturalPersonEntity gertrude = Database.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), null, lady, female);
+			NaturalPersonEntity gertrude = DatabaseHelper.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), null, lady, female);
 			gertrude.Contacts.Add (contactGertrude);
 			contactGertrude.NaturalPerson = gertrude;
 
-			NaturalPersonEntity hans = Database.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, null);
+			NaturalPersonEntity hans = DatabaseHelper.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, null);
 
 			dataContext.SaveChanges ();
 		}

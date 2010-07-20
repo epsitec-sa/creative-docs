@@ -25,6 +25,25 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <param name="fieldId">The id of the field.</param>
 		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
+			if (dataContext == null)
+			{
+				throw new System.ArgumentNullException ("dataContext");
+			}
+
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			if (fieldId.IsEmpty)
+			{
+				throw new System.ArgumentException ("fieldId is not valid.");
+			}
+
+			// TODO Add more test on the input arguments, such as to detect if entity is not managed
+			// by dataContext, or if fieldId is not a field of entity ?
+			// Marc
+			
 			this.dataContext = dataContext;
 			this.entity = entity;
 			this.fieldId = fieldId;
