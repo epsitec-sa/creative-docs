@@ -326,7 +326,16 @@ namespace Epsitec.Common.Graph.Renderers
 		public abstract Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius);
 
 
-		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);
+        /// <summary>
+        /// Permet de connaitre la position d'une légende flottante, en fonction du Renderer.
+        /// </summary>
+        /// <param name="series">Série</param>
+        /// <param name="seriesIndex">Numéro de la série</param>
+        /// <returns>Position centrale où afficher la légende.
+        /// Peut retourner Point.Zero pour empècher d'afficher la légende.</returns>
+        public abstract Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex);
+
+        protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);
 
 		protected virtual void CreateCaption(Data.ChartSeries series, int seriesIndex)
 		{

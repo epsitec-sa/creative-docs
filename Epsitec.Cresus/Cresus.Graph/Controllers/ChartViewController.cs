@@ -1,24 +1,19 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Graph;
-using Epsitec.Common.Graph.Data;
-using Epsitec.Common.Graph.Renderers;
-using Epsitec.Common.Graph.Styles;
-using Epsitec.Common.Graph.Widgets;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Graph.Controllers;
-using Epsitec.Cresus.Graph.Widgets;
-
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.UI;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Printing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Graph.Controllers;
+using Epsitec.Cresus.Graph.Widgets;
 
 [assembly: DependencyClass (typeof (ChartViewController))]
 
@@ -160,7 +155,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				Parent = chartSurface,
 				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
-			};
+            };
+
+            this.floatingCaptions = new FloatingCaptionsView()
+            {
+                Anchor = AnchorStyles.All,
+                Parent = chartSurface,
+                Visibility = this.IsStandalone
+            };
 
 			var palette = new AnchoredPalette ()
 			{
@@ -169,14 +171,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = chartSurface,
 				BackColor = Color.FromBrightness (1),
 				Padding = new Margins (4, 4, 2, 2),
-				Visibility = false,
-			};
+				Visibility = false
+            };
 
 			this.captionView = new CaptionView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = palette,
+				Parent = palette
 			};
+
+            var seriesDetection = new SeriesDetectionController(chartView, captionView);
+
+            // TODO changer ça
+            seriesDetection.HoverIndexChanged +=
+                (sender, e) =>
+                    System.Diagnostics.Debug.WriteLine("kikoooooooooo {0}", e.NewValue);
 
 			this.commandBar = new CommandSelectionBar ()
 			{
@@ -240,7 +249,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.CreateLeftToolButtons ();
 				this.CreateGraphTypeButtons ();
-				this.CreateRightToolButtons ();
+                this.CreateRightToolButtons(palette, floatingCaptions);
 			}
 			else
 			{
@@ -380,8 +389,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Margins = new Margins (2, 2, 0, 0),
 			};
 		}
-		
-		private void CreateRightToolButtons()
+
+        private void CreateRightToolButtons(AnchoredPalette captions, FloatingCaptionsView floatingCaptions)
 		{
 			new Separator ()
 			{
@@ -399,33 +408,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			var button = new MetaButton ()
+			var snapshotButton = new MetaButton ()
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 130,
 				IconUri = "manifest:Epsitec.Cresus.Graph.Images.TakeSnapshot.icon",
 				Text = "Créer un cliché instantané",
 				ButtonClass = ButtonClass.FlatButton,
-//				ContentAlignment = ContentAlignment.MiddleLeft,
-//				ButtonStyle = ButtonStyle.ToolItem,
 				Parent = frame,
 				Margins = new Margins (0, 0, 1, 1),
 				Padding = new Margins (40, 4, 0, 0),
 				Visibility = this.ChartSnapshot == null,
 			};
-#if false
-			button.PaintForeground +=
-				(sender, e) =>
-				{
-					var widget   = (Widget) sender;
-					var graphics = e.Graphics;
 
-					graphics.AddFilledRectangle (new Rectangle (6, 6, 24, 24));
-					graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0, 0, 1));
-				};
-#endif
-
-			button.Clicked +=
+			snapshotButton.Clicked +=
 				(sender, e) =>
 				{
 					var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType);
@@ -441,7 +437,43 @@ namespace Epsitec.Cresus.Graph.Controllers
 					oldWindow.Close ();
 
 					this.document.NotifyNeedsSave (true);
-				};
+                };
+
+            var showCaptionsButton = new MetaButton()
+            {
+                Dock = DockStyle.Left,
+                Text = "Afficher la légende",
+                ButtonClass = ButtonClass.FlatButton,
+                Parent = frame,
+                Margins = new Margins(0, 0, 1, 1),
+                Padding = new Margins(4, 4, 0, 0),
+                Visibility = this.ChartSnapshot == null,
+            };
+
+            showCaptionsButton.Clicked +=
+                (sender, e) =>
+                {
+                    captions.Visibility = !captions.Visibility;
+                };
+
+            var showFloatingCaptionsButton = new MetaButton()
+            {
+                Dock = DockStyle.Left,
+                PreferredWidth = 100,
+                Text = "Afficher les légendes flottantes",
+                ButtonClass = ButtonClass.FlatButton,
+                Parent = frame,
+                Margins = new Margins(0, 0, 1, 1),
+                Padding = new Margins(4, 4, 0, 0),
+                Visibility = this.ChartSnapshot == null,
+            };
+
+            showFloatingCaptionsButton.Clicked +=
+                (sender, e) =>
+                {
+                    floatingCaptions.Visibility = !floatingCaptions.Visibility;
+                };
+
 		}
 
 		private void CreateGraphTypeButtons()
@@ -481,6 +513,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.chartView.Renderer   = null;
 				this.captionView.Captions = null;
+                this.floatingCaptions.Renderer = null;
 			}
 			else
 			{
@@ -488,10 +521,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
 				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
+                this.floatingCaptions.Renderer = renderer;
 			}
 
 			this.chartView.Invalidate ();
 			this.captionView.Invalidate ();
+            this.floatingCaptions.Invalidate ();
 		}
 
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
@@ -590,6 +625,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Widget							container;
 		private ChartView						chartView;
 		private CaptionView						captionView;
+        private FloatingCaptionsView            floatingCaptions;
 		private GraphDocument					document;
 		private Command							graphType;
 		private ColorStyle						colorStyle;

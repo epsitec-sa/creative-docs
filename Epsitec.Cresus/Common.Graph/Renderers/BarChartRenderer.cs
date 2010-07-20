@@ -1,12 +1,9 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Graph;
-using Epsitec.Common.Graph.Data;
-
 using System.Collections.Generic;
-using System.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -77,6 +74,36 @@ namespace Epsitec.Common.Graph.Renderers
 			return this.CreateSurfacePath (series, seriesIndex);
 		}
 
+        /// <summary>
+        /// Retourne la position de la légende en haut d'une barre, centrée.
+        /// </summary>
+        public override Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex)
+        {
+            using (Path path = this.CreateSurfacePath(series, seriesIndex))
+            {
+                PathElement[] elems;
+                Point[] points;
+
+                path.GetElements(out elems, out points);
+
+                double minX = 99999;
+                double maxX = 0;
+                double maxY = 0;
+
+                // Prend chaque point et récupère les points extrèmes.
+                foreach (var p in points)
+                {
+                    // Evite un artefact de calcul
+                    if(p.X > 10)
+                        minX = System.Math.Min(minX, p.X);
+
+                    maxX = System.Math.Max(maxX, p.X);
+                    maxY = System.Math.Max(maxY, p.Y);
+                }
+
+                return new Point(minX + (maxX - minX) / 2, maxY + 5);
+            }
+        }
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
@@ -135,8 +162,6 @@ namespace Epsitec.Common.Graph.Renderers
 		
 		private Path CreateSurfacePath(Data.ChartSeries series, int seriesIndex)
 		{
-			double seriesOffset = (1.0 * seriesIndex) / this.SeriesCount;
-			
 			Path path = new Path ();
 
 			foreach (var item in series.Values)

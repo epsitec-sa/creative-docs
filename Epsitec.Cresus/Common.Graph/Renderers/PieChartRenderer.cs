@@ -1,13 +1,10 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Graph;
-using Epsitec.Common.Graph.Data;
-
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -90,8 +87,41 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public override Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius)
 		{
-			return null;
+            return this.CreateOutlinePath(series, seriesIndex);
 		}
+
+        public override Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex)
+        {
+            foreach (var item in series.Values)
+            {
+                var label = item.Label;
+                var pie = this.pies.FirstOrDefault(x => x.Label == label);
+
+                if ((pie == null) ||
+                    (seriesIndex >= pie.Sectors.Count))
+                {
+                    continue;
+                }
+
+                var sector = pie.Sectors[seriesIndex];
+                var center = pie.Center + this.Bounds.Location;
+                var radius = pie.Radius;
+
+                // N'affiche pas les légendes pour de petits angles
+                if ((sector.Angle2 - sector.Angle1) < angleToHide)
+                {
+                    continue;
+                }
+
+                var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
+
+                var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
+
+                return txtCenter;
+            }
+
+            return new Point(0, 0);
+        }
 
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
@@ -105,6 +135,9 @@ namespace Epsitec.Common.Graph.Renderers
 				case 1:
 					this.PaintOutline (port, series, seriesIndex);
 					break;
+
+                default:
+                    break;
 			}
 		}
 
@@ -206,9 +239,8 @@ namespace Epsitec.Common.Graph.Renderers
 
 			return path;
 		}
-		
 
-		private void UpdatePies()
+        private void UpdatePies()
 		{
 			if (this.pies == null)
 			{
@@ -348,6 +380,8 @@ namespace Epsitec.Common.Graph.Renderers
 			return bestRowCount;
 		}
 
-		private List<SeriesPie> pies;
+        private List<SeriesPie> pies;
+
+        private const int angleToHide = 6;
 	}
 }
