@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public void Initialize(TestContext testContext)
+		public static void Initialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 		}
