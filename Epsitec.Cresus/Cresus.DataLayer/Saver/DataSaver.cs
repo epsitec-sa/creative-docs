@@ -100,56 +100,99 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			// TODO Get the call to DeleteEntityTargetRelationsInMemory out of the if statement
-			// once this function does not call the DataLoader.
+			// TODO Two methods are implemented to remove the target relations from memory
+			// - DeleteEntityTargetRelationsInMemory1 which uses the DataLoader
+			// - DeleteEntityTargetRelationsInMemory2 which doesn't use the DataLoader.
+			// I believe that in some special corner cases, the number 1 might have an incorrect
+			// behavior, while I'm sure that the number 2 will always have a correct behavior. These
+			// special corner cases are if an entity is not persisted, then the data loader will not
+			// find that it is a source for an entity (because it looks in the database) and if that
+			// entity is not saved (for any reason), then that entity will still reference the deleted
+			// one. I'm not sure if that case is possible.
+			// If we decide to use the number 2, then it
+			// might make sense to call it when in the function DataContext.DeleteEntity(...) rather
+			// than here.
+			// Some tests must be done to see which one is the best and then, remove the other and
+			// use the better one here.
 			// Marc
+
+			this.DeleteEntityTargetRelationsInMemory2 (entity);
 
 			if (this.DataContext.IsPersistent (entity))
 			{
-				this.DeleteEntityTargetRelationsInMemory (entity);
+				//this.DeleteEntityTargetRelationsInMemory1 (entity);
 				this.SaverQueryGenerator.DeleteEntity (transaction, entity);
 			}
 		}
 
 
-		private void DeleteEntityTargetRelationsInMemory(AbstractEntity entity)
+		private void DeleteEntityTargetRelationsInMemory1(AbstractEntity entity)
 		{
-			// TODO This method might be optimized by doing the same thing without using the
-			// DataLoader, i.e. by looping over all the managed entities in the DataContext. This
-			// would save some queries to the database. Moreover, this would remove entities off
-			// other entities in the memory even if the removed one is not persisted.
-			// Marc
-
 			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
 			{
-				AbstractEntity sourceEntity = item.Item1;
-				StructuredTypeField field = this.EntityContext.GetStructuredTypeField (sourceEntity, item.Item2.Fields.First ());
+				AbstractEntity source = item.Item1;
+				Druid fieldId = Druid.Parse(item.Item2.Fields.First());
 
-				using (sourceEntity.UseSilentUpdates ())
+				this.DeleteEntityTargetRelationInMemory (source, fieldId, entity);
+			}
+		}
+
+
+		private void DeleteEntityTargetRelationsInMemory2(AbstractEntity target)
+		{
+			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
+
+			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
+				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
+				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
+
+			foreach (AbstractEntity source in this.DataContext.GetEntities ())
+			{
+				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
+				var leafInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+
+				foreach (Druid leafInheritedId in leafInheritedIds)
 				{
-					switch (field.Relation)
+					if (fieldPaths.ContainsKey (leafInheritedId))
 					{
-						case FieldRelation.Reference:
-						{
-							sourceEntity.InternalSetValue (field.Id, null);
+						this.DeleteEntityTargetRelationInMemory (source, fieldPaths[leafInheritedId], target);
+					}
+				}
+			}
+		}
 
-							break;
-						}
-						case FieldRelation.Collection:
-						{
-							IList collection = sourceEntity.InternalGetFieldCollection (field.Id) as IList;
 
-							while (collection.Contains (entity))
-							{
-								collection.Remove (entity);
-							}
+		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target)
+		{
+			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
 
-							break;
-						}
-						default:
+			using (source.UseSilentUpdates ())
+			{
+				switch (field.Relation)
+				{
+					case FieldRelation.Reference:
+					{
+						if (source.InternalGetValue (field.Id) == target)
 						{
-							throw new System.InvalidOperationException ();
+							source.InternalSetValue (field.Id, null);
 						}
+
+						break;
+					}
+					case FieldRelation.Collection:
+					{
+						IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+
+						while (collection.Contains (target))
+						{
+							collection.Remove (target);
+						}
+
+						break;
+					}
+					default:
+					{
+						throw new System.InvalidOperationException ();
 					}
 				}
 			}
