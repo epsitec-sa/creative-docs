@@ -180,8 +180,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = palette
 			};
 
-            var seriesDetection = new SeriesDetectionController(chartView, captionView);
-
 			this.commandBar = new CommandSelectionBar ()
 			{
 				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
@@ -252,6 +250,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
+
+            this.seriesDetection = new SeriesDetectionController(chartView, captionView);
 		}
 
 		public void Refresh(GraphDocument document)
@@ -512,6 +512,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
+                // Indiquer au renderer si la souris passe sur un élément
+                // TODO Modifier pour n'ajouter un handler que la première fois
+                this.seriesDetection.HoverIndexChanged +=
+                    (sender, e) =>
+                    {
+
+                        var r = new System.Random();
+
+                        System.Diagnostics.Debug.WriteLine("Changed {0} {1} {2}", r.Next(), e.OldValue, e.NewValue);
+                        renderer.HoverIndexChanged(e.OldValue, e.NewValue);
+                    };
+
 				this.chartView.Renderer = renderer;
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
@@ -611,7 +623,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private static CommandController		commandController;
 		private static Epsitec.Common.Dialogs.PrintDialog printDialog;
 
-		private CommandController				localController;
+        private SeriesDetectionController       seriesDetection;
+        private CommandController				localController;
 		private readonly GraphApplication		application;
 		private readonly WorkspaceController	workspace;
 		private CommandContext					commandContext;
