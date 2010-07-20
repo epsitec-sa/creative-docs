@@ -8,6 +8,7 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -350,9 +351,23 @@ namespace Epsitec.Common.Graph.Renderers
         /// </summary>
         /// <param name="oldValue">SeriesIndex before the change</param>
         /// <param name="newValue">SeriesIndex after the change</param>
-        public virtual void HoverIndexChanged(object oldValue, object newValue) { }
+        public virtual void HoverIndexChanged(object oldValue, object newValue)
+        {
+            System.Diagnostics.Debug.WriteLine("Hover changed from {0} to {1}", oldValue, newValue);
+            this.activeIndex = (int) newValue;
+        }
 
-		protected abstract System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex);
+        /// <summary>
+        /// Called when there is a mouse click
+        /// </summary>
+        /// <param name="sender">The object that sent the event</param>
+        /// <param name="e">The event data</param>
+        public virtual void OnClicked(object sender, MessageEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.Message.ToString ());
+        }
+        
+        protected abstract System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex);
 		
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
 		{
@@ -412,9 +427,11 @@ namespace Epsitec.Common.Graph.Renderers
 				select new Data.ChartValue (key, value));
 		}
 
+        protected int                            activeIndex = -1;
+
 		private double							minValue;
 		private double							maxValue;
-		private Rectangle						bounds;
+        private Rectangle                       bounds;
 		
 		private readonly HashSet<string>		seriesValueLabelsSet;
 		private readonly List<string>			seriesValueLabelsList;

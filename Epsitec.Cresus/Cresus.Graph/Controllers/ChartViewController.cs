@@ -157,12 +157,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
             };
 
+            // Handling the mouse click
+            this.chartView.Clicked += (sender, e) => this.chartView.OnClicked(sender, e);
+
             this.floatingCaptions = new FloatingCaptionsView()
             {
                 Anchor = AnchorStyles.All,
                 Parent = chartSurface,
                 Visibility = this.IsStandalone
             };
+
+            // Handling the mouse click, passing it to the ChartView
+            this.floatingCaptions.Clicked += (sender, e) => this.chartView.OnClicked(sender, e);
 
 			var palette = new AnchoredPalette ()
 			{
@@ -252,6 +258,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 
             this.seriesDetection = new SeriesDetectionController(chartView, captionView);
+            
+            // Tells the renderer that the mouse is over the graph
+            this.seriesDetection.HoverIndexChanged += (sender, e) => this.chartView.HoverIndexChanged(e.OldValue, e.NewValue);
 		}
 
 		public void Refresh(GraphDocument document)
@@ -512,18 +521,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-                // Indiquer au renderer si la souris passe sur un élément
-                // TODO Modifier pour n'ajouter un handler que la première fois
-                this.seriesDetection.HoverIndexChanged +=
-                    (sender, e) =>
-                    {
-
-                        var r = new System.Random();
-
-                        System.Diagnostics.Debug.WriteLine("Changed {0} {1} {2}", r.Next(), e.OldValue, e.NewValue);
-                        renderer.HoverIndexChanged(e.OldValue, e.NewValue);
-                    };
-
 				this.chartView.Renderer = renderer;
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
