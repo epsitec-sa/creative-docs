@@ -91,12 +91,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			data.Add (
 				new SummaryData
 				{
-					AutoGroup    = true,
-					Name		 = "DocumentItem",
-					IconUri		 = "Data.DocumentItems",
-					Title		 = UIBuilder.FormatText ("Lignes"),
-					CompactTitle = UIBuilder.FormatText ("Lignes"),
-					Text		 = CollectionTemplate.DefaultEmptyText
+					AutoGroup          = true,
+					Name		       = "DocumentItem",
+					IconUri		       = "Data.DocumentItems",
+					Title		       = UIBuilder.FormatText ("Lignes"),
+					CompactTitle       = UIBuilder.FormatText ("Lignes"),
+					Text		       = CollectionTemplate.DefaultEmptyText,
+					ViewControllerMode = ViewControllerMode.Creation,  // TODO: Pourquoi ce mode n'est pas passé à SummaryData.CreateSubViewController ???
 				});
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller)
