@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<DocumentEntity> ("Document", data.Controller)
+			var template = new CollectionTemplate<DocumentEntity> ("Document", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (x.Description))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Description));
 

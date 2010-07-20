@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 		/// <summary>
 		/// Builds a new <c>EntityKeyProxy</c> which represents the <see cref="AbstractEntity"/> with
-		/// the <see cref="Druid"/> <paramref name="entityId"/> and the <see cref="DbKey"/>
-		/// <paramref name="rowKey"/>.
+		/// the <paramref name="entityKey"/>.
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"></see> responsible the <see cref="AbstractEntity"/>.</param>
 		/// <param name="entityKey">The <see cref="EntityKey"/> describing the entity to load.</param>

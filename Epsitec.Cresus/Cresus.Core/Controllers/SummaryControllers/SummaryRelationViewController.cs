@@ -135,17 +135,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIMailContacts(SummaryDataItems data)
 		{
-			Common.CreateUIMailContacts (data, this.EntityGetter, x => x.Person.Contacts);
+			Common.CreateUIMailContacts (this.DataContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
 		private void CreateUITelecomContacts(SummaryDataItems data)
 		{
-			Common.CreateUITelecomContacts (data, this.EntityGetter, x => x.Person.Contacts);
+			Common.CreateUITelecomContacts (this.DataContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
 		private void CreateUIUriContacts(SummaryDataItems data)
 		{
-			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Person.Contacts);
+			Common.CreateUIUriContacts (this.DataContext, data, this.EntityGetter, x => x.Person.Contacts);
 		}
 
 
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller)
+			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetAffairsSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
 

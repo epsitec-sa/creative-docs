@@ -13,11 +13,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		
 		public DataContextEventArgs(DataContext dataContext)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("dataContext");
-			}
-			
 			this.dataContext = dataContext;
 		}
 

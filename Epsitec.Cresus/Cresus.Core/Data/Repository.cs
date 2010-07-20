@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Core.Data
 		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count)
 			where T : AbstractEntity
 		{
-			return this.dataContext.GetByExample<T> (example).Skip (index + 1).Take (count);
+			return this.dataContext.GetByExample<T> (example).Skip (index).Take (count);
 		}
 
 
 		protected IEnumerable<T> GetEntitiesByRequest<T>(Request request, int index, int count)
 			where T : AbstractEntity
 		{
-			return this.dataContext.GetByRequest<T> (request).Skip (index + 1).Take (count);
+			return this.dataContext.GetByRequest<T> (request).Skip (index).Take (count);
 		}
 
 

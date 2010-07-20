@@ -41,20 +41,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod ()]
-		public void DataContextEventArgsConstructorTest1()
+		public void DataContextEventArgsConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (Database.DbInfrastructure))
 			{
 				new DataContextEventArgs (dataContext);
 			}
-		}
-
-
-		[TestMethod ()]
-		[ExpectedException (typeof (ArgumentNullException))]
-		public void DataContextEventArgsConstructorTest2()
-		{
-			new DataContextEventArgs (null);
 		}
 
 

@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<CaseEntity> ("Case", data.Controller)
+			var template = new CollectionTemplate<CaseEntity> ("Case", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetCasesSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (x.Id));
 

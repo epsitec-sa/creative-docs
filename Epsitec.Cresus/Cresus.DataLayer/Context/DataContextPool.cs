@@ -33,54 +33,54 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Adds a <see cref="DataContext"/> to the pool.
 		/// </summary>
-		/// <param name="context">The <see cref="DataContext"/> to add.</param>
+		/// <param name="dataContext">The <see cref="DataContext"/> to add.</param>
 		/// <returns><c>true</c> if the <see cref="DataContext"/> was not present in the pool, <c>false</c> if it was.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="context"/> is null.</exception>
-		public bool Add(DataContext context)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
+		public bool Add(DataContext dataContext)
 		{
-			if (context == null)
+			if (dataContext == null)
 			{
 				throw new System.ArgumentNullException ("context");
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Added context #" + context.UniqueId);
+			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId);
 
-			return this.dataContexts.Add (context);
+			return this.dataContexts.Add (dataContext);
 		}
 
 
 		/// <summary>
 		/// Removes a <see cref="DataContext"/> from the pool.
 		/// </summary>
-		/// <param name="context">The <see cref="DataContext"/> to remove.</param>
+		/// <param name="dataContext">The <see cref="DataContext"/> to remove.</param>
 		/// <returns><c>true</c> if the <see cref="DataContext"/> was present in the pool, <c>false</c> if it was not.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="context"/> is null.</exception>
-		public bool Remove(DataContext context)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
+		public bool Remove(DataContext dataContext)
 		{
-			if (context == null)
+			if (dataContext == null)
 			{
 				throw new System.ArgumentNullException ("context");
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Removed context #" + context.UniqueId);
+			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId);
 
-			return this.dataContexts.Remove (context);
+			return this.dataContexts.Remove (dataContext);
 		}
 
 
 		/// <summary>
 		/// Tells whether the pool contains a given <see cref="DataContext"/>.
 		/// </summary>
-		/// <param name="context">The <see cref="DataContext"/> whose presence in the pool to check.</param>
+		/// <param name="dataContext">The <see cref="DataContext"/> whose presence in the pool to check.</param>
 		/// <returns><c>true</c> if <paramref name="dataContext"/> is in the pool, false if it is not.</returns>
-		public bool Contains(DataContext context)
+		public bool Contains(DataContext dataContext)
 		{
-			if (context == null)
+			if (dataContext == null)
 			{
 				throw new System.ArgumentNullException ("context");
 			}
 
-			return this.dataContexts.Contains (context);
+			return this.dataContexts.Contains (dataContext);
 		}
 
 
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// The <see cref="HashSet"/> used to store references to the managed <see cref="DataContext"/>.
+		/// Stores the references to the managed <see cref="DataContext"/>.
 		/// </summary>
 		private readonly HashSet<DataContext> dataContexts;
 

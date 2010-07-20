@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -51,15 +52,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	public class CollectionTemplate<T> : CollectionTemplate
 			where T : AbstractEntity, new ()
 	{
-		public CollectionTemplate(string name, EntityViewController controller)
+		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext)
 			: base (name)
 		{
-			this.DefineCreateItem (() => controller.NotifyChildItemCreated (CollectionTemplate<T>.CreateEmptyItem ()));
+			this.DefineCreateItem (() => controller.NotifyChildItemCreated (CollectionTemplate<T>.CreateEmptyItem (dataContext)));
 			this.DefineDeleteItem (item => controller.NotifyChildItemDeleted (item));
 		}
 
-		public CollectionTemplate(string name, EntityViewController controller, System.Predicate<T> filter)
-			: this (name, controller)
+		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext, System.Predicate<T> filter)
+			: this (name, controller, dataContext)
 		{
 			this.Filter = filter;
 		}
@@ -217,14 +218,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.GenericDeleteItem (item as T);
 		}
 
-		private static T CreateEmptyItem()
+		private static T CreateEmptyItem(DataContext dataContext)
 		{
 			// TODO Replace this call by a call to the DataContext or EntityNullReferenceVirtualizer,
 			// whichever works (probably the DataContext is better). This might require modifications
 			// to other parts of the program in order to have a DataContext here.
 			// Marc
 
-			T entity = EntityContext.Current.CreateEmptyEntity<T> ();
+			T entity = dataContext.CreateEmptyEntity<T> ();
 			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (entity);
 
 			context.RegisterEmptyEntity (entity);
