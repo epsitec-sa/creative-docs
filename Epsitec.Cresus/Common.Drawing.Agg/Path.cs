@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System;
 namespace Epsitec.Common.Drawing
 {
 	public class Path : System.IDisposable
@@ -539,68 +540,30 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		
-		public bool SurfaceContainsPoint(double x, double y, double approximationZoom)
+        public bool SurfaceContainsPoint(double x, double y, double approximationZoom)
 		{
-			if (this.ContainsCurves)
-			{
-				using (Path path = new Path ())
-				{
-					path.Append (path, approximationZoom);
-					return path.SurfaceContainsPoint (x, y, approximationZoom);
-				}
-			}
+
+            if (this.ContainsCurves)
+            {
+                using (Path path = new Path())
+                {
+                    path.Append(this, approximationZoom);
+                    
+                    /* The path detection doesn't work with curves. 
+                     * They are firstly converted into other shapes that can be handled.
+                     * Since we use the Append() method - which sets ContainsCurves to true,
+                     * since the path *has* curves - we call another method which doesn't 
+                     * check the curves to prevent a infinite recursive loop. 
+                     */
+                    return path.SurfaceContainsPointWithoutCurves(x, y, approximationZoom);
+                }
+            }
+            else
+            {
+                return this.SurfaceContainsPointWithoutCurves(x, y, approximationZoom);
+            }
 			
-			var analyzer = new InsideSurfaceAnalyzer (new Point (x, y));
-
-			Point start   = Point.Zero;
-			Point current = Point.Zero;
-			Point p1 = Point.Zero;
-			bool closed = false;
-			
-			PathElement[] elements;
-			Point[] points;
-
-			this.GetElements (out elements, out points);
-			
-			for (int i = 0; i < elements.Length; i++)
-			{
-				switch (elements[i] & PathElement.MaskCommand)
-				{
-					case PathElement.MoveTo:
-						start = current = points[i];
-						closed = false;
-						break;
-
-					case PathElement.LineTo:
-						p1 = points[i];
-						analyzer.AddSegment (current, p1);
-						current = p1;
-						break;
-
-					case PathElement.Curve3:
-					case PathElement.Curve4:
-						throw new System.InvalidOperationException ("Flattened path still contains curves");
-
-					default:
-						break;
-				}
-
-				if ((elements[i] & PathElement.FlagClose) != 0)
-				{
-					analyzer.AddSegment (current, start);
-					closed = true;
-				}
-			}
-
-			if (!closed)
-			{
-				analyzer.AddSegment (current, start);
-			}
-
-			return analyzer.IsInside ();
 		}
-
 
 		#region Helper Class : InsideSurfaceAnalyzer
 
@@ -1213,6 +1176,66 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			this.isEmpty = false;
 		}
+
+
+        /// <summary>
+        /// Check if a certain point is inside the current path.
+        /// </summary>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <param name="approximationZoom">Zoom in the figure</param>
+        /// <returns>Whether the point is inside the path</returns>
+        private bool SurfaceContainsPointWithoutCurves(double x, double y, double approximationZoom)
+        {
+            var analyzer = new InsideSurfaceAnalyzer(new Point(x, y));
+
+            Point start = Point.Zero;
+            Point current = Point.Zero;
+            Point p1 = Point.Zero;
+            bool closed = false;
+
+            PathElement[] elements;
+            Point[] points;
+
+            this.GetElements(out elements, out points);
+
+            for (int i = 0; i < elements.Length; i++)
+            {
+                switch (elements[i] & PathElement.MaskCommand)
+                {
+                    case PathElement.MoveTo:
+                        start = current = points[i];
+                        closed = false;
+                        break;
+
+                    case PathElement.LineTo:
+                        p1 = points[i];
+                        analyzer.AddSegment(current, p1);
+                        current = p1;
+                        break;
+
+                    case PathElement.Curve3:
+                    case PathElement.Curve4:
+                        throw new System.InvalidOperationException("Flattened path still contains curves");
+
+                    default:
+                        break;
+                }
+
+                if ((elements[i] & PathElement.FlagClose) != 0)
+                {
+                    analyzer.AddSegment(current, start);
+                    closed = true;
+                }
+            }
+
+            if (!closed)
+            {
+                analyzer.AddSegment(current, start);
+            }
+
+            return analyzer.IsInside();
+        }
 		
 		
 		//	Le paramètre kappa permet de calculer la position des points secondaires d'une courbe de Bézier
