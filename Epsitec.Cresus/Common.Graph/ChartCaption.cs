@@ -3,8 +3,6 @@
 
 using Epsitec.Common.Drawing;
 
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Common.Graph
 {
