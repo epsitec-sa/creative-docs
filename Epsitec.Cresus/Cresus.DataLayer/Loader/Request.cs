@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -113,16 +115,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentNullException">If <paramref name="constraint"/> is null.</exception>
 		public void AddLocalConstraint(AbstractEntity entity, Expression constraint)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
+			constraint.ThrowIfNull ("constraint");
 
-			if (constraint == null)
-			{
-				throw new System.ArgumentNullException ("constraint");
-			}
-			
 			if (!this.IsLocalConstraintValid (entity, constraint))
 			{
 				throw new System.ArgumentException ("A field in 'expression' is not a field or 'entity'.");
@@ -140,10 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		internal IEnumerable<Expression> GetLocalConstraints(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 
 			if (this.IsLocalyConstrained (entity))
 			{
@@ -163,10 +155,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		internal bool IsLocalyConstrained(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 
 			return this.localConstraints.ContainsKey (entity);
 		}

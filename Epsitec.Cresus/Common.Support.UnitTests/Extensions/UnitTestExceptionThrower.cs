@@ -39,7 +39,7 @@ namespace Common.Support.UnitTests
 			string string3 = "\t";
 			string string4 = "\n";
 			
-			string1.ThrowIfNullOrEmpty ("string1");
+			string1.ThrowIfNullOrEmpty (null);
 			string2.ThrowIfNullOrEmpty ("string2");
 			string3.ThrowIfNullOrEmpty ("string3");
 			string4.ThrowIfNullOrEmpty ("string4");
@@ -82,6 +82,35 @@ namespace Common.Support.UnitTests
 			string element = "blabla";
 
 			element.ThrowIf (e => !e.Contains ("cou"), "element must contains 'cou'");
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void ThrowIfTest3()
+		{
+			string element = "blabla";
+
+			element.ThrowIf (null, "blabla");
+		}
+
+
+		[TestMethod]
+		public void ThrowIfWithoutValueTest1()
+		{
+			int? value = 1;
+
+			value.ThrowIfWithoutValue ("value");
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void ThrowIfWithoutValueTest2()
+		{
+			int? value = null;
+
+			value.ThrowIfWithoutValue ("value");
 		}
 
 

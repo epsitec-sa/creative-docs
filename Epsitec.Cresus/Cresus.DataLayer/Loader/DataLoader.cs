@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -86,16 +87,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
 		{
-			if (request.RootEntity == null)
-			{
-				throw new System.Exception ("No root entity in request.");
-			}
-
-			if (request.RequestedEntity == null)
-			{
-				throw new System.Exception ("No requested entity in request.");
-			}
-
+			request.ThrowIfNull ("request");
+			request.RootEntity.ThrowIfNull ("request.RootEntity");
+			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
+			
 			foreach (EntityData entityData in this.LoaderQueryGenerator.GetEntitiesData (request))
 			{
 				T entity = this.ResolveEntity (entityData, request.ResolutionMode) as T;

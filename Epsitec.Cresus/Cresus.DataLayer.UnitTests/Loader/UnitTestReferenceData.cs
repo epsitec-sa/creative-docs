@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
+		[ExpectedException (typeof (System.ArgumentException))]
 		public void ItemTest2()
 		{
 			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();

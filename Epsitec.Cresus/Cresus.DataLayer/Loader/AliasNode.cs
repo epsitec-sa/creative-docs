@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Epsitec.Common.Support.Extensions;
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using System.Linq;
@@ -56,10 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null or empty.</exception>
 		private AliasNode(AliasNode parent, string name)
 		{
-			if (string.IsNullOrEmpty (name))
-			{
-				throw new System.ArgumentException ("name");
-			}
+			name.ThrowIfNullOrEmpty ("name");
 			
 			this.parent = parent;
 			this.children = new Dictionary<string, List<AliasNode>> ();
@@ -77,10 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null or empty.</exception>
 		public AliasNode CreateChild(string name)
 		{
-			if (string.IsNullOrEmpty (name))
-			{
-				throw new System.ArgumentException ("name");
-			}
+			name.ThrowIfNullOrEmpty ("name");
 			
 			AliasNode node = new AliasNode (this, name);
 
@@ -103,10 +99,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null, empty or if there are no children with that name.</exception>
 		public AliasNode GetChild(string name)
 		{
-			if (string.IsNullOrEmpty (name) || !this.children.ContainsKey(name))
-			{
-				throw new System.ArgumentException ("name");
-			}
+			name.ThrowIfNullOrEmpty ("name");
+			name.ThrowIf (e => !this.children.ContainsKey (e), "No child with name '" + name + "'.");
 
 			return this.children[name].First ();
 		}
@@ -120,10 +114,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null, empty or if there are no children with that name.</exception>
 		public ReadOnlyCollection<AliasNode> GetChildren(string name)
 		{
-			if (string.IsNullOrEmpty (name) || !this.children.ContainsKey(name))
-			{
-				throw new System.ArgumentException ("name");
-			}
+			name.ThrowIfNullOrEmpty ("name");
+			name.ThrowIf (e => !this.children.ContainsKey (e), "No child with name '" + name + "'.");
 
 			List<AliasNode> children = this.children[name];
 

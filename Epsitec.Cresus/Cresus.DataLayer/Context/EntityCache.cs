@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
@@ -39,10 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public void Add(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 			
 			long id = entity.GetEntitySerialId ();
 
@@ -57,10 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public void Remove(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 			
 			long id = entity.GetEntitySerialId ();
 
@@ -83,21 +78,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="key">The <see cref="DbKey"/> to associate with the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ArgumentException">
 		/// If <paramref name="entity"/> is null.
-		/// If <paramref name="entity"/>is not in in the cache.
+		/// If <paramref name="entity"/>is not in the cache.
 		/// If <paramref name="key"/> is empty.
 		/// </exception>
 		public void DefineRowKey(AbstractEntity entity, DbKey key)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
+			key.ThrowIf (k => k.IsEmpty, "key cannot be empty");
 
-			if (key.IsEmpty)
-			{
-				throw new System.ArgumentException ("key");
-			}
-			
 			long id = entity.GetEntitySerialId ();
 
 			if (!this.entityIdToEntity.ContainsKey (id))
@@ -120,11 +108,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public bool ContainsEntity(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
+			entity.ThrowIfNull ("entity");
+			
 			long id = entity.GetEntitySerialId ();
 
 			return this.entityIdToEntity.ContainsKey (id);
@@ -140,11 +125,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public EntityKey? GetEntityKey(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
+			entity.ThrowIfNull ("entity");
+			
 			long id = entity.GetEntitySerialId ();
 
 			if (this.entityIdToEntityKey.ContainsKey (id))

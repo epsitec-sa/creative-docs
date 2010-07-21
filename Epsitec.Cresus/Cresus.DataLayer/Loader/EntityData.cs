@@ -1,7 +1,6 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -38,19 +37,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
 		public EntityData(EntityKey entityKey, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
-			if (valueData == null)
-			{
-				throw new System.ArgumentNullException ("valueData");
-			}
-
-			if (referenceData == null)
-			{
-				throw new System.ArgumentNullException ("referenceData");
-			}
-			if (collectionData == null)
-			{
-				throw new System.ArgumentNullException ("collectionData");
-			}
+			valueData.ThrowIfNull ("valueData");
+			referenceData.ThrowIfNull ("referenceData");
+			collectionData.ThrowIfNull ("collectionData");
 			
 			this.EntityKey = entityKey;
 			this.LoadedEntityId = loadedEntityId;

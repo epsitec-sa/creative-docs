@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -38,10 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
 		public bool Add(DataContext dataContext)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("context");
-			}
+			dataContext.ThrowIfNull ("dataContext");
 
 			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId);
 
@@ -57,10 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is null.</exception>
 		public bool Remove(DataContext dataContext)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("context");
-			}
+			dataContext.ThrowIfNull ("dataContext");
 
 			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId);
 
@@ -75,10 +70,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns><c>true</c> if <paramref name="dataContext"/> is in the pool, false if it is not.</returns>
 		public bool Contains(DataContext dataContext)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("context");
-			}
+			dataContext.ThrowIfNull ("dataContext");
 
 			return this.dataContexts.Contains (dataContext);
 		}
@@ -93,10 +85,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public DataContext FindDataContext(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 			
 			return this.FirstOrDefault (context => context.Contains (entity));
 		}
@@ -111,10 +100,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public EntityKey? FindEntityKey(AbstractEntity entity)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 			
 			DataContext context = this.FindDataContext (entity);
 

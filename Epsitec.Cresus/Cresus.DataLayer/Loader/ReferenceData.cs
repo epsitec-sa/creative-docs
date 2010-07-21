@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
@@ -33,6 +34,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="fieldId">The id of the field whose reference to set or get.</param>
 		/// <value>The reference of the field with the id <paramref name="fieldId"/>.</value>
+		/// <exception cref="System.ArgumentException">If the provided value is null.</exception>
 		public DbKey? this[Druid fieldId]
 		{
 			get
@@ -48,10 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 			set
 			{
-				if (!value.HasValue)
-				{
-					throw new System.ArgumentNullException ("fieldId");
-				}
+				value.ThrowIfWithoutValue ("value");
 
 				this.referenceKeys[fieldId] = value.Value;
 			}

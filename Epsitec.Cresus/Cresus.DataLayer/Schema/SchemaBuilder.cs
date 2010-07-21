@@ -2,10 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 
@@ -258,10 +259,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			this.AssertTransaction ();
 
-			if (type == null)
-			{
-				throw new System.ArgumentNullException ("type");
-			}
+			type.ThrowIfNull ("type");
+
 			if (type is IStructuredType)
 			{
 				throw new System.InvalidOperationException ("Cannot create type definition for structure");

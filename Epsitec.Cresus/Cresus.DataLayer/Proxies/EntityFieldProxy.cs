@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using System.Linq;
@@ -36,20 +38,9 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		public EntityFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("dataContext");
-			}
-
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
-			if (fieldId.IsEmpty)
-			{
-				throw new System.ArgumentException ("fieldId is not valid.");
-			}
+			dataContext.ThrowIfNull ("dataContext");
+			entity.ThrowIfNull ("entity");
+			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
 			// TODO Add more test on the input arguments, such as to detect if entity is not managed
 			// by dataContext, or if fieldId is not a field of entity ?

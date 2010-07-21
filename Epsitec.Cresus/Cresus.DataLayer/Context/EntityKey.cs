@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Common.Support.EntityEngine;
@@ -41,10 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public EntityKey(AbstractEntity entity, DbKey rowKey)
 		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
+			entity.ThrowIfNull ("entity");
 
 			this.entityId = entity.GetEntityStructuredTypeId ();
 			this.rowKey = rowKey;

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case UnaryComparator.IsNotNull:
 					return DbSimpleConditionOperator.IsNotNull;
 				default:
-					throw new System.ArgumentException ("Conversion of '" + unaryComparator + "' is not supported");
+					throw new System.NotSupportedException ("Conversion of '" + unaryComparator + "' is not supported");
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case BinaryComparator.IsNotLikeEscape:
 					return DbSimpleConditionOperator.NotLikeEscape;
 				default:
-					throw new System.ArgumentException ("Conversion of '" + binaryComparator + "' is not supported");
+					throw new System.NotSupportedException ("Conversion of '" + binaryComparator + "' is not supported");
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case UnaryOperator.Not:
 					return DbConditionModifierOperator.Not;
 				default:
-					throw new System.ArgumentException ("Conversion of '" + unaryOperator + "' is not supported");
+					throw new System.NotSupportedException ("Conversion of '" + unaryOperator + "' is not supported");
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case BinaryOperator.Or:
 					return DbConditionCombinerOperator.Or;
 				default:
-					throw new System.ArgumentException ("Conversion of '" + binaryOperator + "' is not supported");
+					throw new System.NotSupportedException ("Conversion of '" + binaryOperator + "' is not supported");
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				case Type.String:
 					return DbRawType.String;
 				default:
-					throw new System.ArgumentException ("Conversion of '" + type + "' is not supported");
+					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
 			}
 		}
 

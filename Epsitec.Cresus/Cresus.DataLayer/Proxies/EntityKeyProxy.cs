@@ -1,13 +1,12 @@
 //	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
+
 
 namespace Epsitec.Cresus.DataLayer.Proxies
 {
@@ -37,15 +36,8 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		public EntityKeyProxy(DataContext dataContext, EntityKey entityKey)
 		{
-			if (dataContext == null)
-			{
-				throw new System.ArgumentNullException ("dataContext");
-			}
-
-			if (entityKey.IsEmpty)
-			{
-				throw new System.ArgumentException ("entityKey");
-			}
+			dataContext.ThrowIfNull ("dataContext");
+			entityKey.ThrowIf (key => key.IsEmpty, "entityKey cannot be empty");
 			
 			this.dataContext = dataContext;
 			this.entityKey = entityKey;
