@@ -172,10 +172,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public AbstractEntity ResolveEntity(EntityData entityData, ResolutionMode resolutionMode = ResolutionMode.Database)
 		{
-			Druid leafEntityId = entityData.LeafEntityId;
-			DbKey rowKey = entityData.Key;
-
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+			EntityKey entityKey = entityData.EntityKey;
 
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
@@ -190,13 +187,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private AbstractEntity DeserializeEntity(EntityData entityData)
 		{
-			AbstractEntity entity = this.DataContext.CreateEntity (entityData.LeafEntityId);
+			Druid leafEntityId = entityData.EntityKey.EntityId;
+			DbKey rowKey = entityData.EntityKey.RowKey;
+			
+			AbstractEntity entity = this.DataContext.CreateEntity (leafEntityId);
 
-			this.DataContext.DefineRowKey (entity, entityData.Key);
+			this.DataContext.DefineRowKey (entity, rowKey);
 
 			using (entity.DefineOriginalValues ())
 			{
-				List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (entityData.LeafEntityId).ToList ();
+				List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
 
 				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
 				{

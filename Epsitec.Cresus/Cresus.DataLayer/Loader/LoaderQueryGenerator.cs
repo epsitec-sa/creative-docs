@@ -82,15 +82,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				transaction.Commit ();
 			}
 
-			foreach (DbKey entityKey in valuesData.Keys)
+			foreach (DbKey rowKey in valuesData.Keys)
 			{
 				Druid loadedEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
-				Druid realEntityId = valuesData[entityKey].Item1;
-				ValueData entityValueData = valuesData[entityKey].Item2;
-				ReferenceData entityReferenceData = referencesData[entityKey];
-				CollectionData entityCollectionData = collectionsData.ContainsKey(entityKey) ? collectionsData[entityKey] : new CollectionData();
+				Druid leafEntityId = valuesData[rowKey].Item1;
+				ValueData entityValueData = valuesData[rowKey].Item2;
+				ReferenceData entityReferenceData = referencesData[rowKey];
+				CollectionData entityCollectionData = collectionsData.ContainsKey(rowKey) ? collectionsData[rowKey] : new CollectionData();
 
-				yield return new EntityData (entityKey, loadedEntityId, realEntityId, entityValueData, entityReferenceData, entityCollectionData);
+				EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+
+				yield return new EntityData (entityKey, leafEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 

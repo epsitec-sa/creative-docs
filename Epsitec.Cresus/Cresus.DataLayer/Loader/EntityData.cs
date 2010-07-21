@@ -16,35 +16,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// and to transfer this data from the <see cref="LoaderQueryGenerator"/> to the <see cref="DataLoader"/>.
 	/// </summary>
 	/// <remarks>
-	/// Note that this class might be used to store incomplete data. If the type of the
-	/// <see cref="AbstractEntity"/> is a derived type, it might happen that only the data of some of
-	/// its base type might be loaded and stored in a <c>EntityDataContainer</c>.
-	/// 
-	/// If <see cref="LoadedEntityId"/> and <see cref="LeafEntityId"/> are equal, then the data
-	/// of an <see cref="AbstractEntity"/> is fully stored in the <see cref="EntityData"/>.
-	/// If they are not equal, the data of the type represented by <see cref="LoadedEntityId"/> until
-	/// the type at the top of the inheritance chain are stored in the <see cref="EntityData"/>
-	/// but the data of the all the types that are lower in the inheritance chain is not stored in
-	/// the <see cref="EntityData"/>.
+	/// Note that this class might be used to store incomplete data. The value of th property
+	/// <see cref="LoadedEntityId"/> is the most derived type of the <see cref="AbstractEntity"/>
+	/// which has been loaded in memory. If the <see cref="AbstractEntity"/> has a more derived type,
+	/// that means that its data has not been loaded in memory.
 	/// </remarks>
 	internal sealed class EntityData
 	{
 
 
 		/// <summary>
-		/// Creates a new <c>EntityDataContainer</c> for an <see cref="AbstractEntity"/>.
+		/// Creates a new <c>EntityData</c> for an <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <param name="key">The key of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/>.</param>
 		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
-		/// <param name="concreteEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
-		public EntityData(DbKey key, Druid loadedEntityId, Druid concreteEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		public EntityData(EntityKey entityKey, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
-			this.Key = key;
+			this.EntityKey = entityKey;
 			this.LoadedEntityId = loadedEntityId;
-			this.LeafEntityId = concreteEntityId;
 			this.ValueData = valueData;
 			this.ReferenceData = referenceData;
 			this.CollectionData = collectionData;
@@ -52,10 +44,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// Gets or sets the key of the <see cref="AbstractEntity"/>.
+		/// Gets or sets the <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <value>The key of the <see cref="AbstractEntity"/>.</value>
-		public DbKey Key
+		public EntityKey EntityKey
 		{
 			get;
 			private set;
@@ -68,18 +60,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <value>The loaded entity id of the <see cref="AbstractEntity"/>.</value>
 		public Druid LoadedEntityId
-		{
-			get;
-			private set;
-		}
-
-
-		/// <summary>
-		/// Gets or sets the concrete entity id of the <see cref="AbstractEntity"/>. This is the id
-		/// of the most derived type that it implements.
-		/// </summary>
-		/// <value>The concrete entity id of the <see cref="AbstractEntity"/>.</value>
-		public Druid LeafEntityId
 		{
 			get;
 			private set;
