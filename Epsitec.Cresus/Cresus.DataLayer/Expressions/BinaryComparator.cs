@@ -34,6 +34,7 @@
 
 
 		IsNotLikeEscape,
+		IsNull,
 
 
 	}

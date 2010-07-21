@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
-		public Field(Druid FieldId) : base ()
+		public Field(Druid FieldId)
 		{
 			this.FieldId = FieldId;
 		}

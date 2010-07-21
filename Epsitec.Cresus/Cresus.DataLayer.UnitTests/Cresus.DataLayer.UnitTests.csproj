@@ -66,6 +66,7 @@
     <Compile Include="UnitTestBasicEntityActions.cs" />
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />
     <Compile Include="UnitTestNullVirtualization.cs" />
+    <Compile Include="Expressions\UnitTestOperatorConverter.cs" />
     <Compile Include="UnitTestPerformance.cs" />
     <Compile Include="Proxies\UnitTestValueFieldProxy.cs" />
     <Compile Include="Loader\UnitTestReferenceData.cs" />

@@ -6,7 +6,7 @@
 	{
 
 		
-		public Constant(Type type, object value) : base()
+		public Constant(Type type, object value)
 		{
 			this.Type = type;
 			this.Value = value;
