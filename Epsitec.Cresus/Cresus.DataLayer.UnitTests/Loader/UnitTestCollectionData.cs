@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CollectionDataConstructorTest()
 		{
-			CollectionData_Accessor target = new CollectionData_Accessor ();
+			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
 		}
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest()
 		{
-			CollectionData_Accessor target = new CollectionData_Accessor ();
+			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
 
 			Dictionary<Druid, List<DbKey>> keys = new Dictionary<Druid, List<DbKey>> ()
 			{
@@ -43,19 +43,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				foreach (DbKey key in keys[druid])
 				{
-					target[druid].Add (key);
+					collectionData[druid].Add (key);
 				}
 			}
 
 			foreach (Druid druid in keys.Keys)
 			{
 				List<DbKey> keys1 = keys[druid];
-				List<DbKey> keys2 = target[druid];
+				List<DbKey> keys2 = collectionData[druid];
 
 				CollectionAssert.AreEquivalent (keys1, keys2);
 			}
 
-			CollectionAssert.AreEquivalent (new List<DbKey> (), target[Druid.FromLong (9999)]);
+			CollectionAssert.AreEquivalent (new List<DbKey> (), collectionData[Druid.FromLong (9999)]);
 		}
 
 

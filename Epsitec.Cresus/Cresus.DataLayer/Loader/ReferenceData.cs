@@ -59,21 +59,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// Determines whether the <c>EntityReferenceData</c> contains a reference for the field
-		/// given by <paramref name="fieldId"/>.
-		/// </summary>
-		/// <param name="fieldId">The id of the field.</param>
-		/// <returns>
-		/// <c>true</c> if the <c>EntityValueData</c> contains a reference for the field and
-		/// <c>false</c> otherwise.
-		/// </returns>
-		public bool Contains(Druid fieldId)
-		{
-			return this.referenceKeys.ContainsKey (fieldId);
-		}
-
-
-		/// <summary>
 		/// Stores the references of the <see cref="AbstractEntity"/> to other
 		/// <see cref="AbstractEntity"/>. They are stored by field.
 		/// </summary>

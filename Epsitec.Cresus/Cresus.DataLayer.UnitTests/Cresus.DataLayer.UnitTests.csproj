@@ -67,6 +67,7 @@
     <Compile Include="UnitTestNullVirtualization.cs" />
     <Compile Include="UnitTestPerformance.cs" />
     <Compile Include="Proxies\UnitTestValueFieldProxy.cs" />
+    <Compile Include="Loader\UnitTestReferenceData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
