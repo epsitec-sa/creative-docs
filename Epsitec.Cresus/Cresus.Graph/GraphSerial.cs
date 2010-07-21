@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Graph
 			GraphSerial.hasGraphLicense = true;
 			GraphSerial.hasValidGraphLicense = true;
 			return LicensingInfo.ValidLargo;
-#endif
+#else
 
 			var graphId  = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallID", "");
 			var comptaId = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus\Setup", "InstallID", "");
@@ -208,6 +208,7 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			return LicensingInfo.Unknown;
+#endif
 		}
 
 		
