@@ -469,7 +469,8 @@ namespace Epsitec.Cresus.Graph.Controllers
                 IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
-                Margins = new Margins(0, 0, 1, 1),
+                PreferredSize = new Size(40, 40),
+                //Margins = new Margins(0, 0, 1, 1),
                 Padding = new Margins(4, 4, 0, 0),
                 Visibility = this.ChartSnapshot == null,
             };
@@ -486,7 +487,8 @@ namespace Epsitec.Cresus.Graph.Controllers
                 IconUri = "manifest:Epsitec.Cresus.Graph.Images.FloatingCaptions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
-                Margins = new Margins(0, 0, 1, 1),
+                PreferredSize = new Size(40, 40),
+                //Margins = new Margins(0, 0, 1, 1),
                 Padding = new Margins(4, 4, 0, 0),
                 Visibility = this.ChartSnapshot == null,
             };
