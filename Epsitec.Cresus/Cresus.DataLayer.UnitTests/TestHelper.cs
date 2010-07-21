@@ -115,22 +115,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-
-		public static void PrintStartTest(string name)
-		{
-			string message = TestHelper.GetStartTestString (name);
-
-			System.Diagnostics.Debug.WriteLine (message);
-		}
-
-
 		public static void WriteStartTest(string name, string file)
 		{
 			string message = TestHelper.GetStartTestString (name);
 
 			Logger.Log (message, file);
-
-			TestHelper.PrintStartTest (name);
 		}
 
 
@@ -139,29 +128,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			return "===========================================================================================================================================================\n"
 				 + "[" + System.DateTime.Now + "]\t Starting test: " + name + "\n"
 				 + "===========================================================================================================================================================";
-		}
-
-
-		public static void MeasureAndDisplayTime(string message, System.Action action)
-		{
-			TestHelper.MeasureAndDisplayTime (message, action, 1);
-		}
-
-
-		public static void MeasureAndDisplayTime(string message, System.Action action, int count)
-		{
-			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-
-			watch.Start ();
-
-			for (int i = 0; i < count; i++)
-			{
-				action ();
-			}
-
-			watch.Stop ();
-
-			System.Diagnostics.Debug.WriteLine (message + "\t\t\t\tnumber of runs: " + count + "\t average time (ms): " + watch.ElapsedMilliseconds / count);
 		}
 
 

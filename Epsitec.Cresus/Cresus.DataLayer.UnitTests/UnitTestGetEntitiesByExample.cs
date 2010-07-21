@@ -53,8 +53,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjects()
 		{
-			TestHelper.PrintStartTest ("Get objects");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity[] persons = dataContext.GetByExample<NaturalPersonEntity> (new NaturalPersonEntity ()).ToArray ();
@@ -72,8 +70,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCast()
 		{
-			TestHelper.PrintStartTest ("Get objects with cast");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity[] persons = dataContext.GetByExample<AbstractPersonEntity> (new AbstractPersonEntity ()).Cast<NaturalPersonEntity> ().ToArray ();
@@ -90,8 +86,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCorrectValueExample()
 		{
-			TestHelper.PrintStartTest ("Get objects with correct value example");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();
@@ -108,8 +102,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCorrectReferenceExample()
 		{
-			TestHelper.PrintStartTest ("Get objects with correct reference example");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample2 ();
@@ -126,8 +118,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample1()
 		{
-			TestHelper.PrintStartTest ("Get objects with correct collection example 1");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -145,8 +135,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample2()
 		{
-			TestHelper.PrintStartTest ("Get objects with correct collection example 2");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample4 ();
@@ -163,8 +151,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample3()
 		{
-			TestHelper.PrintStartTest ("Get objects with correct collection example 3");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample5 ();
@@ -181,8 +167,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithIncorrectValueExample()
 		{
-			TestHelper.PrintStartTest ("Get objects with incorrect value example");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetIncorrectExample1 ();
@@ -197,8 +181,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithIncorrectReferenceExample()
 		{
-			TestHelper.PrintStartTest ("Get objects with incorrect reference example");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetIncorrectExample2 ();
@@ -213,8 +195,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithIncorrectCollectionExample1()
 		{
-			TestHelper.PrintStartTest ("Get objects with incorrect collection example 1");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetIncorrectExample3 ();
@@ -229,8 +209,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithIncorrectCollectionExample2()
 		{
-			TestHelper.PrintStartTest ("Get objects with incorrect collection example 2");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetIncorrectExample4 ();
@@ -245,8 +223,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithEntityEquality()
 		{
-			TestHelper.PrintStartTest ("Get objects with entity equality");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();
@@ -268,8 +244,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetFreshObject()
 		{
-			TestHelper.PrintStartTest ("Get fresh object");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity freshPerson1 = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -299,8 +273,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectByReferenceReference()
 		{
-			TestHelper.PrintStartTest ("Get objects by reference reference");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfredExample = DatabaseCreator2.GetCorrectExample1 ();
@@ -326,8 +298,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectByCollectionReference()
 		{
-			TestHelper.PrintStartTest ("Get objects by collection reference");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity contactExample = new UriContactEntity ()
@@ -350,8 +320,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetReferencersReference()
 		{
-			TestHelper.PrintStartTest ("Get referencers reference");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfredExample = DatabaseCreator2.GetCorrectExample1 ();
@@ -370,8 +338,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetReferencersCollection()
 		{
-			TestHelper.PrintStartTest ("Get referencers collection");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity contactExample = new UriContactEntity ()
@@ -392,8 +358,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithDeletedEntity()
 		{
-			TestHelper.PrintStartTest ("Get objects with deleted entity");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();
@@ -428,8 +392,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void GetObjectsWithDeletedRelation()
 		{
-			TestHelper.PrintStartTest ("Get objects with deleted relation");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1 ();

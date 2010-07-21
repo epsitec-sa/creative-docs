@@ -43,8 +43,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void ValidRequest()
 		{
-			TestHelper.PrintStartTest ("Valid request");
-
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
 			PersonTitleEntity title = new PersonTitleEntity ();
@@ -104,8 +102,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void InvalidRequest()
 		{
-			TestHelper.PrintStartTest ("Invalid request");
-
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
 			PersonTitleEntity title = new PersonTitleEntity ();
@@ -166,8 +162,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void UnaryComparisonTest()
 		{
-			TestHelper.PrintStartTest ("Unary comparison");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -198,8 +192,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void BinaryComparisonFieldWithValueTest()
 		{
-			TestHelper.PrintStartTest ("Binary comparison field with value");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -229,8 +221,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void BinaryComparisonFieldWithFieldTest()
 		{
-			TestHelper.PrintStartTest ("Binary comparison field with field");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -259,8 +249,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void UnaryOperationTest()
 		{
-			TestHelper.PrintStartTest ("Unary operation");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -294,8 +282,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void BinaryOperationTest()
 		{
-			TestHelper.PrintStartTest ("Binary operation");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -333,8 +319,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DoubleRequest1()
 		{
-			TestHelper.PrintStartTest ("Double request 1");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -371,8 +355,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DoubleRequest2()
 		{
-			TestHelper.PrintStartTest ("Double request 2");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -413,8 +395,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void InnerRequest()
 		{
-			TestHelper.PrintStartTest ("Inner request");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -447,8 +427,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void LikeRequest()
 		{
-			TestHelper.PrintStartTest ("Like request");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
@@ -482,8 +460,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void LikeEscapeRequest()
 		{
-			TestHelper.PrintStartTest ("Like escape request");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				CountryEntity country1 = DatabaseHelper.CreateCountry (dataContext, "c1", "test%test");
@@ -630,8 +606,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RequestedEntityRequest1()
 		{
-			TestHelper.PrintStartTest ("Requested entity request 1");
-			
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -654,8 +628,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RequestedEntityRequest2()
 		{
-			TestHelper.PrintStartTest ("Requested entity request 2");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -680,8 +652,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RequestedEntityRequest3()
 		{
-			TestHelper.PrintStartTest ("Requested entity request 3");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
@@ -704,8 +674,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RootEntityReferenceRequest1()
 		{
-			TestHelper.PrintStartTest ("Root entity reference request 1.");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample1();
@@ -729,8 +697,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RootEntityReferenceRequest2()
 		{
-			TestHelper.PrintStartTest ("Root entity reference request 2.");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();
@@ -761,8 +727,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RootEntityReferenceRequest3()
 		{
-			TestHelper.PrintStartTest ("Root entity reference request 3.");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity example1 = DatabaseCreator2.GetCorrectExample1 ();

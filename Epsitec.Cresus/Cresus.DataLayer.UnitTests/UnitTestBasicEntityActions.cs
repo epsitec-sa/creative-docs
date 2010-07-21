@@ -45,8 +45,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void CreateDatabase()
 		{
-			TestHelper.PrintStartTest ("Create database");
-
 			this.CreateDatabaseHelper ();
 		}
 
@@ -67,8 +65,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DiscardEmptyEntities()
 		{
-			TestHelper.PrintStartTest ("Discard empty entities");
-
 			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -133,8 +129,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void SaveWithoutChanges1()
 		{
-			TestHelper.PrintStartTest ("Save without changes 1");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				dataContext.SaveChanges ();
@@ -145,8 +139,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void SaveWithoutChanges2()
 		{
-			TestHelper.PrintStartTest ("Save without changes 2");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
@@ -171,8 +163,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void ResolveEntity()
 		{
-			TestHelper.PrintStartTest ("Resolve entity");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -189,8 +179,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void InsertEntity()
 		{
-			TestHelper.PrintStartTest ("Insert entity");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert1 = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -230,8 +218,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void InsertEntityValue()
 		{
-			TestHelper.PrintStartTest ("Insert entity value");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -272,8 +258,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void UpdateEntityValue()
 		{
-			TestHelper.PrintStartTest ("Insert entity reference");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -313,8 +297,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DeleteEntityValue()
 		{
-			TestHelper.PrintStartTest ("Delete entity value");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -355,8 +337,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void InsertEntityReference()
 		{
-			TestHelper.PrintStartTest ("Insert entity reference");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -399,8 +379,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void UpdateEntityReference()
 		{
-			TestHelper.PrintStartTest ("Update entity reference");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -445,10 +423,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void RemoveEntityReference()
 		{
-			TestHelper.PrintStartTest ("Remove entity reference");
-
-
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -490,8 +464,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void CreateEntityCollection()
 		{
-			TestHelper.PrintStartTest ("Create entity collection");
-			
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -534,8 +506,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void AddEntityCollection()
 		{
-			TestHelper.PrintStartTest ("Add entity collection");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -583,8 +553,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void UpdateEntityCollection()
 		{
-			TestHelper.PrintStartTest ("Update entity collection");
-
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -722,8 +690,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DeleteEntityPresentInCollectionMemory()
 		{
-			TestHelper.PrintStartTest ("Delete entity present in collection (memory)");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -753,8 +719,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DeleteEntityPresentInReferenceMemory()
 		{
-			TestHelper.PrintStartTest ("Delete entity present in reference (memory)");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity[] contacts = {
@@ -789,8 +753,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DeleteEntityPresentInCollectionDatabase()
 		{
-			TestHelper.PrintStartTest ("Delete entity present in collection (database)");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1)));
@@ -819,8 +781,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void DeleteEntityPresentInReferenceDatabase()
 		{
-			TestHelper.PrintStartTest ("Delete entity present in reference (database)");
-
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
