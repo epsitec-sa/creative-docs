@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-				yield return new EntityData (entityKey, leafEntityId, entityValueData, entityReferenceData, entityCollectionData);
+				yield return new EntityData (entityKey, loadedEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 
