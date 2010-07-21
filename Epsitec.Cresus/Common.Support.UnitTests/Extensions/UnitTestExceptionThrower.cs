@@ -66,6 +66,25 @@ namespace Common.Support.UnitTests
 		}
 
 
+		[TestMethod]
+		public void ThrowIfTest1()
+		{
+			string element = "coucou";
+
+			element.ThrowIf (e => !e.Contains ("cou"), "element must contains 'cou'");
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void ThrowIfTest2()
+		{
+			string element = "blabla";
+
+			element.ThrowIf (e => !e.Contains ("cou"), "element must contains 'cou'");
+		}
+
+
 	}
 
 
