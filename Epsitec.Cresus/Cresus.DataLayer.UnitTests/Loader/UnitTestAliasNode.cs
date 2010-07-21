@@ -42,7 +42,46 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateChildTest()
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void AliasNodeConstructorTest3()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("");
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void AliasNodeConstructorTest4()
+		{
+			string name = null;
+			AliasNode_Accessor node1 = new AliasNode_Accessor (name);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void AliasNodeConstructorTest5()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode_Accessor node2 = new AliasNode_Accessor (node1, "");
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void AliasNodeConstructorTest6()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode_Accessor node2 = new AliasNode_Accessor (node1, null);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		public void CreateChildTest1()
 		{
 			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
 			AliasNode_Accessor node2 = node1.CreateChild ("node2");
@@ -50,6 +89,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			Assert.AreEqual ("node2", node2.Name);
 			Assert.AreSame (node1.Target, node2.parent.Target);
 			Assert.IsNotNull (node2.Alias);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CreateChildTest2()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode_Accessor node2 = node1.CreateChild (null);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CreateChildTest3()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode_Accessor node2 = node1.CreateChild ("");
 		}
 
 
@@ -107,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetChildTest()
+		public void GetChildTest1()
 		{
 			AliasNode_Accessor node = new AliasNode_Accessor ("node");
 
@@ -135,6 +194,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildTest2()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+
+			node1.GetChild (null);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildTest3()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+
+			node1.GetChild ("");
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildTest4()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			
+			node1.GetChild ("test");
+		}
+
+
 		// Because of the limitations of the AliasNode_Accessor, it is not possible to test
 		// a private method with a generic return type. In the following test, the call to
 		// node.getChildren(...) will throw an exception. Therefore, this test is ignored, but I
@@ -145,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		[Ignore]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetChildrenTest()
+		public void GetChildrenTest1()
 		{
 			AliasNode_Accessor node = new AliasNode_Accessor ("node");
 
@@ -170,6 +262,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				
 				CollectionAssert.AreEquivalent (children1, children2);
 			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildrenTest2()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+
+			node1.GetChildren (null);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildrenTest3()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+
+			node1.GetChildren ("");
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void GetChildrenTest4()
+		{
+			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+
+			node1.GetChildren ("test");
 		}
 
 

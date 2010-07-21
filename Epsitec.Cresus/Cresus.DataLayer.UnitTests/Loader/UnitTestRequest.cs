@@ -133,11 +133,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void AddLocalConstraintTest2()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
-
-			person.Title = title;
-			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
 
@@ -148,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new Field (new Druid ("[L0AV]"))
 				);
 
-			request.AddLocalConstraint (person, expression );
+			request.AddLocalConstraint (person, expression);
 		}
 
 
@@ -157,11 +152,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void AddLocalConstraintTest3()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
-
-			person.Title = title;
-			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
 
@@ -172,7 +162,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new Constant (Type.Boolean, true)
 				);
 
-			request.AddLocalConstraint (person, expression );
+			request.AddLocalConstraint (person, expression);
 		}
 
 
@@ -182,9 +172,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
 
-			person.Title = title;
 			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
@@ -195,7 +183,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					UnaryComparator.IsNull
 				);
 
-			request.AddLocalConstraint (uriContact, expression );
+			request.AddLocalConstraint (uriContact, expression);
 		}
 
 
@@ -204,11 +192,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void AddLocalConstraintTest5()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
 			PersonTitleEntity title = new PersonTitleEntity ();
 
 			person.Title = title;
-			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
 
@@ -225,7 +211,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				);
 
-			request.AddLocalConstraint (title, expression );
+			request.AddLocalConstraint (title, expression);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void AddLocalConstraintTest6()
+		{
+			NaturalPersonEntity person = new NaturalPersonEntity ();
+
+			Request request = new Request ();
+
+			Expression expression =
+				new UnaryComparison (
+					new Field (new Druid ("[L0AV]")),
+					UnaryComparator.IsNull
+				);
+
+			request.AddLocalConstraint (null, expression);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void AddLocalConstraintTest7()
+		{
+			NaturalPersonEntity person = new NaturalPersonEntity ();
+
+			Request request = new Request ();
+
+			request.AddLocalConstraint (person, null);
 		}
 
 
@@ -268,6 +284,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				Assert.IsFalse (requestAccessor.IsEntityValueField (person, invalidId));
 			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void IsLocalyConstrainedTest()
+		{
+			Request request = new Request ();
+			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
+
+			requestAccessor.IsLocalyConstrained (null);
 		}
 
 

@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void EntityDataConstructorTest()
+		public void EntityDataConstructorTest1()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
 			Druid loadedEntityId = Druid.FromLong (1);
@@ -33,6 +33,60 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
 
 			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void EntityDataConstructorTest2()
+		{
+			Druid leafEntityId = Druid.FromLong (1);
+			Druid loadedEntityId = Druid.FromLong (1);
+			DbKey rowKey = new DbKey (new DbId (1));
+
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+
+			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+
+			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, null, referenceData, collectionData);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void EntityDataConstructorTest3()
+		{
+			Druid leafEntityId = Druid.FromLong (1);
+			Druid loadedEntityId = Druid.FromLong (1);
+			DbKey rowKey = new DbKey (new DbId (1));
+
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+
+			ValueData_Accessor valueData = new ValueData_Accessor ();
+			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+
+			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, null, collectionData);
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void EntityDataConstructorTest4()
+		{
+			Druid leafEntityId = Druid.FromLong (1);
+			Druid loadedEntityId = Druid.FromLong (1);
+			DbKey rowKey = new DbKey (new DbId (1));
+
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
+
+			ValueData_Accessor valueData = new ValueData_Accessor ();
+			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+
+			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, null);
 		}
 
 

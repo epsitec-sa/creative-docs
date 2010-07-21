@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// Builds a new <c>AliasNode</c> without parent.
 		/// </summary>
 		/// <param name="name">The name of the <c>AliasNode</c>.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null or empty.</exception>
 		public AliasNode(string name) : this (null, name)
 		{
 		}
@@ -52,8 +53,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="parent">The parent of the new <c>AliasNode</c>.</param>
 		/// <param name="name">The name of the new <c>AliasNode</c>.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null or empty.</exception>
 		private AliasNode(AliasNode parent, string name)
 		{
+			if (string.IsNullOrEmpty (name))
+			{
+				throw new System.ArgumentException ("name");
+			}
+			
 			this.parent = parent;
 			this.children = new Dictionary<string, List<AliasNode>> ();
 
@@ -67,8 +74,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="name">The name of the new child.</param>
 		/// <returns>The new child.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null or empty.</exception>
 		public AliasNode CreateChild(string name)
 		{
+			if (string.IsNullOrEmpty (name))
+			{
+				throw new System.ArgumentException ("name");
+			}
+			
 			AliasNode node = new AliasNode (this, name);
 
 			if (!this.children.ContainsKey (name))
@@ -87,8 +100,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="name">The name of the child to get.</param>
 		/// <returns>The child <c>AliasNode</c>.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null, empty or if there are no children with that name.</exception>
 		public AliasNode GetChild(string name)
 		{
+			if (string.IsNullOrEmpty (name) || !this.children.ContainsKey(name))
+			{
+				throw new System.ArgumentException ("name");
+			}
+
 			return this.children[name].First ();
 		}
 
@@ -98,8 +117,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="name">The name of the child to get.</param>
 		/// <returns>The list of children <c>AliasNode</c>.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is null, empty or if there are no children with that name.</exception>
 		public ReadOnlyCollection<AliasNode> GetChildren(string name)
 		{
+			if (string.IsNullOrEmpty (name) || !this.children.ContainsKey(name))
+			{
+				throw new System.ArgumentException ("name");
+			}
+
 			List<AliasNode> children = this.children[name];
 
 			return new ReadOnlyCollection<AliasNode> (children);
@@ -156,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		
 		
 		/// <summary>
-		/// The childrent of the current <c>AliasNode</c>, organized by their name.
+		/// The children of the current <c>AliasNode</c>, organized by their name.
 		/// </summary>
 		private Dictionary<string, List<AliasNode>> children;
 

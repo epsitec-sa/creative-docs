@@ -33,8 +33,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="collectionData">The collection data of the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="valueData"/> is null.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="referenceData"/> is null.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
 		public EntityData(EntityKey entityKey, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
+			if (valueData == null)
+			{
+				throw new System.ArgumentNullException ("valueData");
+			}
+
+			if (referenceData == null)
+			{
+				throw new System.ArgumentNullException ("referenceData");
+			}
+			if (collectionData == null)
+			{
+				throw new System.ArgumentNullException ("collectionData");
+			}
+			
 			this.EntityKey = entityKey;
 			this.LoadedEntityId = loadedEntityId;
 			this.ValueData = valueData;
