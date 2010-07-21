@@ -59,6 +59,7 @@
     <Compile Include="Proxies\UnitTestEntityKeyProxy.cs" />
     <Compile Include="Proxies\UnitTestEntityFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestEntityCollectionFieldProxy.cs" />
+    <Compile Include="Loader\UnitTestAliasNode.cs" />
     <Compile Include="UnitTestGetEntitiesByExample.cs" />
     <Compile Include="UnitTestBasicEntityActions.cs" />
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />

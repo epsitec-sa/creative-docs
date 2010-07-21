@@ -109,9 +109,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// find that it is a source for an entity (because it looks in the database) and if that
 			// entity is not saved (for any reason), then that entity will still reference the deleted
 			// one. I'm not sure if that case is possible.
-			// If we decide to use the number 2, then it
-			// might make sense to call it when in the function DataContext.DeleteEntity(...) rather
-			// than here.
+			// If we decide to use the number 1, then it might  make sense to remove all the stuff
+			// related to make queries to the DataLoader concerning entities that are only in
+			// memory.
+			// If we decide to use the number 2, then it might make sense to call it when in the
+			// function DataContext.DeleteEntity(...) rather than here.
 			// Some tests must be done to see which one is the best and then, remove the other and
 			// use the better one here.
 			// Marc
