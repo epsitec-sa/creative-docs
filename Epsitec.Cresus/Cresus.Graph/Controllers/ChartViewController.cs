@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             };
 
             // Handling the mouse click
-            this.chartView.Clicked += (sender, e) => this.chartView.OnClicked(sender, e);
+            this.chartView.Clicked += this.chartView.OnClicked;
 
             this.floatingCaptions = new FloatingCaptionsView()
             {
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             };
 
             // Handling the mouse click, passing it to the ChartView
-            this.floatingCaptions.Clicked += (sender, e) => this.chartView.OnClicked(sender, e);
+            this.floatingCaptions.Clicked += this.chartView.OnClicked;
 
 			var palette = new AnchoredPalette ()
 			{
