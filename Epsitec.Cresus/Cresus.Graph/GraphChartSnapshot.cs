@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
@@ -9,10 +12,6 @@ using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -23,13 +22,12 @@ namespace Epsitec.Cresus.Graph
 	public class GraphChartSnapshot
 	{
 		protected GraphChartSnapshot()
-		{
-			this.seriesItems = new List<ChartSeries> ();
-			this.columns = new List<string> ();
-			this.Guid = System.Guid.NewGuid ();
-			this.Visibility = true;
+        {
+            this.seriesItems = new List<ChartSeries>();
+            this.columns = new List<string>();
+            this.Guid = System.Guid.NewGuid();
+            this.Visibility = true;
 		}
-
 
 		public ColorStyle ColorStyle
 		{
@@ -81,8 +79,14 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
-		/// <summary>
-		/// Gets or sets the window associated with this snapshot. This information will not be
+        public ChartOptions ChartOptions
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the window associated with this snapshot. This information will not be
 		/// persisted by the <see cref="SaveSettings"/> and <see cref="RestoreSettings"/> methods.
 		/// </summary>
 		/// <value>The window.</value>
@@ -118,59 +122,73 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		internal XElement SaveSettings(XElement xml)
-		{
-			var  graphType = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
+        internal XElement SaveSettings(XElement xml)
+        {
+            var graphType = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
 
-			xml.Add (new XAttribute ("guid", this.Guid));
-			xml.Add (new XAttribute ("type", graphType.CommandId));
+            xml.Add (new XAttribute ("guid", this.Guid));
+            xml.Add (new XAttribute ("type", graphType.CommandId));
 
-			if (!this.Visibility)
-			{
-				//	Only store visibility information for hidden snapshots, since the default is
-				//	'visible' for any snapshot.
+            if (!this.Visibility)
+            {
+                //	Only store visibility information for hidden snapshots, since the default is
+                //	'visible' for any snapshot.
 
-				xml.Add (new XAttribute ("visibility", "false"));
-			}
-			
-			xml.Add (GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
-			xml.Add (new XElement ("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries (x))));
-			xml.Add (new XElement ("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel (x))));
+                xml.Add (new XAttribute ("visibility", "false"));
+            }
 
+            xml.Add(GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
+            xml.Add(new XElement("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries(x))));
+            xml.Add(new XElement("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel(x))));
 
-			return xml;
-		}
+            if (this.ChartOptions != null)
+            {
+                var options = new XElement("options");
+                this.ChartOptions.SaveOptions(options);
+                xml.Add(options);
+            }
 
-		internal void RestoreSettings(XElement xml)
-		{
-			this.Guid = (System.Guid) xml.Attribute ("guid");
-			this.GraphType = Command.Find ((string) xml.Attribute ("type"));
-			this.Visibility = (string) xml.Attribute ("visibility") != "false";
+            return xml;
+        }
 
-			this.colorStyle = new ColorStyle (null);
-			this.colorStyle.RestoreSettings (xml.Element ("colorStyle"));
+        internal void RestoreSettings(XElement xml)
+        {
+            this.Guid = (System.Guid)xml.Attribute("guid");
+            this.GraphType = Command.Find((string)xml.Attribute("type"));
+            this.Visibility = (string)xml.Attribute("visibility") != "false";
 
-			var xmlItems = xml.Element ("items");
-			var xmlColumnLabels = xml.Element ("columnLabels");
-			
-			if (xmlItems != null)
-			{
-				foreach (var element in xmlItems.Elements ())
-				{
-					var series = new ChartSeries ();
-					series.RestoreSettings (element);
-					this.seriesItems.Add (series);
-				}
-			}
+            this.colorStyle = new ColorStyle(null);
+            this.colorStyle.RestoreSettings(xml.Element("colorStyle"));
 
-			if (xmlColumnLabels != null)
-			{
-				foreach (var element in xmlColumnLabels.Elements ())
-				{
-					this.columns.Add ((string) element.Attribute ("value"));
-				}
-			}
-		}
+            var xmlItems = xml.Element("items");
+            var xmlColumnLabels = xml.Element("columnLabels");
+            var xmlOptions = xml.Element("options");
+
+            if (xmlItems != null)
+            {
+                foreach (var element in xmlItems.Elements())
+                {
+                    var series = new ChartSeries();
+                    series.RestoreSettings(element);
+                    this.seriesItems.Add(series);
+                }
+            }
+
+            if (xmlColumnLabels != null)
+            {
+                foreach (var element in xmlColumnLabels.Elements())
+                {
+                    this.columns.Add((string)element.Attribute("value"));
+                }
+            }
+
+            this.ChartOptions = new ChartOptions();
+            if (xmlOptions != null)
+            {
+                
+                this.ChartOptions.RestoreSettings(xmlOptions);
+            }
+        }
 
 		internal AbstractRenderer CreateRenderer(bool visibleLabels)
 		{
@@ -239,22 +257,23 @@ namespace Epsitec.Cresus.Graph
 			return new XElement ("label",
 				new XAttribute ("value", columnLabel ?? ""));
 		}
-        
 
 
-		public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType)
-		{
-			var snapshot = new GraphChartSnapshot ();
 
-			snapshot.colorStyle = GraphChartSnapshot.CreateChartSeriesColorStyle (document);
-			snapshot.seriesItems.AddRange (GraphChartSnapshot.CreateChartSeriesCollection (document));
-			snapshot.columns.AddRange (GraphChartSnapshot.CreateChartSeriesColumnLabels (document));
-			snapshot.GraphType = graphType;
+        public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType, ChartOptions chartOptions)
+        {
+            var snapshot = new GraphChartSnapshot();
 
-			return snapshot;
-		}
+            snapshot.colorStyle = GraphChartSnapshot.CreateChartSeriesColorStyle(document);
+            snapshot.seriesItems.AddRange(GraphChartSnapshot.CreateChartSeriesCollection(document));
+            snapshot.columns.AddRange(GraphChartSnapshot.CreateChartSeriesColumnLabels(document));
+            snapshot.GraphType = graphType;
+            snapshot.ChartOptions = chartOptions;
 
-		public static GraphChartSnapshot FromXml(XElement xml)
+            return snapshot;
+        }
+
+        public static GraphChartSnapshot FromXml(XElement xml)
 		{
 			var snapshot = new GraphChartSnapshot ();
 			snapshot.RestoreSettings (xml);
@@ -305,7 +324,6 @@ namespace Epsitec.Cresus.Graph
 			return document.ChartColumnLabels;
 		}
 
-		
 		private ColorStyle colorStyle;
 		private readonly List<ChartSeries> seriesItems;
 		private readonly List<string> columns;

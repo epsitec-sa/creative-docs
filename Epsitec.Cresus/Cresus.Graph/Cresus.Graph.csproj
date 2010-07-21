@@ -80,6 +80,8 @@
     <Compile Include="Actions\Factory.cs" />
     <Compile Include="Actions\Recorder.cs" />
     <Compile Include="Actions\GenericAction.cs" />
+    <Compile Include="ChartOptions.cs" />
+    <Compile Include="Controllers\ChartOptionsController.cs" />
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DocumentViewController.cs" />
     <Compile Include="Controllers\SeriesDetectionController.cs" />
