@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
 			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (x);
-			var desc     = ArticleDocumentItemHelper.GetArticleDescription (x, shortDescription: true);
+			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x));
 
 			return string.Concat ("<i>Article</i><tab/>", string.Join (" ", quantity, desc));
 		}

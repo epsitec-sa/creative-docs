@@ -21,13 +21,17 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 
-	class PreviewDialog : AbstractDialog
+	class PreviewDialog : AbstractDialog, IAttachedDialog
 	{
-		public PreviewDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
+		public PreviewDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
 		{
+			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
+
 			this.application   = application;
 			this.entityPrinter = entityPrinter;
 			this.entities      = entities;
+
+			this.application.AttachDialog (this);
 		}
 
 
@@ -47,10 +51,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 		protected void SetupWindow(Window window)
 		{
 			this.OwnerWindow = this.application.Window;
+
+			var pageSize = this.entityPrinter.PageSize;
+			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
+
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Aperçu avant impression";
-			window.WindowSize = new Size (210*3, 297*3+40);
-			window.MakeFloatingWindow ();
+			window.ClientSize = new Size (pageSize.Width*3+10+10, pageSize.Height*3+10+40);
+			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
+
+			window.WindowCloseClicked += delegate
+			{
+				this.OnDialogClosed ();
+				this.CloseDialog ();
+			};
 		}
 
 		protected void SetupWidgets(Window window)
@@ -73,6 +87,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			this.preview.Invalidate ();  // pour forcer le dessin
+
+			var label = new StaticText
+			{
+				Parent = this.footer,
+				Text = "Aperçu de la page",
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				PreferredWidth = 100,
+				PreferredHeight = 20,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
 
 			this.pagePrevButton = new GlyphButton
 			{
@@ -268,9 +293,36 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		protected override void OnDialogClosed()
+		{
+			base.OnDialogClosed ();
+
+			this.application.DetachDialog (this);
+		}
 
 
-		private readonly Application application;
+
+		#region IAttachedDialog Members
+
+		public IEnumerable<AbstractEntity> Entities
+		{
+			get
+			{
+				return this.entities;
+			}
+		}
+
+		public void Update()
+		{
+			this.entityPrinter.Clear ();
+			this.entityPrinter.BuildSections ();
+			this.preview.Invalidate ();
+		}
+
+		#endregion
+
+
+		private readonly CoreApplication application;
 		private readonly IEnumerable<AbstractEntity> entities;
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 

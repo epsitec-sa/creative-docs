@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Helpers;
 
 using Epsitec.Cresus.DataLayer;
 
@@ -44,7 +45,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Text, x => this.Text = x));
+		}
+
+
+		private string Text
+		{
+			get
+			{
+				return this.Entity.Text;
+			}
+			set
+			{
+				if (this.Entity.Text != value)
+				{
+					this.Entity.Text = value;
+
+					//	Met à jour le ou les dialogues d'aperçu avant impression ouverts.
+					AbstractDocumentItemHelper.UpdateDialogs (this.Entity);
+				}
+			}
 		}
 
 

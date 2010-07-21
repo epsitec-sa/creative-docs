@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// Initializes a new instance of the <see cref="PrinterManagerDialog"/> class.
 		/// </summary>
 		/// <param name="application">The <see cref="Application"/> creating this instance.</param>
-		public PrinterManagerDialog(Application application)
+		public PrinterManagerDialog(CoreApplication application)
 		{
 			this.Application = application;
 			this.Printers = new List<Printer>(Printer.Load ());
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// Gets or sets the <see cref="Application"/> who created this instance.
 		/// </summary>
 		/// <value>The <see cref="Application"/> who created this instance.</value>
-		protected Application Application
+		protected CoreApplication Application
 		{
 			get;
 			set;

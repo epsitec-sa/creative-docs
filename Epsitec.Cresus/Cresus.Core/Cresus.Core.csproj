@@ -179,9 +179,11 @@
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
     <Compile Include="Data\UnitOfMeasureRepository.cs" />
     <Compile Include="Data\InvoiceDocumentRepository.cs" />
+    <Compile Include="Dialogs\IAttachedDialog.cs" />
     <Compile Include="Dialogs\DocumentTypeDialog.cs" />
     <Compile Include="Dialogs\PreviewDialog.cs" />
     <Compile Include="Helpers\ArticleDocumentItemHelper.cs" />
+    <Compile Include="Helpers\AbstractDocumentItemHelper.cs" />
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractBand.cs" />

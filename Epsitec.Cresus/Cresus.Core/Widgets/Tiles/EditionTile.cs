@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				Parent = this,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, TileArrow.Breadth, 0, 0),
+				Margins = new Margins (0, TileArrow.Breadth, 0, 3),
 			};
 		}
 

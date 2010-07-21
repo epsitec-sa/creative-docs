@@ -45,8 +45,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIDelayedQuantity1 (builder);
 				this.CreateUIDelayedUnitOfMeasure1 (builder);
 
+#if false
 				this.CreateUIDelayedQuantity2 (builder);
 				this.CreateUIDelayedUnitOfMeasure2 (builder);
+#endif
 
 				this.CreateUIPrice (builder);
 
@@ -119,6 +121,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
+			builder.CreateTextFieldMulti (tile, 80, "Désignation", Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
+
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			FrameBox group = builder.CreateGroup (tile, "Quantité livrée");
@@ -131,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			FrameBox group = builder.CreateGroup (tile, "Première quantité livrée ultérieurement et date");
+			FrameBox group = builder.CreateGroup (tile, "Quantité livrée ultérieurement et date");
 			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetDelayedQuantity1, this.SetDelayedQuantity1));
 			builder.CreateTextField (group, DockStyle.Fill,  0, Marshaler.Create (this.GetDelayedDate1, this.SetDelayedDate1));
 		}
@@ -175,6 +179,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					//?this.SetQuantity (1);
 					this.UnitOfMeasure = value.BillingUnit;
 					this.SetPrice (this.GetArticlePrice ());
+
+					this.Entity.ReplacementText = null;
+					this.SetArticleDescription (this.GetArticleDescription ());
 				}
 			}
 		}
@@ -216,6 +223,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private string GetArticleDescription()
+		{
+			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity);
+		}
+
+		private void SetArticleDescription(string value)
+		{
+			if (this.Entity.ReplacementText != value)
+			{
+				this.Entity.ReplacementText = value;
+				this.UpdateDialogs ();
+			}
+		}
+
+
 		private decimal? GetQuantity()
 		{
 			return this.GetQuantity ("livré", 0);
@@ -225,7 +247,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void SetQuantity(decimal? value)
 		{
 			this.SetQuantity ("livré", 0, value);
-			this.UpdatePrice ();
 		}
 
 
@@ -315,9 +336,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					if (IsEmpty (quantity))
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
-						this.UpdatePrice ();
 					}
 
+					this.UpdatePrice ();
 					return;
 				}
 			}
@@ -331,8 +352,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				newQuantity.Unit     = this.Entity.ArticleDefinition.BillingUnit;
 
 				this.Entity.ArticleQuantities.Add (newQuantity);
-				this.UpdatePrice ();
 			}
+
+			this.UpdatePrice ();
 		}
 
 
@@ -358,11 +380,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (quantity.Code == code && rank-- == 0)
 				{
 					quantity.Unit = value;
+					this.UpdateDialogs ();
 
 					if (IsEmpty (quantity))
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
-						this.UpdatePrice ();
+
+						this.tileContainer.UpdateAllWidgets ();
+						this.UpdateDialogs ();
 					}
 
 					return;
@@ -378,7 +403,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				newQuantity.Unit     = value;
 
 				this.Entity.ArticleQuantities.Add (newQuantity);
-				this.UpdatePrice ();
+
+				this.tileContainer.UpdateAllWidgets ();
+				this.UpdateDialogs ();
 			}
 		}
 
@@ -405,11 +432,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (quantity.Code == code && rank-- == 0)
 				{
 					quantity.ExpectedDate = value;
+					this.UpdateDialogs ();
 
 					if (IsEmpty (quantity))
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
-						this.UpdatePrice ();
+
+						this.tileContainer.UpdateAllWidgets ();
+						this.UpdateDialogs ();
 					}
 
 					return;
@@ -424,7 +454,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			newQuantity.ExpectedDate = value;
 
 			this.Entity.ArticleQuantities.Add (newQuantity);
-			this.UpdatePrice ();
+
+			this.tileContainer.UpdateAllWidgets ();
+			this.UpdateDialogs ();
 		}
 
 
@@ -457,6 +489,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (value.HasValue)
 			{
 				this.Entity.ResultingLinePriceBeforeTax = value.Value;
+				this.UpdateDialogs ();
 			}
 		}
 
@@ -470,7 +503,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.ResultingLineTax = this.Entity.ResultingLinePriceBeforeTax * 0.076M;  // TODO: Il manque le taux dans ArticleDocumentItemEntity ?
 
 				this.tileContainer.UpdateAllWidgets ();
+				this.UpdateDialogs ();
 			}
+		}
+
+
+		private void UpdateDialogs()
+		{
+			AbstractDocumentItemHelper.UpdateDialogs (this.Entity);
 		}
 
 

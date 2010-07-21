@@ -140,6 +140,22 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		public static string FirstLine(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				int i = text.IndexOf ("<br/>");
+
+				if (i != -1)
+				{
+					return text.Substring (0, i);
+				}
+			}
+
+			return text;
+		}
+
 		public static string AppendLine(string current, string text)
 		{
 			if (string.IsNullOrEmpty (current))
