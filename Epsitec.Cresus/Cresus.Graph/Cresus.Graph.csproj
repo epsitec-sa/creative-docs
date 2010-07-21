@@ -267,6 +267,8 @@
     <EmbeddedResource Include="Images\GraphType.HorizontalBarChart.icon" />
     <EmbeddedResource Include="Images\GraphType.LineChart.icon" />
     <EmbeddedResource Include="Images\GraphType.VerticalBarChart.icon" />
+    <EmbeddedResource Include="Images\Captions.icon" />
+    <EmbeddedResource Include="Images\FloatingCaptions.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

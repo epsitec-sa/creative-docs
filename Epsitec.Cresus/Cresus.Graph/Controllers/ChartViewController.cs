@@ -248,7 +248,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.CreateLeftToolButtons ();
 				this.CreateGraphTypeButtons ();
-                this.CreateRightToolButtons(palette, floatingCaptions);
+                this.CreateSnapshotButton ();
+                this.CreateOptionsButtons (palette, floatingCaptions);
 			}
 			else
 			{
@@ -394,7 +395,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 		}
 
-        private void CreateRightToolButtons(AnchoredPalette captions, FloatingCaptionsView floatingCaptions)
+        private void CreateSnapshotButton()
 		{
 			new Separator ()
 			{
@@ -442,11 +443,30 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					this.document.NotifyNeedsSave (true);
                 };
+        }
+
+        private void CreateOptionsButtons(AnchoredPalette captions, FloatingCaptionsView floatingCaptions)
+        {
+            new Separator()
+            {
+                IsVerticalLine = true,
+                Dock = DockStyle.Stacked,
+                PreferredWidth = 1,
+                Parent = this.commandBar,
+                Margins = new Margins(2, 2, 0, 0),
+            };
+
+            var frame = new FrameBox()
+            {
+                Dock = DockStyle.Stacked,
+                Parent = this.commandBar,
+                ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+            };
 
             var showCaptionsButton = new MetaButton()
             {
                 Dock = DockStyle.Left,
-                Text = "Afficher la légende",
+                IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
                 Margins = new Margins(0, 0, 1, 1),
@@ -463,8 +483,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             var showFloatingCaptionsButton = new MetaButton()
             {
                 Dock = DockStyle.Left,
-                PreferredWidth = 100,
-                Text = "Afficher les légendes flottantes",
+                IconUri = "manifest:Epsitec.Cresus.Graph.Images.FloatingCaptions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
                 Margins = new Margins(0, 0, 1, 1),
