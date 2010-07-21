@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					if (line is ArticleDocumentItemEntity)
 					{
-						var quantity = ArticleDocumentItemHelper.GetArticleQuantity    (line as ArticleDocumentItemEntity);
-						var desc     = ArticleDocumentItemHelper.GetArticleDescription (line as ArticleDocumentItemEntity, shortDescription: true);
+						var quantity = ArticleDocumentItemHelper.GetArticleQuantity (line as ArticleDocumentItemEntity);
+						var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (line as ArticleDocumentItemEntity));
 
 						builder.Append ("● ");
 						builder.Append (string.Join (" ", quantity, desc));

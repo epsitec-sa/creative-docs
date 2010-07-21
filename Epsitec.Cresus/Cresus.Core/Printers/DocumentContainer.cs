@@ -62,6 +62,17 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public void Clear()
+		{
+			this.pages.Clear ();
+			this.pages.Add (new PageContainer (0));  // crée la première page
+
+			this.currentPage = 0;
+
+			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+		}
+
+
 		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
 		/// </summary>

@@ -50,16 +50,24 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static string GetArticleDescription(ArticleDocumentItemEntity article, bool shortDescription)
+		public static string GetArticleDescription(ArticleDocumentItemEntity article)
 		{
-			string description = shortDescription ? null : article.ArticleDefinition.LongDescription;
-
-			if (string.IsNullOrEmpty (description))
+			if (!string.IsNullOrEmpty (article.ReplacementText))
 			{
-				description = article.ArticleDefinition.ShortDescription;  // description courte s'il n'existe pas de longue
+				return article.ReplacementText;
 			}
 
-			return description;
+			if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+			{
+				return article.ArticleDefinition.LongDescription;
+			}
+
+			if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+			{
+				return article.ArticleDefinition.ShortDescription;
+			}
+
+			return null;
 		}
 	}
 }

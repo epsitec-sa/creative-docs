@@ -136,6 +136,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public void Clear()
+		{
+			this.documentContainer.Clear ();
+		}
+
 		public virtual void BuildSections()
 		{
 			this.documentContainer.PageSize    = this.PageSize;

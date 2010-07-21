@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PrintDialog : AbstractDialog
 	{
-		public PrintDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
+		public PrintDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, List<Printer> printers)
 		{
 			this.application   = application;
 			this.entityPrinter = entityPrinter;
@@ -301,6 +301,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.CloseDialog ();
 
 			var dialog = new Dialogs.PreviewDialog (CoreProgram.Application, this.entityPrinter, this.entities);
+			dialog.IsModal = false;
 			dialog.OpenDialog ();
 		}
 
@@ -310,7 +311,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly Application application;
+		private readonly CoreApplication application;
 		private readonly IEnumerable<AbstractEntity> entities;
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 		private readonly List<Printer> printers;

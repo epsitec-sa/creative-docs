@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Core.Printers
 			if (typeDialog.Result == DialogResult.Accept)
 			{
 				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
+				printDialog.IsModal = false;
 				printDialog.OpenDialog ();
 			}
 		}

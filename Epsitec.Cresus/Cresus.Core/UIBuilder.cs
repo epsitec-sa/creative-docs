@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Core
 				TextBreakMode = Common.Drawing.TextBreakMode.Hyphenate,
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 10, 10),
+				Margins = new Margins (0, 10, 5, 5),
 			};
 
 			this.ContentListAdd (staticText);
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 10, 0, 2),
+					Margins = new Margins (0, 10, 0, 1),
 				};
 
 				this.ContentListAdd (staticText);
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
+				Margins = new Margins (0, 0, 0, 2),
 			};
 
 			this.ContentListAdd (frameBox);
@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Core
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, 10, 0, 1),
 			};
 
 			this.ContentListAdd (staticText);
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Core
 				Parent = parent,
 				PreferredHeight = 20,
 				Dock = dockStyle,
-				Margins = new Margins (0, 10, 0, 5),
+				Margins = new Margins (0, 10, 0, 2),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 			};
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.Core
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, 10, 0, 1),
 			};
 
 			var textField = new TextFieldMultiEx
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
+				Margins = new Margins (0, 10, 0, 2),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 				ScrollerVisibility = false,
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Core
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, 10, 0, 1),
 			};
 
 			var container = new FrameBox
@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
+				Margins = new Margins (0, 10, 0, 2),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -505,14 +505,14 @@ namespace Epsitec.Cresus.Core
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, 10, 0, 1),
 			};
 
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
+				Margins = new Margins (0, 10, 0, 2),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -619,14 +619,14 @@ namespace Epsitec.Cresus.Core
 				Text = string.Concat (label, " :"),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, 10, 0, 1),
 			};
 
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
+				Margins = new Margins (0, 10, 0, 2),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -901,7 +901,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 5, 10),
+				Margins = new Margins (0, 0, 0, 3),
 				AllowMultipleSelection = false,
 				TabIndex = ++this.tabIndex,
 			};
@@ -939,7 +939,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 5, 10),
+				Margins = new Margins (0, 0, 0, 3),
 				AllowMultipleSelection = true,
 				TabIndex = ++this.tabIndex,
 			};
@@ -959,7 +959,7 @@ namespace Epsitec.Cresus.Core
 				{
 					Parent = tile.Container,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 10, 10, 10),
+					Margins = new Margins (0, 10, 5, 5),
 					PreferredHeight = 1,
 				};
 

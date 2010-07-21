@@ -120,6 +120,11 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildConditions ();
 				this.BuildPages ();
 			}
+
+			if (this.DocumentTypeSelected == "BL")
+			{
+				// TODO:
+			}
 		}
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
@@ -377,7 +382,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			string  description = ArticleDocumentItemHelper.GetArticleDescription (line, shortDescription: false);
+			string  description = ArticleDocumentItemHelper.GetArticleDescription (line);
 
 			if (q1 != null)
 			{

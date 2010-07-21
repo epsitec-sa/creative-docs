@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Core
 			this.commands = new CoreCommandDispatcher (this);
 			
 			this.mainWindowController = new MainWindowController (this.data);
+
+			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 		}
 
 
@@ -96,6 +98,30 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.mainWindowController;
+			}
+		}
+
+		public List<Dialogs.IAttachedDialog>	AttachedDialogs
+		{
+			get
+			{
+				return this.attachedDialogs;
+			}
+		}
+
+		public void AttachDialog(Dialogs.IAttachedDialog dialog)
+		{
+			if (!this.attachedDialogs.Contains (dialog))
+			{
+				this.attachedDialogs.Add (dialog);
+			}
+		}
+
+		public void DetachDialog(Dialogs.IAttachedDialog dialog)
+		{
+			if (this.attachedDialogs.Contains (dialog))
+			{
+				this.attachedDialogs.Remove (dialog);
 			}
 		}
 
@@ -234,7 +260,7 @@ namespace Epsitec.Cresus.Core
 		private CoreData								data;
 		private ExceptionManager						exceptionManager;
 		private CoreCommandDispatcher					commands;
-
 		private MainWindowController					mainWindowController;
+		private List<Dialogs.IAttachedDialog>			attachedDialogs;
 	}
 }

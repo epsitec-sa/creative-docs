@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 	class DocumentTypeDialog : AbstractDialog
 	{
-		public DocumentTypeDialog(Application application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, bool isPreview)
+		public DocumentTypeDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, bool isPreview)
 		{
 			this.application   = application;
 			this.entityPrinter = entityPrinter;
@@ -201,10 +201,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var title = new StaticText
 					{
 						Parent = this.optionsFrame,
-						Text = "<font size=\"20\"><b>Options disponibles</b></font>",
+						Text = "<font size=\"16\">Options disponibles</font>",
+						ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
 						PreferredHeight = 30,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, 5),
 					};
 				}
 
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly Application application;
+		private readonly CoreApplication application;
 		private readonly IEnumerable<AbstractEntity> entities;
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 		private readonly bool isPreview;

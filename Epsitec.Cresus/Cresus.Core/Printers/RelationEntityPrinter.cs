@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("Summary", "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
-			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Ajoute les adresses",   true));
-			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Ajoute les téléphones", true));
-			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Ajoute les emails",     true));
+			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Adresses",   true));
+			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Téléphones", true));
+			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Emails",     true));
 			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
 			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
 			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
