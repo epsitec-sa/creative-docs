@@ -170,20 +170,32 @@ namespace Epsitec.Cresus.Graph.Controllers
             // Handling the mouse click, passing it to the ChartView
             this.floatingCaptions.Clicked += this.chartView.OnClicked;
 
-			var palette = new AnchoredPalette ()
+            // Loading a snapshot with available options
+            if (this.ChartSnapshot != null)
+            {
+                floatingCaptions.Visibility = this.ChartSnapshot.ChartOptions.ShowFloatingCaptions;
+            }
+
+			var fixedCaptionsPalette = new AnchoredPalette ()
 			{
 				Anchor = AnchorStyles.TopRight,
 				Margins = new Margins (0, 4, 4, 0),
 				Parent = chartSurface,
 				BackColor = Color.FromBrightness (1),
 				Padding = new Margins (4, 4, 2, 2),
-				Visibility = false
+                Visibility = this.IsStandalone
             };
+
+            // Loading a snapshot with available options
+            if (this.ChartSnapshot != null)
+            {
+                fixedCaptionsPalette.Visibility = this.ChartSnapshot.ChartOptions.ShowFixedCaptions;
+            }
 
 			this.captionView = new CaptionView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = palette
+				Parent = fixedCaptionsPalette
 			};
 
 			this.commandBar = new CommandSelectionBar ()
@@ -200,7 +212,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.commandBar.Dock = DockStyle.Top;
 				this.commandBar.Visibility = true;
-				palette.Visibility = true;
 			}
 			else
 			{
@@ -247,9 +258,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (this.IsStandalone)
 			{
 				this.CreateLeftToolButtons ();
-				this.CreateGraphTypeButtons ();
+                this.CreateGraphTypeButtons();
+                this.chartOptionsController = new ChartOptionsController(this.commandBar, fixedCaptionsPalette, floatingCaptions);
                 this.CreateSnapshotButton ();
-                this.CreateOptionsButtons (palette, floatingCaptions);
 			}
 			else
 			{
@@ -429,7 +440,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			snapshotButton.Clicked +=
 				(sender, e) =>
 				{
-					var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType);
+                    var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType, this.chartOptionsController.ChartOptions);
 					var newWindow = this.workspace.CreateChartViewWindow (snapshot);
 					var oldWindow = this.container.Window;
 					var placement = oldWindow.WindowPlacement;
@@ -444,62 +455,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.document.NotifyNeedsSave (true);
                 };
         }
-
-        private void CreateOptionsButtons(AnchoredPalette captions, FloatingCaptionsView floatingCaptions)
-        {
-            new Separator()
-            {
-                IsVerticalLine = true,
-                Dock = DockStyle.Stacked,
-                PreferredWidth = 1,
-                Parent = this.commandBar,
-                Margins = new Margins(2, 2, 0, 0),
-            };
-
-            var frame = new FrameBox()
-            {
-                Dock = DockStyle.Stacked,
-                Parent = this.commandBar,
-                ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-            };
-
-            var showCaptionsButton = new MetaButton()
-            {
-                Dock = DockStyle.Left,
-                IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
-                ButtonClass = ButtonClass.FlatButton,
-                Parent = frame,
-                PreferredSize = new Size(40, 40),
-                //Margins = new Margins(0, 0, 1, 1),
-                Padding = new Margins(4, 4, 0, 0),
-                Visibility = this.ChartSnapshot == null,
-            };
-
-            showCaptionsButton.Clicked +=
-                (sender, e) =>
-                {
-                    captions.Visibility = !captions.Visibility;
-                };
-
-            var showFloatingCaptionsButton = new MetaButton()
-            {
-                Dock = DockStyle.Left,
-                IconUri = "manifest:Epsitec.Cresus.Graph.Images.FloatingCaptions.icon",
-                ButtonClass = ButtonClass.FlatButton,
-                Parent = frame,
-                PreferredSize = new Size(40, 40),
-                //Margins = new Margins(0, 0, 1, 1),
-                Padding = new Margins(4, 4, 0, 0),
-                Visibility = this.ChartSnapshot == null,
-            };
-
-            showFloatingCaptionsButton.Clicked +=
-                (sender, e) =>
-                {
-                    floatingCaptions.Visibility = !floatingCaptions.Visibility;
-                };
-
-		}
 
 		private void CreateGraphTypeButtons()
 		{
@@ -531,7 +486,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
-			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType);
+			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType, new ChartOptions ());
 			var renderer = snapshot.CreateRenderer (this.IsStandalone);
 
 			if (renderer == null)
@@ -641,6 +596,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private static CommandController		commandController;
 		private static Epsitec.Common.Dialogs.PrintDialog printDialog;
 
+        private ChartOptionsController          chartOptionsController;
         private SeriesDetectionController       seriesDetection;
         private CommandController				localController;
 		private readonly GraphApplication		application;
