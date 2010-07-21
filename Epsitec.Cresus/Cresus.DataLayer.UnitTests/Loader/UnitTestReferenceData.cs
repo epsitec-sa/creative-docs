@@ -61,7 +61,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsFalse (key.HasValue);
 			}
-
 		}
 
 
