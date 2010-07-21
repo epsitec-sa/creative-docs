@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 	
 
-	internal class LoaderQueryGenerator
+	internal sealed class LoaderQueryGenerator
 	{
 
 		

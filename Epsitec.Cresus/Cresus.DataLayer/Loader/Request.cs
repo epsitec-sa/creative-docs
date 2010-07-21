@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 	
 	
-	public class Request
+	public sealed class Request
 	{
 
 
@@ -47,14 +47,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			internal get
 			{
-				AbstractEntity entity = this.requestedEntity ?? this.RootEntity;
-
-				if (entity == null)
-				{
-					throw new System.NullReferenceException ("RequestedEntity is null");
-				}
-
-				return entity;
+				return this.requestedEntity ?? this.RootEntity;
 			}
 			set
 			{
@@ -115,19 +108,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private bool CheckLocalConstraint(AbstractEntity entity, Expression contraint)
 		{
-			HashSet<string> fields1 = new HashSet<string> (entity.GetEntityContext ().GetEntityFieldIds (entity));
-			HashSet<string> fields2 = new HashSet<string> (contraint.GetFields ().Select (d => d.ToResourceId ()));
-
-			return fields1.IsSupersetOf (fields2) && fields2.All (id => this.IsValueField (entity, id));
+			return contraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
 		}
 
 
-		private bool IsValueField(AbstractEntity entity, string fieldId)
+		private bool IsEntityValueField(AbstractEntity entity, string fieldId)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			StructuredTypeField field = entity.GetEntityContext ().GetEntityFieldDefinition (leafEntityId, fieldId);
 
-			return field.Relation == FieldRelation.None;
+			return field != null && field.Relation == FieldRelation.None;
 		}
 
 

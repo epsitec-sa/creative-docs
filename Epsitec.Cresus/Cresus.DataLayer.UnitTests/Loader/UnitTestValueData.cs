@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestValueData
+	public sealed class UnitTestValueData
 	{
 
 

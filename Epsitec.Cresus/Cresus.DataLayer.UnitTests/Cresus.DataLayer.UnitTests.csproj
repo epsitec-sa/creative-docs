@@ -70,6 +70,7 @@
     <Compile Include="Proxies\UnitTestValueFieldProxy.cs" />
     <Compile Include="Loader\UnitTestReferenceData.cs" />
     <Compile Include="Loader\UnitTestValueData.cs" />
+    <Compile Include="Loader\UnitTestRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">

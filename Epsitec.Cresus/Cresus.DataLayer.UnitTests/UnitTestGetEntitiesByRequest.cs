@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestGetEntitiesByRequest
+	public sealed class UnitTestGetEntitiesByRequest
 	{
 
 
@@ -38,125 +38,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
-
-
-		[TestMethod]
-		public void ValidRequest()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
-
-			person.Title = title;
-			person.Contacts.Add (uriContact);
-
-			Request request = new Request ();
-
-			Assert.IsFalse (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (person,
-					new BinaryComparisonFieldWithField (
-						new Field (new Druid ("[L0A01]")),
-						BinaryComparator.IsEqual,
-						new Field (new Druid ("[L0AV]"))
-					)
-				)
-			));
-
-			Assert.IsFalse (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (person,
-					new BinaryComparisonFieldWithValue (
-						new Field (new Druid ("[L0A61]")),
-						BinaryComparator.IsEqual,
-						new Constant (Type.Boolean, true)
-					)
-				)
-			));
-
-			Assert.IsFalse (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (uriContact,
-					new UnaryComparison (
-						new Field (new Druid ("[L0AA2]")),
-						UnaryComparator.IsNull
-					)
-				)
-			));
-
-			Assert.IsFalse (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (title,
-					new BinaryOperation (
-						new UnaryComparison (
-							new Field (new Druid ("[L0AT1]")),
-							UnaryComparator.IsNotNull
-						),
-						BinaryOperator.Or,
-						new UnaryComparison (
-							new Field (new Druid ("[L0AS1]")),
-							UnaryComparator.IsNotNull
-						)
-					)
-				)
-			));
-		}
-
-
-		[TestMethod]
-		public void InvalidRequest()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
-
-			person.Title = title;
-			person.Contacts.Add (uriContact);
-
-			Request request = new Request ();
-
-			Assert.IsTrue (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (person,
-					new BinaryComparisonFieldWithField (
-						new Field (new Druid ("[L0AS1]")),
-						BinaryComparator.IsEqual,
-						new Field (new Druid ("[L0AV]"))
-					)
-				)
-			));
-
-			Assert.IsTrue (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (person,
-					new BinaryComparisonFieldWithValue (
-						new Field (new Druid ("[L0AS]")),
-						BinaryComparator.IsEqual,
-						new Constant (Type.Boolean, true)
-					)
-				)
-			));
-
-			Assert.IsTrue (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (uriContact,
-					new UnaryComparison (
-						new Field (new Druid ("[L0A92]")),
-						UnaryComparator.IsNull
-					)
-				)
-			));
-
-			Assert.IsTrue (this.IsExceptionThrown (() =>
-				request.AddLocalConstraint (title,
-					new BinaryOperation (
-						new UnaryComparison (
-							new Field (new Druid ("[L0A61]")),
-							UnaryComparator.IsNotNull
-						),
-						BinaryOperator.Or,
-						new UnaryComparison (
-							new Field (new Druid ("[L0AS1]")),
-							UnaryComparator.IsNotNull
-						)
-					)
-				)
-			));
-		}
-
 
 
 		[TestMethod]
