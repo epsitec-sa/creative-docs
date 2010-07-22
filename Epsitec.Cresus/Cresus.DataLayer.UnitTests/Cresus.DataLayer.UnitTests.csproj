@@ -76,6 +76,7 @@
     <Compile Include="Loader\UnitTestValueData.cs" />
     <Compile Include="Loader\UnitTestRequest.cs" />
     <Compile Include="Expressions\UnitTestUnaryOperation.cs" />
+    <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
