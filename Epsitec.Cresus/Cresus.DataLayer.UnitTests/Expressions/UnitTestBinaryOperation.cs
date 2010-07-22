@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestBinaryOperation
+	public sealed class UnitTestBinaryOperation
 	{
 
 

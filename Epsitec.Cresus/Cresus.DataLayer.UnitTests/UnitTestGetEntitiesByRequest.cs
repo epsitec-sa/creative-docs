@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithField (
+					new ComparisonFieldField (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
 						new Field (new Druid ("[L0A01]"))
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				request.AddLocalConstraint (example,
 					new UnaryOperation (
 						UnaryOperator.Not,
-						new BinaryComparisonFieldWithValue (
+						new ComparisonFieldValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
@@ -175,13 +175,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				request.AddLocalConstraint (example,
 					new BinaryOperation (
-						new BinaryComparisonFieldWithValue (
+						new ComparisonFieldValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Hans")
 						),
 						BinaryOperator.And,
-						new BinaryComparisonFieldWithValue (
+						new ComparisonFieldValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Gertrude")
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				);
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A01]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Dupond")
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				);
 
 				request.AddLocalConstraint (example.Gender,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example.Gender,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example.Gender,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsLike,
 						new Constant ("%ale")
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLike,
 						new Constant ("test%test")
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				};
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLike,
 						new Constant ("test_test")
@@ -414,10 +414,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					RequestedEntity = example,
 				};
 
-				string value = BinaryComparisonFieldWithValue.Escape ("test%test");
+				string value = ComparisonFieldValue.Escape ("test%test");
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
 						new Constant (value)
@@ -440,10 +440,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					RequestedEntity = example,
 				};
 
-				string value = BinaryComparisonFieldWithValue.Escape ("test_test");
+				string value = ComparisonFieldValue.Escape ("test_test");
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
 						new Constant (value)
@@ -466,10 +466,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					RequestedEntity = example,
 				};
 
-				string value = BinaryComparisonFieldWithValue.Escape ("test#test");
+				string value = ComparisonFieldValue.Escape ("test#test");
 
 				request.AddLocalConstraint (example,
-					new BinaryComparisonFieldWithValue (
+					new ComparisonFieldValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
 						new Constant (value)

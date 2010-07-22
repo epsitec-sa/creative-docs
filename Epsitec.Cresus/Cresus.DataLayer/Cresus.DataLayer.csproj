@@ -147,8 +147,8 @@
     <Compile Include="Loader\EntityData.cs" />
     <Compile Include="Loader\ReferenceData.cs" />
     <Compile Include="Context\EntityKey.cs" />
-    <Compile Include="Expressions\BinaryComparisonFieldWithField.cs" />
-    <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
+    <Compile Include="Expressions\ComparisonFieldField.cs" />
+    <Compile Include="Expressions\ComparisonFieldValue.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
     <Compile Include="Expressions\BinaryComparator.cs" />

@@ -5,22 +5,22 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 	/// <summary>
-	/// The <c>BinaryComparisonFieldWithField</c> class represents a comparison between two
+	/// The <c>ComparisonFieldField</c> class represents a comparison between two
 	/// <see cref="Field"/>, such as (a = b).
 	/// </summary>
-	public class BinaryComparisonFieldWithField : Comparison
+	public class ComparisonFieldField : Comparison
 	{
 
 
 		/// <summary>
-		/// Builds a new <c>BinaryComparisonFieldWithField</c>.
+		/// Builds a new <c>ComparisonFieldField</c>.
 		/// </summary>
 		/// <param name="left">The <see cref="Field"/> on the left of the <see cref="BinaryComparator"/>.</param>
-		/// <param name="op">The <see cref="BinaryComparator"/> used by the <c>BinaryComparisonFieldWithField</c>.</param>
+		/// <param name="op">The <see cref="BinaryComparator"/> used by the <c>ComparisonFieldField</c>.</param>
 		/// <param name="left">The <see cref="Field"/> on the left of the <see cref="BinaryComparator"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="left"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="right"/> is null.</exception>
-		public BinaryComparisonFieldWithField(Field left, BinaryComparator op, Field right) : base ()
+		public ComparisonFieldField(Field left, BinaryComparator op, Field right) : base ()
 		{
 			left.ThrowIfNull ("left");
 			right.ThrowIfNull ("right");
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The left side of the <c>BinaryComparisonFieldWithField</c>.
+		/// The left side of the <c>ComparisonFieldField</c>.
 		/// </summary>
 		public Field Left
 		{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The <see cref="BinaryComparator"/> of the <c>BinaryComparisonFieldWithField</c>.
+		/// The <see cref="BinaryComparator"/> of the <c>ComparisonFieldField</c>.
 		/// </summary>
 		public BinaryComparator Operator
 		{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The right side of the <c>BinaryComparisonFieldWithField</c>.
+		/// The right side of the <c>ComparisonFieldField</c>.
 		/// </summary>
 		public Field Right
 		{

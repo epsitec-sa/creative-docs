@@ -497,10 +497,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			if (UnitTestPerformance.runDeleteTests)
 			{
-				this.DeleteEntity<NaturalPersonEntity> (1);
-				this.DeleteEntity<AbstractContactEntity> (1);
-				this.DeleteEntity<RegionEntity> (1);
-				this.DeleteEntity<ContactRoleEntity> (1);
+				this.DeleteEntity<NaturalPersonEntity> (10);
+				this.DeleteEntity<AbstractContactEntity> (10);
+				this.DeleteEntity<RegionEntity> (10);
+				this.DeleteEntity<ContactRoleEntity> (10);
 			}
 		}
 

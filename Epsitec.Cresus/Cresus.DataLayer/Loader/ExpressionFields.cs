@@ -56,13 +56,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return (comparison as UnaryComparison).GetFields ();
 			}
-			else if (comparison is BinaryComparisonFieldWithField)
+			else if (comparison is ComparisonFieldField)
 			{
-				return (comparison as BinaryComparisonFieldWithField).GetFields ();
+				return (comparison as ComparisonFieldField).GetFields ();
 			}
-			else if (comparison is BinaryComparisonFieldWithValue)
+			else if (comparison is ComparisonFieldValue)
 			{
-				return (comparison as BinaryComparisonFieldWithValue).GetFields ();
+				return (comparison as ComparisonFieldValue).GetFields ();
 			}
 			else
 			{
@@ -92,14 +92,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static IEnumerable<Druid> GetFields(this BinaryComparisonFieldWithField comparison)
+		private static IEnumerable<Druid> GetFields(this ComparisonFieldField comparison)
 		{
 			yield return comparison.Left.FieldId;
 			yield return comparison.Right.FieldId;
 		}
 
 
-		private static IEnumerable<Druid> GetFields(this BinaryComparisonFieldWithValue comparison)
+		private static IEnumerable<Druid> GetFields(this ComparisonFieldValue comparison)
 		{
 			yield return comparison.Left.FieldId;
 		}

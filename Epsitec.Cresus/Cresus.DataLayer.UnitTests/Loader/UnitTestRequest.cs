@@ -70,14 +70,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			Request request = new Request ();
 
 			Expression expression1 =
-				new BinaryComparisonFieldWithField (
+				new ComparisonFieldField (
 					new Field (new Druid ("[L0A01]")),
 					BinaryComparator.IsEqual,
 					new Field (new Druid ("[L0AV]"))
 				);
 
 			Expression expression2 =
-				new BinaryComparisonFieldWithValue (
+				new ComparisonFieldValue (
 					new Field (new Druid ("[L0A61]")),
 					BinaryComparator.IsEqual,
 					new Constant (true)
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			Request request = new Request ();
 
 			Expression expression =
-				new BinaryComparisonFieldWithField (
+				new ComparisonFieldField (
 					new Field (new Druid ("[L0AS1]")),
 					BinaryComparator.IsEqual,
 					new Field (new Druid ("[L0AV]"))
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			Request request = new Request ();
 
 			Expression expression =
-				new BinaryComparisonFieldWithValue (
+				new ComparisonFieldValue (
 					new Field (new Druid ("[L0AS]")),
 					BinaryComparator.IsEqual,
 					new Constant (true)

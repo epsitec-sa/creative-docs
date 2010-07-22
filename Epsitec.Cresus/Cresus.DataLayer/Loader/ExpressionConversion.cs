@@ -53,13 +53,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return (comparison as UnaryComparison).CreateDbCondition (dbTableColumnResolver);
 			}
-			else if (comparison is BinaryComparisonFieldWithField)
+			else if (comparison is ComparisonFieldField)
 			{
-				return (comparison as BinaryComparisonFieldWithField).CreateDbCondition (dbTableColumnResolver);
+				return (comparison as ComparisonFieldField).CreateDbCondition (dbTableColumnResolver);
 			}
-			else if (comparison is BinaryComparisonFieldWithValue)
+			else if (comparison is ComparisonFieldValue)
 			{
-				return (comparison as BinaryComparisonFieldWithValue).CreateDbCondition (dbTableColumnResolver);
+				return (comparison as ComparisonFieldValue).CreateDbCondition (dbTableColumnResolver);
 			}
 			else
 			{
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static DbAbstractCondition CreateDbCondition(this BinaryComparisonFieldWithField comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		private static DbAbstractCondition CreateDbCondition(this ComparisonFieldField comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn left = comparison.Left.GetDbTableColumn (dbTableColumnResolver);
 			DbSimpleConditionOperator op = EnumConverter.ToDbSimpleConditionOperator (comparison.Operator);
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static DbAbstractCondition CreateDbCondition(this BinaryComparisonFieldWithValue comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		private static DbAbstractCondition CreateDbCondition(this ComparisonFieldValue comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn left = comparison.Left.GetDbTableColumn (dbTableColumnResolver);
 			DbSimpleConditionOperator op = EnumConverter.ToDbSimpleConditionOperator (comparison.Operator);
