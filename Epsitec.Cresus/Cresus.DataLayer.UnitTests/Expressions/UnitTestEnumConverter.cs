@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 	
     [TestClass]
-	public sealed class UnitTestConverter
+	public sealed class UnitTestEnumConverter
 	{
 		
 
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (BinaryOperator match in matches.Keys)
 			{
 				DbConditionCombinerOperator result1 = matches[match];
-				DbConditionCombinerOperator result2 = Converter_Accessor.ToDbConditionCombinerOperator (match);
+				DbConditionCombinerOperator result2 = EnumConverter_Accessor.ToDbConditionCombinerOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (UnaryOperator match in matches.Keys)
 			{
 				DbConditionModifierOperator result1 = matches[match];
-				DbConditionModifierOperator result2 = Converter_Accessor.ToDbConditionModifierOperator (match);
+				DbConditionModifierOperator result2 = EnumConverter_Accessor.ToDbConditionModifierOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (Type_Accessor match in matches.Keys)
 			{
 				DbRawType result1 = matches[match];
-				DbRawType result2 = Converter_Accessor.ToDbRawType (match);
+				DbRawType result2 = EnumConverter_Accessor.ToDbRawType (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (UnaryComparator match in matches.Keys)
 			{
 				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = Converter_Accessor.ToDbSimpleConditionOperator (match);
+				DbSimpleConditionOperator result2 = EnumConverter_Accessor.ToDbSimpleConditionOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (BinaryComparator match in matches.Keys)
 			{
 				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = Converter_Accessor.ToDbSimpleConditionOperator (match);
+				DbSimpleConditionOperator result2 = EnumConverter_Accessor.ToDbSimpleConditionOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}

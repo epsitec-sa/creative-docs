@@ -183,11 +183,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// that it targets only value fields which exists in <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> associated with the constraint.</param>
-		/// <param name="contraint">The constraint whose validity to check.</param>
+		/// <param name="constraint">The constraint whose validity to check.</param>
 		/// <returns><c>true</c> if the constraint is valid, <c>false</c> if it is not.</returns>
-		private bool IsLocalConstraintValid(AbstractEntity entity, Expression contraint)
+		private bool IsLocalConstraintValid(AbstractEntity entity, Expression constraint)
 		{
-			return contraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
+			return constraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
 		}
 
 

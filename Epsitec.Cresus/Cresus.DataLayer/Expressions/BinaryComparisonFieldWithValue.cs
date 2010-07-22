@@ -1,9 +1,5 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.Database;
-
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 
@@ -26,23 +22,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
-		}
-
-
-		protected override DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			DbTableColumn left = this.Left.CreateDbTableColumn (dbTableColumnResolver);
-			DbSimpleConditionOperator op = Converter.ToDbSimpleConditionOperator (this.Operator);
-			object rightValue = this.Right.Value;
-			DbRawType rightType = Converter.ToDbRawType (this.Right.Type);
-
-			return new DbSimpleCondition (left, op, rightValue, rightType);
-		}
-
-
-		internal override IEnumerable<Druid> GetFields()
-		{
-			return new Druid[] { this.Left.FieldId, };
 		}
 
 

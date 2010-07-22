@@ -1,13 +1,4 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Database;
-
-using System.Collections.Generic;
-using System.Linq;
-
-
-namespace Epsitec.Cresus.DataLayer.Expressions
+﻿namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
@@ -43,26 +34,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			private set;
 		}
 
-
-
-		internal override DbAbstractCondition CreateDbAbstractCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			DbAbstractCondition left = this.Left.CreateDbAbstractCondition (entity, dbTableColumnResolver);
-			DbAbstractCondition right = this.Right.CreateDbAbstractCondition (entity, dbTableColumnResolver);
-
-			DbConditionCombinerOperator op = Converter.ToDbConditionCombinerOperator (this.Operator);
-
-			return new DbConditionCombiner (op, left, right);
-		}
-
-
-		internal override IEnumerable<Druid> GetFields()
-		{
-			IEnumerable<Druid> left = this.Left.GetFields ();
-			IEnumerable<Druid> right = this.Right.GetFields ();
-
-			return left.Concat (right);
-		}
 
 	}
 

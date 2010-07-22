@@ -137,7 +137,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Context\DataContextEventArgs.cs" />
+    <Compile Include="Loader\ExpressionConversion.cs" />
     <Compile Include="Loader\DataLoader.cs" />
+    <Compile Include="Loader\ExpressionFields.cs" />
     <Compile Include="Loader\Request.cs" />
     <Compile Include="Context\DataContextPool.cs" />
     <Compile Include="Loader\CollectionData.cs" />
@@ -153,7 +155,7 @@
     <Compile Include="Expressions\Comparison.cs" />
     <Compile Include="Expressions\Constant.cs" />
     <Compile Include="Expressions\Type.cs" />
-    <Compile Include="Expressions\Converter.cs" />
+    <Compile Include="Expressions\EnumConverter.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\UnaryComparator.cs" />
     <Compile Include="Expressions\UnaryComparison.cs" />

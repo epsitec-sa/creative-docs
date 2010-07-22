@@ -28,22 +28,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		protected override DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			DbTableColumn left = this.Left.CreateDbTableColumn (dbTableColumnResolver);
-			DbSimpleConditionOperator op = Converter.ToDbSimpleConditionOperator (this.Operator);
-			DbTableColumn right = this.Right.CreateDbTableColumn (dbTableColumnResolver);
-
-			return new DbSimpleCondition (left, op, right);
-		}
-
-
-		internal override IEnumerable<Druid> GetFields()
-		{
-			return new Druid[] { this.Left.FieldId, this.Right.FieldId, };
-		}
-
-
 	}
 
 

@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			DbSelectCondition selectCondition = new DbSelectCondition ()
 			{
-				Condition = constraint.CreateDbAbstractCondition (entity, fieldId =>
+				Condition = constraint.CreateDbCondition (fieldId =>
 				{
 					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 

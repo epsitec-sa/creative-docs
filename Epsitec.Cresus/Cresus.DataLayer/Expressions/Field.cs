@@ -1,6 +1,5 @@
 ﻿using Epsitec.Common.Support;
-
-using Epsitec.Cresus.Database;
+using Epsitec.Common.Support.EntityEngine;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -32,20 +31,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="DbTableColumn"/> corresponding to this <c>Field</c> in the database.
-		/// </summary>
-		/// <param name="dbTableColumnResolver">
-		/// A delegate that will return the <see cref="DbTableColumn"/> corresponding to a given
-		/// <see cref="Druid"/>.
-		/// </param>
-		/// <returns>The <see cref="DbTableColumn"/></returns>
-		internal DbTableColumn CreateDbTableColumn(System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			return dbTableColumnResolver (this.FieldId);
 		}
 
 

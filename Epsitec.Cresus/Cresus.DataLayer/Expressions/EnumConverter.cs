@@ -6,10 +6,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	
 	
 	/// <summary>
-	/// The <c>Converter</c> class provides the tools required to convert between enumerations
+	/// The <c>EnumConverter</c> class provides the tools required to convert between enumerations
 	/// defined in this layer and enumerations defined in the lower layers.
 	/// </summary>
-	internal static class Converter
+	internal static class EnumConverter
 	{
 
 
