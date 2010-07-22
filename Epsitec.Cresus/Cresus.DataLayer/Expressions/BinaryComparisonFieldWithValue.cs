@@ -7,14 +7,29 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
-	public class BinaryComparisonFieldWithValue : BinaryComparison
+	public class BinaryComparisonFieldWithValue : Comparison
 	{
 
 
-		public BinaryComparisonFieldWithValue(Field left, BinaryComparator op, Constant right)
-			: base (left, op)
+		public BinaryComparisonFieldWithValue(Field left, BinaryComparator op, Constant right) : base ()
 		{
+			this.Left = left;
+			this.Operator = op;
 			this.Right = right;
+		}
+
+
+		public Field Left
+		{
+			get;
+			private set;
+		}
+
+
+		public BinaryComparator Operator
+		{
+			get;
+			private set;
 		}
 
 

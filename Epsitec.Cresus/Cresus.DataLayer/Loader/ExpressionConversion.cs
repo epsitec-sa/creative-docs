@@ -53,20 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return (comparison as UnaryComparison).CreateDbCondition (dbTableColumnResolver);
 			}
-			else if (comparison is BinaryComparison)
-			{
-				return (comparison as BinaryComparison).CreateDbCondition (dbTableColumnResolver);
-			}
-			else
-			{
-				throw new System.NotSupportedException ("comparison is not supported");
-			}
-		}
-
-
-		private static DbAbstractCondition CreateDbCondition(this BinaryComparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			if (comparison is BinaryComparisonFieldWithField)
+			else if (comparison is BinaryComparisonFieldWithField)
 			{
 				return (comparison as BinaryComparisonFieldWithField).CreateDbCondition (dbTableColumnResolver);
 			}

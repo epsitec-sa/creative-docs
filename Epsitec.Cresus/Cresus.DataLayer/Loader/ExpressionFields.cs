@@ -56,20 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return (comparison as UnaryComparison).GetFields ();
 			}
-			else if (comparison is BinaryComparison)
-			{
-				return (comparison as BinaryComparison).GetFields ();
-			}
-			else
-			{
-				throw new System.NotSupportedException ("comparison is not supported");
-			}
-		}
-
-
-		private static IEnumerable<Druid> GetFields(this BinaryComparison comparison)
-		{
-			if (comparison is BinaryComparisonFieldWithField)
+			else if (comparison is BinaryComparisonFieldWithField)
 			{
 				return (comparison as BinaryComparisonFieldWithField).GetFields ();
 			}

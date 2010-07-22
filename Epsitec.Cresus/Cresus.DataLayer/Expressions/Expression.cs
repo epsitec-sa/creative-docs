@@ -4,7 +4,7 @@
 
 	/// <summary>
 	/// The <c>Expression</c> class is used to represent a logical expression such as
-	/// ((a > b) and (c = 1)).
+	/// ((a != b) and (c = 1)).
 	/// </summary>
 	public abstract class Expression
 	{

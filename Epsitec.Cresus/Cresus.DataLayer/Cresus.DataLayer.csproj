@@ -151,7 +151,6 @@
     <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
-    <Compile Include="Expressions\BinaryComparison.cs" />
     <Compile Include="Expressions\BinaryComparator.cs" />
     <Compile Include="Expressions\Comparison.cs" />
     <Compile Include="Expressions\Constant.cs" />
