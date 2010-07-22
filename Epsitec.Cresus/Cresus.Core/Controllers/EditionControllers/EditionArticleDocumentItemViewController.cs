@@ -157,9 +157,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
+			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (this.GetDiscount, this.SetDiscount));
+
 			FrameBox group = builder.CreateGroup (tile, "Prix unitaire et total HT");
-			        builder.CreateTextField (group, DockStyle.Left, 100, Marshaler.Create (this.GetPrice,      this.SetPrice));
-			var t = builder.CreateTextField (group, DockStyle.Left, 100, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
+			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetPrice,      this.SetPrice));
+			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
 			t.IsReadOnly = true;
 		}
 
@@ -338,7 +340,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 						this.Entity.ArticleQuantities.RemoveAt (i);
 					}
 
-					this.UpdatePrice ();
+					this.UpdatePrices ();
 					return;
 				}
 			}
@@ -354,7 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.ArticleQuantities.Add (newQuantity);
 			}
 
-			this.UpdatePrice ();
+			this.UpdatePrices ();
 		}
 
 
@@ -460,6 +462,69 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private string GetDiscount()
+		{
+			if (this.Entity.Discounts.Count != 0)
+			{
+				if (this.Entity.Discounts[0].DiscountRate.HasValue)
+				{
+					return Misc.PercentToString (this.Entity.Discounts[0].DiscountRate.Value);
+				}
+
+				if (this.Entity.Discounts[0].DiscountAmount.HasValue)
+				{
+					return Misc.PriceToString (this.Entity.Discounts[0].DiscountAmount.Value);
+				}
+			}
+
+			return null;
+		}
+
+		private void SetDiscount(string value)
+		{
+			value = value.Trim ();
+
+			decimal? v = null;
+			bool percent = false;
+
+			if (value.EndsWith ("%"))
+			{
+				v = Misc.StringToDecimal (value.Substring (0, value.Length-1)) / 100.0M;
+				percent = true;
+			}
+			else
+			{
+				v = Misc.StringToDecimal (value);
+			}
+
+			if (v == null)
+			{
+				this.Entity.Discounts.Clear ();
+			}
+			else
+			{
+				if (this.Entity.Discounts.Count == 0)
+				{
+					var discount = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
+					this.Entity.Discounts.Add (discount);
+				}
+
+				if (percent)
+				{
+					this.Entity.Discounts[0].DiscountRate = v;
+					this.Entity.Discounts[0].DiscountAmount = null;
+				}
+				else
+				{
+					this.Entity.Discounts[0].DiscountRate = null;
+					this.Entity.Discounts[0].DiscountAmount = v;
+				}
+			}
+
+			this.UpdatePrices ();
+		}
+
+
 		private decimal? GetArticlePrice()
 		{
 			return ArticleDocumentItemHelper.GetArticlePrice (this.Entity, System.DateTime.Now, BusinessLogic.Finance.CurrencyCode.Chf);
@@ -475,7 +540,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (value.HasValue)
 			{
 				this.Entity.PrimaryUnitPriceBeforeTax = value.Value;
-				this.UpdatePrice ();
+				this.UpdatePrices ();
 			}
 		}
 
@@ -493,18 +558,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private void UpdatePrice()
+		private void UpdatePrices()
 		{
-			var quantity = this.GetQuantity ();
+			//?InvoiceDocumentHelper.UpdatePrices ();  // TODO: je ne sais pas comment retrouver InvoiceDocumentEntity
+			ArticleDocumentItemHelper.UpdatePrices (this.Entity);
 
-			if (quantity.HasValue)
-			{
-				this.Entity.ResultingLinePriceBeforeTax = this.Entity.PrimaryUnitPriceBeforeTax * quantity.Value;
-				this.Entity.ResultingLineTax = this.Entity.ResultingLinePriceBeforeTax * 0.076M;  // TODO: Il manque le taux dans ArticleDocumentItemEntity ?
-
-				this.tileContainer.UpdateAllWidgets ();
-				this.UpdateDialogs ();
-			}
+			this.tileContainer.UpdateAllWidgets ();
+			this.UpdateDialogs ();
 		}
 
 

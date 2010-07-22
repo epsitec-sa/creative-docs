@@ -28,12 +28,13 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("Summary", "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+			type.DocumentOptions.Add (new DocumentOption ("Données à inclure :"));
 			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Adresses",   true));
 			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Téléphones", true));
 			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Emails",     true));
-			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
-			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
-			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Debug1", "Test #1", "Page fixe de test pour l'objet TextBand.");
@@ -94,6 +95,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
+			base.PrintCurrentPage (port, bounds);
+
 			if (this.DocumentTypeSelected == "Summary")
 			{
 				this.documentContainer.Paint (port, this.CurrentPage);
@@ -163,10 +166,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildContacts(System.Func<bool> builder)
 		{
 			//	Ajoute un contact dans le document.
-			for (int i = 0; i < 10; i++)  // TODO: debug, à enlever
-			{
-				builder ();
-			}
+			builder ();
 		}
 
 		private bool BuildMailContacts()

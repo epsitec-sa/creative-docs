@@ -29,9 +29,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public DocumentContainer()
 		{
 			this.pages = new List<PageContainer> ();
-			this.pages.Add (new PageContainer (0));  // crée la première page
-
-			this.currentPage = 0;
+			this.Clear ();
 		}
 
 
@@ -44,7 +42,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set
 			{
 				this.pageSize = value;
-				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+				this.Clear ();
 			}
 		}
 
@@ -57,7 +55,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set
 			{
 				this.pageMargins = value;
-				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
+				this.Clear ();
 			}
 		}
 

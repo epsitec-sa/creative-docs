@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Data;
@@ -11,7 +12,6 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core
 {
