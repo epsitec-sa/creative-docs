@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Alfred")
+						new Constant ("Alfred")
 					)
 				);
 
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						new BinaryComparisonFieldWithValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsEqual,
-							new Constant (Type.String, "Hans")
+							new Constant ("Hans")
 						)
 					)
 				);
@@ -178,13 +178,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						new BinaryComparisonFieldWithValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsNotEqual,
-							new Constant (Type.String, "Hans")
+							new Constant ("Hans")
 						),
 						BinaryOperator.And,
 						new BinaryComparisonFieldWithValue (
 							new Field (new Druid ("[L0AV]")),
 							BinaryComparator.IsNotEqual,
-							new Constant (Type.String, "Gertrude")
+							new Constant ("Gertrude")
 						)
 					)
 				);
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Alfred")
+						new Constant ("Alfred")
 					)
 				);
 
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A01]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Dupond")
+						new Constant ("Dupond")
 					)
 				);
 
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AV]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Alfred")
+						new Constant ("Alfred")
 					)
 				);
 
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Male")
+						new Constant ("Male")
 					)
 				);
 
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsEqual,
-						new Constant (Type.String, "Male")
+						new Constant ("Male")
 					)
 				);
 
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0AC1]")),
 						BinaryComparator.IsLike,
-						new Constant (Type.String, "%ale")
+						new Constant ("%ale")
 					)
 				);
 
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLike,
-						new Constant (Type.String, "test%test")
+						new Constant ("test%test")
 					)
 				);
 
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLike,
-						new Constant (Type.String, "test_test")
+						new Constant ("test_test")
 					)
 				);
 
@@ -420,7 +420,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
-						new Constant (Type.String, value)
+						new Constant (value)
 					)
 				);
 
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
-						new Constant (Type.String, value)
+						new Constant (value)
 					)
 				);
 
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new BinaryComparisonFieldWithValue (
 						new Field (new Druid ("[L0A3]")),
 						BinaryComparator.IsLikeEscape,
-						new Constant (Type.String, value)
+						new Constant (value)
 					)
 				);
 

@@ -5,7 +5,7 @@
 	/// <summary>
 	/// The <c>Type</c> enumeration defines the types that can be used for a <see cref="Expression"/>.
 	/// </summary>
-	public enum Type
+	internal enum Type
 	{
 
 

@@ -162,11 +162,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		
 		/// <summary>
-		/// Gets the <see cref="List"/> of constraints associated with an <see cref="AbstractEntity"/>
+		/// Gets the <see cref="IList"/> of constraints associated with an <see cref="AbstractEntity"/>
 		/// and creates it if there isn't any.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose constraints to retrieve.</param>
-		/// <returns>The <see cref="List"/> of constraints.</returns>
+		/// <returns>The <see cref="IList"/> of constraints.</returns>
 		private List<Expression> GetWritableLocalConstraints(AbstractEntity entity)
 		{
 			if (!this.IsLocalyConstrained (entity))

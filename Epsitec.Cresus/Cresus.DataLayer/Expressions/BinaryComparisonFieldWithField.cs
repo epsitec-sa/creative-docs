@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		protected override DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn left = this.Left.CreateDbTableColumn (entity, dbTableColumnResolver);
-			DbSimpleConditionOperator op = OperatorConverter.ToDbSimpleConditionOperator (this.Operator);
+			DbSimpleConditionOperator op = Converter.ToDbSimpleConditionOperator (this.Operator);
 			DbTableColumn right = this.Right.CreateDbTableColumn (entity, dbTableColumnResolver);
 
 			return new DbSimpleCondition (left, op, right);

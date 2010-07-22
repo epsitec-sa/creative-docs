@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			DbAbstractCondition left = this.Left.CreateDbAbstractCondition (entity, dbTableColumnResolver);
 			DbAbstractCondition right = this.Right.CreateDbAbstractCondition (entity, dbTableColumnResolver);
 
-			DbConditionCombinerOperator op = OperatorConverter.ToDbConditionCombinerOperator (this.Operator);
+			DbConditionCombinerOperator op = Converter.ToDbConditionCombinerOperator (this.Operator);
 
 			return new DbConditionCombiner (op, left, right);
 		}

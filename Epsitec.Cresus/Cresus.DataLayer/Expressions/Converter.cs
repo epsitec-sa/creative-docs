@@ -6,10 +6,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	
 	
 	/// <summary>
-	/// The <c>OperatorConverter</c> class provides the tools required to convert between enumerations
+	/// The <c>Converter</c> class provides the tools required to convert between enumerations
 	/// defined in this layer and enumerations defined in the lower layers.
 	/// </summary>
-	internal static class OperatorConverter
+	internal static class Converter
 	{
 
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="BinaryComparator"/> to the corresponding <see cref="DbSimpleConditionOperator"/>.
 		/// </summary>
-		/// <param name="unaryComparator">The <see cref="BinaryComparator"/> to converted.</param>
+		/// <param name="binaryComparator">The <see cref="BinaryComparator"/> to converted.</param>
 		/// <returns>The corresponding <see cref="DbSimpleConditionOperator"/>.</returns>
 		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
 		public static DbSimpleConditionOperator ToDbSimpleConditionOperator(BinaryComparator binaryComparator)
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="UnaryOperator"/> to the corresponding <see cref="DbConditionModifierOperator"/>.
 		/// </summary>
-		/// <param name="unaryComparator">The <see cref="UnaryOperator"/> to converted.</param>
+		/// <param name="unaryOperator">The <see cref="UnaryOperator"/> to converted.</param>
 		/// <returns>The corresponding <see cref="DbConditionModifierOperator"/>.</returns>
 		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
 		public static DbConditionModifierOperator ToDbConditionModifierOperator(UnaryOperator unaryOperator)
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="BinaryOperator"/> to the corresponding <see cref="DbConditionCombinerOperator"/>.
 		/// </summary>
-		/// <param name="unaryComparator">The <see cref="BinaryOperator"/> to converted.</param>
+		/// <param name="binaryOperator">The <see cref="BinaryOperator"/> to converted.</param>
 		/// <returns>The corresponding <see cref="DbConditionCombinerOperator"/>.</returns>
 		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
 		public static DbConditionCombinerOperator ToDbConditionCombinerOperator(BinaryOperator binaryOperator)
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="Type"/> to the corresponding <see cref="DbRawType"/>.
 		/// </summary>
-		/// <param name="unaryComparator">The <see cref="Type"/> to converted.</param>
+		/// <param name="type">The <see cref="Type"/> to converted.</param>
 		/// <returns>The corresponding <see cref="DbRawType"/>.</returns>
 		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
 		public static DbRawType ToDbRawType(Type type)

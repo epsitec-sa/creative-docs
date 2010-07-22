@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				new BinaryComparisonFieldWithValue (
 					new Field (new Druid ("[L0A61]")),
 					BinaryComparator.IsEqual,
-					new Constant (Type.Boolean, true)
+					new Constant (true)
 				);
 
 			Expression expression3 =
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				new BinaryComparisonFieldWithValue (
 					new Field (new Druid ("[L0AS]")),
 					BinaryComparator.IsEqual,
-					new Constant (Type.Boolean, true)
+					new Constant (true)
 				);
 
 			request.AddLocalConstraint (person, expression);

@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		internal override DbAbstractCondition CreateDbAbstractCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbAbstractCondition condition = this.Expression.CreateDbAbstractCondition (entity, dbTableColumnResolver);
-			DbConditionModifierOperator op = OperatorConverter.ToDbConditionModifierOperator (this.Operator);
+			DbConditionModifierOperator op = Converter.ToDbConditionModifierOperator (this.Operator);
 
 			return new DbConditionModifier (op, condition);
 		}
