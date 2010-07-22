@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// </summary>
 		/// <param name="op">The operation to apply to the <see cref="Expression"/>.</param>
 		/// <param name="expression">The <see cref="Expression"/> on which to apply the <see cref="UnaryOperator"/>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="expression"/> is null.</exception>
 		public UnaryOperation(UnaryOperator op, Expression expression) : base()
 		{
 			expression.ThrowIfNull ("expression");
