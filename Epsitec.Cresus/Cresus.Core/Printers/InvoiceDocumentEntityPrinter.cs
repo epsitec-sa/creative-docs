@@ -28,35 +28,36 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			DocumentType type;
 
-			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			type.DocumentOptions.Add (new DocumentOption ("Type de bulletin de versement :"));
-			type.DocumentOptions.Add (new DocumentOption ("BVR", "bv", "BVR orange", true));
-			type.DocumentOptions.Add (new DocumentOption ("BV",  "bv", "BV rose"));
-			type.DocumentOptions.Add (new DocumentOption ("Mode d'impression du BV :"));
-			type.DocumentOptions.Add (new DocumentOption ("Simul", null, "Fac-similé complet du BV, uniquement pour des tests", true));
-			type.DocumentOptions.Add (new DocumentOption ("Spec",  null, "Ajoute la mention SPECIMEN"));
-#if false
-			type.DocumentOptions.Add (new DocumentOption ("Sous-titre :"));
-			type.DocumentOptions.Add (new DocumentOption ("ra1", "ra", "Radio A.1", true));
-			type.DocumentOptions.Add (new DocumentOption ("ra2", "ra", "Radio A.2"));
-			type.DocumentOptions.Add (new DocumentOption ("ra3", "ra", "Radio A.3"));
-			type.DocumentOptions.Add (new DocumentOption (10));
-			type.DocumentOptions.Add (new DocumentOption ("rb1", "rb", "Radio B.1"));
-			type.DocumentOptions.Add (new DocumentOption ("rb2", "rb", "Radio B.2", true));
-			type.DocumentOptions.Add (new DocumentOption ("rb3", "rb", "Radio B.3"));
-#endif
+			type = new DocumentType ("G.BV", "Facture générique avec BV", "Facture générique A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			AbstractEntityPrinter.DocumentTypeAddBV (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
-			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
-			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			type = new DocumentType ("G.Simple", "Facture générique sans BV", "Facture générique A4 simple sans bulletin de versement.");
+			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			type.DocumentOptions.Add (new DocumentOption ("Orientation du papier :"));
-			type.DocumentOptions.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
-			type.DocumentOptions.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)",  false));
+			type = new DocumentType ("G.BL", "Bulletin de livraison générique", "Bulletin de livraison générique A4, sans prix.");
+			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("M.BV", "Facture \"M\" avec BV", "Facture \"M\" A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			AbstractEntityPrinter.DocumentTypeAddBV (type.DocumentOptions);
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("M.Simple", "Facture \"M\" sans BV", "Facture \"M\" A4 simple sans bulletin de versement.");
+			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("M.BL", "Bulletin de livraison \"M\"", "Bulletin de livraison \"M\" A4, sans prix.");
+			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			this.columns = new Dictionary<string, TableColumn> ();
@@ -89,9 +90,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.DocumentTypeSelected == "BV")
+				if (this.DocumentTypeSelected.EndsWith (".BV"))
 				{
-					return new Margins (20, 10, 20, AbstractBvBand.DefautlSize.Height+10);
+					return new Margins (20, 10, 20, 10+AbstractBvBand.DefautlSize.Height);
 				}
 				else
 				{
@@ -103,8 +104,9 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void BuildSections()
 		{
 			base.BuildSections ();
+			this.documentContainer.Clear ();
 
-			if (this.DocumentTypeSelected == "BV")
+			if (this.DocumentTypeSelected == "G.BV")
 			{
 				this.BuildHeader ();
 				this.BuildArticles ();
@@ -113,7 +115,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildBvs (bvr: this.HasDocumentOption ("BVR"));
 			}
 
-			if (this.DocumentTypeSelected == "Simple")
+			if (this.DocumentTypeSelected == "G.Simple")
 			{
 				this.BuildHeader ();
 				this.BuildArticles ();
@@ -121,7 +123,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages ();
 			}
 
-			if (this.DocumentTypeSelected == "BL")
+			if (this.DocumentTypeSelected == "G.BL")
 			{
 				// TODO:
 			}
@@ -129,6 +131,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
+			base.PrintCurrentPage (port, bounds);
+
 			this.documentContainer.Paint (port, this.CurrentPage);
 		}
 
@@ -194,7 +198,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.columns.Add ("Nb",   new TableColumn ("Livré",       12.0, ContentAlignment.MiddleLeft));
 			this.columns.Add ("Suit", new TableColumn ("Suit",        12.0, ContentAlignment.MiddleLeft));
 			this.columns.Add ("Date", new TableColumn ("Date",        20.0, ContentAlignment.MiddleLeft));
-			this.columns.Add ("Rab",  new TableColumn ("Rabais",      12.0, ContentAlignment.MiddleRight));
+			this.columns.Add ("Rab",  new TableColumn ("Rabais",      15.0, ContentAlignment.MiddleRight));
 			this.columns.Add ("PU",   new TableColumn ("p.u. HT",     15.0, ContentAlignment.MiddleRight));
 			this.columns.Add ("PT",   new TableColumn ("Prix HT",     15.0, ContentAlignment.MiddleRight));
 			this.columns.Add ("TVA",  new TableColumn ("TVA",         15.0, ContentAlignment.MiddleRight));
@@ -319,6 +323,11 @@ namespace Epsitec.Cresus.Core.Printers
 					this.columns["Date"].Visible = true;
 				}
 			}
+
+			if (line.Discounts.Count != 0)
+			{
+				this.columns["Rab"].Visible = true;
+			}
 		}
 
 		private void InitializeColumnPriceLine(PriceDocumentItemEntity line)
@@ -400,16 +409,29 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			table.SetText (this.columns["Desc"].Rank, row, description);
-			table.SetText (this.columns["PU"  ].Rank, row, Misc.DecimalToString (line.PrimaryUnitPriceBeforeTax));
+			table.SetText (this.columns["PU"  ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax = line.ResultingLineTax.Value;
 
-				table.SetText (this.columns["PT" ].Rank, row, Misc.DecimalToString (beforeTax));
-				table.SetText (this.columns["TVA"].Rank, row, Misc.DecimalToString (tax));
-				table.SetText (this.columns["Tot"].Rank, row, Misc.DecimalToString (beforeTax+tax));
+				table.SetText (this.columns["PT" ].Rank, row, Misc.PriceToString (beforeTax));
+				table.SetText (this.columns["TVA"].Rank, row, Misc.PriceToString (tax));
+				table.SetText (this.columns["Tot"].Rank, row, Misc.PriceToString (beforeTax+tax));
+			}
+
+			if (line.Discounts.Count != 0)
+			{
+				if (line.Discounts[0].DiscountRate.HasValue)
+				{
+					table.SetText (this.columns["Rab"].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
+				}
+
+				if (line.Discounts[0].DiscountAmount.HasValue)
+				{
+					table.SetText (this.columns["Rab"].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
+				}
 			}
 		}
 
@@ -446,13 +468,13 @@ namespace Epsitec.Cresus.Core.Printers
 			string beforePrice = null;
 			if (line.PrimaryPriceBeforeTax.HasValue)
 			{
-				beforePrice = Misc.DecimalToString (line.PrimaryPriceBeforeTax.Value);
+				beforePrice = Misc.PriceToString (line.PrimaryPriceBeforeTax.Value);
 			}
 
 			string afterPrice = null;
 			if (line.ResultingPriceBeforeTax.HasValue)
 			{
-				afterPrice = Misc.DecimalToString (line.ResultingPriceBeforeTax.Value);
+				afterPrice = Misc.PriceToString (line.ResultingPriceBeforeTax.Value);
 			}
 
 			string prix = string.Concat (beforePrice, "<br/>", afterPrice);
@@ -480,13 +502,13 @@ namespace Epsitec.Cresus.Core.Printers
 			string tva = null;
 			if (line.ResultingTax.HasValue)
 			{
-				tva = Misc.DecimalToString (line.ResultingTax.Value);
+				tva = Misc.PriceToString (line.ResultingTax.Value);
 			}
 			
 			string total = null;
 			if (line.FixedPriceAfterTax.HasValue)
 			{
-				total = Misc.DecimalToString (line.FixedPriceAfterTax.Value);
+				total = Misc.PriceToString (line.FixedPriceAfterTax.Value);
 			}
 
 			if (lastLine)
@@ -580,8 +602,8 @@ namespace Epsitec.Cresus.Core.Printers
 					BV = new BvBand ();  // BV rose
 				}
 
-				BV.PaintBvSimulator = this.HasDocumentOption ("Simul");
-				BV.PaintSpecimen    = this.HasDocumentOption ("Spec");
+				BV.PaintBvSimulator = this.HasDocumentOption ("BV.Simul");
+				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Spec");
 				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
@@ -589,7 +611,7 @@ namespace Epsitec.Cresus.Core.Printers
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
 					BV.NotForUse = false;  // c'est LE vrai BV
-					BV.Price = InvoiceDocumentHelper.GetTotal (this.entity);
+					BV.Price = InvoiceDocumentHelper.GetAmontDue (this.entity);
 
 					if (this.entity.BillingDetails.Count > 0)
 					{

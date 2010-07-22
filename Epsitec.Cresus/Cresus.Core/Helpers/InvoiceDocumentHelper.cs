@@ -16,10 +16,10 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class InvoiceDocumentHelper
 	{
-		public static FormattedText GetText(InvoiceDocumentEntity x)
+		public static FormattedText GetSummary(InvoiceDocumentEntity x)
 		{
 			string date = InvoiceDocumentHelper.GetDate (x);
-			string total = Misc.DecimalToString (InvoiceDocumentHelper.GetTotal (x));
+			string total = Misc.PriceToString (InvoiceDocumentHelper.GetAmontDue (x));
 
 			var builder = new System.Text.StringBuilder ();
 
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					if (line is ArticleDocumentItemEntity)
 					{
-						var quantity = ArticleDocumentItemHelper.GetArticleQuantity (line as ArticleDocumentItemEntity);
+						var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (line as ArticleDocumentItemEntity);
 						var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (line as ArticleDocumentItemEntity));
 
 						builder.Append ("● ");
@@ -83,15 +83,6 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static string GetConcerne(InvoiceDocumentEntity x)
-		{
-			if (x.BillingDetails.Count > 0)
-			{
-				return x.BillingDetails[0].Title;
-			}
-
-			return null;
-		}
 
 		public static string GetConditions(InvoiceDocumentEntity x)
 		{
@@ -103,19 +94,133 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static decimal GetTotal(InvoiceDocumentEntity x)
+
+		public static string GetConcerne(InvoiceDocumentEntity x)
 		{
 			if (x.BillingDetails.Count > 0)
 			{
-				return Misc.CentRound (x.BillingDetails[0].AmountDue.Amount);
+				return x.BillingDetails[0].Title;
+			}
+
+			return null;
+		}
+
+		public static void SetConcerne(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				if (x.BillingDetails.Count != 0)
+				{
+					x.BillingDetails[0].Title = null;
+				}
+			}
+			else
+			{
+				if (x.BillingDetails.Count == 0)
+				{
+					var billing = dataContext.CreateEmptyEntity<BillingDetailsEntity> ();
+					x.BillingDetails.Add (billing);
+				}
+
+				x.BillingDetails[0].Title = value;
+			}
+		}
+
+
+		public static decimal GetAmontDue(InvoiceDocumentEntity x)
+		{
+			if (x.BillingDetails.Count > 0)
+			{
+				return Misc.PriceRound (x.BillingDetails[0].AmountDue.Amount);
 			}
 
 			return 0;
 		}
 
+		public static void SetAmontDue(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
+		{
+			if (x.BillingDetails.Count == 0)
+			{
+				var billing = dataContext.CreateEmptyEntity<BillingDetailsEntity> ();
+				x.BillingDetails.Add (billing);
+			}
+
+			x.BillingDetails[0].AmountDue.Amount = value;
+		}
+
+
 		public static string GetTitle(InvoiceDocumentEntity x)
 		{
 			return UIBuilder.FormatText ("<b>Facture", x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
+		}
+
+
+		public static void UpdatePrices(InvoiceDocumentEntity x, DataLayer.DataContext dataContext)
+		{
+			//	Recalcule complètement une facture.
+			var decimalType = DecimalType.Default;
+
+			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
+			decimal primaryTotalBeforeTax = 0;
+			decimal amontDue = 0;
+
+			foreach (var line in x.Lines)
+			{
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					ArticleDocumentItemHelper.UpdatePrices (article);
+
+					primaryTotalBeforeTax += article.PrimaryLinePriceBeforeTax;
+				}
+
+				if (line is PriceDocumentItemEntity)
+				{
+					var price = line as PriceDocumentItemEntity;
+
+					price.PrimaryPriceBeforeTax = primaryTotalBeforeTax;
+					price.FinalPriceBeforeTax   = primaryTotalBeforeTax;
+
+					price.PrimaryTax   = price.FinalPriceBeforeTax * vatRate;
+					price.ResultingTax = price.FinalPriceBeforeTax * vatRate;
+
+					if (price.Discount.IsActive ())  // rabais ?
+					{
+						price.ResultingPriceBeforeTax = price.PrimaryPriceBeforeTax * (1.0M - price.Discount.DiscountRate);
+					}
+					else  // total ?
+					{
+						price.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (price.FixedPriceAfterTax / (1 + vatRate));
+						price.FixedPriceAfterTax = (int) (price.PrimaryPriceBeforeTax * (1+vatRate) / 10) * 10M;
+
+						amontDue = price.FixedPriceAfterTax.Value;
+					}
+				}
+			}
+
+			SetAmontDue (x, dataContext, amontDue);
+		}
+
+
+		public static void UpdateDialogs(InvoiceDocumentEntity x)
+		{
+			//	Met à jour le ou les dialogues d'aperçu avant impression ouverts.
+			foreach (var dialog in CoreProgram.Application.AttachedDialogs)
+			{
+				foreach (var entity in dialog.Entities)
+				{
+					if (entity is InvoiceDocumentEntity)
+					{
+						var invoiceDocument = entity as InvoiceDocumentEntity;
+						if (invoiceDocument == x)
+						{
+							dialog.Update ();
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 }

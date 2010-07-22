@@ -473,7 +473,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected InternalState						InternalState
+		protected InternalState InternalState
 		{
 			get
 			{

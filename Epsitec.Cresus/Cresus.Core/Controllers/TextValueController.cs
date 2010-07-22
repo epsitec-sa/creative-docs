@@ -63,8 +63,9 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 					else
 					{
-						string text = TextConverter.ConvertToSimpleText (widget.Text);
-						this.marshaler.SetStringValue (text);
+						// Il ne faut absolument pas utiliser TextConverter.ConvertToSimpleText, car le texte peut
+						// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
+						this.marshaler.SetStringValue (widget.Text);
 					}
 				};
 
@@ -105,7 +106,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 				else
 				{
-					this.widget.Text = TextConverter.ConvertToTaggedText (this.marshaler.GetStringValue ());
+					// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
+					// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
+					this.widget.Text = this.marshaler.GetStringValue ();
 				}
 			}
 		}

@@ -322,6 +322,46 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public Button CreateButton(EditionTile tile, int width, string label, string buttonText)
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 1),
+			};
+
+			this.ContentListAdd (staticText);
+
+			return this.CreateButton (tile.Container, DockStyle.Top, width, buttonText);
+		}
+
+		public Button CreateButton(FrameBox parent, DockStyle dockStyle, int width, string buttonText)
+		{
+			var button = new Button
+			{
+				Parent = parent,
+				Text = buttonText,
+				PreferredHeight = 20,
+				Dock = dockStyle,
+				Margins = new Margins (0, 10, 0, 2),
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (button);
+
+			if (width > 0)
+			{
+				button.HorizontalAlignment = HorizontalAlignment.Left;
+				button.PreferredWidth = width;
+			}
+
+			return button;
+		}
+
+
 		public TextFieldEx CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
 		{
 			var staticText = new StaticText

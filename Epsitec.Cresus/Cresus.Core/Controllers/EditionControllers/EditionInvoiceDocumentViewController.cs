@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -40,8 +41,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return EditionStatus.Invalid;
 			}
 
-			// TODO: Comment implémenter un vraie validation ? Est-ce que le Marshaler sait faire cela ?
-
 			return EditionStatus.Valid;
 		}
 
@@ -54,6 +53,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	
 		protected override void CreateUI(TileContainer container)
 		{
+			this.tileContainer = container;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -79,11 +80,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
-			builder.CreateTextField (tile, 150, "Numéro externe",       Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			builder.CreateTextField (tile, 150, "Numéro interne",       Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-			builder.CreateMargin    (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile,   0, "Description", Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextField      (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.IdA, x => this.IdA = x));
+			builder.CreateTextField      (tile, 150, "Numéro externe",       Marshaler.Create (() => this.IdB, x => this.IdB = x));
+			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.IdC, x => this.IdC = x));
+			builder.CreateMargin         (tile, horizontalSeparator: true);
+			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextFieldMulti (tile,  36, "Concerne",             Marshaler.Create (() => this.Concerne, x => this.Concerne = x));
+
+			FrameBox group = builder.CreateGroup (tile, "Montant dû");
+			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.AmontDue, x => this.AmontDue = x));
+			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "Recalculer la facture");
+
+			button.Clicked += delegate
+			{
+				InvoiceDocumentHelper.UpdatePrices (this.Entity, this.DataContext);
+				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+				this.tileContainer.UpdateAllWidgets ();
+			};
 		}
 
 		private void CreateUILines(SummaryDataItems data)
@@ -140,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
-			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (x);
+			var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (x);
 			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x));
 
 			return string.Concat ("<i>Article</i><tab/>", string.Join (" ", quantity, desc));
@@ -166,7 +179,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				string total = null;
 				if (x.FixedPriceAfterTax.HasValue)
 				{
-					total = Misc.DecimalToString (x.FixedPriceAfterTax.Value);
+					total = Misc.PriceToString (x.FixedPriceAfterTax.Value);
 				}
 
 				return string.Concat ("<i>Prix</i><tab/>", desc, " ", total);
@@ -174,5 +187,83 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			return null;
 		}
+
+
+		private string IdA
+		{
+			get
+			{
+				return this.Entity.IdA;
+			}
+			set
+			{
+				if (this.Entity.IdA != value)
+				{
+					this.Entity.IdA = value;
+					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+				}
+			}
+		}
+
+		private string IdB
+		{
+			get
+			{
+				return this.Entity.IdB;
+			}
+			set
+			{
+				if (this.Entity.IdB != value)
+				{
+					this.Entity.IdB = value;
+					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+				}
+			}
+		}
+
+		private string IdC
+		{
+			get
+			{
+				return this.Entity.IdC;
+			}
+			set
+			{
+				if (this.Entity.IdC != value)
+				{
+					this.Entity.IdC = value;
+					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+				}
+			}
+		}
+
+		private string Concerne
+		{
+			get
+			{
+				return InvoiceDocumentHelper.GetConcerne (this.Entity);
+			}
+			set
+			{
+				InvoiceDocumentHelper.SetConcerne (this.Entity, this.DataContext, value);
+				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+			}
+		}
+
+		private decimal AmontDue
+		{
+			get
+			{
+				return InvoiceDocumentHelper.GetAmontDue (this.Entity);
+			}
+			set
+			{
+				InvoiceDocumentHelper.SetAmontDue (this.Entity, this.DataContext, value);
+				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
+			}
+		}
+
+
+		private TileContainer					tileContainer;
 	}
 }

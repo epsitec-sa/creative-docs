@@ -76,8 +76,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 10, 10, 40),
 			};
 
-			this.preview.BuildSections (this.entityPrinter);
-
 			this.footer = new FrameBox
 			{
 				Parent = window.Root,
@@ -85,8 +83,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
 				Margins = new Margins (10, 10, 0, 10),
 			};
-
-			this.preview.Invalidate ();  // pour forcer le dessin
 
 			var label = new StaticText
 			{
@@ -128,8 +124,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
-
-			this.UpdatePage ();
 
 			if (this.entityPrinter.DocumentTypeSelected.StartsWith ("Debug"))
 			{
@@ -204,6 +198,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};
+
+			this.preview.BuildSections (this.entityPrinter);
+			this.UpdatePage ();
 		}
 
 		protected void SetupEvents(Window window)
@@ -316,7 +313,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.entityPrinter.Clear ();
 			this.entityPrinter.BuildSections ();
-			this.preview.Invalidate ();
+
+			this.entityPrinter.CurrentPage = System.Math.Min (this.entityPrinter.CurrentPage, this.entityPrinter.PageCount-1);
+			this.UpdatePage ();
 		}
 
 		#endregion

@@ -37,13 +37,26 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static string GetArticleQuantity(ArticleDocumentItemEntity article)
+		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
 			foreach (var quantity in article.ArticleQuantities)
 			{
 				if (quantity.Code == "livré")
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
+				}
+			}
+
+			return null;
+		}
+
+		public static decimal? GetArticleQuantity(ArticleDocumentItemEntity article)
+		{
+			foreach (var quantity in article.ArticleQuantities)
+			{
+				if (quantity.Code == "livré")
+				{
+					return quantity.Quantity;
 				}
 			}
 
@@ -68,6 +81,50 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 
 			return null;
+		}
+
+
+		public static void UpdatePrices(ArticleDocumentItemEntity article)
+		{
+			//	Recalcule une ligne d'une facture.
+			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
+			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (article);
+
+			if (quantity.HasValue)
+			{
+				decimal? total = article.PrimaryUnitPriceBeforeTax * quantity.Value;
+
+				if (article.Discounts.Count != 0)  // y a-t-il un rabais de ligne ?
+				{
+					if (article.Discounts[0].DiscountRate.HasValue)  // rabais en % ?
+					{
+						total *= 1.0M - article.Discounts[0].DiscountRate.Value;
+					}
+
+					if (article.Discounts[0].DiscountAmount.HasValue)  // rabais en francs ?
+					{
+						total -= article.Discounts[0].DiscountAmount.Value;
+					}
+				}
+
+				article.FinalLineTax     = total * vatRate;
+				article.ResultingLineTax = total * vatRate;
+
+				article.PrimaryLinePriceBeforeTax   = total.Value;
+				article.FixedLinePriceBeforeTax     = total;
+				article.FinalLinePriceBeforeTax     = total;
+				article.ResultingLinePriceBeforeTax = total;
+			}
+			else
+			{
+				article.FinalLineTax     = null;
+				article.ResultingLineTax = null;
+
+				article.PrimaryLinePriceBeforeTax   = 0;
+				article.FixedLinePriceBeforeTax     = null;
+				article.FinalLinePriceBeforeTax     = null;
+				article.ResultingLinePriceBeforeTax = null;
+			}
 		}
 	}
 }

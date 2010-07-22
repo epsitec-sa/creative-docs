@@ -306,10 +306,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 				var initial = port.Transform;
 
-				port.Transform = Transform.CreateRotationDegTransform (20, AbstractBvBand.DefautlSize.Width/2, AbstractBvBand.DefautlSize.Height/2);
+				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (20));
 
 				port.Color = Color.FromBrightness (this.PaintBvSimulator ? 1.0 : 0.95);
-				port.PaintText (80, 80, "SPECIMEN", AbstractBvBand.fixFontBold, 100);
+				port.PaintText (12, 0, "SPECIMEN", AbstractBvBand.fixFontBold, 40);
 
 				port.Transform = initial;
 			}

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core
 		/// </summary>
 		/// <param name="value">Montant en francs et centimes</param>
 		/// <returns>Valeur arrondie au 5 centimes le plus proche</returns>
-		public static decimal CentRound(decimal value, decimal round=0.05M)
+		public static decimal PriceRound(decimal value, decimal round=0.05M)
 		{
 			decimal factor = 1.0M / round;
 			decimal adjust = round / 2.0M;
@@ -33,12 +33,25 @@ namespace Epsitec.Cresus.Core
 			return string.Concat (i.ToString (), "%");
 		}
 
-		public static string DecimalToString(decimal value)
+		public static string PriceToString(decimal value)
 		{
 			int franc = decimal.ToInt32 (value);
 			int cent  = decimal.ToInt32 (value * 100) - decimal.ToInt32 (value) * 100;
 
 			return string.Concat (franc.ToString (), ".", cent.ToString ("D2"));
+		}
+
+		public static decimal? StringToDecimal(string text)
+		{
+			decimal value;
+			if (decimal.TryParse (text, out value))
+			{
+				return value;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
@@ -101,13 +114,13 @@ namespace Epsitec.Cresus.Core
 
 		public static bool IsPunctuationMark(char c)
 		{
+			// Exclu le caractère '/', pour permettre de numéroter une facture "1000 / 45 / bg" (par exemple).
 			switch (c)
 			{
 				case ',':
 				case ';':
 				case '.':
 				case ':':
-				case '/':
 				case ')':
 					return true;
 

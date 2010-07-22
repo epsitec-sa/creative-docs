@@ -149,6 +149,68 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void PrintCurrentPage(IPaintPort port, Rectangle bounds)
 		{
+			if (this.HasDocumentOption ("Spec"))
+			{
+				this.PaintSpecimen(port, bounds);
+			}
+		}
+
+		private void PaintSpecimen(IPaintPort port, Rectangle bounds)
+		{
+			//	Dessine un très gros "SPECIMEN" au travers de la page.
+			var font = Font.GetFont ("Arial", "Bold");
+
+			var initial = port.Transform;
+
+			if (this.PageSize.Height > this.PageSize.Width)  // portrait ?
+			{
+				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (60));
+
+				port.Color = Color.FromBrightness (0.95);
+				port.PaintText (34, -36, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
+			}
+			else  // paysage ?
+			{
+				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (20));
+
+				port.Color = Color.FromBrightness (0.95);
+				port.PaintText (26, 26, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
+			}
+
+			port.Transform = initial;
+		}
+
+
+		protected static void DocumentTypeAddBV(List<DocumentOption> options)
+		{
+			//	Ajoute les options d'impression liées aux BV.
+			options.Add (new DocumentOption ( /**    **/  "Type de bulletin de versement :"));
+			options.Add (new DocumentOption ("BVR", "BV", "BVR orange", true));
+			options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
+
+			options.Add (new DocumentOption ( /**         **/  "Mode d'impression du BV :"));
+			options.Add (new DocumentOption ("BV.Simul", null, "Fac-similé complet du BV (pour des essais)", true));
+			options.Add (new DocumentOption ("BV.Spec",  null, "Ajoute la mention SPECIMEN"));
+		}
+
+		protected static void DocumentTypeAddOrientation(List<DocumentOption> options)
+		{
+			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
+			options.Add (new DocumentOption ( /**                    **/  "Orientation du papier :"));
+			options.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
+			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)", false));
+		}
+
+		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
+		{
+			//	Ajoute les options d'impression générales.
+			options.Add (new DocumentOption ("Spec", null, "Ajoute la mention SPECIMEN"));
+		}
+
+		protected static void DocumentTypeAddMargin(List<DocumentOption> options)
+		{
+			//	Ajoute une marge verticale.
+			options.Add (new DocumentOption (20));
 		}
 
 
@@ -181,6 +243,8 @@ namespace Epsitec.Cresus.Core.Printers
 			return types.FirstOrDefault ();
 		}
 
+
+		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
 		private readonly List<DocumentType>		documentTypes;
 		private readonly List<string>			documentOptionsNameSelected;

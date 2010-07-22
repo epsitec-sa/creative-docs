@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.SetupWidgets (window);
 			this.SetupEvents  (window);
 			this.UpdateWidgets ();
+			this.UpdatePreview ();
 
 			window.AdjustWindowSize ();
 
@@ -51,10 +52,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupWindow(Window window)
 		{
+			double width = 300;
+			double height = (int) (width*297/210);  // place une une page A4 verticale
+
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Choix du type de document";
-			window.WindowSize = new Size (700, 500);
+			window.ClientSize = new Size (10+(width+5)*3+10, 10+height+40);
 			window.MakeFloatingWindow ();
 		}
 
@@ -82,8 +86,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DrawFrameState = FrameState.All,
 				DrawFrameWidth = 1,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (5, 5, 0, 0),
 				Padding = new Margins (10),
+			};
+
+			this.preview = new Widgets.PreviewEntity
+			{
+				Parent = frame,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (5, 0, 0, 0),
 			};
 
 			this.confirmationButtons.Clear ();
@@ -105,6 +116,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					this.entityPrinter.DocumentTypeSelected = button.Name;
 					this.UpdateWidgets ();
+					this.UpdatePreview ();
 				};
 
 				this.confirmationButtons.Add (button);
@@ -259,6 +271,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 								}
 
 								this.UpdateSelectedOptions ();
+								this.UpdatePreview ();
 							};
 
 							this.optionButtons.Add (check);
@@ -280,6 +293,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 							radio.Clicked += delegate
 							{
 								this.SetRadio (radio.Name);
+								this.UpdatePreview ();
 							};
 
 							this.optionButtons.Add (radio);
@@ -336,6 +350,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private void UpdatePreview()
+		{
+			if (!string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected))
+			{
+				this.entityPrinter.Clear ();
+				this.preview.BuildSections (this.entityPrinter);
+				this.preview.Invalidate ();  // pour forcer le dessin
+			}
+		}
+
+
 		private DocumentOption GetDocumentOption(DocumentType documentType, string name)
 		{
 			foreach (var documentOption in documentType.DocumentOptions)
@@ -371,6 +396,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private List<ConfirmationButton> confirmationButtons;
 		private List<AbstractButton> optionButtons;
 		private FrameBox optionsFrame;
+		private Widgets.PreviewEntity preview;
 		private Button acceptButton;
 		private Button cancelButton;
 	}
