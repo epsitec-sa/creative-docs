@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// </summary>
 		/// <param name="left">The <see cref="Field"/> on the left of the <see cref="BinaryComparator"/>.</param>
 		/// <param name="op">The <see cref="BinaryComparator"/> used by the <c>ComparisonFieldValue</c>.</param>
-		/// <param name="left">The <see cref="Constant"/> on the left of the <see cref="BinaryComparator"/>.</param>
+		/// <param name="right">The <see cref="Constant"/> on the left of the <see cref="BinaryComparator"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="left"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="right"/> is null.</exception>
 		public ComparisonFieldValue(Field left, BinaryComparator op, Constant right) : base ()

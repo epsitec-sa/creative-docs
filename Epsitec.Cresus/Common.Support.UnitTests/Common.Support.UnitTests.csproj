@@ -9,7 +9,7 @@
     <ProjectGuid>{143A9741-1296-44BA-A2DA-85873722BC81}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common.Support.UnitTests</RootNamespace>
+    <RootNamespace>Epsitec.Common.Support.UnitTests</RootNamespace>
     <AssemblyName>Common.Support.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,8 +58,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\UnitTestExceptionThrower.cs" />
+    <Compile Include="Extensions\UnitTestEntityModifications.cs" />
+    <Compile Include="Resources\Common.Support.UnitTests\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Common.Support.UnitTests\SourceCode\Res.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>
@@ -81,6 +84,10 @@
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
+      <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
+      <Name>Common.Support.Implementation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support\Common.Support.csproj">
       <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
       <Name>Common.Support</Name>
@@ -89,6 +96,26 @@
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
+      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
+      <Name>Common.Widgets</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support.UnitTests\Captions.00.resource">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support.UnitTests\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Common.Support.UnitTests\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -176,7 +176,6 @@
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Saver\DataSaver.cs" />
-    <Compile Include="Saver\EntityModificationViewer.cs" />
     <Compile Include="Saver\SaverQueryGenerator.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />

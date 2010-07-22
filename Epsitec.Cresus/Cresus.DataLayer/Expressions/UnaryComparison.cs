@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// </summary>
 		/// <param name="field">The field on which to apply the <see cref="UnaryComparator"/>.</param>
 		/// <param name="op">The predicate to apply on the <see cref="Field"/>.</param>
-		/// <exception cref="Sytem.ArgumentNullException">If <paramref name="field"/> is null.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="field"/> is null.</exception>
 		public UnaryComparison(Field field, UnaryComparator op) : base()
 		{
 			field.ThrowIfNull ("field");

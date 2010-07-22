@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -24,18 +26,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		public SaverQueryGenerator(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
-			this.EntityModificationViewer = new EntityModificationViewer (dataContext);
 		}
 
 
 		private DataContext DataContext
-		{
-			get;
-			set;
-		}
-
-
-		private EntityModificationViewer EntityModificationViewer
 		{
 			get;
 			set;
@@ -183,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
 				let fieldId = field.CaptionId
 				where field.Relation == FieldRelation.None
-				where this.EntityModificationViewer.HasValueChanged (entity, fieldId)
+				where entity.HasValueChanged(fieldId)
 				select fieldId
 			);
 
@@ -302,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var fieldIds = from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 						   let fieldId = field.CaptionId
 						   where field.Relation == FieldRelation.Reference
-						   where this.EntityModificationViewer.HasReferenceChanged (entity, fieldId)
+						   where entity.HasReferenceChanged (fieldId)
 						   select fieldId;
 
 			foreach (Druid fieldId in fieldIds)
@@ -336,7 +330,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var fieldIds = from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 						   let fieldId = field.CaptionId
 						   where field.Relation == FieldRelation.Collection
-						   where this.EntityModificationViewer.HasCollectionChanged (entity, fieldId)
+						   where entity.HasCollectionChanged (fieldId)
 						   select fieldId;
 
 			foreach (Druid fieldId in fieldIds)
