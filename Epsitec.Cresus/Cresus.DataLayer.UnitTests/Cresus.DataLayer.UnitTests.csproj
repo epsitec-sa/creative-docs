@@ -63,6 +63,7 @@
     <Compile Include="Loader\UnitTestCollectionData.cs" />
     <Compile Include="Loader\UnitTestEntityData.cs" />
     <Compile Include="Expressions\UnitTestConstant.cs" />
+    <Compile Include="Expressions\UnitTestField.cs" />
     <Compile Include="UnitTestGetEntitiesByExample.cs" />
     <Compile Include="UnitTestBasicEntityActions.cs" />
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />
