@@ -137,6 +137,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Context\DataContextEventArgs.cs" />
+    <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\ExpressionConversion.cs" />
     <Compile Include="Loader\DataLoader.cs" />
     <Compile Include="Loader\ExpressionFields.cs" />

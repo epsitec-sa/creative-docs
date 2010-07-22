@@ -17,13 +17,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public static IEnumerable<Druid> GetFields(this Expression expression)
 		{
-			if (expression is UnaryOperation)
+
+			if (expression is Operation)
 			{
-				return (expression as UnaryOperation).GetFields ();
-			}
-			else if (expression is BinaryOperation)
-			{
-				return (expression as BinaryOperation).GetFields ();
+				return (expression as Operation).GetFields ();
 			}
 			else if (expression is Comparison)
 			{
@@ -36,18 +33,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static IEnumerable<Druid> GetFields(this UnaryOperation operation)
+		private static IEnumerable<Druid> GetFields(this Operation operation)
 		{
-			return operation.Expression.GetFields ();
-		}
-
-
-		private static IEnumerable<Druid> GetFields(this BinaryOperation operation)
-		{
-			IEnumerable<Druid> left = operation.Left.GetFields ();
-			IEnumerable<Druid> right = operation.Right.GetFields ();
-
-			return left.Concat (right);
+			if (operation is UnaryOperation)
+			{
+				return (operation as UnaryOperation).GetFields ();
+			}
+			else if (operation is BinaryOperation)
+			{
+				return (operation as BinaryOperation).GetFields ();
+			}
+			else
+			{
+				throw new System.NotSupportedException ("operation is not supported");
+			}
 		}
 
 
@@ -68,12 +67,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static IEnumerable<Druid> GetFields(this UnaryComparison comparison)
-		{
-			yield return comparison.Field.FieldId;
-		}
-
-
 		private static IEnumerable<Druid> GetFields(this BinaryComparison comparison)
 		{
 			if (comparison is BinaryComparisonFieldWithField)
@@ -88,6 +81,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				throw new System.NotSupportedException ("comparison is not supported");
 			}
+		}
+
+
+		private static IEnumerable<Druid> GetFields(this UnaryOperation operation)
+		{
+			return operation.Expression.GetFields ();
+		}
+
+
+		private static IEnumerable<Druid> GetFields(this BinaryOperation operation)
+		{
+			IEnumerable<Druid> left = operation.Left.GetFields ();
+			IEnumerable<Druid> right = operation.Right.GetFields ();
+
+			return left.Concat (right);
+		}
+
+
+		private static IEnumerable<Druid> GetFields(this UnaryComparison comparison)
+		{
+			yield return comparison.Field.FieldId;
 		}
 
 

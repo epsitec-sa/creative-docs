@@ -2,7 +2,7 @@
 {
 
 
-	public class BinaryOperation : Expression
+	public class BinaryOperation : Operation
 	{
 
 

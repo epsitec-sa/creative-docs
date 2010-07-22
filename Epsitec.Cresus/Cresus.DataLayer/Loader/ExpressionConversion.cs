@@ -15,13 +15,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public static DbAbstractCondition CreateDbCondition(this Expression expression, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
-			if (expression is UnaryOperation)
+			if (expression is Operation)
 			{
-				return (expression as UnaryOperation).CreateDbCondition (dbTableColumnResolver);
-			}
-			else if (expression is BinaryOperation)
-			{
-				return (expression as BinaryOperation).CreateDbCondition (dbTableColumnResolver);
+				return (expression as Operation).CreateDbCondition (dbTableColumnResolver);
 			}
 			else if (expression is Comparison)
 			{
@@ -30,6 +26,57 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			else
 			{
 				throw new System.NotSupportedException ("expression is not supported");
+			}
+		}
+
+
+		private static DbAbstractCondition CreateDbCondition(this Operation operation, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		{
+			if (operation is UnaryOperation)
+			{
+				return (operation as UnaryOperation).CreateDbCondition (dbTableColumnResolver);
+			}
+			else if (operation is BinaryOperation)
+			{
+				return (operation as BinaryOperation).CreateDbCondition (dbTableColumnResolver);
+			}
+			else
+			{
+				throw new System.NotSupportedException ("operation is not supported");
+			}
+		}
+
+
+		private static DbAbstractCondition CreateDbCondition(this Comparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		{
+			if (comparison is UnaryComparison)
+			{
+				return (comparison as UnaryComparison).CreateDbCondition (dbTableColumnResolver);
+			}
+			else if (comparison is BinaryComparison)
+			{
+				return (comparison as BinaryComparison).CreateDbCondition (dbTableColumnResolver);
+			}
+			else
+			{
+				throw new System.NotSupportedException ("comparison is not supported");
+			}
+		}
+
+
+		private static DbAbstractCondition CreateDbCondition(this BinaryComparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
+		{
+			if (comparison is BinaryComparisonFieldWithField)
+			{
+				return (comparison as BinaryComparisonFieldWithField).CreateDbCondition (dbTableColumnResolver);
+			}
+			else if (comparison is BinaryComparisonFieldWithValue)
+			{
+				return (comparison as BinaryComparisonFieldWithValue).CreateDbCondition (dbTableColumnResolver);
+			}
+			else
+			{
+				throw new System.NotSupportedException ("comparison is not supported");
 			}
 		}
 
@@ -54,46 +101,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private static DbAbstractCondition CreateDbCondition(this Comparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			if (comparison is UnaryComparison)
-			{
-				return (comparison as UnaryComparison).CreateDbCondition (dbTableColumnResolver);
-			}
-			else if (comparison is BinaryComparison)
-			{
-				return (comparison as BinaryComparison).CreateDbCondition (dbTableColumnResolver);
-			}
-			else
-			{
-				throw new System.NotSupportedException ("comparison is not supported");
-			}
-		}
-
-
 		private static DbAbstractCondition CreateDbCondition(this UnaryComparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
 		{
 			DbTableColumn field = comparison.Field.GetDbTableColumn (dbTableColumnResolver);
 			DbSimpleConditionOperator op = EnumConverter.ToDbSimpleConditionOperator (comparison.Operator);
 
 			return new DbSimpleCondition (field, op);
-		}
-
-
-		private static DbAbstractCondition CreateDbCondition(this BinaryComparison comparison, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			if (comparison is BinaryComparisonFieldWithField)
-			{
-				return (comparison as BinaryComparisonFieldWithField).CreateDbCondition (dbTableColumnResolver);
-			}
-			else if (comparison is BinaryComparisonFieldWithValue)
-			{
-				return (comparison as BinaryComparisonFieldWithValue).CreateDbCondition (dbTableColumnResolver);
-			}
-			else
-			{
-				throw new System.NotSupportedException ("comparison is not supported");
-			}
 		}
 
 
