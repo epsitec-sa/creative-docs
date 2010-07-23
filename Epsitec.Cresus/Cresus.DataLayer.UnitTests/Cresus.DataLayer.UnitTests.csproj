@@ -67,6 +67,7 @@
     <Compile Include="Expressions\UnitTestBinaryOperation.cs" />
     <Compile Include="Expressions\UnitTestBinaryComparisonFieldWithField.cs" />
     <Compile Include="Expressions\UnitTestComparisonFieldValue.cs" />
+    <Compile Include="Loader\UnitTestExpressionFields.cs" />
     <Compile Include="UnitTestGetEntitiesByExample.cs" />
     <Compile Include="UnitTestBasicEntityActions.cs" />
     <Compile Include="UnitTestGetEntitiesByRequest.cs" />
