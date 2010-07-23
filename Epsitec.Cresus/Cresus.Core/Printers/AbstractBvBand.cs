@@ -132,20 +132,14 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected virtual Color LightPinkColor
+		protected virtual Color LightPinkColor(bool isPreview)
 		{
-			get
-			{
-				return Color.Empty;
-			}
+			return Color.Empty;
 		}
 
-		protected virtual Color DarkPinkColor
+		protected virtual Color DarkPinkColor(bool isPreview)
 		{
-			get
-			{
-				return Color.Empty;
-			}
+			return Color.Empty;
 		}
 
 
@@ -192,7 +186,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool Paint(IPaintPort port, int section, Point topLeft)
+		public override bool Paint(IPaintPort port, bool isPreview, int section, Point topLeft)
 		{
 			if (section != 0)
 			{
@@ -201,7 +195,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.PaintBvSimulator)
 			{
-				this.PaintFix (port, topLeft);
+				this.PaintFix (port, isPreview, topLeft);
 			}
 			else
 			{
@@ -214,12 +208,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected virtual void PaintFix(IPaintPort port, Point topLeft)
+		protected virtual void PaintFix(IPaintPort port, bool isPreview, Point topLeft)
 		{
 			//	Dessine tous éléments fixes, pour simuler un BV sur un fond blanc.
 
 			//	Dessine les fonds.
-			port.Color = this.LightPinkColor;
+			port.Color = this.LightPinkColor (isPreview);
 			port.PaintSurface (Path.FromRectangle (topLeft.X, topLeft.Y-106, 210, 106));
 
 			port.Color = Color.FromBrightness (1);
@@ -249,7 +243,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintOutline (Path.FromLine (topLeft.X+204, topLeft.Y-81, topLeft.X+199, topLeft.Y-81));
 
 			//	Dessine les cercles.
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.LineWidth = 0.1;
 			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+194, topLeft.Y-17), 9);
 			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+17, topLeft.Y-95), 9);
@@ -263,7 +257,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintText (topLeft.X+2, topLeft.Y-48.5, "CHF", AbstractBvBand.fixFontRegular, 3.0);
 			port.PaintText (topLeft.X+63, topLeft.Y-48.5, "CHF", AbstractBvBand.fixFontRegular, 3.0);
 
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.PaintText (topLeft.X+2, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractBvBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+63, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractBvBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+2, topLeft.Y-45, "Konto / Compte / Conto", AbstractBvBand.fixFontRegular, 2.0);
@@ -277,7 +271,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintText (topLeft.X+32, topLeft.Y-95.0, "L'ufficio d'accettazione", AbstractBvBand.fixFontRegular, 2.0);
 
 			//	Dessine la zone de découpe.
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.PaintText (topLeft.X+60, topLeft.Y+2, "Vor der Einzahlung abzutrennen / A détacher avant le versement / Da staccare prima del vertamento", AbstractBvBand.fixFontRegular, 2.0);
 
 			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*0, topLeft.Y+2));

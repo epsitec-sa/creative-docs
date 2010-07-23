@@ -38,10 +38,11 @@ namespace Epsitec.Cresus.Core.Printers
 				entities.Add (entity);
 			}
 
-			this.Print (entities);
+			PrintEngine.Print (entities);
 		}
 
-		public void Print(IEnumerable<AbstractEntity> entities)
+
+		public static void Print(IEnumerable<AbstractEntity> entities)
 		{
 			if (entities == null || entities.Count () == 0)
 			{
@@ -78,6 +79,31 @@ namespace Epsitec.Cresus.Core.Printers
 				var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
 				printDialog.OpenDialog ();
 			}
+		}
+
+		public static void Print(AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
+		{
+			if (entities == null || entities.Count () == 0)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à imprimer.").OpenDialog ();
+				return;
+			}
+
+			List<Printer> printers = new List<Printer>
+			(
+				from printer in Printer.Load ()
+				where PrinterSettings.InstalledPrinters.Contains (printer.Name)
+				select printer
+			);
+
+			if (printers.Count == 0)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
+				return;
+			}
+
+			var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
+			printDialog.OpenDialog ();
 		}
 
 

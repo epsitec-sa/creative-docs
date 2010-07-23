@@ -190,12 +190,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.UpdateDebug ();
 			}
-			
+
 			this.closeButton = new Button ()
 			{
 				Parent = this.footer,
 				Text = "Fermer",
 				Dock = DockStyle.Right,
+				TabIndex = 1,
+			};
+
+			this.printButton = new Button ()
+			{
+				Parent = this.footer,
+				Text = "Imprimer",
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 10, 0, 0),
 				TabIndex = 1,
 			};
 
@@ -215,6 +224,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.debugPrevButton2.Clicked += new EventHandler<MessageEventArgs> (debugPrevButton2_Clicked);
 				this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
 			}
+
+			this.printButton.Clicked += delegate
+			{
+				this.CloseDialog ();
+
+				PrintEngine.Print (this.entityPrinter, this.entities);
+			};
+
+			this.closeButton.Clicked += delegate
+			{
+				this.CloseDialog ();
+			};
 
 			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
 		}
@@ -339,7 +360,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private GlyphButton debugPrevButton2;
 		private StaticText debugParam2;
 		private GlyphButton debugNextButton2;
-		
+
+		private Button printButton;
 		private Button closeButton;
 	}
 }

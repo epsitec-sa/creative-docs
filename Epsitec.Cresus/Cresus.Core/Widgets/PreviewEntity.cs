@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.entityPrinter = entityPrinter;
 
+			this.entityPrinter.IsPreview = true;
 			this.entityPrinter.BuildSections ();
 		}
 
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Transform initial = graphics.Transform;
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
-				this.entityPrinter.PrintCurrentPage (graphics, this.Client.Bounds);
+				this.entityPrinter.PrintCurrentPage (graphics);
 
 				graphics.Transform = initial;
 

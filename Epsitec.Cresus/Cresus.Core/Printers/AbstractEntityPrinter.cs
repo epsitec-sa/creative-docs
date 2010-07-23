@@ -136,6 +136,13 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public bool IsPreview
+		{
+			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
+			get;
+			set;
+		}
+
 		public void Clear()
 		{
 			this.documentContainer.Clear ();
@@ -147,15 +154,15 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.PageMargins = this.PageMargins;
 		}
 
-		public virtual void PrintCurrentPage(IPaintPort port, Rectangle bounds)
+		public virtual void PrintCurrentPage(IPaintPort port)
 		{
 			if (this.HasDocumentOption ("Spec"))
 			{
-				this.PaintSpecimen(port, bounds);
+				this.PaintSpecimen(port);
 			}
 		}
 
-		private void PaintSpecimen(IPaintPort port, Rectangle bounds)
+		private void PaintSpecimen(IPaintPort port)
 		{
 			//	Dessine un très gros "SPECIMEN" au travers de la page.
 			var font = Font.GetFont ("Arial", "Bold");

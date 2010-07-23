@@ -48,13 +48,13 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public bool Paint(IPaintPort port)
+		public bool Paint(IPaintPort port, bool isPreview)
 		{
 			bool ok = true;
 
 			foreach (var band in this.bands)
 			{
-				if (!band.Paint (port))
+				if (!band.Paint (port, isPreview))
 				{
 					ok = false;
 				}
