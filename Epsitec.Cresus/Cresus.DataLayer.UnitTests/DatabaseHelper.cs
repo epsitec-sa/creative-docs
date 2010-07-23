@@ -5,7 +5,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 

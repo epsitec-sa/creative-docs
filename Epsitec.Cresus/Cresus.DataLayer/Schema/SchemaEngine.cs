@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (createTable)
 			{
-				SchemaBuilder tableBuilder = new SchemaBuilder(this);
+				SchemaBuilder tableBuilder = new SchemaBuilder(this.DbInfrastructure);
 
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 				{

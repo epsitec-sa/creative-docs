@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -20,27 +19,24 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	/// The <c>SchemaBuilder</c> class is used internally to build <see cref="DbTable"/> and register
 	/// them to the DbInfrastructure.
 	/// </summary>
-	internal class SchemaBuilder
+	internal sealed class SchemaBuilder
 	{
 		
 		
 		/// <summary>
 		/// Builds a new <c>SchemaBuilder.</c>
 		/// </summary>
-		/// <param name="schemaEngine">The <see cref="SchemaEngine"/> used as a cache for this instance.</param>
-		public SchemaBuilder(SchemaEngine schemaEngine)
+		public SchemaBuilder(DbInfrastructure dbInfrastructure)
 		{
-			this.SchemaEngine = schemaEngine;
-		}
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			
+			this.DbInfrastructure = dbInfrastructure;
 
+			this.tableCache = new Dictionary<Druid, DbTable> ();
+			this.typeCache = new Dictionary<Druid, DbTypeDef> ();
 
-		/// <summary>
-		/// The <see cref="SchemaEngine"/> associated with this instance.
-		/// </summary>
-		private SchemaEngine SchemaEngine
-		{
-			get;
-			set;
+			this.newTables = new Dictionary<Druid, DbTable> ();
+			this.newTypes = new Dictionary<Druid, DbTypeDef> ();
 		}
 
 
@@ -49,35 +45,34 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		private DbInfrastructure DbInfrastructure
 		{
-			get
-			{
-				return this.SchemaEngine.DbInfrastructure;
-			}
+			get;
+			set;
 		}
 
 
 		/// <summary>
-		/// Creates the schema of an <see cref="AbstractEntity"/> and register it to the database. This
-		/// method will recursively create and register everything that is required to build the schema.
+		/// Creates the schema corresponding to the given <see cref="Druid"/> and register it to the
+		/// database. This method will recursively create and register everything that is required
+		/// to build the schema.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
-		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to build</param>
+		/// <param name="entityId">The <see cref="Druid"/> of the schema to create.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="transaction"/> is null.</exception>
 		public void CreateSchema(DbTransaction transaction, Druid entityId)
 		{
 			transaction.ThrowIfNull ("transaction");
 
-			this.newTablesDictionary = new Dictionary<Druid, DbTable> ();
-			this.newTypesDictionary = new Dictionary<Druid, DbTypeDef> ();
+			this.newTables = new Dictionary<Druid, DbTable> ();
+			this.newTypes = new Dictionary<Druid, DbTypeDef> ();
 
-			this.CreateTable (transaction, entityId);
+			this.GetOrCreateTable (transaction, entityId);
 
-			foreach (DbTable table in this.newTablesDictionary.Values)
+			foreach (DbTable table in this.newTables.Values)
 			{
 				this.DbInfrastructure.RegisterNewDbTable (transaction, table);
 			}
 
-			foreach (DbTable table in this.newTablesDictionary.Values)
+			foreach (DbTable table in this.newTables.Values)
 			{
 				this.DbInfrastructure.RegisterColumnRelations (transaction, table);
 			}
@@ -91,7 +86,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTable"/>.</returns>
 		public Dictionary<Druid, DbTable> GetNewTableDefinitions()
 		{
-			return this.newTablesDictionary;
+			return this.newTables;
 		}
 
 
@@ -102,38 +97,60 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/>.</returns>
 		public Dictionary<Druid, DbTypeDef> GetNewTypeDefinitions()
 		{
-			return this.newTypesDictionary;
+			return this.newTypes;
 		}
 
 
 		/// <summary>
-		/// Creates the <see cref="DbTable"/> of an <see cref="AbstractEntity"/> and everything which
-		/// is required such as the parent and neighbor <see cref="DbTable"/> without registering
-		/// them to the database.
+		/// Gets the <see cref="DbTable"/> corresponding to a <see cref="Druid"/> or creates it with
+		/// all its dependencies if it does not exist.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
-		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to create.</param>
-		/// <returns>The root <see cref="DbTable"/> of the <see cref="AbstractEntity"/>.</returns>
-		private DbTable CreateTable(DbTransaction transaction, Druid entityId)
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to create.</param>
+		/// <returns>The root <see cref="DbTable"/>.</returns>
+		private DbTable GetOrCreateTable(DbTransaction transaction, Druid entityId)
 		{
-			DbTable table = null;
-
-			//	If we have already generated a table definition for this entity,
-			//	just re-use it. This check makes circular references possible.
+			// Ok, this looks like kind of simple to me, to simple to be alright, so I'll explain.
+			// The ?? operator ensures that first we look in the cache. If there is something in the
+			// cache, we stop here, but if we have nothing in the cache, we get a null and thus, we
+			// look in the database. Again, if we have nothing in the database, we go on and CreateDataColumn
+			// the DbTable.
+			// Marc
 			
-			if (table == null)
-			{
-				this.newTablesDictionary.TryGetValue (entityId, out table);
-			}
+			return this.LookForTableInCache (entityId)
+				?? this.LookForTableInDatabase (transaction, entityId)
+				?? this.BuildTable (transaction, entityId);
+		}
 
-			if (table == null)
-			{
-				table = this.SchemaEngine.GetEntityTableDefinition (entityId);
-			}
 
-			if (table == null)
+		/// <summary>
+		/// Looks for the <see cref="DbTable"/> corresponding to a <see cref="Druid"/> in the local
+		/// cache.
+		/// </summary>
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to look for.</param>
+		/// <returns>The <see cref="DbTable"/> if it is in the cache, or null.</returns>
+		private DbTable LookForTableInCache(Druid entityId)
+		{
+			DbTable table;
+
+			this.tableCache.TryGetValue (entityId, out table);
+			
+			return table;
+		}
+
+
+		/// <summary>
+		/// Looks the <see cref="DbTable"/> corresponding to a <see cref="Druid"/> in the database.
+		/// </summary>
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to look for.</param>
+		/// <returns>The <see cref="DbTable"/> if it is in the database, or null.</returns>
+		private DbTable LookForTableInDatabase(DbTransaction transaction, Druid entityId)
+		{
+			DbTable table = this.DbInfrastructure.ResolveDbTable (transaction, entityId);
+
+			if (table != null)
 			{
-				table = this.CreateTableHelper (transaction, entityId);
+				this.tableCache[entityId] = table;
 			}
 
 			return table;
@@ -141,13 +158,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Helper method for <see cref="CreateTable"/>, which will do the real job of creating a
-		/// <see cref="DbTable"/> that does not exists and all its dependencies.
+		/// Creates the <see cref="DbTable"/> corresponding to a <see cref="Druid"/> and everything
+		/// which is required such as the parent and neighbor <see cref="DbTable"/> without registering
+		/// them to the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
-		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to create.</param>
-		/// <returns>The root <see cref="DbTable"/> of the <see cref="AbstractEntity"/>.</returns>
-		private DbTable CreateTableHelper(DbTransaction transaction, Druid entityId)
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to create.</param>
+		/// <returns>The new <see cref="DbTable"/>.</returns>
+		private DbTable BuildTable(DbTransaction transaction, Druid entityId)
 		{
 			ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
 			StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
@@ -160,7 +178,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 			table.Comment = table.DisplayName;
 
-			this.newTablesDictionary[entityId] = table;
+			this.newTables[entityId] = table;
+			this.tableCache[entityId] = table;
 
 			if (entityType.BaseTypeId.IsEmpty)
 			{
@@ -175,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			}
 			else
 			{
-				this.CreateTable (transaction, entityType.BaseTypeId);
+				this.GetOrCreateTable (transaction, entityType.BaseTypeId);
 			}
 
 			//	For every locally defined field (this includes field inserted
@@ -256,7 +275,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
 			System.Diagnostics.Debug.Assert (field.Type is StructuredType);
 
-			DbTable target = this.CreateTable (transaction, field.TypeId);
+			DbTable target = this.GetOrCreateTable (transaction, field.TypeId);
 			DbColumn column = DbTable.CreateRelationColumn (transaction, this.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 
 			table.Columns.Add (column);
@@ -264,11 +283,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
-		/// Gets the <see cref="DbTypeDef"/> for the given type. If it is not yet known, it is
-		/// created and registered to the database.
+		/// Gets the <see cref="DbTypeDef"/> for the given type or creates it  and register it to the
+		/// database if it does not exists.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
-		/// <param name="type">The type whose <see cref="DbTypeDef"/> to get.</param>
+		/// <param name="type">The type whose <see cref="DbTypeDef"/> to get or create.</param>
 		/// <param name="options">The <see cref="FieldOptions"/> of the type.</param>
 		/// <returns>The <see cref="DbTypeDef"/>.</returns>
 		private DbTypeDef GetOrCreateTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
@@ -276,28 +295,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			type.ThrowIfNull ("type");
 			type.ThrowIf (t => t is IStructuredType, "Cannot create type definition for structure");
 
-			DbTypeDef typeDef = null;
-			
-			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
+			// Here I used the same trick as above. If it's not clear, look at the comments in the
+			// GetOrCreateTable method.
+			// Marc
 
-			if (typeDef == null)
-			{
-				this.newTypesDictionary.TryGetValue (type.CaptionId, out typeDef);
-			}
-
-			if (typeDef == null)
-			{
-				typeDef = this.SchemaEngine.GetTypeDefinition (type.CaptionId);
-			}
-			
-			if (typeDef == null)
-			{
-				typeDef = new DbTypeDef (type, options == FieldOptions.Nullable);
-
-				this.DbInfrastructure.RegisterNewDbType (transaction, typeDef);
-
-				this.newTypesDictionary[type.CaptionId] = typeDef;
-			}
+			DbTypeDef typeDef = this.LookForTypeDefInCache (type)
+				?? this.LookForTypeDefInDatabase (transaction, type)
+				?? this.BuildTypeDef (transaction, type, options);
 
 			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!typeDef.Key.IsEmpty);
@@ -307,17 +311,85 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		/// <summary>
+		/// Looks for the <see cref="DbTypeDef"/> corresponding to a <see cref="INamedType"/> in the
+		/// local cache.
+		/// </summary>
+		/// <param name="type">The <see cref="INamedType"/> to look for.</param>
+		/// <returns>The <see cref="DbTypeDef"/> if it is in the cache, or null.</returns>
+		private DbTypeDef LookForTypeDefInCache(INamedType type)
+		{
+			DbTypeDef typeDef;
+
+			this.typeCache.TryGetValue (type.CaptionId, out typeDef);
+
+			return typeDef;
+		}
+
+
+		/// <summary>
+		/// Looks for the <see cref="DbTypeDef"/> corresponding to a <see cref="INamedType"/> in the
+		/// database.
+		/// </summary>
+		/// <param name="type">The <see cref="INamedType"/> to look for.</param>
+		/// <returns>The <see cref="DbTypeDef"/> if it is in the cache, or null.</returns>
+		private DbTypeDef LookForTypeDefInDatabase(DbTransaction transaction, INamedType type)
+		{
+			DbTypeDef typeDef = this.DbInfrastructure.ResolveDbType (transaction, type);
+
+			if (typeDef != null)
+			{
+				this.typeCache[type.CaptionId] = typeDef;
+			}
+
+			return typeDef;
+		}
+
+
+		/// <summary>
+		/// Create the <see cref="DbTypeDef"/> corresponding to a <see cref="INamedType"/> and
+		/// registers it to the database.
+		/// </summary>
+		/// <param name="type">The <see cref="INamedType"/> to create.</param>
+		/// <returns>The new <see cref="DbTypeDef"/>.</returns>
+		private DbTypeDef BuildTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
+		{
+			DbTypeDef typeDef = new DbTypeDef (type, options == FieldOptions.Nullable);
+
+			this.DbInfrastructure.RegisterNewDbType (transaction, typeDef);
+
+			this.newTypes[type.CaptionId] = typeDef;
+			this.typeCache[type.CaptionId] = typeDef;
+
+			return typeDef;
+		}
+
+
+		/// <summary>
+		/// Stores the mapping between all the <see cref="Druid"/> and the <see cref="DbTable"/> that
+		/// have been seen by this instance.
+		/// </summary>
+		private Dictionary<Druid, DbTable> tableCache;
+
+
+		/// <summary>
+		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that
+		/// have been seen by this instance.
+		/// </summary>
+		private Dictionary<Druid, DbTypeDef> typeCache;
+
+
+		/// <summary>
 		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTable"/> that
 		/// where created during the last call of <see cref="CreateSchema"/>.
 		/// </summary>
-		private Dictionary<Druid, DbTable> newTablesDictionary;
+		private Dictionary<Druid, DbTable> newTables;
 
 
 		/// <summary>
 		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that
 		/// where created during the last call of <see cref="CreateSchema"/>.
 		/// </summary>
-		private Dictionary<Druid, DbTypeDef> newTypesDictionary;
+		private Dictionary<Druid, DbTypeDef> newTypes;
 
 
 	}
