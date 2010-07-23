@@ -337,6 +337,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (!this.IsModern)
 			{
+				var currentPage = this.documentContainer.CurrentPage;
+
 				var h = table.GetRowHeight (0);
 
 				var line = new SurfaceBand ();
@@ -345,6 +347,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.documentContainer.CurrentPage = 0;
 				this.documentContainer.AddAbsolute (line, bounds);
+
+				this.documentContainer.CurrentPage = currentPage;
 			}
 		}
 
