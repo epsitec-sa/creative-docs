@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
-
 			this.documentContainer = new DocumentContainer ();
+			this.tableColumns = new Dictionary<string, TableColumn> ();
 		}
 
 
@@ -171,15 +171,23 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else  // paysage ?
 			{
-				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (20));
+				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (30));
 
 				port.Color = Color.FromBrightness (0.95);
-				port.PaintText (26, 26, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
+				port.PaintText (30, -4, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
 			}
 
 			port.Transform = initial;
 		}
 
+
+		protected static void DocumentTypeAddStyles(List<DocumentOption> options)
+		{
+			//	Ajoute les options d'impression liées aux BV.
+			options.Add (new DocumentOption ( /**           **/  "Style du document :"));
+			options.Add (new DocumentOption ("Classic", "Style", "Classique", true));
+			options.Add (new DocumentOption ("Modern",  "Style", "Moderne"));
+		}
 
 		protected static void DocumentTypeAddBV(List<DocumentOption> options)
 		{
@@ -198,7 +206,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
 			options.Add (new DocumentOption ( /**                    **/  "Orientation du papier :"));
 			options.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
-			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)", false));
+			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)"));
 		}
 
 		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
@@ -246,12 +254,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
-		private readonly List<DocumentType>		documentTypes;
-		private readonly List<string>			documentOptionsNameSelected;
-		protected readonly DocumentContainer	documentContainer;
-		private int								currentPage;
-		private int								debugParam1;
-		private int								debugParam2;
+		private readonly List<DocumentType>			documentTypes;
+		private readonly List<string>				documentOptionsNameSelected;
+		protected readonly DocumentContainer		documentContainer;
+		protected Dictionary<string, TableColumn>	tableColumns;
+		private int									currentPage;
+		private int									debugParam1;
+		private int									debugParam2;
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter

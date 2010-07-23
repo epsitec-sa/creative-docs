@@ -149,9 +149,10 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x)
+		public static string GetTitle(InvoiceDocumentEntity x, bool isBL)
 		{
-			return UIBuilder.FormatText ("<b>Facture", x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
+			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
+			return UIBuilder.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 		}
 
 

@@ -28,39 +28,24 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			DocumentType type;
 
-			type = new DocumentType ("G.BV", "Facture générique avec BV", "Facture générique A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			AbstractEntityPrinter.DocumentTypeAddBV (type.DocumentOptions);
+			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			AbstractEntityPrinter.DocumentTypeAddStyles (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddBV     (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("G.Simple", "Facture générique sans BV", "Facture générique A4 simple sans bulletin de versement.");
+			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
+			AbstractEntityPrinter.DocumentTypeAddStyles      (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("G.BL", "Bulletin de livraison générique", "Bulletin de livraison générique A4, sans prix.");
+			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
+			AbstractEntityPrinter.DocumentTypeAddStyles      (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
-
-			type = new DocumentType ("M.BV", "Facture \"M\" avec BV", "Facture \"M\" A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			AbstractEntityPrinter.DocumentTypeAddBV (type.DocumentOptions);
-			this.DocumentTypes.Add (type);
-
-			type = new DocumentType ("M.Simple", "Facture \"M\" sans BV", "Facture \"M\" A4 simple sans bulletin de versement.");
-			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
-			this.DocumentTypes.Add (type);
-
-			type = new DocumentType ("M.BL", "Bulletin de livraison \"M\"", "Bulletin de livraison \"M\" A4, sans prix.");
-			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin   (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen (type.DocumentOptions);
-			this.DocumentTypes.Add (type);
-
-			this.columns = new Dictionary<string, TableColumn> ();
 		}
 
 		public override string JobName
@@ -90,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.DocumentTypeSelected.EndsWith (".BV"))
+				if (this.DocumentTypeSelected == "BV")
 				{
 					return new Margins (20, 10, 20, 10+AbstractBvBand.DefautlSize.Height);
 				}
@@ -106,7 +91,7 @@ namespace Epsitec.Cresus.Core.Printers
 			base.BuildSections ();
 			this.documentContainer.Clear ();
 
-			if (this.DocumentTypeSelected == "G.BV")
+			if (this.DocumentTypeSelected == "BV")
 			{
 				this.BuildHeader ();
 				this.BuildArticles ();
@@ -115,7 +100,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildBvs (bvr: this.HasDocumentOption ("BVR"));
 			}
 
-			if (this.DocumentTypeSelected == "G.Simple")
+			if (this.DocumentTypeSelected == "Simple")
 			{
 				this.BuildHeader ();
 				this.BuildArticles ();
@@ -123,9 +108,12 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages ();
 			}
 
-			if (this.DocumentTypeSelected == "G.BL")
+			if (this.DocumentTypeSelected == "BL")
 			{
-				// TODO:
+				this.BuildHeader ();
+				this.BuildArticles ();
+				this.BuildConditions ();
+				this.BuildPages ();
 			}
 		}
 
@@ -175,7 +163,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
@@ -193,16 +181,55 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.PageSize.Height-87;
 
-			this.columns.Clear ();
-			this.columns.Add ("Desc", new TableColumn ("Désignation", 70.0, ContentAlignment.MiddleLeft));
-			this.columns.Add ("Nb",   new TableColumn ("Livré",       12.0, ContentAlignment.MiddleLeft));
-			this.columns.Add ("Suit", new TableColumn ("Suit",        12.0, ContentAlignment.MiddleLeft));
-			this.columns.Add ("Date", new TableColumn ("Date",        20.0, ContentAlignment.MiddleLeft));
-			this.columns.Add ("Rab",  new TableColumn ("Rabais",      15.0, ContentAlignment.MiddleRight));
-			this.columns.Add ("PU",   new TableColumn ("p.u. HT",     15.0, ContentAlignment.MiddleRight));
-			this.columns.Add ("PT",   new TableColumn ("Prix HT",     15.0, ContentAlignment.MiddleRight));
-			this.columns.Add ("TVA",  new TableColumn ("TVA",         15.0, ContentAlignment.MiddleRight));
-			this.columns.Add ("Tot",  new TableColumn ("Total",       15.0, ContentAlignment.MiddleRight));
+			this.tableColumns.Clear ();
+			if (this.IsModern)
+			{
+				double wd = 70.0;
+
+				if (this.IsBL)
+				{
+					wd += 15*5;
+				}
+
+				if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
+				{
+					wd += 80;
+				}
+
+				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Nb",   new TableColumn ("Livré",       12.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        12.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        20.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      15.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     15.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     15.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         15.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       15.0, ContentAlignment.MiddleRight));
+			}
+			else
+			{
+				double wd = 54.0;
+
+				if (this.IsBL)
+				{
+					wd += 17*5;
+				}
+
+				if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
+				{
+					wd += 80;
+				}
+
+				this.tableColumns.Add ("Nb",   new TableColumn ("Quantité",    17.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        14.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        22.0, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      17.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     17.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     17.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         17.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       17.0, ContentAlignment.MiddleRight));
+			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
 			//	ainsi que les colonnes visibles.
@@ -212,29 +239,43 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				if (line.Visibility)
 				{
+					bool exist = false;
+
 					if (line is TextDocumentItemEntity)
 					{
-						this.InitializeColumnTextLine (line as TextDocumentItemEntity);
+						exist = this.InitializeColumnTextLine (line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity);
+						exist = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
+						exist = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
 					}
 
-					rowCount++;
+					if (exist)
+					{
+						rowCount++;
+					}
 				}
+			}
+
+			if (this.IsBL)
+			{
+				this.tableColumns["Rab"].Visible = false;
+				this.tableColumns["PU" ].Visible = false;
+				this.tableColumns["PT" ].Visible = false;
+				this.tableColumns["TVA"].Visible = false;
+				this.tableColumns["Tot"].Visible = false;
 			}
 
 			//	Compte et numérote les colonnes visibles.
 			int columnCount = 0;
 
-			foreach (var column in this.columns.Values)
+			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
@@ -246,11 +287,13 @@ namespace Epsitec.Cresus.Core.Printers
 			var table = new TableBand ();
 			table.ColumnsCount = columnCount;
 			table.RowsCount = rowCount;
+			table.PaintFrame = this.IsModern;
+			table.CellMargins = new Margins (this.IsModern ? 1 : 2);
 
 			int row = 0;
 
 			//	Génère une première ligne d'en-tête (titres des colonnes).
-			foreach (var column in this.columns.Values)
+			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
@@ -262,6 +305,9 @@ namespace Epsitec.Cresus.Core.Printers
 			this.InitializeRowAlignment (table, row);
 
 			row++;
+
+			int linePage = this.documentContainer.CurrentPage;
+			double lineY = this.documentContainer.CurrentVerticalPosition;
 
 			foreach (var line in this.entity.Lines)
 			{
@@ -288,50 +334,75 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			this.documentContainer.AddFromTop (table, 5.0);
+
+			if (!this.IsModern)
+			{
+				var h = table.GetRowHeight (0);
+
+				var line = new SurfaceBand ();
+				line.Height = 0.3;
+				var bounds = new Rectangle (this.PageMargins.Left, lineY-h, this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right, line.Height);
+
+				this.documentContainer.CurrentPage = 0;
+				this.documentContainer.AddAbsolute (line, bounds);
+			}
 		}
 
 
-		private void InitializeColumnTextLine(TextDocumentItemEntity line)
+		private bool InitializeColumnTextLine(TextDocumentItemEntity line)
 		{
-			this.columns["Desc"].Visible = true;
+			this.tableColumns["Desc"].Visible = true;
+			return true;
 		}
 
-		private void InitializeColumnArticleLine(ArticleDocumentItemEntity line)
+		private bool InitializeColumnArticleLine(ArticleDocumentItemEntity line)
 		{
-			this.columns["Desc"].Visible = true;
-			this.columns["Tot" ].Visible = true;
+			if (this.IsBL && this.IsPort (line))
+			{
+				return false;
+			}
+
+			this.tableColumns["Desc"].Visible = true;
+			this.tableColumns["Tot" ].Visible = true;
 
 			if (line.VatCode != BusinessLogic.Finance.VatCode.None &&
 				line.VatCode != BusinessLogic.Finance.VatCode.Excluded &&
 				line.VatCode != BusinessLogic.Finance.VatCode.ZeroRated)
 			{
-				this.columns["TVA"].Visible = true;
+				this.tableColumns["TVA"].Visible = true;
 			}
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
 				if (quantity.Code == "livré")
 				{
-					this.columns["Nb"].Visible = true;
-					this.columns["PU"].Visible = true;
-					this.columns["PT"].Visible = true;
+					this.tableColumns["Nb"].Visible = true;
+					this.tableColumns["PU"].Visible = true;
+					this.tableColumns["PT"].Visible = true;
 				}
 
 				if (quantity.Code == "suivra")
 				{
-					this.columns["Suit"].Visible = true;
-					this.columns["Date"].Visible = true;
+					this.tableColumns["Suit"].Visible = true;
+					this.tableColumns["Date"].Visible = true;
 				}
 			}
 
 			if (line.Discounts.Count != 0)
 			{
-				this.columns["Rab"].Visible = true;
+				this.tableColumns["Rab"].Visible = true;
 			}
+
+			return true;
 		}
 
-		private void InitializeColumnPriceLine(PriceDocumentItemEntity line)
+		private bool InitializeColumnPriceLine(PriceDocumentItemEntity line)
 		{
+			if (this.IsBL)
+			{
+				return false;
+			}
+
 			if (line.Discount.IsActive ())
 			{
 				this.InitializeColumnDiscountLine (line);
@@ -340,35 +411,42 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.InitializeColumnTotalLine (line);
 			}
+
+			return true;
 		}
 
 		private void InitializeColumnDiscountLine(PriceDocumentItemEntity line)
 		{
 			if (line.PrimaryPriceBeforeTax.HasValue)
 			{
-				this.columns["Rab"].Visible = true;
+				this.tableColumns["Rab"].Visible = true;
 			}
 
-			this.columns["Desc"].Visible = true;
-			this.columns["PT"  ].Visible = true;
+			this.tableColumns["Desc"].Visible = true;
+			this.tableColumns["PT"  ].Visible = true;
 		}
 
 		private void InitializeColumnTotalLine(PriceDocumentItemEntity line)
 		{
-			this.columns["Desc"].Visible = true;
-			this.columns["TVA" ].Visible = true;
-			this.columns["Tot" ].Visible = true;
+			this.tableColumns["Desc"].Visible = true;
+			this.tableColumns["TVA" ].Visible = true;
+			this.tableColumns["Tot" ].Visible = true;
 		}
 
 
 		private void BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			string text = string.Concat ("<b>", line.Text, "</b>");
-			table.SetText (this.columns["Desc"].Rank, row, text);
+			table.SetText (this.tableColumns["Desc"].Rank, row, text);
 		}
 
 		private void BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
+			if (this.IsBL && this.IsPort (line))
+			{
+				return;
+			}
+
 			string q1 = null;
 			string q2 = null;
 			string date = null;
@@ -395,48 +473,53 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (q1 != null)
 			{
-				table.SetText (this.columns["Nb"].Rank, row, q1);
+				table.SetText (this.tableColumns["Nb"].Rank, row, q1);
 			}
 
 			if (q2 != null)
 			{
-				table.SetText (this.columns["Suit"].Rank, row, q2);
+				table.SetText (this.tableColumns["Suit"].Rank, row, q2);
 			}
 
 			if (date != null)
 			{
-				table.SetText (this.columns["Date"].Rank, row, date);
+				table.SetText (this.tableColumns["Date"].Rank, row, date);
 			}
 
-			table.SetText (this.columns["Desc"].Rank, row, description);
-			table.SetText (this.columns["PU"  ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
+			table.SetText (this.tableColumns["Desc"].Rank, row, description);
+			table.SetText (this.tableColumns["PU"  ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax = line.ResultingLineTax.Value;
 
-				table.SetText (this.columns["PT" ].Rank, row, Misc.PriceToString (beforeTax));
-				table.SetText (this.columns["TVA"].Rank, row, Misc.PriceToString (tax));
-				table.SetText (this.columns["Tot"].Rank, row, Misc.PriceToString (beforeTax+tax));
+				table.SetText (this.tableColumns["PT" ].Rank, row, Misc.PriceToString (beforeTax));
+				table.SetText (this.tableColumns["TVA"].Rank, row, Misc.PriceToString (tax));
+				table.SetText (this.tableColumns["Tot"].Rank, row, Misc.PriceToString (beforeTax+tax));
 			}
 
 			if (line.Discounts.Count != 0)
 			{
 				if (line.Discounts[0].DiscountRate.HasValue)
 				{
-					table.SetText (this.columns["Rab"].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
+					table.SetText (this.tableColumns["Rab"].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
 				}
 
 				if (line.Discounts[0].DiscountAmount.HasValue)
 				{
-					table.SetText (this.columns["Rab"].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
+					table.SetText (this.tableColumns["Rab"].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
 				}
 			}
 		}
 
 		private void BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
 		{
+			if (this.IsBL)
+			{
+				return;
+			}
+
 			if (line.Discount.IsActive ())
 			{
 				this.BuildDiscountLine (table, row, line);
@@ -486,9 +569,9 @@ namespace Epsitec.Cresus.Core.Printers
 				rabais = string.Concat ("<br/>", Misc.PercentToString (line.Discount.DiscountRate.Value));
 			}
 
-			table.SetText (this.columns["Desc"].Rank, row, desc);
-			table.SetText (this.columns["Rab" ].Rank, row, rabais);
-			table.SetText (this.columns["PT"  ].Rank, row, prix);
+			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
+			table.SetText (this.tableColumns["Rab" ].Rank, row, rabais);
+			table.SetText (this.tableColumns["PT"  ].Rank, row, prix);
 		}
 
 		private void BuildTotalLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
@@ -518,20 +601,20 @@ namespace Epsitec.Cresus.Core.Printers
 				total = string.Concat ("<b>", total, "</b>");
 			}
 
-			table.SetText (this.columns["Desc"].Rank, row, desc);
-			table.SetText (this.columns["TVA" ].Rank, row, tva);
-			table.SetText (this.columns["Tot" ].Rank, row, total);
+			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
+			table.SetText (this.tableColumns["TVA" ].Rank, row, tva);
+			table.SetText (this.tableColumns["Tot" ].Rank, row, total);
 
 			if (lastLine)
 			{
-				table.SetCellBorderWidth (this.columns["Tot"].Rank, row, 0.5);  // met un cadre épais
+				table.SetCellBorderWidth (this.tableColumns["Tot"].Rank, row, 0.5);  // met un cadre épais
 			}
 		}
 
 
 		private void InitializeRowAlignment(TableBand table, int row)
 		{
-			foreach (var column in this.columns.Values)
+			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
@@ -544,6 +627,11 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildConditions()
 		{
 			//	Met les conditions à la fin de la facture.
+			if (this.IsBL)
+			{
+				return;
+			}
+
 			string conditions = InvoiceDocumentHelper.GetConditions (this.entity);
 
 			if (!string.IsNullOrEmpty (conditions))
@@ -566,7 +654,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -629,34 +717,38 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-
-		/// <summary>
-		/// Représente une colonne de la table principale des articles à facturer.
-		/// Elle pourra être visible ou cachée.
-		/// </summary>
-		private class TableColumn
+		private bool IsPort(ArticleDocumentItemEntity article)
 		{
-			public TableColumn(string title, double width, ContentAlignment alignment)
+			//	Retourne true s'il s'agit des frais de port.
+			if (article.ArticleDefinition.IsActive () &&
+				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
-				this.Title     = title;
-				this.Width     = width;
-				this.Alignment = alignment;
-				this.Rank      = -1;
-				this.Visible   = false;
+				return article.ArticleDefinition.ArticleCategory.Name == "Ports/emballages";
 			}
 
-			public string			Title;
-			public double			Width;
-			public ContentAlignment	Alignment;
-			public int				Rank;
-			public bool				Visible;
+			return false;
 		}
+
+		private bool IsBL
+		{
+			get
+			{
+				return this.DocumentTypeSelected == "BL";
+			}
+		}
+
+		private bool IsModern
+		{
+			get
+			{
+				return this.HasDocumentOption ("Modern");
+			}
+		}
+
 
 
 
 		private static readonly Font font = Font.GetFont ("Arial", "Regular");
 		private static readonly double fontSize = 3.0;
-
-		private Dictionary<string, TableColumn> columns;
 	}
 }
