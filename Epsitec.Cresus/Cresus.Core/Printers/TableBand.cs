@@ -333,6 +333,23 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public double GetRowHeight(int row)
+		{
+			foreach (var section in this.sectionsInfo)
+			{
+				foreach (var info in section.RowsInfo)
+				{
+					if (info.Row == row)
+					{
+						return info.Height;
+					}
+				}
+			}
+
+			return 0;
+		}
+
+
 		public override double RequiredHeight(double width)
 		{
 			this.width = width;
@@ -341,7 +358,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int row = 0; row < this.rowsCount; row++)
 			{
-				height += this.GetRowHeight (row);
+				height += this.ComputeRowHeight (row);
 			}
 
 			return height;
@@ -644,7 +661,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private double GetRowHeight(int row)
+		private double ComputeRowHeight(int row)
 		{
 			//	Calcule la hauteur nécessaire pour la ligne, qui est celle de la plus haute cellule.
 			double height = 0;
