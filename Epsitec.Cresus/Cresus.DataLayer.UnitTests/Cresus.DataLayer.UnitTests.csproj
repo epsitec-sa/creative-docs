@@ -51,6 +51,7 @@
     <Compile Include="Context\UnitTestDataContextPool.cs" />
     <Compile Include="Context\UnitTestEntityCache.cs" />
     <Compile Include="Context\UnitTestEntityKey.cs" />
+    <Compile Include="Loader\UnitTestExpressionConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\TestStore.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
@@ -83,6 +84,10 @@
     <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
+      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
+      <Name>Common.Debug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.IO\Common.IO.csproj">
       <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
       <Name>Common.IO</Name>
@@ -143,7 +148,9 @@
   <ItemGroup>
     <Shadow Include="Test References\Cresus.DataLayer.accessor" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Shadow Include="Test References\Cresus.Database.accessor" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
