@@ -168,11 +168,11 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="port">Port graphique</param>
 		/// <param name="page">Rang de la page (0..n)</param>
 		/// <returns></returns>
-		public bool Paint(IPaintPort port, int page)
+		public bool Paint(IPaintPort port, int page, bool isPreview)
 		{
 			if (page >= 0 && page < this.pages.Count)
 			{
-				return this.pages[page].Paint (port);
+				return this.pages[page].Paint (port, isPreview);
 			}
 
 			return true;

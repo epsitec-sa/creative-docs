@@ -31,30 +31,31 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 
-		protected override Color LightPinkColor
+		protected override Color LightPinkColor(bool isPreview)
 		{
-			get
+			if (isPreview)
 			{
-				return Color.FromHexa ("ffebd9");  // orange très pâle
+				return Color.FromHexa ("ffe2d9");  // orange très pâle
+			}
+			else
+			{
+				return Color.FromHexa ("ffc6b2");  // orange pâle
 			}
 		}
 
-		protected override Color DarkPinkColor
+		protected override Color DarkPinkColor(bool isPreview)
 		{
-			get
-			{
-				return Color.FromHexa ("ff9f48");  // orange
-			}
+			return Color.FromHexa ("ff8547");  // orange
 		}
 
 
-		protected override void PaintFix(IPaintPort port, Point topLeft)
+		protected override void PaintFix(IPaintPort port, bool isPreview, Point topLeft)
 		{
 			//	Dessine tous éléments fixes, pour simuler un BV sur un fond blanc.
-			base.PaintFix (port, topLeft);
+			base.PaintFix (port, isPreview, topLeft);
 
 			//	Dessine la référence.
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.LineWidth = 0.1;
 			port.PaintOutline (Path.FromRectangle (topLeft.X+123, topLeft.Y-39, 83, 6));
 			port.PaintOutline (Path.FromLine (topLeft.X+123, topLeft.Y-33, topLeft.X+123, topLeft.Y-32));
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintOutline (Path.FromLine (topLeft.X+206, topLeft.Y-32, topLeft.X+190, topLeft.Y-32));
 
 			//	Dessine les cases pour les montants.
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.LineWidth = 0.75;
 			port.PaintOutline (Path.FromRectangle (topLeft.X+1, topLeft.Y-56, 40, 6));
 			port.PaintOutline (Path.FromRectangle (topLeft.X+47, topLeft.Y-56, 10, 6));
@@ -78,7 +79,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.Color = Color.FromBrightness (0);
 			port.PaintText (topLeft.X+70, topLeft.Y-76, "609", AbstractBvBand.ocrFont, 4.2);
 
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.PaintText (topLeft.X+144, topLeft.Y-32, "Referenz-Nr. / N° de référence / N° di riferimento", AbstractBvBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+124, topLeft.Y-14, "Keine Mitteilungen anbringen", AbstractBvBand.fixFontRegular, 2.0);
 			port.PaintText (topLeft.X+124, topLeft.Y-18, "Pas de communications", AbstractBvBand.fixFontRegular, 2.0);

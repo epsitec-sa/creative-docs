@@ -79,11 +79,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.DocumentTypeSelected == "BV")
 				{
-					return new Margins (20, 10, 20+h, h*2+10+AbstractBvBand.DefautlSize.Height);
+					return new Margins (20, 10, 20+h*2, h+10+AbstractBvBand.DefautlSize.Height);
 				}
 				else
 				{
-					return new Margins (20, 10, 20+h, h*2+20);
+					return new Margins (20, 10, 20+h*2, h+20);
 				}
 			}
 		}
@@ -123,11 +123,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void PrintCurrentPage(IPaintPort port, Rectangle bounds)
+		public override void PrintCurrentPage(IPaintPort port)
 		{
-			base.PrintCurrentPage (port, bounds);
+			base.PrintCurrentPage (port);
 
-			this.documentContainer.Paint (port, this.CurrentPage);
+			this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 		}
 
 

@@ -30,30 +30,31 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected override Color LightPinkColor
+		protected override Color LightPinkColor(bool isPreview)
 		{
-			get
+			if (isPreview)
 			{
 				return Color.FromHexa ("ffe8e5");  // rose très pâle
 			}
-		}
-
-		protected override Color DarkPinkColor
-		{
-			get
+			else
 			{
-				return Color.FromHexa ("ff5948");  // rose
+				return Color.FromHexa ("ffc7bf");  // rose pâle
 			}
 		}
 
+		protected override Color DarkPinkColor(bool isPreview)
+		{
+			return Color.FromHexa ("ff5948");  // rose
+		}
 
-		protected override void PaintFix(IPaintPort port, Point topLeft)
+
+		protected override void PaintFix(IPaintPort port, bool isPreview, Point topLeft)
 		{
 			//	Dessine tous éléments fixes, pour simuler un BV sur un fond blanc.
-			base.PaintFix (port, topLeft);
+			base.PaintFix (port, isPreview, topLeft);
 
 			//	Dessine les traits.
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.LineWidth = 0.1;
 
 			port.PaintOutline (Path.FromLine (topLeft.X+2, topLeft.Y-67, topLeft.X+57, topLeft.Y-67));
@@ -72,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 			pos = new Point (topLeft.X+2, topLeft.Y-55);
 			for (int i = 0; i < 8; i++)
 			{
-				this.PaintCell (port, pos);
+				this.PaintCell (port, isPreview, pos);
 
 				if (i == 1 || i == 4)
 				{
@@ -85,7 +86,7 @@ namespace Epsitec.Cresus.Core.Printers
 			pos = new Point (topLeft.X+48, topLeft.Y-55);
 			for (int i = 0; i < 2; i++)
 			{
-				this.PaintCell (port, pos);
+				this.PaintCell (port, isPreview, pos);
 
 				pos.X += 5;
 			}
@@ -93,7 +94,7 @@ namespace Epsitec.Cresus.Core.Printers
 			pos = new Point (topLeft.X+63, topLeft.Y-55);
 			for (int i = 0; i < 8; i++)
 			{
-				this.PaintCell (port, pos);
+				this.PaintCell (port, isPreview, pos);
 
 				if (i == 1 || i == 4)
 				{
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.Core.Printers
 			pos = new Point (topLeft.X+109, topLeft.Y-55);
 			for (int i = 0; i < 2; i++)
 			{
-				this.PaintCell (port, pos);
+				this.PaintCell (port, isPreview, pos);
 
 				pos.X += 5;
 			}
@@ -119,7 +120,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.Color = Color.FromBrightness (0);
 			port.PaintText (topLeft.X+70, topLeft.Y-76, "105", AbstractBvBand.ocrFont, 4.2);
 
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.PaintText (topLeft.X+123, topLeft.Y-7, "Zahlungsweck / Motif versement / Motivo versamento", AbstractBvBand.fixFontRegular, 2.0);
 		}
 
@@ -162,7 +163,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void PaintCell(IPaintPort port, Point pos)
+		private void PaintCell(IPaintPort port, bool isPreview, Point pos)
 		{
 			//	Dessine un rectangle pour un digit du montant.
 			Rectangle bounds = new Rectangle (pos.X, pos.Y, 4, 5);
@@ -171,7 +172,7 @@ namespace Epsitec.Cresus.Core.Printers
 			port.Color = Color.FromBrightness (1);
 			port.PaintSurface (Path.FromRectangle (bounds));
 
-			port.Color = this.DarkPinkColor;
+			port.Color = this.DarkPinkColor (isPreview);
 			port.PaintOutline (Path.FromRectangle (bounds));
 		}
 

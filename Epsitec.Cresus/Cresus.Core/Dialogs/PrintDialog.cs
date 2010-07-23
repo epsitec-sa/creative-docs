@@ -284,18 +284,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			entityPrinter.BuildSections ();
 
-			if (printer.Horizontal)
+			Transform transform;
+
+			if (entityPrinter.PageSize.Width < entityPrinter.PageSize.Height)  // portrait ?
 			{
-				Transform transform = Transform.Identity;
-				PrintPort.PrintSinglePage (painter => entityPrinter.PrintCurrentPage (painter, new Rectangle (xOffset, -yOffset, width, height)), printDocument, transform);
+				transform = Transform.Identity;
 			}
-			else
+			else  // paysage ?
 			{
-				Transform transform = Transform.Identity.RotateDeg (90);
-				PrintPort.PrintSinglePage (painter => entityPrinter.PrintCurrentPage (painter, new Rectangle (-yOffset, -xOffset, width, height)), printDocument, transform);
+				transform = Transform.CreateRotationDegTransform (90, entityPrinter.PageSize.Height/2, entityPrinter.PageSize.Height/2);
 			}
+
+			var engine = new MultiPagePrintEngine (entityPrinter, transform);
+			printDocument.Print (engine);
 		}
 
+	
 		protected void Preview()
 		{
 			this.CloseDialog ();

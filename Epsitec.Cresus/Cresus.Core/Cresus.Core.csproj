@@ -190,6 +190,7 @@
     <Compile Include="Printers\AbstractBvBand.cs" />
     <Compile Include="Printers\BvrBand.cs" />
     <Compile Include="Printers\BvBand.cs" />
+    <Compile Include="Printers\MultiPagePrintEngine.cs" />
     <Compile Include="Printers\SurfaceBand.cs" />
     <Compile Include="Printers\TableColumn.cs" />
     <Compile Include="Printers\DocumentOption.cs" />
