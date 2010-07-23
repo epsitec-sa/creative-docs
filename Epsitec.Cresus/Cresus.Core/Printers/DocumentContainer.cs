@@ -86,11 +86,14 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Ajoute un objet (qui occupera toute la largeur) depuis le haut, sur autant de
 		/// pages qu'il en faut.
+		/// Retourne la liste des rectangles occupés par l'objet sur chaque page.
 		/// </summary>
 		/// <param name="band"></param>
 		/// <param name="bottomMargin"></param>
-		public void AddFromTop(AbstractBand band, double bottomMargin)
+		public List<Rectangle> AddFromTop(AbstractBand band, double bottomMargin)
 		{
+			var list = new List<Rectangle> ();
+
 			double width  = this.pageSize.Width  - this.pageMargins.Left - this.pageMargins.Right;
 			double height = this.pageSize.Height - this.pageMargins.Top  - this.pageMargins.Bottom;
 			double rest = this.currentVerticalPosition - this.pageMargins.Bottom;
@@ -112,8 +115,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
 
+				var bounds = new Rectangle (this.pageMargins.Left, this.currentVerticalPosition-requiredHeight, width, requiredHeight);
+				list.Add (bounds);
+
 				this.currentVerticalPosition -= requiredHeight + bottomMargin;
 			}
+
+			return list;
 		}
 
 		public int CurrentPage
