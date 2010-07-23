@@ -75,13 +75,15 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
+				double h = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight;
+
 				if (this.DocumentTypeSelected == "BV")
 				{
-					return new Margins (20, 10, 20, 10+AbstractBvBand.DefautlSize.Height);
+					return new Margins (20, 10, 20+h, h*2+10+AbstractBvBand.DefautlSize.Height);
 				}
 				else
 				{
-					return new Margins (20, 10, 20, 20);
+					return new Margins (20, 10, 20+h, h*2+20);
 				}
 			}
 		}
@@ -97,6 +99,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildArticles ();
 				this.BuildConditions ();
 				this.BuildPages ();
+				this.BuildReportHeaders ();
+				this.BuildReportFooters ();
 				this.BuildBvs (bvr: this.HasDocumentOption ("BVR"));
 			}
 
@@ -106,6 +110,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildArticles ();
 				this.BuildConditions ();
 				this.BuildPages ();
+				this.BuildReportHeaders ();
+				this.BuildReportFooters ();
 			}
 
 			if (this.DocumentTypeSelected == "BL")
@@ -273,19 +279,19 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			//	Compte et numérote les colonnes visibles.
-			int columnCount = 0;
+			this.columnCount = 0;
 
 			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
-					column.Rank = columnCount++;
+					column.Rank = this.columnCount++;
 				}
 			}
 
 			//	Deuxième passe pour générer les colonnes et les lignes du tableau.
 			var table = new TableBand ();
-			table.ColumnsCount = columnCount;
+			table.ColumnsCount = this.columnCount;
 			table.RowsCount = rowCount;
 			table.PaintFrame = this.IsModern;
 			table.CellMargins = new Margins (this.IsModern ? 1 : 2);
@@ -333,23 +339,18 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			this.documentContainer.AddFromTop (table, 5.0);
+			this.tableBounds = this.documentContainer.AddFromTop (table, 5.0);
 
-			if (!this.IsModern)
-			{
-				var currentPage = this.documentContainer.CurrentPage;
+			this.firstRowForEachSection = table.GetFirstRowForEachSection ();
 
-				var h = table.GetRowHeight (0);
+			// Met un trait horizontal sous l'en-tête.
+			var currentPage = this.documentContainer.CurrentPage;
+			this.documentContainer.CurrentPage = 0;  // dans la première page
 
-				var line = new SurfaceBand ();
-				line.Height = 0.3;
-				var bounds = new Rectangle (this.PageMargins.Left, lineY-h, this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right, line.Height);
+			var h = table.GetRowHeight (0);
+			this.BuildSeparator (lineY-h);
 
-				this.documentContainer.CurrentPage = 0;
-				this.documentContainer.AddAbsolute (line, bounds);
-
-				this.documentContainer.CurrentPage = currentPage;
-			}
+			this.documentContainer.CurrentPage = currentPage;
 		}
 
 
@@ -496,7 +497,7 @@ namespace Epsitec.Cresus.Core.Printers
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
-				decimal tax = line.ResultingLineTax.Value;
+				decimal tax =       line.ResultingLineTax.Value;
 
 				table.SetText (this.tableColumns["PT" ].Rank, row, Misc.PriceToString (beforeTax));
 				table.SetText (this.tableColumns["TVA"].Rank, row, Misc.PriceToString (tax));
@@ -650,8 +651,10 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildPages()
 		{
 			//	Met les numéros de page.
-			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+1, 80, 5);
-			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+1, 80, 5);
+			double reportHeight = InvoiceDocumentEntityPrinter.reportHeight*2;
+
+			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
+			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
 			for (int page = 1; page < this.documentContainer.PageCount; page++)
 			{
@@ -673,6 +676,125 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.AddAbsolute (rightHeader, rightBounds);
 			}
 		}
+
+		private void BuildReportHeaders()
+		{
+			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+
+			for (int page = 1; page < this.documentContainer.PageCount; page++)
+			{
+				this.documentContainer.CurrentPage = page;
+
+				var table = new TableBand ();
+				table.ColumnsCount = this.columnCount;
+				table.RowsCount = 2;
+				table.PaintFrame = this.IsModern;
+				table.CellMargins = new Margins (this.IsModern ? 1 : 2);
+
+				//	Génère une première ligne d'en-tête (titres des colonnes).
+				foreach (var column in this.tableColumns.Values)
+				{
+					if (column.Visible)
+					{
+						table.SetRelativeColumWidth (column.Rank, column.Width);
+						table.SetText (column.Rank, 0, column.Title);
+					}
+				}
+
+				//	Génère une deuxième ligne avec les montants à reporter.
+				table.SetText (this.tableColumns["Desc"].Rank, 1, "Report");
+
+				decimal sumPT, sumTva, sumTot;
+				this.ComputeBottomReports (page-1, out sumPT, out sumTva, out sumTot);
+				table.SetText (this.tableColumns["PT" ].Rank, 1, Misc.PriceToString (sumPT));
+				table.SetText (this.tableColumns["TVA"].Rank, 1, Misc.PriceToString (sumTva));
+				table.SetText (this.tableColumns["Tot"].Rank, 1, Misc.PriceToString (sumTot));
+
+				this.InitializeRowAlignment (table, 0);
+				this.InitializeRowAlignment (table, 1);
+
+				var tableBound = this.tableBounds[page];
+				double h = table.RequiredHeight (width);
+				var bounds = new Rectangle (tableBound.Left, tableBound.Top, width, h);
+
+				this.documentContainer.AddAbsolute (table, bounds);
+
+				// Met un trait horizontal sous l'en-tête.
+				h = table.GetRowHeight (0);
+				this.BuildSeparator (bounds.Top-h);
+			}
+		}
+
+		private void BuildReportFooters()
+		{
+			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+
+			for (int page = 0; page < this.documentContainer.PageCount-1; page++)
+			{
+				this.documentContainer.CurrentPage = page;
+
+				var table = new TableBand ();
+				table.ColumnsCount = this.columnCount;
+				table.RowsCount = 1;
+				table.PaintFrame = this.IsModern;
+				table.CellMargins = new Margins (this.IsModern ? 1 : 2);
+
+				foreach (var column in this.tableColumns.Values)
+				{
+					if (column.Visible)
+					{
+						table.SetRelativeColumWidth (column.Rank, column.Width);
+					}
+				}
+
+				table.SetText (this.tableColumns["Desc"].Rank, 0, "Reporté");
+
+				decimal sumPT, sumTva, sumTot;
+				this.ComputeBottomReports (page, out sumPT, out sumTva, out sumTot);
+				table.SetText (this.tableColumns["PT" ].Rank, 0, Misc.PriceToString (sumPT));
+				table.SetText (this.tableColumns["TVA"].Rank, 0, Misc.PriceToString (sumTva));
+				table.SetText (this.tableColumns["Tot"].Rank, 0, Misc.PriceToString (sumTot));
+
+				this.InitializeRowAlignment (table, 0);
+
+				var tableBound = this.tableBounds[page];
+				double h = table.RequiredHeight (width);
+				var bounds = new Rectangle (tableBound.Left, tableBound.Bottom-h, width, h);
+
+				this.documentContainer.AddAbsolute (table, bounds);
+
+				// Met un trait horizontal sur le report.
+				this.BuildSeparator (bounds.Top);
+			}
+		}
+
+		private void ComputeBottomReports(int page, out decimal sumPT, out decimal sumTva, out decimal sumTot)
+		{
+			//	Calcul les reports à montrer en bas d'une page.
+			sumPT  = 0;
+			sumTva = 0;
+			sumTot = 0;
+
+			int lastRow = this.firstRowForEachSection[page+1];
+
+			for (int row = 0; row < lastRow; row++)
+			{
+				AbstractDocumentItemEntity item = this.entity.Lines[row];
+
+				if (item is ArticleDocumentItemEntity)
+				{
+					var article = item as ArticleDocumentItemEntity;
+
+					decimal beforeTax = article.ResultingLinePriceBeforeTax.Value;
+					decimal tax =       article.ResultingLineTax.Value;
+
+					sumPT  += beforeTax;
+					sumTva += tax;
+					sumTot += beforeTax+tax;
+				}
+			}
+		}
+
 
 		private void BuildBvs(bool bvr)
 		{
@@ -721,6 +843,19 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private void BuildSeparator(double y, double width=0.5)
+		{
+			//	Met un séparateur horizontal.
+			var line = new SurfaceBand ()
+			{
+				Height = width,
+			};
+
+			var bounds = new Rectangle (this.PageMargins.Left, y-width/2, this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right, line.Height);
+			this.documentContainer.AddAbsolute (line, bounds);
+		}
+
+
 		private bool IsPort(ArticleDocumentItemEntity article)
 		{
 			//	Retourne true s'il s'agit des frais de port.
@@ -754,5 +889,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font font = Font.GetFont ("Arial", "Regular");
 		private static readonly double fontSize = 3.0;
+		private static readonly double reportHeight = 7.0;
+
+		private int columnCount;
+		private int[] firstRowForEachSection;
+		private List<Rectangle> tableBounds;
 	}
 }

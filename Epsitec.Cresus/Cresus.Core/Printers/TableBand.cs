@@ -333,23 +333,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public double GetRowHeight(int row)
-		{
-			foreach (var section in this.sectionsInfo)
-			{
-				foreach (var info in section.RowsInfo)
-				{
-					if (info.Row == row)
-					{
-						return info.Height;
-					}
-				}
-			}
-
-			return 0;
-		}
-
-
 		public override double RequiredHeight(double width)
 		{
 			this.width = width;
@@ -584,6 +567,38 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return 0;
 		}
+
+		public double GetRowHeight(int row)
+		{
+			foreach (var section in this.sectionsInfo)
+			{
+				foreach (var info in section.RowsInfo)
+				{
+					if (info.Row == row)
+					{
+						return info.Height;
+					}
+				}
+			}
+
+			return 0;
+		}
+
+		public int[] GetFirstRowForEachSection()
+		{
+			int[] rows = new int[this.sectionsInfo.Count+1];
+			int index = 0;
+
+			foreach (var section in this.sectionsInfo)
+			{
+				rows[index+1] = section.FirstRow;
+			}
+
+			rows[index] = this.rowsCount;
+
+			return rows;
+		}
+
 
 		/// <summary>
 		/// Dessine une section de l'objet à une position donnée.
