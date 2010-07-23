@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer.Schema
 {
 	
-	
+	// TODO Correct null bug.
 	internal sealed class SchemaEngine
 	{
 
@@ -50,8 +50,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			if (createTable)
 			{
 				SchemaBuilder tableBuilder = new SchemaBuilder(this);
+
+				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					tableBuilder.CreateSchema (transaction, entityId);
+
+					transaction.Commit ();
+				}
 				
-				tableBuilder.CreateSchema (entityId);
 
 				foreach (var item in tableBuilder.GetNewTableDefinitions ())
 				{

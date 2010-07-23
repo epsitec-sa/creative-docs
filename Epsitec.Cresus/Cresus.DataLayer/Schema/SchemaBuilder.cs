@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -16,139 +17,150 @@ namespace Epsitec.Cresus.DataLayer.Schema
 	
 	
 	/// <summary>
-	/// The <c>SchemaBuilder</c> class is used internally to build
-	/// one or more <see cref="DbTable"/> instances based on entity ids.
+	/// The <c>SchemaBuilder</c> class is used internally to build <see cref="DbTable"/> and register
+	/// them to the DbInfrastructure.
 	/// </summary>
 	internal class SchemaBuilder
 	{
 		
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SchemaBuilder"/> class.
+		/// Builds a new <c>SchemaBuilder.</c>
 		/// </summary>
-		/// <param name="schemaEngine">The schema engine.</param>
+		/// <param name="schemaEngine">The <see cref="SchemaEngine"/> used as a cache for this instance.</param>
 		public SchemaBuilder(SchemaEngine schemaEngine)
 		{
-			this.schemaEngine = schemaEngine;
-			
-			this.tables = new List<DbTable> ();
-			this.newTables = new List<DbTable> ();
-
-			this.tablesDictionary = new Dictionary<Druid, DbTable> ();
-			this.typesDictionary = new Dictionary<Druid, DbTypeDef> ();
+			this.SchemaEngine = schemaEngine;
 		}
 
 
-		public void CreateSchema(Druid entityId)
+		/// <summary>
+		/// The <see cref="SchemaEngine"/> associated with this instance.
+		/// </summary>
+		private SchemaEngine SchemaEngine
 		{
-			using (this.BeginTransaction ())
+			get;
+			set;
+		}
+
+
+		/// <summary>
+		/// The <see cref="DbInfrastructure"/> associated with this instance.
+		/// </summary>
+		private DbInfrastructure DbInfrastructure
+		{
+			get
 			{
-				System.Diagnostics.Debug.Assert (this.newTables.Count == 0);
-
-				this.CreateTable (entityId);
-
-				foreach (DbTable table in this.newTables)
-				{
-					this.schemaEngine.DbInfrastructure.RegisterNewDbTable (this.transaction, table);
-				}
-
-				foreach (DbTable table in this.newTables)
-				{
-					this.schemaEngine.DbInfrastructure.RegisterColumnRelations (this.transaction, table);
-				}
-
-				this.CommitTransaction ();
+				return this.SchemaEngine.DbInfrastructure;
 			}
 		}
 
 
 		/// <summary>
-		/// Starts a transaction. This will inherit the currently active
-		/// transaction, if one is already active. Use this method inside
-		/// a <c>using</c> block.
+		/// Creates the schema of an <see cref="AbstractEntity"/> and register it to the database. This
+		/// method will recursively create and register everything that is required to build the schema.
 		/// </summary>
-		/// <returns>A <see cref="System.IDisposable"/> object which must be
-		/// disposed of when the transaction block ends.</returns>
-		private System.IDisposable BeginTransaction()
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to build</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="transaction"/> is null.</exception>
+		public void CreateSchema(DbTransaction transaction, Druid entityId)
 		{
-			if (this.transaction != null && this.transaction.IsActive)
+			transaction.ThrowIfNull ("transaction");
+
+			this.newTablesDictionary = new Dictionary<Druid, DbTable> ();
+			this.newTypesDictionary = new Dictionary<Druid, DbTypeDef> ();
+
+			this.CreateTable (transaction, entityId);
+
+			foreach (DbTable table in this.newTablesDictionary.Values)
 			{
-				throw new System.InvalidOperationException ("SchemaEngineTableBuilder already has an active transaction");
+				this.DbInfrastructure.RegisterNewDbTable (transaction, table);
 			}
 
-			this.transaction = this.schemaEngine.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite);
-
-			return this.transaction;
+			foreach (DbTable table in this.newTablesDictionary.Values)
+			{
+				this.DbInfrastructure.RegisterColumnRelations (transaction, table);
+			}
 		}
+
 
 		/// <summary>
-		/// Commits the active transaction, which must have been started
-		/// with the <see cref="BeginTransaction"/> method.
+		/// Gets the mapping of the <see cref="Druid"/> and the <see cref="DbTable"/> that where created
+		/// during the last call of the method <see cref="CreateSchema"/>.
 		/// </summary>
-		private void CommitTransaction()
-		{
-			this.transaction.Commit ();
-			this.transaction = null;
-		}
-
-
+		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTable"/>.</returns>
 		public Dictionary<Druid, DbTable> GetNewTableDefinitions()
 		{
-			return this.tablesDictionary;
-		}
-
-
-		public Dictionary<Druid, DbTypeDef> GetNewTypeDefinitions()
-		{
-			return this.typesDictionary;
+			return this.newTablesDictionary;
 		}
 
 
 		/// <summary>
-		/// Creates the table definition, without registering it with the database.
-		/// This method will be called recursively.
+		/// Gets the mapping of the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that where created
+		/// during the last call of the method <see cref="CreateSchema"/>.
 		/// </summary>
-		/// <param name="entityId">The entity id.</param>
-		/// <returns>The root table for the entity.</returns>
-		private DbTable CreateTable(Druid entityId)
+		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/>.</returns>
+		public Dictionary<Druid, DbTypeDef> GetNewTypeDefinitions()
 		{
-			DbTable table;
+			return this.newTypesDictionary;
+		}
+
+
+		/// <summary>
+		/// Creates the <see cref="DbTable"/> of an <see cref="AbstractEntity"/> and everything which
+		/// is required such as the parent and neighbor <see cref="DbTable"/> without registering
+		/// them to the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to create.</param>
+		/// <returns>The root <see cref="DbTable"/> of the <see cref="AbstractEntity"/>.</returns>
+		private DbTable CreateTable(DbTransaction transaction, Druid entityId)
+		{
+			DbTable table = null;
 
 			//	If we have already generated a table definition for this entity,
 			//	just re-use it. This check makes circular references possible.
 			
-			if (this.tablesDictionary.TryGetValue (entityId, out table))
+			if (table == null)
 			{
-				return table;
+				this.newTablesDictionary.TryGetValue (entityId, out table);
 			}
 
-			ResourceManager manager = this.schemaEngine.DbInfrastructure.DefaultContext.ResourceManager;
+			if (table == null)
+			{
+				table = this.SchemaEngine.GetEntityTableDefinition (entityId);
+			}
+
+			if (table == null)
+			{
+				table = this.CreateTableHelper (transaction, entityId);
+			}
+
+			return table;
+		}
+
+
+		/// <summary>
+		/// Helper method for <see cref="CreateTable"/>, which will do the real job of creating a
+		/// <see cref="DbTable"/> that does not exists and all its dependencies.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="AbstractEntity"/> whose schema to create.</param>
+		/// <returns>The root <see cref="DbTable"/> of the <see cref="AbstractEntity"/>.</returns>
+		private DbTable CreateTableHelper(DbTransaction transaction, Druid entityId)
+		{
+			ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
 			StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
-			
+
 			if (entityType == null)
 			{
 				throw new System.ArgumentException ("Invalid entity ID", "entityId");
 			}
-			
-			this.AssertTransaction ();
 
-			table = this.schemaEngine.GetEntityTableDefinition (entityId);
-
-			if (table != null)
-			{
-				//	Add the table to the list of tables, but not to the tables
-				//	dictionary - that one will only contain "new" tables.
-
-				this.tables.Add (table);
-				return table;
-			}
-
-			table = this.schemaEngine.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
-
+			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 			table.Comment = table.DisplayName;
-			this.newTables.Add (table);
-			this.tables.Add (table);
-			this.tablesDictionary[entityId] = table;
+
+			this.newTablesDictionary[entityId] = table;
 
 			if (entityType.BaseTypeId.IsEmpty)
 			{
@@ -156,17 +168,15 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				//	need to add a special identification column, which can be used
 				//	to map a row to its proper derived entity class.
 
-				DbTypeDef typeDef = this.schemaEngine.DbInfrastructure.ResolveDbType (this.transaction, Tags.TypeKeyId);
+				DbTypeDef typeDef = this.DbInfrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
 				DbColumn column = new DbColumn (Tags.ColumnInstanceType, typeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
-				
+
 				table.Columns.Add (column);
 			}
 			else
 			{
-				this.CreateTable (entityType.BaseTypeId);
+				this.CreateTable (transaction, entityType.BaseTypeId);
 			}
-
-
 
 			//	For every locally defined field (this includes field inserted
 			//	through an interface, possibly locally overridden), create a
@@ -174,12 +184,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			foreach (StructuredTypeField field in entityType.Fields.Values)
 			{
-				if ((field.Membership == FieldMembership.Local) ||
-					(field.Membership == FieldMembership.LocalOverride))
+				if (field.Membership == FieldMembership.Local || field.Membership == FieldMembership.LocalOverride)
 				{
 					if (field.Source == FieldSource.Value)
-					{		
-						this.CreateColumn (table, field);
+					{
+						this.CreateColumn (transaction, table, field);
 					}
 				}
 			}
@@ -187,25 +196,28 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			return table;
 		}
 
+
 		/// <summary>
-		/// Creates a column to represent the specified field.
+		/// Creates a <see cref="DbColumn"/> to represent the given field in the given
+		/// <see cref="DbTable"/>.
 		/// </summary>
-		/// <param name="table">The table.</param>
-		/// <param name="field">The field.</param>
-		private void CreateColumn(DbTable table, StructuredTypeField field)
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="table">The <see cref="DbTable"/> to which to add the <see cref="DbColumn"/>.</param>
+		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
+		private void CreateColumn(DbTransaction transaction, DbTable table, StructuredTypeField field)
 		{
 			switch (field.Relation)
 			{
 				case FieldRelation.None:
-					this.CreateDataColumn (table, field);
+					this.CreateDataColumn (transaction, table, field);
 					break;
 				
 				case FieldRelation.Reference:
-					this.CreateRelationColumn (table, field, DbCardinality.Reference);
+					this.CreateRelationColumn (transaction, table, field, DbCardinality.Reference);
 					break;
 				
 				case FieldRelation.Collection:
-					this.CreateRelationColumn (table, field, DbCardinality.Collection);
+					this.CreateRelationColumn (transaction, table, field, DbCardinality.Collection);
 					break;
 
 				default:
@@ -213,125 +225,99 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			}
 		}
 
+
 		/// <summary>
-		/// Creates a data column for the specified field.
+		/// Creates a <see cref="DbColumn"/> for the given data field.
 		/// </summary>
-		/// <param name="table">The table.</param>
-		/// <param name="field">The field.</param>
-		private void CreateDataColumn(DbTable table, StructuredTypeField field)
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="table">The <see cref="DbTable"/> to which to add the <see cref="DbColumn"/>.</param>
+		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
+		private void CreateDataColumn(DbTransaction transaction, DbTable table, StructuredTypeField field)
 		{
-			DbTypeDef typeDef = this.CreateTypeDef (field.Type, field.Options);
-			DbColumn  column  = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			DbTypeDef typeDef = this.GetOrCreateTypeDef (transaction, field.Type, field.Options);
+			DbColumn column = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
 			column.Comment = column.DisplayName;
 
 			table.Columns.Add (column);
 		}
 
+
 		/// <summary>
-		/// Creates a relation column for the specified field.
+		/// Creates a <see cref="DbColumn"/> for the given relation field.
 		/// </summary>
-		/// <param name="table">The table.</param>
-		/// <param name="field">The field.</param>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="table">The <see cref="DbTable"/> to which to add the <see cref="DbColumn"/>.</param>
+		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
 		/// <param name="cardinality">The cardinality of the relation.</param>
-		private void CreateRelationColumn(DbTable table, StructuredTypeField field, DbCardinality cardinality)
+		private void CreateRelationColumn(DbTransaction transaction, DbTable table, StructuredTypeField field, DbCardinality cardinality)
 		{
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
 			System.Diagnostics.Debug.Assert (field.Type is StructuredType);
 
-			DbTable  target = this.CreateTable (field.TypeId);
-			DbColumn column = DbTable.CreateRelationColumn (this.transaction, this.schemaEngine.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
+			DbTable target = this.CreateTable (transaction, field.TypeId);
+			DbColumn column = DbTable.CreateRelationColumn (transaction, this.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 
 			table.Columns.Add (column);
 		}
 
+
 		/// <summary>
-		/// Gets the type definition object for the specified type. If the
-		/// type is not yet known, register it with the database.
+		/// Gets the <see cref="DbTypeDef"/> for the given type. If it is not yet known, it is
+		/// created and registered to the database.
 		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <param name="options">The field options.</param>
-		/// <returns>
-		/// The <see cref="DbTypeDef"/> instance or <c>null</c>.
-		/// </returns>
-		private DbTypeDef CreateTypeDef(INamedType type, FieldOptions options)
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="type">The type whose <see cref="DbTypeDef"/> to get.</param>
+		/// <param name="options">The <see cref="FieldOptions"/> of the type.</param>
+		/// <returns>The <see cref="DbTypeDef"/>.</returns>
+		private DbTypeDef GetOrCreateTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
 		{
-			this.AssertTransaction ();
-
 			type.ThrowIfNull ("type");
+			type.ThrowIf (t => t is IStructuredType, "Cannot create type definition for structure");
 
-			if (type is IStructuredType)
+			DbTypeDef typeDef = null;
+			
+			System.Diagnostics.Debug.Assert (type.CaptionId.IsValid);
+
+			if (typeDef == null)
 			{
-				throw new System.InvalidOperationException ("Cannot create type definition for structure");
+				this.newTypesDictionary.TryGetValue (type.CaptionId, out typeDef);
 			}
 
-			DbTypeDef typeDef;
-			Druid typeId = type.CaptionId;
-
-			System.Diagnostics.Debug.Assert (typeId.IsValid);
-
-			if (this.typesDictionary.TryGetValue (typeId, out typeDef))
+			if (typeDef == null)
 			{
-				return typeDef;
+				typeDef = this.SchemaEngine.GetTypeDefinition (type.CaptionId);
 			}
-
-			typeDef = this.schemaEngine.GetTypeDefinition (typeId);
-
-			if (typeDef != null)
-			{
-				return typeDef;
-			}
-
-			DbInfrastructure infrastructure = this.schemaEngine.DbInfrastructure;
-			typeDef = infrastructure.ResolveDbType (this.transaction, type);
-
+			
 			if (typeDef == null)
 			{
 				typeDef = new DbTypeDef (type, options == FieldOptions.Nullable);
 
-				infrastructure.RegisterNewDbType (this.transaction, typeDef);
+				this.DbInfrastructure.RegisterNewDbType (transaction, typeDef);
+
+				this.newTypesDictionary[type.CaptionId] = typeDef;
 			}
 
 			System.Diagnostics.Debug.Assert (typeDef != null);
 			System.Diagnostics.Debug.Assert (!typeDef.Key.IsEmpty);
 
-			this.typesDictionary[typeId] = typeDef;
-
 			return typeDef;
-			
-		}
-
-		private void AssertTransaction()
-		{
-			if ((this.transaction != null) &&
-				(this.transaction.IsActive))
-			{
-				return;
-			}
-			else
-			{
-				throw new System.InvalidOperationException ("SchemaEngineTableBuilder has no active transaction");
-			}
 		}
 
 
-		private SchemaEngine schemaEngine;
+		/// <summary>
+		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTable"/> that
+		/// where created during the last call of <see cref="CreateSchema"/>.
+		/// </summary>
+		private Dictionary<Druid, DbTable> newTablesDictionary;
 
 
-		private DbTransaction transaction;
-
-
-		private List<DbTable> tables;
-
-
-		private List<DbTable> newTables;
-
-
-		private Dictionary<Druid, DbTable> tablesDictionary;
-
-
-		private Dictionary<Druid, DbTypeDef> typesDictionary;
+		/// <summary>
+		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that
+		/// where created during the last call of <see cref="CreateSchema"/>.
+		/// </summary>
+		private Dictionary<Druid, DbTypeDef> newTypesDictionary;
 
 
 	}
