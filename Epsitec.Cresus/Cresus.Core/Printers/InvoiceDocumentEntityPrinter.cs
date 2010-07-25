@@ -188,53 +188,53 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.CurrentVerticalPosition = this.PageSize.Height-87;
 
 			this.tableColumns.Clear ();
-			if (this.IsModern)
+
+			double wd;
+			double wm;
+			if (this.IsWithFrame)
 			{
-				double wd = 70.0;
-
-				if (this.IsBL)
-				{
-					wd += 15*5;
-				}
-
-				if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
-				{
-					wd += 80;
-				}
-
-				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Nb",   new TableColumn ("Livré",       12.0, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        12.0, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        20.0, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      15.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     15.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     15.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         15.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       15.0, ContentAlignment.MiddleRight));
+				wd = 70.0;
+				wm = 15.0;
 			}
 			else
 			{
-				double wd = 54.0;
+				wd = 54.0;
+				wm = 17.0;
+			}
 
-				if (this.IsBL)
-				{
-					wd += 17*5;
-				}
+			if (this.IsBL)
+			{
+				wd += wm*5;
+			}
 
-				if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
-				{
-					wd += 80;
-				}
+			if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
+			{
+				wd += 80;
+			}
 
-				this.tableColumns.Add ("Nb",   new TableColumn ("Quantité",    17.0, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        14.0, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        22.0, ContentAlignment.MiddleLeft));
+			if (this.IsColumnsOrderQD)
+			{
+				this.tableColumns.Add ("Nb",   new TableColumn ("?",           wm,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        wm-3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        wm+5, ContentAlignment.MiddleLeft));
 				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      17.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     17.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     17.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         17.0, ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       17.0, ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       wm,   ContentAlignment.MiddleRight));
+			}
+			else
+			{
+				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Nb",   new TableColumn ("?",           wm,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        wm-3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        wm+5, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       wm,   ContentAlignment.MiddleRight));
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
@@ -293,8 +293,18 @@ namespace Epsitec.Cresus.Core.Printers
 			var table = new TableBand ();
 			table.ColumnsCount = this.columnCount;
 			table.RowsCount = rowCount;
-			table.PaintFrame = this.IsModern;
-			table.CellMargins = new Margins (this.IsModern ? 1 : 2);
+			table.PaintFrame = this.IsWithFrame;
+			table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
+
+			//	Détermine le nom de la colonne "Nb".
+			if (this.tableColumns["Suit"].Visible)  // colonne "Suit" visible ?
+			{
+				this.tableColumns["Nb"].Title = "Livré";  // affiche "Livré", "Suit", "Date"
+			}
+			else
+			{
+				this.tableColumns["Nb"].Title = "Quantité";  // affiche "Quantité"
+			}
 
 			int row = 0;
 
@@ -681,6 +691,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildReportHeaders()
 		{
+			//	Met un report en haut des pages concernées, avec une répétition de la ligne
+			//	d'en-tête (noms des colonnes).
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
 			for (int page = 1; page < this.documentContainer.PageCount; page++)
@@ -695,8 +707,8 @@ namespace Epsitec.Cresus.Core.Printers
 				var table = new TableBand ();
 				table.ColumnsCount = this.columnCount;
 				table.RowsCount = 2;
-				table.PaintFrame = this.IsModern;
-				table.CellMargins = new Margins (this.IsModern ? 1 : 2);
+				table.PaintFrame = this.IsWithFrame;
+				table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
 				foreach (var column in this.tableColumns.Values)
@@ -734,12 +746,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildReportFooters()
 		{
+			//	Met un report en bas des pages concernées.
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
 			for (int page = 0; page < this.documentContainer.PageCount-1; page++)
 			{
 				if (page >= this.tableBounds.Count-1)
 				{
+					//	S'il n'y a pas de tableau dans la page suivante, il est inutile de mettre
+					//	un report au bas de celle-çi.
 					break;
 				}
 
@@ -748,8 +763,8 @@ namespace Epsitec.Cresus.Core.Printers
 				var table = new TableBand ();
 				table.ColumnsCount = this.columnCount;
 				table.RowsCount = 1;
-				table.PaintFrame = this.IsModern;
-				table.CellMargins = new Margins (this.IsModern ? 1 : 2);
+				table.PaintFrame = this.IsWithFrame;
+				table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
 
 				foreach (var column in this.tableColumns.Values)
 				{
@@ -782,7 +797,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void ComputeBottomReports(int page, out decimal sumPT, out decimal sumTva, out decimal sumTot)
 		{
-			//	Calcul les reports à montrer en bas d'une page.
+			//	Calcul les reports à montrer en bas d'une page, ou en haut de la suivante.
 			sumPT  = 0;
 			sumTva = 0;
 			sumTot = 0;
@@ -803,7 +818,7 @@ namespace Epsitec.Cresus.Core.Printers
 					var article = item as ArticleDocumentItemEntity;
 
 					decimal beforeTax = article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
-					decimal tax =       article.ResultingLineTax.GetValueOrDefault (0);
+					decimal tax =       article.ResultingLineTax           .GetValueOrDefault (0);
 
 					sumPT  += beforeTax;
 					sumTva += tax;
@@ -893,15 +908,21 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private bool IsModern
+		private bool IsColumnsOrderQD
 		{
 			get
 			{
-				return this.HasDocumentOption ("Modern");
+				return this.HasDocumentOption ("ColumnsOrderQD");
 			}
 		}
 
-
+		private bool IsWithFrame
+		{
+			get
+			{
+				return this.HasDocumentOption ("WithFrame");
+			}
+		}
 
 
 		private static readonly Font font = Font.GetFont ("Arial", "Regular");

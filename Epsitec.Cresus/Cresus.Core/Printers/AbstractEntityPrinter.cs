@@ -191,9 +191,13 @@ namespace Epsitec.Cresus.Core.Printers
 		protected static void DocumentTypeAddStyles(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression liées aux BV.
-			options.Add (new DocumentOption ( /**           **/  "Style du document :"));
-			options.Add (new DocumentOption ("Classic", "Style", "Classique", true));
-			options.Add (new DocumentOption ("Modern",  "Style", "Moderne"));
+			options.Add (new DocumentOption ( /**                   **/  "Aspect de la liste des articles :"));
+			options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
+			options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
+
+			options.Add (new DocumentOption ( /**                         **/  "Ordre des colonnes :"));
+			options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
+			options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
 		}
 
 		protected static void DocumentTypeAddBV(List<DocumentOption> options)
@@ -212,8 +216,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
 			options.Add (new DocumentOption ( /**                    **/  "Orientation du papier :"));
-			options.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait (papier en hauteur)", true));
-			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage (papier en largeur)"));
+			options.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait", true));
+			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage"));
 		}
 
 		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
