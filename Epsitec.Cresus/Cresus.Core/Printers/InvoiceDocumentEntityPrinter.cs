@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableBounds = this.documentContainer.AddFromTop (table, 5.0);
 
-			this.firstRowForEachSection = table.GetFirstRowForEachSection ();
+			this.lastRowForEachSection = table.GetLastRowForEachSection ();
 
 			// Met un trait horizontal sous l'en-tête.
 			var currentPage = this.documentContainer.CurrentPage;
@@ -577,6 +577,8 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
 			table.SetText (this.tableColumns["Rab" ].Rank, row, rabais);
 			table.SetText (this.tableColumns["PT"  ].Rank, row, prix);
+
+			table.SetUnbreakableRow (row, true);
 		}
 
 		private void BuildTotalLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
@@ -683,6 +685,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int page = 1; page < this.documentContainer.PageCount; page++)
 			{
+				if (page >= this.tableBounds.Count)
+				{
+					break;
+				}
+
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
@@ -731,6 +738,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int page = 0; page < this.documentContainer.PageCount-1; page++)
 			{
+				if (page >= this.tableBounds.Count-1)
+				{
+					break;
+				}
+
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
@@ -775,18 +787,23 @@ namespace Epsitec.Cresus.Core.Printers
 			sumTva = 0;
 			sumTot = 0;
 
-			int lastRow = this.firstRowForEachSection[page+1];
+			int lastRow = this.lastRowForEachSection[page];
 
-			for (int row = 0; row < lastRow; row++)
+			for (int row = 0; row <= lastRow; row++)
 			{
-				AbstractDocumentItemEntity item = this.entity.Lines[row];
+				if (row == 0)  // en-tête ?
+				{
+					continue;
+				}
+
+				AbstractDocumentItemEntity item = this.entity.Lines[row-1];  // -1 à cause de l'en-tête
 
 				if (item is ArticleDocumentItemEntity)
 				{
 					var article = item as ArticleDocumentItemEntity;
 
-					decimal beforeTax = article.ResultingLinePriceBeforeTax.Value;
-					decimal tax =       article.ResultingLineTax.Value;
+					decimal beforeTax = article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
+					decimal tax =       article.ResultingLineTax.GetValueOrDefault (0);
 
 					sumPT  += beforeTax;
 					sumTva += tax;
@@ -820,7 +837,7 @@ namespace Epsitec.Cresus.Core.Printers
 				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Spec");
 				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
-				BV.Communication = "En vous remerciant pour votre travail qui nous a rendu un très grand service !";
+				BV.Communication = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
@@ -892,7 +909,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private static readonly double reportHeight = 7.0;
 
 		private int columnCount;
-		private int[] firstRowForEachSection;
+		private int[] lastRowForEachSection;
 		private List<Rectangle> tableBounds;
 	}
 }
