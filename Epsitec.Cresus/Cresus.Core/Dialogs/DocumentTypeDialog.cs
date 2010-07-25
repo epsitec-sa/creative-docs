@@ -146,6 +146,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};
+
+			this.pagesInfo = new StaticText ()
+			{
+				Parent = footer,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth = 100,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 20, 0, 0),
+			};
 		}
 
 		private void SetupEvents(Window window)
@@ -357,6 +366,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.entityPrinter.Clear ();
 				this.preview.BuildSections (this.entityPrinter);
 				this.preview.Invalidate ();  // pour forcer le dessin
+
+				this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
 			}
 		}
 
@@ -397,6 +408,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private List<AbstractButton> optionButtons;
 		private FrameBox optionsFrame;
 		private Widgets.PreviewEntity preview;
+		private StaticText pagesInfo;
 		private Button acceptButton;
 		private Button cancelButton;
 	}

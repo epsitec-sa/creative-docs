@@ -208,6 +208,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
+			this.pagesInfo = new StaticText ()
+			{
+				Parent = this.footer,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth = 100,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 20, 0, 0),
+			};
+
 			this.preview.BuildSections (this.entityPrinter);
 			this.UpdatePage ();
 		}
@@ -300,6 +309,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.pageRank.Text = (this.entityPrinter.CurrentPage+1).ToString ();
 
 			this.preview.Invalidate ();
+
+			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
 		}
 
 		private void UpdateDebug()
@@ -361,6 +372,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText debugParam2;
 		private GlyphButton debugNextButton2;
 
+		private StaticText pagesInfo;
 		private Button printButton;
 		private Button closeButton;
 	}

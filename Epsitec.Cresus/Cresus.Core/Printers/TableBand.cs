@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.columnsCount != value)
 				{
 					this.columnsCount = value;
+					this.unbreakableRows = new bool[this.columnsCount];
 					this.UpdateContent ();
 				}
 			}
@@ -87,6 +88,25 @@ namespace Epsitec.Cresus.Core.Printers
 					this.rowsCount = value;
 					this.UpdateContent ();
 				}
+			}
+		}
+
+
+		public bool GetUnbreakableRow(int row)
+		{
+			if (this.unbreakableRows != null && row >= 0 && row < this.unbreakableRows.Length)
+			{
+				return this.unbreakableRows[row];
+			}
+
+			return false;
+		}
+
+		public void SetUnbreakableRow(int row, bool value)
+		{
+			if (this.unbreakableRows != null && row >= 0 && row < this.unbreakableRows.Length)
+			{
+				this.unbreakableRows[row] = value;
 			}
 		}
 
@@ -500,7 +520,7 @@ namespace Epsitec.Cresus.Core.Printers
 					}
 				}
 
-				if (tooSmall)
+				if (tooSmall || (!rowEnding && this.GetUnbreakableRow (row)))
 				{
 					for (int column = 0; column < this.columnsCount; column++)
 					{
@@ -556,8 +576,8 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Retourne la hauteur que l'objet occupe dans une section.
 		/// </summary>
-		/// <param name="section"></param>
-		/// <returns></returns>
+		/// <param name="section">index de la section</param>
+		/// <returns>hauteur</returns>
 		public override double GetSectionHeight(int section)
 		{
 			if (section >= 0 && section < this.sectionsInfo.Count)
@@ -584,17 +604,20 @@ namespace Epsitec.Cresus.Core.Printers
 			return 0;
 		}
 
-		public int[] GetFirstRowForEachSection()
+		/// <summary>
+		/// Retourne les index des dernières lignes de chaque section. Comme un montant est toujours
+		/// imprimé en haut d'une cellule, cela permet de calculer les reports.
+		/// </summary>
+		/// <returns>Liste des numéros de lignes</returns>
+		public int[] GetLastRowForEachSection()
 		{
 			int[] rows = new int[this.sectionsInfo.Count+1];
 			int index = 0;
 
 			foreach (var section in this.sectionsInfo)
 			{
-				rows[index+1] = section.FirstRow;
+				rows[index++] = section.FirstRow + section.RowCount - 1;
 			}
-
-			rows[index] = this.rowsCount;
 
 			return rows;
 		}
@@ -799,5 +822,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private List<List<TextBand>>		content;
 		private List<double>				relativeColumnsWidth;
 		private List<SectionInfo>			sectionsInfo;
+		private bool[]						unbreakableRows;
 	}
 }
