@@ -37,10 +37,10 @@ namespace Epsitec.Cresus.Core.Printers
 			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("Debug1", "Test #1", "Page fixe de test pour l'objet TextBand.");
+			type = new DocumentType ("Debug.1", "Test #1", "Page fixe de test pour l'objet TextBand.");
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("Debug2", "Test #2", "Page fixe de test pour l'objet TableBand.");
+			type = new DocumentType ("Debug.2", "Test #2", "Page fixe de test pour l'objet TableBand.");
 			this.DocumentTypes.Add (type);
 		}
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.HasDocumentOption ("Horizontal"))
+				if (this.HasDocumentOption ("Orientation.Horizontal"))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -102,12 +102,12 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 			}
 
-			if (this.DocumentTypeSelected == "Debug1")
+			if (this.DocumentTypeSelected == "Debug.1")
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.DocumentTypeSelected == "Debug2")
+			if (this.DocumentTypeSelected == "Debug.2")
 			{
 				this.PaintTest2 (port);
 			}

@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
 		/// </summary>
-		/// <param name="band"></param>
+		/// <param name="band">Objet à ajouter</param>
 		/// <param name="bounds"></param>
 		public void AddAbsolute(AbstractBand band, Rectangle bounds)
 		{
@@ -88,8 +88,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// pages qu'il en faut.
 		/// Retourne la liste des rectangles occupés par l'objet sur chaque page.
 		/// </summary>
-		/// <param name="band"></param>
-		/// <param name="bottomMargin"></param>
+		/// <param name="band">Objet à ajouter</param>
+		/// <param name="bottomMargin">Marge inférieure jusqu'à l'objet suivant</param>
+		/// <returns>Rectangles occupés par l'objet sur chaque page</returns>
 		public List<Rectangle> AddFromTop(AbstractBand band, double bottomMargin)
 		{
 			var list = new List<Rectangle> ();
@@ -107,7 +108,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.pages.Add (new PageContainer (this.pages.Count));  // crée la page
+					this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
 
 					this.currentPage++;
 					this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
@@ -123,6 +124,34 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return list;
 		}
+
+		/// <summary>
+		/// Ajoute un objet au bas d'une page. S'il n'y a pas assez de place, crée une nouvelle page.
+		/// On ne tient pas compte de la marge inférieure, qui peut donc sans problème être dépassée.
+		/// </summary>
+		/// <param name="band">Objet à ajouter</param>
+		/// <param name="bottomPosition">Position depuis le bas</param>
+		/// <returns>Rectangle occupé par l'objet</returns>
+		public Rectangle AddToBottom(AbstractBand band, double bottomPosition)
+		{
+			double width  = this.pageSize.Width  - this.pageMargins.Left - this.pageMargins.Right;
+
+			double h = band.RequiredHeight (width);
+
+			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
+			{
+				this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
+
+				this.currentPage++;
+				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
+			}
+
+			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
+			this.AddAbsolute (band, bounds);
+
+			return bounds;
+		}
+
 
 		public int CurrentPage
 		{

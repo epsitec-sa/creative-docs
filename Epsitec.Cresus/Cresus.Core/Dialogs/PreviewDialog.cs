@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			if (this.entityPrinter.DocumentTypeSelected.StartsWith ("Debug"))
+			if (this.entityPrinter.DocumentTypeSelected.StartsWith ("Debug."))
 			{
 				this.debugPrevButton1 = new GlyphButton
 				{

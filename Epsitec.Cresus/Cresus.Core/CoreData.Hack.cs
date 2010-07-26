@@ -474,6 +474,7 @@ namespace Epsitec.Cresus.Core
 		{
 			var uomUnit1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var uomUnit3 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 
 			uomUnit1.Code = "pce";
 			uomUnit1.Name = "Pièce";
@@ -489,21 +490,36 @@ namespace Epsitec.Cresus.Core
 			uomUnit2.SmallestIncrement = 1;
 			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
+			uomUnit3.Code = "x";
+			uomUnit3.Name = "Fois";
+			uomUnit3.DivideRatio = 1;
+			uomUnit3.MultiplyRatio = 1;
+			uomUnit3.SmallestIncrement = 1;
+			uomUnit3.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+
 			yield return uomUnit1;
 			yield return uomUnit2;
+			yield return uomUnit3;
 		}
 
 		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase(IEnumerable<UnitOfMeasureEntity> units)
 		{
 			var uomUnit1 = units.Where (x => x.Code == "pce").First ();
 			var uomUnit2 = units.Where (x => x.Code == "box").First ();
+			var uomUnit3 = units.Where (x => x.Code == "x").First ();
 
-			var uomGroup = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
-			uomGroup.Name = "Unités d'emballage soft/standard";
-			uomGroup.Description = "Unités d'emballage pour les logiciels Crésus standard";
-			uomGroup.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
-			uomGroup.Units.Add (uomUnit1);
-			uomGroup.Units.Add (uomUnit2);
+			var uomGroup1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			uomGroup1.Name = "Unités d'emballage soft/standard";
+			uomGroup1.Description = "Unités d'emballage pour les logiciels Crésus standard";
+			uomGroup1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup1.Units.Add (uomUnit1);
+			uomGroup1.Units.Add (uomUnit2);
+
+			var uomGroup2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			uomGroup2.Name = "Frais";
+			uomGroup2.Description = "Frais";
+			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup2.Units.Add (uomUnit3);
 
 			var articleGroup1 = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
 
@@ -569,7 +585,7 @@ namespace Epsitec.Cresus.Core
 			articleDef1.ArticleGroups.Add (articleGroup1);
 			articleDef1.ArticleCategory = articleCategory1;
 			articleDef1.BillingUnit = uomUnit1;
-			articleDef1.Units = uomGroup;
+			articleDef1.Units = uomGroup1;
 			articleDef1.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
 			articleDef2.IdA = "CR-SP";
@@ -578,7 +594,7 @@ namespace Epsitec.Cresus.Core
 			articleDef2.ArticleGroups.Add (articleGroup1);
 			articleDef2.ArticleCategory = articleCategory1;
 			articleDef2.BillingUnit = uomUnit1;
-			articleDef2.Units = uomGroup;
+			articleDef2.Units = uomGroup1;
 			articleDef2.ArticlePrices.Add (this.CreateArticlePrice (446.10M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
 			articleDef3.IdA = "CR-FL";
@@ -587,12 +603,14 @@ namespace Epsitec.Cresus.Core
 			articleDef3.ArticleGroups.Add (articleGroup1);
 			articleDef3.ArticleCategory = articleCategory1;
 			articleDef3.BillingUnit = uomUnit1;
-			articleDef3.Units = uomGroup;
+			articleDef3.Units = uomGroup1;
 			articleDef3.ArticlePrices.Add (this.CreateArticlePrice (892.20M, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
 
 			articleDef4.IdA = "EMB";
 			articleDef4.ShortDescription = "Port et emballage";
 			articleDef4.ArticleCategory = articleCategory2;
+			articleDef4.BillingUnit = uomUnit3;
+			articleDef4.Units = uomGroup2;
 			articleDef4.ArticlePrices.Add (this.CreateArticlePrice (11.15M));
 
 			yield return articleDef1;
@@ -715,6 +733,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.ArticleQuantities.Add (quantityA3_2);
 
 			var lineA4 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			var quantityA4 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
 
 			lineA4.Visibility = true;
 			lineA4.IndentationLevel = 0;
@@ -729,6 +748,13 @@ namespace Epsitec.Cresus.Core
 			lineA4.ResultingLineTax = lineA4.ResultingLinePriceBeforeTax * vatRate;
 			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.ShortDescription;
 			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
+
+			quantityA4.Code = "livré";
+			quantityA4.Quantity = 1;
+			quantityA4.Unit = lineA4.ArticleDefinition.BillingUnit;
+			quantityA4.ExpectedDate = new Date (2010, 7, 8);
+
+			lineA4.ArticleQuantities.Add (quantityA4);
 
 			var discountA1 = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
 

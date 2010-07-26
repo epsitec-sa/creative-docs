@@ -29,21 +29,22 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			AbstractEntityPrinter.DocumentTypeAddStyles (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddBV     (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddBV      (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			AbstractEntityPrinter.DocumentTypeAddStyles      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			AbstractEntityPrinter.DocumentTypeAddStyles      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddBL          (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 		}
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.HasDocumentOption ("Horizontal"))
+				if (this.HasDocumentOption ("Orientation.Horizontal"))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -101,7 +102,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages ();
 				this.BuildReportHeaders ();
 				this.BuildReportFooters ();
-				this.BuildBvs (bvr: this.HasDocumentOption ("BVR"));
+				this.BuildBvs ();
 			}
 
 			if (this.DocumentTypeSelected == "Simple")
@@ -118,7 +119,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.BuildHeader ();
 				this.BuildArticles ();
-				this.BuildConditions ();
+				this.BuildFooterBL ();
 				this.BuildPages ();
 			}
 		}
@@ -278,6 +279,12 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns["Tot"].Visible = false;
 			}
 
+			if (!this.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			{
+				this.tableColumns["Suit"].Visible = false;
+				this.tableColumns["Date"].Visible = false;
+			}
+
 			//	Compte et numérote les colonnes visibles.
 			this.columnCount = 0;
 
@@ -329,23 +336,28 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				if (line.Visibility)
 				{
+					bool exist = false;
+
 					if (line is TextDocumentItemEntity)
 					{
-						this.BuildTextLine (table, row, line as TextDocumentItemEntity);
+						exist = this.BuildTextLine (table, row, line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						this.BuildArticleLine (table, row, line as ArticleDocumentItemEntity);
+						exist = this.BuildArticleLine (table, row, line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						this.BuildPriceLine (table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
+						exist = this.BuildPriceLine (table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
 					}
 
-					this.InitializeRowAlignment (table, row);
-					row++;
+					if (exist)
+					{
+						this.InitializeRowAlignment (table, row);
+						row++;
+					}
 				}
 			}
 
@@ -373,6 +385,11 @@ namespace Epsitec.Cresus.Core.Printers
 		private bool InitializeColumnArticleLine(ArticleDocumentItemEntity line)
 		{
 			if (this.IsBL && this.IsPort (line))
+			{
+				return false;
+			}
+
+			if (!this.IsPrintableArticle (line))
 			{
 				return false;
 			}
@@ -449,17 +466,24 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
+		private bool BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			string text = string.Concat ("<b>", line.Text, "</b>");
 			table.SetText (this.tableColumns["Desc"].Rank, row, text);
+
+			return true;
 		}
 
-		private void BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
+		private bool BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
 			if (this.IsBL && this.IsPort (line))
 			{
-				return;
+				return false;
+			}
+
+			if (!this.IsPrintableArticle (line))
+			{
+				return false;
 			}
 
 			string q1 = null;
@@ -526,13 +550,15 @@ namespace Epsitec.Cresus.Core.Printers
 					table.SetText (this.tableColumns["Rab"].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
 				}
 			}
+
+			return true;
 		}
 
-		private void BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
+		private bool BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
 		{
 			if (this.IsBL)
 			{
-				return;
+				return false;
 			}
 
 			if (line.Discount.IsActive ())
@@ -543,6 +569,8 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.BuildTotalLine (table, row, line, lastLine);
 			}
+
+			return true;
 		}
 
 		private void BuildDiscountLine(TableBand table, int row, PriceDocumentItemEntity line)
@@ -628,6 +656,24 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
+		{
+			if (!this.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			{
+				foreach (var quantity in line.ArticleQuantities)
+				{
+					if (quantity.Code == "livré")
+					{
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+			return true;
+		}
+
 
 		private void InitializeRowAlignment(TableBand table, int row)
 		{
@@ -660,10 +706,32 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		private void BuildFooterBL()
+		{
+			if (this.HasDocumentOption ("BL.Signing"))
+			{
+				var table = new TableBand ();
+
+				table.ColumnsCount = 2;
+				table.RowsCount = 1;
+				table.PaintFrame = true;
+				table.Font = font;
+				table.FontSize = fontSize;
+				table.CellMargins = new Margins (2);
+				table.SetRelativeColumWidth (0,  60);
+				table.SetRelativeColumWidth (1, 100);
+				table.SetText (0, 0, "Matériel reçu en bonne et dûe forme");
+				table.SetText (1, 0, "Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>");
+				table.SetUnbreakableRow (0, true);
+
+				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+			}
+		}
+
 		private void BuildPages()
 		{
 			//	Met les numéros de page.
-			double reportHeight = InvoiceDocumentEntityPrinter.reportHeight*2;
+			double reportHeight = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight*2;
 
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
@@ -828,7 +896,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildBvs(bool bvr)
+		private void BuildBvs()
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);
@@ -839,7 +907,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				AbstractBvBand BV;
 
-				if (bvr)
+				if (this.HasDocumentOption ("BVR"))
 				{
 					BV = new BvrBand ();  // BVR orangé
 				}
