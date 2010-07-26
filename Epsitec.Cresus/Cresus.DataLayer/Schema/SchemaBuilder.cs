@@ -34,9 +34,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			this.tableCache = new Dictionary<Druid, DbTable> ();
 			this.typeCache = new Dictionary<Druid, DbTypeDef> ();
-
-			this.newTables = new Dictionary<Druid, DbTable> ();
-			this.newTypes = new Dictionary<Druid, DbTypeDef> ();
 		}
 
 
@@ -57,47 +54,27 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="entityId">The <see cref="Druid"/> of the schema to create.</param>
+		/// <returns>The <see cref="DbTable"/> that have been created.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="transaction"/> is null.</exception>
-		public void CreateSchema(DbTransaction transaction, Druid entityId)
+		public IEnumerable<DbTable> CreateSchema(DbTransaction transaction, Druid entityId)
 		{
 			transaction.ThrowIfNull ("transaction");
 
-			this.newTables = new Dictionary<Druid, DbTable> ();
-			this.newTypes = new Dictionary<Druid, DbTypeDef> ();
+			List<DbTable> newTables = new List<DbTable> ();
 
-			this.GetOrCreateTable (transaction, entityId);
+			this.GetOrCreateTable (transaction, newTables, entityId);
 
-			foreach (DbTable table in this.newTables.Values)
+			foreach (DbTable table in newTables)
 			{
 				this.DbInfrastructure.RegisterNewDbTable (transaction, table);
 			}
 
-			foreach (DbTable table in this.newTables.Values)
+			foreach (DbTable table in newTables)
 			{
 				this.DbInfrastructure.RegisterColumnRelations (transaction, table);
 			}
-		}
 
-
-		/// <summary>
-		/// Gets the mapping of the <see cref="Druid"/> and the <see cref="DbTable"/> that where created
-		/// during the last call of the method <see cref="CreateSchema"/>.
-		/// </summary>
-		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTable"/>.</returns>
-		public Dictionary<Druid, DbTable> GetNewTableDefinitions()
-		{
-			return this.newTables;
-		}
-
-
-		/// <summary>
-		/// Gets the mapping of the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that where created
-		/// during the last call of the method <see cref="CreateSchema"/>.
-		/// </summary>
-		/// <returns>The mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/>.</returns>
-		public Dictionary<Druid, DbTypeDef> GetNewTypeDefinitions()
-		{
-			return this.newTypes;
+			return newTables;
 		}
 
 
@@ -106,9 +83,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// all its dependencies if it does not exist.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="newTables">The list of the created <see cref="DbTable"/>.</param>
 		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to create.</param>
 		/// <returns>The root <see cref="DbTable"/>.</returns>
-		private DbTable GetOrCreateTable(DbTransaction transaction, Druid entityId)
+		private DbTable GetOrCreateTable(DbTransaction transaction, List<DbTable> newTables, Druid entityId)
 		{
 			// Ok, this looks like kind of simple to me, to simple to be alright, so I'll explain.
 			// The ?? operator ensures that first we look in the cache. If there is something in the
@@ -119,7 +97,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			
 			return this.LookForTableInCache (entityId)
 				?? this.LookForTableInDatabase (transaction, entityId)
-				?? this.BuildTable (transaction, entityId);
+				?? this.BuildTable (transaction, newTables, entityId);
 		}
 
 
@@ -142,6 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <summary>
 		/// Looks the <see cref="DbTable"/> corresponding to a <see cref="Druid"/> in the database.
 		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to look for.</param>
 		/// <returns>The <see cref="DbTable"/> if it is in the database, or null.</returns>
 		private DbTable LookForTableInDatabase(DbTransaction transaction, Druid entityId)
@@ -163,9 +142,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// them to the database.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="newTables">The list of the created <see cref="DbTable"/>.</param>
 		/// <param name="entityId">The <see cref="Druid"/> of the <see cref="DbTable"/> to create.</param>
 		/// <returns>The new <see cref="DbTable"/>.</returns>
-		private DbTable BuildTable(DbTransaction transaction, Druid entityId)
+		private DbTable BuildTable(DbTransaction transaction, List<DbTable> newTables, Druid entityId)
 		{
 			ResourceManager manager = this.DbInfrastructure.DefaultContext.ResourceManager;
 			StructuredType entityType = TypeRosetta.CreateTypeObject (manager, entityId) as StructuredType;
@@ -178,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 			table.Comment = table.DisplayName;
 
-			this.newTables[entityId] = table;
+			newTables.Add (table);
 			this.tableCache[entityId] = table;
 
 			if (entityType.BaseTypeId.IsEmpty)
@@ -194,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			}
 			else
 			{
-				this.GetOrCreateTable (transaction, entityType.BaseTypeId);
+				this.GetOrCreateTable (transaction, newTables, entityType.BaseTypeId);
 			}
 
 			//	For every locally defined field (this includes field inserted
@@ -207,7 +187,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				{
 					if (field.Source == FieldSource.Value)
 					{
-						this.CreateColumn (transaction, table, field);
+						this.CreateColumn (transaction, newTables, table, field);
 					}
 				}
 			}
@@ -221,9 +201,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <see cref="DbTable"/>.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="newTables">The list of the created <see cref="DbTable"/>.</param>
 		/// <param name="table">The <see cref="DbTable"/> to which to add the <see cref="DbColumn"/>.</param>
 		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
-		private void CreateColumn(DbTransaction transaction, DbTable table, StructuredTypeField field)
+		private void CreateColumn(DbTransaction transaction, List<DbTable> newTables, DbTable table, StructuredTypeField field)
 		{
 			switch (field.Relation)
 			{
@@ -232,11 +213,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					break;
 				
 				case FieldRelation.Reference:
-					this.CreateRelationColumn (transaction, table, field, DbCardinality.Reference);
+					this.CreateRelationColumn (transaction, newTables, table, field, DbCardinality.Reference);
 					break;
 				
 				case FieldRelation.Collection:
-					this.CreateRelationColumn (transaction, table, field, DbCardinality.Collection);
+					this.CreateRelationColumn (transaction, newTables, table, field, DbCardinality.Collection);
 					break;
 
 				default:
@@ -266,16 +247,17 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Creates a <see cref="DbColumn"/> for the given relation field.
 		/// </summary>
 		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
+		/// <param name="newTables">The list of the created <see cref="DbTable"/>.</param>
 		/// <param name="table">The <see cref="DbTable"/> to which to add the <see cref="DbColumn"/>.</param>
 		/// <param name="field">The field to be represented by the <see cref="DbColumn"/>.</param>
 		/// <param name="cardinality">The cardinality of the relation.</param>
-		private void CreateRelationColumn(DbTransaction transaction, DbTable table, StructuredTypeField field, DbCardinality cardinality)
+		private void CreateRelationColumn(DbTransaction transaction, List<DbTable> newTables, DbTable table, StructuredTypeField field, DbCardinality cardinality)
 		{
-			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
-			System.Diagnostics.Debug.Assert (field.CaptionId.IsValid);
-			System.Diagnostics.Debug.Assert (field.Type is StructuredType);
-
-			DbTable target = this.GetOrCreateTable (transaction, field.TypeId);
+			cardinality.ThrowIf (c => c == DbCardinality.None, "cardinality cannot be 'none'");
+			field.ThrowIf (f => !f.CaptionId.IsValid, "field caption must be valid");
+			field.ThrowIf (f => !(f.Type is StructuredType), "field must be of type StructuredType");
+			
+			DbTable target = this.GetOrCreateTable (transaction, newTables, field.TypeId);
 			DbColumn column = DbTable.CreateRelationColumn (transaction, this.DbInfrastructure, field.CaptionId, target, DbRevisionMode.TrackChanges, cardinality);
 
 			table.Columns.Add (column);
@@ -330,6 +312,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Looks for the <see cref="DbTypeDef"/> corresponding to a <see cref="INamedType"/> in the
 		/// database.
 		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="type">The <see cref="INamedType"/> to look for.</param>
 		/// <returns>The <see cref="DbTypeDef"/> if it is in the cache, or null.</returns>
 		private DbTypeDef LookForTypeDefInDatabase(DbTransaction transaction, INamedType type)
@@ -349,7 +332,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Create the <see cref="DbTypeDef"/> corresponding to a <see cref="INamedType"/> and
 		/// registers it to the database.
 		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use.</param>
 		/// <param name="type">The <see cref="INamedType"/> to create.</param>
+		/// <param name="options">The options to use.</param>
 		/// <returns>The new <see cref="DbTypeDef"/>.</returns>
 		private DbTypeDef BuildTypeDef(DbTransaction transaction, INamedType type, FieldOptions options)
 		{
@@ -357,7 +342,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			this.DbInfrastructure.RegisterNewDbType (transaction, typeDef);
 
-			this.newTypes[type.CaptionId] = typeDef;
 			this.typeCache[type.CaptionId] = typeDef;
 
 			return typeDef;
@@ -376,20 +360,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// have been seen by this instance.
 		/// </summary>
 		private Dictionary<Druid, DbTypeDef> typeCache;
-
-
-		/// <summary>
-		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTable"/> that
-		/// where created during the last call of <see cref="CreateSchema"/>.
-		/// </summary>
-		private Dictionary<Druid, DbTable> newTables;
-
-
-		/// <summary>
-		/// Stores the mapping between the <see cref="Druid"/> and the <see cref="DbTypeDef"/> that
-		/// where created during the last call of <see cref="CreateSchema"/>.
-		/// </summary>
-		private Dictionary<Druid, DbTypeDef> newTypes;
 
 
 	}

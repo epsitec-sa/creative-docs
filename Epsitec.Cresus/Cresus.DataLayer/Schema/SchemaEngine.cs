@@ -28,12 +28,19 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private SchemaEngine(DbInfrastructure dbInfrastructure)
 		{
 			this.DbInfrastructure = dbInfrastructure;
+			this.SchemaBuilder = new SchemaBuilder (dbInfrastructure);
 
 			this.tableDefinitionCache = new Dictionary<Druid, DbTable> ();
-			this.typeDefinitionCache = new Dictionary<Druid, DbTypeDef> ();
 		}
 
 
+		private SchemaBuilder SchemaBuilder
+		{
+			get;
+			set;
+		}
+		
+		
 		public DbInfrastructure DbInfrastructure
 		{
 			get;
@@ -49,24 +56,20 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (createTable)
 			{
-				SchemaBuilder tableBuilder = new SchemaBuilder(this.DbInfrastructure);
+				IEnumerable<DbTable> newTables;
 
 				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					tableBuilder.CreateSchema (transaction, entityId);
+					newTables = this.SchemaBuilder.CreateSchema (transaction, entityId);
 
 					transaction.Commit ();
 				}
-				
 
-				foreach (var item in tableBuilder.GetNewTableDefinitions ())
+				foreach (DbTable table in newTables)
 				{
-					this.AddTableDefinitionToCache (item.Key, item.Value);
-				}
+					Druid id = table.CaptionId;
 
-				foreach (var item in tableBuilder.GetNewTypeDefinitions ())
-				{
-					this.AddTypeDefinitionToCache (item.Key, item.Value);
+					this.AddTableDefinitionToCache (id, table);
 				}
 
 			}
@@ -151,61 +154,22 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			return this.GetTableDefinitionFromCache (fieldId);
 		}
 
-		
-		public DbTypeDef GetTypeDefinition(Druid typeId)
+
+		private void AddTableDefinitionToCache(Druid id, DbTable table)
 		{
-			if (!this.IsTypeDefinitionInCache (typeId))
-			{
-				using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					string typeName = typeId.ToResourceId ();
-					typeName = typeName.Substring (1, typeName.Length - 2);
-
-					DbTypeDef typeDefinition = this.DbInfrastructure.ResolveDbType (transaction, typeName);
-					
-					transaction.Commit ();
-
-					this.typeDefinitionCache[typeId] = typeDefinition;
-				}
-			}
-
-			return this.GetTypeDefinitionFromCache(typeId);
+			this.tableDefinitionCache[id] = table;
 		}
 
 
-		private void AddTableDefinitionToCache(Druid entityId, DbTable table)
+		private DbTable GetTableDefinitionFromCache(Druid id)
 		{
-			this.tableDefinitionCache[entityId] = table;
+			return this.tableDefinitionCache[id];
 		}
 
 
-		private DbTable GetTableDefinitionFromCache(Druid entityId)
+		private bool IsTableDefinitionInCache(Druid id)
 		{
-			return this.tableDefinitionCache[entityId];
-		}
-
-
-		private bool IsTableDefinitionInCache(Druid entityId)
-		{
-			return this.tableDefinitionCache.ContainsKey (entityId);
-		}
-
-
-		private void AddTypeDefinitionToCache(Druid typeId, DbTypeDef type)
-		{
-			this.typeDefinitionCache[typeId] = type;
-		}
-
-
-		private DbTypeDef GetTypeDefinitionFromCache(Druid typeId)
-		{
-			return this.typeDefinitionCache[typeId];
-		}
-
-
-		private bool IsTypeDefinitionInCache(Druid typeId)
-		{
-			return this.typeDefinitionCache.ContainsKey (typeId);
+			return this.tableDefinitionCache.ContainsKey (id);
 		}
 
 
@@ -259,9 +223,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		private readonly Dictionary<Druid, DbTable> tableDefinitionCache;
-
-
-		private readonly Dictionary<Druid, DbTypeDef> typeDefinitionCache;
 
 
 		private readonly static Dictionary<DbInfrastructure, SchemaEngine> instances;

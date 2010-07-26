@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
+namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 	// TODO This is not the prettiest unit test I've done. It might be nice to refractor it if the

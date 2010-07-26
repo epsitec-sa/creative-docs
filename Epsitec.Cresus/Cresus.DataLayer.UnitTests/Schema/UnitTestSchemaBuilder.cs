@@ -67,17 +67,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				var builder = new SchemaBuilder_Accessor (dbInfrastructure);
 
+				List<DbTable> newTables = new List<DbTable> ();
+
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					builder.BuildTable (transaction, tuple.Item1);
+					builder.BuildTable (transaction, newTables, tuple.Item1);
 
 					transaction.Commit ();
 				}
 
-				Dictionary<Druid, DbTable> newTables = builder.GetNewTableDefinitions ();
-
-				Assert.IsTrue (tuple.Item2.Except (newTables.Keys).Count () == 0);
-				Assert.IsTrue (newTables.Keys.Except (tuple.Item2).Count () == 0);
+				Assert.IsTrue (tuple.Item2.Except (newTables.Select (t => t.CaptionId)).Count () == 0);
+				Assert.IsTrue (newTables.Select (t => t.CaptionId).Except (tuple.Item2).Count () == 0);
 
 				DatabaseHelper.CreateAndConnectToDatabase ();
 			}
@@ -109,9 +109,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				}
 			}
 
-			Assert.IsTrue (this.GetSampleTypes ().Select (t => t.CaptionId).Except (builder.GetNewTypeDefinitions ().Keys).Count () == 0);
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Except (this.GetSampleTypes ().Select (t => t.CaptionId)).Count () == 0);
-
 			DatabaseHelper.DisconnectFromDatabase ();
 			DatabaseHelper.ConnectToDatabase ();
 
@@ -131,8 +128,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					types2.Add (typeDef);
 				}
 			}
-
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Count == 0);
 
 			CollectionAssert.AreEquivalent (types1, types2);
 
@@ -155,11 +150,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					builder.CreateSchema (transaction, tuple.Item1);
+					List<DbTable> newTables = builder.CreateSchema (transaction, tuple.Item1).ToList ();
 
 					transaction.Commit ();
 
-					tables1.AddRange (builder.GetNewTableDefinitions ().Values.Select (t => t.CaptionId));
+					tables1.AddRange (newTables.Select (t => t.CaptionId));
 				}
 
 				DatabaseHelper.DisconnectFromDatabase ();
@@ -170,53 +165,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					builder.CreateSchema (transaction, tuple.Item1);
+					List<DbTable> newTables = builder.CreateSchema (transaction, tuple.Item1).ToList ();
 
 					transaction.Commit ();
 
-					tables2.AddRange (builder.GetNewTableDefinitions ().Values.Select (t => t.CaptionId));
+					tables2.AddRange (newTables.Select (t => t.CaptionId));
 				}
 
 				Assert.IsTrue (tables1.Except (tuple.Item2).Count () == 0);
 				Assert.IsTrue (tuple.Item2.Except (tables1).Count () == 0);
-				Assert.IsTrue (tables2.Count == 0);
-
-				DatabaseHelper.DisconnectFromDatabase ();
-				DatabaseHelper.ConnectToDatabase ();
-
-				dbInfrastructure = DatabaseHelper.DbInfrastructure;
-				builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-				tables1 = new List<Druid> ();
-				tables2 = new List<Druid> ();
-
-				builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					builder.CreateSchema (transaction, tuple.Item1);
-
-					transaction.Commit ();
-
-					tables1.AddRange (builder.GetNewTableDefinitions ().Values.Select (t => t.CaptionId));
-				}
-
-				DatabaseHelper.DisconnectFromDatabase ();
-				DatabaseHelper.ConnectToDatabase ();
-
-				dbInfrastructure = DatabaseHelper.DbInfrastructure;
-				builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					builder.CreateSchema (transaction, tuple.Item1);
-
-					transaction.Commit ();
-
-					tables2.AddRange (builder.GetNewTableDefinitions ().Values.Select (t => t.CaptionId));
-				}
-
-				Assert.IsTrue (tables1.Count == 0);
 				Assert.IsTrue (tables2.Count == 0);
 
 				DatabaseHelper.CreateAndConnectToDatabase ();
@@ -247,7 +204,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			foreach (INamedType type in this.GetSampleTypes ())
 			{
-
 				DbTypeDef type1;
 				DbTypeDef type2;
 
@@ -271,46 +227,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (type1, type2);
 			}
-
-			Assert.IsTrue (this.GetSampleTypes ().Select (t => t.CaptionId).Except (builder.GetNewTypeDefinitions ().Keys).Count () == 0);
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Except (this.GetSampleTypes ().Select (t => t.CaptionId)).Count () == 0);
-
-			DatabaseHelper.DisconnectFromDatabase ();
-			DatabaseHelper.ConnectToDatabase ();
-
-			dbInfrastructure = DatabaseHelper.DbInfrastructure;
-			builder = new SchemaBuilder_Accessor (dbInfrastructure);
-
-			foreach (INamedType type in this.GetSampleTypes ())
-			{
-
-				DbTypeDef type1;
-				DbTypeDef type2;
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					type1 = builder.GetOrCreateTypeDef (transaction, type, FieldOptions.None);
-
-					Assert.IsNotNull (type1);
-
-					transaction.Commit ();
-				}
-
-				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-				{
-					type2 =  builder.GetOrCreateTypeDef (transaction, type, FieldOptions.None);
-
-					Assert.IsNotNull (type2);
-
-					transaction.Commit ();
-				}
-
-				Assert.AreSame (type1, type2);
-			}
-
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Count == 0);
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -329,11 +245,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					builder.CreateSchema (transaction, tuple.Item1);
+					tables1 = builder.CreateSchema (transaction, tuple.Item1).ToList ();
 
 					transaction.Commit ();
-
-					tables1.AddRange (builder.GetNewTableDefinitions ().Values);
 				}
 
 				foreach (DbTable table1 in tables1)
@@ -369,11 +283,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					builder.CreateSchema (transaction, tuple.Item1);
+					List<DbTable> newTables = builder.CreateSchema (transaction, tuple.Item1).ToList ();
 
 					transaction.Commit ();
 
-					tables1.AddRange (builder.GetNewTableDefinitions ().Values.Select (t => t.CaptionId));
+					tables1.AddRange (newTables.Select (t => t.CaptionId));
 				}
 
 				DatabaseHelper.DisconnectFromDatabase ();
@@ -438,9 +352,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreSame (type1, type2);
 			}
 
-			Assert.IsTrue (this.GetSampleTypes ().Select (t => t.CaptionId).Except (builder.GetNewTypeDefinitions ().Keys).Count () == 0);
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Except (this.GetSampleTypes ().Select (t => t.CaptionId)).Count () == 0);
-
 			DatabaseHelper.DisconnectFromDatabase ();
 			DatabaseHelper.ConnectToDatabase ();
 
@@ -449,7 +360,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			foreach (INamedType type in this.GetSampleTypes ())
 			{
-
 				DbTypeDef type1;
 				DbTypeDef type2;
 
@@ -473,8 +383,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (type1, type2);
 			}
-
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Count == 0);
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
@@ -524,8 +432,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					types2.Add (typeDef);
 				}
 			}
-
-			Assert.IsTrue (builder.GetNewTypeDefinitions ().Keys.Count == 0);
 
 			CollectionAssert.AreEquivalent (types1, types2);
 
