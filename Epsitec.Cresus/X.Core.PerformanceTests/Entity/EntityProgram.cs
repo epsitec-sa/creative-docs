@@ -3,17 +3,17 @@
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.UnitTests;
+using Epsitec.Cresus.PerformanceTests;
 
 using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.PerformanceTests.Entity
 {
 
 
-	public class Program
+	public sealed class EntityProgram
 	{
 
 
@@ -55,8 +55,8 @@ namespace Epsitec.Cresus.Core
 					System.Threading.Thread.Sleep (2*1000);
 					System.Console.ResetColor ();
 
-					Program.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
-					Program.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
+					EntityProgram.MeasureAndDisplayExecutionTime ("RetrieveNaturalPerson", 100, () => test.RetrieveNaturalPerson ());
+					EntityProgram.MeasureAndDisplayExecutionTime ("RetrieveLocation", 100, () => test.RetrieveLocation ());
 				}
 			}
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core
 
 		private static void MeasureAndDisplayExecutionTime(string text, int count, System.Action action)
 		{
-			var time = Program.MeasureExecutionTimeInMilliseconds (count, action);
+			var time = EntityProgram.MeasureExecutionTimeInMilliseconds (count, action);
 			System.Console.ForegroundColor = System.ConsoleColor.Green;
 			System.Console.WriteLine ("{0}: {1}ms", text, time);
 			System.Console.ResetColor ();

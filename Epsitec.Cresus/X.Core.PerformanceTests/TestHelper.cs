@@ -6,7 +6,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Implementation;
 using Epsitec.Common.IO;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.PerformanceTests
 {
 
 
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core
 			//	for migration tips, from nUnit to MSTest.
 
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
-			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.UnitTests");
+			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.PerformanceTests");
 		}
 
 		

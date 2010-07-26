@@ -1,20 +1,20 @@
 ﻿using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.PerformanceTests.Entities;
 
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.PerformanceTests
 {
 	
 	
-	internal static class DatabaseCreator1
+	internal static class DatabaseCreator
 	{
 
 
-		static DatabaseCreator1()
+		static DatabaseCreator()
 		{
-			DatabaseCreator1.NbElements = new Dictionary<string, Dictionary<DatabaseSize, int>> ()
+			DatabaseCreator.NbElements = new Dictionary<string, Dictionary<DatabaseSize, int>> ()
 			{
 				{"contactRoles", new Dictionary<DatabaseSize, int>()
 					{
@@ -199,19 +199,19 @@ namespace Epsitec.Cresus.Core
 
 				System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 
-				int nbContactRoles = DatabaseCreator1.NbElements["contactRoles"][size];
+				int nbContactRoles = DatabaseCreator.NbElements["contactRoles"][size];
 				ContactRoleEntity[] contactRoles = DatabaseHelper.CreateContactRoles (dataContext, nbContactRoles);
 				dataContext.SaveChanges ();
 
-				int nbUriComments = DatabaseCreator1.NbElements["uriComments"][size];
+				int nbUriComments = DatabaseCreator.NbElements["uriComments"][size];
 				CommentEntity[] uriComments = DatabaseHelper.CreateComments (dataContext, nbUriComments);
 				dataContext.SaveChanges ();
 
-				int nbUriSchemes = DatabaseCreator1.NbElements["uriSchemes"][size];
+				int nbUriSchemes = DatabaseCreator.NbElements["uriSchemes"][size];
 				UriSchemeEntity[] uriSchemes = DatabaseHelper.CreateUriSchemes (dataContext, nbUriSchemes);
 				dataContext.SaveChanges ();
 
-				int nbUriContacts = DatabaseCreator1.NbElements["uriContacts"][size];
+				int nbUriContacts = DatabaseCreator.NbElements["uriContacts"][size];
 				UriContactEntity[] uriContacts = DatabaseHelper.CreateUriContacts (dataContext, uriSchemes, nbUriContacts);
 				dataContext.SaveChanges ();
 
@@ -221,15 +221,15 @@ namespace Epsitec.Cresus.Core
 				DatabaseHelper.AssignComments (uriContacts, uriComments);
 				dataContext.SaveChanges ();
 
-				int nbTelecomComments = DatabaseCreator1.NbElements["telecomComments"][size];
+				int nbTelecomComments = DatabaseCreator.NbElements["telecomComments"][size];
 				CommentEntity[] telecomComments = DatabaseHelper.CreateComments (dataContext, nbTelecomComments);
 				dataContext.SaveChanges ();
 
-				int nbTelecomTypes = DatabaseCreator1.NbElements["telecomTypes"][size];
+				int nbTelecomTypes = DatabaseCreator.NbElements["telecomTypes"][size];
 				TelecomTypeEntity[] telecomTypes = DatabaseHelper.CreateTelecomTypes (dataContext, nbTelecomTypes);
 				dataContext.SaveChanges ();
 
-				int nbTelecomContacts = DatabaseCreator1.NbElements["telecomContacts"][size];
+				int nbTelecomContacts = DatabaseCreator.NbElements["telecomContacts"][size];
 				TelecomContactEntity[] telecomContacts = DatabaseHelper.CreateTelecomContacts (dataContext, telecomTypes, nbTelecomContacts);
 				dataContext.SaveChanges ();
 
@@ -239,35 +239,35 @@ namespace Epsitec.Cresus.Core
 				DatabaseHelper.AssignComments (telecomContacts, telecomComments);
 				dataContext.SaveChanges ();
 
-				int nbMailComments = DatabaseCreator1.NbElements["mailComments"][size];
+				int nbMailComments = DatabaseCreator.NbElements["mailComments"][size];
 				CommentEntity[] mailComments = DatabaseHelper.CreateComments (dataContext, nbMailComments);
 				dataContext.SaveChanges ();
 
-				int nbCountries = DatabaseCreator1.NbElements["countries"][size];
+				int nbCountries = DatabaseCreator.NbElements["countries"][size];
 				CountryEntity[] countries = DatabaseHelper.CreateCountries (dataContext, nbCountries);
 				dataContext.SaveChanges ();
 
-				int nbRegions = DatabaseCreator1.NbElements["regions"][size];
+				int nbRegions = DatabaseCreator.NbElements["regions"][size];
 				RegionEntity[] regions = DatabaseHelper.CreateRegions (dataContext, countries, nbRegions);
 				dataContext.SaveChanges ();
 
-				int nbLocations = DatabaseCreator1.NbElements["locations"][size];
+				int nbLocations = DatabaseCreator.NbElements["locations"][size];
 				LocationEntity[] locations = DatabaseHelper.CreateLocations (dataContext, regions, nbLocations);
 				dataContext.SaveChanges ();
 
-				int nbStreets = DatabaseCreator1.NbElements["streets"][size];
+				int nbStreets = DatabaseCreator.NbElements["streets"][size];
 				StreetEntity[] streets = DatabaseHelper.CreateStreets (dataContext, nbStreets);
 				dataContext.SaveChanges ();
 
-				int nbPostBoxes = DatabaseCreator1.NbElements["postBoxes"][size];
+				int nbPostBoxes = DatabaseCreator.NbElements["postBoxes"][size];
 				PostBoxEntity[] postBoxes = DatabaseHelper.CreatePostBoxes (dataContext, nbPostBoxes);
 				dataContext.SaveChanges ();
 
-				int nbAddresses = DatabaseCreator1.NbElements["addresses"][size];
+				int nbAddresses = DatabaseCreator.NbElements["addresses"][size];
 				AddressEntity[] addresses = DatabaseHelper.CreateAddresses (dataContext, streets, postBoxes, locations, nbAddresses);
 				dataContext.SaveChanges ();
 
-				int nbMailContacts = DatabaseCreator1.NbElements["mailContacts"][size];
+				int nbMailContacts = DatabaseCreator.NbElements["mailContacts"][size];
 				MailContactEntity[] mailContacts = DatabaseHelper.CreateMailContact (dataContext, addresses, nbMailContacts);
 				dataContext.SaveChanges ();
 
@@ -277,27 +277,27 @@ namespace Epsitec.Cresus.Core
 				DatabaseHelper.AssignComments (mailContacts, mailComments);
 				dataContext.SaveChanges ();
 
-				int nbLanguages = DatabaseCreator1.NbElements["languages"][size];
+				int nbLanguages = DatabaseCreator.NbElements["languages"][size];
 				LanguageEntity[] languages = DatabaseHelper.CreateLanguages (dataContext, nbLanguages);
 				dataContext.SaveChanges ();
 
-				int nbTitles = DatabaseCreator1.NbElements["titles"][size];
+				int nbTitles = DatabaseCreator.NbElements["titles"][size];
 				PersonTitleEntity[] titles = DatabaseHelper.CreatePersonTitles (dataContext, nbTitles);
 				dataContext.SaveChanges ();
 
-				int nbGenders = DatabaseCreator1.NbElements["genders"][size];
+				int nbGenders = DatabaseCreator.NbElements["genders"][size];
 				PersonGenderEntity[] genders = DatabaseHelper.CreatePersonGenders (dataContext, nbGenders);
 				dataContext.SaveChanges ();
 
-				int nbLegalPersonTypes = DatabaseCreator1.NbElements["legalPersonTypes"][size];
+				int nbLegalPersonTypes = DatabaseCreator.NbElements["legalPersonTypes"][size];
 				LegalPersonTypeEntity[] legalPersonTypes = DatabaseHelper.CreateLegalPersonTypes (dataContext, nbLegalPersonTypes);
 				dataContext.SaveChanges ();
 
-				int nbNaturalPersons = DatabaseCreator1.NbElements["naturalPersons"][size];
+				int nbNaturalPersons = DatabaseCreator.NbElements["naturalPersons"][size];
 				NaturalPersonEntity[] naturalPersons = DatabaseHelper.CreateNaturalPersons (dataContext, languages, titles, genders, nbNaturalPersons);
 				dataContext.SaveChanges ();
 
-				int nbLegalPersons = DatabaseCreator1.NbElements["legalPersons"][size];
+				int nbLegalPersons = DatabaseCreator.NbElements["legalPersons"][size];
 				LegalPersonEntity[] legalPersons = DatabaseHelper.CreateLegalPersons (dataContext, languages, legalPersonTypes, nbLegalPersons);
 				dataContext.SaveChanges ();
 

@@ -1,19 +1,25 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.UnitTests;
+using Epsitec.Cresus.PerformanceTests;
 
 using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.PerformanceTests.Entities;
 
-namespace Epsitec.Cresus.Core
+
+namespace Epsitec.Cresus.PerformanceTests.Entity
 {
-	public class TestPerformance : System.IDisposable
+
+
+	internal sealed class TestPerformance : System.IDisposable
 	{
+
+
 		public TestPerformance(bool createAndPopulateDatabase)
 		{
 			TestHelper.Initialize ();
@@ -21,7 +27,7 @@ namespace Epsitec.Cresus.Core
 			if (createAndPopulateDatabase)
 			{
 				DatabaseHelper.CreateAndConnectToDatabase ();
-				DatabaseCreator1.PopulateDatabase (DatabaseSize.Small);
+				DatabaseCreator.PopulateDatabase (DatabaseSize.Small);
 			}
 			else
 			{
@@ -31,6 +37,7 @@ namespace Epsitec.Cresus.Core
 			this.dbInfrastructure = DatabaseHelper.DbInfrastructure;
 		}
 
+
 		public DbInfrastructure DbInfrastructure
 		{
 			get
@@ -38,6 +45,7 @@ namespace Epsitec.Cresus.Core
 				return this.dbInfrastructure;
 			}
 		}
+
 
 		public void RetrieveNaturalPerson()
 		{
@@ -59,6 +67,7 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Trace.WriteLine ("Operation took " + watch.ElapsedMilliseconds + " ms");
 			}
 		}
+
 
 		public void RetrieveLocation()
 		{
@@ -358,6 +367,7 @@ namespace Epsitec.Cresus.Core
 
 		#region IDisposable Members
 
+
 		public void Dispose()
 		{
 			if (this.dbInfrastructure != null)
@@ -367,9 +377,13 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
 		#endregion
+
 
 
 		private DbInfrastructure dbInfrastructure;
 	}
+
+
 }

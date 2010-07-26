@@ -7,10 +7,10 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.PerformanceTests.Entities;
 
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.PerformanceTests
 {
 
 
