@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Graph
             if (xmlOptions != null)
             {
                 
-                this.ChartOptions.RestoreSettings(xmlOptions);
+                this.ChartOptions.RestoreOptions(xmlOptions);
             }
         }
 
