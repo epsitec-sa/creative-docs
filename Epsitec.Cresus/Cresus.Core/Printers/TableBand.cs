@@ -132,205 +132,205 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string GetText(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return null;
 			}
 			else
 			{
-				return textBox.Text;
+				return textBand.Text;
 			}
 		}
 
 		public void SetText(int column, int row, string value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.Text = value;
+				textBand.Text = value;
 			}
 		}
 
 
 		public Font GetFont(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return null;
 			}
 			else
 			{
-				return textBox.Font;
+				return textBand.Font;
 			}
 		}
 
 		public void SetFont(int column, int row, Font value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.Font = value;
+				textBand.Font = value;
 			}
 		}
 
 
 		public double GetFontSize(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return 0;
 			}
 			else
 			{
-				return textBox.FontSize;
+				return textBand.FontSize;
 			}
 		}
 
 		public void SetFontSize(int column, int row, double value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.FontSize = value;
+				textBand.FontSize = value;
 			}
 		}
 
 
 		public ContentAlignment GetAlignment(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return ContentAlignment.None;
 			}
 			else
 			{
-				return textBox.Alignment;
+				return textBand.Alignment;
 			}
 		}
 
 		public void SetAlignment(int column, int row, ContentAlignment value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.Alignment = value;
+				textBand.Alignment = value;
 			}
 		}
 
 
 		public TextJustifMode GetJustif(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return TextJustifMode.None;
 			}
 			else
 			{
-				return textBox.Justif;
+				return textBand.Justif;
 			}
 		}
 
 		public void SetJustif(int column, int row, TextJustifMode value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.Justif = value;
+				textBand.Justif = value;
 			}
 		}
 
 
 		public double GetCellBorderWidth(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return 0;
 			}
 			else
 			{
-				return textBox.TableCellBorderWidth;
+				return textBand.TableCellBorderWidth;
 			}
 		}
 
 		public void SetCellBorderWidth(int column, int row, double value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.TableCellBorderWidth = value;
+				textBand.TableCellBorderWidth = value;
 			}
 		}
 
 
 		public Color GetBackground(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return Color.Empty;
 			}
 			else
 			{
-				return textBox.TableCellBackground;
+				return textBand.TableCellBackground;
 			}
 		}
 
 		public void SetBackground(int column, int row, Color value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.TableCellBackground = value;
+				textBand.TableCellBackground = value;
 			}
 		}
 
 
 		public TextBreakMode GetBreakMode(int column, int row)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox == null)
+			if (textBand == null)
 			{
 				return TextBreakMode.None;
 			}
 			else
 			{
-				return textBox.BreakMode;
+				return textBand.BreakMode;
 			}
 		}
 
 		public void SetBreakMode(int column, int row, TextBreakMode value)
 		{
-			TextBand textBox = this.GetTextBox (column, row);
+			TextBand textBand = this.GetTextBand (column, row);
 
-			if (textBox != null)
+			if (textBand != null)
 			{
-				textBox.BreakMode = value;
+				textBand.BreakMode = value;
 			}
 		}
 
 
-		public TextBand GetTextBox(int column, int row)
+		public TextBand GetTextBand(int column, int row)
 		{
 			if (column >= 0 && column < this.columnsCount && row >= 0 && row < this.rowsCount)
 			{
@@ -365,6 +365,21 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			return height;
+		}
+
+		public double RequiredColumnWidth(int column)
+		{
+			//	Retourne la largeur requise pour une colonne donnée si les textes sont mis sur une seule ligne.
+			double width = 0;
+
+			for (int row = 0; row < this.rowsCount; row++)
+			{
+				TextBand textBand = this.GetTextBand (column, row);
+
+				width = System.Math.Max (width, textBand.RequiredWidth ());
+			}
+
+			return width;
 		}
 
 
@@ -418,10 +433,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				TextBand textBox = this.GetTextBox (column, row);
+				TextBand textBand = this.GetTextBand (column, row);
 				double width = this.GetAbsoluteColumnWidth (column);
 
-				textBox.JustifInitialize (width-horizontalMargin);
+				textBand.JustifInitialize (width-horizontalMargin);
 			}
 		}
 
@@ -478,7 +493,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
-					TextBand textBox = this.GetTextBox (column, row);
+					TextBand textBand = this.GetTextBand (column, row);
 
 					int textSection = 0;
 					int line = 0;
@@ -497,11 +512,11 @@ namespace Epsitec.Cresus.Core.Printers
 					}
 					else
 					{
-						bool cellEnding = textBox.JustifOneSection (ref line, height-verticalMargin);
+						bool cellEnding = textBand.JustifOneSection (ref line, height-verticalMargin);
 
-						double cellHeight = textBox.LastHeight + verticalMargin;
+						double cellHeight = textBand.LastHeight + verticalMargin;
 
-						CellInfo newCell = new CellInfo (textSection, textBox.LastFirstLine, textBox.LastLineCount, cellEnding, cellHeight);
+						CellInfo newCell = new CellInfo (textSection, textBand.LastFirstLine, textBand.LastLineCount, cellEnding, cellHeight);
 						rowInfo.CellsInfo.Add (newCell);
 
 						maxRowHeight = System.Math.Max (maxRowHeight, cellHeight);
@@ -511,7 +526,7 @@ namespace Epsitec.Cresus.Core.Printers
 							rowEnding = false;
 						}
 
-						if (textBox.LastLineCount == 0 && !string.IsNullOrEmpty(textBox.Text))
+						if (textBand.LastLineCount == 0 && !string.IsNullOrEmpty (textBand.Text))
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
 							//	il faut rejeter cette 'row' et essayer sur une nouvelle section.
@@ -524,8 +539,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					for (int column = 0; column < this.columnsCount; column++)
 					{
-						TextBand textBox = this.GetTextBox (column, row);
-						textBox.JustifRemoveLastSection ();
+						TextBand textBand = this.GetTextBand (column, row);
+						textBand.JustifRemoveLastSection ();
 					}
 
 					break;
@@ -656,20 +671,20 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (cellInfo.FirstLine != -1)
 					{
-						TextBand textBox = this.GetTextBox (column, row);
+						TextBand textBand = this.GetTextBand (column, row);
 
-						if (textBox.TableCellBackground.IsValid)
+						if (textBand.TableCellBackground.IsValid)
 						{
-							port.Color = textBox.TableCellBackground;
+							port.Color = textBand.TableCellBackground;
 							port.PaintSurface (Path.FromRectangle (cellBounds));
 						}
 
-						if (!textBox.Paint (port, isPreview, cellInfo.TextSection, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
+						if (!textBand.Paint (port, isPreview, cellInfo.TextSection, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
 						{
 							ok = false;
 						}
 
-						cellBorderWidth = textBox.TableCellBorderWidth;
+						cellBorderWidth = textBand.TableCellBorderWidth;
 					}
 
 					if (this.PaintFrame)
@@ -705,13 +720,13 @@ namespace Epsitec.Cresus.Core.Printers
 			double height = 0;
 			for (int column = 0; column < this.columnsCount; column++)
 			{
-				TextBand textBox = this.GetTextBox (column, row);
+				TextBand textBand = this.GetTextBand (column, row);
 
 				double width = this.GetAbsoluteColumnWidth (column);
 				width -= this.CellMargins.Left;
 				width -= this.CellMargins.Right;
 
-				height = System.Math.Max (height, textBox.RequiredHeight (width));
+				height = System.Math.Max (height, textBand.RequiredHeight (width));
 			}
 
 			height += this.CellMargins.Top;
@@ -750,11 +765,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 				for (int column = 0; column < this.columnsCount; column++)
 				{
-					var textBox = new TextBand ();
-					textBox.Font = this.Font;
-					textBox.FontSize = this.FontSize;
-					
-					line.Add (textBox);
+					var textBand = new TextBand ();
+					textBand.Font = this.Font;
+					textBand.FontSize = this.FontSize;
+
+					line.Add (textBand);
 				}
 
 				this.content.Add (line);

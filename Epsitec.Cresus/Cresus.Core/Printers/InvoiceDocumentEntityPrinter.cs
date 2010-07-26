@@ -29,19 +29,19 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice (type.DocumentOptions, isBL: false);
 			AbstractEntityPrinter.DocumentTypeAddBV      (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions, isBL: false);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions);
+			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions, isBL: true);
 			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
 			AbstractEntityPrinter.DocumentTypeAddBL          (type.DocumentOptions);
@@ -190,52 +190,33 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableColumns.Clear ();
 
-			double wd;
-			double wm;
-			if (this.IsWithFrame)
-			{
-				wd = 70.0;
-				wm = 15.0;
-			}
-			else
-			{
-				wd = 54.0;
-				wm = 17.0;
-			}
-
-			if (this.IsBL)
-			{
-				wd += wm*5;
-			}
-
-			if (this.PageSize.Width > this.PageSize.Height)  // paysage ?
-			{
-				wd += 80;
-			}
+			double priceWidth = 13 + this.CellMargin*2;  // largeur standard pour un montant ou une quantité
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add ("Nb",   new TableColumn ("?",           wm,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        wm-3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        wm+5, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Nb",   new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("ArId", new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
 			}
 			else
 			{
-				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", wd,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Nb",   new TableColumn ("?",           wm,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        wm-3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        wm+5, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         wm,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       wm,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("ArId", new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add ("Nb",   new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
+				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Date", new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
@@ -285,23 +266,28 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns["Date"].Visible = false;
 			}
 
+			if (!this.HasDocumentOption ("ArticleId"))  // n'imprime pas les numéros d'article ?
+			{
+				this.tableColumns["ArId"].Visible = false;
+			}
+
 			//	Compte et numérote les colonnes visibles.
-			this.columnCount = 0;
+			this.visibleColumnCount = 0;
 
 			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
-					column.Rank = this.columnCount++;
+					column.Rank = this.visibleColumnCount++;
 				}
 			}
 
 			//	Deuxième passe pour générer les colonnes et les lignes du tableau.
-			var table = new TableBand ();
-			table.ColumnsCount = this.columnCount;
-			table.RowsCount = rowCount;
-			table.PaintFrame = this.IsWithFrame;
-			table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
+			this.table = new TableBand ();
+			this.table.ColumnsCount = this.visibleColumnCount;
+			this.table.RowsCount = rowCount;
+			this.table.PaintFrame = this.IsWithFrame;
+			this.table.CellMargins = new Margins (this.CellMargin);
 
 			//	Détermine le nom de la colonne "Nb".
 			if (this.tableColumns["Suit"].Visible)  // colonne "Suit" visible ?
@@ -313,22 +299,22 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns["Nb"].Title = "Quantité";  // affiche "Quantité"
 			}
 
+			//	Génère une première ligne d'en-tête (titres des colonnes).
 			int row = 0;
 
-			//	Génère une première ligne d'en-tête (titres des colonnes).
 			foreach (var column in this.tableColumns.Values)
 			{
 				if (column.Visible)
 				{
-					table.SetRelativeColumWidth (column.Rank, column.Width);
-					table.SetText               (column.Rank, row, column.Title);
+					this.table.SetText (column.Rank, row, column.Title);
 				}
 			}
 
-			this.InitializeRowAlignment (table, row);
+			this.InitializeRowAlignment (this.table, row);
 
 			row++;
 
+			//	Génère toutes les lignes pour les articles.
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
@@ -340,36 +326,99 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (line is TextDocumentItemEntity)
 					{
-						exist = this.BuildTextLine (table, row, line as TextDocumentItemEntity);
+						exist = this.BuildTextLine (this.table, row, line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						exist = this.BuildArticleLine (table, row, line as ArticleDocumentItemEntity);
+						exist = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						exist = this.BuildPriceLine (table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
+						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
 					}
 
 					if (exist)
 					{
-						this.InitializeRowAlignment (table, row);
+						this.InitializeRowAlignment (this.table, row);
 						row++;
 					}
 				}
 			}
 
-			this.tableBounds = this.documentContainer.AddFromTop (table, 5.0);
+			//	Détermine les largeurs des colonnes.
+			double fixedWidth = 0;
+			double[] columnWidths = new double[this.visibleColumnCount];
+			foreach (var column in this.tableColumns.Values)
+			{
+				if (column.Visible)
+				{
+					if (column.Width != 0)  // pas la seule colonne en mode width = fill ?
+					{
+						double columnWidth = this.table.RequiredColumnWidth (column.Rank) + this.CellMargin*2;
 
-			this.lastRowForEachSection = table.GetLastRowForEachSection ();
+						columnWidths[column.Rank] = columnWidth;
+						fixedWidth += columnWidth;
+					}
+				}
+			}
+
+			if (fixedWidth < this.documentContainer.CurrentWidth - 50)  // reste au moins 5cm pour la colonne 'fill' ?
+			{
+				//	Initialise les largeurs en fonction des contenus réels des colonnes.
+				foreach (var column in this.tableColumns.Values)
+				{
+					if (column.Visible)
+					{
+						if (column.Width != 0)  // pas la seule colonne en mode width = fill ?
+						{
+							column.Width = columnWidths[column.Rank];
+						}
+					}
+				}
+			}
+			else
+			{
+				//	Initialise les largeurs d'après les estimations initiales.
+				fixedWidth = 0;
+				foreach (var column in this.tableColumns.Values)
+				{
+					if (column.Visible)
+					{
+						if (column.Width != 0)  // pas la seule colonne en mode width = fill ?
+						{
+							fixedWidth += column.Width;
+						}
+					}
+				}
+			}
+
+			foreach (var column in this.tableColumns.Values)
+			{
+				if (column.Visible)
+				{
+					double columnWidth = column.Width;
+
+					if (columnWidth == 0)  // seule colonne en mode width = fill ?
+					{
+						columnWidth = this.documentContainer.CurrentWidth - fixedWidth;  // utilise la largeur restante
+					}
+
+					this.table.SetRelativeColumWidth (column.Rank, columnWidth);
+				}
+			}
+
+			//	Met la grande table dans le document.
+			this.tableBounds = this.documentContainer.AddFromTop (this.table, 5.0);
+
+			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 
 			// Met un trait horizontal sous l'en-tête.
 			var currentPage = this.documentContainer.CurrentPage;
 			this.documentContainer.CurrentPage = 0;  // dans la première page
 
-			var h = table.GetRowHeight (0);
+			var h = this.table.GetRowHeight (0);
 			this.BuildSeparator (lineY-h);
 
 			this.documentContainer.CurrentPage = currentPage;
@@ -394,6 +443,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
+			this.tableColumns["ArId"].Visible = true;
 			this.tableColumns["Desc"].Visible = true;
 			this.tableColumns["Tot" ].Visible = true;
 
@@ -525,6 +575,7 @@ namespace Epsitec.Cresus.Core.Printers
 				table.SetText (this.tableColumns["Date"].Rank, row, date);
 			}
 
+			table.SetText (this.tableColumns["ArId"].Rank, row, ArticleDocumentItemHelper.GetArticleId (line));
 			table.SetText (this.tableColumns["Desc"].Rank, row, description);
 			table.SetText (this.tableColumns["PU"  ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
 
@@ -773,17 +824,17 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
-				table.ColumnsCount = this.columnCount;
+				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 2;
 				table.PaintFrame = this.IsWithFrame;
-				table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
+				table.CellMargins = new Margins (this.CellMargin);
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
 				foreach (var column in this.tableColumns.Values)
 				{
 					if (column.Visible)
 					{
-						table.SetRelativeColumWidth (column.Rank, column.Width);
+						table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
 						table.SetText (column.Rank, 0, column.Title);
 					}
 				}
@@ -829,16 +880,16 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var table = new TableBand ();
-				table.ColumnsCount = this.columnCount;
+				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 1;
 				table.PaintFrame = this.IsWithFrame;
-				table.CellMargins = new Margins (this.IsWithFrame ? 1 : 2);
+				table.CellMargins = new Margins (this.CellMargin);
 
 				foreach (var column in this.tableColumns.Values)
 				{
 					if (column.Visible)
 					{
-						table.SetRelativeColumWidth (column.Rank, column.Width);
+						table.SetRelativeColumWidth (column.Rank, this.table.GetRelativeColumnWidth (column.Rank));
 					}
 				}
 
@@ -917,7 +968,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				BV.PaintBvSimulator = this.HasDocumentOption ("BV.Simul");
-				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Spec");
+				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Specimen");
 				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
 				BV.Communication = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
@@ -984,6 +1035,14 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		private double CellMargin
+		{
+			get
+			{
+				return this.IsWithFrame ? 1 : 2;
+			}
+		}
+
 		private bool IsWithFrame
 		{
 			get
@@ -997,8 +1056,9 @@ namespace Epsitec.Cresus.Core.Printers
 		private static readonly double fontSize = 3.0;
 		private static readonly double reportHeight = 7.0;
 
-		private int columnCount;
-		private int[] lastRowForEachSection;
-		private List<Rectangle> tableBounds;
+		private TableBand			table;
+		private int					visibleColumnCount;
+		private int[]				lastRowForEachSection;
+		private List<Rectangle>		tableBounds;
 	}
 }

@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.Core
 			uomUnit2.SmallestIncrement = 1;
 			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
-			uomUnit3.Code = "x";
+			uomUnit3.Code = "×";  // caractère Unicode 00D7
 			uomUnit3.Name = "Fois";
 			uomUnit3.DivideRatio = 1;
 			uomUnit3.MultiplyRatio = 1;
@@ -506,7 +506,7 @@ namespace Epsitec.Cresus.Core
 		{
 			var uomUnit1 = units.Where (x => x.Code == "pce").First ();
 			var uomUnit2 = units.Where (x => x.Code == "box").First ();
-			var uomUnit3 = units.Where (x => x.Code == "x").First ();
+			var uomUnit3 = units.Where (x => x.Code == "×").First ();
 
 			var uomGroup1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup1.Name = "Unités d'emballage soft/standard";

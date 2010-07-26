@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Printers
 	/// Cette classe permet de construire le document complet à imprimer, avec ses différentes pages.
 	/// La classe PageContainer contient une page.
 	/// La classe BandContainer contient une section d'une bande.
+	/// Toutes les dimensions sont données en millimètres.
 	/// </summary>
 	public class DocumentContainer
 	{
@@ -56,6 +57,15 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.pageMargins = value;
 				this.Clear ();
+			}
+		}
+
+
+		public double CurrentWidth
+		{
+			get
+			{
+				return this.pageSize.Width - pageMargins.Left - pageMargins.Right;
 			}
 		}
 

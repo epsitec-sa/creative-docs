@@ -63,6 +63,13 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
+		public static string GetArticleId(ArticleDocumentItemEntity article)
+		{
+			var x = article.ArticleDefinition;
+
+			return UIBuilder.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
+		}
+
 		public static string GetArticleDescription(ArticleDocumentItemEntity article)
 		{
 			if (!string.IsNullOrEmpty (article.ReplacementText))

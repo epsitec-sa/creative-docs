@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void PrintCurrentPage(IPaintPort port)
 		{
-			if (this.HasDocumentOption ("Generic.Spec"))
+			if (this.HasDocumentOption ("Generic.Specimen"))
 			{
 				this.PaintSpecimen(port);
 			}
@@ -188,36 +188,46 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected static void DocumentTypeAddInvoice(List<DocumentOption> options)
+		protected static void DocumentTypeAddInvoice(List<DocumentOption> options, bool isBL)
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			options.Add (new DocumentOption ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
+			options.Add (new DocumentOption ("Delayed",   null, "Imprime les articles livrés ultérieurement", true));
+			options.Add (new DocumentOption ("ArticleId", null, "Imprime les numéros d'article", false));
 
-			options.Add (new DocumentOption ( /**                   **/  "Aspect de la liste des articles :"));
+			options.Add (new DocumentOption ("Aspect de la liste des articles :"));
 			options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
 			options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
 
-			options.Add (new DocumentOption ( /**                         **/  "Ordre des colonnes :"));
-			options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
-			options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
+			options.Add (new DocumentOption ("Ordre des colonnes :"));
+
+			if (isBL)
+			{
+				options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
+				options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité"));
+			}
+			else
+			{
+				options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
+				options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
+			}
 		}
 
 		protected static void DocumentTypeAddBV(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression liées aux BV.
-			options.Add (new DocumentOption ( /**    **/  "Type de bulletin de versement :"));
+			options.Add (new DocumentOption ("Type de bulletin de versement :"));
 			options.Add (new DocumentOption ("BVR", "BV", "BVR orange", true));
 			options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
 
-			options.Add (new DocumentOption ( /**         **/  "Mode d'impression du BV :"));
-			options.Add (new DocumentOption ("BV.Simul", null, "Fac-similé complet du BV (pour des essais)", true));
-			options.Add (new DocumentOption ("BV.Spec",  null, "Ajoute la mention SPECIMEN"));
+			options.Add (new DocumentOption ("Mode d'impression du BV :"));
+			options.Add (new DocumentOption ("BV.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
+			options.Add (new DocumentOption ("BV.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
 		protected static void DocumentTypeAddOrientation(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
-			options.Add (new DocumentOption ( /**                                **/  "Orientation du papier :"));
+			options.Add (new DocumentOption ("Orientation du papier :"));
 			options.Add (new DocumentOption ("Orientation.Vertical",   "Orientation", "Portrait", true));
 			options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
 		}
@@ -231,7 +241,7 @@ namespace Epsitec.Cresus.Core.Printers
 		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression générales.
-			options.Add (new DocumentOption ("Generic.Spec", null, "Ajoute la mention SPECIMEN"));
+			options.Add (new DocumentOption ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
 		protected static void DocumentTypeAddMargin(List<DocumentOption> options)

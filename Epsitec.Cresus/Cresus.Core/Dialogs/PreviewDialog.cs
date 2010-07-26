@@ -20,7 +20,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
-
+	/// <summary>
+	/// Dialogue pour monter un aperçu d'une page avant l'impression. On peut naviguer dans les différentes
+	/// pages du document.
+	/// </summary>
 	class PreviewDialog : AbstractDialog, IAttachedDialog
 	{
 		public PreviewDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
