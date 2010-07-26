@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Database
 		
 		#region IName Members
 
+
 		/// <summary>
 		/// Gets the name of the table.
 		/// </summary>
@@ -85,7 +86,7 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.captionId.IsValid)
 				{
-					return Druid.ToFullString (this.CaptionId.ToLong ());
+					return DbTable.GetEntityTableName (this.CaptionId);
 				}
 				else
 				{
@@ -703,6 +704,13 @@ namespace Epsitec.Cresus.Database
 		{
 			return string.Concat (sourceColumnName, ":", sourceTableName);
 		}
+
+
+		public static string GetEntityTableName(Druid entityId)
+		{
+			return Druid.ToFullString (entityId.ToLong ());
+		}
+
 		
 		/// <summary>
 		/// Extracts the key from the specified row.

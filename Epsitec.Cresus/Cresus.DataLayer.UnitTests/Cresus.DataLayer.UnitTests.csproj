@@ -82,6 +82,7 @@
     <Compile Include="Expressions\UnitTestUnaryOperation.cs" />
     <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
     <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
+    <Compile Include="Schema\UnitTestSchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

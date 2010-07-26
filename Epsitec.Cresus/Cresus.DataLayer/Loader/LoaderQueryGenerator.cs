@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			AliasNode localAlias = this.GetLocalEntityAlias (rootAliasNode, localEntityId);
 
-			DbTableColumn tableColumn = this.GetEntityColumn (localEntityId, localAlias.Alias, LoaderQueryGenerator.statusColumn);
+			DbTableColumn tableColumn = this.GetEntityColumn (localEntityId, localAlias.Alias, Tags.ColumnStatus);
 
 			DbSelectCondition condition = new DbSelectCondition ()
 			{
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
 
 				long id = rootEntityKey.Value.Id.Value;
-				DbTableColumn columnId = this.GetEntityColumn (rootEntityId, rootEntityAlias.Alias, LoaderQueryGenerator.idColumn);
+				DbTableColumn columnId = this.GetEntityColumn (rootEntityId, rootEntityAlias.Alias, Tags.ColumnId);
 
 				DbSelectCondition condition = new DbSelectCondition ()
 				{
@@ -423,9 +423,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			string rootTableAlias = rootEntityAlias.Alias;
 			string localTableAlias = localEntityAlias.Alias;
 
-			DbTableColumn localEntityIdColumn = this.GetEntityColumn (localEntityId, localTableAlias, LoaderQueryGenerator.idColumn);
-			DbTableColumn localEntityStatusColumn = this.GetEntityColumn (localEntityId, localTableAlias, LoaderQueryGenerator.statusColumn);
-			DbTableColumn rootEntityIdColumn = this.GetEntityColumn (rootEntityId, rootTableAlias, LoaderQueryGenerator.idColumn);
+			DbTableColumn localEntityIdColumn = this.GetEntityColumn (localEntityId, localTableAlias, Tags.ColumnId);
+			DbTableColumn localEntityStatusColumn = this.GetEntityColumn (localEntityId, localTableAlias, Tags.ColumnStatus);
+			DbTableColumn rootEntityIdColumn = this.GetEntityColumn (rootEntityId, rootTableAlias, Tags.ColumnId);
 
 			SqlJoinCode type = SqlJoinCode.Inner;
 
@@ -482,7 +482,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			string alias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId).Alias;
 			string fieldId = field.Id;
 			
-			DbTableColumn tableColumn = this.GetEntityColumn (localEntityId, alias, fieldId);
+			DbTableColumn tableColumn = this.GetEntityColumn (localEntityId, alias, field.CaptionId);
 
 			AbstractType fieldType = field.Type as AbstractType;
 			object fieldValue = entity.InternalGetValue (fieldId);
@@ -609,7 +609,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbJoin join = this.BuildJoinToRelation (localEntityId, fieldId, rootEntityAlias, joinType);
 			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
 
-			DbTableColumn idColumn = this.GetRelationColumn (localEntityId, fieldId, relationAlias.Alias, LoaderQueryGenerator.relationTargetColumn);
+			DbTableColumn idColumn = this.GetRelationColumn (localEntityId, fieldId, relationAlias.Alias, Tags.ColumnRefTargetId);
 
 			DbAbstractCondition part1 = join.Condition;
 			DbAbstractCondition part2 = new DbSimpleCondition (idColumn, DbSimpleConditionOperator.Equal, targetId, DbRawType.Int64);
@@ -633,9 +633,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
 
-			DbTableColumn sourceIdColumn = this.GetEntityColumn (rootEntityId, entityTableAlias, LoaderQueryGenerator.idColumn);
-			DbTableColumn relationSourceIdColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, LoaderQueryGenerator.relationSourceColumn);
-			DbTableColumn relationSourceStatusColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, LoaderQueryGenerator.statusColumn);
+			DbTableColumn sourceIdColumn = this.GetEntityColumn (rootEntityId, entityTableAlias, Tags.ColumnId);
+			DbTableColumn relationSourceIdColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, Tags.ColumnRefSourceId);
+			DbTableColumn relationSourceStatusColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, Tags.ColumnStatus);
 
 			DbJoin join = new DbJoin (sourceIdColumn, relationSourceIdColumn, joinType)
 			{
@@ -661,9 +661,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			string relationTableAlias = relationAlias.Alias;
 			string targetTableAlias = targetAlias.Alias;
 
-			DbTableColumn relationTargetIdColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, LoaderQueryGenerator.relationTargetColumn);
-			DbTableColumn targetIdColumn = this.GetEntityColumn (rootTargetId, targetTableAlias, LoaderQueryGenerator.idColumn);
-			DbTableColumn targetStatusColumn = this.GetEntityColumn (rootTargetId, targetTableAlias, LoaderQueryGenerator.statusColumn);
+			DbTableColumn relationTargetIdColumn = this.GetRelationColumn (localEntityId, fieldId, relationTableAlias, Tags.ColumnRefTargetId);
+			DbTableColumn targetIdColumn = this.GetEntityColumn (rootTargetId, targetTableAlias, Tags.ColumnId);
+			DbTableColumn targetStatusColumn = this.GetEntityColumn (rootTargetId, targetTableAlias, Tags.ColumnStatus);
 
 			DbJoin join = new DbJoin (relationTargetIdColumn, targetIdColumn, joinType)
 			{
@@ -694,9 +694,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
 					string tableAlias = this.GetLocalEntityAlias (rootEntityAlias, localEntityId).Alias;
-					string columnName = fieldId.ToResourceId ();
 
-					return this.GetEntityColumn (localEntityId, tableAlias, columnName);
+					return this.GetEntityColumn (localEntityId, tableAlias, fieldId);
 				}),
 			};
 
@@ -720,11 +719,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
-				this.AddEntityQueryField (dbReader, rootEntityAlias, localEntityId, fieldId.ToResourceId ());
+				this.AddEntityQueryField (dbReader, rootEntityAlias, localEntityId, fieldId);
 			}
 
-			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, LoaderQueryGenerator.typeColumn);
-			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, LoaderQueryGenerator.idColumn);
+			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, Tags.ColumnInstanceType);
+			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, Tags.ColumnId);
 		}
 
 
@@ -745,7 +744,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				this.AddQueryForReference (dbReader, entity, rootEntityAlias, fieldId);
 			}
 
-			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, LoaderQueryGenerator.idColumn);
+			this.AddEntityQueryField (dbReader, rootEntityAlias, rootEntityId, Tags.ColumnId);
 		}
 
 
@@ -761,7 +760,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			AliasNode relationAlias = rootEntityAlias.GetChild (fieldId.ToResourceId ());
 
-			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, LoaderQueryGenerator.relationTargetColumn);
+			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, Tags.ColumnRefTargetId);
 		}
 
 
@@ -774,10 +773,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
 
-			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, LoaderQueryGenerator.relationTargetColumn);
-			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, LoaderQueryGenerator.relationRankColumn);
+			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, Tags.ColumnRefTargetId);
+			this.AddRelationQueryField (dbReader, relationAlias.Alias, localEntityId, fieldId, Tags.ColumnRefRank);
 
-			this.AddEntityQueryField (dbReader, rootEntityAlias, this.EntityContext.GetRootEntityId (localEntityId), LoaderQueryGenerator.idColumn);
+			this.AddEntityQueryField (dbReader, rootEntityAlias, this.EntityContext.GetRootEntityId (localEntityId), Tags.ColumnId);
 		}
 
 
@@ -788,9 +787,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
 
-			DbTableColumn column = this.GetRelationColumn (localEntityId, fieldId, relationAlias.Alias, LoaderQueryGenerator.relationRankColumn);
+			DbTableColumn column = this.GetRelationColumn (localEntityId, fieldId, relationAlias.Alias, Tags.ColumnRefRank);
 
 			dbReader.AddSortOrder (column, SqlSortOrder.Ascending);
+		}
+
+
+		private void AddEntityQueryField(DbReader dbReader, AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId)
+		{
+			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
+
+			this.AddEntityQueryField (dbReader, rootEntityAlias, localEntityId, columnName);
 		}
 
 
@@ -803,10 +810,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private DbTableColumn GetEntityColumn(Druid entityId, string entityAlias, Druid fieldId)
+		{
+			string columName = this.SchemaEngine.GetEntityColumnName (fieldId);
+
+			return this.GetEntityColumn (entityId, entityAlias, columName);
+		}
+
+
 		private DbTableColumn GetEntityColumn(Druid entityId, string entityAlias, string columName)
 		{
 			DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (entityId);
-			DbColumn dbColumn = dbTable.Columns[this.SchemaEngine.GetEntityColumnName (columName)];
+			DbColumn dbColumn = dbTable.Columns[columName];
 
 			return new DbTableColumn (dbColumn)
 			{
@@ -827,7 +842,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private DbTableColumn GetRelationColumn(Druid localEntityId, Druid fieldId, string relationAlias, string columName)
 		{
 			DbTable dbRelationTable = this.SchemaEngine.GetRelationTableDefinition (localEntityId, fieldId);
-			DbColumn dbColumn = dbRelationTable.Columns[this.SchemaEngine.GetEntityColumnName (columName)];
+			DbColumn dbColumn = dbRelationTable.Columns[columName];
 
 			return new DbTableColumn (dbColumn)
 			{
@@ -945,7 +960,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				else
 				{
 					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
-					string columnName = this.SchemaEngine.GetEntityColumnName (field.Id);
+					string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
 
 					DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 					DbColumn dbColumn = dbTable.Columns[columnName];
@@ -994,24 +1009,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return newValue;
 		}
-
-
-		private static readonly string relationSourceColumn = "[" + Tags.ColumnRefSourceId + "]";
-
-
-		private static readonly string relationTargetColumn = "[" + Tags.ColumnRefTargetId + "]";
-
-
-		private static readonly string relationRankColumn = "[" + Tags.ColumnRefRank + "]";
-
-
-		private static readonly string idColumn = "[" + Tags.ColumnId + "]";
-
-
-		private static readonly string typeColumn = "[" + Tags.ColumnInstanceType + "]";
-
-
-		private static readonly string statusColumn = "[" + Tags.ColumnStatus + "]";
 
 
 	}

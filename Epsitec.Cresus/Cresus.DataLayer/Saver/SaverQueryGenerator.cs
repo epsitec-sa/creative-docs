@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private SqlField CreateSqlFieldForEntityValueField(DbTable table, Druid fieldId, object value)
 		{
-			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId.ToResourceId ());
+			string columnName = this.SchemaEngine.GetEntityColumnName (fieldId);
 			DbColumn column = table.Columns[columnName];
 
 			return this.CreateSqlFieldForColumn (column, value);
