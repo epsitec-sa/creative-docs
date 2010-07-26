@@ -95,6 +95,14 @@ namespace Epsitec.Cresus.Core.Printers
 			return height;
 		}
 
+		public double RequiredWidth()
+		{
+			//	Retourne la largeur requise si le texte est mis sur une seule ligne.
+			var textLayout = this.CreateTextLayout ();
+
+			return textLayout.SingleLineSize.Width;
+		}
+
 
 		/// <summary>
 		/// Effectue la justification verticale pour découper le texte en sections.
@@ -267,7 +275,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="port">Port graphique</param>
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
-		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
+		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné correctement</returns>
 		public override bool Paint(IPaintPort port, bool isPreview, int section, Point topLeft)
 		{
 			if (section < 0 || section >= this.sectionsInfo.Count)
@@ -296,13 +304,30 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (textLayout.TotalRectangle.IsEmpty && !string.IsNullOrEmpty(textLayout.Text))
 			{
+#if false
 				//	Dessine une grande croix 'x'.
 				port.LineWidth = 0.1;
 				port.Color = Color.FromBrightness (0);
 				port.PaintOutline (Path.FromLine (clipRect.BottomLeft, clipRect.TopRight));
 				port.PaintOutline (Path.FromLine (clipRect.TopLeft, clipRect.BottomRight));
+#else
+				//	S'il n'y a pas la place, dessine le texte avec une police plus petite, sur un fond orange.
+				port.Color = Color.FromName ("Orange");
+				port.PaintSurface (Path.FromRectangle (clipRect));
 
-				ok = false;
+				for (int i = 0; i < 10; i++)
+				{
+					textLayout.DefaultFontSize *= 0.8;
+
+					if (!textLayout.TotalRectangle.IsEmpty)
+					{
+						textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+						break;
+					}
+				}
+#endif
+
+				ok = false;  // il y a eu un problème !
 			}
 			else
 			{

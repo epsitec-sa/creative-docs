@@ -20,7 +20,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
-
+	/// <summary>
+	/// Dialogue pour choisir le type du document à imprimer/monter ainsi que ses options.
+	/// </summary>
 	class DocumentTypeDialog : AbstractDialog
 	{
 		public DocumentTypeDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, bool isPreview)
@@ -33,7 +35,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.confirmationButtons = new List<ConfirmationButton> ();
 			this.optionButtons = new List<AbstractButton> ();
 
-			this.settings = CoreApplication.ExtractSettings (this.SettingsPrefix);
+			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
 		}
 
 
@@ -59,8 +61,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.Text = "Choix du type de document";
 			this.window.MakeFloatingWindow ();
 
-			bool showOptions = this.GetSettings (this.GetSettingsKey ("ShowOptions")) != "No";
-			bool showPreview = this.GetSettings (this.GetSettingsKey ("ShowPreview")) != "No";
+			bool showOptions = this.GetSettings (true, "ShowOptions") != "No";
+			bool showPreview = this.GetSettings (true, "ShowPreview") != "No";
 
 			this.UpdateWindowSize (showOptions, showPreview);
 		}
@@ -97,8 +99,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 			//	Crée les 3 panneaux côte-à-côte.
-			bool showOptions = this.GetSettings (this.GetSettingsKey ("ShowOptions")) != "No";
-			bool showPreview = this.GetSettings (this.GetSettingsKey ("ShowPreview")) != "No";
+			bool showOptions = this.GetSettings (true, "ShowOptions") != "No";
+			bool showPreview = this.GetSettings (true, "ShowPreview") != "No";
 
 			var leftFrame = new FrameBox
 			{
@@ -131,7 +133,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.confirmationButtons.Clear ();
 			int tabIndex = 0;
 
-			this.entityPrinter.DocumentTypeSelected = this.GetSettings (this.GetSettingsKey ("SelectedType"));
+			this.entityPrinter.DocumentTypeSelected = this.GetSettings (true, "SelectedType");
 
 			foreach (var documentType in this.entityPrinter.DocumentTypes)
 			{
@@ -148,7 +150,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				button.Clicked += delegate
 				{
 					this.entityPrinter.DocumentTypeSelected = button.Name;
-					this.SetSettings (this.GetSettingsKey ("SelectedType"), this.entityPrinter.DocumentTypeSelected);
+					this.SetSettings (true, "SelectedType", this.entityPrinter.DocumentTypeSelected);
 					this.UpdateWidgets ();
 					this.UpdatePreview ();
 				};
@@ -221,7 +223,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.optionsFrame.Visibility = this.showOptionsCheckButton.ActiveState == ActiveState.Yes;
 				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
-				this.SetSettings (this.GetSettingsKey ("ShowOptions"), this.optionsFrame.Visibility ? "Yes" : "No");
+				this.SetSettings (true, "ShowOptions", this.optionsFrame.Visibility ? "Yes" : "No");
 			};
 
 			this.previewCheckButton.ActiveStateChanged += delegate
@@ -229,12 +231,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.previewFrame.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
 				this.pagesInfo.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
 				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
-				this.SetSettings (this.GetSettingsKey ("ShowPreview"), this.previewFrame.Visibility ? "Yes" : "No");
+				this.SetSettings (true, "ShowPreview", this.previewFrame.Visibility ? "Yes" : "No");
 			};
 
 			this.acceptButton.Clicked += delegate
 			{
-				CoreApplication.MergeSettings (this.SettingsPrefix, this.settings);
+				CoreApplication.MergeSettings (this.SettingsGlobalPrefix, this.settings);
 
 				this.Result = DialogResult.Accept;
 				this.CloseDialog ();
@@ -333,7 +335,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						{
 							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
 
-							string settings = this.GetSettings (this.GetSettingsKey (option.Name));
+							string settings = this.GetSettings (false, option.Name);
 							if (!string.IsNullOrEmpty (settings))
 							{
 								if (settings == "No")
@@ -363,13 +365,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 								if (check.ActiveState == ActiveState.No)
 								{
 									check.ActiveState = ActiveState.Yes;
-									this.SetSettings (this.GetSettingsKey (check.Name), "Yes");
+									this.SetSettings (false, check.Name, "Yes");
 
 								}
 								else
 								{
 									check.ActiveState = ActiveState.No;
-									this.SetSettings (this.GetSettingsKey (check.Name), "No");
+									this.SetSettings (false, check.Name, "No");
 								}
 
 								this.UpdateSelectedOptions ();
@@ -382,7 +384,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						{
 							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
 
-							string settings = this.GetSettings (this.GetSettingsKey (option.RadioName));
+							string settings = this.GetSettings (false, option.RadioName);
 							if (!string.IsNullOrEmpty (settings))
 							{
 								state = (settings == option.Name) ? ActiveState.Yes : ActiveState.No;
@@ -402,7 +404,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 							radio.Clicked += delegate
 							{
-								this.SetSettings (this.GetSettingsKey (radio.Group), radio.Name);
+								this.SetSettings (false, radio.Group, radio.Name);
 								this.SetRadio (radio.Name);
 								this.UpdatePreview ();
 							};
@@ -501,27 +503,54 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private string GetSettings(string key)
+		#region Settings
+		private string GetSettings(bool global, string key)
 		{
-			if (this.settings.ContainsKey (key))
+			string fullKey = this.GetSettingsKey (global, key);
+
+			if (this.settings.ContainsKey (fullKey))
 			{
-				return this.settings[key];
+				return this.settings[fullKey];
 			}
 
 			return null;
 		}
 
-		private void SetSettings(string key, string value)
+		private void SetSettings(bool global, string key, string value)
 		{
-			this.settings[key] = value;
+			string fullKey = this.GetSettingsKey (global, key);
+
+			this.settings[fullKey] = value;
 		}
 
-		private string GetSettingsKey(string key)
+		private string GetSettingsKey(bool global, string key)
 		{
-			return string.Concat (this.SettingsPrefix, ".", key);
+			if (global)
+			{
+				return string.Concat (this.SettingsGlobalPrefix, ".", key);
+			}
+			else
+			{
+				return string.Concat (this.SettingsTypedPrefix, ".", key);
+			}
 		}
 
-		private string SettingsPrefix
+		private string SettingsTypedPrefix
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected))
+				{
+					return this.SettingsGlobalPrefix;
+				}
+				else
+				{
+					return string.Concat (this.SettingsGlobalPrefix, ".", this.entityPrinter.DocumentTypeSelected);
+				}
+			}
+		}
+
+		private string SettingsGlobalPrefix
 		{
 			get
 			{
@@ -540,6 +569,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 		}
+		#endregion
 
 
 		private readonly CoreApplication				application;
