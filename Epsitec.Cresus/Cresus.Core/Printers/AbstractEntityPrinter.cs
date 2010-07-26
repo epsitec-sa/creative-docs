@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void PrintCurrentPage(IPaintPort port)
 		{
-			if (this.HasDocumentOption ("Spec"))
+			if (this.HasDocumentOption ("Generic.Spec"))
 			{
 				this.PaintSpecimen(port);
 			}
@@ -188,9 +188,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected static void DocumentTypeAddStyles(List<DocumentOption> options)
+		protected static void DocumentTypeAddInvoice(List<DocumentOption> options)
 		{
-			//	Ajoute les options d'impression liées aux BV.
+			//	Ajoute les options d'impression liées aux factures.
+			options.Add (new DocumentOption ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
+
 			options.Add (new DocumentOption ( /**                   **/  "Aspect de la liste des articles :"));
 			options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
 			options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
@@ -215,15 +217,21 @@ namespace Epsitec.Cresus.Core.Printers
 		protected static void DocumentTypeAddOrientation(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
-			options.Add (new DocumentOption ( /**                    **/  "Orientation du papier :"));
-			options.Add (new DocumentOption ("Vertical",   "Orientation", "Portrait", true));
-			options.Add (new DocumentOption ("Horizontal", "Orientation", "Paysage"));
+			options.Add (new DocumentOption ( /**                                **/  "Orientation du papier :"));
+			options.Add (new DocumentOption ("Orientation.Vertical",   "Orientation", "Portrait", true));
+			options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
+		}
+
+		protected static void DocumentTypeAddBL(List<DocumentOption> options)
+		{
+			//	Ajoute les options d'impression générales.
+			options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\" avec signature", true));
 		}
 
 		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
 		{
 			//	Ajoute les options d'impression générales.
-			options.Add (new DocumentOption ("Spec", null, "Ajoute la mention SPECIMEN"));
+			options.Add (new DocumentOption ("Generic.Spec", null, "Ajoute la mention SPECIMEN"));
 		}
 
 		protected static void DocumentTypeAddMargin(List<DocumentOption> options)

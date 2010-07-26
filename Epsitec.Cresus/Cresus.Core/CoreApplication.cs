@@ -140,6 +140,65 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		#region Settings
+		public static string GetSettings(string key)
+		{
+			//	Donne le contenu d'un réglage global.
+			if (CoreApplication.settings.ContainsKey (key))
+			{
+				return CoreApplication.settings[key];
+			}
+
+			return null;
+		}
+
+		public static void SetSettings(string key, string value)
+		{
+			//	Modifie un réglage global.
+			CoreApplication.settings[key] = value;
+		}
+
+		public static Dictionary<string, string> ExtractSettings(string startKey)
+		{
+			//	Extrait tous les réaglages d'une catégorie donnée.
+			Dictionary<string, string> dict = new Dictionary<string, string> ();
+
+			foreach (var pair in CoreApplication.settings)
+			{
+				if (pair.Key.StartsWith (startKey))
+				{
+					dict.Add (pair.Key, pair.Value);
+				}
+			}
+
+			return dict;
+		}
+
+		public static void MergeSettings(string startKey, Dictionary<string, string> dict)
+		{
+			//	Met à jour tous les réaglages d'une catégorie donnée.
+			var keys = new List<string> ();
+			foreach (var key in CoreApplication.settings.Keys)
+			{
+				keys.Add (key);
+			}
+
+			foreach (var key in keys)
+			{
+				if (key.StartsWith (startKey))
+				{
+					CoreApplication.settings.Remove (key);
+				}
+			}
+
+			foreach (var pair in dict)
+			{
+				CoreApplication.settings.Add (pair.Key, pair.Value);
+			}
+		}
+		#endregion
+
+
 		internal void CreateUI()
 		{
 			this.CreateUIMainWindow ();
@@ -255,6 +314,8 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		private static Dictionary<string, string>		settings = new Dictionary<string, string> ();
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;

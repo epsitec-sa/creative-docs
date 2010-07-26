@@ -32,51 +32,79 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.confirmationButtons = new List<ConfirmationButton> ();
 			this.optionButtons = new List<AbstractButton> ();
+
+			this.settings = CoreApplication.ExtractSettings (this.SettingsPrefix);
 		}
 
 
 		protected override Window CreateWindow()
 		{
-			Window window = new Window ();
+			this.window = new Window ();
 
-			this.SetupWindow  (window);
-			this.SetupWidgets (window);
-			this.SetupEvents  (window);
+			this.SetupWindow ();
+			this.SetupWidgets ();
+			this.SetupEvents ();
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
 
-			window.AdjustWindowSize ();
+			this.window.AdjustWindowSize ();
 
-			return window;
+			return this.window;
 		}
 
-		private void SetupWindow(Window window)
+		private void SetupWindow()
+		{
+			this.OwnerWindow = this.application.Window;
+			this.window.Icon = this.application.Window.Icon;
+			this.window.Text = "Choix du type de document";
+			this.window.MakeFloatingWindow ();
+
+			bool showOptions = this.GetSettings (this.GetSettingsKey ("ShowOptions")) != "No";
+			bool showPreview = this.GetSettings (this.GetSettingsKey ("ShowPreview")) != "No";
+
+			this.UpdateWindowSize (showOptions, showPreview);
+		}
+
+		private void UpdateWindowSize(bool showOptions, bool showPreview)
 		{
 			double width = 300;
 			double height = (int) (width*297/210);  // place une une page A4 verticale
 
-			this.OwnerWindow = this.application.Window;
-			window.Icon = this.application.Window.Icon;
-			window.Text = "Choix du type de document";
-			window.ClientSize = new Size (10+(width+5)*3+10, 10+height+40);
-			window.MakeFloatingWindow ();
+			int columns = 1;
+
+			if (showOptions)
+			{
+				columns++;
+			}
+
+			if (showPreview)
+			{
+				columns++;
+			}
+
+			this.window.ClientSize = new Size (10 + (10+width)*columns + 10, 10 + height + 40);
+			this.window.AdjustWindowSize ();
 		}
 
-		private void SetupWidgets(Window window)
+		private void SetupWidgets()
 		{
 			var frame = new FrameBox
 			{
-				Parent = window.Root,
+				Parent = this.window.Root,
 				Anchor = AnchorStyles.All,
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
 				Margins = new Margins (10, 10, 10, 40),
 			};
 
-			var left = new FrameBox
+			//	Crée les 3 panneaux côte-à-côte.
+			bool showOptions = this.GetSettings (this.GetSettingsKey ("ShowOptions")) != "No";
+			bool showPreview = this.GetSettings (this.GetSettingsKey ("ShowPreview")) != "No";
+
+			var leftFrame = new FrameBox
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 5, 0, 0),
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
 			this.optionsFrame = new FrameBox
@@ -85,26 +113,31 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DrawFullFrame = true,
 				DrawFrameState = FrameState.All,
 				DrawFrameWidth = 1,
+				Visibility = showOptions,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 5, 0, 0),
+				Margins = new Margins (10, 0, 0, 0),
 				Padding = new Margins (10),
 			};
 
-			this.preview = new Widgets.PreviewEntity
+			this.previewFrame = new Widgets.PreviewEntity
 			{
 				Parent = frame,
+				Visibility = showPreview,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 0),
+				Margins = new Margins (10, 0, 0, 0),
 			};
 
+			//	Rempli le panneau de gauche.
 			this.confirmationButtons.Clear ();
 			int tabIndex = 0;
+
+			this.entityPrinter.DocumentTypeSelected = this.GetSettings (this.GetSettingsKey ("SelectedType"));
 
 			foreach (var documentType in this.entityPrinter.DocumentTypes)
 			{
 				var button = new ConfirmationButton
 				{
-					Parent = left,
+					Parent = leftFrame,
 					Name = documentType.Name,
 					Text = ConfirmationButton.FormatContent (documentType.ShortDescription, documentType.LongDescription),
 					PreferredHeight = 52,
@@ -115,6 +148,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				button.Clicked += delegate
 				{
 					this.entityPrinter.DocumentTypeSelected = button.Name;
+					this.SetSettings (this.GetSettingsKey ("SelectedType"), this.entityPrinter.DocumentTypeSelected);
 					this.UpdateWidgets ();
 					this.UpdatePreview ();
 				};
@@ -122,12 +156,33 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.confirmationButtons.Add (button);
 			}
 
+			//	Rempli le pied de page.
 			var footer = new FrameBox
 			{
-				Parent = window.Root,
+				Parent = this.window.Root,
 				PreferredHeight = 20,
 				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
 				Margins = new Margins (10, 10, 0, 10),
+			};
+
+			this.showOptionsCheckButton = new CheckButton ()
+			{
+				Parent = footer,
+				Text = "Montrer les options",
+				PreferredWidth = 130,
+				ActiveState = showOptions ? ActiveState.Yes : ActiveState.No,
+				Dock = DockStyle.Left,
+				TabIndex = 3,
+			};
+
+			this.previewCheckButton = new CheckButton ()
+			{
+				Parent = footer,
+				Text = "Montrer l'aperçu",
+				PreferredWidth = 110,
+				ActiveState = showPreview ? ActiveState.Yes : ActiveState.No,
+				Dock = DockStyle.Left,
+				TabIndex = 4,
 			};
 
 			this.cancelButton = new Button ()
@@ -136,7 +191,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Text = "Annuler",
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
-				TabIndex = 1,
+				TabIndex = 2,
 			};
 
 			this.acceptButton = new Button ()
@@ -155,12 +210,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 20, 0, 0),
 			};
+
+			this.UpdateWidgets ();
+			this.UpdatePreview ();
 		}
 
-		private void SetupEvents(Window window)
+		private void SetupEvents()
 		{
+			this.showOptionsCheckButton.ActiveStateChanged += delegate
+			{
+				this.optionsFrame.Visibility = this.showOptionsCheckButton.ActiveState == ActiveState.Yes;
+				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
+				this.SetSettings (this.GetSettingsKey ("ShowOptions"), this.optionsFrame.Visibility ? "Yes" : "No");
+			};
+
+			this.previewCheckButton.ActiveStateChanged += delegate
+			{
+				this.previewFrame.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
+				this.pagesInfo.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
+				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
+				this.SetSettings (this.GetSettingsKey ("ShowPreview"), this.previewFrame.Visibility ? "Yes" : "No");
+			};
+
 			this.acceptButton.Clicked += delegate
 			{
+				CoreApplication.MergeSettings (this.SettingsPrefix, this.settings);
+
 				this.Result = DialogResult.Accept;
 				this.CloseDialog ();
 			};
@@ -256,12 +331,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 					{
 						if (string.IsNullOrEmpty (option.RadioName))
 						{
+							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
+
+							string settings = this.GetSettings (this.GetSettingsKey (option.Name));
+							if (!string.IsNullOrEmpty (settings))
+							{
+								if (settings == "No")
+								{
+									state = ActiveState.No;
+								}
+
+								if (settings == "Yes")
+								{
+									state = ActiveState.Yes;
+								}
+							}
+
 							var check = new CheckButton
 							{
 								Parent = this.optionsFrame,
 								Name = option.Name,
 								Text = option.Description,
-								ActiveState = option.DefautState ? ActiveState.Yes : ActiveState.No,
+								ActiveState = state,
 								Dock = DockStyle.Top,
 								AutoToggle = false,
 								TabIndex = ++tabIndex,
@@ -272,11 +363,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 								if (check.ActiveState == ActiveState.No)
 								{
 									check.ActiveState = ActiveState.Yes;
+									this.SetSettings (this.GetSettingsKey (check.Name), "Yes");
 
 								}
 								else
 								{
 									check.ActiveState = ActiveState.No;
+									this.SetSettings (this.GetSettingsKey (check.Name), "No");
 								}
 
 								this.UpdateSelectedOptions ();
@@ -287,13 +380,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 						}
 						else
 						{
+							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
+
+							string settings = this.GetSettings (this.GetSettingsKey (option.RadioName));
+							if (!string.IsNullOrEmpty (settings))
+							{
+								state = (settings == option.Name) ? ActiveState.Yes : ActiveState.No;
+							}
+
 							var radio = new RadioButton
 							{
 								Parent = this.optionsFrame,
 								Name = option.Name,
 								Group = option.RadioName,
 								Text = option.Description,
-								ActiveState = option.DefautState ? ActiveState.Yes : ActiveState.No,
+								ActiveState = state,
 								Dock = DockStyle.Top,
 								AutoToggle = false,
 								TabIndex = ++tabIndex,
@@ -301,6 +402,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 							radio.Clicked += delegate
 							{
+								this.SetSettings (this.GetSettingsKey (radio.Group), radio.Name);
 								this.SetRadio (radio.Name);
 								this.UpdatePreview ();
 							};
@@ -364,8 +466,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (!string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected))
 			{
 				this.entityPrinter.Clear ();
-				this.preview.BuildSections (this.entityPrinter);
-				this.preview.Invalidate ();  // pour forcer le dessin
+				this.previewFrame.BuildSections (this.entityPrinter);
+				this.previewFrame.Invalidate ();  // pour forcer le dessin
 
 				this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
 			}
@@ -399,17 +501,62 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly CoreApplication application;
-		private readonly IEnumerable<AbstractEntity> entities;
-		private readonly Printers.AbstractEntityPrinter entityPrinter;
-		private readonly bool isPreview;
+		private string GetSettings(string key)
+		{
+			if (this.settings.ContainsKey (key))
+			{
+				return this.settings[key];
+			}
 
-		private List<ConfirmationButton> confirmationButtons;
-		private List<AbstractButton> optionButtons;
-		private FrameBox optionsFrame;
-		private Widgets.PreviewEntity preview;
-		private StaticText pagesInfo;
-		private Button acceptButton;
-		private Button cancelButton;
+			return null;
+		}
+
+		private void SetSettings(string key, string value)
+		{
+			this.settings[key] = value;
+		}
+
+		private string GetSettingsKey(string key)
+		{
+			return string.Concat (this.SettingsPrefix, ".", key);
+		}
+
+		private string SettingsPrefix
+		{
+			get
+			{
+				if (this.entities != null && this.entities.Count () != 0)
+				{
+					var entity = this.entities.First ();
+					var type = entity.GetType ();
+					var names = type.ToString ().Split ('.');
+					var name = names[names.Length-1];
+
+					return string.Concat ("DocumentTypeDialog.", name);
+				}
+				else
+				{
+					return "DocumentTypeDialog";
+				}
+			}
+		}
+
+
+		private readonly CoreApplication				application;
+		private readonly IEnumerable<AbstractEntity>	entities;
+		private readonly Printers.AbstractEntityPrinter	entityPrinter;
+		private readonly bool							isPreview;
+
+		private Window									window;
+		private List<ConfirmationButton>				confirmationButtons;
+		private List<AbstractButton>					optionButtons;
+		private FrameBox								optionsFrame;
+		private Widgets.PreviewEntity					previewFrame;
+		private CheckButton								showOptionsCheckButton;
+		private CheckButton								previewCheckButton;
+		private StaticText								pagesInfo;
+		private Button									acceptButton;
+		private Button									cancelButton;
+		private Dictionary<string, string>				settings;
 	}
 }
