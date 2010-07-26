@@ -68,11 +68,11 @@ namespace Epsitec.Cresus.Graph
         /// <summary>
         /// Restoring the options from an XML fragment
         /// </summary>
-        /// <param name="xml">XML fragment to use</param>
-        public void RestoreSettings(XElement xml)
+        /// <param name="options">XML fragment to use</param>
+        public void RestoreOptions(XElement options)
         {
-            ShowFixedCaptions = xml.Element ("ShowFixedCaptions").Value == "true";
-            ShowFloatingCaptions = xml.Element ("ShowFloatingCaptions").Value == "true";
+            ShowFixedCaptions = options.Element ("ShowFixedCaptions").Value == "true";
+            ShowFloatingCaptions = options.Element ("ShowFloatingCaptions").Value == "true";
         }
 
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFixedCaptionsChanged;

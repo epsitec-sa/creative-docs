@@ -1,12 +1,11 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas SCHMID, Maintainer: Pierre ARNAUD, Jonas SCHMID
 
-using Epsitec.Cresus.Graph.Widgets;
-using Epsitec.Common.Graph.Widgets;
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.UI;
-using System.Xml.Linq;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Graph.Widgets;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
