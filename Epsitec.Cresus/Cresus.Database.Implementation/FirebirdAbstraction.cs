@@ -490,6 +490,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			return new FbDataAdapter (fbCommand);
 		}
 		
+		// TODO The options given to the BeginTransaction(...) method are wrong and cause a deadlock
+		// when more than one DataContext tries to write in the database. It should be something like
+		// Concurrency | Protected | Wait | Read and Concurrency | Protected | Wait | Write, but I
+		// couldn't manage to make it run correctly.
+		// Marc
+
+
 		public System.Data.IDbTransaction BeginReadOnlyTransaction()
 		{
 			this.EnsureConnection ();

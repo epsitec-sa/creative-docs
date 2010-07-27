@@ -46,49 +46,39 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		public void ConcurrencySequenceAllTest()
 		{
-			int nbThreads = 2;
-			int nbInsertions = 250;
-
-			this.InsertData (nbThreads, nbInsertions, l => this.ThreadActionSequence(l));
-			this.CheckData (nbThreads, nbInsertions, l => this.ThreadActionSequence (l));
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence(l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
 		}
 
 
 		[TestMethod]
 		public void ConcurrencyMixedWriteSequenceReadTest()
 		{
-			int nbThreads = 2;
-			int nbInsertions = 250;
-
-			this.InsertData (nbThreads, nbInsertions, l => this.ThreadActionMixed (l));
-			this.CheckData (nbThreads, nbInsertions, l => this.ThreadActionSequence (l));
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
 		}
 
 
 		[TestMethod]
 		public void ConcurrencySequenceWriteMixedReadTest()
 		{
-			int nbThreads = 2;
-			int nbInsertions = 250;
-
-			this.InsertData (nbThreads, nbInsertions, l => this.ThreadActionSequence (l));
-			this.CheckData (nbThreads, nbInsertions, l => this.ThreadActionMixed (l));
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
 		}
 
 
 		[TestMethod]
 		public void ConcurrencyMixedAllTest()
 		{
-			int nbThreads = 2;
-			int nbInsertions = 250;
-
-			this.InsertData (nbThreads, nbInsertions, l => this.ThreadActionMixed (l));
-			this.CheckData (nbThreads, nbInsertions, l => this.ThreadActionMixed (l));
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
 		}
 
 
 		private void InsertData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
+			this.errorMessages = new List<string> ();
+			
 			List<Thread> threads = new List<Thread> ();
 
 			for (int i = 0; i < nbThreads; i++)
@@ -99,11 +89,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 
 			threadFunction (threads);
+
+			this.FinalizeTest ();
 		}
 
 
 		private void CheckData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
+			this.errorMessages = new List<string> ();
+
 			List<Thread> threads = new List<Thread> ();
 
 			for (int i = 0; i < nbThreads; i++)
@@ -116,6 +110,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			threads.Add (new Thread (() => this.CheckWholeData (nbThreads, nbInsertions)));
 
 			threadFunction (threads);
+
+			this.FinalizeTest ();
 		}
 
 
@@ -162,19 +158,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadInsertionLoop(DataContext dataContext, int startIndex, int nbInsertions)
 		{
-			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			try
 			{
-				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-				person.Firstname = "FirstName" + i;
-
-				try
+				for (int i = startIndex; i < startIndex + nbInsertions; i++)
 				{
+					NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+					person.Firstname = "FirstName" + i;
+
 					dataContext.SaveChanges ();
 				}
-				catch (System.Exception e)
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
 				{
-					Assert.Fail ("Exception has been thrown: " + e.Message + "\n\n" + e.StackTrace);
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
 				}
 			}
 		}
@@ -199,25 +198,41 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadCheckLoop(int nbInsertions, int startIndex, DataContext dataContext)
 		{
-			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			try
 			{
-				NaturalPersonEntity example = new NaturalPersonEntity ()
+				for (int i = startIndex; i < startIndex + nbInsertions; i++)
 				{
-					Firstname = "FirstName" + i,
-				};
+					NaturalPersonEntity example = new NaturalPersonEntity ()
+					{
+						Firstname = "FirstName" + i,
+					};
 
-				List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
-
-				try
-				{
+					List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
+					
 					persons.AddRange (dataContext.GetByExample (example));
-				}
-				catch (System.Exception e)
-				{
-					Assert.Fail ("Exception has been thrown: " + e.Message + "\n\n" + e.StackTrace);
-				}
 
-				Assert.IsTrue (persons.Count == 1);
+					if (persons.Count == 0)
+					{
+						lock (this.errorMessages)
+						{
+							this.errorMessages.Add ("Insertion " + i + "not found");
+						}
+					}
+					else if (persons.Count > 1)
+					{
+						lock (this.errorMessages)
+						{
+							this.errorMessages.Add ("Duplicate insertion " + i);
+						}
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+				}
 			}
 		}
 
@@ -233,23 +248,50 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DataContext dataContext = new DataContext (dbInfrastructure))
 				{
-					List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
-					
 					try
 					{
+						List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
+											
 						persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
+
+						if (persons.Count != nbTotalInsertions)
+						{
+							lock (this.errorMessages)
+							{
+								this.errorMessages.Add ("Total number of insertions is " + persons.Count + " but " + nbTotalInsertions + " is expected");
+							}
+						}
 					}
 					catch (System.Exception e)
 					{
-						Assert.Fail ("Exception has been thrown: " + e.Message + "\n\n" + e.StackTrace);
+						lock (this.errorMessages)
+						{
+							this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+						}
 					}
-
-					Assert.IsTrue (persons.Count == nbTotalInsertions);
 				}
 			}
 		}
-                    
 
+
+		private void FinalizeTest()
+		{
+			if (errorMessages.Count > 0)
+			{
+				string message = "\n\n" + string.Join ("\n\n", this.errorMessages);
+
+				Assert.Fail (message);
+			}
+		}
+
+
+		private List<string> errorMessages;
+
+
+		private readonly int nbThreads = 2;
+
+
+		private readonly int nbInsertions = 250;
 	}
 
 
