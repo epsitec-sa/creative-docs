@@ -1,13 +1,12 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Graph;
-using Epsitec.Common.Graph.Data;
-using Epsitec.Common.Support.Extensions;
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Graph.Renderers
@@ -132,6 +131,24 @@ namespace Epsitec.Common.Graph.Renderers
 			get;
 			set;
 		}
+
+        public IChartRendererOptions            RendererOptions
+        {
+            get
+            {
+
+                if (this.rendererOptions == null)
+                {
+                    this.rendererOptions = this.GetRendererOptions();
+                }
+
+                return rendererOptions;
+            }
+            set
+            {
+                this.rendererOptions = value;
+            }
+        }
 
 		
 		protected int							AdditionalRenderingPasses
@@ -366,7 +383,7 @@ namespace Epsitec.Common.Graph.Renderers
         {
             System.Diagnostics.Debug.WriteLine(e.Message.ToString ());
         }
-        
+
         protected abstract System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex);
 		
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
@@ -381,6 +398,15 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			return this.seriesValueLabelsList.IndexOf (label);
 		}
+
+        /// <summary>
+        /// Returns a class that can handle Renderer options.
+        /// </summary>
+        /// <returns>Renderer specific class</returns>
+        internal virtual IChartRendererOptions GetRendererOptions ()
+        {
+            return new DummyRendererOptionsClass ();
+        }
 
 		private Data.ChartSeries GetPreprocessedSeries(Data.ChartSeries series)
 		{
@@ -427,11 +453,41 @@ namespace Epsitec.Common.Graph.Renderers
 				select new Data.ChartValue (key, value));
 		}
 
-        protected int                            activeIndex = -1;
+        /// <summary>
+        /// Interface defining how Renderer options are saved and restored.
+        /// If a renderer has any options, it has to declare method <see cref="GetRendererOptions"/>
+        /// in order to be able to save them.
+        /// </summary>
+        public interface IChartRendererOptions
+        {
+            /// <summary>
+            /// Save the renderer options into a xml fragment.
+            /// </summary>
+            /// <param name="options">The xml fragment to save into</param>
+            void SaveRendererOptions(XElement options);
+
+            /// <summary>
+            /// Restore the renderer options from a xml fragment.
+            /// </summary>
+            /// <param name="options">The xml fragment from where to restore the options.</param>
+            void RestoreRendererOptions(XElement options);
+        }
+
+        /// <summary>
+        /// "Dummy" class allowing any Renderer not to define an empty class if it has no options.
+        /// </summary>
+        public class DummyRendererOptionsClass : IChartRendererOptions {
+            public void SaveRendererOptions(XElement options) {}
+            public void RestoreRendererOptions(XElement options) {}
+        }
+
+
+        protected int                           activeIndex = -1;
 
 		private double							minValue;
 		private double							maxValue;
         private Rectangle                       bounds;
+        private IChartRendererOptions           rendererOptions;
 		
 		private readonly HashSet<string>		seriesValueLabelsSet;
 		private readonly List<string>			seriesValueLabelsList;
