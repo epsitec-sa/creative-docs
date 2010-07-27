@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Widgets;
@@ -14,9 +15,8 @@ namespace Epsitec.Common.Graph.Renderers
 		public PieChartRenderer()
 		{
 			this.AdditionalRenderingPasses = 1;
-            outParts = new List<int>();
+            this.PieRendererOptions.OutParts = new List<int> ();
 		}
-
 		
 		public override void Collect(ChartSeries series)
 		{
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Graph.Renderers
                 var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
 
                 // Cette partie doit être décalée
-                if (seriesIndex == this.activeIndex || this.outParts.Contains(seriesIndex))
+                if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
                 {
                     txtCenter.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
                     txtCenter.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
@@ -156,16 +156,20 @@ namespace Epsitec.Common.Graph.Renderers
             if (this.activeIndex >= 0)
             {
                 // Tries to delete to index from the list, if it is already in it
-                if (!this.outParts.Remove (this.activeIndex))
+                if (!this.PieRendererOptions.OutParts.Remove (this.activeIndex))
                 {
                     // Did not succeed, try then to add it to the list
-                    this.outParts.Add (this.activeIndex);
+                    this.PieRendererOptions.OutParts.Add (this.activeIndex);
                 }
 
                 // It acts like a toggle button
             }
         }
 
+        internal override IChartRendererOptions GetRendererOptions()
+        {
+            return new PieChartRendererOptions();
+        }
 		
 		private void PaintLine(IPaintPort port, Data.ChartSeries series, int seriesIndex)
         {
@@ -257,7 +261,7 @@ namespace Epsitec.Common.Graph.Renderers
 					continue;
 				}
 
-                if (seriesIndex == this.activeIndex || this.outParts.Contains(seriesIndex))
+                if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
                 {
                     var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
                     center.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
@@ -412,8 +416,54 @@ namespace Epsitec.Common.Graph.Renderers
 			return bestRowCount;
 		}
 
+        /// <summary>
+        /// Class handling specific options of the <see cref="PieChartRenderer"/>.
+        /// </summary>
+        private class PieChartRendererOptions : IChartRendererOptions {
+
+            /// <summary>
+            /// Parts of the pie chart that have to be "out".
+            /// It is a list of indexes. 
+            /// </summary>
+            public List<int> OutParts { get; set; }
+
+            public void SaveRendererOptions(XElement options)
+            {
+                var outPartsElems = new XElement ("OutParts");
+                this.OutParts.ForEach (x => outPartsElems.Add (new XElement ("part", x)));
+                options.Add (outPartsElems);
+            }
+
+            public void RestoreRendererOptions(XElement options)
+            {
+                var outPartsElems = options.Element ("OutParts");
+
+                if (outPartsElems != null)
+                {
+                    this.OutParts.Clear ();
+
+                    var elems = outPartsElems.Elements ("part");
+
+                    foreach(string e in elems) {
+                        this.OutParts.Add (System.Int32.Parse(e));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Allows the current class to call the options object without having to cast it
+        /// to <see cref="PieChartRendererOptions"/> each time. 
+        /// </summary>
+        private PieChartRendererOptions PieRendererOptions
+        {
+            get
+            {
+                return (PieChartRendererOptions) this.RendererOptions;
+            }
+        }
+
         private List<SeriesPie> pies;
-        private List<int> outParts;
 
         private const int angleToHide = 6;
         private double radiusProportion = 0.15;

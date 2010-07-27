@@ -85,6 +85,12 @@ namespace Epsitec.Cresus.Graph
             set;
         }
 
+        public AbstractRenderer.IChartRendererOptions RendererOptions
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Gets or sets the window associated with this snapshot. This information will not be
 		/// persisted by the <see cref="SaveSettings"/> and <see cref="RestoreSettings"/> methods.
@@ -148,6 +154,13 @@ namespace Epsitec.Cresus.Graph
                 xml.Add(options);
             }
 
+            if (this.RendererOptions != null)
+            {
+                var rendererOptions = new XElement("rendererOptions");
+                this.RendererOptions.SaveRendererOptions(rendererOptions);
+                xml.Add(rendererOptions);
+            }
+
             return xml;
         }
 
@@ -163,6 +176,7 @@ namespace Epsitec.Cresus.Graph
             var xmlItems = xml.Element("items");
             var xmlColumnLabels = xml.Element("columnLabels");
             var xmlOptions = xml.Element("options");
+            var xmlRendererOptions = xml.Element("rendererOptions");
 
             if (xmlItems != null)
             {
@@ -184,9 +198,15 @@ namespace Epsitec.Cresus.Graph
 
             this.ChartOptions = new ChartOptions();
             if (xmlOptions != null)
-            {
-                
+            {   
                 this.ChartOptions.RestoreOptions(xmlOptions);
+            }
+
+            if (xmlRendererOptions != null)
+            {
+                // We have to backup the xml fragment.
+                // We cannot restore it now since we don't know which renderer will be used.
+                this.xmlRendererOptions = xmlRendererOptions;
             }
         }
 
@@ -233,7 +253,26 @@ namespace Epsitec.Cresus.Graph
 			renderer.CollectRange (series);
 			renderer.UpdateCaptions (series);
 			renderer.AlwaysIncludeZero = true;
-			
+
+            // The renderer options are not available yet
+            if (this.RendererOptions == null)
+            {
+                // Get them
+                this.RendererOptions = renderer.RendererOptions;
+
+                // Now we can restore them with the right renderer
+                if (this.xmlRendererOptions != null)
+                {
+                    this.RendererOptions.RestoreRendererOptions (this.xmlRendererOptions);
+                    this.xmlRendererOptions = null;
+                }
+            }
+            else
+            {
+                // Give the options back to the renderer
+                renderer.RendererOptions = this.RendererOptions;
+            }
+
 
 			return renderer;
 		}
@@ -259,8 +298,14 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+        // Called when creating a new snapshot from a document
+        public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType)
+        {
+            return FromDocument(document, graphType, new ChartOptions (), null);
+        }
 
-        public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType, ChartOptions chartOptions)
+        // Called when options are available
+        public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType, ChartOptions chartOptions, AbstractRenderer.IChartRendererOptions rendererOptions)
         {
             var snapshot = new GraphChartSnapshot();
 
@@ -269,6 +314,7 @@ namespace Epsitec.Cresus.Graph
             snapshot.columns.AddRange(GraphChartSnapshot.CreateChartSeriesColumnLabels(document));
             snapshot.GraphType = graphType;
             snapshot.ChartOptions = chartOptions;
+            snapshot.RendererOptions = rendererOptions;
 
             return snapshot;
         }
@@ -328,5 +374,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<ChartSeries> seriesItems;
 		private readonly List<string> columns;
 		private Weak<Window> window;
+        private XElement xmlRendererOptions;
 	}
 }

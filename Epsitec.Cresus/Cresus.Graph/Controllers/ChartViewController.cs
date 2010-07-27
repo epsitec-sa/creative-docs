@@ -14,6 +14,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Graph.Controllers;
 using Epsitec.Cresus.Graph.Widgets;
+using Epsitec.Common.Graph.Renderers;
 
 [assembly: DependencyClass (typeof (ChartViewController))]
 
@@ -440,7 +441,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			snapshotButton.Clicked +=
 				(sender, e) =>
 				{
-                    var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType, this.chartOptionsController.ChartOptions);
+                    var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType, this.chartOptionsController.ChartOptions, this.rendererOptions);
 					var newWindow = this.workspace.CreateChartViewWindow (snapshot);
 					var oldWindow = this.container.Window;
 					var placement = oldWindow.WindowPlacement;
@@ -486,7 +487,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
-			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType, new ChartOptions ());
+			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType);
 			var renderer = snapshot.CreateRenderer (this.IsStandalone);
 
 			if (renderer == null)
@@ -502,6 +503,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
 				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
                 this.floatingCaptions.Renderer = renderer;
+                this.rendererOptions = snapshot.RendererOptions;
 			}
 
 			this.chartView.Invalidate ();
@@ -597,6 +599,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private static Epsitec.Common.Dialogs.PrintDialog printDialog;
 
         private ChartOptionsController          chartOptionsController;
+        private AbstractRenderer.IChartRendererOptions rendererOptions;
         private SeriesDetectionController       seriesDetection;
         private CommandController				localController;
 		private readonly GraphApplication		application;
