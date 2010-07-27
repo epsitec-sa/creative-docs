@@ -102,8 +102,6 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 						dataContext.SaveChanges ();
 
 						Logger.LogToConsole ("Created person " + i);
-
-						System.Threading.Thread.Sleep (10);
 					}
 				}
 			}
@@ -141,8 +139,6 @@ namespace Epsitec.Cresus.PerformanceTests.Concurrency
 						{
 							Logger.LogToConsole ("Person " + i + " found");
 						}
-
-						System.Threading.Thread.Sleep (10);
 					}
 				}
 			}
