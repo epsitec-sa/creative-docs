@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.Core.Printers
 			this.bands = new List<BandContainer> ();
 		}
 
+		public int Count
+		{
+			get
+			{
+				return this.bands.Count;
+			}
+		}
+
 		/// <summary>
 		/// Ajoute un objet AbstractBand dans la page.
 		/// </summary>

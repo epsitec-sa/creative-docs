@@ -110,6 +110,8 @@
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionBillingDetailsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Controllers\SelectionController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Common.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryPaymentModeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleDefinitionViewController.cs" />
@@ -177,6 +180,8 @@
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
     <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
+    <Compile Include="Data\CurrencyRepository.cs" />
+    <Compile Include="Data\PaymentModeRepository.cs" />
     <Compile Include="Data\UnitOfMeasureRepository.cs" />
     <Compile Include="Data\InvoiceDocumentRepository.cs" />
     <Compile Include="Dialogs\IAttachedDialog.cs" />

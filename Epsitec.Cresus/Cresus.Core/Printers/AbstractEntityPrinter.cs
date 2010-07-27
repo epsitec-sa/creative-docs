@@ -188,6 +188,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		#region Document types
 		protected static void DocumentTypeAddInvoice(List<DocumentOption> options, bool isBL)
 		{
 			//	Ajoute les options d'impression liées aux factures.
@@ -249,7 +250,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Ajoute une marge verticale.
 			options.Add (new DocumentOption (20));
 		}
-
+		#endregion
 
 
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)

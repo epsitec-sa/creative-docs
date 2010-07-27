@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static FormattedText GetSummary(InvoiceDocumentEntity x)
 		{
 			string date = InvoiceDocumentHelper.GetDate (x);
-			string total = Misc.PriceToString (InvoiceDocumentHelper.GetAmontDue (x));
+			string total = Misc.PriceToString (InvoiceDocumentHelper.GetFixedPrice (x));
 
 			var builder = new System.Text.StringBuilder ();
 
@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
+#if false
 		public static string GetConditions(InvoiceDocumentEntity x)
 		{
 			if (x.BillingDetails.Count > 0)
@@ -147,8 +148,42 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			x.BillingDetails[0].AmountDue.Amount = value;
 		}
+#endif
 
 
+		public static decimal GetFixedPrice(InvoiceDocumentEntity x)
+		{
+			if (x.Lines.Count > 0)
+			{
+				var lastLine = x.Lines.Last ();
+
+				if (lastLine is PriceDocumentItemEntity)
+				{
+					var price = lastLine as PriceDocumentItemEntity;
+
+					if (price.FixedPriceAfterTax.HasValue)
+					{
+						return Misc.PriceRound (price.FixedPriceAfterTax.Value);
+					}
+				}
+			}
+
+			return 0;
+		}
+
+		public static void SetFixedPrice(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
+		{
+			if (x.Lines.Count == 0 || !(x.Lines.Last () is PriceDocumentItemEntity))
+			{
+				var newLine = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+				x.Lines.Add (newLine);
+			}
+
+			var price = x.Lines.Last () as PriceDocumentItemEntity;
+			price.FixedPriceAfterTax = value;
+		}
+
+	
 		public static string GetTitle(InvoiceDocumentEntity x, bool isBL)
 		{
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
@@ -200,7 +235,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 
-			SetAmontDue (x, dataContext, amontDue);
+			SetFixedPrice (x, dataContext, amontDue);
 		}
 
 

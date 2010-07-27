@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var data = containerController.DataItems;
 
 			this.CreateUILines (data);
+			this.CreateUIBillings (data);
 			this.CreateUIComments (data);
 
 			containerController.GenerateTiles ();
@@ -85,10 +86,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.IdC, x => this.IdC = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
-			builder.CreateTextFieldMulti (tile,  36, "Concerne",             Marshaler.Create (() => this.Concerne, x => this.Concerne = x));
 
-			FrameBox group = builder.CreateGroup (tile, "Montant dû");
-			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.AmontDue, x => this.AmontDue = x));
+			FrameBox group = builder.CreateGroup (tile, "Total arrêté");
+			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.FixedPrice, x => this.FixedPrice = x));
 			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "Recalculer la facture");
 
 			button.Clicked += delegate
@@ -118,6 +118,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+		}
+
+		private void CreateUIBillings(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup          = true,
+					Name		       = "BillingDetails",
+					IconUri		       = "Data.BillingDetails",
+					Title		       = UIBuilder.FormatText ("Payements"),
+					CompactTitle       = UIBuilder.FormatText ("Payements"),
+					Text		       = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller)
+				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (x)))
+				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (x)));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
 
 		private void CreateUIComments(SummaryDataItems data)
@@ -189,6 +209,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private static string GetBillingDetailsSummary(BillingDetailsEntity billingDetailsEntity)
+		{
+			string amount = Misc.PriceToString (billingDetailsEntity.AmountDue.Amount);
+			string title = Misc.FirstLine (billingDetailsEntity.Title);
+
+			return string.Concat (amount, " ", title);
+		}
+
+
 		private string IdA
 		{
 			get
@@ -237,28 +266,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private string Concerne
+		private decimal FixedPrice
 		{
 			get
 			{
-				return InvoiceDocumentHelper.GetConcerne (this.Entity);
+				return InvoiceDocumentHelper.GetFixedPrice (this.Entity);
 			}
 			set
 			{
-				InvoiceDocumentHelper.SetConcerne (this.Entity, this.DataContext, value);
-				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
-			}
-		}
-
-		private decimal AmontDue
-		{
-			get
-			{
-				return InvoiceDocumentHelper.GetAmontDue (this.Entity);
-			}
-			set
-			{
-				InvoiceDocumentHelper.SetAmontDue (this.Entity, this.DataContext, value);
+				InvoiceDocumentHelper.SetFixedPrice (this.Entity, this.DataContext, value);
 				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
 			}
 		}
