@@ -1,0 +1,92 @@
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.DataLayer;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+{
+	public class EditionBillingDetailsViewController : EditionViewController<Entities.BillingDetailsEntity>
+	{
+		public EditionBillingDetailsViewController(string name, Entities.BillingDetailsEntity entity)
+			: base (name, entity)
+		{
+		}
+
+		protected override void CreateUI(TileContainer container)
+		{
+			using (var builder = new UIBuilder (container, this))
+			{
+				builder.CreateHeaderEditorTile ();
+				builder.CreateEditionTitleTile ("Data.BillingDetails", "Payement");
+
+				this.CreateUIMain (builder);
+				this.CreateUIPaymentMode (builder);
+
+				builder.CreateFooterEditorTile ();
+			}
+		}
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			if (string.IsNullOrEmpty (this.Entity.Title))
+			{
+				return EditionStatus.Empty;
+			}
+
+			return EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
+		}
+
+
+		private void CreateUIMain(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 100, "Date", Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
+			builder.CreateTextFieldMulti (tile, 36, "Texte <i>Concerne</i> sur la facture", Marshaler.Create (() => this.Entity.Title, x => this.Entity.Title = x));
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile, 100, "Numéro de compte BVR du client", Marshaler.Create (() => this.Entity.EsrCustomerNumber, x => this.Entity.EsrCustomerNumber = x));
+			builder.CreateTextField (tile, 0, "Numéro de référence BVR à 27 chiffres", Marshaler.Create (() => this.Entity.EsrReferenceNumber, x => this.Entity.EsrReferenceNumber = x));
+			builder.CreateMargin (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile, 80, "Montant à payer", Marshaler.Create (() => this.Entity.AmountDue.Amount, x => this.Entity.AmountDue.Amount = x));
+		}
+
+		private void CreateUIPaymentMode(UIBuilder builder)
+		{
+			builder.CreateAutoCompleteTextField ("Mode de paiement",
+				new SelectionController<PaymentModeEntity>
+				{
+					ValueGetter = () => this.Entity.AmountDue.PaymentMode,
+					ValueSetter = x => this.Entity.AmountDue.PaymentMode = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetPaymentModes (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				});
+		}
+
+		private NewEntityReference CreateNewPaymentMode(DataContext context)
+		{
+			var paymentMode = context.CreateRegisteredEmptyEntity<PaymentModeEntity> ();
+			return paymentMode;
+		}
+	}
+}

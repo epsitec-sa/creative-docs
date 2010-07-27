@@ -97,6 +97,16 @@ namespace Epsitec.Cresus.Core
 			return new ArticleDefinitionRepository (this.DataContext).GetAllArticleDefinitions ();
 		}
 
+		public IEnumerable<PaymentModeEntity> GetPaymentModes()
+		{
+			return new PaymentModeRepository (this.DataContext).GetAllPaymentModes ();
+		}
+
+		public IEnumerable<CurrencyEntity> GetCurrencies()
+		{
+			return new CurrencyRepository (this.DataContext).GetAllCurrencies ();
+		}
+
 		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments()
 		{
 			return new InvoiceDocumentRepository (this.DataContext).GetAllInvoiceDocuments ();
@@ -125,7 +135,10 @@ namespace Epsitec.Cresus.Core
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
 			UnitOfMeasureEntity[] units = this.InsertUnitOfMeasureInDatabase ().ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
-			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, articleDefs).ToArray ();
+			PaymentModeEntity[] paymentDefs = this.InsertPaymentModeInDatabase ().ToArray ();
+			//?CurrencyEntity[] currencyDefs = this.InsertCurrencyInDatabase ().ToArray ();  // TODO: pourquoi cela fait-il planter la base de données ?
+			//?InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs).ToArray ();
+			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, null, articleDefs).ToArray ();
 
 			this.DataContext.SaveChanges ();
 		}
@@ -619,7 +632,76 @@ namespace Epsitec.Cresus.Core
 			yield return articleDef4;
 		}
 
-		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentInDatabase(MailContactEntity billingAddress, ArticleDefinitionEntity[] articleDefs)
+		private IEnumerable<PaymentModeEntity> InsertPaymentModeInDatabase()
+		{
+			var paymentMode1 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode2 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode3 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode4 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode5 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+
+			paymentMode1.Rank = 0;
+			paymentMode1.Code = "BILL10";
+			paymentMode1.Name = "BVR à 10 jours net";
+			paymentMode1.Description = "Facture payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 10 jours net.";
+			paymentMode1.BookAccount = "1010";
+			paymentMode1.StandardPaymentTerm = 10;
+
+			paymentMode2.Rank = 1;
+			paymentMode2.Code = "BILL30";
+			paymentMode2.Name = "BVR à 30 jours net";
+			paymentMode2.Description = "Facture payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
+			paymentMode2.BookAccount = "1010";
+			paymentMode2.StandardPaymentTerm = 30;
+
+			paymentMode3.Rank = 2;
+			paymentMode3.Code = "BILL30.1";
+			paymentMode3.Name = "BVR à 30 jours net, 1ère mensualité";
+			paymentMode3.Description = "Première mensualité payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
+			paymentMode3.BookAccount = "1010";
+			paymentMode3.StandardPaymentTerm = 30;
+
+			paymentMode4.Rank = 3;
+			paymentMode4.Code = "BILL30.2";
+			paymentMode4.Name = "BVR à 30 jours net, 2ème mensualité";
+			paymentMode4.Description = "Deuxième mensualité payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
+			paymentMode4.BookAccount = "1010";
+			paymentMode4.StandardPaymentTerm = 30;
+
+			paymentMode5.Rank = 4;
+			paymentMode5.Code = "PAYED";
+			paymentMode5.Name = "Au comptant";
+			paymentMode5.Description = "Facture payée au comptant.";
+			paymentMode5.BookAccount = "1010";
+
+			yield return paymentMode1;
+			yield return paymentMode2;
+			yield return paymentMode3;
+			yield return paymentMode4;
+			yield return paymentMode5;
+		}
+
+		private IEnumerable<CurrencyEntity> InsertCurrencyInDatabase()
+		{
+			var currency1 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
+			var currency2 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
+			var currency3 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
+
+			currency1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			currency1.ExchangeRate = 1.0M;
+
+			currency2.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Eur;
+			currency2.ExchangeRate = 1.5M;  // au hasard
+
+			currency3.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Usd;
+			currency3.ExchangeRate = 1.2M;  // au hasard
+
+			yield return currency1;
+			yield return currency2;
+			yield return currency3;
+		}
+
+		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs)
 		{
 			var decimalType = DecimalType.Default;
 			decimal vatRate = 0.076M;
@@ -838,19 +920,12 @@ namespace Epsitec.Cresus.Core
 			invoiceA.Lines.Add (lineA4);		//	  Frais de port
 			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1790.00
 
-			var paymentMode = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
-
-			paymentMode.Code = "BILL";
-			paymentMode.Name = "BVR à 30 jours net";
-			paymentMode.Description = "Facture payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
-			paymentMode.BookAccount = "1010";
-			paymentMode.StandardPaymentTerm = 30;
-
 			var paymentA = this.DataContext.CreateEmptyEntity<PaymentDetailEntity> ();
 
 			paymentA.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
-			paymentA.PaymentMode = paymentMode;
+			paymentA.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
 			paymentA.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value;
+			//?paymentA.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA.Date = new Date (2010, 08, 06);
 
 			billingA.Title = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";

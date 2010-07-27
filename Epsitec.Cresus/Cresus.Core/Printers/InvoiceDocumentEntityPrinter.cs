@@ -96,31 +96,45 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeSelected == "BV")
 			{
-				this.BuildHeader ();
-				this.BuildArticles ();
-				this.BuildConditions ();
-				this.BuildPages ();
-				this.BuildReportHeaders ();
-				this.BuildReportFooters ();
-				this.BuildBvs ();
+				foreach (var billingDetails in this.entity.BillingDetails)
+				{
+					int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+					this.BuildHeader (billingDetails);
+					this.BuildArticles ();
+					this.BuildConditions (billingDetails);
+					this.BuildPages (firstPage);
+					this.BuildReportHeaders (firstPage);
+					this.BuildReportFooters (firstPage);
+					this.BuildBvs (billingDetails, firstPage);
+				}
 			}
 
 			if (this.DocumentTypeSelected == "Simple")
 			{
-				this.BuildHeader ();
-				this.BuildArticles ();
-				this.BuildConditions ();
-				this.BuildPages ();
-				this.BuildReportHeaders ();
-				this.BuildReportFooters ();
+				if (this.entity.BillingDetails.Count != 0)
+				{
+					var billingDetails = this.entity.BillingDetails[0];
+
+					int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+					this.BuildHeader (billingDetails);
+					this.BuildArticles ();
+					this.BuildConditions (billingDetails);
+					this.BuildPages (firstPage);
+					this.BuildReportHeaders (firstPage);
+					this.BuildReportFooters (firstPage);
+				}
 			}
 
 			if (this.DocumentTypeSelected == "BL")
 			{
-				this.BuildHeader ();
+				int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+				this.BuildHeader (null);
 				this.BuildArticles ();
 				this.BuildFooterBL ();
-				this.BuildPages ();
+				this.BuildPages (firstPage);
 			}
 		}
 
@@ -132,7 +146,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildHeader()
+		private void BuildHeader(BillingDetailsEntity billingDetails)
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
 			var imageBand = new ImageBand ();
@@ -152,21 +166,24 @@ namespace Epsitec.Cresus.Core.Printers
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.PageSize.Height-57, 80, 25));
 
-			string concerne = InvoiceDocumentHelper.GetConcerne (this.entity);
-			if (!string.IsNullOrEmpty (concerne))
+			if (billingDetails != null)
 			{
-				var concerneBand = new TableBand ();
-				concerneBand.ColumnsCount = 2;
-				concerneBand.RowsCount = 1;
-				concerneBand.PaintFrame = false;
-				concerneBand.Font = font;
-				concerneBand.FontSize = fontSize;
-				concerneBand.CellMargins = new Margins (0);
-				concerneBand.SetRelativeColumWidth (0, 15);
-				concerneBand.SetRelativeColumWidth (1, 80);
-				concerneBand.SetText (0, 0, "Concerne");
-				concerneBand.SetText (1, 0, concerne);
-				this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, this.PageSize.Height-67, 100, 15));
+				string concerne = billingDetails.Title;
+				if (!string.IsNullOrEmpty (concerne))
+				{
+					var concerneBand = new TableBand ();
+					concerneBand.ColumnsCount = 2;
+					concerneBand.RowsCount = 1;
+					concerneBand.PaintFrame = false;
+					concerneBand.Font = font;
+					concerneBand.FontSize = fontSize;
+					concerneBand.CellMargins = new Margins (0);
+					concerneBand.SetRelativeColumWidth (0, 15);
+					concerneBand.SetRelativeColumWidth (1, 80);
+					concerneBand.SetText (0, 0, "Concerne");
+					concerneBand.SetText (1, 0, concerne);
+					this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, this.PageSize.Height-67, 100, 15));
+				}
 			}
 
 			var titleBand = new TextBand ();
@@ -738,7 +755,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildConditions()
+		private void BuildConditions(BillingDetailsEntity billingDetails)
 		{
 			//	Met les conditions à la fin de la facture.
 			if (this.IsBL)
@@ -746,7 +763,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			string conditions = InvoiceDocumentHelper.GetConditions (this.entity);
+			string conditions = billingDetails.AmountDue.PaymentMode.Description;
 
 			if (!string.IsNullOrEmpty (conditions))
 			{
@@ -779,7 +796,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildPages()
+		private void BuildPages(int firstPage)
 		{
 			//	Met les numéros de page.
 			double reportHeight = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight*2;
@@ -787,7 +804,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
-			for (int page = 1; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount; page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -798,7 +815,7 @@ namespace Epsitec.Cresus.Core.Printers
 				leftHeader.FontSize = 4.0;
 
 				var rightHeader = new TextBand ();
-				rightHeader.Text = string.Format ("page {0}", (page+1).ToString ());
+				rightHeader.Text = string.Format ("page {0}", (page-firstPage+1).ToString ());
 				rightHeader.Alignment = ContentAlignment.BottomRight;
 				rightHeader.Font = font;
 				rightHeader.FontSize = fontSize;
@@ -808,15 +825,17 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildReportHeaders()
+		private void BuildReportHeaders(int firstPage)
 		{
 			//	Met un report en haut des pages concernées, avec une répétition de la ligne
 			//	d'en-tête (noms des colonnes).
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = 1; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount; page++)
 			{
-				if (page >= this.tableBounds.Count)
+				int relativePage = page-firstPage;
+
+				if (relativePage >= this.tableBounds.Count)
 				{
 					break;
 				}
@@ -843,7 +862,7 @@ namespace Epsitec.Cresus.Core.Printers
 				table.SetText (this.tableColumns["Desc"].Rank, 1, "Report");
 
 				decimal sumPT, sumTva, sumTot;
-				this.ComputeBottomReports (page-1, out sumPT, out sumTva, out sumTot);
+				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTva, out sumTot);
 				table.SetText (this.tableColumns["PT" ].Rank, 1, Misc.PriceToString (sumPT));
 				table.SetText (this.tableColumns["TVA"].Rank, 1, Misc.PriceToString (sumTva));
 				table.SetText (this.tableColumns["Tot"].Rank, 1, Misc.PriceToString (sumTot));
@@ -851,7 +870,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.InitializeRowAlignment (table, 0);
 				this.InitializeRowAlignment (table, 1);
 
-				var tableBound = this.tableBounds[page];
+				var tableBound = this.tableBounds[relativePage];
 				double h = table.RequiredHeight (width);
 				var bounds = new Rectangle (tableBound.Left, tableBound.Top, width, h);
 
@@ -863,14 +882,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildReportFooters()
+		private void BuildReportFooters(int firstPage)
 		{
 			//	Met un report en bas des pages concernées.
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = 0; page < this.documentContainer.PageCount-1; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount-1; page++)
 			{
-				if (page >= this.tableBounds.Count-1)
+				int relativePage = page-firstPage;
+
+				if (relativePage >= this.tableBounds.Count-1)
 				{
 					//	S'il n'y a pas de tableau dans la page suivante, il est inutile de mettre
 					//	un report au bas de celle-çi.
@@ -896,14 +917,14 @@ namespace Epsitec.Cresus.Core.Printers
 				table.SetText (this.tableColumns["Desc"].Rank, 0, "Reporté");
 
 				decimal sumPT, sumTva, sumTot;
-				this.ComputeBottomReports (page, out sumPT, out sumTva, out sumTot);
+				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
 				table.SetText (this.tableColumns["PT" ].Rank, 0, Misc.PriceToString (sumPT));
 				table.SetText (this.tableColumns["TVA"].Rank, 0, Misc.PriceToString (sumTva));
 				table.SetText (this.tableColumns["Tot"].Rank, 0, Misc.PriceToString (sumTot));
 
 				this.InitializeRowAlignment (table, 0);
 
-				var tableBound = this.tableBounds[page];
+				var tableBound = this.tableBounds[relativePage];
 				double h = table.RequiredHeight (width);
 				var bounds = new Rectangle (tableBound.Left, tableBound.Bottom-h, width, h);
 
@@ -947,12 +968,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildBvs()
+		private void BuildBvs(BillingDetailsEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);
 
-			for (int page = 0; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount; page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -975,14 +996,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
-					BV.NotForUse = false;  // c'est LE vrai BV
-					BV.Price = InvoiceDocumentHelper.GetAmontDue (this.entity);
-
-					if (this.entity.BillingDetails.Count > 0)
-					{
-						BV.EsrCustomerNumber  = this.entity.BillingDetails[0].EsrCustomerNumber;
-						BV.EsrReferenceNumber = this.entity.BillingDetails[0].EsrReferenceNumber;
-					}
+					BV.NotForUse          = false;  // c'est LE vrai BV
+					BV.Price              = billingDetails.AmountDue.Amount;
+					BV.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
+					BV.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
 				}
 				else  // faux BV ?
 				{

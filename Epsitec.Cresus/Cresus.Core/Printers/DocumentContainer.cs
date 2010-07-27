@@ -80,6 +80,19 @@ namespace Epsitec.Cresus.Core.Printers
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
 		}
 
+		/// <summary>
+		/// Si la dernière page actuelle n'est pas vide, crée un nouvelle page vide.
+		/// </summary>
+		public int PrepareEmptyPage()
+		{
+			if (this.pages.Last ().Count > 0)  // dernière page non vide ?
+			{
+				this.AddNewPage ();
+			}
+
+			return this.currentPage;
+		}
+
 
 		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
@@ -118,10 +131,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
-
-					this.currentPage++;
-					this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
+					this.AddNewPage ();
 				}
 
 				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
@@ -150,10 +160,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
 			{
-				this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
-
-				this.currentPage++;
-				this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
+				this.AddNewPage ();
 			}
 
 			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
@@ -215,6 +222,15 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			return true;
+		}
+
+
+		private void AddNewPage()
+		{
+			this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
+
+			this.currentPage++;
+			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
 		}
 
 
