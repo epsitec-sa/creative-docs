@@ -87,6 +87,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 10, 0, 10),
 			};
 
+			this.updateButton = new Button
+			{
+				Parent = this.footer,
+				Text = "Mettre à jour",
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
 			var label = new StaticText
 			{
 				Parent = this.footer,
@@ -95,7 +103,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredWidth = 100,
 				PreferredHeight = 20,
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
+				Margins = new Margins (20, 0, 0, 0),
 			};
 
 			this.pagePrevButton = new GlyphButton
@@ -237,6 +245,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (debugNextButton2_Clicked);
 			}
 
+			this.updateButton.Clicked += delegate
+			{
+				this.Update ();
+			};
+
 			this.printButton.Clicked += delegate
 			{
 				this.CloseDialog ();
@@ -375,6 +388,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText debugParam2;
 		private GlyphButton debugNextButton2;
 
+		private Button updateButton;
 		private StaticText pagesInfo;
 		private Button printButton;
 		private Button closeButton;

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -59,13 +60,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 100, "Date", Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
-			builder.CreateTextFieldMulti (tile, 36, "Texte <i>Concerne</i> sur la facture", Marshaler.Create (() => this.Entity.Title, x => this.Entity.Title = x));
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile, 100, "Numéro de compte BVR du client", Marshaler.Create (() => this.Entity.EsrCustomerNumber, x => this.Entity.EsrCustomerNumber = x));
-			builder.CreateTextField (tile, 0, "Numéro de référence BVR à 27 chiffres", Marshaler.Create (() => this.Entity.EsrReferenceNumber, x => this.Entity.EsrReferenceNumber = x));
-			builder.CreateMargin (tile, horizontalSeparator: true);
-			builder.CreateTextField (tile, 80, "Montant à payer", Marshaler.Create (() => this.Entity.AmountDue.Amount, x => this.Entity.AmountDue.Amount = x));
+			builder.CreateTextField      (tile, 100, "Date",                                  Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
+			builder.CreateTextFieldMulti (tile,  36, "Texte <i>Concerne</i> sur la facture",  Marshaler.Create (() => this.Entity.Title, x => this.Entity.Title = x));
+			builder.CreateMargin         (tile, horizontalSeparator: true);
+			builder.CreateTextField      (tile, 100, "CCP du destinataire",                   Marshaler.Create (() => this.Entity.EsrCustomerNumber, x => this.Entity.EsrCustomerNumber = x));
+			builder.CreateTextField      (tile,   0, "Numéro de référence BVR à 27 chiffres", Marshaler.Create (() => this.Entity.EsrReferenceNumber, x => this.Entity.EsrReferenceNumber = x));
+			builder.CreateMargin         (tile, horizontalSeparator: true);
+
+
+			FrameBox group = builder.CreateGroup (tile, "Montant à payer");
+			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.AmountDue.Amount, x => this.Entity.AmountDue.Amount = x));
+			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "&lt; Mettre le solde");
+
+			button.Clicked += delegate
+			{
+				// TODO: Comment accéder à la liste des BillingDetails ?
+			};
 		}
 
 		private void CreateUIPaymentMode(UIBuilder builder)

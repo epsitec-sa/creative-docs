@@ -637,8 +637,6 @@ namespace Epsitec.Cresus.Core
 			var paymentMode1 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
 			var paymentMode2 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
 			var paymentMode3 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
-			var paymentMode4 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
-			var paymentMode5 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
 
 			paymentMode1.Rank = 0;
 			paymentMode1.Code = "BILL10";
@@ -654,31 +652,15 @@ namespace Epsitec.Cresus.Core
 			paymentMode2.BookAccount = "1010";
 			paymentMode2.StandardPaymentTerm = 30;
 
-			paymentMode3.Rank = 2;
-			paymentMode3.Code = "BILL30.1";
-			paymentMode3.Name = "BVR à 30 jours net, 1ère mensualité";
-			paymentMode3.Description = "Première mensualité payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
-			paymentMode3.BookAccount = "1010";
-			paymentMode3.StandardPaymentTerm = 30;
-
-			paymentMode4.Rank = 3;
-			paymentMode4.Code = "BILL30.2";
-			paymentMode4.Name = "BVR à 30 jours net, 2ème mensualité";
-			paymentMode4.Description = "Deuxième mensualité payable au moyen du bulletin de versement ci-joint.<br/>Conditions: 30 jours net.";
-			paymentMode4.BookAccount = "1010";
-			paymentMode4.StandardPaymentTerm = 30;
-
-			paymentMode5.Rank = 4;
-			paymentMode5.Code = "PAYED";
-			paymentMode5.Name = "Au comptant";
-			paymentMode5.Description = "Facture payée au comptant.";
-			paymentMode5.BookAccount = "1010";
+			paymentMode3.Rank = 4;
+			paymentMode3.Code = "PAYED";
+			paymentMode3.Name = "Au comptant";
+			paymentMode3.Description = "Facture payée au comptant.";
+			paymentMode3.BookAccount = "1000";
 
 			yield return paymentMode1;
 			yield return paymentMode2;
 			yield return paymentMode3;
-			yield return paymentMode4;
-			yield return paymentMode5;
 		}
 
 		private IEnumerable<CurrencyEntity> InsertCurrencyInDatabase()

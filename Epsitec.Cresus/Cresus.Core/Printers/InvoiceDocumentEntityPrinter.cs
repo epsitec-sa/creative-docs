@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
 					this.BuildConditions (billingDetails);
-					this.BuildPages (firstPage);
+					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
 					this.BuildBvs (billingDetails, firstPage);
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
 					this.BuildConditions (billingDetails);
-					this.BuildPages (firstPage);
+					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
 				}
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildHeader (null);
 				this.BuildArticles ();
 				this.BuildFooterBL ();
-				this.BuildPages (firstPage);
+				this.BuildPages (null, firstPage);
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
@@ -796,7 +796,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildPages(int firstPage)
+		private void BuildPages(BillingDetailsEntity billingDetails, int firstPage)
 		{
 			//	Met les numéros de page.
 			double reportHeight = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight*2;
@@ -809,7 +809,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -992,7 +992,7 @@ namespace Epsitec.Cresus.Core.Printers
 				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Specimen");
 				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
-				BV.Communication = InvoiceDocumentHelper.GetTitle (this.entity, this.IsBL);
+				BV.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL);
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{

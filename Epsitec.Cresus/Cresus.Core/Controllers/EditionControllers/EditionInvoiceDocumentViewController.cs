@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 
 			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller)
-				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (x)));
+				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
+				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
@@ -209,12 +209,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private static string GetBillingDetailsSummary(BillingDetailsEntity billingDetailsEntity)
+		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailsEntity billingDetailsEntity)
 		{
 			string amount = Misc.PriceToString (billingDetailsEntity.AmountDue.Amount);
 			string title = Misc.FirstLine (billingDetailsEntity.Title);
+			string ratio = InvoiceDocumentHelper.GetRatio (invoiceDocument, billingDetailsEntity, false);
 
-			return string.Concat (amount, " ", title);
+			if (ratio == null)
+			{
+				return UIBuilder.FormatText (amount, title).ToString ();
+			}
+			else
+			{
+				return UIBuilder.FormatText (amount, ratio, title).ToString ();
+			}
 		}
 
 
