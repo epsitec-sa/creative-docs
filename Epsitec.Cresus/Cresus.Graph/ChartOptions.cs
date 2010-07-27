@@ -75,6 +75,17 @@ namespace Epsitec.Cresus.Graph
             ShowFloatingCaptions = options.Element ("ShowFloatingCaptions").Value == "true";
         }
 
+        /// <summary>
+        /// Copies values from one ChartOptions object to this one.
+        /// Events are kept from this object (not copied from oldValues).
+        /// </summary>
+        /// <param name="oldValues">Object to copy the values from</param>
+        internal void copyValues (ChartOptions oldValues)
+        {
+            this.showFixedCaptions = oldValues.showFixedCaptions;
+            this.showFloatingCaptions = oldValues.showFloatingCaptions;
+        }
+
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFixedCaptionsChanged;
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFloatingCaptionsChanged;
 
