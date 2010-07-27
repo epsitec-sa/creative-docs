@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute les options d'impression liées aux factures.
 			options.Add (new DocumentOption ("Delayed",   null, "Imprime les articles livrés ultérieurement", true));
-			options.Add (new DocumentOption ("ArticleId", null, "Imprime les numéros d'article", false));
+			options.Add (new DocumentOption ("ArticleId", null, "Imprime les identificateurs d'article", false));
 
 			options.Add (new DocumentOption ("Aspect de la liste des articles :"));
 			options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));

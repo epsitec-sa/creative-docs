@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.TableCellBackground = Color.Empty;
 
 			this.sectionsInfo = new List<SectionInfo> ();
+			this.textLayout = new TextLayout ();
 		}
 
 
@@ -82,14 +83,14 @@ namespace Epsitec.Cresus.Core.Printers
 		public override double RequiredHeight(double width)
 		{
 			this.width = width;
-			var textLayout = this.CreateTextLayout ();
+			this.UpdateTextLayout ();
 
 			double height = 0;
 
-			int lineCount = textLayout.TotalLineCount;
+			int lineCount = this.textLayout.TotalLineCount;
 			for (int i = 0; i < lineCount; i++)
 			{
-				height += textLayout.GetLineHeight (i);
+				height += this.textLayout.GetLineHeight (i);
 			}
 
 			return height;
@@ -98,9 +99,9 @@ namespace Epsitec.Cresus.Core.Printers
 		public double RequiredWidth()
 		{
 			//	Retourne la largeur requise si le texte est mis sur une seule ligne.
-			var textLayout = this.CreateTextLayout ();
+			this.UpdateTextLayout ();
 
-			return textLayout.SingleLineSize.Width;
+			return this.textLayout.SingleLineSize.Width;
 		}
 
 
@@ -150,15 +151,15 @@ namespace Epsitec.Cresus.Core.Printers
 			this.width = width;
 			this.sectionsInfo.Clear ();
 
-			//	Crée un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
+			//	Met à jour un pavé à la bonne largeur mais de hauteur infinie, pour pouvoir calculer les hauteurs
 			//	de toutes les lignes.
-			var textLayout = this.CreateTextLayout ();
+			this.UpdateTextLayout ();
 
-			int totalLineCount = textLayout.TotalLineCount;
+			int totalLineCount = this.textLayout.TotalLineCount;
 			this.heights = new double[totalLineCount];
 			for (int i = 0; i < totalLineCount; i++)
 			{
-				this.heights[i] = textLayout.GetLineHeight (i);
+				this.heights[i] = this.textLayout.GetLineHeight (i);
 			}
 		}
 
@@ -298,11 +299,11 @@ namespace Epsitec.Cresus.Core.Printers
 			Rectangle bounds = clipRect;
 			bounds.Top += verticalOffset;  // remonte le début, qui sera clippé
 
-			//	Crée le TextLayout avec les données réelles et dessine-le.
-			var textLayout = this.CreateTextLayout ();
-			textLayout.LayoutSize = bounds.Size;
+			//	Met à jour le TextLayout avec les données réelles et dessine-le.
+			this.UpdateTextLayout ();
+			this.textLayout.LayoutSize = bounds.Size;
 
-			if (textLayout.TotalRectangle.IsEmpty && !string.IsNullOrEmpty(textLayout.Text))
+			if (this.textLayout.TotalRectangle.IsEmpty && !string.IsNullOrEmpty (this.textLayout.Text))
 			{
 #if false
 				//	Dessine une grande croix 'x'.
@@ -317,11 +318,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 				for (int i = 0; i < 10; i++)
 				{
-					textLayout.DefaultFontSize *= 0.8;
+					this.textLayout.DefaultFontSize *= 0.8;
 
-					if (!textLayout.TotalRectangle.IsEmpty)
+					if (!this.textLayout.TotalRectangle.IsEmpty)
 					{
-						textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+						this.textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
 						break;
 					}
 				}
@@ -331,7 +332,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
+				this.textLayout.Paint (bounds.BottomLeft, port, clipRect, Color.Empty, GlyphPaintStyle.Normal);
 			}
 
 			if (this.DebugPaintFrame)
@@ -350,23 +351,18 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 	
-		private TextLayout CreateTextLayout()
+		private void UpdateTextLayout()
 		{
-			//	Crée un TextLayout à la bonne largeur mais de hauteur infinie.
-			var textLayout = new TextLayout ()
-			{
-				Alignment             = this.Alignment,
-				JustifMode            = this.Justif,
-				BreakMode             = this.BreakMode,
-				DefaultFont           = this.Font,
-				DefaultFontSize       = this.FontSize,
-				LayoutSize            = new Size (this.width, double.MaxValue),
-				DefaultUnderlineWidth = 0.1,
-				DefaultWaveWidth      = 0.75,
-				Text                  = this.Text,
-			};
-
-			return textLayout;
+			//	Met à jour le TextLayout à la bonne largeur mais avec une hauteur infinie.
+			this.textLayout.Alignment             = this.Alignment;
+			this.textLayout.JustifMode            = this.Justif;
+			this.textLayout.BreakMode             = this.BreakMode;
+			this.textLayout.DefaultFont           = this.Font;
+			this.textLayout.DefaultFontSize       = this.FontSize;
+			this.textLayout.LayoutSize            = new Size (this.width, double.MaxValue);
+			this.textLayout.DefaultUnderlineWidth = 0.1;
+			this.textLayout.DefaultWaveWidth      = 0.75;
+			this.textLayout.Text                  = this.Text;
 		}
 
 
@@ -388,5 +384,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private double				width;
 		private List<SectionInfo>	sectionsInfo;
 		private double[]			heights;
+		private TextLayout			textLayout;
 	}
 }
