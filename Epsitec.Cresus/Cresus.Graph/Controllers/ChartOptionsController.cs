@@ -29,6 +29,20 @@ namespace Epsitec.Cresus.Graph.Controllers
                 ShowFloatingCaptions = true
             };
 
+            // Change visibility when value is changed
+            this.ChartOptions.ShowFixedCaptionsChanged +=
+                (sender, e) =>
+                {
+                    captions.Visibility = (bool)e.NewValue;
+                };
+
+            // Change visibility when value is changed
+            this.ChartOptions.ShowFloatingCaptionsChanged +=
+                (sender, e) =>
+                {
+                    floatingCaptions.Visibility = (bool)e.NewValue;
+                };
+
             this.SetupUI(commandBar, captions, floatingCaptions);
         }
 
@@ -39,7 +53,11 @@ namespace Epsitec.Cresus.Graph.Controllers
         {
             get
             {
-                return chartOptions;
+                return this.chartOptions;
+            }
+            set
+            {
+                this.chartOptions.copyValues (value);
             }
         }
 
@@ -71,13 +89,6 @@ namespace Epsitec.Cresus.Graph.Controllers
                 Padding = new Margins(4, 4, 0, 0),
             };
 
-            // Change visibility when value is changed
-            this.ChartOptions.ShowFixedCaptionsChanged +=
-                (sender, e) =>
-                {
-                    fixedCaptions.Visibility = (bool) e.NewValue;
-                };
-
             // Change value when then button is click
             showCaptionsButton.Clicked +=
                 (sender, e) =>
@@ -94,13 +105,6 @@ namespace Epsitec.Cresus.Graph.Controllers
                 PreferredSize = new Size(40, 40),
                 Padding = new Margins(4, 4, 0, 0),
             };
-
-            // Change visibility when value is changed
-            this.ChartOptions.ShowFloatingCaptionsChanged +=
-                (sender, e) =>
-                {
-                    floatingCaptions.Visibility = (bool) e.NewValue;
-                };
 
             // Change value when then button is click
             showFloatingCaptionsButton.Clicked +=

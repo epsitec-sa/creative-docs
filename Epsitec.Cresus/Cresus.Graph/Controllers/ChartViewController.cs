@@ -260,8 +260,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.CreateLeftToolButtons ();
                 this.CreateGraphTypeButtons();
-                this.chartOptionsController = new ChartOptionsController(this.commandBar, fixedCaptionsPalette, floatingCaptions);
+                this.chartOptionsController = new ChartOptionsController (this.commandBar, fixedCaptionsPalette, floatingCaptions);
                 this.CreateSnapshotButton ();
+
+                // Copy ChartOptions if available
+                if (this.ChartSnapshot != null)
+                {
+                    this.chartOptionsController.ChartOptions = this.ChartSnapshot.ChartOptions;
+                }
+
 			}
 			else
 			{
