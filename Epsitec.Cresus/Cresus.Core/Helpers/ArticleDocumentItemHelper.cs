@@ -39,12 +39,21 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
+			string unit = null;
+
 			foreach (var quantity in article.ArticleQuantities)
 			{
 				if (quantity.Code == "livré")
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
+
+				unit = quantity.Unit.Code;
+			}
+
+			if (unit != null)
+			{
+				return Misc.FormatUnit (0, unit);
 			}
 
 			return null;

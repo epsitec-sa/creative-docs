@@ -28,10 +28,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+			this.tileContainer = container;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de (sous-)total");
+				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de rabais et/ou total");
 
 				this.CreateUIMain (builder);
 
@@ -44,6 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
+#if false
 			builder.CreateTextField (tile, 0, "TextForPrimaryPrice", Marshaler.Create (() => this.Entity.TextForPrimaryPrice, x => this.Entity.TextForPrimaryPrice = x));
 			builder.CreateTextField (tile, 0, "TextForResultingPrice", Marshaler.Create (() => this.Entity.TextForResultingPrice, x => this.Entity.TextForResultingPrice = x));
 			builder.CreateTextField (tile, 0, "TextForFixedPrice", Marshaler.Create (() => this.Entity.TextForFixedPrice, x => this.Entity.TextForFixedPrice = x));
@@ -65,6 +68,89 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 120, "FixedPriceAfterTax", Marshaler.Create (() => this.Entity.FixedPriceAfterTax, x => this.Entity.FixedPriceAfterTax = x));
 			builder.CreateTextField (tile, 120, "FinalPriceBeforeTax", Marshaler.Create (() => this.Entity.FinalPriceBeforeTax, x => this.Entity.FinalPriceBeforeTax = x));
 			builder.CreateTextField (tile, 120, "FinalTax", Marshaler.Create (() => this.Entity.FinalTax, x => this.Entity.FinalTax = x));
+#else
+			builder.CreateTextField (tile, 80, "Rabais de groupe (pourcent ou montant)", Marshaler.Create (this.GetDiscount,           this.SetDiscount));
+			builder.CreateTextField (tile, 80, "Montant total du groupe arrêté TTC",     Marshaler.Create (this.GetFixedPriceAfterTax, this.SetFixedPriceAfterTax));
+#endif
+		}
+
+
+		private string GetDiscount()
+		{
+			if (this.Entity.Discount.DiscountRate.HasValue)
+			{
+				return Misc.PercentToString (this.Entity.Discount.DiscountRate.Value);
+			}
+
+			if (this.Entity.Discount.DiscountAmount.HasValue)
+			{
+				return Misc.PriceToString (this.Entity.Discount.DiscountAmount.Value);
+			}
+
+			return null;
+		}
+
+		private void SetDiscount(string value)
+		{
+			value = value.Trim ();
+
+			decimal? v = null;
+			bool percent = false;
+
+			if (value.EndsWith ("%"))
+			{
+				v = Misc.StringToDecimal (value.Substring (0, value.Length-1)) / 100.0M;
+				percent = true;
+			}
+			else
+			{
+				v = Misc.StringToDecimal (value);
+			}
+
+			if (v == null)
+			{
+				this.Entity.Discount.DiscountRate   = null;
+				this.Entity.Discount.DiscountAmount = null;
+			}
+			else
+			{
+				if (percent)
+				{
+					this.Entity.Discount.DiscountRate = v;
+					this.Entity.Discount.DiscountAmount = null;
+				}
+				else
+				{
+					this.Entity.Discount.DiscountRate = null;
+					this.Entity.Discount.DiscountAmount = v;
+				}
+			}
+
+			if (this.Entity.Discount.DiscountRate.HasValue || this.Entity.Discount.DiscountAmount.HasValue)
+			{
+				this.Entity.FixedPriceAfterTax = null;
+			}
+
+			this.tileContainer.UpdateAllWidgets ();
+		}
+
+
+		private string GetFixedPriceAfterTax()
+		{
+			return Misc.PriceToString (this.Entity.FixedPriceAfterTax);
+		}
+
+		private void SetFixedPriceAfterTax(string value)
+		{
+			this.Entity.FixedPriceAfterTax = Misc.StringToDecimal (value);
+
+			if (this.Entity.FixedPriceAfterTax.HasValue)
+			{
+				this.Entity.Discount.DiscountRate   = null;
+				this.Entity.Discount.DiscountAmount = null;
+			}
+
+			this.tileContainer.UpdateAllWidgets ();
 		}
 
 
@@ -72,5 +158,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return EditionStatus.Valid;
 		}
+
+
+		private TileContainer					tileContainer;
 	}
 }

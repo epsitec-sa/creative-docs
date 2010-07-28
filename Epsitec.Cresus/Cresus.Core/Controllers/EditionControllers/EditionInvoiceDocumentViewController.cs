@@ -87,9 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
-			FrameBox group = builder.CreateGroup (tile, "Total arrêté TTC");
-			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.FixedPrice, x => this.FixedPrice = x));
-			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "Recalculer la facture");
+			var button = builder.CreateButton (tile, 0, "Action", "Recalculer la facture");
 
 			button.Clicked += delegate
 			{
@@ -180,31 +178,50 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
 		{
-			if (x.Discount.IsActive ())
+			var builder = new System.Text.StringBuilder ();
+			builder.Append ("<i>Total</i><tab/>");
+			bool first = true;
+
+			if (x.Discount.DiscountRate.HasValue)
 			{
-				if (x.Discount.DiscountRate.HasValue)
+				if (!first)
 				{
-					return string.Concat ("<i>Total</i><tab/>Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
-				}
-			}
-			else
-			{
-				string desc = x.TextForFixedPrice;
-				if (string.IsNullOrEmpty (desc))
-				{
-					desc = "Total arrêté";
+					builder.Append (", ");
 				}
 
-				string total = null;
-				if (x.FixedPriceAfterTax.HasValue)
-				{
-					total = Misc.PriceToString (x.FixedPriceAfterTax.Value);
-				}
+				builder.Append ("Rabais ");
+				builder.Append (Misc.PercentToString (x.Discount.DiscountRate));
 
-				return string.Concat ("<i>Total</i><tab/>", desc, " ", total);
+				first = false;
 			}
 
-			return null;
+			if (x.Discount.DiscountAmount.HasValue)
+			{
+				if (!first)
+				{
+					builder.Append (", ");
+				}
+
+				builder.Append ("Rabais ");
+				builder.Append (Misc.PriceToString (x.Discount.DiscountAmount));
+
+				first = false;
+			}
+
+			if (x.FixedPriceAfterTax.HasValue)
+			{
+				if (!first)
+				{
+					builder.Append (", ");
+				}
+
+				builder.Append ("Montant arrêté ");
+				builder.Append (Misc.PriceToString (x.FixedPriceAfterTax));
+
+				first = false;
+			}
+
+			return builder.ToString ();
 		}
 
 
@@ -221,19 +238,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			else
 			{
 				return UIBuilder.FormatText (amount, ratio, title).ToString ();
-			}
-		}
-
-
-		private decimal? FixedPrice
-		{
-			get
-			{
-				return InvoiceDocumentHelper.GetFixedPrice (this.Entity);
-			}
-			set
-			{
-				InvoiceDocumentHelper.SetFixedPrice (this.Entity, this.DataContext, value);
 			}
 		}
 

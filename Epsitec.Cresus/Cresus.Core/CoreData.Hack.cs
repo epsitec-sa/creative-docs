@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Core
 			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			var uomUnit3 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 
-			//?uomUnit1.Rank = 0;
+			//?uomUnit1.Rank = 0;  // TODO: La propriété Rank semble manquer, contrairement à ce qui est indiqué sur les schémas imprimés !
 			uomUnit1.Code = "pce";
 			uomUnit1.Name = "Pièce";
 			uomUnit1.DivideRatio = 1;
