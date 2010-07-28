@@ -235,7 +235,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (this.Entity.ReplacementText != value)
 			{
 				this.Entity.ReplacementText = value;
-				this.UpdateDialogs ();
 			}
 		}
 
@@ -382,14 +381,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (quantity.Code == code && rank-- == 0)
 				{
 					quantity.Unit = value;
-					this.UpdateDialogs ();
 
 					if (IsEmpty (quantity))
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
 
 						this.tileContainer.UpdateAllWidgets ();
-						this.UpdateDialogs ();
 					}
 
 					return;
@@ -407,7 +404,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.ArticleQuantities.Add (newQuantity);
 
 				this.tileContainer.UpdateAllWidgets ();
-				this.UpdateDialogs ();
 			}
 		}
 
@@ -434,14 +430,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (quantity.Code == code && rank-- == 0)
 				{
 					quantity.ExpectedDate = value;
-					this.UpdateDialogs ();
 
 					if (IsEmpty (quantity))
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
 
 						this.tileContainer.UpdateAllWidgets ();
-						this.UpdateDialogs ();
 					}
 
 					return;
@@ -458,7 +452,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.Entity.ArticleQuantities.Add (newQuantity);
 
 			this.tileContainer.UpdateAllWidgets ();
-			this.UpdateDialogs ();
 		}
 
 
@@ -554,7 +547,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (value.HasValue)
 			{
 				this.Entity.ResultingLinePriceBeforeTax = value.Value;
-				this.UpdateDialogs ();
 			}
 		}
 
@@ -564,13 +556,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			ArticleDocumentItemHelper.UpdatePrices (this.Entity);
 
 			this.tileContainer.UpdateAllWidgets ();
-			this.UpdateDialogs ();
-		}
-
-
-		private void UpdateDialogs()
-		{
-			AbstractDocumentItemHelper.UpdateDialogs (this.Entity);
 		}
 
 

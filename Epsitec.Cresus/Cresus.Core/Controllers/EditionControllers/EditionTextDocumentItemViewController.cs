@@ -45,26 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Text, x => this.Text = x));
-		}
-
-
-		private string Text
-		{
-			get
-			{
-				return this.Entity.Text;
-			}
-			set
-			{
-				if (this.Entity.Text != value)
-				{
-					this.Entity.Text = value;
-
-					//	Met à jour le ou les dialogues d'aperçu avant impression ouverts.
-					AbstractDocumentItemHelper.UpdateDialogs (this.Entity);
-				}
-			}
+			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 		}
 
 
