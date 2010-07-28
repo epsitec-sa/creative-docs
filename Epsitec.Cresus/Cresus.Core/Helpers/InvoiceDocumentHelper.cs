@@ -84,106 +84,6 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-#if false
-		public static string GetConditions(InvoiceDocumentEntity x)
-		{
-			if (x.BillingDetails.Count > 0)
-			{
-				return x.BillingDetails[0].AmountDue.PaymentMode.Description;
-			}
-
-			return null;
-		}
-
-
-		public static string GetConcerne(InvoiceDocumentEntity x)
-		{
-			if (x.BillingDetails.Count > 0)
-			{
-				return x.BillingDetails[0].Title;
-			}
-
-			return null;
-		}
-
-		public static void SetConcerne(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, string value)
-		{
-			if (string.IsNullOrEmpty (value))
-			{
-				if (x.BillingDetails.Count != 0)
-				{
-					x.BillingDetails[0].Title = null;
-				}
-			}
-			else
-			{
-				if (x.BillingDetails.Count == 0)
-				{
-					var billing = dataContext.CreateEmptyEntity<BillingDetailsEntity> ();
-					x.BillingDetails.Add (billing);
-				}
-
-				x.BillingDetails[0].Title = value;
-			}
-		}
-
-
-		public static decimal GetAmontDue(InvoiceDocumentEntity x)
-		{
-			if (x.BillingDetails.Count > 0)
-			{
-				return Misc.PriceRound (x.BillingDetails[0].AmountDue.Amount);
-			}
-
-			return 0;
-		}
-
-		public static void SetAmontDue(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
-		{
-			if (x.BillingDetails.Count == 0)
-			{
-				var billing = dataContext.CreateEmptyEntity<BillingDetailsEntity> ();
-				x.BillingDetails.Add (billing);
-			}
-
-			x.BillingDetails[0].AmountDue.Amount = value;
-		}
-#endif
-
-
-		public static decimal GetFixedPrice(InvoiceDocumentEntity x)
-		{
-			if (x.Lines.Count > 0)
-			{
-				var lastLine = x.Lines.Last ();
-
-				if (lastLine is PriceDocumentItemEntity)
-				{
-					var price = lastLine as PriceDocumentItemEntity;
-
-					if (price.FixedPriceAfterTax.HasValue)
-					{
-						return Misc.PriceRound (price.FixedPriceAfterTax.Value);
-					}
-				}
-			}
-
-			return 0;
-		}
-
-		public static void SetFixedPrice(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
-		{
-			if (x.Lines.Count == 0 || !(x.Lines.Last () is PriceDocumentItemEntity))
-			{
-				var newLine = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
-				x.Lines.Add (newLine);
-			}
-
-			var price = x.Lines.Last () as PriceDocumentItemEntity;
-			price.FixedPriceAfterTax = value;
-		}
-
-	
 		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailsEntity billingDetails, bool isBL)
 		{
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
@@ -270,6 +170,40 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
+		public static decimal GetFixedPrice(InvoiceDocumentEntity x)
+		{
+			if (x.Lines.Count > 0)
+			{
+				var lastLine = x.Lines.Last ();
+
+				if (lastLine is PriceDocumentItemEntity)
+				{
+					var price = lastLine as PriceDocumentItemEntity;
+
+					if (price.FixedPriceAfterTax.HasValue)
+					{
+						return Misc.PriceRound (price.FixedPriceAfterTax.Value);
+					}
+				}
+			}
+
+			return 0;
+		}
+
+		public static void SetFixedPrice(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
+		{
+			if (x.Lines.Count == 0 || !(x.Lines.Last () is PriceDocumentItemEntity))
+			{
+				var newLine = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+				x.Lines.Add (newLine);
+			}
+
+			var price = x.Lines.Last () as PriceDocumentItemEntity;
+			price.FixedPriceAfterTax = value;
+		}
+
+	
+#if false
 		public static void UpdateDialogs(InvoiceDocumentEntity x)
 		{
 			//	Met à jour le ou les dialogues d'aperçu avant impression ouverts.
@@ -289,5 +223,6 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 		}
+#endif
 	}
 }
