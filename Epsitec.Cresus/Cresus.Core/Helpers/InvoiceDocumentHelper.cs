@@ -191,13 +191,13 @@ namespace Epsitec.Cresus.Core.Helpers
 							if (price.Discount.DiscountRate.HasValue)
 							{
 								price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) * (1.0M - price.Discount.DiscountRate.GetValueOrDefault (0)));
-								price.ResultingTax            = Misc.PriceConstrain (price.PrimaryTax.GetValueOrDefault (0)            * (1.0M - price.Discount.DiscountRate.GetValueOrDefault (0)));
 							}
 							else
 							{
 								price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.Discount.DiscountAmount.GetValueOrDefault (0));
-								price.ResultingTax            = Misc.PriceConstrain (price.PrimaryTax.GetValueOrDefault (0)            - price.Discount.DiscountAmount.GetValueOrDefault (0));
 							}
+
+							price.ResultingTax = Misc.PriceConstrain (price.ResultingPriceBeforeTax.GetValueOrDefault (0) * vatRate);
 						}
 						else
 						{
