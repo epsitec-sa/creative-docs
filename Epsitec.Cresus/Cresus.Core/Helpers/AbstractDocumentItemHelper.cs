@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Helpers
 	{
 		public static void UpdateDialogs(AbstractDocumentItemEntity documentItem)
 		{
+#if false
 			//	Met à jour le ou les dialogues d'aperçu avant impression ouverts.
 			foreach (var dialog in CoreProgram.Application.AttachedDialogs)
 			{
@@ -34,6 +35,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 				}
 			}
+#endif
 		}
 	}
 }
