@@ -489,6 +489,7 @@ namespace Epsitec.Cresus.Core
 			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			var uomUnit3 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
 
+			//?uomUnit1.Rank = 0;
 			uomUnit1.Code = "pce";
 			uomUnit1.Name = "Pièce";
 			uomUnit1.DivideRatio = 1;
@@ -496,6 +497,7 @@ namespace Epsitec.Cresus.Core
 			uomUnit1.SmallestIncrement = 1;
 			uomUnit1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
+			//?uomUnit2.Rank = 1;
 			uomUnit2.Code = "box";
 			uomUnit2.Name = "Carton de 6";
 			uomUnit2.DivideRatio = 1;
@@ -503,6 +505,7 @@ namespace Epsitec.Cresus.Core
 			uomUnit2.SmallestIncrement = 1;
 			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
+			//?uomUnit3.Rank = 2;
 			uomUnit3.Code = "×";  // caractère Unicode 00D7
 			uomUnit3.Name = "Fois";
 			uomUnit3.DivideRatio = 1;

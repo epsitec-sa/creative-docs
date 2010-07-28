@@ -99,38 +99,30 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (quantity.HasValue)
 			{
-				decimal? total = article.PrimaryUnitPriceBeforeTax * quantity.Value;
+				decimal? total = Misc.PriceConstrain (article.PrimaryUnitPriceBeforeTax * quantity);
 
-				if (article.Discounts.Count != 0)  // y a-t-il un rabais de ligne ?
+				if (article.NeverApplyDiscount == false &&
+					article.Discounts.Count != 0)  // y a-t-il un rabais de ligne ?
 				{
 					if (article.Discounts[0].DiscountRate.HasValue)  // rabais en % ?
 					{
-						total *= 1.0M - article.Discounts[0].DiscountRate.Value;
+						total = Misc.PriceConstrain (total.GetValueOrDefault (0) * (1.0M - article.Discounts[0].DiscountRate.Value));
 					}
-
-					if (article.Discounts[0].DiscountAmount.HasValue)  // rabais en francs ?
+					else if (article.Discounts[0].DiscountAmount.HasValue)  // rabais en francs ?
 					{
-						total -= article.Discounts[0].DiscountAmount.Value;
+						total = Misc.PriceConstrain (total.GetValueOrDefault (0) - article.Discounts[0].DiscountAmount.Value);
 					}
 				}
 
-				article.FinalLineTax     = total * vatRate;
-				article.ResultingLineTax = total * vatRate;
-
-				article.PrimaryLinePriceBeforeTax   = total.Value;
-				article.FixedLinePriceBeforeTax     = total;
-				article.FinalLinePriceBeforeTax     = total;
-				article.ResultingLinePriceBeforeTax = total;
+				article.PrimaryLinePriceBeforeTax   = total.GetValueOrDefault (0);
+				article.ResultingLinePriceBeforeTax = (int) total.GetValueOrDefault (0);  // arrondi au franc inférieur, pourquoi pas ?
+				article.ResultingLineTax            = Misc.PriceConstrain (article.ResultingLinePriceBeforeTax.Value * vatRate);
 			}
 			else
 			{
-				article.FinalLineTax     = null;
-				article.ResultingLineTax = null;
-
 				article.PrimaryLinePriceBeforeTax   = 0;
-				article.FixedLinePriceBeforeTax     = null;
-				article.FinalLinePriceBeforeTax     = null;
 				article.ResultingLinePriceBeforeTax = null;
+				article.ResultingLineTax            = null;
 			}
 		}
 	}

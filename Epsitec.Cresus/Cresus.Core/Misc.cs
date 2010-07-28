@@ -14,31 +14,51 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
-		/// <summary>
-		/// Effectue un arrondi au 5 centimes le plus proche.
-		/// </summary>
-		/// <param name="value">Montant en francs et centimes</param>
-		/// <returns>Valeur arrondie au 5 centimes le plus proche</returns>
-		public static decimal PriceRound(decimal value, decimal round=0.05M)
+		public static decimal? PriceConstrain(decimal? value, decimal resolution=0.01M)
 		{
-			decimal factor = 1.0M / round;
-			decimal adjust = round / 2.0M;
+			if (!value.HasValue)
+			{
+				return null;
+			}
 
-			return System.Math.Floor ((value+adjust)*factor) / factor;
+			if (resolution == 0.01M)
+			{
+				return Misc.decimalRange001.Constrain (value.Value);
+			}
+			else if (resolution == 0.05M)
+			{
+				return Misc.decimalRange005.Constrain (value.Value);
+			}
+			else if (resolution == 1.00M)
+			{
+				return Misc.decimalRange100.Constrain (value.Value);
+			}
+			else
+			{
+				DecimalRange dr = new DecimalRange (0, 1000000000, resolution);
+				return dr.Constrain (value);
+			}
 		}
 
-		public static string PercentToString(decimal value)
+		public static string PercentToString(decimal? value)
 		{
+			if (!value.HasValue)
+			{
+				return null;
+			}
+
 			int i = (int) (value*100);
 			return string.Concat (i.ToString (), "%");
 		}
 
-		public static string PriceToString(decimal value)
+		public static string PriceToString(decimal? value)
 		{
-			int franc = decimal.ToInt32 (value);
-			int cent  = decimal.ToInt32 (value * 100) - decimal.ToInt32 (value) * 100;
+			if (!value.HasValue)
+			{
+				return null;
+			}
 
-			return string.Concat (franc.ToString (), ".", cent.ToString ("D2"));
+			return Misc.decimalRange001.ConvertToString (value.Value);
 		}
 
 		public static decimal? StringToDecimal(string text)
@@ -338,5 +358,10 @@ namespace Epsitec.Cresus.Core
 		{
 			return Epsitec.Common.Types.Converters.TextConverter.ConvertToLowerAndStripAccents (text);
 		}
+
+
+		private static DecimalRange decimalRange001 = new DecimalRange (0, 1000000000, 0.01M);
+		private static DecimalRange decimalRange005 = new DecimalRange (0, 1000000000, 0.05M);
+		private static DecimalRange decimalRange100 = new DecimalRange (0, 1000000000, 1.00M);
 	}
 }

@@ -115,7 +115,6 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.entity.BillingDetails.Count != 0)
 				{
 					var billingDetails = this.entity.BillingDetails[0];
-
 					int firstPage = this.documentContainer.PrepareEmptyPage ();
 
 					this.BuildHeader (billingDetails);
@@ -523,6 +522,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableColumns["Desc"].Visible = true;
 			this.tableColumns["PT"  ].Visible = true;
+			this.tableColumns["TVA" ].Visible = true;
+			this.tableColumns["Tot" ].Visible = true;
 		}
 
 		private void InitializeColumnTotalLine(PriceDocumentItemEntity line)
@@ -680,9 +681,19 @@ namespace Epsitec.Cresus.Core.Printers
 				rabais = string.Concat ("<br/>", Misc.PercentToString (line.Discount.DiscountRate.Value));
 			}
 
+			string tva = null;
+			if (line.ResultingTax.HasValue)
+			{
+				tva = string.Concat ("<br/>", Misc.PriceToString (line.ResultingTax.Value));
+			}
+
+			string total = string.Concat ("<br/>", Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0)));
+
 			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
 			table.SetText (this.tableColumns["Rab" ].Rank, row, rabais);
 			table.SetText (this.tableColumns["PT"  ].Rank, row, prix);
+			table.SetText (this.tableColumns["TVA" ].Rank, row, tva);
+			table.SetText (this.tableColumns["Tot" ].Rank, row, total);
 
 			table.SetUnbreakableRow (row, true);
 		}
