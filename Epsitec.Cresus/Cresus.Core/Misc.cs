@@ -155,7 +155,13 @@ namespace Epsitec.Cresus.Core
 			//	1, "pce"		-> "1 pce"
 			//	2, "pce"		-> "2 pces"
 			//	3, "km"			-> "3 km"
-			//	0.5, "Litre"	-> "0.5 litres"
+			//	1.5, "Litre"	-> "0.5 litre"
+
+			//	Régle intéressante:
+			//	Un euro et soixante centimes : "1,60 euro" ? ou "euros" ?
+			//	Non! Le pluriel commence à 2.
+			//	Source: http://orthonet.sdv.fr/pages/informations_p11.html
+
 			if (string.IsNullOrEmpty (unit))
 			{
 				return quantity.ToString ();
@@ -164,7 +170,7 @@ namespace Epsitec.Cresus.Core
 			{
 				//	Si l'unité a 1 ou 2 caractères, on n'y touche pas ("m", "cm", "m2", "kg", "t", etc.).
 				//	TODO: Faire mieux et gérer les pluriels en "x" !
-				if (quantity != 1.0M && unit.Length > 2)
+				if (System.Math.Abs (quantity) >= 2 && unit.Length > 2)
 				{
 					unit = string.Concat (unit.ToLower(), "s");
 				}

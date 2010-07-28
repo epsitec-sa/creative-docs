@@ -501,36 +501,17 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
-			if (line.Discount.IsActive ())
-			{
-				this.InitializeColumnDiscountLine (line);
-			}
-			else
-			{
-				this.InitializeColumnTotalLine (line);
-			}
-
-			return true;
-		}
-
-		private void InitializeColumnDiscountLine(PriceDocumentItemEntity line)
-		{
-			if (line.PrimaryPriceBeforeTax.HasValue)
-			{
-				this.tableColumns["Rab"].Visible = true;
-			}
-
 			this.tableColumns["Desc"].Visible = true;
 			this.tableColumns["PT"  ].Visible = true;
 			this.tableColumns["TVA" ].Visible = true;
 			this.tableColumns["Tot" ].Visible = true;
-		}
 
-		private void InitializeColumnTotalLine(PriceDocumentItemEntity line)
-		{
-			this.tableColumns["Desc"].Visible = true;
-			this.tableColumns["TVA" ].Visible = true;
-			this.tableColumns["Tot" ].Visible = true;
+			if (InvoiceDocumentHelper.HasAmount (line))
+			{
+				this.tableColumns["Rab"].Visible = true;
+			}
+
+			return true;
 		}
 
 
@@ -630,109 +611,71 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
-			if (line.Discount.IsActive ())
+			string discount = InvoiceDocumentHelper.GetAmount (line);
+
+			//	Colonne "Désignation":
+			if (discount == null)
 			{
-				this.BuildDiscountLine (table, row, line);
+				table.SetText (this.tableColumns["Desc"].Rank, row, line.TextForResultingPrice);
 			}
 			else
 			{
-				this.BuildTotalLine (table, row, line, lastLine);
+				table.SetText (this.tableColumns["Desc"].Rank, row, string.Concat (line.TextForPrimaryPrice, "<br/>", line.TextForResultingPrice));
 			}
 
-			return true;
-		}
-
-		private void BuildDiscountLine(TableBand table, int row, PriceDocumentItemEntity line)
-		{
-			//	Génère les 2 lignes de description.
-			string beforeText = line.TextForPrimaryPrice;
-			if (string.IsNullOrEmpty (beforeText))
+			//	Colonne "Rabais":
+			if (discount != null)
 			{
-				beforeText = "Total avant rabais";
+				table.SetText (this.tableColumns["Rab"].Rank, row, string.Concat ("<br/>", discount));
 			}
 
-			string afterText = line.TextForResultingPrice;
-			if (string.IsNullOrEmpty (afterText))
+			//	Colonne "Prix HT":
+			if (discount == null)
 			{
-				afterText = "Total après rabais";
+				string p1 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns["PT"].Rank, row, p1);
+			}
+			else
+			{
+				string p1 = Misc.PriceToString (line.PrimaryPriceBeforeTax.GetValueOrDefault (0));
+				string p2 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns["PT"].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
 
-			string desc = string.Concat (beforeText, "<br/>", afterText);
-
-			//	Génère les 2 lignes de prix.
-			string beforePrice = null;
-			if (line.PrimaryPriceBeforeTax.HasValue)
+			//	Colonne "TVA":
+			if (discount == null)
 			{
-				beforePrice = Misc.PriceToString (line.PrimaryPriceBeforeTax.Value);
+				string p1 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns["TVA"].Rank, row, p1);
+			}
+			else
+			{
+				string p1 = Misc.PriceToString (line.PrimaryTax.GetValueOrDefault (0));
+				string p2 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns["TVA"].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
 
-			string afterPrice = null;
-			if (line.ResultingPriceBeforeTax.HasValue)
+			//	Colonne "Total":
+			string total;
+
+			if (line.FixedPriceAfterTax.HasValue)  // valeur imposée ?
 			{
-				afterPrice = Misc.PriceToString (line.ResultingPriceBeforeTax.Value);
+				total = Misc.PriceToString (line.FixedPriceAfterTax);
 			}
-
-			string prix = string.Concat (beforePrice, "<br/>", afterPrice);
-
-			//	Génère les 2 lignes de rabais.
-			string rabais = null;
-			if (line.Discount.DiscountRate.HasValue)
+			else
 			{
-				rabais = string.Concat ("<br/>", Misc.PercentToString (line.Discount.DiscountRate.Value));
-			}
-
-			string tva = null;
-			if (line.ResultingTax.HasValue)
-			{
-				tva = string.Concat ("<br/>", Misc.PriceToString (line.ResultingTax.Value));
-			}
-
-			string total = string.Concat ("<br/>", Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0)));
-
-			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
-			table.SetText (this.tableColumns["Rab" ].Rank, row, rabais);
-			table.SetText (this.tableColumns["PT"  ].Rank, row, prix);
-			table.SetText (this.tableColumns["TVA" ].Rank, row, tva);
-			table.SetText (this.tableColumns["Tot" ].Rank, row, total);
-
-			table.SetUnbreakableRow (row, true);
-		}
-
-		private void BuildTotalLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
-		{
-			string desc = line.TextForFixedPrice;
-			if (string.IsNullOrEmpty (desc))
-			{
-				desc = "Total arrêté";
-			}
-
-			string tva = null;
-			if (line.ResultingTax.HasValue)
-			{
-				tva = Misc.PriceToString (line.ResultingTax.Value);
-			}
-			
-			string total = null;
-			if (line.FixedPriceAfterTax.HasValue)
-			{
-				total = Misc.PriceToString (line.FixedPriceAfterTax.Value);
+				total = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
 			}
 
 			if (lastLine)
 			{
-				desc  = string.Concat ("<b>", desc,  "</b>");
-				tva   = string.Concat ("<b>", tva,   "</b>");
 				total = string.Concat ("<b>", total, "</b>");
-			}
-
-			table.SetText (this.tableColumns["Desc"].Rank, row, desc);
-			table.SetText (this.tableColumns["TVA" ].Rank, row, tva);
-			table.SetText (this.tableColumns["Tot" ].Rank, row, total);
-
-			if (lastLine)
-			{
 				table.SetCellBorderWidth (this.tableColumns["Tot"].Rank, row, 0.5);  // met un cadre épais
 			}
+
+			table.SetText (this.tableColumns["Tot"].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
+
+			return true;
 		}
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
