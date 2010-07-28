@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
-			FrameBox group = builder.CreateGroup (tile, "Total arrêté");
+			FrameBox group = builder.CreateGroup (tile, "Total arrêté TTC");
 			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.FixedPrice, x => this.FixedPrice = x));
 			var button = builder.CreateButton    (group, DockStyle.Fill, 0, "Recalculer la facture");
 
@@ -127,8 +127,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup          = true,
 					Name		       = "BillingDetails",
 					IconUri		       = "Data.BillingDetails",
-					Title		       = UIBuilder.FormatText ("Payements"),
-					CompactTitle       = UIBuilder.FormatText ("Payements"),
+					Title		       = UIBuilder.FormatText ("Paiements"),
+					CompactTitle       = UIBuilder.FormatText ("Paiements"),
 					Text		       = CollectionTemplate.DefaultEmptyText,
 				});
 
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (x.Discount.DiscountRate.HasValue)
 				{
-					return string.Concat ("<i>Prix</i><tab/>Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
+					return string.Concat ("<i>Total</i><tab/>Rabais ", Misc.PercentToString (x.Discount.DiscountRate.Value));
 				}
 			}
 			else
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					total = Misc.PriceToString (x.FixedPriceAfterTax.Value);
 				}
 
-				return string.Concat ("<i>Prix</i><tab/>", desc, " ", total);
+				return string.Concat ("<i>Total</i><tab/>", desc, " ", total);
 			}
 
 			return null;
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private decimal FixedPrice
+		private decimal? FixedPrice
 		{
 			get
 			{

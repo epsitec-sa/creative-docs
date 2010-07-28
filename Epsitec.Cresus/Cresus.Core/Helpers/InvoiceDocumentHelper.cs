@@ -125,52 +125,134 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static void UpdatePrices(InvoiceDocumentEntity x, DataLayer.DataContext dataContext)
 		{
 			//	Recalcule complètement une facture.
-			var decimalType = DecimalType.Default;
+			//	
+			//	Une ligne de total (PriceDocumentItemEntity) effectue un sous-total de tout ce qui précède,
+			//	depuis le sous-total précédent. Sauf pour la dernière ligne qui effectue toujours un total complet:
+			//	
+			//	  Article A
+			//	  Article B
+			//	Total (A+B), en fait, sous-total de A+B
+			//	  Article C
+			//	  Article D
+			//	Total (C+D), en fait, sous-total de C+D
+			//	  Article E
+			//	Total (A+B+C+D+E), en fait, grand total
+
+			// TODO: Valider cela avec Pierre !
 
 			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
-			decimal primaryTotalBeforeTax = 0;
-			decimal amontDue = 0;
+			decimal primaryTotalBeforeTax    = 0;
+			decimal primaryTotalTax          = 0;
+			decimal primarySubtotalBeforeTax = 0;
+			decimal primarySubtotalTax       = 0;
+			decimal discountRate = 1;
 
-			foreach (var line in x.Lines)
+			for (int i=0; i<x.Lines.Count; i++)
 			{
+				var line = x.Lines[i];
+				bool isLastLine = (i == x.Lines.Count-1);
+
 				if (line is ArticleDocumentItemEntity)
 				{
 					var article = line as ArticleDocumentItemEntity;
 
 					ArticleDocumentItemHelper.UpdatePrices (article);
 
-					primaryTotalBeforeTax += article.PrimaryLinePriceBeforeTax;
+					primarySubtotalBeforeTax += article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
+					primarySubtotalTax       += article.ResultingLineTax.GetValueOrDefault (0);
 				}
 
 				if (line is PriceDocumentItemEntity)
 				{
 					var price = line as PriceDocumentItemEntity;
 
-					price.PrimaryPriceBeforeTax = primaryTotalBeforeTax;
-					price.FinalPriceBeforeTax   = primaryTotalBeforeTax;
-
-					price.PrimaryTax   = price.FinalPriceBeforeTax * vatRate;
-					price.ResultingTax = price.FinalPriceBeforeTax * vatRate;
-
-					if (price.Discount.IsActive ())  // rabais ?
+					if (isLastLine == false)  // sous-total ?
 					{
-						price.ResultingPriceBeforeTax = price.PrimaryPriceBeforeTax * (1.0M - price.Discount.DiscountRate);
+						price.PrimaryPriceBeforeTax = primarySubtotalBeforeTax;
+						price.PrimaryTax            = primarySubtotalTax;
+
+						if (price.Discount.IsActive ())  // rabais ?
+						{
+							price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) * (1.0M - price.Discount.DiscountRate.GetValueOrDefault (0)));
+							price.ResultingTax            = Misc.PriceConstrain (price.PrimaryTax.GetValueOrDefault (0)            * (1.0M - price.Discount.DiscountRate.GetValueOrDefault (0)));
+						}
+						else
+						{
+							price.ResultingPriceBeforeTax = price.PrimaryPriceBeforeTax;
+							price.ResultingTax            = price.PrimaryTax;
+						}
+
+						primaryTotalBeforeTax = price.ResultingPriceBeforeTax.GetValueOrDefault (0);
+						primaryTotalTax       = price.ResultingTax.GetValueOrDefault (0);
+
+						primarySubtotalBeforeTax = 0;
+						primarySubtotalTax       = 0;
 					}
-					else  // total ?
+					else  // dernière ligne (grand total) ?
 					{
-						price.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (price.FixedPriceAfterTax / (1 + vatRate));
-						price.FixedPriceAfterTax = (int) (price.PrimaryPriceBeforeTax * (1+vatRate) / 10) * 10M;
+						price.PrimaryPriceBeforeTax = primaryTotalBeforeTax + primarySubtotalBeforeTax;
+						price.PrimaryTax            = primaryTotalTax       + primarySubtotalTax;
 
-						amontDue = price.FixedPriceAfterTax.Value;
+						if (!price.FixedPriceAfterTax.HasValue || price.FixedPriceAfterTax.Value == 0)
+						{
+							//	Si le grand total n'est pas encore connu, on l'initialise selon le total réel de la facture.
+							//	S'il est déjà connu, on laisse la valeur imposée.
+							price.FixedPriceAfterTax = price.PrimaryPriceBeforeTax + price.PrimaryTax;
+						}
+
+						discountRate = (price.FixedPriceAfterTax.GetValueOrDefault (1) - price.PrimaryTax.GetValueOrDefault (0)) / price.PrimaryPriceBeforeTax.GetValueOrDefault (1);
+
+						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPriceAfterTax.Value / (1.0M + vatRate));
+						price.ResultingTax            = Misc.PriceConstrain (price.ResultingPriceBeforeTax.Value * vatRate);
+
+						price.FinalPriceBeforeTax = price.ResultingPriceBeforeTax;
+						price.FinalTax            = Misc.PriceConstrain (price.FinalPriceBeforeTax.GetValueOrDefault (0) * vatRate);
 					}
 				}
 			}
 
-			SetFixedPrice (x, dataContext, amontDue);
+			InvoiceDocumentHelper.BackwardUpdatePrices (x, dataContext, discountRate);
+		}
+
+		private static void BackwardUpdatePrices(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal discountRate)
+		{
+			//	Si le prix arrêté (FixedPriceAfterTax) est plus petit que le total réel, on doit
+			//	appliquer les rabais à l'envers en remontant du pied de la facture pour arriver
+			//	aux articles, afin de savoir à quel prix réel chaque article a été vendu; ces
+			//	infos de 'remontée' sont alors stockées dans FinalPriceBeforeTax et FinalTax et
+			//	servent à la comptabilisation uniquement, mais pas à l'impression d'une facture.
+			for (int i=0; i<x.Lines.Count; i++)
+			{
+				var line = x.Lines[i];
+				bool isLastLine = (i == x.Lines.Count-1);
+
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					article.FinalLinePriceBeforeTax = Misc.PriceConstrain (article.ResultingLinePriceBeforeTax * discountRate);
+					article.FinalLineTax            = Misc.PriceConstrain (article.ResultingLineTax            * discountRate);
+				}
+
+				if (line is PriceDocumentItemEntity)
+				{
+					var price = line as PriceDocumentItemEntity;
+
+					if (isLastLine == false)  // sous-total ?
+					{
+						price.FinalPriceBeforeTax = Misc.PriceConstrain (price.ResultingPriceBeforeTax * discountRate);
+						price.FinalTax            = Misc.PriceConstrain (price.ResultingTax            * discountRate);
+					}
+					else  // dernière ligne (grand total) ?
+					{
+						// tout est déjà calculé
+					}
+				}
+			}
 		}
 
 
-		public static decimal GetFixedPrice(InvoiceDocumentEntity x)
+		public static decimal? GetFixedPrice(InvoiceDocumentEntity x)
 		{
 			if (x.Lines.Count > 0)
 			{
@@ -182,7 +264,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 					if (price.FixedPriceAfterTax.HasValue)
 					{
-						return Misc.PriceRound (price.FixedPriceAfterTax.Value);
+						return Misc.PriceConstrain (price.FixedPriceAfterTax.Value);
 					}
 				}
 			}
@@ -190,7 +272,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return 0;
 		}
 
-		public static void SetFixedPrice(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal value)
+		public static void SetFixedPrice(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal? value)
 		{
 			if (x.Lines.Count == 0 || !(x.Lines.Last () is PriceDocumentItemEntity))
 			{
