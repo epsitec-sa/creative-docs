@@ -81,9 +81,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.IdA, x => this.IdA = x));
-			builder.CreateTextField      (tile, 150, "Numéro externe",       Marshaler.Create (() => this.IdB, x => this.IdB = x));
-			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.IdC, x => this.IdC = x));
+			builder.CreateTextField      (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
+			builder.CreateTextField      (tile, 150, "Numéro externe",       Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
@@ -94,7 +94,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			button.Clicked += delegate
 			{
 				InvoiceDocumentHelper.UpdatePrices (this.Entity, this.DataContext);
-				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
 				this.tileContainer.UpdateAllWidgets ();
 			};
 		}
@@ -226,54 +225,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private string IdA
-		{
-			get
-			{
-				return this.Entity.IdA;
-			}
-			set
-			{
-				if (this.Entity.IdA != value)
-				{
-					this.Entity.IdA = value;
-					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
-				}
-			}
-		}
-
-		private string IdB
-		{
-			get
-			{
-				return this.Entity.IdB;
-			}
-			set
-			{
-				if (this.Entity.IdB != value)
-				{
-					this.Entity.IdB = value;
-					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
-				}
-			}
-		}
-
-		private string IdC
-		{
-			get
-			{
-				return this.Entity.IdC;
-			}
-			set
-			{
-				if (this.Entity.IdC != value)
-				{
-					this.Entity.IdC = value;
-					InvoiceDocumentHelper.UpdateDialogs (this.Entity);
-				}
-			}
-		}
-
 		private decimal FixedPrice
 		{
 			get
@@ -283,7 +234,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			set
 			{
 				InvoiceDocumentHelper.SetFixedPrice (this.Entity, this.DataContext, value);
-				InvoiceDocumentHelper.UpdateDialogs (this.Entity);
 			}
 		}
 
