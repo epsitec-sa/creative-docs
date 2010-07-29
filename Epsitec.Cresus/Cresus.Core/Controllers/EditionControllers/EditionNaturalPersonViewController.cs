@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewTitle(DataContext context)
 		{
-			var title = context.CreateRegisteredEmptyEntity<PersonTitleEntity> ();
+			var title = context.CreateEmptyEntity<PersonTitleEntity> ();
 			return title;
 		}
 	}

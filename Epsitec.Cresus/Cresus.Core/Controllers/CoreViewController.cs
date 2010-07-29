@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public virtual Epsitec.Cresus.DataLayer.DataContext DataContext
+		public virtual Epsitec.Cresus.DataLayer.Context.DataContext DataContext
 		{
 			get;
 			set;
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		internal void AboutToSave(DataLayer.DataContext dataContext)
+		internal void AboutToSave(DataLayer.Context.DataContext dataContext)
 		{
 			this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ().ForEach (x => x.AboutToSave (dataContext));
 

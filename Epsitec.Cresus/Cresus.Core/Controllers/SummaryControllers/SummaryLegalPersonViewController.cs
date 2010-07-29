@@ -59,17 +59,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void CreateUIMailContacts(SummaryDataItems data)
 		{
-			Common.CreateUIMailContacts (data, this.EntityGetter, x => x.Contacts);
+			Common.CreateUIMailContacts (this.DataContext, data, this.EntityGetter, x => x.Contacts);
 		}
 
 		private void CreateUITelecomContacts(SummaryDataItems data)
 		{
-			Common.CreateUITelecomContacts (data, this.EntityGetter, x => x.Contacts);
+			Common.CreateUITelecomContacts (this.DataContext, data, this.EntityGetter, x => x.Contacts);
 		}
 
 		private void CreateUIUriContacts(SummaryDataItems data)
 		{
-			Common.CreateUIUriContacts (data, this.EntityGetter, x => x.Contacts);
+			Common.CreateUIUriContacts (this.DataContext, data, this.EntityGetter, x => x.Contacts);
 		}
 
 

@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -132,7 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						int active = this.scrollList.SelectedItemIndex;
 						var entity = BrowserViewController.GetActiveItem (this.collection, active);
-						var key    = DataContextPool.Instance.FindEntityKey (entity);
+						var key    = DataContextPool.Instance.FindEntityKey (entity) ?? EntityKey.Empty;
 
 						if (this.activeEntityKey != key)
 						{

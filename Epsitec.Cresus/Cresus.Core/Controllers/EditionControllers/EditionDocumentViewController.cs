@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			SummaryControllers.Common.CreateUIComments (data, this.EntityGetter, x => x.Comments);
+			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 

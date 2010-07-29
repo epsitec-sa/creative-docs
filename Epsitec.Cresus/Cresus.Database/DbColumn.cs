@@ -123,6 +123,7 @@ namespace Epsitec.Cresus.Database
 		
 		#region IName Members
 
+
 		/// <summary>
 		/// Gets the name of the column.
 		/// </summary>
@@ -133,7 +134,7 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.captionId.IsValid)
 				{
-					return Druid.ToFullString (this.CaptionId.ToLong ());
+					return DbColumn.GetColumnName (this.CaptionId);
 				}
 				else
 				{
@@ -818,6 +819,19 @@ namespace Epsitec.Cresus.Database
 
 			throw new System.NotSupportedException (string.Format ("Column '{0}' has an unsupported class", this.Name));
 		}
+
+
+		public static string GetColumnName(Druid fieldId)
+		{
+			return Druid.ToFullString (fieldId.ToLong ());
+		}
+
+
+		public static string GetColumnName(string field)
+		{
+			return field.Substring (1, field.Length - 2);
+		}
+
 
 		#region IEquatable<DbColumn> Members
 

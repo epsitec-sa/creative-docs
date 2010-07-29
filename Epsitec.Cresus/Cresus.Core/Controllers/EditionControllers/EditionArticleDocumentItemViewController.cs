@@ -14,7 +14,8 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
 
-using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -366,7 +367,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (value.HasValue)
 			{
-				var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 				newQuantity.Code     = code;
 				newQuantity.Quantity = value.Value;
@@ -415,7 +416,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (!string.IsNullOrEmpty (value.Code))
 			{
-				var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 				newQuantity.Code     = code;
 				newQuantity.Quantity = 1;
@@ -462,7 +463,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				}
 			}
 
-			var newQuantity = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			newQuantity.Code         = code;
 			newQuantity.Quantity     = 1;
@@ -518,7 +519,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				if (this.Entity.Discounts.Count == 0)
 				{
-					var discount = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
+					var discount = this.DataContext.CreateEntity<DiscountEntity> ();
 					this.Entity.Discounts.Add (discount);
 				}
 
@@ -589,13 +590,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
-			var title = context.CreateRegisteredEmptyEntity<ArticleDefinitionEntity> ();
+			var title = context.CreateEmptyEntity<ArticleDefinitionEntity> ();
 			return title;
 		}
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var title = context.CreateRegisteredEmptyEntity<UnitOfMeasureEntity> ();
+			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			return title;
 		}
 

@@ -16,6 +16,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		public EntityChangedEventArgs(AbstractEntity entity, string id, object oldValue, object newValue)
 			: base (entity)
 		{
+			this.id = id;
+			this.oldValue = oldValue;
+			this.newValue = newValue;
 		}
 
 

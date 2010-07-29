@@ -34,17 +34,33 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Epsitec.Cresus.PerformanceTests.Entity.EntityProgram</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
+    <Compile Include="Concurrency\ConcurrencyProgram.cs" />
+    <Compile Include="DatabaseCreator.cs" />
+    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="Entity\EntityProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestPerformance.cs" />
+    <Compile Include="Resources\X.Core.PerformanceTests\SourceCode\Entities.cs" />
+    <Compile Include="Resources\X.Core.PerformanceTests\SourceCode\Res.cs" />
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="Entity\TestPerformance.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.IO\Common.IO.csproj">
+      <Project>{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}</Project>
+      <Name>Common.IO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Implementation\Common.Support.Implementation.csproj">
       <Project>{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}</Project>
       <Name>Common.Support.Implementation</Name>
@@ -57,13 +73,9 @@
       <Project>{8960D1EA-3B82-49A1-9D44-F92F467209FF}</Project>
       <Name>Common.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.CoreLibrary\Cresus.CoreLibrary.csproj">
-      <Project>{678BC79B-6AF9-4E5E-9B59-DD78DA0A06D0}</Project>
-      <Name>Cresus.CoreLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
-      <Name>Cresus.Core</Name>
+    <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
+      <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
+      <Name>Common.Widgets</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
@@ -73,21 +85,23 @@
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Name>Cresus.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.DataLayer.UnitTests\Cresus.DataLayer.UnitTests.csproj">
-      <Project>{E8493223-9A6E-49C1-81D6-42B0AE7A14D3}</Project>
-      <Name>Cresus.DataLayer.UnitTests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj">
-      <Project>{F18C2336-9F85-4717-99B9-A1C30E8C463E}</Project>
-      <Name>Cresus.Core.UnitTests</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="Resources\X.Core.PerformanceTests\Captions.00.resource">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\X.Core.PerformanceTests\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\X.Core.PerformanceTests\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

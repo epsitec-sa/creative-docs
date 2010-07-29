@@ -4,7 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Browser;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -12,21 +13,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
+
+
 	public abstract class Repository
 	{
+
+
 		protected Repository(DataContext dataContext)
 		{
 			this.dataContext = dataContext;
-			this.dataBrowser = new DataBrowser (this.dataContext);
-		}
-
-
-		public DataContext DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
 		}
 
 
@@ -39,38 +34,41 @@ namespace Epsitec.Cresus.Core.Data
 		protected IEnumerable<T> GetEntitiesByExample<T>(T example)
 			where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByExample<T> (example);
+			return this.dataContext.GetByExample<T> (example);
 		}
 
 
 		protected IEnumerable<T> GetEntitiesByRequest<T>(Request request)
 			where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByRequest<T> (request);
+			return this.dataContext.GetByRequest<T> (request);
 		}
 
 
 		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count)
 			where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByExample<T> (example).Skip (index + 1).Take (count);
+			return this.dataContext.GetByExample<T> (example).Skip (index).Take (count);
 		}
 
 
 		protected IEnumerable<T> GetEntitiesByRequest<T>(Request request, int index, int count)
 			where T : AbstractEntity
 		{
-			return this.dataBrowser.GetByRequest<T> (request).Skip (index + 1).Take (count);
+			return this.dataContext.GetByRequest<T> (request).Skip (index).Take (count);
 		}
 
 
 		protected IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
 		{
-			return this.dataBrowser.GetReferencers (target, true).Select (result => result.Item1);
+			return this.dataContext.GetReferencers (target).Select (result => result.Item1);
 		}
 
 
 		private readonly DataContext dataContext;
-		private readonly DataBrowser dataBrowser;
+
+
 	}
+
+
 }

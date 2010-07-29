@@ -1,5 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -22,8 +25,21 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <param name="dataContext">The <see cref="DataContext"/> responsible of <paramref name="entity"/>.</param>
 		/// <param name="entity">The entity.</param>
 		/// <param name="fieldId">The id of the field.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// If <paramref name="dataContext"/> is null.
+		/// If <paramref name="entity"/> is null.
+		/// </exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			entity.ThrowIfNull ("entity");
+			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+
+			// TODO Add more test on the input arguments, such as to detect if entity is not managed
+			// by dataContext, or if fieldId is not a field of entity ?
+			// Marc
+			
 			this.dataContext = dataContext;
 			this.entity = entity;
 			this.fieldId = fieldId;
@@ -39,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns></returns>
 		public object GetValue()
 		{
-			return this.dataContext.GetFieldValue (entity, fieldId);
+			return this.dataContext.DataLoader.GetFieldValue (entity, fieldId);
 		}
 
 

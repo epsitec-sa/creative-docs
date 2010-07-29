@@ -131,59 +131,54 @@
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Name>Cresus.Requests</Name>
-      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="DataContextEventArgs.cs" />
-    <Compile Include="Browser\Request.cs" />
-    <Compile Include="DataContextPool.cs" />
-    <Compile Include="EntityData\EntityCollectionData.cs" />
-    <Compile Include="EntityData\EntityDataContainer.cs" />
-    <Compile Include="EntityData\EntityReferenceData.cs" />
-    <Compile Include="EntityKey.cs" />
-    <Compile Include="Expressions\BinaryComparisonFieldWithField.cs" />
-    <Compile Include="Expressions\BinaryComparisonFieldWithValue.cs" />
+    <Compile Include="Context\DataContextEventArgs.cs" />
+    <Compile Include="Expressions\Operation.cs" />
+    <Compile Include="Loader\ExpressionConversion.cs" />
+    <Compile Include="Loader\DataLoader.cs" />
+    <Compile Include="Loader\ExpressionFields.cs" />
+    <Compile Include="Loader\Request.cs" />
+    <Compile Include="Context\DataContextPool.cs" />
+    <Compile Include="Loader\CollectionData.cs" />
+    <Compile Include="Loader\EntityData.cs" />
+    <Compile Include="Loader\ReferenceData.cs" />
+    <Compile Include="Context\EntityKey.cs" />
+    <Compile Include="Expressions\ComparisonFieldField.cs" />
+    <Compile Include="Expressions\ComparisonFieldValue.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
-    <Compile Include="Expressions\BinaryComparison.cs" />
     <Compile Include="Expressions\BinaryComparator.cs" />
     <Compile Include="Expressions\Comparison.cs" />
     <Compile Include="Expressions\Constant.cs" />
     <Compile Include="Expressions\Type.cs" />
-    <Compile Include="Expressions\OperatorConverter.cs" />
+    <Compile Include="Expressions\EnumConverter.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\UnaryComparator.cs" />
     <Compile Include="Expressions\UnaryComparison.cs" />
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
-    <Compile Include="Browser\AliasNode.cs" />
-    <Compile Include="EntityData\EntityValueData.cs" />
+    <Compile Include="Loader\AliasNode.cs" />
+    <Compile Include="Loader\ResolutionMode.cs" />
+    <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
-    <Compile Include="DataContext.EntityDataCache.cs" />
-    <Compile Include="Browser\DataBrowser.cs" />
+    <Compile Include="Context\EntityCache.cs" />
+    <Compile Include="Loader\LoaderQueryGenerator.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataContext.cs" />
-    <Compile Include="EntityResolutionMode.cs" />
-    <Compile Include="Helpers\EntityDataMapping.cs" />
+    <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
-    <Compile Include="Helpers\SchemaEngineTableBuilder.cs" />
-    <Compile Include="Helpers\TemporaryRowCollection.cs" />
-    <Compile Include="RequestFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SchemaEngine.cs" />
+    <Compile Include="Saver\DataSaver.cs" />
+    <Compile Include="Saver\SaverQueryGenerator.cs" />
+    <Compile Include="Schema\SchemaBuilder.cs" />
+    <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

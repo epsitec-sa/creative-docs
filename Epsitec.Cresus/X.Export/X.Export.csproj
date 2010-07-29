@@ -166,30 +166,6 @@ xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(SolutionDir)Export\Resource
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
-      <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
-      <Name>Cresus.Remoting.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Remoting\Cresus.Remoting.csproj">
-      <Project>{C3C59295-14DD-4AF7-B22A-0F8045DA671C}</Project>
-      <Name>Cresus.Remoting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Replication\Cresus.Replication.csproj">
-      <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>
-      <Name>Cresus.Replication</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Requests\Cresus.Requests.csproj">
-      <Project>{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}</Project>
-      <Name>Cresus.Requests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Services.Implementation\Cresus.Services.Implementation.csproj">
-      <Project>{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}</Project>
-      <Name>Cresus.Services.Implementation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Services\Cresus.Services.csproj">
-      <Project>{76A75F71-6965-458C-B0D1-C2741241EDEB}</Project>
-      <Name>Cresus.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\X.Tool.ResGenerator\X.Tool.ResGenerator.csproj">
       <Project>{3E741450-319E-49CF-BFEC-35BE01CE0AFD}</Project>
       <Name>X.Tool.ResGenerator</Name>

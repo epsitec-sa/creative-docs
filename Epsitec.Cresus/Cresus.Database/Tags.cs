@@ -34,15 +34,8 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnDateTime		= "CR_DATETIME";
 		public const string ColumnInstanceType	= "CR_TYPE";
 		
-		public const string ColumnDictKey		= "CR_DICT_KEY";
-		public const string ColumnDictValue		= "CR_DICT_VALUE";
-		
-		public const string ColumnReqData		= "CR_RQ_DATA";
-		public const string ColumnReqExState	= "CR_RQ_EX_STATE";
-		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
-		public const string	ColumnRefColumn		= "CREF_COLUMN";
 		public const string	ColumnRefTarget		= "CREF_TARGET_TABLE";
 		public const string ColumnRefLog		= "CREF_LOG";
 		public const string ColumnRefId			= "CREF_ID";
@@ -51,19 +44,11 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnRefModel		= "CREF_MODEL";
 		public const string ColumnRefRank		= "CREF_RANK";
 		
-		public const string ColumnClientName	= "CR_CLIENT_NAME";
-		public const string ColumnClientId		= "CR_CLIENT_ID";
-		public const string ColumnClientSync	= "CR_CLIENT_SYNC";
-		public const string ColumnClientCreDate	= "CR_CLIENT_CRE_DATE";
-		public const string ColumnClientConDate	= "CR_CLIENT_CON_DATE";
-		
 		//	Basic CRESUS table names :
 		
 		public const string	TableTableDef		= "CR_TABLE_DEF";
 		public const string	TableColumnDef		= "CR_COLUMN_DEF";
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
 		public const string TableLog			= "CR_LOG";
-		public const string TableRequestQueue	= "CR_RQ_QUEUE";
-		public const string TableClientDef      = "CR_CLIENT_DEF";
 	}
 }

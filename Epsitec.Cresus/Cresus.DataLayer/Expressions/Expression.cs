@@ -1,28 +1,21 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Database;
-
-using System.Collections.Generic;
-
-
-namespace Epsitec.Cresus.DataLayer.Expressions
+﻿namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
+	/// <summary>
+	/// The <c>Expression</c> class is used to represent a logical expression such as
+	/// ((a != b) and (c = 1)).
+	/// </summary>
 	public abstract class Expression
 	{
 
 
-		public Expression()
+		/// <summary>
+		/// Builds a new <c>Expression</c>.
+		/// </summary>
+		protected Expression()
 		{
 		}
-
-
-		internal abstract DbAbstractCondition CreateDbAbstractCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
-
-
-		internal abstract IEnumerable<Druid> GetFields();
 
 	}
 
