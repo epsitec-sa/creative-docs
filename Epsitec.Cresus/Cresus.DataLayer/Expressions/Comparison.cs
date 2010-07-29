@@ -1,29 +1,22 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Database;
-
-
-namespace Epsitec.Cresus.DataLayer.Expressions
+﻿namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
+	/// <summary>
+	/// The <c>Comparison</c> class represents a predicate over <see cref="Field"/> or
+	/// <see cref="Constant"/> such as (a = b).
+	/// </summary>
 	public abstract class Comparison : Expression
 	{
-
-
-		public Comparison() : base ()
+		
+		
+		/// <summary>
+		/// Builds a new <c>Comparison</c>.
+		/// </summary>
+		protected Comparison()
 		{
+			
 		}
-
-
-		internal override DbAbstractCondition CreateDbAbstractCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver)
-		{
-			return this.CreateDbSimpleCondition (entity, dbTableColumnResolver);
-		}
-
-
-		protected abstract DbSimpleCondition CreateDbSimpleCondition(AbstractEntity entity, System.Func<Druid, DbTableColumn> dbTableColumnResolver);
 
 
 	}

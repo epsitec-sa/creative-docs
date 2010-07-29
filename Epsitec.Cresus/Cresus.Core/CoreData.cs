@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -103,10 +104,7 @@ namespace Epsitec.Cresus.Core
 
 		public DataContext CreateDataContext()
 		{
-			var context = new DataContext (this.dbInfrastructure)
-			{
-				EnableEntityNullReferenceVirtualizer = true,
-			};
+			var context = new DataContext(this.dbInfrastructure) { EnableNullVirtualization = true };
 
 			DataContextPool.Instance.Add (context);
 

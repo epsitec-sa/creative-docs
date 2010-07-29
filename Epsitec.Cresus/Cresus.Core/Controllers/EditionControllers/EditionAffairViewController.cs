@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<AbstractBusinessEventEntity> ("BusinessEvent", data.Controller)
+			var template = new CollectionTemplate<AbstractBusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetCaseEventsSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 

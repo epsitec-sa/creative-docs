@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core
 		{
 			for (int i = 0; i < CoreData.countries.Length; i += 2)
 			{
-				CountryEntity country = this.DataContext.CreateEmptyEntity<CountryEntity> ();
+				CountryEntity country = this.DataContext.CreateEntity<CountryEntity> ();
 
 				country.Code = CoreData.countries[i + 0];
 				country.Name = CoreData.countries[i + 1];
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < CoreData.swissLocations.Length; i += 2)
 			{
-				LocationEntity location = this.DataContext.CreateEmptyEntity<LocationEntity> ();
+				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = swiss;
 				location.PostalCode = CoreData.swissLocations[i + 0];
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < CoreData.frenchLocations.Length; i += 2)
 			{
-				LocationEntity location = this.DataContext.CreateEmptyEntity<LocationEntity> ();
+				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = french;
 				location.PostalCode = CoreData.frenchLocations[i + 0];
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (string name in names)
 			{
-				CaseEventTypeEntity eventType = this.DataContext.CreateEmptyEntity<CaseEventTypeEntity> ();
+				CaseEventTypeEntity eventType = this.DataContext.CreateEntity<CaseEventTypeEntity> ();
 
 				eventType.Code = name;
 				//?eventType.Rank = rank++;
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (string name in names)
 			{
-				ContactRoleEntity contactRole = this.DataContext.CreateEmptyEntity<ContactRoleEntity> ();
+				ContactRoleEntity contactRole = this.DataContext.CreateEntity<ContactRoleEntity> ();
 
 				contactRole.Name = name;
 				contactRole.Rank = rank++;
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < codes.Length && i < names.Length; i++)
 			{
-				UriSchemeEntity uriScheme = this.DataContext.CreateEmptyEntity<UriSchemeEntity> ();
+				UriSchemeEntity uriScheme = this.DataContext.CreateEntity<UriSchemeEntity> ();
 
 				uriScheme.Code = codes[i];
 				uriScheme.Name = names[i];
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < codes.Length && i < names.Length; i++)
 			{
-				TelecomTypeEntity telecomType = this.DataContext.CreateEmptyEntity<TelecomTypeEntity> ();
+				TelecomTypeEntity telecomType = this.DataContext.CreateEntity<TelecomTypeEntity> ();
 
 				telecomType.Code = codes[i];
 				telecomType.Name = names[i];
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < shortNames.Length && i < names.Length; i++)
 			{
-				PersonTitleEntity personTitle = this.DataContext.CreateEmptyEntity<PersonTitleEntity> ();
+				PersonTitleEntity personTitle = this.DataContext.CreateEntity<PersonTitleEntity> ();
 
 				personTitle.ShortName = shortNames[i];
 				personTitle.Name = names[i];
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < codes.Length && i < names.Length; i++)
 			{
-				PersonGenderEntity personGender = this.DataContext.CreateEmptyEntity<PersonGenderEntity> ();
+				PersonGenderEntity personGender = this.DataContext.CreateEntity<PersonGenderEntity> ();
 
 				personGender.Code = codes[i];
 				personGender.Name = names[i];
@@ -296,11 +296,11 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<AbstractPersonEntity> InsertAbstractPersonsInDatabase(IEnumerable<LocationEntity> locations, IEnumerable<ContactRoleEntity> roles, IEnumerable<UriSchemeEntity> uriSchemes, IEnumerable<TelecomTypeEntity> telecomTypes, IEnumerable<PersonTitleEntity> personTitles, IEnumerable<PersonGenderEntity> personGenders)
 		{
-			LegalPersonEntity companyEpsitec = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
-			LegalPersonEntity companyMigros  = this.DataContext.CreateEmptyEntity<LegalPersonEntity> ();
+			LegalPersonEntity companyEpsitec = this.DataContext.CreateEntity<LegalPersonEntity> ();
+			LegalPersonEntity companyMigros  = this.DataContext.CreateEntity<LegalPersonEntity> ();
 
-			NaturalPersonEntity personPA = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
-			NaturalPersonEntity personDR = this.DataContext.CreateEmptyEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity personPA = this.DataContext.CreateEntity<NaturalPersonEntity> ();
+			NaturalPersonEntity personDR = this.DataContext.CreateEntity<NaturalPersonEntity> ();
 
 			ContactRoleEntity roleFact  = roles.Where (x => x.Name == "facturation").First ();
 			ContactRoleEntity roleProf  = roles.Where (x => x.Name == "professionnel").First ();
@@ -319,42 +319,42 @@ namespace Epsitec.Cresus.Core
 
 			// addressEpsitec
 
-			StreetEntity streetEpsitec = this.DataContext.CreateEmptyEntity<StreetEntity> ();
+			StreetEntity streetEpsitec = this.DataContext.CreateEntity<StreetEntity> ();
 			streetEpsitec.StreetName = "Ch. du Fontenay 3";
 			streetEpsitec.Complement = "2ème étage";
 
-			PostBoxEntity postboxEpsitec = this.DataContext.CreateEmptyEntity<PostBoxEntity> ();
+			PostBoxEntity postboxEpsitec = this.DataContext.CreateEntity<PostBoxEntity> ();
 			postboxEpsitec.Number = "Case postale 1234";
 
-			AddressEntity addressEpsitec = this.DataContext.CreateEmptyEntity<AddressEntity> ();
+			AddressEntity addressEpsitec = this.DataContext.CreateEntity<AddressEntity> ();
 			addressEpsitec.Location = locationYverdon;
 			addressEpsitec.Street = streetEpsitec;
 			addressEpsitec.PostBox = postboxEpsitec;
 
 			// addressPA
 
-			StreetEntity streetPA = this.DataContext.CreateEmptyEntity<StreetEntity> ();
+			StreetEntity streetPA = this.DataContext.CreateEntity<StreetEntity> ();
 			streetPA.StreetName = "Ch. du Fontenay 6";
 
-			AddressEntity addressPA = this.DataContext.CreateEmptyEntity<AddressEntity> ();
+			AddressEntity addressPA = this.DataContext.CreateEntity<AddressEntity> ();
 			addressPA.Location = locationYverdon;
 			addressPA.Street = streetPA;
 
 			// companyEpsitec
 
-			CommentEntity commentEpsitec = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			CommentEntity commentEpsitec = this.DataContext.CreateEntity<CommentEntity> ();
 			commentEpsitec.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
 
-			MailContactEntity mailEpsitec1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			MailContactEntity mailEpsitec1 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailEpsitec1.LegalPerson = companyEpsitec;
 			mailEpsitec1.Address = addressEpsitec;
 			mailEpsitec1.Comments.Add (commentEpsitec);
 			mailEpsitec1.Roles.Add (roleFact);
 
-			CommentEntity commentEpsitecT1 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			CommentEntity commentEpsitecT1 = this.DataContext.CreateEntity<CommentEntity> ();
 			commentEpsitecT1.Text = "Administration et vente";
 
-			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec1.LegalPerson = companyEpsitec;
 			telecomEpsitec1.TelecomType = telecomTypeFix;
 			telecomEpsitec1.Number = "+41 848 27 37 87";
@@ -362,23 +362,23 @@ namespace Epsitec.Cresus.Core
 			telecomEpsitec1.Roles.Add (roleProf);
 			telecomEpsitec1.Roles.Add (roleFact);
 
-			CommentEntity commentEpsitecT2 = this.DataContext.CreateEmptyEntity<CommentEntity> ();
+			CommentEntity commentEpsitecT2 = this.DataContext.CreateEntity<CommentEntity> ();
 			commentEpsitecT2.Text = "Assistance technique (hotline)";
 
-			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec2.LegalPerson = companyEpsitec;
 			telecomEpsitec2.TelecomType = telecomTypeFix;
 			telecomEpsitec2.Number = "+41 848 27 37 89";
 			telecomEpsitec2.Comments.Add (commentEpsitecT2);
 			telecomEpsitec2.Roles.Add (roleProf);
 
-			UriContactEntity uriEpsitec1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			UriContactEntity uriEpsitec1 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriEpsitec1.LegalPerson = companyEpsitec;
 			uriEpsitec1.Uri = "epsitec@epsitec.ch";
 			uriEpsitec1.UriScheme = uriSchemeMailto;
 			uriEpsitec1.Roles.Add (roleProf);
 
-			UriContactEntity uriEpsitec2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			UriContactEntity uriEpsitec2 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriEpsitec2.LegalPerson = companyEpsitec;
 			uriEpsitec2.Uri = "support@epsitec.ch";
 			uriEpsitec2.UriScheme = uriSchemeMailto;
@@ -399,45 +399,45 @@ namespace Epsitec.Cresus.Core
 
 			// personPA
 
-			MailContactEntity mailPA1 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			MailContactEntity mailPA1 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailPA1.NaturalPerson = personPA;
 			mailPA1.LegalPerson = companyEpsitec;
 			mailPA1.Address = addressEpsitec;
 			mailPA1.Complement = "Direction";
 			mailPA1.Roles.Add (roleProf);
 
-			MailContactEntity mailPA2 = this.DataContext.CreateEmptyEntity<MailContactEntity> ();
+			MailContactEntity mailPA2 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailPA2.NaturalPerson = personPA;
 			mailPA2.Address = addressPA;
 			mailPA2.Roles.Add (rolePrive);
 
-			TelecomContactEntity telecomPA1 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity telecomPA1 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA1.NaturalPerson = personPA;
 			telecomPA1.TelecomType = telecomTypeMobile;
 			telecomPA1.Number = "+41 79 367 45 97";
 			telecomPA1.Roles.Add (rolePrive);
 			telecomPA1.Roles.Add (roleProf);
 
-			TelecomContactEntity telecomPA2 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity telecomPA2 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA2.NaturalPerson = personPA;
 			telecomPA2.TelecomType = telecomTypeFix;
 			telecomPA2.Number = "+41 24 425 08 09";
 			telecomPA2.Roles.Add (roleProf);
 
-			TelecomContactEntity telecomPA3 = this.DataContext.CreateEmptyEntity<TelecomContactEntity> ();
+			TelecomContactEntity telecomPA3 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomPA3.NaturalPerson = personPA;
 			telecomPA3.TelecomType = telecomTypeFax;
 			telecomPA3.Number = "+41 24 555 83 59";
 			telecomPA3.Roles.Add (rolePrive);
 			telecomPA3.Roles.Add (roleProf);
 
-			UriContactEntity uriPA1 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			UriContactEntity uriPA1 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriPA1.NaturalPerson = personPA;
 			uriPA1.Uri = "arnaud@epsitec.ch";
 			uriPA1.UriScheme = uriSchemeMailto;
 			uriPA1.Roles.Add (rolePrive);
 
-			UriContactEntity uriPA2 = this.DataContext.CreateEmptyEntity<UriContactEntity> ();
+			UriContactEntity uriPA2 = this.DataContext.CreateEntity<UriContactEntity> ();
 			uriPA2.NaturalPerson = personPA;
 			uriPA2.Uri = "perre.arnaud@opac.ch";
 			uriPA2.UriScheme = uriSchemeMailto;
@@ -473,7 +473,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var person in persons)
 			{
-				RelationEntity relation = this.DataContext.CreateEmptyEntity<RelationEntity> ();
+				RelationEntity relation = this.DataContext.CreateEntity<RelationEntity> ();
 
 				relation.IdA = (id++).ToString ();
 				relation.Person = person;
@@ -485,9 +485,9 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<UnitOfMeasureEntity> InsertUnitOfMeasureInDatabase()
 		{
-			var uomUnit1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
-			var uomUnit2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
-			var uomUnit3 = this.DataContext.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var uomUnit1 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
+			var uomUnit2 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
+			var uomUnit3 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 
 			//?uomUnit1.Rank = 0;  // TODO: La propriété Rank semble manquer, contrairement à ce qui est indiqué sur les schémas imprimés !
 			uomUnit1.Code = "pce";
@@ -524,26 +524,26 @@ namespace Epsitec.Cresus.Core
 			var uomUnit2 = units.Where (x => x.Code == "box").First ();
 			var uomUnit3 = units.Where (x => x.Code == "×").First ();
 
-			var uomGroup1 = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			var uomGroup1 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup1.Name = "Unités d'emballage soft/standard";
 			uomGroup1.Description = "Unités d'emballage pour les logiciels Crésus standard";
 			uomGroup1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 			uomGroup1.Units.Add (uomUnit1);
 			uomGroup1.Units.Add (uomUnit2);
 
-			var uomGroup2 = this.DataContext.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			var uomGroup2 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup2.Name = "Frais";
 			uomGroup2.Description = "Frais";
 			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 			uomGroup2.Units.Add (uomUnit3);
 
-			var articleGroup1 = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
+			var articleGroup1 = this.DataContext.CreateEntity<ArticleGroupEntity> ();
 
 			articleGroup1.Rank = 0;
 			articleGroup1.Code = "SOFT";
 			articleGroup1.Name = "Logiciels";
 
-			var accountingDef = this.DataContext.CreateEmptyEntity<ArticleAccountingDefinitionEntity> ();
+			var accountingDef = this.DataContext.CreateEntity<ArticleAccountingDefinitionEntity> ();
 
 			accountingDef.BeginDate = new System.DateTime (2010, 1, 1);
 			accountingDef.EndDate   = new System.DateTime (2099, 1, 1);
@@ -553,29 +553,29 @@ namespace Epsitec.Cresus.Core
 			accountingDef.PurchaseDiscountBookAccount = "4900";
 			accountingDef.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
 
-			var priceRoundingMode = this.DataContext.CreateEmptyEntity<PriceRoundingModeEntity> ();
+			var priceRoundingMode = this.DataContext.CreateEntity<PriceRoundingModeEntity> ();
 
 			priceRoundingMode.Name = "Arrondi à 5ct";
 			priceRoundingMode.Modulo = 0.05M;
 			priceRoundingMode.AddBeforeModulo = 0.025M;
 			priceRoundingMode.PriceRoundingPolicy = BusinessLogic.Finance.RoundingPolicy.OnFinalPriceAfterTax;
 
-			var articleCategory1 = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
+			var articleCategory1 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory1.Name = "Logiciels Crésus";
 			articleCategory1.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory1.DefaultAccounting.Add (accountingDef);
 			articleCategory1.DefaultRoundingMode = priceRoundingMode;
 
-			var articleCategory2 = this.DataContext.CreateEmptyEntity<ArticleCategoryEntity> ();
+			var articleCategory2 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory2.Name = "Ports/emballages";
 			articleCategory2.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory2.NeverApplyDiscount = true;
 
-			var articlePriceGroup1 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
-			var articlePriceGroup2 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
-			var articlePriceGroup3 = this.DataContext.CreateEmptyEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
+			var articlePriceGroup3 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 
 			articlePriceGroup1.Code = "USER";
 			articlePriceGroup1.Name = "Prix catalogue";
@@ -590,10 +590,10 @@ namespace Epsitec.Cresus.Core
 			articlePriceGroup3.MultiplyRatio = 0.70M;
 			articlePriceGroup3.DivideRatio = 1.00M;
 
-			var articleDef1 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
-			var articleDef2 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
-			var articleDef3 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
-			var articleDef4 = this.DataContext.CreateEmptyEntity<ArticleDefinitionEntity> ();
+			var articleDef1 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
+			var articleDef2 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
+			var articleDef3 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
+			var articleDef4 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 
 			articleDef1.IdA = "CR-CP";
 			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
@@ -637,9 +637,11 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<PaymentModeEntity> InsertPaymentModeInDatabase()
 		{
-			var paymentMode1 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
-			var paymentMode2 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
-			var paymentMode3 = this.DataContext.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode1 = this.DataContext.CreateEntity<PaymentModeEntity> ();
+			var paymentMode2 = this.DataContext.CreateEntity<PaymentModeEntity> ();
+			var paymentMode3 = this.DataContext.CreateEntity<PaymentModeEntity> ();
+			var paymentMode4 = this.DataContext.CreateEntity<PaymentModeEntity> ();
+			var paymentMode5 = this.DataContext.CreateEntity<PaymentModeEntity> ();
 
 			paymentMode1.Rank = 0;
 			paymentMode1.Code = "BILL10";
@@ -668,9 +670,9 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<CurrencyEntity> InsertCurrencyInDatabase()
 		{
-			var currency1 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
-			var currency2 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
-			var currency3 = this.DataContext.CreateEmptyEntity<CurrencyEntity> ();
+			var currency1 = this.DataContext.CreateEntity<CurrencyEntity> ();
+			var currency2 = this.DataContext.CreateEntity<CurrencyEntity> ();
+			var currency3 = this.DataContext.CreateEntity<CurrencyEntity> ();
 
 			currency1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
 			currency1.ExchangeRate = 1.0M;
@@ -691,8 +693,8 @@ namespace Epsitec.Cresus.Core
 			var decimalType = DecimalType.Default;
 			decimal vatRate = 0.076M;
 
-			var billingA = this.DataContext.CreateEmptyEntity<BillingDetailsEntity> ();
-			var invoiceA = this.DataContext.CreateEmptyEntity<InvoiceDocumentEntity> ();
+			var billingA = this.DataContext.CreateEntity<BillingDetailsEntity> ();
+			var invoiceA = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
 
 			invoiceA.IdA = "1000";
 			invoiceA.DocumentSource = BusinessLogic.DocumentSource.Generated;
@@ -708,13 +710,13 @@ namespace Epsitec.Cresus.Core
 			invoiceA.BillingDetails.Add (billingA);
 			invoiceA.DebtorBookAccount = "1100";
 
-			var textA1 = this.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+			var textA1 = this.DataContext.CreateEntity<TextDocumentItemEntity> ();
 
 			textA1.Visibility = true;
 			textA1.Text = "Logiciels";
 
-			var lineA1 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-			var quantityA1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var lineA1 = this.DataContext.CreateEntity<ArticleDocumentItemEntity> ();
+			var quantityA1 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA1.Visibility = true;
 			lineA1.IndentationLevel = 0;
@@ -737,9 +739,9 @@ namespace Epsitec.Cresus.Core
 
 			lineA1.ArticleQuantities.Add (quantityA1);
 
-			var lineA2 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-			var quantityA2_1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
-			var quantityA2_2 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var lineA2 = this.DataContext.CreateEntity<ArticleDocumentItemEntity> ();
+			var quantityA2_1 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
+			var quantityA2_2 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA2.Visibility = true;
 			lineA2.IndentationLevel = 0;
@@ -768,9 +770,9 @@ namespace Epsitec.Cresus.Core
 			lineA2.ArticleQuantities.Add (quantityA2_1);
 			lineA2.ArticleQuantities.Add (quantityA2_2);
 
-			var lineA3 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-			var quantityA3_1 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
-			var quantityA3_2 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var lineA3 = this.DataContext.CreateEntity<ArticleDocumentItemEntity> ();
+			var quantityA3_1 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
+			var quantityA3_2 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA3.Visibility = true;
 			lineA3.IndentationLevel = 0;
@@ -799,8 +801,8 @@ namespace Epsitec.Cresus.Core
 			lineA3.ArticleQuantities.Add (quantityA3_1);
 			lineA3.ArticleQuantities.Add (quantityA3_2);
 
-			var lineA4 = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-			var quantityA4 = this.DataContext.CreateEmptyEntity<ArticleQuantityEntity> ();
+			var lineA4 = this.DataContext.CreateEntity<ArticleDocumentItemEntity> ();
+			var quantityA4 = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
 			lineA4.Visibility = true;
 			lineA4.IndentationLevel = 0;
@@ -823,12 +825,12 @@ namespace Epsitec.Cresus.Core
 
 			lineA4.ArticleQuantities.Add (quantityA4);
 
-			var discountA1 = this.DataContext.CreateEmptyEntity<DiscountEntity> ();
+			var discountA1 = this.DataContext.CreateEntity<DiscountEntity> ();
 
 			discountA1.Description = "Rabais de quantité";
 			discountA1.DiscountRate = 0.20M;
 
-			var totalA1 = this.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+			var totalA1 = this.DataContext.CreateEntity<PriceDocumentItemEntity> ();
 
 			//	Total avec rabais; devrait s'imprimer ainsi :
 			//
@@ -863,7 +865,7 @@ namespace Epsitec.Cresus.Core
 			totalA1.TextForResultingPrice = "Total après rabais";
 			totalA1.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.Discount | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal;
 
-			var totalA2 = this.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+			var totalA2 = this.DataContext.CreateEntity<PriceDocumentItemEntity> ();
 
 			//	TVA ............................................ xx
 			//	Total arrêté ................................. xxxx
@@ -905,7 +907,7 @@ namespace Epsitec.Cresus.Core
 			invoiceA.Lines.Add (lineA4);		//	  Frais de port
 			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1790.00
 
-			var paymentA = this.DataContext.CreateEmptyEntity<PaymentDetailEntity> ();
+			var paymentA = this.DataContext.CreateEntity<PaymentDetailEntity> ();
 
 			paymentA.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
 			paymentA.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
@@ -923,7 +925,7 @@ namespace Epsitec.Cresus.Core
 
 		private ArticlePriceEntity CreateArticlePrice(decimal price, ArticlePriceGroupEntity articlePriceGroup1 = null, ArticlePriceGroupEntity articlePriceGroup2 = null, ArticlePriceGroupEntity articlePriceGroup3 = null)
 		{
-			var articlePrice1 = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
+			var articlePrice1 = this.DataContext.CreateEntity<ArticlePriceEntity> ();
 
 			articlePrice1.BeginDate = new System.DateTime (2010,  1,  1,  0,  0,  0);  // 1 janvier 00:00:00
 			articlePrice1.EndDate   = new System.DateTime (2020, 12, 31, 23, 59, 59);  // 31 décembre 23:59:59 (c'est important de donner l'heure)

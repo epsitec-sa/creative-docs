@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static void UpdatePrices(InvoiceDocumentEntity x, DataLayer.DataContext dataContext)
+		public static void UpdatePrices(InvoiceDocumentEntity x, DataLayer.Context.DataContext dataContext)
 		{
 			//	Recalcule complètement une facture.
 			//	
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			InvoiceDocumentHelper.BackwardUpdatePrices (x, dataContext, discountRate);
 		}
 
-		private static void BackwardUpdatePrices(InvoiceDocumentEntity x, DataLayer.DataContext dataContext, decimal discountRate)
+		private static void BackwardUpdatePrices(InvoiceDocumentEntity x, DataLayer.Context.DataContext dataContext, decimal discountRate)
 		{
 			//	Si le prix arrêté (FixedPriceAfterTax) est plus petit que le total réel, on doit
 			//	appliquer les rabais à l'envers en remontant du pied de la facture pour arriver

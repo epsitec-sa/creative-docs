@@ -1,8 +1,11 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
-using System.Collections;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Cresus.DataLayer.Proxies
@@ -27,8 +30,21 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <param name="dataContext">The <see cref="DataContext"></see> responsible of <paramref name="entity"></paramref>.</param>
 		/// <param name="entity">The <see cref="AbstractEntity"/> that references the <see cref="AbstractEntity"/> of this instance.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field.</param>
+		/// <exception cref="System.ArgumentNullException">
+		/// If <paramref name="dataContext"/> is null.
+		/// If <paramref name="entity"/> is null.
+		/// </exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		public EntityCollectionFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			entity.ThrowIfNull ("entity");
+			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+
+			// TODO Add more test on the input arguments, such as to detect if entity is not managed
+			// by dataContext, or if fieldId is not a field of entity ?
+			// Marc
+			
 			this.dataContext = dataContext;
 			this.entity = entity;
 			this.fieldId = fieldId;
@@ -89,21 +105,38 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		{
 			EntityContext entityContext = this.entity.GetEntityContext ();
 
-			Druid entityId = this.entity.GetEntityStructuredTypeId ();
-			Druid localEntityId = entityContext.GetLocalEntityId (entityId, this.fieldId);
-			StructuredTypeField field = entityContext.GetEntityFieldDefinition (entityId, this.fieldId.ToResourceId ());
+			Druid leafEntityId = this.entity.GetEntityStructuredTypeId ();
+			string fieldId = this.fieldId.ToResourceId ();
+			StructuredTypeField field = entityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
 
-			IList targets = new EntityCollection<AbstractEntity> (this.fieldId.ToResourceId (), this.entity, false) as IList;
-			
-			using (this.entity.DefineOriginalValues ())
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
+
+			rootExample.GetFieldCollection<AbstractEntity> (fieldId).Add (targetExample);
+
+			Request request = new Request ()
 			{
-				foreach (object item in this.dataContext.ReadFieldRelation (this.entity, localEntityId, field, EntityResolutionMode.Load))
-				{
-					targets.Add (item);
-				}
+				RootEntity = rootExample,
+				RootEntityKey = this.dataContext.GetEntityKey (this.entity).Value.RowKey,
+				RequestedEntity = targetExample,
+			};
+
+			var targetsIn = this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request);
+			var targetsOut = new EntityCollection<AbstractEntity> (fieldId, this.entity, false);
+
+			foreach (AbstractEntity target in targetsIn)
+			{
+				targetsOut.Add (target);
 			}
 
-			return targets;
+			if (targetsOut.Count > 0)
+			{
+				return targetsOut;
+			}
+			else
+			{
+				return UndefinedValue.Value;
+			}
 		}
 
 

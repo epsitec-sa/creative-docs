@@ -17,7 +17,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public class EntityContext : IEntityPersistenceManager
 	{
-		private EntityContext()
+		public EntityContext()
 			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
 		{
 		}
@@ -886,8 +886,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal void NotifyEntityChanged(AbstractEntity entity, string id, object oldValue, object newValue)
 		{
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("Entity {0}.{1} changed from {2} to {3}", entity.GetEntitySerialId (), id, oldValue, newValue));
-			this.OnEntityChanged (new EntityChangedEventArgs (entity, id, oldValue, newValue));
+			//-			System.Diagnostics.Debug.WriteLine (string.Format ("Entity {0}.{1} changed from {2} to {3}", entity.GetEntitySerialId (), id, oldValue, newValue));
+			
+			EntityChangedEventArgs eventArgs = new EntityChangedEventArgs (entity, id, oldValue, newValue);
+			
+			this.OnEntityChanged (eventArgs);
+			entity.OnEntityChanged (eventArgs);
 		}
 
 		protected virtual void OnEntityAttached(EntityContextEventArgs e)

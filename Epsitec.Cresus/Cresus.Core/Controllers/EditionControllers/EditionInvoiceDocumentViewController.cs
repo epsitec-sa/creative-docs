@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.DataContext context, bool isEmpty)
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller)
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		       = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller)
+			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
 				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			SummaryControllers.Common.CreateUIComments (data, this.EntityGetter, x => x.Comments);
+			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 

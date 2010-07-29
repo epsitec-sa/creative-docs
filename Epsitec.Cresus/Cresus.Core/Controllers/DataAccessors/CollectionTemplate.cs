@@ -10,6 +10,33 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
+
+
+// TODO There was some kind of bug or something was not completely implemented.
+// With the old version of the DataLayer, created entities where not unregistered as empty entities
+// when they changed, so they where not saved. That resulted in the creation of a new entity not
+// persisted to the database. When the entity changed, the "définition en cours" message was changed
+// (I don't know how) to the real summary text.
+// With the new DataLayer, the created entities where still not unregistered as empty entities, but
+// the update of the "définition en cours" feature was broken. There was probably a subtle change
+// that I can't find.
+// To correct that, I added an event to AbstractEntity so that we know when an entity changes
+// and when it is fired, we unregister the changed entity as an empty entity. This solves the problem
+// of the entities not being persisted, but I didn't found a way to refresh the display so we can
+// update the "définition en cours" message.
+// That means that there is some work to do, because that feature is not implemented correctly, it is
+// implemented to that it minimaly works in good cases.
+// 1) Check that this way of doing this stuff is a good solution.
+// 2) Refresh the display when an entity is changed so we can update the "définition en cours" message.
+// 3) Unregister the CollectionTemplate from the event of an entity when the entity has changed once
+//    (because we need to unregister from the empty entities only once) and if the CollectionTemplate
+//    is "disposed" because then we don't need to listen to that event anymore.
+// 4) Add a Dispose() method to CollectionTemplate so that we can call it to unregister the change
+//    events that are still registered.
+// I put a comment with text "// Stuff added for the entity change feature." everywhere in the code
+// where I made a modification regarding that feature. For any question about all that stuff, ask Marc.
+// Marc
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -51,15 +78,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	public class CollectionTemplate<T> : CollectionTemplate
 			where T : AbstractEntity, new ()
 	{
-		public CollectionTemplate(string name, EntityViewController controller)
+		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext)
 			: base (name)
 		{
-			this.DefineCreateItem (() => controller.NotifyChildItemCreated (CollectionTemplate<T>.CreateEmptyItem ()));
+			this.DefineCreateItem (() => controller.NotifyChildItemCreated (CollectionTemplate<T>.CreateEmptyItem (dataContext)));
 			this.DefineDeleteItem (item => controller.NotifyChildItemDeleted (item));
+			
+			// Stuff added for the entity change feature.
+			this.DefineChangeItem ((s, e) =>
+			{
+				dataContext.UnregisterEmptyEntity (e.Entity);
+			});
 		}
 
-		public CollectionTemplate(string name, EntityViewController controller, System.Predicate<T> filter)
-			: this (name, controller)
+		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext, System.Predicate<T> filter)
+			: this (name, controller, dataContext)
 		{
 			this.Filter = filter;
 		}
@@ -95,6 +128,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public CollectionTemplate<T> DefineSetupItem(System.Action<T> action)
 		{
 			this.setupItem = action;
+			return this;
+		}
+
+		// Stuff added for the entity change feature.
+		public CollectionTemplate<T> DefineChangeItem(System.Action<T, EntityChangedEventArgs> action)
+		{
+			this.changeItem = action;
 			return this;
 		}
 
@@ -177,7 +217,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = SummaryDataType.CollectionItem;
 			
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (source);
+			var context = Epsitec.Cresus.DataLayer.Context.DataContextPool.Instance.FindDataContext (source);
 
 			if ((context != null) &&
 				(context.IsRegisteredAsEmptyEntity (source)))
@@ -217,14 +257,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.GenericDeleteItem (item as T);
 		}
 
-		private static T CreateEmptyItem()
+		private static T CreateEmptyItem(DataContext dataContext)
 		{
-			T entity = EntityContext.Current.CreateEmptyEntity<T> ();
-			var context = Epsitec.Cresus.DataLayer.DataContextPool.Instance.FindDataContext (entity);
-
-			context.RegisterEmptyEntity (entity);
-
-			return entity;
+			return dataContext.CreateEmptyEntity<T> ();
 		}
 
 		private void BindEmptyEntitySummaryData(SummaryData data, T source)
@@ -257,6 +292,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 			}
 
+			// Stuff added for the entity change feature.
+			item.EntityChanged += (s, e) => this.changeItem ((T) s, e);
+			
 			return item;
 		}
 
@@ -265,9 +303,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.deleteItem (item);
 		}
 
-
+		
 		private System.Func<T> createItem;
 		private System.Action<T> deleteItem;
 		private System.Action<T> setupItem;
+
+		// Stuff added for the entity change feature.
+		private System.Action<T, EntityChangedEventArgs> changeItem;
 	}
 }

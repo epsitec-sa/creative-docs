@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -107,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 			var orchestrator = this.Orchestrator;
 			var context      = orchestrator.DataContext;
-			var entity       = context.CreateEmptyEntity<T> ();
+			var entity       = context.CreateEntity<T> ();
 
 			if (initializer != null)
 			{
