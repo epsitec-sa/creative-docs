@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
 				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCreateItem  (this.CreateLineItem);
+				.DefineCreateItem  (this.CreateArticleDocumentItem);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
@@ -143,10 +143,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private ArticleDocumentItemEntity CreateLineItem()
+		private ArticleDocumentItemEntity CreateArticleDocumentItem()
 		{
-			//	Crée un nouvelle ligne dans la facture, du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			return this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
+			var article = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+			article.Visibility = true;
+			article.BeginDate  = this.Entity.CreationDate;
+			article.EndDate    = this.Entity.CreationDate;
+
+			return article;
 		}
 
 
