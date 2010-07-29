@@ -9,6 +9,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
+
 	/// <summary>
 	/// The <c>EntityCollectionData</c> class stores the collection data of an <see cref="AbstractEntity"/>.
 	/// The collection data of an <see cref="AbstractEntity"/> is defined as the data which is stored
