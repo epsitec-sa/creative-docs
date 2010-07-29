@@ -53,7 +53,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			Assert.IsNull (requestAccessor.RequestedEntity);
 			Assert.IsNull (requestAccessor.RootEntity);
 			Assert.IsNull (requestAccessor.RootEntityKey);
-			Assert.AreEqual (ResolutionMode.Database, requestAccessor.ResolutionMode);
 		}
 
 
@@ -326,24 +325,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			request.RootEntity = entity1;
 			request.RequestedEntity = entity2;
 			Assert.AreSame (entity2, requestAccessor.RequestedEntity);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void ResolutionModeTest()
-		{
-			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
-
-			request.ResolutionMode = ResolutionMode.Database;
-			Assert.AreEqual (ResolutionMode.Database, requestAccessor.ResolutionMode);
-
-			request.ResolutionMode = ResolutionMode.Memory;
-			Assert.AreEqual (ResolutionMode.Memory, requestAccessor.ResolutionMode);
-
-			request.ResolutionMode = ResolutionMode.Database;
-			Assert.AreEqual (ResolutionMode.Database, requestAccessor.ResolutionMode);
 		}
 
 

@@ -50,8 +50,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			this.RootEntity = null;
 			this.RequestedEntity = null;
-
-			this.ResolutionMode = ResolutionMode.Database;
 		}
 
 
@@ -90,17 +88,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				this.requestedEntity = value;
 			}
-		}
-
-		
-		/// <summary>
-		/// Tells whether the <c>Request</c> should return <see cref="AbstractEntity"/> which are
-		/// only in memory or also in the database.
-		/// </summary>
-		public ResolutionMode ResolutionMode
-		{
-			internal get;
-			set;
 		}
 
 		

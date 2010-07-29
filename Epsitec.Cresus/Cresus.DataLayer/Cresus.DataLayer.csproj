@@ -163,7 +163,6 @@
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="Loader\AliasNode.cs" />
-    <Compile Include="Loader\ResolutionMode.cs" />
     <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
