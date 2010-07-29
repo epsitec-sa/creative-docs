@@ -573,8 +573,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void UpdatePrices()
 		{
-			//?InvoiceDocumentHelper.UpdatePrices ();  // TODO: je ne sais pas comment retrouver InvoiceDocumentEntity
-			ArticleDocumentItemHelper.UpdatePrices (this.Entity);
+			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+
+			if (invoiceDocument != null)
+			{
+				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
+			}
 
 			this.tileContainer.UpdateAllWidgets ();
 		}

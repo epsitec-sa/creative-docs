@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Helpers;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -26,6 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+			this.tileContainer = container;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -75,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			button.Clicked += delegate
 			{
-				// TODO: Comment accéder à la liste des BillingDetails ?
+				this.ComputeAmontDue ();
 			};
 		}
 
@@ -99,5 +102,30 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var paymentMode = context.CreateEmptyEntity<PaymentModeEntity> ();
 			return paymentMode;
 		}
+
+		private void ComputeAmontDue()
+		{
+			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+
+			if (invoiceDocument != null)
+			{
+				this.Entity.AmountDue.Amount = 0;
+				decimal amountDue = 0;
+
+				foreach (var billing in invoiceDocument.BillingDetails)
+				{
+					amountDue += billing.AmountDue.Amount;
+				}
+
+				decimal total = InvoiceDocumentHelper.GetTotalPrice (invoiceDocument).GetValueOrDefault (0);
+				this.Entity.AmountDue.Amount = total-amountDue;
+
+				this.tileContainer.UpdateAllWidgets ();
+			}
+		}
+
+
+
+		private TileContainer tileContainer;
 	}
 }

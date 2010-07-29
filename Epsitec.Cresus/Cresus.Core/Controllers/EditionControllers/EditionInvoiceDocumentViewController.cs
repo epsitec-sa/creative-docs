@@ -87,13 +87,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 
-			var button = builder.CreateButton (tile, 0, "Action", "Recalculer la facture");
+#if true
+			// TODO: à supprimer un jour...
+			var button = builder.CreateButton (tile, 0, "Action", "Recalculer la facture (provisoire)");
 
 			button.Clicked += delegate
 			{
 				InvoiceDocumentHelper.UpdatePrices (this.Entity, this.DataContext);
 				this.tileContainer.UpdateAllWidgets ();
 			};
+#endif
 		}
 
 		private void CreateUILines(SummaryDataItems data)
