@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				}
 			}
 
-			foreach (INamedType type in this.GetSampleTypes ())
+			foreach (INamedType type in this.GetSampleNonNullableTypes ())
 			{
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type2 = builder.LookForTypeDefInCache (type);
+					type2 = builder.LookForTypeDefInCache (type, FieldOptions.None);
 
 					Assert.IsNotNull (type2);
 
@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type1 = builder.LookForTypeDefInDatabase (transaction, type);
+					type1 = builder.LookForTypeDefInDatabase (transaction, type, FieldOptions.None);
 
 					Assert.IsNotNull (type1);
 
@@ -410,7 +410,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					type2 = builder.LookForTypeDefInCache (type);
+					type2 = builder.LookForTypeDefInCache (type, FieldOptions.None);
 
 					Assert.IsNotNull (type2);
 
@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					DbTypeDef typeDef = builder.LookForTypeDefInDatabase (transaction, type);
+					DbTypeDef typeDef = builder.LookForTypeDefInDatabase (transaction, type, FieldOptions.None);
 
 					Assert.IsNotNull (typeDef);
 
@@ -472,6 +472,35 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			CollectionAssert.AreEquivalent (types1, types2);
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		public void CreateNewTypeDefTest()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+			SchemaBuilder_Accessor builder = new SchemaBuilder_Accessor (dbInfrastructure);
+
+			foreach (INamedType type in this.GetSampleNonNullableTypes ())
+			{
+				DbTypeDef typeDef1 = new DbTypeDef (type);
+				Assert.IsFalse (typeDef1.IsNullable);
+
+				DbTypeDef typeDef2 = builder.CreateNewTypeDef (type, FieldOptions.None, typeDef1);
+				Assert.AreSame (typeDef1, typeDef2);
+
+				DbTypeDef typeDef3 = builder.CreateNewTypeDef (type, FieldOptions.Nullable, typeDef2);
+				Assert.AreNotSame (typeDef2, typeDef3);
+				Assert.IsTrue (typeDef3.IsNullable);
+
+				DbTypeDef typeDef4 = builder.CreateNewTypeDef (type, FieldOptions.Nullable, typeDef3);
+				Assert.AreSame (typeDef3, typeDef4);
+
+				DbTypeDef typeDef5 = builder.CreateNewTypeDef (type, FieldOptions.None, typeDef4);
+				Assert.AreNotSame (typeDef4, typeDef5);
+				Assert.IsFalse (typeDef5.IsNullable);
+			}
 		}
 
 
