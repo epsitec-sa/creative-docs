@@ -142,6 +142,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void DeleteEntityTargetRelationsInMemory2(AbstractEntity target)
 		{
+			// This method will probably be too slow for a high number of managed entities, therefore
+			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
+			// other entities, or by looping only on a subset of entities, i.e only on the location
+			// entities if we look for an entity which can be targeted only by a location.
+			// Marc
+
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
 			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)

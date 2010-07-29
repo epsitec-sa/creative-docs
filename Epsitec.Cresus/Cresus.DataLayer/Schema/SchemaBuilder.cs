@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			this.typeCache.TryGetValue (type.CaptionId, out typeDef);
 
-			return this.CreateNewTypeDef (type, options, typeDef);
+			return this.CreateNewTypeDefIfNecessary (type, options, typeDef);
 		}
 
 
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				this.typeCache[type.CaptionId] = typeDef;
 			}
 
-			return this.CreateNewTypeDef (type, options, typeDef);
+			return this.CreateNewTypeDefIfNecessary (type, options, typeDef);
 		}
 
 
@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="options">The <see cref="FieldOptions"/> that the <see cref="DbTypeDef"/> should match.</param>
 		/// <param name="typeDef">The <see cref="DbTypeDef"/> to check.</param>
 		/// <returns>The given <see cref="DbTypeDef"/> or a new one.</returns>
-		private DbTypeDef CreateNewTypeDef(INamedType type, FieldOptions options, DbTypeDef typeDef)
+		private DbTypeDef CreateNewTypeDefIfNecessary(INamedType type, FieldOptions options, DbTypeDef typeDef)
 		{
 			DbTypeDef newTypeDef = typeDef;
 
