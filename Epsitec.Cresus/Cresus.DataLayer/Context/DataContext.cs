@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Creates a new <see cref="AbstractEntity"/> of type <paramref name="TEntity"/> associated
+		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
 		/// with this instance and registers it as an empty one.
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// as empty, it will now be considered as a normal <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to unregister as empty.</param>
-		/// <remarks>See the remarks in <see cref="RegistedEmptyEntity"/>.</remarks>
+		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
 			if (this.emptyEntities.Remove (entity))
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister as empty.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating whether to register or unregister is at empty.</param>
-		/// <remarks>See the remarks in <see cref="RegistedEmptyEntity"/>.</remarks>
+		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
 			if (isEmpty)
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose empty status to check.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> is registered as empty, <c>false</c> if it isn't.</returns>
-		/// <remarks>See the remarks in <see cref="RegistedEmptyEntity"/>.</remarks>
+		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)
 		{
 			return this.emptyEntities.Contains (entity);
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is deleted in this instance or if it will
-		/// be deleted in the next call to <see cref="SaveChange"/>.
+		/// be deleted in the next call to <see cref="SaveChanges"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to check if it has been deleted.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> has been deleted, <c>false</c> if it hasn't.</returns>
@@ -418,7 +418,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entityKey">The <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/>.</returns>
-		[System.Obsolete ("use GetByRequest instead.")]
 		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
 			AbstractEntity entity = this.entitiesCache.GetEntity (entityKey);
@@ -433,13 +432,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		
 		/// <summary>
-		/// Gets the <see cref="AbstractEntity"/> of type <paramref name="TEntity"/> with a given
+		/// Gets the <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> with a given
 		/// <see cref="DbKey"/>. This method looks in the cache and then queries the database.
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to get.</typeparam>
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/></returns>
-		[System.Obsolete ("use GetByRequest instead.")]
 		public TEntity ResolveEntity<TEntity>(DbKey rowKey) where TEntity : AbstractEntity, new ()
 		{
 			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
@@ -472,13 +470,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request) where TEntity : AbstractEntity
 		{
 			return this.DataLoader.GetByRequest<TEntity> (request);
-		}
-
-
-		[System.Obsolete("This method might be removed soon.")]
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
-		{
-			return this.DataLoader.GetReferencers (target, resolutionMode);
 		}
 
 

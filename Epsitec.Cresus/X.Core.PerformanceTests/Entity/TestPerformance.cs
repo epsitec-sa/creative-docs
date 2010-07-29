@@ -140,10 +140,6 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 
 			this.GetAddressGivenLegalPersonReference ();
 			this.GetAddressGivenLegalPersonValue ();
-
-			this.GetAddressReferencers ();
-			
-			this.GetLegalPersonReferencers ();
 		}
 
 
@@ -339,28 +335,6 @@ namespace Epsitec.Cresus.PerformanceTests.Entity
 				};
 
 				dataContext.GetByExample<MailContactEntity> (example).Select (c => c.Address).Count ();
-			}
-		}
-
-
-		public void GetAddressReferencers()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1000000000001)));
-
-				dataContext.GetReferencers (address).Count ();
-			}
-		}
-
-
-		public void GetLegalPersonReferencers()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000010001)));
-
-				dataContext.GetReferencers (person).Count ();
 			}
 		}
 

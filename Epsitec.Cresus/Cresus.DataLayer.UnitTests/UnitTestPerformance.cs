@@ -453,44 +453,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void GetAddressReferencers()
-		{
-			TestHelper.WriteStartTest ("Retrieve address referencers", UnitTestPerformance.logFile);
-
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				AddressEntity address = dataContext.ResolveEntity<AddressEntity> (new DbKey (new DbId (1)));
-
-				TestHelper.MeasureAndWriteTime (
-					"",
-					UnitTestPerformance.logFile,
-					() => dataContext.GetReferencers (address).Count (),
-					UnitTestPerformance.nbRuns
-				);
-			}
-		}
-
-
-		[TestMethod]
-		public void GetLegalPersonReferencers()
-		{
-			TestHelper.WriteStartTest ("Retrieve legal person referencers", UnitTestPerformance.logFile);
-
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				LegalPersonEntity person = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
-
-				TestHelper.MeasureAndWriteTime (
-					"results",
-					UnitTestPerformance.logFile,
-					() => dataContext.GetReferencers (person).Count (),
-					UnitTestPerformance.nbRuns
-				);
-			}
-		}
-
-
-		[TestMethod]
 		public void DeleteEntities()
 		{
 			TestHelper.WriteStartTest ("DeleteEntities", UnitTestPerformance.logFile);

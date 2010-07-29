@@ -100,47 +100,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			// TODO Two methods are implemented to remove the target relations from memory
-			// - DeleteEntityTargetRelationsInMemory1 which uses the DataLoader
-			// - DeleteEntityTargetRelationsInMemory2 which doesn't use the DataLoader.
-			// I believe that in some special corner cases, the number 1 might have an incorrect
-			// behavior, while I'm sure that the number 2 will always have a correct behavior. These
-			// special corner cases are if an entity is not persisted, then the data loader will not
-			// find that it is a source for an entity (because it looks in the database) and if that
-			// entity is not saved (for any reason), then that entity will still reference the deleted
-			// one. I'm not sure if that case is possible.
-			// If we decide to use the number 1, then it might  make sense to remove all the stuff
-			// related to make queries to the DataLoader concerning entities that are only in
-			// memory.
-			// If we decide to use the number 2, then it might make sense to call it when in the
-			// function DataContext.DeleteEntity(...) rather than here.
-			// Some tests must be done to see which one is the best and then, remove the other and
-			// use the better one here.
-			// Marc
-
-			this.DeleteEntityTargetRelationsInMemory2 (entity);
+			this.DeleteEntityTargetRelationsInMemory (entity);
 
 			if (this.DataContext.IsPersistent (entity))
 			{
-				//this.DeleteEntityTargetRelationsInMemory1 (entity);
 				this.SaverQueryGenerator.DeleteEntity (transaction, entity);
 			}
 		}
 
 
-		private void DeleteEntityTargetRelationsInMemory1(AbstractEntity entity)
-		{
-			foreach (var item in this.DataContext.GetReferencers (entity, ResolutionMode.Memory))
-			{
-				AbstractEntity source = item.Item1;
-				Druid fieldId = Druid.Parse(item.Item2.Fields.First());
-
-				this.DeleteEntityTargetRelationInMemory (source, fieldId, entity);
-			}
-		}
-
-
-		private void DeleteEntityTargetRelationsInMemory2(AbstractEntity target)
+		private void DeleteEntityTargetRelationsInMemory(AbstractEntity target)
 		{
 			// This method will probably be too slow for a high number of managed entities, therefore
 			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting

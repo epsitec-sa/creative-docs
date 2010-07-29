@@ -103,54 +103,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(AbstractEntity target, ResolutionMode resolutionMode = ResolutionMode.Database)
-		{
-			if (this.DataContext.GetEntityKey (target) != null)
-			{
-				foreach (Druid targetEntityId in this.EntityContext.GetInheritedEntityIds (target.GetEntityStructuredTypeId ()))
-				{
-					foreach (EntityFieldPath sourceFieldPath in this.DbInfrastructure.GetSourceReferences (targetEntityId))
-					{
-						foreach (System.Tuple<AbstractEntity, EntityFieldPath> item in this.GetReferencers (sourceFieldPath, target, resolutionMode))
-						{
-							yield return item;
-						}
-					}
-				}
-			}
-		}
-
-
-		private IEnumerable<System.Tuple<AbstractEntity, EntityFieldPath>> GetReferencers(EntityFieldPath sourceFieldPath, AbstractEntity target, ResolutionMode resolutionMode)
-		{
-			Druid sourceEntityId = sourceFieldPath.EntityId;
-			string sourceFieldId = sourceFieldPath.Fields.First ();
-
-			AbstractEntity example = this.EntityContext.CreateEmptyEntity (sourceEntityId);
-			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (example, sourceFieldId);
-
-			using (example.DefineOriginalValues ())
-			{
-				if (field.Relation == FieldRelation.Reference)
-				{
-					example.SetField<object> (field.Id, target);
-				}
-				else if (field.Relation == FieldRelation.Collection)
-				{
-					example.InternalGetFieldCollection (field.Id).Add (target);
-				}
-			}
-
-			Request request = new Request ()
-			{
-				RootEntity = example,
-				ResolutionMode = resolutionMode,
-			};
-
-			return this.GetByRequest<AbstractEntity> (request).Select (sourceEntity => System.Tuple.Create (sourceEntity, sourceFieldPath));
-		}
-
-
 		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
 			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityKey.EntityId);
