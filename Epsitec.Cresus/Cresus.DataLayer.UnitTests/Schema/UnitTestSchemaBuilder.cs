@@ -225,8 +225,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					transaction.Commit ();
 				}
 
-				Assert.AreSame (type1, type2);
+				Assert.AreEqual (type1, type2);
 			}
+
+			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -263,6 +265,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					transaction.Commit ();
 				}
 			}
+
+			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -385,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					transaction.Commit ();
 				}
 
-				Assert.AreSame (type1, type2);
+				Assert.AreEqual (type1, type2);
 			}
 
 			DatabaseHelper.DisconnectFromDatabase ();
@@ -417,7 +421,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					transaction.Commit ();
 				}
 
-				Assert.AreSame (type1, type2);
+				Assert.AreEqual (type1, type2);
 			}
 
 			DatabaseHelper.CreateAndConnectToDatabase ();
@@ -477,7 +481,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateNewTypeDefTest()
+		public void CreateNewTypeDefTestIfNecessary()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 			SchemaBuilder_Accessor builder = new SchemaBuilder_Accessor (dbInfrastructure);
@@ -487,17 +491,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				DbTypeDef typeDef1 = new DbTypeDef (type);
 				Assert.IsFalse (typeDef1.IsNullable);
 
-				DbTypeDef typeDef2 = builder.CreateNewTypeDef (type, FieldOptions.None, typeDef1);
+				DbTypeDef typeDef2 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.None, typeDef1);
 				Assert.AreSame (typeDef1, typeDef2);
 
-				DbTypeDef typeDef3 = builder.CreateNewTypeDef (type, FieldOptions.Nullable, typeDef2);
+				DbTypeDef typeDef3 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.Nullable, typeDef2);
 				Assert.AreNotSame (typeDef2, typeDef3);
 				Assert.IsTrue (typeDef3.IsNullable);
 
-				DbTypeDef typeDef4 = builder.CreateNewTypeDef (type, FieldOptions.Nullable, typeDef3);
+				DbTypeDef typeDef4 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.Nullable, typeDef3);
 				Assert.AreSame (typeDef3, typeDef4);
 
-				DbTypeDef typeDef5 = builder.CreateNewTypeDef (type, FieldOptions.None, typeDef4);
+				DbTypeDef typeDef5 = builder.CreateNewTypeDefIfNecessary (type, FieldOptions.None, typeDef4);
 				Assert.AreNotSame (typeDef4, typeDef5);
 				Assert.IsFalse (typeDef5.IsNullable);
 			}
