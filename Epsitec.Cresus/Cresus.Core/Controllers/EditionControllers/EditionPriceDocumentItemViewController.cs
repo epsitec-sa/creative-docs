@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Helpers;
 
 using Epsitec.Cresus.DataLayer;
 
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.FixedPriceAfterTax = null;
 			}
 
-			this.tileContainer.UpdateAllWidgets ();
+			this.UpdatePrices ();
 		}
 
 
@@ -170,10 +171,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.Entity.Discount.DiscountAmount = null;
 			}
 
-			this.tileContainer.UpdateAllWidgets ();
+			this.UpdatePrices ();
 		}
 
 
+		private void UpdatePrices()
+		{
+			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+
+			if (invoiceDocument != null)
+			{
+				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
+			}
+
+			this.tileContainer.UpdateAllWidgets ();
+		}
+
+	
 		protected override EditionStatus GetEditionStatus()
 		{
 			return EditionStatus.Valid;

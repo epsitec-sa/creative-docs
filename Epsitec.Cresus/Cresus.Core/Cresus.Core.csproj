@@ -110,6 +110,7 @@
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
