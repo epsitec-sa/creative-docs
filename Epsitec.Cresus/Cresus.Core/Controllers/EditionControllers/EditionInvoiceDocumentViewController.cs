@@ -110,9 +110,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				});
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext)
-				.DefineText        (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCreateItem  (this.CreateArticleDocumentItem);
+				.DefineText           (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
+				.DefineCompactText    (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
+				.DefineCreateItem     (this.CreateArticleDocumentItem)  // le bouton [+] crée une ligne d'article
+				.DefineCreateGetIndex (this.CreateArticleGetIndex);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
@@ -153,6 +154,34 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			article.EndDate    = this.Entity.CreationDate;
 
 			return article;
+		}
+
+		private int CreateArticleGetIndex()
+		{
+			//	Retourne l'index où insérer la nouvelle ligne d'article créée avec le bouton [+].
+			//	Depuis la dernière ligne, on ignore les lignes de totaux et les articles 'frais de port'.
+			int index = this.Entity.Lines.Count;  // insère à la fin par défaut
+
+			while (index > 0)
+			{
+				var line = this.Entity.Lines[index-1];
+
+				if (line is PriceDocumentItemEntity)
+				{
+					index--;  // insère avant un (sous-)total
+					continue;
+				}
+
+				if (ArticleDocumentItemHelper.IsFixedTax (line as ArticleDocumentItemEntity))
+				{
+					index--;  // insère avant les frais de port
+					continue;
+				}
+
+				break;
+			}
+
+			return index;
 		}
 
 

@@ -105,6 +105,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public bool HasCreateGetIndex
+		{
+			get
+			{
+				return this.createGetIndex != null;
+			}
+		}
+
 		public bool HasDeleteItem
 		{
 			get
@@ -115,12 +123,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public CollectionTemplate<T> DefineCreateItem(System.Func<T> action)
 		{
+			//	Définition de l'action qui crée une nouvelle entité.
 			this.createItem = action;
+			return this;
+		}
+
+		public CollectionTemplate<T> DefineCreateGetIndex(System.Func<int> action)
+		{
+			//	Définition de l'action qui retourne l'index où insérer la nouvelle entité créée.
+			this.createGetIndex = action;
 			return this;
 		}
 
 		public CollectionTemplate<T> DefineDeleteItem(System.Action<T> action)
 		{
+			//	Définition de l'action qui supprime une entité.
 			this.deleteItem = action;
 			return this;
 		}
@@ -228,10 +245,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				this.BindRealEntitySummaryData (data, source, collectionAccessor);
 			}
-			
+
 			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
+				data.AddNewItem = () => this.AddItem (data, collectionAccessor);
 				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
 			}
 
@@ -242,8 +259,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (this.HasCreateItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => collectionAccessor.AddItem (this.GenericCreateItem ());
+				data.AddNewItem = () => this.AddItem (data, collectionAccessor);
 			}
+		}
+
+		private void AddItem(SummaryData data, ICollectionAccessor collectionAccessor)
+		{
+			int index = collectionAccessor.GetItemCollection ().Count;  // insère à la fin
+			if (this.HasCreateGetIndex)
+			{
+				index = this.createGetIndex ();
+			}
+
+			collectionAccessor.InsertItem (index, this.GenericCreateItem ());
+
+			data.CreatedIndex = index;
 		}
 
 		
@@ -303,8 +333,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.deleteItem (item);
 		}
 
-		
+
 		private System.Func<T> createItem;
+		private System.Func<int> createGetIndex;
 		private System.Action<T> deleteItem;
 		private System.Action<T> setupItem;
 

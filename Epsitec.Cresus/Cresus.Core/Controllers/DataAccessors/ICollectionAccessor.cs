@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// </summary>
 	public interface ICollectionAccessor
 	{
+		void InsertItem(int index, AbstractEntity item);
 		void AddItem(AbstractEntity item);
 		bool RemoveItem(AbstractEntity item);
 

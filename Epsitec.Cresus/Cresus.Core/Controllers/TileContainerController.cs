@@ -249,7 +249,7 @@ using Epsitec.Common.Support.EntityEngine;
 					this.QueueTasklets ("CreateNewTile",
 						new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 						new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
-						new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
+						new TaskletJob (() => this.OpenSubViewForCreatedSummaryTile (item, itemName), TaskletRunMode.After));
 				};
 			tile.RemoveClicked += (sender, e) =>
 				{
@@ -269,7 +269,7 @@ using Epsitec.Common.Support.EntityEngine;
 				this.QueueTasklets ("CreateNewTile",
 					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
 					new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
-					new TaskletJob (() => this.OpenSubViewForLastSummaryTile (itemName), TaskletRunMode.After));
+					new TaskletJob (() => this.OpenSubViewForCreatedSummaryTile (item, itemName), TaskletRunMode.After));
 			}
 			else
 			{
@@ -280,13 +280,35 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
-		private void OpenSubViewForLastSummaryTile(string itemName)
+		private void OpenSubViewForCreatedSummaryTile(SummaryData item, string itemName)
 		{
-			var last = this.activeItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
+			int index = item.CreatedIndex;
+			SummaryData sel = null;
 
-			if (last != null)
+			foreach (var x in this.activeItems)
 			{
-				last.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
+				if (SummaryData.GetNamePrefix (x.Name) == itemName)
+				{
+					if (index-- == 0)
+					{
+						sel = x;
+						break;
+					}
+				}
+			}
+
+			if (sel == null)
+			{
+				var last = this.activeItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
+
+				if (last != null)
+				{
+					last.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
+				}
+			}
+			else
+			{
+				sel.SummaryTile.OpenSubView (this.controller.Orchestrator, this.controller);
 			}
 		}
 
