@@ -133,7 +133,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
+				.DefineSetupItem   (this.SetupBillingDetails);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
@@ -281,6 +282,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				return UIBuilder.FormatText (amount, ratio, title).ToString ();
 			}
+		}
+
+		private void SetupBillingDetails(BillingDetailsEntity billingDetails)
+		{
+			var date = Date.Today;
+
+			billingDetails.AmountDue.Date = date;
+			billingDetails.Title = string.Format ("Votre commande du {0}", Misc.GetDateTimeDescription (date.ToDateTime ()));
+			billingDetails.EsrCustomerNumber = "01-69444-3";  // compte BVR
+			billingDetails.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";  // n° de réf BVR lié
+			// TODO: Trouver ces 2 dernièers informations de faon plus générale !
 		}
 
 
