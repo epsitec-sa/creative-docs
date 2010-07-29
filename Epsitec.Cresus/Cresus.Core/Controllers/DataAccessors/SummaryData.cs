@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	{
 		public SummaryData()
 		{
-			this.ViewControllerMode = ViewControllerMode.Edition;
 			this.bindings = new List<AccessorBinding> ();
 		}
 
@@ -31,12 +30,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (template != null)
 			{
-				this.Name               = template.Name;
-				this.Rank               = template.Rank;
-				this.IconUri            = template.IconUri;
-				this.AutoGroup          = template.AutoGroup;
-				this.DataType           = template.DataType;
-				this.ViewControllerMode = template.ViewControllerMode;
+				this.Name      = template.Name;
+				this.Rank      = template.Rank;
+				this.IconUri   = template.IconUri;
+				this.AutoGroup = template.AutoGroup;
+				this.DataType  = template.DataType;
 			}
 		}
 
@@ -94,12 +92,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		public SummaryDataType					DataType
-		{
-			get;
-			set;
-		}
-
-		public ViewControllerMode				ViewControllerMode
 		{
 			get;
 			set;
@@ -303,7 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (this.EntityMarshaler != null)
 			{
-				return EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, this.ViewControllerMode, orchestrator);
+				return EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator);
 			}
 
 			return null;
