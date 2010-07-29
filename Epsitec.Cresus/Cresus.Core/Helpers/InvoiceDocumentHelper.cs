@@ -89,10 +89,10 @@ namespace Epsitec.Cresus.Core.Helpers
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
 			string title = UIBuilder.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return string.Concat (title, " ", InvoiceDocumentHelper.GetRatio (x, billingDetails, isBL));
+			return string.Concat (title, " ", InvoiceDocumentHelper.GetRatio (x, billingDetails, true, isBL));
 		}
 
-		public static string GetRatio(InvoiceDocumentEntity x, BillingDetailsEntity billingDetails, bool isBL)
+		public static string GetRatio(InvoiceDocumentEntity x, BillingDetailsEntity billingDetails, bool parenthesis, bool isBL)
 		{
 			int rank = 0;
 			int count = 0;
@@ -115,7 +115,14 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (count > 1)
 			{
-				return string.Format ("({0}/{1})", (rank+1).ToString (), count.ToString ());
+				if (parenthesis)
+				{
+					return string.Format ("({0}/{1})", (rank+1).ToString (), count.ToString ());
+				}
+				else
+				{
+					return string.Format ("{0}/{1}", (rank+1).ToString (), count.ToString ());
+				}
 			}
 
 			return null;

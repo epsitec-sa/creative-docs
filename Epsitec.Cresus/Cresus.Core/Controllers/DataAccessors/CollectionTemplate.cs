@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => this.AddItem (data, collectionAccessor);
+				data.AddNewItem = () => this.CreateItem (data, collectionAccessor);
 				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
 			}
 
@@ -259,20 +259,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (this.HasCreateItem && collectionAccessor != null)
 			{
-				data.AddNewItem = () => this.AddItem (data, collectionAccessor);
+				data.AddNewItem = () => this.CreateItem (data, collectionAccessor);
 			}
 		}
 
-		private void AddItem(SummaryData data, ICollectionAccessor collectionAccessor)
+		private void CreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
 		{
-			int index = collectionAccessor.GetItemCollection ().Count;  // insère à la fin
-			if (this.HasCreateGetIndex)
+			//	Crée une nouvelle entité et insère-la au bon endroit.
+			//	Si aucune action CreateGetIndex n'est définie, elle est insérée à la fin.
+			//	Sinon, CreateGetIndex détermine l'index à utiliser.
+			int index = collectionAccessor.GetItemCollection ().Count;  // index pour insérer à la fin
+
+			if (this.HasCreateGetIndex)  // action CreateGetIndex définie ?
 			{
-				index = this.createGetIndex ();
+				index = this.createGetIndex ();  // index selon l'action
 			}
 
 			collectionAccessor.InsertItem (index, this.GenericCreateItem ());
 
+			// Mémorise l'index de l'entité insérée, pour permettre de la sélectionner dans la tuile.
 			data.CreatedIndex = index;
 		}
 
