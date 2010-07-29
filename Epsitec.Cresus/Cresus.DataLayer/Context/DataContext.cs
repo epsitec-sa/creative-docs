@@ -193,33 +193,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		// TODO Remove the two methods below which are kind of strange and replace the call by calls
-		// to the method just above.
-		// Marc
-
-
-		public bool UpdateEmptyEntityStatus(AbstractEntity entity, params bool[] emptyPredicateResults)
-		{
-			System.Diagnostics.Debug.Assert (emptyPredicateResults.Length > 0);
-
-			bool result = emptyPredicateResults.All (x => x);
-
-			this.UpdateEmptyEntityStatus (entity, result);
-
-			return result;
-		}
-
-
-		public bool UpdateEmptyEntityStatus<T>(T entity, System.Predicate<T> emptyPredicate) where T : AbstractEntity
-		{
-			bool result = emptyPredicate (entity);
-			
-			this.UpdateEmptyEntityStatus (entity, result);
-
-			return result;
-		}
-
-
 		public void DeleteEntity(AbstractEntity entity)
 		{
 			if (!this.entitiesDeleted.Contains (entity))
