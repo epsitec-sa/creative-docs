@@ -111,7 +111,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
+				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
+				.DefineCreateItem  (this.CreateLineItem);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
@@ -139,6 +140,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIComments(SummaryDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
+		}
+
+
+		private ArticleDocumentItemEntity CreateLineItem()
+		{
+			//	Crée un nouvelle ligne dans la facture, du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
+			return this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
 		}
 
 
