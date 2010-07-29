@@ -408,10 +408,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		// TODO make two next methods as internal and update what must be updated in order to to it.
-		// Marc
-
-
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> corresponding to a <see cref="EntityKey"/>. This
 		/// method looks in the cache and then queries the database.
