@@ -315,44 +315,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (alfred));
 			}
 		}
-
-
-		[TestMethod]
-		public void GetReferencersReference()
-		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity alfredExample = DatabaseCreator2.GetCorrectExample1 ();
-				NaturalPersonEntity alfred = dataContext.GetByExample<NaturalPersonEntity> (alfredExample).FirstOrDefault ();
-
-				AbstractEntity[] referencers = dataContext.GetReferencers (alfred).Select (r => r.Item1).ToArray ();
-
-				Assert.IsTrue (referencers.Length == 2);
-
-				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
-				Assert.IsTrue (referencers.OfType<UriContactEntity> ().Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
-			}
-		}
-
-
-		[TestMethod]
-		public void GetReferencersCollection()
-		{
-			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				UriContactEntity contactExample = new UriContactEntity ()
-				{
-					Uri = "alfred@coucou.com",
-				};
-
-				UriContactEntity contact = dataContext.GetByExample (contactExample).FirstOrDefault ();
-
-				AbstractEntity[] referencers = dataContext.GetReferencers (contact).Select (r => r.Item1).ToArray ();
-
-				Assert.IsTrue (referencers.Length == 1);
-				Assert.IsTrue (referencers.OfType<NaturalPersonEntity> ().Any (p => DatabaseCreator2.CheckAlfred (p)));
-			}
-		}
 		
 
 		[TestMethod]
