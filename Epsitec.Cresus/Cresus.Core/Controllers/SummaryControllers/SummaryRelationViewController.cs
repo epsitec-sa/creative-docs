@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.UpdateRelationDefaultAddress ();
 			
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
-			context.UpdateEmptyEntityStatus (entity.Person, x => x.IsEmpty ());
+			context.UpdateEmptyEntityStatus (entity.Person, entity.Person.IsEmpty ());
 		}
 
 		private void CreateUIRelation(SummaryDataItems data)
