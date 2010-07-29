@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -468,16 +470,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			List<DbColumn> columns = new List<DbColumn> ()
 			{
-				new DbColumn(Druid.FromLong(0), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(1), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(2), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(3), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(4), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(5), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(6), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(7), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(8), new DbTypeDef()),
-				new DbColumn(Druid.FromLong(9), new DbTypeDef()),
+				new DbColumn(Druid.FromLong(0), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(1), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(2), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(3), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(4), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(5), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(6), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(7), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(8), new DbTypeDef(IntegerType.Default)),
+				new DbColumn(Druid.FromLong(9), new DbTypeDef(IntegerType.Default)),
 			};
 
 			table.Columns.AddRange (columns);
