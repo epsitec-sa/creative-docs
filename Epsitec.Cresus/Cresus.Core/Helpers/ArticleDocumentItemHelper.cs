@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static string GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
+			//	Retourne la quantité d'un article et l'unité correspondante. Si l'article n'est pas livrable,
+			//	retourne zéro (par exemple "0 pce").
 			string unit = null;
 
 			foreach (var quantity in article.ArticleQuantities)

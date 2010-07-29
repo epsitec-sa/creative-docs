@@ -35,10 +35,29 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de total");
 
+				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
+		}
+
+
+		private void CreateTabBook(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			List<string> pagesDescription = new List<string> ();
+			pagesDescription.Add ("Text.Texte");
+			pagesDescription.Add ("Article.Article");
+			pagesDescription.Add ("Price.Total");
+			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Price", this.HandleTabBookAction);
+		}
+
+		private void HandleTabBookAction(string tabPageName)
+		{
 		}
 
 
@@ -161,6 +180,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer					tileContainer;
+		private TileContainer							tileContainer;
+		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 	}
 }

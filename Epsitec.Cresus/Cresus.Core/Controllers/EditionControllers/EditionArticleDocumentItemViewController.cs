@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDocumentItem", "Ligne d'article");
 
+				this.CreateTabBook (builder);
+
 				this.CreateUIArticleDefinition (builder);
 
 				this.CreateUIQuantity (builder);
@@ -54,6 +56,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				builder.CreateFooterEditorTile ();
 			}
+		}
+
+
+		private void CreateTabBook(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			List<string> pagesDescription = new List<string> ();
+			pagesDescription.Add ("Text.Texte");
+			pagesDescription.Add ("Article.Article");
+			pagesDescription.Add ("Price.Total");
+			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Article", this.HandleTabBookAction);
+		}
+
+		private void HandleTabBookAction(string tabPageName)
+		{
 		}
 
 
@@ -586,6 +606,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer					tileContainer;
+		private TileContainer							tileContainer;
+		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 	}
 }
