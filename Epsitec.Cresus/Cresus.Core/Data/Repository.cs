@@ -59,12 +59,6 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		protected IEnumerable<AbstractEntity> GetReferencers(AbstractEntity target)
-		{
-			return this.dataContext.GetReferencers (target).Select (result => result.Item1);
-		}
-
-
 		private readonly DataContext dataContext;
 
 
