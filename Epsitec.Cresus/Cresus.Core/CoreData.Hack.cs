@@ -136,10 +136,9 @@ namespace Epsitec.Cresus.Core
 			UnitOfMeasureEntity[] units = this.InsertUnitOfMeasureInDatabase ().ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
 			PaymentModeEntity[] paymentDefs = this.InsertPaymentModeInDatabase ().ToArray ();
-			//?CurrencyEntity[] currencyDefs = this.InsertCurrencyInDatabase ().ToArray ();  // TODO: pourquoi cela fait-il planter la base de données ?
-			//?InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs).ToArray ();
-			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, null, articleDefs).ToArray ();
-
+			CurrencyEntity[] currencyDefs = this.InsertCurrencyInDatabase ().ToArray ();
+			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs).ToArray ();
+			
 			this.DataContext.SaveChanges ();
 		}
 
