@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbTypeDef"/> class.
 		/// </summary>
-		public DbTypeDef()
+		private DbTypeDef()
 		{
 		}
 
