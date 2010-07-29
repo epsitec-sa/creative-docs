@@ -122,10 +122,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			context.UpdateEmptyEntityStatus (contact, isEmpty);
 
-			context.UpdateEmptyEntityStatus (contact.Address,
-				context.UpdateEmptyEntityStatus (contact.Address.Street,  x => x.IsEmpty ()),
-				context.UpdateEmptyEntityStatus (contact.Address.PostBox, x => x.IsEmpty ()),
-				contact.Address.Location.IsEmpty ());
+			bool emptyStreet = contact.Address.Street.IsEmpty ();
+			bool emptyPostBox = contact.Address.PostBox.IsEmpty ();
+			bool emptyLocation = contact.Address.Location.IsEmpty ();
+			bool emptyAddress = emptyStreet && emptyPostBox && emptyLocation;
+
+			context.UpdateEmptyEntityStatus (contact.Address.Street, emptyStreet);
+			context.UpdateEmptyEntityStatus (contact.Address.PostBox, emptyPostBox);
+			context.UpdateEmptyEntityStatus (contact.Address, emptyAddress);
 		}
 
 		private void CreateUIRoles(UIBuilder builder)
