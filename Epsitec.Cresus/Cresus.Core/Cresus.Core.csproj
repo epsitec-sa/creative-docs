@@ -116,7 +116,6 @@
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleDocumentItemViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionAbstractDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionCommentViewController.cs" />

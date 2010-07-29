@@ -243,6 +243,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public int								CreatedIndex
+		{
+			get;
+			set;
+		}
+
+
 		public void ExecuteAccessors()
 		{
 			this.bindings.ForEach (x => x.Execute ());

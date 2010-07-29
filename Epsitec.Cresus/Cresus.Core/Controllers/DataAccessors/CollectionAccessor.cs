@@ -31,6 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#region ICollectionAccessor Members
 
+		public abstract void InsertItem(int index, AbstractEntity item);
+
 		public abstract void AddItem(AbstractEntity item);
 
 		public abstract bool RemoveItem(AbstractEntity item);
@@ -157,6 +159,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					index++;
 				}
 			}
+		}
+
+		public override void InsertItem(int index, AbstractEntity item)
+		{
+			var source = this.source ();
+			var collection = this.collectionResolver (source);
+			collection.Insert (index, item as T3);
 		}
 
 		public override void AddItem(AbstractEntity item)

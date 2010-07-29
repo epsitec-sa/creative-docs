@@ -449,7 +449,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnArticleLine(ArticleDocumentItemEntity line)
 		{
-			if (this.IsBL && this.IsPort (line))
+			if (this.IsBL && ArticleDocumentItemHelper.IsFixedTax (line))
 			{
 				return false;
 			}
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
-			if (this.IsBL && this.IsPort (line))
+			if (this.IsBL && ArticleDocumentItemHelper.IsFixedTax (line))
 			{
 				return false;
 			}
@@ -977,18 +977,6 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddAbsolute (line, bounds);
 		}
 
-
-		private bool IsPort(ArticleDocumentItemEntity article)
-		{
-			//	Retourne true s'il s'agit des frais de port.
-			if (article.ArticleDefinition.IsActive () &&
-				article.ArticleDefinition.ArticleCategory.IsActive ())
-			{
-				return article.ArticleDefinition.ArticleCategory.Name == "Ports/emballages";
-			}
-
-			return false;
-		}
 
 		private bool IsBL
 		{
