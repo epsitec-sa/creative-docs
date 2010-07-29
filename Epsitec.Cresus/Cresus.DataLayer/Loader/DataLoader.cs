@@ -78,7 +78,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				RootEntity = example,
 				RequestedEntity = example,
-				ResolutionMode = ResolutionMode.Database,
 			};
 
 			return this.GetByRequest<T> (request);
@@ -93,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			foreach (EntityData entityData in this.LoaderQueryGenerator.GetEntitiesData (request))
 			{
-				T entity = this.ResolveEntity (entityData, request.ResolutionMode) as T;
+				T entity = this.ResolveEntity (entityData) as T;
 
 				if (entity != null)
 				{
@@ -117,13 +116,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public AbstractEntity ResolveEntity(EntityData entityData, ResolutionMode resolutionMode = ResolutionMode.Database)
+		public AbstractEntity ResolveEntity(EntityData entityData)
 		{
 			EntityKey entityKey = entityData.EntityKey;
 
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
-			if (entity == null && resolutionMode == ResolutionMode.Database)
+			if (entity == null)
 			{
 				entity = this.DeserializeEntity (entityData);
 			}
