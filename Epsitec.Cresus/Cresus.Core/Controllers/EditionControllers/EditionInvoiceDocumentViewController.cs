@@ -268,11 +268,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailsEntity billingDetailsEntity)
+		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailsEntity billingDetails)
 		{
-			string amount = Misc.PriceToString (billingDetailsEntity.AmountDue.Amount);
-			string title = Misc.FirstLine (billingDetailsEntity.Title);
-			string ratio = InvoiceDocumentHelper.GetRatio (invoiceDocument, billingDetailsEntity, false);
+			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
+			string title = Misc.FirstLine (billingDetails.Title);
+			string ratio = InvoiceDocumentHelper.GetRatio (invoiceDocument, billingDetails, true, false);
 
 			if (ratio == null)
 			{
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			billingDetails.Title = string.Format ("Votre commande du {0}", Misc.GetDateTimeDescription (date.ToDateTime ()));
 			billingDetails.EsrCustomerNumber = "01-69444-3";  // compte BVR
 			billingDetails.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";  // n° de réf BVR lié
-			// TODO: Trouver ces 2 dernièers informations de faon plus générale !
+			// TODO: Trouver ces 2 dernières informations de façon plus générale !
 		}
 
 

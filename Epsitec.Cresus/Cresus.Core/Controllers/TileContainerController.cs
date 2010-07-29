@@ -282,6 +282,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 		private void OpenSubViewForCreatedSummaryTile(SummaryData item, string itemName)
 		{
+			//	Ouvre la vue correspondant à la dernière entité créée dans une collection.
 			int index = item.CreatedIndex;
 			SummaryData sel = null;
 
