@@ -10,18 +10,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 	{
 
 
-		public ReferenceSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, EntityKey? oldValue, EntityKey? newValue)
+		public ReferenceSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, EntityKey? newValue)
 			: base (dataContextId, entityKey, fieldId)
 		{
-			this.OldValue = oldValue;
 			this.NewValue = newValue;
-		}
-
-
-		public EntityKey? OldValue
-		{
-			get;
-			private set;
 		}
 
 

@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void DeleteEntityTargetRelationsInMemory(AbstractEntity target)
+		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target)
 		{
 			// This method will probably be too slow for a high number of managed entities, therefore
 			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting

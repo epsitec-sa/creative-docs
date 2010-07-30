@@ -7,9 +7,11 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Schema;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -197,6 +199,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 
 			return this.entitiesCache.ContainsEntity (entity);
+		}
+
+
+		internal bool Contains(EntityKey entityKey)
+		{
+			return this.entitiesCache.GetEntity (entityKey) != null;
 		}
 
 
@@ -542,27 +550,97 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		internal void Synchronize(DeleteSynchronizationJob job)
+		// TODO Add notification when an entity is deleted or updated as in the next methods.
+
+		internal void Synchronize(AbstractSynchronisationJob job)
 		{
-			throw new System.NotImplementedException ();
+			if (this.Contains (job.EntityKey))
+			{
+				// Here is a little trick : job is cast to dynamic, which allows us to simulate a
+				// double dispatch call to this.Synchronize(...). That is cool, because that means
+				// that we have 4 overloads for this.Synchronize(...) and we are able to call the
+				// appropriate one without knowing the concrete type of job at compile time or by
+				// testing it with the 'is' keyword at runtime.
+				// Marc
+
+				this.Synchronize ((dynamic) job);
+			}
+		}
+		
+
+		private void Synchronize(DeleteSynchronizationJob job)
+		{
+			AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity);
 		}
 
 
-		internal void Synchronize(ValueSynchronizationJob job)
+		private void Synchronize(ValueSynchronizationJob job)
 		{
-			throw new System.NotImplementedException ();
+			AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+			using (entity.UseSilentUpdates ())
+			{
+				using (entity.DefineOriginalValues ())
+				{
+					string fieldId = job.FieldId.ToResourceId ();
+					object fieldValue = job.NewValue;
+
+					entity.InternalSetValue (fieldId, fieldValue);
+				}
+			}
 		}
 
 
-		internal void Synchronize(ReferenceSynchronizationJob job)
+		private void Synchronize(ReferenceSynchronizationJob job)
 		{
-			throw new System.NotImplementedException ();
+			AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+			using (entity.UseSilentUpdates ())
+			{
+				using (entity.DefineOriginalValues ())
+				{
+					string fieldId = job.FieldId.ToResourceId ();
+					object fieldValue;
+
+					if (job.NewValue.HasValue)
+					{
+						fieldValue = new EntityKeyProxy (this, job.NewValue.Value);
+					}
+					else
+					{
+						fieldValue = null;
+					}
+
+					entity.InternalSetValue (fieldId, fieldValue);
+				}
+			}
 		}
 
 
-		internal void Synchronize(CollectionSynchronizationJob job)
+		private void Synchronize(CollectionSynchronizationJob job)
 		{
-			throw new System.NotImplementedException ();
+			AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+			using (entity.UseSilentUpdates ())
+			{
+				using (entity.DefineOriginalValues ())
+				{
+					string fieldId = job.FieldId.ToResourceId ();
+
+					IList collection = entity.InternalGetFieldCollection (fieldId);
+
+					collection.Clear ();
+
+					foreach (EntityKey entityKey in job.NewValues)
+					{
+						object proxy = new EntityKeyProxy (this, entityKey);
+
+						collection.Add (proxy);
+					}
+				}
+			}
 		}
 
 
