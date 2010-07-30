@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				// TODO: Should we propagate the serialization to another DataContext ?
 				// Pierre
-				return;
+				throw new System.Exception ("entity is not owned by the DataContext associated with this DataSaver.");
 			}
 
 			bool isPersisted = this.DataContext.IsPersistent (entity);
