@@ -195,6 +195,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				this.SaveEntity (transaction, savedEntities, entity);
 			}
 
+			foreach (AbstractEntity entity in savedEntities)
+			{
+				entity.SetModifiedValuesAsOriginalValues ();
+			}
+
 			return entitiesToSave.Any ();
 		}
 
