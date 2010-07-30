@@ -6,11 +6,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 {
 
 
-	internal class ValueUpdateSynchronizationJob : AbstractUpdateSynchronizationJob
+	internal class ValueSynchronizationJob : AbstractUpdateSynchronizationJob
 	{
 
 
-		public ValueUpdateSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, object oldValue, object newValue)
+		public ValueSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, object oldValue, object newValue)
 			: base (dataContextId, entityKey, fieldId)
 		{
 			this.OldValue = oldValue;

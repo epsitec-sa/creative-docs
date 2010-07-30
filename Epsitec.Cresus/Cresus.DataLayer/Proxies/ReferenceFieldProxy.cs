@@ -13,17 +13,17 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 
 	/// <summary>
-	/// The <c>EntityFieldProxy</c> class is used as a placeholder for an <see cref="AbstractEntity"/>.
+	/// The <c>ReferenceFieldProxy</c> class is used as a placeholder for an <see cref="AbstractEntity"/>.
 	/// The <see cref="AbstractEntity"/> that it represents is defined by another
 	/// <see cref="AbstractEntity"/> and the <see cref="Druid"/> of a field of this
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	internal class EntityFieldProxy : AbstractFieldProxy, IEntityProxy
+	internal class ReferenceFieldProxy : AbstractFieldProxy, IEntityProxy
 	{
 
 
 		/// <summary>
-		/// Builds a new <c>EntityKeyProxy</c> which represents the <see cref="AbstractEntity"/> that
+		/// Builds a new <c>ReferenceFieldProxy</c> which represents the <see cref="AbstractEntity"/> that
 		/// is the one referenced by the field with the <see cref="Druid"/> <paramref name="fieldId"/>
 		/// of <paramref name="entity"/>.
 		/// </summary>
@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// </exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="dataContext"/>.</exception>
-		/// <exception cref="System.ArgumentException">If the field given by <see cref="fieldId"/> is not valid for the <c>EntityFieldProxy</c>.</exception>
-		public EntityFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
+		/// <exception cref="System.ArgumentException">If the field given by <paramref name="fieldId"/> is not valid for the <c>ReferenceFieldProxy</c>.</exception>
+		public ReferenceFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 			: base (dataContext, entity, fieldId)
 		{
 		}

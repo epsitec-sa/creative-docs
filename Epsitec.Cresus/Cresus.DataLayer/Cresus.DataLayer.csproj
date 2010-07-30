@@ -165,8 +165,8 @@
     <Compile Include="Loader\AliasNode.cs" />
     <Compile Include="Loader\ValueData.cs" />
     <Compile Include="Proxies\AbstractFieldProxy.cs" />
-    <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
-    <Compile Include="Proxies\EntityFieldProxy.cs" />
+    <Compile Include="Proxies\CollectionFieldProxy.cs" />
+    <Compile Include="Proxies\ReferenceFieldProxy.cs" />
     <Compile Include="Context\EntityCache.cs" />
     <Compile Include="Loader\LoaderQueryGenerator.cs" />
     <Compile Include="Proxies\ValueFieldProxy.cs" />
@@ -179,10 +179,10 @@
     <Compile Include="Saver\AbstractUpdateSynchronizationJob.cs" />
     <Compile Include="Saver\DataSaver.cs" />
     <Compile Include="Saver\DeleteSynchronizationJob.cs" />
-    <Compile Include="Saver\EntityCollectionUpdateSynchronizationJob.cs" />
-    <Compile Include="Saver\EntityUpdateSynchronizationJob.cs" />
+    <Compile Include="Saver\CollectionSynchronizationJob.cs" />
+    <Compile Include="Saver\ReferenceSynchronizationJob.cs" />
     <Compile Include="Saver\SaverQueryGenerator.cs" />
-    <Compile Include="Saver\ValueUpdateSynchronizationJob.cs" />
+    <Compile Include="Saver\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>

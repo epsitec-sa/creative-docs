@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// </exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="dataContext"/>.</exception>
-		/// <exception cref="System.ArgumentException">If the field given by <see cref="fieldId"/> is not valid for the <c>ValueFieldProxy</c>.</exception>
+		/// <exception cref="System.ArgumentException">If the field given by <paramref name="fieldId"/> is not valid for the <c>ValueFieldProxy</c>.</exception>
 		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
 			: base (dataContext, entity, fieldId)
 		{
