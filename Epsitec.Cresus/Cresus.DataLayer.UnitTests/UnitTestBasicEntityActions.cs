@@ -763,6 +763,38 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		[TestMethod]
+		public void RevertModifiedEntity()
+		{
+			string firstName1 = "Alfred";
+			string firstName2 = "Albert";
+			
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+				Assert.AreEqual (firstName1, alfred.Firstname);
+
+				alfred.Firstname = firstName2;
+				Assert.AreEqual (firstName2, alfred.Firstname);
+
+				dataContext.SaveChanges ();
+				Assert.AreEqual (firstName2, alfred.Firstname);
+
+				alfred.Firstname = firstName1;
+				Assert.AreEqual (firstName1, alfred.Firstname);
+
+				dataContext.SaveChanges ();
+				Assert.AreEqual (firstName1, alfred.Firstname);
+			}
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+				Assert.AreEqual (firstName1, alfred.Firstname);
+			}
+		}
+
+
 	}
 
 
