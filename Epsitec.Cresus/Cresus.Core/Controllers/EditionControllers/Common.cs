@@ -17,6 +17,49 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	internal static class Common
 	{
+		public static void ChangeEditedLineEntity (TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
+		{
+			EntityViewController parentController = Common.GetParentController (tileContainer);
+			InvoiceDocumentEntity invoiceDocument = parentController.GetEntity () as InvoiceDocumentEntity;
+
+			//	Cherche l'index de la ligne dans la collection.
+			int index = invoiceDocument.Lines.IndexOf (entity);
+			if (index == -1)
+			{
+				return;
+			}
+
+			//	Ferme la tuile.
+			parentController.Orchestrator.CloseSubViews (parentController);
+
+			//	Supprime l'entité dans la db.
+			invoiceDocument.Lines.RemoveAt (index);
+			dataContext.DeleteEntity (entity);
+			parentController.DataContext.DeleteEntity (entity);
+
+			//	Crée la nouvelle entité.
+			AbstractDocumentItemEntity newEntity;
+
+			if (tabPageName == "Text")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+			}
+			else if (tabPageName == "Price")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+			}
+			else
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			}
+
+			invoiceDocument.Lines.Insert (index, newEntity);
+
+			//?this.tileContainer.CreateSubViewController
+			//?parentController.Orchestrator.ShowSubView (parentController, newControler);
+		}
+
+
 		/// <summary>
 		/// Cette méthode "magique" est capable de retrouver l'entité parent à partir du container servant
 		/// à éditer une entité fille.
@@ -25,16 +68,29 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		/// <returns></returns>
 		public static AbstractEntity GetParentEntity(TileContainer container)
 		{
+			var parentController = Common.GetParentController (container);
+
+			if (parentController != null)
+			{
+				return parentController.GetEntity ();
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Cette méthode "magique" est capable de retrouver le contrôleur parent à partir du container servant
+		/// à éditer une entité fille.
+		/// </summary>
+		/// <param name="container"></param>
+		/// <returns></returns>
+		public static EntityViewController GetParentController(TileContainer container)
+		{
 			var controllers = container.Controller.Orchestrator.Controller.GetAllSubControllers ();
 
 			if (controllers.Count () >= 1)
 			{
-				var parentController = controllers.ElementAt (1) as EntityViewController;
-
-				if (parentController != null)
-				{
-					return parentController.GetEntity ();
-				}
+				return controllers.ElementAt (1) as EntityViewController;
 			}
 
 			return null;

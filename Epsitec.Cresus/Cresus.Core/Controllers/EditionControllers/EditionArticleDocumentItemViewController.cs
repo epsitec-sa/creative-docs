@@ -75,6 +75,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void HandleTabBookAction(string tabPageName)
 		{
+			if (tabPageName == "Article")
+			{
+				return;
+			}
+
+			Common.ChangeEditedLineEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
 		}
 
 
