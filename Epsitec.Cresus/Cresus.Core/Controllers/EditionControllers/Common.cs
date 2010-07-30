@@ -33,9 +33,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			parentController.Orchestrator.CloseSubViews (parentController);
 
 			//	Supprime l'entité dans la db.
-			invoiceDocument.Lines.RemoveAt (index);
-			dataContext.DeleteEntity (entity);
-			parentController.DataContext.DeleteEntity (entity);
+			invoiceDocument.Lines.RemoveAt (index);              // supprime dans la liste de la facture
+			dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
+			parentController.DataContext.DeleteEntity (entity);  // supprime dans le DataContext de la facture
 
 			//	Crée la nouvelle entité.
 			AbstractDocumentItemEntity newEntity;
@@ -55,7 +55,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			invoiceDocument.Lines.Insert (index, newEntity);
 
-			//?this.tileContainer.CreateSubViewController
+			//	Crée et montre la nouvelle tuile.
+			// TODO: ...
 			//?parentController.Orchestrator.ShowSubView (parentController, newControler);
 		}
 
