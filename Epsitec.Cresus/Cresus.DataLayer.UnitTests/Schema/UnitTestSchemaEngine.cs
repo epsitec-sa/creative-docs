@@ -1,5 +1,4 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
 
@@ -9,8 +8,6 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
-
-using System.Linq;
 
 
 
@@ -24,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -33,9 +30,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
+		}
+
+
+		[TestInitialize]
+		public static void TestInitialize()
+		{
+			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 		
@@ -112,8 +116,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				Assert.IsNotNull (engine.GetRelationTableDefinition (relationId.Item1, relationId.Item2));
 			}
-
-			DatabaseHelper.CreateAndConnectToDatabase();
 		}
 
 

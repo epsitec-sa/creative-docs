@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -32,12 +32,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
-		private void CreateDatabaseHelper()
+
+		[TestInitialize]
+		public static void TestInitialize()
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
@@ -265,8 +267,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				dataContext.SaveChanges ();
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -346,8 +346,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (persons.Count () == 0);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -387,8 +385,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (persons[0].Contacts.Count == 0);
 				Assert.IsTrue (persons[0].Gender == null);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 

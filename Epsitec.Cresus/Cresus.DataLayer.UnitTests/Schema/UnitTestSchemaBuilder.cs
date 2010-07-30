@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -32,9 +32,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
+		}
+
+
+		[TestInitialize]
+		public static void TestInitialize()
+		{
+			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 		
@@ -130,8 +137,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 
 			CollectionAssert.AreEquivalent (types1, types2);
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -227,8 +232,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreEqual (type1, type2);
 			}
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -265,8 +268,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					transaction.Commit ();
 				}
 			}
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -423,8 +424,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreEqual (type1, type2);
 			}
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
@@ -474,8 +473,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 
 			CollectionAssert.AreEquivalent (types1, types2);
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
 		}
 
 
