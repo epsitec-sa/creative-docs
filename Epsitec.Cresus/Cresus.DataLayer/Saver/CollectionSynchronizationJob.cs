@@ -12,11 +12,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 {
 
 
-	internal class EntityCollectionUpdateSynchronizationJob : AbstractUpdateSynchronizationJob
+	internal class CollectionSynchronizationJob : AbstractUpdateSynchronizationJob
 	{
 
 
-		public EntityCollectionUpdateSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, IEnumerable<EntityKey> oldValues, IEnumerable<EntityKey> newValues)
+		public CollectionSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, IEnumerable<EntityKey> oldValues, IEnumerable<EntityKey> newValues)
 			: base (dataContextId, entityKey, fieldId)
 		{
 			this.OldValues = new ReadOnlyCollection<EntityKey> (oldValues.ToList ());

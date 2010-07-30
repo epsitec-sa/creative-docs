@@ -182,10 +182,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					return new ValueFieldProxy (this.DataContext, entity, field.CaptionId);
 				
 				case FieldRelation.Reference:
-					return new EntityFieldProxy (this.DataContext, entity, field.CaptionId);
+					return new ReferenceFieldProxy (this.DataContext, entity, field.CaptionId);
 					
 				case FieldRelation.Collection:
-					return new EntityCollectionFieldProxy (this.DataContext, entity, field.CaptionId);
+					return new CollectionFieldProxy (this.DataContext, entity, field.CaptionId);
 					
 				default:
 					throw new System.NotImplementedException ();

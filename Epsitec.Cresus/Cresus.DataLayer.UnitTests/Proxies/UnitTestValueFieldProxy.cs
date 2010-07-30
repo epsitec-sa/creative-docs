@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					Druid fieldId = Druid.Parse ("[L0AV]");
 
-					new EntityFieldProxy_Accessor (dataContext2, person, fieldId);
+					new ValueFieldProxy_Accessor (dataContext2, person, fieldId);
 				}
 			}
 		}
