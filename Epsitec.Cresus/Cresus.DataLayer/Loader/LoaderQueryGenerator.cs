@@ -21,7 +21,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-	
+
+
+	// TODO Comment this class
+	// Marc
+
 
 	internal sealed class LoaderQueryGenerator
 	{
