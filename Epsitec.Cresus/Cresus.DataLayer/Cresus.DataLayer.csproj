@@ -175,8 +175,14 @@
     </Compile>
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
+    <Compile Include="Saver\AbstractSynchronisationJob.cs" />
+    <Compile Include="Saver\AbstractUpdateSynchronizationJob.cs" />
     <Compile Include="Saver\DataSaver.cs" />
+    <Compile Include="Saver\DeleteSynchronizationJob.cs" />
+    <Compile Include="Saver\EntityCollectionUpdateSynchronizationJob.cs" />
+    <Compile Include="Saver\EntityUpdateSynchronizationJob.cs" />
     <Compile Include="Saver\SaverQueryGenerator.cs" />
+    <Compile Include="Saver\ValueUpdateSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>

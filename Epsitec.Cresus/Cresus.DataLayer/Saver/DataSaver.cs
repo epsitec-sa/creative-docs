@@ -6,7 +6,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections;
 using System.Collections.Generic;
