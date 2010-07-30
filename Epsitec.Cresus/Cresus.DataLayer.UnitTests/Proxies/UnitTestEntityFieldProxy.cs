@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				var proxy = new EntityFieldProxy_Accessor (dataContext, person, fieldId);
 
-				Assert.AreSame (dataContext, proxy.dataContext);
-				Assert.AreSame (person, proxy.entity);
-				Assert.AreEqual (fieldId, proxy.fieldId);
+				Assert.AreSame (dataContext, proxy.DataContext);
+				Assert.AreSame (person, proxy.Entity);
+				Assert.AreEqual (fieldId, proxy.FieldId);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValueFieldProxyConstructorTest2()
+		public void EntityFieldProxyConstructorTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValueFieldProxyConstructorTest3()
+		public void EntityFieldProxyConstructorTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -90,13 +90,59 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest4()
+		public void EntityFieldProxyConstructorTest4()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				new EntityFieldProxy_Accessor (dataContext, person, Druid.Empty);
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void EntityFieldProxyonstructorTest5()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+				new EntityFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AN]"));
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void EntityFieldProxyConstructorTest6()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+				new EntityFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AS]"));
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void EntityFieldProxyConstructorTest7()
+		{
+			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
+				{
+					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					Druid fieldId = Druid.Parse ("[L0A11]");
+
+					new EntityFieldProxy_Accessor (dataContext2, person, fieldId);
+				}
 			}
 		}
 

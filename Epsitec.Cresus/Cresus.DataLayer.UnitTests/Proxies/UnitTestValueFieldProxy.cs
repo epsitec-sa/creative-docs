@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				var proxy = new ValueFieldProxy_Accessor (dataContext, person, fieldId);
 
-				Assert.AreSame (dataContext, proxy.dataContext);
-				Assert.AreSame (person, proxy.entity);
-				Assert.AreEqual (fieldId, proxy.fieldId);
+				Assert.AreSame (dataContext, proxy.DataContext);
+				Assert.AreSame (person, proxy.Entity);
+				Assert.AreEqual (fieldId, proxy.FieldId);
 			}
 		}
 
@@ -97,6 +97,52 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
 				new ValueFieldProxy_Accessor (dataContext, person, Druid.Empty);
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void ValueFieldProxyConstructorTest5()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+				new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AN]"));
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void ValueFieldProxyConstructorTest6()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+				new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AD1]"));
+			}
+		}
+
+
+		[TestMethod]
+		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void ValueFieldProxyConstructorTest7()
+		{
+			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
+				{
+					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					Druid fieldId = Druid.Parse ("[L0AV]");
+
+					new EntityFieldProxy_Accessor (dataContext2, person, fieldId);
+				}
 			}
 		}
 
