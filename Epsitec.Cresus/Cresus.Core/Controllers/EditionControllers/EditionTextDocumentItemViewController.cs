@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
+			this.tileContainer = container;
+
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
@@ -57,6 +59,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void HandleTabBookAction(string tabPageName)
 		{
+			if (tabPageName == "Text")
+			{
+				return;
+			}
+
+			Common.ChangeEditedLineEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
 		}
 
 
@@ -74,6 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private TileContainer							tileContainer;
 		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 	}
 }
