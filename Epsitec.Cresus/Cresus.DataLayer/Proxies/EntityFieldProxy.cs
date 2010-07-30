@@ -1,6 +1,5 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -19,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 	/// <see cref="AbstractEntity"/> and the <see cref="Druid"/> of a field of this
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	internal class EntityFieldProxy : IEntityProxy
+	internal class EntityFieldProxy : AbstractFieldProxy, IEntityProxy
 	{
 
 
@@ -36,19 +35,23 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// If <paramref name="entity"/> is null.
 		/// </exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="dataContext"/>.</exception>
+		/// <exception cref="System.ArgumentException">If the field given by <see cref="fieldId"/> is not valid for the <c>EntityFieldProxy</c>.</exception>
 		public EntityFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
+			: base (dataContext, entity, fieldId)
 		{
-			dataContext.ThrowIfNull ("dataContext");
-			entity.ThrowIfNull ("entity");
-			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+		}
 
-			// TODO Add more test on the input arguments, such as to detect if entity is not managed
-			// by dataContext, or if fieldId is not a field of entity ?
-			// Marc
 
-			this.dataContext = dataContext;
-			this.entity = entity;
-			this.fieldId = fieldId;
+		/// <summary>
+		/// Gets the kind of <see cref="FieldRelation"/> of the field used by this instance.
+		/// </summary>
+		protected override FieldRelation FieldRelation
+		{
+			get
+			{
+				return FieldRelation.Reference;
+			}
 		}
 
 
@@ -104,10 +107,10 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public object PromoteToRealInstance()
 		{
-			EntityContext entityContext = this.entity.GetEntityContext ();
+			EntityContext entityContext = this.Entity.GetEntityContext ();
 
-			Druid leafEntityId = this.entity.GetEntityStructuredTypeId ();
-			string fieldId = this.fieldId.ToResourceId ();
+			Druid leafEntityId = this.Entity.GetEntityStructuredTypeId ();
+			string fieldId = this.FieldId.ToResourceId ();
 			StructuredTypeField field = entityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
 
 			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
@@ -118,11 +121,11 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			Request request = new Request ()
 			{
 				RootEntity = rootExample,
-				RootEntityKey = this.dataContext.GetEntityKey(this.entity).Value.RowKey,
+				RootEntityKey = this.DataContext.GetEntityKey(this.Entity).Value.RowKey,
 				RequestedEntity = targetExample,
 			};
 
-			object result = this.dataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+			object result = this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
 
 			if (result == null)
 			{
@@ -134,27 +137,6 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 
 		#endregion
-
-
-		/// <summary>
-		/// The <see cref="DataContext"/> responsible of the <see cref="AbstractEntity"/> of this
-		/// instance.
-		/// </summary>
-		private DataContext dataContext;
-
-
-		/// <summary>
-		/// The <see cref="AbstractEntity"/> that references the <see cref="AbstractEntity"/> of this
-		/// instance.
-		/// </summary>
-		private AbstractEntity entity;
-
-
-		/// <summary>
-		/// The <see cref="Druid"/> of the field of the <see cref="AbstractEntity"/> that targets the
-		/// <see cref="AbstractEntity"/> of this instance.
-		/// </summary>
-		private Druid fieldId;
 
 
 	}

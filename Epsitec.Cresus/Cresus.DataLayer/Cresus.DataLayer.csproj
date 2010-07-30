@@ -164,6 +164,7 @@
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="Loader\AliasNode.cs" />
     <Compile Include="Loader\ValueData.cs" />
+    <Compile Include="Proxies\AbstractFieldProxy.cs" />
     <Compile Include="Proxies\EntityCollectionFieldProxy.cs" />
     <Compile Include="Proxies\EntityFieldProxy.cs" />
     <Compile Include="Context\EntityCache.cs" />

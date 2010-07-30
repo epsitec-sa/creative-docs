@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -13,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 	/// The <c>ValueFieldProxy</c> class is a placeholder for the value of a value field of an
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	internal class ValueFieldProxy : IValueProxy
+	internal class ValueFieldProxy : AbstractFieldProxy, IValueProxy
 	{
 
 
@@ -30,19 +31,23 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// If <paramref name="entity"/> is null.
 		/// </exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="dataContext"/>.</exception>
+		/// <exception cref="System.ArgumentException">If the field given by <see cref="fieldId"/> is not valid for the <c>ValueFieldProxy</c>.</exception>
 		public ValueFieldProxy(DataContext dataContext, AbstractEntity entity, Druid fieldId)
+			: base (dataContext, entity, fieldId)
 		{
-			dataContext.ThrowIfNull ("dataContext");
-			entity.ThrowIfNull ("entity");
-			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
+		}
 
-			// TODO Add more test on the input arguments, such as to detect if entity is not managed
-			// by dataContext, or if fieldId is not a field of entity ?
-			// Marc
-			
-			this.dataContext = dataContext;
-			this.entity = entity;
-			this.fieldId = fieldId;
+
+		/// <summary>
+		/// Gets the kind of <see cref="FieldRelation"/> of the field used by this instance.
+		/// </summary>
+		protected override FieldRelation FieldRelation
+		{
+			get
+			{
+				return FieldRelation.None;
+			}
 		}
 
 
@@ -55,30 +60,11 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns></returns>
 		public object GetValue()
 		{
-			return this.dataContext.DataLoader.GetFieldValue (entity, fieldId);
+			return this.DataContext.DataLoader.GetFieldValue (Entity, FieldId);
 		}
 
 
 		#endregion
-
-
-		/// <summary>
-		/// The <see cref="DataContext"/> responsible of the <see cref="AbstractEntity"/> of this
-		/// instance.
-		/// </summary>
-		private readonly DataContext dataContext;
-
-
-		/// <summary>
-		/// The <see cref="AbstractEntity"/> whose one of the field is represented by this instance.
-		/// </summary>
-		private readonly AbstractEntity entity;
-
-
-		/// <summary>
-		/// The id of the field represented by this instance.
-		/// </summary>
-		private readonly Druid fieldId;
 
 	
 	}
