@@ -15,11 +15,13 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
+
 	// TODO This is not the prettiest unit test I've done. It might be nice to refractor it if the
 	// the underlying structure of DbAbstractCondition & cie changes and makes it easier to test
 	// the result of the comparisons. Because it is really ugly right now.
 	// Marc
 	
+
     [TestClass]
 	public class UnitTestExpressionConversion
 	{

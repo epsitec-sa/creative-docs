@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}

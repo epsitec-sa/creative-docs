@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -34,7 +34,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		private void CreateDatabaseHelper()
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			DatabaseHelper.DisconnectFromDatabase ();
+		}
+
+
+		[TestInitialize]
+		public static void TestInitialize()
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
@@ -44,13 +52,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				DatabaseCreator2.PupulateDatabase (dataContext);
 			}
-		}
-
-
-		[ClassCleanup]
-		public static void Cleanup()
-		{
-			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
@@ -103,8 +104,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (gertrude.PreferredLanguage, language);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -173,8 +172,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -232,8 +229,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (gertrude.PreferredLanguage, language);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -312,8 +307,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreSame (contact.NaturalPerson.PreferredLanguage, language);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 

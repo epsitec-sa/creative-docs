@@ -14,8 +14,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	[TestClass]
 	public sealed class UnitTestValueData
 	{
-
-
+		
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]

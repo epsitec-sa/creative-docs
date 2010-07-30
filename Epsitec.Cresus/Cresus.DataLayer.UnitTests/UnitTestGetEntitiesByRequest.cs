@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
@@ -629,20 +629,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
 				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
-			}
-		}
-
-
-		private bool IsExceptionThrown(System.Action action)
-		{
-			try
-			{
-				action ();
-				return false;
-			}
-			catch (System.Exception)
-			{
-				return true;
 			}
 		}
 

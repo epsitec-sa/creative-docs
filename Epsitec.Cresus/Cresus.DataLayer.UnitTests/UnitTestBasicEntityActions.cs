@@ -22,34 +22,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[ClassInitialize]
-		public static void Initialize(TestContext testContext)
+		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			DatabaseHelper.CreateAndConnectToDatabase ();
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				DatabaseCreator2.PupulateDatabase (dataContext);
-			}
 		}
 
 
 		[ClassCleanup]
-		public static void Cleanup()
+		public static void ClassCleanup()
 		{
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
-				
-		[TestMethod]
-		public void CreateDatabase()
-		{
-			this.CreateDatabaseHelper ();
-		}
 
-
-		private void CreateDatabaseHelper()
+		[TestInitialize]
+		public static void TestInitialize()
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
@@ -121,8 +108,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.AreEqual (6, contacts.Count ());
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -210,8 +195,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -250,8 +233,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -289,8 +270,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -329,8 +308,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -371,8 +348,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -415,8 +390,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -456,8 +429,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -498,8 +469,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreEqual (1, albert.Contacts.Count);
 				Assert.AreSame (contact, albert.Contacts[0]);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -545,8 +514,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreEqual (contact1, albert.Contacts[0]);
 				Assert.AreEqual (contact2, albert.Contacts[1]);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -590,8 +557,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreEqual (1, albert.Contacts.Count);
 				Assert.AreEqual (contact, albert.Contacts[0]);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -641,8 +606,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.AreEqual (contact2, albert.Contacts[0]);
 				Assert.AreEqual (contact1, albert.Contacts[1]);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -682,8 +645,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsNull (albert.PreferredLanguage);
 				Assert.AreEqual (0, albert.Contacts.Count);
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -711,8 +672,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -745,8 +704,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -773,8 +730,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (alfred.Contacts.Count == 1);
 				Assert.IsTrue (alfred.Contacts.Any (c => DatabaseCreator2.CheckUriContact (c as UriContactEntity, "alfred@blabla.com", "Alfred")));
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
@@ -805,8 +760,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (contacts.All (c => c.NaturalPerson == null));
 			}
-
-			this.CreateDatabaseHelper ();
 		}
 
 
