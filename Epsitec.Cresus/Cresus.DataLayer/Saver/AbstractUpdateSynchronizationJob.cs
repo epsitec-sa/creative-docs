@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		protected Druid FieldId
+		public Druid FieldId
 		{
 			get;
 			private set;

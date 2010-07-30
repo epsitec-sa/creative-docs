@@ -90,6 +90,7 @@
     <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
     <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
     <Compile Include="Schema\UnitTestSchemaEngine.cs" />
+    <Compile Include="UnitTestSynchronization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

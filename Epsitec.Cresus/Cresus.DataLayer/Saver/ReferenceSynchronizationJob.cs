@@ -18,23 +18,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		protected EntityKey? OldValue
+		public EntityKey? OldValue
 		{
 			get;
 			private set;
 		}
 
 
-		protected EntityKey? NewValue
+		public EntityKey? NewValue
 		{
 			get;
 			private set;
-		}
-
-
-		protected override void Synchronize(DataContext dataContext)
-		{
-			throw new System.NotImplementedException ();
 		}
 
 

@@ -24,23 +24,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		protected ReadOnlyCollection<EntityKey> OldValues
+		public ReadOnlyCollection<EntityKey> OldValues
 		{
 			get;
 			private set;
 		}
 
 
-		protected ReadOnlyCollection<EntityKey> NewValues
+		public ReadOnlyCollection<EntityKey> NewValues
 		{
 			get;
 			private set;
-		}
-
-
-		protected override void Synchronize(DataContext dataContext)
-		{
-			throw new System.NotImplementedException ();
 		}
 
 

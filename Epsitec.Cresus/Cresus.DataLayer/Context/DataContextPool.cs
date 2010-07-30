@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.DataLayer.Saver;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -105,6 +107,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 			DataContext context = this.FindDataContext (entity);
 
 			return (context == null) ? null : context.GetEntityKey (entity);
+		}
+
+
+		internal void Synchronize(IEnumerable<AbstractSynchronisationJob> jobs)
+		{
+			foreach (dynamic job in jobs)
+			{
+				foreach (DataContext dataContext in this)
+				{
+					dataContext.Synchronize (job);
+				}
+			}
 		}
 
 

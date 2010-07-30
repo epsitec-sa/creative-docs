@@ -20,32 +20,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 		
 
-		private int DataContextId
+		public int DataContextId
 		{
 			get;
 			set;
 		}
 
 
-		protected EntityKey EntityKey
+		public EntityKey EntityKey
 		{
 			get;
 			private set;
 		}
-
-
-		public void Synchronize(IEnumerable<DataContext> dataContexts)
-		{
-			var dataContextsToSynchronize = dataContexts.Where (d => d.UniqueId != this.DataContextId);
-			
-			foreach (DataContext dataContext in dataContextsToSynchronize)
-			{
-				this.Synchronize (dataContext);
-			}
-		}
-
-
-		protected abstract void Synchronize(DataContext dataContext);
 
 
 	}

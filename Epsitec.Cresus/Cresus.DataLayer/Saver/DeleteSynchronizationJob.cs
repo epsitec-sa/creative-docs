@@ -13,13 +13,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 		}
 
-
-		protected override void Synchronize(DataContext dataContext)
-		{
-			throw new System.NotImplementedException ();
-		}
-
-
 	}
 
 
