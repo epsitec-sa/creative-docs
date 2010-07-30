@@ -3,10 +3,13 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -688,6 +691,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					using (this.DefineOriginalValues ())
 					{
+						// TODO It would be nice to instantiate a EntityCollection<> with the proper
+						// type and not AbstractEntity. Below was the way it was done before. A good
+						// way of doing it would be to add a method for that in every cocnrete class
+						// of entities.
+						// Marc
+
 						//StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 						//AbstractEntity model = this.context.CreateEmptyEntity (field.TypeId);
 
@@ -1250,6 +1259,37 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.NotifyContextEventHandlers ("*", null, null);
 		}
 
+
+		internal void SetModifiedValuesAsOriginalValues()
+		{
+			IValueStore originalValues = this.GetOriginalValues ();
+			IValueStore modifiedValues = this.GetModifiedValues ();
+
+			IEnumerable<string> fieldIds = this.context.GetEntityFieldIds (this);
+
+			using (this.UseSilentUpdates ())
+			{
+				foreach (Druid fieldId in fieldIds.Select (id => Druid.Parse (id)))
+				{
+					this.SetModifiedValueAsOriginalValue (originalValues, modifiedValues, fieldId);
+				}
+			}
+		}
+
+
+		private void SetModifiedValueAsOriginalValue(IValueStore originalValues, IValueStore modifiedValues, Druid fieldId)
+		{
+			string fieldName = fieldId.ToResourceId ();
+
+			object modifiedValue = modifiedValues.GetValue (fieldName);
+
+			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
+			{
+				this.originalValues.SetValue (fieldName, modifiedValue, ValueStoreSetMode.ShortCircuit);
+				this.modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
+			}
+		}
+		
 
 		#region Helper Classes
 
