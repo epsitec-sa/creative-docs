@@ -542,6 +542,30 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		internal void Synchronize(DeleteSynchronizationJob job)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+
+		internal void Synchronize(ValueSynchronizationJob job)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+
+		internal void Synchronize(ReferenceSynchronizationJob job)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+
+		internal void Synchronize(CollectionSynchronizationJob job)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+
 		#region IDisposable Members
 
 
