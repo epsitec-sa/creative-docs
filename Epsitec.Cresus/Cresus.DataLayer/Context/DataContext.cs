@@ -146,8 +146,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public TEntity CreateEntity<TEntity>() where TEntity : AbstractEntity, new ()
 		{
+			this.AssertDataContextIsNotDisposed ();
+			
 			return this.EntityContext.CreateEmptyEntity<TEntity> ();
 		}
 
@@ -170,8 +173,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public TEntity CreateEmptyEntity<TEntity>() where TEntity : AbstractEntity, new ()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			TEntity entity = this.CreateEntity<TEntity> ();
 
 			this.RegisterEmptyEntity (entity);
@@ -185,8 +191,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to check if it is managed by this instance.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> is managed by this instance, <c>false</c> if it is not.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public bool Contains(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesCache.ContainsEntity (entity);
 		}
 
@@ -196,8 +205,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
 		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public EntityKey? GetEntityKey(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesCache.GetEntityKey (entity);
 		}
 
@@ -230,9 +242,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// modified since the last call to <see cref="SaveChanges"/>.
 		/// </summary>
 		/// <returns><c>true</c> if there is any modification, <c>false</c> if there isn't any.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public bool ContainsChanges()
 		{
-			bool containsDeletedEntities = this.entitiesToDelete.Any();
+			this.AssertDataContextIsNotDisposed ();
+
+			bool containsDeletedEntities = this.entitiesToDelete.Any ();
 			bool containsChangedEntities = this.GetEntitiesModified ().Any ();
 
 			return containsDeletedEntities || containsChangedEntities;
@@ -251,8 +266,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// the second <see cref="AbstractEntity"/> wouldn't have changed.
 		/// </remarks>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register as empty.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void RegisterEmptyEntity(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if (this.emptyEntities.Add (entity))
 			{
 				System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
@@ -268,8 +286,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to unregister as empty.</param>
 		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if (this.emptyEntities.Remove (entity))
 			{
 				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
@@ -285,8 +306,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister as empty.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating whether to register or unregister is at empty.</param>
 		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if (isEmpty)
 			{
 				this.RegisterEmptyEntity (entity);
@@ -305,8 +329,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose empty status to check.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> is registered as empty, <c>false</c> if it isn't.</returns>
 		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.emptyEntities.Contains (entity);
 		}
 
@@ -323,8 +350,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// be persisted to the database.
 		/// </remarks>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void DeleteEntity(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if (!this.entitiesDeleted.Contains (entity))
 			{
 				this.entitiesToDelete.Add (entity);
@@ -338,8 +368,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to check if it has been deleted.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> has been deleted, <c>false</c> if it hasn't.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public bool IsDeleted(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
 		}
 
@@ -414,8 +447,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entityKey">The <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public AbstractEntity ResolveEntity(EntityKey entityKey)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			AbstractEntity entity = this.entitiesCache.GetEntity (entityKey);
 
 			if (entity == null)
@@ -434,8 +470,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to get.</typeparam>
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/></returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public TEntity ResolveEntity<TEntity>(DbKey rowKey) where TEntity : AbstractEntity, new ()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
 			EntityKey entityKey = new EntityKey (entityId, rowKey);
 
@@ -450,8 +489,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to return.</typeparam>
 		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example) where TEntity : AbstractEntity
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.DataLoader.GetByExample<TEntity> (example);
 		}
 
@@ -463,8 +505,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to return.</typeparam>
 		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request) where TEntity : AbstractEntity
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.DataLoader.GetByRequest<TEntity> (request);
 		}
 
@@ -473,8 +518,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Persists all the changes that have been made to the <see cref="AbstractEntity"/> managed
 		/// by this instance to the database.
 		/// </summary>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void SaveChanges()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			this.DataSaver.SaveChanges ();
 		}
 
@@ -485,8 +533,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// dependencies.
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> whose schema to create.</typeparam>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void CreateSchema<TEntity>() where TEntity : AbstractEntity, new()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			this.SchemaEngine.CreateSchema<TEntity> ();
 		}
 
@@ -522,11 +573,27 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		/// <summary>
+		/// Throws an <see cref="System.ObjectDisposedException"/> if this instance has been
+		/// disposed.
+		/// </summary>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		private void AssertDataContextIsNotDisposed()
+		{
+			if (this.isDisposed)
+			{
+				throw new System.ObjectDisposedException ("DataContext #" + this.UniqueId);
+			}
+		}
+
+
 		#region IEntityPersistenceManager Members
 
 
 		public string GetPersistedId(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			string persistedId = null;
 			
 			if (this.IsPersistent (entity))
@@ -550,6 +617,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public AbstractEntity GetPeristedEntity(string id)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			AbstractEntity entity = null;
 
 			if (!string.IsNullOrEmpty (id) && id.StartsWith ("db:"))
@@ -605,10 +674,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> has been persisted to the database.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose persistense to check.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose persistence to check.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> has been persisted to the database, <c>false</c> if it hasn't.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public bool IsPersistent(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			EntityKey? key = this.GetEntityKey (entity);
 
 			return key.HasValue && !key.Value.RowKey.IsEmpty;
