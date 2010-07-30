@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		internal void Synchronize(IEnumerable<AbstractSynchronisationJob> jobs)
 		{
-			foreach (dynamic job in jobs)
+			foreach (AbstractSynchronisationJob job in jobs)
 			{
 				foreach (DataContext dataContext in this)
 				{
