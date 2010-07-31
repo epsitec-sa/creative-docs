@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			var containerController = new TileContainerController (this, container);
-			var data = containerController.DataItems;
+			this.TileContainerController = new TileContainerController (this, container);
+			var data = this.TileContainerController.DataItems;
 
 			data.Add (
 				new SummaryData
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 
-			containerController.GenerateTiles ();
+			this.TileContainerController.GenerateTiles ();
 		}
 	}
 }

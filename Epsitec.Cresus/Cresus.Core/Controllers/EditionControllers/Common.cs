@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	internal static class Common
 	{
-		public static void ChangeEditedLineEntity (TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
+		public static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
 		{
 			EntityViewController parentController = Common.GetParentController (tileContainer);
 			InvoiceDocumentEntity invoiceDocument = parentController.GetEntity () as InvoiceDocumentEntity;
@@ -51,13 +51,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			else
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+				var article = newEntity as ArticleDocumentItemEntity;
+				article.BeginDate = invoiceDocument.CreationDate;
+				article.EndDate   = invoiceDocument.CreationDate;
 			}
+
+			newEntity.Visibility = true;
 
 			invoiceDocument.Lines.Insert (index, newEntity);
 
 			//	Crée et montre la nouvelle tuile.
-			// TODO: ...
-			//?parentController.Orchestrator.ShowSubView (parentController, newControler);
+			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 
 

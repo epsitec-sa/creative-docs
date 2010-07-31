@@ -114,6 +114,14 @@ using Epsitec.Common.Support.EntityEngine;
 		}
 
 
+		public void ShowSubView(int index, string itemName)
+		{
+			this.QueueTasklets ("CreateNewTile",
+				new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
+				new TaskletJob (() => this.OpenSubView (index, itemName), TaskletRunMode.After));
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -283,7 +291,12 @@ using Epsitec.Common.Support.EntityEngine;
 		private void OpenSubViewForCreatedSummaryTile(SummaryData item, string itemName)
 		{
 			//	Ouvre la vue correspondant à la dernière entité créée dans une collection.
-			int index = item.CreatedIndex;
+			this.OpenSubView (item.CreatedIndex, itemName);
+		}
+
+		private void OpenSubView(int index, string itemName)
+		{
+			//	Ouvre une vue correspondant à une entité dans une collection.
 			SummaryData sel = null;
 
 			foreach (var x in this.activeItems)
