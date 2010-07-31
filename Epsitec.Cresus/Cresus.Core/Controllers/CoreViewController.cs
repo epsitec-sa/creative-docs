@@ -25,7 +25,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		
+
+		public TileContainerController TileContainerController
+		{
+			get;
+			set;
+		}
+
 		public Orchestrators.DataViewOrchestrator Orchestrator
 		{
 			get;

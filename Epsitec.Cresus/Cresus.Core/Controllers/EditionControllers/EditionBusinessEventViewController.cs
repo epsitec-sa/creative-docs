@@ -63,12 +63,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			var containerController = new TileContainerController (this, container);
-			var data = containerController.DataItems;
+			this.TileContainerController = new TileContainerController (this, container);
+			var data = this.TileContainerController.DataItems;
 
 			this.CreateUIDocuments (data);
 
-			containerController.GenerateTiles ();
+			this.TileContainerController.GenerateTiles ();
 		}
 
 
