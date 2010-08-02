@@ -510,7 +510,7 @@ namespace Epsitec.Cresus.Core
 			uomUnit3.DivideRatio = 1;
 			uomUnit3.MultiplyRatio = 1;
 			uomUnit3.SmallestIncrement = 1;
-			uomUnit3.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomUnit3.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
 
 			yield return uomUnit1;
 			yield return uomUnit2;
@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Core
 			var uomGroup2 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup2.Name = "Frais";
 			uomGroup2.Description = "Frais";
-			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
 			uomGroup2.Units.Add (uomUnit3);
 
 			var articleGroup1 = this.DataContext.CreateEntity<ArticleGroupEntity> ();
@@ -911,7 +911,7 @@ namespace Epsitec.Cresus.Core
 			paymentA.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
 			paymentA.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
 			paymentA.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value;
-			//?paymentA.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
+			paymentA.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA.Date = new Date (2010, 08, 06);
 
 			billingA.Title = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";

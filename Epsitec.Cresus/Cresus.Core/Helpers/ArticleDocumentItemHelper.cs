@@ -23,11 +23,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				if (price.BeginDate.HasValue && price.EndDate.HasValue)
 				{
-					// TODO: Vérifier si on impose les heures 00:00:00 et 23:59:59 ici ou en amont.
-					System.DateTime beginDate = new System.DateTime (price.BeginDate.Value.Year, price.BeginDate.Value.Month, price.BeginDate.Value.Day,  0,  0,  0);
-					System.DateTime endDate   = new System.DateTime (price.EndDate.Value.Year,   price.EndDate.Value.Month,   price.EndDate.Value.Day,   23, 59, 59);
-
-					if (date >= beginDate && date <= endDate && currency == price.CurrencyCode)
+					if (date >= price.BeginDate && date <= price.EndDate && currency == price.CurrencyCode)
 					{
 						return price.ValueBeforeTax;
 					}
@@ -125,24 +121,24 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (quantity.HasValue)
 			{
-				decimal? total = Misc.PriceConstrain (article.PrimaryUnitPriceBeforeTax * quantity);
+				decimal total = Misc.PriceConstrain (article.PrimaryUnitPriceBeforeTax * quantity.Value);
 
 				if (article.NeverApplyDiscount == false &&
 					article.Discounts.Count != 0)  // y a-t-il un rabais de ligne ?
 				{
 					if (article.Discounts[0].DiscountRate.HasValue)  // rabais en % ?
 					{
-						total = Misc.PriceConstrain (total.GetValueOrDefault (0) * (1.0M - article.Discounts[0].DiscountRate.Value));
+						total = Misc.PriceConstrain (total * (1.0M - article.Discounts[0].DiscountRate.Value));
 					}
 					else if (article.Discounts[0].DiscountAmount.HasValue)  // rabais en francs ?
 					{
-						total = Misc.PriceConstrain (total.GetValueOrDefault (0) - article.Discounts[0].DiscountAmount.Value);
+						total = Misc.PriceConstrain (total - article.Discounts[0].DiscountAmount.Value);
 					}
 				}
 
-				article.PrimaryLinePriceBeforeTax   = total.GetValueOrDefault (0);
-				article.ResultingLinePriceBeforeTax = (int) total.GetValueOrDefault (0);  // arrondi au franc inférieur, pourquoi pas ?
-				article.ResultingLineTax            = Misc.PriceConstrain (article.ResultingLinePriceBeforeTax.Value * vatRate);
+				article.PrimaryLinePriceBeforeTax   = total;
+				article.ResultingLinePriceBeforeTax = (int) total;  // arrondi au franc inférieur, pourquoi pas ?
+				article.ResultingLineTax            = /* Misc.PriceConstrain */ (article.ResultingLinePriceBeforeTax.Value * vatRate);
 			}
 			else
 			{

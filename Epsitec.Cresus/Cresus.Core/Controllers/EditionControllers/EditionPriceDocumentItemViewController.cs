@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (invoiceDocument != null)
 			{
-				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
+				InvoiceDocumentHelper.UpdatePrices (invoiceDocument);
 			}
 
 			this.tileContainer.UpdateAllWidgets ();
