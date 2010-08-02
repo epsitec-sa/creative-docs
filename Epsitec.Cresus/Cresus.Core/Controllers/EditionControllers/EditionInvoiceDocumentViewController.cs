@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			button.Clicked += delegate
 			{
-				InvoiceDocumentHelper.UpdatePrices (this.Entity, this.DataContext);
+				InvoiceDocumentHelper.UpdatePrices (this.Entity);
 				this.tileContainer.UpdateAllWidgets ();
 			};
 #endif

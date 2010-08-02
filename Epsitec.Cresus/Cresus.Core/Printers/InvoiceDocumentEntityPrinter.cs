@@ -742,7 +742,7 @@ namespace Epsitec.Cresus.Core.Printers
 				table.CellMargins = new Margins (2);
 				table.SetRelativeColumWidth (0,  60);
 				table.SetRelativeColumWidth (1, 100);
-				table.SetText (0, 0, "Matériel reçu en bonne et dûe forme");
+				table.SetText (0, 0, "Matériel reçu en bonne et due forme");
 				table.SetText (1, 0, "Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>");
 				table.SetUnbreakableRow (0, true);
 

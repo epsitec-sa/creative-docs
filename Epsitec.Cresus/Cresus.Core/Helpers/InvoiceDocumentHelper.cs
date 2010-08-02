@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static void UpdatePrices(InvoiceDocumentEntity x, DataLayer.Context.DataContext dataContext)
+		public static void UpdatePrices(InvoiceDocumentEntity x)
 		{
 			//	Recalcule complètement une facture.
 			//	
@@ -188,6 +188,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					//	Calcule ResultingPriceBeforeTax et ResultingTax, les prix après rabais.
 					if (price.FixedPriceAfterTax.HasValue)  // valeur imposée ?
 					{
+						//	Utiliser une règle de 3 : ht final = ttc final / ttc calculé * ht calculé
 						price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.FixedPriceAfterTax.Value / (1.0M + vatRate));
 						price.ResultingTax            = Misc.PriceConstrain (price.ResultingPriceBeforeTax.Value * vatRate);
 					}
@@ -209,6 +210,7 @@ namespace Epsitec.Cresus.Core.Helpers
 								price.ResultingPriceBeforeTax = Misc.PriceConstrain (price.PrimaryPriceBeforeTax.GetValueOrDefault (0) - price.Discount.DiscountAmount.GetValueOrDefault (0));
 							}
 
+							//	règle de 3
 							price.ResultingTax = Misc.PriceConstrain (price.ResultingPriceBeforeTax.GetValueOrDefault (0) * vatRate);
 						}
 						else
@@ -239,10 +241,10 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 
-			InvoiceDocumentHelper.BackwardUpdatePrices (x, dataContext, discountRate);
+			InvoiceDocumentHelper.BackwardUpdatePrices(x, discountRate);
 		}
 
-		private static void BackwardUpdatePrices(InvoiceDocumentEntity x, DataLayer.Context.DataContext dataContext, decimal discountRate)
+		private static void BackwardUpdatePrices(InvoiceDocumentEntity x, decimal discountRate)
 		{
 			//	Si le prix arrêté (FixedPriceAfterTax) est plus petit que le total réel, on doit
 			//	appliquer les rabais à l'envers en remontant du pied de la facture pour arriver

@@ -21,17 +21,22 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
+			return Misc.PriceConstrain (value.Value, resolution);
+		}
+
+		public static decimal PriceConstrain(decimal value, decimal resolution=0.01M)
+		{
 			if (resolution == 0.01M)
 			{
-				return Misc.decimalRange001.Constrain (value.Value);
+				return Misc.decimalRange001.Constrain (value);
 			}
 			else if (resolution == 0.05M)
 			{
-				return Misc.decimalRange005.Constrain (value.Value);
+				return Misc.decimalRange005.Constrain (value);
 			}
 			else if (resolution == 1.00M)
 			{
-				return Misc.decimalRange100.Constrain (value.Value);
+				return Misc.decimalRange100.Constrain (value);
 			}
 			else
 			{
