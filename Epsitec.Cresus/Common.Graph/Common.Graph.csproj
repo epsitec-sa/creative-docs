@@ -56,6 +56,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Epsitec.BingMapsWrapper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Epsitec.BingMapsWrapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -86,6 +90,7 @@
     <Compile Include="Data\Dimension.cs" />
     <Compile Include="Data\DimensionVector.cs" />
     <Compile Include="Data\DataTable.cs" />
+    <Compile Include="Renderers\GeoChartRenderer.cs" />
     <Compile Include="Widgets\FloatingCaptionsView.cs" />
     <Compile Include="PaintLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -163,6 +168,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Epsitec.BingMapsWrapper.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

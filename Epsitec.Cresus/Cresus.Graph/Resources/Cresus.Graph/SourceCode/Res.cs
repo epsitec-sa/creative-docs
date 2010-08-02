@@ -44,6 +44,8 @@ namespace Epsitec.Cresus
 				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartHorizontal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 				//	designer:cap/BVA1
 				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartVertical = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+				//	designer:cap/BVAS
+				public static readonly global::Epsitec.Common.Widgets.Command UseGeoChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
 				//	designer:cap/BVA
 				public static readonly global::Epsitec.Common.Widgets.Command UseLineChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 				//	designer:cap/BVAR
@@ -80,6 +82,8 @@ namespace Epsitec.Cresus
 				public const long UseBarChartHorizontal = 0x3EB0000A000002L;
 				//	designer:cap/BVA1
 				public const long UseBarChartVertical = 0x3EB0000A000001L;
+				//	designer:cap/BVAS
+				public const long UseGeoChart = 0x3EB0000A00001CL;
 				//	designer:cap/BVA
 				public const long UseLineChart = 0x3EB0000A000000L;
 				//	designer:cap/BVAR
