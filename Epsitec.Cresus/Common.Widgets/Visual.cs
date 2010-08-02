@@ -2056,18 +2056,42 @@ namespace Epsitec.Common.Widgets
 				this.RemoveEventHandler (Visual.IsFocusedProperty, value);
 			}
 		}
-		
-		public event PropertyChangedEventHandler	KeyboardFocusChanged
-		{
-			add
-			{
-				this.AddEventHandler (Visual.KeyboardFocusProperty, value);
-			}
-			remove
-			{
-				this.RemoveEventHandler (Visual.KeyboardFocusProperty, value);
-			}
-		}
+
+        public event PropertyChangedEventHandler    KeyboardFocusChanged
+        {
+            add
+            {
+                this.AddEventHandler (Visual.KeyboardFocusProperty, value);
+            }
+            remove
+            {
+                this.RemoveEventHandler (Visual.KeyboardFocusProperty, value);
+            }
+        }
+
+        public event PropertyChangedEventHandler    PaddingChanged
+        {
+            add
+            {
+                this.AddEventHandler (Visual.PaddingProperty, value);
+            }
+            remove
+            {
+                this.RemoveEventHandler (Visual.PaddingProperty, value);
+            }
+        }
+
+        public event PropertyChangedEventHandler    MarginsChanged
+        {
+            add
+            {
+                this.AddEventHandler (Visual.MarginsProperty, value);
+            }
+            remove
+            {
+                this.RemoveEventHandler (Visual.MarginsProperty, value);
+            }
+        }
 
 		public event EventHandler					DisplayCaptionChanged
 		{
