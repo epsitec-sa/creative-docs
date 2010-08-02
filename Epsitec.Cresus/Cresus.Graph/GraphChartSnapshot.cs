@@ -230,7 +230,11 @@ namespace Epsitec.Cresus.Graph
 			else if (graphType == Res.Commands.GraphType.UsePieChart)
 			{
 				renderer = new PieChartRenderer ();
-			}
+            }
+            else if (graphType == Res.Commands.GraphType.UseGeoChart)
+            {
+                renderer = new GeoChartRenderer ();
+            }
 
 			System.Diagnostics.Debug.Assert (renderer != null);
 
