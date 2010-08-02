@@ -190,6 +190,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
             {
+                fixedCaptionsPalette.Margins = this.ChartSnapshot.ChartOptions.FixedCaptionsPosition;
                 fixedCaptionsPalette.Visibility = this.ChartSnapshot.ChartOptions.ShowFixedCaptions;
             }
 
@@ -549,8 +550,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			yield return Res.Commands.GraphType.UseLineChart;
 			yield return Res.Commands.GraphType.UseBarChartVertical;
-			//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
-			yield return Res.Commands.GraphType.UsePieChart;
+            //-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+            yield return Res.Commands.GraphType.UsePieChart;
 		}
 
 
@@ -565,8 +566,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			[Command (Res.CommandIds.GraphType.UseLineChart)]
 			[Command (Res.CommandIds.GraphType.UseBarChartVertical)]
-			[Command (Res.CommandIds.GraphType.UseBarChartHorizontal)]
-			[Command (Res.CommandIds.GraphType.UsePieChart)]
+            [Command (Res.CommandIds.GraphType.UseBarChartHorizontal)]
+            [Command (Res.CommandIds.GraphType.UsePieChart)]
 			private void GraphTypeCommand(CommandDispatcher sender, CommandEventArgs e)
 			{
 				var controller = ChartViewController.GetChartViewController (e.CommandContext);

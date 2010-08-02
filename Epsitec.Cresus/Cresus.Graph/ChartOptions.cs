@@ -4,6 +4,7 @@
 using System.Xml.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 namespace Epsitec.Cresus.Graph
 {
     /// <summary>
@@ -52,6 +53,26 @@ namespace Epsitec.Cresus.Graph
             }
         }
 
+        public Margins FixedCaptionsPosition
+        {
+            get
+            {
+                return fixedCaptionsPosition;
+            }
+            set
+            {
+                if (this.fixedCaptionsPosition != value)
+                {
+                    var oldValue = this.fixedCaptionsPosition;
+                    this.fixedCaptionsPosition = value;
+
+                    // Fire the event if needed
+                    if (this.FixedCaptionsPositionChanged != null)
+                        this.FixedCaptionsPositionChanged (this, new DependencyPropertyChangedEventArgs ("FixedCaptionsPosition", oldValue, value));
+                }
+            }
+        }
+
         /// <summary>
         /// Saving the options into the XML fragment
         /// </summary>
@@ -60,9 +81,11 @@ namespace Epsitec.Cresus.Graph
         {
             var fixedCaptions = new XElement("ShowFixedCaptions", this.ShowFixedCaptions);
             var floatingCaptions = new XElement("ShowFloatingCaptions", this.ShowFloatingCaptions);
+            var fixedCaptionsPosition = new XElement ("FixedCaptionsPosition", this.fixedCaptionsPosition);
 
             options.Add(fixedCaptions);
             options.Add(floatingCaptions);
+            options.Add (fixedCaptionsPosition);
         }
 
         /// <summary>
@@ -71,8 +94,25 @@ namespace Epsitec.Cresus.Graph
         /// <param name="options">XML fragment to use</param>
         public void RestoreOptions(XElement options)
         {
-            ShowFixedCaptions = options.Element ("ShowFixedCaptions").Value == "true";
-            ShowFloatingCaptions = options.Element ("ShowFloatingCaptions").Value == "true";
+            XElement tmp;
+
+            tmp = options.Element ("ShowFixedCaptions");
+            if(tmp != null)
+                ShowFixedCaptions = tmp.Value == "true";
+
+            tmp = options.Element ("ShowFloatingCaptions");
+            if (tmp != null)
+                ShowFloatingCaptions = tmp.Value == "true";
+
+            tmp = options.Element ("FixedCaptionsPosition");
+            if (tmp != null)
+            {
+                FixedCaptionsPosition = Margins.Parse (tmp.Value);
+            }
+            else
+            {
+                FixedCaptionsPosition = new Margins (0, 4, 4, 0);
+            }
         }
 
         /// <summary>
@@ -84,12 +124,15 @@ namespace Epsitec.Cresus.Graph
         {
             this.showFixedCaptions = oldValues.showFixedCaptions;
             this.showFloatingCaptions = oldValues.showFloatingCaptions;
+            this.fixedCaptionsPosition = oldValues.fixedCaptionsPosition;
         }
 
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFixedCaptionsChanged;
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFloatingCaptionsChanged;
+        public event EventHandler<DependencyPropertyChangedEventArgs> FixedCaptionsPositionChanged;
 
         private bool showFixedCaptions;
         private bool showFloatingCaptions;
+        private Margins fixedCaptionsPosition;
     }
 }

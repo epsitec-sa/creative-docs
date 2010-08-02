@@ -49,7 +49,7 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
         /// <summary>
-        /// Methode called by <see cref="SeriesDetectionController"/> when the mouse is over the graph.
+        /// Method called by <see cref="SeriesDetectionController"/> when the mouse is over the graph.
         /// Allows the renderer to be noticed and it can change its appearance based on the mouse location.
         /// Called only when <c>seriesItem</c> changes.
         /// </summary>

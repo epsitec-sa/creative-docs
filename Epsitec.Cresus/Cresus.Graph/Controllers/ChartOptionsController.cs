@@ -19,31 +19,44 @@ namespace Epsitec.Cresus.Graph.Controllers
         /// Create the controller into a frame
         /// </summary>
         /// <param name="commandBar">FrameBox where to put the configuration buttons</param>
-        /// <param name="captions">FrameBox showing the captions to show/hide</param>
+        /// <param name="fixedCaptions">FrameBox showing the captions to show/hide</param>
         /// <param name="floatingCaptions">FrameBox showing the floating captions to show/hide</param>
-        public ChartOptionsController(FrameBox commandBar, AnchoredPalette captions, FloatingCaptionsView floatingCaptions)
+        public ChartOptionsController(FrameBox commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
         {
             this.chartOptions = new ChartOptions()
             {
                 ShowFixedCaptions = true,
-                ShowFloatingCaptions = true
+                ShowFloatingCaptions = true,
+                FixedCaptionsPosition = new Margins (0, 4, 4, 0)
             };
 
             // Change visibility when value is changed
             this.ChartOptions.ShowFixedCaptionsChanged +=
                 (sender, e) =>
                 {
-                    captions.Visibility = (bool)e.NewValue;
+                    fixedCaptions.Visibility = (bool) e.NewValue;
                 };
 
             // Change visibility when value is changed
             this.ChartOptions.ShowFloatingCaptionsChanged +=
                 (sender, e) =>
                 {
-                    floatingCaptions.Visibility = (bool)e.NewValue;
+                    floatingCaptions.Visibility = (bool) e.NewValue;
                 };
 
-            this.SetupUI(commandBar, captions, floatingCaptions);
+            this.ChartOptions.FixedCaptionsPositionChanged +=
+                (sender, e) =>
+                {
+                    fixedCaptions.Margins = (Margins)e.NewValue;
+                };
+
+            fixedCaptions.MarginsChanged +=
+                (sender, e) =>
+                {
+                    this.ChartOptions.FixedCaptionsPosition = (Margins)e.NewValue;
+                };
+
+            this.SetupUI(commandBar, fixedCaptions, floatingCaptions);
         }
 
         /// <summary>
