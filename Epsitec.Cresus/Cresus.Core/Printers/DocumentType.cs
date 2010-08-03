@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		#region Add options
-		public void AddInvoice(bool isBL)
+		public void DocumentOptionsAddInvoice(bool isBL)
 		{
 			//	Ajoute les options d'impression liées aux factures.
 			this.options.Add (new DocumentOption ("Delayed",   null, "Imprime les articles livrés ultérieurement", true));
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public void AddBV()
+		public void DocumentOptionsAddBV()
 		{
 			//	Ajoute les options d'impression liées aux BV.
 			this.options.Add (new DocumentOption ("Type de bulletin de versement :"));
@@ -85,11 +85,11 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
 
 			this.options.Add (new DocumentOption ("Mode d'impression du BV :"));
-			this.options.Add (new DocumentOption ("BV.Simul", null, "Fac-similé complet du BV (pour des essais)", true));
+			this.options.Add (new DocumentOption ("BV.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
 			this.options.Add (new DocumentOption ("BV.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
-		public void AddOrientation()
+		public void DocumentOptionsAddOrientation()
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
 			this.options.Add (new DocumentOption ("Orientation du papier :"));
@@ -97,19 +97,19 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
 		}
 
-		public void AddBL()
+		public void DocumentOptionsAddBL()
 		{
 			//	Ajoute les options d'impression générales.
 			this.options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\" avec signature", true));
 		}
 
-		public void AddSpecimen()
+		public void DocumentOptionsAddSpecimen()
 		{
 			//	Ajoute les options d'impression générales.
 			this.options.Add (new DocumentOption ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
-		public void AddMargin()
+		public void DocumentOptionsAddMargin()
 		{
 			//	Ajoute une marge verticale.
 			this.options.Add (new DocumentOption (20));
