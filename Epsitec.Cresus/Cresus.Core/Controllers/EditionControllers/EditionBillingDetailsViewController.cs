@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.BillingDetails", "Paiement");
+				builder.CreateEditionTitleTile ("Data.BillingDetails", "Facturation");
 
 				this.CreateUIMain (builder);
 				this.CreateUIPaymentMode (builder);
