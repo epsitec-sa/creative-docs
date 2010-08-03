@@ -565,12 +565,14 @@ namespace Epsitec.Cresus.Core
 			articleCategory1.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory1.DefaultAccounting.Add (accountingDef);
 			articleCategory1.DefaultRoundingMode = priceRoundingMode;
+			articleCategory1.ArticleType = BusinessLogic.ArticleType.Goods;
 
 			var articleCategory2 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory2.Name = "Ports/emballages";
 			articleCategory2.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory2.NeverApplyDiscount = true;
+			articleCategory2.ArticleType = BusinessLogic.ArticleType.Tax;
 
 			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();

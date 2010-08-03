@@ -449,7 +449,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnArticleLine(ArticleDocumentItemEntity line)
 		{
-			if (this.IsBL && ArticleDocumentItemHelper.IsFixedTax (line))
+			if (this.IsBL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return false;
 			}
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
-			if (this.IsBL && ArticleDocumentItemHelper.IsFixedTax (line))
+			if (this.IsBL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return false;
 			}

@@ -100,13 +100,25 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static bool IsFixedTax(ArticleDocumentItemEntity article)
 		{
-			//	Retourne true s'il s'agit d'un article de type 'frais de port'.
+			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
 			if (article != null &&
 				article.ArticleDefinition.IsActive () &&
 				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
-				// TODO: Peut-être faudra-t-il faire cela autrement...
-				return article.ArticleDefinition.ArticleCategory.Name == "Ports/emballages";
+				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Tax;
+			}
+
+			return false;
+		}
+
+		public static bool IsArticleForBL(ArticleDocumentItemEntity article)
+		{
+			//	Retourne true s'il s'agit d'un article qui doit figurer sur un BL.
+			if (article != null &&
+				article.ArticleDefinition.IsActive () &&
+				article.ArticleDefinition.ArticleCategory.IsActive ())
+			{
+				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Goods;  // marchandises ?
 			}
 
 			return false;

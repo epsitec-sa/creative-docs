@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	{
 		None		 = 0,
 
-		Goods		 = 10,
+		Goods		 = 10,	// marchandises
 		Service		 = 20,
 		Subscription = 30,
 		Charge		 = 40,
 
-		Freight		 = 50,
+		Freight		 = 50,	// fret
 		Tax			 = 60,
 	}
 }
