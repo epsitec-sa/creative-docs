@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.UnitOfMeasure,
 					ValueSetter = x => this.UnitOfMeasure = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.DelayedUnitOfMeasure1,
 					ValueSetter = x => this.DelayedUnitOfMeasure1 = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure1, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.DelayedUnitOfMeasure2,
 					ValueSetter = x => this.DelayedUnitOfMeasure2 = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure2, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
@@ -190,6 +190,30 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetPrice,      this.SetPrice));
 			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
 			t.IsReadOnly = true;
+		}
+
+
+		private IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
+		{
+			//	Retourne les unités appartenant au même groupe que l'article.
+#if false
+			//	Version normale :
+			var fullList = CoreProgram.Application.Data.GetUnitOfMeasure ();
+			var groupList = new List<UnitOfMeasureEntity> ();
+
+			foreach (var uom in fullList)
+			{
+				if (uom.Category == this.Entity.ArticleDefinition.Units.Category)
+				{
+					groupList.Add (uom);
+				}
+			}
+
+			return groupList;
+#else
+			//	With lambda expression and query operator :
+			return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == this.Entity.ArticleDefinition.Units.Category);
+#endif
 		}
 
 
