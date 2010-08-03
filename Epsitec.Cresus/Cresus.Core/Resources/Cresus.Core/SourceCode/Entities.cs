@@ -61,6 +61,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQB]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A0C]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQC]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGD]", typeof (Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -6071,6 +6072,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ArticleType</c> field.
+		///	designer:fld/L0AC7/L0A0E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0E]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.ArticleType ArticleType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.ArticleType> ("[L0A0E]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.ArticleType oldValue = this.ArticleType;
+				if (oldValue != value)
+				{
+					this.OnArticleTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.ArticleType> ("[L0A0E]", oldValue, value);
+					this.OnArticleTypeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -6080,6 +6103,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
+		partial void OnArticleTypeChanging(global::Epsitec.Cresus.Core.BusinessLogic.ArticleType oldValue, global::Epsitec.Cresus.Core.BusinessLogic.ArticleType newValue);
+		partial void OnArticleTypeChanged(global::Epsitec.Cresus.Core.BusinessLogic.ArticleType oldValue, global::Epsitec.Cresus.Core.BusinessLogic.ArticleType newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6646,6 +6671,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>GroupIndex</c> field.
+		///	designer:fld/L0A7A/L0AFD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AFD]")]
+		public int GroupIndex
+		{
+			get
+			{
+				return this.GetField<int> ("[L0AFD]");
+			}
+			set
+			{
+				int oldValue = this.GroupIndex;
+				if (oldValue != value)
+				{
+					this.OnGroupIndexChanging (oldValue, value);
+					this.SetField<int> ("[L0AFD]", oldValue, value);
+					this.OnGroupIndexChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnVisibilityChanging(bool oldValue, bool newValue);
 		partial void OnVisibilityChanged(bool oldValue, bool newValue);
@@ -6653,6 +6700,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnLayoutSettingsChanged(string oldValue, string newValue);
 		partial void OnIndentationLevelChanging(int oldValue, int newValue);
 		partial void OnIndentationLevelChanged(int oldValue, int newValue);
+		partial void OnGroupIndexChanging(int oldValue, int newValue);
+		partial void OnGroupIndexChanged(int oldValue, int newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -7246,28 +7295,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TextForTax</c> field.
-		///	designer:fld/L0AAB/L0A5D
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0A5D]")]
-		public string TextForTax
-		{
-			get
-			{
-				return this.GetField<string> ("[L0A5D]");
-			}
-			set
-			{
-				string oldValue = this.TextForTax;
-				if (oldValue != value)
-				{
-					this.OnTextForTaxChanging (oldValue, value);
-					this.SetField<string> ("[L0A5D]", oldValue, value);
-					this.OnTextForTaxChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Discount</c> field.
 		///	designer:fld/L0AAB/L0ABB
 		///	</summary>
@@ -7474,8 +7501,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTextForResultingPriceChanged(string oldValue, string newValue);
 		partial void OnTextForFixedPriceChanging(string oldValue, string newValue);
 		partial void OnTextForFixedPriceChanged(string oldValue, string newValue);
-		partial void OnTextForTaxChanging(string oldValue, string newValue);
-		partial void OnTextForTaxChanged(string oldValue, string newValue);
 		partial void OnDiscountChanging(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
 		partial void OnDiscountChanged(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
 		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -7748,6 +7773,199 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 410);	// [L0AQC]
 		public static readonly new string EntityStructuredTypeKey = "[L0AQC]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.TaxDocumentItem Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>TaxDocumentItem</c> entity.
+	///	designer:cap/L0AGD
+	///	</summary>
+	public partial class TaxDocumentItemEntity : global::Epsitec.Cresus.Core.Entities.AbstractDocumentItemEntity
+	{
+		///	<summary>
+		///	The <c>Text</c> field.
+		///	designer:fld/L0AGD/L0AHD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHD]")]
+		public global::Epsitec.Common.Types.FormattedText Text
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
+				if (oldValue != value)
+				{
+					this.OnTextChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]", oldValue, value);
+					this.OnTextChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>VatCode</c> field.
+		///	designer:fld/L0AGD/L0ALD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ALD]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode VatCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0ALD]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue = this.VatCode;
+				if (oldValue != value)
+				{
+					this.OnVatCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0ALD]", oldValue, value);
+					this.OnVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BaseAmount</c> field.
+		///	designer:fld/L0AGD/L0AJD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJD]")]
+		public global::System.Decimal? BaseAmount
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AJD]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.BaseAmount;
+				if (oldValue != value)
+				{
+					this.OnBaseAmountChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AJD]", oldValue, value);
+					this.OnBaseAmountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Rate</c> field.
+		///	designer:fld/L0AGD/L0AID
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AID]")]
+		public global::System.Decimal? Rate
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AID]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.Rate;
+				if (oldValue != value)
+				{
+					this.OnRateChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AID]", oldValue, value);
+					this.OnRateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RoundingMode</c> field.
+		///	designer:fld/L0AGD/L0AMD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMD]")]
+		public global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity RoundingMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0AMD]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue = this.RoundingMode;
+				if (oldValue != value)
+				{
+					this.OnRoundingModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity> ("[L0AMD]", oldValue, value);
+					this.OnRoundingModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ResultingTax</c> field.
+		///	designer:fld/L0AGD/L0AKD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AKD]")]
+		public global::System.Decimal? ResultingTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AKD]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.ResultingTax;
+				if (oldValue != value)
+				{
+					this.OnResultingTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AKD]", oldValue, value);
+					this.OnResultingTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FinalTax</c> field.
+		///	designer:fld/L0AGD/L0AND
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AND]")]
+		public global::System.Decimal? FinalTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AND]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.FinalTax;
+				if (oldValue != value)
+				{
+					this.OnFinalTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AND]", oldValue, value);
+					this.OnFinalTaxChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnBaseAmountChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBaseAmountChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnRateChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnRateChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		partial void OnResultingTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnResultingTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnFinalTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 432);	// [L0AGD]
+		public static readonly new string EntityStructuredTypeKey = "[L0AGD]";
 	}
 }
 #endregion
