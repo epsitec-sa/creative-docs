@@ -29,23 +29,23 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice (type.DocumentOptions, isBL: false);
-			AbstractEntityPrinter.DocumentTypeAddBV      (type.DocumentOptions);
+			type.AddInvoice (isBL: false);
+			type.AddBV      ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions, isBL: false);
-			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
+			type.AddInvoice     (isBL: false);
+			type.AddOrientation ();
+			type.AddMargin      ();
+			type.AddSpecimen    ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			AbstractEntityPrinter.DocumentTypeAddInvoice     (type.DocumentOptions, isBL: true);
-			AbstractEntityPrinter.DocumentTypeAddOrientation (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddMargin      (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddBL          (type.DocumentOptions);
-			AbstractEntityPrinter.DocumentTypeAddSpecimen    (type.DocumentOptions);
+			type.AddInvoice     (isBL: true);
+			type.AddOrientation ();
+			type.AddMargin      ();
+			type.AddBL          ();
+			type.AddSpecimen    ();
 			this.DocumentTypes.Add (type);
 		}
 
@@ -210,29 +210,29 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.IsColumnsOrderQD)
 			{
-				this.tableColumns.Add ("Nb",   new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("ArId", new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
+				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
 			}
 			else
 			{
-				this.tableColumns.Add ("ArId", new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Desc", new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add ("Nb",   new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
-				this.tableColumns.Add ("Suit", new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Date", new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add ("Rab",  new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PU",   new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("PT",   new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("TVA",  new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
-				this.tableColumns.Add ("Tot",  new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
+				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
+				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Total",       priceWidth,   ContentAlignment.MiddleRight));
 			}
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
@@ -269,22 +269,22 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.IsBL)
 			{
-				this.tableColumns["Rab"].Visible = false;
-				this.tableColumns["PU" ].Visible = false;
-				this.tableColumns["PT" ].Visible = false;
-				this.tableColumns["TVA"].Visible = false;
-				this.tableColumns["Tot"].Visible = false;
+				this.tableColumns[TableColumnKeys.Discount  ].Visible = false;
+				this.tableColumns[TableColumnKeys.UnitPrice ].Visible = false;
+				this.tableColumns[TableColumnKeys.LinePrice ].Visible = false;
+				this.tableColumns[TableColumnKeys.Vat       ].Visible = false;
+				this.tableColumns[TableColumnKeys.Total     ].Visible = false;
 			}
 
 			if (!this.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
 			{
-				this.tableColumns["Suit"].Visible = false;
-				this.tableColumns["Date"].Visible = false;
+				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
+				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
 			}
 
 			if (!this.HasDocumentOption ("ArticleId"))  // n'imprime pas les numéros d'article ?
 			{
-				this.tableColumns["ArId"].Visible = false;
+				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
 
 			//	Compte et numérote les colonnes visibles.
@@ -305,14 +305,14 @@ namespace Epsitec.Cresus.Core.Printers
 			this.table.PaintFrame = this.IsWithFrame;
 			this.table.CellMargins = new Margins (this.CellMargin);
 
-			//	Détermine le nom de la colonne "Nb".
-			if (this.tableColumns["Suit"].Visible)  // colonne "Suit" visible ?
+			//	Détermine le nom de la colonne TableColumnKeys.Quantity.
+			if (this.tableColumns[TableColumnKeys.DelayedQuantity].Visible)  // colonne quantité visible ?
 			{
-				this.tableColumns["Nb"].Title = "Livré";  // affiche "Livré", "Suit", "Date"
+				this.tableColumns[TableColumnKeys.Quantity].Title = "Livré";  // affiche "Livré", "Suit", "Date"
 			}
 			else
 			{
-				this.tableColumns["Nb"].Title = "Quantité";  // affiche "Quantité"
+				this.tableColumns[TableColumnKeys.Quantity].Title = "Quantité";  // affiche "Quantité"
 			}
 
 			//	Génère une première ligne d'en-tête (titres des colonnes).
@@ -443,7 +443,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnTextLine(TextDocumentItemEntity line)
 		{
-			this.tableColumns["Desc"].Visible = true;
+			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			return true;
 		}
 
@@ -459,36 +459,36 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
-			this.tableColumns["ArId"].Visible = true;
-			this.tableColumns["Desc"].Visible = true;
-			this.tableColumns["Tot" ].Visible = true;
+			this.tableColumns[TableColumnKeys.ArticleId         ].Visible = true;
+			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
+			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
 			if (line.VatCode != BusinessLogic.Finance.VatCode.None &&
 				line.VatCode != BusinessLogic.Finance.VatCode.Excluded &&
 				line.VatCode != BusinessLogic.Finance.VatCode.ZeroRated)
 			{
-				this.tableColumns["TVA"].Visible = true;
+				this.tableColumns[TableColumnKeys.Vat].Visible = true;
 			}
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
 				if (quantity.Code == "livré")
 				{
-					this.tableColumns["Nb"].Visible = true;
-					this.tableColumns["PU"].Visible = true;
-					this.tableColumns["PT"].Visible = true;
+					this.tableColumns[TableColumnKeys.Quantity ].Visible = true;
+					this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
+					this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
 				}
 
 				if (quantity.Code == "suivra")
 				{
-					this.tableColumns["Suit"].Visible = true;
-					this.tableColumns["Date"].Visible = true;
+					this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = true;
+					this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = true;
 				}
 			}
 
 			if (line.Discounts.Count != 0)
 			{
-				this.tableColumns["Rab"].Visible = true;
+				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
 			return true;
@@ -501,14 +501,14 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
-			this.tableColumns["Desc"].Visible = true;
-			this.tableColumns["PT"  ].Visible = true;
-			this.tableColumns["TVA" ].Visible = true;
-			this.tableColumns["Tot" ].Visible = true;
+			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
+			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
+			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
+			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
 			if (InvoiceDocumentHelper.HasAmount (line))
 			{
-				this.tableColumns["Rab"].Visible = true;
+				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
 			return true;
@@ -518,7 +518,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private bool BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			string text = string.Concat ("<b>", line.Text, "</b>");
-			table.SetText (this.tableColumns["Desc"].Rank, row, text);
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
 			return true;
 		}
@@ -561,43 +561,43 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (q1 != null)
 			{
-				table.SetText (this.tableColumns["Nb"].Rank, row, q1);
+				table.SetText (this.tableColumns[TableColumnKeys.Quantity].Rank, row, q1);
 			}
 
 			if (q2 != null)
 			{
-				table.SetText (this.tableColumns["Suit"].Rank, row, q2);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedQuantity].Rank, row, q2);
 			}
 
 			if (date != null)
 			{
-				table.SetText (this.tableColumns["Date"].Rank, row, date);
+				table.SetText (this.tableColumns[TableColumnKeys.DelayedDate].Rank, row, date);
 			}
 
-			table.SetText (this.tableColumns["ArId"].Rank, row, ArticleDocumentItemHelper.GetArticleId (line));
-			table.SetText (this.tableColumns["Desc"].Rank, row, description);
-			table.SetText (this.tableColumns["PU"  ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleId         ].Rank, row, ArticleDocumentItemHelper.GetArticleId (line));
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, description);
+			table.SetText (this.tableColumns[TableColumnKeys.UnitPrice         ].Rank, row, Misc.PriceToString (line.PrimaryUnitPriceBeforeTax));
 
 			if (line.ResultingLinePriceBeforeTax.HasValue && line.ResultingLineTax.HasValue)
 			{
 				decimal beforeTax = line.ResultingLinePriceBeforeTax.Value;
 				decimal tax =       line.ResultingLineTax.Value;
 
-				table.SetText (this.tableColumns["PT" ].Rank, row, Misc.PriceToString (beforeTax));
-				table.SetText (this.tableColumns["TVA"].Rank, row, Misc.PriceToString (tax));
-				table.SetText (this.tableColumns["Tot"].Rank, row, Misc.PriceToString (beforeTax+tax));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (beforeTax));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (tax));
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, row, Misc.PriceToString (beforeTax+tax));
 			}
 
 			if (line.Discounts.Count != 0)
 			{
 				if (line.Discounts[0].DiscountRate.HasValue)
 				{
-					table.SetText (this.tableColumns["Rab"].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PercentToString (line.Discounts[0].DiscountRate.Value));
 				}
 
 				if (line.Discounts[0].DiscountAmount.HasValue)
 				{
-					table.SetText (this.tableColumns["Rab"].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
+					table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, Misc.PriceToString (line.Discounts[0].DiscountAmount.Value));
 				}
 			}
 
@@ -616,43 +616,43 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Colonne "Désignation":
 			if (discount == null)
 			{
-				table.SetText (this.tableColumns["Desc"].Rank, row, line.TextForResultingPrice);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForResultingPrice);
 			}
 			else
 			{
-				table.SetText (this.tableColumns["Desc"].Rank, row, string.Concat (line.TextForPrimaryPrice, "<br/>", line.TextForResultingPrice));
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, string.Concat (line.TextForPrimaryPrice, "<br/>", line.TextForResultingPrice));
 			}
 
 			//	Colonne "Rabais":
 			if (discount != null)
 			{
-				table.SetText (this.tableColumns["Rab"].Rank, row, string.Concat ("<br/>", discount));
+				table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, string.Concat ("<br/>", discount));
 			}
 
 			//	Colonne "Prix HT":
 			if (discount == null)
 			{
 				string p1 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns["PT"].Rank, row, p1);
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, p1);
 			}
 			else
 			{
 				string p1 = Misc.PriceToString (line.PrimaryPriceBeforeTax.GetValueOrDefault (0));
 				string p2 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns["PT"].Rank, row, string.Concat (p1, "<br/>", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
 
 			//	Colonne "TVA":
 			if (discount == null)
 			{
 				string p1 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns["TVA"].Rank, row, p1);
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, p1);
 			}
 			else
 			{
 				string p1 = Misc.PriceToString (line.PrimaryTax.GetValueOrDefault (0));
 				string p2 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns["TVA"].Rank, row, string.Concat (p1, "<br/>", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
 
 			//	Colonne "Total":
@@ -670,10 +670,10 @@ namespace Epsitec.Cresus.Core.Printers
 			if (lastLine)
 			{
 				total = string.Concat ("<b>", total, "</b>");
-				table.SetCellBorderWidth (this.tableColumns["Tot"].Rank, row, 0.5);  // met un cadre épais
+				table.SetCellBorderWidth (this.tableColumns[TableColumnKeys.Total].Rank, row, 0.5);  // met un cadre épais
 			}
 
-			table.SetText (this.tableColumns["Tot"].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
+			table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
 
 			return true;
 		}
@@ -813,13 +813,13 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				//	Génère une deuxième ligne avec les montants à reporter.
-				table.SetText (this.tableColumns["Desc"].Rank, 1, "Report");
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 1, "Report");
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage-1, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns["PT" ].Rank, 1, Misc.PriceToString (sumPT));
-				table.SetText (this.tableColumns["TVA"].Rank, 1, Misc.PriceToString (sumTva));
-				table.SetText (this.tableColumns["Tot"].Rank, 1, Misc.PriceToString (sumTot));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 1, Misc.PriceToString (sumPT));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 1, Misc.PriceToString (sumTva));
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 1, Misc.PriceToString (sumTot));
 
 				this.InitializeRowAlignment (table, 0);
 				this.InitializeRowAlignment (table, 1);
@@ -868,13 +868,13 @@ namespace Epsitec.Cresus.Core.Printers
 					}
 				}
 
-				table.SetText (this.tableColumns["Desc"].Rank, 0, "Reporté");
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "Reporté");
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
-				table.SetText (this.tableColumns["PT" ].Rank, 0, Misc.PriceToString (sumPT));
-				table.SetText (this.tableColumns["TVA"].Rank, 0, Misc.PriceToString (sumTva));
-				table.SetText (this.tableColumns["Tot"].Rank, 0, Misc.PriceToString (sumTot));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, 0, Misc.PriceToString (sumPT));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, 0, Misc.PriceToString (sumTva));
+				table.SetText (this.tableColumns[TableColumnKeys.Total    ].Rank, 0, Misc.PriceToString (sumTot));
 
 				this.InitializeRowAlignment (table, 0);
 

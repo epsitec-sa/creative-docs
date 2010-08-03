@@ -52,6 +52,71 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		#region Add options
+		public void AddInvoice(bool isBL)
+		{
+			//	Ajoute les options d'impression liées aux factures.
+			this.options.Add (new DocumentOption ("Delayed",   null, "Imprime les articles livrés ultérieurement", true));
+			this.options.Add (new DocumentOption ("ArticleId", null, "Imprime les identificateurs d'article", false));
+
+			this.options.Add (new DocumentOption ("Aspect de la liste des articles :"));
+			this.options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
+			this.options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
+
+			this.options.Add (new DocumentOption ("Ordre des colonnes :"));
+
+			if (isBL)
+			{
+				this.options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
+				this.options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité"));
+			}
+			else
+			{
+				this.options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
+				this.options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
+			}
+		}
+
+		public void AddBV()
+		{
+			//	Ajoute les options d'impression liées aux BV.
+			this.options.Add (new DocumentOption ("Type de bulletin de versement :"));
+			this.options.Add (new DocumentOption ("BVR", "BV", "BVR orange", true));
+			this.options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
+
+			this.options.Add (new DocumentOption ("Mode d'impression du BV :"));
+			this.options.Add (new DocumentOption ("BV.Simul", null, "Fac-similé complet du BV (pour des essais)", true));
+			this.options.Add (new DocumentOption ("BV.Specimen", null, "Incruste la mention SPECIMEN"));
+		}
+
+		public void AddOrientation()
+		{
+			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
+			this.options.Add (new DocumentOption ("Orientation du papier :"));
+			this.options.Add (new DocumentOption ("Orientation.Vertical",   "Orientation", "Portrait", true));
+			this.options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
+		}
+
+		public void AddBL()
+		{
+			//	Ajoute les options d'impression générales.
+			this.options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\" avec signature", true));
+		}
+
+		public void AddSpecimen()
+		{
+			//	Ajoute les options d'impression générales.
+			this.options.Add (new DocumentOption ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
+		}
+
+		public void AddMargin()
+		{
+			//	Ajoute une marge verticale.
+			this.options.Add (new DocumentOption (20));
+		}
+		#endregion
+
+
 		private readonly List<DocumentOption> options;
 	}
 }
