@@ -135,6 +135,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
+			this.attachedWidget.Items.Clear ();
+
 			foreach (var item in this.PossibleItemsGetter ())
 			{
 				this.attachedWidget.Items.Add (item);
