@@ -300,6 +300,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			return typeof (T);
 		}
 
+
+		public System.IDisposable DisableNotifications()
+		{
+			var collection = this.EntityCollection as EntityCollection;
+
+			System.Diagnostics.Debug.Assert (collection != null);
+
+			return collection.DisableNotifications ();
+		}
+
+
 		/// <summary>
 		/// Temporarily disables all change notifications. Any changes which
 		/// happen until <c>Dispose</c> is called on the returned object will
