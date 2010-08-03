@@ -80,6 +80,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.AreEqual ("1337", language.Code);
+				Assert.AreEqual ("1337 5|*34|<", language.Name);
 
 				dataContext.SaveChanges ();
 			}
@@ -148,6 +150,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+				Assert.AreEqual ("1337", language.Code);
+				Assert.AreEqual ("1337 5|*34|<", language.Name);
 
 				dataContext.SaveChanges ();
 			}
@@ -203,6 +207,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
 				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+				Assert.AreEqual ("1337", language2.Code);
+				Assert.AreEqual ("1337 5|*34|<", language2.Name);
 
 				gertrude.PreferredLanguage = language2;
 
@@ -272,6 +278,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
 				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
+				Assert.AreEqual ("1337", language2.Code);
+				Assert.AreEqual ("1337 5|*34|<", language2.Name);
 
 				person.PreferredLanguage = language2;
 
@@ -280,9 +288,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
 				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
 
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (person));
-				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (person));
-				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (person));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language2));
+				Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language2));
+				Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language2));
 
 				dataContext.SaveChanges ();
 			}
