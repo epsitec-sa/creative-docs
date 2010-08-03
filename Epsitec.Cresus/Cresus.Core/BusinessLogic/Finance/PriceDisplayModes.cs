@@ -18,5 +18,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Finance
 		FixedPrice		= 0x0004,
 		Tax				= 0x0008,
 		ResultingTotal	= 0x0010,
+
+		WithTax			= 0x1000,
 	}
 }
