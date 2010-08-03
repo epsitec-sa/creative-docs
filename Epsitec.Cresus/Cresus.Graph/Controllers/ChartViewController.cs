@@ -495,6 +495,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
+            // Change the tab index
+            this.commandBar.SelectedItem = this.GraphType;
+
 			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType);
 			var renderer = snapshot.CreateRenderer (this.IsStandalone);
 
