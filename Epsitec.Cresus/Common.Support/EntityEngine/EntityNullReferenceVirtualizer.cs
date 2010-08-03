@@ -126,8 +126,15 @@ namespace Epsitec.Common.Support.EntityEngine
 					.Cast<Store> ()
 					.ToArray ();
 
-				return (stores.Length > 0)
-					&& (stores.All (store => store.IsReadOnly));
+				if ((stores.Length > 0) &&
+					(stores.All (store => store.IsReadOnly)))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
@@ -320,7 +327,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			#endregion
 
-			private void TranformNullEntityIntoLiveEntity()
+			#region IEntityValueStore Members
+
+			public bool IsEmpty
+			{
+				get
+				{
+					throw new System.NotImplementedException ();
+				}
+			}
+
+			#endregion
+
+			public void TranformNullEntityIntoLiveEntity()
 			{
 				if (this.IsReadOnly)
 				{
@@ -430,9 +449,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				IValueStore realOriginalValueStore = entity.GetOriginalValues ();
 				IValueStore realModifiedValueStore = entity.GetModifiedValues ();
 
-				var store = new Store (realOriginalValueStore, realModifiedValueStore, entity, parentEntity, parentStore, id);
+				var store1 = new Store (realOriginalValueStore, realModifiedValueStore, entity, parentEntity, parentStore, id);
+				var store2 = new StoreForwarder (realModifiedValueStore, store1);
 
-				entity.SetModifiedValues (store);
+				entity.SetOriginalValues (store1);
+				entity.SetModifiedValues (store2);
 			}
 
 
@@ -447,6 +468,33 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		#endregion
+
+		class StoreForwarder : IValueStore
+		{
+			public StoreForwarder(IValueStore store1, Store store2)
+			{
+				this.store1 = store1;
+				this.store2 = store2;
+			}
+
+			#region IValueStore Members
+
+			public object GetValue(string id)
+			{
+				return this.store1.GetValue (id);
+			}
+
+			public void SetValue(string id, object value, ValueStoreSetMode mode)
+			{
+				this.store1.SetValue (id, value, mode);
+				this.store2.TranformNullEntityIntoLiveEntity ();
+			}
+
+			#endregion
+
+			private readonly IValueStore store1;
+			private readonly Store store2;
+		}
 		
 		[System.ThreadStatic]
 		private static EntityContext emptyEntityContext;
