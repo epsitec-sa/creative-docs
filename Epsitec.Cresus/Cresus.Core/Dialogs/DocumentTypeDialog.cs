@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 	{
 		public DocumentTypeDialog(CoreApplication application, Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities, bool isPreview)
 		{
+			this.IsApplicationWindow = true;  // pour avoir les boutons Minimize/Maximize/Close !
+
 			this.application   = application;
 			this.entityPrinter = entityPrinter;
 			this.entities      = entities;
@@ -59,12 +61,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Choix du type de document";
-			this.window.MakeFloatingWindow ();
+			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			bool showOptions = this.GetSettings (true, "ShowOptions") != "No";
 			bool showPreview = this.GetSettings (true, "ShowPreview") != "No";
 
 			this.UpdateWindowSize (showOptions, showPreview);
+
+			window.WindowCloseClicked += delegate
+			{
+				this.OnDialogClosed ();
+				this.CloseDialog ();
+			};
 		}
 
 		private void UpdateWindowSize(bool showOptions, bool showPreview)
