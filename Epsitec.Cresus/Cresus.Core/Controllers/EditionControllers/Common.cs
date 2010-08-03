@@ -92,9 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		/// <returns></returns>
 		public static EntityViewController GetParentController(TileContainer container)
 		{
+			// TODO: Il faudra supprimer cette méthode. Un *ViewController devrait connaître les entités parent !
 			var controllers = container.Controller.Orchestrator.Controller.GetAllSubControllers ();
 
-			if (controllers.Count () >= 1)
+			if (controllers.Count () > 1)
 			{
 				return controllers.ElementAt (1) as EntityViewController;
 			}

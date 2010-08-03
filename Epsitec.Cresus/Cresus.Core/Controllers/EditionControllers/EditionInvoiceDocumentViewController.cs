@@ -129,8 +129,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup          = true,
 					Name		       = "BillingDetails",
 					IconUri		       = "Data.BillingDetails",
-					Title		       = UIBuilder.FormatText ("Paiements"),
-					CompactTitle       = UIBuilder.FormatText ("Paiements"),
+					Title		       = UIBuilder.FormatText ("Facturation"),
+					CompactTitle       = UIBuilder.FormatText ("Facturation"),
 					Text		       = CollectionTemplate.DefaultEmptyText,
 				});
 
@@ -211,21 +211,37 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string GetTextDocumentItemSummary(TextDocumentItemEntity x)
 		{
-			return string.Concat ("<i>Texte</i><tab/>", x.Text);
+			if (string.IsNullOrEmpty (x.Text))
+			{
+				return "<i>Texte</i>";
+			}
+			else
+			{
+				return x.Text;
+			}
 		}
 
 		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
 			var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (x);
 			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x));
+			var price = Misc.PriceToString (x.PrimaryLinePriceBeforeTax);
 
-			return string.Concat ("<i>Article</i><tab/>", string.Join (" ", quantity, desc));
+			string text = string.Join (" ", quantity, desc, price);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return "<i>Article</i>";
+			}
+			else
+			{
+				return text;
+			}
 		}
 
 		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
 		{
 			var builder = new System.Text.StringBuilder ();
-			builder.Append ("<i>Total</i><tab/>");
 			bool first = true;
 
 			if (x.Discount.DiscountRate.HasValue)
@@ -265,6 +281,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.Append (Misc.PriceToString (x.FixedPriceAfterTax));
 
 				first = false;
+			}
+
+			if (first)
+			{
+				builder.Append ("<i>Total</i>");
 			}
 
 			return builder.ToString ();
