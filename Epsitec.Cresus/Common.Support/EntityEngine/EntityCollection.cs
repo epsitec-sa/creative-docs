@@ -58,6 +58,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.containerFieldId = containerFieldId;
 			this.container = container;
 			this.state = copyOnWrite ? State.CopyOnWrite : State.Default;
+
+			this.CollectionChanging += this.HandleCollectionChanging;
+			this.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 		/// <summary>
@@ -102,10 +105,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <summary>
 		/// Called when the collection is changing.
 		/// </summary>
-		protected override void OnCollectionChanging()
+		private void HandleCollectionChanging(object sender)
 		{
-			base.OnCollectionChanging ();
-
 			this.container.UpdateDataGeneration ();
 		}
 
@@ -446,10 +447,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		protected override void OnCollectionChanged(CollectionChangedEventArgs e)
+		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs e)
 		{
-			base.OnCollectionChanged (e);
-
 			if ((this.container != null) &&
 				(this.containerFieldId != null))
 			{
