@@ -7791,19 +7791,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AGD/L0AHD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AHD]")]
-		public global::Epsitec.Common.Types.FormattedText Text
+		public string Text
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]");
+				return this.GetField<string> ("[L0AHD]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
+				string oldValue = this.Text;
 				if (oldValue != value)
 				{
 					this.OnTextChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]", oldValue, value);
+					this.SetField<string> ("[L0AHD]", oldValue, value);
 					this.OnTextChanged (oldValue, value);
 				}
 			}
@@ -7941,8 +7941,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanging(string oldValue, string newValue);
+		partial void OnTextChanged(string oldValue, string newValue);
 		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnBaseAmountChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);

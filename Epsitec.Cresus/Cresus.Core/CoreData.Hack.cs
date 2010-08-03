@@ -861,24 +861,40 @@ namespace Epsitec.Cresus.Core
 			totalA1.PrimaryPriceBeforeTax = (lineA1.ResultingLinePriceBeforeTax + lineA2.ResultingLinePriceBeforeTax + lineA3.ResultingLinePriceBeforeTax);
 			totalA1.PrimaryTax = totalA1.PrimaryPriceBeforeTax * vatRate;
 			totalA1.ResultingPriceBeforeTax = totalA1.PrimaryPriceBeforeTax * (1.0M - discountA1.DiscountRate);
-			totalA1.ResultingTax = totalA1.FinalPriceBeforeTax * vatRate;
-			totalA1.TextForPrimaryPrice = "Total avant rabais";
-			totalA1.TextForResultingPrice = "Total après rabais";
+			totalA1.ResultingTax = totalA1.ResultingPriceBeforeTax * vatRate;
+			totalA1.TextForPrimaryPrice = "Total HT avant rabais";
+			totalA1.TextForResultingPrice = "Total HT après rabais";
 			totalA1.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.Discount | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal;
 
+			var taxA1 = this.DataContext.CreateEntity<TaxDocumentItemEntity> ();
+
+			taxA1.Visibility = true;
+			taxA1.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			taxA1.Rate = vatRate;
+			taxA1.BaseAmount = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
+			taxA1.ResultingTax = taxA1.Rate * taxA1.BaseAmount; // devrait être égal à 'totalA1.ResultingTax + lineA4.ResultingLineTax'
+			taxA1.Text = "TVA au taux standard";
+			
 			var totalA2 = this.DataContext.CreateEntity<PriceDocumentItemEntity> ();
 
 			//	TVA ............................................ xx
-			//	Total arrêté ................................. xxxx
+			//	Total TTC .................................... xxxx
+			//	Total TTC arrêté ............................. xxxx
 
 			totalA2.Visibility = true;
 			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
-			totalA2.PrimaryTax = totalA1.ResultingTax + lineA4.PrimaryLinePriceBeforeTax;
-			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceBeforeTax * (1+vatRate) / 10) * 10M;
-			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));
+			totalA2.PrimaryTax = taxA1.ResultingTax;
+
+			decimal totalAfterTax = totalA2.PrimaryPriceBeforeTax.Value + totalA2.PrimaryTax.Value;
+
+			totalA2.FixedPriceAfterTax = (int) (totalAfterTax / 10) * 10.00M;	//	arrondi à 10.-
+
+			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));  // -- à revalider
 			totalA2.ResultingTax = decimalType.Range.ConstrainToZero (totalA2.ResultingPriceBeforeTax * vatRate);
-			totalA2.TextForFixedPrice = "Total arrêté";
-//-			totalA2.TextForTax = "TVA";
+			totalA2.TextForPrimaryPrice = "Total TTC";
+			totalA2.TextForFixedPrice = "Total TTC arrêté";
+			totalA2.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal | BusinessLogic.Finance.PriceDisplayModes.WithTax;
+
 
 			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
 			//	lignes d'articles qui peuvent être soumis à un rabais :
@@ -906,7 +922,8 @@ namespace Epsitec.Cresus.Core
 			invoiceA.Lines.Add (lineA3);		//	  Crésus Salaires PRO x 0 (et 2+1 qui seront livrés les 01/09/2010 et 31.01.2011)
 			invoiceA.Lines.Add (totalA1);		//	Rabais de quantité et sous-total après rabais
 			invoiceA.Lines.Add (lineA4);		//	  Frais de port
-			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1790.00
+			invoiceA.Lines.Add (taxA1);			//	  TVA de 136.xx
+			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1930.00
 
 			var paymentA = this.DataContext.CreateEntity<PaymentDetailEntity> ();
 
