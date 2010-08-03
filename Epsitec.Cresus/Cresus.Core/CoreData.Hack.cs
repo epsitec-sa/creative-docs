@@ -572,7 +572,7 @@ namespace Epsitec.Cresus.Core
 			articleCategory2.Name = "Ports/emballages";
 			articleCategory2.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory2.NeverApplyDiscount = true;
-			articleCategory2.ArticleType = BusinessLogic.ArticleType.Tax;
+			articleCategory2.ArticleType = BusinessLogic.ArticleType.Freight;
 
 			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
