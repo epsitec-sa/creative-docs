@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		Subscription = 30,
 		Charge		 = 40,
 
-		Freight		 = 50,	// fret
+		Freight		 = 50,	// fret (port et emballage)
 		Tax			 = 60,
 	}
 }
