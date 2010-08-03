@@ -1,9 +1,11 @@
-﻿using System;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Jonas SCHMID, Maintainer: Jonas SCHMID
+
 using System.Collections.Generic;
 using System.Net;
-using Epsitec.Common.Drawing;
-using Epsitec.BingMapsWrapper;
 using System.Threading;
+using Epsitec.BingMapsWrapper;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -17,7 +19,7 @@ namespace Epsitec.Common.Graph.Renderers
 
         public GeoChartRenderer ()
         {
-            this.fetchImage ();
+            this.fetchImageAsync ();
         }
 
         public override void BeginRender (IPaintPort port, Epsitec.Common.Drawing.Rectangle bounds)
@@ -25,7 +27,7 @@ namespace Epsitec.Common.Graph.Renderers
 
             if (this.Bounds.Width != bounds.Width || this.Bounds.Height != bounds.Height)
             {
-                this.fetchImage ((int)bounds.Width, (int)bounds.Height);
+                this.fetchImageAsync ((int)bounds.Width, (int)bounds.Height);
             }
 
             base.BeginRender (port, bounds);
@@ -104,10 +106,8 @@ namespace Epsitec.Common.Graph.Renderers
             };
         }
 
-        private void fetchImage (int width = 200, int height = 200)
+        private void fetchImageAsync (int width = 200, int height = 200)
         {
-            System.Diagnostics.Debug.WriteLine ("{0}, {1}", width, height);
-
             if (this.myThread != null)
             {
 
@@ -118,14 +118,13 @@ namespace Epsitec.Common.Graph.Renderers
 
             this.currentWidth = width;
             this.currentHeight = height;
-            this.myThread = new Thread (this.fetchImageAsync);
+            this.myThread = new Thread (this.fetchImage);
             this.myThread.Start ();
             //new Thread (this.fetchImageAsync).Start ();
         }
 
-        public void fetchImageAsync ()
+        private void fetchImage ()
         {
-            // var url = string.Format (this.imgUrl, width, height);
             var url = GeoChartRenderer.GetUrl (this.currentWidth, this.currentHeight);
 
             System.Diagnostics.Debug.WriteLine (url);
@@ -231,7 +230,7 @@ namespace Epsitec.Common.Graph.Renderers
                     // Nope. Resize the buffer, put in the byte we've just
                     // read, and continue
                     byte[] newBuffer = new byte[buffer.Length * 2];
-                    Array.Copy (buffer, newBuffer, buffer.Length);
+                    System.Array.Copy (buffer, newBuffer, buffer.Length);
                     newBuffer[read] = (byte)nextByte;
                     buffer = newBuffer;
                     read++;
@@ -239,14 +238,12 @@ namespace Epsitec.Common.Graph.Renderers
             }
             // Buffer is now too big. Shrink it.
             byte[] ret = new byte[read];
-            Array.Copy (buffer, ret, read);
+            System.Array.Copy (buffer, ret, read);
             return ret;
         }
 
         private static string BingKey = "ArjEUH2p_AaSYGF1wH-9JzcKAnNmn3B3ZiGAlSHTbvWfV_jVaRO3TbYlz6503XkN";
         private Image image;
-        //private readonly string imgUrl = "http://ecn.api.tiles.virtualearth.net/api/GetMap.ashx?ppl=36,Jo,46.774316,6.659994_0,G,46.781879,6.641235_0,,46.7786304652691,6.64143316447735&w={0}&h={1}&b=r,shading.hill,mkt.en-US&z=10";
-
         private static ImageryWrapper imageryWrapper;
         private int currentHeight;
         private int currentWidth;
