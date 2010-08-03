@@ -876,7 +876,7 @@ namespace Epsitec.Cresus.Core
 			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));
 			totalA2.ResultingTax = decimalType.Range.ConstrainToZero (totalA2.ResultingPriceBeforeTax * vatRate);
 			totalA2.TextForFixedPrice = "Total arrêté";
-			totalA2.TextForTax = "TVA";
+//-			totalA2.TextForTax = "TVA";
 
 			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
 			//	lignes d'articles qui peuvent être soumis à un rabais :
