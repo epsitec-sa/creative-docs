@@ -29,23 +29,23 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			type.AddInvoice (isBL: false);
-			type.AddBV      ();
+			type.DocumentOptionsAddInvoice (isBL: false);
+			type.DocumentOptionsAddBV      ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			type.AddInvoice     (isBL: false);
-			type.AddOrientation ();
-			type.AddMargin      ();
-			type.AddSpecimen    ();
+			type.DocumentOptionsAddInvoice     (isBL: false);
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddSpecimen    ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			type.AddInvoice     (isBL: true);
-			type.AddOrientation ();
-			type.AddMargin      ();
-			type.AddBL          ();
-			type.AddSpecimen    ();
+			type.DocumentOptionsAddInvoice     (isBL: true);
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddBL          ();
+			type.DocumentOptionsAddSpecimen    ();
 			this.DocumentTypes.Add (type);
 		}
 

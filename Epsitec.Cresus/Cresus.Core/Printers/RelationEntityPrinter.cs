@@ -32,9 +32,9 @@ namespace Epsitec.Cresus.Core.Printers
 			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Adresses",   true));
 			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Téléphones", true));
 			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Emails",     true));
-			type.AddOrientation ();
-			type.AddMargin      ();
-			type.AddSpecimen    ();
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddSpecimen    ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Debug.1", "Test #1", "Page fixe de test pour l'objet TextBand.");
