@@ -38,10 +38,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				var originalValues = entity.GetOriginalValues ();
 				var modifiedValues = entity.GetModifiedValues ();
 				
-				//	BUG: writing in the modified values does not work when the caller is
-				//	AbstractEntity.SetModifiedValueAsOriginalValue, since we should really
-				//	be writing into the original values !
-				
 				entity.SetOriginalValues (new Store (originalValues, modifiedValues, entity));
 			}
 		}
@@ -318,13 +314,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
-				this.TranformNullEntityInfoLiveEntity ();
+				this.TranformNullEntityIntoLiveEntity ();
 				this.ReplaceValue (id, value, mode);
 			}
 			
 			#endregion
 
-			private void TranformNullEntityInfoLiveEntity()
+			private void TranformNullEntityIntoLiveEntity()
 			{
 				if (this.IsReadOnly)
 				{
@@ -355,7 +351,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				//	Make sure this is a real entity, before recording the entity into the specified
 				//	reference field:
 
-				this.TranformNullEntityInfoLiveEntity ();
+				this.TranformNullEntityIntoLiveEntity ();
 
 				this.ReplaceValue (fieldId, entity, ValueStoreSetMode.Default);
 				
@@ -365,7 +361,18 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			private void ReplaceValue(string id, object value, ValueStoreSetMode mode)
 			{
-				this.realWriteStore.SetValue (id, value, mode);
+				if (mode == ValueStoreSetMode.ShortCircuit)
+				{
+					//	The short-circuit mode is used by AbstractEntity.SetModifiedValueAsOriginalValue when it
+					//	is resetting the original values in the store. We must therefore use the 'read store' as
+					//	the target (which usually maps to the original store).
+
+					this.realReadStore.SetValue (id, value, mode);
+				}
+				else
+				{
+					this.realWriteStore.SetValue (id, value, mode);
+				}
 				
 				this.values.Remove (id);
 			}
@@ -384,12 +391,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
 
-					if (entity != null)
-					{
-						Store.PatchNullReferences (entity, this.entity, this, id);
+					System.Diagnostics.Debug.Assert (entity != null);
 
-						this.values.Add (id, entity);
-					}
+					Store.PatchNullReferences (entity, parentEntity: this.entity, parentStore: this, id: id);
+					this.values.Add (id, entity);
 
 					return entity;
 				}
@@ -422,9 +427,10 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			private static void PatchNullReferences(AbstractEntity entity, AbstractEntity parentEntity, Store parentStore, string id)
 			{
+				IValueStore realOriginalValueStore = entity.GetOriginalValues ();
 				IValueStore realModifiedValueStore = entity.GetModifiedValues ();
 
-				var store = new Store (realModifiedValueStore, realModifiedValueStore, entity, parentEntity, parentStore, id);
+				var store = new Store (realOriginalValueStore, realModifiedValueStore, entity, parentEntity, parentStore, id);
 
 				entity.SetModifiedValues (store);
 			}

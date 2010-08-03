@@ -1271,22 +1271,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				foreach (Druid fieldId in fieldIds.Select (id => Druid.Parse (id)))
 				{
-					this.SetModifiedValueAsOriginalValue (originalValues, modifiedValues, fieldId);
+					AbstractEntity.SetModifiedValueAsOriginalValue (originalValues, modifiedValues, fieldId);
 				}
 			}
 		}
 
 
-		private void SetModifiedValueAsOriginalValue(IValueStore originalValues, IValueStore modifiedValues, Druid fieldId)
+		private static void SetModifiedValueAsOriginalValue(IValueStore originalValues, IValueStore modifiedValues, Druid fieldId)
 		{
-			string fieldName = fieldId.ToResourceId ();
-
+			string fieldName     = fieldId.ToResourceId ();
 			object modifiedValue = modifiedValues.GetValue (fieldName);
 
 			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
 			{
-				this.originalValues.SetValue (fieldName, modifiedValue, ValueStoreSetMode.ShortCircuit);
-				this.modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
+				originalValues.SetValue (fieldName, modifiedValue, ValueStoreSetMode.ShortCircuit);
+				modifiedValues.SetValue (fieldName, UndefinedValue.Value, ValueStoreSetMode.ShortCircuit);
 			}
 		}
 		
