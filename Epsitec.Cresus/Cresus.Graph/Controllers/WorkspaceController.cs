@@ -1,22 +1,20 @@
 ﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Graph.Widgets;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Graph.Widgets;
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
