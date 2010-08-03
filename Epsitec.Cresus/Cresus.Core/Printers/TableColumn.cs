@@ -8,6 +8,21 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
+	public enum TableColumnKeys
+	{
+		Quantity,
+		DelayedQuantity,
+		DelayedDate,
+		ArticleId,
+		ArticleDescription,
+		Discount,
+		UnitPrice,
+		LinePrice,
+		Vat,
+		Total,
+	}
+
+
 	/// <summary>
 	/// Représente une colonne d'une table TableBand.
 	/// Elle pourra être visible ou cachée.

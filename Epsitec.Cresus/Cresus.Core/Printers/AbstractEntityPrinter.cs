@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
 			this.documentContainer = new DocumentContainer ();
-			this.tableColumns = new Dictionary<string, TableColumn> ();
+			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
 		}
 
 
@@ -188,71 +188,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		#region Document types
-		protected static void DocumentTypeAddInvoice(List<DocumentOption> options, bool isBL)
-		{
-			//	Ajoute les options d'impression liées aux factures.
-			options.Add (new DocumentOption ("Delayed",   null, "Imprime les articles livrés ultérieurement", true));
-			options.Add (new DocumentOption ("ArticleId", null, "Imprime les identificateurs d'article", false));
-
-			options.Add (new DocumentOption ("Aspect de la liste des articles :"));
-			options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
-			options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
-
-			options.Add (new DocumentOption ("Ordre des colonnes :"));
-
-			if (isBL)
-			{
-				options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
-				options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité"));
-			}
-			else
-			{
-				options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
-				options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
-			}
-		}
-
-		protected static void DocumentTypeAddBV(List<DocumentOption> options)
-		{
-			//	Ajoute les options d'impression liées aux BV.
-			options.Add (new DocumentOption ("Type de bulletin de versement :"));
-			options.Add (new DocumentOption ("BVR", "BV", "BVR orange", true));
-			options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
-
-			options.Add (new DocumentOption ("Mode d'impression du BV :"));
-			options.Add (new DocumentOption ("BV.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
-			options.Add (new DocumentOption ("BV.Specimen", null, "Incruste la mention SPECIMEN"));
-		}
-
-		protected static void DocumentTypeAddOrientation(List<DocumentOption> options)
-		{
-			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
-			options.Add (new DocumentOption ("Orientation du papier :"));
-			options.Add (new DocumentOption ("Orientation.Vertical",   "Orientation", "Portrait", true));
-			options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
-		}
-
-		protected static void DocumentTypeAddBL(List<DocumentOption> options)
-		{
-			//	Ajoute les options d'impression générales.
-			options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\" avec signature", true));
-		}
-
-		protected static void DocumentTypeAddSpecimen(List<DocumentOption> options)
-		{
-			//	Ajoute les options d'impression générales.
-			options.Add (new DocumentOption ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
-		}
-
-		protected static void DocumentTypeAddMargin(List<DocumentOption> options)
-		{
-			//	Ajoute une marge verticale.
-			options.Add (new DocumentOption (20));
-		}
-		#endregion
-
-
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
 		{
 			var type = AbstractEntityPrinter.FindType (entity.GetType ());
@@ -284,13 +219,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
-		private readonly List<DocumentType>			documentTypes;
-		private readonly List<string>				documentOptionsNameSelected;
-		protected readonly DocumentContainer		documentContainer;
-		protected Dictionary<string, TableColumn>	tableColumns;
-		private int									currentPage;
-		private int									debugParam1;
-		private int									debugParam2;
+		private readonly List<DocumentType>					documentTypes;
+		private readonly List<string>						documentOptionsNameSelected;
+		protected readonly DocumentContainer				documentContainer;
+		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
+		private int											currentPage;
+		private int											debugParam1;
+		private int											debugParam2;
 	}
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter
