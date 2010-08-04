@@ -58,6 +58,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public bool AreEventsEnabled
+		{
+			get
+			{
+				return this.disableEventsCount == 0;
+			}
+		}
+
+
 		public event EventHandler<EntityChangedEventArgs> EntityChanged
 		{
 			add
@@ -396,6 +405,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		public System.IDisposable UseSilentUpdates()
 		{
 			return new SilentUpdatesHelper (this);
+		}
+
+
+		public System.IDisposable DisableEvents()
+		{
+			return new DisableEventsHelper (this);
 		}
 
 
@@ -760,8 +775,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (this.IsDefiningOriginalValues == false);
 
 			EntityCollection<T> copy = new EntityCollection<T> (id, this, false);
-
-			copy.AddRange (collection);
+			
+			using (copy.DisableNotifications ())
+			{
+				copy.AddRange (collection);
+			}
 
 			this.InternalSetValue (id, copy);
 
@@ -1383,6 +1401,26 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		private class DisableEventsHelper : Helper
+		{
+
+
+			public DisableEventsHelper(AbstractEntity entity)
+				: base (entity)
+			{
+				System.Threading.Interlocked.Increment (ref this.Entity.disableEventsCount);
+			}
+
+
+			protected override void Finish()
+			{
+				System.Threading.Interlocked.Decrement (ref this.Entity.disableEventsCount);
+			}
+
+
+		}
+
+
 		#endregion
 
 
@@ -1414,6 +1452,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private long dataGeneration;
 		private int silentUpdateCount;
 		private int defineOriginalValuesCount;
+		private int disableEventsCount;
 		private bool calculationsDisabled;
 		private IValueStore originalValues;
 		private IValueStore modifiedValues;
