@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
 using Epsitec.Common.Support.EntityEngine;
+	using Epsitec.Cresus.DataLayer.Context;
 
 	/// <summary>
 	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
@@ -27,13 +28,13 @@ using Epsitec.Common.Support.EntityEngine;
 	/// </summary>
 	public class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(EntityViewController controller, TileContainer container)
+		public TileContainerController(EntityViewController controller, TileContainer container, DataContext dataContext)
 		{
 			this.controller  = controller;
 			this.container   = container;
 			this.dataItems   = new SummaryDataItems (controller);
 			this.activeItems = new List<SummaryData> ();
-			this.entityContext = EntityContext.Current;
+			this.dataContext = dataContext;
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
@@ -48,7 +49,7 @@ using Epsitec.Common.Support.EntityEngine;
 			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 
-			this.entityContext.EntityChanged += this.HandleEntityChanged;
+			this.dataContext.EntityEvent += this.HandleEntityChanged;
 			this.refreshTimer.Start ();
 		}
 
@@ -129,7 +130,7 @@ using Epsitec.Common.Support.EntityEngine;
 			this.refreshTimer.Stop ();
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
-			this.entityContext.EntityChanged -= this.HandleEntityChanged;
+			this.dataContext.EntityEvent -= this.HandleEntityChanged;
 			this.container.SizeChanged -= this.HandleContainerSizeChanged;
 			
 			this.GetTitleTiles ().ForEach (x => x.Parent = null);
@@ -608,7 +609,7 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
-		private void HandleEntityChanged(object sender, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs e)
+		private void HandleEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityEventArgs e)
 		{
 			//	We don't refresh synchronously, since this method could be called very, very often
 			//	and also produce deep recursive calls. Simply set a flag and let the refresh timer
@@ -629,7 +630,7 @@ using Epsitec.Common.Support.EntityEngine;
 		private readonly EntityViewController	controller;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		activeItems;
-		private readonly EntityContext			entityContext;
+		private readonly DataContext			dataContext;
 		private readonly Timer					refreshTimer;
 
 		private readonly Button					closeButton;
