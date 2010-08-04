@@ -8369,6 +8369,28 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class EnumValueArticleParameterDefinitionEntity : global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity
 	{
 		///	<summary>
+		///	The <c>Cardinality</c> field.
+		///	designer:fld/L0AOE/L0A2F
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2F]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality Cardinality
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality> ("[L0A2F]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality oldValue = this.Cardinality;
+				if (oldValue != value)
+				{
+					this.OnCardinalityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality> ("[L0A2F]", oldValue, value);
+					this.OnCardinalityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DefaultValue</c> field.
 		///	designer:fld/L0AOE/L0AQE
 		///	</summary>
@@ -8457,6 +8479,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnCardinalityChanging(global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality newValue);
+		partial void OnCardinalityChanged(global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality oldValue, global::Epsitec.Cresus.Core.BusinessLogic.EnumValueCardinality newValue);
 		partial void OnDefaultValueChanging(string oldValue, string newValue);
 		partial void OnDefaultValueChanged(string oldValue, string newValue);
 		partial void OnValuesChanging(string oldValue, string newValue);

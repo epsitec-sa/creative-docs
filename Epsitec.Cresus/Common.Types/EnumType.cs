@@ -164,6 +164,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public override object					DefaultValue
+		{
+			get
+			{
+				object value = base.DefaultValue;
+				return value ?? this.ConvertToEnum (0);
+			}
+		}
+
 		/// <summary>
 		/// Gets the collection of <see cref="EnumValue"/> values, which can
 		/// be modified if <c>MakeEditable</c> was called.
