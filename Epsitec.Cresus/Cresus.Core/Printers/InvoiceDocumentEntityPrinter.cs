@@ -502,8 +502,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
 		{
-			// TODO:
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
+			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
+			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
+
 			return true;
 		}
 
@@ -619,8 +621,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
 		{
-			// TODO:
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.Text);
+			var text = string.Concat (line.Text, " (", Misc.PercentToString (line.Rate), ")");
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
+
+			table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (line.BaseAmount));
+			table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (line.ResultingTax));
 
 			return true;
 		}
