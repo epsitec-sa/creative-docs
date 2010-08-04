@@ -202,14 +202,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
 			}
 
-			if (documentItemEntity is PriceDocumentItemEntity)
-			{
-				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
-			}
-
 			if (documentItemEntity is TaxDocumentItemEntity)
 			{
 				return GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
+			}
+
+			if (documentItemEntity is PriceDocumentItemEntity)
+			{
+				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
 			}
 
 			return null;			
@@ -238,6 +238,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (string.IsNullOrEmpty (text))
 			{
 				return "<i>Article</i>";
+			}
+			else
+			{
+				return text;
+			}
+		}
+
+		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
+		{
+			var desc = x.Text;
+			var tax = Misc.PriceToString (x.ResultingTax);
+
+			string text = string.Join (" ", desc, tax);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return "<i>TVA</i>";
 			}
 			else
 			{
@@ -295,18 +312,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			return builder.ToString ();
-		}
-
-		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
-		{
-			if (string.IsNullOrEmpty (x.Text))
-			{
-				return "<i>TVA</i>";
-			}
-			else
-			{
-				return x.Text;
-			}
 		}
 
 

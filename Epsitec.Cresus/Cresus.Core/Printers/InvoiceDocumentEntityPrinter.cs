@@ -251,14 +251,14 @@ namespace Epsitec.Cresus.Core.Printers
 						exist = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity);
 					}
 
-					if (line is PriceDocumentItemEntity)
-					{
-						exist = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
-					}
-
 					if (line is TaxDocumentItemEntity)
 					{
 						exist = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
+					}
+
+					if (line is PriceDocumentItemEntity)
+					{
+						exist = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
 					}
 
 					if (exist)
@@ -351,14 +351,14 @@ namespace Epsitec.Cresus.Core.Printers
 						exist = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity);
 					}
 
-					if (line is PriceDocumentItemEntity)
-					{
-						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
-					}
-
 					if (line is TaxDocumentItemEntity)
 					{
 						exist = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity);
+					}
+
+					if (line is PriceDocumentItemEntity)
+					{
+						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
 					}
 
 					if (exist)
@@ -500,6 +500,13 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
+		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
+		{
+			// TODO:
+			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
+			return true;
+		}
+
 		private bool InitializeColumnPriceLine(PriceDocumentItemEntity line)
 		{
 			if (this.IsBL)
@@ -517,13 +524,6 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
-			return true;
-		}
-
-		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
-		{
-			// TODO:
-			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			return true;
 		}
 
@@ -617,6 +617,14 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
+		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
+		{
+			// TODO:
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.Text);
+
+			return true;
+		}
+
 		private bool BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
 		{
 			if (this.IsBL)
@@ -687,15 +695,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
-
-			return true;
-		}
-
-		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
-		{
-			// TODO:
-			string text = string.Concat ("<b>", line.Text, "</b>");
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
 			return true;
 		}
