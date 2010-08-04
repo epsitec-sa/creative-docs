@@ -104,9 +104,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField ("Adresse de livraison",
 				new SelectionController<MailContactEntity>
 				{
-					ValueGetter = () => this.Entity.BillingMailContact,
-					ValueSetter = x => this.Entity.BillingMailContact = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
+					ValueGetter = () => this.Entity.ShippingMailContact,
+					ValueSetter = x => this.Entity.ShippingMailContact = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
 
 					ToTextArrayConverter     = x => GetMailTexts (x),
@@ -148,32 +148,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string[] GetMailTexts(MailContactEntity x)
 		{
-			if (x.NaturalPerson.IsActive ())
+			return new string[]
 			{
-				return new string[] { x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, x.Address.Location.PostalCode, x.Address.Location.Name };
-			}
-
-			if (x.LegalPerson.IsActive ())
-			{
-				return new string[] { x.LegalPerson.Name, x.NaturalPerson.Lastname, x.Address.Location.PostalCode, x.Address.Location.Name };
-			}
-
-			return null;
+				x.LegalPerson.Name,
+				x.NaturalPerson.Firstname,
+				x.NaturalPerson.Lastname,
+				x.Address.Street.StreetName,
+				x.Address.Location.PostalCode,
+				x.Address.Location.Name
+			};
 		}
 
 		private static FormattedText GetMailText(MailContactEntity x)
 		{
-			if (x.NaturalPerson.IsActive ())
-			{
-				return UIBuilder.FormatText (x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, x.Address.Location.PostalCode, x.Address.Location.Name);
-			}
-
-			if (x.LegalPerson.IsActive ())
-			{
-				return UIBuilder.FormatText (x.LegalPerson.Name, x.Address.Location.PostalCode, x.Address.Location.Name);
-			}
-
-			return UIBuilder.FormatText (x.Address.Location.PostalCode, x.Address.Location.Name);
+			return UIBuilder.FormatText (x.LegalPerson.Name, "~,",
+										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
+										 x.Address.Street.StreetName, "~,",
+										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 
