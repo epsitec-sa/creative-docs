@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Core
 
 		private void AttachSaveStateHandler(DataContext context)
 		{
-			context.EntityContext.EntityChanged += this.HandleEntityContextEntityChanged;
+			context.EntityEvent += this.HandleEntityContextEntityChanged;
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.SaveRecord, () => this.SaveDataContext (this.DataContext));
 			
 			this.UpdateEditionSaveRecordCommandState ();
@@ -374,15 +374,18 @@ namespace Epsitec.Cresus.Core
 
 		private void DetachSaveStateHandler(DataContext context)
 		{
-			context.EntityContext.EntityChanged -= this.HandleEntityContextEntityChanged;
+			context.EntityEvent -= this.HandleEntityContextEntityChanged;
 			CoreProgram.Application.Commands.PopHandler (Res.Commands.Edition.SaveRecord);
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
 
-		private void HandleEntityContextEntityChanged(object sender, EntityChangedEventArgs e)
+		private void HandleEntityContextEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityEventArgs e)
 		{
-			this.UpdateEditionSaveRecordCommandState ();
+			if (e.EventType == EntityEventType.Updated)
+			{
+				this.UpdateEditionSaveRecordCommandState ();
+			}
 		}
 
 

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.TileContainerController = new TileContainerController (this, container);
+			this.TileContainerController = new TileContainerController (this, container, this.DataContext);
 			var data = this.TileContainerController.DataItems;
 
 			data.Add (

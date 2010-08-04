@@ -64,9 +64,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				builder.CreateFooterEditorTile ();
 			}
-
+			
 			//	Summary:
-			this.TileContainerController = new TileContainerController (this, container);
+			this.TileContainerController = new TileContainerController (this, container, this.DataContext);
 			var data = this.TileContainerController.DataItems;
 
 			this.CreateUICaseEvents (data);
