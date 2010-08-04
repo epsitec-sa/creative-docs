@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			this.TileContainerController = new TileContainerController (this, container, this.DataContext);
 			var data = this.TileContainerController.DataItems;
 
-			this.CreateUIInvoiceDocument (data);
-			this.CreateUILines (data);
+			this.CreateUIInvoice  (data);
+			this.CreateUILines    (data);
 			this.CreateUIBillings (data);
 			this.CreateUIComments (data);
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private void CreateUIInvoiceDocument(SummaryDataItems data)
+		private void CreateUIInvoice(SummaryDataItems data)
 		{
 			data.Add (
 				new SummaryData
@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
-
 
 		private void CreateUILines(SummaryDataItems data)
 		{
