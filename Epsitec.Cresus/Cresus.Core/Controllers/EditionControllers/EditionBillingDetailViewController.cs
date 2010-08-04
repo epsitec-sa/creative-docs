@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				}
 				else
 				{
-					return this.Entity.InstalmentRank.ToString ();
+					return (this.Entity.InstalmentRank+1).ToString ();
 				}
 			}
 			set
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					{
 						if (n > 0)
 						{
-							this.Entity.InstalmentRank = n;
+							this.Entity.InstalmentRank = n-1;
 							return;
 						}
 					}

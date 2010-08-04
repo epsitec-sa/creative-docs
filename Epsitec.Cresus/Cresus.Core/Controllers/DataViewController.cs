@@ -352,6 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private EntityViewController CreateRootSummaryViewController()
 		{
+#if false
 			var mode = ViewControllerMode.Summary;
 
 			// Hack pour ouvrir les factures directement en édition.
@@ -361,6 +362,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, mode, this.Orchestrator);
+#else
+			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator);
+#endif
 		}
 
 		private CoreViewController GetParentController(int depth)

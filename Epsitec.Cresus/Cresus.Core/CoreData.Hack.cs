@@ -1015,14 +1015,14 @@ namespace Epsitec.Cresus.Core
 			billingA1.AmountDue = paymentA1;
 			billingA1.EsrCustomerNumber = "01-69444-3";										//	compte BVR
 			billingA1.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";				//	n° de réf BVR lié
-			billingA1.InstalmentRank = 1;
+			billingA1.InstalmentRank = 0;
 			billingA1.InstalmentName = "1/2";
 
 			billingA2.Title = "Facture 1000-00, 2ème tranche";
 			billingA2.AmountDue = paymentA2;
 			billingA2.EsrCustomerNumber = "01-69444-3";										//	compte BVR
 			billingA2.EsrReferenceNumber = "96 13070 01000 02173 50356 73893";				//	n° de réf BVR lié
-			billingA2.InstalmentRank = 2;
+			billingA2.InstalmentRank = 1;
 			billingA2.InstalmentName = "2/2";
 
 			yield return invoiceA;
