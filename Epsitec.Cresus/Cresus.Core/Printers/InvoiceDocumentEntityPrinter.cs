@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			DocumentType type;
 
-			type = new DocumentType ("BV", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			type = new DocumentType ("ESR", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
 			type.DocumentOptionsAddInvoice (isBL: false);
-			type.DocumentOptionsAddBV      ();
+			type.DocumentOptionsAddEsr      ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
@@ -78,9 +78,9 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double h = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight;
 
-				if (this.DocumentTypeSelected == "BV")
+				if (this.DocumentTypeSelected == "ESR")
 				{
-					return new Margins (20, 10, 20+h*2, h+10+AbstractBvBand.DefautlSize.Height);
+					return new Margins (20, 10, 20+h*2, h+10+AbstractEsrBand.DefautlSize.Height);
 				}
 				else
 				{
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Printers
 			base.BuildSections ();
 			this.documentContainer.Clear ();
 
-			if (this.DocumentTypeSelected == "BV")
+			if (this.DocumentTypeSelected == "ESR")
 			{
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
-					this.BuildBvs (billingDetails, firstPage);
+					this.BuildEsrs (billingDetails, firstPage);
 				}
 			}
 
@@ -922,45 +922,45 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildBvs(BillingDetailEntity billingDetails, int firstPage)
+		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);
+			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
 
 			for (int page = firstPage; page < this.documentContainer.PageCount; page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				AbstractBvBand BV;
+				AbstractEsrBand Esr;
 
-				if (this.HasDocumentOption ("BVR"))
+				if (this.HasDocumentOption ("ESR"))
 				{
-					BV = new BvrBand ();  // BVR orangé
+					Esr = new EsrBand ();  // BVR orangé
 				}
 				else
 				{
-					BV = new BvBand ();  // BV rose
+					Esr = new EsBand ();  // BV rose
 				}
 
-				BV.PaintBvSimulator = this.HasDocumentOption ("BV.Simul");
-				BV.PaintSpecimen    = this.HasDocumentOption ("BV.Specimen");
-				BV.From = InvoiceDocumentHelper.GetMailContact (this.entity);
-				BV.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
-				BV.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL);
+				Esr.PaintEsrSimulator = this.HasDocumentOption ("ESR.Simul");
+				Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
+				Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
+				Esr.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
+				Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL);
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
-					BV.NotForUse          = false;  // c'est LE vrai BV
-					BV.Price              = billingDetails.AmountDue.Amount;
-					BV.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
-					BV.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
+					Esr.NotForUse          = false;  // c'est LE vrai BV
+					Esr.Price              = billingDetails.AmountDue.Amount;
+					Esr.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
+					Esr.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
 				}
 				else  // faux BV ?
 				{
-					BV.NotForUse = true;  // pour imprimer "XXXXX XX"
+					Esr.NotForUse = true;  // pour imprimer "XXXXX XX"
 				}
 
-				this.documentContainer.AddAbsolute (BV, bounds);
+				this.documentContainer.AddAbsolute (Esr, bounds);
 			}
 		}
 

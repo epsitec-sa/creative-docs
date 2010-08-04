@@ -105,7 +105,8 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ArticleDefinition.IsActive () &&
 				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
-				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Tax;
+				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Freight ||
+					   article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Tax;
 			}
 
 			return false;

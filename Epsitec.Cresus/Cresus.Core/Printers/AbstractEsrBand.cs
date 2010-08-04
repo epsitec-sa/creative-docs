@@ -22,12 +22,12 @@ namespace Epsitec.Cresus.Core.Printers
 	/// <summary>
 	/// Classe générique permettant de dessiner un BVR orange ou un BV rose.
 	/// </summary>
-	public abstract class AbstractBvBand : AbstractBand
+	public abstract class AbstractEsrBand : AbstractBand
 	{
-		public AbstractBvBand()
+		public AbstractEsrBand()
 			: base ()
 		{
-			this.PaintBvSimulator = true;
+			this.PaintEsrSimulator = true;
 			this.PaintSpecimen = true;
 		}
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// true  -> Dessine un faux BVR orangé ou BV rose sur du papier vierge. A n'utiliser que pour l'aperçu avant impression.
 		/// false -> Ne dessine que les informations réelles sur du papier avec un BVR/BV préimprimé.
 		/// </summary>
-		public bool PaintBvSimulator
+		public bool PaintEsrSimulator
 		{
 			get;
 			set;
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override double RequiredHeight(double width)
 		{
-			return AbstractBvBand.DefautlSize.Height;
+			return AbstractEsrBand.DefautlSize.Height;
 		}
 
 
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			if (section == 0)
 			{
-				return AbstractBvBand.DefautlSize.Height;
+				return AbstractEsrBand.DefautlSize.Height;
 			}
 
 			return 0;
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			if (this.PaintBvSimulator)
+			if (this.PaintEsrSimulator)
 			{
 				this.PaintFix (port, isPreview, topLeft);
 			}
@@ -224,8 +224,8 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Dessine les grandes lignes noires de séparation.
 			port.LineWidth = 0.15;
 			port.Color = Color.FromBrightness (0.7);
-			AbstractBvBand.PaintCutLine (port, new Point (topLeft.X+0, topLeft.Y-0), new Point (topLeft.X+210, topLeft.Y-0));
-			AbstractBvBand.PaintCutLine (port, new Point (topLeft.X+60, topLeft.Y-5), new Point (topLeft.X+60, topLeft.Y-106));
+			AbstractEsrBand.PaintCutLine (port, new Point (topLeft.X+0, topLeft.Y-0), new Point (topLeft.X+210, topLeft.Y-0));
+			AbstractEsrBand.PaintCutLine (port, new Point (topLeft.X+60, topLeft.Y-5), new Point (topLeft.X+60, topLeft.Y-106));
 
 			port.Color = Color.FromBrightness (0);
 			port.PaintOutline (Path.FromLine (topLeft.X, topLeft.Y-5, topLeft.X+210, topLeft.Y-5));
@@ -245,44 +245,44 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Dessine les cercles.
 			port.Color = this.DarkPinkColor (isPreview);
 			port.LineWidth = 0.1;
-			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+194, topLeft.Y-17), 9);
-			AbstractBvBand.PaintDashedCircle (port, new Point (topLeft.X+17, topLeft.Y-95), 9);
+			AbstractEsrBand.PaintDashedCircle (port, new Point (topLeft.X+194, topLeft.Y-17), 9);
+			AbstractEsrBand.PaintDashedCircle (port, new Point (topLeft.X+17, topLeft.Y-95), 9);
 
 			//	Dessine les textes.
 			port.Color = Color.FromBrightness (0);
-			port.PaintText (topLeft.X+2, topLeft.Y-4, "Empfangsschein / Récépissé / Ricevuta", AbstractBvBand.fixFontBold, 3.0);
-			port.PaintText (topLeft.X+64, topLeft.Y-4, "Einzahlung Giro", AbstractBvBand.fixFontBold, 3.0);
-			port.PaintText (topLeft.X+114, topLeft.Y-4, "Versement Virement", AbstractBvBand.fixFontBold, 3.0);
-			port.PaintText (topLeft.X+173, topLeft.Y-4, "Versamento Girata", AbstractBvBand.fixFontBold, 3.0);
-			port.PaintText (topLeft.X+2, topLeft.Y-48.5, "CHF", AbstractBvBand.fixFontRegular, 3.0);
-			port.PaintText (topLeft.X+63, topLeft.Y-48.5, "CHF", AbstractBvBand.fixFontRegular, 3.0);
+			port.PaintText (topLeft.X+2, topLeft.Y-4, "Empfangsschein / Récépissé / Ricevuta", AbstractEsrBand.fixFontBold, 3.0);
+			port.PaintText (topLeft.X+64, topLeft.Y-4, "Einzahlung Giro", AbstractEsrBand.fixFontBold, 3.0);
+			port.PaintText (topLeft.X+114, topLeft.Y-4, "Versement Virement", AbstractEsrBand.fixFontBold, 3.0);
+			port.PaintText (topLeft.X+173, topLeft.Y-4, "Versamento Girata", AbstractEsrBand.fixFontBold, 3.0);
+			port.PaintText (topLeft.X+2, topLeft.Y-48.5, "CHF", AbstractEsrBand.fixFontRegular, 3.0);
+			port.PaintText (topLeft.X+63, topLeft.Y-48.5, "CHF", AbstractEsrBand.fixFontRegular, 3.0);
 
 			port.Color = this.DarkPinkColor (isPreview);
-			port.PaintText (topLeft.X+2, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+63, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+2, topLeft.Y-45, "Konto / Compte / Conto", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+63, topLeft.Y-45, "Konto / Compte / Conto", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+2, topLeft.Y-59, "Einbezahlt von / Versé par / Versato da", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+124, topLeft.Y-45, "Einbezahlt von / Versé par / Versato da", AbstractBvBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+2, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+63, topLeft.Y-7, "Einzahlung für / Versement pour / Versamento per", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+2, topLeft.Y-45, "Konto / Compte / Conto", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+63, topLeft.Y-45, "Konto / Compte / Conto", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+2, topLeft.Y-59, "Einbezahlt von / Versé par / Versato da", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+124, topLeft.Y-45, "Einbezahlt von / Versé par / Versato da", AbstractEsrBand.fixFontRegular, 2.0);
 
 			port.Color = Color.FromBrightness (0);
-			port.PaintText (topLeft.X+32, topLeft.Y-90.0, "Die Annahmestelle", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+32, topLeft.Y-92.5, "L'office de dépôt", AbstractBvBand.fixFontRegular, 2.0);
-			port.PaintText (topLeft.X+32, topLeft.Y-95.0, "L'ufficio d'accettazione", AbstractBvBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+32, topLeft.Y-90.0, "Die Annahmestelle", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+32, topLeft.Y-92.5, "L'office de dépôt", AbstractEsrBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+32, topLeft.Y-95.0, "L'ufficio d'accettazione", AbstractEsrBand.fixFontRegular, 2.0);
 
 			//	Dessine la zone de découpe.
 			port.Color = this.DarkPinkColor (isPreview);
-			port.PaintText (topLeft.X+60, topLeft.Y+2, "Vor der Einzahlung abzutrennen / A détacher avant le versement / Da staccare prima del vertamento", AbstractBvBand.fixFontRegular, 2.0);
+			port.PaintText (topLeft.X+60, topLeft.Y+2, "Vor der Einzahlung abzutrennen / A détacher avant le versement / Da staccare prima del vertamento", AbstractEsrBand.fixFontRegular, 2.0);
 
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*0, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*1, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*2, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*3, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*0, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*1, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*2, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+42+4.5*3, topLeft.Y+2));
 
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*0, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*1, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*2, topLeft.Y+2));
-			AbstractBvBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*3, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*0, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*1, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*2, topLeft.Y+2));
+			AbstractEsrBand.PaintTriangle (port, new Point (topLeft.X+154+4.5*3, topLeft.Y+2));
 		}
 
 		protected virtual void PaintContent(IPaintPort port, Point topLeft)
@@ -302,8 +302,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (20));
 
-				port.Color = Color.FromBrightness (this.PaintBvSimulator ? 1.0 : 0.95);
-				port.PaintText (12, 0, "SPECIMEN", AbstractBvBand.fixFontBold, 40);
+				port.Color = Color.FromBrightness (this.PaintEsrSimulator ? 1.0 : 0.95);
+				port.PaintText (12, 0, "SPECIMEN", AbstractEsrBand.fixFontBold, 40);
 
 				port.Transform = initial;
 			}
@@ -474,8 +474,8 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					string p = string.Concat ("01", AbstractBvBand.PriceToStringRef (this.Price));
-					char c = BvHelper.ComputeControlKey (p);
+					string p = string.Concat ("01", AbstractEsrBand.PriceToStringRef (this.Price));
+					char c = EsrHelper.ComputeControlKey (p);
 
 					montant = string.Concat(p, c);
 				}
