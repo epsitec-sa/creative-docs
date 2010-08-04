@@ -487,8 +487,8 @@ namespace Epsitec.Cresus.Core
 			var uomUnit1 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 			var uomUnit2 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 			var uomUnit3 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
+			var uomUnit4 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 
-			//?uomUnit1.Rank = 0;  // TODO: La propriété Rank semble manquer, contrairement à ce qui est indiqué sur les schémas imprimés !
 			uomUnit1.Code = "pce";
 			uomUnit1.Name = "Pièce";
 			uomUnit1.DivideRatio = 1;
@@ -496,7 +496,6 @@ namespace Epsitec.Cresus.Core
 			uomUnit1.SmallestIncrement = 1;
 			uomUnit1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
-			//?uomUnit2.Rank = 1;
 			uomUnit2.Code = "box";
 			uomUnit2.Name = "Carton de 6";
 			uomUnit2.DivideRatio = 1;
@@ -504,7 +503,6 @@ namespace Epsitec.Cresus.Core
 			uomUnit2.SmallestIncrement = 1;
 			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
 
-			//?uomUnit3.Rank = 2;
 			uomUnit3.Code = "×";  // caractère Unicode 00D7
 			uomUnit3.Name = "Fois";
 			uomUnit3.DivideRatio = 1;
@@ -512,9 +510,17 @@ namespace Epsitec.Cresus.Core
 			uomUnit3.SmallestIncrement = 1;
 			uomUnit3.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
 
+			uomUnit4.Code = "mm";
+			uomUnit4.Name = "Millimètre";
+			uomUnit4.DivideRatio = 1;
+			uomUnit4.MultiplyRatio = 1;
+			uomUnit4.SmallestIncrement = 1;
+			uomUnit4.Category = BusinessLogic.UnitOfMeasureCategory.Length;
+
 			yield return uomUnit1;
 			yield return uomUnit2;
 			yield return uomUnit3;
+			yield return uomUnit4;
 		}
 
 		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase(IEnumerable<UnitOfMeasureEntity> units)
@@ -522,6 +528,8 @@ namespace Epsitec.Cresus.Core
 			var uomUnit1 = units.Where (x => x.Code == "pce").First ();
 			var uomUnit2 = units.Where (x => x.Code == "box").First ();
 			var uomUnit3 = units.Where (x => x.Code == "×").First ();
+
+			var uomUnitMm = units.Where (x => x.Code == "mm").First ();
 
 			var uomGroup1 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup1.Name = "Unités d'emballage soft/standard";
@@ -574,6 +582,13 @@ namespace Epsitec.Cresus.Core
 			articleCategory2.NeverApplyDiscount = true;
 			articleCategory2.ArticleType = BusinessLogic.ArticleType.Freight;
 
+			var articleCategory3 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
+
+			articleCategory3.Name = "Fenêtres";
+			articleCategory3.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory3.ArticleType = BusinessLogic.ArticleType.Goods;
+			articleCategory3.DefaultAccounting.Add (accountingDef);
+
 			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup3 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
@@ -595,6 +610,7 @@ namespace Epsitec.Cresus.Core
 			var articleDef2 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 			var articleDef3 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 			var articleDef4 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
+			var articleDef5 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 
 			articleDef1.IdA = "CR-CP";
 			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
@@ -629,6 +645,52 @@ namespace Epsitec.Cresus.Core
 			articleDef4.BillingUnit = uomUnit3;
 			articleDef4.Units = uomGroup2;
 			articleDef4.ArticlePrices.Add (this.CreateArticlePrice (11.15M));
+
+			var param5_1 = this.DataContext.CreateEntity<NumericValueArticleParameterDefinitionEntity> ();
+			var param5_2 = this.DataContext.CreateEntity<NumericValueArticleParameterDefinitionEntity> ();
+			var param5_3 = this.DataContext.CreateEntity<EnumValueArticleParameterDefinitionEntity> ();
+
+			param5_1.Code = "H";
+			param5_1.Name = "Hauteur";
+			param5_1.Rank = 0;
+			param5_1.Modulo = 5;
+			param5_1.UnitOfMeasure = uomUnitMm;
+			param5_1.DefaultValue = 1200;
+			param5_1.MinValue = 400;
+			param5_1.MaxValue = 3000;
+			param5_1.PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("800", "900", "1000", "1200", "1600", "1800", "2000");
+
+			param5_2.Code = "L";
+			param5_2.Name = "Largeur";
+			param5_2.Rank = 1;
+			param5_2.Modulo = 5;
+			param5_2.UnitOfMeasure = uomUnitMm;
+			param5_2.DefaultValue = 500;
+			param5_2.MinValue = 200;
+			param5_2.MaxValue = 1000;
+			param5_2.PreferredValues = AbstractArticleParameterDefinitionEntity.Join ("400", "500", "800");
+
+			param5_3.Code = "TYPVER";
+			param5_3.Name = "Type de verre";
+			param5_3.Rank = 2;
+			param5_3.DefaultValue = "";
+			param5_3.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
+			param5_3.Values = AbstractArticleParameterDefinitionEntity.Join ("STD", "UV-1", "UV-2");
+			param5_3.ShortDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Standard", "Anti-UV 1", "Anti-UV 2");
+			param5_3.LongDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Verre standard", "Verre anti-UV avec protection à 100%", "Verre anti-UV avec protection à 100%, incluant un laminage anti-reflets");
+
+			
+			articleDef5.IdA = "WDO-DESIGN";
+			articleDef5.ShortDescription = "Fenêtre Design";
+			articleDef5.LongDescription  = "Fenêtre Design pour tout type de façades, produite à la main par des artisans de la région";
+			articleDef5.ArticleGroups.Add (articleGroup1);
+			articleDef5.ArticleCategory = articleCategory3;
+			articleDef5.BillingUnit = uomUnit1;
+			articleDef5.Units = uomGroup1;
+			articleDef5.ArticlePrices.Add (this.CreateArticlePrice (2000, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
+			articleDef5.ArticleParameters.Add (param5_1);
+			articleDef5.ArticleParameters.Add (param5_2);
+			articleDef5.ArticleParameters.Add (param5_3);
 
 			yield return articleDef1;
 			yield return articleDef2;
