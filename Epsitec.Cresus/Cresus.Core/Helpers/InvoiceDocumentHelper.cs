@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			string date = InvoiceDocumentHelper.GetDate (x);
 
-			string billing  = GetCompactMailContactSummary (x.BillingMailContact).ToString ();
-			string shipping = GetCompactMailContactSummary (x.ShippingMailContact).ToString ();
+			string billing  = GetShortMailContactSummary (x.BillingMailContact).ToString ();
+			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
 
 			string addresses;
 			if (x.BillingMailContact == x.ShippingMailContact)
@@ -36,9 +36,10 @@ namespace Epsitec.Cresus.Core.Helpers
 			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, addresses);
 		}
 
-		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
+		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
 		{
 			return UIBuilder.FormatText (x.LegalPerson.Name, "\n",
+										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
 										 x.Address.Street.StreetName, "\n",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}

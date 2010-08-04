@@ -46,15 +46,35 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "MailContact",
 					IconUri				= "Data.Mail",
-					Title				= UIBuilder.FormatText ("Adresse"),
+					Title				= UIBuilder.FormatText ("Adresse", "(", string.Join (", ", this.Entity.Roles.Select (role => role.Name)), ")"),
 					CompactTitle		= UIBuilder.FormatText ("Adresse"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Address.Street.StreetName, "\n", x.Address.Location.PostalCode, x.Address.Location.Name)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Address.Street.StreetName, x.Address.Location.PostalCode, x.Address.Location.Name)),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => SummaryMailContactViewController.GetMailContactSummary (x)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => SummaryMailContactViewController.GetCompactMailContactSummary (x)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
 
-		
+
+		private static FormattedText GetMailContactSummary(MailContactEntity x)
+		{
+			return UIBuilder.FormatText (x.LegalPerson.Name, "\n",
+										 x.LegalPerson.Complement, "\n",
+										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
+										 x.Complement, "\n",
+										 x.Address.Street.StreetName, "\n",
+										 x.Address.Street.Complement, "\n",
+										 x.Address.PostBox.Number, "\n",
+										 x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name);
+		}
+
+		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
+		{
+			return UIBuilder.FormatText (x.Address.Street.StreetName, "~,",
+										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
+										 x.Address.Location.PostalCode, x.Address.Location.Name);
+		}
+
+	
 		private void SetupNewContact(AbstractContactEntity contact)
 		{
 #if false

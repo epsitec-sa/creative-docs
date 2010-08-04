@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, dataContext)
 				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineText			(x => Common.GetMailContactSummary (x))
-				.DefineCompactText	(x => Common.GetShortMailContactSummary (x));
+				.DefineCompactText	(x => Common.GetCompactMailContactSummary (x));
 
 
 			data.Add (
@@ -87,9 +87,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 										 x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
-		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
+		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
 		{
-			return UIBuilder.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name);
+			return UIBuilder.FormatText (x.Address.Street.StreetName, "~,",
+										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 
