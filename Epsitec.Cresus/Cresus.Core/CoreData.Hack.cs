@@ -736,7 +736,8 @@ namespace Epsitec.Cresus.Core
 			lineA1.ArticleShortDescriptionCache = lineA1.ArticleDefinition.ShortDescription;
 			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.LongDescription;
 			
-			quantityA1.Code = "livré";
+			quantityA1.ColumnName = "livré";
+			quantityA1.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
 			quantityA1.Quantity = 3;
 			quantityA1.Unit = lineA1.ArticleDefinition.BillingUnit;
 			quantityA1.ExpectedDate = new Date (2010, 7, 8);
@@ -761,12 +762,14 @@ namespace Epsitec.Cresus.Core
 			lineA2.ArticleShortDescriptionCache = lineA2.ArticleDefinition.ShortDescription;
 			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
 
-			quantityA2_1.Code = "livré";
+			quantityA2_1.ColumnName = "livré";
+			quantityA2_1.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
 			quantityA2_1.Quantity = 1;
 			quantityA2_1.Unit = lineA2.ArticleDefinition.BillingUnit;
 			quantityA2_1.ExpectedDate = new Date (2010, 7, 8);
 
-			quantityA2_2.Code = "suivra";
+			quantityA2_2.ColumnName = "suivra";
+			quantityA2_2.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
 			quantityA2_2.Quantity = 1;
 			quantityA2_2.Unit = lineA2.ArticleDefinition.BillingUnit;
 			quantityA2_2.ExpectedDate = new Date (2010, 7, 19);
@@ -792,12 +795,14 @@ namespace Epsitec.Cresus.Core
 			lineA3.ArticleShortDescriptionCache = lineA3.ArticleDefinition.ShortDescription;
 			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
 
-			quantityA3_1.Code = "suivra";
+			quantityA3_1.ColumnName = "suivra";
+			quantityA3_1.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
 			quantityA3_1.Quantity = 2;
 			quantityA3_1.Unit = lineA3.ArticleDefinition.BillingUnit;
 			quantityA3_1.ExpectedDate = new Date (2010, 9, 1);
 
-			quantityA3_2.Code = "suivra";
+			quantityA3_2.ColumnName = "suivra";
+			quantityA3_2.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
 			quantityA3_2.Quantity = 1;
 			quantityA3_2.Unit = lineA3.ArticleDefinition.BillingUnit;
 			quantityA3_2.ExpectedDate = new Date (2011, 1, 31);
@@ -822,7 +827,8 @@ namespace Epsitec.Cresus.Core
 			lineA4.ArticleShortDescriptionCache = lineA4.ArticleDefinition.ShortDescription;
 			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
 
-			quantityA4.Code = "livré";
+			quantityA4.ColumnName = "livré";
+			quantityA4.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
 			quantityA4.Quantity = 1;
 			quantityA4.Unit = lineA4.ArticleDefinition.BillingUnit;
 			quantityA4.ExpectedDate = new Date (2010, 7, 8);

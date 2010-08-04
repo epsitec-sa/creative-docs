@@ -243,11 +243,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
-				return this.GetUnitOfMeasure ("livré", 0);
+				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Billed, 0);
 			}
 			set
 			{
-				this.SetUnitOfMeasure ("livré", 0, value);
+				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Billed, 0, value);
 			}
 		}
 
@@ -255,11 +255,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
-				return this.GetUnitOfMeasure ("suivra", 0);
+				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 0);
 			}
 			set
 			{
-				this.SetUnitOfMeasure ("suivra", 0, value);
+				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
 			}
 		}
 
@@ -267,11 +267,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
-				return this.GetUnitOfMeasure ("suivra", 1);
+				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 1);
 			}
 			set
 			{
-				this.SetUnitOfMeasure ("suivra", 1, value);
+				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
 			}
 		}
 
@@ -292,67 +292,67 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private decimal? GetQuantity()
 		{
-			return this.GetQuantity ("livré", 0);
+			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Billed, 0);
 		}
 
 
 		private void SetQuantity(decimal? value)
 		{
-			this.SetQuantity ("livré", 0, value);
+			this.SetQuantity (BusinessLogic.ArticleQuantityType.Billed, 0, value);
 		}
 
 
 		private decimal? GetDelayedQuantity1()
 		{
-			return this.GetQuantity ("suivra", 0);
+			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 0);
 		}
 
 
 		private void SetDelayedQuantity1(decimal? value)
 		{
-			this.SetQuantity ("suivra", 0, value);
+			this.SetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
 		}
 
 
 		private decimal? GetDelayedQuantity2()
 		{
-			return this.GetQuantity ("suivra", 1);
+			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 1);
 		}
 
 
 		private void SetDelayedQuantity2(decimal? value)
 		{
-			this.SetQuantity ("suivra", 1, value);
+			this.SetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
 		}
 
 
 		private Date? GetDelayedDate1()
 		{
-			return this.GetDate ("suivra", 0);
+			return this.GetDate (BusinessLogic.ArticleQuantityType.Delayed, 0);
 		}
 
 		private void SetDelayedDate1(Date? value)
 		{
-			this.SetDate ("suivra", 0, value);
+			this.SetDate (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
 		}
 
 
 		private Date? GetDelayedDate2()
 		{
-			return this.GetDate ("suivra", 1);
+			return this.GetDate (BusinessLogic.ArticleQuantityType.Delayed, 1);
 		}
 
 		private void SetDelayedDate2(Date? value)
 		{
-			this.SetDate ("suivra", 1, value);
+			this.SetDate (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
 		}
 
 
-		private decimal? GetQuantity(string code, int rank)
+		private decimal? GetQuantity(BusinessLogic.ArticleQuantityType quantityType, int rank)
 		{
 			foreach (var quantity in this.Entity.ArticleQuantities)
 			{
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					if (quantity.Quantity == 0)
 					{
@@ -368,13 +368,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return null;
 		}
 
-		private void SetQuantity(string code, int rank, decimal? value)
+		private void SetQuantity(BusinessLogic.ArticleQuantityType quantityType, int rank, decimal? value)
 		{
 			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
 			{
 				var quantity = this.Entity.ArticleQuantities[i];
 
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					if (value.HasValue)
 					{
@@ -399,9 +399,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
-				newQuantity.Code     = code;
-				newQuantity.Quantity = value.Value;
-				newQuantity.Unit     = this.Entity.ArticleDefinition.BillingUnit;
+				newQuantity.QuantityType = quantityType;
+				newQuantity.Quantity     = value.Value;
+				newQuantity.Unit         = this.Entity.ArticleDefinition.BillingUnit;
 
 				this.Entity.ArticleQuantities.Add (newQuantity);
 			}
@@ -410,11 +410,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private UnitOfMeasureEntity GetUnitOfMeasure(string code, int rank)
+		private UnitOfMeasureEntity GetUnitOfMeasure(BusinessLogic.ArticleQuantityType quantityType, int rank)
 		{
 			foreach (var quantity in this.Entity.ArticleQuantities)
 			{
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					return quantity.Unit;
 				}
@@ -423,13 +423,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return null;
 		}
 
-		private void SetUnitOfMeasure(string code, int rank, UnitOfMeasureEntity value)
+		private void SetUnitOfMeasure(BusinessLogic.ArticleQuantityType quantityType, int rank, UnitOfMeasureEntity value)
 		{
 			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
 			{
 				var quantity = this.Entity.ArticleQuantities[i];
 
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					quantity.Unit = value;
 
@@ -448,9 +448,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
-				newQuantity.Code     = code;
-				newQuantity.Quantity = 1;
-				newQuantity.Unit     = value;
+				newQuantity.QuantityType = quantityType;
+				newQuantity.Quantity     = 1;
+				newQuantity.Unit         = value;
 
 				this.Entity.ArticleQuantities.Add (newQuantity);
 
@@ -459,11 +459,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private Date? GetDate(string code, int rank)
+		private Date? GetDate(BusinessLogic.ArticleQuantityType quantityType, int rank)
 		{
 			foreach (var quantity in this.Entity.ArticleQuantities)
 			{
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					return quantity.ExpectedDate;
 				}
@@ -472,13 +472,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return null;
 		}
 
-		private void SetDate(string code, int rank, Date? value)
+		private void SetDate(BusinessLogic.ArticleQuantityType quantityType, int rank, Date? value)
 		{
 			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
 			{
 				var quantity = this.Entity.ArticleQuantities[i];
 
-				if (quantity.Code == code && rank-- == 0)
+				if (quantity.QuantityType == quantityType && rank-- == 0)
 				{
 					quantity.ExpectedDate = value;
 
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
 
-			newQuantity.Code         = code;
+			newQuantity.QuantityType = quantityType;
 			newQuantity.Quantity     = 1;
 			newQuantity.Unit         = this.Entity.ArticleDefinition.BillingUnit;
 			newQuantity.ExpectedDate = value;
