@@ -89,43 +89,26 @@ namespace Epsitec.Cresus.Core.Helpers
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
 			string title = UIBuilder.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return string.Concat (title, " ", InvoiceDocumentHelper.GetRatio (x, billingDetails, true, isBL));
+			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentRatio (x, billingDetails, true, isBL));
 		}
 
-		public static string GetRatio(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
+		public static string GetInstalmentRatio(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
 		{
-			int rank = 0;
-			int count = 0;
-
-			if (billingDetails != null && x.BillingDetails.Count > 1)
+			if (billingDetails.InstalmentRank == null)
 			{
-				foreach (var d in x.BillingDetails)
-				{
-					if (d == billingDetails)
-					{
-						rank = count;
-					}
-
-					if (d.AmountDue.PaymentMode.Code == billingDetails.AmountDue.PaymentMode.Code)
-					{
-						count++;
-					}
-				}
+				return null;
 			}
 
-			if (count > 1)
-			{
-				if (parenthesis)
-				{
-					return string.Format ("({0}/{1})", (rank+1).ToString (), count.ToString ());
-				}
-				else
-				{
-					return string.Format ("{0}/{1}", (rank+1).ToString (), count.ToString ());
-				}
-			}
+			int count = x.BillingDetails.Count (y => y.InstalmentRank != null);  // compte les mensualités
 
-			return null;
+			if (parenthesis)
+			{
+				return string.Format ("({0}/{1})", billingDetails.InstalmentRank.ToString (), count.ToString ());
+			}
+			else
+			{
+				return string.Format ("{0}/{1}", billingDetails.InstalmentRank.ToString (), count.ToString ());
+			}
 		}
 
 
