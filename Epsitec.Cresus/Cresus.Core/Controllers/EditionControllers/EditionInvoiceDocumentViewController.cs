@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		       = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<BillingDetailsEntity> ("BillingDetails", data.Controller, this.DataContext)
+			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext)
 				.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
 				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
 				.DefineSetupItem   (this.SetupBillingDetails);
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailsEntity billingDetails)
+		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailEntity billingDetails)
 		{
 			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
 			string title = Misc.FirstLine (billingDetails.Title);
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private void SetupBillingDetails(BillingDetailsEntity billingDetails)
+		private void SetupBillingDetails(BillingDetailEntity billingDetails)
 		{
 			var date = Date.Today;
 

@@ -694,11 +694,13 @@ namespace Epsitec.Cresus.Core
 			var decimalType = DecimalType.Default;
 			decimal vatRate = 0.076M;
 
-			var billingA = this.DataContext.CreateEntity<BillingDetailsEntity> ();
+			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
+			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var invoiceA = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
 
-			invoiceA.IdA = "1000";
+			invoiceA.IdA = "1000-00";
 			invoiceA.DocumentSource = BusinessLogic.DocumentSource.Generated;
+			invoiceA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
 			invoiceA.Description = "Facture de test #1000";
 			invoiceA.CreationDate = new System.DateTime (2010, 7, 8);
 			invoiceA.LastModificationDate = System.DateTime.Now;
@@ -708,7 +710,8 @@ namespace Epsitec.Cresus.Core
 			invoiceA.OtherPartyTaxMode = BusinessLogic.Finance.TaxMode.LiableForVat;
 			invoiceA.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
 			invoiceA.BillingStatus = BusinessLogic.Finance.BillingStatus.DebtorBillOpen;
-			invoiceA.BillingDetails.Add (billingA);
+			invoiceA.BillingDetails.Add (billingA1);
+			invoiceA.BillingDetails.Add (billingA2);
 			invoiceA.DebtorBookAccount = "1100";
 
 			var textA1 = this.DataContext.CreateEntity<TextDocumentItemEntity> ();
@@ -925,18 +928,34 @@ namespace Epsitec.Cresus.Core
 			invoiceA.Lines.Add (taxA1);			//	  TVA de 136.xx
 			invoiceA.Lines.Add (totalA2);		//	Total arrêté à 1930.00
 
-			var paymentA = this.DataContext.CreateEntity<PaymentDetailEntity> ();
+			var paymentA1 = this.DataContext.CreateEntity<PaymentDetailEntity> ();
+			var paymentA2 = this.DataContext.CreateEntity<PaymentDetailEntity> ();
 
-			paymentA.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
-			paymentA.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
-			paymentA.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value;
-			paymentA.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
-			paymentA.Date = new Date (2010, 08, 06);
+			paymentA1.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
+			paymentA1.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
+			paymentA1.Amount = 1000.00M;
+			paymentA1.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
+			paymentA1.Date = new Date (2010, 08, 06);
 
-			billingA.Title = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
-			billingA.AmountDue = paymentA;
-			billingA.EsrCustomerNumber = "01-69444-3";										//	compte BVR
-			billingA.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";				//	n° de réf BVR lié
+			paymentA2.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
+			paymentA2.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
+			paymentA2.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value - paymentA1.Amount;
+			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
+			paymentA2.Date = new Date (2010, 09, 05);
+
+			billingA1.Title = "Facture 1000-00, 1ère tranche";
+			billingA1.AmountDue = paymentA1;
+			billingA1.EsrCustomerNumber = "01-69444-3";										//	compte BVR
+			billingA1.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";				//	n° de réf BVR lié
+			billingA1.InstalmentRank = 1;
+			billingA1.InstalmentName = "1/2";
+
+			billingA2.Title = "Facture 1000-00, 2ème tranche";
+			billingA1.AmountDue = paymentA2;
+			billingA1.EsrCustomerNumber = "01-69444-3";										//	compte BVR
+			billingA1.EsrReferenceNumber = "96 13070 01000 02173 50356 73893";				//	n° de réf BVR lié
+			billingA1.InstalmentRank = 2;
+			billingA1.InstalmentName = "2/2";
 
 			yield return invoiceA;
 		}

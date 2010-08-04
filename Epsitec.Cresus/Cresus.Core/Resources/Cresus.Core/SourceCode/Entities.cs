@@ -47,7 +47,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A56]", typeof (Epsitec.Cresus.Core.Entities.ArticleAccountingDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AD6]", typeof (Epsitec.Cresus.Core.Entities.ArticleTraceabilityDetailsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AL6]", typeof (Epsitec.Cresus.Core.Entities.PaymentModeEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AS6]", typeof (Epsitec.Cresus.Core.Entities.BillingDetailsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AS6]", typeof (Epsitec.Cresus.Core.Entities.BillingDetailEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A27]", typeof (Epsitec.Cresus.Core.Entities.InvoiceDocumentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AC7]", typeof (Epsitec.Cresus.Core.Entities.ArticleCategoryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AI7]", typeof (Epsitec.Cresus.Core.Entities.DateRangeEntity))]
@@ -2475,6 +2475,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DocumentTitle</c> field.
+		///	designer:fld/L0AO2/L0A6E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A6E]")]
+		public string DocumentTitle
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A6E]");
+			}
+			set
+			{
+				string oldValue = this.DocumentTitle;
+				if (oldValue != value)
+				{
+					this.OnDocumentTitleChanging (oldValue, value);
+					this.SetField<string> ("[L0A6E]", oldValue, value);
+					this.OnDocumentTitleChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/L0AO2/L0AP2
 		///	</summary>
@@ -2599,6 +2621,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? newValue);
 		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? newValue);
+		partial void OnDocumentTitleChanging(string oldValue, string newValue);
+		partial void OnDocumentTitleChanged(string oldValue, string newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnFileNameChanging(string oldValue, string newValue);
@@ -3411,11 +3435,11 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AI3/L0AT6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AT6]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BillingDetailsEntity> BillingDetails
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> BillingDetails
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BillingDetailsEntity> ("[L0AT6]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0AT6]");
 			}
 		}
 		///	<summary>
@@ -5769,14 +5793,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.BillingDetails Entity
+#region Epsitec.Cresus.Core.BillingDetail Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>BillingDetails</c> entity.
+	///	The <c>BillingDetail</c> entity.
 	///	designer:cap/L0AS6
 	///	</summary>
-	public partial class BillingDetailsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class BillingDetailEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>Title</c> field.
@@ -5888,6 +5912,50 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>InstalmentRank</c> field.
+		///	designer:fld/L0AS6/L0A4E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A4E]")]
+		public int? InstalmentRank
+		{
+			get
+			{
+				return this.GetField<int?> ("[L0A4E]");
+			}
+			set
+			{
+				int? oldValue = this.InstalmentRank;
+				if (oldValue != value)
+				{
+					this.OnInstalmentRankChanging (oldValue, value);
+					this.SetField<int?> ("[L0A4E]", oldValue, value);
+					this.OnInstalmentRankChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>InstalmentName</c> field.
+		///	designer:fld/L0AS6/L0A5E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A5E]")]
+		public string InstalmentName
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A5E]");
+			}
+			set
+			{
+				string oldValue = this.InstalmentName;
+				if (oldValue != value)
+				{
+					this.OnInstalmentNameChanging (oldValue, value);
+					this.SetField<string> ("[L0A5E]", oldValue, value);
+					this.OnInstalmentNameChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnTitleChanging(string oldValue, string newValue);
 		partial void OnTitleChanged(string oldValue, string newValue);
@@ -5899,14 +5967,18 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnEsrCustomerNumberChanged(string oldValue, string newValue);
 		partial void OnEsrReferenceNumberChanging(string oldValue, string newValue);
 		partial void OnEsrReferenceNumberChanged(string oldValue, string newValue);
+		partial void OnInstalmentRankChanging(int? oldValue, int? newValue);
+		partial void OnInstalmentRankChanged(int? oldValue, int? newValue);
+		partial void OnInstalmentNameChanging(string oldValue, string newValue);
+		partial void OnInstalmentNameChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.BillingDetailsEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.BillingDetailEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.BillingDetailsEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.BillingDetailEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 220);	// [L0AS6]
 		public static readonly new string EntityStructuredTypeKey = "[L0AS6]";
@@ -7588,6 +7660,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PaymentData</c> field.
+		///	designer:fld/L0AQB/L0A3E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A3E]")]
+		public string PaymentData
+		{
+			get
+			{
+				return this.GetField<string> ("[L0A3E]");
+			}
+			set
+			{
+				string oldValue = this.PaymentData;
+				if (oldValue != value)
+				{
+					this.OnPaymentDataChanging (oldValue, value);
+					this.SetField<string> ("[L0A3E]", oldValue, value);
+					this.OnPaymentDataChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Amount</c> field.
 		///	designer:fld/L0AQB/L0ARB
 		///	</summary>
@@ -7658,6 +7752,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPaymentTypeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PaymentDetailType oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PaymentDetailType newValue);
 		partial void OnPaymentModeChanging(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
 		partial void OnPaymentModeChanged(global::Epsitec.Cresus.Core.Entities.PaymentModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentModeEntity newValue);
+		partial void OnPaymentDataChanging(string oldValue, string newValue);
+		partial void OnPaymentDataChanged(string oldValue, string newValue);
 		partial void OnAmountChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnAmountChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCurrencyChanging(global::Epsitec.Cresus.Core.Entities.CurrencyEntity oldValue, global::Epsitec.Cresus.Core.Entities.CurrencyEntity newValue);
@@ -7710,9 +7806,33 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>BillingDetail</c> field.
+		///	designer:fld/L0A0C/L0A2E
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2E]")]
+		public global::Epsitec.Cresus.Core.Entities.BillingDetailEntity BillingDetail
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0A2E]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue = this.BillingDetail;
+				if (oldValue != value)
+				{
+					this.OnBillingDetailChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.BillingDetailEntity> ("[L0A2E]", oldValue, value);
+					this.OnBillingDetailChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPaymentChanging(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnPaymentChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
+		partial void OnBillingDetailChanging(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
+		partial void OnBillingDetailChanged(global::Epsitec.Cresus.Core.Entities.BillingDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.BillingDetailEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

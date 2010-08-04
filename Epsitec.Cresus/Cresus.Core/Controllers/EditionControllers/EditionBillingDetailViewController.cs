@@ -18,9 +18,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionBillingDetailsViewController : EditionViewController<Entities.BillingDetailsEntity>
+	public class EditionBillingDetailViewController : EditionViewController<Entities.BillingDetailEntity>
 	{
-		public EditionBillingDetailsViewController(string name, Entities.BillingDetailsEntity entity)
+		public EditionBillingDetailViewController(string name, Entities.BillingDetailEntity entity)
 			: base (name, entity)
 		{
 		}
