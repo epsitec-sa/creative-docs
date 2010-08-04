@@ -72,8 +72,10 @@ namespace Epsitec.Common.Graph.Renderers
     
         protected override void Render (IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
         {
-            if(this.image !=  null)
+            if (this.image != null)
+            {
                 port.PaintImage (this.image, this.Bounds);
+            }
         }
 
         protected override System.Action<IPaintPort, Epsitec.Common.Drawing.Rectangle> CreateCaptionSamplePainter (Data.ChartSeries series, int seriesIndex)
@@ -110,10 +112,8 @@ namespace Epsitec.Common.Graph.Renderers
         {
             if (this.myThread != null)
             {
-
                 this.myThread.Abort ();
                 this.myThread.Join ();
-                this.myThread = null;
             }
 
             this.currentWidth = width;
@@ -125,21 +125,32 @@ namespace Epsitec.Common.Graph.Renderers
 
         private void fetchImage ()
         {
-            var url = GeoChartRenderer.GetUrl (this.currentWidth, this.currentHeight);
+            string url = "none";
 
-            System.Diagnostics.Debug.WriteLine (url);
+            try
+            {
+                url = GeoChartRenderer.GetUrl (this.currentWidth, this.currentHeight);
 
-            HttpWebRequest httpWebRequest =
-            (HttpWebRequest)WebRequest.Create (url);
+                System.Diagnostics.Debug.WriteLine (url);
 
-            HttpWebResponse httpWebResponse =
-                    (HttpWebResponse)httpWebRequest.GetResponse ();
+                HttpWebRequest httpWebRequest =
+                (HttpWebRequest)WebRequest.Create (url);
 
-            System.IO.Stream stream = httpWebResponse.GetResponseStream ();
+                HttpWebResponse httpWebResponse =
+                        (HttpWebResponse)httpWebRequest.GetResponse ();
 
-            byte[] b = GeoChartRenderer.ReadFully (stream, 100);
+                System.IO.Stream stream = httpWebResponse.GetResponseStream ();
 
-            this.image = Drawing.Bitmap.FromData (b);
+                byte[] b = GeoChartRenderer.ReadFully (stream, 100);
+
+                this.image = Drawing.Bitmap.FromData (b);
+
+            }
+            catch (ThreadAbortException e)
+            {
+                this.image = null;
+                System.Diagnostics.Debug.WriteLine (string.Format("Aborting fetching image {0}", url));
+            }
         }
 
         private static string GetUrl (int width, int height)
@@ -181,7 +192,8 @@ namespace Epsitec.Common.Graph.Renderers
                         Height = height,
                         Width = width
                     },
-                    PreventIconCollision = false
+                    PreventIconCollision = false,
+                    ImageType = ImageType.Type.Jpeg
                 },
                 Pushpins = pushpins
             };
