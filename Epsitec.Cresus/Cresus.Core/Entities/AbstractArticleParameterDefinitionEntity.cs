@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Core.Entities
 		/// Some article parameter definitions store several values in a single
 		/// text field; the values are separated by the special '∙' character.
 		/// </summary>
-		public const char SeparatorChar = (char) 0x2219;					// '∙'
-		public const string Separator = SeparatorChar.ToString ();			// "∙"
+		public const char				SeparatorChar	= (char) 0x2219;					// '∙'
+		public static readonly string	Separator		= SeparatorChar.ToString ();		// "∙"
 
 		/// <summary>
 		/// Splits the specified text using the specific '∙' separator.

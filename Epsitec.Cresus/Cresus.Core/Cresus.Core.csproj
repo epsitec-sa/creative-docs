@@ -95,6 +95,7 @@
     <Compile Include="BusinessLogic\ArticleType.cs" />
     <Compile Include="BusinessLogic\DocumentSource.cs" />
     <Compile Include="BusinessLogic\Enumerations.cs" />
+    <Compile Include="BusinessLogic\EnumValueCardinality.cs" />
     <Compile Include="BusinessLogic\Finance\BillingMode.cs" />
     <Compile Include="BusinessLogic\Finance\BillingStatus.cs" />
     <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
