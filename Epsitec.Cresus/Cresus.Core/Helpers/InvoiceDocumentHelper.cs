@@ -20,7 +20,27 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			string date = InvoiceDocumentHelper.GetDate (x);
 
-			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date);
+			string billing  = GetCompactMailContactSummary (x.BillingMailContact).ToString ();
+			string shipping = GetCompactMailContactSummary (x.ShippingMailContact).ToString ();
+
+			string addresses;
+			if (x.BillingMailContact == x.ShippingMailContact)
+			{
+				addresses = string.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
+			}
+			else
+			{
+				addresses = string.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
+			}
+
+			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, addresses);
+		}
+
+		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
+		{
+			return UIBuilder.FormatText (x.LegalPerson.Name, "\n",
+										 x.Address.Street.StreetName, "\n",
+										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 

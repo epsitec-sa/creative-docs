@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed partial class CoreData
 	{
+		public IEnumerable<MailContactEntity> GetMailContacts()
+		{
+			return new MailContactRepository (this.DataContext).GetAllMailContacts ();
+		}
+
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersons()
 		{
 			return new NaturalPersonRepository (this.DataContext).GetAllNaturalPersons ();
