@@ -5010,26 +5010,30 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>ArticleQuantity</c> entity.
 	///	designer:cap/L0AM5
 	///	</summary>
-	public partial class ArticleQuantityEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class ArticleQuantityEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region IItemCode Members
 		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/L0AM5/L0AD3
+		///	The <c>QuantityType</c> field.
+		///	designer:fld/L0AM5/L0ADE
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
-		public string Code
+		[global::Epsitec.Common.Support.EntityField ("[L0ADE]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType QuantityType
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType> ("[L0ADE]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType oldValue = this.QuantityType;
+				if (oldValue != value)
+				{
+					this.OnQuantityTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType> ("[L0ADE]", oldValue, value);
+					this.OnQuantityTypeChanged (oldValue, value);
+				}
 			}
 		}
-		#endregion
 		///	<summary>
 		///	The <c>Quantity</c> field.
 		///	designer:fld/L0AM5/L0AN5
@@ -5118,7 +5122,31 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ColumnName</c> field.
+		///	designer:fld/L0AM5/L0AEE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AEE]")]
+		public string ColumnName
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AEE]");
+			}
+			set
+			{
+				string oldValue = this.ColumnName;
+				if (oldValue != value)
+				{
+					this.OnColumnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AEE]", oldValue, value);
+					this.OnColumnNameChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnQuantityTypeChanging(global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType oldValue, global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType newValue);
+		partial void OnQuantityTypeChanged(global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType oldValue, global::Epsitec.Cresus.Core.BusinessLogic.ArticleQuantityType newValue);
 		partial void OnQuantityChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnQuantityChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnUnitChanging(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
@@ -5127,6 +5155,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExpectedDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnExpectedDateFormatChanging(string oldValue, string newValue);
 		partial void OnExpectedDateFormatChanged(string oldValue, string newValue);
+		partial void OnColumnNameChanging(string oldValue, string newValue);
+		partial void OnColumnNameChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

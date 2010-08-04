@@ -91,6 +91,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\ArticleQuantityType.cs" />
     <Compile Include="BusinessLogic\ArticleType.cs" />
     <Compile Include="BusinessLogic\DocumentSource.cs" />
     <Compile Include="BusinessLogic\Enumerations.cs" />
