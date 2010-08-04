@@ -142,8 +142,6 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	  Article E
 			//	Total (A+B+C+D+E), en fait, grand total
 
-			// TODO: Valider cela avec Pierre !
-
 			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
 			decimal primaryTotalBeforeTax    = 0;
 			decimal primaryTotalTax          = 0;
@@ -164,6 +162,14 @@ namespace Epsitec.Cresus.Core.Helpers
 
 					primarySubtotalBeforeTax += article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
 					primarySubtotalTax       += article.ResultingLineTax.GetValueOrDefault (0);
+				}
+
+				if (line is TaxDocumentItemEntity)
+				{
+					var tax = line as TaxDocumentItemEntity;
+
+					tax.BaseAmount = primarySubtotalBeforeTax;
+					tax.ResultingTax = tax.Rate * tax.BaseAmount;
 				}
 
 				if (line is PriceDocumentItemEntity)
