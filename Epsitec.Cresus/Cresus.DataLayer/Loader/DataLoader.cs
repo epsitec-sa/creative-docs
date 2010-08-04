@@ -1,19 +1,20 @@
 ﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Proxies;
 
 
 namespace Epsitec.Cresus.DataLayer.Loader
@@ -146,16 +147,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (entity.DefineOriginalValues ())
 			{
-				List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
-
-				foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
+				using (entity.DisableEvents ())
 				{
-					this.DeserializeEntityLocalWithProxies (entity, currentId);
-				}
+					List<Druid> entityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId).ToList ();
 
-				foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
-				{
-					this.DeserializeEntityLocal (entity, entityData, currentId);
+					foreach (Druid currentId in entityIds.TakeWhile (id => id != entityData.LoadedEntityId))
+					{
+						this.DeserializeEntityLocalWithProxies (entity, currentId);
+					}
+
+					foreach (Druid currentId in entityIds.SkipWhile (id => id != entityData.LoadedEntityId))
+					{
+						this.DeserializeEntityLocal (entity, entityData, currentId);
+					}
 				}
 			}
 
