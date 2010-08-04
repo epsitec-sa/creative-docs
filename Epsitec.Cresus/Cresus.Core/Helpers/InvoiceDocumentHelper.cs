@@ -94,6 +94,8 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static string GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
 		{
+			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
+			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
 			if (billingDetails.InstalmentRank == null)
 			{
 				return null;
@@ -101,7 +103,14 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (!string.IsNullOrEmpty (billingDetails.InstalmentName))
 			{
-				return billingDetails.InstalmentName;
+				if (parenthesis)
+				{
+					return string.Concat ("(", billingDetails.InstalmentName, ")");
+				}
+				else
+				{
+					return billingDetails.InstalmentName;
+				}
 			}
 
 			int count = x.BillingDetails.Count (y => y.InstalmentRank != null);  // compte les mensualités

@@ -104,6 +104,7 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionTaxDocumentItemViewController.cs" />
     <Compile Include="EsrHelper.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
@@ -306,6 +307,7 @@
     <EmbeddedResource Include="Images\Data.TextDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.DocumentItems.icon" />
     <EmbeddedResource Include="Images\Data.UnitOfMeasure.icon" />
+    <EmbeddedResource Include="Images\Data.TaxDocumentItem.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

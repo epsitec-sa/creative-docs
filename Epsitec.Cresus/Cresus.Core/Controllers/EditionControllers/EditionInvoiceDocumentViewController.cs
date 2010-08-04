@@ -207,6 +207,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
 			}
 
+			if (documentItemEntity is TaxDocumentItemEntity)
+			{
+				return GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
+			}
+
 			return null;			
 		}
 
@@ -290,6 +295,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			return builder.ToString ();
+		}
+
+		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
+		{
+			if (string.IsNullOrEmpty (x.Text))
+			{
+				return "<i>TVA</i>";
+			}
+			else
+			{
+				return x.Text;
+			}
 		}
 
 

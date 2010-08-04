@@ -44,6 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
 			}
+			else if (tabPageName == "TVA")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<TaxDocumentItemEntity> ();
+			}
 			else if (tabPageName == "Price")
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
