@@ -62,6 +62,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A0C]", typeof (Epsitec.Cresus.Core.Entities.PaymentDetailEventEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQC]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGD]", typeof (Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AFE]", typeof (Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -6560,8 +6561,42 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PriceRoundingMode</c> entity.
 	///	designer:cap/L0AQ9
 	///	</summary>
-	public partial class PriceRoundingModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class PriceRoundingModeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IRoundingMode
 	{
+		#region IRoundingMode Members
+		///	<summary>
+		///	The <c>Modulo</c> field.
+		///	designer:fld/L0AQ9/L0AHE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHE]")]
+		public global::System.Decimal Modulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetModulo (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>AddBeforeModulo</c> field.
+		///	designer:fld/L0AQ9/L0AIE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIE]")]
+		public global::System.Decimal AddBeforeModulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetAddBeforeModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetAddBeforeModulo (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AQ9/L0AR9
@@ -6607,50 +6642,6 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Modulo</c> field.
-		///	designer:fld/L0AQ9/L0AT9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AT9]")]
-		public global::System.Decimal Modulo
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal> ("[L0AT9]");
-			}
-			set
-			{
-				global::System.Decimal oldValue = this.Modulo;
-				if (oldValue != value)
-				{
-					this.OnModuloChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[L0AT9]", oldValue, value);
-					this.OnModuloChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AddBeforeModulo</c> field.
-		///	designer:fld/L0AQ9/L0AU9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AU9]")]
-		public global::System.Decimal AddBeforeModulo
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal> ("[L0AU9]");
-			}
-			set
-			{
-				global::System.Decimal oldValue = this.AddBeforeModulo;
-				if (oldValue != value)
-				{
-					this.OnAddBeforeModuloChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[L0AU9]", oldValue, value);
-					this.OnAddBeforeModuloChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>PriceRoundingPolicy</c> field.
 		///	designer:fld/L0AQ9/L0AKA
 		///	</summary>
@@ -6677,10 +6668,6 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
-		partial void OnModuloChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnModuloChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnAddBeforeModuloChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnAddBeforeModuloChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnPriceRoundingPolicyChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy newValue);
 		partial void OnPriceRoundingPolicyChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy newValue);
 		
@@ -8116,6 +8103,257 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 432);	// [L0AGD]
 		public static readonly new string EntityStructuredTypeKey = "[L0AGD]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.NumericValueArticleParameterDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>NumericValueArticleParameterDefinition</c> entity.
+	///	designer:cap/L0AFE
+	///	</summary>
+	public partial class NumericValueArticleParameterDefinitionEntity : global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity, global::Epsitec.Cresus.Core.Entities.IRoundingMode
+	{
+		#region IRoundingMode Members
+		///	<summary>
+		///	The <c>Modulo</c> field.
+		///	designer:fld/L0AFE/L0AHE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHE]")]
+		public global::System.Decimal Modulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetModulo (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>AddBeforeModulo</c> field.
+		///	designer:fld/L0AFE/L0AIE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIE]")]
+		public global::System.Decimal AddBeforeModulo
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.GetAddBeforeModulo (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IRoundingModeInterfaceImplementation.SetAddBeforeModulo (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>MinValue</c> field.
+		///	designer:fld/L0AFE/L0AKE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AKE]")]
+		public global::System.Decimal? MinValue
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AKE]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.MinValue;
+				if (oldValue != value)
+				{
+					this.OnMinValueChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AKE]", oldValue, value);
+					this.OnMinValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MaxValue</c> field.
+		///	designer:fld/L0AFE/L0ALE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ALE]")]
+		public global::System.Decimal? MaxValue
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0ALE]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.MaxValue;
+				if (oldValue != value)
+				{
+					this.OnMaxValueChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0ALE]", oldValue, value);
+					this.OnMaxValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultValue</c> field.
+		///	designer:fld/L0AFE/L0AME
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AME]")]
+		public global::System.Decimal? DefaultValue
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0AME]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.DefaultValue;
+				if (oldValue != value)
+				{
+					this.OnDefaultValueChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0AME]", oldValue, value);
+					this.OnDefaultValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PreferredValues</c> field.
+		///	designer:fld/L0AFE/L0ANE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANE]")]
+		public string PreferredValues
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ANE]");
+			}
+			set
+			{
+				string oldValue = this.PreferredValues;
+				if (oldValue != value)
+				{
+					this.OnPreferredValuesChanging (oldValue, value);
+					this.SetField<string> ("[L0ANE]", oldValue, value);
+					this.OnPreferredValuesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>UnitOfMeasure</c> field.
+		///	designer:fld/L0AFE/L0AJE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJE]")]
+		public global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity UnitOfMeasure
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0AJE]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue = this.UnitOfMeasure;
+				if (oldValue != value)
+				{
+					this.OnUnitOfMeasureChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity> ("[L0AJE]", oldValue, value);
+					this.OnUnitOfMeasureChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnMinValueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMinValueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMaxValueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMaxValueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultValueChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnDefaultValueChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPreferredValuesChanging(string oldValue, string newValue);
+		partial void OnPreferredValuesChanged(string oldValue, string newValue);
+		partial void OnUnitOfMeasureChanging(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
+		partial void OnUnitOfMeasureChanged(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 463);	// [L0AFE]
+		public static readonly new string EntityStructuredTypeKey = "[L0AFE]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.IRoundingMode Interface
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>IRoundingMode</c> entity.
+	///	designer:cap/L0AGE
+	///	</summary>
+	public interface IRoundingMode
+	{
+		///	<summary>
+		///	The <c>Modulo</c> field.
+		///	designer:fld/L0AGE/L0AHE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHE]")]
+		global::System.Decimal Modulo
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>AddBeforeModulo</c> field.
+		///	designer:fld/L0AGE/L0AIE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIE]")]
+		global::System.Decimal AddBeforeModulo
+		{
+			get;
+			set;
+		}
+	}
+	public static partial class IRoundingModeInterfaceImplementation
+	{
+		public static global::System.Decimal GetModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.Decimal> ("[L0AHE]");
+		}
+		public static void SetModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.Decimal oldValue = obj.Modulo;
+			if (oldValue != value)
+			{
+				IRoundingModeInterfaceImplementation.OnModuloChanging (obj, oldValue, value);
+				entity.SetField<global::System.Decimal> ("[L0AHE]", oldValue, value);
+				IRoundingModeInterfaceImplementation.OnModuloChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		static partial void OnModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		public static global::System.Decimal GetAddBeforeModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::System.Decimal> ("[L0AIE]");
+		}
+		public static void SetAddBeforeModulo(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::System.Decimal oldValue = obj.AddBeforeModulo;
+			if (oldValue != value)
+			{
+				IRoundingModeInterfaceImplementation.OnAddBeforeModuloChanging (obj, oldValue, value);
+				entity.SetField<global::System.Decimal> ("[L0AIE]", oldValue, value);
+				IRoundingModeInterfaceImplementation.OnAddBeforeModuloChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnAddBeforeModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+		static partial void OnAddBeforeModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
 	}
 }
 #endregion
