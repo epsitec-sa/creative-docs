@@ -77,16 +77,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public void DocumentOptionsAddBV()
+		public void DocumentOptionsAddEsr()
 		{
 			//	Ajoute les options d'impression liées aux BV.
 			this.options.Add (new DocumentOption ("Type de bulletin de versement :"));
-			this.options.Add (new DocumentOption ("BVR", "BV", "BVR orange", true));
-			this.options.Add (new DocumentOption ("BV",  "BV", "BV rose"));
+			this.options.Add (new DocumentOption ("ESR", "ESR", "BVR orange", true));
+			this.options.Add (new DocumentOption ("ES",  "ESR", "BV rose"));
 
 			this.options.Add (new DocumentOption ("Mode d'impression du BV :"));
-			this.options.Add (new DocumentOption ("BV.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
-			this.options.Add (new DocumentOption ("BV.Specimen", null, "Incruste la mention SPECIMEN"));
+			this.options.Add (new DocumentOption ("ESR.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
+			this.options.Add (new DocumentOption ("ESR.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
 		public void DocumentOptionsAddOrientation()

@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Core
 {
 
 	/// <summary>
-	/// The class <c>BvHelper</c> contains static methods used to check or build bv values.
+	/// The class <c>EsrHelper</c> contains static methods used to check or build es values.
 	/// </summary>
-	static class BvHelper
+	static class EsrHelper
 	{
 
 		/// <summary>
@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.Core
 			while (number.Length > 0)
 			{
 				int digit = int.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
-				report = BvHelper.controlKeyTable[report, digit];
+				report = EsrHelper.controlKeyTable[report, digit];
 				number = number.Substring (1);
 			}
 
-			return BvHelper.controlKeys[report];
+			return EsrHelper.controlKeys[report];
 		}
 
 		/// <summary>
@@ -128,9 +128,9 @@ namespace Epsitec.Cresus.Core
 			{
 				iban = string.Format ("{0}{1}", iban.Substring (4), iban.Substring (0, 4));
 
-				foreach (string s in BvHelper.charConversionTable.Keys)
+				foreach (string s in EsrHelper.charConversionTable.Keys)
 				{
-					iban = iban.Replace (s, BvHelper.charConversionTable[s]);
+					iban = iban.Replace (s, EsrHelper.charConversionTable[s]);
 				}
 
 				string remainder = "";
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core
 		/// <returns>A <see cref="bool"/> indicating if iban is valid or not.</returns>
 		public static bool CheckBeneficiaryIban(string iban)
 		{
-			return BvHelper.CheckIban (iban);
+			return EsrHelper.CheckIban (iban);
 		}
 
 		/// <summary>
@@ -312,8 +312,8 @@ namespace Epsitec.Cresus.Core
 		/// <returns>A <see cref="bool"/> indicating if the values required to build the reference line are valid or not.</returns>
 		public static bool CheckReferenceLine(string iban, string reference)
 		{
-			return BvHelper.CheckBeneficiaryIban (iban)
-				&& BvHelper.CheckReferenceClientNumber (reference);
+			return EsrHelper.CheckBeneficiaryIban (iban)
+				&& EsrHelper.CheckReferenceClientNumber (reference);
 		}
 
 		/// <summary>
@@ -325,9 +325,9 @@ namespace Epsitec.Cresus.Core
 		/// <returns>A <see cref="bool"/> indicating if the values required to build the clearing line are valid or not.</returns>
 		public static bool CheckClearingLine(string constant, string clearing, string key)
 		{
-			return BvHelper.CheckClearingConstant (constant)
-				&& BvHelper.CheckClearingBank (clearing)
-				&& BvHelper.CheckClearingBankKey (key);
+			return EsrHelper.CheckClearingConstant (constant)
+				&& EsrHelper.CheckClearingBank (clearing)
+				&& EsrHelper.CheckClearingBankKey (key);
 		}
 
 		/// <summary>
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
 		public static string BuildFrancPart(string amount)
 		{
-			if (!BvHelper.CheckAmount (amount))
+			if (!EsrHelper.CheckAmount (amount))
 			{
 				throw new System.ArgumentException (string.Format("the provided argument is not valid. Iban: {0}.", amount));
 			}
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
 		public static string BuildCentPart(string amount)
 		{
-			if (!BvHelper.CheckAmount (amount))
+			if (!EsrHelper.CheckAmount (amount))
 			{
 				throw new System.ArgumentException (string.Format ("the provided argument is not valid. Iban: {0}.", amount));
 			}
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If the provided values are not valid.</exception>
 		public static string BuildReferenceLine(string iban, string reference)
 		{
-			if (!BvHelper.CheckReferenceLine (iban, reference))
+			if (!EsrHelper.CheckReferenceLine (iban, reference))
 			{
 				string message = string.Format ("One of the provided argument is not valid. Iban: {0}. Reference: {1}.", iban, reference);
 				throw new System.ArgumentException (message);
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.Core
 			iban =  Regex.Replace (iban, @"\s", "");
 			string line = string.Format ("{0}{1}{2}", reference, "0000", iban.Substring (iban.Length - 12, 12));
 
-			return string.Format ("{0}{1}+", line, BvHelper.ComputeControlKey (line));
+			return string.Format ("{0}{1}+", line, EsrHelper.ComputeControlKey (line));
 		}
 
 		/// <summary>
@@ -409,14 +409,14 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If the provided values are not valid.</exception>
 		public static string BuildClearingLine(string constant, string clearing, string key)
 		{
-			if (!BvHelper.CheckClearingLine (constant, clearing, key))
+			if (!EsrHelper.CheckClearingLine (constant, clearing, key))
 			{
 				string message = string.Format ("One of the provided argument is not valid. Constant: {0}. Clearing: {1}. Key: {2}.", constant, clearing, key);
 				throw new System.ArgumentException (message);
 			}
 
 			string line = string.Format ("{0}{1}{2}", constant, clearing, key);
-			return string.Format ("{0}{1}>", line, BvHelper.ComputeControlKey (line));
+			return string.Format ("{0}{1}>", line, EsrHelper.ComputeControlKey (line));
 		}
 
 		/// <summary>
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
 		public static string BuildCcpNumberLine(string ccp)
 		{
-			if (!BvHelper.CheckCcpNumber (ccp))
+			if (!EsrHelper.CheckCcpNumber (ccp))
 			{
 				throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", ccp));
 			}
@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Core
 			{
 				error = "N°IBAN du bénéficiaire: doit se terminer par 12 chiffres.";
 			}
-			else if (!BvHelper.CheckBeneficiaryIban (iban))
+			else if (!EsrHelper.CheckBeneficiaryIban (iban))
 			{
 				error = "N°IBAN du bénéficiaire: invalide.";
 			}
@@ -569,7 +569,7 @@ namespace Epsitec.Cresus.Core
 			{
 				error = "Nom et adresse du bénéficiaire: chaque ligne ne peut contenir que 27 caractères.";
 			}
-			else if (!BvHelper.CheckBeneficiaryAddress (address))
+			else if (!EsrHelper.CheckBeneficiaryAddress (address))
 			{
 				error = "Nom et adresse du bénéficiaire: invalide.";
 			}
@@ -604,7 +604,7 @@ namespace Epsitec.Cresus.Core
 			{
 				error = "Montant: ne peut contenir que des chiffres et une virgule.";
 			}
-			else if (!BvHelper.CheckAmount(amount))
+			else if (!EsrHelper.CheckAmount(amount))
 			{
 				error = "Montant: invalide.";
 			}
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Core
 			{
 				error = "Versé par: chaque ligne ne peut contenir que 30 caractères.";
 			}
-			else if (!BvHelper.CheckPayedBy (payedBy))
+			else if (!EsrHelper.CheckPayedBy (payedBy))
 			{
 				error = "Versé par: invalide.";
 			}
@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.Core
 		public static string GetErrorMessageForReason(string reason)
 		{
 			string[] lines = reason.Split ('\n');
-			bool valid = BvHelper.CheckReason (reason);
+			bool valid = EsrHelper.CheckReason (reason);
 
 			string error;
 

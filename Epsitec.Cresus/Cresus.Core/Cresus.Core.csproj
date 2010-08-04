@@ -103,7 +103,7 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
-    <Compile Include="BvHelper.cs" />
+    <Compile Include="EsrHelper.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
@@ -195,9 +195,9 @@
     <Compile Include="Helpers\InvoiceDocumentHelper.cs" />
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractBand.cs" />
-    <Compile Include="Printers\AbstractBvBand.cs" />
-    <Compile Include="Printers\BvrBand.cs" />
-    <Compile Include="Printers\BvBand.cs" />
+    <Compile Include="Printers\AbstractEsrBand.cs" />
+    <Compile Include="Printers\EsrBand.cs" />
+    <Compile Include="Printers\EsBand.cs" />
     <Compile Include="Printers\MultiPagePrintEngine.cs" />
     <Compile Include="Printers\SurfaceBand.cs" />
     <Compile Include="Printers\TableColumn.cs" />
