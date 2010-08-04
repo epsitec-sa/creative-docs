@@ -19,27 +19,8 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static FormattedText GetSummary(InvoiceDocumentEntity x)
 		{
 			string date = InvoiceDocumentHelper.GetDate (x);
-			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPrice (x));
 
-			var builder = new System.Text.StringBuilder ();
-
-			foreach (var line in x.Lines)
-			{
-				if (line.Visibility)
-				{
-					if (line is ArticleDocumentItemEntity)
-					{
-						var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (line as ArticleDocumentItemEntity);
-						var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (line as ArticleDocumentItemEntity));
-
-						builder.Append ("● ");
-						builder.Append (string.Join (" ", quantity, desc));
-						builder.Append ("<br/>");
-					}
-				}
-			}
-
-			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, "\n", builder.ToString (), "Total: ", total);
+			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date);
 		}
 
 
