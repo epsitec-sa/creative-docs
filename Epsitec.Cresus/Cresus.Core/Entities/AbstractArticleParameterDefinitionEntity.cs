@@ -8,14 +8,35 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AbstractArticleParameterDefinitionEntity
 	{
+		/// <summary>
+		/// Some article parameter definitions store several values in a single
+		/// text field; the values are separated by the special '∙' character.
+		/// </summary>
 		public const char SeparatorChar = (char) 0x2219;					// '∙'
 		public const string Separator = SeparatorChar.ToString ();			// "∙"
 
+		/// <summary>
+		/// Splits the specified text using the specific '∙' separator.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The values.</returns>
 		public static string[] Split(string text)
 		{
-			return text.Split (AbstractArticleParameterDefinitionEntity.SeparatorChar);
+			if (string.IsNullOrEmpty (text))
+			{
+				return new string[0];
+			}
+			else
+			{
+				return text.Split (AbstractArticleParameterDefinitionEntity.SeparatorChar);
+			}
 		}
 
+		/// <summary>
+		/// Joins the specified values using the specific '∙' separator.
+		/// </summary>
+		/// <param name="values">The values.</param>
+		/// <returns>The text.</returns>
 		public static string Join(params string[] values)
 		{
 			return string.Join (AbstractArticleParameterDefinitionEntity.Separator, values);
