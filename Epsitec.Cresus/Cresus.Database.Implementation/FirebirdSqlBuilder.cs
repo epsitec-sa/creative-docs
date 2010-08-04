@@ -407,8 +407,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (";\n");
 			}
 		}
-		
-		
+				
 		public void SelectData(SqlSelect sqlQuery)
 		{
 			this.PrepareCommand ();
@@ -435,20 +434,49 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.PrepareCommand ();
 			this.commandType = DbCommandType.NonQuery;
 			this.commandCount++;
+
+			this.BuildInsertSqlClause (tableName, fields);
 			
+			this.Append (";\n");
+		}
+		
+		public void InsertData(string tableName, Collections.SqlFieldList fieldsToInsert, Collections.SqlFieldList fieldsToReturn)
+		{
+			if (!this.ValidateName (tableName))
+			{
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
+			}
+
+			if (fieldsToInsert.Count == 0)
+			{
+				return;
+			}
+
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.NonQuery;
+			this.commandCount++;
+
+			this.BuildInsertSqlClause (tableName, fieldsToInsert);
+			this.BuildReturningSqlClause (tableName, fieldsToInsert, fieldsToReturn);
+
+			this.Append (";\n");
+		}
+
+		public void BuildInsertSqlClause(string tableName, Collections.SqlFieldList fieldsToInsert)
+		{
 			this.Append ("INSERT INTO ");
 			this.Append (tableName);
 			this.Append ("(");
-			
+
 			bool isFirstField = true;
-			
-			foreach (SqlField field in fields)
+
+			foreach (SqlField field in fieldsToInsert)
 			{
 				if (!this.ValidateName (field.Alias))
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field '{0}' in table {1}", field.Alias, tableName));
 				}
-				
+
 				if (isFirstField)
 				{
 					isFirstField = false;
@@ -457,30 +485,36 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					this.Append (",");
 				}
-				
+
 				this.Append (field.Alias);
 			}
 
 			System.Diagnostics.Debug.Assert (isFirstField == false);
-			
+
 			this.Append (") VALUES (");
-			
+
 			isFirstField = true;
-			
-			foreach (SqlField field in fields)
+
+			foreach (SqlField field in fieldsToInsert)
 			{
 				string data = null;
-				
+
 				switch (field.FieldType)
 				{
-					case SqlFieldType.Default:		data = "DEFAULT";						break;
-					case SqlFieldType.Null:			data = "NULL";							break;
-					case SqlFieldType.Constant:		data = this.MakeCommandParam (field);	break;
-					
+					case SqlFieldType.Default:
+						data = "DEFAULT";
+						break;
+					case SqlFieldType.Null:
+						data = "NULL";
+						break;
+					case SqlFieldType.Constant:
+						data = this.MakeCommandParam (field);
+						break;
+
 					default:
 						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field type {0} for field {1} in table {2}", field.FieldType.ToString (), field.Alias, tableName));
 				}
-				
+
 				if (isFirstField)
 				{
 					isFirstField = false;
@@ -489,13 +523,51 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					this.Append (",");
 				}
-				
+
 				this.Append (data);
 			}
 
+			this.Append (") ");
+
 			System.Diagnostics.Debug.Assert (isFirstField == false);
-			
-			this.Append (");\n");
+		}
+
+
+
+		private void BuildReturningSqlClause(string tableName, Collections.SqlFieldList fieldsToInsert, Collections.SqlFieldList fieldsToReturn)
+		{
+			if (fieldsToReturn.Count > 0)
+			{
+				if (fieldsToInsert.Count == 0)
+				{
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, "Invalid query: returning clause without inserted fields in insert clause.");
+				}
+
+				this.Append ("RETURNING ");
+
+				bool isFirstField = true;
+
+				foreach (SqlField field in fieldsToReturn)
+				{
+					if (!this.ValidateName (field.Alias))
+					{
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field '{0}' in table {1}", field.Alias, tableName));
+					}
+
+					if (isFirstField)
+					{
+						isFirstField = false;
+					}
+					else
+					{
+						this.Append (", ");
+					}
+
+					this.Append (field.Alias);
+				}
+
+				System.Diagnostics.Debug.Assert (isFirstField == false);
+			}
 		}
 
 		public void UpdateData(string tableName, Collections.SqlFieldList fields, Collections.SqlFieldList conditions)

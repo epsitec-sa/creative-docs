@@ -89,6 +89,11 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		void InsertTable(SqlTable table);
 
+		/// <summary>
+		/// Sets the comment of a table.
+		/// </summary>
+		/// <param name="tableName">The name of the table whose comment to set.</param>
+		/// <param name="comment">The value of the comment.</param>
 		void SetTableComment(string tableName, string comment);
 
 		/// <summary>
@@ -104,6 +109,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="columns">The columns.</param>
 		void InsertTableColumns(string tableName, SqlColumn[] columns);
 
+		/// <summary>
+		/// Sets the comment of a column in a table.
+		/// </summary>
+		/// <param name="tableName">The name of the table containing the column.</param>
+		/// <param name="columnName">The name of the column whose comment to set.</param>
+		/// <param name="comment">The value of the comment.</param>
 		void SetTableColumnComment(string tableName, string columnName, string comment);
 
 		/// <summary>
@@ -133,6 +144,15 @@ namespace Epsitec.Cresus.Database
 		/// <param name="fields">The fields.</param>
 		void InsertData(string tableName, Collections.SqlFieldList fields);
 		
+		/// <summary>
+		/// Inserts data into a table, based on a collection of fields and returns the values of
+		/// another collection of fields.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="fieldsToInsert">The fields to insert.</param>
+		/// <param name="fieldsToReturn">The fields whose value to return.</param>
+		void InsertData(string tableName, Collections.SqlFieldList fieldsToInsert, Collections.SqlFieldList fieldsToReturn);
+				
 		/// <summary>
 		/// Updates data from a table, based on a collection of fields and a
 		/// set of conditions.
@@ -179,7 +199,7 @@ namespace Epsitec.Cresus.Database
 		void SetCommandParameterValue(System.Data.IDbCommand command, int index, object value);
 
 		/// <summary>
-		/// Gets a value for a parametrized command.
+		/// Gets a value for a parameterized command.
 		/// </summary>
 		/// <param name="command">The command.</param>
 		/// <param name="index">The parameter index.</param>
