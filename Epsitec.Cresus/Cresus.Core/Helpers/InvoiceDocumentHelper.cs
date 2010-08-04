@@ -89,14 +89,19 @@ namespace Epsitec.Cresus.Core.Helpers
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
 			string title = UIBuilder.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentRatio (x, billingDetails, true, isBL));
+			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true, isBL));
 		}
 
-		public static string GetInstalmentRatio(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
+		public static string GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
 		{
 			if (billingDetails.InstalmentRank == null)
 			{
 				return null;
+			}
+
+			if (!string.IsNullOrEmpty (billingDetails.InstalmentName))
+			{
+				return billingDetails.InstalmentName;
 			}
 
 			int count = x.BillingDetails.Count (y => y.InstalmentRank != null);  // compte les mensualités
