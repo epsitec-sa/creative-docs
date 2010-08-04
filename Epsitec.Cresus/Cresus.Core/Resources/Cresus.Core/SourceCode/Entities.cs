@@ -63,6 +63,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQC]", typeof (Epsitec.Cresus.Core.Entities.ExchangeRateSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGD]", typeof (Epsitec.Cresus.Core.Entities.TaxDocumentItemEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AFE]", typeof (Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AOE]", typeof (Epsitec.Cresus.Core.Entities.EnumValueArticleParameterDefinitionEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -8354,6 +8355,127 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		static partial void OnAddBeforeModuloChanged(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
 		static partial void OnAddBeforeModuloChanging(global::Epsitec.Cresus.Core.Entities.IRoundingMode obj, global::System.Decimal oldValue, global::System.Decimal newValue);
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.EnumValueArticleParameterDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>EnumValueArticleParameterDefinition</c> entity.
+	///	designer:cap/L0AOE
+	///	</summary>
+	public partial class EnumValueArticleParameterDefinitionEntity : global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity
+	{
+		///	<summary>
+		///	The <c>DefaultValue</c> field.
+		///	designer:fld/L0AOE/L0AQE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQE]")]
+		public string DefaultValue
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AQE]");
+			}
+			set
+			{
+				string oldValue = this.DefaultValue;
+				if (oldValue != value)
+				{
+					this.OnDefaultValueChanging (oldValue, value);
+					this.SetField<string> ("[L0AQE]", oldValue, value);
+					this.OnDefaultValueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Values</c> field.
+		///	designer:fld/L0AOE/L0APE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APE]")]
+		public string Values
+		{
+			get
+			{
+				return this.GetField<string> ("[L0APE]");
+			}
+			set
+			{
+				string oldValue = this.Values;
+				if (oldValue != value)
+				{
+					this.OnValuesChanging (oldValue, value);
+					this.SetField<string> ("[L0APE]", oldValue, value);
+					this.OnValuesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ShortDescriptions</c> field.
+		///	designer:fld/L0AOE/L0ARE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARE]")]
+		public string ShortDescriptions
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ARE]");
+			}
+			set
+			{
+				string oldValue = this.ShortDescriptions;
+				if (oldValue != value)
+				{
+					this.OnShortDescriptionsChanging (oldValue, value);
+					this.SetField<string> ("[L0ARE]", oldValue, value);
+					this.OnShortDescriptionsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LongDescriptions</c> field.
+		///	designer:fld/L0AOE/L0ASE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASE]")]
+		public string LongDescriptions
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ASE]");
+			}
+			set
+			{
+				string oldValue = this.LongDescriptions;
+				if (oldValue != value)
+				{
+					this.OnLongDescriptionsChanging (oldValue, value);
+					this.SetField<string> ("[L0ASE]", oldValue, value);
+					this.OnLongDescriptionsChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDefaultValueChanging(string oldValue, string newValue);
+		partial void OnDefaultValueChanged(string oldValue, string newValue);
+		partial void OnValuesChanging(string oldValue, string newValue);
+		partial void OnValuesChanged(string oldValue, string newValue);
+		partial void OnShortDescriptionsChanging(string oldValue, string newValue);
+		partial void OnShortDescriptionsChanged(string oldValue, string newValue);
+		partial void OnLongDescriptionsChanging(string oldValue, string newValue);
+		partial void OnLongDescriptionsChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EnumValueArticleParameterDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.EnumValueArticleParameterDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 472);	// [L0AOE]
+		public static readonly new string EntityStructuredTypeKey = "[L0AOE]";
 	}
 }
 #endregion
