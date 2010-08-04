@@ -81,11 +81,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
-			builder.CreateTextField      (tile, 150, "Numéro externe",       Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
+			builder.CreateTextField      (tile, 150, "Numéro de la facture",           Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
+			builder.CreateTextField      (tile, 150, "Numéro externe",                 Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField      (tile, 150, "Numéro interne",                 Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
-			builder.CreateTextField      (tile,   0, "Description",          Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
+			builder.CreateTextFieldMulti (tile,  36, "Texte <i>Concerne</i> imprimé",  Marshaler.Create (() => this.Entity.DocumentTitle, x => this.Entity.DocumentTitle = x));
+			builder.CreateTextField      (tile,   0, "Description interne",            Marshaler.Create (() => this.Entity.Description,   x => this.Entity.Description = x));
 
 #if true
 			// TODO: à supprimer un jour...
