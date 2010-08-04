@@ -165,24 +165,20 @@ namespace Epsitec.Cresus.Core.Printers
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.PageSize.Height-57, 80, 25));
 
-			if (billingDetails != null)
+			if (!string.IsNullOrEmpty (this.entity.DocumentTitle))
 			{
-				string concerne = billingDetails.Title;
-				if (!string.IsNullOrEmpty (concerne))
-				{
-					var concerneBand = new TableBand ();
-					concerneBand.ColumnsCount = 2;
-					concerneBand.RowsCount = 1;
-					concerneBand.PaintFrame = false;
-					concerneBand.Font = font;
-					concerneBand.FontSize = fontSize;
-					concerneBand.CellMargins = new Margins (0);
-					concerneBand.SetRelativeColumWidth (0, 15);
-					concerneBand.SetRelativeColumWidth (1, 80);
-					concerneBand.SetText (0, 0, "Concerne");
-					concerneBand.SetText (1, 0, concerne);
-					this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, this.PageSize.Height-67, 100, 15));
-				}
+				var concerneBand = new TableBand ();
+				concerneBand.ColumnsCount = 2;
+				concerneBand.RowsCount = 1;
+				concerneBand.PaintFrame = false;
+				concerneBand.Font = font;
+				concerneBand.FontSize = fontSize;
+				concerneBand.CellMargins = new Margins (0);
+				concerneBand.SetRelativeColumWidth (0, 15);
+				concerneBand.SetRelativeColumWidth (1, 80);
+				concerneBand.SetText (0, 0, "Concerne");
+				concerneBand.SetText (1, 0, this.entity.DocumentTitle);
+				this.documentContainer.AddAbsolute (concerneBand, new Rectangle (20, this.PageSize.Height-67, 100, 15));
 			}
 
 			var titleBand = new TextBand ();
@@ -717,7 +713,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			string conditions = billingDetails.AmountDue.PaymentMode.Description;
+			string conditions = string.Join("<br/>", billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description);
 
 			if (!string.IsNullOrEmpty (conditions))
 			{
