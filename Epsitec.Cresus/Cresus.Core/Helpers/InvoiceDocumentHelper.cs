@@ -117,11 +117,11 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			if (parenthesis)
 			{
-				return string.Format ("({0}/{1})", billingDetails.InstalmentRank.ToString (), count.ToString ());
+				return string.Format ("({0}/{1})", (billingDetails.InstalmentRank+1).ToString (), count.ToString ());
 			}
 			else
 			{
-				return string.Format ("{0}/{1}", billingDetails.InstalmentRank.ToString (), count.ToString ());
+				return string.Format ("{0}/{1}", (billingDetails.InstalmentRank+1).ToString (), count.ToString ());
 			}
 		}
 
