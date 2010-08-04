@@ -127,9 +127,12 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 			var targetsIn = this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request);
 			var targetsOut = new EntityCollection<AbstractEntity> (fieldId, this.Entity, false);
 
-			foreach (AbstractEntity target in targetsIn)
+			using (this.Entity.DisableEvents ())
 			{
-				targetsOut.Add (target);
+				foreach (AbstractEntity target in targetsIn)
+				{
+					targetsOut.Add (target);
+				}
 			}
 
 			if (targetsOut.Count > 0)
