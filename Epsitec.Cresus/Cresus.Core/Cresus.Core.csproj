@@ -113,7 +113,7 @@
     <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionBillingDetailsViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPriceDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTextDocumentItemViewController.cs" />

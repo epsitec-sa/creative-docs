@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildHeader(BillingDetailsEntity billingDetails)
+		private void BuildHeader(BillingDetailEntity billingDetails)
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
 			var imageBand = new ImageBand ();
@@ -709,7 +709,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildConditions(BillingDetailsEntity billingDetails)
+		private void BuildConditions(BillingDetailEntity billingDetails)
 		{
 			//	Met les conditions à la fin de la facture.
 			if (this.IsBL)
@@ -750,7 +750,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildPages(BillingDetailsEntity billingDetails, int firstPage)
+		private void BuildPages(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met les numéros de page.
 			double reportHeight = this.IsBL ? 0 : InvoiceDocumentEntityPrinter.reportHeight*2;
@@ -922,7 +922,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void BuildBvs(BillingDetailsEntity billingDetails, int firstPage)
+		private void BuildBvs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			var bounds = new Rectangle (Point.Zero, AbstractBvBand.DefautlSize);

@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailsEntity billingDetails, bool isBL)
+		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL)
 		{
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
 			string title = UIBuilder.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return string.Concat (title, " ", InvoiceDocumentHelper.GetRatio (x, billingDetails, true, isBL));
 		}
 
-		public static string GetRatio(InvoiceDocumentEntity x, BillingDetailsEntity billingDetails, bool parenthesis, bool isBL)
+		public static string GetRatio(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
 		{
 			int rank = 0;
 			int count = 0;
