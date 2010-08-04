@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public DataContext(DbInfrastructure infrastructure)
 		{
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
+			this.IsDisposed = false;
 			this.DbInfrastructure = infrastructure;
 			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure);
 			this.EntityContext = new EntityContext ();
@@ -50,8 +51,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
-			
+
+			this.eventLock = new object ();
+
 			this.EntityContext.EntityAttached += this.HandleEntityCreated;
+			this.EntityContext.EntityChanged += this.HandleEntityChanged;
 			this.EntityContext.PersistenceManagers.Add (this);
 		}
 
@@ -72,6 +76,39 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Tells whether this instance is disposed or not.
+		/// </summary>
+		public bool IsDisposed
+		{
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// The event that is fired when an <see cref="AbstractEntity"/> managed by this instance is
+		/// created, updated or deleted.
+		/// </summary>
+		public event EventHandler<EntityEventArgs> EntityEvent
+		{
+			add
+			{
+				lock (this.eventLock)
+				{
+					this.entityEvent += value;
+				}
+			}
+			remove
+			{
+				lock (this.eventLock)
+				{
+					this.entityEvent -= value;
+				}
+			}
 		}
 
 
@@ -131,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> creaded by this
+		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> created by this
 		/// <see cref="DataContext"/> can be null virtualized with the
 		/// <see cref="EntityNullReferenceVirtualizer"/>.
 		/// </summary>
@@ -152,8 +189,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public TEntity CreateEntity<TEntity>() where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
+
+			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
+
+			this.FireEntityEvent (entity, EntityEventSource.External, EntityEventType.Created);
 			
-			return this.EntityContext.CreateEmptyEntity<TEntity> ();
+			return entity;
 		}
 
 
@@ -163,8 +204,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entityId">The <see cref="Druid"/> of the type of the <see cref="AbstractEntity"/> to create.</param>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal AbstractEntity CreateEntity(Druid entityId)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.EntityContext.CreateEmptyEntity (entityId);
 		}
 
@@ -202,8 +246,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		/// <summary>
+		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
+		/// given <see cref="EntityKey"/>.
+		/// </summary>
+		/// <param name="entityKey">The <see cref="EntityKey"/> to check if the corresponding <see cref="AbstractEntity"/> is managed by this instance.</param>
+		/// <returns><c>true</c> if the corresponding <see cref="AbstractEntity"/> is managed by this instance, <c>false</c> if it is not.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal bool Contains(EntityKey entityKey)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesCache.GetEntity (entityKey) != null;
 		}
 
@@ -228,8 +281,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entityKey">The <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal AbstractEntity GetEntity(EntityKey entityKey)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesCache.GetEntity (entityKey);
 		}
 
@@ -239,8 +295,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="DbKey"/> to define.</param>
 		/// <param name="key">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal void DefineRowKey(AbstractEntity entity, DbKey key)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			this.entitiesCache.DefineRowKey (entity, key);
 		}
 
@@ -389,8 +448,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance.
 		/// </summary>
 		/// <returns>The <see cref="AbstractEntity"/> managed by this instance.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal IEnumerable<AbstractEntity> GetEntities()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesCache.GetEntities ();
 		}
 
@@ -400,8 +462,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// since the last call to <see cref="SaveChanges"/>.
 		/// </summary>
 		/// <returns>The modified <see cref="AbstractEntity"/> managed by this instance.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal IEnumerable<AbstractEntity> GetEntitiesModified()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return from AbstractEntity entity in this.GetEntities ()
 				   where entity.GetEntityDataGeneration () >= this.EntityContext.DataGeneration
 				   select entity;
@@ -412,8 +477,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Gets the <see cref="AbstractEntity"/> that have been deleted by this instance.
 		/// </summary>
 		/// <returns>The <see cref="AbstractEntity"/> that have been deleted by this instance.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal IEnumerable<AbstractEntity> GetEntitiesDeleted()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesDeleted;
 		}
 
@@ -423,8 +491,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <see cref="SaveChanges"/>.
 		/// </summary>
 		/// <returns>The <see cref="AbstractEntity"/> which must be deleted.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal IEnumerable<AbstractEntity> GetEntitiesToDelete()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			return this.entitiesToDelete;
 		}
 
@@ -433,18 +504,26 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Mark an <see cref="AbstractEntity"/> as deleted, which removes it from this instance.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to mark as deleted.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal void MarkAsDeleted(AbstractEntity entity)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			this.entitiesDeleted.Add (entity);
 			this.entitiesCache.Remove (entity);
+
+			this.FireEntityEvent (entity, EntityEventSource.External, EntityEventType.Deleted);
 		}
 
 
 		/// <summary>
 		/// Clears the list of the <see cref="AbstractEntity"/> which are to be deleted.
 		/// </summary>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal void ClearEntitiesToDelete()
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			this.entitiesToDelete.Clear ();
 		}
 
@@ -531,7 +610,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			this.DataSaver.SaveChanges ();
+			IEnumerable<AbstractSynchronisationJob> jobs = this.DataSaver.SaveChanges ();
+			
+			DataContextPool.Instance.Synchronize (this, jobs);
 		}
 
 
@@ -550,10 +631,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		// TODO Add notification when an entity is deleted or updated as in the next methods.
-
+		/// <summary>
+		/// Applies the modifications described by the given <see cref="AbstractSynchronisationJob"/>
+		/// to the current instance if it is relevant.
+		/// </summary>
+		/// <param name="job">The <see cref="AbstractSynchronisationJob"/> whose modification to apply.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		internal void Synchronize(AbstractSynchronisationJob job)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if (this.Contains (job.EntityKey))
 			{
 				// Here is a little trick : job is cast to dynamic, which allows us to simulate a
@@ -566,16 +653,26 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.Synchronize ((dynamic) job);
 			}
 		}
-		
 
+
+		/// <summary>
+		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="DeleteSynchronizationJob"/> whose modification to apply.</param>
 		private void Synchronize(DeleteSynchronizationJob job)
 		{
 			AbstractEntity entity = this.GetEntity (job.EntityKey);
 
-			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity);
+			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityEventSource.Synchronization);
+
+			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Deleted);
 		}
 
 
+		/// <summary>
+		/// Applies the modifications described by the given <see cref="ValueSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="ValueSynchronizationJob"/> whose modification to apply.</param>
 		private void Synchronize(ValueSynchronizationJob job)
 		{
 			AbstractEntity entity = this.GetEntity (job.EntityKey);
@@ -584,15 +681,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				using (entity.DefineOriginalValues ())
 				{
-					string fieldId = job.FieldId.ToResourceId ();
-					object fieldValue = job.NewValue;
+					using (entity.DisableEvents ())
+					{
+						string fieldId = job.FieldId.ToResourceId ();
+						object fieldValue = job.NewValue;
 
-					entity.InternalSetValue (fieldId, fieldValue);
+						entity.InternalSetValue (fieldId, fieldValue);
+					}
 				}
 			}
+
+			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
+		/// <summary>
+		/// Applies the modifications described by the given <see cref="ReferenceSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="ReferenceSynchronizationJob"/> whose modification to apply.</param>
 		private void Synchronize(ReferenceSynchronizationJob job)
 		{
 			AbstractEntity entity = this.GetEntity (job.EntityKey);
@@ -601,24 +707,33 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				using (entity.DefineOriginalValues ())
 				{
-					string fieldId = job.FieldId.ToResourceId ();
-					object fieldValue;
-
-					if (job.NewValue.HasValue)
+					using (entity.DisableEvents ())
 					{
-						fieldValue = new EntityKeyProxy (this, job.NewValue.Value);
-					}
-					else
-					{
-						fieldValue = null;
-					}
+						string fieldId = job.FieldId.ToResourceId ();
+						object fieldValue;
 
-					entity.InternalSetValue (fieldId, fieldValue);
+						if (job.NewValue.HasValue)
+						{
+							fieldValue = new EntityKeyProxy (this, job.NewValue.Value);
+						}
+						else
+						{
+							fieldValue = null;
+						}
+
+						entity.InternalSetValue (fieldId, fieldValue);
+					}
 				}
 			}
+
+			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
+		/// <summary>
+		/// Applies the modifications described by the given <see cref="CollectionSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="CollectionSynchronizationJob"/> whose modification to apply.</param>
 		private void Synchronize(CollectionSynchronizationJob job)
 		{
 			AbstractEntity entity = this.GetEntity (job.EntityKey);
@@ -627,20 +742,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				using (entity.DefineOriginalValues ())
 				{
-					string fieldId = job.FieldId.ToResourceId ();
-
-					IList collection = entity.InternalGetFieldCollection (fieldId);
-
-					collection.Clear ();
-
-					foreach (EntityKey entityKey in job.NewValues)
+					using (entity.DisableEvents ())
 					{
-						object proxy = new EntityKeyProxy (this, entityKey);
+						string fieldId = job.FieldId.ToResourceId ();
 
-						collection.Add (proxy);
+						IList collection = entity.InternalGetFieldCollection (fieldId);
+
+						collection.Clear ();
+
+						foreach (EntityKey entityKey in job.NewValues)
+						{
+							object proxy = new EntityKeyProxy (this, entityKey);
+
+							collection.Add (proxy);
+						}
 					}
 				}
 			}
+
+			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
@@ -665,13 +785,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="disposing"></param>
 		private void Dipose(bool disposing)
 		{
-			if (!this.isDisposed && disposing)
+			if (!this.IsDisposed && disposing)
 			{
 				this.EntityContext.EntityAttached -= this.HandleEntityCreated;
+				this.EntityContext.EntityChanged -= this.HandleEntityChanged;
 				this.EntityContext.PersistenceManagers.Remove (this);
+
+				// TODO Remove this instance from the DataContextPool singleton if it is present?
+				// Marc
 			}
 
-			this.isDisposed = true;
+			this.IsDisposed = true;
 		}
 
 
@@ -682,7 +806,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		private void AssertDataContextIsNotDisposed()
 		{
-			if (this.isDisposed)
+			if (this.IsDisposed)
 			{
 				throw new System.ObjectDisposedException ("DataContext #" + this.UniqueId);
 			}
@@ -882,9 +1006,43 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// The disposed state of this instance.
+		/// Handles the events fired by the <see cref="EntityContext"/> associated with this
+		/// instance and redirects them to the appropriate event handler.
 		/// </summary>
-		private bool isDisposed;
+		/// <param name="sender">The sender of the event.</param>
+		/// <param name="args">The data about the event.</param>
+		private void HandleEntityChanged(object sender, EntityChangedEventArgs args)
+		{
+			this.FireEntityEvent (args.Entity, EntityEventSource.External, EntityEventType.Updated);
+		}
+
+
+		/// <summary>
+		/// Fires an event through the appropriate event handler with the given parameters, that will
+		/// notify the listeners about the changes.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> concerned by the event.</param>
+		/// <param name="source">The source of the event.</param>
+		/// <param name="type">The type of the event.</param>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void FireEntityEvent(AbstractEntity entity, EntityEventSource source, EntityEventType type)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			EventHandler<EntityEventArgs> handler;
+
+			lock (this.eventLock)
+			{
+				handler = this.entityEvent;
+			}
+
+			if (handler != null)
+			{
+				EntityEventArgs eventArgs = new EntityEventArgs (entity, type, source);
+
+				handler (this, eventArgs);
+			}
+		}
 
 
 		/// <summary>
@@ -909,6 +1067,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The <see cref="AbstractEntity"/> which have been deleted.
 		/// </summary>
 		private readonly HashSet<AbstractEntity> entitiesDeleted;
+
+
+		/// <summary>
+		/// The object used as a lock for the events.
+		/// </summary>
+		private readonly object eventLock;
+
+
+		/// <summary>
+		/// The event handler used to fire events related to the <see cref="AbstractEntity"/>
+		/// managed by this instance.
+		/// </summary>
+		private EventHandler<EntityEventArgs> entityEvent;
 
 
 		/// <summary>

@@ -64,14 +64,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void SaveChanges()
+		public IEnumerable<AbstractSynchronisationJob> SaveChanges()
 		{
 			bool containsChanges;
 
+			List<AbstractSynchronisationJob> synchronizationJobs = new List<AbstractSynchronisationJob> ();
+
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				bool deletedEntities = this.DeleteEntities (transaction);
-				bool savedEntities = this.SaveEntities (transaction);
+				bool deletedEntities = this.DeleteEntities (transaction, synchronizationJobs);
+				bool savedEntities = this.SaveEntities (transaction, synchronizationJobs);
 
 				containsChanges = deletedEntities || savedEntities;
 
@@ -82,15 +84,25 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				this.UpdateDataGeneration ();
 			}
+
+			return synchronizationJobs;
 		}
 
 
-		private bool DeleteEntities(DbTransaction transaction)
+		private bool DeleteEntities(DbTransaction transaction, List<AbstractSynchronisationJob> synchronizationJobs)
 		{
 			List<AbstractEntity> entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
-			
+
 			foreach (AbstractEntity entity in entitiesToDelete)
 			{
+				if (this.DataContext.IsPersistent (entity))
+				{
+					int dataContextId = this.DataContext.UniqueId;
+					EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+
+					synchronizationJobs.Add (new DeleteSynchronizationJob (dataContextId, entityKey));
+				}
+
 				this.RemoveEntity (transaction, entity);
 				this.DataContext.MarkAsDeleted (entity);
 			}
@@ -103,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.DeleteEntityTargetRelationsInMemory (entity);
+			this.DeleteEntityTargetRelationsInMemory (entity, EntityEventSource.Internal);
 
 			if (this.DataContext.IsPersistent (entity))
 			{
@@ -112,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target)
+		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target, EntityEventSource eventSource)
 		{
 			// This method will probably be too slow for a high number of managed entities, therefore
 			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
@@ -135,51 +147,64 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				{
 					if (fieldPaths.ContainsKey (leafInheritedId))
 					{
-						this.DeleteEntityTargetRelationInMemory (source, fieldPaths[leafInheritedId], target);
+						this.DeleteEntityTargetRelationInMemory (source, fieldPaths[leafInheritedId], target, eventSource);
 					}
 				}
 			}
 		}
 
 
-		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target)
+		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityEventSource eventSource)
 		{
 			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
 
+			bool updated = false;
+
 			using (source.UseSilentUpdates ())
 			{
-				switch (field.Relation)
+				using (source.DisableEvents ())
 				{
-					case FieldRelation.Reference:
+					switch (field.Relation)
 					{
-						if (source.InternalGetValue (field.Id) == target)
-						{
-							source.InternalSetValue (field.Id, null);
-						}
+						case FieldRelation.Reference:
 
-						break;
-					}
-					case FieldRelation.Collection:
-					{
-						IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+							if (source.InternalGetValue (field.Id) == target)
+							{
+								source.InternalSetValue (field.Id, null);
 
-						while (collection.Contains (target))
-						{
-							collection.Remove (target);
-						}
+								updated = true;
+							}
 
-						break;
-					}
-					default:
-					{
-						throw new System.InvalidOperationException ();
+							break;
+
+						case FieldRelation.Collection:
+
+							IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+
+							while (collection.Contains (target))
+							{
+								collection.Remove (target);
+
+								updated = true;
+							}
+
+							break;
+
+						default:
+
+							throw new System.InvalidOperationException ();
 					}
 				}
+			}
+
+			if (updated)
+			{
+				this.DataContext.FireEntityEvent (source, eventSource, EntityEventType.Updated);
 			}
 		}
 
 
-		private bool SaveEntities(DbTransaction transaction)
+		private bool SaveEntities(DbTransaction transaction, List<AbstractSynchronisationJob> synchronizationJobs)
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
 				from entity in this.DataContext.GetEntitiesModified ()
@@ -191,7 +216,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
-				this.SaveEntity (transaction, savedEntities, entity);
+				this.SaveEntity (transaction, savedEntities, synchronizationJobs, entity);
 			}
 
 			foreach (AbstractEntity entity in savedEntities)
@@ -203,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity entity)
+		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity entity)
 		{
 			if (savedEntities.Contains (entity))
 			{
@@ -230,32 +255,36 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				this.DataContext.DefineRowKey (entity, newKey);
 			}
 
-			this.SaveTargetsIfNotPersisted (transaction, savedEntities, entity);
+			this.SaveTargetsIfNotPersisted (transaction, savedEntities, synchronizationJobs, entity);
+
+			IEnumerable<AbstractSynchronisationJob> newSynchronizationJobs;
 
 			if (isPersisted)
 			{
-				this.UpdateEntity (transaction, entity);
+				newSynchronizationJobs = this.UpdateEntity (transaction, entity);
 			}
 			else
 			{
-				this.InsertEntity (transaction, entity);
+				newSynchronizationJobs = this.InsertEntity (transaction, entity);
 			}
+
+			synchronizationJobs.AddRange (newSynchronizationJobs);
 		}
 
 
-		private void InsertEntity(DbTransaction transaction, AbstractEntity entity)
+		private IEnumerable<AbstractSynchronisationJob> InsertEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.SaverQueryGenerator.InsertEntity (transaction, entity);
+			return this.SaverQueryGenerator.InsertEntity (transaction, entity);
 		}
 
 
-		private void UpdateEntity(DbTransaction transaction, AbstractEntity entity)
+		private IEnumerable<AbstractSynchronisationJob> UpdateEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.SaverQueryGenerator.UpdateEntity (transaction, entity);
+			return this.SaverQueryGenerator.UpdateEntity (transaction, entity);
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity source)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source)
 		{
 			Druid leafEntityId = source.GetEntityStructuredTypeId ();
 
@@ -266,12 +295,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (StructuredTypeField field in relations)
 			{
-				this.SaveTargetsIfNotPersisted (transaction, savedEntities, source, field);
+				this.SaveTargetsIfNotPersisted (transaction, savedEntities, synchronizationJobs, source, field);
 			}
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, AbstractEntity source, StructuredTypeField field)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
 		{
 			List<AbstractEntity> targets = new List<AbstractEntity> ();
 			
@@ -295,7 +324,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
 			{
-				this.SaveEntity (transaction, savedEntities, target);
+				this.SaveEntity (transaction, savedEntities, synchronizationJobs, target);
 			}
 		}
 
