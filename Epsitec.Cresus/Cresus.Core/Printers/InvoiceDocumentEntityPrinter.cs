@@ -256,6 +256,11 @@ namespace Epsitec.Cresus.Core.Printers
 						exist = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
 					}
 
+					if (line is TaxDocumentItemEntity)
+					{
+						exist = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
+					}
+
 					if (exist)
 					{
 						rowCount++;
@@ -349,6 +354,11 @@ namespace Epsitec.Cresus.Core.Printers
 					if (line is PriceDocumentItemEntity)
 					{
 						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
+					}
+
+					if (line is TaxDocumentItemEntity)
+					{
+						exist = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity);
 					}
 
 					if (exist)
@@ -507,6 +517,13 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
+			return true;
+		}
+
+		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
+		{
+			// TODO:
+			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			return true;
 		}
 
@@ -673,6 +690,16 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return true;
 		}
+
+		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
+		{
+			// TODO:
+			string text = string.Concat ("<b>", line.Text, "</b>");
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
+
+			return true;
+		}
+
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
 		{

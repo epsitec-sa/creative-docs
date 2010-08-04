@@ -20,9 +20,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionTextDocumentItemViewController : EditionViewController<Entities.TextDocumentItemEntity>
+	public class EditionTaxDocumentItemViewController : EditionViewController<Entities.TaxDocumentItemEntity>
 	{
-		public EditionTextDocumentItemViewController(string name, Entities.TextDocumentItemEntity entity)
+		public EditionTaxDocumentItemViewController(string name, Entities.TaxDocumentItemEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.TextDocumentItem", "Ligne de texte");
+				builder.CreateEditionTitleTile ("Data.TaxDocumentItem", "Ligne de TVA");
 
 				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
@@ -55,12 +55,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			pagesDescription.Add ("Article.Article");
 			pagesDescription.Add ("TVA.TVA");
 			pagesDescription.Add ("Price.Total");
-			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Text", this.HandleTabBookAction);
+			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "TVA", this.HandleTabBookAction);
 		}
 
 		private void HandleTabBookAction(string tabPageName)
 		{
-			if (tabPageName == "Text")
+			if (tabPageName == "TVA")
 			{
 				return;
 			}
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+			builder.CreateTextField (tile, 0, "Description", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 		}
 
 
