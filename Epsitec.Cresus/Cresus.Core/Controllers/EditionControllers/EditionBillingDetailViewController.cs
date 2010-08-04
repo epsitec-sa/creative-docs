@@ -67,10 +67,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile, 100, "Date",                                  Marshaler.Create (() => this.Entity.AmountDue.Date, x => this.Entity.AmountDue.Date = x));
 			builder.CreateTextFieldMulti (tile,  36, "Texte <i>Concerne</i> sur la facture",  Marshaler.Create (() => this.Entity.Title, x => this.Entity.Title = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
+			builder.CreateTextField      (tile,  50, "Rang de la mensualité",                 Marshaler.Create (() => this.InstalmentRank, x => this.InstalmentRank = x));
+			builder.CreateTextField      (tile,   0, "Description de la mensualité",          Marshaler.Create (() => this.Entity.InstalmentName, x => this.Entity.InstalmentName = x));
+			builder.CreateMargin         (tile, horizontalSeparator: true);
 			builder.CreateTextField      (tile, 100, "CCP du destinataire",                   Marshaler.Create (() => this.Entity.EsrCustomerNumber, x => this.Entity.EsrCustomerNumber = x));
 			builder.CreateTextField      (tile,   0, "Numéro de référence BVR à 27 chiffres", Marshaler.Create (() => this.Entity.EsrReferenceNumber, x => this.Entity.EsrReferenceNumber = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
-
 
 			FrameBox group = builder.CreateGroup (tile, "Montant à payer");
 			             builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.AmountDue.Amount, x => this.Entity.AmountDue.Amount = x));
@@ -102,6 +104,40 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var paymentMode = context.CreateEmptyEntity<PaymentModeEntity> ();
 			return paymentMode;
 		}
+
+
+		private string InstalmentRank
+		{
+			get
+			{
+				if (this.Entity.InstalmentRank == null)
+				{
+					return null;
+				}
+				else
+				{
+					return this.Entity.InstalmentRank.ToString ();
+				}
+			}
+			set
+			{
+				if (!string.IsNullOrEmpty (value))
+				{
+					int n;
+					if (int.TryParse (value, out n))
+					{
+						if (n > 0)
+						{
+							this.Entity.InstalmentRank = n;
+							return;
+						}
+					}
+				}
+
+				this.Entity.InstalmentRank = null;
+			}
+		}
+
 
 		private void ComputeAmontDue()
 		{
