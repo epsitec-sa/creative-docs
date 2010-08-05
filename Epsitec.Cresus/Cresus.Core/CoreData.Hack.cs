@@ -951,35 +951,23 @@ namespace Epsitec.Cresus.Core
 			taxA1.ResultingTax = taxA1.Rate * taxA1.BaseAmount; // devrait être égal à 'totalA1.ResultingTax + lineA4.ResultingLineTax'
 			taxA1.Text = "TVA au taux standard";
 			
-			var totalA2 = this.DataContext.CreateEntity<PriceDocumentItemEntity> ();
+			var totalA2 = this.DataContext.CreateEntity<TotalDocumentItemEntity> ();
 
 			//	TVA ............................................ xx
 			//	Total TTC .................................... xxxx
 			//	Total TTC arrêté ............................. xxxx
 
 			totalA2.Visibility = true;
-			totalA2.LayoutSettings = "auto";  // indique une ligne insérée et gérée automatiquement par le logiciel (provisoire)
-			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
-			totalA2.PrimaryTax = taxA1.ResultingTax;
-
-			decimal totalAfterTax = totalA2.PrimaryPriceBeforeTax.Value + totalA2.PrimaryTax.Value;
-
-			totalA2.FixedPriceAfterTax = (int) (totalAfterTax / 10) * 10.00M;	//	arrondi à 10.-
-
-			totalA2.ResultingPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA2.FixedPriceAfterTax / (1 + vatRate));  // -- à revalider
-			totalA2.ResultingTax = decimalType.Range.ConstrainToZero (totalA2.ResultingPriceBeforeTax * vatRate);
+			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax;
+			totalA2.FixedPriceAfterTax = (int) (totalA2.PrimaryPriceAfterTax / 10) * 10.00M;	//	arrondi à 10.-
 			totalA2.TextForPrimaryPrice = "Total TTC";
 			totalA2.TextForFixedPrice = "Total TTC arrêté";
-			totalA2.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal | BusinessLogic.Finance.PriceDisplayModes.WithTax;
-
 
 			//	Le total arrêté force un rabais supplémentaire qu'il faut remonter dans les
 			//	lignes d'articles qui peuvent être soumis à un rabais :
 
-			totalA2.FinalPriceBeforeTax = totalA2.ResultingPriceBeforeTax;
-			totalA2.FinalTax = decimalType.Range.ConstrainToZero (totalA2.FinalPriceBeforeTax * vatRate);
-
-			decimal? fixedPriceDiscount = (totalA2.FinalPriceBeforeTax - lineA4.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
+			decimal? totalBeforeTax = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
+			decimal? fixedPriceDiscount = (totalBeforeTax - lineA4.PrimaryLinePriceBeforeTax) / totalA1.ResultingPriceBeforeTax.Value;
 
 			totalA1.FinalPriceBeforeTax = decimalType.Range.ConstrainToZero (totalA1.ResultingPriceBeforeTax * fixedPriceDiscount);
 			totalA1.FinalTax = decimalType.Range.ConstrainToZero (totalA1.FinalPriceBeforeTax * vatRate);
@@ -1013,7 +1001,7 @@ namespace Epsitec.Cresus.Core
 
 			paymentA2.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
 			paymentA2.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
-			paymentA2.Amount = (totalA2.FinalPriceBeforeTax + totalA2.FinalTax).Value - paymentA1.Amount;
+			paymentA2.Amount = totalA2.FixedPriceAfterTax.Value - paymentA1.Amount;
 			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA2.Date = new Date (2010, 09, 05);
 
