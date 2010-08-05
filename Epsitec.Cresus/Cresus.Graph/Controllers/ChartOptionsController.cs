@@ -6,6 +6,7 @@ using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Graph.Widgets;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -29,6 +30,9 @@ namespace Epsitec.Cresus.Graph.Controllers
                 ShowFloatingCaptions = true,
                 FixedCaptionsPosition = new Margins (0, 4, 4, 0)
             };
+
+			this.dispatcher = new CommandDispatcher ("ChartOptions Dispatcher", CommandDispatcherLevel.Secondary);
+			this.dispatcher.RegisterController (this);
 
             // Change visibility when value is changed
             this.ChartOptions.ShowFixedCaptionsChanged +=
@@ -92,10 +96,13 @@ namespace Epsitec.Cresus.Graph.Controllers
                 ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
             };
 
+			CommandDispatcher.SetDispatcher (frame, this.dispatcher);
+
             var showCaptionsButton = new MetaButton()
             {
+				CommandObject = Res.Commands.ChartOptions.ShowSummaryCaptions,
                 Dock = DockStyle.Left,
-                IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
+//                IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
                 PreferredSize = new Size(40, 40),
@@ -103,11 +110,13 @@ namespace Epsitec.Cresus.Graph.Controllers
             };
 
             // Change value when then button is click
+#if false
             showCaptionsButton.Clicked +=
                 (sender, e) =>
                 {
                     this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
                 };
+#endif
 
             var showFloatingCaptionsButton = new MetaButton()
             {
@@ -127,7 +136,14 @@ namespace Epsitec.Cresus.Graph.Controllers
                 };
         }
 
+		[Command (Res.CommandIds.ChartOptions.ShowSummaryCaptions)]
+		private void ExecuteShowSummaryCaptionsCommand()
+		{
+			this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
+		}
+
 
         private readonly ChartOptions chartOptions;
+		private readonly CommandDispatcher dispatcher;
     }
 }
