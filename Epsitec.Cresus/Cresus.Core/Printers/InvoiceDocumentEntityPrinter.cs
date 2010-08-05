@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Printers
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
 
-			string date = InvoiceDocumentHelper.GetDate (this.entity);
+			string date = Misc.GetDateTimeDescription (this.entity.LastModificationDate);
 			var dateBand = new TextBand ();
 			dateBand.Text = UIBuilder.FormatText ("Crissier, le ", date).ToString ();
 			dateBand.Font = font;

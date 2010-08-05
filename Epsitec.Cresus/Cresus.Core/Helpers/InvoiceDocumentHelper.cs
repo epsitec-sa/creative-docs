@@ -18,7 +18,8 @@ namespace Epsitec.Cresus.Core.Helpers
 	{
 		public static FormattedText GetSummary(InvoiceDocumentEntity x)
 		{
-			string date = InvoiceDocumentHelper.GetDate (x);
+			string date = Misc.GetDateTimeShortDescription (x.LastModificationDate);
+			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPrice (x));
 
 			string billing  = GetShortMailContactSummary (x.BillingMailContact).ToString ();
 			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				addresses = string.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
-			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, addresses);
+			return UIBuilder.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, ", ", total, addresses);
 		}
 
 		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
@@ -44,21 +45,6 @@ namespace Epsitec.Cresus.Core.Helpers
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
-
-		public static string GetDate(InvoiceDocumentEntity x)
-		{
-			System.DateTime date;
-			if (x.LastModificationDate.HasValue)
-			{
-				date = x.LastModificationDate.Value;
-			}
-			else
-			{
-				date = System.DateTime.Now;
-			}
-
-			return Misc.GetDateTimeDescription (date);
-		}
 
 		public static string GetMailContact(InvoiceDocumentEntity x)
 		{
@@ -327,7 +313,55 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
+
 		public static decimal? GetTotalPrice(InvoiceDocumentEntity x)
+		{
+			//	Retourne le prix total TTC d'une facture, en tenant compte du total arrêté s'il existe.
+			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
+
+			if (lastPriceEntity != null)
+			{
+				return Misc.PriceConstrain (lastPriceEntity.ResultingPriceBeforeTax.GetValueOrDefault (0) + lastPriceEntity.ResultingTax.GetValueOrDefault (0));
+			}
+
+			return null;
+		}
+
+		public static decimal? GetPrimaryPriceTTC(InvoiceDocumentEntity x)
+		{
+			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
+
+			if (lastPriceEntity != null)
+			{
+				return lastPriceEntity.PrimaryPriceBeforeTax.GetValueOrDefault (0) + lastPriceEntity.PrimaryTax.GetValueOrDefault (0);
+			}
+
+			return null;
+		}
+
+		public static decimal? GetFixedPrice(InvoiceDocumentEntity x)
+		{
+			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
+
+			if (lastPriceEntity != null)
+			{
+				return lastPriceEntity.FixedPriceAfterTax;
+			}
+
+			return null;
+		}
+
+		public static void SetFixedPrice(InvoiceDocumentEntity x, decimal? value)
+		{
+			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
+
+			if (lastPriceEntity != null)
+			{
+				lastPriceEntity.FixedPriceAfterTax = value;
+			}
+		}
+
+		private static PriceDocumentItemEntity GetLastPriceEntity(InvoiceDocumentEntity x)
 		{
 			if (x.Lines.Count > 0)
 			{
@@ -335,9 +369,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 				if (lastLine is PriceDocumentItemEntity)
 				{
-					var price = lastLine as PriceDocumentItemEntity;
-
-					return Misc.PriceConstrain (price.ResultingPriceBeforeTax.GetValueOrDefault (0) + price.ResultingTax.GetValueOrDefault (0));
+					return lastLine as PriceDocumentItemEntity;
 				}
 			}
 
