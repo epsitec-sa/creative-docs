@@ -298,6 +298,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private void BuildAutoIncrementTriggerForColumn(string tableName, SqlColumn column)
 		{
+			// Firebird does not support directly the auto incremented columns, so we need to use
+			// a workaround described here : http://www.firebirdfaq.org/faq29/ . Basically, we need
+			// to create an sequence generator and call that generator in a trigger before a row is
+			// inserted in the table.
+			
 			if (column.IsAutoIncremented)
 			{
 				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
@@ -321,6 +326,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		private void RemoveAutoIncrementedTriggerForColumn(string tableName, SqlColumn column)
 		{
+			// As Firebird does not support directly auto incremented columns, we need to cleanup the
+			// database if we are removing such a column. So first we remove the sequence generator
+			// and then we remove the trigger.
+			// Marc.
+
 			if (column.IsAutoIncremented)
 			{
 				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
