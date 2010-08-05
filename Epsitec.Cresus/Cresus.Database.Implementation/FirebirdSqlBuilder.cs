@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append ("AS ");
 				this.Append ("BEGIN ");
 				this.Append ("NEW." + column.Name + " = GEN_ID(" + generatorName + ", 1); ");
-				this.Append ("END; ");
+				this.Append ("END;\n");
 			}
 		}
 
