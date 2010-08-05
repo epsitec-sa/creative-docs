@@ -160,10 +160,10 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static void UpdatePrices(ArticleDocumentItemEntity article)
+		public static void UpdatePrices(GenericArticleDocumentEntity document, ArticleDocumentItemEntity article)
 		{
 			//	Recalcule une ligne d'une facture.
-			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
+			var vatRate  = ArticleDocumentItemHelper.GetArticleVatRate (document, article).GetValueOrDefault (0);
 			var quantity = ArticleDocumentItemHelper.GetArticleQuantity (article);
 
 			if (quantity.HasValue)

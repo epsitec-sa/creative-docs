@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (line is PriceDocumentItemEntity)
 					{
-						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity, lastLine: row == rowCount-1);
+						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
@@ -648,7 +648,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private bool BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line, bool lastLine)
+		private bool BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
 		{
 			if (this.IsBL)
 			{
@@ -711,13 +711,9 @@ namespace Epsitec.Cresus.Core.Printers
 				total = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
 			}
 
-			if (lastLine)
-			{
-				total = string.Concat ("<b>", total, "</b>");
-				table.SetCellBorderWidth (this.tableColumns[TableColumnKeys.Total].Rank, row, 0.5);  // met un cadre épais
-			}
-
 			table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
+
+			table.SetUnbreakableRow (row, true);
 
 			return true;
 		}
@@ -761,6 +757,9 @@ namespace Epsitec.Cresus.Core.Printers
 				string total = string.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b>");
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
+
+			table.SetUnbreakableRow (row, true);
+			table.SetCellBorderWidth (this.tableColumns[TableColumnKeys.Total].Rank, row, 0.5);
 
 			return true;
 		}
