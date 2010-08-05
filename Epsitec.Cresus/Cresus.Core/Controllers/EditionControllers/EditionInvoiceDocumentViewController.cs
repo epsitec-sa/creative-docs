@@ -79,10 +79,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile, 150, "Numéro de la facture", Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
-			builder.CreateTextField      (tile, 150, "Numéro externe",       Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
-			builder.CreateTextField      (tile, 150, "Numéro interne",       Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
-			builder.CreateMargin         (tile, horizontalSeparator: true);
+			FrameBox group = builder.CreateGroup (tile, "N° de la facture (principal, externe et interne)");
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
 		}
 
 		private void CreateUIBillingMail(UIBuilder builder)
@@ -126,8 +128,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			FrameBox group = builder.CreateGroup (tile, "Totaux calculé et arrêté TTC");
-			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
-			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetFixedPrice, this.SetFixedPrice));
+			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetPrimaryPriceTTC, this.SetPrimaryPriceTTC));
+			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetFixedPriceTTC,   this.SetFixedPriceTTC));
 			t.IsReadOnly = true;
 
 #if true
@@ -156,6 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static string[] GetMailTexts(MailContactEntity x)
 		{
+			//	Retourne la liste des textes pour les recherches 'AutoComplete'.
 			return new string[]
 			{
 				x.LegalPerson.Name,
@@ -169,6 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static FormattedText GetMailText(MailContactEntity x)
 		{
+			//	Retourne le texte compact d'une ligne pour peupler le widget AutoCompleteTextField.
 			return UIBuilder.FormatText (x.LegalPerson.Name, "~,",
 										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
 										 x.Address.Street.StreetName, "~,",
@@ -176,24 +180,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private string GetTotalPrice()
+		private string GetPrimaryPriceTTC()
 		{
 			return Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceTTC (this.Entity));
 		}
 
-		private void SetTotalPrice(string value)
+		private void SetPrimaryPriceTTC(string value)
 		{
 			// Rien à faire, le widget est readonly !
 		}
 
-		private string GetFixedPrice()
+		private string GetFixedPriceTTC()
 		{
-			return Misc.PriceToString (InvoiceDocumentHelper.GetFixedPrice (this.Entity));
+			return Misc.PriceToString (InvoiceDocumentHelper.GetFixedPriceTTC (this.Entity));
 		}
 
-		private void SetFixedPrice(string value)
+		private void SetFixedPriceTTC(string value)
 		{
-			InvoiceDocumentHelper.SetFixedPrice (this.Entity, Misc.StringToDecimal (value));
+			InvoiceDocumentHelper.SetFixedPriceTTC (this.Entity, Misc.StringToDecimal (value));
 		}
 
 
