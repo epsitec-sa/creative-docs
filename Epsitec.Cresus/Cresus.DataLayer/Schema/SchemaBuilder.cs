@@ -154,14 +154,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				throw new System.ArgumentException ("Invalid entity ID", "entityId");
 			}
-
-			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
+			
+			bool isRootTable = entityType.BaseTypeId.IsEmpty;
+			
+			DbTable table = this.DbInfrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges, isRootTable);
 			table.Comment = table.DisplayName;
 
 			newTables.Add (table);
 			this.tableCache[entityId] = table;
 
-			if (entityType.BaseTypeId.IsEmpty)
+			if (isRootTable)
 			{
 				//	If this entity has no parent in the class hierarchy, then we
 				//	need to add a special identification column, which can be used
