@@ -118,6 +118,10 @@
     <None Include="Identities\PA.png" />
     <None Include="Identities\YR.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Identities\JS.png" />
+    <None Include="Identities\MS.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

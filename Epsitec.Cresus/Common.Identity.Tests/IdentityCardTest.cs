@@ -76,14 +76,16 @@ namespace Epsitec.Common.Identity
 
 			string path = @"S:\Epsitec.Cresus\Common.Identity\Identities";
 
-			IdentityCard cardCA = new IdentityCard ("Christian Alleyn", 5, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "CA.png")));
-			IdentityCard cardPA = new IdentityCard ("Pierre Arnaud",    1, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "PA.png")));
-			IdentityCard cardDB = new IdentityCard ("David Besuchet", 3, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DB.png")));
-			IdentityCard cardMB = new IdentityCard ("Marc Bettex", 8, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MB.png")));
-			IdentityCard cardDD = new IdentityCard ("Denis Dumoulin", 6, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DD.png")));
-			IdentityCard cardYR = new IdentityCard ("Yves Raboud",      4, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "YR.png")));
-			IdentityCard cardDR = new IdentityCard ("Daniel Roux",      2, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DR.png")));
-			IdentityCard cardMW = new IdentityCard ("Michael Walz", 7, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MW.png")));
+			IdentityCard cardCA = new IdentityCard ("Christian Alleyn",   5, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "CA.png")));
+			IdentityCard cardPA = new IdentityCard ("Pierre Arnaud",      1, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "PA.png")));
+			IdentityCard cardDB = new IdentityCard ("David Besuchet",     3, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DB.png")));
+			IdentityCard cardMB = new IdentityCard ("Marc Bettex",        8, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MB.png")));
+			IdentityCard cardDD = new IdentityCard ("Denis Dumoulin",     6, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DD.png")));
+			IdentityCard cardYR = new IdentityCard ("Yves Raboud",        4, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "YR.png")));
+			IdentityCard cardDR = new IdentityCard ("Daniel Roux",        2, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DR.png")));
+			IdentityCard cardJS = new IdentityCard ("Jonas Schmid",       9, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "JS.png")));
+			IdentityCard cardMS = new IdentityCard ("Mathieu Schroeter", 10, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MS.png")));
+			IdentityCard cardMW = new IdentityCard ("Michael Walz",       7, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MW.png")));
 
 			repository.IdentityCards.Add (cardCA);
 			repository.IdentityCards.Add (cardPA);
@@ -92,6 +94,8 @@ namespace Epsitec.Common.Identity
 			repository.IdentityCards.Add (cardDD);
 			repository.IdentityCards.Add (cardYR);
 			repository.IdentityCards.Add (cardDR);
+			repository.IdentityCards.Add (cardJS);
+			repository.IdentityCards.Add (cardMS);
 			repository.IdentityCards.Add (cardMW);
 
 			string xml = Epsitec.Common.Types.Serialization.SimpleSerialization.SerializeToString (repository);
