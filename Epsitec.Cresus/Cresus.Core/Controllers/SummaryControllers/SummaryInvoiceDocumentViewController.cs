@@ -71,7 +71,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.DefineCreateItem (this.CreateArticleDocumentItem)  // le bouton [+] crée une ligne d'article
 				.DefineCreateGetIndex (this.CreateArticleGetIndex);
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+			//?data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetLines (x), template));
 		}
 
 		private void CreateUIBillings(SummaryDataItems data)
@@ -116,16 +117,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private int CreateArticleGetIndex()
 		{
 			//	Retourne l'index où insérer la nouvelle ligne d'article créée avec le bouton [+].
-			//	Depuis la dernière ligne, on ignore les lignes de totaux et les articles 'frais de port'.
 			int index = this.Entity.Lines.Count;  // insère à la fin par défaut
 
 			while (index > 0)
 			{
 				var line = this.Entity.Lines[index-1];
 
-				if (line is PriceDocumentItemEntity)
+				if (line is TotalDocumentItemEntity ||
+					line is TaxDocumentItemEntity   )
 				{
-					index--;  // insère avant un (sous-)total
+					index--;  // insère avant le total
 					continue;
 				}
 
@@ -139,6 +140,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			return index;
+		}
+
+		private static IList<AbstractDocumentItemEntity> GetLines(InvoiceDocumentEntity x)
+		{
+			//	Retourne les lignes éditables par l'utilisateur, c'est-à-dire sans les entités
+			//	TaxDocumentItemEntity et TotalDocumentItemEntity.
+#if false
+			return x.Lines.Where (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is PriceDocumentItemEntity)).ToList ();
+#else
+			return x.Lines;
+#endif
 		}
 
 
@@ -205,50 +217,21 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
 		{
 			var builder = new System.Text.StringBuilder ();
-			bool first = true;
+
+			builder.Append ("Sous-total ");
+			builder.Append (Misc.PriceToString (x.ResultingPriceBeforeTax));
 
 			if (x.Discount.DiscountRate.HasValue)
 			{
-				if (!first)
-				{
-					builder.Append (", ");
-				}
-
-				builder.Append ("Rabais ");
-				builder.Append (Misc.PercentToString (x.Discount.DiscountRate));
-
-				first = false;
+				builder.Append (" (après rabais en %)");
 			}
-
-			if (x.Discount.DiscountAmount.HasValue)
+			else if (x.Discount.DiscountAmount.HasValue)
 			{
-				if (!first)
-				{
-					builder.Append (", ");
-				}
-
-				builder.Append ("Rabais ");
-				builder.Append (Misc.PriceToString (x.Discount.DiscountAmount));
-
-				first = false;
+				builder.Append (" (après rabais en francs)");
 			}
-
-			if (x.FixedPriceAfterTax.HasValue)
+			else if (x.FixedPriceAfterTax.HasValue)
 			{
-				if (!first)
-				{
-					builder.Append (", ");
-				}
-
-				builder.Append ("Montant arrêté ");
-				builder.Append (Misc.PriceToString (x.FixedPriceAfterTax));
-
-				first = false;
-			}
-
-			if (first)
-			{
-				builder.Append ("<i>Sous-total</i>");
+				builder.Append (" (montant arrêté)");
 			}
 
 			return builder.ToString ();
@@ -273,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static string GetTotalDocumentItemSummary(TotalDocumentItemEntity x)
 		{
-			var desc = x.PrimaryPriceAfterTax;
+			var desc = x.TextForPrimaryPrice;
 
 			string total;
 			if (x.FixedPriceAfterTax.HasValue)

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (container, this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de total");
+				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de sous-total");
 
 				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
@@ -95,9 +95,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 120, "FinalPriceBeforeTax", Marshaler.Create (() => this.Entity.FinalPriceBeforeTax, x => this.Entity.FinalPriceBeforeTax = x));
 			builder.CreateTextField (tile, 120, "FinalTax", Marshaler.Create (() => this.Entity.FinalTax, x => this.Entity.FinalTax = x));
 #else
-			builder.CreateTextField  (tile, 80, "Rabais de groupe (pourcent ou montant)", Marshaler.Create (this.GetDiscount, this.SetDiscount));
+			builder.CreateStaticText (tile, 70, "Cette ligne effectue un sous-total de tous les articles précédents. Vous pouvez spécifier ci-dessous un rabais facultatif pour l'ensemble du sous-groupe.");
+
+			builder.CreateTextField  (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (this.GetDiscount, this.SetDiscount));
 			builder.CreateStaticText (tile, 16, "<b>— ou —</b>");
-			builder.CreateTextField  (tile, 80, "Montant total du groupe arrêté TTC",     Marshaler.Create (this.GetFixedPriceAfterTax, this.SetFixedPriceAfterTax));
+			builder.CreateTextField  (tile, 80, "Sous-total arrêté TTC",        Marshaler.Create (this.GetFixedPriceAfterTax, this.SetFixedPriceAfterTax));
 #endif
 		}
 

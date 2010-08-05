@@ -36,36 +36,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.TaxDocumentItem", "Ligne de TVA");
 
-				this.CreateTabBook (builder);
 				this.CreateUIMain (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
-		}
-
-
-		private void CreateTabBook(UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, horizontalSeparator: false);
-
-			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Text.Texte");
-			pagesDescription.Add ("Article.Article");
-			pagesDescription.Add ("TVA.TVA");
-			pagesDescription.Add ("Price.Total");
-			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "TVA", this.HandleTabBookAction);
-		}
-
-		private void HandleTabBookAction(string tabPageName)
-		{
-			if (tabPageName == "TVA")
-			{
-				return;
-			}
-
-			Common.ChangeEditedLineEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
 		}
 
 
@@ -77,8 +51,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile, 80, "Taux de TVA",        Marshaler.Create (() => this.Entity.Rate, x => this.Entity.Rate = x));
 			builder.CreateTextField (tile, 80, "Montant de base HT", Marshaler.Create (() => this.Entity.BaseAmount, x => this.Entity.BaseAmount = x));
 			builder.CreateTextField (tile, 80, "TVA due",            Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
-
-			builder.CreateTextField (tile, 0, "LayoutSettings (provisoire)", Marshaler.Create (() => this.Entity.LayoutSettings, x => this.Entity.LayoutSettings = x));
 		}
 
 
@@ -89,6 +61,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private TileContainer							tileContainer;
-		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 	}
 }

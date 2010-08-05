@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
+			builder.CreateStaticText     (tile, 40, "Cette ligne insère un texte fixe dans la colonne \"Désignation\", sans prix.");
 			builder.CreateTextFieldMulti (tile, 100, "Texte fixe", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 		}
 

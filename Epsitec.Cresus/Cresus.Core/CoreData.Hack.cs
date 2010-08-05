@@ -493,6 +493,7 @@ namespace Epsitec.Cresus.Core
 			var uomUnit2 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 			var uomUnit3 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 			var uomUnit4 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
+			var uomUnit5 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 
 			uomUnit1.Code = "pce";
 			uomUnit1.Name = "Pièce";
@@ -522,10 +523,18 @@ namespace Epsitec.Cresus.Core
 			uomUnit4.SmallestIncrement = 1;
 			uomUnit4.Category = BusinessLogic.UnitOfMeasureCategory.Length;
 
+			uomUnit5.Code = "l";
+			uomUnit5.Name = "Litre";
+			uomUnit5.DivideRatio = 1;
+			uomUnit5.MultiplyRatio = 1;
+			uomUnit5.SmallestIncrement = 1;
+			uomUnit5.Category = BusinessLogic.UnitOfMeasureCategory.Volume;
+
 			yield return uomUnit1;
 			yield return uomUnit2;
 			yield return uomUnit3;
 			yield return uomUnit4;
+			yield return uomUnit5;
 		}
 
 		private IEnumerable<ArticleDefinitionEntity> InsertArticleDefinitionsInDatabase(IEnumerable<UnitOfMeasureEntity> units)
@@ -533,6 +542,7 @@ namespace Epsitec.Cresus.Core
 			var uomUnit1 = units.Where (x => x.Code == "pce").First ();
 			var uomUnit2 = units.Where (x => x.Code == "box").First ();
 			var uomUnit3 = units.Where (x => x.Code == "×").First ();
+			var uomUnit4 = units.Where (x => x.Code == "l").First ();
 
 			var uomUnitMm = units.Where (x => x.Code == "mm").First ();
 
@@ -544,10 +554,17 @@ namespace Epsitec.Cresus.Core
 			uomGroup1.Units.Add (uomUnit2);
 
 			var uomGroup2 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
-			uomGroup2.Name = "Frais";
-			uomGroup2.Description = "Frais";
-			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
-			uomGroup2.Units.Add (uomUnit3);
+			uomGroup2.Name = "Unités pour boissons";
+			uomGroup2.Description = "Unités pour les boissons";
+			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup2.Units.Add (uomUnit2);
+			uomGroup2.Units.Add (uomUnit4);
+
+			var uomGroup3 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
+			uomGroup3.Name = "Frais";
+			uomGroup3.Description = "Frais";
+			uomGroup3.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
+			uomGroup3.Units.Add (uomUnit3);
 
 			var articleGroup1 = this.DataContext.CreateEntity<ArticleGroupEntity> ();
 
@@ -594,6 +611,13 @@ namespace Epsitec.Cresus.Core
 			articleCategory3.ArticleType = BusinessLogic.ArticleType.Goods;
 			articleCategory3.DefaultAccounting.Add (accountingDef);
 
+			var articleCategory4 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
+
+			articleCategory4.Name = "Aliments";
+			articleCategory4.DefaultVatCode = BusinessLogic.Finance.VatCode.ReducedTax;
+			articleCategory4.ArticleType = BusinessLogic.ArticleType.Goods;
+			articleCategory4.DefaultAccounting.Add (accountingDef);
+
 			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup2 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
 			var articlePriceGroup3 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
@@ -616,6 +640,7 @@ namespace Epsitec.Cresus.Core
 			var articleDef3 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 			var articleDef4 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 			var articleDef5 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
+			var articleDef6 = this.DataContext.CreateEntity<ArticleDefinitionEntity> ();
 
 			articleDef1.IdA = "CR-CP";
 			articleDef1.ShortDescription = "Crésus Comptabilité PRO";
@@ -648,7 +673,7 @@ namespace Epsitec.Cresus.Core
 			articleDef4.ShortDescription = "Port et emballage";
 			articleDef4.ArticleCategory = articleCategory2;
 			articleDef4.BillingUnit = uomUnit3;
-			articleDef4.Units = uomGroup2;
+			articleDef4.Units = uomGroup3;
 			articleDef4.ArticlePrices.Add (this.CreateArticlePrice (11.15M));
 
 			var param5_1 = this.DataContext.CreateEntity<NumericValueArticleParameterDefinitionEntity> ();
@@ -684,7 +709,7 @@ namespace Epsitec.Cresus.Core
 			param5_3.ShortDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Standard", "Anti-UV 1", "Anti-UV 2");
 			param5_3.LongDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Verre standard", "Verre anti-UV avec protection à 100%", "Verre anti-UV avec protection à 100%, incluant un laminage anti-reflets");
 
-			
+
 			articleDef5.IdA = "WDO-DESIGN";
 			articleDef5.ShortDescription = "Fenêtre Design";
 			articleDef5.LongDescription  = "Fenêtre Design pour tout type de façades, produite à la main par des artisans de la région";
@@ -697,10 +722,21 @@ namespace Epsitec.Cresus.Core
 			articleDef5.ArticleParameters.Add (param5_2);
 			articleDef5.ArticleParameters.Add (param5_3);
 
+			articleDef6.IdA = "FOOD-MILCH";
+			articleDef6.ShortDescription = "Lait";
+			articleDef6.LongDescription  = "Lait pasteurisé";
+			articleDef6.ArticleGroups.Add (articleGroup1);
+			articleDef6.ArticleCategory = articleCategory4;
+			articleDef6.BillingUnit = uomUnit4;
+			articleDef6.Units = uomGroup2;
+			articleDef6.ArticlePrices.Add (this.CreateArticlePrice (1.50M, articlePriceGroup1));
+
 			yield return articleDef1;
 			yield return articleDef2;
 			yield return articleDef3;
 			yield return articleDef4;
+			yield return articleDef5;
+			yield return articleDef6;
 		}
 
 		private IEnumerable<PaymentModeEntity> InsertPaymentModeInDatabase()
@@ -952,10 +988,6 @@ namespace Epsitec.Cresus.Core
 			taxA1.Text = "TVA au taux standard";
 			
 			var totalA2 = this.DataContext.CreateEntity<TotalDocumentItemEntity> ();
-
-			//	TVA ............................................ xx
-			//	Total TTC .................................... xxxx
-			//	Total TTC arrêté ............................. xxxx
 
 			totalA2.Visibility = true;
 			totalA2.PrimaryPriceAfterTax = totalA1.ResultingPriceBeforeTax + totalA1.ResultingTax + lineA4.ResultingLinePriceBeforeTax + lineA4.ResultingLineTax;
