@@ -85,6 +85,11 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
+			if (billingDetails == null)
+			{
+				return null;
+			}
+
 			if (billingDetails != null && billingDetails.InstalmentRank == null)
 			{
 				return null;

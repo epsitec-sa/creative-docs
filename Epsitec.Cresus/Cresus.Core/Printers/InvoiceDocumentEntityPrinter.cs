@@ -532,6 +532,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
 		{
+			if (this.IsBL)
+			{
+				return false;
+			}
+
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
 			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
@@ -541,6 +546,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool InitializeColumnTotalLine(TotalDocumentItemEntity line)
 		{
+			if (this.IsBL)
+			{
+				return false;
+			}
+
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.Discount          ].Visible = line.FixedPriceAfterTax.HasValue;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
@@ -714,6 +724,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
 		{
+			if (this.IsBL)
+			{
+				return false;
+			}
+
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.Text);
 			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.BaseAmount));
 			table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row, Misc.PriceToString (line.ResultingTax));
@@ -723,6 +738,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildTotalLine(TableBand table, int row, TotalDocumentItemEntity line)
 		{
+			if (this.IsBL)
+			{
+				return false;
+			}
+
 			if (line.FixedPriceAfterTax.HasValue)
 			{
 				string text = string.Join ("<br/>", line.TextForPrimaryPrice, line.TextForFixedPrice);
@@ -731,13 +751,15 @@ namespace Epsitec.Cresus.Core.Printers
 				string discount = string.Concat ("<br/>", Misc.PriceToString (line.PrimaryPriceAfterTax - line.FixedPriceAfterTax));
 				table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, discount);
 
-				string total = string.Join ("<br/>", Misc.PriceToString (line.PrimaryPriceAfterTax), Misc.PriceToString (line.FixedPriceAfterTax));
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, text);
+				string total = string.Concat (Misc.PriceToString (line.PrimaryPriceAfterTax), "<br/><b>", Misc.PriceToString (line.FixedPriceAfterTax), "</b>");
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
 			else
 			{
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrimaryPrice);
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, Misc.PriceToString (line.PrimaryPriceAfterTax));
+
+				string total = string.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b>");
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
 
 			return true;
