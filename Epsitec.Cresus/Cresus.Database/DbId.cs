@@ -126,10 +126,14 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The identifier.</returns>
 		public static DbId CreateId(long localId, int clientId)
 		{
-			System.Diagnostics.Debug.Assert (localId >= 0);
-			System.Diagnostics.Debug.Assert (localId < DbId.LocalRange);
-			System.Diagnostics.Debug.Assert (clientId >= 0);
-			System.Diagnostics.Debug.Assert (clientId < DbId.ClientRange);
+			// TODO This is not valid anymore, since the ids are auto generated. I need to clean this
+			// sometime.
+			// Marc
+			
+			//System.Diagnostics.Debug.Assert (localId >= 0);
+			//System.Diagnostics.Debug.Assert (localId < DbId.LocalRange);
+			//System.Diagnostics.Debug.Assert (clientId >= 0);
+			//System.Diagnostics.Debug.Assert (clientId < DbId.ClientRange);
 			
 			return new DbId (localId + DbId.LocalRange * clientId);
 		}

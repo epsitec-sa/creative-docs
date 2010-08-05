@@ -320,11 +320,6 @@ namespace Epsitec.Cresus.Database
 					
 					DbId lastServerId = this.logger.CurrentId;
 					
-					//	Since this is a fresh roaming database, all table ids will be reset to
-					//	one (1) :
-					
-					this.ResetColumnData (transaction, this.internalTables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, clientId));
-					
 					//	Update the logger in order to use the new client id instead of the
 					//	id found in the copied database :
 					
@@ -353,25 +348,6 @@ namespace Epsitec.Cresus.Database
 		private void ClearTable(DbTransaction transaction, DbTable table)
 		{
 			transaction.SqlBuilder.RemoveData (table.GetSqlName (), null);
-			this.ExecuteNonQuery (transaction);
-		}
-
-		/// <summary>
-		/// Resets the data in the specified column to the specified value.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <param name="columnName">Name of the column.</param>
-		/// <param name="data">The data.</param>
-		private void ResetColumnData(DbTransaction transaction, DbTable table, string columnName, DbId data)
-		{
-			DbColumn              column = table.Columns[columnName];
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
-			
-			fields.Add (column.GetSqlName (), this.CreateSqlFieldFromAdoValue (column, data));
-			
-			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, null);
-			
 			this.ExecuteNonQuery (transaction);
 		}
 
@@ -568,8 +544,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The category.</param>
 		/// <param name="revisionMode">The revision mode.</param>
+		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns>The database table definition.</returns>
-		public DbTable CreateDbTable(string name, DbElementCat category, DbRevisionMode revisionMode)
+		public DbTable CreateDbTable(string name, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
 		{
 			switch (category)
 			{
@@ -577,7 +554,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
 				
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, revisionMode);
+					return this.CreateTable(name, category, revisionMode, autoIncrementedId);
 				
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
@@ -591,8 +568,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The category.</param>
 		/// <param name="revisionMode">The revision mode.</param>
+		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns>The database table definition.</returns>
-		public DbTable CreateDbTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode)
+		public DbTable CreateDbTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
 		{
 			switch (category)
 			{
@@ -600,7 +578,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", captionId));
 
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable (captionId, category, revisionMode);
+					return this.CreateTable (captionId, category, revisionMode, autoIncrementedId);
 
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, captionId));
@@ -933,10 +911,9 @@ namespace Epsitec.Cresus.Database
 			
 			this.CheckForUnknownType (transaction, typeDef);
 
-			long tableId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTypeDef], 1);
+			DbKey typeKey = this.InsertTypeDefRow (transaction, typeDef);
 
-			typeDef.DefineKey (new DbKey (tableId));
-			this.InsertTypeDefRow (transaction, typeDef);
+			typeDef.DefineKey (typeKey);
 		}
 
 		/// <summary>
@@ -1174,12 +1151,13 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The table name.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode)
+		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
 		{
 			DbTable table = new DbTable (name);
 
-			this.DefineBasicTable (table, category, revisionMode);
+			this.DefineBasicTable (table, category, revisionMode, autoIncrementedId);
 
 			return table;
 		}
@@ -1190,23 +1168,25 @@ namespace Epsitec.Cresus.Database
 		/// <param name="captionId">The table caption id.</param>
 		/// <param name="category">The table category.</param>
 		/// <param name="revisionMode">The table revision mode.</param>
+		/// <param name="autoIncrementedId">Tells whether the id of the table must be auto incremented or not.</param>
 		/// <returns></returns>
-		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode)
+		internal DbTable CreateTable(Druid captionId, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
 		{
 			DbTable table = new DbTable (captionId);
 
-			this.DefineBasicTable (table, category, revisionMode);
+			this.DefineBasicTable (table, category, revisionMode, autoIncrementedId);
 
 			return table;
 		}
 
-		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode)
+		private void DefineBasicTable(DbTable table, DbElementCat category, DbRevisionMode revisionMode, bool autoIncrementedId)
 		{
 			System.Diagnostics.Debug.Assert (revisionMode != DbRevisionMode.Unknown);
-			
-			DbTypeDef typeDef = this.internalTypes[Tags.TypeKeyId];
 
-			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable);
+			DbColumn colId   = new DbColumn (Tags.ColumnId, this.internalTypes[Tags.TypeKeyId], DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+			{
+				IsAutoIncremented = autoIncrementedId,
+			};
 			DbColumn colStat = new DbColumn (Tags.ColumnStatus, this.internalTypes[Tags.TypeKeyStatus], DbColumnClass.KeyStatus, DbElementCat.Internal);
 			DbColumn colLog  = new DbColumn (Tags.ColumnRefLog, this.internalTypes[Tags.TypeKeyId], DbColumnClass.RefInternal, DbElementCat.Internal);
 
@@ -1243,22 +1223,17 @@ namespace Epsitec.Cresus.Database
 			{
 				this.CheckForUnknownTable (transaction, table);
 				
-				long tableId  = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableTableDef], 1);
-				long columnId = this.NewRowIdInTable (transaction, this.internalTables[Tags.TableColumnDef], table.Columns.Count);
-				
 				//	Create the table description in the CR_TABLE_DEF table :
-				
-				table.DefineKey (new DbKey (tableId));
 				table.UpdatePrimaryKeyInfo ();
-				
-				this.InsertTableDefRow (transaction, table);
+				DbKey tableKey = this.InsertTableDefRow (transaction, table);
+				table.DefineKey (tableKey);
 				
 				//	Create the column descriptions in the CR_COLUMN_DEF table :
 				
-				for (int i = 0; i < table.Columns.Count; i++)
+				foreach (DbColumn column in table.Columns)
 				{
-					table.Columns[i].DefineKey (new DbKey (columnId + i));
-					this.InsertColumnDefRow (transaction, table, table.Columns[i]);
+					DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
+					column.DefineKey (columnKey);
 				}
 			}
 			
@@ -1924,26 +1899,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Updates the next column id in the table definition metadata. This
-		/// is used when a new column is created to derive the column key.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <param name="nextId">The next column id.</param>
-		internal void UpdateTableNextId(DbTransaction transaction, DbTable table, DbId nextId)
-		{
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
-			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
-			
-			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (nextId, DbKey.RawTypeForId));
-			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
-			
-			transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
-			this.ExecuteSilent (transaction);
-		}
-
-		/// <summary>
 		/// Loads the table definitions based on the metadata table key and the
 		/// specified search mode.
 		/// </summary>
@@ -2267,60 +2222,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets the next row id in the specified table. This does not allocate
-		/// any keys.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <returns>The next row id.</returns>
-		internal long NextRowIdInTable(DbTransaction transaction, DbTable table)
-		{
-			return this.NewRowIdInTable (transaction, table, 0);
-		}
-
-		/// <summary>
-		/// Gets the first available row id in the specified table and allocates
-		/// room for the specified number of keys.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="table">The table.</param>
-		/// <param name="numKeys">The number of keys to allocate.</param>
-		/// <returns>The first row id of a contiguous range.</returns>
-		public long NewRowIdInTable(DbTransaction transaction, DbTable table, int numKeys)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (numKeys >= 0);
-			
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
-			Collections.SqlFieldList conds  = new Collections.SqlFieldList ();
-			
-			SqlField fieldNextId = SqlField.CreateName (Tags.ColumnNextId);
-			SqlField fieldConstN = SqlField.CreateConstant (numKeys, DbRawType.Int32);
-			
-			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionCode.MathAdd, fieldNextId, fieldConstN));
-			
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, table.Key);
-			
-			if (numKeys > 0)
-			{
-				transaction.SqlBuilder.UpdateData (Tags.TableTableDef, fields, conds);
-				this.ExecuteSilent (transaction);
-			}
-			
-			SqlSelect query = new SqlSelect ();
-
-			System.Diagnostics.Debug.Assert (conds.Count == 1);
-
-			query.Fields.Add (fieldNextId);
-			query.Tables.Add (SqlField.CreateName (Tags.TableTableDef));
-			query.Conditions.Add (conds[0]);
-			
-			transaction.SqlBuilder.SelectData (query);
-			
-			return InvariantConverter.ToLong (this.ExecuteScalar (transaction)) - numKeys;
-		}
-
-		/// <summary>
 		/// Adds a SELECT extraction condition for a key in a table.
 		/// </summary>
 		/// <param name="conditions">The conditions.</param>
@@ -2435,11 +2336,6 @@ namespace Epsitec.Cresus.Database
 		/// <param name="transaction">The transaction.</param>
 		private void SetupTables(DbTransaction transaction)
 		{
-			long typeKeyId   = DbId.CreateId (1, this.clientId);
-			long tableKeyId  = DbId.CreateId (1, this.clientId);
-			long columnKeyId = DbId.CreateId (1, this.clientId);
-			long clientKeyId = DbId.CreateId (1, this.clientId);
-
 			System.Diagnostics.Debug.Assert (this.logger == null);
 			
 			//	Minimal logger definition. We must be able to access to the
@@ -2456,8 +2352,8 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (DbTypeDef typeDef in this.internalTypes)
 			{
-				typeDef.DefineKey (new DbKey (typeKeyId++));
-				this.InsertTypeDefRow (transaction, typeDef);
+				DbKey dbKey = this.InsertTypeDefRow (transaction, typeDef);
+				typeDef.DefineKey (dbKey);
 			}
 			
 			//	Then, fill the table definition table and the column definition
@@ -2465,15 +2361,14 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (DbTable table in this.internalTables)
 			{
-				table.DefineKey (new DbKey (tableKeyId++));
 				table.UpdatePrimaryKeyInfo ();
-				
-				this.InsertTableDefRow (transaction, table);
+				DbKey tableDbKey = this.InsertTableDefRow (transaction, table);
+				table.DefineKey (tableDbKey);
 				
 				foreach (DbColumn column in table.Columns)
 				{
-					column.DefineKey (new DbKey (columnKeyId++));
-					this.InsertColumnDefRow (transaction, table, column);
+					DbKey columnDbKey = this.InsertColumnDefRow (transaction, table, column);
+					column.DefineKey (columnDbKey);
 				}
 			}
 			
@@ -2488,10 +2383,6 @@ namespace Epsitec.Cresus.Database
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefType,   Tags.TableTypeDef);
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTarget, Tags.TableTableDef);
 			
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTableDef], tableKeyId);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableColumnDef], columnKeyId);
-			this.UpdateTableNextId (transaction, this.internalTables[Tags.TableTypeDef], typeKeyId);
-			
 			//	Now that everything is properly defined, we may attach the
 			//	logger to the database :
 			
@@ -2499,7 +2390,6 @@ namespace Epsitec.Cresus.Database
 			this.logger.CreateInitialEntry (transaction);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
-			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internalTables[Tags.TableLog]) == DbId.CreateId (2, this.clientId));
 		}
 
 		/// <summary>
@@ -2556,24 +2446,30 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="typeDef">The type definition.</param>
-		private void InsertTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
+		private DbKey InsertTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
 			
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
+			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName),
+				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)),
+			};
 
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnId],          typeDef.Key.Id));
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus));
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name));
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName));
-			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)));
-			
-			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fields);
-			this.ExecuteSilent (transaction);
+			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			{
+				new SqlField() { Alias = typeDefTable.Columns[Tags.ColumnId].GetSqlName (), },
+			};
+
+			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+			object data = this.ExecuteScalar (transaction);
+
+			return new DbKey (new DbId ((long) data));
 		}
 
 		/// <summary>
@@ -2581,27 +2477,32 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table definition.</param>
-		private void InsertTableDefRow(DbTransaction transaction, DbTable table)
+		private DbKey InsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
-			
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnId],		    table.Key.Id));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)));
-			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnNextId],      DbId.CreateId (1, this.clientId)));
-			
-			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
-			this.ExecuteSilent (transaction);
+			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName),
+				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)),
+			};
+
+			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			{
+				new SqlField() { Alias = tableDefTable.Columns[Tags.ColumnId].GetSqlName (), },
+			};
+
+			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+			object data = this.ExecuteScalar (transaction);
 
 			this.ClearSourceReferenceResolver ();
+
+			return new DbKey (new DbId ((long) data));
 		}
 
 		/// <summary>
@@ -2612,28 +2513,34 @@ namespace Epsitec.Cresus.Database
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="table">The table definition.</param>
 		/// <param name="column">The column definition.</param>
-		private void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
+		private DbKey InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
-			
-			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnId],          column.Key.Id));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id));
-			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id));
-			
-			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
-			this.ExecuteSilent (transaction);
+			Collections.SqlFieldList fieldsToInsert = new Collections.SqlFieldList ()
+			{
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id),
+				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id),
+			};
+
+			Collections.SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+			{
+				new SqlField() { Alias = columnDefTable.Columns[Tags.ColumnId].GetSqlName (), },
+			};
+
+			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+			object data = this.ExecuteScalar (transaction);
 
 			this.ClearSourceReferenceResolver ();
+
+			return new DbKey (new DbId ((long) data));
 		}
 
 		protected override void Dispose(bool disposing)
@@ -2723,13 +2630,12 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTableDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
 						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal)
 					};
 
 				this.CreateTable (table, columns);
@@ -2741,7 +2647,7 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableColumnDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal),
@@ -2749,7 +2655,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal)
+						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal),
 					};
 				
 				this.CreateTable (table, columns);
@@ -2761,12 +2667,12 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableTypeDef);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable),
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
 						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
 						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal)
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
 					};
 				
 				this.CreateTable (table, columns);
@@ -2778,8 +2684,8 @@ namespace Epsitec.Cresus.Database
 				DbTable    table   = new DbTable (Tags.TableLog);
 				DbColumn[] columns = new DbColumn[]
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable),
-						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.Immutable)
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
+						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.Immutable),
 					};
 				
 				//	TODO: add a column recording the nature of the change and the author of the change...

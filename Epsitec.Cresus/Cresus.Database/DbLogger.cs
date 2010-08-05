@@ -87,7 +87,13 @@ namespace Epsitec.Cresus.Database
 			//	enregistré dans le LOG. Ainsi, id.ClientId n'est pas nécessairement égal à
 			//	l'identificateur de client actif.
 			
-			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.table);
+			// TODO This was how it was done before, but this method does not exist anymore, so I
+			// replaced the call with a dummy initialization. This should be corrected when the
+			// logs will be used.
+			// Marc
+
+			//DbId id = this.infrastructure.NextRowIdInTable (transaction, this.table);
+			DbId id = new DbId (1);
 			
 			this.nextId    = id.LocalId;
 			this.currentId = DbId.CreateId (this.nextId - 1, id.ClientId);
@@ -330,7 +336,9 @@ namespace Epsitec.Cresus.Database
 				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
 				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
 
-				this.infrastructure.UpdateTableNextId (transaction, this.table, DbId.CreateId (nextId, entry.Id.ClientId));
+				// TODO This method does not exist anymore, a workaround must be found when we really
+				// use the logs.
+				//this.infrastructure.UpdateTableNextId (transaction, this.table, DbId.CreateId (nextId, entry.Id.ClientId));
 
 				this.nextId    = nextId;
 				this.currentId = entry.Id;

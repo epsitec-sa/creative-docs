@@ -1069,7 +1069,10 @@ namespace Epsitec.Cresus.Database
 			DbTypeDef statusType = infrastructure.ResolveLoadedDbType (Tags.TypeKeyStatus);
 			DbTypeDef rankType   = infrastructure.ResolveLoadedDbType (Tags.TypeCollectionRank);
 
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnId,          refIdType,  DbColumnClass.KeyId,       DbElementCat.Internal));
+			relationTable.Columns.Add (new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
+			{
+				IsAutoIncremented = true,
+			});
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnStatus,      statusType, DbColumnClass.KeyStatus,   DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType,  DbColumnClass.RefInternal, DbElementCat.Internal));

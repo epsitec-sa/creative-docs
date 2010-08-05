@@ -67,28 +67,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public DbKey GetNewDbKey(DbTransaction transaction, AbstractEntity entity)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (leafEntityId);
-
-			DbTable table = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
-
-			return this.GetNewDbKeys (transaction, table, 1).Single ();
-		}
-
-
-		private IEnumerable<DbKey> GetNewDbKeys(DbTransaction transaction, DbTable table, int count)
-		{
-			long start = this.DbInfrastructure.NewRowIdInTable (transaction, table, count);
-
-			for (long newId = start; newId < start + count; newId++)
-			{
-				yield return new DbKey (new DbId (newId));
-			}
-		}
-
-
 		public IEnumerable<AbstractSynchronisationJob> InsertEntityValues(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
 		{
 			this.InsertEntityValuesWorker (transaction, newEntityKeys, entity);
@@ -153,13 +131,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
 
-			if (localEntityId == rootEntityId)
-			{
-				newEntityKeys[entity] = this.GetNewDbKey (transaction, entity);
-			}
-			
-			DbKey dbKey = this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
-						
 			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 			
 			SqlFieldList fields = new SqlFieldList ();
@@ -170,7 +141,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			fields.AddRange (this.CreateSqlFields (table, entity, localEntityId, fieldIds));
 
-			fields.Add (this.CreateSqlFieldForKey (table, dbKey));
 			fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
 			fields.Add (this.CreateSqlFieldForLog (table));
 
@@ -178,12 +148,35 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				fields.Add (this.CreateSqlFieldForType (table, leafEntityId));
 			}
+			else
+			{
+				DbKey dbKey = this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
+
+				fields.Add (this.CreateSqlFieldForKey (table, dbKey));
+			}
 
 			string tableName = table.GetSqlName ();
-			
-			transaction.SqlBuilder.InsertData (tableName, fields);
+			if (localEntityId == rootEntityId)
+			{
+				DbColumn column = table.Columns[Tags.ColumnId];
 
-			this.DbInfrastructure.ExecuteNonQuery (transaction);
+				SqlFieldList fieldsToReturn = new SqlFieldList ()
+				{
+					new SqlField () { Alias = column.GetSqlName() },
+				};
+				
+				transaction.SqlBuilder.InsertData (tableName, fields, fieldsToReturn);
+
+				object data = this.DbInfrastructure.ExecuteScalar (transaction);
+
+				newEntityKeys[entity] = new DbKey (new DbId ((long) data));
+			}
+			else
+			{
+				transaction.SqlBuilder.InsertData (tableName, fields);
+
+				this.DbInfrastructure.ExecuteNonQuery (transaction);
+			}
 		}
 
 
@@ -468,13 +461,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			string tableName = table.GetSqlName ();
 				
 			List<DbKey> targetKeysList = targetKeys.ToList ();
-			List<DbKey> dbKeys = this.GetNewDbKeys (transaction, table, targetKeysList.Count).ToList ();
 
 			for (int rank = 0; rank < targetKeysList.Count; rank++)
 			{
 				SqlFieldList fields = new SqlFieldList ();
 
-				fields.Add (this.CreateSqlFieldForKey (table, dbKeys[rank]));
 				fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
 				fields.Add (this.CreateSqlFieldForSourceId (table, sourceKey));
 				fields.Add (this.CreateSqlFieldForTargetId (table, targetKeysList[rank]));
