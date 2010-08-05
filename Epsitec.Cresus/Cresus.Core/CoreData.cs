@@ -292,6 +292,7 @@ namespace Epsitec.Cresus.Core
 			dataContext.CreateSchema<NumericValueArticleParameterDefinitionEntity> ();
 			
 			dataContext.CreateSchema<PaymentDetailEventEntity> ();
+			dataContext.CreateSchema<TotalDocumentItemEntity> ();
 		}
 
 		private void PopulateDatabase()
