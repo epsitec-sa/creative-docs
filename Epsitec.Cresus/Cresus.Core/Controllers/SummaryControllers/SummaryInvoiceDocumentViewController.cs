@@ -79,12 +79,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (
 				new SummaryData
 				{
-					AutoGroup          = true,
-					Name		       = "BillingDetails",
-					IconUri		       = "Data.BillingDetails",
-					Title		       = UIBuilder.FormatText ("Facturation"),
-					CompactTitle       = UIBuilder.FormatText ("Facturation"),
-					Text		       = CollectionTemplate.DefaultEmptyText,
+					AutoGroup    = true,
+					Name		 = "BillingDetails",
+					IconUri		 = "Data.BillingDetails",
+					Title		 = UIBuilder.FormatText ("Facturation"),
+					CompactTitle = UIBuilder.FormatText ("Facturation"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext)
@@ -154,14 +154,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				return GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
 			}
 
+			if (documentItemEntity is PriceDocumentItemEntity)
+			{
+				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
+			}
+
 			if (documentItemEntity is TaxDocumentItemEntity)
 			{
 				return GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
 			}
 
-			if (documentItemEntity is PriceDocumentItemEntity)
+			if (documentItemEntity is TotalDocumentItemEntity)
 			{
-				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
+				return GetTotalDocumentItemSummary (documentItemEntity as TotalDocumentItemEntity);
 			}
 
 			return null;
@@ -190,23 +195,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			if (string.IsNullOrEmpty (text))
 			{
 				return "<i>Article</i>";
-			}
-			else
-			{
-				return text;
-			}
-		}
-
-		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
-		{
-			var desc = x.Text;
-			var tax = Misc.PriceToString (x.ResultingTax);
-
-			string text = string.Join (" ", desc, tax);
-
-			if (string.IsNullOrEmpty (text))
-			{
-				return "<i>TVA</i>";
 			}
 			else
 			{
@@ -260,10 +248,53 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (first)
 			{
-				builder.Append ("<i>Total</i>");
+				builder.Append ("<i>Sous-total</i>");
 			}
 
 			return builder.ToString ();
+		}
+
+		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
+		{
+			var desc = x.Text;
+			var tax = Misc.PriceToString (x.ResultingTax);
+
+			string text = string.Join (" ", desc, tax);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return "<i>TVA</i>";
+			}
+			else
+			{
+				return text;
+			}
+		}
+
+		private static string GetTotalDocumentItemSummary(TotalDocumentItemEntity x)
+		{
+			var desc = x.PrimaryPriceAfterTax;
+
+			string total;
+			if (x.FixedPriceAfterTax.HasValue)
+			{
+				 total = Misc.PriceToString (x.FixedPriceAfterTax);
+			}
+			else
+			{
+				total = Misc.PriceToString (x.PrimaryPriceAfterTax);
+			}
+
+			string text = string.Join (" ", desc, total);
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return "<i>Total</i>";
+			}
+			else
+			{
+				return text;
+			}
 		}
 
 

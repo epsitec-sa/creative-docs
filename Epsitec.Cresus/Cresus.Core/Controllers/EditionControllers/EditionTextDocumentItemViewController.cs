@@ -53,8 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			List<string> pagesDescription = new List<string> ();
 			pagesDescription.Add ("Text.Texte");
 			pagesDescription.Add ("Article.Article");
-			pagesDescription.Add ("TVA.TVA");
-			pagesDescription.Add ("Price.Total");
+			pagesDescription.Add ("Price.Sous-total");
 			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Text", this.HandleTabBookAction);
 		}
 

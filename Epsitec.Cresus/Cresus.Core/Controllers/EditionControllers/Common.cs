@@ -38,21 +38,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			parentController.DataContext.DeleteEntity (entity);  // supprime dans le DataContext de la facture
 
 			//	Crée la nouvelle entité.
-			AbstractDocumentItemEntity newEntity;
+			AbstractDocumentItemEntity newEntity = null;
 
 			if (tabPageName == "Text")
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
 			}
-			else if (tabPageName == "TVA")
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<TaxDocumentItemEntity> ();
-			}
-			else if (tabPageName == "Price")
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
-			}
-			else
+			else if (tabPageName == "Article")
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
 
@@ -60,7 +52,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				article.BeginDate = invoiceDocument.CreationDate;
 				article.EndDate   = invoiceDocument.CreationDate;
 			}
+			else if (tabPageName == "Price")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+			}
 
+			System.Diagnostics.Debug.Assert (newEntity != null);
 			newEntity.Visibility = true;
 
 			invoiceDocument.Lines.Insert (index, newEntity);
