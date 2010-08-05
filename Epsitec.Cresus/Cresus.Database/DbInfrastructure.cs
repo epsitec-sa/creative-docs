@@ -1269,21 +1269,6 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
-			if (!string.IsNullOrEmpty (table.Comment))
-			{
-				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
-				this.ExecuteSilent (transaction);
-			}
-
-			foreach (SqlColumn column in sqlTable.Columns)
-			{
-				if (!string.IsNullOrEmpty (column.Comment))
-				{
-					transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, column.Comment);
-					this.ExecuteSilent (transaction);
-				}
-			}
-
 			//	Create the revision tracking table, if needed :
 
 			if (table.RevisionMode == DbRevisionMode.TrackChanges)
@@ -1319,12 +1304,6 @@ namespace Epsitec.Cresus.Database
 
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
-
-			if (!string.IsNullOrEmpty (table.Comment))
-			{
-				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
-				this.ExecuteSilent (transaction);
-			}
 		}
 
 		/// <summary>

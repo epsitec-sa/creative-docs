@@ -90,17 +90,10 @@ namespace Epsitec.Cresus.Database
 		void InsertTable(SqlTable table);
 
 		/// <summary>
-		/// Sets the comment of a table.
-		/// </summary>
-		/// <param name="tableName">The name of the table whose comment to set.</param>
-		/// <param name="comment">The value of the comment.</param>
-		void SetTableComment(string tableName, string comment);
-
-		/// <summary>
 		/// Removes the specified table from the database.
 		/// </summary>
-		/// <param name="tableName">Name of the table.</param>
-		void RemoveTable(string tableName);
+		/// <param name="table">The table.</param>
+		void RemoveTable(SqlTable table);
 		
 		/// <summary>
 		/// Inserts columns into the table definition.
@@ -108,14 +101,6 @@ namespace Epsitec.Cresus.Database
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="columns">The columns.</param>
 		void InsertTableColumns(string tableName, SqlColumn[] columns);
-
-		/// <summary>
-		/// Sets the comment of a column in a table.
-		/// </summary>
-		/// <param name="tableName">The name of the table containing the column.</param>
-		/// <param name="columnName">The name of the column whose comment to set.</param>
-		/// <param name="comment">The value of the comment.</param>
-		void SetTableColumnComment(string tableName, string columnName, string comment);
 
 		/// <summary>
 		/// Updates the columns in a table definition.
