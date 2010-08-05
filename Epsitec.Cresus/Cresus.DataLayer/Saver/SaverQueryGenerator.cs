@@ -74,11 +74,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			DbTable table = this.SchemaEngine.GetEntityTableDefinition (rootEntityId);
 
-			return this.GetNewDbKsys (transaction, table, 1).Single ();
+			return this.GetNewDbKeys (transaction, table, 1).Single ();
 		}
 
 
-		private IEnumerable<DbKey> GetNewDbKsys(DbTransaction transaction, DbTable table, int count)
+		private IEnumerable<DbKey> GetNewDbKeys(DbTransaction transaction, DbTable table, int count)
 		{
 			long start = this.DbInfrastructure.NewRowIdInTable (transaction, table, count);
 
@@ -89,33 +89,47 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public IEnumerable<AbstractSynchronisationJob> InsertEntity(DbTransaction transaction, AbstractEntity entity)
+		public IEnumerable<AbstractSynchronisationJob> InsertEntityValues(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
 		{
-			DbKey dbKey = this.GetDbKey (entity);
-
-			this.InsertEntityValues (transaction, entity, dbKey);
-			this.InsertEntityReferences (transaction, entity, dbKey);
-			this.InsertEntityCollections (transaction, entity, dbKey);
+			this.InsertEntityValuesWorker (transaction, newEntityKeys, entity);
 
 			return new List<AbstractSynchronisationJob> ();
 		}
 
 
-		public IEnumerable<AbstractSynchronisationJob> UpdateEntity(DbTransaction transaction, AbstractEntity entity)
+		public IEnumerable<AbstractSynchronisationJob> InsertEntityRelations(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
 		{
-			DbKey dbKey = this.GetDbKey (entity);
+			DbKey dbKey = this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
+			
+			this.InsertEntityReferences (transaction, newEntityKeys, entity, dbKey);
+			this.InsertEntityCollections (transaction, newEntityKeys, entity, dbKey);
 
-			var jobs1 = this.UpdateEntityValues (transaction, entity, dbKey).ToList ();
-			var jobs2 = this.UpdateEntityReferences (transaction, entity, dbKey).ToList ();
-			var jobs3 = this.UpdateEntityCollections (transaction, entity, dbKey).ToList ();
+			return new List<AbstractSynchronisationJob> ();
+		}
 
-			return jobs1.Concat (jobs2).Concat (jobs3);
+
+		public IEnumerable<AbstractSynchronisationJob> UpdateEntityValues(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
+		{
+			DbKey dbKey = this.GetPersistentEntityDbKey (entity);
+
+			return this.UpdateEntityValues (transaction, newEntityKeys, entity, dbKey).ToList ();
+		}
+
+
+		public IEnumerable<AbstractSynchronisationJob> UpdateEntityRelations(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
+		{
+			DbKey dbKey = this.GetPersistentEntityDbKey (entity);
+
+			var jobs1 = this.UpdateEntityReferences (transaction, newEntityKeys, entity, dbKey).ToList ();
+			var jobs2 = this.UpdateEntityCollections (transaction, newEntityKeys, entity, dbKey).ToList ();
+
+			return jobs1.Concat (jobs2);
 		}
 
 
 		public void DeleteEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			DbKey dbKey = this.GetDbKey (entity);
+			DbKey dbKey = this.GetPersistentEntityDbKey (entity);
 
 			this.DeleteEntityValues (transaction, entity, dbKey);
 			this.DeleteEntitySourceRelations (transaction, entity, dbKey);
@@ -123,19 +137,29 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void InsertEntityValues(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private void InsertEntityValuesWorker(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
+			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId).Reverse ())
 			{
-				this.InsertEntityValues (transaction, entity, localEntityId, dbKey);
+				this.InsertEntityValuesWorker (transaction, newEntityKeys, entity, localEntityId);
 			}
 		}
 
 
-		private void InsertEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
+		private void InsertEntityValuesWorker(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid localEntityId)
 		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
+
+			if (localEntityId == rootEntityId)
+			{
+				newEntityKeys[entity] = this.GetNewDbKey (transaction, entity);
+			}
+			
+			DbKey dbKey = this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
+						
 			DbTable table = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
 			
 			SqlFieldList fields = new SqlFieldList ();
@@ -150,9 +174,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			fields.Add (this.CreateSqlFieldForStatus (table, DbRowStatus.Live));
 			fields.Add (this.CreateSqlFieldForLog (table));
 
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
-
 			if (localEntityId == rootEntityId)
 			{
 				fields.Add (this.CreateSqlFieldForType (table, leafEntityId));
@@ -166,13 +187,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractSynchronisationJob> UpdateEntityValues(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private IEnumerable<AbstractSynchronisationJob> UpdateEntityValues(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			foreach (Druid localEntityId in this.EntityContext.GetInheritedEntityIds (leafEntityId))
 			{
-				var newJobs = this.UpdateEntityValues (transaction, entity, localEntityId, dbKey);
+				var newJobs = this.UpdateEntityValues (transaction, newEntityKeys, entity, localEntityId, dbKey);
 
 				foreach (var newJob in newJobs)
 				{
@@ -182,7 +203,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractSynchronisationJob> UpdateEntityValues(DbTransaction transaction, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
+		private IEnumerable<AbstractSynchronisationJob> UpdateEntityValues(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid localEntityId, DbKey dbKey)
 		{
 			SqlFieldList fields = new SqlFieldList ();
 
@@ -212,7 +233,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				yield return this.CreateValueSynchronizationJob (entity, fieldId);
+				yield return this.CreateValueSynchronizationJob (newEntityKeys, entity, fieldId);
 			}
 		}
 
@@ -243,7 +264,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void InsertEntityReferences(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private void InsertEntityReferences(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -253,12 +274,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				this.InsertEntityReference (transaction, entity, fieldId, dbKey);
+				this.InsertEntityReference (transaction, newEntityKeys, entity, fieldId, dbKey);
 			}
 		}
 
 
-		private void InsertEntityReference(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
+		private void InsertEntityReference(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
@@ -267,14 +288,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
 			{
-				List<DbKey> targetKeys = new List<DbKey> () { this.GetDbKey (target) };
+				List<DbKey> targetKeys = new List<DbKey> ()
+				{
+					this.GetEntityDbKey (target, newEntityKeys)
+				};
 
 				this.InsertEntityRelation (transaction, localEntityId, fieldId, dbKey, targetKeys);
 			}
 		}
 
 
-		private void InsertEntityCollections(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private void InsertEntityCollections(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -284,12 +308,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				this.InsertEntityCollection (transaction, entity, fieldId, dbKey);
+				this.InsertEntityCollection (transaction, newEntityKeys, entity, fieldId, dbKey);
 			}
 		}
 
 
-		private void InsertEntityCollection(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
+		private void InsertEntityCollection(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
@@ -297,7 +321,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			List<DbKey> targetKeys = new List<DbKey> (
 				from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
 				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
-				select this.GetDbKey (target)
+				select this.GetEntityDbKey (target, newEntityKeys)
 			);
 
 			if (targetKeys.Any ())
@@ -307,7 +331,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractSynchronisationJob> UpdateEntityReferences(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private IEnumerable<AbstractSynchronisationJob> UpdateEntityReferences(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -319,7 +343,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				var newJob = this.UpdateEntityReference (transaction, entity, fieldId, dbKey);
+				var newJob = this.UpdateEntityReference (transaction, newEntityKeys, entity, fieldId, dbKey);
 
 				if (newJob != null)
 				{
@@ -329,7 +353,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private AbstractSynchronisationJob UpdateEntityReference(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
+		private AbstractSynchronisationJob UpdateEntityReference(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
 			// TODO This function might be optimized in the following way. I'm not too sure if it
 			// would be better than the current implementation.
@@ -342,13 +366,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, dbKey);
 
-			this.InsertEntityReference (transaction, entity, fieldId, dbKey);
+			this.InsertEntityReference (transaction, newEntityKeys, entity, fieldId, dbKey);
 
-			return this.CreateReferenceSynchronizationJob (entity, fieldId);
+			return this.CreateReferenceSynchronizationJob (newEntityKeys, entity, fieldId);
 		}
 
 
-		private IEnumerable<AbstractSynchronisationJob> UpdateEntityCollections(DbTransaction transaction, AbstractEntity entity, DbKey dbKey)
+		private IEnumerable<AbstractSynchronisationJob> UpdateEntityCollections(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, DbKey dbKey)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -360,14 +384,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (Druid fieldId in fieldIds)
 			{
-				var newJob = this.UpdateEntityCollection (transaction, entity, fieldId, dbKey);
+				var newJob = this.UpdateEntityCollection (transaction, newEntityKeys, entity, fieldId, dbKey);
 
 				yield return newJob;
 			}
 		}
 
 
-		private AbstractSynchronisationJob UpdateEntityCollection(DbTransaction transaction, AbstractEntity entity, Druid fieldId, DbKey dbKey)
+		private AbstractSynchronisationJob UpdateEntityCollection(DbTransaction transaction, Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId, DbKey dbKey)
 		{
 			// TODO This function might be optimized by having a better policy to delete/update/Insert
 			// the relation rows. It could take advantage to what already exists in the database, which
@@ -381,9 +405,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, dbKey);
 
-			this.InsertEntityCollection (transaction, entity, fieldId, dbKey);
+			this.InsertEntityCollection (transaction, newEntityKeys, entity, fieldId, dbKey);
 
-			return this.CreateCollectionSynchronizationJob (entity, fieldId);
+			return this.CreateCollectionSynchronizationJob (newEntityKeys, entity, fieldId);
 		}
 
 
@@ -444,7 +468,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			string tableName = table.GetSqlName ();
 				
 			List<DbKey> targetKeysList = targetKeys.ToList ();
-			List<DbKey> dbKeys = this.GetNewDbKsys (transaction, table, targetKeysList.Count).ToList ();
+			List<DbKey> dbKeys = this.GetNewDbKeys (transaction, table, targetKeysList.Count).ToList ();
 
 			for (int rank = 0; rank < targetKeysList.Count; rank++)
 			{
@@ -722,16 +746,35 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private DbKey GetDbKey(AbstractEntity entity)
+		private DbKey GetPersistentEntityDbKey(AbstractEntity entity)
 		{
 			return this.DataContext.GetEntityKey (entity).Value.RowKey;
 		}
 
 
-		private AbstractSynchronisationJob CreateValueSynchronizationJob(AbstractEntity entity, Druid fieldId)
+		private DbKey GetNonPersistentEntityDbKey(AbstractEntity entity, Dictionary<AbstractEntity, DbKey> newEntityKeys)
+		{
+			return newEntityKeys[entity];
+		}
+
+
+		private DbKey GetEntityDbKey(AbstractEntity entity, Dictionary<AbstractEntity, DbKey> newEntityKeys)
+		{
+			if (this.DataContext.IsPersistent (entity))
+			{
+				return this.GetPersistentEntityDbKey (entity);
+			}
+			else
+			{
+				return this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
+			}
+		}
+
+
+		private AbstractSynchronisationJob CreateValueSynchronizationJob(Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId)
 		{
 			int dataContextId = this.DataContext.UniqueId;
-			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+			EntityKey entityKey = this.GetEntityKey (entity, newEntityKeys);
 
 			string fieldName = fieldId.ToResourceId ();
 			object newValue = entity.GetField<object> (fieldName);
@@ -740,10 +783,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private AbstractSynchronisationJob CreateReferenceSynchronizationJob(AbstractEntity entity, Druid fieldId)
+		private AbstractSynchronisationJob CreateReferenceSynchronizationJob(Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId)
 		{
 			int dataContextId = this.DataContext.UniqueId;
-			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+			EntityKey entityKey = this.GetEntityKey (entity, newEntityKeys);
 
 			string fieldName = fieldId.ToResourceId ();
 			AbstractEntity target = entity.GetField<AbstractEntity> (fieldName);
@@ -754,9 +797,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				job = new ReferenceSynchronizationJob (dataContextId, entityKey, fieldId, null);
 			}
-			else if (this.DataContext.IsPersistent (target))
+			else if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
 			{
-				EntityKey? newValue = this.DataContext.GetEntityKey (target);
+				EntityKey newValue = this.GetEntityKey (target, newEntityKeys);
 
 				job = new ReferenceSynchronizationJob (dataContextId, entityKey, fieldId, newValue);
 			}
@@ -765,17 +808,36 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private AbstractSynchronisationJob CreateCollectionSynchronizationJob(AbstractEntity entity, Druid fieldId)
+		private AbstractSynchronisationJob CreateCollectionSynchronizationJob(Dictionary<AbstractEntity, DbKey> newEntityKeys, AbstractEntity entity, Druid fieldId)
 		{
 			int dataContextId = this.DataContext.UniqueId;
-			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+			EntityKey entityKey = this.GetEntityKey (entity, newEntityKeys);
 
 			string fieldName = fieldId.ToResourceId ();
 			var newValues = from e in entity.GetFieldCollection<AbstractEntity> (fieldName)
-							where this.DataContext.IsPersistent (e)
-							select this.DataContext.GetEntityKey (e).Value;
+							where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (e)
+							select this.GetEntityKey (e, newEntityKeys);
 
 			return new CollectionSynchronizationJob (dataContextId, entityKey, fieldId, newValues);
+		}
+
+
+		private EntityKey GetEntityKey(AbstractEntity entity, Dictionary<AbstractEntity, DbKey> newEntityKeys)
+		{
+			EntityKey entityKey;
+			
+			if (this.DataContext.IsPersistent (entity))
+			{
+				entityKey = this.DataContext.GetEntityKey (entity).Value;
+			}
+			else
+			{
+				DbKey dbKey = this.GetNonPersistentEntityDbKey (entity, newEntityKeys);
+
+				entityKey = new EntityKey (entity, dbKey);
+			}
+
+			return entityKey;
 		}
 
 
