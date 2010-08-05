@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					var article = line as ArticleDocumentItemEntity;
 
-					ArticleDocumentItemHelper.UpdatePrices (article);
+					ArticleDocumentItemHelper.UpdatePrices (x, article);
 
 					primarySubtotalBeforeTax += article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
 					primarySubtotalTax       += article.ResultingLineTax.GetValueOrDefault (0);
