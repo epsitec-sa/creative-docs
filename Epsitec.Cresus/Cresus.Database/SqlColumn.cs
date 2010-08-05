@@ -179,9 +179,31 @@ namespace Epsitec.Cresus.Database
 
 		public string Comment
 		{
-			get;
-			set;
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
 		}
+
+
+		public bool IsAutoIncremented
+		{
+			get
+			{
+				return this.isAutoIncremented;
+			}
+			set
+			{
+				this.isAutoIncremented = value;
+			}
+		}
+
+
+
 
 		/// <summary>
 		/// Sets the type.
@@ -231,8 +253,10 @@ namespace Epsitec.Cresus.Database
 		}
 
 		private string							name;
+		private string							comment;
 		private DbRawType						type;
 		private bool							isNullable;
+		private bool							isAutoIncremented;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
 		private DbCharacterEncoding				encoding;
