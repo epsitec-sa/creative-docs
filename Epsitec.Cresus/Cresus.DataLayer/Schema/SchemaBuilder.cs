@@ -88,10 +88,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <returns>The root <see cref="DbTable"/>.</returns>
 		private DbTable GetOrCreateTable(DbTransaction transaction, List<DbTable> newTables, Druid entityId)
 		{
-			// Ok, this looks like kind of simple to me, to simple to be alright, so I'll explain.
+			// Ok, this looks like kind of simple to me, to simple too be alright, so I'll explain.
 			// The ?? operator ensures that first we look in the cache. If there is something in the
 			// cache, we stop here, but if we have nothing in the cache, we get a null and thus, we
-			// look in the database. Again, if we have nothing in the database, we go on and CreateDataColumn
+			// look in the database. Again, if we have nothing in the database, we go on and create
 			// the DbTable.
 			// Marc
 			
