@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -122,6 +123,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextFieldMulti (tile, 36, "Texte <i>Concerne</i> imprimé", Marshaler.Create (() => this.Entity.DocumentTitle, x => this.Entity.DocumentTitle = x));
 			builder.CreateTextField      (tile,  0, "Description interne",           Marshaler.Create (() => this.Entity.Description,   x => this.Entity.Description = x));
 
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			FrameBox group = builder.CreateGroup (tile, "Totaux calculé et arrêté TTC");
+			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
+			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetFixedPrice, this.SetFixedPrice));
+			t.IsReadOnly = true;
+
 #if true
 			// TODO: à supprimer un jour...
 			builder.CreateMargin (tile, horizontalSeparator: false);
@@ -165,6 +173,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
 										 x.Address.Street.StreetName, "~,",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
+		}
+
+
+		private string GetTotalPrice()
+		{
+			return Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceTTC (this.Entity));
+		}
+
+		private void SetTotalPrice(string value)
+		{
+			// Rien à faire, le widget est readonly !
+		}
+
+		private string GetFixedPrice()
+		{
+			return Misc.PriceToString (InvoiceDocumentHelper.GetFixedPrice (this.Entity));
+		}
+
+		private void SetFixedPrice(string value)
+		{
+			InvoiceDocumentHelper.SetFixedPrice (this.Entity, Misc.StringToDecimal (value));
 		}
 
 

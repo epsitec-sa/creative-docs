@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string GetDateTimeShortDescription(System.DateTime dateTime)
+		public static string GetDateTimeShortDescription(System.DateTime? dateTime)
 		{
 			if (dateTime == null)
 			{
@@ -88,11 +88,11 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return dateTime.ToString ("dd.MM.yyyy");  // par exemple 31.03.2010
+				return dateTime.Value.ToString ("dd.MM.yyyy");  // par exemple 06.03.2011
 			}
 		}
 
-		public static string GetDateTimeDescription(System.DateTime dateTime)
+		public static string GetDateTimeDescription(System.DateTime? dateTime)
 		{
 			if (dateTime == null)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return dateTime.ToString ("dd MMMM yyyy");  // par exemple 31 mars 2010
+				return dateTime.Value.ToString ("d MMMM yyyy");  // par exemple 6 mars 2011
 			}
 		}
 
