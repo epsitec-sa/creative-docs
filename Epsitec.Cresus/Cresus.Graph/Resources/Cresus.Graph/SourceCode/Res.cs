@@ -12,6 +12,18 @@ namespace Epsitec.Cresus
 		
 		public static class Commands
 		{
+			public static class ChartOptions
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/BVAT
+				public static readonly global::Epsitec.Common.Widgets.Command ShowSeriesCaptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
+				//	designer:cap/BVAU
+				public static readonly global::Epsitec.Common.Widgets.Command ShowSummaryCaptions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+			}
+			
 			public static class File
 			{
 				internal static void _Initialize()
@@ -54,6 +66,7 @@ namespace Epsitec.Cresus
 			
 			internal static void _Initialize()
 			{
+				ChartOptions._Initialize ();
 				File._Initialize ();
 				General._Initialize ();
 				GraphType._Initialize ();
@@ -62,6 +75,14 @@ namespace Epsitec.Cresus
 		
 		public static class CommandIds
 		{
+			public static class ChartOptions
+			{
+				//	designer:cap/BVAT
+				public const long ShowSeriesCaptions = 0x3EB0000A00001DL;
+				//	designer:cap/BVAU
+				public const long ShowSummaryCaptions = 0x3EB0000A00001EL;
+			}
+			
 			public static class File
 			{
 				//	designer:cap/BVA5

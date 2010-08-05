@@ -1,10 +1,13 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Jonas SCHMID, Maintainer: Pierre ARNAUD, Jonas SCHMID
 
-using System.Xml.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+
+using System.Xml.Linq;
+
 namespace Epsitec.Cresus.Graph
 {
     /// <summary>
@@ -25,6 +28,8 @@ namespace Epsitec.Cresus.Graph
                 {
                     var oldValue = this.showFixedCaptions;
                     this.showFixedCaptions = value;
+
+					GraphProgram.Application.SetActiveState (Res.Commands.ChartOptions.ShowSummaryCaptions, value ? ActiveState.Yes : ActiveState.No);
 
                     // Fire the event if needed
                     if(this.ShowFixedCaptionsChanged != null)
