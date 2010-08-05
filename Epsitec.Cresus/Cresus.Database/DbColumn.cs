@@ -394,8 +394,27 @@ namespace Epsitec.Cresus.Database
 
 		public string Comment
 		{
-			get;
-			set;
+			get
+			{
+				return this.comment;
+			}
+			set
+			{
+				this.comment = value;
+			}
+		}
+
+
+		public bool IsAutoIncremented
+		{
+			get
+			{
+				return this.isAutoIncremented;
+			}
+			set
+			{
+				this.isAutoIncremented = value;
+			}
 		}
 
 
@@ -790,6 +809,7 @@ namespace Epsitec.Cresus.Database
 			column.Comment = this.Comment;
 			column.IsNullable = this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
+			column.IsAutoIncremented = this.IsAutoIncremented;
 	
 			return column;
 		}
@@ -883,14 +903,16 @@ namespace Epsitec.Cresus.Database
 				DbColumn column = new DbColumn ();
 				bool isEmptyElement = xmlReader.IsEmptyElement;
 
-				column.captionId       = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
-				column.category        = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
-				column.revisionMode    = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
-				column.columnClass     = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
-				column.cardinality     = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
-				column.localization    = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
-				column.isPrimaryKey    = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
-				column.targetTableName = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
+				column.captionId         = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
+				column.category          = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
+				column.revisionMode      = DbTools.ParseRevisionMode (xmlReader.GetAttribute ("rev"));
+				column.columnClass       = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
+				column.cardinality       = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
+				column.localization      = DbTools.ParseLocalization (xmlReader.GetAttribute ("loc"));
+				column.isPrimaryKey      = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
+				column.targetTableName   = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
+				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
+				column.isAutoIncremented = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("inc"));
 
 				if (!isEmptyElement)
 				{
@@ -923,6 +945,8 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "loc", DbTools.ColumnLocalizationToString (this.Localization));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			DbTools.WriteAttribute (xmlWriter, "ttab", DbTools.StringToString (this.TargetTableName));
+			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
+			DbTools.WriteAttribute (xmlWriter, "inc", DbTools.BoolDefaultingToFalseToString (this.isAutoIncremented));
 			
 			xmlWriter.WriteEndElement ();
 		}
@@ -969,6 +993,8 @@ namespace Epsitec.Cresus.Database
 		private DbKey							key;
 		
 		private bool							isPrimaryKey;
+		private bool							isAutoIncremented;
+		private string							comment;
 		private DbElementCat					category;
 		private DbRevisionMode					revisionMode;
 		private DbColumnClass					columnClass;
