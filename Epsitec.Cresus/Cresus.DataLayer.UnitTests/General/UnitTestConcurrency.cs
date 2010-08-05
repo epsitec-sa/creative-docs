@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestInitialize]
-		private void TestInitialize()
+		public void TestInitialize()
 		{
 			DatabaseHelper.CreateAndConnectToDatabase ();
 
