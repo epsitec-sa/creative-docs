@@ -213,10 +213,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			);
 
 			HashSet<AbstractEntity> savedEntities = new HashSet<AbstractEntity> ();
+			Dictionary<AbstractEntity, DbKey> newEntityKeys = new Dictionary<AbstractEntity, DbKey> ();
 
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
-				this.SaveEntity (transaction, savedEntities, synchronizationJobs, entity);
+				this.SaveEntity (transaction, savedEntities, newEntityKeys, synchronizationJobs, entity);
+			}
+
+			foreach (var item in newEntityKeys)
+			{
+				AbstractEntity entity = item.Key;
+				DbKey dbKey = item.Value;
+
+				this.DataContext.DefineRowKey (entity, dbKey);
 			}
 
 			foreach (AbstractEntity entity in savedEntities)
@@ -228,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity entity)
+		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity entity)
 		{
 			if (savedEntities.Contains (entity))
 			{
@@ -248,43 +257,29 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			bool isPersisted = this.DataContext.IsPersistent (entity);
 
-			if (!isPersisted)
-			{
-				DbKey newKey = this.SaverQueryGenerator.GetNewDbKey (transaction, entity);
-
-				this.DataContext.DefineRowKey (entity, newKey);
-			}
-
-			this.SaveTargetsIfNotPersisted (transaction, savedEntities, synchronizationJobs, entity);
-
-			IEnumerable<AbstractSynchronisationJob> newSynchronizationJobs;
-
 			if (isPersisted)
 			{
-				newSynchronizationJobs = this.UpdateEntity (transaction, entity);
+				synchronizationJobs.AddRange (this.SaverQueryGenerator.UpdateEntityValues (transaction, newEntityKeys, entity));
 			}
 			else
 			{
-				newSynchronizationJobs = this.InsertEntity (transaction, entity);
+				synchronizationJobs.AddRange (this.SaverQueryGenerator.InsertEntityValues (transaction, newEntityKeys, entity));
 			}
 
-			synchronizationJobs.AddRange (newSynchronizationJobs);
+			this.SaveTargetsIfNotPersisted (transaction, savedEntities, newEntityKeys, synchronizationJobs, entity);
+
+			if (isPersisted)
+			{
+				synchronizationJobs.AddRange (this.SaverQueryGenerator.UpdateEntityRelations (transaction, newEntityKeys, entity));
+			}
+			else
+			{
+				synchronizationJobs.AddRange (this.SaverQueryGenerator.InsertEntityRelations (transaction, newEntityKeys, entity));
+			}
 		}
 
 
-		private IEnumerable<AbstractSynchronisationJob> InsertEntity(DbTransaction transaction, AbstractEntity entity)
-		{
-			return this.SaverQueryGenerator.InsertEntity (transaction, entity);
-		}
-
-
-		private IEnumerable<AbstractSynchronisationJob> UpdateEntity(DbTransaction transaction, AbstractEntity entity)
-		{
-			return this.SaverQueryGenerator.UpdateEntity (transaction, entity);
-		}
-
-
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source)
 		{
 			Druid leafEntityId = source.GetEntityStructuredTypeId ();
 
@@ -295,12 +290,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (StructuredTypeField field in relations)
 			{
-				this.SaveTargetsIfNotPersisted (transaction, savedEntities, synchronizationJobs, source, field);
+				this.SaveTargetsIfNotPersisted (transaction, savedEntities, newEntityKeys, synchronizationJobs, source, field);
 			}
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
 		{
 			List<AbstractEntity> targets = new List<AbstractEntity> ();
 			
@@ -324,7 +319,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
 			{
-				this.SaveEntity (transaction, savedEntities, synchronizationJobs, target);
+				this.SaveEntity (transaction, savedEntities, newEntityKeys, synchronizationJobs, target);
 			}
 		}
 
