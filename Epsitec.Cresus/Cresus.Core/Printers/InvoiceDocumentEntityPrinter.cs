@@ -621,11 +621,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
 		{
-			var text = string.Concat (line.Text, " (", Misc.PercentToString (line.Rate), ")");
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
-
-			table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, Misc.PriceToString (line.BaseAmount));
-			table.SetText (this.tableColumns[TableColumnKeys.Vat      ].Rank, row, Misc.PriceToString (line.ResultingTax));
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.Text);
+			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.BaseAmount));
+			table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row, Misc.PriceToString (line.ResultingTax));
 
 			return true;
 		}

@@ -52,8 +52,13 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
+#if false
 			int i = (int) (value*100);
 			return string.Concat (i.ToString (), "%");
+#else
+			DecimalRange dr = new DecimalRange (0, 1000000000, 0.1M);
+			return string.Concat (dr.ConvertToString (value.Value*100), "%");
+#endif
 		}
 
 		public static string PriceToString(decimal? value)
