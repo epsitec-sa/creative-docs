@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -79,9 +80,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField             (tile, 150, "Numéro de client",                Marshaler.Create (this.Entity, x => x.IdA,                       (x, v) => x.IdA = v));
-			builder.CreateTextField             (tile, 150, "Numéro externe",                  Marshaler.Create (this.Entity, x => x.IdB,		                (x, v) => x.IdB = v));
-			builder.CreateTextField             (tile, 150, "Numéro interne",                  Marshaler.Create (this.Entity, x => x.IdC,				        (x, v) => x.IdC = v));
+			FrameBox group = builder.CreateGroup (tile, "N° de client (principal, externe et interne)");
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (this.Entity, x => x.IdA, (x, v) => x.IdA = v));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (this.Entity, x => x.IdB, (x, v) => x.IdB = v));
+			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (this.Entity, x => x.IdC, (x, v) => x.IdC = v));
+
 			builder.CreateMargin                (tile, horizontalSeparator: false);
 			builder.CreateTextField             (tile,  90, "Client depuis le",                Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);

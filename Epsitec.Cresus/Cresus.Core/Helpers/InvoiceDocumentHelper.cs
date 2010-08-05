@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static FormattedText GetSummary(InvoiceDocumentEntity x)
 		{
 			string date = Misc.GetDateTimeShortDescription (x.LastModificationDate);
-			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPrice (x));
+			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPriceTTC (x));
 
 			string billing  = GetShortMailContactSummary (x.BillingMailContact).ToString ();
 			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static decimal? GetTotalPrice(InvoiceDocumentEntity x)
+		public static decimal? GetTotalPriceTTC(InvoiceDocumentEntity x)
 		{
 			//	Retourne le prix total TTC d'une facture, en tenant compte du total arrêté s'il existe.
 			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static decimal? GetFixedPrice(InvoiceDocumentEntity x)
+		public static decimal? GetFixedPriceTTC(InvoiceDocumentEntity x)
 		{
 			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
 
@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			return null;
 		}
 
-		public static void SetFixedPrice(InvoiceDocumentEntity x, decimal? value)
+		public static void SetFixedPriceTTC(InvoiceDocumentEntity x, decimal? value)
 		{
 			var lastPriceEntity = InvoiceDocumentHelper.GetLastPriceEntity (x);
 

@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					amountDue += billing.AmountDue.Amount;
 				}
 
-				decimal total = InvoiceDocumentHelper.GetTotalPrice (invoiceDocument).GetValueOrDefault (0);
+				decimal total = InvoiceDocumentHelper.GetTotalPriceTTC (invoiceDocument).GetValueOrDefault (0);
 				this.Entity.AmountDue.Amount = total-amountDue;
 
 				this.tileContainer.UpdateAllWidgets ();
