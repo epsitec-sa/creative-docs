@@ -355,7 +355,12 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			
-			sql_builder.RemoveTable ("FbTestTable");
+			// TODO The next line will not compile anymore since the signature of the method has
+			// been changed. It requires now the SqlTable object, and not the name of the table to
+			// delete.
+			// Marc
+
+			//sql_builder.RemoveTable ("FbTestTable");
 			
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
@@ -413,8 +418,13 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
-			
-			sql_builder.RemoveTable ("FbTestTable");
+
+			// TODO The next line will not compile anymore since the signature of the method has
+			// been changed. It requires now the SqlTable object, and not the name of the table to
+			// delete.
+			// Marc
+
+			//sql_builder.RemoveTable ("FbTestTable");
 			
 			System.Data.IDbCommand command      = sql_builder.Command;
 			DbCommandType          command_type = sql_builder.CommandType;
@@ -445,8 +455,13 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command;
 
 			//	supprime la table si jamais
-			
-			sql_builder.RemoveTable ("FbTestArrayTable");
+
+			// TODO The next line will not compile anymore since the signature of the method has
+			// been changed. It requires now the SqlTable object, and not the name of the table to
+			// delete.
+			// Marc
+
+			//sql_builder.RemoveTable ("FbTestArrayTable");
 			
 			command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);

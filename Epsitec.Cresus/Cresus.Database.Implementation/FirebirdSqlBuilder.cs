@@ -262,42 +262,122 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.Append (");\n");
 			}
+
+			if (!string.IsNullOrEmpty (table.Comment))
+			{
+				this.commandCount++;
+
+				string escapedComment = table.Comment.Replace ("'", "''");
+
+				string query = string.Format ("COMMENT ON TABLE {0} IS '{1}';\n", table.Name, escapedComment);
+
+				this.Append (query);
+			}
+
+			foreach (SqlColumn column in table.Columns)
+			{
+				this.BuildSetColumnCommentSqlCommand (table.Name, column);
+				this.BuildAutoIncrementTriggerForColumn (table.Name, column);
+			}
 		}
 
 
-		public void SetTableComment(string tableName, string comment)
+		private void BuildSetColumnCommentSqlCommand(string tableName, SqlColumn column)
 		{
-			if (!this.ValidateName (tableName))
+			if (!string.IsNullOrEmpty (column.Comment))
 			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
+				this.commandCount++;
+
+				string escapedComment = column.Comment.Replace ("'", "''");
+
+				string query = string.Format ("COMMENT ON COLUMN {0}.{1} IS '{2}';\n", tableName, column.Name, escapedComment);
+
+				this.Append (query);
 			}
-			
-			this.PrepareCommand ();
+		}
+		
+		private void BuildAutoIncrementTriggerForColumn(string tableName, SqlColumn column)
+		{
+			if (column.IsAutoIncremented)
+			{
+				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
+				string triggerName = this.GetAutoIncrementTriggerName (tableName, column);
 
-			this.commandType = DbCommandType.Silent;
-			this.commandCount++;
-			
-			string escapedComment = comment.Replace ("'", "''");
+				this.commandCount++;
+				this.Append ("CREATE GENERATOR " + generatorName + ";\n");
 
-			string query = string.Format ("COMMENT ON TABLE {0} IS '{1}';\n", tableName, escapedComment);
+				this.commandCount++;
+				this.Append ("SET GENERATOR " + generatorName + " TO 0;\n");
 
-			this.Append (query);
+				this.commandCount++;
+				this.Append ("CREATE TRIGGER " + triggerName + " FOR " + tableName + " ");
+				this.Append ("ACTIVE BEFORE INSERT POSITION 0 ");
+				this.Append ("AS ");
+				this.Append ("BEGIN ");
+				this.Append ("NEW." + column.Name + " = GEN_ID(" + generatorName + ", 1); ");
+				this.Append ("END; ");
+			}
 		}
 
-		public void RemoveTable(string tableName)
+		private void RemoveAutoIncrementedTriggerForColumn(string tableName, SqlColumn column)
 		{
-			if (!this.ValidateName (tableName))
+			if (column.IsAutoIncremented)
 			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
+				string generatorName = this.GetAutoIncrementGeneratorName (tableName, column);
+				string triggerName = this.GetAutoIncrementTriggerName (tableName, column);
+
+				this.commandCount++;
+				this.Append ("DROP GENERATOR " + generatorName + ";\n");
+
+				this.commandCount++;
+				this.Append ("DROP TRIGGER " + triggerName + ";\n");
+			}
+		}
+
+		private string GetAutoIncrementGeneratorName(string tableName, SqlColumn column)
+		{
+			string generatorName = tableName + "_" + column.Name + "_gid";
+
+			if (generatorName.Length > 32)
+			{
+				throw new System.Exception ("Generator name for column " + column.Name + " of table " + tableName + " is too long.");
+			}
+
+			return generatorName;
+		}
+
+		private string GetAutoIncrementTriggerName(string tableName, SqlColumn column)
+		{
+			string triggerName = tableName + "_" + column.Name + "_tid";
+
+			if (triggerName.Length > 32)
+			{
+				throw new System.Exception ("Trigger name for column " + column.Name + " of table " + tableName + " is too long.");
+			}
+
+			return triggerName;
+		}
+
+		public void RemoveTable(SqlTable table)
+		{
+			if (!this.ValidateName (table.Name))
+			{
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", table.Name));
 			}
 			
 			this.PrepareCommand ();
 			
 			this.commandType = DbCommandType.Silent;
+
+			foreach (SqlColumn column in table.Columns)
+			{
+				this.RemoveAutoIncrementedTriggerForColumn (table.Name, column);
+			}
+			
 			this.commandCount++;
 			
 			this.Append ("DROP TABLE ");
-			this.Append (tableName);
+			this.Append (table.Name);
 			this.Append (";\n");
 		}
 		
@@ -329,31 +409,10 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (this.GetSqlType (column));
 				this.Append (this.GetSqlColumnAttributes (column));
 				this.Append (";\n");
+
+				this.BuildSetColumnCommentSqlCommand (tableName, column);
+				this.BuildAutoIncrementTriggerForColumn (tableName, column);
 			}
-		}
-
-		public void SetTableColumnComment(string tableName, string columnName, string comment)
-		{
-			if (!this.ValidateName (tableName))
-			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
-			}
-
-			if (!this.ValidateName (columnName))
-			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0}", columnName));
-			}
-
-			this.PrepareCommand ();
-
-			this.commandType = DbCommandType.Silent;
-			this.commandCount++;
-
-			string escapedComment = comment.Replace ("'", "''");
-
-			string query = string.Format ("COMMENT ON COLUMN {0}.{1} IS '{2}';\n", tableName, columnName, escapedComment);
-
-			this.Append (query);
 		}
 
 		public void UpdateTableColumns(string tableName, SqlColumn[] columns)
@@ -397,6 +456,8 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0} in table {1}", column.Name, tableName));
 				}
+
+				this.RemoveAutoIncrementedTriggerForColumn (tableName, column);
 				
 				this.commandCount++;
 				
