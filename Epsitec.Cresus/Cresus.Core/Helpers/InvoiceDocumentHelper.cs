@@ -8,6 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -114,7 +115,13 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static void UpdatePrices(InvoiceDocumentEntity x)
+		public static int GetUserLinesCount(InvoiceDocumentEntity x)
+		{
+			//	Retourne le nombre de lignes gérables par l'utilisateur.
+			return x.Lines.Count (y => y.LayoutSettings != "auto");
+		}
+
+		public static void UpdatePrices(InvoiceDocumentEntity x, DataContext dataContext)
 		{
 			//	Recalcule complètement une facture.
 			//	
@@ -129,6 +136,8 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	Total (C+D), en fait, sous-total de C+D
 			//	  Article E
 			//	Total (A+B+C+D+E), en fait, grand total
+
+			InvoiceDocumentHelper.UpdateAutoLines (x, dataContext);
 
 			decimal vatRate = 0.076M;  // TODO: Cette valeur ne devrait pas tomber du ciel !
 			decimal primaryTotalBeforeTax    = 0;
@@ -154,10 +163,12 @@ namespace Epsitec.Cresus.Core.Helpers
 
 				if (line is TaxDocumentItemEntity)
 				{
+#if false
 					var tax = line as TaxDocumentItemEntity;
 
 					tax.BaseAmount = primarySubtotalBeforeTax;
 					tax.ResultingTax = tax.Rate * tax.BaseAmount;
+#endif
 				}
 
 				if (line is PriceDocumentItemEntity)
@@ -270,6 +281,118 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 				}
 			}
+		}
+
+		private static void UpdateAutoLines(InvoiceDocumentEntity x, DataContext dataContext)
+		{
+			InvoiceDocumentHelper.CreateLastPriceAutoLine (x, dataContext);
+			InvoiceDocumentHelper.UpdateTaxLines (x, dataContext);
+		}
+
+		private static void UpdateTaxLines(InvoiceDocumentEntity x, DataContext dataContext)
+		{
+			// Cherche toutes les catégories utilisées par les articles.
+			var categories = new List<ArticleCategoryEntity> ();
+
+			foreach (var line in x.Lines)
+			{
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+					var category = article.ArticleDefinition.ArticleCategory;
+
+					if (!categories.Contains (category))
+					{
+						categories.Add (category);
+					}
+				}
+			}
+
+			//	Crée ou supprime des lignes de taxe pour en avoir juste le bon nombre.
+			InvoiceDocumentHelper.CreateOrDeleteTaxLines(x, dataContext, categories.Count);
+
+			for (int i = 0; i < categories.Count; i++)
+			{
+				var category = categories[i];
+				var tax = x.Lines[x.Lines.Count-1-categories.Count+i] as TaxDocumentItemEntity;
+
+				tax.VatCode = category.DefaultVatCode;
+
+				decimal amount, rate;
+				InvoiceDocumentHelper.GetArticleTotalAmoutForTax (x, category.Name, out amount, out rate);
+				tax.BaseAmount = amount;
+				tax.Rate = rate;
+
+				tax.ResultingTax = tax.BaseAmount * tax.Rate;
+				tax.Text = string.Format ("TVA {0} pour {1}", Misc.PercentToString (rate), category.Name);
+			}
+		}
+
+		private static void GetArticleTotalAmoutForTax(InvoiceDocumentEntity x, string categoryName, out decimal amount, out decimal rate)
+		{
+			//	Calcule le montant total et le taux de tva, pour une catégorie, parmi tous les articles d'une facture.
+			amount = 0;
+			rate   = 0;
+
+			foreach (var line in x.Lines)
+			{
+				if (line is ArticleDocumentItemEntity)
+				{
+					var article = line as ArticleDocumentItemEntity;
+
+					if (article.ArticleDefinition.ArticleCategory.Name == categoryName)
+					{
+						amount += article.ResultingLinePriceBeforeTax.GetValueOrDefault (0);
+						rate = ArticleDocumentItemHelper.GetArticleVatRate (x, article).GetValueOrDefault (0);
+					}
+				}
+			}
+		}
+
+		private static void CreateOrDeleteTaxLines(InvoiceDocumentEntity x, DataContext dataContext, int requiredTotal)
+		{
+			//	Crée ou supprime des lignes de taxe pour en avoir juste le bon nombre.
+			//	Depuis la fin, on a toujours le total, les taxes puis les articles.
+			int currentTotal = x.Lines.Count (y => y is TaxDocumentItemEntity);
+
+			if (currentTotal < requiredTotal)  // faut-il créer de nouvelles lignes de taxe ?
+			{
+				for (int i = 0; i < requiredTotal-currentTotal; i++)
+				{
+					var tax = dataContext.CreateEntity<TaxDocumentItemEntity> ();
+					tax.Visibility = true;
+
+					x.Lines.Insert (x.Lines.Count-1, tax);  // insère juste avant le total final
+				}
+			}
+
+			if (currentTotal > requiredTotal)  // faut-il supprimer des lignes de taxe ?
+			{
+				for (int i = 0; i < currentTotal-requiredTotal; i++)
+				{
+					var tax = x.Lines.LastOrDefault (y => y is TaxDocumentItemEntity) as TaxDocumentItemEntity;
+
+					x.Lines.Remove (tax);
+					dataContext.DeleteEntity (tax);
+				}
+			}
+		}
+
+		private static void CreateLastPriceAutoLine(InvoiceDocumentEntity x, DataContext dataContext)
+		{
+			//	Crée si nécessaire la dernière ligne de total.
+			var lastLine = InvoiceDocumentHelper.GetLastPriceEntity (x);
+			if (lastLine != null && lastLine.LayoutSettings == "auto")
+			{
+				return;  // la dernière ligne de total existe déjà
+			}
+
+			// Crée la dernière ligne de total.
+			var lastPrice = dataContext.CreateEntity<PriceDocumentItemEntity> ();
+			lastPrice.Visibility = true;
+			lastPrice.LayoutSettings = "auto";
+
+			x.Lines.Add (lastPrice);
 		}
 
 

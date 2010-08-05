@@ -958,6 +958,7 @@ namespace Epsitec.Cresus.Core
 			//	Total TTC arrêté ............................. xxxx
 
 			totalA2.Visibility = true;
+			totalA2.LayoutSettings = "auto";  // indique une ligne insérée et gérée automatiquement par le logiciel (provisoire)
 			totalA2.PrimaryPriceBeforeTax = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
 			totalA2.PrimaryTax = taxA1.ResultingTax;
 

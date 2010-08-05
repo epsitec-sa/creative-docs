@@ -16,6 +16,40 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class ArticleDocumentItemHelper
 	{
+		public static decimal? GetArticleVatRate(GenericArticleDocumentEntity document, ArticleDocumentItemEntity article)
+		{
+			//	Retourne le taux de tva auquel un article est soumi.
+			// TODO: Il faudra probablement modifier cela pour chercher les informations dans une table !
+			// TODO: Il devrait aussi y avoir une date en entrée !
+			switch (article.ArticleDefinition.ArticleCategory.DefaultVatCode)
+			{
+				case BusinessLogic.Finance.VatCode.Excluded:
+				case BusinessLogic.Finance.VatCode.ZeroRated:
+					return 0;
+
+				case BusinessLogic.Finance.VatCode.StandardTax:
+				case BusinessLogic.Finance.VatCode.StandardInputTaxOnInvestementOrOperatingExpenses:
+				case BusinessLogic.Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses:
+				case BusinessLogic.Finance.VatCode.StandardTaxOnTurnover:
+					return 0.076M;
+
+				case BusinessLogic.Finance.VatCode.ReducedTax:
+				case BusinessLogic.Finance.VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses:
+				case BusinessLogic.Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses:
+				case BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover:
+					return 0.024M;
+
+				case BusinessLogic.Finance.VatCode.SpecialTax:
+				case BusinessLogic.Finance.VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses:
+				case BusinessLogic.Finance.VatCode.SpecialInputTaxOnMaterialOrServiceExpenses:
+				case BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover:
+					return 0.036M;
+			}
+
+			return null;
+		}
+
+
 		public static decimal? GetArticlePrice(ArticleDocumentItemEntity article, System.DateTime date, BusinessLogic.Finance.CurrencyCode currency)
 		{
 			//	Il peut y avoir plusieurs prix, mais un seul prix à une date donnée pour une monnaie donnée.
