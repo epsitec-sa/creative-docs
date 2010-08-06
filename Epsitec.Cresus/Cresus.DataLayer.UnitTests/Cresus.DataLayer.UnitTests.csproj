@@ -68,8 +68,8 @@
     <Compile Include="Proxies\UnitTestReferenceFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestCollectionFieldProxy.cs" />
     <Compile Include="Loader\UnitTestAliasNode.cs" />
-    <Compile Include="Loader\UnitTestCollectionData.cs" />
-    <Compile Include="Loader\UnitTestEntityData.cs" />
+    <Compile Include="Loader\Data\UnitTestCollectionData.cs" />
+    <Compile Include="Loader\Data\UnitTestEntityData.cs" />
     <Compile Include="Expressions\UnitTestConstant.cs" />
     <Compile Include="Expressions\UnitTestField.cs" />
     <Compile Include="Expressions\UnitTestBinaryOperation.cs" />
@@ -86,8 +86,8 @@
     <Compile Include="Expressions\UnitTestEnumConverter.cs" />
     <Compile Include="General\UnitTestPerformance.cs" />
     <Compile Include="Proxies\UnitTestValueFieldProxy.cs" />
-    <Compile Include="Loader\UnitTestReferenceData.cs" />
-    <Compile Include="Loader\UnitTestValueData.cs" />
+    <Compile Include="Loader\Data\UnitTestReferenceData.cs" />
+    <Compile Include="Loader\Data\UnitTestValueData.cs" />
     <Compile Include="Loader\UnitTestRequest.cs" />
     <Compile Include="Expressions\UnitTestUnaryOperation.cs" />
     <Compile Include="Expressions\UnitTestUnaryComparison.cs" />
