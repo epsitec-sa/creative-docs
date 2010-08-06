@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 {
 
 
-	internal class CollectionSynchronizationJob : AbstractUpdateSynchronizationJob
+	internal class CollectionSynchronizationJob : AbstractFieldSynchronizationJob
 	{
 
 
