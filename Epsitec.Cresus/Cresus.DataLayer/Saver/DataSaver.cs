@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections;
 using System.Collections.Generic;

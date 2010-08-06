@@ -11,6 +11,7 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader.Data;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;

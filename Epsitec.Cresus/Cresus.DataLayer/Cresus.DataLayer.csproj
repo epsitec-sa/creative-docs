@@ -147,9 +147,9 @@
     <Compile Include="Loader\ExpressionFields.cs" />
     <Compile Include="Loader\Request.cs" />
     <Compile Include="Context\DataContextPool.cs" />
-    <Compile Include="Loader\CollectionData.cs" />
-    <Compile Include="Loader\EntityData.cs" />
-    <Compile Include="Loader\ReferenceData.cs" />
+    <Compile Include="Loader\Data\CollectionData.cs" />
+    <Compile Include="Loader\Data\EntityData.cs" />
+    <Compile Include="Loader\Data\ReferenceData.cs" />
     <Compile Include="Context\EntityKey.cs" />
     <Compile Include="Expressions\ComparisonFieldField.cs" />
     <Compile Include="Expressions\ComparisonFieldValue.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\Field.cs" />
     <Compile Include="Loader\AliasNode.cs" />
-    <Compile Include="Loader\ValueData.cs" />
+    <Compile Include="Loader\Data\ValueData.cs" />
     <Compile Include="Proxies\AbstractFieldProxy.cs" />
     <Compile Include="Proxies\CollectionFieldProxy.cs" />
     <Compile Include="Proxies\ReferenceFieldProxy.cs" />
@@ -179,21 +179,21 @@
     </Compile>
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
-    <Compile Include="Saver\AbstractPersistenceJob.cs" />
-    <Compile Include="Saver\AbstractInsertionOrUpdatePersistenceJob.cs" />
-    <Compile Include="Saver\AbstractSynchronisationJob.cs" />
-    <Compile Include="Saver\AbstractUpdateSynchronizationJob.cs" />
-    <Compile Include="Saver\CollectionPersistenceJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\AbstractPersistenceJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\AbstractInsertionOrUpdatePersistenceJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\AbstractSynchronisationJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\AbstractUpdateSynchronizationJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\CollectionPersistenceJob.cs" />
     <Compile Include="Saver\DataSaver.cs" />
-    <Compile Include="Saver\DeletePersistenceJob.cs" />
-    <Compile Include="Saver\DeleteSynchronizationJob.cs" />
-    <Compile Include="Saver\CollectionSynchronizationJob.cs" />
-    <Compile Include="Saver\PersistenceJobType.cs" />
-    <Compile Include="Saver\ReferencePersistenceJob.cs" />
-    <Compile Include="Saver\ReferenceSynchronizationJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\DeletePersistenceJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\DeleteSynchronizationJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\CollectionSynchronizationJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\PersistenceJobType.cs" />
+    <Compile Include="Saver\PersistenceJobs\ReferencePersistenceJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\ReferenceSynchronizationJob.cs" />
     <Compile Include="Saver\SaverQueryGenerator.cs" />
-    <Compile Include="Saver\ValuePersistenceJob.cs" />
-    <Compile Include="Saver\ValueSynchronizationJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\ValuePersistenceJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />
   </ItemGroup>

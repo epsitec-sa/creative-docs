@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
 
-namespace Epsitec.Cresus.DataLayer.Saver
+namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
 
 

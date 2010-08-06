@@ -9,6 +9,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.Saver;
+using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections;

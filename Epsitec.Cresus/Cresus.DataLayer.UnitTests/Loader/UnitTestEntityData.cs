@@ -3,11 +3,9 @@
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Loader.Data;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests
