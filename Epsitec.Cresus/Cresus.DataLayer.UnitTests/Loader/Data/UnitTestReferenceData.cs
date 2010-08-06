@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ReferenceDataConstructorTest()
 		{
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+			ReferenceData referenceData = new ReferenceData ();
 		}
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest1()
 		{
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+			ReferenceData referenceData = new ReferenceData ();
 
 			Dictionary<Druid, DbKey> keys = new Dictionary<Druid, DbKey> ()
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void ItemTest2()
 		{
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+			ReferenceData referenceData = new ReferenceData ();
 
 			referenceData[Druid.FromLong (1)] = null;
 		}

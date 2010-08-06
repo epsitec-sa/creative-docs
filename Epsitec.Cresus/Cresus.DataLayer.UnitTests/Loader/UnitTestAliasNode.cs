@@ -19,10 +19,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void AliasNodeConstructorTest1()
 		{
-			AliasNode_Accessor node = new AliasNode_Accessor ("node");
+			AliasNode node = new AliasNode ("node");
 
 			Assert.AreEqual ("node", node.Name);
-			Assert.IsNull (node.parent);
+			Assert.IsNull (node.GetParent());
 			Assert.IsNotNull (node.Alias);
 		}
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void AliasNodeConstructorTest3()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("");
+			AliasNode node1 = new AliasNode ("");
 		}
 
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void AliasNodeConstructorTest4()
 		{
 			string name = null;
-			AliasNode_Accessor node1 = new AliasNode_Accessor (name);
+			AliasNode node1 = new AliasNode (name);
 		}
 
 
@@ -83,11 +83,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CreateChildTest1()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = node1.CreateChild ("node2");
+			AliasNode node1 = new AliasNode ("node1");
+			AliasNode node2 = node1.CreateChild ("node2");
 
 			Assert.AreEqual ("node2", node2.Name);
-			Assert.AreSame (node1.Target, node2.parent.Target);
+			Assert.AreSame (node1, node2.GetParent ());
 			Assert.IsNotNull (node2.Alias);
 		}
 
@@ -97,8 +97,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CreateChildTest2()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = node1.CreateChild (null);
+			AliasNode node1 = new AliasNode ("node1");
+			AliasNode node2 = node1.CreateChild (null);
 		}
 
 
@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CreateChildTest3()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = node1.CreateChild ("");
+			AliasNode node1 = new AliasNode ("node1");
+			AliasNode node2 = node1.CreateChild ("");
 		}
 
 
@@ -168,15 +168,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetChildTest1()
 		{
-			AliasNode_Accessor node = new AliasNode_Accessor ("node");
+			AliasNode node = new AliasNode ("node");
 
-			Dictionary<string, List<AliasNode_Accessor>> children = new Dictionary<string, List<AliasNode_Accessor>> ();
+			Dictionary<string, List<AliasNode>> children = new Dictionary<string, List<AliasNode>> ();
 
 			for (int i = 0; i < 5; i++)
 			{
 				string name = "name" + i;
 
-				children[name] = new List<AliasNode_Accessor> ();
+				children[name] = new List<AliasNode> ();
 
 				for (int j = 0; j < 5; j++)
 				{
@@ -186,10 +186,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			foreach (string name in children.Keys)
 			{
-				AliasNode_Accessor node1 = children[name].First ();
-				AliasNode_Accessor node2 = node.GetChild (name);
+				AliasNode node1 = children[name].First ();
+				AliasNode node2 = node.GetChild (name);
 
-				Assert.AreSame (node1.Target, node2.Target);
+				Assert.AreSame (node1, node2);
 			}
 		}
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest2()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 
 			node1.GetChild (null);
 		}
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest3()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 
 			node1.GetChild ("");
 		}
@@ -221,33 +221,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest4()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 			
 			node1.GetChild ("test");
 		}
 
 
-		// Because of the limitations of the AliasNode_Accessor, it is not possible to test
-		// a private method with a generic return type. In the following test, the call to
-		// node.getChildren(...) will throw an exception. Therefore, this test is ignored, but I
-		// leave it here, in case the support for private method with a generic return type is
-		// improved in the next versions of Visual Studio.
-		// Marc
-
-		[TestMethod]
-		[Ignore]
+		[TestMethod]	
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetChildrenTest1()
 		{
-			AliasNode_Accessor node = new AliasNode_Accessor ("node");
+			AliasNode node = new AliasNode ("node");
 
-			Dictionary<string, List<AliasNode_Accessor>> children = new Dictionary<string, List<AliasNode_Accessor>> ();
+			Dictionary<string, List<AliasNode>> children = new Dictionary<string, List<AliasNode>> ();
 
 			for (int i = 0; i < 5; i++)
 			{
 				string name = "name" + i;
 
-				children[name] = new List<AliasNode_Accessor> ();
+				children[name] = new List<AliasNode> ();
 
 				for (int j = 0; j < 5; j++)
 				{
@@ -257,8 +249,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			foreach (string name in children.Keys)
 			{
-				List<AliasNode_Accessor> children1 = children[name];
-				List<AliasNode_Accessor> children2 = node.GetChildren (name).ToList ();
+				List<AliasNode> children1 = children[name];
+				List<AliasNode> children2 = node.GetChildren (name).ToList ();
 				
 				CollectionAssert.AreEquivalent (children1, children2);
 			}
@@ -270,7 +262,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest2()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 
 			node1.GetChildren (null);
 		}
@@ -281,7 +273,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest3()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 
 			node1.GetChildren ("");
 		}
@@ -292,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest4()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
+			AliasNode node1 = new AliasNode ("node1");
 
 			node1.GetChildren ("test");
 		}
@@ -302,10 +294,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetParentTest()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = node1.CreateChild ("node2");
+			AliasNode node1 = new AliasNode ("node1");
+			AliasNode node2 = node1.CreateChild ("node2");
 
-			Assert.AreSame (node1.Target, node2.GetParent ().Target);
+			Assert.AreSame (node1, node2.GetParent ());
 		}
 
 
@@ -313,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void AliasTest()
 		{
-			AliasNode_Accessor node = new AliasNode_Accessor ("node");
+			AliasNode node = new AliasNode ("node");
 
 			Assert.IsNotNull (node.Alias);
 		}
@@ -323,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void NameTest()
 		{
-			AliasNode_Accessor node = new AliasNode_Accessor ("node");
+			AliasNode node = new AliasNode ("node");
 
 			Assert.AreEqual ("node", node.Name);
 		}

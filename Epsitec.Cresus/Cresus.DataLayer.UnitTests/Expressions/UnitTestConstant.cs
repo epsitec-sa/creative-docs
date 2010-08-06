@@ -43,17 +43,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void TypeTest()
 		{
-			Assert.AreEqual (Type_Accessor.Int16, new Constant_Accessor ((short) 0).Type);
-			Assert.AreEqual (Type_Accessor.Int32, new Constant_Accessor ((int) 0).Type);
-			Assert.AreEqual (Type_Accessor.Int64, new Constant_Accessor ((long) 0).Type);
-			Assert.AreEqual (Type_Accessor.Double, new Constant_Accessor ((decimal) 0).Type);
-			Assert.AreEqual (Type_Accessor.Double, new Constant_Accessor ((float) 0).Type);
-			Assert.AreEqual (Type_Accessor.Double, new Constant_Accessor ((double) 0).Type);
-			Assert.AreEqual (Type_Accessor.Boolean, new Constant_Accessor (true).Type);
-			Assert.AreEqual (Type_Accessor.String, new Constant_Accessor ("test").Type);
-			Assert.AreEqual (Type_Accessor.Date, new Constant_Accessor (Date.Today).Type);
-			Assert.AreEqual (Type_Accessor.Time, new Constant_Accessor (Time.Now).Type);
-			Assert.AreEqual (Type_Accessor.DateTime, new Constant_Accessor (System.DateTime.Now).Type);
+			Assert.AreEqual (Type.Int16, new Constant ((short) 0).Type);
+			Assert.AreEqual (Type.Int32, new Constant ((int) 0).Type);
+			Assert.AreEqual (Type.Int64, new Constant ((long) 0).Type);
+			Assert.AreEqual (Type.Double, new Constant ((decimal) 0).Type);
+			Assert.AreEqual (Type.Double, new Constant ((float) 0).Type);
+			Assert.AreEqual (Type.Double, new Constant ((double) 0).Type);
+			Assert.AreEqual (Type.Boolean, new Constant (true).Type);
+			Assert.AreEqual (Type.String, new Constant ("test").Type);
+			Assert.AreEqual (Type.Date, new Constant (Date.Today).Type);
+			Assert.AreEqual (Type.Time, new Constant (Time.Now).Type);
+			Assert.AreEqual (Type.DateTime, new Constant (System.DateTime.Now).Type);
 		}
 
 

@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 		}
 
 
@@ -45,10 +45,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, null, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, null, referenceData, collectionData);
 		}
 
 
@@ -63,10 +63,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, null, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, null, collectionData);
 		}
 
 
@@ -81,10 +81,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, null);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, null);
 		}
 
 
@@ -98,13 +98,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 
-			Assert.AreSame (collectionData.Target, entityData.CollectionData.Target);
+			Assert.AreSame (collectionData, entityData.CollectionData);
 		}
 
 
@@ -118,11 +118,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreEqual (entityKey, entityData.EntityKey);
 		}
@@ -138,11 +138,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreEqual (loadedEntityId, entityData.LoadedEntityId);
 		}
@@ -158,13 +158,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 
-			Assert.AreSame (referenceData.Target, entityData.ReferenceData.Target);
+			Assert.AreSame (referenceData, entityData.ReferenceData);
 		}
 
 
@@ -178,13 +178,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 
-			ValueData_Accessor valueData = new ValueData_Accessor ();
-			ReferenceData_Accessor referenceData = new ReferenceData_Accessor ();
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			ValueData valueData = new ValueData ();
+			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData_Accessor entityData = new EntityData_Accessor (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
 
-			Assert.AreSame (valueData.Target, entityData.ValueData.Target);
+			Assert.AreSame (valueData, entityData.ValueData);
 		}
 
 

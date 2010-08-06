@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CollectionDataConstructorTest()
 		{
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			CollectionData collectionData = new CollectionData ();
 		}
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest()
 		{
-			CollectionData_Accessor collectionData = new CollectionData_Accessor ();
+			CollectionData collectionData = new CollectionData ();
 
 			Dictionary<Druid, List<DbKey>> keys = new Dictionary<Druid, List<DbKey>> ()
 			{
