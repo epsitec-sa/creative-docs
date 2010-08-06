@@ -179,13 +179,20 @@
     </Compile>
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
+    <Compile Include="Saver\AbstractPersistenceJob.cs" />
+    <Compile Include="Saver\AbstractInsertionOrUpdatePersistenceJob.cs" />
     <Compile Include="Saver\AbstractSynchronisationJob.cs" />
     <Compile Include="Saver\AbstractUpdateSynchronizationJob.cs" />
+    <Compile Include="Saver\CollectionPersistenceJob.cs" />
     <Compile Include="Saver\DataSaver.cs" />
+    <Compile Include="Saver\DeletePersistenceJob.cs" />
     <Compile Include="Saver\DeleteSynchronizationJob.cs" />
     <Compile Include="Saver\CollectionSynchronizationJob.cs" />
+    <Compile Include="Saver\PersistenceJobType.cs" />
+    <Compile Include="Saver\ReferencePersistenceJob.cs" />
     <Compile Include="Saver\ReferenceSynchronizationJob.cs" />
     <Compile Include="Saver\SaverQueryGenerator.cs" />
+    <Compile Include="Saver\ValuePersistenceJob.cs" />
     <Compile Include="Saver\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />
     <Compile Include="Schema\SchemaEngine.cs" />
