@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		// Stuff added for the entity change feature.
-		public CollectionTemplate<T> DefineChangeItem(System.Action<T, EntityChangedEventArgs> action)
+		public CollectionTemplate<T> DefineChangeItem(System.Action<T, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs> action)
 		{
 			this.changeItem = action;
 			return this;
@@ -345,6 +345,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private System.Action<T> setupItem;
 
 		// Stuff added for the entity change feature.
-		private System.Action<T, EntityChangedEventArgs> changeItem;
+		private System.Action<T, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs> changeItem;
 	}
 }
