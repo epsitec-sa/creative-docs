@@ -146,6 +146,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
+		public void SaveNewEntityWithoutChanges()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				dataContext.SaveChanges ();
+			}
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+
+				Assert.IsNotNull (person);
+			}
+		}
+
+
+		[TestMethod]
 		public void ResolveEntity()
 		{
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
