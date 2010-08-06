@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	
 	
     [TestClass]
-    public class UnitTestConcurrency
+    public sealed class UnitTestConcurrency
     {
 
 

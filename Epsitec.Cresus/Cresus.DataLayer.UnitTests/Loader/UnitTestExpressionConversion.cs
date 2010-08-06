@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	
 
     [TestClass]
-	public class UnitTestExpressionConversion
+	public sealed class UnitTestExpressionConversion
 	{
 
 

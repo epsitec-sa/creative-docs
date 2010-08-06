@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestGetEntitiesByExample
+	public sealed class UnitTestGetEntitiesByExample
 	{
 
 

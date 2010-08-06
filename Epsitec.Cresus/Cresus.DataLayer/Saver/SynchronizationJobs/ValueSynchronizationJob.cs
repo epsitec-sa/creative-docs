@@ -21,11 +21,10 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// </summary>
 		/// <param name="dataContextId">The unique id of the <see cref="DataContext"/> that is creating the <c>ValueSynchronizationJob</c>.</param>
 		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/> targeted by the <c>ValueSynchronizationJob</c>.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> of the field targeted by the <c>ValueSynchronizationJob</c></param>
-		/// <param name="newValue">The new value of the field targeted by the <c>ValueSynchronizationJob</c></param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field targeted by the <c>ValueSynchronizationJob</c>.</param>
+		/// <param name="newValue">The new value of the field targeted by the <c>ValueSynchronizationJob</c>.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
-		
 		public ValueSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, object newValue)
 			: base (dataContextId, entityKey, fieldId)
 		{
