@@ -3720,8 +3720,26 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>VatDefinition</c> entity.
 	///	designer:cap/L0A24
 	///	</summary>
-	public partial class VatDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
+	public partial class VatDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.IItemRank
 	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/L0A24/L0A03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A03]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
 		#region IDateRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
@@ -3783,19 +3801,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A24/L0A44
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A44]")]
-		public string Code
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode Code
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A44]");
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0A44]");
 			}
 			set
 			{
-				string oldValue = this.Code;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue = this.Code;
 				if (oldValue != value)
 				{
 					this.OnCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A44]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0A44]", oldValue, value);
 					this.OnCodeChanged (oldValue, value);
 				}
 			}
@@ -3825,8 +3843,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnCodeChanging(string oldValue, string newValue);
-		partial void OnCodeChanged(string oldValue, string newValue);
+		partial void OnCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		

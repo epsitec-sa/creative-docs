@@ -112,6 +112,13 @@ namespace Epsitec.Cresus.Core
 			return new CurrencyRepository (this.DataContext).GetAllCurrencies ();
 		}
 
+		public IEnumerable<VatDefinitionEntity> GetVatDefinitions()
+		{
+			//	TODO: implement the repository
+			//return new VatDefinitionRepository (this.DataContext).GetAllVatDefinitions ();
+			throw new System.NotImplementedException ();
+		}
+
 		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments()
 		{
 			return new InvoiceDocumentRepository (this.DataContext).GetAllInvoiceDocuments ();
@@ -138,11 +145,12 @@ namespace Epsitec.Cresus.Core
 			PersonGenderEntity[] personGenders = this.InsertPersonGendersInDatabase ().ToArray ();
 			AbstractPersonEntity[] abstractPersons = this.InsertAbstractPersonsInDatabase (locations, roles, uriSchemes, telecomTypes, personTitles, personGenders).ToArray ();
 			RelationEntity[] relations = this.InsertRelationsInDatabase (abstractPersons).ToArray ();
-			UnitOfMeasureEntity[] units = this.InsertUnitOfMeasureInDatabase ().ToArray ();
+			UnitOfMeasureEntity[] units = this.InsertUnitsOfMeasureInDatabase ().ToArray ();
 			ArticleDefinitionEntity[] articleDefs = this.InsertArticleDefinitionsInDatabase (units).ToArray ();
-			PaymentModeEntity[] paymentDefs = this.InsertPaymentModeInDatabase ().ToArray ();
-			CurrencyEntity[] currencyDefs = this.InsertCurrencyInDatabase ().ToArray ();
-			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs).ToArray ();
+			PaymentModeEntity[] paymentDefs = this.InsertPaymentModesInDatabase ().ToArray ();
+			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
+			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
+			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs).ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -487,7 +495,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<UnitOfMeasureEntity> InsertUnitOfMeasureInDatabase()
+		private IEnumerable<UnitOfMeasureEntity> InsertUnitsOfMeasureInDatabase()
 		{
 			var uomUnit1 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
 			var uomUnit2 = this.DataContext.CreateEntity<UnitOfMeasureEntity> ();
@@ -739,7 +747,7 @@ namespace Epsitec.Cresus.Core
 			yield return articleDef6;
 		}
 
-		private IEnumerable<PaymentModeEntity> InsertPaymentModeInDatabase()
+		private IEnumerable<PaymentModeEntity> InsertPaymentModesInDatabase()
 		{
 			var paymentMode1 = this.DataContext.CreateEntity<PaymentModeEntity> ();
 			var paymentMode2 = this.DataContext.CreateEntity<PaymentModeEntity> ();
@@ -772,7 +780,7 @@ namespace Epsitec.Cresus.Core
 			yield return paymentMode3;
 		}
 
-		private IEnumerable<CurrencyEntity> InsertCurrencyInDatabase()
+		private IEnumerable<CurrencyEntity> InsertCurrenciesInDatabase()
 		{
 			var currency1 = this.DataContext.CreateEntity<CurrencyEntity> ();
 			var currency2 = this.DataContext.CreateEntity<CurrencyEntity> ();
@@ -792,10 +800,89 @@ namespace Epsitec.Cresus.Core
 			yield return currency3;
 		}
 
-		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs)
+		private IEnumerable<VatDefinitionEntity> InsertVatDefinitionsInDatabase()
+		{
+			var vatDef2010_1 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2010_2 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2010_3 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2010_4 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+
+			var vatDef2011_1 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2011_2 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2011_3 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+			var vatDef2011_4 = this.DataContext.CreateEntity<VatDefinitionEntity> ();
+
+			vatDef2010_1.Rank = 0;
+			vatDef2010_1.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
+			vatDef2010_1.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_1.Code = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2010_1.Name = "TVA sur le chiffre d'affaires, taux standard";
+			vatDef2010_1.Rate = 7.6M * 0.01M;
+
+			vatDef2010_2.Rank = 1;
+			vatDef2010_2.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
+			vatDef2010_2.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_2.Code = BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2010_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
+			vatDef2010_2.Rate = 2.4M * 0.01M;
+
+			vatDef2010_3.Rank = 2;
+			vatDef2010_3.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
+			vatDef2010_3.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_3.Code = BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2010_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
+			vatDef2010_3.Rate = 3.6M * 0.01M;
+
+			vatDef2010_4.Rank = 3;
+			vatDef2010_4.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
+			vatDef2010_4.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
+			vatDef2010_4.Code = BusinessLogic.Finance.VatCode.Excluded;
+			vatDef2010_4.Name = "Exclu du champ d'application de la TVA";
+			vatDef2010_4.Rate = 0.0M * 0.01M;
+
+			vatDef2011_1.Rank = 0;
+			vatDef2011_1.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_1.EndDate   = null;
+			vatDef2011_1.Code = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2011_1.Name = "TVA sur le chiffre d'affaires, taux standard";
+			vatDef2011_1.Rate = 8.0M * 0.01M;
+
+			vatDef2011_2.Rank = 1;
+			vatDef2011_2.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_2.EndDate   = null;
+			vatDef2011_2.Code = BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2011_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
+			vatDef2011_2.Rate = 2.5M * 0.01M;
+
+			vatDef2011_3.Rank = 2;
+			vatDef2011_3.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_3.EndDate   = null;
+			vatDef2011_3.Code = BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2011_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
+			vatDef2011_3.Rate = 3.8M * 0.01M;
+
+			vatDef2011_4.Rank = 3;
+			vatDef2011_4.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
+			vatDef2011_4.EndDate   = null;
+			vatDef2011_4.Code = BusinessLogic.Finance.VatCode.Excluded;
+			vatDef2011_4.Name = "Exclu du champ d'application de la TVA";
+			vatDef2011_4.Rate = 0.0M * 0.01M;
+
+			yield return vatDef2010_1;
+			yield return vatDef2010_2;
+			yield return vatDef2010_3;
+			yield return vatDef2010_4;
+			
+			yield return vatDef2011_1;
+			yield return vatDef2011_2;
+			yield return vatDef2011_3;
+			yield return vatDef2011_4;
+		}
+
+		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs)
 		{
 			var decimalType = DecimalType.Default;
-			decimal vatRate = 0.076M;
+			decimal vatRate = vatDefs.Where (x => x.Code == BusinessLogic.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
 
 			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
