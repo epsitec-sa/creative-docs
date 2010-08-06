@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (BinaryOperator match in matches.Keys)
 			{
 				DbConditionCombinerOperator result1 = matches[match];
-				DbConditionCombinerOperator result2 = EnumConverter_Accessor.ToDbConditionCombinerOperator (match);
+				DbConditionCombinerOperator result2 = EnumConverter.ToDbConditionCombinerOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (UnaryOperator match in matches.Keys)
 			{
 				DbConditionModifierOperator result1 = matches[match];
-				DbConditionModifierOperator result2 = EnumConverter_Accessor.ToDbConditionModifierOperator (match);
+				DbConditionModifierOperator result2 = EnumConverter.ToDbConditionModifierOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -59,23 +59,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbRawTypeTest()
 		{
-			var matches = new Dictionary<Type_Accessor, DbRawType> ()
+			var matches = new Dictionary<Type, DbRawType> ()
 			{
-				{ Type_Accessor.Boolean, DbRawType.Boolean },
-				{ Type_Accessor.Int16, DbRawType.Int16 },
-				{ Type_Accessor.Int32, DbRawType.Int32 },
-				{ Type_Accessor.Int64, DbRawType.Int64 },
-				{ Type_Accessor.Double, DbRawType.LargeDecimal },
-				{ Type_Accessor.Date, DbRawType.Date },
-				{ Type_Accessor.Time, DbRawType.Time },
-				{ Type_Accessor.DateTime, DbRawType.DateTime },
-				{ Type_Accessor.String, DbRawType.String },
+				{ Type.Boolean, DbRawType.Boolean },
+				{ Type.Int16, DbRawType.Int16 },
+				{ Type.Int32, DbRawType.Int32 },
+				{ Type.Int64, DbRawType.Int64 },
+				{ Type.Double, DbRawType.LargeDecimal },
+				{ Type.Date, DbRawType.Date },
+				{ Type.Time, DbRawType.Time },
+				{ Type.DateTime, DbRawType.DateTime },
+				{ Type.String, DbRawType.String },
 			};
 
-			foreach (Type_Accessor match in matches.Keys)
+			foreach (Type match in matches.Keys)
 			{
 				DbRawType result1 = matches[match];
-				DbRawType result2 = EnumConverter_Accessor.ToDbRawType (match);
+				DbRawType result2 = EnumConverter.ToDbRawType (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (UnaryComparator match in matches.Keys)
 			{
 				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = EnumConverter_Accessor.ToDbSimpleConditionOperator (match);
+				DbSimpleConditionOperator result2 = EnumConverter.ToDbSimpleConditionOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			foreach (BinaryComparator match in matches.Keys)
 			{
 				DbSimpleConditionOperator result1 = matches[match];
-				DbSimpleConditionOperator result2 = EnumConverter_Accessor.ToDbSimpleConditionOperator (match);
+				DbSimpleConditionOperator result2 = EnumConverter.ToDbSimpleConditionOperator (match);
 
 				Assert.AreEqual (result1, result2);
 			}

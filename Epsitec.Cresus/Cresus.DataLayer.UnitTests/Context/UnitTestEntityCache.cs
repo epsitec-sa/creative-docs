@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void EntityCacheConstructorTest()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 		}
 
 
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			foreach (AbstractEntity entity in entities)
 			{
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void AddTest2()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.Add (null);
 		}
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			foreach (AbstractEntity entity in entities1)
 			{
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			for (int i = 0; i < entities.Count; i++)
 			{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void DefineRowKeyTest2()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.DefineRowKey (null, new DbKey (new DbId (1)));
 
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void DefineRowKeyTest3()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.DefineRowKey (new NaturalPersonEntity (), new DbKey (new DbId (0)));
 		}
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void DefineRowKeyTest4()
 		{
 			NaturalPersonEntity entity = EntityContext.Current.CreateEntity<NaturalPersonEntity> ();
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.DefineRowKey (entity, new DbKey (new DbId (1)));
 		}
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			foreach (AbstractEntity entity in entities1)
 			{
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			for (int i = 0; i < entities.Count; i++)
 			{
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			for (int i = 0; i < entities1.Count; i++)
 			{
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void GetEntityKeyTest2()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.GetEntityKey (null);
 		}
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				EntityContext.Current.CreateEntity<LocationEntity> (),
 			};
 
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			foreach (AbstractEntity entity in entities)
             {
@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void RemoveTest2()
 		{
-			EntityCache_Accessor entityCache = new EntityCache_Accessor ();
+			EntityCache entityCache = new EntityCache ();
 
 			entityCache.Remove (null);
 		}

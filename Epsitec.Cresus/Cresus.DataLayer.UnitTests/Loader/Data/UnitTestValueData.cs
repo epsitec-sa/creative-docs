@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ValueDataConstructorTest()
 		{
-			ValueData_Accessor valueData = new ValueData_Accessor ();
+			ValueData valueData = new ValueData ();
 		}
 
 
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest()
 		{
-			ValueData_Accessor valueData = new ValueData_Accessor ();
+			ValueData valueData = new ValueData ();
 
 			Dictionary<Druid, object> values = new Dictionary<Druid, object> ()
 			{
