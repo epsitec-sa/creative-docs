@@ -162,9 +162,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller, this.DataContext)
-				.DefineText        (x => UIBuilder.FormatText (GetAffairsSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (x.IdA));
+			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller, this.DataContext);
+
+			template.DefineText        (x => UIBuilder.FormatText (GetAffairsSummary (x)));
+			template.DefineCompactText (x => UIBuilder.FormatText (x.IdA));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
 		}

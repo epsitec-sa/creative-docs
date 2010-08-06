@@ -65,14 +65,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext)
-				.DefineText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetDocumentItemSummary (x)))
-				.DefineCreateItem (this.CreateArticleDocumentItem)  // le bouton [+] crée une ligne d'article
-				.DefineCreateGetIndex (this.CreateArticleGetIndex);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext);
 
-			//?data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetLines (x), template));
+			template.DefineText           (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCompactText    (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
+			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
+			template.Filter = LineFilter;
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
 
 		private void CreateUIBillings(SummaryDataItems data)
@@ -88,10 +89,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext)
-				.DefineText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
-				.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)))
-				.DefineSetupItem (this.SetupBillingDetails);
+			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext);
+			
+			template.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineSetupItem   (this.SetupBillingDetails);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
@@ -142,15 +144,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return index;
 		}
 
-		private static IList<AbstractDocumentItemEntity> GetLines(InvoiceDocumentEntity x)
+		private static bool LineFilter(AbstractDocumentItemEntity x)
 		{
-			//	Retourne les lignes éditables par l'utilisateur, c'est-à-dire sans les entités
-			//	TaxDocumentItemEntity et TotalDocumentItemEntity.
-#if false
-			return x.Lines.Where (y => (y is TextDocumentItemEntity || y is ArticleDocumentItemEntity || y is PriceDocumentItemEntity)).ToList ();
-#else
-			return x.Lines;
-#endif
+			return x is TextDocumentItemEntity    ||
+				   x is ArticleDocumentItemEntity ||
+				   x is PriceDocumentItemEntity;
 		}
 
 
