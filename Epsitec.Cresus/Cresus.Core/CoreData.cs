@@ -281,6 +281,7 @@ namespace Epsitec.Cresus.Core
 			dataContext.CreateSchema<TelecomContactEntity> ();
 			dataContext.CreateSchema<UriContactEntity> ();
 			dataContext.CreateSchema<ArticleDefinitionEntity> ();
+			dataContext.CreateSchema<VatDefinitionEntity> ();
 			dataContext.CreateSchema<InvoiceDocumentEntity> ();
 
 			dataContext.CreateSchema<ArticleDocumentItemEntity> ();
