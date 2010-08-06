@@ -26,7 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data.DataContextChanged +=
 				delegate
 				{
-					this.UpdateCollection ();
+					System.Diagnostics.Debug.WriteLine ("DataContext changed : BrowserViewController should do something about it");
+//-					this.UpdateCollection ();
 				};
 		}
 
