@@ -23,11 +23,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data       = data;
 			this.collection = new List<AbstractEntity> ();
+
 			this.data.DataContextChanged +=
-				delegate
+				(sender, e) =>
 				{
-					System.Diagnostics.Debug.WriteLine ("DataContext changed : BrowserViewController should do something about it");
-//-					this.UpdateCollection ();
+					if (this.data.IsDataContextActive)
+					{
+						System.Diagnostics.Debug.WriteLine ("DataContext changed: BrowserViewController should do something about it");
+//-						this.UpdateCollection (silent: true);
+					}
 				};
 		}
 
@@ -77,7 +81,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
 		{
+			this.Orchestrator.Controller.ClearActiveEntity ();
+
 			this.collectionGetter = collectionGetter;
+			this.data.SetupDataContext ();
 			this.UpdateCollection ();
 		}
 
@@ -167,13 +174,20 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 		
-		private void UpdateCollection()
+		private void UpdateCollection(bool silent = false)
 		{
 			if (this.collectionGetter != null)
 			{
-				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+				if (silent == false)
+				{
+					this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+				}
+
+				var data = this.collectionGetter ().ToArray ();
+
 				this.collection.Clear ();
-				this.collection.AddRange (this.collectionGetter ());
+				this.collection.AddRange (data);
+				
 				this.RefreshScrollList ();
 			}
 		}
