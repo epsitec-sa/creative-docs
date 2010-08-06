@@ -539,7 +539,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
-			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
 
 			return true;
 		}
@@ -699,7 +698,7 @@ namespace Epsitec.Cresus.Core.Printers
 				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
 
-			//	Colonne "Total":
+			//	Colonne "Prix TTC":
 			string total;
 
 			if (line.FixedPriceAfterTax.HasValue)  // valeur imposée ?
@@ -725,9 +724,10 @@ namespace Epsitec.Cresus.Core.Printers
 				return false;
 			}
 
-			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.Text);
-			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.BaseAmount));
-			table.SetText (this.tableColumns[TableColumnKeys.Vat               ].Rank, row, Misc.PriceToString (line.ResultingTax));
+			string text = string.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
+
+			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
+			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.ResultingTax));
 
 			return true;
 		}
