@@ -699,18 +699,17 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			//	Colonne "Prix TTC":
-			string total;
-
-			if (line.FixedPriceAfterTax.HasValue)  // valeur imposée ?
+			if (discount == null)
 			{
-				total = Misc.PriceToString (line.FixedPriceAfterTax);
+				string p1 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, p1);
 			}
 			else
 			{
-				total = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
+				string p1 = Misc.PriceToString (line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0));
+				string p2 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (p1, "<br/>", p2));
 			}
-
-			table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (discount == null ? "" : "<br/>", total));
 
 			table.SetUnbreakableRow (row, true);
 
