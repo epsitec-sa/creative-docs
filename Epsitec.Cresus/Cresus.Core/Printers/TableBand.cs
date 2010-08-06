@@ -538,14 +538,15 @@ namespace Epsitec.Cresus.Core.Printers
 					TextBand textBand = this.GetTextBand (column, row);
 					var margins = this.GetMargins (textBand);
 
-					int textSection = 0;
-					int line = 0;
-					bool lastEnding = false;
+					int  textSection = 0;
+					int  line        = 0;
+					bool lastEnding  = false;
+
 					if (lastCellsInfo != null)
 					{
 						textSection = lastCellsInfo[column].TextSection + 1;
-						line = lastCellsInfo[column].FirstLine + lastCellsInfo[column].LineCount;
-						lastEnding = lastCellsInfo[column].Ending;
+						line        = lastCellsInfo[column].FirstLine + lastCellsInfo[column].LineCount;
+						lastEnding  = lastCellsInfo[column].Ending;
 					}
 
 					if (lastEnding)
@@ -574,7 +575,7 @@ namespace Epsitec.Cresus.Core.Printers
 						if (textBand.LastLineCount == 0 && !string.IsNullOrEmpty (textBand.Text))
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
-							//	il faut rejeter cette 'row' et essayer sur une nouvelle section.
+							//	il faut rejeter cette 'row' et essayer dans une nouvelle section.
 							tooSmall = true;
 						}
 					}

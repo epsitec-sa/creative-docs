@@ -452,17 +452,6 @@ namespace Epsitec.Cresus.Core.Printers
 			this.tableBounds = this.documentContainer.AddFromTop (this.table, 5.0);
 
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
-
-#if false
-			// Met un trait horizontal sous l'en-tête.
-			var currentPage = this.documentContainer.CurrentPage;
-			this.documentContainer.CurrentPage = 0;  // dans la première page
-
-			var h = this.table.GetRowHeight (0);
-			this.BuildSeparator (lineY-h);
-
-			this.documentContainer.CurrentPage = currentPage;
-#endif
 		}
 
 
@@ -1003,12 +992,6 @@ namespace Epsitec.Cresus.Core.Printers
 				var bounds = new Rectangle (tableBound.Left, tableBound.Top, width, h);
 
 				this.documentContainer.AddAbsolute (table, bounds);
-
-#if false
-				// Met un trait horizontal sous l'en-tête.
-				h = table.GetRowHeight (0);
-				this.BuildSeparator (bounds.Top-h);
-#endif
 			}
 		}
 
@@ -1059,11 +1042,6 @@ namespace Epsitec.Cresus.Core.Printers
 				var bounds = new Rectangle (tableBound.Left, tableBound.Bottom-h, width, h);
 
 				this.documentContainer.AddAbsolute (table, bounds);
-
-#if false
-				// Met un trait horizontal sur le report.
-				this.BuildSeparator (bounds.Top);
-#endif
 			}
 		}
 
@@ -1143,21 +1121,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-#if false
-		private void BuildSeparator(double y, double width=0.5)
-		{
-			//	Met un séparateur horizontal.
-			var line = new SurfaceBand ()
-			{
-				Height = width,
-			};
-
-			var bounds = new Rectangle (this.PageMargins.Left, y-width/2, this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right, line.Height);
-			this.documentContainer.AddAbsolute (line, bounds);
-		}
-#endif
-
-
 		private bool IsBL
 		{
 			get
@@ -1184,6 +1147,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private Margins GetCellMargins(double bottomForce = 0, double topForce = 0)
 		{
+			//	Retourne les marges à utiliser pour une ligne entière.
 			var margins = this.table.CellMargins;
 
 			if (bottomForce != 0)

@@ -39,9 +39,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.ArticleDefinition", "Article");
 
 				this.CreateUIMain (builder);
+				this.CreateUICategory (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
+
+			//	Summary:
+			this.TileContainerController = new TileContainerController (this, container);
+			var data = this.TileContainerController.DataItems;
+
+			this.CreateUIGroup (data);
+
+			this.TileContainerController.GenerateTiles ();
 		}
 
 
@@ -58,8 +67,53 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField      (tile,  0, "Description courte", Marshaler.Create (() => this.Entity.ShortDescription, x => this.Entity.ShortDescription = x));
 			builder.CreateTextFieldMulti (tile, 68, "Description longue", Marshaler.Create (() => this.Entity.LongDescription, x => this.Entity.LongDescription = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA", Marshaler.Create (this.Entity, x => x.VatCode, (x, v) => x.VatCode = v), BusinessLogic.Enumerations.GetGetAllPossibleItemsVatCode (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
+		private void CreateUICategory(UIBuilder builder)
+		{
+			builder.CreateAutoCompleteTextField ("Catégorie",
+				new SelectionController<ArticleCategoryEntity>
+				{
+					ValueGetter = () => this.Entity.ArticleCategory,
+					ValueSetter = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				});
+		}
+
+		private NewEntityReference CreateNewCategory(DataContext context)
+		{
+			return context.CreateEmptyEntity<ArticleCategoryEntity> ();
+		}
+
+
+		private void CreateUIGroup(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "ArticleGroup",
+					IconUri		 = "Data.ArticleDefinition",
+					Title		 = UIBuilder.FormatText ("Groupes d'articles"),
+					CompactTitle = UIBuilder.FormatText ("Groupes"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroup", data.Controller, this.DataContext);
+
+			template.DefineText (x => UIBuilder.FormatText (x.Name));
+			template.DefineCompactText (x => UIBuilder.FormatText (x.Name));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleGroups, template));
+		}
 
 
 		private TileContainer							tileContainer;
