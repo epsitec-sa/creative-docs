@@ -179,6 +179,7 @@
     </Compile>
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
+    <Compile Include="Saver\JobConverter.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractPersistenceJob.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractInsertionOrUpdatePersistenceJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\AbstractSynchronisationJob.cs" />

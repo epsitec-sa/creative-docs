@@ -716,9 +716,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 						string fieldId = job.FieldId.ToResourceId ();
 						object fieldValue;
 
-						if (job.NewValue.HasValue)
+						if (job.NewTargetKey.HasValue)
 						{
-							fieldValue = new EntityKeyProxy (this, job.NewValue.Value);
+							fieldValue = new EntityKeyProxy (this, job.NewTargetKey.Value);
 						}
 						else
 						{
@@ -754,7 +754,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 						collection.Clear ();
 
-						foreach (EntityKey entityKey in job.NewValues)
+						foreach (EntityKey entityKey in job.NewTargetKeys)
 						{
 							object proxy = new EntityKeyProxy (this, entityKey);
 
