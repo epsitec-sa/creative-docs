@@ -181,7 +181,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
-		/// with this instance.
+		/// with this instance. This methods fires an event indicating that the <see cref="AbstractEntity"/>
+		/// has been created.
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
@@ -193,7 +194,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
 
 			this.NotifyEntityChanged (entity, EntityEventSource.External, EntityEventType.Created);
-			
+
+			entity.UpdateDataGeneration ();
+
 			return entity;
 		}
 
