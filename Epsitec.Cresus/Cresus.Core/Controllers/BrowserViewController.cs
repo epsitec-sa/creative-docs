@@ -24,6 +24,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data       = data;
 			this.collection = new List<AbstractEntity> ();
 
+			this.data.SaveRecordCommandExecuted +=
+				(sender, e) =>
+				{
+					this.UpdateCollection ();
+				};
+
 			this.data.DataContextChanged +=
 				(sender, e) =>
 				{
@@ -81,6 +87,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
 		{
+			//	When switching to some other contents, the browser first has to ensure that the
+			//	UI no longer has an actively selected entity; clearing the active entity will
+			//	also make sure that any changes will be automatically persisted:
+
 			this.Orchestrator.Controller.ClearActiveEntity ();
 
 			this.collectionGetter = collectionGetter;
