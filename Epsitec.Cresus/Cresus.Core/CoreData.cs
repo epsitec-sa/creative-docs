@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public bool IsDataContextActive
+		{
+			get
+			{
+				return this.activeDataContext != null;
+			}
+		}
+
 		public DataContext DataContext
 		{
 			get
@@ -98,9 +106,16 @@ namespace Epsitec.Cresus.Core
 			if (context != null)
 			{
 				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
+				
 				this.OnAboutToSaveDataContext (context);
-				context.SaveChanges ();
+				
+				if (context.ContainsChanges ())
+				{
+					context.SaveChanges ();
+				}
+
 				this.UpdateEditionSaveRecordCommandState ();
+				
 				System.Diagnostics.Debug.WriteLine ("Done");
 			}
 		}
@@ -312,7 +327,7 @@ namespace Epsitec.Cresus.Core
 			// TODO
 		}
 
-		private void SetupDataContext()
+		public void SetupDataContext()
 		{
 			var oldContext = this.activeDataContext;
 			this.activeDataContext = this.CreateDataContext ();
