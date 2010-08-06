@@ -28,23 +28,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var data = this.TileContainerController.DataItems;
 
 			this.CreateUIArticleDefinition (data);
+			this.CreateUIComments (data);
 
 			this.TileContainerController.GenerateTiles ();
 		}
-
-		protected override EditionStatus GetEditionStatus()
-		{
-			var entity = this.Entity;
-			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
-		}
-
-		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
-		{
-			var entity = this.Entity;
-			
-			context.UpdateEmptyEntityStatus (entity, isEmpty);
-		}
 		
+
 		private void CreateUIArticleDefinition(SummaryDataItems data)
 		{
 			data.Add (
@@ -58,6 +47,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
+		}
+
+		private void CreateUIComments(SummaryDataItems data)
+		{
+			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
+		}
+
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			var entity = this.Entity;
+			return entity.IsEmpty () ? EditionStatus.Empty : EditionStatus.Valid;
+		}
+
+		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
+		{
+			var entity = this.Entity;
+
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
 		}
 	}
 }
