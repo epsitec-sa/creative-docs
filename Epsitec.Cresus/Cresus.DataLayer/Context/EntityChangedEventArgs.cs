@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// The <c>EntityEventArgs</c> is a container for the data describing an event related to an
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	public class EntityEventArgs : EventArgs
+	public class EntityChangedEventArgs : EventArgs
 	{
 
 
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="eventType">The type of the event.</param>
 		/// <param name="eventSource">The source of the event.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		public EntityEventArgs(AbstractEntity entity, EntityEventType eventType, EntityEventSource eventSource)
+		public EntityChangedEventArgs(AbstractEntity entity, EntityChangedEventType eventType, EntityChangedEventSource eventSource)
 			: base ()
 		{
 			entity.ThrowIfNull ("entity");
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// The type of the event.
 		/// </summary>
-		public EntityEventType EventType
+		public EntityChangedEventType EventType
 		{
 			get;
 			set;
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// The source of the event.
 		/// </summary>
-		public EntityEventSource EventSource
+		public EntityChangedEventSource EventSource
 		{
 			get;
 			private set;

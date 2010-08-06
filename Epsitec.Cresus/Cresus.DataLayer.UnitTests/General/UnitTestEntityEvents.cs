@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs>();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs>();
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 1);
 				Assert.AreSame (person, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Created, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Created, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
@@ -83,8 +83,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 1);
 				Assert.AreSame (language, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Updated, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 1);
 				Assert.AreSame (person, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Updated, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) =>
 				{
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 1);
 				Assert.AreSame (person, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Updated, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
@@ -161,8 +161,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 1);
 				Assert.AreSame (language, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Deleted, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[0].EventSource);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
@@ -189,12 +189,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 2);
 				Assert.AreSame (person, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Updated, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.Internal, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
 
 				Assert.AreSame (language, eventArgs[1].Entity);
-				Assert.AreEqual (EntityEventType.Deleted, eventArgs[1].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[1].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
 
 			}
 		}
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
+				List<EntityChangedEventArgs> eventArgs = new List<EntityChangedEventArgs> ();
 
 				dataContext.EntityChanged += (s, a) =>
 				{
@@ -225,12 +225,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				Assert.IsTrue (eventArgs.Count == 2);
 				Assert.AreSame (person, eventArgs[0].Entity);
-				Assert.AreEqual (EntityEventType.Updated, eventArgs[0].EventType);
-				Assert.AreEqual (EntityEventSource.Internal, eventArgs[0].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Updated, eventArgs[0].EventType);
+				Assert.AreEqual (EntityChangedEventSource.Internal, eventArgs[0].EventSource);
 
 				Assert.AreSame (contact, eventArgs[1].Entity);
-				Assert.AreEqual (EntityEventType.Deleted, eventArgs[1].EventType);
-				Assert.AreEqual (EntityEventSource.External, eventArgs[1].EventSource);
+				Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs[1].EventType);
+				Assert.AreEqual (EntityChangedEventSource.External, eventArgs[1].EventSource);
 			}
 		}
 
@@ -247,8 +247,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -263,8 +263,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 0);
 
@@ -274,8 +274,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs2.Count == 1);
 						Assert.AreSame (language2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 					}
 					finally
 					{
@@ -299,8 +299,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -316,8 +316,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (person1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 0);
 
@@ -327,8 +327,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs2.Count == 1);
 						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 					}
 					finally
 					{
@@ -352,8 +352,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -369,8 +369,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (person1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 0);
 
@@ -380,8 +380,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs2.Count == 1);
 						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 					}
 					finally
 					{
@@ -405,8 +405,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -426,13 +426,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 1);
 						Assert.AreSame (language2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 					}
 					finally
 					{
@@ -456,8 +456,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -478,17 +478,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (language1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 2);
 						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 
 						Assert.AreSame (language2, eventArgs2[1].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs2[1].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[1].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
 					}
 					finally
 					{
@@ -512,8 +512,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 					try
 					{
-						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
-						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs1 = new List<EntityChangedEventArgs> ();
+						List<EntityChangedEventArgs> eventArgs2 = new List<EntityChangedEventArgs> ();
 
 						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
 						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
@@ -534,17 +534,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 						Assert.IsTrue (eventArgs1.Count == 1);
 						Assert.AreSame (contact1, eventArgs1[0].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs1[0].EventType);
-						Assert.AreEqual (EntityEventSource.External, eventArgs1[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs1[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.External, eventArgs1[0].EventSource);
 
 						Assert.IsTrue (eventArgs2.Count == 2);
 						Assert.AreSame (person2, eventArgs2[0].Entity);
-						Assert.AreEqual (EntityEventType.Updated, eventArgs2[0].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[0].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Updated, eventArgs2[0].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[0].EventSource);
 
 						Assert.AreSame (contact2, eventArgs2[1].Entity);
-						Assert.AreEqual (EntityEventType.Deleted, eventArgs2[1].EventType);
-						Assert.AreEqual (EntityEventSource.Synchronization, eventArgs2[1].EventSource);
+						Assert.AreEqual (EntityChangedEventType.Deleted, eventArgs2[1].EventType);
+						Assert.AreEqual (EntityChangedEventSource.Synchronization, eventArgs2[1].EventSource);
 					}
 					finally
 					{

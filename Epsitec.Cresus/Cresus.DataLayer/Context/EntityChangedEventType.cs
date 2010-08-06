@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// The <c>EntityEventType</c> enum describes the possible types for the events related the the
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	public enum EntityEventType
+	public enum EntityChangedEventType
 	{
 		
 		
