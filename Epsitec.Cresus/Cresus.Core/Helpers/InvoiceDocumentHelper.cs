@@ -236,12 +236,12 @@ namespace Epsitec.Cresus.Core.Helpers
 
 					if (total.FixedPriceAfterTax.HasValue)
 					{
-						total.TextForPrimaryPrice = "<b>Total</b>";
+						total.TextForPrimaryPrice = "<b>Total TTC</b>";
 						total.TextForFixedPrice   = "<b><i>Total arrêté à</i></b>";
 					}
 					else
 					{
-						total.TextForPrimaryPrice = "<b>Total</b>";
+						total.TextForPrimaryPrice = "<b>Total TTC</b>";
 						total.TextForFixedPrice   = null;
 					}
 				}

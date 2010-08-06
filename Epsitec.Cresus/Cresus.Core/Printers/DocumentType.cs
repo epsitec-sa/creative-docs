@@ -60,8 +60,9 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption ("ArticleId", null, "Imprime les identificateurs d'article", false));
 
 			this.options.Add (new DocumentOption ("Aspect de la liste des articles :"));
-			this.options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé sans encadrements", true));
-			this.options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré avec encadrements"));
+			this.options.Add (new DocumentOption ("Frameless", "TableAspect", "Espacé, sans encadrements"));
+			this.options.Add (new DocumentOption ("WithLine",  "TableAspect", "Espacé, avec des lignes de séparation", true));
+			this.options.Add (new DocumentOption ("WithFrame", "TableAspect", "Serré, avec des encadrements"));
 
 			this.options.Add (new DocumentOption ("Ordre des colonnes :"));
 

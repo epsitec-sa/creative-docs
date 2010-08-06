@@ -200,6 +200,7 @@
     <Compile Include="Printers\AbstractEntityPrinter.cs" />
     <Compile Include="Printers\AbstractBand.cs" />
     <Compile Include="Printers\AbstractEsrBand.cs" />
+    <Compile Include="Printers\CellBorder.cs" />
     <Compile Include="Printers\EsrBand.cs" />
     <Compile Include="Printers\EsBand.cs" />
     <Compile Include="Printers\MultiPagePrintEngine.cs" />

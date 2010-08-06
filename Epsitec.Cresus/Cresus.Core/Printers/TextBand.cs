@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Core.Printers
 			this.Justif    = TextJustifMode.None;
 			this.BreakMode = TextBreakMode.Hyphenate;
 
-			this.TableCellBorderWidth = double.NaN;
+			this.TableCellMargins    = Margins.Zero;
+			this.TableCellBorder     = CellBorder.Empty;
 			this.TableCellBackground = Color.Empty;
 
 			this.sectionsInfo = new List<SectionInfo> ();
@@ -59,9 +60,20 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public double TableCellBorderWidth
+		public Margins TableCellMargins
 		{
 			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
+			//	Si elle n'a jamais été initialisée et qu'elle vaut Margins.Zero, cela signifie qu'il
+			//	faut utiliser la valeur générale du tableau (TableBand.CellMargins).
+			get;
+			set;
+		}
+
+		public CellBorder TableCellBorder
+		{
+			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
+			//	Si elle n'a jamais été initialisée et qu'elle vaut CellBorder.Empty, cela signifie qu'il
+			//	faut utiliser la valeur générale du tableau (TableBand.CellBorder).
 			get;
 			set;
 		}
@@ -69,6 +81,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public Color TableCellBackground
 		{
 			//	Cette propriété n'est pas exploitée directement pas TextBand, mais par TableBand !
+			//	Si elle n'a jamais été initialisée et qu'elle vaut Color.Empty, cela signifie qu'il
+			//	faut utiliser la valeur générale du tableau.
 			get;
 			set;
 		}
