@@ -4,7 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.DataLayer.Saver;
+using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections;
 using System.Collections.Generic;

@@ -2,7 +2,7 @@
 
 using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Loader.Data;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

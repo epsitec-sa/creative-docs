@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.Saver
+namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 {
 
 

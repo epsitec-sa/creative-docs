@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Epsitec.Cresus.DataLayer.Saver
+namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
 
 

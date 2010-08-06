@@ -8,6 +8,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Database.Collections;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;

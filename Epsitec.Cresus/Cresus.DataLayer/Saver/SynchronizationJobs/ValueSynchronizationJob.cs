@@ -2,7 +2,8 @@
 
 using Epsitec.Cresus.DataLayer.Context;
 
-namespace Epsitec.Cresus.DataLayer.Saver
+
+namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 {
 
 

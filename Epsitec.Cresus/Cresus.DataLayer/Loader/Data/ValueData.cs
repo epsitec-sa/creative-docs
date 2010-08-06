@@ -4,7 +4,7 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.Loader
+namespace Epsitec.Cresus.DataLayer.Loader.Data
 {
 
 
