@@ -478,7 +478,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					using (this.DefineOriginalValues ())
 					{
 						list = new EntityCollection<T> (id, this, true);
-						this.InternalSetValue (id, list);
+						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
 					}
 
 					list = new EntityCollectionProxy<T> (id, this);
@@ -657,7 +657,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return value;
 		}
 		
-		internal void InternalSetValue(string id, object value)
+		internal void InternalSetValue(string id, object value, ValueStoreSetMode mode = ValueStoreSetMode.Default)
 		{
 			if (this.IsDefiningOriginalValues)
 			{
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.CreateOriginalValues ();
 				}
 
-				this.OriginalValues.SetValue (id, value, ValueStoreSetMode.Default);
+				this.OriginalValues.SetValue (id, value, mode);
 			}
 			else
 			{
@@ -675,7 +675,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.CreateModifiedValues ();
 				}
 
-				this.ModifiedValues.SetValue (id, value, ValueStoreSetMode.Default);
+				this.ModifiedValues.SetValue (id, value, mode);
 			}
 		}
 
@@ -727,8 +727,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						//list = System.Activator.CreateInstance (collectionType, id, this) as System.Collections.IList;
 
 						list = new EntityCollection<AbstractEntity> (id, this, true);
-
-						this.InternalSetValue (id, list);
+						this.InternalSetValue (id, list, ValueStoreSetMode.InitialCollection);
 					}
 				}
 				else
