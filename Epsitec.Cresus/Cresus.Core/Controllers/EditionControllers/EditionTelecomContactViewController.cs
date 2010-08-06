@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			this.TileContainerController = new TileContainerController (this, container, this.DataContext);
+			this.TileContainerController = new TileContainerController (this, container);
 			var data = this.TileContainerController.DataItems;
 
 			this.CreateUIComments (data);
