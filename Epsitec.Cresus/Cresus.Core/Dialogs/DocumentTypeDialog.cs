@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWindowSize(bool showOptions, bool showPreview)
 		{
 			double width = 300;
-			double height = (int) (width*297/210);  // place une une page A4 verticale
+			double height = (int) (width*297/210);  // place pour une page A4 verticale
 
 			int columns = 1;
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				columns++;
 			}
 
-			this.window.ClientSize = new Size (10 + (10+width)*columns + 10, 10 + height + 40);
+			this.window.ClientSize = new Size (10 + (10+width)*columns, 10 + height + 40);
 			this.window.AdjustWindowSize ();
 		}
 
@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var leftFrame = new FrameBox
 			{
 				Parent = frame,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 300,
+				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
@@ -124,7 +125,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DrawFrameState = FrameState.All,
 				DrawFrameWidth = 1,
 				Visibility = showOptions,
-				Dock = DockStyle.Fill,
+				PreferredWidth = 300,
+				Dock = DockStyle.Left,
 				Margins = new Margins (10, 0, 0, 0),
 				Padding = new Margins (10),
 			};
