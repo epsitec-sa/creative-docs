@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public IEnumerable<AbstractSynchronisationJob> Convert(AbstractPersistenceJob job)
+		public IEnumerable<AbstractSynchronizationJob> Convert(AbstractPersistenceJob job)
 		{
 			return this.Convert ((dynamic) job);
 		}

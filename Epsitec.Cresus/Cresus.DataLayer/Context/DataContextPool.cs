@@ -111,13 +111,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Applies a sequence of <see cref="AbstractSynchronisationJob"/> provided by a
+		/// Applies a sequence of <see cref="AbstractSynchronizationJob"/> provided by a
 		/// <see cref="DataContext"/> to all the <see cref="DataContext"/> managed by this instance,
 		/// if <paramref name="dataContext"/> is also managed by this instance.
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"/> whose modifications to synchronize.</param>
-		/// <param name="jobs">The sequence of <see cref="AbstractSynchronisationJob"/> to sychronize.</param>
-		internal void Synchronize(DataContext dataContext, IEnumerable<AbstractSynchronisationJob> jobs)
+		/// <param name="jobs">The sequence of <see cref="AbstractSynchronizationJob"/> to sychronize.</param>
+		internal void Synchronize(DataContext dataContext, IEnumerable<AbstractSynchronizationJob> jobs)
 		{
 			if (DataContextPool.Instance.Contains (dataContext))
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 					.Where (d => !d.IsDisposed)
 					.ToList ();
 
-				foreach (AbstractSynchronisationJob job in jobs)
+				foreach (AbstractSynchronizationJob job in jobs)
 				{
 					foreach (DataContext otherDataContext in otherDataContexts)
 					{

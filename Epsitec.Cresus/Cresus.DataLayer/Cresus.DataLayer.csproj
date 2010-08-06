@@ -182,7 +182,7 @@
     <Compile Include="Saver\JobConverter.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractPersistenceJob.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractInsertionOrUpdatePersistenceJob.cs" />
-    <Compile Include="Saver\SynchronizationJobs\AbstractSynchronisationJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\AbstractSynchronizationJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\AbstractUpdateSynchronizationJob.cs" />
     <Compile Include="Saver\PersistenceJobs\CollectionPersistenceJob.cs" />
     <Compile Include="Saver\DataSaver.cs" />
