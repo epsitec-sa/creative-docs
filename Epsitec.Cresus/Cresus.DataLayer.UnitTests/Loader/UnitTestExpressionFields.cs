@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestExpressionFields
+	public sealed class UnitTestExpressionFields
 	{
 		
 		

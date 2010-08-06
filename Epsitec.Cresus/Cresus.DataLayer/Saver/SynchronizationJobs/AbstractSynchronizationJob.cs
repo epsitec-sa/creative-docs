@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// Creates a new <c>AbstractSynchronizationJob</c>.
 		/// </summary>
 		/// <param name="dataContextId">The unique id of the <see cref="DataContext"/> that is creating the <c>AbstractSynchronizationJob</c>.</param>
-		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/> targeted by the <c>AbstractSynchronizationJob.</c></param>
+		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/> targeted by the <c>AbstractSynchronizationJob</c>.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityKey"/> is empty.</exception>
 		protected AbstractSynchronizationJob(int dataContextId, EntityKey entityKey)
 		{

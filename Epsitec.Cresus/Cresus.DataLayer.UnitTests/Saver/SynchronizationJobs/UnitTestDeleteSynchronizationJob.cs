@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestDeleteSynchronizationJob
+	public sealed class UnitTestDeleteSynchronizationJob
 	{
 
 

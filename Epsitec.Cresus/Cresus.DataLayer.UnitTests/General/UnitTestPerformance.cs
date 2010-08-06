@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 	[TestClass]
-	public class UnitTestPerformance
+	public sealed class UnitTestPerformance
 	{
 
 
