@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var concerneBand = new TableBand ();
 				concerneBand.ColumnsCount = 2;
 				concerneBand.RowsCount = 1;
-				concerneBand.PaintFrame = false;
+				concerneBand.CellBorder = CellBorder.Empty;
 				concerneBand.Font = font;
 				concerneBand.FontSize = fontSize;
 				concerneBand.CellMargins = new Margins (0);
@@ -211,8 +211,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleId,          new TableColumn ("Article",     priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.ArticleDescription, new TableColumn ("Désignation", 0,            ContentAlignment.MiddleLeft));  // seule colonne en mode width = fill
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
@@ -224,8 +224,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns.Add (TableColumnKeys.Quantity,           new TableColumn ("?",           priceWidth,   ContentAlignment.MiddleLeft));  // "Quantité" ou "Livré"
 				this.tableColumns.Add (TableColumnKeys.DelayedQuantity,    new TableColumn ("Suit",        priceWidth,   ContentAlignment.MiddleLeft));
 				this.tableColumns.Add (TableColumnKeys.DelayedDate,        new TableColumn ("Date",        priceWidth+3, ContentAlignment.MiddleLeft));
-				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.UnitPrice,          new TableColumn ("p.u. HT",     priceWidth,   ContentAlignment.MiddleRight));
+				this.tableColumns.Add (TableColumnKeys.Discount,           new TableColumn ("Rabais",      priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.LinePrice,          new TableColumn ("Prix HT",     priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.Vat,                new TableColumn ("TVA",         priceWidth,   ContentAlignment.MiddleRight));
 				this.tableColumns.Add (TableColumnKeys.Total,              new TableColumn ("Prix TTC",    priceWidth,   ContentAlignment.MiddleRight));
@@ -239,37 +239,34 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				if (line.Visibility)
 				{
-					bool exist = false;
+					int rowUsed = 0;
 
 					if (line is TextDocumentItemEntity)
 					{
-						exist = this.InitializeColumnTextLine (line as TextDocumentItemEntity);
+						rowUsed = this.InitializeColumnTextLine (line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						exist = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity);
+						rowUsed = this.InitializeColumnArticleLine (line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						exist = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
+						rowUsed = this.InitializeColumnPriceLine (line as PriceDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
 					{
-						exist = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
+						rowUsed = this.InitializeColumnTaxLine (line as TaxDocumentItemEntity);
 					}
 
 					if (line is TotalDocumentItemEntity)
 					{
-						exist = this.InitializeColumnTotalLine (line as TotalDocumentItemEntity);
+						rowUsed = this.InitializeColumnTotalLine (line as TotalDocumentItemEntity);
 					}
 
-					if (exist)
-					{
-						rowCount++;
-					}
+					rowCount += rowUsed;
 				}
 			}
 
@@ -308,7 +305,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.table = new TableBand ();
 			this.table.ColumnsCount = this.visibleColumnCount;
 			this.table.RowsCount = rowCount;
-			this.table.PaintFrame = this.IsWithFrame;
+			this.table.CellBorder = this.GetCellBorder ();
 			this.table.CellMargins = new Margins (this.CellMargin);
 
 			//	Détermine le nom de la colonne TableColumnKeys.Quantity.
@@ -333,6 +330,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			this.InitializeRowAlignment (this.table, row);
+			this.table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
 
 			row++;
 
@@ -340,41 +338,50 @@ namespace Epsitec.Cresus.Core.Printers
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
-			foreach (var line in this.entity.Lines)
+			for (int i = 0; i < this.entity.Lines.Count; i++)
 			{
+				var line = this.entity.Lines[i];
+
 				if (line.Visibility)
 				{
-					bool exist = false;
+					int rowUsed = 0;
 
 					if (line is TextDocumentItemEntity)
 					{
-						exist = this.BuildTextLine (this.table, row, line as TextDocumentItemEntity);
+						rowUsed = this.BuildTextLine (this.table, row, line as TextDocumentItemEntity);
 					}
 
 					if (line is ArticleDocumentItemEntity)
 					{
-						exist = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity);
+						rowUsed = this.BuildArticleLine (this.table, row, line as ArticleDocumentItemEntity);
 					}
 
 					if (line is PriceDocumentItemEntity)
 					{
-						exist = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity);
+						rowUsed = this.BuildPriceLine (this.table, row, line as PriceDocumentItemEntity);
 					}
 
 					if (line is TaxDocumentItemEntity)
 					{
-						exist = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity);
+						bool firstTax = (i > 0                         && !(this.entity.Lines[i-1] is TaxDocumentItemEntity));
+						bool lastTax  = (i < this.entity.Lines.Count-1 && !(this.entity.Lines[i+1] is TaxDocumentItemEntity));
+
+						rowUsed = this.BuildTaxLine (this.table, row, line as TaxDocumentItemEntity, firstTax, lastTax);
 					}
 
 					if (line is TotalDocumentItemEntity)
 					{
-						exist = this.BuildTotalLine (this.table, row, line as TotalDocumentItemEntity);
+						rowUsed = this.BuildTotalLine (this.table, row, line as TotalDocumentItemEntity);
 					}
 
-					if (exist)
+					if (rowUsed != 0)
 					{
-						this.InitializeRowAlignment (this.table, row);
-						row++;
+						for (int j=row; j<row+rowUsed; j++)
+						{
+							this.InitializeRowAlignment (this.table, j);
+						}
+
+						row += rowUsed;
 					}
 				}
 			}
@@ -446,6 +453,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.lastRowForEachSection = this.table.GetLastRowForEachSection ();
 
+#if false
 			// Met un trait horizontal sous l'en-tête.
 			var currentPage = this.documentContainer.CurrentPage;
 			this.documentContainer.CurrentPage = 0;  // dans la première page
@@ -454,25 +462,28 @@ namespace Epsitec.Cresus.Core.Printers
 			this.BuildSeparator (lineY-h);
 
 			this.documentContainer.CurrentPage = currentPage;
+#endif
 		}
 
 
-		private bool InitializeColumnTextLine(TextDocumentItemEntity line)
+		private int InitializeColumnTextLine(TextDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			return true;
+			return 1;
 		}
 
-		private bool InitializeColumnArticleLine(ArticleDocumentItemEntity line)
+		private int InitializeColumnArticleLine(ArticleDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
-				return false;
+				return 0;
 			}
 
 			if (!this.IsPrintableArticle (line))
 			{
-				return false;
+				return 0;
 			}
 
 			this.tableColumns[TableColumnKeys.ArticleId         ].Visible = true;
@@ -507,14 +518,15 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Discount].Visible = true;
 			}
 
-			return true;
+			return 1;
 		}
 
-		private bool InitializeColumnPriceLine(PriceDocumentItemEntity line)
+		private int InitializeColumnPriceLine(PriceDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
@@ -522,60 +534,58 @@ namespace Epsitec.Cresus.Core.Printers
 			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
-			if (InvoiceDocumentHelper.HasAmount (line))
-			{
-				this.tableColumns[TableColumnKeys.Discount].Visible = true;
-			}
-
-			return true;
+			return InvoiceDocumentHelper.HasAmount (line) ? 2 : 1;  // 2 fausses lignes s'il y a un rabais
 		}
 
-		private bool InitializeColumnTaxLine(TaxDocumentItemEntity line)
+		private int InitializeColumnTaxLine(TaxDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
 
-			return true;
+			return 1;
 		}
 
-		private bool InitializeColumnTotalLine(TotalDocumentItemEntity line)
+		private int InitializeColumnTotalLine(TotalDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.Discount          ].Visible = line.FixedPriceAfterTax.HasValue;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
-			return true;
+			return 1;
 		}
 
 
-		private bool BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
+		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			string text = string.Concat ("<b>", line.Text, "</b>");
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
-			return true;
+			return 1;
 		}
 
-		private bool BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
+		private int BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
-				return false;
+				return 0;
 			}
 
 			if (!this.IsPrintableArticle (line))
 			{
-				return false;
+				return 0;
 			}
 
 			string q1 = null;
@@ -644,14 +654,18 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			return true;
+			return 1;
 		}
 
-		private bool BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
+		private int BuildPriceLine(TableBand table, int row, PriceDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
+			//  Une ligne de sous-total PriceDocumentItemEntity peut occuper 2 lignes physiques du tableau,
+			//	lorsqu'il y a un rabais. Cela permet de créer un demi-espace vertical entre les lignes
+			//	'Sous-total avant rabais / Rabais' et 'Sous-total après rabais'.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			string discount = InvoiceDocumentHelper.GetAmount (line);
@@ -663,64 +677,108 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, string.Concat (line.TextForPrimaryPrice, "<br/>", line.TextForResultingPrice));
-			}
+				string rabais;
+				if (line.Discount.DiscountRate.HasValue)
+				{
+					rabais = string.Format ("Rabais {0}", discount);  // Rabais 20.0%
+				}
+				else
+				{
+					rabais = "Rabais";
+				}
 
-			//	Colonne "Rabais":
-			if (discount != null)
-			{
-				table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, string.Concat ("<br/>", discount));
+				string text = string.Concat (line.TextForPrimaryPrice, "<br/>", rabais);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+0, text);
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+1, line.TextForResultingPrice);
 			}
 
 			//	Colonne "Prix HT":
 			if (discount == null)
 			{
-				string p1 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
+				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
+				string p1 = Misc.PriceToString (v1);
+
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, p1);
 			}
 			else
 			{
-				string p1 = Misc.PriceToString (line.PrimaryPriceBeforeTax.GetValueOrDefault (0));
-				string p2 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row, string.Concat (p1, "<br/>", p2));
+				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0);
+				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0);
+
+				string p1 = Misc.PriceToString (v1);
+				string p2 = Misc.PriceToString (v1 - v3);
+				string p3 = Misc.PriceToString (v3);
+
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, string.Concat (p1, "<br/>-", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+1, p3);
 			}
 
 			//	Colonne "TVA":
 			if (discount == null)
 			{
-				string p1 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
+				decimal v1 = line.ResultingTax.GetValueOrDefault (0);
+				string p1 = Misc.PriceToString (v1);
+
 				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, p1);
 			}
 			else
 			{
-				string p1 = Misc.PriceToString (line.PrimaryTax.GetValueOrDefault (0));
-				string p2 = Misc.PriceToString (line.ResultingTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row, string.Concat (p1, "<br/>", p2));
+				decimal v1 = line.PrimaryTax.GetValueOrDefault (0);
+				decimal v3 = line.ResultingTax.GetValueOrDefault (0);
+
+				string p1 = Misc.PriceToString (v1);
+				string p2 = Misc.PriceToString (v1 - v3);
+				string p3 = Misc.PriceToString (v3);
+
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, string.Concat (p1, "<br/>-", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+1, p3);
 			}
 
 			//	Colonne "Prix TTC":
 			if (discount == null)
 			{
-				string p1 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
+				decimal v1 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
+				string p1 = Misc.PriceToString (v1);
+
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, p1);
 			}
 			else
 			{
-				string p1 = Misc.PriceToString (line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0));
-				string p2 = Misc.PriceToString (line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0));
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, string.Concat (p1, "<br/>", p2));
+				decimal v1 = line.PrimaryPriceBeforeTax.GetValueOrDefault (0) + line.PrimaryTax.GetValueOrDefault (0);
+				decimal v3 = line.ResultingPriceBeforeTax.GetValueOrDefault (0) + line.ResultingTax.GetValueOrDefault (0);
+
+				string p1 = Misc.PriceToString (v1);
+				string p2 = Misc.PriceToString (v1 - v3);
+				string p3 = Misc.PriceToString (v3);
+
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, string.Concat (p1, "<br/>-", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+1, p3);
 			}
 
-			table.SetUnbreakableRow (row, true);
+			if (discount == null)
+			{
+				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true));
+			}
+			else
+			{
+				table.SetUnbreakableRow (row, true);
 
-			return true;
+				table.SetCellBorder (row+0, this.GetCellBorder (bottomLess: true));  // pas de trait horizontal entre les 2 fausses lignes
+				table.SetCellBorder (row+1, this.GetCellBorder (topLess: true, bottomBold: true));
+
+				table.SetCellMargins (row+0, this.GetCellMargins (bottomForce: 0.5));
+				table.SetCellMargins (row+1, this.GetCellMargins (topForce:    0.5));  // un demi-espace entre les 2 fausses lignes
+			}
+
+			return InvoiceDocumentHelper.HasAmount (line) ? 2 : 1;  // 2 fausses lignes s'il y a un rabais
 		}
 
-		private bool BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line)
+		private int BuildTaxLine(TableBand table, int row, TaxDocumentItemEntity line, bool firstTax, bool lastTax)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			string text = string.Concat (line.Text, " (", Misc.PriceToString (line.BaseAmount), ")");
@@ -728,14 +786,38 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 			table.SetText (this.tableColumns[TableColumnKeys.LinePrice         ].Rank, row, Misc.PriceToString (line.ResultingTax));
 
-			return true;
+			table.SetCellBorder (row, this.GetCellBorder (bottomLess: true, topLess: true));
+
+			// Adapte les marges comme suit:
+			// Seule la première taxe a une marge supérieure normale.
+			// Seule la dernière taxe a une marge inférieure normale.
+			// Les taxes sont donc serrées entre elles.
+			var margins = table.CellMargins;
+
+			if (!firstTax)
+			{
+				margins.Top = 0;
+			}
+
+			if (!lastTax)
+			{
+				margins.Bottom = 0;
+			}
+
+			if (!firstTax || !lastTax)
+			{
+				table.SetCellMargins (row, margins);
+			}
+
+			return 1;
 		}
 
-		private bool BuildTotalLine(TableBand table, int row, TotalDocumentItemEntity line)
+		private int BuildTotalLine(TableBand table, int row, TotalDocumentItemEntity line)
 		{
+			//	Retourne le nombre de lignes à utiliser dans le tableau.
 			if (this.IsBL)
 			{
-				return false;
+				return 0;
 			}
 
 			if (line.FixedPriceAfterTax.HasValue)
@@ -743,10 +825,7 @@ namespace Epsitec.Cresus.Core.Printers
 				string text = string.Join ("<br/>", line.TextForPrimaryPrice, line.TextForFixedPrice);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
-				string discount = string.Concat ("<br/>", Misc.PriceToString (line.PrimaryPriceAfterTax - line.FixedPriceAfterTax));
-				table.SetText (this.tableColumns[TableColumnKeys.Discount].Rank, row, discount);
-
-				string total = string.Concat (Misc.PriceToString (line.PrimaryPriceAfterTax), "<br/><b>", Misc.PriceToString (line.FixedPriceAfterTax), "</b>");
+				string total = string.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, total);
 			}
 			else
@@ -758,9 +837,18 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			table.SetUnbreakableRow (row, true);
-			table.SetCellBorderWidth (this.tableColumns[TableColumnKeys.Total].Rank, row, 0.5);
 
-			return true;
+			if (this.IsWithFrame)
+			{
+				table.SetCellBorder (row, this.GetCellBorder (topLess: true));
+				table.SetCellBorder (this.tableColumns[TableColumnKeys.Total].Rank, row, new CellBorder (CellBorder.BoldWidth));
+			}
+			else
+			{
+				table.SetCellBorder (row, this.GetCellBorder (bottomBold: true, topLess: true));
+			}
+
+			return 1;
 		}
 
 
@@ -822,7 +910,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				table.ColumnsCount = 2;
 				table.RowsCount = 1;
-				table.PaintFrame = true;
+				table.CellBorder = CellBorder.Default;
 				table.Font = font;
 				table.FontSize = fontSize;
 				table.CellMargins = new Margins (2);
@@ -885,7 +973,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var table = new TableBand ();
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 2;
-				table.PaintFrame = this.IsWithFrame;
+				table.CellBorder = this.GetCellBorder (bottomBold: true);
 				table.CellMargins = new Margins (this.CellMargin);
 
 				//	Génère une première ligne d'en-tête (titres des colonnes).
@@ -916,9 +1004,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.documentContainer.AddAbsolute (table, bounds);
 
+#if false
 				// Met un trait horizontal sous l'en-tête.
 				h = table.GetRowHeight (0);
 				this.BuildSeparator (bounds.Top-h);
+#endif
 			}
 		}
 
@@ -943,7 +1033,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var table = new TableBand ();
 				table.ColumnsCount = this.visibleColumnCount;
 				table.RowsCount = 1;
-				table.PaintFrame = this.IsWithFrame;
+				table.CellBorder = this.GetCellBorder (topBold: true);
 				table.CellMargins = new Margins (this.CellMargin);
 
 				foreach (var column in this.tableColumns.Values)
@@ -970,8 +1060,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.documentContainer.AddAbsolute (table, bounds);
 
+#if false
 				// Met un trait horizontal sur le report.
 				this.BuildSeparator (bounds.Top);
+#endif
 			}
 		}
 
@@ -1051,6 +1143,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+#if false
 		private void BuildSeparator(double y, double width=0.5)
 		{
 			//	Met un séparateur horizontal.
@@ -1062,6 +1155,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var bounds = new Rectangle (this.PageMargins.Left, y-width/2, this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right, line.Height);
 			this.documentContainer.AddAbsolute (line, bounds);
 		}
+#endif
 
 
 		private bool IsBL
@@ -1085,6 +1179,76 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				return this.IsWithFrame ? 1 : 2;
+			}
+		}
+
+		private Margins GetCellMargins(double bottomForce = 0, double topForce = 0)
+		{
+			var margins = this.table.CellMargins;
+
+			if (bottomForce != 0)
+			{
+				margins.Bottom = bottomForce;
+			}
+
+			if (topForce != 0)
+			{
+				margins.Top = topForce;
+			}
+
+			return margins;
+		}
+
+		private CellBorder GetCellBorder(bool bottomBold = false, bool topBold = false, bool bottomLess = false, bool topLess = false)
+		{
+			//	Retourne les bordures à utiliser pour une ligne entière.
+			double leftWidth   = 0;
+			double rightWidth  = 0;
+			double bottomWidth = 0;
+			double topWidth    = 0;
+
+			//	Initialise pour le style choisi.
+			if (this.IsWithFrame)
+			{
+				leftWidth   = CellBorder.NormalWidth;
+				rightWidth  = CellBorder.NormalWidth;
+				bottomWidth = CellBorder.NormalWidth;
+				topWidth    = CellBorder.NormalWidth;
+			}
+			else if (this.IsWithLine)
+			{
+				bottomWidth = CellBorder.NormalWidth;
+			}
+
+			//	Ajoute ou enlève, selon les exceptions.
+			if (bottomBold)
+			{
+				bottomWidth = CellBorder.BoldWidth;
+			}
+
+			if (topBold)
+			{
+				topWidth = CellBorder.BoldWidth;
+			}
+
+			if (bottomLess)
+			{
+				bottomWidth = 0;
+			}
+
+			if (topLess)  // :-O
+			{
+				topWidth = 0;
+			}
+
+			return new CellBorder (leftWidth, rightWidth, bottomWidth, topWidth);
+		}
+
+		private bool IsWithLine
+		{
+			get
+			{
+				return this.HasDocumentOption ("WithLine");
 			}
 		}
 

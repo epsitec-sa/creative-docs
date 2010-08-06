@@ -23,9 +23,8 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public TableBand() : base()
 		{
-			this.CellBorderWidth = 0.1;
+			this.CellBorder = CellBorder.Default;
 			this.CellMargins = new Margins (1.0);
-			this.PaintFrame = true;
 
 			this.content = new List<List<TextBand>> ();
 			this.relativeColumnsWidth = new List<double> ();
@@ -33,19 +32,13 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public double CellBorderWidth
+		public CellBorder CellBorder
 		{
 			get;
 			set;
 		}
 
 		public Margins CellMargins
-		{
-			get;
-			set;
-		}
-
-		public bool PaintFrame
 		{
 			get;
 			set;
@@ -255,27 +248,70 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public double GetCellBorderWidth(int column, int row)
+		public Margins GetCellMargins(int column, int row)
 		{
 			TextBand textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
-				return 0;
+				return Margins.Zero;
 			}
 			else
 			{
-				return textBand.TableCellBorderWidth;
+				return textBand.TableCellMargins;
 			}
 		}
 
-		public void SetCellBorderWidth(int column, int row, double value)
+		public void SetCellMargins(int column, int row, Margins value)
 		{
 			TextBand textBand = this.GetTextBand (column, row);
 
 			if (textBand != null)
 			{
-				textBand.TableCellBorderWidth = value;
+				textBand.TableCellMargins = value;
+			}
+		}
+
+		public void SetCellMargins(int row, Margins value)
+		{
+			//	Spécifie les marges pour toute une ligne.
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				this.SetCellMargins (column, row, value);
+			}
+		}
+
+
+		public CellBorder GetCellBorder(int column, int row)
+		{
+			TextBand textBand = this.GetTextBand (column, row);
+
+			if (textBand == null)
+			{
+				return CellBorder.Empty;
+			}
+			else
+			{
+				return textBand.TableCellBorder;
+			}
+		}
+
+		public void SetCellBorder(int column, int row, CellBorder value)
+		{
+			TextBand textBand = this.GetTextBand (column, row);
+
+			if (textBand != null)
+			{
+				textBand.TableCellBorder = value;
+			}
+		}
+
+		public void SetCellBorder(int row, CellBorder value)
+		{
+			//	Spécifie les bordures pour toute une ligne.
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				this.SetCellBorder (column, row, value);
 			}
 		}
 
@@ -429,14 +465,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void JustifInitialize(int row)
 		{
-			double horizontalMargin = this.CellMargins.Left + this.CellMargins.Right;
-
 			for (int column = 0; column < this.columnsCount; column++)
 			{
 				TextBand textBand = this.GetTextBand (column, row);
 				double width = this.GetAbsoluteColumnWidth (column);
+				var margins = this.GetMargins (textBand);
 
-				textBand.JustifInitialize (width-horizontalMargin);
+				textBand.JustifInitialize (width - margins.Left - margins.Right);
 			}
 		}
 
@@ -478,13 +513,20 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			double verticalMargin = this.CellMargins.Bottom + this.CellMargins.Top;
-
 			int	rowCount = 0;
 			double sectionHeight = 0;
 			bool ending = false;
 
-			while (height-verticalMargin > 0)
+			double maxVerticalMargin = 0;
+			for (int column = 0; column < this.columnsCount; column++)
+			{
+				TextBand textBand = this.GetTextBand (column, row);
+				var margins = this.GetMargins (textBand);
+
+				maxVerticalMargin = System.Math.Max (maxVerticalMargin, margins.Bottom + margins.Top);
+			}
+
+			while (height-maxVerticalMargin > 0)
 			{
 				var rowInfo = new RowInfo (row);
 				double maxRowHeight = 0;
@@ -494,6 +536,7 @@ namespace Epsitec.Cresus.Core.Printers
 				for (int column = 0; column < this.columnsCount; column++)
 				{
 					TextBand textBand = this.GetTextBand (column, row);
+					var margins = this.GetMargins (textBand);
 
 					int textSection = 0;
 					int line = 0;
@@ -512,6 +555,8 @@ namespace Epsitec.Cresus.Core.Printers
 					}
 					else
 					{
+						double verticalMargin = margins.Bottom + margins.Top;
+
 						bool cellEnding = textBand.JustifOneSection (ref line, height-verticalMargin);
 
 						double cellHeight = textBand.LastHeight + verticalMargin;
@@ -667,7 +712,8 @@ namespace Epsitec.Cresus.Core.Printers
 					var cellInfo = rowInfo.CellsInfo[column];
 					double width = this.GetAbsoluteColumnWidth (column);
 					Rectangle cellBounds = new Rectangle (x, y-rowInfo.Height, width, rowInfo.Height);
-					double cellBorderWidth = double.NaN;
+
+					CellBorder cellBorder = CellBorder.Empty;
 
 					if (cellInfo.FirstLine != -1)
 					{
@@ -679,20 +725,56 @@ namespace Epsitec.Cresus.Core.Printers
 							port.PaintSurface (Path.FromRectangle (cellBounds));
 						}
 
-						if (!textBand.Paint (port, isPreview, cellInfo.TextSection, new Point (x+this.CellMargins.Left, y-this.CellMargins.Top)))
+						var margins = this.GetMargins (textBand);
+						if (!textBand.Paint (port, isPreview, cellInfo.TextSection, new Point (x+margins.Left, y-margins.Top)))
 						{
 							ok = false;
 						}
 
-						cellBorderWidth = textBand.TableCellBorderWidth;
+						cellBorder = textBand.TableCellBorder;
 					}
 
-					if (this.PaintFrame)
+					//	Dessine le cadre de la cellule.
+					if (cellBorder.IsEmpty)
 					{
-						//	Dessine le cadre de la cellule.
-						port.LineWidth = double.IsNaN (cellBorderWidth) ? this.CellBorderWidth : cellBorderWidth;
-						port.Color = Color.FromBrightness (0);
-						port.PaintOutline (Path.FromRectangle (cellBounds));
+						cellBorder = this.CellBorder;
+					}
+
+					if (cellBorder.IsValid)
+					{
+						port.Color = cellBorder.Color;
+
+						if (cellBorder.IsConstantWidth)
+						{
+							port.LineWidth = cellBorder.LeftWidth;
+							port.PaintOutline (Path.FromRectangle (cellBounds));
+						}
+						else
+						{
+							if (cellBorder.LeftWidth > 0)
+							{
+								port.LineWidth = cellBorder.LeftWidth;
+								port.PaintOutline (Path.FromLine (cellBounds.BottomLeft, cellBounds.TopLeft));
+							}
+
+							if (cellBorder.RightWidth > 0)
+							{
+								port.LineWidth = cellBorder.RightWidth;
+								port.PaintOutline (Path.FromLine (cellBounds.BottomRight, cellBounds.TopRight));
+							}
+
+							if (cellBorder.BottomWidth > 0)
+							{
+								port.LineWidth = cellBorder.BottomWidth;
+								port.PaintOutline (Path.FromLine (cellBounds.BottomLeft, cellBounds.BottomRight));
+							}
+
+							if (cellBorder.TopWidth > 0)
+							{
+								port.LineWidth = cellBorder.TopWidth;
+								port.PaintOutline (Path.FromLine (cellBounds.TopLeft, cellBounds.TopRight));
+							}
+						}
 					}
 
 					x += width;
@@ -717,22 +799,25 @@ namespace Epsitec.Cresus.Core.Printers
 		private double ComputeRowHeight(int row)
 		{
 			//	Calcule la hauteur nécessaire pour la ligne, qui est celle de la plus haute cellule.
-			double height = 0;
+			double maxHeight = 0;
+
 			for (int column = 0; column < this.columnsCount; column++)
 			{
 				TextBand textBand = this.GetTextBand (column, row);
+				var margins = this.GetMargins (textBand);
 
 				double width = this.GetAbsoluteColumnWidth (column);
-				width -= this.CellMargins.Left;
-				width -= this.CellMargins.Right;
+				width -= margins.Left;
+				width -= margins.Right;
 
-				height = System.Math.Max (height, textBand.RequiredHeight (width));
+				double height = textBand.RequiredHeight (width);
+				height += margins.Top;
+				height += margins.Bottom;
+
+				maxHeight = System.Math.Max (maxHeight, height);
 			}
 
-			height += this.CellMargins.Top;
-			height += this.CellMargins.Bottom;
-
-			return height;
+			return maxHeight;
 		}
 
 		private double GetAbsoluteColumnWidth(int column)
@@ -779,6 +864,23 @@ namespace Epsitec.Cresus.Core.Printers
 			for (int column = 0; column < this.columnsCount; column++)
 			{
 				this.relativeColumnsWidth.Add (1.0);
+			}
+		}
+
+
+		private Margins GetMargins(TextBand textBand)
+		{
+			//	Retourne les marges à utiliser pour une cellule donnée.
+			if (textBand.TableCellMargins.Left   == 0 &&
+				textBand.TableCellMargins.Right  == 0 &&
+				textBand.TableCellMargins.Bottom == 0 &&
+				textBand.TableCellMargins.Top    == 0)
+			{
+				return this.CellMargins;
+			}
+			else
+			{
+				return textBand.TableCellMargins;
 			}
 		}
 
