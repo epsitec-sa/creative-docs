@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs>();
 
-				dataContext.EntityEvent += (s, a) => eventArgs.Add (a);
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
 				Assert.IsTrue (eventArgs.Count == 0);
 
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) => eventArgs.Add (a);
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
 				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) => eventArgs.Add (a);
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				PersonGenderEntity gender = dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) =>
+				dataContext.EntityChanged += (s, a) =>
 				{
 					eventArgs.Add (a);
 				};
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) => eventArgs.Add (a);
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
 				LanguageEntity language = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) => eventArgs.Add (a);
+				dataContext.EntityChanged += (s, a) => eventArgs.Add (a);
 
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				LanguageEntity language = person.PreferredLanguage;
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			{
 				List<EntityEventArgs> eventArgs = new List<EntityEventArgs> ();
 
-				dataContext.EntityEvent += (s, a) =>
+				dataContext.EntityChanged += (s, a) =>
 				{
 					eventArgs.Add (a);
 				};
@@ -250,8 +250,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 						LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
@@ -302,8 +302,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -355,8 +355,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -408,8 +408,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 						LanguageEntity language2 = dataContext2.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
@@ -459,8 +459,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						LanguageEntity language1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1)));
 						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
@@ -515,8 +515,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 						List<EntityEventArgs> eventArgs1 = new List<EntityEventArgs> ();
 						List<EntityEventArgs> eventArgs2 = new List<EntityEventArgs> ();
 
-						dataContext1.EntityEvent += (s, a) => eventArgs1.Add (a);
-						dataContext2.EntityEvent += (s, a) => eventArgs2.Add (a);
+						dataContext1.EntityChanged += (s, a) => eventArgs1.Add (a);
+						dataContext2.EntityChanged += (s, a) => eventArgs2.Add (a);
 
 						AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1)));
 						NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));

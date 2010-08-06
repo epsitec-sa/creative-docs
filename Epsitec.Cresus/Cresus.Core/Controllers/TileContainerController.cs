@@ -28,13 +28,13 @@ using Epsitec.Common.Support.EntityEngine;
 	/// </summary>
 	public class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(EntityViewController controller, TileContainer container, DataContext dataContext)
+		public TileContainerController(EntityViewController controller, TileContainer container)
 		{
 			this.controller  = controller;
 			this.container   = container;
 			this.dataItems   = new SummaryDataItems (controller);
 			this.activeItems = new List<SummaryData> ();
-			this.dataContext = dataContext;
+			this.dataContext = controller.DataContext;
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
@@ -49,7 +49,7 @@ using Epsitec.Common.Support.EntityEngine;
 			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 
-			this.dataContext.EntityEvent += this.HandleEntityChanged;
+			this.dataContext.EntityChanged += this.HandleEntityChanged;
 			this.refreshTimer.Start ();
 		}
 
@@ -130,7 +130,7 @@ using Epsitec.Common.Support.EntityEngine;
 			this.refreshTimer.Stop ();
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
-			this.dataContext.EntityEvent -= this.HandleEntityChanged;
+			this.dataContext.EntityChanged -= this.HandleEntityChanged;
 			this.container.SizeChanged -= this.HandleContainerSizeChanged;
 			
 			this.GetTitleTiles ().ForEach (x => x.Parent = null);

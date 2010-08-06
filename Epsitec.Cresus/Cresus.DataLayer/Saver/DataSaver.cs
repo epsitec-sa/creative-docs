@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (updated)
 			{
-				this.DataContext.FireEntityEvent (source, eventSource, EntityEventType.Updated);
+				this.DataContext.NotifyEntityChanged (source, eventSource, EntityEventType.Updated);
 			}
 		}
 

@@ -90,23 +90,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// The event that is fired when an <see cref="AbstractEntity"/> managed by this instance is
+		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
 		/// created, updated or deleted.
 		/// </summary>
-		public event EventHandler<EntityEventArgs> EntityEvent
+		public event EventHandler<EntityEventArgs> EntityChanged
 		{
 			add
 			{
 				lock (this.eventLock)
 				{
-					this.entityEvent += value;
+					this.entityChanged += value;
 				}
 			}
 			remove
 			{
 				lock (this.eventLock)
 				{
-					this.entityEvent -= value;
+					this.entityChanged -= value;
 				}
 			}
 		}
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
 
-			this.FireEntityEvent (entity, EntityEventSource.External, EntityEventType.Created);
+			this.NotifyEntityChanged (entity, EntityEventSource.External, EntityEventType.Created);
 			
 			return entity;
 		}
@@ -512,7 +512,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesDeleted.Add (entity);
 			this.entitiesCache.Remove (entity);
 
-			this.FireEntityEvent (entity, EntityEventSource.External, EntityEventType.Deleted);
+			this.NotifyEntityChanged (entity, EntityEventSource.External, EntityEventType.Deleted);
 		}
 
 
@@ -665,7 +665,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityEventSource.Synchronization);
 
-			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Deleted);
+			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Deleted);
 		}
 
 
@@ -691,7 +691,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
@@ -726,7 +726,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
@@ -760,7 +760,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.FireEntityEvent (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
 		}
 
 
@@ -1013,7 +1013,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="args">The data about the event.</param>
 		private void HandleEntityChanged(object sender, EntityChangedEventArgs args)
 		{
-			this.FireEntityEvent (args.Entity, EntityEventSource.External, EntityEventType.Updated);
+			this.NotifyEntityChanged (args.Entity, EntityEventSource.External, EntityEventType.Updated);
 		}
 
 
@@ -1025,7 +1025,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="source">The source of the event.</param>
 		/// <param name="type">The type of the event.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void FireEntityEvent(AbstractEntity entity, EntityEventSource source, EntityEventType type)
+		internal void NotifyEntityChanged(AbstractEntity entity, EntityEventSource source, EntityEventType type)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -1033,7 +1033,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			lock (this.eventLock)
 			{
-				handler = this.entityEvent;
+				handler = this.entityChanged;
 			}
 
 			if (handler != null)
@@ -1079,7 +1079,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The event handler used to fire events related to the <see cref="AbstractEntity"/>
 		/// managed by this instance.
 		/// </summary>
-		private EventHandler<EntityEventArgs> entityEvent;
+		private EventHandler<EntityEventArgs> entityChanged;
 
 
 		/// <summary>
