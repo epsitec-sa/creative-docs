@@ -94,7 +94,7 @@
     <Compile Include="Schema\UnitTestSchemaBuilder.cs" />
     <Compile Include="Schema\UnitTestSchemaEngine.cs" />
     <Compile Include="General\UnitTestSynchronization.cs" />
-    <Compile Include="UnitTestDeleteSynchronizationJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\UnitTestDeleteSynchronizationJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
@@ -169,9 +169,7 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Saver\SynchronizationJobs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

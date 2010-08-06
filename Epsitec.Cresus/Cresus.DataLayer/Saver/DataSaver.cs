@@ -65,11 +65,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public IEnumerable<AbstractSynchronisationJob> SaveChanges()
+		public IEnumerable<AbstractSynchronizationJob> SaveChanges()
 		{
 			bool containsChanges;
 
-			List<AbstractSynchronisationJob> synchronizationJobs = new List<AbstractSynchronisationJob> ();
+			List<AbstractSynchronizationJob> synchronizationJobs = new List<AbstractSynchronizationJob> ();
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool DeleteEntities(DbTransaction transaction, List<AbstractSynchronisationJob> synchronizationJobs)
+		private bool DeleteEntities(DbTransaction transaction, List<AbstractSynchronizationJob> synchronizationJobs)
 		{
 			List<AbstractEntity> entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool SaveEntities(DbTransaction transaction, List<AbstractSynchronisationJob> synchronizationJobs)
+		private bool SaveEntities(DbTransaction transaction, List<AbstractSynchronizationJob> synchronizationJobs)
 		{
 			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
 				from entity in this.DataContext.GetEntitiesModified ()
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity entity)
+		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity entity)
 		{
 			if (savedEntities.Contains (entity))
 			{
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity source)
 		{
 			Druid leafEntityId = source.GetEntityStructuredTypeId ();
 
@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronisationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
+		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
 		{
 			List<AbstractEntity> targets = new List<AbstractEntity> ();
 			

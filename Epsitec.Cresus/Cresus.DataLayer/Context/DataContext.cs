@@ -614,7 +614,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			IEnumerable<AbstractSynchronisationJob> jobs = this.DataSaver.SaveChanges ();
+			IEnumerable<AbstractSynchronizationJob> jobs = this.DataSaver.SaveChanges ();
 			
 			DataContextPool.Instance.Synchronize (this, jobs);
 		}
@@ -636,12 +636,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Applies the modifications described by the given <see cref="AbstractSynchronisationJob"/>
+		/// Applies the modifications described by the given <see cref="AbstractSynchronizationJob"/>
 		/// to the current instance if it is relevant.
 		/// </summary>
-		/// <param name="job">The <see cref="AbstractSynchronisationJob"/> whose modification to apply.</param>
+		/// <param name="job">The <see cref="AbstractSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void Synchronize(AbstractSynchronisationJob job)
+		internal void Synchronize(AbstractSynchronizationJob job)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
