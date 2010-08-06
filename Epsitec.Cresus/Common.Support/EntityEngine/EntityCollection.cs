@@ -21,6 +21,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.enableVirtualizer = true;
 		}
 
+		public bool IsVirtualizerEnabled
+		{
+			get
+			{
+				return this.enableVirtualizer;
+			}
+		}
+
 		/// <summary>
 		/// Virtualizes the null references of the specified entity, if this has
 		/// been enabled for this collection.

@@ -312,7 +312,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				else if (value is EntityCollection)
 				{
 					var collection = value as EntityCollection;
-
 					collection.EnableEntityNullReferenceVirtualizer ();
 				}
 
@@ -321,8 +320,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			public void SetValue(string id, object value, ValueStoreSetMode mode)
 			{
-				this.TranformNullEntityIntoLiveEntity ();
-				this.ReplaceValue (id, value, mode);
+				if (mode == ValueStoreSetMode.InitialCollection)
+				{
+					var collection = value as EntityCollection;
+
+					System.Diagnostics.Debug.Assert (collection != null);
+					System.Diagnostics.Debug.Assert (collection.Count == 0);
+
+					collection.EnableEntityNullReferenceVirtualizer ();
+					
+					this.realReadStore.SetValue (id, value, mode);
+				}
+				else
+				{
+					this.TranformNullEntityIntoLiveEntity ();
+					this.ReplaceValue (id, value, mode);
+				}
 			}
 			
 			#endregion
