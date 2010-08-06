@@ -95,6 +95,7 @@
     <Compile Include="Schema\UnitTestSchemaEngine.cs" />
     <Compile Include="General\UnitTestSynchronization.cs" />
     <Compile Include="Saver\SynchronizationJobs\UnitTestDeleteSynchronizationJob.cs" />
+    <Compile Include="Saver\SynchronizationJobs\UnitTestValueSynchronizationJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
