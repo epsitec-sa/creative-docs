@@ -388,9 +388,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private void HandleEntityContextEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityEventArgs e)
+		private void HandleEntityContextEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityChangedEventArgs e)
 		{
-			if (e.EventType == EntityEventType.Updated)
+			if (e.EventType == EntityChangedEventType.Updated)
 			{
 				this.UpdateEditionSaveRecordCommandState ();
 			}

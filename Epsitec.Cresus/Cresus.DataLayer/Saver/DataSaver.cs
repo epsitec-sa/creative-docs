@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
 		{
-			this.DeleteEntityTargetRelationsInMemory (entity, EntityEventSource.Internal);
+			this.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Internal);
 
 			if (this.DataContext.IsPersistent (entity))
 			{
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target, EntityEventSource eventSource)
+		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target, EntityChangedEventSource eventSource)
 		{
 			// This method will probably be too slow for a high number of managed entities, therefore
 			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityEventSource eventSource)
+		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
 		{
 			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (updated)
 			{
-				this.DataContext.NotifyEntityChanged (source, eventSource, EntityEventType.Updated);
+				this.DataContext.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
 			}
 		}
 

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// The <c>EntityEventSource</c> enum describes the possible sources for an event related to an
 	/// <see cref="AbstractEntity"/>.
 	/// </summary>
-	public enum EntityEventSource
+	public enum EntityChangedEventSource
 	{
 		
 		

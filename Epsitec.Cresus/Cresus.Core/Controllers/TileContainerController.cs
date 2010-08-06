@@ -613,7 +613,7 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
-		private void HandleEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityEventArgs e)
+		private void HandleEntityChanged(object sender, Epsitec.Cresus.DataLayer.Context.EntityChangedEventArgs e)
 		{
 			//	We don't refresh synchronously, since this method could be called very, very often
 			//	and also produce deep recursive calls. Simply set a flag and let the refresh timer

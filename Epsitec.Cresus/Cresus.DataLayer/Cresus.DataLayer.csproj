@@ -138,9 +138,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Context\DataContextEventArgs.cs" />
-    <Compile Include="Context\EntityEventArgs.cs" />
-    <Compile Include="Context\EntityEventSource.cs" />
-    <Compile Include="Context\EntityEventType.cs" />
+    <Compile Include="Context\EntityChangedEventArgs.cs" />
+    <Compile Include="Context\EntityChangedEventSource.cs" />
+    <Compile Include="Context\EntityChangedEventType.cs" />
     <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\ExpressionConversion.cs" />
     <Compile Include="Loader\DataLoader.cs" />

@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			foreach (AbstractEntity entity in this.GetSampleEntities ())
 			{
-				foreach (EntityEventType eventType in this.GetSampleTypes ())
+				foreach (EntityChangedEventType eventType in this.GetSampleTypes ())
 				{
-					foreach (EntityEventSource eventSource in this.GetSampleSources ())
+					foreach (EntityChangedEventSource eventSource in this.GetSampleSources ())
 					{
-						var eventArgs = new DataLayer.Context.EntityEventArgs (entity, eventType, eventSource);
+						var eventArgs = new DataLayer.Context.EntityChangedEventArgs (entity, eventType, eventSource);
 
 						Assert.AreSame (entity, eventArgs.Entity);
 						Assert.AreEqual (eventType, eventArgs.EventType);
@@ -51,10 +51,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public void EntityEventArgsConstructorTest2()
 		{
 			AbstractEntity entity = null;
-			EntityEventType eventType = this.GetSampleTypes ().First ();
-			EntityEventSource eventSource = this.GetSampleSources ().First ();
+			EntityChangedEventType eventType = this.GetSampleTypes ().First ();
+			EntityChangedEventSource eventSource = this.GetSampleSources ().First ();
 
-			new DataLayer.Context.EntityEventArgs (entity, eventType, eventSource);
+			new DataLayer.Context.EntityChangedEventArgs (entity, eventType, eventSource);
 		}
 
 
@@ -66,19 +66,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		private IEnumerable<EntityEventType> GetSampleTypes()
+		private IEnumerable<EntityChangedEventType> GetSampleTypes()
 		{
-			yield return EntityEventType.Created;
-			yield return EntityEventType.Deleted;
-			yield return EntityEventType.Updated;
+			yield return EntityChangedEventType.Created;
+			yield return EntityChangedEventType.Deleted;
+			yield return EntityChangedEventType.Updated;
 		}
 
 
-		private IEnumerable<EntityEventSource> GetSampleSources()
+		private IEnumerable<EntityChangedEventSource> GetSampleSources()
 		{
-			yield return EntityEventSource.External;
-			yield return EntityEventSource.Internal;
-			yield return EntityEventSource.Synchronization;
+			yield return EntityChangedEventSource.External;
+			yield return EntityChangedEventSource.Internal;
+			yield return EntityChangedEventSource.Synchronization;
 		}
 
 
