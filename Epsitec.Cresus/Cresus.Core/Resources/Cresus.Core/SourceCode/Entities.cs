@@ -3312,6 +3312,28 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class GenericArticleDocumentEntity : global::Epsitec.Cresus.Core.Entities.DocumentEntity
 	{
 		///	<summary>
+		///	The <c>BillingRelation</c> field.
+		///	designer:fld/L0AI3/L0ABF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ABF]")]
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity BillingRelation
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0ABF]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.BillingRelation;
+				if (oldValue != value)
+				{
+					this.OnBillingRelationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0ABF]", oldValue, value);
+					this.OnBillingRelationChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>BillingMailContact</c> field.
 		///	designer:fld/L0AI3/L0A67
 		///	</summary>
@@ -3467,7 +3489,31 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>BillingDate</c> field.
+		///	designer:fld/L0AI3/L0AAF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAF]")]
+		public global::Epsitec.Common.Types.Date? BillingDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[L0AAF]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.BillingDate;
+				if (oldValue != value)
+				{
+					this.OnBillingDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[L0AAF]", oldValue, value);
+					this.OnBillingDateChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnBillingRelationChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnBillingRelationChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnBillingMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnBillingMailContactChanged(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
 		partial void OnShippingMailContactChanging(global::Epsitec.Cresus.Core.Entities.MailContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.MailContactEntity newValue);
@@ -3480,6 +3526,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCurrencyCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.CurrencyCode newValue);
 		partial void OnBillingStatusChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.BillingStatus oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.BillingStatus newValue);
 		partial void OnBillingStatusChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.BillingStatus oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.BillingStatus newValue);
+		partial void OnBillingDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnBillingDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
