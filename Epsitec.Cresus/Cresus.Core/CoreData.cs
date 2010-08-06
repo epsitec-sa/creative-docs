@@ -80,10 +80,13 @@ namespace Epsitec.Cresus.Core
 				bool databaseIsNew  = this.ConnectToDatabase (databaseAccess);
 
 				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
+				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
 				this.SetupDataContext ();
 				this.SetupDatabase (databaseIsNew || this.ForceDatabaseCreation);
-				
+				this.DisposeDataContext (this.activeDataContext);
+
+				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 				System.Diagnostics.Debug.WriteLine ("Database ready");
 			}
 
@@ -104,7 +107,10 @@ namespace Epsitec.Cresus.Core
 
 		public DataContext CreateDataContext()
 		{
-			var context = new DataContext(this.dbInfrastructure) { EnableNullVirtualization = true };
+			var context = new DataContext (this.dbInfrastructure)
+			{
+				EnableNullVirtualization = true
+			};
 
 			DataContextPool.Instance.Add (context);
 

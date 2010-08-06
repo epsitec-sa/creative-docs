@@ -150,6 +150,8 @@ using Epsitec.Common.Support.EntityEngine;
 		
 		private void RefreshCollectionItems()
 		{
+			System.Diagnostics.Debug.WriteLine ("About to RefreshCollectionItems on DataContext #" + this.dataContext.UniqueId);
+
 			this.QueueTasklets ("RefreshCollectionItems",
 				new TaskletJob (() => this.dataItems.RefreshCollectionItems (), TaskletRunMode.Async),
 				new TaskletJob (() => this.RefreshActiveItems (), TaskletRunMode.BeforeAndAfter));
@@ -164,6 +166,8 @@ using Epsitec.Common.Support.EntityEngine;
 			this.activeItems.AddRange (currentItems);
 
 			TileContainerController.DisposeDataItems (obsoleteItems);
+
+			System.Diagnostics.Debug.WriteLine ("About to RefreshActiveItems on DataContext #" + this.dataContext.UniqueId);
 
 			this.QueueTasklets ("ExecuteAccessors",
 				new TaskletJob (() => this.activeItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
