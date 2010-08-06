@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="tableDefinition">The <see cref="DbTable"/> whose relations to load.</param>
 		private void LoadRelations(DbTable tableDefinition)
 		{
-			using (DbTransaction transaction = DbInfrastructure.BeginTransaction ())
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				foreach (DbColumn columnDefinition in tableDefinition.Columns)
 				{
