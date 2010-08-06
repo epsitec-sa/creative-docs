@@ -11,14 +11,14 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 	{
 
 
-		public ReferenceSynchronizationJob(int dataContextId, EntityKey entityKey, Druid fieldId, EntityKey? newValue)
-			: base (dataContextId, entityKey, fieldId)
+		public ReferenceSynchronizationJob(int dataContextId, EntityKey sourceKey, Druid fieldId, EntityKey? newTargetKey)
+			: base (dataContextId, sourceKey, fieldId)
 		{
-			this.NewValue = newValue;
+			this.NewTargetKey = newTargetKey;
 		}
 
 
-		public EntityKey? NewValue
+		public EntityKey? NewTargetKey
 		{
 			get;
 			private set;
