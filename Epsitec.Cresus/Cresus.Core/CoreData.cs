@@ -386,12 +386,30 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		private void OnSaveRecordCommandExecuted(DataContext context)
+		{
+			var handler = this.SaveRecordCommandExecuted;
+
+			if (handler != null)
+			{
+				handler (this, new DataContextEventArgs (context));
+			}
+		}
+
 
 		private void AttachSaveStateHandler(DataContext context)
 		{
 			context.EntityChanged += this.HandleEntityContextEntityChanged;
-			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.SaveRecord, () => this.SaveDataContext (this.DataContext));
-			
+
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.SaveRecord,
+				delegate
+				{
+					var activeDataContext = this.DataContext;
+
+					this.SaveDataContext (activeDataContext);
+					this.OnSaveRecordCommandExecuted (activeDataContext);
+				});
+
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
@@ -428,6 +446,7 @@ namespace Epsitec.Cresus.Core
 		
 		public event EventHandler<DataContextEventArgs> DataContextChanged;
 		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;
+		public event EventHandler<DataContextEventArgs> SaveRecordCommandExecuted;
 
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly EntityContext independentEntityContext;
