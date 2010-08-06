@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is
 		/// created, updated or deleted.
 		/// </summary>
-		public event EventHandler<EntityEventArgs> EntityChanged
+		public event EventHandler<EntityChangedEventArgs> EntityChanged
 		{
 			add
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			TEntity entity = this.EntityContext.CreateEmptyEntity<TEntity> ();
 
-			this.NotifyEntityChanged (entity, EntityEventSource.External, EntityEventType.Created);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Created);
 
 			entity.UpdateDataGeneration ();
 
@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesDeleted.Add (entity);
 			this.entitiesCache.Remove (entity);
 
-			this.NotifyEntityChanged (entity, EntityEventSource.External, EntityEventType.Deleted);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Deleted);
 		}
 
 
@@ -666,9 +666,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			AbstractEntity entity = this.GetEntity (job.EntityKey);
 
-			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityEventSource.Synchronization);
+			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Synchronization);
 
-			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Deleted);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
 		}
 
 
@@ -694,7 +694,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
 		}
 
 
@@ -729,7 +729,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
 		}
 
 
@@ -763,7 +763,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 
-			this.NotifyEntityChanged (entity, EntityEventSource.Synchronization, EntityEventType.Updated);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
 		}
 
 
@@ -1014,9 +1014,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="sender">The sender of the event.</param>
 		/// <param name="args">The data about the event.</param>
-		private void HandleEntityChanged(object sender, EntityChangedEventArgs args)
+		private void HandleEntityChanged(object sender, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs args)
 		{
-			this.NotifyEntityChanged (args.Entity, EntityEventSource.External, EntityEventType.Updated);
+			this.NotifyEntityChanged (args.Entity, EntityChangedEventSource.External, EntityChangedEventType.Updated);
 		}
 
 
@@ -1028,11 +1028,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="source">The source of the event.</param>
 		/// <param name="type">The type of the event.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void NotifyEntityChanged(AbstractEntity entity, EntityEventSource source, EntityEventType type)
+		internal void NotifyEntityChanged(AbstractEntity entity, EntityChangedEventSource source, EntityChangedEventType type)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			EventHandler<EntityEventArgs> handler;
+			EventHandler<EntityChangedEventArgs> handler;
 
 			lock (this.eventLock)
 			{
@@ -1041,7 +1041,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (handler != null)
 			{
-				EntityEventArgs eventArgs = new EntityEventArgs (entity, type, source);
+				EntityChangedEventArgs eventArgs = new EntityChangedEventArgs (entity, type, source);
 
 				handler (this, eventArgs);
 			}
@@ -1082,7 +1082,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The event handler used to fire events related to the <see cref="AbstractEntity"/>
 		/// managed by this instance.
 		/// </summary>
-		private EventHandler<EntityEventArgs> entityChanged;
+		private EventHandler<EntityChangedEventArgs> entityChanged;
 
 
 		/// <summary>
