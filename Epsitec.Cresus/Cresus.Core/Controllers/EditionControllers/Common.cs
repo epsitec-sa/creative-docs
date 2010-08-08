@@ -17,6 +17,55 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	internal static class Common
 	{
+		public static string EnumInternalToSingleLine(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, ", ");
+			}
+		}
+
+		public static string EnumInternalToMultiLine(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, "<br/>");
+			}
+		}
+
+		public static string EnumSingleLineToInternal(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value.Replace (", ", AbstractArticleParameterDefinitionEntity.Separator);
+			}
+		}
+
+		public static string EnumMultiLineToInternal(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return value.Replace ("<br/>", AbstractArticleParameterDefinitionEntity.Separator);
+			}
+		}
+
+
 		public static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
 		{
 			EntityViewController parentController = Common.GetParentController (tileContainer);
@@ -64,6 +113,47 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//	Crée et montre la nouvelle tuile.
 			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
+		}
+
+
+		public static void ChangeEditedParameterEntity(TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, string tabPageName)
+		{
+			EntityViewController parentController = Common.GetParentController (tileContainer);
+			ArticleDefinitionEntity articleDefinition = parentController.GetEntity () as ArticleDefinitionEntity;
+
+			//	Cherche l'index de la ligne dans la collection.
+			int index = articleDefinition.ArticleParameters.IndexOf (entity);
+			if (index == -1)
+			{
+				return;
+			}
+
+			//	Ferme la tuile.
+			parentController.Orchestrator.CloseSubViews (parentController);
+
+			//	Supprime l'entité dans la db.
+			articleDefinition.ArticleParameters.RemoveAt (index);  // supprime dans la liste de l'article
+			dataContext.DeleteEntity (entity);                     // supprime dans le DataContext de la ligne
+			parentController.DataContext.DeleteEntity (entity);    // supprime dans le DataContext de l'article
+
+			//	Crée la nouvelle entité.
+			AbstractArticleParameterDefinitionEntity newEntity = null;
+
+			if (tabPageName == "Numeric")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+			}
+			else if (tabPageName == "Enum")
+			{
+				newEntity = parentController.DataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
+			}
+
+			System.Diagnostics.Debug.Assert (newEntity != null);
+
+			articleDefinition.ArticleParameters.Insert (index, newEntity);
+
+			//	Crée et montre la nouvelle tuile.
+			parentController.TileContainerController.ShowSubView (index, "ArticleParameterDefinition");
 		}
 
 
