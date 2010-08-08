@@ -314,6 +314,7 @@ namespace Epsitec.Cresus.Core
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 2),
+				TabIndex = ++this.tabIndex,
 			};
 
 			this.ContentListAdd (frameBox);

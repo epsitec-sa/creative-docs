@@ -104,7 +104,8 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
-    <Compile Include="Controllers\EnumValueArticleParameterController.cs" />
+    <Compile Include="Controllers\EditionControllers\ValuesArticleParameterController.cs" />
+    <Compile Include="Controllers\EditionControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleGroupViewController.cs" />

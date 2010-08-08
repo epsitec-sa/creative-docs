@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateTabBook (builder);
 
 				this.CreateUIArticleDefinition (builder);
+				this.CreateUIParameter (builder);
 
 				this.CreateUIQuantity (builder);
 				this.CreateUIUnitOfMeasure (builder);
@@ -97,6 +98,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToTextArrayConverter     = x => new string[] { x.IdA, x.ShortDescription },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.IdA, x.ShortDescription),
 				});
+		}
+
+		private void CreateUIParameter(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			var group = builder.CreateGroup (tile, null);  // groupe sans titre
+			this.parameterController = new ValuesArticleParameterController (this.tileContainer, tile);
+			this.parameterController.CreateUI (group);
+			this.parameterController.UpdateUI (this.Entity.ArticleDefinition);
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
@@ -235,6 +246,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					this.Entity.ReplacementText = null;
 					this.SetArticleDescription (this.GetArticleDescription ());
+
+					this.parameterController.UpdateUI (this.Entity.ArticleDefinition);
 				}
 			}
 		}
@@ -643,5 +656,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private TileContainer							tileContainer;
 		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
+		private ValuesArticleParameterController		parameterController;
 	}
 }

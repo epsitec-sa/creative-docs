@@ -17,7 +17,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public class EnumValueArticleParameterController
 	{
@@ -119,8 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = toolbar,
 				PreferredSize = new Size (buttonSize*2, buttonSize),
-				GlyphShape = Common.Widgets.GlyphShape.Plus,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Plus,
 				Margins = new Margins (0, 0, 0, 0),
 				Dock = DockStyle.Left,
 			};
@@ -129,8 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = toolbar,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				GlyphShape = Common.Widgets.GlyphShape.Minus,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Minus,
 				Margins = new Margins (1, 0, 0, 0),
 				Dock = DockStyle.Left,
 			};
@@ -139,8 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = toolbar,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				GlyphShape = Common.Widgets.GlyphShape.ArrowUp,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.ArrowUp,
 				Margins = new Margins (10, 0, 0, 0),
 				Dock = DockStyle.Left,
 			};
@@ -149,8 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = toolbar,
 				PreferredSize = new Size (buttonSize, buttonSize),
-				GlyphShape = Common.Widgets.GlyphShape.ArrowDown,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.ArrowDown,
 				Margins = new Margins (1, 0, 0, 0),
 				Dock = DockStyle.Left,
 			};
@@ -158,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.labelCount = new StaticText
 			{
 				Parent = toolbar,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock = DockStyle.Fill,
 			};
 
