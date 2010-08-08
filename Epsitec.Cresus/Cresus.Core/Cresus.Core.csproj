@@ -104,6 +104,7 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
+    <Compile Include="Controllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleGroupViewController.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Controllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\CreationAbstractDocumentItemViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />

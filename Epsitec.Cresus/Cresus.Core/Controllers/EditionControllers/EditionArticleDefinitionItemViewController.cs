@@ -166,29 +166,49 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append (parameter.Name);
-			builder.Append (": ");
+			if (!string.IsNullOrEmpty (parameter.Name))
+			{
+				builder.Append (parameter.Name);
+				builder.Append (": ");
+			}
 
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
 				var value = parameter as NumericValueArticleParameterDefinitionEntity;
 
-				builder.Append (value.DefaultValue.ToString ());
-				builder.Append (" (");
-				builder.Append (value.MinValue.ToString ());
-				builder.Append ("..");
-				builder.Append (value.MaxValue.ToString ());
-				builder.Append (")");
+				if (value.DefaultValue.HasValue ||
+					value.MinValue.HasValue     ||
+					value.MaxValue.HasValue     )
+				{
+					builder.Append (value.DefaultValue.ToString ());
+					builder.Append (" (");
+					builder.Append (value.MinValue.ToString ());
+					builder.Append ("..");
+					builder.Append (value.MaxValue.ToString ());
+					builder.Append (")");
+				}
+				else
+				{
+					builder.Append ("<i>Vide</i>");
+				}
 			}
 
 			if (parameter is EnumValueArticleParameterDefinitionEntity)
 			{
 				var value = parameter as EnumValueArticleParameterDefinitionEntity;
 
-				builder.Append (value.DefaultValue);
-				builder.Append (" (");
-				builder.Append (Common.EnumInternalToSingleLine (value.Values));
-				builder.Append (")");
+				if (!string.IsNullOrWhiteSpace (value.DefaultValue) ||
+					!string.IsNullOrWhiteSpace (value.Values)       )
+				{
+					builder.Append (value.DefaultValue);
+					builder.Append (" (");
+					builder.Append (Common.EnumInternalToSingleLine (value.Values));
+					builder.Append (")");
+				}
+				else
+				{
+					builder.Append ("<i>Vide</i>");
+				}
 			}
 
 			return builder.ToString ();
