@@ -599,16 +599,14 @@ namespace Epsitec.Common.Widgets.Adorners
 						}
 
 						{
-							double radius = this.RetRadiusScroller (rect);
-							Drawing.Path pTitle = this.PathRoundRectangle (rect, radius);
+							Drawing.Path pTitle = this.PathRoundRectangle (rect, 2);
 							graphics.Rasterizer.AddOutline (pTitle, 1.0);
 							graphics.RenderSolid (this.colorBorderButton);
 						}
 					}
 					else
 					{
-						double radius = this.RetRadiusScroller(rect);
-						Drawing.Path pTitle = this.PathRoundRectangle(rect, radius);
+						Drawing.Path pTitle = this.PathRoundRectangle(rect, 2);
 						graphics.Rasterizer.AddOutline(pTitle, 1.0);
 						graphics.RenderSolid(this.colorBorder);
 					}
@@ -2510,13 +2508,6 @@ namespace Epsitec.Common.Widgets.Adorners
 			return System.Math.Floor(System.Math.Max(3, dim/7));
 		}
 
-		protected double RetRadiusScroller(Drawing.Rectangle rect)
-		{
-			//	Retourne le rayon à utiliser pour une zone rectangulaire.
-			double dim = System.Math.Min(rect.Width, rect.Height);
-			return System.Math.Floor(System.Math.Max(2, dim/7));
-		}
-
 		protected void PaintImageButton(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
 										int rank)
@@ -2536,7 +2527,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				this.PaintImageButton9 (graphics, rect, this.RetRadiusScroller (rect), icon, 2);
+				this.PaintImageButton9 (graphics, rect, 2, icon, 2);
 			}
 		}
 
