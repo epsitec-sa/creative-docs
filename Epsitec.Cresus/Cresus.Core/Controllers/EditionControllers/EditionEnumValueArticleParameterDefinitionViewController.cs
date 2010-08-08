@@ -73,114 +73,59 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateTextField (tile, 80, "Code", Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
 			builder.CreateTextField (tile, 0, "Nom", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
 			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (this.Entity, x => x.Cardinality, (x, v) => x.Cardinality = v), BusinessLogic.Enumerations.GetGetAllPossibleItemsValueCardinality (), x => UIBuilder.FormatText (x.Values[0]));
-			builder.CreateTextFieldMulti (tile, 94, "Valeurs", Marshaler.Create (() => this.Values, x => this.Values = x));
-			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextFieldMulti (tile, 94, "Descriptions courtes", Marshaler.Create (() => this.ShortDescriptions, x => this.ShortDescriptions = x));
-			builder.CreateTextFieldMulti (tile, 94, "Descriptions longues", Marshaler.Create (() => this.LongDescriptions, x => this.LongDescriptions = x));
+			var group = builder.CreateGroup (tile, "Contenu de l'énumération");
+			this.parameterController = new EnumValueArticleParameterController (this.tileContainer, this.Entity);
+			this.parameterController.CreateUI (group);
+
+			builder.CreateTextField (tile, 0, "Valeur", Marshaler.Create (() => this.Value, x => this.Value = x));
+			builder.CreateTextField (tile, 0, "Description courte", Marshaler.Create (() => this.ShortDescription, x => this.ShortDescription = x));
+			builder.CreateTextFieldMulti (tile, 78, "Description longue", Marshaler.Create (() => this.LongDescription, x => this.LongDescription = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
 		}
 
 
-		private string Values
+		private string Value
 		{
 			get
 			{
-				return EditionEnumValueArticleParameterDefinitionViewController.EnumInternalToMultiLine (this.Entity.Values);
+				return this.parameterController.SelectedValue;
 			}
 			set
 			{
-				this.Entity.Values = EditionEnumValueArticleParameterDefinitionViewController.EnumMultiLineToInternal (value);
+				this.parameterController.SelectedValue = value;
 			}
 		}
 
-		private string ShortDescriptions
+		private string ShortDescription
 		{
 			get
 			{
-				return EditionEnumValueArticleParameterDefinitionViewController.EnumInternalToMultiLine (this.Entity.ShortDescriptions);
+				return this.parameterController.SelectedShortDescription;
 			}
 			set
 			{
-				this.Entity.ShortDescriptions = EditionEnumValueArticleParameterDefinitionViewController.EnumMultiLineToInternal (value);
+				this.parameterController.SelectedShortDescription = value;
 			}
 		}
 
-		private string LongDescriptions
+		private string LongDescription
 		{
 			get
 			{
-				return EditionEnumValueArticleParameterDefinitionViewController.EnumInternalToMultiLine (this.Entity.LongDescriptions);
+				return this.parameterController.SelectedLongDescription;
 			}
 			set
 			{
-				this.Entity.LongDescriptions = EditionEnumValueArticleParameterDefinitionViewController.EnumMultiLineToInternal (value);
+				this.parameterController.SelectedLongDescription = value;
 			}
 		}
-
-
-		public static string EnumInternalToMultiLine(string value)
-		{
-			var builder = new System.Text.StringBuilder ();
-
-			string[] values = null;
-			int count = 0;
-			int max = 9;
-
-			if (!string.IsNullOrEmpty(value))
-			{
-				values = value.Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-				count = values.Length;
-				max = System.Math.Max (9, values.Length);
-			}
-
-			for (int i = 0; i < max; i++)
-			{
-				builder.Append ((i+1).ToString ());
-				builder.Append (": ");
-
-				if (i < count)
-				{
-					builder.Append (values[i]);
-				}
-
-				builder.Append ("<br/>");
-			}
-
-			return builder.ToString ();
-		}
-
-		public static string EnumMultiLineToInternal(string value)
-		{
-			List<string> list = new List<string> ();
-			string[] values = value.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
-
-			for (int i = 0; i < values.Length; i++)
-			{
-				string text = values[i];
-
-				int index = text.IndexOf (":");
-				if (index != -1)
-				{
-					text = text.Substring (index+1);
-				}
-
-				text = text.Trim ();
-
-				if (!string.IsNullOrEmpty (text))
-				{
-					list.Add (text);
-				}
-			}
-
-			return string.Join (AbstractArticleParameterDefinitionEntity.Separator, list);
-		}
-
 
 
 		protected override EditionStatus GetEditionStatus()
@@ -191,5 +136,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private TileContainer							tileContainer;
 		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
+		private EnumValueArticleParameterController		parameterController;
 	}
 }
