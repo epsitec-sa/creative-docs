@@ -1,0 +1,129 @@
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
+using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Helpers;
+
+using Epsitec.Cresus.DataLayer.Context;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+{
+	public class EditionNumericValueArticleParameterDefinitionViewController : EditionViewController<Entities.NumericValueArticleParameterDefinitionEntity>
+	{
+		public EditionNumericValueArticleParameterDefinitionViewController(string name, Entities.NumericValueArticleParameterDefinitionEntity entity)
+			: base (name, entity)
+		{
+		}
+
+		protected override void CreateUI(TileContainer container)
+		{
+			this.tileContainer = container;
+
+			using (var builder = new UIBuilder (container, this))
+			{
+				builder.CreateHeaderEditorTile ();
+				builder.CreateEditionTitleTile ("Data.ArticleParameter", "Paramètre");
+
+				this.CreateTabBook (builder);
+				this.CreateUIMain1 (builder);
+				this.CreateUIUnitOfMeasure (builder);
+				this.CreateUIMain2 (builder);
+
+				builder.CreateFooterEditorTile ();
+			}
+		}
+
+
+		private void CreateTabBook(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			List<string> pagesDescription = new List<string> ();
+			pagesDescription.Add ("Numeric.Valeur nunérique");
+			pagesDescription.Add ("Enum.Enumération");
+			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Numeric", this.HandleTabBookAction);
+		}
+
+		private void HandleTabBookAction(string tabPageName)
+		{
+			if (tabPageName == "Numeric")
+			{
+				return;
+			}
+
+			Common.ChangeEditedParameterEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
+		}
+
+
+		private void CreateUIMain1(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateTextField (tile, 80, "Code", Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
+			builder.CreateTextField (tile, 0, "Nom", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+		}
+
+		private void CreateUIUnitOfMeasure(UIBuilder builder)
+		{
+			builder.CreateAutoCompleteTextField ("Unité",
+				new SelectionController<UnitOfMeasureEntity>
+				{
+					ValueGetter = () => this.Entity.UnitOfMeasure,
+					ValueSetter = x => this.Entity.UnitOfMeasure = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.Entity.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+				});
+		}
+
+		private void CreateUIMain2(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 80, "Valeur minimale", Marshaler.Create (() => this.Entity.MinValue, x => this.Entity.MinValue = x));
+			builder.CreateTextField (tile, 80, "Valeur maximale", Marshaler.Create (() => this.Entity.MaxValue, x => this.Entity.MaxValue = x));
+			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
+			builder.CreateTextField (tile, 0, "Valeurs préférentielles", Marshaler.Create (() => this.Entity.PreferredValues, x => this.Entity.PreferredValues = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 80, "Modulo", Marshaler.Create (() => this.Entity.Modulo, x => this.Entity.Modulo = x));
+			builder.CreateTextField (tile, 80, "AddBeforeModulo", Marshaler.Create (() => this.Entity.AddBeforeModulo, x => this.Entity.AddBeforeModulo = x));
+		}
+
+
+		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
+		{
+			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			return title;
+		}
+
+
+		protected override EditionStatus GetEditionStatus()
+		{
+			return EditionStatus.Valid;
+		}
+
+
+		private TileContainer							tileContainer;
+		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
+	}
+}
