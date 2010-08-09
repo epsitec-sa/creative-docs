@@ -39,8 +39,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			get
 			{
+				var parameters = this.ImportDictionary ();
+
 				string value;
-				if (this.parameters.TryGetValue (this.Code, out value))
+				if (parameters.TryGetValue (this.Code, out value))
 				{
 					return value;
 				}
@@ -49,15 +51,18 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 			set
 			{
-				this.parameters[this.Code] = value;
+				var parameters = this.ImportDictionary ();
 
-				this.ExportDictionary ();
+				parameters[this.Code] = value;
+
+				this.ExportDictionary (parameters);
 			}
 		}
 
-		private void ImportDictionary()
+		private Dictionary<string, string> ImportDictionary()
 		{
-			this.parameters = new Dictionary<string, string> ();
+			//	Ce dictionnaiore ne doit pas être conservé, car plusieurs contrôleurs travaillent simultanément.
+			var parameters = new Dictionary<string, string> ();
 
 			string[] values = (this.article.ArticleParameters ?? "").Split (new string[] { AbstractArticleParameterController.Separator }, System.StringSplitOptions.None);
 			for (int i = 0; i < values.Length-1; i+=2)
@@ -65,15 +70,17 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				string key  = values[i+0];
 				string data = values[i+1];
 
-				this.parameters.Add (key, data);
+				parameters.Add (key, data);
 			}
+
+			return parameters;
 		}
 
-		private void ExportDictionary()
+		private void ExportDictionary(Dictionary<string, string> parameters)
 		{
 			var list = new List<string> ();
 
-			foreach (var pair in this.parameters)
+			foreach (var pair in parameters)
 			{
 				list.Add (pair.Key);
 				list.Add (pair.Value);
@@ -104,7 +111,5 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private readonly ArticleDocumentItemEntity article;
 		private readonly int parameterIndex;
-
-		private Dictionary<string, string> parameters;
 	}
 }
