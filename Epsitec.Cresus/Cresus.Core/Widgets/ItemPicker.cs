@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public BusinessLogic.EnumValueCardinality Cardinality
 		{
+			// TODO: Le mode EnumValueCardinality.AtLeastOne n'est pas encore supporté !
 			get;
 			set;
 		}
