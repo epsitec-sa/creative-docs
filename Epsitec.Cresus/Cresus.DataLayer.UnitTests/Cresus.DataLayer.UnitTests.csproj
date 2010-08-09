@@ -101,6 +101,7 @@
     <Compile Include="Saver\PersistenceJobs\UnitTestDeletePersistenceJob.cs" />
     <Compile Include="Saver\PersistenceJobs\UnitTestValuePersistenceJob.cs" />
     <Compile Include="Saver\PersistenceJobs\UnitTestReferencePersistenceJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\UnitTestCollectionPersistenceJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

@@ -1,5 +1,4 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
@@ -7,8 +6,6 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
-
-using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests
@@ -102,7 +99,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			yield return PersistenceJobType.Update;
 		}
 
-		
 
 	}
 
