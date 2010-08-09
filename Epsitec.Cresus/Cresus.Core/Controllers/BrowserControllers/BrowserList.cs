@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public void DefineCollection(IEnumerable<AbstractEntity> entities)
+		public void DefineEntities(IEnumerable<AbstractEntity> entities)
 		{
 			this.list.Clear ();
 			this.list.AddRange (entities.Select (x => new BrowserListItem (this, x)));

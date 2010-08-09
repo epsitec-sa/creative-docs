@@ -888,7 +888,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (entity.AreEventsEnabled)
 			{
-				EntityChangedEventArgs eventArgs = new EntityChangedEventArgs (entity, id, oldValue, newValue);
+				EntityFieldChangedEventArgs eventArgs = new EntityFieldChangedEventArgs (entity, id, oldValue, newValue);
 
 				this.OnEntityChanged (eventArgs);
 				entity.OnEntityChanged (eventArgs);
@@ -925,9 +925,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		protected virtual void OnEntityChanged(EntityChangedEventArgs e)
+		protected virtual void OnEntityChanged(EntityFieldChangedEventArgs e)
 		{
-			EventHandler<EntityChangedEventArgs> handler;
+			EventHandler<EntityFieldChangedEventArgs> handler;
 
 			lock (this.eventExclusion)
 			{
@@ -1152,7 +1152,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public event EventHandler<EntityChangedEventArgs> EntityChanged
+		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged
 		{
 			add
 			{
@@ -1180,7 +1180,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private EventHandler<EntityContextEventArgs> entityAttachedEvent;
 		private EventHandler<EntityContextEventArgs> entityDetachedEvent;
-        private EventHandler<EntityChangedEventArgs> entityChangedEvent;
+        private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
 
 		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;

@@ -65,9 +65,18 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var context     = e.CommandContext;
 			var controller  = CoreApplication.GetController<BrowserViewController> (context);
 
+			this.ClearActiveEntity (context);
 			this.UpdateActiveCommandState (activeState);
 			
 			controller.SelectDataSet (databaseName);
+		}
+
+		private void ClearActiveEntity(CommandContext context)
+		{
+			var controller = CoreApplication.GetController<MainViewController> (context);
+			var orchestrator = controller.Orchestrator;
+
+			orchestrator.Controller.ClearActiveEntity ();
 		}
 
 		private void UpdateActiveCommandState(CommandState activeState)

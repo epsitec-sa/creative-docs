@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public event EventHandler<EntityChangedEventArgs> EntityChanged
+		public event EventHandler<EntityFieldChangedEventArgs> EntityChanged
 		{
 			add
 			{
@@ -1423,9 +1423,9 @@ namespace Epsitec.Common.Support.EntityEngine
 		#endregion
 
 
-		internal void OnEntityChanged(EntityChangedEventArgs e)
+		internal void OnEntityChanged(EntityFieldChangedEventArgs e)
 		{
-			EventHandler<EntityChangedEventArgs> handler;
+			EventHandler<EntityFieldChangedEventArgs> handler;
 
 			lock (this.eventExclusion)
 			{
@@ -1463,7 +1463,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		// be not the best way of doing things. This implementation was not meant to be definitive
 		// but only working, so change it if you don't like it.
 		// Marc
-		private EventHandler<EntityChangedEventArgs> entityChangedEvent;
+		private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
 	}
 
 

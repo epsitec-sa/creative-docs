@@ -7,13 +7,13 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityChangedEventArgs</c> class is used to report changes related to
 	/// an entity contents.
 	/// </summary>
-	public class EntityChangedEventArgs : EntityEventArgs
+	public class EntityFieldChangedEventArgs : EntityEventArgs
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityChangedEventArgs"/> class.
+		/// Initializes a new instance of the <see cref="EntityFieldChangedEventArgs"/> class.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		public EntityChangedEventArgs(AbstractEntity entity, string id, object oldValue, object newValue)
+		public EntityFieldChangedEventArgs(AbstractEntity entity, string id, object oldValue, object newValue)
 			: base (entity)
 		{
 			this.id = id;

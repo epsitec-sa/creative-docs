@@ -125,8 +125,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		public void ClearActiveEntity()
 		{
-			this.PopAllViewControllers ();
-			this.entity = null;
+			if (this.entity != null)
+			{
+				this.PopAllViewControllers ();
+				this.entity = null;
+			}
 		}
 
 
