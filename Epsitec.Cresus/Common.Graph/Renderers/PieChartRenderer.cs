@@ -279,7 +279,7 @@ namespace Epsitec.Common.Graph.Renderers
                 // We widen the path for the detection
                 if (forDetection)
                 {
-                	radius *= 1.4);
+                	radius *= 1.4;
                 }
 				
 				path.MoveTo (center);
