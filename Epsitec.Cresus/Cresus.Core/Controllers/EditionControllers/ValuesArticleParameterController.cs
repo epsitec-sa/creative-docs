@@ -38,44 +38,39 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			};
 		}
 
-		public void UpdateUI(ArticleDefinitionEntity article)
+		public void UpdateUI(ArticleDocumentItemEntity article)
 		{
 			this.frameBox.Children.Clear ();
 
-			int tabIndex = 0;
-			foreach (var parameter in article.ArticleParameters)
+			for (int index = 0; index < article.ArticleDefinition.ArticleParameters.Count; index++)
 			{
-				this.CreateParameterUI (this.frameBox, parameter, ++tabIndex);
+				this.CreateParameterUI (this.frameBox, article, index);
 			}
 
 			// Montre ou cache la tuile parente.
-			this.editionTile.Visibility = article.ArticleParameters.Count != 0;
+			this.editionTile.Visibility = article.ArticleDefinition.ArticleParameters.Count != 0;
 		}
 
-		private void CreateParameterUI(FrameBox parent, AbstractArticleParameterDefinitionEntity parameter, int tabIndex)
+		private void CreateParameterUI(FrameBox parent, ArticleDocumentItemEntity article, int index)
 		{
 			var box = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 1),
-				TabIndex = tabIndex,
+				TabIndex = index+1,  // 1..n
 			};
 
 			var label = new StaticText
 			{
 				Parent = box,
-				Text = parameter.Name,
+				Text = article.ArticleDefinition.ArticleParameters[index].Name,
 				PreferredWidth = 100,
 				Dock = DockStyle.Left,
 			};
 
-			var field = new AutoCompleteTextField
-			{
-				Parent = box,
-				Dock = DockStyle.Fill,
-				TabIndex = 1,
-			};
+			var controller = new AbstractArticleParameterController (article, index);
+			controller.CreateUI (box);
 		}
 
 
