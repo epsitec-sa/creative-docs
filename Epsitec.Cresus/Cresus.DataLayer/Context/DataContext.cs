@@ -1003,7 +1003,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="sender">The sender of the event.</param>
 		/// <param name="args">The data about the event.</param>
-		private void HandleEntityChanged(object sender, Epsitec.Common.Support.EntityEngine.EntityChangedEventArgs args)
+		private void HandleEntityChanged(object sender, Epsitec.Common.Support.EntityEngine.EntityFieldChangedEventArgs args)
 		{
 			this.NotifyEntityChanged (args.Entity, EntityChangedEventSource.External, EntityChangedEventType.Updated);
 		}

@@ -25,10 +25,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			base.DataContext = data.CreateDataContext ();
 			this.collection  = new BrowserList (this.DataContext);
 
+			this.DataContext.EntityChanged += this.HandleDataContextEntityChanged;
+
 			this.data.SaveRecordCommandExecuted +=
 				(sender, e) =>
 				{
-					this.UpdateCollection ();
+//-					this.UpdateCollection ();
 				};
 
 			this.data.DataContextChanged +=
@@ -36,12 +38,39 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				{
 					if (this.data.IsDataContextActive)
 					{
-						System.Diagnostics.Debug.WriteLine ("DataContext changed: BrowserViewController should do something about it");
+//-						System.Diagnostics.Debug.WriteLine ("DataContext changed: BrowserViewController should do something about it");
 //-						this.UpdateCollection (silent: true);
 					}
 				};
 		}
 
+		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("DataContext #{0} source={1} type={2}", this.DataContext.UniqueId, e.EventSource, e.EventType);
+		}
+
+		private void HandleScrollListSelectedItemChanged(object sender)
+		{
+			if (this.suspendUpdates == 0)
+			{
+				this.NotifySelectedItemChange ();
+			}
+		}
+
+		private void NotifySelectedItemChange()
+		{
+			int active    = this.scrollList.SelectedItemIndex;
+			var entityKey = this.collection.GetEntityKey (active);
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
+
+			if (this.activeEntityKey != entityKey)
+			{
+				this.activeEntityKey = entityKey;
+				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+				this.OnCurrentChanged ();
+			}
+		}
 		public override DataContext DataContext
 		{
 			get
@@ -163,24 +192,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.scrollList.Items.ValueConverter = BrowserList.ValueConverterFunction;
 
-			this.scrollList.SelectedItemChanged +=
-				delegate
-				{
-					if (this.suspendUpdates == 0)
-					{
-						int active    = this.scrollList.SelectedItemIndex;
-						var entityKey = this.collection.GetEntityKey (active);
-
-						System.Diagnostics.Debug.WriteLine ("SelectedItemChanged : old key = " + this.activeEntityKey + " / new key = " + entityKey);
-
-						if (this.activeEntityKey != entityKey)
-						{
-							this.activeEntityKey = entityKey;
-							this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-							this.OnCurrentChanged ();
-						}
-					}
-				};
+			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 
 			this.RefreshScrollList ();
 		}
@@ -203,27 +215,25 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					break;
 			}
 		}
+
+		private AbstractEntity[] GetCollectionEntities()
+		{
+			if (this.collectionGetter == null)
+			{
+				return new AbstractEntity[0];
+			}
+			else
+			{
+				return this.collectionGetter (this.DataContext).ToArray ();
+			}
+		}
 		
 		private void UpdateCollection()
 		{
 			if (this.collectionGetter != null)
 			{
-				int active   = this.scrollList.SelectedItemIndex;
-				var entityKey1 = this.collection.GetEntityKey (active);
-				
-				var data = this.collectionGetter (this.DataContext).ToArray ();
-
-				this.collection.DefineCollection (data);
-
-				var entityKey2 = this.collection.GetEntityKey (active);
-
-				if (entityKey1 != entityKey2)
-                {
-					this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-					this.OnCurrentChanged ();
-                }
-				
-				this.RefreshScrollList ();
+				this.collection.DefineEntities (this.GetCollectionEntities ());
+				this.RefreshScrollList (reset: true);
 			}
 		}
 		
@@ -257,21 +267,22 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void RefreshScrollList()
+		private void RefreshScrollList(bool reset = false)
 		{
 			if (this.scrollList != null)
 			{
 				int newCount = this.collection.Count;
 
-				int oldActive = this.scrollList.SelectedItemIndex;
+				int oldActive = reset ? 0 : this.scrollList.SelectedItemIndex;
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
 				this.suspendUpdates++;
 				this.scrollList.Items.Clear ();
 				this.scrollList.Items.AddRange (collection);
+				this.scrollList.SelectedItemIndex = newActive;
 				this.suspendUpdates--;
 
-				this.scrollList.SelectedItemIndex = newActive;
+				this.NotifySelectedItemChange ();
 			}
 		}
 
