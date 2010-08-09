@@ -16,15 +16,31 @@ namespace Epsitec.Cresus.DataLayer.Saver
 {
 	
 	
+	/// <summary>
+	/// The <c>PersistenceJobGenerator</c> class is used to build the <see cref="AbstractPersistenceJob"/>
+	/// that describe the modifications that must be applied on an <see cref="AbstractEntity"/> in
+	/// the database in order to persist it.
+	/// </summary>
 	internal sealed class PersistenceJobGenerator
 	{
 
+
+		/// <summary>
+		/// Creates a new <c>PersistenceJobGenerator</c>.
+		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> that will be used to persist the <see cref="AbstractEntity"/>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		public PersistenceJobGenerator(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			
 			this.DataContext = dataContext;
 		}
 
 
+		/// <summary>
+		/// The <see cref="DataContext"/> used to persist the <see cref="AbstractEntity"/>.
+		/// </summary>
 		private DataContext DataContext
 		{
 			get;
@@ -32,6 +48,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		/// <summary>
+		/// The <see cref="EntityContext"/> associated with this instance.
+		/// </summary>
 		private EntityContext EntityContext
 		{
 			get
@@ -41,63 +60,116 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public IEnumerable<AbstractPersistenceJob> InsertEntity(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed in
+		/// order to insert the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose insertion <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		public IEnumerable<AbstractPersistenceJob> CreateInsertionJobs(AbstractEntity entity)
 		{
-			var jobs1 = this.InsertEntityValues (entity);
-			var jobs2 = this.InsertEntityReferences (entity);
-			var jobs3 = this.InsertEntityCollections (entity);
+			entity.ThrowIfNull ("entity");
+			
+			var jobs1 = this.CreateInsertionValueJobs (entity);
+			var jobs2 = this.CreateInsertionReferenceJobs (entity);
+			var jobs3 = this.CreateInsertionCollectionJobs (entity);
 
-			return jobs1.Concat (jobs2).Concat (jobs3);
+			return jobs1.Concat (jobs2).Concat (jobs3).Where (j => j!=null);
 		}
 
 
-		public IEnumerable<AbstractPersistenceJob> UpdateEntity(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed in
+		/// order to update the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose update <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		public IEnumerable<AbstractPersistenceJob> CreateUpdateJobs(AbstractEntity entity)
 		{
-			var jobs1 = this.UpdateEntityValues (entity);
-			var jobs2 = this.UpdateEntityReferences (entity);
-			var jobs3 = this.UpdateEntityCollections (entity);
+			entity.ThrowIfNull ("entity");
+			
+			var jobs1 = this.CreateUpdateValueJobs (entity);
+			var jobs2 = this.CreateUpdateReferenceJobs (entity);
+			var jobs3 = this.CreateUpdateCollectionJobs (entity);
 
-			return jobs1.Concat (jobs2).Concat (jobs3);
+			return jobs1.Concat (jobs2).Concat (jobs3).Where (j => j!=null);
 		}
 
 
-		public AbstractPersistenceJob DeleteEntity(AbstractEntity entity)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed in order to 
+		/// remove the given <see cref="AbstractEntity"/> in from database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose delete <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		public AbstractPersistenceJob CreateDeletionJob(AbstractEntity entity)
 		{
+			entity.ThrowIfNull ("entity");
+			
 			return new DeletePersistenceJob (entity);
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> InsertEntityValues(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// insert the values of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateInsertionValueJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
 			return from Druid localEntityId in localEntityIds
-				   select this.InsertEntityValues (entity, localEntityId);
+				   select this.CreateInsertionValueJob (entity, localEntityId);
 		}
 
 
-		private AbstractPersistenceJob InsertEntityValues(AbstractEntity entity, Druid localEntityId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to insert the
+		/// values of the given subtype of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the subtype of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateInsertionValueJob(AbstractEntity entity, Druid localEntityId)
 		{
 			var fieldIds = from field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId)
 						   where field.Relation == FieldRelation.None
 						   select field.CaptionId;
 
-			return this.CreateValuePersistenceJob(entity, localEntityId, fieldIds, PersistenceJobType.Insert);
+			return this.CreateValueJob(entity, localEntityId, fieldIds, PersistenceJobType.Insert);
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> UpdateEntityValues(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// update the values of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateUpdateValueJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			var localEntityIds = this.EntityContext.GetInheritedEntityIds (leafEntityId);
 
 			return from Druid localEntityId in localEntityIds
-				   select this.UpdateEntityValues (entity, localEntityId);
+				   select this.CreateUpdateValueJob (entity, localEntityId);
 		}
 
 
-		private AbstractPersistenceJob UpdateEntityValues(AbstractEntity entity, Druid localEntityId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to update the
+		/// values of the given subtype of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the subtype of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateUpdateValueJob(AbstractEntity entity, Druid localEntityId)
 		{
 			AbstractPersistenceJob job = null;
 			
@@ -111,14 +183,23 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			if (fieldIds.Any ())
 			{
-				job = this.CreateValuePersistenceJob (entity, localEntityId, fieldIds, PersistenceJobType.Update);		
+				job = this.CreateValueJob (entity, localEntityId, fieldIds, PersistenceJobType.Update);		
 			}
 
 			return job;
 		}
 
 
-		private AbstractPersistenceJob CreateValuePersistenceJob(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds, PersistenceJobType jobType)
+		/// <summary>
+		/// Creates the appropriate <see cref="AbstractPersistenceJob"/> that must be used to insert
+		/// or update the given fields of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> defining the subtype of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldIds">The sequence of <see cref="Druid"/> identifying the fields to insert or update.</param>
+		/// <param name="jobType">Tells whether to update or insert the values.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateValueJob(AbstractEntity entity, Druid localEntityId, IEnumerable<Druid> fieldIds, PersistenceJobType jobType)
 		{
 			Druid rootEntityId = this.EntityContext.GetRootEntityId (localEntityId);
 			bool isRootType = localEntityId == rootEntityId;
@@ -133,17 +214,30 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> InsertEntityReferences(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// insert the references of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateInsertionReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				   where field.Relation == FieldRelation.Reference
-				   select this.InsertEntityReference (entity, field.CaptionId);
+				   select this.CreateInsertionReferenceJob (entity, field.CaptionId);
 		}
 
 
-		private AbstractPersistenceJob InsertEntityReference(AbstractEntity entity, Druid fieldId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to insert the
+		/// reference of the given field of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateInsertionReferenceJob(AbstractEntity entity, Druid fieldId)
 		{
 			ReferencePersistenceJob job = null;
 			
@@ -161,7 +255,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> UpdateEntityReferences(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// update the references of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateUpdateReferenceJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -169,11 +269,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				   let fieldId = field.CaptionId
 				   where field.Relation == FieldRelation.Reference
 				   where entity.HasReferenceChanged (fieldId)
-				   select this.UpdateEntityReference (entity, field.CaptionId);
+				   select this.CreateUpdateReferenceJob (entity, field.CaptionId);
 		}
 
 
-		private AbstractPersistenceJob UpdateEntityReference(AbstractEntity entity, Druid fieldId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to update the
+		/// reference of the given field of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateUpdateReferenceJob(AbstractEntity entity, Druid fieldId)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
@@ -194,17 +301,30 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> InsertEntityCollections(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// insert the collections of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateInsertionCollectionJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			return from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 				   where field.Relation == FieldRelation.Collection
-				   select this.InsertEntityCollection (entity, field.CaptionId);
+				   select this.CreateInsertionCollectionJob (entity, field.CaptionId);
 		}
 
 
-		private AbstractPersistenceJob InsertEntityCollection(AbstractEntity entity, Druid fieldId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to insert the
+		/// collection of the given field of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateInsertionCollectionJob(AbstractEntity entity, Druid fieldId)
 		{
 			CollectionPersistenceJob job = null;
 
@@ -219,14 +339,20 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
-				job = this.CreateCollectionPersistenceJob (entity, fieldId, targets, jobType);
+				job = this.CreateCollectionJob (entity, fieldId, targets, jobType);
 			}
 
 			return job;
 		}
 
 
-		private IEnumerable<AbstractPersistenceJob> UpdateEntityCollections(AbstractEntity entity)
+		/// <summary>
+		/// Creates the sequence of <see cref="AbstractPersistenceJob"/> that must be executed to
+		/// update the collections of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The sequence of <see cref="AbstractPersistenceJob"/>.</returns>
+		private IEnumerable<AbstractPersistenceJob> CreateUpdateCollectionJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -234,23 +360,38 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				   let fieldId = field.CaptionId
 				   where field.Relation == FieldRelation.Collection
 				   where entity.HasCollectionChanged (fieldId)
-				   select this.UpdateEntityCollection (entity, field.CaptionId);
+				   select this.CreateUpdateCollectionJob (entity, field.CaptionId);
 		}
 
 
-		private AbstractPersistenceJob UpdateEntityCollection(AbstractEntity entity, Druid fieldId)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to update the
+		/// collection of the given field of the given <see cref="AbstractEntity"/> in the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private AbstractPersistenceJob CreateUpdateCollectionJob(AbstractEntity entity, Druid fieldId)
 		{
 			var targets = from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
 						  where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
 						  select target;
 
-			PersistenceJobType jobType = PersistenceJobType.Insert;
+			PersistenceJobType jobType = PersistenceJobType.Update;
 
-			return this.CreateCollectionPersistenceJob (entity, fieldId, targets, jobType);
+			return this.CreateCollectionJob (entity, fieldId, targets, jobType);
 		}
 
 
-		private CollectionPersistenceJob CreateCollectionPersistenceJob(AbstractEntity entity, Druid fieldId, IEnumerable<AbstractEntity> targets, PersistenceJobType jobType)
+		/// <summary>
+		/// Creates the <see cref="AbstractPersistenceJob"/> that must be executed to insert or
+		/// update the collection of the given field of the given <see cref="AbstractEntity"/> in
+		/// the database.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
+		private CollectionPersistenceJob CreateCollectionJob(AbstractEntity entity, Druid fieldId, IEnumerable<AbstractEntity> targets, PersistenceJobType jobType)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
