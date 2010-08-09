@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 
 using System.Collections.Generic;
 using System.Linq;

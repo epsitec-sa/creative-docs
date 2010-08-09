@@ -14,15 +14,16 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers
+namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserViewController : CoreViewController, INotifyCurrentChanged
 	{
 		public BrowserViewController(string name, CoreData data)
 			: base (name)
 		{
-			this.data       = data;
-			this.collection = new List<AbstractEntity> ();
+			this.data        = data;
+			base.DataContext = data.CreateDataContext ();
+			this.collection  = new BrowserList (this.DataContext);
 
 			this.data.SaveRecordCommandExecuted +=
 				(sender, e) =>
@@ -39,6 +40,18 @@ namespace Epsitec.Cresus.Core.Controllers
 //-						this.UpdateCollection (silent: true);
 					}
 				};
+		}
+
+		public override DataContext DataContext
+		{
+			get
+			{
+				return base.DataContext;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("Cannot set DataContext");
+			}
 		}
 
 		public FrameBox SettingsPanel
@@ -58,20 +71,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public AbstractEntity GetActiveEntity()
+		public AbstractEntity GetActiveEntity(DataContext context)
 		{
-			if (this.activeEntityKey.IsEmpty)
+			if (this.activeEntityKey == null)
 			{
 				return null;
 			}
 
-			int active   = this.scrollList.SelectedItemIndex;
-			var entity   = BrowserViewController.GetActiveItem (this.collection, active);
-			var entityId = entity.GetEntityStructuredTypeId ();
+			int active    = this.scrollList.SelectedItemIndex;
+			var entityKey = this.collection.GetEntityKey (active);
 
-			entity = this.data.DataContext.ResolveEntity (this.activeEntityKey);
-
-			return entity;
+			if (entityKey.HasValue)
+			{
+				return context.ResolveEntity (entityKey.Value);
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public void SelectDataSet(string dataSetName)
@@ -85,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 		
-		public void SetContents(System.Func<IEnumerable<AbstractEntity>> collectionGetter)
+		public void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -144,18 +161,21 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
 			};
 
+			this.scrollList.Items.ValueConverter = BrowserList.ValueConverterFunction;
+
 			this.scrollList.SelectedItemChanged +=
 				delegate
 				{
 					if (this.suspendUpdates == 0)
 					{
-						int active = this.scrollList.SelectedItemIndex;
-						var entity = BrowserViewController.GetActiveItem (this.collection, active);
-						var key    = DataContextPool.Instance.FindEntityKey (entity) ?? EntityKey.Empty;
+						int active    = this.scrollList.SelectedItemIndex;
+						var entityKey = this.collection.GetEntityKey (active);
 
-						if (this.activeEntityKey != key)
+						System.Diagnostics.Debug.WriteLine ("SelectedItemChanged : old key = " + this.activeEntityKey + " / new key = " + entityKey);
+
+						if (this.activeEntityKey != entityKey)
 						{
-							this.activeEntityKey = key;
+							this.activeEntityKey = entityKey;
 							this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
 							this.OnCurrentChanged ();
 						}
@@ -171,32 +191,37 @@ namespace Epsitec.Cresus.Core.Controllers
 			switch (this.dataSetName)
 			{
 				case "Customers":
-					this.SetContents (() => this.data.GetCustomers ());
+					this.SetContents (context => this.data.GetCustomers (context));
 					break;
 
 				case "ArticleDefinitions":
-					this.SetContents (() => this.data.GetArticleDefinitions ());
+					this.SetContents (context => this.data.GetArticleDefinitions (context));
 					break;
 
 				case "InvoiceDocuments":
-					this.SetContents (() => this.data.GetInvoiceDocuments ());
+					this.SetContents (context => this.data.GetInvoiceDocuments (context));
 					break;
 			}
 		}
 		
-		private void UpdateCollection(bool silent = false)
+		private void UpdateCollection()
 		{
 			if (this.collectionGetter != null)
 			{
-				if (silent == false)
-				{
+				int active   = this.scrollList.SelectedItemIndex;
+				var entityKey1 = this.collection.GetEntityKey (active);
+				
+				var data = this.collectionGetter (this.DataContext).ToArray ();
+
+				this.collection.DefineCollection (data);
+
+				var entityKey2 = this.collection.GetEntityKey (active);
+
+				if (entityKey1 != entityKey2)
+                {
 					this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-				}
-
-				var data = this.collectionGetter ().ToArray ();
-
-				this.collection.Clear ();
-				this.collection.AddRange (data);
+					this.OnCurrentChanged ();
+                }
 				
 				this.RefreshScrollList ();
 			}
@@ -236,26 +261,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.scrollList != null)
 			{
-				var updatedList = new List<FormattedText> ();
-
-				foreach (var entity in this.collection)
-				{
-					var text = BrowserViewController.GetEntityDisplayText (entity);
-
-					if (text.IsNullOrEmpty)
-					{
-						text = CollectionTemplate.DefaultEmptyText;
-					}
-
-					updatedList.Add (text);
-				}
+				int newCount = this.collection.Count;
 
 				int oldActive = this.scrollList.SelectedItemIndex;
-				int newActive = oldActive < updatedList.Count ? oldActive : updatedList.Count-1;
+				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
 				this.suspendUpdates++;
 				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (updatedList.Select (x => x.ToString ()));
+				this.scrollList.Items.AddRange (collection);
 				this.suspendUpdates--;
 
 				this.scrollList.SelectedItemIndex = newActive;
@@ -274,7 +287,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static FormattedText GetEntityDisplayText(AbstractEntity entity)
+		internal static FormattedText GetEntityDisplayText(AbstractEntity entity)
 		{
 			if (entity == null)
 			{
@@ -321,13 +334,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData data;
-		private readonly List<AbstractEntity> collection;
+		private readonly BrowserList collection;
 		private string dataSetName;
-		private System.Func<IEnumerable<AbstractEntity>> collectionGetter;
+		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
 		private int suspendUpdates;
 
 		private ScrollList scrollList;
-		private EntityKey activeEntityKey;
+		private EntityKey? activeEntityKey;
 		private FrameBox settingsPanel;
 	}
 }
