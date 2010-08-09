@@ -84,7 +84,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="DataContext"/> to find.</param>
 		/// <returns>The <see cref="DataContext"/> responsible for <paramref name="entity"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public DataContext FindDataContext(AbstractEntity entity)
 		{
 			if (entity == null)

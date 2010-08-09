@@ -251,10 +251,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void FindDataContextTest2()
 		{
-			new DataContextPool_Accessor ().FindDataContext (null);
+			DataContext dataContext = new DataContextPool_Accessor ().FindDataContext (null);
+
+			Assert.IsNull (dataContext);
 		}
 
 
