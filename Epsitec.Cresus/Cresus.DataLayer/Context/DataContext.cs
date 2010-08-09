@@ -17,11 +17,8 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-
 namespace Epsitec.Cresus.DataLayer.Context
 {
-	
-	
 	/// <summary>
 	/// The <c>DataContext</c> class is responsible of the mapping between the object model and the
 	/// relational model of the <see cref="AbstractEntity"/>. It is therefore the designated entry
@@ -30,8 +27,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 	[System.Diagnostics.DebuggerDisplay ("DataContext #{UniqueId}")]
 	public sealed class DataContext : System.IDisposable, IEntityPersistenceManager
 	{
-
-
 		/// <summary>
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
@@ -60,7 +55,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.EntityContext.PersistenceManagers.Add (this);
 		}
 
-
 		/// <summary>
 		/// Destructor for the <c>DataContext</c>.
 		/// </summary>
@@ -78,7 +72,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Tells whether this instance is disposed or not.
@@ -112,7 +105,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="EntityContext"/> associated with this instance.
 		/// </summary>
@@ -127,7 +119,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="DbInfrastructure"/> associated with this instance.
 		/// </summary>
@@ -136,7 +127,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="SchemaEngine"/> associated with this instance.
@@ -147,7 +137,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="DataLoader"/> associated with this instance.
 		/// </summary>
@@ -157,7 +146,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="DataSaver"/> associated with this instance.
 		/// </summary>
@@ -166,7 +154,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> created by this
@@ -179,7 +166,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			set;
 		}
 
-
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
 		/// with this instance. This methods fires an event indicating that the <see cref="AbstractEntity"/>
@@ -188,7 +174,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public TEntity CreateEntity<TEntity>() where TEntity : AbstractEntity, new ()
+		public TEntity CreateEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -224,7 +211,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public TEntity CreateEmptyEntity<TEntity>() where TEntity : AbstractEntity, new ()
+		public TEntity CreateEmptyEntity<TEntity>()
+			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -249,7 +237,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entitiesCache.ContainsEntity (entity);
 		}
 
-
 		/// <summary>
 		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
 		/// given <see cref="EntityKey"/>.
@@ -263,7 +250,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return this.entitiesCache.GetEntity (entityKey) != null;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
@@ -543,14 +529,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			AbstractEntity entity = this.entitiesCache.GetEntity (entityKey);
+			AbstractEntity entity = this.GetEntity (entityKey);
 
 			if (entity == null)
 			{
-				entity = this.DataLoader.ResolveEntity (entityKey);
+				return this.DataLoader.ResolveEntity (entityKey);
 			}
-
-			return entity;
+			else
+			{
+				return entity;
+			}
 		}
 
 		
@@ -562,7 +550,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/></returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public TEntity ResolveEntity<TEntity>(DbKey rowKey) where TEntity : AbstractEntity, new ()
+		public TEntity ResolveEntity<TEntity>(DbKey rowKey)
+			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -572,7 +561,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return (TEntity) this.ResolveEntity (entityKey);
 		}
 
-
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which match the
 		/// given example.
@@ -581,13 +569,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example) where TEntity : AbstractEntity
+		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
+			where TEntity : AbstractEntity
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			return this.DataLoader.GetByExample<TEntity> (example);
 		}
-
 
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which correspond
@@ -597,13 +585,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request) where TEntity : AbstractEntity
+		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request)
+			where TEntity : AbstractEntity
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			return this.DataLoader.GetByRequest<TEntity> (request);
 		}
-
 
 		/// <summary>
 		/// Persists all the changes that have been made to the <see cref="AbstractEntity"/> managed
@@ -619,7 +607,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			DataContextPool.Instance.Synchronize (this, jobs);
 		}
 
-
 		/// <summary>
 		/// Creates and persists the schema describing an <see cref="AbstractEntity"/> to the
 		/// database. The schema for the <see cref="AbstractEntity"/> is created with all the
@@ -627,7 +614,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> whose schema to create.</typeparam>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public void CreateSchema<TEntity>() where TEntity : AbstractEntity, new()
+		public void CreateSchema<TEntity>()
+			where TEntity : AbstractEntity, new()
 		{
 			this.AssertDataContextIsNotDisposed ();
 
@@ -1090,9 +1078,5 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The next unique id which will be used for the next instance of <c>DataContext</c>.
 		/// </summary>
 		private static int nextUniqueId;
-
-
 	}
-
-
 }

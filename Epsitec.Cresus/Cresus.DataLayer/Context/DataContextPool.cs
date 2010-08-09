@@ -87,7 +87,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public DataContext FindDataContext(AbstractEntity entity)
 		{
-			entity.ThrowIfNull ("entity");
+			if (entity == null)
+			{
+				return null;
+			}
 			
 			return this.FirstOrDefault (context => context.Contains (entity));
 		}
@@ -102,7 +105,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public EntityKey? FindEntityKey(AbstractEntity entity)
 		{
-			entity.ThrowIfNull ("entity");
+			if (entity == null)
+            {
+				return null;
+            }
 			
 			DataContext context = this.FindDataContext (entity);
 

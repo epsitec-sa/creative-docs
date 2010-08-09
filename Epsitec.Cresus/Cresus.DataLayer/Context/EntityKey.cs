@@ -7,19 +7,14 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Database;
 using Epsitec.Common.Support.EntityEngine;
 
-
 namespace Epsitec.Cresus.DataLayer.Context
 {
-
-
 	/// <summary>
 	/// The <c>EntityKey</c> structure encodes the identity of an <see cref="EntityKey"/> in the
 	/// database using a <see cref="DbKey"/> and a <see cref="Druid"/>.
 	/// </summary>
 	public struct EntityKey : System.IEquatable<EntityKey>
 	{
-
-
 		/// <summary>
 		/// Builds a new <see cref="EntityKey"></see> which identifies an <see cref="AbstractEntity"></see>.
 		/// </summary>
@@ -30,7 +25,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityId = entityId;
 			this.rowKey = rowKey;
 		}
-
 
 		/// <summary>
 		/// Creates the <see cref="EntityKey"></see> corresponding the <paramref name="entity"></paramref> and
@@ -61,7 +55,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="Druid"/> that represents the type of the <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -73,7 +66,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.entityId;
 			}
 		}
-
 
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is empty.
@@ -125,6 +117,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
 		}
 
+		public override string ToString()
+		{
+			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
+		}
+
 
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are equal.
@@ -136,7 +133,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return a.Equals (b);
 		}
-
 
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are different.
@@ -156,7 +152,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		private readonly DbKey rowKey;
 
-
 		/// <summary>
 		/// The <see cref="Druid"/> which represents the type of the <see cref="AbstractEntity"/>
 		/// represented by this instance.
@@ -168,9 +163,5 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// An instance of the empty <see cref="EntityKey"/>.
 		/// </summary>
 		public static readonly EntityKey Empty = new EntityKey ();
-
-
 	}
-
-
 }
