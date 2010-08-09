@@ -399,9 +399,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			//	enumValues -> parameterEntity
 			//	Génial, cet opérateur Select !
-			this.parameterEntity.Values            = string.Join (AbstractArticleParameterDefinitionEntity.Separator, this.enumValues.Select (x => x.Value));
-			this.parameterEntity.ShortDescriptions = string.Join (AbstractArticleParameterDefinitionEntity.Separator, this.enumValues.Select (x => x.ShortDescription));
-			this.parameterEntity.LongDescriptions  = string.Join (AbstractArticleParameterDefinitionEntity.Separator, this.enumValues.Select (x => x.LongDescription));
+			var extract = this.enumValues.Where (x => !string.IsNullOrEmpty (x.Value));
+
+			this.parameterEntity.Values            = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.Value));
+			this.parameterEntity.ShortDescriptions = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.ShortDescription));
+			this.parameterEntity.LongDescriptions  = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.LongDescription));
 		}
 
 
