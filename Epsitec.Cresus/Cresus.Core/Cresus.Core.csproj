@@ -104,6 +104,8 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
     <Compile Include="Controllers\EditionControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
@@ -122,9 +124,9 @@
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
     <Compile Include="CommandHandlers\ICommandHandler.cs" />
-    <Compile Include="Controllers\BrowserSettingsController.cs" />
-    <Compile Include="Controllers\BrowserSettingsMode.cs" />
-    <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsMode.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
     <Compile Include="Controllers\EditionControllers\Common.cs" />
     <Compile Include="Controllers\EditionControllers\EditionPaymentModeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBillingDetailViewController.cs" />

@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core
 {
@@ -87,9 +88,9 @@ namespace Epsitec.Cresus.Core
 			return new PersonGenderRepository (this.DataContext).GetAllPersonGenders ();
 		}
 
-		public IEnumerable<RelationEntity> GetCustomers()
+		public IEnumerable<RelationEntity> GetCustomers(DataContext context)
 		{
-			return new RelationRepository (this.DataContext).GetAllRelations ();
+			return new RelationRepository (context).GetAllRelations ();
 		}
 
 		public IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
@@ -97,9 +98,9 @@ namespace Epsitec.Cresus.Core
 			return new UnitOfMeasureRepository (this.DataContext).GetAllUnitOfMeasure ();
 		}
 
-		public IEnumerable<ArticleDefinitionEntity> GetArticleDefinitions()
+		public IEnumerable<ArticleDefinitionEntity> GetArticleDefinitions(DataContext context)
 		{
-			return new ArticleDefinitionRepository (this.DataContext).GetAllArticleDefinitions ();
+			return new ArticleDefinitionRepository (context).GetAllArticleDefinitions ();
 		}
 
 		public IEnumerable<ArticleCategoryEntity> GetArticleCategories()
@@ -129,9 +130,9 @@ namespace Epsitec.Cresus.Core
 			throw new System.NotImplementedException ();
 		}
 
-		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments()
+		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments(DataContext context)
 		{
-			return new InvoiceDocumentRepository (this.DataContext).GetAllInvoiceDocuments ();
+			return new InvoiceDocumentRepository (context).GetAllInvoiceDocuments ();
 		}
 
 		public IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)

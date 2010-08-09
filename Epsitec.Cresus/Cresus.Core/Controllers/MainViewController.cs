@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Printers;
@@ -48,13 +49,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserViewController.CurrentChanging +=
 				delegate
 				{
+					System.Diagnostics.Debug.WriteLine ("CurrentChanging");
 					this.dataViewController.ClearActiveEntity ();
 				};
 
 			this.browserViewController.CurrentChanged +=
 				delegate
 				{
-					this.dataViewController.SetActiveEntity (this.browserViewController.GetActiveEntity ());
+					System.Diagnostics.Debug.WriteLine ("CurrentChanged");
+					this.dataViewController.SetActiveEntity (this.browserViewController.GetActiveEntity (this.dataViewController.DataContext));
 				};
 		}
 
@@ -105,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
 			this.dataViewController.CreateUI (this.rightPanel);
 
-			this.BrowserSettingsMode = Controllers.BrowserSettingsMode.Compact;
+			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
 
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.Print ());
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Preview, () => this.Preview ());
@@ -190,19 +193,19 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			switch (this.browserSettingsMode)
 			{
-				case Controllers.BrowserSettingsMode.Hidden:
+				case BrowserSettingsMode.Hidden:
 					expandedPanel.Visibility = false;
 					compactPanel.Visibility  = false;
 					this.browserSettingsPanel.Parent = null;
 					break;
 
-				case Controllers.BrowserSettingsMode.Compact:
+				case BrowserSettingsMode.Compact:
 					expandedPanel.Visibility = false;
 					compactPanel.Visibility  = true;
 					this.browserSettingsPanel.Parent = compactPanel;
 					break;
 
-				case Controllers.BrowserSettingsMode.Expanded:
+				case BrowserSettingsMode.Expanded:
 					expandedPanel.Visibility = true;
 					compactPanel.Visibility  = false;
 					this.browserSettingsPanel.Parent = expandedPanel;
@@ -216,12 +219,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void Print()
 		{
-			this.printEngine.Print (this.browserViewController.GetActiveEntity ());
+			var context = this.data.DataContext;
+			var entity = this.browserViewController.GetActiveEntity (context);
+			this.printEngine.Print (entity);
 		}
 
 		private void Preview()
 		{
-			this.printEngine.Preview (this.browserViewController.GetActiveEntity ());
+			var context = this.data.DataContext;
+			var entity = this.browserViewController.GetActiveEntity (context);
+			this.printEngine.Preview (entity);
 		}
 
 		
