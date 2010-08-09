@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			var group = builder.CreateGroup (tile, null);  // groupe sans titre
-			this.parameterController = new ValuesArticleParameterController (this.tileContainer, tile);
+			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, tile);
 			this.parameterController.CreateUI (group);
 			this.parameterController.UpdateUI (this.Entity);
 		}
@@ -636,7 +636,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer							tileContainer;
-		private ValuesArticleParameterController		parameterController;
+		private TileContainer													tileContainer;
+		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 	}
 }

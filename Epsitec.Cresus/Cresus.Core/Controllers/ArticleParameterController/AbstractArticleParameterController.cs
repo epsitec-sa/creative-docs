@@ -17,14 +17,14 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
 	public class AbstractArticleParameterController
 	{
-		public AbstractArticleParameterController(ArticleDocumentItemEntity article, int index)
+		public AbstractArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
 		{
 			this.article = article;
-			this.index = index;
+			this.parameterIndex = parameterIndex;
 
 			this.ImportDictionary ();
 		}
@@ -32,38 +32,65 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		public void CreateUI(FrameBox parent)
 		{
-			var field = new TextFieldEx
-			{
-				Parent = parent,
-				Dock = DockStyle.Fill,
-				Text = this.ParameterValue,
-			};
+			AbstractArticleParameterDefinitionEntity parameter = this.article.ArticleDefinition.ArticleParameters[this.parameterIndex];
 
-			field.AcceptingEdition += delegate
+			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
-				this.ParameterValue = field.Text;
-			};
+				var field = new TextFieldEx
+				{
+					Parent = parent,
+					Dock = DockStyle.Fill,
+					Text = this.ParameterValue,
+				};
+
+				field.AcceptingEdition += delegate
+				{
+					this.ParameterValue = field.Text;
+				};
+			}
+
+			if (parameter is EnumValueArticleParameterDefinitionEntity)
+			{
+				var field = new TextFieldEx
+				{
+					Parent = parent,
+					Dock = DockStyle.Fill,
+					Text = this.ParameterValue,
+				};
+
+				field.AcceptingEdition += delegate
+				{
+					this.ParameterValue = field.Text;
+				};
+			}
 		}
 
+
+		private string GetParameterValue()
+		{
+			return this.ParameterValue;
+		}
+
+		private void SetParameterValue(string value)
+		{
+			this.ParameterValue = value;
+		}
 
 		private string ParameterValue
 		{
 			get
 			{
-				string key = this.article.ArticleDefinition.ArticleParameters[this.index].Code;
-
-				if (this.parameters.ContainsKey (key))
+				string value;
+				if (this.parameters.TryGetValue (this.Code, out value))
 				{
-					return this.parameters[key];
+					return value;
 				}
 
 				return null;
 			}
 			set
 			{
-				string key = this.article.ArticleDefinition.ArticleParameters[this.index].Code;
-
-				this.parameters[key] = value;
+				this.parameters[this.Code] = value;
 
 				this.ExportDictionary ();
 			}
@@ -96,9 +123,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.article.ArticleParameters = string.Join (AbstractArticleParameterDefinitionEntity.Separator, list);
 		}
 
+		private string Code
+		{
+			get
+			{
+				return this.article.ArticleDefinition.ArticleParameters[this.parameterIndex].Code;
+			}
+		}
+
 
 		private readonly ArticleDocumentItemEntity article;
-		private readonly int index;
+		private readonly int parameterIndex;
 
 		private Dictionary<string, string> parameters;
 	}
