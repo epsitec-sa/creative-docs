@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			this.parameters = new Dictionary<string, string> ();
 
-			string[] values = (this.article.ArticleParameters ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] values = (this.article.ArticleParameters ?? "").Split (new string[] { AbstractArticleParameterController.Separator }, System.StringSplitOptions.None);
 			for (int i = 0; i < values.Length-1; i+=2)
 			{
 				string key  = values[i+0];
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				list.Add (pair.Value);
 			}
 
-			this.article.ArticleParameters = string.Join (AbstractArticleParameterDefinitionEntity.Separator, list);
+			this.article.ArticleParameters = string.Join (AbstractArticleParameterController.Separator, list);
 		}
 
 		private string Code
@@ -98,6 +98,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 		}
 
+
+		private const char				SeparatorChar	= (char) 0x25CA;					// '◊'
+		private static readonly string	Separator		= SeparatorChar.ToString ();		// "◊"
 
 		private readonly ArticleDocumentItemEntity article;
 		private readonly int parameterIndex;

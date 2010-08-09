@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.hintWordSeparators = new List<string> ();
 
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
+			this.TextChanged += this.HandleTextChanged;
 		}
 
 		public AutoCompleteTextField(Widget embedder)
@@ -100,6 +101,12 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// </summary>
 		/// <value>The hint comparer.</value>
 		public System.Func<object, string, HintComparerResult> HintComparer
+		{
+			get;
+			set;
+		}
+
+		public System.Func<string, bool> ContentValidator
 		{
 			get;
 			set;
@@ -379,6 +386,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private void HandleTextChanged(object sender)
+		{
+			if (this.ContentValidator != null)
+			{
+				bool ok = this.ContentValidator (this.Text);
+				this.SetError (!ok);
+			}
+		}
+
+
 		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
@@ -525,7 +542,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				this.SetSilentSelectedItemIndex (-1);  // (*)
 				this.HintText = null;
-				this.SetError (!string.IsNullOrEmpty (this.Text));
+
+				if (this.ContentValidator == null)
+				{
+					this.SetError (!string.IsNullOrEmpty (this.Text));
+				}
+				else
+				{
+					bool ok = this.ContentValidator (this.Text);
+					this.SetError (!ok);
+				}
 			}
 
 			if (startEdition)
