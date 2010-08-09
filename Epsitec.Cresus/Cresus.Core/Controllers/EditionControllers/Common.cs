@@ -66,6 +66,46 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		public static void CreateAbstractDocumentItemTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string defaultPage)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			List<string> pagesDescription = new List<string> ();
+			pagesDescription.Add ("Text.Texte");
+			pagesDescription.Add ("Article.Article");
+			pagesDescription.Add ("Price.Sous-total");
+
+			builder.CreateTabBook (tile, pagesDescription, defaultPage, x =>
+			{
+				if (x != defaultPage)
+				{
+					Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, x);
+				}
+			});
+		}
+
+		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, string defaultPage)
+		{
+			var tile = builder.CreateEditionTile ();
+
+			builder.CreateMargin (tile, horizontalSeparator: false);
+
+			List<string> pagesDescription = new List<string> ();
+			pagesDescription.Add ("Numeric.Valeur nunérique");
+			pagesDescription.Add ("Enum.Enumération");
+
+			builder.CreateTabBook (tile, pagesDescription, defaultPage, x =>
+			{
+				if (x != defaultPage)
+				{
+					Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, x);
+				}
+			});
+		}
+
+	
 		public static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
 		{
 			EntityViewController parentController = Common.GetParentController (tileContainer);

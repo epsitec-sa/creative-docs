@@ -46,25 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, horizontalSeparator: false);
-
-			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Text.Texte");
-			pagesDescription.Add ("Article.Article");
-			pagesDescription.Add ("Price.Sous-total");
-			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Price", this.HandleTabBookAction);
-		}
-
-		private void HandleTabBookAction(string tabPageName)
-		{
-			if (tabPageName == "Price")
-			{
-				return;
-			}
-
-			Common.ChangeEditedLineEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
+			Common.CreateAbstractDocumentItemTabBook (builder, this.tileContainer, this.DataContext, this.Entity, "Price");
 		}
 
 
@@ -203,6 +185,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private TileContainer							tileContainer;
-		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 	}
 }
