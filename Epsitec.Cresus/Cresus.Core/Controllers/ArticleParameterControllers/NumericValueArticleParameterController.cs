@@ -38,9 +38,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var editor = new AutoCompleteTextField
 			{
 				Parent = parent,
+				Name = "debug_toto",
 				MenuButtonWidth = buttonWidth-1,
 				Dock = DockStyle.Fill,
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
+				TabIndex = 1,
 			};
 
 			//	Initialise le contenu initial.
@@ -54,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			editor.Text = initialValue;
 
 			//	Initialise le menu des valeurs préférées.
-			string[] preferred = numericParameter.PreferredValues.Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] preferred = (numericParameter.PreferredValues ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 			foreach (var v in preferred)
 			{
 				editor.Items.Add (v, v);
@@ -80,10 +82,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			editor.AcceptingEdition += delegate
 			{
-				int    index = editor.SelectedItemIndex;
-				string key   = index < 0 ? null : editor.Items.GetKey (index);
-				//?
-				this.ParameterValue = editor.Text;
+				string value = editor.Text;
+
+				if (!this.ContentValidator (value))
+				{
+					value = numericParameter.DefaultValue.ToString ();
+				}
+
+				this.ParameterValue = value;
 			};
 
 			menuButton.Clicked += delegate
