@@ -89,7 +89,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public override Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius)
 		{
-            var path = this.CreateOutlinePath(series, seriesIndex);   
+            var path = this.CreateOutlinePath(series, seriesIndex, true);   
             return path;
 		}
 
@@ -237,7 +237,14 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		private Path CreateOutlinePath(Data.ChartSeries series, int seriesIndex)
+        /// <summary>
+        /// Create a path for an element from the series
+        /// </summary>
+        /// <param name="series"></param>
+        /// <param name="seriesIndex"></param>
+        /// <param name="forDetection">Is the path for the mouse detection? If so, the path will be wider to help the element selection</param>
+        /// <returns>The outline path</returns>
+        private Path CreateOutlinePath (Data.ChartSeries series, int seriesIndex, bool forDetection = false)
 		{
 			Path path = new Path ();
 
@@ -261,11 +268,18 @@ namespace Epsitec.Common.Graph.Renderers
 					continue;
 				}
 
-                if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
+                // The element has to be out of the pie
+                if (!forDetection && (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex)))
                 {
                     var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
                     center.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
                     center.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
+                }
+
+                // We widen then path for the detection
+                if (forDetection)
+                {
+                	radius += 1000;
                 }
 				
 				path.MoveTo (center);
