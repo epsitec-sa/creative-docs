@@ -84,12 +84,20 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.bounds;
+				return this.portBounds;
 			}
 		}
 
-		public IEnumerable<string>				ValueLabels
-		{
+        public Rectangle                        PortSize
+        {
+            get
+            {
+                return this.portSize;
+            }
+        }
+
+        public IEnumerable<string> ValueLabels
+        {
 			get
 			{
 				return this.seriesValueLabelsList.Select (x => DataCube.CleanUpLabel (x));
@@ -222,9 +230,10 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValueLabelsList.Clear ();
 		}
 
-		public virtual void BeginRender(IPaintPort port, Rectangle bounds)
+        public virtual void BeginRender (IPaintPort port, Rectangle portSize, Rectangle portBounds)
 		{
-			this.bounds = bounds;
+			this.portBounds = portBounds;
+            this.portSize = portSize;
 			this.BeginLayer (port, PaintLayer.Background);
 		}
 
@@ -283,16 +292,16 @@ namespace Epsitec.Common.Graph.Renderers
 			collection.ForEach (item => this.Collect (item));
 		}
 
-		public void Render(IPaintPort port, Rectangle bounds)
+		public void Render(IPaintPort port, Rectangle portSize, Rectangle portBounds)
 		{
-			this.Render (this.SeriesItems, port, bounds);
+            this.Render (this.SeriesItems, port, portSize, portBounds);
 		}
 
-		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
+        public void Render (IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle portSize, Rectangle portBounds)
 		{
 			this.UpdateCaptions (series);
 
-			this.BeginRender (port, bounds);
+			this.BeginRender (port, portSize, portBounds);
 
 			int start     = 0;
 			int increment = 1;
@@ -485,8 +494,9 @@ namespace Epsitec.Common.Graph.Renderers
         protected int                           activeIndex = -1;
 
 		private double							minValue;
-		private double							maxValue;
-        private Rectangle                       bounds;
+        private double                          maxValue;
+        private Rectangle                       portBounds;
+        private Rectangle                       portSize;
         private IChartRendererOptions           rendererOptions;
 		
 		private readonly HashSet<string>		seriesValueLabelsSet;

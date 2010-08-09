@@ -173,7 +173,7 @@ namespace Epsitec.Common.Graph
 			document.Print (new PrintEngine (
 				port =>
 				{
-					lineChartRenderer.Render (new List<Data.ChartSeries> () { chartSeries1, chartSeries2 }, port, Rectangle.Deflate (document.DefaultPageSettings.Bounds, 24, 24));
+                    lineChartRenderer.Render (new List<Data.ChartSeries> () { chartSeries1, chartSeries2 }, port, document.DefaultPageSettings.Bounds, Rectangle.Deflate (document.DefaultPageSettings.Bounds, 24, 24));
 				}));
 		}
 		

@@ -23,23 +23,23 @@ namespace Epsitec.Common.Graph.Renderers
 			base.Collect (series);
 			this.pies = null;
 		}
-		
-		public override void BeginRender(IPaintPort port, Rectangle bounds)
+
+        public override void BeginRender (IPaintPort port, Rectangle portSize, Rectangle portBounds)
 		{
 			this.UpdatePies ();
 
-			int rows = PieChartRenderer.GetRowCount (bounds.Width, bounds.Height, this.pies.Count);
+			int rows = PieChartRenderer.GetRowCount (portBounds.Width, portBounds.Height, this.pies.Count);
 			int cols = this.pies.Count == 0  ? 1 : (int) System.Math.Ceiling ((double) this.pies.Count / rows);
 
-			double dx = bounds.Width / cols;
-			double dy = bounds.Height / rows;
+			double dx = portBounds.Width / cols;
+			double dy = portBounds.Height / rows;
 			double d = System.Math.Min (dx, dy);
 
 			int pieIndex = 0;
 
 			for (int i = 0; i < rows; i++)
 			{
-				var y = bounds.Height - dy/2 - i*dy;
+				var y = portBounds.Height - dy/2 - i*dy;
 
 				for (int j = 0; j < cols; j++)
 				{
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Graph.Renderers
 				}
 			}
 
-			base.BeginRender (port, bounds);
+			base.BeginRender (port, portSize, portBounds);
 		}
 
 		public override void BeginPass(IPaintPort port, int pass)
