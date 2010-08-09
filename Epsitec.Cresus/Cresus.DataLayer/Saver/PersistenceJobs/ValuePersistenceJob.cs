@@ -12,16 +12,24 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 	{
 
 
-		public ValuePersistenceJob(AbstractEntity entity, Druid localEntityId, Dictionary<Druid, object> fieldIdsWithValues, PersistenceJobType jobType)
+		public ValuePersistenceJob(AbstractEntity entity, Druid localEntityId, Dictionary<Druid, object> fieldIdsWithValues, bool IsRootTypeJob, PersistenceJobType jobType)
 			: base (entity, localEntityId, jobType)
 		{
 			this.fieldIdsWithValues = new Dictionary<Druid, object> (fieldIdsWithValues);
+			this.IsRootTypeJob = IsRootTypeJob;
 		}
 
 
 		public IEnumerable<KeyValuePair<Druid, object>> GetFieldIdsWithValues()
 		{
 			return this.fieldIdsWithValues;
+		}
+
+
+		public bool IsRootTypeJob
+		{
+			get;
+			private set;
 		}
 
 
