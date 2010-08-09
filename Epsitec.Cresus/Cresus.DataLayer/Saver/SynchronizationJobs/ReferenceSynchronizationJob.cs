@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// <param name="sourceKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/> targeted by the <c>ReferenceSynchronizationJob</c>.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> of the field targeted by the <c>ReferenceSynchronizationJob</c>.</param>
 		/// <param name="newTargetKey">The <see cref="EntityKey"/> of the new target of the field targeted by the <c>ValueSynchronizationJob</c>.</param>
-		/// <exception cref="System.ArgumentException">If <paramref name="EntityKey"/> is empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="sourceKey"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="newTargetKey"/> is empty.</exception>
 		public ReferenceSynchronizationJob(int dataContextId, EntityKey sourceKey, Druid fieldId, EntityKey? newTargetKey)
