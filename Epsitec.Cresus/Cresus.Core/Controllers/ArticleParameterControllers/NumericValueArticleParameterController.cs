@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			editor.ValueToDescriptionConverter = value => this.GetUserText (value as string);
 			editor.HintComparer = (value, text) => this.MatchUserText (value as string, text);
 			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			editor.ContentValidator = x => this.ContentValidator (x);
 
 			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
 			var menuButton = new GlyphButton
@@ -107,6 +108,42 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			var itemText = TextConverter.ConvertToLowerAndStripAccents (value);
 			return AutoCompleteTextField.Compare (itemText, userText);
+		}
+
+		private bool ContentValidator(string value)
+		{
+			if (string.IsNullOrWhiteSpace (value))
+			{
+				return true;
+			}
+
+			decimal d;
+			if (decimal.TryParse (value.Trim (), out d))
+			{
+				var numericParameter = this.ParameterDefinition as NumericValueArticleParameterDefinitionEntity;
+
+				if (numericParameter.MinValue.HasValue)
+				{
+					if (d < numericParameter.MinValue)
+					{
+						return false;
+					}
+				}
+
+				if (numericParameter.MaxValue.HasValue)
+				{
+					if (d > numericParameter.MaxValue)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 }
