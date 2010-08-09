@@ -29,12 +29,12 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
 		
-		public override void BeginRender(IPaintPort port, Rectangle bounds)
+		public override void BeginRender(IPaintPort port, Rectangle portSize, Rectangle portBounds)
 		{
-			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
-			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValueCount);
+			this.verticalScale = portBounds.Height / (this.MaxValue - this.MinValue);
+			this.horizontalScale = portBounds.Width / System.Math.Max (1, this.ValueCount);
 			
-			base.BeginRender (port, bounds);
+			base.BeginRender (port, portSize, portBounds);
 		}
 
 		public override void BeginPass(IPaintPort port, int pass)

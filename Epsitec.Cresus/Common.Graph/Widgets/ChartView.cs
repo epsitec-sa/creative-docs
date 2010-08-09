@@ -83,7 +83,7 @@ namespace Epsitec.Common.Graph.Widgets
 				var transform = graphics.Transform;
 				graphics.ScaleTransform (this.scale, this.scale, 0, 0);
 				Rectangle paint = Rectangle.Deflate (this.Client.Bounds, this.Padding);
-				this.renderer.Render (graphics, Rectangle.Scale (paint, 1/this.scale));
+                this.renderer.Render (graphics, Rectangle.Scale (this.Client.Bounds, 1 / this.scale), Rectangle.Scale (paint, 1 / this.scale));
 				graphics.Transform = transform;
 			}
 		}

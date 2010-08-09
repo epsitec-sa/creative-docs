@@ -22,15 +22,14 @@ namespace Epsitec.Common.Graph.Renderers
             this.fetchImageAsync ();
         }
 
-        public override void BeginRender (IPaintPort port, Epsitec.Common.Drawing.Rectangle bounds)
+        public override void BeginRender (IPaintPort port, Epsitec.Common.Drawing.Rectangle portSize, Epsitec.Common.Drawing.Rectangle portBounds)
         {
-
-            if (this.Bounds.Width != bounds.Width || this.Bounds.Height != bounds.Height)
+            if (this.PortSize.Width != portSize.Width || this.PortSize.Height != portSize.Height)
             {
-                this.fetchImageAsync ((int)bounds.Width, (int)bounds.Height);
+                this.fetchImageAsync ((int)portSize.Width, (int)portSize.Height);
             }
 
-            base.BeginRender (port, bounds);
+            base.BeginRender (port, portSize, portBounds);
         }
 
         public override void BeginPass (IPaintPort port, int pass)
@@ -74,7 +73,7 @@ namespace Epsitec.Common.Graph.Renderers
         {
             if (this.image != null)
             {
-                port.PaintImage (this.image, this.Bounds);
+                port.PaintImage (this.image, this.PortSize);
             }
         }
 

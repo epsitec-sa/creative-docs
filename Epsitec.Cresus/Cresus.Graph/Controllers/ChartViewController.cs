@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			System.Action<IPaintPort> painter =
 				port =>
 				{
-					this.chartView.Renderer.Render (port, chartRect);
+                    this.chartView.Renderer.Render (port, chartRect, chartRect);
 
 					using (var p = new Path ())
 					{

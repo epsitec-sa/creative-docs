@@ -297,8 +297,8 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
 			graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
 
-			paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
-			renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
+			var bounds = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
+            renderer.Render (graphics, Rectangle.Scale (paint, 1 / scale), Rectangle.Scale (bounds, 1 / scale));
 
 			graphics.LineWidth = 1.0;
 			graphics.LineJoin = JoinStyle.Miter;
