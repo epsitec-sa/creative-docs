@@ -46,24 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, horizontalSeparator: false);
-
-			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Numeric.Valeur nunérique");
-			pagesDescription.Add ("Enum.Enumération");
-			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "Enum", this.HandleTabBookAction);
-		}
-
-		private void HandleTabBookAction(string tabPageName)
-		{
-			if (tabPageName == "Enum")
-			{
-				return;
-			}
-
-			Common.ChangeEditedParameterEntity (this.tileContainer, this.DataContext, this.Entity, tabPageName);
+			Common.CreateAbstractArticleParameterTabBook (builder, this.tileContainer, this.DataContext, this.Entity, "Enum");
 		}
 
 
@@ -135,7 +118,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private TileContainer							tileContainer;
-		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
 		private EnumValueArticleParameterController		parameterController;
 	}
 }
