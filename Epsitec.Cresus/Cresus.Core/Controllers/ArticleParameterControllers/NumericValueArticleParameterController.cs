@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -29,16 +31,38 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public override void CreateUI(FrameBox parent)
 		{
+			var numericParameter = this.ParameterDefinition as NumericValueArticleParameterDefinitionEntity;
 			double buttonWidth = 14;
 
+			//	Ligne éditable.
 			var editor = new AutoCompleteTextField
 			{
 				Parent = parent,
 				MenuButtonWidth = buttonWidth-1,
 				Dock = DockStyle.Fill,
-				Text = this.ParameterValue,
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 			};
+
+			//	Initialise le contenu initial.
+			string initialValue = this.ParameterValue;
+
+			if (string.IsNullOrEmpty (initialValue))
+			{
+				initialValue = numericParameter.DefaultValue.ToString ();
+			}
+
+			editor.Text = initialValue;
+
+			//	Initialise le menu des valeurs préférées.
+			string[] preferred = numericParameter.PreferredValues.Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			foreach (var v in preferred)
+			{
+				editor.Items.Add (v, v);
+			}
+
+			editor.ValueToDescriptionConverter = value => this.GetUserText (value as string);
+			editor.HintComparer = (value, text) => this.MatchUserText (value as string, text);
+			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
 			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
 			var menuButton = new GlyphButton
@@ -55,6 +79,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			editor.AcceptingEdition += delegate
 			{
+				int    index = editor.SelectedItemIndex;
+				string key   = index < 0 ? null : editor.Items.GetKey (index);
+				//?
 				this.ParameterValue = editor.Text;
 			};
 
@@ -64,6 +91,22 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				editor.Focus ();
 				editor.OpenComboMenu ();
 			};
+		}
+
+		private FormattedText GetUserText(string value)
+		{
+			return UIBuilder.FormatText (value);
+		}
+
+		private HintComparerResult MatchUserText(string value, string userText)
+		{
+			if (string.IsNullOrWhiteSpace (userText))
+			{
+				return Widgets.HintComparerResult.NoMatch;
+			}
+
+			var itemText = TextConverter.ConvertToLowerAndStripAccents (value);
+			return AutoCompleteTextField.Compare (itemText, userText);
 		}
 	}
 }
