@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
-	public class AbstractArticleParameterController
+	public abstract class AbstractArticleParameterController
 	{
 		public AbstractArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
 		{
@@ -30,53 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public virtual void CreateUI(FrameBox parent)
 		{
-			AbstractArticleParameterDefinitionEntity parameter = this.article.ArticleDefinition.ArticleParameters[this.parameterIndex];
-
-			if (parameter is NumericValueArticleParameterDefinitionEntity)
-			{
-				var field = new TextFieldEx
-				{
-					Parent = parent,
-					Dock = DockStyle.Fill,
-					Text = this.ParameterValue,
-				};
-
-				field.AcceptingEdition += delegate
-				{
-					this.ParameterValue = field.Text;
-				};
-			}
-
-			if (parameter is EnumValueArticleParameterDefinitionEntity)
-			{
-				var field = new TextFieldEx
-				{
-					Parent = parent,
-					Dock = DockStyle.Fill,
-					Text = this.ParameterValue,
-				};
-
-				field.AcceptingEdition += delegate
-				{
-					this.ParameterValue = field.Text;
-				};
-			}
 		}
 
 
-		private string GetParameterValue()
-		{
-			return this.ParameterValue;
-		}
-
-		private void SetParameterValue(string value)
-		{
-			this.ParameterValue = value;
-		}
-
-		private string ParameterValue
+		protected string ParameterValue
 		{
 			get
 			{

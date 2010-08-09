@@ -19,9 +19,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
-	public class EnumValueArticleParameterController
+	public class ArticleParameterListController
 	{
-		public EnumValueArticleParameterController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
+		public ArticleParameterListController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.parameterEntity = parameterEntity;
