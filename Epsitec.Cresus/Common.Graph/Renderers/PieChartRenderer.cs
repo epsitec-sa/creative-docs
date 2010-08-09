@@ -28,18 +28,18 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			this.UpdatePies ();
 
-			int rows = PieChartRenderer.GetRowCount (portBounds.Width, portBounds.Height, this.pies.Count);
+			int rows = PieChartRenderer.GetRowCount (portSize.Width, portSize.Height, this.pies.Count);
 			int cols = this.pies.Count == 0  ? 1 : (int) System.Math.Ceiling ((double) this.pies.Count / rows);
 
-			double dx = portBounds.Width / cols;
-			double dy = portBounds.Height / rows;
+			double dx = portSize.Width / cols;
+			double dy = portSize.Height / rows;
 			double d = System.Math.Min (dx, dy);
 
 			int pieIndex = 0;
 
 			for (int i = 0; i < rows; i++)
 			{
-				var y = portBounds.Height - dy/2 - i*dy;
+				var y = portSize.Height - dy/2 - i*dy;
 
 				for (int j = 0; j < cols; j++)
 				{
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Graph.Renderers
                 }
 
                 var sector = pie.Sectors[seriesIndex];
-                var center = pie.Center + this.Bounds.Location;
+                var center = pie.Center + this.PortSize.Location;
                 var radius = pie.Radius;
 
                 // N'affiche pas les légendes pour de petits angles
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Graph.Renderers
 				}
 
 				var sector = pie.Sectors[seriesIndex];
-				var center = pie.Center + this.Bounds.Location;
+				var center = pie.Center + this.PortSize.Location;
 				var radius = pie.Radius;
 
 				if ((sector.Angle2 - sector.Angle1) < 0.1)
