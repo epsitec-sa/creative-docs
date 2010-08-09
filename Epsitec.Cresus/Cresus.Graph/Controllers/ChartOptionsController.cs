@@ -7,6 +7,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Graph.Widgets;
 using Epsitec.Common.Support;
+using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -89,6 +90,7 @@ namespace Epsitec.Cresus.Graph.Controllers
                 Margins = new Margins(2, 2, 0, 0),
             };
 
+            // Buttons container
             var frame = new FrameBox ()
             {
                 Dock = DockStyle.Stacked,
@@ -96,41 +98,55 @@ namespace Epsitec.Cresus.Graph.Controllers
                 ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
             };
 
+            // Used to dispatch the commands
             CommandDispatcher.SetDispatcher (frame, this.dispatcher);
 
-            var showCaptionsButton = new MetaButton ()
-            {
-                CommandObject = Res.Commands.ChartOptions.ShowSummaryCaptions,
-                Dock = DockStyle.Left,
-                ButtonClass = ButtonClass.FlatButton,
-                Parent = frame,
-                PreferredSize = new Size (40, 40),
-                Padding = new Margins (4, 4, 0, 0),
-            };
+            // Create the buttons
+            CreateCommandButton (frame, Res.Commands.ChartOptions.ShowSummaryCaptions);
+            CreateCommandButton (frame, Res.Commands.ChartOptions.ShowSeriesCaptions);
+        }
 
-            var showFloatingCaptionsButton = new MetaButton ()
+        /// <summary>
+        /// Create a button into a Widget using a command. Allows to easily create buttons with the same layout
+        /// </summary>
+        /// <param name="parent">Where to put the button</param>
+        /// <param name="command">Associated command</param>
+        private static void CreateCommandButton (Widget parent, Command command)
+        {
+            new MetaButton ()
             {
-                CommandObject = Res.Commands.ChartOptions.ShowSeriesCaptions,
-                Dock = DockStyle.Left,
-                ButtonClass = ButtonClass.FlatButton,
-                Parent = frame,
-                PreferredSize = new Size (40, 40),
-                Padding = new Margins (4, 4, 0, 0),
+                CommandObject = command,
+                Parent = parent,
+                Dock = ChartOptionsController.preferredDockStyle,
+                ButtonClass = ChartOptionsController.preferredButtonClass,
+                PreferredSize = ChartOptionsController.preferredSize,
+                Padding = ChartOptionsController.preferredPadding
             };
         }
 
+        /// <summary>
+        /// Called when clicking the summary captions button
+        /// </summary>
         [Command (Res.CommandIds.ChartOptions.ShowSummaryCaptions)]
         private void ExecuteShowSummaryCaptionsCommand ()
         {
             this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
         }
 
+        /// <summary>
+        /// Called when clicking the series captions button
+        /// </summary>
         [Command (Res.CommandIds.ChartOptions.ShowSeriesCaptions)]
         private void ExecuteShowSeriesCaptionsCommand ()
         {
             this.ChartOptions.ShowFloatingCaptions = !this.ChartOptions.ShowFloatingCaptions;
         }
 
+        // Options for the buttons
+        private static readonly Size preferredSize = new Size (40, 40);
+        private static readonly Margins preferredPadding = new Margins (4, 4, 0, 0);
+        private static readonly ButtonClass preferredButtonClass = ButtonClass.FlatButton;
+        private static readonly DockStyle preferredDockStyle = DockStyle.Left;
 
         private readonly ChartOptions chartOptions;
 		private readonly CommandDispatcher dispatcher;
