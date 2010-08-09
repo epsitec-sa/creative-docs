@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -38,6 +39,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.list.AddRange (entities.Select (x => new BrowserListItem (this, x)));
 		}
 
+		public void Invalidate()
+		{
+			this.list.ForEach (x => x.ClearCachedDisplayText ());
+		}
+
 		public EntityKey? GetEntityKey(int index)
 		{
 			if ((index >= 0) &&
@@ -55,12 +61,39 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		internal FormattedText GenerateEntityDisplayText(AbstractEntity entity)
 		{
 			if (entity == null)
-            {
-				throw new System.ArgumentNullException ("entity");
-            }
+			{
+				return FormattedText.Empty;
+			}
 
-			return BrowserViewController.GetEntityDisplayText (entity);
+			if (entity is LegalPersonEntity)
+			{
+				var person = entity as LegalPersonEntity;
+				return UIBuilder.FormatText (person.Name);
+			}
+			if (entity is NaturalPersonEntity)
+			{
+				var person = entity as NaturalPersonEntity;
+				return UIBuilder.FormatText (person.Firstname, person.Lastname);
+			}
+			if (entity is RelationEntity)
+			{
+				var customer = entity as RelationEntity;
+				return UIBuilder.FormatText (this.GenerateEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
+			}
+			if (entity is ArticleDefinitionEntity)
+			{
+				var article = entity as ArticleDefinitionEntity;
+				return UIBuilder.FormatText (article.ShortDescription);
+			}
+			if (entity is InvoiceDocumentEntity)
+			{
+				var invoice = entity as InvoiceDocumentEntity;
+				return UIBuilder.FormatText (invoice.IdA);
+			}
+
+			return FormattedText.Empty;
 		}
+
 
         internal EntityKey GetEntityKey(AbstractEntity entity)
 		{

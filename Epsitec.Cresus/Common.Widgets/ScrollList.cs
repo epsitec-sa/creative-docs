@@ -319,6 +319,19 @@ namespace Epsitec.Common.Widgets
 			return margins;
 		}
 
+		public bool InvalidateTextLayouts()
+		{
+			if (this.isDirty)
+			{
+				return false;
+			}
+			else
+			{
+				this.SetDirty ();
+				return true;
+			}
+		}
+
 
 		public virtual bool IsItemSelected(int index)
 		{

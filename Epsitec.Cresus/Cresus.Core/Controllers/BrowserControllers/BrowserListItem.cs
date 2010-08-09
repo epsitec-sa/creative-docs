@@ -53,12 +53,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public void ClearCachedDisplayText()
+		{
+			this.text = null;
+		}
+
 		private void GenerateDisplayText()
 		{
 			this.text = this.list.GenerateEntityDisplayText (this.entity);
 
 			if ((this.text == null) ||
-						(this.text.Value.IsNullOrEmpty))
+				(this.text.Value.IsNullOrEmpty))
 			{
 				this.text = CollectionTemplate.DefaultEmptyText;
 			}
