@@ -11,7 +11,7 @@ namespace Epsitec.Common.Graph.Widgets
 
         public AbstractRenderer Renderer { get; set; }
 
-        protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+        protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
         {
             var style = new CaptionStyle();
 
