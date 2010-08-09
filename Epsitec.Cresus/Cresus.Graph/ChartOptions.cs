@@ -51,6 +51,8 @@ namespace Epsitec.Cresus.Graph
                     var oldValue = this.showFloatingCaptions;
                     this.showFloatingCaptions = value;
 
+                    GraphProgram.Application.SetActiveState (Res.Commands.ChartOptions.ShowSeriesCaptions, value ? ActiveState.Yes : ActiveState.No);
+
                     // Fire the event if needed
                     if(this.ShowFloatingCaptionsChanged != null)
                         this.ShowFloatingCaptionsChanged(this, new DependencyPropertyChangedEventArgs("ShowFloatingCaptions", oldValue, value));
@@ -127,9 +129,9 @@ namespace Epsitec.Cresus.Graph
         /// <param name="oldValues">Object to copy the values from</param>
         internal void copyValues (ChartOptions oldValues)
         {
-            this.showFixedCaptions = oldValues.showFixedCaptions;
-            this.showFloatingCaptions = oldValues.showFloatingCaptions;
-            this.fixedCaptionsPosition = oldValues.fixedCaptionsPosition;
+            this.ShowFixedCaptions = oldValues.ShowFixedCaptions;
+            this.ShowFloatingCaptions = oldValues.ShowFloatingCaptions;
+            this.FixedCaptionsPosition = oldValues.FixedCaptionsPosition;
         }
 
         public event EventHandler<DependencyPropertyChangedEventArgs> ShowFixedCaptionsChanged;

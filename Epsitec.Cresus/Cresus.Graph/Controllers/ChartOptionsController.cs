@@ -19,10 +19,10 @@ namespace Epsitec.Cresus.Graph.Controllers
         /// <summary>
         /// Create the controller into a frame
         /// </summary>
-        /// <param name="commandBar">FrameBox where to put the configuration buttons</param>
+        /// <param name="commandBar">CommandSelectionBar where to put the configuration buttons</param>
         /// <param name="fixedCaptions">FrameBox showing the captions to show/hide</param>
         /// <param name="floatingCaptions">FrameBox showing the floating captions to show/hide</param>
-        public ChartOptionsController(FrameBox commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
+        public ChartOptionsController (CommandSelectionBar commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
         {
             this.chartOptions = new ChartOptions()
             {
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             }
         }
 
-        private void SetupUI (FrameBox commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
+        private void SetupUI (CommandSelectionBar commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
         {
             new Separator()
             {
@@ -89,58 +89,47 @@ namespace Epsitec.Cresus.Graph.Controllers
                 Margins = new Margins(2, 2, 0, 0),
             };
 
-            var frame = new FrameBox()
+            var frame = new FrameBox ()
             {
                 Dock = DockStyle.Stacked,
                 Parent = commandBar,
                 ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
             };
 
-			CommandDispatcher.SetDispatcher (frame, this.dispatcher);
+            CommandDispatcher.SetDispatcher (frame, this.dispatcher);
 
-            var showCaptionsButton = new MetaButton()
+            var showCaptionsButton = new MetaButton ()
             {
-				CommandObject = Res.Commands.ChartOptions.ShowSummaryCaptions,
+                CommandObject = Res.Commands.ChartOptions.ShowSummaryCaptions,
                 Dock = DockStyle.Left,
-//                IconUri = "manifest:Epsitec.Cresus.Graph.Images.Captions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
-                PreferredSize = new Size(40, 40),
-                Padding = new Margins(4, 4, 0, 0),
+                PreferredSize = new Size (40, 40),
+                Padding = new Margins (4, 4, 0, 0),
             };
 
-            // Change value when then button is click
-#if false
-            showCaptionsButton.Clicked +=
-                (sender, e) =>
-                {
-                    this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
-                };
-#endif
-
-            var showFloatingCaptionsButton = new MetaButton()
+            var showFloatingCaptionsButton = new MetaButton ()
             {
+                CommandObject = Res.Commands.ChartOptions.ShowSeriesCaptions,
                 Dock = DockStyle.Left,
-                IconUri = "manifest:Epsitec.Cresus.Graph.Images.FloatingCaptions.icon",
                 ButtonClass = ButtonClass.FlatButton,
                 Parent = frame,
-                PreferredSize = new Size(40, 40),
-                Padding = new Margins(4, 4, 0, 0),
+                PreferredSize = new Size (40, 40),
+                Padding = new Margins (4, 4, 0, 0),
             };
-
-            // Change value when then button is click
-            showFloatingCaptionsButton.Clicked +=
-                (sender, e) =>
-                {
-                    this.ChartOptions.ShowFloatingCaptions = !this.ChartOptions.ShowFloatingCaptions;
-                };
         }
 
-		[Command (Res.CommandIds.ChartOptions.ShowSummaryCaptions)]
-		private void ExecuteShowSummaryCaptionsCommand()
-		{
-			this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
-		}
+        [Command (Res.CommandIds.ChartOptions.ShowSummaryCaptions)]
+        private void ExecuteShowSummaryCaptionsCommand ()
+        {
+            this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
+        }
+
+        [Command (Res.CommandIds.ChartOptions.ShowSeriesCaptions)]
+        private void ExecuteShowSeriesCaptionsCommand ()
+        {
+            this.ChartOptions.ShowFloatingCaptions = !this.ChartOptions.ShowFloatingCaptions;
+        }
 
 
         private readonly ChartOptions chartOptions;
