@@ -258,6 +258,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
+			var entity = this.Entity;
+			context.UpdateEmptyEntityStatus (entity, isEmpty);
 		}
 
 		private T entity;
