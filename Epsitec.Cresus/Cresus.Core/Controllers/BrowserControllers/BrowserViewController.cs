@@ -24,53 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.data = data;
 		}
 
-		private void CreateDataContext()
-		{
-			base.DataContext = data.CreateDataContext ();
-			this.DataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
-			this.collection  = new BrowserList (this.DataContext);
-
-			this.DataContext.EntityChanged += this.HandleDataContextEntityChanged;
-		}
-
-		private void DisposeDataContext()
-		{
-			if (this.DataContext != null)
-			{
-				this.DataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-				this.data.DisposeDataContext (this.DataContext);
-				base.DataContext = null;
-				this.collection = null;
-			}
-		}
-
-		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine ("DataContext #{0} source={1} type={2}", this.DataContext.UniqueId, e.EventSource, e.EventType);
-		}
-
-		private void HandleScrollListSelectedItemChanged(object sender)
-		{
-			if (this.suspendUpdates == 0)
-			{
-				this.NotifySelectedItemChange ();
-			}
-		}
-
-		private void NotifySelectedItemChange()
-		{
-			int active    = this.scrollList.SelectedItemIndex;
-			var entityKey = this.collection == null ? null : this.collection.GetEntityKey (active);
-
-			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
-
-			if (this.activeEntityKey != entityKey)
-			{
-				this.activeEntityKey = entityKey;
-				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-				this.OnCurrentChanged ();
-			}
-		}
+		
 		public override DataContext DataContext
 		{
 			get
@@ -100,6 +54,30 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
+		public void SelectDataSet(string dataSetName)
+		{
+			if (this.dataSetName != dataSetName)
+			{
+				this.DisposeDataContext ();
+				this.dataSetName = dataSetName;
+				this.CreateDataContext ();
+
+				this.SelectContentsBasedOnDataSet ();
+				this.OnDataSetSelected ();
+			}
+		}
+
+		public void CreateNewItem()
+		{
+			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
+
+			if (item != null)
+			{
+				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
+				this.Orchestrator.ShowSubView (null, controller);
+			}
+		}
+
 		public AbstractEntity GetActiveEntity(DataContext context)
 		{
 			if (this.activeEntityKey == null)
@@ -117,43 +95,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			else
 			{
 				return null;
-			}
-		}
-
-		public void SelectDataSet(string dataSetName)
-		{
-			if (this.dataSetName != dataSetName)
-			{
-				this.DisposeDataContext ();
-				this.dataSetName = dataSetName;
-				this.CreateDataContext ();
-
-				this.UpdateDataSet ();
-				this.OnDataSetSelected ();
-			}
-		}
-		
-		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
-		{
-			//	When switching to some other contents, the browser first has to ensure that the
-			//	UI no longer has an actively selected entity; clearing the active entity will
-			//	also make sure that any changes will be automatically persisted:
-
-			this.Orchestrator.Controller.ClearActiveEntity ();
-
-			this.collectionGetter = collectionGetter;
-			this.data.SetupDataContext ();
-			this.UpdateCollection ();
-		}
-
-		public void CreateNewItem()
-		{
-			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
-
-			if (item != null)
-			{
-				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
-				this.Orchestrator.ShowSubView (null, controller);
 			}
 		}
 
@@ -200,7 +141,47 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		private void UpdateDataSet()
+		private void CreateDataContext()
+		{
+			base.DataContext = data.CreateDataContext ();
+			this.DataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
+			this.collection  = new BrowserList (this.DataContext);
+
+			this.DataContext.EntityChanged += this.HandleDataContextEntityChanged;
+		}
+
+		private void DisposeDataContext()
+		{
+			if (this.DataContext != null)
+			{
+				this.DataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+				this.data.DisposeDataContext (this.DataContext);
+				base.DataContext = null;
+				this.collection = null;
+			}
+		}
+
+		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+			if ((this.collection != null) &&
+				(this.scrollList != null))
+			{
+				if (this.scrollList.InvalidateTextLayouts ())
+				{
+					this.collection.Invalidate ();
+				}
+			}
+		}
+
+		private void HandleScrollListSelectedItemChanged(object sender)
+		{
+			if (this.suspendUpdates == 0)
+			{
+				this.NotifySelectedItemChange ();
+			}
+		}
+		
+		private void SelectContentsBasedOnDataSet()
 		{
 			switch (this.dataSetName)
 			{
@@ -217,6 +198,20 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					break;
 			}
 		}
+	
+		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
+		{
+			//	When switching to some other contents, the browser first has to ensure that the
+			//	UI no longer has an actively selected entity; clearing the active entity will
+			//	also make sure that any changes will be automatically persisted:
+
+			this.Orchestrator.Controller.ClearActiveEntity ();
+
+			this.collectionGetter = collectionGetter;
+			this.data.SetupDataContext ();
+			this.UpdateCollection ();
+		}
+
 
 		private AbstractEntity[] GetCollectionEntities()
 		{
@@ -238,6 +233,22 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.RefreshScrollList (reset: true);
 			}
 		}
+		
+		private void NotifySelectedItemChange()
+		{
+			int active    = this.scrollList.SelectedItemIndex;
+			var entityKey = this.collection == null ? null : this.collection.GetEntityKey (active);
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
+
+			if (this.activeEntityKey != entityKey)
+			{
+				this.activeEntityKey = entityKey;
+				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+				this.OnCurrentChanged ();
+			}
+		}
+	
 		
 		protected void OnCurrentChanged()
 		{
@@ -269,6 +280,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
 		private void RefreshScrollList(bool reset = false)
 		{
 			if (this.scrollList != null)
@@ -286,54 +298,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				this.NotifySelectedItemChange ();
 			}
-		}
-
-		private static T GetActiveItem<T>(IList<T> collection, int index)
-		{
-			if (index < 0)
-			{
-				return default (T);
-			}
-			else
-			{
-				return collection[index];
-			}
-		}
-
-		internal static FormattedText GetEntityDisplayText(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return FormattedText.Empty;
-			}
-
-			if (entity is LegalPersonEntity)
-			{
-				var person = entity as LegalPersonEntity;
-				return UIBuilder.FormatText (person.Name);
-			}
-			if (entity is NaturalPersonEntity)
-			{
-				var person = entity as NaturalPersonEntity;
-				return UIBuilder.FormatText (person.Firstname, person.Lastname);
-			}
-			if (entity is RelationEntity)
-			{
-				var customer = entity as RelationEntity;
-				return UIBuilder.FormatText (BrowserViewController.GetEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
-			}
-			if (entity is ArticleDefinitionEntity)
-			{
-				var article = entity as ArticleDefinitionEntity;
-				return UIBuilder.FormatText (article.ShortDescription);
-			}
-			if (entity is InvoiceDocumentEntity)
-			{
-				var invoice = entity as InvoiceDocumentEntity;
-				return UIBuilder.FormatText (invoice.IdA);
-			}
-			
-			return FormattedText.Empty;
 		}
 
 		#region INotifyCurrentChanged Members
