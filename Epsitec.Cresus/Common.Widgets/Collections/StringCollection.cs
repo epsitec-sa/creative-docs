@@ -89,6 +89,11 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void AddRange(IEnumerable<object> values)
 		{
+			if (values == null)
+            {
+				return;
+            }
+
 			foreach (var value in values)
 			{
 				this.Add (value);
@@ -97,6 +102,11 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void AddRange(IEnumerable<string> values)
 		{
+			if (values == null)
+            {
+				return;
+            }
+			
 			foreach (var value in values)
 			{
 				this.Add (value);

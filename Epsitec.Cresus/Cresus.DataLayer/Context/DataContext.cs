@@ -82,6 +82,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+		/// <summary>
+		/// Gets or sets the name of the <c>DataContext</c>. This is useful when
+		/// debugging.
+		/// </summary>
+		/// <value>The name of the <c>DataContext</c>.</value>
+		public string Name
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// The event is fired when an <see cref="AbstractEntity"/> managed by this instance is

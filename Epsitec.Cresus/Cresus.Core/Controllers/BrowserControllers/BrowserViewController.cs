@@ -21,27 +21,27 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public BrowserViewController(string name, CoreData data)
 			: base (name)
 		{
-			this.data        = data;
+			this.data = data;
+		}
+
+		private void CreateDataContext()
+		{
 			base.DataContext = data.CreateDataContext ();
+			this.DataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
 			this.collection  = new BrowserList (this.DataContext);
 
 			this.DataContext.EntityChanged += this.HandleDataContextEntityChanged;
+		}
 
-			this.data.SaveRecordCommandExecuted +=
-				(sender, e) =>
-				{
-//-					this.UpdateCollection ();
-				};
-
-			this.data.DataContextChanged +=
-				(sender, e) =>
-				{
-					if (this.data.IsDataContextActive)
-					{
-//-						System.Diagnostics.Debug.WriteLine ("DataContext changed: BrowserViewController should do something about it");
-//-						this.UpdateCollection (silent: true);
-					}
-				};
+		private void DisposeDataContext()
+		{
+			if (this.DataContext != null)
+			{
+				this.DataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+				this.data.DisposeDataContext (this.DataContext);
+				base.DataContext = null;
+				this.collection = null;
+			}
 		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void NotifySelectedItemChange()
 		{
 			int active    = this.scrollList.SelectedItemIndex;
-			var entityKey = this.collection.GetEntityKey (active);
+			var entityKey = this.collection == null ? null : this.collection.GetEntityKey (active);
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
 
@@ -124,14 +124,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.dataSetName != dataSetName)
 			{
+				this.DisposeDataContext ();
 				this.dataSetName = dataSetName;
+				this.CreateDataContext ();
 
 				this.UpdateDataSet ();
 				this.OnDataSetSelected ();
 			}
 		}
 		
-		public void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
+		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -271,14 +273,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.scrollList != null)
 			{
-				int newCount = this.collection.Count;
+				int newCount = this.collection == null ? 0 : this.collection.Count;
 
 				int oldActive = reset ? 0 : this.scrollList.SelectedItemIndex;
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
 				this.suspendUpdates++;
 				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (collection);
+				this.scrollList.Items.AddRange (this.collection);
 				this.scrollList.SelectedItemIndex = newActive;
 				this.suspendUpdates--;
 
@@ -345,7 +347,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData data;
-		private readonly BrowserList collection;
+		private BrowserList collection;
 		private string dataSetName;
 		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
 		private int suspendUpdates;
