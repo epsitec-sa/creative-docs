@@ -106,6 +106,7 @@
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
+    <Compile Include="Controllers\EditionControllers\AbstractArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
