@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
 
 
-	internal class ReferencePersistenceJob : AbstractInsertionOrUpdatePersistenceJob
+	internal class ReferencePersistenceJob : AbstractFieldPersistenceJob
 	{
 
 
