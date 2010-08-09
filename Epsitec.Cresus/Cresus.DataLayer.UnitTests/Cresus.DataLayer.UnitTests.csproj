@@ -99,6 +99,7 @@
     <Compile Include="Saver\SynchronizationJobs\UnitTestReferenceSynchronizationJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\UnitTestCollectionSynchronizationJob.cs" />
     <Compile Include="Saver\PersistenceJobs\UnitTestDeletePersistenceJob.cs" />
+    <Compile Include="Saver\PersistenceJobs\UnitTestValuePersistenceJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
