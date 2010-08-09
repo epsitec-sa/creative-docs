@@ -69,8 +69,19 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Dock = DockStyle.Left,
 			};
 
-			var controller = new AbstractArticleParameterController (article, index);
-			controller.CreateUI (box);
+			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameters[index];
+
+			if (parameter is NumericValueArticleParameterDefinitionEntity)
+			{
+				var controller = new NumericValueArticleParameterController (article, index);
+				controller.CreateUI (box);
+			}
+
+			if (parameter is EnumValueArticleParameterDefinitionEntity)
+			{
+				var controller = new EnumValueArticleParameterController (article, index);
+				controller.CreateUI (box);
+			}
 		}
 
 
