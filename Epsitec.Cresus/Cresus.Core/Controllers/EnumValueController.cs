@@ -39,8 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
-			//?widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as string[], text);
-			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (this.TextList, text);
+			widget.HintComparer = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
 			this.widget = widget;
@@ -74,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static HintComparerResult MatchUserText(string[] value, string userText)
+		private static HintComparerResult MatchUserText(EnumKeyValues<T> value, string userText)
 		{
 			if (string.IsNullOrWhiteSpace (userText))
 			{
@@ -83,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var result = Widgets.HintComparerResult.NoMatch;
 
-			foreach (var text in value)
+			foreach (var text in value.Values)
 			{
 				var itemText = TextConverter.ConvertToLowerAndStripAccents (text);
 				result = Widgets.AutoCompleteTextField.Bestof (result, Widgets.AutoCompleteTextField.Compare (itemText, userText));
