@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				Dock = DockStyle.Fill,
 				Text = this.ParameterValue,
+				TabIndex = 1,
 			};
 
 			field.AcceptingEdition += delegate

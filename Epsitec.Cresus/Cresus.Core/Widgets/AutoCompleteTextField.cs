@@ -428,7 +428,18 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			base.OnEditionAccepted ();
 
-			this.Text = this.HintText;
+			if (this.ContentValidator == null)
+			{
+				this.Text = this.HintText;
+			}
+			else
+			{
+				if (!this.ContentValidator (this.Text))
+				{
+					this.Text = this.HintText;
+				}
+			}
+
 			this.CloseComboMenu ();
 		}
 
