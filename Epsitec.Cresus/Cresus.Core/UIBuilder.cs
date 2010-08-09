@@ -943,7 +943,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 3),
-				AllowMultipleSelection = false,
+				Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne,
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -981,7 +981,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 3),
-				AllowMultipleSelection = true,
+				Cardinality = BusinessLogic.EnumValueCardinality.Any,
 				TabIndex = ++this.tabIndex,
 			};
 

@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public ItemPicker()
 		{
+			this.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
+
 			this.items = new Common.Widgets.Collections.StringCollection (this);
 			this.items.AcceptsRichText = true;
 
@@ -28,13 +30,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		/// <summary>
-		/// Autorise ou non les sélections multiples, ce qui se traduit par des CheckButtons ou des RadioButtons.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if [allow multiple selection]; otherwise, <c>false</c>.
-		/// </value>
-		public bool AllowMultipleSelection
+		public BusinessLogic.EnumValueCardinality Cardinality
 		{
 			get;
 			set;
@@ -58,15 +54,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	d'efficacité !
 			this.Children.Clear ();
 
+			AbstractButton button;
 			int tabIndex = 1;
+
+			if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
+			{
+				button = new RadioButton
+				{
+					Parent = this,
+					Index = -1,
+					Text = "Aucun",
+					Dock = DockStyle.Top,
+					TabIndex = tabIndex++,
+				};
+			}
 
 			for (int i = 0; i < this.items.Count; i++)
 			{
-				AbstractButton button;
-
-				if (this.AllowMultipleSelection)
+				if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
+					this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
 				{
-					button = new CheckButton
+					button = new RadioButton
 					{
 						Parent = this,
 						Index = i,
@@ -77,7 +85,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					button = new RadioButton
+					button = new CheckButton
 					{
 						Parent = this,
 						Index = i,
