@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -8,24 +9,51 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
 
 
+	/// <summary>
+	/// The <c>ValuePersistenceJob</c> class describes the modifications that have been made to the
+	/// value fields of an <see cref="AbstractEntity"/>. It contains all the modifications of the
+	/// fields of a given subtype of the <see cref="AbstractEntity"/>.
+	/// </summary>
 	internal class ValuePersistenceJob : AbstractFieldPersistenceJob
 	{
 
 
+		/// <summary>
+		/// Creates a new <c>ValuePersistenceJob</c>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> concerned by the <c>ValuePersistenceJob</c>.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> of the type that holds the fields concerned by the <c>ValuePersistenceJob</c>.</param>
+		/// <param name="fieldIdsWithValues">The mapping between the modified fields and their values.</param>
+		/// <param name="IsRootTypeJob">Indicates whether <paramref name="localEntityId"/> is the root type of the <see cref="AbstractEntity"/> or not.</param>
+		/// <param name="jobType">The job type of the <c>ValuePersistenceJob</c>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="localEntityId"/> is empty.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="fieldIdsWithValues"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldIdsWithValues"/> contains an empty <see cref="Druid"/>.</exception>
 		public ValuePersistenceJob(AbstractEntity entity, Druid localEntityId, Dictionary<Druid, object> fieldIdsWithValues, bool IsRootTypeJob, PersistenceJobType jobType)
 			: base (entity, localEntityId, jobType)
 		{
+			fieldIdsWithValues.ThrowIfNull ("fieldIdsWithValues");
+			fieldIdsWithValues.ThrowIf (fv => fv.ContainsKey (Druid.Empty), "fieldIdsWithValues cannot contain empty druids");
+
 			this.fieldIdsWithValues = new Dictionary<Druid, object> (fieldIdsWithValues);
 			this.IsRootTypeJob = IsRootTypeJob;
 		}
 
 
+		/// <summary>
+		/// The mapping between the field ids and their values.
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerable<KeyValuePair<Druid, object>> GetFieldIdsWithValues()
 		{
 			return this.fieldIdsWithValues;
 		}
 
 
+		/// <summary>
+		/// Indicates whether this job concerns the root type of the <see cref="AbstractEntity"/>.
+		/// </summary>
 		public bool IsRootTypeJob
 		{
 			get;
@@ -33,6 +61,9 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		}
 
 
+		/// <summary>
+		/// Holds the mapping between the field ids and their values.
+		/// </summary>
 		private Dictionary<Druid, object> fieldIdsWithValues;
 
 
