@@ -104,6 +104,7 @@
     <Compile Include="Saver\PersistenceJobs\UnitTestCollectionPersistenceJob.cs" />
     <Compile Include="Saver\UnitTestPersistenceJobConverter.cs" />
     <Compile Include="Saver\UnitTestPersistenceJobGenerator.cs" />
+    <Compile Include="Saver\UnitTestPersistenceJobProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
