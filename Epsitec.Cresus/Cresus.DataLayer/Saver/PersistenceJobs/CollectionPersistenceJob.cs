@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -10,18 +11,44 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
 
 
+	/// <summary>
+	/// The <c>CollectionPersistenceJob</c> class describes the modifications that have been made to
+	/// a single collection field of an <see cref="AbstractEntity"/> and that are to be persisted in
+	/// the database.
+	/// </summary>
 	internal class CollectionPersistenceJob : AbstractFieldPersistenceJob
 	{
 
 
+		/// <summary>
+		/// Creates a new <c>CollectionPersistenceJob</c>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> concerned by the <c>CollectionPersistenceJob</c>.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> of the type that holds the fields concerned by the <c>CollectionPersistenceJob</c>.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field that has been modified.</param>
+		/// <param name="targets">The new targets of the field that has been modified.</param>
+		/// <param name="jobType">The job type of the <c>CollectionPersistenceJob</c>.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="localEntityId"/> is empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="fieldId"/> is empty.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="targets"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="targets"/> contains <c>null</c>.</exception>
 		public CollectionPersistenceJob(AbstractEntity entity, Druid localEntityId, Druid fieldId, IEnumerable<AbstractEntity> targets, PersistenceJobType jobType)
 			: base (entity, localEntityId, jobType)
 		{
+			fieldId.ThrowIf (f => f.IsEmpty, "fieldId cannot be empty");
+			targets.ThrowIfNull ("targets");
+
 			this.FieldId = fieldId;
 			this.Targets = targets.ToList ();
+
+			this.Targets.ThrowIf (t => t.Contains (null), "targets cannot contain null.");
 		}
 
 
+		/// <summary>
+		/// The <see cref="Druid"/> of the field that has been modified.
+		/// </summary>
 		public Druid FieldId
 		{
 			get;
@@ -29,6 +56,9 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		}
 
 		
+		/// <summary>
+		/// The new targets of the field that has been modified.
+		/// </summary>
 		public IEnumerable<AbstractEntity> Targets
 		{
 			get;
