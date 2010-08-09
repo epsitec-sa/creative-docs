@@ -87,6 +87,14 @@ namespace Epsitec.Common.Widgets.Collections
 			return index0;
 		}
 
+		public void AddRange(IEnumerable<object> values)
+		{
+			foreach (var value in values)
+			{
+				this.Add (value);
+			}
+		}
+
 		public void AddRange(IEnumerable<string> values)
 		{
 			foreach (var value in values)
