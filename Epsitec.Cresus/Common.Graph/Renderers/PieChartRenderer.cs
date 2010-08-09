@@ -276,10 +276,10 @@ namespace Epsitec.Common.Graph.Renderers
                     center.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
                 }
 
-                // We widen then path for the detection
+                // We widen the path for the detection
                 if (forDetection)
                 {
-                	radius += 1000;
+                	radius *= 1.4);
                 }
 				
 				path.MoveTo (center);

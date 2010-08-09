@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 
-            this.seriesDetection = new SeriesDetectionController(chartView, captionView);
+            this.seriesDetection = new SeriesDetectionController (chartView, captionView);
             
             // Tells the renderer that the mouse is over the graph
             this.seriesDetection.HoverIndexChanged += (sender, e) => this.chartView.HoverIndexChanged(e.OldValue, e.NewValue);
