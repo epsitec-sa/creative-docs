@@ -17,7 +17,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.EditionControllers
+namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
 	public class EnumValueArticleParameterController
 	{

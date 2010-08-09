@@ -106,9 +106,9 @@
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
-    <Compile Include="Controllers\EditionControllers\AbstractArticleParameterController.cs" />
-    <Compile Include="Controllers\EditionControllers\ValuesArticleParameterController.cs" />
-    <Compile Include="Controllers\EditionControllers\EnumValueArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterController\AbstractArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterController\ValuesArticleParameterController.cs" />
+    <Compile Include="Controllers\ArticleParameterController\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleGroupViewController.cs" />
