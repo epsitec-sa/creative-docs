@@ -13,6 +13,8 @@ namespace Epsitec.Common.Graph.Widgets
 		{
 			this.Padding = new Margins (60, 30, 30, 30);
 			this.scale = 1.0;
+
+            this.Clicked += this.OnClicked;
 		}
 
 

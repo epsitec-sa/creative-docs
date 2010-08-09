@@ -158,18 +158,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
             };
 
-            // Handling the mouse click
-            this.chartView.Clicked += this.chartView.OnClicked;
-
             this.floatingCaptions = new FloatingCaptionsView()
             {
                 Anchor = AnchorStyles.All,
-                Parent = chartSurface,
+                Parent = chartView,
                 Visibility = this.IsStandalone
             };
-
-            // Handling the mouse click, passing it to the ChartView
-            this.floatingCaptions.Clicked += this.chartView.OnClicked;
 
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
