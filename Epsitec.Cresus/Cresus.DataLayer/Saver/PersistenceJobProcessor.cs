@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -26,6 +27,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		public PersistenceJobProcessor(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			
 			this.DataContext = dataContext;
 		}
 
@@ -66,6 +69,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		public Dictionary<AbstractEntity, DbKey> ProcessJobs(IEnumerable<AbstractPersistenceJob> jobs)
 		{
+			jobs.ThrowIfNull ("jobs");
+			
 			List<AbstractPersistenceJob> jobsCopy = jobs.ToList ();
 			Dictionary<AbstractEntity, DbKey> newEntityKeys = new Dictionary<AbstractEntity, DbKey> ();
 
@@ -95,6 +100,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				{
 					this.ProcessJob (transaction, newEntityKeys, collectionJob);
 				}
+
+				transaction.Commit ();
 			}
 
 			return newEntityKeys;
@@ -314,13 +321,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			// Marc
 
 			DbKey sourceKey = this.GetEntityDbKey (job.Entity, newEntityKeys);
-			DbKey targetKey = this.GetEntityDbKey (job.Target, newEntityKeys);
 
 			Druid localEntityId = job.LocalEntityId;
 			Druid fieldId = job.FieldId;
 
 			this.DeleteEntitySourceRelation (transaction, localEntityId, fieldId, sourceKey);
-			this.InsertEntityRelation (transaction, localEntityId, fieldId, sourceKey, targetKey);
+
+			if (job.Target != null)
+			{
+				DbKey targetKey = this.GetEntityDbKey (job.Target, newEntityKeys);
+
+				this.InsertEntityRelation (transaction, localEntityId, fieldId, sourceKey, targetKey);
+			}
 		}
 
 
@@ -359,6 +371,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			this.InsertEntityRelation (transaction, localEntityId, fieldId, sourceKey, targetKeys);
 		}
+
 
 		private void InsertEntityRelation(DbTransaction transaction, Druid localEntityId, Druid fieldId, DbKey sourceKey, IEnumerable<DbKey> targetKeys)
 		{
