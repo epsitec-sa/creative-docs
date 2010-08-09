@@ -180,6 +180,7 @@
     <Compile Include="Context\DataContext.cs" />
     <Compile Include="Proxies\EntityKeyProxy.cs" />
     <Compile Include="Saver\PersistenceJobConverter.cs" />
+    <Compile Include="Saver\PersistenceJobGenerator.cs" />
     <Compile Include="Saver\PersistenceJobProcessor.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractPersistenceJob.cs" />
     <Compile Include="Saver\PersistenceJobs\AbstractInsertionOrUpdatePersistenceJob.cs" />
