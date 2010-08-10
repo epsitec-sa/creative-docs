@@ -15,43 +15,44 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.fb = fb;
 		}
-		
+
 		#region ISqlEngine Members
-		
+
 		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out int result)
 		{
 			result = 0;
-			
+
 			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
 				case DbCommandType.ReturningData:
 					break;
-				
+
 				default:
 					throw new Exceptions.GenericException (this.fb.DbAccess, string.Format ("Illegal command type {0}", type));
 			}
-			
+
 			if (commandCount > 1)
 			{
 				string[] commands = command.CommandText.Split ('\n');
-				
+
 				for (int i = 0; i < commands.Length; i++)
 				{
 					if (commands[i].Length > 0)
 					{
 						command.CommandText = commands[i];
-						result += command.ExecuteNonQuery ();
+						result += this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteNonQuery ());
 					}
 				}
 			}
 			else if (commandCount > 0)
 			{
-				result += command.ExecuteNonQuery ();
+				result += this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteNonQuery ());
 			}
+
 		}
-		
+
 		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out object simpleData)
 		{
 			if (commandCount > 1)
@@ -63,23 +64,23 @@ namespace Epsitec.Cresus.Database.Implementation
 				simpleData = null;
 				return;
 			}
-			
+
 			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					simpleData = command.ExecuteNonQuery ();
+					simpleData = this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteNonQuery ());
 					break;
-				
+
 				case DbCommandType.ReturningData:
-					simpleData = command.ExecuteScalar ();
+					simpleData = this.ExecuteQueryAndConvertFbExceptions (() => command.ExecuteScalar ());
 					break;
-				
+
 				default:
 					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
 		}
-		
+
 		public void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out System.Data.DataSet dataSet)
 		{
 			if (commandCount < 1)
@@ -87,38 +88,67 @@ namespace Epsitec.Cresus.Database.Implementation
 				dataSet = null;
 				return;
 			}
-			
+
 			int result;
-			
+
 			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					this.Execute (command, type, commandCount, out result);
+					this.ExecuteQueryAndConvertFbExceptions (() => this.Execute (command, type, commandCount, out result));
 					dataSet = null;
 					break;
-				
+
 				case DbCommandType.ReturningData:
-					System.Data.IDataAdapter adapter = this.fb.NewDataAdapter (command);
-					dataSet = new System.Data.DataSet ();
-					adapter.Fill (dataSet);
+					dataSet = this.ExecuteQueryAndConvertFbExceptions (() =>
+					{
+						System.Data.IDataAdapter adapter = this.fb.NewDataAdapter (command);
+						System.Data.DataSet ds = new System.Data.DataSet ();
+						adapter.Fill (ds);
+						return ds;
+					});
 					break;
-				
+
 				default:
 					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
 		}
-		
+
 		#endregion
-			
+
 		#region IDisposable Members
-		
+
 		public void Dispose()
 		{
 		}
-		
+
 		#endregion
-		
+
+		private void ExecuteQueryAndConvertFbExceptions(System.Action query)
+		{
+			this.ExecuteQueryAndConvertFbExceptions (() =>
+			{
+				query ();
+				return 0;
+			});
+		}
+
+
+		private T ExecuteQueryAndConvertFbExceptions<T>(System.Func<T> query)
+		{
+			try
+			{
+				return query ();
+			}
+			catch (FbException e)
+			{
+				DbAccess dbAccess = this.fb.DbAccess;
+				string message = "Could not execute query because a problem occurred.";
+
+				throw new Database.Exceptions.GenericException (dbAccess, message, e);
+			}
+		}
+
 		private FirebirdAbstraction		fb;
 	}
 }
