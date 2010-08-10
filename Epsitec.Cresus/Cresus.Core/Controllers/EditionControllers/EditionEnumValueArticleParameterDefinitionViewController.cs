@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.parameterController = new ArticleParameterControllers.ArticleParameterListController (this.tileContainer, this.Entity);
 			this.parameterController.CreateUI (group);
 
+#if false
 			builder.CreateTextField (tile, 0, "Valeur", Marshaler.Create (() => this.Value, x => this.Value = x));
 			builder.CreateTextField (tile, 0, "Description courte", Marshaler.Create (() => this.ShortDescription, x => this.ShortDescription = x));
 			builder.CreateTextFieldMulti (tile, 78, "Description longue", Marshaler.Create (() => this.LongDescription, x => this.LongDescription = x));
@@ -71,9 +72,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
+#endif
 		}
 
 
+#if false
 		private string Value
 		{
 			get
@@ -109,6 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.parameterController.SelectedLongDescription = value;
 			}
 		}
+#endif
 
 
 		protected override EditionStatus GetEditionStatus()
