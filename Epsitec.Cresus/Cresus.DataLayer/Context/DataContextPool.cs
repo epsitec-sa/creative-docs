@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// if <paramref name="dataContext"/> is also managed by this instance.
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"/> whose modifications to synchronize.</param>
-		/// <param name="jobs">The sequence of <see cref="AbstractSynchronizationJob"/> to sychronize.</param>
+		/// <param name="jobs">The sequence of <see cref="AbstractSynchronizationJob"/> to synchronize.</param>
 		internal void Synchronize(DataContext dataContext, IEnumerable<AbstractSynchronizationJob> jobs)
 		{
 			if (DataContextPool.Instance.Contains (dataContext))
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				{
 					foreach (DataContext otherDataContext in otherDataContexts)
 					{
-						otherDataContext.Synchronize (job);
+						job.Synchronize (otherDataContext);
 					}
 				}
 			}

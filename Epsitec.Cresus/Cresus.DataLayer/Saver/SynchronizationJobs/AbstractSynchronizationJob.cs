@@ -53,6 +53,14 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		}
 
 
+		/// <summary>
+		/// Calls the appropriate method in order to apply the modifications of this instance to the
+		/// given <see cref="DataContext"/>.
+		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> to which apply the modifications of this instance.</param>
+		public abstract void Synchronize(DataContext dataContext);
+
+
 	}
 
 

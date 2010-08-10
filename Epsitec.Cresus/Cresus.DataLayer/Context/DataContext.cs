@@ -634,135 +634,139 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Applies the modifications described by the given <see cref="AbstractSynchronizationJob"/>
+		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>
 		/// to the current instance if it is relevant.
 		/// </summary>
-		/// <param name="job">The <see cref="AbstractSynchronizationJob"/> whose modification to apply.</param>
+		/// <param name="job">The <see cref="DeleteSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal void Synchronize(AbstractSynchronizationJob job)
+		internal void Synchronize(DeleteSynchronizationJob job)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			if (this.Contains (job.EntityKey))
 			{
-				// Here is a little trick : job is cast to dynamic, which allows us to simulate a
-				// double dispatch call to this.Synchronize(...). That is cool, because that means
-				// that we have 4 overloads for this.Synchronize(...) and we are able to call the
-				// appropriate one without knowing the concrete type of job at compile time or by
-				// testing it with the 'is' keyword at runtime.
-				// Marc
+				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
-				this.Synchronize ((dynamic) job);
+				this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Synchronization);
+
+				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
 			}
 		}
 
 
 		/// <summary>
-		/// Applies the modifications described by the given <see cref="DeleteSynchronizationJob"/>.
-		/// </summary>
-		/// <param name="job">The <see cref="DeleteSynchronizationJob"/> whose modification to apply.</param>
-		private void Synchronize(DeleteSynchronizationJob job)
-		{
-			AbstractEntity entity = this.GetEntity (job.EntityKey);
-
-			this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Synchronization);
-
-			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
-		}
-
-
-		/// <summary>
-		/// Applies the modifications described by the given <see cref="ValueSynchronizationJob"/>.
+		/// Applies the modifications described by the given <see cref="ValueSynchronizationJob"/>
+		/// to the current instance if it is relevant.
 		/// </summary>
 		/// <param name="job">The <see cref="ValueSynchronizationJob"/> whose modification to apply.</param>
-		private void Synchronize(ValueSynchronizationJob job)
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void Synchronize(ValueSynchronizationJob job)
 		{
-			AbstractEntity entity = this.GetEntity (job.EntityKey);
+			this.AssertDataContextIsNotDisposed ();
 
-			using (entity.UseSilentUpdates ())
+			if (this.Contains (job.EntityKey))
 			{
-				using (entity.DefineOriginalValues ())
-				{
-					using (entity.DisableEvents ())
-					{
-						string fieldId = job.FieldId.ToResourceId ();
-						object fieldValue = job.NewValue;
+				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
-						entity.InternalSetValue (fieldId, fieldValue);
+				using (entity.UseSilentUpdates ())
+				{
+					using (entity.DefineOriginalValues ())
+					{
+						using (entity.DisableEvents ())
+						{
+							string fieldId = job.FieldId.ToResourceId ();
+							object fieldValue = job.NewValue;
+
+							entity.InternalSetValue (fieldId, fieldValue);
+						}
 					}
 				}
-			}
 
-			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+			}
 		}
 
 
 		/// <summary>
-		/// Applies the modifications described by the given <see cref="ReferenceSynchronizationJob"/>.
+		/// Applies the modifications described by the given <see cref="ReferenceSynchronizationJob"/>
+		/// to the current instance if it is relevant.
 		/// </summary>
 		/// <param name="job">The <see cref="ReferenceSynchronizationJob"/> whose modification to apply.</param>
-		private void Synchronize(ReferenceSynchronizationJob job)
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void Synchronize(ReferenceSynchronizationJob job)
 		{
-			AbstractEntity entity = this.GetEntity (job.EntityKey);
+			this.AssertDataContextIsNotDisposed ();
 
-			using (entity.UseSilentUpdates ())
+			if (this.Contains (job.EntityKey))
 			{
-				using (entity.DefineOriginalValues ())
+				AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+				using (entity.UseSilentUpdates ())
 				{
-					using (entity.DisableEvents ())
+					using (entity.DefineOriginalValues ())
 					{
-						string fieldId = job.FieldId.ToResourceId ();
-						object fieldValue;
-
-						if (job.NewTargetKey.HasValue)
+						using (entity.DisableEvents ())
 						{
-							fieldValue = new EntityKeyProxy (this, job.NewTargetKey.Value);
-						}
-						else
-						{
-							fieldValue = null;
-						}
+							string fieldId = job.FieldId.ToResourceId ();
+							object fieldValue;
 
-						entity.InternalSetValue (fieldId, fieldValue);
+							if (job.NewTargetKey.HasValue)
+							{
+								fieldValue = new EntityKeyProxy (this, job.NewTargetKey.Value);
+							}
+							else
+							{
+								fieldValue = null;
+							}
+
+							entity.InternalSetValue (fieldId, fieldValue);
+						}
 					}
 				}
-			}
 
-			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+			}
 		}
 
 
 		/// <summary>
-		/// Applies the modifications described by the given <see cref="CollectionSynchronizationJob"/>.
+		/// Applies the modifications described by the given <see cref="CollectionSynchronizationJob"/>
+		/// to the current instance if it is relevant.
 		/// </summary>
 		/// <param name="job">The <see cref="CollectionSynchronizationJob"/> whose modification to apply.</param>
-		private void Synchronize(CollectionSynchronizationJob job)
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		internal void Synchronize(CollectionSynchronizationJob job)
 		{
-			AbstractEntity entity = this.GetEntity (job.EntityKey);
+			this.AssertDataContextIsNotDisposed ();
 
-			using (entity.UseSilentUpdates ())
+			if (this.Contains (job.EntityKey))
 			{
-				using (entity.DefineOriginalValues ())
+				AbstractEntity entity = this.GetEntity (job.EntityKey);
+
+				using (entity.UseSilentUpdates ())
 				{
-					using (entity.DisableEvents ())
+					using (entity.DefineOriginalValues ())
 					{
-						string fieldId = job.FieldId.ToResourceId ();
-
-						IList collection = entity.InternalGetFieldCollection (fieldId);
-
-						collection.Clear ();
-
-						foreach (EntityKey entityKey in job.NewTargetKeys)
+						using (entity.DisableEvents ())
 						{
-							object proxy = new EntityKeyProxy (this, entityKey);
+							string fieldId = job.FieldId.ToResourceId ();
 
-							collection.Add (proxy);
+							IList collection = entity.InternalGetFieldCollection (fieldId);
+
+							collection.Clear ();
+
+							foreach (EntityKey entityKey in job.NewTargetKeys)
+							{
+								object proxy = new EntityKeyProxy (this, entityKey);
+
+								collection.Add (proxy);
+							}
 						}
 					}
 				}
-			}
 
-			this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+			}
 		}
 
 
