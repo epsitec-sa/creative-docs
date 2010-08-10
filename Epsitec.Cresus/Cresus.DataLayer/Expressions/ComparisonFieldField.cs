@@ -1,4 +1,10 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.DataLayer.Loader;
+
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -58,6 +64,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Gets the sequence of field ids that are used in this instance.
+		/// </summary>
+		/// <returns>The sequence of field ids that are used in this instance.</returns>
+		internal override IEnumerable<Druid> GetFields()
+		{
+			return ExpressionFields.GetFields (this);
 		}
 
 

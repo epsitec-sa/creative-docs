@@ -1,4 +1,9 @@
-﻿namespace Epsitec.Cresus.DataLayer.Expressions
+﻿using Epsitec.Common.Support;
+
+using System.Collections.Generic;
+
+
+namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
@@ -16,6 +21,14 @@
 		protected Expression()
 		{
 		}
+
+
+		/// <summary>
+		/// Gets the sequence of field ids that are used in this instance.
+		/// </summary>
+		/// <returns>The sequence of field ids that are used in this instance.</returns>
+		internal abstract IEnumerable<Druid> GetFields();
+
 
 	}
 

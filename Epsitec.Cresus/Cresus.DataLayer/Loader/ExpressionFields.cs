@@ -22,94 +22,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		/// <summary>
 		/// Gets the set of <see cref="Druid"/> of the <see cref="Field"/> present in an
-		/// <see cref="Expression"/>.
-		/// </summary>
-		/// <param name="expression">The <see cref="Expression"/> whose <see cref="Druid"/> to get.</param>
-		/// <returns>The set of <see cref="Druid"/>.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="expression"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this Expression expression)
-		{
-			expression.ThrowIfNull ("expression");
-
-			if (expression is Operation)
-			{
-				return (expression as Operation).GetFields ();
-			}
-			else if (expression is Comparison)
-			{
-				return (expression as Comparison).GetFields ();
-			}
-			else
-			{
-				throw new System.NotSupportedException ("expression is not supported");
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the set of <see cref="Druid"/> of the <see cref="Field"/> present in an
-		/// <see cref="Operation"/>.
-		/// </summary>
-		/// <param name="operation">The <see cref="Operation"/> whose <see cref="Druid"/> to get.</param>
-		/// <returns>The set of <see cref="Druid"/>.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="operation"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this Operation operation)
-		{
-			operation.ThrowIfNull ("operation");
-			
-			if (operation is UnaryOperation)
-			{
-				return (operation as UnaryOperation).GetFields ();
-			}
-			else if (operation is BinaryOperation)
-			{
-				return (operation as BinaryOperation).GetFields ();
-			}
-			else
-			{
-				throw new System.NotSupportedException ("operation is not supported");
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the set of <see cref="Druid"/> of the <see cref="Field"/> present in an
-		/// <see cref="Comparison"/>.
-		/// </summary>
-		/// <param name="comparison">The <see cref="Comparison"/> whose <see cref="Druid"/> to get.</param>
-		/// <returns>The set of <see cref="Druid"/>.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="comparison"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this Comparison comparison)
-		{
-			comparison.ThrowIfNull ("comparison");
-
-			if (comparison is UnaryComparison)
-			{
-				return (comparison as UnaryComparison).GetFields ();
-			}
-			else if (comparison is ComparisonFieldField)
-			{
-				return (comparison as ComparisonFieldField).GetFields ();
-			}
-			else if (comparison is ComparisonFieldValue)
-			{
-				return (comparison as ComparisonFieldValue).GetFields ();
-			}
-			else
-			{
-				throw new System.NotSupportedException ("comparison is not supported");
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the set of <see cref="Druid"/> of the <see cref="Field"/> present in an
 		/// <see cref="UnaryOperation"/>.
 		/// </summary>
 		/// <param name="operation">The <see cref="UnaryOperation"/> whose <see cref="Druid"/> to get.</param>
 		/// <returns>The set of <see cref="Druid"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="operation"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this UnaryOperation operation)
+		public static IEnumerable<Druid> GetFields(UnaryOperation operation)
 		{
 			operation.ThrowIfNull ("operation");
 
@@ -124,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="operation">The <see cref="BinaryOperation"/> whose <see cref="Druid"/> to get.</param>
 		/// <returns>The set of <see cref="Druid"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="operation"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this BinaryOperation operation)
+		public static IEnumerable<Druid> GetFields(BinaryOperation operation)
 		{
 			operation.ThrowIfNull ("operation");
 
@@ -142,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="comparison">The <see cref="UnaryComparison"/> whose <see cref="Druid"/> to get.</param>
 		/// <returns>The set of <see cref="Druid"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="comparison"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this UnaryComparison comparison)
+		public static IEnumerable<Druid> GetFields(UnaryComparison comparison)
 		{
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
@@ -173,7 +91,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="comparison">The <see cref="ComparisonFieldField"/> whose <see cref="Druid"/> to get.</param>
 		/// <returns>The set of <see cref="Druid"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="comparison"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this ComparisonFieldField comparison)
+		public static IEnumerable<Druid> GetFields(ComparisonFieldField comparison)
 		{
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
@@ -215,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="comparison">The <see cref="ComparisonFieldValue"/> whose <see cref="Druid"/> to get.</param>
 		/// <returns>The set of <see cref="Druid"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="comparison"/> is null.</exception>
-		public static IEnumerable<Druid> GetFields(this ComparisonFieldValue comparison)
+		public static IEnumerable<Druid> GetFields(ComparisonFieldValue comparison)
 		{
 			// This method does not do the job itself but call an helper method so the arguments are
 			// checked immediately and the execution of the helper is deferred.
