@@ -19,6 +19,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
+	/// <summary>
+	/// Ce contrôleur gère la définition des paramètres d'un article.
+	/// </summary>
 	public class ArticleParameterListController
 	{
 		public ArticleParameterListController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)

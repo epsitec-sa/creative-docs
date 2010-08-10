@@ -19,6 +19,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
+	/// <summary>
+	/// Ce contrôleur permet de saisir une énumération pour un paramètre d'article, dans une ligne d'article
+	/// d'une facture.
+	/// </summary>
 	public class EnumValueArticleParameterController : AbstractArticleParameterController
 	{
 		public EnumValueArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
@@ -29,18 +33,92 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public override void CreateUI(FrameBox parent)
 		{
-			var field = new TextFieldEx
+			var enumParameter = this.ParameterDefinition as EnumValueArticleParameterDefinitionEntity;
+			double buttonWidth = 14;
+
+			//	Ligne éditable.
+			this.editor = new ItemPicketCombo
 			{
 				Parent = parent,
+				MenuButtonWidth = buttonWidth,
+				Cardinality = enumParameter.Cardinality,
 				Dock = DockStyle.Fill,
-				Text = this.ParameterValue,
 				TabIndex = 1,
 			};
 
-			field.AcceptingEdition += delegate
+			//	Initialise le menu des valeurs.
+			string[] values            = (enumParameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] shortDescriptions = (enumParameter.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+
+			for (int i = 0; i < System.Math.Min (values.Length, shortDescriptions.Length); i++)
 			{
-				this.ParameterValue = field.Text;
+				this.editor.Items.Add (values[i], shortDescriptions[i]);
+			}
+
+			//	Initialise le contenu.
+			string[] parameterValues = (this.ParameterValue ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+
+			foreach (var parameterValue in parameterValues)
+			{
+				int i = this.GetIndex (parameterValue);
+
+				if (i != -1)
+				{
+					this.editor.AddSelection (new int[] { i });
+				}
+			}
+
+			//	Initialise le contenu par défaut.
+			if (this.editor.SelectionCount == 0 && !string.IsNullOrEmpty (enumParameter.DefaultValue))
+			{
+				int i = this.GetIndex (enumParameter.DefaultValue);
+
+				if (i != -1)
+				{
+					this.editor.AddSelection (new int[] { i });
+				}
+			}
+
+			this.editor.SelectedItemChanged += delegate
+			{
+				this.ParameterValue = this.SelectedParameterValues;
 			};
 		}
+
+
+		private int GetIndex(string key)
+		{
+			//	Retourne l'index d'une clé.
+			for (int i = 0; i < this.editor.Items.Count; i++)
+			{
+				if (key == this.editor.Items.GetKey (i))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private string SelectedParameterValues
+		{
+			//	Retourne la liste des paramètres choisis (les codes spéarés par des '∙').
+			get
+			{
+				var list = new List<string> ();
+
+				var sel = this.editor.GetSortedSelection ();
+				foreach (int i in sel)
+				{
+					string key = this.editor.Items.GetKey (i);
+					list.Add (key);
+				}
+
+				return string.Join (AbstractArticleParameterDefinitionEntity.Separator, list);
+			}
+		}
+
+
+		private ItemPicketCombo editor;
 	}
 }

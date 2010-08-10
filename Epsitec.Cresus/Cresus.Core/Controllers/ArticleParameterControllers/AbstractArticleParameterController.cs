@@ -19,6 +19,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
+	/// <summary>
+	/// Classe de base pour la saisie d'une valeur numérique ou d'une énumération pour un paramètre d'article,
+	/// dans une ligne d'article d'une facture.
+	/// </summary>
 	public abstract class AbstractArticleParameterController
 	{
 		public AbstractArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
