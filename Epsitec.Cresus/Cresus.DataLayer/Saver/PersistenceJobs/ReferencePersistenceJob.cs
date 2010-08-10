@@ -2,6 +2,10 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
+
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
@@ -54,6 +58,18 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		{
 			get;
 			private set;
+		}
+
+
+		/// <summary>
+		/// Calls the appropriate method that will convert this instance into an equivalent sequence
+		/// of <see cref="AbstractSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="converter">The <see cref="PersistenceJobConverter"/> to use for the conversion.</param>
+		/// <returns> The sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		public override IEnumerable<AbstractSynchronizationJob> Convert(PersistenceJobConverter converter)
+		{
+			return converter.Convert (this);
 		}
 
 

@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private IEnumerable<AbstractSynchronizationJob> ConvertPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
 		{
-			return jobs.SelectMany (j => this.JobConverter.Convert (j)).ToList ();
+			return jobs.SelectMany (j => j.Convert (this.JobConverter)).ToList ();
 		}
 
 
