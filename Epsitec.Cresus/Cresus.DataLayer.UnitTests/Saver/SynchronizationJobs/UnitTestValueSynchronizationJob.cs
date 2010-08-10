@@ -61,6 +61,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void SynchronizeTest()
+		{
+			int dataContextId = 0;
+			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
+			Druid fieldId = Druid.FromLong (1);
+			object value = "value";
+
+			new ValueSynchronizationJob (dataContextId, entityKey, fieldId, value).Synchronize (null);
+		}
+
+
 	}
 
 

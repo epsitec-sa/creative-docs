@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -31,8 +32,11 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		/// given <see cref="DataContext"/>.
 		/// </summary>
 		/// <param name="dataContext">The <see cref="DataContext"/> to which apply the modifications of this instance.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		public override void Synchronize(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+
 			dataContext.Synchronize (this);
 		}
 
