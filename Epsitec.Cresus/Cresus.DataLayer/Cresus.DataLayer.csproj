@@ -194,7 +194,6 @@
     <Compile Include="Saver\PersistenceJobs\PersistenceJobType.cs" />
     <Compile Include="Saver\PersistenceJobs\ReferencePersistenceJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\ReferenceSynchronizationJob.cs" />
-    <Compile Include="Saver\SaverQueryGenerator.cs" />
     <Compile Include="Saver\PersistenceJobs\ValuePersistenceJob.cs" />
     <Compile Include="Saver\SynchronizationJobs\ValueSynchronizationJob.cs" />
     <Compile Include="Schema\SchemaBuilder.cs" />

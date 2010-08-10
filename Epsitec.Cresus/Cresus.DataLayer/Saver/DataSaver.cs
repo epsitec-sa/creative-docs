@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		public DataSaver(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
-			this.SaverQueryGenerator = new SaverQueryGenerator (dataContext);
 			this.JobConverter = new PersistenceJobConverter (dataContext);
 			this.JobGenerator = new PersistenceJobGenerator (dataContext);
 			this.JobProcessor = new PersistenceJobProcessor (dataContext);
@@ -38,13 +37,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		private DataContext DataContext
-		{
-			get;
-			set;
-		}
-
-
-		private SaverQueryGenerator SaverQueryGenerator
 		{
 			get;
 			set;
@@ -92,20 +84,19 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		public IEnumerable<AbstractSynchronizationJob> SaveChanges()
 		{
-			return this.SaveChanges1 ();
-		}
-
-
-		public IEnumerable<AbstractSynchronizationJob> SaveChanges2()
-		{
 			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
 
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
 			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs);
+
+			this.CleanSavedEntities (entitiesToSave);
+			this.AssignNewEntityKeys (newEntityKeys);
+			
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
-			this.PostProcessPersistenceJobs (entitiesToDelete, entitiesToSave, newEntityKeys);
+			this.CleanDeletedEntities (entitiesToDelete);
+			this.UpdateDataGeneration ();
 
 			return synchronizationJobs;
 		}
@@ -154,7 +145,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
 		{
 			bool done = false;
-			IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys;
+			int nbTries = 0;
+			System.Random dice = new System.Random ();
+			IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
 
 			do
 			{
@@ -169,13 +162,22 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 					done = true;
 				}
-				catch (System.Exception e)
+				catch (Database.Exceptions.GenericException e)
 				{
-					// catch the appropriate exception here
-					// throw after too much tries.
-					throw;
+					if (nbTries <= 25)
+					{
+						int minWaitTime = 10;
+						int maxWaitTime = minWaitTime + (10 * nbTries);
+						int waitTime = dice.Next (minWaitTime, maxWaitTime);
 
-					System.Threading.Thread.Sleep (100);
+						System.Threading.Thread.Sleep (waitTime);
+
+						nbTries++;
+					}
+					else
+					{
+						throw new System.Exception ("Impossible to persist changes to the database.", e);
+					}
 				}
 			}
 			while (!done);
@@ -184,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private void PostProcessPersistenceJobs(IEnumerable<AbstractEntity> entitiesToDelete, IEnumerable<AbstractEntity> entitiesToSave, IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys)
+		private void CleanDeletedEntities(IEnumerable<AbstractEntity> entitiesToDelete)
 		{
 			foreach (AbstractEntity entity in entitiesToDelete)
 			{
@@ -193,12 +195,20 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			}
 
 			this.DataContext.ClearEntitiesToDelete ();
+		}
 
+
+		private void CleanSavedEntities(IEnumerable<AbstractEntity> entitiesToSave)
+		{
 			foreach (AbstractEntity entity in entitiesToSave)
 			{
 				entity.SetModifiedValuesAsOriginalValues ();
 			}
+		}
 
+
+		private void AssignNewEntityKeys(IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys)
+		{
 			foreach (var newEntityKey in newEntityKeys)
 			{
 				AbstractEntity entity = newEntityKey.Key;
@@ -206,75 +216,18 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 				this.DataContext.DefineRowKey (entity, key);
 			}
-
-			this.UpdateDataGeneration ();
 		}
-
 
 
 		private IEnumerable<AbstractSynchronizationJob> ConvertPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
 		{
-			return jobs.SelectMany (j => this.JobConverter.Convert (j));
+			return jobs.SelectMany (j => this.JobConverter.Convert (j)).ToList ();
 		}
 
 
-		public IEnumerable<AbstractSynchronizationJob> SaveChanges1()
+		private void UpdateDataGeneration()
 		{
-			bool containsChanges;
-
-			List<AbstractSynchronizationJob> synchronizationJobs = new List<AbstractSynchronizationJob> ();
-
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				bool deletedEntities = this.DeleteEntities (transaction, synchronizationJobs);
-				bool savedEntities = this.SaveEntities (transaction, synchronizationJobs);
-
-				containsChanges = deletedEntities || savedEntities;
-
-				transaction.Commit ();
-			}
-
-			if (containsChanges)
-			{
-				this.UpdateDataGeneration ();
-			}
-
-			return synchronizationJobs;
-		}
-
-
-		private bool DeleteEntities(DbTransaction transaction, List<AbstractSynchronizationJob> synchronizationJobs)
-		{
-			List<AbstractEntity> entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
-
-			foreach (AbstractEntity entity in entitiesToDelete)
-			{
-				if (this.DataContext.IsPersistent (entity))
-				{
-					int dataContextId = this.DataContext.UniqueId;
-					EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
-
-					synchronizationJobs.Add (new DeleteSynchronizationJob (dataContextId, entityKey));
-				}
-
-				this.RemoveEntity (transaction, entity);
-				this.DataContext.MarkAsDeleted (entity);
-			}
-
-			this.DataContext.ClearEntitiesToDelete ();
-
-			return entitiesToDelete.Any ();
-		}
-
-
-		private void RemoveEntity(DbTransaction transaction, AbstractEntity entity)
-		{
-			this.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Internal);
-
-			if (this.DataContext.IsPersistent (entity))
-			{
-				this.SaverQueryGenerator.DeleteEntity (transaction, entity);
-			}
+			this.EntityContext.NewDataGeneration ();
 		}
 
 
@@ -358,126 +311,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool SaveEntities(DbTransaction transaction, List<AbstractSynchronizationJob> synchronizationJobs)
-		{
-			List<AbstractEntity> entitiesToSave = new List<AbstractEntity> (
-				from entity in this.DataContext.GetEntitiesModified ()
-				where this.CheckIfEntityCanBeSaved (entity)
-				select entity
-			);
-
-			HashSet<AbstractEntity> savedEntities = new HashSet<AbstractEntity> ();
-			Dictionary<AbstractEntity, DbKey> newEntityKeys = new Dictionary<AbstractEntity, DbKey> ();
-
-			foreach (AbstractEntity entity in entitiesToSave)
-			{
-				this.SaveEntity (transaction, savedEntities, newEntityKeys, synchronizationJobs, entity);
-			}
-
-			foreach (var item in newEntityKeys)
-			{
-				AbstractEntity entity = item.Key;
-				DbKey dbKey = item.Value;
-
-				this.DataContext.DefineRowKey (entity, dbKey);
-			}
-
-			foreach (AbstractEntity entity in savedEntities)
-			{
-				entity.SetModifiedValuesAsOriginalValues ();
-			}
-
-			return entitiesToSave.Any ();
-		}
-
-
-		private void SaveEntity(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity entity)
-		{
-			if (savedEntities.Contains (entity))
-			{
-				return;
-			}
-			else
-			{
-				savedEntities.Add (entity);
-			}
-			
-			if (!this.DataContext.Contains (entity))
-			{
-				// TODO: Should we propagate the serialization to another DataContext ?
-				// Pierre
-				throw new System.Exception ("entity is not owned by the DataContext associated with this DataSaver.");
-			}
-
-			bool isPersisted = this.DataContext.IsPersistent (entity);
-
-			if (isPersisted)
-			{
-				synchronizationJobs.AddRange (this.SaverQueryGenerator.UpdateEntityValues (transaction, newEntityKeys, entity));
-			}
-			else
-			{
-				synchronizationJobs.AddRange (this.SaverQueryGenerator.InsertEntityValues (transaction, newEntityKeys, entity));
-			}
-
-			this.SaveTargetsIfNotPersisted (transaction, savedEntities, newEntityKeys, synchronizationJobs, entity);
-
-			if (isPersisted)
-			{
-				synchronizationJobs.AddRange (this.SaverQueryGenerator.UpdateEntityRelations (transaction, newEntityKeys, entity));
-			}
-			else
-			{
-				synchronizationJobs.AddRange (this.SaverQueryGenerator.InsertEntityRelations (transaction, newEntityKeys, entity));
-			}
-		}
-
-
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity source)
-		{
-			Druid leafEntityId = source.GetEntityStructuredTypeId ();
-
-			var relations = from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
-							let rel = field.Relation
-							where rel == FieldRelation.Reference || rel == FieldRelation.Collection
-							select field;
-
-			foreach (StructuredTypeField field in relations)
-			{
-				this.SaveTargetsIfNotPersisted (transaction, savedEntities, newEntityKeys, synchronizationJobs, source, field);
-			}
-		}
-
-
-		private void SaveTargetsIfNotPersisted(DbTransaction transaction, HashSet<AbstractEntity> savedEntities, Dictionary<AbstractEntity, DbKey> newEntityKeys, List<AbstractSynchronizationJob> synchronizationJobs, AbstractEntity source, StructuredTypeField field)
-		{
-			List<AbstractEntity> targets = new List<AbstractEntity> ();
-			
-			switch (field.Relation)
-			{
-				case FieldRelation.Reference:
-				{
-					targets.Add (source.GetField<AbstractEntity> (field.Id));
-					break;
-				}
-				case FieldRelation.Collection:
-				{
-					targets.AddRange (source.GetFieldCollection<AbstractEntity> (field.Id));
-					break;
-				}
-				default:
-				{
-					throw new System.InvalidOperationException ();
-				}
-			}
-
-			foreach (AbstractEntity target in targets.Where (t => this.CheckIfTargetMustBeSaved (t)))
-			{
-				this.SaveEntity (transaction, savedEntities, newEntityKeys, synchronizationJobs, target);
-			}
-		}
-
-
 		private bool CheckIfTargetMustBeSaved(AbstractEntity target)
 		{
 			bool mustBeSaved = target != null
@@ -497,12 +330,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				&& !EntityNullReferenceVirtualizer.IsNullEntity (entity);
 
 			return canBeSaved;
-		}
-
-
-		private void UpdateDataGeneration()
-		{
-			this.EntityContext.NewDataGeneration ();
 		}
 
 
