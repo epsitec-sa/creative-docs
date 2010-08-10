@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			foreach (AbstractEntity entity in entitiesToDelete)
 			{
-				this.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Internal);
+				this.DataContext.RemoveAllReferences (entity, EntityChangedEventSource.Internal);
 				this.DataContext.MarkAsDeleted (entity);
 			}
 
@@ -228,86 +228,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private void UpdateDataGeneration()
 		{
 			this.EntityContext.NewDataGeneration ();
-		}
-
-
-		public void DeleteEntityTargetRelationsInMemory(AbstractEntity target, EntityChangedEventSource eventSource)
-		{
-			// This method will probably be too slow for a high number of managed entities, therefore
-			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
-			// other entities, or by looping only on a subset of entities, i.e only on the location
-			// entities if we look for an entity which can be targeted only by a location.
-			// Marc
-
-			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
-
-			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
-				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
-				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
-
-			foreach (AbstractEntity source in this.DataContext.GetEntities ())
-			{
-				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
-				var leafInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
-
-				foreach (Druid leafInheritedId in leafInheritedIds)
-				{
-					if (fieldPaths.ContainsKey (leafInheritedId))
-					{
-						this.DeleteEntityTargetRelationInMemory (source, fieldPaths[leafInheritedId], target, eventSource);
-					}
-				}
-			}
-		}
-
-
-		private void DeleteEntityTargetRelationInMemory(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
-		{
-			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
-
-			bool updated = false;
-
-			using (source.UseSilentUpdates ())
-			{
-				using (source.DisableEvents ())
-				{
-					switch (field.Relation)
-					{
-						case FieldRelation.Reference:
-
-							if (source.InternalGetValue (field.Id) == target)
-							{
-								source.InternalSetValue (field.Id, null);
-
-								updated = true;
-							}
-
-							break;
-
-						case FieldRelation.Collection:
-
-							IList collection = source.InternalGetFieldCollection (field.Id) as IList;
-
-							while (collection.Contains (target))
-							{
-								collection.Remove (target);
-
-								updated = true;
-							}
-
-							break;
-
-						default:
-
-							throw new System.InvalidOperationException ();
-					}
-				}
-			}
-
-			if (updated)
-			{
-				this.DataContext.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
-			}
 		}
 
 
