@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+ï»¿//	Copyright Â© 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 
 	/// <summary>
 	/// La classe TextLayout permet de stocker et d'afficher des contenus
-	/// riches (un sous-ensemble très restreint de HTML).
+	/// riches (un sous-ensemble trÃ¨s restreint de HTML).
 	/// </summary>
 	public class TextLayout
 	{
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							Text
 		{
-			//	Texte associé, contenant des commandes HTML, mais sans les commandes <put>.
+			//	Texte associÃ©, contenant des commandes HTML, mais sans les commandes <put>.
 			get
 			{
 				if ( this.text == null )
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							InternalText
 		{
-			//	Texte associé, contenant des commandes HTML, y compris les commandes <put>.
+			//	Texte associÃ©, contenant des commandes HTML, y compris les commandes <put>.
 			get
 			{
 				return this.text ?? "";
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 			get { return (this.text == null) ? 0 : this.text.Length; }
 		}
 		
-		public int								MaxTextIndex			// index maximum (position "logique", indépendante des tags de formatage)
+		public int								MaxTextIndex			// index maximum (position "logique", indÃ©pendante des tags de formatage)
 		{
 			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
 		}
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Font						DefaultFont
 		{
-			//	Fonte par défaut.
+			//	Fonte par dÃ©faut.
 			get
 			{
 				return this.style.Font;
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double							DefaultFontSize
 		{
-			//	Taille de la fonte par défaut.
+			//	Taille de la fonte par dÃ©faut.
 			get
 			{
 				return this.style.FontSize;
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.TextBreakMode			BreakMode
 		{
-			//	Mode de césure.
+			//	Mode de cÃ©sure.
 			get
 			{
 				return this.breakMode == Drawing.TextBreakMode.Undefined ? this.style.BreakMode : this.breakMode;
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool								ShowLineBreak
 		{
-			//	Détermine si les <br/> sont visibles ou non.
+			//	DÃ©termine si les <br/> sont visibles ou non.
 			get
 			{
 				return this.style.ShowLineBreaks;
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								ShowTab
 		{
-			//	Détermine si les tabulateurs sont visibles ou non.
+			//	DÃ©termine si les tabulateurs sont visibles ou non.
 			get
 			{
 				return this.style.ShowTabMarks;
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double							DrawingScale
 		{
-			//	Détermine l'échelle de dessin.
+			//	DÃ©termine l'Ã©chelle de dessin.
 			get
 			{
 				return this.drawingScale;
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double							VerticalMark
 		{
-			//	Détermine la position du marqueur vertical.
+			//	DÃ©termine la position du marqueur vertical.
 			get
 			{
 				return this.verticalMark;
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Size						SingleLineSize
 		{
-			//	Retourne les dimensions du texte indépendament de LayoutSize,
+			//	Retourne les dimensions du texte indÃ©pendament de LayoutSize,
 			//	s'il est mis sur une seule ligne.
 			get
 			{
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Widgets
 		public int								TotalLineCount
 		{
 			//	Retourne le nombre de lignes total dans le layout courant
-			//	(y compris les lignes qui débordent).
+			//	(y compris les lignes qui dÃ©bordent).
 			get
 			{
 				this.UpdateLayout();
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 		public int								VisibleLineCount
 		{
 			//	Retourne le nombre de lignes visibles dans le layout courant
-			//	(sans compter les lignes qui débordent).
+			//	(sans compter les lignes qui dÃ©bordent).
 			get
 			{
 				this.UpdateLayout();
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Widgets
 		public Drawing.Rectangle				TotalRectangle
 		{
 			//	Retourne le rectangle englobant du layout courant; ce
-			//	rectangle comprend toutes les lignes, même celles qui débordent.
+			//	rectangle comprend toutes les lignes, mÃªme celles qui dÃ©bordent.
 			get { return this.GetRectangleBounds(true); }
 		}
 		
@@ -561,8 +561,8 @@ namespace Epsitec.Common.Widgets
 		public Drawing.Rectangle				StandardRectangle
 		{
 			//	Retourne le rectangle standard englobant du layout courant; ce
-			//	rectangle ne dépend pas de la hauteur des lettres du texte.
-			//	Le rectangle aura la même hauteur avec "ace" ou "Ap".
+			//	rectangle ne dÃ©pend pas de la hauteur des lettres du texte.
+			//	Le rectangle aura la mÃªme hauteur avec "ace" ou "Ap".
 			get
 			{
 				this.UpdateLayout();
@@ -596,8 +596,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Retourne le rectangle englobant du layout, en tenant compte de
 			//	toutes les lignes (all=true) ou seulement des lignes visibles (all=false).
-			//	Si le texte est aligné sur le bord gauche, rectangle.Left n'est pas
-			//	forcément égal à 0.
+			//	Si le texte est alignÃ© sur le bord gauche, rectangle.Left n'est pas
+			//	forcÃ©ment Ã©gal Ã  0.
 			this.UpdateLayout();
 
 			Drawing.Rectangle totalRect = Drawing.Rectangle.Empty;
@@ -641,8 +641,8 @@ namespace Epsitec.Common.Widgets
 
 		internal bool IsSelectionBold(TextLayoutContext context)
 		{
-			//	Indique si les caractères sélectionnés sont gras.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique si les caractÃ¨res sÃ©lectionnÃ©s sont gras.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				return this.IsPrepared (context, "bold");
 			}
@@ -663,15 +663,15 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionBold(TextLayoutContext context, bool bold)
 		{
-			//	Met en gras ou en normal tous les caractères sélectionnés.
+			//	Met en gras ou en normal tous les caractÃ¨res sÃ©lectionnÃ©s.
 			string state = bold ? "yes" : "no";
 			this.InsertPutCommand(context, "bold=\"" + state + "\"");
 		}
 
 		internal bool IsSelectionItalic(TextLayoutContext context)
 		{
-			//	Indique si les caractères sélectionnés sont italiques.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique si les caractÃ¨res sÃ©lectionnÃ©s sont italiques.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				return this.IsPrepared (context, "italic");
 			}
@@ -691,15 +691,15 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionItalic(TextLayoutContext context, bool italic)
 		{
-			//	Met en italique ou en normal tous les caractères sélectionnés.
+			//	Met en italique ou en normal tous les caractÃ¨res sÃ©lectionnÃ©s.
 			string state = italic ? "yes" : "no";
 			this.InsertPutCommand(context, "italic=\"" + state + "\"");
 		}
 
 		internal bool IsSelectionUnderline(TextLayoutContext context)
 		{
-			//	Indique si les caractères sélectionnés sont soulignés.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique si les caractÃ¨res sÃ©lectionnÃ©s sont soulignÃ©s.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				return this.IsPrepared (context, "underline");
 			}
@@ -719,16 +719,16 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionUnderline(TextLayoutContext context, bool underline)
 		{
-			//	Met en souligné ou en normal tous les caractères sélectionnés.
+			//	Met en soulignÃ© ou en normal tous les caractÃ¨res sÃ©lectionnÃ©s.
 			string state = underline ? "yes" : "no";
 			this.InsertPutCommand(context, "underline=\"" + state + "\"");
 		}
 
 		internal string GetSelectionFontFace(TextLayoutContext context)
 		{
-			//	Indique le nom de la fonte des caractères sélectionnés.
-			//	Une chaîne vide indique la fonte par défaut.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique le nom de la fonte des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une chaÃ®ne vide indique la fonte par dÃ©faut.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				string s = this.FindLastPrepared (context, Attributes.Face);
 				if (s == "")
@@ -756,17 +756,17 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionFontFace(TextLayoutContext context, string name)
 		{
-			//	Modifie le nom de la fonte des caractères sélectionnés.
-			//	Une chaîne vide indique la fonte par défaut.
+			//	Modifie le nom de la fonte des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une chaÃ®ne vide indique la fonte par dÃ©faut.
 			if ( name == "" )  name = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 			this.InsertPutCommand(context, "face=\"" + name + "\"");
 		}
 
 		internal double GetSelectionFontScale(TextLayoutContext context)
 		{
-			//	Indique l'échelle des caractères sélectionnés.
-			//	1 indique l'échelle par défaut.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique l'Ã©chelle des caractÃ¨res sÃ©lectionnÃ©s.
+			//	1 indique l'Ã©chelle par dÃ©faut.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				string s = this.FindLastPrepared (context, Attributes.Size);
 				if (s == "")
@@ -789,8 +789,8 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionFontScale(TextLayoutContext context, double scale)
 		{
-			//	Modifie l'échelle des caractères sélectionnés.
-			//	1 indique l'échelle par défaut.
+			//	Modifie l'Ã©chelle des caractÃ¨res sÃ©lectionnÃ©s.
+			//	1 indique l'Ã©chelle par dÃ©faut.
 			scale = System.Math.Max(scale,   0.01);  // min 1%
 			scale = System.Math.Min(scale, 100.00);  // max 10000%
 			this.InsertPutCommand(context, "size=\"" + scale*100.0 + "%\"");
@@ -807,9 +807,9 @@ namespace Epsitec.Common.Widgets
 
 		internal Drawing.RichColor GetSelectionFontRichColor(TextLayoutContext context)
 		{
-			//	Indique la couleur des caractères sélectionnés.
-			//	Une couleur vide indique la couleur par défaut.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique la couleur des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une couleur vide indique la couleur par dÃ©faut.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				return TextLayout.GetRichColorFromName (this.FindLastPrepared (context, Attributes.Color));
 			}
@@ -866,9 +866,9 @@ namespace Epsitec.Common.Widgets
 
 		internal Drawing.Color GetSelectionFontColor(TextLayoutContext context)
 		{
-			//	Indique la couleur des caractères sélectionnés.
-			//	Une couleur vide indique la couleur par défaut.
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			//	Indique la couleur des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une couleur vide indique la couleur par dÃ©faut.
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				string s = this.FindLastPrepared (context, Attributes.Color);
 				return Drawing.Color.FromName (s);
@@ -889,8 +889,8 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionFontRichColor(TextLayoutContext context, Drawing.RichColor color)
 		{
-			//	Modifie la couleur des caractères sélectionnés.
-			//	Une couleur vide indique la couleur par défaut.
+			//	Modifie la couleur des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une couleur vide indique la couleur par dÃ©faut.
 			string s;
 			if ( color.IsEmpty )
 			{
@@ -905,8 +905,8 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionFontColor(TextLayoutContext context, Drawing.Color color)
 		{
-			//	Modifie la couleur des caractères sélectionnés.
-			//	Une couleur vide indique la couleur par défaut.
+			//	Modifie la couleur des caractÃ¨res sÃ©lectionnÃ©s.
+			//	Une couleur vide indique la couleur par dÃ©faut.
 			string s;
 			if ( color.IsEmpty )
 			{
@@ -921,7 +921,7 @@ namespace Epsitec.Common.Widgets
 
 		internal Drawing.TextListType GetSelectionList(TextLayoutContext context)
 		{
-			//	Indique si les caractères sélectionnés commencent par une puce.
+			//	Indique si les caractÃ¨res sÃ©lectionnÃ©s commencent par une puce.
 			int i = this.FindJustifBlockRank (context);
 
 			if (i == -1)
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void SetSelectionList(TextLayoutContext context, Drawing.TextListType list)
 		{
-			//	Met ou enlève la puce au début des caractères sélectionnés.
+			//	Met ou enlÃ¨ve la puce au dÃ©but des caractÃ¨res sÃ©lectionnÃ©s.
 			this.Simplify(context);
 			this.ListDelete(context);
 
@@ -1002,7 +1002,7 @@ namespace Epsitec.Common.Widgets
 
 		private JustifBlock FindJustifBlock(TextLayoutContext context)
 		{
-			//	Cherche le premier bloc correspondant à un index.
+			//	Cherche le premier bloc correspondant Ã  un index.
 			int i = this.FindJustifBlockRank (context);
 			
 			if (i == -1)
@@ -1017,20 +1017,20 @@ namespace Epsitec.Common.Widgets
 
 		private int FindJustifBlockRank(TextLayoutContext context)
 		{
-			//	Cherche le premier bloc correspondant à un index.
+			//	Cherche le premier bloc correspondant Ã  un index.
 			this.UpdateLayout ();
 
 			int  from  = context.CursorFrom;
 			int  to    = context.CursorTo;
 			bool after = context.CursorAfter;
 
-			if (from != to)  // zone sélectionnée ?
+			if (from != to)  // zone sÃ©lectionnÃ©e ?
 			{
-				from = System.Math.Min (from, to);  // cherche le début en marche arrière
+				from = System.Math.Min (from, to);  // cherche le dÃ©but en marche arriÃ¨re
 				after = true;
 			}
 
-			if (after)  // cherche en marche arrière ?
+			if (after)  // cherche en marche arriÃ¨re ?
 			{
 				int index = from;
 				
@@ -1066,14 +1066,14 @@ namespace Epsitec.Common.Widgets
 
 		private bool IsPrepared(TextLayoutContext context, string key)
 		{
-			//	Cherche si la préparation contient une commande donnée.
+			//	Cherche si la prÃ©paration contient une commande donnÃ©e.
 			if ( context.PrepareOffset == -1 )  return false;
 			return (this.FindLastPrepared(context, key) == "yes");
 		}
 
 		private string FindLastPrepared(TextLayoutContext context, string key)
 		{
-			//	Cherche si la préparation contient une commande avec l'attribut donné.
+			//	Cherche si la prÃ©paration contient une commande avec l'attribut donnÃ©.
 			if (context.PrepareOffset == -1)
 			{
 				return "";
@@ -1082,7 +1082,7 @@ namespace Epsitec.Common.Widgets
 			Dictionary<string, string> parameters;
 			
 			string text = this.InternalText;
-			string found = "";  // rien encore trouvé
+			string found = "";  // rien encore trouvÃ©
 			
 			int from = context.PrepareOffset;
 			int to   = context.PrepareOffset + context.PrepareLength1;
@@ -1100,12 +1100,12 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			return found;  // retourne la *dernière* préparation trouvée
+			return found;  // retourne la *derniÃ¨re* prÃ©paration trouvÃ©e
 		}
 
 		private void InsertPutCommand(TextLayoutContext context, string cmd)
 		{
-			//	Modifie les caractères sélectionnés avec une commande <put..>..</put>.
+			//	Modifie les caractÃ¨res sÃ©lectionnÃ©s avec une commande <put..>..</put>.
 			string begin = "<put " + cmd + ">";
 			string end   = "</put>";
 
@@ -1114,17 +1114,17 @@ namespace Epsitec.Common.Widgets
 				this.DeletePutCommand(context, begin, end);
 			}
 
-			if ( context.CursorFrom == context.CursorTo )  // prépare l'insertion ?
+			if ( context.CursorFrom == context.CursorTo )  // prÃ©pare l'insertion ?
 			{
 				int cursor1 = this.FindOffsetFromIndex(context.CursorFrom, false);
 				int cursor2 = cursor1;
-				if ( context.PrepareOffset == -1 )  // première préparation ?
+				if ( context.PrepareOffset == -1 )  // premiÃ¨re prÃ©paration ?
 				{
 					context.PrepareOffset  = cursor1;
 					context.PrepareLength1 = 0;
 					context.PrepareLength2 = 0;
 				}
-				else	// ajoute à une préparation existante ?
+				else	// ajoute Ã  une prÃ©paration existante ?
 				{
 					cursor1 = context.PrepareOffset + context.PrepareLength1;
 					cursor2 = cursor1 + context.PrepareLength2;
@@ -1138,7 +1138,7 @@ namespace Epsitec.Common.Widgets
 				this.isPrepareDirty = true;
 				//	Il ne faut surtout pas faire de this.Simplify() ici !
 			}
-			else	// modifie les caractères sélectionnés ?
+			else	// modifie les caractÃ¨res sÃ©lectionnÃ©s ?
 			{
 				int cursorFrom = System.Math.Min(context.CursorFrom, context.CursorTo);
 				int cursorTo   = System.Math.Max(context.CursorFrom, context.CursorTo);
@@ -1181,7 +1181,7 @@ namespace Epsitec.Common.Widgets
 
 		private void ListInsert(TextLayoutContext context, string cmd)
 		{
-			//	Insère des puces dans tous les paragraphes sélectionnés.
+			//	InsÃ¨re des puces dans tous les paragraphes sÃ©lectionnÃ©s.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
 			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
 			int initialFrom = from;
@@ -1217,13 +1217,13 @@ namespace Epsitec.Common.Widgets
 
 			if ( initialFrom == from && initialFrom < initialTo )
 			{
-				context.CursorFrom --;  // englobe la première puce créée
+				context.CursorFrom --;  // englobe la premiÃ¨re puce crÃ©Ã©e
 			}
 		}
 
 		private void ListDelete(TextLayoutContext context)
 		{
-			//	Supprime les puces dans tous les paragraphes sélectionnés.
+			//	Supprime les puces dans tous les paragraphes sÃ©lectionnÃ©s.
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
 			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
 			this.AlignToBreakLines(ref from, ref to);
@@ -1259,7 +1259,7 @@ namespace Epsitec.Common.Widgets
 		private void AlignToBreakLines(ref int from, ref int to)
 		{
 			//	Adapte les index from/to pour englober des paragraphes entiers.
-			//	from: début d'un paragraphe (après un <br/>)
+			//	from: dÃ©but d'un paragraphe (aprÃ¨s un <br/>)
 			//	to:   fin d'un paragraphe (avant un <br/>)
 			string simple = this.InternalSimpleText;
 
@@ -1282,7 +1282,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectAll(TextLayoutContext context)
 		{
-			//	Sélectionne tout le texte.
+			//	SÃ©lectionne tout le texte.
 			if ( this.text == null )  return;
 
 			context.CursorFrom  = 0;
@@ -1292,7 +1292,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectLine(TextLayoutContext context)
 		{
-			//	Sélectionne toute la ligne.
+			//	SÃ©lectionne toute la ligne.
 			this.MoveExtremity(context, -1, false);
 			int from = context.CursorFrom;
 			this.MoveExtremity(context, 1, false);
@@ -1302,7 +1302,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SelectWord(TextLayoutContext context)
 		{
-			//	Sélectionne tout le mot.
+			//	SÃ©lectionne tout le mot.
 			string simple = this.InternalSimpleText;
 
 			while ( context.CursorFrom > 0 )
@@ -1323,9 +1323,9 @@ namespace Epsitec.Common.Widgets
 
 		private int DeleteText(int from, int to)
 		{
-			//	Supprime des caractères, tout en conservant les commandes. S'il reste
-			//	des commandes superflues, elles seront supprimées par Symplify().
-			//	Retourne l'index où insérer les éventuels caractères remplaçants.
+			//	Supprime des caractÃ¨res, tout en conservant les commandes. S'il reste
+			//	des commandes superflues, elles seront supprimÃ©es par Symplify().
+			//	Retourne l'index oÃ¹ insÃ©rer les Ã©ventuels caractÃ¨res remplaÃ§ants.
 			Dictionary<string, string> parameters;
 			string text = this.InternalText;
 
@@ -1339,7 +1339,8 @@ namespace Epsitec.Common.Widgets
 					 tag == Tag.Tab       ||
 					 tag == Tag.List      ||
 					 tag == Tag.Image     ||
-					 tag == Tag.Null)
+					 tag == Tag.Null      ||
+					 tag == Tag.Param)
 				{
 					text = text.Remove(begin, from-begin);
 					to -= from-begin;
@@ -1363,9 +1364,9 @@ namespace Epsitec.Common.Widgets
 
 		public bool DeleteSelection(TextLayoutContext context)
 		{
-			//	Supprime les caractères sélectionnés dans le texte.
+			//	Supprime les caractÃ¨res sÃ©lectionnÃ©s dans le texte.
 			bool simplified = false;
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				this.Simplify (context);
 				simplified = true;
@@ -1401,7 +1402,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool ReplaceSelection(TextLayoutContext context, string ins)
 		{
-			//	Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
+			//	InsÃ¨re une chaÃ®ne correspondant Ã  un caractÃ¨re ou un tag (jamais plus).
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
 			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
 			
@@ -1417,7 +1418,7 @@ namespace Epsitec.Common.Widgets
 				to   = this.text.Length;
 			}
 			
-			if ( from < to )  // caractères sélectionnés à supprimer ?
+			if ( from < to )  // caractÃ¨res sÃ©lectionnÃ©s Ã  supprimer ?
 			{
 				bool us = context.UndoSeparator;
 				int cursor = this.DeleteText(from, to);
@@ -1439,8 +1440,8 @@ namespace Epsitec.Common.Widgets
 				context.CursorAfter = false;
 				context.UndoSeparator = us;
 
-				//	Simplifie seulement après avoir supprimé la sélection puis inséré
-				//	le caractère, afin qu'il utilise les mêmes attributs typographiques.
+				//	Simplifie seulement aprÃ¨s avoir supprimÃ© la sÃ©lection puis insÃ©rÃ©
+				//	le caractÃ¨re, afin qu'il utilise les mÃªmes attributs typographiques.
 				this.Simplify(context);
 			}
 			else
@@ -1453,7 +1454,7 @@ namespace Epsitec.Common.Widgets
 				string text = this.InternalText;
 				int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
 				bool prepare = false;
-				if ( context.PrepareOffset != -1 )  // a-t-on préparé des attributs typographiques ?
+				if ( context.PrepareOffset != -1 )  // a-t-on prÃ©parÃ© des attributs typographiques ?
 				{
 					cursor = context.PrepareOffset + context.PrepareLength1;
 					cursor = System.Math.Min(cursor, text.Length);
@@ -1468,7 +1469,7 @@ namespace Epsitec.Common.Widgets
 				context.CursorAfter = false;
 				context.UndoSeparator = us;
 
-				if ( prepare )  this.Simplify(context);  // supprime les préparations <put...>
+				if ( prepare )  this.Simplify(context);  // supprime les prÃ©parations <put...>
 			}
 
 			this.DefineCursorPosX(context);
@@ -1477,8 +1478,8 @@ namespace Epsitec.Common.Widgets
 
 		private bool IsPlaceForInsertion(TextLayoutContext context, string ins)
 		{
-			//	Indique s'il reste assez de place pour insérer une chaîne.
-			//	Si le texte contient des commandes <put>, elles ne doivent pas être comptées !
+			//	Indique s'il reste assez de place pour insÃ©rer une chaÃ®ne.
+			//	Si le texte contient des commandes <put>, elles ne doivent pas Ãªtre comptÃ©es !
 			int length = 0;
 
 			if (this.text != null)
@@ -1498,17 +1499,17 @@ namespace Epsitec.Common.Widgets
 
 		public bool InsertCharacter(TextLayoutContext context, char character)
 		{
-			//	Insère un caractère.
+			//	InsÃ¨re un caractÃ¨re.
 			return this.ReplaceSelection(context, TextLayout.ConvertToTaggedText(character));
 		}
 
 		public bool DeleteCharacter(TextLayoutContext context, int dir)
 		{
-			//	Supprime le caractère à gauche ou à droite du curseur.
+			//	Supprime le caractÃ¨re Ã  gauche ou Ã  droite du curseur.
 			if (this.DeleteSelection (context))
 				return false;
 
-			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			if (context.PrepareOffset != -1)  // prÃ©paration pour l'insertion ?
 			{
 				this.Simplify (context);
 			}
@@ -1517,7 +1518,7 @@ namespace Epsitec.Common.Widgets
 
 			int from, to;
 			
-			if (dir < 0)  // à gauche du curseur ?
+			if (dir < 0)  // Ã  gauche du curseur ?
 			{
 				if (context.CursorTo == 0)
 				{
@@ -1527,7 +1528,7 @@ namespace Epsitec.Common.Widgets
 				from = this.FindOffsetFromIndex (context.CursorTo-1);
 				to   = this.FindOffsetFromIndex (context.CursorTo);
 			}
-			else	// à droite du curseur ?
+			else	// Ã  droite du curseur ?
 			{
 				from = this.FindOffsetFromIndex (context.CursorTo);
 				to   = this.FindOffsetFromIndex (context.CursorTo+1);
@@ -1566,7 +1567,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool MoveLine(TextLayoutContext context, int move, bool select)
 		{
-			//	Déplace le curseur par lignes.
+			//	DÃ©place le curseur par lignes.
 			int index;
 			bool after;
 			int line = context.CursorLine+move;
@@ -1586,7 +1587,7 @@ namespace Epsitec.Common.Widgets
 
 		public bool MoveExtremity(TextLayoutContext context, int move, bool select)
 		{
-			//	Déplace le curseur au début ou à la fin d'une ligne.
+			//	DÃ©place le curseur au dÃ©but ou Ã  la fin d'une ligne.
 			double posx;
 			if ( move < 0 )  posx = 0;
 			else             posx = this.LayoutSize.Width;
@@ -1608,17 +1609,17 @@ namespace Epsitec.Common.Widgets
 
 		private bool IsWordSeparator(char character)
 		{
-			//	Indique si un caractère est un séparateur pour les déplacements
-			//	avec Ctrl+flèche.
+			//	Indique si un caractÃ¨re est un sÃ©parateur pour les dÃ©placements
+			//	avec Ctrl+flÃ¨che.
 			character = System.Char.ToLower(character);
 			if ( character == '_' ||
-				 character == 'á' || character == 'à' || character == 'â' || character == 'ä' ||
-				 character == 'ç' ||
-				 character == 'é' || character == 'è' || character == 'ê' || character == 'ë' ||
-				 character == 'í' || character == 'ì' || character == 'î' || character == 'ï' ||
-				 character == 'ó' || character == 'ò' || character == 'ô' || character == 'ö' ||
-				 character == 'ú' || character == 'ù' || character == 'û' || character == 'ü' )  return false;
-			//	TODO: généraliser avec tous les accents exotiques ?
+				 character == 'Ã¡' || character == 'Ã ' || character == 'Ã¢' || character == 'Ã¤' ||
+				 character == 'Ã§' ||
+				 character == 'Ã©' || character == 'Ã¨' || character == 'Ãª' || character == 'Ã«' ||
+				 character == 'Ã­' || character == 'Ã¬' || character == 'Ã®' || character == 'Ã¯' ||
+				 character == 'Ã³' || character == 'Ã²' || character == 'Ã´' || character == 'Ã¶' ||
+				 character == 'Ãº' || character == 'Ã¹' || character == 'Ã»' || character == 'Ã¼' )  return false;
+			//	TODO: gÃ©nÃ©raliser avec tous les accents exotiques ?
 			if ( character >= 'a' && character <= 'z' )  return false;
 			if ( character >= '0' && character <= '9' )  return false;
 			return true;
@@ -1626,7 +1627,7 @@ namespace Epsitec.Common.Widgets
 
 		private bool IsDualCursor(int index)
 		{
-			//	Indique s'il existe 2 positions différentes pour un index.
+			//	Indique s'il existe 2 positions diffÃ©rentes pour un index.
 			//	L'une avec CursorAfter = false, et l'autre avec CursorAfter = true.
 			this.UpdateLayout();
 
@@ -1655,7 +1656,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool MoveCursor(TextLayoutContext context, int move, bool select, bool word)
 		{
-			//	Déplace le curseur.
+			//	DÃ©place le curseur.
 			if ( move == 1 && !select && !word &&
 				 context.CursorFrom == context.CursorTo &&
 				 !context.CursorAfter &&
@@ -1684,7 +1685,7 @@ namespace Epsitec.Common.Widgets
 			if ( select )  cursor = context.CursorTo;
 			string simple = this.InternalSimpleText;
 
-			if ( word )  // déplacement par mots ?
+			if ( word )  // dÃ©placement par mots ?
 			{
 				if ( move < 0 )
 				{
@@ -1713,7 +1714,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
-			else	// déplacement par caractères ?
+			else	// dÃ©placement par caractÃ¨res ?
 			{
 				cursor += move;
 			}
@@ -1731,8 +1732,8 @@ namespace Epsitec.Common.Widgets
 
 		public void DefineCursorPosX(TextLayoutContext context)
 		{
-			//	Mémorise la position horizontale du curseur, afin de pouvoir y
-			//	revenir en cas de déplacement par lignes.
+			//	MÃ©morise la position horizontale du curseur, afin de pouvoir y
+			//	revenir en cas de dÃ©placement par lignes.
 			Drawing.Point p1, p2;
 			if ( this.FindTextCursor(context, out p1, out p2) )
 			{
@@ -1744,7 +1745,7 @@ namespace Epsitec.Common.Widgets
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics)
 		{
 			//	Dessine le texte, en fonction du layout...
-			//	Si une couleur est donnée avec uniqueColor, tout le texte est peint
+			//	Si une couleur est donnÃ©e avec uniqueColor, tout le texte est peint
 			//	avec cette couleur, en ignorant les <font color=...>.
 			this.Paint(pos, graphics, Drawing.Rectangle.MaxValue, Drawing.RichColor.Empty, Drawing.GlyphPaintStyle.Normal);
 		}
@@ -1865,6 +1866,20 @@ namespace Epsitec.Common.Widgets
 					this.OnAnchor (new AnchorEventArgs (x, y+descender, block.Width, ascender-descender, block.BeginIndex));
 				}
 
+				if (block.BackColor.IsVisible)
+				{
+					var frame = Drawing.Rectangle.Deflate (blockRect, new Drawing.Margins (0, 0, 1, 0));
+					var path  = Drawing.Path.CreateRoundedRectangle (frame, 2, 2);
+
+					graphics.Color = block.BackColor;
+					graphics.PaintSurface (path);
+					graphics.LineWidth = 0.5;
+					graphics.Color = Drawing.Color.FromAlphaColor (1, graphics.Color);
+					graphics.PaintOutline (path);
+
+					path.Dispose ();
+				}
+
 				graphics.RichColor = color;
 
 				if (!string.IsNullOrEmpty(block.Text))
@@ -1923,7 +1938,7 @@ namespace Epsitec.Common.Widgets
 							width = charsWidth[charsWidth.Length-1]*block.FontSize;
 						}
 
-						string text = "\u00B6";  // caractère unicode 182
+						string text = "\u00B6";  // caractÃ¨re unicode 182
 						graphics.PaintText (x+width, y, text, block.Font, block.FontSize);
 					}
 				}
@@ -1982,11 +1997,11 @@ namespace Epsitec.Common.Widgets
 
 		private Drawing.Path PathWave(Drawing.Point p1, Drawing.Point p2)
 		{
-			//	Génère le chemin d'une vague "/\/\/\/\/\/\".
-			//	Le début "montant" de la vague est toujours aligné sur x=0, afin que
+			//	GÃ©nÃ¨re le chemin d'une vague "/\/\/\/\/\/\".
+			//	Le dÃ©but "montant" de la vague est toujours alignÃ© sur x=0, afin que
 			//	deux vagues successives soient jointives.
 			Drawing.Path path = new Drawing.Path();
-			double len = 4;  // période d'une vague
+			double len = 4;  // pÃ©riode d'une vague
 			p1.Y -= 1;
 			double start = p1.X-p1.X%len-0.5;  // -0.5 pour feinter l'anti-aliasing !
 			double end   = p2.X-p2.X%len+len+0.5;
@@ -2014,13 +2029,13 @@ namespace Epsitec.Common.Widgets
 
 					if ( pp1.X >= p2.X || pp2.X <= p1.X )  continue;
 
-					if ( pp1.X < p1.X )  // dépasse à gauche ?
+					if ( pp1.X < p1.X )  // dÃ©passe Ã  gauche ?
 					{
 						pp1.Y += (pp2.Y-pp1.Y)*(p1.X-pp1.X)/(pp2.X-pp1.X);
 						pp1.X = p1.X;
 					}
 
-					if ( pp2.X > p2.X )  // dépasse à droite ?
+					if ( pp2.X > p2.X )  // dÃ©passe Ã  droite ?
 					{
 						pp2.Y += (pp1.Y-pp2.Y)*(p2.X-pp2.X)/(pp1.X-pp2.X);
 						pp2.X = p2.X;
@@ -2035,7 +2050,7 @@ namespace Epsitec.Common.Widgets
 
 		private Drawing.Path PathTab(Drawing.IPaintPort graphics, Drawing.Rectangle rect)
 		{
-			//	Génère le chemin pour représenter un tabulateur.
+			//	GÃ©nÃ¨re le chemin pour reprÃ©senter un tabulateur.
 			double x1 = rect.Left+1.0/this.drawingScale;
 			double x2 = rect.Right-1.0/this.drawingScale;
 			double y  = rect.Bottom+rect.Height*0.5;
@@ -2150,8 +2165,8 @@ namespace Epsitec.Common.Widgets
 
 		private bool DetectIndex(Drawing.Point pos, int posLine, bool select, out int index, out bool after)
 		{
-			//	Trouve l'index dans le texte interne qui correspond à la
-			//	position indiquée. Retourne false en cas d'échec.
+			//	Trouve l'index dans le texte interne qui correspond Ã  la
+			//	position indiquÃ©e. Retourne false en cas d'Ã©chec.
 			this.UpdateLayout();
 			
 			pos.Y = System.Math.Max(pos.Y, 0);
@@ -2173,7 +2188,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					if (pos.Y > line.Pos.Y+line.Ascender)  // avant la première ligne ?
+					if (pos.Y > line.Pos.Y+line.Ascender)  // avant la premiÃ¨re ligne ?
 					{
 						index = 0;
 						after = true;
@@ -2182,7 +2197,7 @@ namespace Epsitec.Common.Widgets
 
 					line = this.lines[this.lines.Count-1];
 					
-					if (pos.Y < line.Pos.Y+line.Descender)  // après la dernière ligne ?
+					if (pos.Y < line.Pos.Y+line.Descender)  // aprÃ¨s la derniÃ¨re ligne ?
 					{
 						index = this.MaxTextIndex;
 						after = false;
@@ -2231,7 +2246,7 @@ namespace Epsitec.Common.Widgets
 						if ( pos.X >= block.Pos.X-before &&
 							 pos.X <= block.Pos.X+width  )
 						{
-							if ( block.IsImage || block.Tab || block.List )
+							if ( block.IsImage || block.Tab || block.List || block.HasReplacement )
 							{
 								index = ( pos.X-block.Pos.X > width/2 ) ? block.EndIndex : block.BeginIndex;
 								after = this.IsAfter(j, index);
@@ -2265,7 +2280,7 @@ namespace Epsitec.Common.Widgets
 								index = block.BeginIndex+max;
 								if ( select && block.LineBreak && pos.X > block.Pos.X+block.Width )
 								{
-									index ++;  // après le <br/>
+									index ++;  // aprÃ¨s le <br/>
 									after = false;
 								}
 								else
@@ -2285,8 +2300,8 @@ namespace Epsitec.Common.Widgets
 
 		private bool IsAfter(int blockRank, int index)
 		{
-			//	Teste si le bloc précédent contient aussi le même index. Si oui,
-			//	retourne true, car l'index trouvé correspond à la 2ème position possible.
+			//	Teste si le bloc prÃ©cÃ©dent contient aussi le mÃªme index. Si oui,
+			//	retourne true, car l'index trouvÃ© correspond Ã  la 2Ã¨me position possible.
 			if ( blockRank > 0 )
 			{
 				JustifBlock prevBlock = this.blocks[blockRank-1];
@@ -2301,8 +2316,8 @@ namespace Epsitec.Common.Widgets
 		
 		public string DetectAnchor(Drawing.Point pos)
 		{
-			//	Détecte s'il y a un lien hypertexte dans la liste des
-			//	tags actifs à la position en question. Si oui, extrait la chaîne
+			//	DÃ©tecte s'il y a un lien hypertexte dans la liste des
+			//	tags actifs Ã  la position en question. Si oui, extrait la chaÃ®ne
 			//	de l'argument href, en supprimant les guillemets.
 			int index;
 			bool after;
@@ -2334,7 +2349,7 @@ namespace Epsitec.Common.Widgets
 
 		private double IndexToPosX(JustifBlock block, JustifLine line, int index)
 		{
-			//	Retourne la position horizontale correspondant à un index dans un bloc.
+			//	Retourne la position horizontale correspondant Ã  un index dans un bloc.
 			if ( block.LineBreak && index == block.EndIndex+1 )
 			{
 				return block.Pos.X + block.Width + line.Height/2;
@@ -2352,14 +2367,21 @@ namespace Epsitec.Common.Widgets
 			{
 				block.Font.GetTextCharEndX(block.Text, block.Infos, out charsWidth);
 			}
-			return block.Pos.X+charsWidth[index-block.BeginIndex-1]*block.FontSize;
+			int charIndex = index-block.BeginIndex-1;
+
+			if (block.HasReplacement)
+			{
+				charIndex = charsWidth.Length-1;
+			}
+
+			return block.Pos.X+charsWidth[charIndex]*block.FontSize;
 		}
 
 		
 		public SelectedArea[] FindTextRange(Drawing.Point pos, int indexBegin, int indexEnd)
 		{
 			//	Retourne un tableau avec les rectangles englobant le texte
-			//	spécifié par son début et sa fin. Il y a un rectangle par ligne.
+			//	spÃ©cifiÃ© par son dÃ©but et sa fin. Il y a un rectangle par ligne.
 			if ( indexBegin >= indexEnd )  return new SelectedArea[0];
 
 			this.UpdateLayout();
@@ -2417,7 +2439,7 @@ namespace Epsitec.Common.Widgets
 					};
 				}
 
-				if ( block.IsImage || block.Tab || block.List )
+				if ( block.IsImage || block.Tab || block.List || block.HasReplacement )
 				{
 					Drawing.Rectangle box = area.Rect;
 					box.Left  = System.Math.Min(box.Left,  block.Pos.X);
@@ -2503,8 +2525,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool FindTextCursor(TextLayoutContext context, out Drawing.Point p1, out Drawing.Point p2)
 		{
-			//	Retourne les deux extrémités du curseur.
-			//	Indique également le numéro de la ligne (0..n) dans le contexte.
+			//	Retourne les deux extrÃ©mitÃ©s du curseur.
+			//	Indique Ã©galement le numÃ©ro de la ligne (0..n) dans le contexte.
 			
 			this.UpdateLayout();
 
@@ -2522,7 +2544,7 @@ namespace Epsitec.Common.Widgets
 				{
 					p2.Y = line.Pos.Y+line.Ascender;
 					p1.Y = line.Pos.Y+line.Descender;
-					if (block.IsImage || block.Tab || block.List)
+					if (block.IsImage || block.Tab || block.List || block.HasReplacement)
 					{
 						if (index == block.BeginIndex)
 						{
@@ -2639,7 +2661,7 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Point FindTextEnd()
 		{
-			//	Retourne le coin inférieur/droite du dernier caractère.
+			//	Retourne le coin infÃ©rieur/droite du dernier caractÃ¨re.
 			this.UpdateLayout();
 
 			if ( this.blocks.Count == 0 )
@@ -2654,7 +2676,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double FindTextHeight()
 		{
-			//	Retourne la hauteur nécessaire pour le texte.
+			//	Retourne la hauteur nÃ©cessaire pour le texte.
 			this.UpdateLayout();
 
 			if ( this.blocks.Count == 0 )
@@ -2671,7 +2693,7 @@ namespace Epsitec.Common.Widgets
 #if false
 		public int AdvanceTag(int offset)
 		{
-			//	Si on est au début d'un tag, donne la longueur jusqu'à la fin.
+			//	Si on est au dÃ©but d'un tag, donne la longueur jusqu'Ã  la fin.
 			if ( offset >= this.MaxTextOffset )  return 0;
 
 			if ( this.text[offset] == '<' )  // tag <xx> ?
@@ -2701,7 +2723,7 @@ namespace Epsitec.Common.Widgets
 
 		public int RecedeTag(int offset)
 		{
-			//	Si on est à la fin d'un tag, donne la longueur jusqu'au début.
+			//	Si on est Ã  la fin d'un tag, donne la longueur jusqu'au dÃ©but.
 			if ( offset <= 0 )  return 0;
 			offset --;
 
@@ -2739,10 +2761,10 @@ namespace Epsitec.Common.Widgets
 
 		public int FindOffsetFromIndex(int textIndex, bool after)
 		{
-			//	Retourne l'offset dans le texte interne, correspondant à l'index
-			//	spécifié pour le texte sans tags. Si after=true, on saute tous les
-			//	tags qui précèdent le caractère indiqué (textIndex=0 => premier
-			//	caractère non tag dans le texte).
+			//	Retourne l'offset dans le texte interne, correspondant Ã  l'index
+			//	spÃ©cifiÃ© pour le texte sans tags. Si after=true, on saute tous les
+			//	tags qui prÃ©cÃ¨dent le caractÃ¨re indiquÃ© (textIndex=0 => premier
+			//	caractÃ¨re non tag dans le texte).
 			int    index = 0;
 			int    beginOffset;
 			int    endOffset = 0;
@@ -2776,6 +2798,7 @@ namespace Epsitec.Common.Widgets
 						 startOfTag != "<tab/" &&
 						 startOfTag != "<list" &&
 						 startOfTag != "<img " &&
+						 startOfTag != "<para" &&
 						 startOfTag != "<null")  continue;
 				}
 				else if ( this.text[endOffset] == '&' )
@@ -2801,8 +2824,8 @@ namespace Epsitec.Common.Widgets
 		
 		public int FindIndexFromOffset(int taggedTextOffset)
 		{
-			//	Retourne l'index dans le texte propre, correspondant à l'offset
-			//	spécifié dans le texte avec tags.
+			//	Retourne l'index dans le texte propre, correspondant Ã  l'offset
+			//	spÃ©cifiÃ© dans le texte avec tags.
 			int    index = 0;
 			int    beginOffset;
 
@@ -2826,6 +2849,7 @@ namespace Epsitec.Common.Widgets
 					if ( startOfTag == "<br/>" ||
 						 startOfTag == "<tab/" ||
 						 startOfTag == "<list" ||
+						 startOfTag == "<para" ||
 						 startOfTag == "<img " )
 					{
 						index ++;
@@ -2853,7 +2877,7 @@ namespace Epsitec.Common.Widgets
 
 		private static bool DeleteTagsList(string endTag, List<string> list)
 		{
-			//	Enlève un tag à la fin de la liste.
+			//	EnlÃ¨ve un tag Ã  la fin de la liste.
 			System.Diagnostics.Debug.Assert(endTag.StartsWith("</"));
 			System.Diagnostics.Debug.Assert(endTag.EndsWith(">"));
 
@@ -2875,16 +2899,16 @@ namespace Epsitec.Common.Widgets
 		#region SubstringComplete
 		public static string SubstringComplete(string text, int from, int to)
 		{
-			//	Extrait une sous-chaîne et complète les tags manquants.
+			//	Extrait une sous-chaÃ®ne et complÃ¨te les tags manquants.
 			from = System.Math.Min(from, text.Length);
 			to   = System.Math.Min(to,   text.Length);
 			string result = text.Substring(from, to-from);
 
-			TextLayout.TagComplete(ref result, Tag.Bold,       Tag.BoldEnd,       "<b>", "</b>");
-			TextLayout.TagComplete(ref result, Tag.Italic,     Tag.ItalicEnd,     "<i>", "</i>");
+			TextLayout.TagComplete(ref result, Tag.Bold,       Tag.BoldEnd,      "<b>", "</b>");
+			TextLayout.TagComplete(ref result, Tag.Italic,     Tag.ItalicEnd,    "<i>", "</i>");
 			TextLayout.TagComplete(ref result, Tag.Underline,  Tag.UnderlineEnd, "<u>", "</u>");
-			TextLayout.TagComplete(ref result, Tag.Mnemonic,   Tag.MnemonicEnd,   "<m>", "</m>");
-			TextLayout.TagComplete(ref result, Tag.Wave,       Tag.WaveEnd,       "<w>", "</w>");
+			TextLayout.TagComplete(ref result, Tag.Mnemonic,   Tag.MnemonicEnd,  "<m>", "</m>");
+			TextLayout.TagComplete(ref result, Tag.Wave,       Tag.WaveEnd,      "<w>", "</w>");
 
 			string fot = TextLayout.TagCapturePrev(text, 0, from, Tag.Font);
 			TextLayout.TagComplete(ref result, Tag.Font, Tag.FontEnd, fot, "</font>");
@@ -2951,7 +2975,7 @@ namespace Epsitec.Common.Widgets
 
 		private static int TagSearchPrev(string text, int from, int to, Tag search)
 		{
-			//	Cherche un tag en arrière.
+			//	Cherche un tag en arriÃ¨re.
 			Dictionary<string, string> parameters;
 			int last = -1;
 			int offset = from;
@@ -3023,7 +3047,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static Tag ParseTag(string text, ref int offset, out Dictionary<string, string> parameters)
 		{
-			//	Avance d'un caractère ou d'un tag dans le texte.
+			//	Avance d'un caractÃ¨re ou d'un tag dans le texte.
 			System.Diagnostics.Debug.Assert(text != null);
 			parameters = null;
 			
@@ -3080,6 +3104,7 @@ namespace Epsitec.Common.Widgets
 							case "<font":  tagId = Tag.Font;    close = ">";   break;
 							case "<w":     tagId = Tag.Wave;    close = ">";   break;
 							case "<put":   tagId = Tag.Put;     close = ">";   break;
+							case "<param": tagId = Tag.Param;   close = "/>";  break;
 						}
 						
 						if ( !end.EndsWith(close) )
@@ -3087,7 +3112,7 @@ namespace Epsitec.Common.Widgets
 							return Tag.SyntaxError;
 						}
 						
-						//	Enlève la fin du tag, comme ça on n'a réellement plus que les arguments.
+						//	EnlÃ¨ve la fin du tag, comme Ã§a on n'a rÃ©ellement plus que les arguments.
 						string arg = end.Remove(end.Length-close.Length, close.Length);
 						parameters = new Dictionary<string, string> ();
 						
@@ -3142,8 +3167,8 @@ namespace Epsitec.Common.Widgets
 		
 		public static char ExtractMnemonic(string text)
 		{
-			//	Trouve la séquence <m>x</m> dans le texte et retourne le premier caractère
-			//	de x comme code mnémonique (en majuscules).
+			//	Trouve la sÃ©quence <m>x</m> dans le texte et retourne le premier caractÃ¨re
+			//	de x comme code mnÃ©monique (en majuscules).
 			System.Diagnostics.Debug.Assert(text != null);
 			Dictionary<string, string> parameters;
 
@@ -3157,17 +3182,17 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			return '\0';  // rien trouvé
+			return '\0';  // rien trouvÃ©
 		}
 
 		public static string ConvertToXmlText(string text)
 		{
-			//	Convertit les caractères guillemet et apostrophe en tag XML &xxx;.
-			//	Il ne faut pas convertir les caractères '<', '>' et '&', car le texte
-			//	peut déjà contenir des tags XML. Par exemple, '<b>' ou '&quot;'.
-			//	Il serait évidemment catastrophique de convertir '<b>' en '&lt;b&gt;'
+			//	Convertit les caractÃ¨res guillemet et apostrophe en tag XML &xxx;.
+			//	Il ne faut pas convertir les caractÃ¨res '<', '>' et '&', car le texte
+			//	peut dÃ©jÃ  contenir des tags XML. Par exemple, '<b>' ou '&quot;'.
+			//	Il serait Ã©videmment catastrophique de convertir '<b>' en '&lt;b&gt;'
 			//	et '&quot;' en '&amp;quot;' !
-			//	Ceci permet de formater un texte édité avec le bloc-notes, par exemple.
+			//	Ceci permet de formater un texte Ã©ditÃ© avec le bloc-notes, par exemple.
 			if (text == null)
 			{
 				return null;
@@ -3210,8 +3235,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert(text != null);
 			if ( autoMnemonic )
 			{
-				//	Cherche les occurrences de "&" dans le texte et gère comme suit:
-				//	- Remplace "&x" par "<m>x</m>" (le tag <m> spécifie un code mnémonique)
+				//	Cherche les occurrences de "&" dans le texte et gÃ¨re comme suit:
+				//	- Remplace "&x" par "<m>x</m>" (le tag <m> spÃ©cifie un code mnÃ©monique)
 				//	- Remplace "&&" par "&"
 
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
@@ -3416,15 +3441,15 @@ namespace Epsitec.Common.Widgets
 			if ( this.text == null )  return;
 			this.SetText (this.GetSimplify());
 			this.isPrepareDirty = false;
-			context.PrepareOffset  = -1;  // annule la préparation pour l'insertion
+			context.PrepareOffset  = -1;  // annule la prÃ©paration pour l'insertion
 			context.PrepareLength1 = 0;
 			context.PrepareLength2 = 0;
 		}
 
 		public string GetSimplify()
 		{
-			//	Simplifie et met à plat toutes les commandes HTML du texte.
-			//	Les commandes <put..>..</put> sont intégrées puis supprimées.
+			//	Simplifie et met Ã  plat toutes les commandes HTML du texte.
+			//	Les commandes <put..>..</put> sont intÃ©grÃ©es puis supprimÃ©es.
 			Stack<FontDefinition>			fontStack;
 			FontDefinition					fontDefault;
 			FontDefinition					fontItem;
@@ -3434,7 +3459,7 @@ namespace Epsitec.Common.Widgets
 
 			fontStack = new Stack<FontDefinition> ();
 
-			//	Prépare la fonte initiale par défaut.
+			//	PrÃ©pare la fonte initiale par dÃ©faut.
 			fontDefault = new FontDefinition(string.Concat (TextLayout.CodeDefault, this.DefaultFont.FaceName), "100%", string.Concat (TextLayout.CodeDefault, "#", Drawing.RichColor.ToHexa(this.DefaultRichColor)));
 
 			fontItem = fontDefault;
@@ -3546,6 +3571,7 @@ namespace Epsitec.Common.Widgets
 
 					case Tag.None:
 					case Tag.Null:
+					case Tag.Param:
 					case Tag.Image:
 					case Tag.LineBreak:
 					case Tag.Tab:
@@ -3891,13 +3917,14 @@ namespace Epsitec.Common.Widgets
 			run.Anchor     = supplItem.Anchor > 0;
 			run.Wave       = supplItem.Wave > 0;
 			run.WaveColor  = supplItem.WaveColor;
+			run.BackColor  = supplItem.BackColor;
 		}
 
 		private void PutRun(List<Drawing.TextBreak.XRun> runList,
 							  Stack<FontItem> fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
-							  Drawing.Image image, double verticalOffset)
+							  Drawing.Image image, double verticalOffset, string replacement = null)
 		{
 			if ( currentIndex-startIndex == 0 )  return;
 
@@ -3909,6 +3936,7 @@ namespace Epsitec.Common.Widgets
 			run.Length = currentIndex-startIndex;
 			run.Image  = image;
 			run.VerticalOffset = verticalOffset;
+			run.Replacement = replacement;
 			this.FontToRun(run, font, fontItem, supplItem);
 			runList.Add(run);
 
@@ -3940,14 +3968,15 @@ namespace Epsitec.Common.Widgets
 			block.Anchor     = supplItem.Anchor>0;
 			block.Wave       = supplItem.Wave>0;
 			block.WaveColor  = supplItem.WaveColor;
+			block.BackColor  = supplItem.BackColor;
 			this.tabs.Add(block);
 		}
 
 		private void GenerateRuns()
 		{
-			//	Génère les listes suivantes:
+			//	GÃ©nÃ¨re les listes suivantes:
 			//	this.parts   parties entre 2 tabs contenant une liste de runs
-			//	this.tabs    JustifBlocks des tabulateurs rencontrés
+			//	this.tabs    JustifBlocks des tabulateurs rencontrÃ©s
 			if ( this.MaxTextOffset == 0 )
 			{
 				this.parts = null;
@@ -3955,7 +3984,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			//	Crée la liste des parties.
+			//	CrÃ©e la liste des parties.
 			if ( this.parts == null )
 			{
 				this.parts = new List<TabPart> ();
@@ -3965,7 +3994,7 @@ namespace Epsitec.Common.Widgets
 				this.parts.Clear();
 			}
 
-			//	Crée la liste des tabulateurs (liste de JustifBlocks).
+			//	CrÃ©e la liste des tabulateurs (liste de JustifBlocks).
 			if ( this.tabs == null )
 			{
 				this.tabs = new List<JustifBlock> ();
@@ -4010,7 +4039,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					}
 
-					if ( tag == Tag.Tab  ||  // partie terminée par un tabulateur ?
+					if ( tag == Tag.Tab  ||  // partie terminÃ©e par un tabulateur ?
 						 tag == Tag.List )
 					{
 						this.PutTab(fontStack, supplItem, startIndex, tag, parameters);
@@ -4126,8 +4155,17 @@ namespace Epsitec.Common.Widgets
 								break;
 
 							case Tag.Null:
-								buffer.Append ("†");
+								buffer.Append ("â€ ");
 								currentIndex++;
+								break;
+
+							case Tag.Param:
+								string replacement = string.Concat (" ", parameters["code"], "â‰¡", parameters["value"], " ");
+								buffer.Append (TextLayout.CodeObject);
+								currentIndex ++;
+								supplItem.BackColor = Drawing.Color.FromAlphaRgb (0.3, 0.5, 0.5, 0.5);
+								this.PutRun (runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0, replacement);
+								supplItem.BackColor = Drawing.Color.Empty;
 								break;
 
 							case Tag.None:
@@ -4163,14 +4201,14 @@ namespace Epsitec.Common.Widgets
 
 		private void GenerateBlocks()
 		{
-			//	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
+			//	Met Ã  jour this.blocks en fonction du texte, de la fonte et des dimensions.
 			this.blocks.Clear();
 			int textLength = this.MaxTextOffset;
 noText:
 			if ( textLength == 0 )
 			{
-				//	Si le texte n'existe pas, met quand même un bloc vide,
-				//	afin de voir apparaître le curseur (FindTextCursor).
+				//	Si le texte n'existe pas, met quand mÃªme un bloc vide,
+				//	afin de voir apparaÃ®tre le curseur (FindTextCursor).
 				FontItem fontItem = new FontItem(this);
 				fontItem.FontFace  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 				fontItem.FontScale = 1;  // 100%
@@ -4196,7 +4234,7 @@ noText:
 			double pos = 0.0;  // position horizontale dans la ligne
 			double indent = 0.0;  // pas encore d'indentation
 			int tabIndex = 0;  // index dans this.tabs
-			bool lineBreak = false;  // bloc terminé par <br/> ?
+			bool lineBreak = false;  // bloc terminÃ© par <br/> ?
 			bool beginOfText = true;
 			bool listEnding = false;
 
@@ -4212,7 +4250,7 @@ noText:
 					JustifBlock tb = this.tabs[tabIndex++];
 
 					Drawing.TextStyle.Tab tab;
-					if ( listEnding )  // partie précédente terminée par <list/> ?
+					if ( listEnding )  // partie prÃ©cÃ©dente terminÃ©e par <list/> ?
 					{
 						tab = new Drawing.TextStyle.Tab(pos+tb.FontSize*this.ProcessNum (tb.Parameters, "width", 2.0), Drawing.TextTabType.Indent, Drawing.TextTabLine.None);
 					}
@@ -4230,12 +4268,12 @@ noText:
 						if ( tab.Pos > this.layoutSize.Width )
 						{
 							textLength = 0;
-							goto noText;  // y'a plus rien à faire !
+							goto noText;  // y'a plus rien Ã  faire !
 						}
 					}
 
 					JustifBlock block = tb.Copy();
-					block.BoL    = lineBreak;  // dernier bloc terminé par <br/> ?
+					block.BoL    = lineBreak;  // dernier bloc terminÃ© par <br/> ?
 					block.Indent = block.BoL ? indent : 0.0;
 					block.Width  = tab.Pos-pos;
 					this.blocks.Add(block);
@@ -4244,7 +4282,7 @@ noText:
 						 tabType == Drawing.TextTabType.Center  ||
 						 tabType == Drawing.TextTabType.Decimal )
 					{
-						tabWidth = block.Width;  // largeur év. "mangeable"
+						tabWidth = block.Width;  // largeur Ã©v. "mangeable"
 					}
 					if ( tabType == Drawing.TextTabType.Indent )
 					{
@@ -4281,12 +4319,12 @@ noText:
 					if ( lines == null || lines.Length == 0 )
 					{
 						textLength = 0;
-						goto noText;  // y'a plus rien à faire !
+						goto noText;  // y'a plus rien Ã  faire !
 					}
 					tabWidth = 0.0;
 				}
 
-				if ( tabWidth != 0.0 )  // est-on après un tabulateur spécial ?
+				if ( tabWidth != 0.0 )  // est-on aprÃ¨s un tabulateur spÃ©cial ?
 				{
 					JustifBlock block = this.blocks[this.blocks.Count-1];
 					System.Diagnostics.Debug.Assert(block.Tab);
@@ -4305,7 +4343,7 @@ noText:
 						dist = this.DecimalTabLength(part.Text, part.Runs);
 					}
 					dist = System.Math.Min(dist, block.Width-0.1);
-					block.Width -= dist;  // diminue la largeur du tab précédent
+					block.Width -= dist;  // diminue la largeur du tab prÃ©cÃ©dent
 					pos -= dist;
 				}
 
@@ -4365,6 +4403,14 @@ noText:
 							block.Anchor     = run.Anchor;
 							block.Wave       = run.Wave;
 							block.WaveColor  = run.WaveColor;
+							block.BackColor  = run.BackColor;
+
+							if (run.Replacement != null)
+							{
+								block.Text = run.Replacement;
+								block.HasReplacement = true;
+								block.Width = font.GetTextAdvance (block.Text)*run.FontSize;
+							}
 					
 							if ( run.Image != null )
 							{
@@ -4453,9 +4499,9 @@ noText:
 			if ( this.blocks.Count > 0 )
 			{
 				JustifBlock block = this.blocks[this.blocks.Count-1];
-				if ( block.LineBreak )  // texte terminé par un <br/> ?
+				if ( block.LineBreak )  // texte terminÃ© par un <br/> ?
 				{
-					//	Ajoute un bloc vide afin de pouvoir mettre le curseur au début de
+					//	Ajoute un bloc vide afin de pouvoir mettre le curseur au dÃ©but de
 					//	la ligne vide qui suit le <br/>.
 					JustifBlock lb = block.Copy();
 					lb.BeginIndex = block.EndIndex+1;
@@ -4472,7 +4518,7 @@ noText:
 
 		private double DecimalTabLength(string text, Drawing.TextBreak.XRun[] runs)
 		{
-			//	Retourne la distance jusqu'au point décimal.
+			//	Retourne la distance jusqu'au point dÃ©cimal.
 			if ( text.Length == 0 )  return 0.0;
 
 			string sep = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
@@ -4492,9 +4538,9 @@ noText:
 
 		private void GenerateJustification()
 		{
-			//	Met à jour this.lines en fonction de this.blocks.
-			//	Détermine la position des blocs en fonction de l'alignement.
-			//	Détermine également quels sont les blocs et les lignes visibles.
+			//	Met Ã  jour this.lines en fonction de this.blocks.
+			//	DÃ©termine la position des blocs en fonction de l'alignement.
+			//	DÃ©termine Ã©galement quels sont les blocs et les lignes visibles.
 			this.lines.Clear();
 
 			this.totalLine = 0;
@@ -4563,7 +4609,7 @@ noText:
 					nextLineBlock ++;
 					if ( nextLineBlock >= this.blocks.Count )  break;
 					block = this.blocks[nextLineBlock];
-					if ( block.BoL )  break;  // break si début nouvelle ligne
+					if ( block.BoL )  break;  // break si dÃ©but nouvelle ligne
 				}
 
 				bool visible;
@@ -4645,7 +4691,7 @@ noText:
 								block.Pos = pos;
 								block.Visible = visible;
 
-								if ( block.IsImage || block.Tab || block.List )
+								if ( block.IsImage || block.Tab || block.List || block.HasReplacement )
 								{
 									pos.X += block.Width;
 								}
@@ -4702,7 +4748,7 @@ noText:
 				pos.Y += ascender;
 				pos.Y -= height;  // position haut de la ligne suivante
 
-				beginLineBlock = nextLineBlock;  // index début ligne suivante
+				beginLineBlock = nextLineBlock;  // index dÃ©but ligne suivante
 			}
 
 			//	Effectue l'alignement vertical.
@@ -4768,7 +4814,7 @@ noText:
 
 		public static bool CheckSyntax(string text, out int offsetError)
 		{
-			//	Vérifie la syntaxe d'un texte.
+			//	VÃ©rifie la syntaxe d'un texte.
 			Dictionary<string, string> parameters;
 			List<string> list = new List<string> ();
 			int    beginOffset;
@@ -4873,7 +4919,7 @@ noText:
 
 		public void FillFontFaceList(List<OpenType.FontName> list)
 		{
-			//	Ajoute toutes les fontes utilisées dans une liste.
+			//	Ajoute toutes les fontes utilisÃ©es dans une liste.
 			if (this.text == null)
 			{
 				return;
@@ -4904,8 +4950,8 @@ noText:
 
 		public OneCharStructure[] ComputeStructure()
 		{
-			//	Génère la structure pour chaque caractère du texte, ce qui permet
-			//	de gérer les textes spéciaux non rectangulaires, tels que l'objet
+			//	GÃ©nÃ¨re la structure pour chaque caractÃ¨re du texte, ce qui permet
+			//	de gÃ©rer les textes spÃ©ciaux non rectangulaires, tels que l'objet
 			//	ObjectTextLine de Pictogram.
 			
 			if (this.layoutSize.Width == 0)
@@ -5007,13 +5053,14 @@ noText:
 			Font,		FontEnd,			// <font ...>...</font>
 			Anchor,		AnchorEnd,			// <a href="x">...</a>
 			Image,							// <img src="x"/>
+			Param,							// <param code="H" value="120cm"/>
 
 			Put,		PutEnd,				// <put ...>...</put>
 		}
 		
 		
-		//	Fonte servant à refléter simplifier les commandes HTML rencontrées.
-		//	Un stack de FontDefinition est créé.
+		//	Fonte servant Ã  reflÃ©ter simplifier les commandes HTML rencontrÃ©es.
+		//	Un stack de FontDefinition est crÃ©Ã©.
 		private struct FontDefinition
 		{
 			public FontDefinition(string face, string scale, string color)
@@ -5108,8 +5155,8 @@ noText:
 			
 			public int		Bold          = 0;	// gras si > 0
 			public int		Italic        = 0;	// italique si > 0
-			public int		Underline     = 0;	// souligné si > 0
-			public int		Mnemonic      = 0;	// souligné si > 0
+			public int		Underline     = 0;	// soulignÃ© si > 0
+			public int		Mnemonic      = 0;	// soulignÃ© si > 0
 			public int		Anchor        = 0;	// lien si > 0
 			public string	StringAnchor  = "";
 			public int		Wave          = 0;	// vague si > 0
@@ -5122,8 +5169,8 @@ noText:
 			public string	PutUnderline  = "";
 		}
 
-		//	Fonte servant à refléter les commandes HTML rencontrées.
-		//	Un stack de FontItem est créé.
+		//	Fonte servant Ã  reflÃ©ter les commandes HTML rencontrÃ©es.
+		//	Un stack de FontItem est crÃ©Ã©.
 		private class FontItem
 		{
 			public FontItem(TextLayout host)
@@ -5184,14 +5231,15 @@ noText:
 		{
 			public int				Bold       = 0;  // gras si > 0
 			public int				Italic     = 0;  // italique si > 0
-			public int				Underline  = 0;  // souligné si > 0
+			public int				Underline  = 0;  // soulignÃ© si > 0
 			public int				Anchor     = 0;  // lien si > 0
 			public int				Wave       = 0;  // vague si > 0
 			public Drawing.Color	WaveColor  = Drawing.Color.Empty;
+			public Drawing.Color	BackColor  = Drawing.Color.Empty;
 		}
 
-		//	Descripteur d'un bloc de texte. Tous les caractères du bloc ont
-		//	la même fonte, même taille et même couleur.
+		//	Descripteur d'un bloc de texte. Tous les caractÃ¨res du bloc ont
+		//	la mÃªme fonte, mÃªme taille et mÃªme couleur.
 		private class JustifBlock
 		{
 			public JustifBlock(TextLayout host)
@@ -5224,6 +5272,7 @@ noText:
 				this.Anchor     = supplItem.Anchor > 0;
 				this.Wave       = supplItem.Wave > 0;
 				this.WaveColor  = supplItem.WaveColor;
+				this.BackColor  = supplItem.BackColor;
 			}
 
 			public string FontFace
@@ -5276,8 +5325,10 @@ noText:
 			public bool						Anchor;
 			public bool						Wave;
 			public Drawing.Color			WaveColor = Drawing.Color.Empty;
-			public double					Indent;		// largeur à sauter pour l'indentation
+			public Drawing.Color			BackColor = Drawing.Color.Empty;
+			public double					Indent;		// largeur Ã  sauter pour l'indentation
 			public double					Width;		// largeur du bloc
+			public bool						HasReplacement;
 			public Drawing.Point			Pos;		// sur la ligne de base
 			public Drawing.Image			Image;		// image bitmap
 			public double					ImageAscender;
@@ -5292,7 +5343,7 @@ noText:
 			public double					InfoElast;
 		}
 
-		//	Descripteur d'une ligne de texte. Une ligne est composée
+		//	Descripteur d'une ligne de texte. Une ligne est composÃ©e
 		//	d'un ou plusieurs blocs.
 		private class JustifLine
 		{
@@ -5300,7 +5351,7 @@ noText:
 			public int						LastBlock;	// index du dernier bloc
 			public int						Rank;		// rang de la ligne (0..n)
 			public Drawing.Point			Pos;		// position sur la ligne de base
-			public double					Width;		// largeur occupée par la ligne
+			public double					Width;		// largeur occupÃ©e par la ligne
 			public double					Height;		// interligne
 			public double					Ascender;	// hauteur en-dessus de la ligne de base (+)
 			public double					Descender;	// hauteur en-dessous de la ligne de base (-)

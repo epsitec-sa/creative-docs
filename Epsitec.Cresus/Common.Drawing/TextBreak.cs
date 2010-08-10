@@ -135,8 +135,10 @@ namespace Epsitec.Common.Drawing
 			public bool Anchor      = false;
 			public bool Wave        = false;
 			public Color WaveColor   = Color.Empty;
+			public Color BackColor   = Color.Empty;
 			public Image Image       = null;
 			public double VerticalOffset = 0.0;
+			public string Replacement = null;
 			public string Locale      = null;
 		}
 
