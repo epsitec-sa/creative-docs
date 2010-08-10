@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections;
@@ -30,6 +31,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			this.DataContext = dataContext;
 			this.SaverQueryGenerator = new SaverQueryGenerator (dataContext);
+			this.JobConverter = new PersistenceJobConverter (dataContext);
+			this.JobGenerator = new PersistenceJobGenerator (dataContext);
+			this.JobProcessor = new PersistenceJobProcessor (dataContext);
 		}
 
 
@@ -65,7 +69,156 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		private PersistenceJobConverter JobConverter
+		{
+			get;
+			set;
+		}
+
+
+		private PersistenceJobGenerator JobGenerator
+		{
+			get;
+			set;
+		}
+
+
+		private PersistenceJobProcessor JobProcessor
+		{
+			get;
+			set;
+		}
+
+
 		public IEnumerable<AbstractSynchronizationJob> SaveChanges()
+		{
+			return this.SaveChanges1 ();
+		}
+
+
+		public IEnumerable<AbstractSynchronizationJob> SaveChanges2()
+		{
+			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
+			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
+
+			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
+			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs);
+			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
+
+			this.PostProcessPersistenceJobs (entitiesToDelete, entitiesToSave, newEntityKeys);
+
+			return synchronizationJobs;
+		}
+
+
+		private IEnumerable<AbstractPersistenceJob> GetPersistenceJobs(IEnumerable<AbstractEntity> entitiesToDelete, IEnumerable<AbstractEntity> entitiesToSave)
+		{
+			var deletionJobs = this.DeleteEntities (entitiesToDelete);
+			var saveJobs = this.SaveEntities (entitiesToSave);
+
+			return deletionJobs.Concat (saveJobs);
+		}
+
+
+		private IEnumerable<AbstractPersistenceJob> DeleteEntities(IEnumerable<AbstractEntity> entitiesToDelete)
+		{
+			return from entity in entitiesToDelete
+				   where this.DataContext.IsPersistent (entity)
+				   select this.JobGenerator.CreateDeletionJob (entity);
+		}
+
+		private IEnumerable<AbstractPersistenceJob> SaveEntities(IEnumerable<AbstractEntity> entitiesToSave)
+		{
+			List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ();
+
+			var entities = from entity in entitiesToSave
+						   where this.CheckIfEntityCanBeSaved (entity)
+						   select entity;
+
+			foreach (AbstractEntity entity in entities)
+			{
+				if (this.DataContext.IsPersistent (entity))
+				{
+					jobs.AddRange (this.JobGenerator.CreateUpdateJobs (entity));
+				}
+				else
+				{
+					jobs.AddRange (this.JobGenerator.CreateInsertionJobs (entity));
+				}
+			}
+
+			return jobs;
+		}
+
+
+		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
+		{
+			bool done = false;
+			IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys;
+
+			do
+			{
+				try
+				{
+					using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
+					{
+						newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
+
+						transaction.Commit ();
+					}
+
+					done = true;
+				}
+				catch (System.Exception e)
+				{
+					// catch the appropriate exception here
+					// throw after too much tries.
+					throw;
+
+					System.Threading.Thread.Sleep (100);
+				}
+			}
+			while (!done);
+
+			return newEntityKeys;
+		}
+
+
+		private void PostProcessPersistenceJobs(IEnumerable<AbstractEntity> entitiesToDelete, IEnumerable<AbstractEntity> entitiesToSave, IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys)
+		{
+			foreach (AbstractEntity entity in entitiesToDelete)
+			{
+				this.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Internal);
+				this.DataContext.MarkAsDeleted (entity);
+			}
+
+			this.DataContext.ClearEntitiesToDelete ();
+
+			foreach (AbstractEntity entity in entitiesToSave)
+			{
+				entity.SetModifiedValuesAsOriginalValues ();
+			}
+
+			foreach (var newEntityKey in newEntityKeys)
+			{
+				AbstractEntity entity = newEntityKey.Key;
+				DbKey key = newEntityKey.Value;
+
+				this.DataContext.DefineRowKey (entity, key);
+			}
+
+			this.UpdateDataGeneration ();
+		}
+
+
+
+		private IEnumerable<AbstractSynchronizationJob> ConvertPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
+		{
+			return jobs.SelectMany (j => this.JobConverter.Convert (j));
+		}
+
+
+		public IEnumerable<AbstractSynchronizationJob> SaveChanges1()
 		{
 			bool containsChanges;
 
