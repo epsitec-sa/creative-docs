@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
@@ -639,8 +640,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="job">The <see cref="DeleteSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
 		internal void Synchronize(DeleteSynchronizationJob job)
 		{
+			job.ThrowIfNull ("job");
 			this.AssertDataContextIsNotDisposed ();
 
 			if (this.Contains (job.EntityKey))
@@ -660,8 +663,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="job">The <see cref="ValueSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
 		internal void Synchronize(ValueSynchronizationJob job)
 		{
+			job.ThrowIfNull ("job");
 			this.AssertDataContextIsNotDisposed ();
 
 			if (this.Contains (job.EntityKey))
@@ -693,8 +698,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="job">The <see cref="ReferenceSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
 		internal void Synchronize(ReferenceSynchronizationJob job)
 		{
+			job.ThrowIfNull ("job");
 			this.AssertDataContextIsNotDisposed ();
 
 			if (this.Contains (job.EntityKey))
@@ -735,8 +742,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="job">The <see cref="CollectionSynchronizationJob"/> whose modification to apply.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
 		internal void Synchronize(CollectionSynchronizationJob job)
 		{
+			job.ThrowIfNull ("job");
 			this.AssertDataContextIsNotDisposed ();
 
 			if (this.Contains (job.EntityKey))
