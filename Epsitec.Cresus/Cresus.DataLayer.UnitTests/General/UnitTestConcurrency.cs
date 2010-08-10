@@ -5,7 +5,6 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -15,107 +14,105 @@ using System.Threading;
 
 namespace Epsitec.Cresus.DataLayer.UnitTests
 {
-	
-	
-    [TestClass]
-    public sealed class UnitTestConcurrency
-    {
 
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
-        {
-            TestHelper.Initialize ();
-        }
+	[TestClass]
+	public sealed class UnitTestConcurrency
+	{
 
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            DatabaseHelper.CreateAndConnectToDatabase ();
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
 
-            using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-            {
-                dataContext.CreateSchema<NaturalPersonEntity> ();
-                dataContext.CreateSchema<UriContactEntity> ();
-                dataContext.CreateSchema<MailContactEntity> ();
-                dataContext.CreateSchema<TelecomContactEntity> ();
-            }
+			System.AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+			{
+				System.Exception exception = (System.Exception) e.ExceptionObject;
 
-            DatabaseHelper.DisconnectFromDatabase ();
-        }
+				Assert.Fail (exception.Message + "\n" + exception.StackTrace + "\n\n");
+			};
+		}
 
 
-		[TestMethod]
-		[Ignore]
-        public void ConcurrencySequenceAllTest()
-        {
-            this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence(l));
-            this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
-        }
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			DatabaseHelper.CreateAndConnectToDatabase ();
 
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				dataContext.CreateSchema<NaturalPersonEntity> ();
+				dataContext.CreateSchema<UriContactEntity> ();
+				dataContext.CreateSchema<MailContactEntity> ();
+				dataContext.CreateSchema<TelecomContactEntity> ();
+			}
 
-		[TestMethod]
-		[Ignore]
-        public void ConcurrencyMixedWriteSequenceReadTest()
-        {
-            this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
-            this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConcurrencySequenceWriteMixedReadTest()
-        {
-            this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
-            this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConcurrencyMixedAllTest()
-        {
-            this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
-            this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConflictingValuesUpdatesSequence()
-        {
-            this.ConflictingValueUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConflictingValueUpdatesMixed()
-        {
-            this.ConflictingValueUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConflictingReferenceUpdatesSequence()
-        {
-            this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
-        }
-
-
-		[TestMethod]
-		[Ignore]
-        public void ConflictingReferenceUpdatesMixed()
-        {
-            this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
 
 		[TestMethod]
-		[Ignore]
+		public void ConcurrencySequenceAllTest()
+		{
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+		}
+
+
+		[TestMethod]
+		public void ConcurrencyMixedWriteSequenceReadTest()
+		{
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+		}
+
+
+		[TestMethod]
+		public void ConcurrencySequenceWriteMixedReadTest()
+		{
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+		}
+
+
+		[TestMethod]
+		public void ConcurrencyMixedAllTest()
+		{
+			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+			this.CheckData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+		}
+
+
+		[TestMethod]
+		public void ConflictingValuesUpdatesSequence()
+		{
+			this.ConflictingValueUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+		}
+
+
+		[TestMethod]
+		public void ConflictingValuesUpdatesMixed()
+		{
+			this.ConflictingValueUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+		}
+
+
+		[TestMethod]
+		public void ConflictingReferenceUpdatesSequence()
+		{
+			this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
+		}
+
+
+		[TestMethod]
+		public void ConflictingReferenceUpdatesMixed()
+		{
+			this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
+		}
+
+
+		[TestMethod]
 		public void ConflictingCollectionUpdatesSequence()
 		{
 			this.ConflictingCollectionUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -123,7 +120,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[Ignore]
 		public void ConflictingCollectionUpdatesMixed()
 		{
 			this.ConflictingCollectionUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
@@ -131,7 +127,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[Ignore]
 		public void ConflictingSequence()
 		{
 			this.Conflicting (this.nbThreads, this.nbInsertions / 5, l => this.ThreadActionSequence (l));
@@ -146,247 +141,158 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-        private void ThreadActionSequence(List<Thread> threads)
-        {
-            foreach (Thread thread in threads)
-            {
-                thread.Start ();
-                thread.Join ();
-            }
-        }
+		private void ThreadActionSequence(List<Thread> threads)
+		{
+			foreach (Thread thread in threads)
+			{
+				thread.Start ();
+				thread.Join ();
+			}
+		}
 
 
-        private void ThreadActionMixed(List<Thread> threads)
-        {
-            foreach (Thread thread in threads)
-            {
-                thread.Start ();
-            }
-
-            foreach (Thread thread in threads)
-            {
-                thread.Join ();
-            }
-        }
-
-
-        private void InsertData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
-        {
-            this.errorMessages = new List<string> ();
-			
-            List<Thread> threads = new List<Thread> ();
-
-            for (int i = 0; i < nbThreads; i++)
-            {
-                int iCopy = i;
-
-                threads.Add (new Thread (() => this.ThreadInsertData (iCopy, nbInsertions)));
-            }
-
-            threadFunction (threads);
-
-            this.FinalizeTest ();
-        }
-
-
-        private void ThreadInsertData(int threadNumber, int nbInsertions)
-        {
-            int startIndex = threadNumber * nbInsertions;
-			
-            using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
-            {
-                DbAccess access = TestHelper.CreateDbAccess ();
-                dbInfrastructure.AttachToDatabase (access);
-
-                using (DataContext dataContext = new DataContext (dbInfrastructure))
-                {
-                    this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
-                }
-            }
-        }
-
-
-        private void ThreadInsertionLoop(DataContext dataContext, int startIndex, int nbInsertions)
-        {
-            try
-            {
-                for (int i = startIndex; i < startIndex + nbInsertions; i++)
-                {
-                    NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-                    person.Firstname = "FirstName" + i;
-
-                    dataContext.SaveChanges ();
-                }
-            }
-            catch (System.Exception e)
-            {
-                lock (this.errorMessages)
-                {
-                    this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-                }
-            }
-        }
-
-
-        private void CheckData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
-        {
-            this.errorMessages = new List<string> ();
-
-            List<Thread> threads = new List<Thread> ();
-
-            for (int i = 0; i < nbThreads; i++)
-            {
-                int iCopy = i;
-
-                threads.Add (new Thread (() => this.ThreadCheckData (iCopy, nbInsertions)));
-            }
-
-            threads.Add (new Thread (() => this.CheckWholeData (nbThreads, nbInsertions)));
-
-            threadFunction (threads);
-
-            this.FinalizeTest ();
-        }
-		
-
-        private void ThreadCheckData(int threadNumber, int nbInsertions)
-        {
-            int startIndex = threadNumber * nbInsertions;
-			
-            using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
-            {
-                DbAccess access = TestHelper.CreateDbAccess ();
-                dbInfrastructure.AttachToDatabase (access);
-
-                using (DataContext dataContext = new DataContext (dbInfrastructure))
-                {
-                    this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
-                }
-            }
-        }
-
-
-        private void ThreadCheckLoop(int nbInsertions, int startIndex, DataContext dataContext)
-        {
-            try
-            {
-                for (int i = startIndex; i < startIndex + nbInsertions; i++)
-                {
-                    NaturalPersonEntity example = new NaturalPersonEntity ()
-                    {
-                        Firstname = "FirstName" + i,
-                    };
-
-                    List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
-					
-                    persons.AddRange (dataContext.GetByExample (example));
-
-                    if (persons.Count == 0)
-                    {
-                        lock (this.errorMessages)
-                        {
-                            this.errorMessages.Add ("Insertion " + i + "not found");
-                        }
-                    }
-                    else if (persons.Count > 1)
-                    {
-                        lock (this.errorMessages)
-                        {
-                            this.errorMessages.Add ("Duplicate insertion " + i);
-                        }
-                    }
-                }
-            }
-            catch (System.Exception e)
-            {
-                lock (this.errorMessages)
-                {
-                    this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-                }
-            }
-        }
-
-
-        private void CheckWholeData(int nbThreads, int nbInsertions)
-        {
-            int nbTotalInsertions = nbThreads * nbInsertions;
-
-            using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
-            {
-                DbAccess access = TestHelper.CreateDbAccess ();
-                dbInfrastructure.AttachToDatabase (access);
-
-                using (DataContext dataContext = new DataContext (dbInfrastructure))
-                {
-                    try
-                    {
-                        List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
-											
-                        persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
-
-                        if (persons.Count != nbTotalInsertions)
-                        {
-                            lock (this.errorMessages)
-                            {
-                                this.errorMessages.Add ("Total number of insertions is " + persons.Count + " but " + nbTotalInsertions + " is expected");
-                            }
-                        }
-                    }
-                    catch (System.Exception e)
-                    {
-                        lock (this.errorMessages)
-                        {
-                            this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-                        }
-                    }
-                }
-            }
-        }
-
-
-        private void ConflictingValueUpdates(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
-        {
-            this.errorMessages = new List<string> ();
-
-            this.ConflictingValueUpdateSetup ();
-
-            List<Thread> threads = new List<Thread> ();
-
-            for (int i = 0; i < nbThreads; i++)
-            {
-                int iCopy = i;
-
-                threads.Add (new Thread (() => this.ThreadConflictingValueUpdates (iCopy, nbInsertions)));
-            }
-
-            threadFunction (threads);
-
-            this.FinalizeTest ();
-        }
-
-
-
-        private void ConflictingValueUpdateSetup()
-        {
-            DatabaseHelper.ConnectToDatabase ();
-
-            using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-            {
-                NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
-
-                person.Firstname = "name";
-
-                dataContext.SaveChanges ();
+		private void ThreadActionMixed(List<Thread> threads)
+		{
+			foreach (Thread thread in threads)
+			{
+				thread.Start ();
 			}
 
-			DatabaseHelper.DisconnectFromDatabase ();
-        }
+			foreach (Thread thread in threads)
+			{
+				thread.Join ();
+			}
+		}
 
 
-		private void ThreadConflictingValueUpdates(int threadNumber, int nbInsertions)
+		private void InsertData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			int startIndex = threadNumber * nbInsertions;
+			this.errorMessages = new List<string> ();
+
+			List<Thread> threads = new List<Thread> ();
+
+			for (int i = 0; i < nbThreads; i++)
+			{
+				int iCopy = i;
+
+				threads.Add (new Thread (() => this.ThreadInsertData (iCopy, nbInsertions)));
+			}
+
+			threadFunction (threads);
+
+			this.FinalizeTest ();
+		}
+
+
+		private void ThreadInsertData(int threadNumber, int nbInsertions)
+		{
+			try
+			{
+				int startIndex = threadNumber * nbInsertions;
+
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				{
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
+
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+				}
+			}
+		}
+
+
+		private void ThreadInsertionLoop(DataContext dataContext, int startIndex, int nbInsertions)
+		{
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			{
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				person.Firstname = "FirstName" + i;
+
+				dataContext.SaveChanges ();
+			}
+		}
+
+
+		private void CheckData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
+		{
+			this.errorMessages = new List<string> ();
+
+			List<Thread> threads = new List<Thread> ();
+
+			for (int i = 0; i < nbThreads; i++)
+			{
+				int iCopy = i;
+
+				threads.Add (new Thread (() => this.ThreadCheckData (iCopy, nbInsertions)));
+			}
+
+			this.CheckWholeData (nbThreads, nbInsertions);
+
+			threadFunction (threads);
+
+			this.FinalizeTest ();
+		}
+
+
+		private void ThreadCheckData(int threadNumber, int nbInsertions)
+		{
+			try
+			{
+				int startIndex = threadNumber * nbInsertions;
+
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				{
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
+
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+				}
+			}
+		}
+
+
+		private void ThreadCheckLoop(int nbInsertions, int startIndex, DataContext dataContext)
+		{
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Firstname = "FirstName" + i,
+				};
+
+				List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
+
+				persons.AddRange (dataContext.GetByExample (example));
+
+				Assert.IsTrue (persons.Count == 1);
+			}
+		}
+
+
+		private void CheckWholeData(int nbThreads, int nbInsertions)
+		{
+			int nbTotalInsertions = nbThreads * nbInsertions;
 
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 			{
@@ -395,32 +301,92 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DataContext dataContext = new DataContext (dbInfrastructure))
 				{
-					this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
+					List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
+
+					persons.AddRange (dataContext.GetByExample (new NaturalPersonEntity ()));
+
+					Assert.IsTrue (persons.Count == nbTotalInsertions);
 				}
 			}
 		}
 
 
-        private void ThreadConflictingValueUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
-        {
-            try
-            {
-                NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+		private void ConflictingValueUpdates(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
+		{
+			this.errorMessages = new List<string> ();
 
-                for (int i = startIndex; i < startIndex + nbInsertions; i++)
-                {
-                    naturalPerson.Firstname = "name" + i;
+			this.ConflictingValueUpdateSetup ();
 
-                    dataContext.SaveChanges ();
-                }
-            }
-            catch (System.Exception e)
-            {
-                lock (this.errorMessages)
-                {
-                    this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-                }
-            }
+			List<Thread> threads = new List<Thread> ();
+
+			for (int i = 0; i < nbThreads; i++)
+			{
+				int iCopy = i;
+
+				threads.Add (new Thread (() => this.ThreadConflictingValueUpdates (iCopy, nbInsertions)));
+			}
+
+			threadFunction (threads);
+
+			this.FinalizeTest ();
+		}
+
+
+
+		private void ConflictingValueUpdateSetup()
+		{
+			DatabaseHelper.ConnectToDatabase ();
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				person.Firstname = "name";
+
+				dataContext.SaveChanges ();
+			}
+
+			DatabaseHelper.DisconnectFromDatabase ();
+		}
+
+
+		private void ThreadConflictingValueUpdates(int threadNumber, int nbInsertions)
+		{
+			try
+			{
+				int startIndex = threadNumber * nbInsertions;
+
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+				{
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
+
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+				}
+			}
+		}
+
+
+		private void ThreadConflictingValueUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
+		{
+			NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			{
+				naturalPerson.Firstname = "name" + i;
+
+				dataContext.SaveChanges ();
+			}
 		}
 
 
@@ -467,40 +433,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadConflictingReferenceUpdates(int threadNumber, int nbInsertions)
 		{
-			int startIndex = threadNumber * nbInsertions;
-
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
-			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
-
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
-				{
-					this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
-				}
-			}
-		}
-
-
-		private void ThreadConflictingReferenceUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
-		{
 			try
 			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
+				int startIndex = threadNumber * nbInsertions;
+
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 				{
-					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
-				};
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
 
-				System.Random dice = new System.Random ();
-
-				for (int i = startIndex; i < startIndex + nbInsertions; i++)
-				{
-					int diceNext = dice.Next (0, 2);
-					person.Gender = genders[diceNext];
-
-					dataContext.SaveChanges ();
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
+					}
 				}
 			}
 			catch (System.Exception e)
@@ -513,6 +458,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		private void ThreadConflictingReferenceUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext)
+		{
+			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+			List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
+				{
+					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
+					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
+				};
+
+			System.Random dice = new System.Random ();
+
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			{
+				int diceNext = dice.Next (0, 2);
+				person.Gender = genders[diceNext];
+
+				dataContext.SaveChanges ();
+			}
+		}
+
+
 		private void CheckConflictingReferenceUpdates()
 		{
 			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
@@ -520,30 +486,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				DbAccess access = TestHelper.CreateDbAccess ();
 				dbInfrastructure.AttachToDatabase (access);
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
 				{
-					try
-					{
-						using (DbTransaction transaction = dbInfrastructure.BeginTransaction ())
-						{
-							SqlSelect query = new SqlSelect ();
+					SqlSelect query = new SqlSelect ();
 
-							query.Fields.Add (new SqlField ("CR_ID", "CR_ID"));
+					query.Fields.Add (new SqlField ("CR_ID", "CR_ID"));
 
-							query.Tables.Add (new SqlField ("X_L0A11_L0AN", "X_L0A11_L0AN"));
+					query.Tables.Add (new SqlField ("X_L0A11_L0AN", "X_L0A11_L0AN"));
 
-							System.Data.DataTable data = dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+					System.Data.DataTable data = dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 
-							Assert.IsTrue (data.Rows.Count == 1);
-						}
-					}
-					catch (System.Exception e)
-					{
-						lock (this.errorMessages)
-						{
-							this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-						}
-					}
+					Assert.IsTrue (data.Rows.Count == 1);
 				}
 			}
 		}
@@ -569,7 +522,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.CheckConflictingCollectionUpdates (nbContactsToUse);
+			if (!this.errorMessages.Any ())
+			{
+				this.CheckConflictingCollectionUpdates (nbContactsToUse);
+			}
 
 			this.FinalizeTest ();
 		}
@@ -586,9 +542,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				for (int i = 0; i < nbContacts; i++)
 				{
-					UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();	
+					UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
 				}
-				
+
 				dataContext.SaveChanges ();
 			}
 
@@ -598,16 +554,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadConflictingCollectionUpdates(int threadNumber, int nbInsertions, int nbContacts, int nbContactsToUse)
 		{
-			int startIndex = threadNumber * nbInsertions;
-
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			try
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
+				int startIndex = threadNumber * nbInsertions;
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 				{
-					this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
+
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
 				}
 			}
 		}
@@ -615,38 +581,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadConflictingCollectionUpdatesLoop(int nbInsertions, int startIndex, DataContext dataContext, int nbTotalContacts, int nbContactsToUse)
 		{
-			try
+			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+			List<UriContactEntity> contacts = new List<UriContactEntity> ();
+
+			for (int i = 0; i < nbTotalContacts; i++)
 			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				List<UriContactEntity> contacts = new List<UriContactEntity> ();
-
-				for (int i = 0; i < nbTotalContacts; i++)
-                {
-					contacts.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (i + 1))));
-                }
-
-				System.Random dice = new System.Random ();
-
-				for (int i = startIndex; i < startIndex + nbInsertions; i++)
-				{
-					List<UriContactEntity> contactsCopy = new List<UriContactEntity> (contacts);
-					
-					person.Contacts.Clear ();
-
-					for (int j = 0; j < nbContactsToUse; j++)
-					{
-						person.Contacts.Add (contactsCopy[dice.Next (0, contactsCopy.Count)]);
-					}
-					
-					dataContext.SaveChanges ();
-				}
+				contacts.Add (dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (i + 1))));
 			}
-			catch (System.Exception e)
+
+			System.Random dice = new System.Random ();
+
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
 			{
-			    lock (this.errorMessages)
-			    {
-			        this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-			    }
+				List<UriContactEntity> contactsCopy = new List<UriContactEntity> (contacts);
+
+				person.Contacts.Clear ();
+
+				for (int j = 0; j < nbContactsToUse; j++)
+				{
+					person.Contacts.Add (contactsCopy[dice.Next (0, contactsCopy.Count)]);
+				}
+
+				dataContext.SaveChanges ();
 			}
 		}
 
@@ -660,19 +616,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 				using (DataContext dataContext = new DataContext (dbInfrastructure))
 				{
-					try
-					{
-						NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-						Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
-					}
-					catch (System.Exception e)
-					{
-						lock (this.errorMessages)
-						{
-							this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-						}
-					}
+					Assert.IsTrue (person.Contacts.Count == nbContactsToUse);
 				}
 			}
 		}
@@ -712,16 +658,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadConflicting(int threadNumber, int nbInsertions)
 		{
-			int startIndex = threadNumber * nbInsertions;
-
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
+			try
 			{
-				DbAccess access = TestHelper.CreateDbAccess ();
-				dbInfrastructure.AttachToDatabase (access);
+				int startIndex = threadNumber * nbInsertions;
 
-				using (DataContext dataContext = new DataContext (dbInfrastructure))
+				using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
 				{
-					this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
+					DbAccess access = TestHelper.CreateDbAccess ();
+					dbInfrastructure.AttachToDatabase (access);
+
+					using (DataContext dataContext = new DataContext (dbInfrastructure))
+					{
+						this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				lock (this.errorMessages)
+				{
+					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
 				}
 			}
 		}
@@ -729,46 +685,36 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ThreadConflictingLoop(int nbInsertions, int startIndex, DataContext dataContext)
 		{
-			try
-			{
-				System.Random dice = new System.Random ();
+			System.Random dice = new System.Random ();
 
-				for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			for (int i = startIndex; i < startIndex + nbInsertions; i++)
+			{
+				switch (dice.Next (0, 6))
 				{
-					switch (dice.Next(0, 6))
-					{
-						case 0:
-							this.ThreadConflictingLoopCase0 (dataContext, dice);
-							break;
+					case 0:
+						this.ThreadConflictingLoopCase0 (dataContext, dice);
+						break;
 
-						case 1:
-							this.ThreadConflictingLoopCase1 (dataContext, dice);
-							break;
+					case 1:
+						this.ThreadConflictingLoopCase1 (dataContext, dice);
+						break;
 
-						case 2:
-							this.ThreadConflictingLoopCase2 (dataContext, dice);
-							break;
+					case 2:
+						this.ThreadConflictingLoopCase2 (dataContext, dice);
+						break;
 
-						case 3:
-							this.ThreadConflictingLoopCase3 (dataContext, dice);
-							break;
+					case 3:
+						this.ThreadConflictingLoopCase3 (dataContext, dice);
+						break;
 
-						case 4:
-							this.ThreadConflictingLoopCase4 (dataContext, dice);
-							break;
+					case 4:
+						this.ThreadConflictingLoopCase4 (dataContext, dice);
+						break;
 
-						default:
-							this.ThreadConflictingLoopCaseDefault (dataContext, dice);
-							break;
-					}
+					default:
+						this.ThreadConflictingLoopCaseDefault (dataContext, dice);
+						break;
 				}
-			}
-			catch (System.Exception e)
-			{
-			    lock (this.errorMessages)
-			    {
-			        this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
-			    }
 			}
 		}
 
@@ -815,12 +761,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				person.Title.Name = dice.Next ().ToString ();
 				person.Gender.Code = dice.Next ().ToString ();
 				person.PreferredLanguage.Name = dice.Next ().ToString ();
-				
+
 				IList<AbstractContactEntity> contacts1 = person.Contacts;
 				IList<AbstractContactEntity> contacts2 = this.Shuffle (contacts1);
-				
+
 				person.Contacts.Clear ();
-				
+
 				foreach (AbstractContactEntity contact in contacts2)
 				{
 					person.Contacts.Add (contact);
@@ -952,16 +898,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			dataContext.SaveChanges ();
 		}
 
-				
-		private void FinalizeTest()
-        {
-            if (errorMessages.Count > 0)
-            {
-                string message = "\n\n" + string.Join ("\n\n", this.errorMessages);
 
-                Assert.Fail (message);
-            }
-        }
+		private void FinalizeTest()
+		{
+			if (errorMessages.Count > 0)
+			{
+				string message = "\n\n" + string.Join ("\n\n", this.errorMessages);
+
+				Assert.Fail (message);
+			}
+		}
 
 
 		private List<T> Shuffle<T>(IList<T> list)
@@ -969,7 +915,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			List<T> copy = new List<T> (list);
 			List<T> shuffled = new List<T> ();
 
-			System.Random dice = new System.Random();
+			System.Random dice = new System.Random ();
 
 			while (copy.Any ())
 			{
@@ -983,16 +929,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-        private List<string> errorMessages;
+		private List<string> errorMessages;
 
 
-        private readonly int nbThreads = 5;
+		private readonly int nbThreads = 5;
 
 
-        private readonly int nbInsertions = 250;
+		private readonly int nbInsertions = 250;
 
 
-    }
+	}
 
 
 }
