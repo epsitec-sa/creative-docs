@@ -21,6 +21,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 {
 
 
+	// TODO Comment this class
+	// Marc
+
+
 	internal sealed class PersistenceJobProcessor
 	{
 		
@@ -67,41 +71,37 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		public Dictionary<AbstractEntity, DbKey> ProcessJobs(IEnumerable<AbstractPersistenceJob> jobs)
+		public IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessJobs(DbTransaction transaction, IEnumerable<AbstractPersistenceJob> jobs)
 		{
 			jobs.ThrowIfNull ("jobs");
-			
+			transaction.ThrowIfNull ("transaction");
+
 			List<AbstractPersistenceJob> jobsCopy = jobs.ToList ();
 			Dictionary<AbstractEntity, DbKey> newEntityKeys = new Dictionary<AbstractEntity, DbKey> ();
 
-			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
+			foreach (var deleteJob in jobsCopy.OfType<DeletePersistenceJob> ())
 			{
-				foreach (var deleteJob in jobsCopy.OfType<DeletePersistenceJob> ())
-				{
-					this.ProcessJob (transaction, deleteJob);
-				}
+				this.ProcessJob (transaction, deleteJob);
+			}
 
-				foreach (var rootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => j.IsRootTypeJob))
-				{
-					this.ProcessJob (transaction, newEntityKeys, rootValueJob);
-				}
+			foreach (var rootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => j.IsRootTypeJob))
+			{
+				this.ProcessJob (transaction, newEntityKeys, rootValueJob);
+			}
 
-				foreach (var subRootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => !j.IsRootTypeJob))
-				{
-					this.ProcessJob (transaction, newEntityKeys, subRootValueJob);
-				}
+			foreach (var subRootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => !j.IsRootTypeJob))
+			{
+				this.ProcessJob (transaction, newEntityKeys, subRootValueJob);
+			}
 
-				foreach (var referenceJob in jobsCopy.OfType<ReferencePersistenceJob> ())
-				{
-					this.ProcessJob (transaction, newEntityKeys, referenceJob);
-				}
+			foreach (var referenceJob in jobsCopy.OfType<ReferencePersistenceJob> ())
+			{
+				this.ProcessJob (transaction, newEntityKeys, referenceJob);
+			}
 
-				foreach (var collectionJob in jobsCopy.OfType<CollectionPersistenceJob> ())
-				{
-					this.ProcessJob (transaction, newEntityKeys, collectionJob);
-				}
-
-				transaction.Commit ();
+			foreach (var collectionJob in jobsCopy.OfType<CollectionPersistenceJob> ())
+			{
+				this.ProcessJob (transaction, newEntityKeys, collectionJob);
 			}
 
 			return newEntityKeys;
