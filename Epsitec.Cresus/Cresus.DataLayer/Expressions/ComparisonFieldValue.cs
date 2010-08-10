@@ -1,6 +1,11 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Loader;
+
+using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
 
@@ -80,6 +85,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			string replacement = escapeChar + "$1";
 
 			return Regex.Replace (value, pattern, replacement);
+		}
+
+
+		/// <summary>
+		/// Gets the sequence of field ids that are used in this instance.
+		/// </summary>
+		/// <returns>The sequence of field ids that are used in this instance.</returns>
+		internal override IEnumerable<Druid> GetFields()
+		{
+			return ExpressionFields.GetFields (this);
 		}
 
 
