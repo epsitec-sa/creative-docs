@@ -311,16 +311,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private bool CheckIfTargetMustBeSaved(AbstractEntity target)
-		{
-			bool mustBeSaved = target != null
-				&& !this.DataContext.IsPersistent (target)
-				&&  this.CheckIfEntityCanBeSaved (target);
-			
-			return mustBeSaved;
-		}
-
-
 		internal bool CheckIfEntityCanBeSaved(AbstractEntity entity)
 		{
 			bool canBeSaved = entity != null
