@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			get
 			{
-				return this.article.ArticleDefinition.ArticleParameters[this.parameterIndex];
+				return this.article.ArticleDefinition.ArticleParameterDefinitions[this.parameterIndex];
 			}
 		}
 

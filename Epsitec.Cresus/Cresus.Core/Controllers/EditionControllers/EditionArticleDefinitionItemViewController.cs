@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			template.DefineCompactText (x => UIBuilder.FormatText (GetParameterSummary (x)));
 			template.DefineCreateItem (this.CreateParameter);  // le bouton [+] crée une ligne d'article
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameters, template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));
 		}
 
 
