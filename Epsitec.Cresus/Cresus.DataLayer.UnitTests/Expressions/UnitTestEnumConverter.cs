@@ -17,7 +17,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbConditionCombinerOperatorTest()
 		{
 			var matches = new Dictionary<BinaryOperator, DbConditionCombinerOperator> ()
@@ -37,7 +36,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbConditionModifierOperatorTest()
 		{
 			var matches = new Dictionary<UnaryOperator, DbConditionModifierOperator> ()
@@ -56,7 +54,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbRawTypeTest()
 		{
 			var matches = new Dictionary<Type, DbRawType> ()
@@ -83,7 +80,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbSimpleConditionOperatorTest1()
 		{
 			var matches = new Dictionary<UnaryComparator, DbSimpleConditionOperator> ()
@@ -103,7 +99,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ToDbSimpleConditionOperatorTest2()
 		{
 			var matches = new Dictionary<BinaryComparator, DbSimpleConditionOperator> ()

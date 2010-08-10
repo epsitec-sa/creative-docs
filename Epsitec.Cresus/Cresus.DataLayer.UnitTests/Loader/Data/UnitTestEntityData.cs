@@ -17,7 +17,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 	{
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void EntityDataConstructorTest1()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
@@ -35,7 +34,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void EntityDataConstructorTest2()
 		{
@@ -53,7 +51,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void EntityDataConstructorTest3()
 		{
@@ -71,7 +68,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void EntityDataConstructorTest4()
 		{
@@ -89,7 +85,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CollectionDataTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
@@ -109,7 +104,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void EntityKeyTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
@@ -129,7 +123,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void LoadedEntityIdTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
@@ -149,7 +142,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ReferenceDataTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
@@ -169,7 +161,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ValueDataTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);

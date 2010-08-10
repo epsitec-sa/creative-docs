@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void LeftTest()
 		{
 			Field leftField = new Field (Druid.FromLong (1));
