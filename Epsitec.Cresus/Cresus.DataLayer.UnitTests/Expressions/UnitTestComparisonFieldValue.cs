@@ -55,7 +55,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void LeftTest()
 		{
 			Field left = new Field (Druid.FromLong (1));
@@ -69,7 +68,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void OperatorTest()
 		{
 			Field left = new Field (Druid.FromLong (1));
@@ -83,7 +81,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void RightTest()
 		{
 			Field left = new Field (Druid.FromLong (1));
@@ -93,6 +90,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			var comparison = new ComparisonFieldValue (left, op, right);
 
 			Assert.AreSame (right, comparison.Right);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void CreateDbConditionTest()
+		{
+			Field left = new Field (Druid.FromLong (1));
+			Constant right = new Constant (0);
+			BinaryComparator op = BinaryComparator.IsEqual;
+
+			var comparison = new ComparisonFieldValue (left, op, right);
+
+			comparison.CreateDbCondition (null);
 		}
 
 

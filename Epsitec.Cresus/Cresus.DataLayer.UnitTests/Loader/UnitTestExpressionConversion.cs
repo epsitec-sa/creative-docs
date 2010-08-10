@@ -16,97 +16,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 {
 
 
-	// TODO This is not the prettiest unit test I've done. It might be nice to refractor it if the
-	// the underlying structure of DbAbstractCondition & cie changes and makes it easier to test
-	// the result of the comparisons. Because it is really ugly right now.
-	// Marc
-	
-
-    [TestClass]
+	 [TestClass]
 	public sealed class UnitTestExpressionConversion
 	{
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionExpressionTest2()
-		{
-			Expression expression = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (expression, resolver);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionExpressionTest3()
-		{
-			Expression expression = new UnaryComparison (new Field (Druid.FromLong (1)), UnaryComparator.IsNull);
-			System.Func<Druid, DbTableColumn> resolver = null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (expression, resolver);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionOperationTest2()
-		{
-			Operation operation = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionOperationTest3()
-		{
-			Operation operation = new UnaryOperation (
-				UnaryOperator.Not,
-				new UnaryComparison (
-					new Field (Druid.FromLong (1)),
-					UnaryComparator.IsNull
-				)
-			);
-
-			System.Func<Druid, DbTableColumn> resolver = null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonTest2()
-		{
-			Comparison comparison = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonTest3()
-		{
-			Comparison comparison = new UnaryComparison (
-				new Field (Druid.FromLong (1)),
-				UnaryComparator.IsNull
-			);
-			System.Func<Druid, DbTableColumn> resolver = null;
-
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
-		}
 
 
 		[TestMethod]
