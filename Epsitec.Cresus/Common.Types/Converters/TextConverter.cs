@@ -62,16 +62,20 @@ namespace Epsitec.Common.Types.Converters
 
 						offset += length;
 
-						if (tag.IndexOf ("<img ") == 0)
+						if (tag.StartsWith ("<img "))
 						{
 							buffer.Append (imageReplacement);
 						}
-						if (tag.IndexOf ("<br/>") == 0)
+						if (tag.StartsWith ("<param "))
+                        {
+							buffer.Append (imageReplacement);
+                        }
+						if (tag.StartsWith ("<br/>"))
 						{
 							buffer.Append ("\n");
 						}
-						if (tag.IndexOf ("<tab/>") == 0 ||
-							 tag.IndexOf ("<list")  == 0)
+						if (tag.StartsWith ("<tab/>") ||
+							 tag.StartsWith ("<list"))
 						{
 							buffer.Append ("\t");
 						}

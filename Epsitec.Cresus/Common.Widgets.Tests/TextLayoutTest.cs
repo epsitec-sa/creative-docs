@@ -62,19 +62,34 @@ namespace Epsitec.Common.Widgets
 			Window.RunInTestEnvironment (window);
 		}
 
-		[Test] public void CheckPaintWave()
+		[Test]
+		public void CheckPaintWave()
 		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(300, 200);
+			Window window = new Window ();
+
+			window.ClientSize = new Size (300, 200);
 			window.Text = "CheckPaintWave";
 			window.Root.PaintForeground += CheckPaint_PaintWave1;
-			window.Root.Invalidate();
-			window.Show();
+			window.Root.Invalidate ();
+			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
 
-		[Test] public void CheckRectangle()
+		[Test]
+		public void CheckPaintParam()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (300, 200);
+			window.Text = "CheckPaintParam";
+			window.Root.PaintForeground += CheckPaint_PaintParam;
+			window.Root.Invalidate ();
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckRectangle()
 		{
 			Window window = new Window();
 			
@@ -365,6 +380,21 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
+
+		[Test]
+		public void CheckTextWithParamElements()
+		{
+			Window window = new Window ();
+			window.Text = "CheckTextWithParamElements";
+			window.ClientSize = new Size (200, 100);
+			window.Root.Padding = new Margins (5, 5, 5, 5);
+			TextFieldMulti text = new TextFieldMulti ();
+			text.Dock = DockStyle.Fill;
+			text.Text = @"Hello <param code=""X"" value=""10""/> et <param code=""Y"" value=""20""/>...";
+			text.SetParent (window.Root);
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
 		
 		
 		[Test] public void CheckFindIndexFromOffset()
@@ -568,6 +598,24 @@ namespace Epsitec.Common.Widgets
 #endif
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckPaint_PaintParam(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout ();
+
+			layout.Text = @"Dimensions: <param code=""H"" value=""200""/> x <param code=""L"" value=""80""/> sous forme de paramètres.";
+			layout.DefaultFont = Font.GetFont ("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.JustifMode = TextJustifMode.AllButLast;
+			layout.LayoutSize = new Size (150, 150);
+
+			Point pos = new Point (20, 20);
+			e.Graphics.AddFilledRectangle (pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid (Color.FromBrightness (1));
+
+			layout.Paint (pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 		}
 
 		private void CheckRectangle_Paint1(object sender, PaintEventArgs e)
