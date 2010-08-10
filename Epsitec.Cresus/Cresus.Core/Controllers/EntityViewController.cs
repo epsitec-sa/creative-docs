@@ -7,15 +7,16 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
-using System.Collections.Generic;
-using System.Linq;
-using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -83,9 +84,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
 		}
 
-		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerVersion = -1)
+		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1)
 		{
-			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode, controllerVersion);
+			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode, controllerSubTypeId);
 
 			if (controller == null)
 			{
@@ -124,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int controllerVersion)
+		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int controllerSubTypeId)
 		{
 			var baseTypePrefix = EntityViewController.GetViewControllerPrefix (mode);
 			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
@@ -139,19 +140,19 @@ namespace Epsitec.Cresus.Core.Controllers
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;
 
-			if (controllerVersion < 0)
+			if (controllerSubTypeId < 0)
 			{
-				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerVersionAttribute), false).Length == 0);
+				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Length == 0);
 			}
 			else
 			{
-				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerVersionAttribute), false).Cast<ControllerVersionAttribute> ().Any (attribute => attribute.Version == controllerVersion));
+				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
 			}
 
 			return types.FirstOrDefault ();
 		}
 
-		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, int controllerVersion)
+		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId)
 		{
 			switch (mode)
 			{
@@ -167,7 +168,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
 
-			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode, controllerVersion);
+			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode, controllerSubTypeId);
 
 			if (type == null)
 			{
@@ -181,28 +182,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
-	}
-
-	[System.AttributeUsage (System.AttributeTargets.Class, AllowMultiple=true, Inherited=false)]
-	public class ControllerVersionAttribute : System.Attribute
-	{
-		public ControllerVersionAttribute()
-		{
-		}
-
-		public ControllerVersionAttribute(int version)
-		{
-		}
-
-		public int Version
-		{
-			get
-			{
-				return this.version;
-			}
-		}
-
-		private readonly int version;
 	}
 
 
@@ -290,7 +269,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
 		{
 			var entity = this.Entity;
-			context.UpdateEmptyEntityStatus (entity, isEmpty);
+
+			if (context != null)
+			{
+				context.UpdateEmptyEntityStatus (entity, isEmpty);
+			}
 		}
 
 		private T entity;
