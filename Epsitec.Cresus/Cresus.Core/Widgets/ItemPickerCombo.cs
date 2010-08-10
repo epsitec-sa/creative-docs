@@ -1,27 +1,33 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class SuperCombo : TextFieldCombo, IMultipleSelection
+	/// <summary>
+	/// Ce widget permet d'éditer une enumération sous une forme très compacte (une seule ligne),
+	/// avec un support complet de tous les modes de cardinalité.
+	/// </summary>
+	public class ItemPicketCombo : TextFieldCombo, IMultipleSelection
 	{
-		public SuperCombo()
+		public ItemPicketCombo()
 		{
-			this.AllowMultipleSelection = true;  //? provisoire
+			this.IsReadOnly = true;
+			this.Cardinality = BusinessLogic.EnumValueCardinality.Any;
 			this.MultipleSelectionTextSeparator = ", ";
 
 			this.selection = new HashSet<int> ();
 		}
 
-		public SuperCombo(Widget embedder)
+		public ItemPicketCombo(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -39,7 +45,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public bool AllowMultipleSelection
+		public BusinessLogic.EnumValueCardinality Cardinality
 		{
 			get;
 			set;
@@ -48,6 +54,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public string MultipleSelectionTextSeparator
 		{
+			//	Choix du séparateur pour afficher plusieurs sélections dans la ligne éditable.
+			//	Ce séparateur n'a qu'un rôle visuel.
 			get;
 			set;
 		}
@@ -149,11 +157,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			if (this.AllowMultipleSelection)
-			{
-				this.InitializeSelections ();
-			}
-
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			this.menu = this.CreateMenu ();
@@ -178,7 +181,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.scrollList != null)
 			{
 				this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
-				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectionActivated  += this.HandleScrollListSelectionActivated;
 			}
 
 			this.StartEdition ();
@@ -208,7 +211,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectionActivated  -= this.HandleScrollListSelectionActivated;
 				this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
 
 				this.scrollList.Dispose ();
@@ -267,40 +270,63 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected override void ProcessComboActivatedIndex(int sel)
 		{
 			//	Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			//	est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
-			//	qui est appelée à chaque changement "visuel".
-
+			//	est validée par un clic de souris.
+			var sels = this.GetSortedSelection ();
 			int index = this.MapComboListToIndex (sel);
 
 			if (index >= 0)
 			{
-				if (this.AllowMultipleSelection)
+				if (this.Cardinality == BusinessLogic.EnumValueCardinality.Any)
 				{
-					this.InitialiseSelectedText (index);
+					if (sels.Contains (index))
+					{
+						this.RemoveSelection (new int[] { index });
+					}
+					else
+					{
+						this.AddSelection (new int[] { index });
+					}
 				}
-				else
+				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
 				{
-					this.SelectedItemIndex = index;
+					if (sels.Contains (index))
+					{
+						this.RemoveSelection (new int[] { index });
+					}
+					else
+					{
+						this.ClearSelection ();
+						this.AddSelection (new int[] { index });
+					}
+				}
+				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+				{
+					if (sels.Contains (index))
+					{
+						if (this.SelectionCount > 1)
+						{
+							this.RemoveSelection (new int[] { index });
+						}
+					}
+					else
+					{
+						this.AddSelection (new int[] { index });
+					}
+				}
+				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne)
+				{
+					this.ClearSelection ();
+					this.AddSelection (new int[] { index });
 				}
 
 				this.menu.Behavior.Accept ();
 			}
 		}
 
-		protected override void ProcessComboSelectedIndex(int sel)
-		{
-			//	Met à jour le contenu de la combo en cas de changement de sélection
-			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
-			//	activée.
-
-			if (this.IsLiveUpdateEnabled && !this.AllowMultipleSelection)
-			{
-				this.SelectedItemIndex = this.MapComboListToIndex (sel);
-			}
-		}
-
 		protected override void CopyItemsToComboList(Common.Widgets.Collections.StringCollection list)
 		{
+			var sel = this.GetSortedSelection ();
+
 			for (int i = 0; i < this.items.Count; i++)
 			{
 				string name = this.items.GetKey (i);
@@ -311,7 +337,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					text = this.ListTextConverter (text);
 				}
 
-				if (this.IsSelectedItem (text))
+				if (sel.Contains (i))
 				{
 					text = string.Concat ("● ", text);  // TODO: Mettre un vrai "vu"
 				}
@@ -324,55 +350,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private bool IsSelectedItem(string text)
-		{
-			var words = Misc.Split (this.Text.Replace (",", " "), " ");
-
-			foreach (var word in words)
-			{
-				if (word == text)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private void InitializeSelections()
-		{
-			this.ClearSelection ();
-
-			var words = Misc.Split (this.Text.Replace (",", " "), " ");
-
-			foreach (var word in words)
-			{
-				int index = this.items.IndexOf (word);
-				if (index != -1)
-				{
-					this.AddSelection (Enumerable.Range (index, 1));
-				}
-			}
-		}
-
-		private void InitialiseSelectedText(int index)
-		{
-			if ((this.IsItemSelected (index)))
-			{
-				this.RemoveSelection (Enumerable.Range (index, 1));
-			}
-			else
-			{
-				this.AddSelection (Enumerable.Range (index, 1));
-			}
-
-			this.UpdateText ();
-		}
-
 		private void UpdateText()
 		{
-			ICollection<int> sels = this.GetSortedSelection ();
-			List<string> list = new List<string> ();
+			var sels = this.GetSortedSelection ();
+			var list = new List<string> ();
 
 			foreach (int sel in sels)
 			{
@@ -397,7 +378,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.Invalidate ();
 
-			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (SuperCombo.MultiSelectionChangedEvent);
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ItemPicketCombo.MultiSelectionChangedEvent);
 			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
 
 			if (handler != null)
@@ -417,8 +398,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void HandleScrollListSelectedItemChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
-
-			this.ProcessComboSelectedIndex (this.scrollList.SelectedItemIndex);
 		}
 
 		private void HandleMenuAccepted(object sender)

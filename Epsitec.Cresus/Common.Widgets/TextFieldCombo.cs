@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 			this.button.Pressed += this.HandleButtonPressed;
 			
 			this.defaultButtonWidth = this.button.PreferredWidth;
-			this.margins.Right        = this.button.PreferredWidth;
+			this.margins.Right      = this.button.PreferredWidth;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this ()
@@ -47,9 +47,24 @@ namespace Epsitec.Common.Widgets
 			
 			return button;
 		}
-		
-		
-		public Button							Button
+
+
+		public double							MenuButtonWidth
+		{
+			get
+			{
+				return this.button.PreferredWidth;
+			}
+			set
+			{
+				this.button.PreferredWidth = value;
+
+				this.defaultButtonWidth = this.button.PreferredWidth;
+				this.margins.Right      = this.button.PreferredWidth;
+			}
+		}
+
+		public Button Button
 		{
 			get
 			{

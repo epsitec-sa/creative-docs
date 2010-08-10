@@ -19,6 +19,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
+	/// <summary>
+	/// Ce contrôleur gère l'ensemble de la saisie des valeurs des articles paramétrés (donc pour tous
+	/// les paramètres de l'article concerné).
+	/// </summary>
 	public class ValuesArticleParameterController
 	{
 		public ValuesArticleParameterController(TileContainer tileContainer, EditionTile editionTile)

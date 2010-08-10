@@ -434,6 +434,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 			else
 			{
+				//	Si un validateur existe, il faut accepter les valeurs 'non hint' si elles sont
+				//	conforme au validateur.
 				if (!this.ContentValidator (this.Text))
 				{
 					this.Text = this.HintText;

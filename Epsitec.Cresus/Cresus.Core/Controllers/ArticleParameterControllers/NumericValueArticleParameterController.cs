@@ -21,6 +21,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
+	/// <summary>
+	/// Ce contrôleur permet de saisir une valeur numérique pour un paramètre d'article, dans une ligne d'article
+	/// d'une facture.
+	/// </summary>
 	public class NumericValueArticleParameterController : AbstractArticleParameterController
 	{
 		public NumericValueArticleParameterController(ArticleDocumentItemEntity article, int parameterIndex)
@@ -38,14 +42,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var editor = new AutoCompleteTextField
 			{
 				Parent = parent,
-				Name = "debug_toto",
 				MenuButtonWidth = buttonWidth-1,
 				Dock = DockStyle.Fill,
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 				TabIndex = 1,
 			};
 
-			//	Initialise le contenu initial.
+			//	Initialise le contenu par défaut.
 			string initialValue = this.ParameterValue;
 
 			if (string.IsNullOrEmpty (initialValue))

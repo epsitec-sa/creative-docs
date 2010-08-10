@@ -285,6 +285,7 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\PreviewEntity.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
@@ -300,7 +301,6 @@
     <Compile Include="Widgets\Tiles\FrameTile.cs" />
     <Compile Include="Widgets\Tiles\TitleTile.cs" />
     <Compile Include="Widgets\ItemPicker.cs" />
-    <Compile Include="Widgets\SuperCombo.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
     <Compile Include="Widgets\Tiles\EditionTile.cs" />
     <Compile Include="Widgets\Tiles\SummaryTile.cs" />
