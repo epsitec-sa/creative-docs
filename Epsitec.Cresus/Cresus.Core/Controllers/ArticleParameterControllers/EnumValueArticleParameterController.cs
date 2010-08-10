@@ -34,55 +34,92 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		public override void CreateUI(FrameBox parent)
 		{
 			var enumParameter = this.ParameterDefinition as EnumValueArticleParameterDefinitionEntity;
-			double buttonWidth = 14;
 
-			//	Ligne éditable.
-			this.editor = new ItemPicketCombo
-			{
-				Parent = parent,
-				MenuButtonWidth = buttonWidth,
-				Cardinality = enumParameter.Cardinality,
-				Dock = DockStyle.Fill,
-				TabIndex = 1,
-			};
-
-			//	Initialise le menu des valeurs.
 			string[] values            = (enumParameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 			string[] shortDescriptions = (enumParameter.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] parameterValues   = (this.ParameterValue             ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 
-			for (int i = 0; i < System.Math.Min (values.Length, shortDescriptions.Length); i++)
+			int enumCount = System.Math.Min (values.Length, shortDescriptions.Length);
+
+			if (enumCount == 0)
 			{
-				this.editor.Items.Add (values[i], shortDescriptions[i]);
-			}
-
-			//	Initialise le contenu.
-			string[] parameterValues = (this.ParameterValue ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-
-			foreach (var parameterValue in parameterValues)
-			{
-				int i = this.GetIndex (parameterValue);
-
-				if (i != -1)
+				var label = new StaticText
 				{
-					this.editor.AddSelection (new int[] { i });
-				}
+					Parent = parent,
+					Text = "<i>Enunmération vide</i>",
+					Dock = DockStyle.Fill,
+				};
 			}
-
-			//	Initialise le contenu par défaut.
-			if (this.editor.SelectionCount == 0 && !string.IsNullOrEmpty (enumParameter.DefaultValue))
+			else if (enumCount == 1)
 			{
-				int i = this.GetIndex (enumParameter.DefaultValue);
-
-				if (i != -1)
+				var button = new CheckButton
 				{
-					this.editor.AddSelection (new int[] { i });
-				}
-			}
+					Parent = parent,
+					Text = shortDescriptions[0],
+					Dock = DockStyle.Fill,
+				};
 
-			this.editor.SelectedItemChanged += delegate
+				if (parameterValues.Length != 0 && !string.IsNullOrEmpty (parameterValues[0]))
+				{
+					button.ActiveState = (parameterValues[0] == values[0]) ? ActiveState.Yes : ActiveState.No;
+				}
+				else if (enumParameter.DefaultValue == values[0])  // valeur par défaut ?
+				{
+					button.ActiveState = ActiveState.Yes;
+				}
+
+				button.ActiveStateChanged += delegate
+				{
+					this.ParameterValue = (button.ActiveState == ActiveState.Yes) ? values[0] : "-";
+				};
+			}
+			else
 			{
-				this.ParameterValue = this.SelectedParameterValues;
-			};
+				double buttonWidth = 14;
+
+				//	Ligne éditable.
+				this.editor = new ItemPicketCombo
+				{
+					Parent = parent,
+					MenuButtonWidth = buttonWidth,
+					Cardinality = enumParameter.Cardinality,
+					Dock = DockStyle.Fill,
+					TabIndex = 1,
+				};
+
+				//	Initialise le menu des valeurs.
+				for (int i = 0; i < enumCount; i++)
+				{
+					this.editor.Items.Add (values[i], shortDescriptions[i]);
+				}
+
+				//	Initialise le contenu.
+				foreach (var parameterValue in parameterValues)
+				{
+					int i = this.GetIndex (parameterValue);
+
+					if (i != -1)
+					{
+						this.editor.AddSelection (new int[] { i });
+					}
+				}
+
+				//	Initialise le contenu par défaut.
+				if (this.editor.SelectionCount == 0 && !string.IsNullOrEmpty (enumParameter.DefaultValue))
+				{
+					int i = this.GetIndex (enumParameter.DefaultValue);
+
+					if (i != -1)
+					{
+						this.editor.AddSelection (new int[] { i });
+					}
+				}
+
+				this.editor.SelectedItemChanged += delegate
+				{
+					this.ParameterValue = this.SelectedParameterValues;
+				};
+			}
 		}
 
 
