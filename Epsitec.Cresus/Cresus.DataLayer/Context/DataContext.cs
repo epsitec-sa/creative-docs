@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
@@ -651,7 +653,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				AbstractEntity entity = this.GetEntity (job.EntityKey);
 
-				this.DataSaver.DeleteEntityTargetRelationsInMemory (entity, EntityChangedEventSource.Synchronization);
+				this.RemoveAllReferences (entity, EntityChangedEventSource.Synchronization);
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
 			}
@@ -776,6 +778,100 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
+			}
+		}
+
+
+		/// <summary>
+		/// Removes all references to an <see cref="AbstractEntity"/> from all the <see cref="AbstractEntity"/>
+		/// managed by this instance.
+		/// </summary>
+		/// <param name="target">The <see cref="AbstractEntity"/> whose references to remove.</param>
+		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
+		public void RemoveAllReferences(AbstractEntity target, EntityChangedEventSource eventSource)
+		{
+			// This method will probably be too slow for a high number of managed entities, therefore
+			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
+			// other entities, or by looping only on a subset of entities, i.e only on the location
+			// entities if we look for an entity which can be targeted only by a location.
+			// Marc
+
+			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
+
+			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
+				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
+				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
+
+			foreach (AbstractEntity source in this.GetEntities ())
+			{
+				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
+				var leafInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+
+				foreach (Druid leafInheritedId in leafInheritedIds)
+				{
+					if (fieldPaths.ContainsKey (leafInheritedId))
+					{
+						this.RemoveReference (source, fieldPaths[leafInheritedId], target, eventSource);
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Removes the relation with an <see cref="AbstractEntity"/> in another a field of another
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="source">The <see cref="AbstractEntity"/> whose reference or collection field to clean up.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> of the field to clean up.</param>
+		/// <param name="target">The <see cref="AbstractEntity"/> that must be removed from the field.</param>
+		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
+		private void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
+		{
+			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
+
+			bool updated = false;
+
+			using (source.UseSilentUpdates ())
+			{
+				using (source.DisableEvents ())
+				{
+					switch (field.Relation)
+					{
+						case FieldRelation.Reference:
+
+							if (source.InternalGetValue (field.Id) == target)
+							{
+								source.InternalSetValue (field.Id, null);
+
+								updated = true;
+							}
+
+							break;
+
+						case FieldRelation.Collection:
+
+							IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+
+							while (collection.Contains (target))
+							{
+								collection.Remove (target);
+
+								updated = true;
+							}
+
+							break;
+
+						default:
+
+							throw new System.InvalidOperationException ();
+					}
+				}
+			}
+
+			if (updated)
+			{
+				this.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
 			}
 		}
 
