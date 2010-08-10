@@ -52,10 +52,26 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="job">The <see cref="DeletePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
-		internal IEnumerable<DeleteSynchronizationJob> Convert(DeletePersistenceJob job)
+		internal IEnumerable<AbstractSynchronizationJob> Convert(DeletePersistenceJob job)
 		{
-			job.ThrowIfNull ("job");
+			// This method does not do the job itself but call an helper method so the arguments are
+			// checked immediately and the execution of the helper is deferred.
+			// Marc.
 			
+			job.ThrowIfNull ("job");
+
+			return this.ConvertHelper (job);
+		}
+
+
+		/// <summary>
+		/// Converts the given <see cref="DeletePersistenceJob"/> into the corresponding sequence
+		/// of <see cref="AbstractSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="DeletePersistenceJob"/> to convert.</param>
+		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(DeletePersistenceJob job)
+		{
 			int dataContextId = this.DataContext.UniqueId;
 			EntityKey entityKey = this.DataContext.GetEntityKey (job.Entity).Value;
 
@@ -70,15 +86,31 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="job">The <see cref="ValuePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
-		internal IEnumerable<ValueSynchronizationJob> Convert(ValuePersistenceJob job)
+		internal IEnumerable<AbstractSynchronizationJob> Convert(ValuePersistenceJob job)
 		{
-			job.ThrowIfNull ("job");
+			// This method does not do the job itself but call an helper method so the arguments are
+			// checked immediately and the execution of the helper is deferred.
+			// Marc.
 			
+			job.ThrowIfNull ("job");
+
+			return this.ConvertHelper (job);
+		}
+
+
+		/// <summary>
+		/// Converts the given <see cref="ValuePersistenceJob"/> into the corresponding sequence
+		/// of <see cref="AbstractSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="ValuePersistenceJob"/> to convert.</param>
+		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(ValuePersistenceJob job)
+		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
 				EntityKey entityKey = this.DataContext.GetEntityKey (job.Entity).Value;
-				
+
 				foreach (var update in job.GetFieldIdsWithValues ())
 				{
 					Druid fieldId = update.Key;
@@ -97,16 +129,32 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
-		internal IEnumerable<ReferenceSynchronizationJob> Convert(ReferencePersistenceJob job)
+		internal IEnumerable<AbstractSynchronizationJob> Convert(ReferencePersistenceJob job)
 		{
-			job.ThrowIfNull ("job");
+			// This method does not do the job itself but call an helper method so the arguments are
+			// checked immediately and the execution of the helper is deferred.
+			// Marc.
 			
+			job.ThrowIfNull ("job");
+
+			return this.ConvertHelper (job);
+		}
+
+
+		/// <summary>
+		/// Converts the given <see cref="ReferencePersistenceJob"/> into the corresponding sequence
+		/// of <see cref="AbstractSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to convert.</param>
+		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(ReferencePersistenceJob job)
+		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
 				EntityKey sourceKey = this.DataContext.GetEntityKey (job.Entity).Value;
 				Druid fieldId = job.FieldId;
-				
+
 				EntityKey? targetKey;
 
 				if (job.Target == null)
@@ -130,10 +178,26 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
-		internal IEnumerable<CollectionSynchronizationJob> Convert(CollectionPersistenceJob job)
+		internal IEnumerable<AbstractSynchronizationJob> Convert(CollectionPersistenceJob job)
 		{
-			job.ThrowIfNull ("job");
+			// This method does not do the job itself but call an helper method so the arguments are
+			// checked immediately and the execution of the helper is deferred.
+			// Marc.
 			
+			job.ThrowIfNull ("job");
+
+			return this.ConvertHelper (job);
+		}
+
+
+		/// <summary>
+		/// Converts the given <see cref="CollectionPersistenceJob"/> into the corresponding sequence
+		/// of <see cref="AbstractSynchronizationJob"/>.
+		/// </summary>
+		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to convert.</param>
+		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(CollectionPersistenceJob job)
+		{
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
