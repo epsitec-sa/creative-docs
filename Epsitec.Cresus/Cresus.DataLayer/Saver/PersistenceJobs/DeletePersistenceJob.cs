@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
@@ -33,8 +34,11 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// </summary>
 		/// <param name="converter">The <see cref="PersistenceJobConverter"/> to use for the conversion.</param>
 		/// <returns> The sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="converter"/> is <c>null</c>.</exception>
 		public override IEnumerable<AbstractSynchronizationJob> Convert(PersistenceJobConverter converter)
 		{
+			converter.ThrowIfNull ("converter");
+
 			return converter.Convert (this);
 		}
 
