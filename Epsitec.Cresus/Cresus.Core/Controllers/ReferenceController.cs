@@ -28,16 +28,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="entityMapper">The entity mapper.</param>
 		/// <param name="creator">The entity creator.</param>
 		/// <param name="mode">The view controller mode.</param>
+		/// <param name="viewControllerSubTypeId">The sub-type ID of the view controller.</param>
 		public ReferenceController(
 			System.Func<AbstractEntity> entityGetter,
 			System.Func<AbstractEntity, AbstractEntity> entityMapper = null,
 			System.Func<DataContext, NewEntityReference> creator = null,
-			ViewControllerMode mode = ViewControllerMode.Summary)
+			ViewControllerMode mode = ViewControllerMode.Summary,
+			int viewControllerSubTypeId = -1)
 		{
-			this.entityGetter       = entityGetter ?? (() => null);
-			this.entityMapper       = entityMapper;
-			this.viewControllerMode = mode;
-			this.creator            = creator;
+			this.entityGetter			 = entityGetter ?? (() => null);
+			this.entityMapper			 = entityMapper;
+			this.viewControllerMode		 = mode;
+			this.creator				 = creator;
+			this.viewControllerSubTypeId = viewControllerSubTypeId;
 		}
 
 
@@ -52,18 +55,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="rootToFinalMapper">The mapper used to reach the final entity (the one which will be displayed in the UI) from the root entity.</param>
 		/// <param name="creator">The creator.</param>
 		/// <param name="mode">The mode.</param>
+		/// <param name="viewControllerSubTypeId">The sub-type ID of the view controller.</param>
 		/// <returns></returns>
 		public static ReferenceController Create<T1, T2, T3>(
 			System.Func<T1> rootEntityGetter,
 			Expression<System.Func<T1, T2>> rootToFieldMapper,
 			System.Func<T1, T3> rootToFinalMapper,
 			System.Func<DataContext, NewEntityReference> creator = null,
-			ViewControllerMode mode = ViewControllerMode.Summary)
+			ViewControllerMode mode = ViewControllerMode.Summary,
+			int viewControllerSubTypeId = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity
 			where T3 : AbstractEntity
 		{
-			return new ReferenceController (rootEntityGetter, x => ReferenceController.Apply (x as T1, rootToFinalMapper), creator, mode);
+			return new ReferenceController (rootEntityGetter, x => ReferenceController.Apply (x as T1, rootToFinalMapper), creator, mode, viewControllerSubTypeId);
 		}
 
 
@@ -81,6 +86,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			get
 			{
 				return this.creator != null;
+			}
+		}
+
+		public int ViewControllerSubTypeId
+		{
+			get
+			{
+				return this.viewControllerSubTypeId;
 			}
 		}
 
@@ -129,5 +142,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly System.Func<AbstractEntity, AbstractEntity> entityMapper;
 		private readonly ViewControllerMode viewControllerMode;
 		private readonly System.Func<DataContext, NewEntityReference> creator;
+		private readonly int viewControllerSubTypeId;
 	}
 }
