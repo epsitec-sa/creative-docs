@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Numeric.Valeur nunérique");
+			pagesDescription.Add ("Numeric.Valeur numérique");
 			pagesDescription.Add ("Enum.Enumération");
 
 			builder.CreateTabBook (tile, pagesDescription, defaultPage, x =>
