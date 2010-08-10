@@ -668,6 +668,46 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
+		public void NullElementInEntityCollection()
+		{using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
+				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+
+				albert.Firstname = "Albert";
+				albert.Lastname = "Levert";
+				albert.Contacts.Add (contact);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+
+				albert.Contacts.Add (null);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
+				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+
+				Assert.AreEqual ("Albert", albert.Firstname);
+				Assert.AreEqual ("Levert", albert.Lastname);
+				Assert.IsNull (albert.BirthDate);
+				Assert.IsNull (albert.Gender);
+				Assert.IsNull (albert.Title);
+				Assert.IsNull (albert.PreferredLanguage);
+				Assert.AreEqual (1, albert.Contacts.Count);
+				Assert.AreSame (contact, albert.Contacts.First ());
+			}
+		}
+
+
+		[TestMethod]
 		public void DeleteEntityPresentInCollectionMemory()
 		{
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
