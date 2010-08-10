@@ -28,7 +28,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="entityMapper">The entity mapper.</param>
 		/// <param name="creator">The entity creator.</param>
 		/// <param name="mode">The view controller mode.</param>
-		public ReferenceController(System.Func<AbstractEntity> entityGetter, System.Func<AbstractEntity, AbstractEntity> entityMapper = null, System.Func<DataContext, NewEntityReference> creator = null, ViewControllerMode mode = ViewControllerMode.Summary)
+		public ReferenceController(
+			System.Func<AbstractEntity> entityGetter,
+			System.Func<AbstractEntity, AbstractEntity> entityMapper = null,
+			System.Func<DataContext, NewEntityReference> creator = null,
+			ViewControllerMode mode = ViewControllerMode.Summary)
 		{
 			this.entityGetter       = entityGetter ?? (() => null);
 			this.entityMapper       = entityMapper;
@@ -49,7 +53,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="creator">The creator.</param>
 		/// <param name="mode">The mode.</param>
 		/// <returns></returns>
-		public static ReferenceController Create<T1, T2, T3>(System.Func<T1> rootEntityGetter, Expression<System.Func<T1, T2>> rootToFieldMapper, System.Func<T1, T3> rootToFinalMapper,
+		public static ReferenceController Create<T1, T2, T3>(
+			System.Func<T1> rootEntityGetter,
+			Expression<System.Func<T1, T2>> rootToFieldMapper,
+			System.Func<T1, T3> rootToFinalMapper,
 			System.Func<DataContext, NewEntityReference> creator = null,
 			ViewControllerMode mode = ViewControllerMode.Summary)
 			where T1 : AbstractEntity

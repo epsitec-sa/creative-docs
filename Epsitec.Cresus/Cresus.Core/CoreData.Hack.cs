@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Core
 			var articleCategory1 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory1.Name = "Logiciels Crésus";
-			articleCategory1.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory1.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory1.DefaultAccounting.Add (accountingDef);
 			articleCategory1.DefaultRoundingMode = priceRoundingMode;
 			articleCategory1.ArticleType = BusinessLogic.ArticleType.Goods;
@@ -619,21 +619,21 @@ namespace Epsitec.Cresus.Core
 			var articleCategory2 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory2.Name = "Ports/emballages";
-			articleCategory2.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory2.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory2.NeverApplyDiscount = true;
 			articleCategory2.ArticleType = BusinessLogic.ArticleType.Freight;
 
 			var articleCategory3 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory3.Name = "Fenêtres";
-			articleCategory3.DefaultVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory3.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
 			articleCategory3.ArticleType = BusinessLogic.ArticleType.Goods;
 			articleCategory3.DefaultAccounting.Add (accountingDef);
 
 			var articleCategory4 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory4.Name = "Aliments";
-			articleCategory4.DefaultVatCode = BusinessLogic.Finance.VatCode.ReducedTax;
+			articleCategory4.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.ReducedTax;
 			articleCategory4.ArticleType = BusinessLogic.ArticleType.Goods;
 			articleCategory4.DefaultAccounting.Add (accountingDef);
 

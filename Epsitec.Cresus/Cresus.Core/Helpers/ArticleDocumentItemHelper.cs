@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	Retourne le taux de tva auquel un article est soumi.
 			// TODO: Il faudra probablement modifier cela pour chercher les informations dans une table !
 			// TODO: Il devrait aussi y avoir une date en entrée !
-			switch (article.ArticleDefinition.ArticleCategory.DefaultVatCode)
+			switch (article.ArticleDefinition.ArticleCategory.DefaultOutputVatCode)
 			{
 				case BusinessLogic.Finance.VatCode.Excluded:
 				case BusinessLogic.Finance.VatCode.ZeroRated:

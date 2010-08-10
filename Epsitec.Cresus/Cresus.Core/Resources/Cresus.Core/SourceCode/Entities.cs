@@ -2901,11 +2901,33 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>VatCode</c> field.
+		///	The <c>InputVatCode</c> field.
+		///	designer:fld/L0A63/L0ACF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ACF]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? InputVatCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode?> ("[L0ACF]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue = this.InputVatCode;
+				if (oldValue != value)
+				{
+					this.OnInputVatCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode?> ("[L0ACF]", oldValue, value);
+					this.OnInputVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>OutputVatCode</c> field.
 		///	designer:fld/L0A63/L0AH7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH7]")]
-		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? VatCode
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? OutputVatCode
 		{
 			get
 			{
@@ -2913,12 +2935,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue = this.VatCode;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue = this.OutputVatCode;
 				if (oldValue != value)
 				{
-					this.OnVatCodeChanging (oldValue, value);
+					this.OnOutputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode?> ("[L0AH7]", oldValue, value);
-					this.OnVatCodeChanged (oldValue, value);
+					this.OnOutputVatCodeChanged (oldValue, value);
 				}
 			}
 		}
@@ -3065,8 +3087,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnShortDescriptionChanged(string oldValue, string newValue);
 		partial void OnLongDescriptionChanging(string oldValue, string newValue);
 		partial void OnLongDescriptionChanged(string oldValue, string newValue);
-		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
-		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
+		partial void OnInputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
+		partial void OnInputVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
+		partial void OnOutputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
+		partial void OnOutputVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
 		partial void OnArticleCategoryChanging(global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity newValue);
 		partial void OnArticleCategoryChanged(global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleCategoryEntity newValue);
 		partial void OnBillingUnitChanging(global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity oldValue, global::Epsitec.Cresus.Core.Entities.UnitOfMeasureEntity newValue);
@@ -6178,11 +6202,33 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DefaultVatCode</c> field.
+		///	The <c>DefaultInputVatCode</c> field.
+		///	designer:fld/L0AC7/L0ADF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ADF]")]
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode DefaultInputVatCode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0ADF]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue = this.DefaultInputVatCode;
+				if (oldValue != value)
+				{
+					this.OnDefaultInputVatCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0ADF]", oldValue, value);
+					this.OnDefaultInputVatCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DefaultOutputVatCode</c> field.
 		///	designer:fld/L0AC7/L0AG7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AG7]")]
-		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode DefaultVatCode
+		public global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode DefaultOutputVatCode
 		{
 			get
 			{
@@ -6190,12 +6236,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue = this.DefaultVatCode;
+				global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue = this.DefaultOutputVatCode;
 				if (oldValue != value)
 				{
-					this.OnDefaultVatCodeChanging (oldValue, value);
+					this.OnDefaultOutputVatCodeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode> ("[L0AG7]", oldValue, value);
-					this.OnDefaultVatCodeChanged (oldValue, value);
+					this.OnDefaultOutputVatCodeChanged (oldValue, value);
 				}
 			}
 		}
@@ -6302,8 +6348,10 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnDefaultVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
-		partial void OnDefaultVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnDefaultInputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnDefaultInputVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnDefaultOutputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
+		partial void OnDefaultOutputVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnVatNumberChanging(string oldValue, string newValue);
 		partial void OnVatNumberChanged(string oldValue, string newValue);
 		partial void OnDefaultRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
