@@ -1,5 +1,4 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Types;
+﻿using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
