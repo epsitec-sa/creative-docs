@@ -90,12 +90,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
+		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void CollectionPersistenceJobConstructor5Test()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.Empty;
+			Druid fieldId = Druid.FromLong (2);
 			List<AbstractEntity> targets = null;
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -109,11 +109,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.Empty;
+			Druid fieldId = Druid.FromLong (2);
 			var targets = this.GetSampleTargets ().Concat (new List<AbstractEntity> () { null });
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
 			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void ConvertTest()
+		{
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
+			Druid localEntityId = Druid.FromLong (1);
+			Druid fieldId =Druid.FromLong (2);
+			var targets = this.GetSampleTargets ();
+			PersistenceJobType jobType = PersistenceJobType.Insert;
+
+			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType).Convert (null);
 		}
 
 

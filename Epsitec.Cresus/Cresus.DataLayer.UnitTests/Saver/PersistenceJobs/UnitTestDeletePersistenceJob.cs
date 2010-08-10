@@ -34,6 +34,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void ConvertTest()
+		{
+			AbstractEntity entity = new NaturalPersonEntity ();
+
+			new DeletePersistenceJob (entity).Convert (null);
+		}
+
+
 	}
 
 

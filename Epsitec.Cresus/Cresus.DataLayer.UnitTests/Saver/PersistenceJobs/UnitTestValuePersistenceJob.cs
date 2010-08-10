@@ -108,6 +108,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void ConvertTest()
+		{
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
+			Druid localEntityId = Druid.FromLong (1);
+			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
+			{
+				{ Druid.FromLong (2), "test" },
+			};
+			bool isRootTypeJob = true;
+			PersistenceJobType jobType = PersistenceJobType.Insert;
+
+			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType).Convert (null);
+		}
+
+
 		private IEnumerable<Druid> GetSampleDruids()
 		{
 			for (int i = 1; i < 10; i++)
