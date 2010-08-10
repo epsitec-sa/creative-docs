@@ -40,7 +40,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void TypeTest()
 		{
 			Assert.AreEqual (Type.Int16, new Constant ((short) 0).Type);
@@ -58,7 +57,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ValueTest()
 		{
 			Assert.AreEqual (0, (short) new Constant ((short) 0).Value);

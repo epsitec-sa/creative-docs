@@ -16,7 +16,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void AliasNodeConstructorTest1()
 		{
 			AliasNode node = new AliasNode ("node");
@@ -41,7 +40,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void AliasNodeConstructorTest3()
 		{
@@ -50,7 +48,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void AliasNodeConstructorTest4()
 		{
@@ -80,7 +77,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CreateChildTest1()
 		{
 			AliasNode node1 = new AliasNode ("node1");
@@ -93,7 +89,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CreateChildTest2()
 		{
@@ -103,7 +98,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void CreateChildTest3()
 		{
@@ -165,7 +159,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetChildTest1()
 		{
 			AliasNode node = new AliasNode ("node");
@@ -195,7 +188,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest2()
 		{
@@ -206,7 +198,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest3()
 		{
@@ -217,7 +208,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildTest4()
 		{
@@ -227,8 +217,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		[TestMethod]	
-		[DeploymentItem ("Cresus.DataLayer.dll")]
+		[TestMethod]
 		public void GetChildrenTest1()
 		{
 			AliasNode node = new AliasNode ("node");
@@ -258,7 +247,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest2()
 		{
@@ -269,7 +257,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest3()
 		{
@@ -280,7 +267,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void GetChildrenTest4()
 		{
@@ -291,7 +277,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetParentTest()
 		{
 			AliasNode node1 = new AliasNode ("node1");
@@ -312,7 +297,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void NameTest()
 		{
 			AliasNode node = new AliasNode ("node");

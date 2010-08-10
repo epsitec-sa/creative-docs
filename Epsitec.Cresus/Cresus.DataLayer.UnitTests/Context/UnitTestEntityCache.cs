@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void EntityCacheConstructorTest()
 		{
 			EntityCache entityCache = new EntityCache ();
@@ -37,7 +36,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void AddTest1()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -66,7 +64,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void AddTest2()
 		{
@@ -77,7 +74,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ContainsEntityTest()
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
@@ -122,7 +118,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void DefineRowKeyTest1()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -154,7 +149,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void DefineRowKeyTest2()
 		{
@@ -166,7 +160,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void DefineRowKeyTest3()
 		{
@@ -177,7 +170,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void DefineRowKeyTest4()
 		{
@@ -189,7 +181,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEntitiesTest()
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
@@ -218,7 +209,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEntityTest()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -258,7 +248,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEntityKeyTest1()
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
@@ -311,7 +300,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void GetEntityKeyTest2()
 		{
@@ -322,7 +310,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void RemoveTest1()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
@@ -397,7 +384,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void RemoveTest2()
 		{

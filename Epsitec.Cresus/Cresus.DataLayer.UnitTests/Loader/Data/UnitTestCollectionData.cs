@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void CollectionDataConstructorTest()
 		{
 			CollectionData collectionData = new CollectionData ();
@@ -27,7 +26,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest()
 		{
 			CollectionData collectionData = new CollectionData ();

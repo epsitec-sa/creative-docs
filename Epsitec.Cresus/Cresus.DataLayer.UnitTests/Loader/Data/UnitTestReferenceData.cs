@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ReferenceDataConstructorTest()
 		{
 			ReferenceData referenceData = new ReferenceData ();
@@ -27,7 +26,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void ItemTest1()
 		{
 			ReferenceData referenceData = new ReferenceData ();
@@ -65,7 +63,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		[ExpectedException (typeof (System.ArgumentException))]
 		public void ItemTest2()
 		{
