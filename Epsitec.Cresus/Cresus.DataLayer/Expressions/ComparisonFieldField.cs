@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
@@ -74,6 +76,22 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		internal override IEnumerable<Druid> GetFields()
 		{
 			return ExpressionFields.GetFields (this);
+		}
+
+
+		/// <summary>
+		/// Converts this instance to an equivalent <see cref="DbAbstractCondition"/>, using a
+		/// resolver to convert the <see cref="Druid"/> of the fields to the appropriate
+		/// <see cref="DbTableColumn"/>.
+		/// </summary>
+		/// <param name="columnResolver">The function used to resolve the <see cref="DbTableColumn"/> given an <see cref="Druid"/>.</param>
+		/// <returns>The new <see cref="DbAbstractCondition"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="columnResolver"/> is null.</exception>
+		internal override DbAbstractCondition CreateDbCondition(System.Func<Druid, DbTableColumn> columnResolver)
+		{
+			columnResolver.ThrowIfNull ("columnResolver");
+
+			return ExpressionConversion.CreateDbCondition (this, columnResolver);
 		}
 
 

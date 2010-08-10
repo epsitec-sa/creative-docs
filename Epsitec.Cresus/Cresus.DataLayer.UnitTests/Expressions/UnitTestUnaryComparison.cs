@@ -33,7 +33,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void FieldTest()
 		{
 			Field field = new Field (Druid.FromLong (1));
@@ -45,7 +44,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void OperatorTest()
 		{
 			Field field = new Field (Druid.FromLong (1));
@@ -55,6 +53,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			Assert.AreEqual (UnaryComparator.IsNull, comparison1.Operator);
 			Assert.AreEqual (UnaryComparator.IsNotNull, comparison2.Operator);
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void CreateDbConditionTest()
+		{
+			Field field = new Field (Druid.FromLong (1));
+
+			UnaryComparison comparison = new UnaryComparison (field, UnaryComparator.IsNull);
+
+			comparison.CreateDbCondition (null);
 		}
 
 

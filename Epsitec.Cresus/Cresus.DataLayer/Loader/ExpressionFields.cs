@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 	/// <summary>
-	/// The <c>ExpressionFields</c> class provides extension methods that can retrieve the set of
+	/// The <c>ExpressionFields</c> class provides methods that can retrieve the set of
 	/// <see cref="Druid"/> of the <see cref="Field"/> present in an <see cref="Expression"/>.
 	/// </summary>
 	internal static class ExpressionFields
