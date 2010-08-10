@@ -737,9 +737,9 @@ namespace Epsitec.Cresus.Core
 			articleDef5.BillingUnit = uomUnit1;
 			articleDef5.Units = uomGroup1;
 			articleDef5.ArticlePrices.Add (this.CreateArticlePrice (2000, articlePriceGroup1, articlePriceGroup2, articlePriceGroup3));
-			articleDef5.ArticleParameters.Add (param5_1);
-			articleDef5.ArticleParameters.Add (param5_2);
-			articleDef5.ArticleParameters.Add (param5_3);
+			articleDef5.ArticleParameterDefinitions.Add (param5_1);
+			articleDef5.ArticleParameterDefinitions.Add (param5_2);
+			articleDef5.ArticleParameterDefinitions.Add (param5_3);
 
 			articleDef6.IdA = "FOOD-MILCH";
 			articleDef6.ShortDescription = "Lait";

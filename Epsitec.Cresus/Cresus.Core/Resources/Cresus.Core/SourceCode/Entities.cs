@@ -2923,11 +2923,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ArticleParameters</c> field.
+		///	The <c>ArticleParameterDefinitions</c> field.
 		///	designer:fld/L0A63/L0AH3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH3]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity> ArticleParameters
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractArticleParameterDefinitionEntity> ArticleParameterDefinitions
 		{
 			get
 			{

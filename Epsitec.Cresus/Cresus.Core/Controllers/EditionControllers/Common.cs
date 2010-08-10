@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			ArticleDefinitionEntity articleDefinition = parentController.GetEntity () as ArticleDefinitionEntity;
 
 			//	Cherche l'index de la ligne dans la collection.
-			int index = articleDefinition.ArticleParameters.IndexOf (entity);
+			int index = articleDefinition.ArticleParameterDefinitions.IndexOf (entity);
 			if (index == -1)
 			{
 				return;
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			parentController.Orchestrator.CloseSubViews (parentController);
 
 			//	Supprime l'entité dans la db.
-			articleDefinition.ArticleParameters.RemoveAt (index);  // supprime dans la liste de l'article
+			articleDefinition.ArticleParameterDefinitions.RemoveAt (index);  // supprime dans la liste de l'article
 			dataContext.DeleteEntity (entity);                     // supprime dans le DataContext de la ligne
 			parentController.DataContext.DeleteEntity (entity);    // supprime dans le DataContext de l'article
 
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			System.Diagnostics.Debug.Assert (newEntity != null);
 
-			articleDefinition.ArticleParameters.Insert (index, newEntity);
+			articleDefinition.ArticleParameterDefinitions.Insert (index, newEntity);
 
 			//	Crée et montre la nouvelle tuile.
 			parentController.TileContainerController.ShowSubView (index, "ArticleParameterDefinition");

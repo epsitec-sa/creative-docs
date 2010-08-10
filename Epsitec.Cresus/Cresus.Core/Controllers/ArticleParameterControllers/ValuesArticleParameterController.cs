@@ -42,13 +42,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			this.frameBox.Children.Clear ();
 
-			for (int index = 0; index < article.ArticleDefinition.ArticleParameters.Count; index++)
+			for (int index = 0; index < article.ArticleDefinition.ArticleParameterDefinitions.Count; index++)
 			{
 				this.CreateParameterUI (this.frameBox, article, index);
 			}
 
 			// Montre ou cache la tuile parente.
-			this.editionTile.Visibility = article.ArticleDefinition.ArticleParameters.Count != 0;
+			this.editionTile.Visibility = article.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
 		}
 
 		private void CreateParameterUI(FrameBox parent, ArticleDocumentItemEntity article, int index)
@@ -64,12 +64,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var label = new StaticText
 			{
 				Parent = box,
-				Text = article.ArticleDefinition.ArticleParameters[index].Name,
+				Text = article.ArticleDefinition.ArticleParameterDefinitions[index].Name,
 				PreferredWidth = 100,
 				Dock = DockStyle.Left,
 			};
 
-			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameters[index];
+			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameterDefinitions[index];
 
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
