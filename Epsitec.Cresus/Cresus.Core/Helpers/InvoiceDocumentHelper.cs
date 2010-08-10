@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				var category = categories[i];
 				var tax = x.Lines[x.Lines.Count-1-categories.Count+i] as TaxDocumentItemEntity;
 
-				tax.VatCode = category.DefaultVatCode;
+				tax.VatCode = category.DefaultOutputVatCode;
 
 				decimal amount, rate;
 				InvoiceDocumentHelper.GetArticleTotalAmoutForTax (x, category.Name, out amount, out rate);

@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA", Marshaler.Create (this.Entity, x => x.VatCode, (x, v) => x.VatCode = v), BusinessLogic.Enumerations.GetGetAllPossibleItemsVatCode (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA", Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)

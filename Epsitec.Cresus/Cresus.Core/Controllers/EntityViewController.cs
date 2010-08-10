@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
 		}
 
-		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
+		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerVersion = -1)
 		{
-			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode);
+			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode, controllerVersion);
 
 			if (controller == null)
 			{
@@ -123,8 +123,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
 		}
-		
-		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode)
+
+		private static System.Type FindViewControllerType(System.Type entityType, ViewControllerMode mode, int controllerVersion)
 		{
 			var baseTypePrefix = EntityViewController.GetViewControllerPrefix (mode);
 			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
@@ -139,10 +139,19 @@ namespace Epsitec.Cresus.Core.Controllers
 						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;
 
+			if (controllerVersion < 0)
+			{
+				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerVersionAttribute), false).Length == 0);
+			}
+			else
+			{
+				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerVersionAttribute), false).Cast<ControllerVersionAttribute> ().Any (attribute => attribute.Version == controllerVersion));
+			}
+
 			return types.FirstOrDefault ();
 		}
 
-		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		private static EntityViewController ResolveEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, int controllerVersion)
 		{
 			switch (mode)
 			{
@@ -158,7 +167,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					throw new System.NotSupportedException (string.Format ("ViewControllerMode.{0} not supported", mode));
 			}
 
-			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode);
+			var type = EntityViewController.FindViewControllerType (entity.GetType (), mode, controllerVersion);
 
 			if (type == null)
 			{
@@ -172,6 +181,28 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
+	}
+
+	[System.AttributeUsage (System.AttributeTargets.Class, AllowMultiple=true, Inherited=false)]
+	public class ControllerVersionAttribute : System.Attribute
+	{
+		public ControllerVersionAttribute()
+		{
+		}
+
+		public ControllerVersionAttribute(int version)
+		{
+		}
+
+		public int Version
+		{
+			get
+			{
+				return this.version;
+			}
+		}
+
+		private readonly int version;
 	}
 
 

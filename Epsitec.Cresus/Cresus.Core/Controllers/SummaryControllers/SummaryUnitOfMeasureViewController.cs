@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static string GetCategory(Entities.UnitOfMeasureEntity unit)
 		{
-			foreach (var item in Enumerations.GetGetAllPossibleItemsUnitOfMeasureCategory ())
+			foreach (var item in Enumerations.GetAllPossibleUnitOfMeasureCategories ())
 			{
 				if (item.Key == unit.Category)
 				{

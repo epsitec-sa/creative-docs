@@ -10,14 +10,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public static class Enumerations
 	{
-		public static IEnumerable<EnumKeyValues<Finance.TaxMode>> GetAllPossibleItemsTaxModes()
+		public static IEnumerable<EnumKeyValues<Finance.TaxMode>> GetAllPossibleTaxModes()
 		{
 			yield return EnumKeyValues.Create (Finance.TaxMode.LiableForVat,    "Assujetti à la TVA");
 			yield return EnumKeyValues.Create (Finance.TaxMode.NotLiableForVat, "Non-assujetti à la TVA");
 			yield return EnumKeyValues.Create (Finance.TaxMode.ExemptFromVat,   "Exonéré");
 		}
 
-		public static IEnumerable<EnumKeyValues<Finance.CurrencyCode>> GetGetAllPossibleItemsDefaultCurrencyCodes()
+		public static IEnumerable<EnumKeyValues<Finance.CurrencyCode>> GetAllPossibleCurrencyCodes()
 		{
 			yield return EnumKeyValues.Create (Finance.CurrencyCode.Chf, "CHF", "Franc suisse");
 			yield return EnumKeyValues.Create (Finance.CurrencyCode.Eur, "EUR", "Euro");
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (Finance.CurrencyCode.Cny, "CNY", "Yuan chinois");
 		}
 
-		public static IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> GetGetAllPossibleItemsUnitOfMeasureCategory()
+		public static IEnumerable<EnumKeyValues<UnitOfMeasureCategory>> GetAllPossibleUnitOfMeasureCategories()
 		{
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Unrelated, "Indépendant");
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Unit,      "Unité");
@@ -39,14 +39,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Energy,    "Energie");
 		}
 
-		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetGetAllPossibleItemsVatCode()
+		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetAllPossibleVatCodes()
 		{
 			yield return EnumKeyValues.Create (Finance.VatCode.Excluded, "EXCLU", "Exclu de l'impôt");
 			yield return EnumKeyValues.Create (Finance.VatCode.ZeroRated, "EXPORT", "Exporté (exonéré)");
 
-			yield return EnumKeyValues.Create (Finance.VatCode.StandardTax, "NORM", "Taux normal");  // TODO: ces 3 codes sont des inventions !
-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedTax, "RED", "Taux réduit");
-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialTax, "HEB", "Taux spécial");
+//-			yield return EnumKeyValues.Create (Finance.VatCode.StandardTax, "NORM", "Taux normal");  // TODO: ces 3 codes sont des inventions !
+//-			yield return EnumKeyValues.Create (Finance.VatCode.ReducedTax, "RED", "Taux réduit");
+//-			yield return EnumKeyValues.Create (Finance.VatCode.SpecialTax, "HEB", "Taux spécial");
 
 			yield return EnumKeyValues.Create (Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses, "IPM", "Taux normal, matériel ou service");
 			yield return EnumKeyValues.Create (Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses, "IPMRED", "Taux réduit, matériel ou service");
@@ -61,19 +61,19 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (Finance.VatCode.SpecialTaxOnTurnover, "TVAHEB", "Taux spécial, chiffre d'affaires");
 		}
 
-		public static IEnumerable<EnumKeyValues<ArticleType>> GetGetAllPossibleItemsArticleType()
+		public static IEnumerable<EnumKeyValues<ArticleType>> GetAllPossibleArticleTypes()
 		{
 			yield return EnumKeyValues.Create (ArticleType.Goods,        "Marchandise");
 			yield return EnumKeyValues.Create (ArticleType.Service,      "Service");
 			yield return EnumKeyValues.Create (ArticleType.Subscription, "Abonnement");
-			yield return EnumKeyValues.Create (ArticleType.Charge,       "Charge");
+			yield return EnumKeyValues.Create (ArticleType.Charge,       "Frais");
 			yield return EnumKeyValues.Create (ArticleType.Freight,      "Port et emballage");
 			yield return EnumKeyValues.Create (ArticleType.Tax,          "Taxe");
 		}
 
-		public static IEnumerable<EnumKeyValues<EnumValueCardinality>> GetGetAllPossibleItemsValueCardinality()
+		public static IEnumerable<EnumKeyValues<EnumValueCardinality>> GetAllPossibleValueCardinalities()
 		{
-			yield return EnumKeyValues.Create (EnumValueCardinality.Any,        "N'importe lesquels");
+			yield return EnumKeyValues.Create (EnumValueCardinality.Any,        "Zéro, un ou plusieurs");
 			yield return EnumKeyValues.Create (EnumValueCardinality.AtLeastOne, "Au moins un");
 			yield return EnumKeyValues.Create (EnumValueCardinality.ExactlyOne, "Un et un seul");
 			yield return EnumKeyValues.Create (EnumValueCardinality.ZeroOrOne,  "Un ou aucun");
