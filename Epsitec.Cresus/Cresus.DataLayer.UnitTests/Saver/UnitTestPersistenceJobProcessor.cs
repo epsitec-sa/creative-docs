@@ -6,7 +6,6 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
-using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -73,13 +72,29 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ProcessJobsTest()
+		public void ProcessJobsTest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
+				
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction())
+				{
+					processor.ProcessJobs (transaction, null);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void ProcessJobsTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-				processor.ProcessJobs (null);
+				processor.ProcessJobs (null, new List<AbstractPersistenceJob> ());
 			}
 		}
 
@@ -98,8 +113,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					new DeletePersistenceJob (entity),
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+				
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
 
+					transaction.Commit ();
+				}
+				
 				Assert.IsTrue (newKeys.Count == 0);
 			}
 
@@ -139,7 +161,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 1);
 				Assert.AreEqual (entity, newKeys.First ().Key);
@@ -179,7 +208,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 0);
 			}
@@ -222,7 +258,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 0);
 			}
@@ -270,7 +313,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 0);
 			}
@@ -317,7 +367,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					)
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 0);
 			}
@@ -361,7 +418,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					),
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 0);
 			}
@@ -514,7 +578,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					),
 				};
 
-				var newKeys = processor.ProcessJobs (jobs);
+				Dictionary<AbstractEntity, DbKey> newKeys;
+
+				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction ())
+				{
+					newKeys = processor.ProcessJobs (transaction, jobs).ToDictionary (p => p.Key, p => p.Value);
+
+					transaction.Commit ();
+				}
 
 				Assert.IsTrue (newKeys.Count == 3);
 
