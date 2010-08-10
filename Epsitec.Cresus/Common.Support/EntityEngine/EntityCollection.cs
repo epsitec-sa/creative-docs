@@ -188,6 +188,10 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.Virtualize (promotedItem);
 					return promotedItem;
 				}
+				else if (item == null)
+				{
+					return null;
+				}
 			}
 
 			throw new System.NotImplementedException ();
