@@ -46,28 +46,16 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 
 		/// <summary>
-		/// Converts the given <see cref="AbstractPersistenceJob"/> into the corresponding sequence
-		/// of <see cref="AbstractSynchronizationJob"/>.
-		/// </summary>
-		/// <param name="job">The <see cref="AbstractPersistenceJob"/> to convert.</param>
-		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
-		public IEnumerable<AbstractSynchronizationJob> Convert(AbstractPersistenceJob job)
-		{
-			job.ThrowIfNull ("job");
-
-			return this.Convert ((dynamic) job);
-		}
-
-
-		/// <summary>
 		/// Converts the given <see cref="DeletePersistenceJob"/> into the corresponding sequence
 		/// of <see cref="AbstractSynchronizationJob"/>.
 		/// </summary>
 		/// <param name="job">The <see cref="DeletePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
-		private IEnumerable<DeleteSynchronizationJob> Convert(DeletePersistenceJob job)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
+		internal IEnumerable<DeleteSynchronizationJob> Convert(DeletePersistenceJob job)
 		{
+			job.ThrowIfNull ("job");
+			
 			int dataContextId = this.DataContext.UniqueId;
 			EntityKey entityKey = this.DataContext.GetEntityKey (job.Entity).Value;
 
@@ -81,8 +69,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="job">The <see cref="ValuePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
-		private IEnumerable<ValueSynchronizationJob> Convert(ValuePersistenceJob job)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
+		internal IEnumerable<ValueSynchronizationJob> Convert(ValuePersistenceJob job)
 		{
+			job.ThrowIfNull ("job");
+			
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
@@ -105,8 +96,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="job">The <see cref="ReferencePersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
-		private IEnumerable<ReferenceSynchronizationJob> Convert(ReferencePersistenceJob job)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
+		internal IEnumerable<ReferenceSynchronizationJob> Convert(ReferencePersistenceJob job)
 		{
+			job.ThrowIfNull ("job");
+			
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
@@ -135,8 +129,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="job">The <see cref="CollectionPersistenceJob"/> to convert.</param>
 		/// <returns>The converted sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
-		private IEnumerable<CollectionSynchronizationJob> Convert(CollectionPersistenceJob job)
+		/// <exception cref="System.ArgumentNullException">If <paramref name="job"/> is <c>null</c>.</exception>
+		internal IEnumerable<CollectionSynchronizationJob> Convert(CollectionPersistenceJob job)
 		{
+			job.ThrowIfNull ("job");
+			
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;

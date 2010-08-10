@@ -66,19 +66,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		[TestMethod]
 		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ConvertAbstractJobTest()
+		public void ConvertDeleteJobTest1()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
 
-				converter.Convert (null);
+				converter.Convert ((DeletePersistenceJob) null);
 			}
 		}
 
 
 		[TestMethod]
-		public void ConvertDeleteJobTest()
+		public void ConvertDeleteJobTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -98,7 +98,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void ConvertValueJobTest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
+
+				converter.Convert ((ValuePersistenceJob) null);
+			}
+		}
+
+
+		[TestMethod]
+		public void ConvertValueJobTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -123,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ConvertValueJobTest2()
+		public void ConvertValueJobTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -158,7 +171,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void ConvertReferenceJobTest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
+
+				converter.Convert ((ReferencePersistenceJob) null);
+			}
+		}
+
+
+		[TestMethod]
+		public void ConvertReferenceJobTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -180,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ConvertReferenceJobTest2()
+		public void ConvertReferenceJobTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -207,7 +233,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ConvertReferenceJobTest3()
+		public void ConvertReferenceJobTest4()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -234,7 +260,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void ConvertCollectionJobTest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				PersistenceJobConverter converter = new PersistenceJobConverter (dataContext);
+
+				converter.Convert ((CollectionPersistenceJob) null);
+			}
+		}
+
+
+		[TestMethod]
+		public void ConvertCollectionJobTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -259,7 +298,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 
 		[TestMethod]
-		public void ConvertCollectionJobTest2()
+		public void ConvertCollectionJobTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
