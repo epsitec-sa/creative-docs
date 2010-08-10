@@ -25,13 +25,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
-
-			System.AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-			{
-				System.Exception exception = (System.Exception) e.ExceptionObject;
-
-				Assert.Fail (exception.Message + "\n" + exception.StackTrace + "\n\n");
-			};
 		}
 
 
@@ -51,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
-
+		
 		[TestMethod]
 		public void ConcurrencySequenceAllTest()
 		{
@@ -167,7 +160,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void InsertData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			List<Thread> threads = new List<Thread> ();
 
@@ -180,7 +173,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.FinalizeTest ();
+			this.FinalizeTest("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -203,9 +196,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -226,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void CheckData(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			List<Thread> threads = new List<Thread> ();
 
@@ -241,7 +234,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.FinalizeTest ();
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -264,9 +257,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -313,7 +306,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ConflictingValueUpdates(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			this.ConflictingValueUpdateSetup ();
 
@@ -328,7 +321,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.FinalizeTest ();
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -369,9 +362,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -392,7 +385,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ConflictingReferenceUpdates(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			this.ConflictingReferenceUpdateSetup ();
 
@@ -409,7 +402,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			this.CheckConflictingReferenceUpdates ();
 
-			this.FinalizeTest ();
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -450,9 +443,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -504,7 +497,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void ConflictingCollectionUpdates(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			int nbTotalContacts = 10;
 			int nbContactsToUse = 5;
@@ -522,12 +515,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			if (!this.errorMessages.Any ())
+			if (!this.handledExceptions.Any ())
 			{
 				this.CheckConflictingCollectionUpdates (nbContactsToUse);
 			}
 
-			this.FinalizeTest ();
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -571,9 +564,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -626,7 +619,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private void Conflicting(int nbThreads, int nbInsertions, System.Action<List<Thread>> threadFunction)
 		{
-			this.errorMessages = new List<string> ();
+			this.handledExceptions = new List<System.Exception> ();
 
 			this.ConflictingSetup ();
 
@@ -641,7 +634,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.FinalizeTest ();
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -675,9 +668,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			}
 			catch (System.Exception e)
 			{
-				lock (this.errorMessages)
+				lock (this.handledExceptions)
 				{
-					this.errorMessages.Add (e.Message + "\n" + e.StackTrace);
+					this.handledExceptions.Add (e);
 				}
 			}
 		}
@@ -899,14 +892,20 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		private void FinalizeTest()
+		private void FinalizeTest(string name, List<System.Exception> exceptions)
 		{
-			if (errorMessages.Count > 0)
+			if (exceptions.Count > 0)
 			{
-				string message = "\n\n" + string.Join ("\n\n", this.errorMessages);
+				string message = name + ":\n\n" + string.Join ("\n\n", exceptions.Select (e => this.GetExceptionString (e)));
 
 				Assert.Fail (message);
 			}
+		}
+
+
+		private string GetExceptionString(System.Exception e)
+		{
+			return e.Message + "\n\n" + e.StackTrace;
 		}
 
 
@@ -929,7 +928,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		}
 
 
-		private List<string> errorMessages;
+		private List<System.Exception> handledExceptions;
 
 
 		private readonly int nbThreads = 5;
