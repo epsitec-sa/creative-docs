@@ -33,89 +33,18 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public string SelectedValue
-		{
-			get
-			{
-				if (this.SelectedIndex == -1)
-				{
-					return null;
-				}
-				else
-				{
-					return this.enumValues[this.SelectedIndex].Value;
-				}
-			}
-			set
-			{
-				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].Value != value)
-				{
-					this.enumValues[this.SelectedIndex].Value = value;
-					this.StoreEnumValuesList ();
-					this.UpdateScrollList ();
-				}
-			}
-		}
-
-		public string SelectedShortDescription
-		{
-			get
-			{
-				if (this.SelectedIndex == -1)
-				{
-					return null;
-				}
-				else
-				{
-					return this.enumValues[this.SelectedIndex].ShortDescription;
-				}
-			}
-			set
-			{
-				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].ShortDescription != value)
-				{
-					this.enumValues[this.SelectedIndex].ShortDescription = value;
-					this.StoreEnumValuesList ();
-					this.UpdateScrollList ();
-				}
-			}
-		}
-
-		public string SelectedLongDescription
-		{
-			get
-			{
-				if (this.SelectedIndex == -1)
-				{
-					return null;
-				}
-				else
-				{
-					return this.enumValues[this.SelectedIndex].LongDescription;
-				}
-			}
-			set
-			{
-				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].LongDescription != value)
-				{
-					this.enumValues[this.SelectedIndex].LongDescription = value;
-					this.StoreEnumValuesList ();
-					this.UpdateScrollList ();
-				}
-			}
-		}
-
-
 		public void CreateUI(FrameBox parent)
 		{
 			int buttonSize = 23;
 
+			//	Crée la toolbar.
 			var toolbar = new FrameBox
 			{
 				Parent = parent,
 				PreferredHeight = buttonSize,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 2, 2),
+				TabIndex = 1,
 			};
 
 			this.createButton = new GlyphButton
@@ -161,14 +90,90 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Dock = DockStyle.Fill,
 			};
 
+			//	Crée la liste.
 			this.scrollList = new ScrollList
 			{
 				Parent = parent,
 				PreferredHeight = 124,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 0),
+				TabIndex = 2,
 			};
 
+			//	Crée l'édition de la valeur.
+			this.valueLabel = new StaticText
+			{
+				Parent = parent,
+				Text = "Valeur :",
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 1),
+			};
+
+			this.valueField = new TextFieldEx
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+				TabIndex = 3,
+				DefocusAction = DefocusAction.AcceptEdition,
+			};
+
+			//	Crée l'édition de la description courte.
+			this.shortDescriptionLabel = new StaticText
+			{
+				Parent = parent,
+				Text = "Description courte :",
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 1),
+			};
+
+			this.shortDescriptionField = new TextFieldEx
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+				TabIndex = 4,
+				DefocusAction = DefocusAction.AcceptEdition,
+			};
+
+			//	Crée l'édition de la description longue.
+			this.longDescriptionLabel = new StaticText
+			{
+				Parent = parent,
+				Text = "Description longue :",
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 1),
+			};
+
+			this.longDescriptionField = new TextFieldMultiEx
+			{
+				Parent = parent,
+				PreferredHeight = 78,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+				TabIndex = 5,
+				DefocusAction = DefocusAction.AcceptEdition,
+				ScrollerVisibility = false,
+				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
+			};
+
+			//	Créer le bouton pour la valeur par défaut.
+			this.defaultButton = new CheckButton
+			{
+				Parent = parent,
+				Text = "Cette valeur est la valeur par défaut",
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 5, 2),
+				TabIndex = 6,
+			};
+
+			//	Connecte tous les événements.
 			this.createButton.Clicked += delegate
 			{
 				this.ActionCreate ();
@@ -194,6 +199,27 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				this.ActionSelectionChanged ();
 			};
 
+			this.valueField.AcceptingEdition += delegate
+			{
+				this.SelectedValue = this.valueField.Text;
+			};
+
+			this.shortDescriptionField.AcceptingEdition += delegate
+			{
+				this.SelectedShortDescription = this.shortDescriptionField.Text;
+			};
+
+			this.longDescriptionField.AcceptingEdition += delegate
+			{
+				this.SelectedLongDescription = this.longDescriptionField.Text;
+			};
+
+			this.defaultButton.Clicked += delegate
+			{
+				this.defaultButton.ActiveState = (this.defaultButton.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+				this.SelectedDefaultValue = this.defaultButton.ActiveState == ActiveState.Yes;
+			};
+
 			this.InitialiseEnumValuesList ();
 			this.UpdateScrollList ();
 			this.UpdateButtons ();
@@ -217,8 +243,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			this.StoreEnumValuesList ();
 			this.UpdateScrollList (sel);
+			this.UpdateFields ();
 			this.UpdateButtons ();
 			this.tileContainer.UpdateAllWidgets ();
+
+			this.valueField.Focus ();
 		}
 
 		private void ActionDelete()
@@ -234,6 +263,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			this.StoreEnumValuesList ();
 			this.UpdateScrollList (sel);
+			this.UpdateFields ();
 			this.UpdateButtons ();
 			this.tileContainer.UpdateAllWidgets ();
 		}
@@ -248,6 +278,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			this.StoreEnumValuesList ();
 			this.UpdateScrollList (sel-1);
+			this.UpdateFields ();
 			this.UpdateButtons ();
 			this.tileContainer.UpdateAllWidgets ();
 		}
@@ -262,6 +293,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			this.StoreEnumValuesList ();
 			this.UpdateScrollList (sel+1);
+			this.UpdateFields ();
 			this.UpdateButtons ();
 			this.tileContainer.UpdateAllWidgets ();
 		}
@@ -273,10 +305,19 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				return;
 			}
 
+			this.UpdateFields ();
 			this.UpdateButtons ();
 			this.tileContainer.UpdateAllWidgets ();
 		}
 
+
+		private void UpdateFields()
+		{
+			this.valueField.Text            = this.SelectedValue;
+			this.shortDescriptionField.Text = this.SelectedShortDescription;
+			this.longDescriptionField.Text  = this.SelectedLongDescription;
+			this.defaultButton.ActiveState  = this.SelectedDefaultValue ? ActiveState.Yes : ActiveState.No;
+		}
 
 		private void UpdateButtons()
 		{
@@ -286,6 +327,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.deleteButton.Enable = sel != -1;
 			this.upButton.Enable = sel > 0;
 			this.downButton.Enable = sel != -1 && sel < this.enumValues.Count-1;
+
+			this.valueLabel.Enable = sel != -1;
+			this.shortDescriptionLabel.Enable = sel != -1;
+			this.longDescriptionLabel.Enable = sel != -1;
+			this.valueField.Enable = sel != -1;
+			this.shortDescriptionField.Enable = sel != -1;
+			this.longDescriptionField.Enable = sel != -1;
+			this.defaultButton.Enable = sel != -1;
 		}
 
 		private void UpdateScrollList(int? sel=null)
@@ -305,11 +354,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 				if (enumValue.IsEmpty)
 				{
-					text = "<i>Vide</i>";
+					text = "   <i>Vide</i>";
 				}
 				else
 				{
+					string prefix = (enumValue.Value == this.parameterEntity.DefaultValue) ? "● " : "   ";
 					text = UIBuilder.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
+					text = string.Concat (prefix, text);
 				}
 
 				this.scrollList.Items.Add (text);
@@ -346,6 +397,97 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.labelCount.Text = text;
 		}
 
+
+		private string SelectedValue
+		{
+			get
+			{
+				if (this.SelectedIndex == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.enumValues[this.SelectedIndex].Value;
+				}
+			}
+			set
+			{
+				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].Value != value)
+				{
+					if (this.SelectedDefaultValue)  // est-on en train de changer la valeur utilisée comme valeur par défaut ?
+					{
+						this.parameterEntity.DefaultValue = value;
+					}
+
+					this.enumValues[this.SelectedIndex].Value = value;
+					this.StoreEnumValuesList ();
+					this.UpdateScrollList ();
+				}
+			}
+		}
+
+		private string SelectedShortDescription
+		{
+			get
+			{
+				if (this.SelectedIndex == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.enumValues[this.SelectedIndex].ShortDescription;
+				}
+			}
+			set
+			{
+				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].ShortDescription != value)
+				{
+					this.enumValues[this.SelectedIndex].ShortDescription = value;
+					this.StoreEnumValuesList ();
+					this.UpdateScrollList ();
+				}
+			}
+		}
+
+		private string SelectedLongDescription
+		{
+			get
+			{
+				if (this.SelectedIndex == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.enumValues[this.SelectedIndex].LongDescription;
+				}
+			}
+			set
+			{
+				if (this.SelectedIndex != -1 && this.enumValues[this.SelectedIndex].LongDescription != value)
+				{
+					this.enumValues[this.SelectedIndex].LongDescription = value;
+					this.StoreEnumValuesList ();
+					this.UpdateScrollList ();
+				}
+			}
+		}
+
+		private bool SelectedDefaultValue
+		{
+			get
+			{
+				return this.parameterEntity.DefaultValue == this.enumValues[this.SelectedIndex].Value;
+			}
+			set
+			{
+				this.parameterEntity.DefaultValue = value ? this.enumValues[this.SelectedIndex].Value : null;
+				this.UpdateScrollList ();
+			}
+		}
+
 		private int SelectedIndex
 		{
 			get
@@ -359,7 +501,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				this.ignoreChange = false;
 			}
 		}
-
 
 
 		private void InitialiseEnumValuesList()
@@ -437,6 +578,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private GlyphButton downButton;
 		private StaticText labelCount;
 		private ScrollList scrollList;
+		private StaticText valueLabel;
+		private StaticText shortDescriptionLabel;
+		private StaticText longDescriptionLabel;
+		private TextFieldEx valueField;
+		private TextFieldEx shortDescriptionField;
+		private TextFieldMultiEx longDescriptionField;
+		private CheckButton defaultButton;
 
 		private List<EnumValue> enumValues;
 		private bool ignoreChange;
