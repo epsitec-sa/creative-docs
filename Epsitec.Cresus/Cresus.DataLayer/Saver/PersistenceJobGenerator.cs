@@ -390,6 +390,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
 		/// <param name="fieldId">The <see cref="Druid"/> defining the field of the <see cref="AbstractEntity"/> whose <see cref="AbstractPersistenceJob"/> to create.</param>
+		/// <param name="targets">The sequence of targets of the field.</param>
+		/// <param name="jobType">Indicates whether the <see cref="AbstractPersistenceJob"/> is an update or an insert.</param>
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private CollectionPersistenceJob CreateCollectionJob(AbstractEntity entity, Druid fieldId, IEnumerable<AbstractEntity> targets, PersistenceJobType jobType)
 		{
