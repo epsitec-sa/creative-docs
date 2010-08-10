@@ -320,10 +320,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 		private DataContext CreateDataContext()
 		{
-			return new DataContext (DatabaseHelper.DbInfrastructure)
-			{
-				EnableNullVirtualization = true
-			};
+			return new DataContext (DatabaseHelper.DbInfrastructure, true);
 		}
 
 

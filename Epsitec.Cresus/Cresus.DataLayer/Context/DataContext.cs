@@ -32,7 +32,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Creates a new <c>DataContext</c>.
 		/// </summary>
 		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> that will be used to talk to the database.</param>
-		public DataContext(DbInfrastructure infrastructure)
+		/// <param name="enableNullVirtualization">Tells whether to enable the virtualization of null <see cref="AbstractEntity"/> or not.</param>
+		public DataContext(DbInfrastructure infrastructure, bool enableNullVirtualization = false)
 		{
 			this.UniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.IsDisposed = false;
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
 
-			this.EnableNullVirtualization = false;
+			this.EnableNullVirtualization = enableNullVirtualization;
 
 			this.entitiesCache = new EntityCache ();
 			this.emptyEntities = new HashSet<AbstractEntity> ();
@@ -174,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public bool EnableNullVirtualization
 		{
 			get;
-			set;
+			private set;
 		}
 
 		/// <summary>
