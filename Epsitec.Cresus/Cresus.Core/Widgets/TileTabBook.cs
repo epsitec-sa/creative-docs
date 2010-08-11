@@ -35,14 +35,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		
 		public void SelectTabPage(TabPageDef description)
 		{
-			if (this.selectedItem != description)
+			if (this.selectedItemName != description.Name)
 			{
-				this.selectedItem = description;
+				this.selectedItemName = description.Name;
 				this.RefreshTabPageSelection ();
 
-				if (this.selectedItem != null)
+				if (description != null)
 				{
-					this.selectedItem.ExecuteAction ();
+					description.ExecuteAction ();
 				}
 			}
 		}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			foreach (TilePageButton page in this.Children.Widgets)
 			{
-				bool isSelected = page.TabPageDef == this.selectedItem;
+				bool isSelected = page.TabPageDef.Name == this.selectedItemName;
 
 				page.SetSelected (isSelected);
 				page.TabPageDef.SetPageWidgetsVisibility (isSelected);
@@ -101,6 +101,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		private readonly List<TabPageDef> items;
-		private TabPageDef selectedItem;
+		private string selectedItemName;
 	}
 }

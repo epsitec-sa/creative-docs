@@ -66,24 +66,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		public static void CreateAbstractDocumentItemTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string defaultPage)
+		public static void CreateAbstractDocumentItemTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, DocumentItemTabId defaultId)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
-			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Text.Texte");
-			pagesDescription.Add ("Article.Article");
-			pagesDescription.Add ("Price.Sous-total");
+			var book = builder.CreateTabBook (
+				TabPageDef.Create (DocumentItemTabId.Text,    new FormattedText ("Texte"),      id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)),
+				TabPageDef.Create (DocumentItemTabId.Article, new FormattedText ("Article"),    id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)),
+				TabPageDef.Create (DocumentItemTabId.Price,   new FormattedText ("Sous-total"), id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)));
 
-			builder.CreateTabBook (pagesDescription, x =>
-			{
-				if (x != defaultPage)
-				{
-					Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, x);
-				}
-			});
+			book.SelectTabPage (defaultId);
 		}
 
 		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, string defaultPage)
@@ -106,8 +100,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 	
-		public static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, string tabPageName)
+		private static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, DocumentItemTabId id)
 		{
+			if ((entity != null) &&
+				(entity.TabId == id))
+			{
+				return;
+			}
+
 			EntityViewController parentController = Common.GetParentController (tileContainer);
 			InvoiceDocumentEntity invoiceDocument = parentController.GetEntity () as InvoiceDocumentEntity;
 
@@ -129,11 +129,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée la nouvelle entité.
 			AbstractDocumentItemEntity newEntity = null;
 
-			if (tabPageName == "Text")
+			if (id == DocumentItemTabId.Text)
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
 			}
-			else if (tabPageName == "Article")
+			else if (id == DocumentItemTabId.Article)
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				article.BeginDate = invoiceDocument.CreationDate;
 				article.EndDate   = invoiceDocument.CreationDate;
 			}
-			else if (tabPageName == "Price")
+			else if (id == DocumentItemTabId.Price)
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
 			}
@@ -233,5 +233,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			return null;
 		}
+	}
+	
+	public enum DocumentItemTabId
+	{
+		None,
+		Text,
+		Article,
+		Price,
+	}
+
+	public enum ArticleParameterTabId
+	{
+		Numeric,
+		Enum,
 	}
 }

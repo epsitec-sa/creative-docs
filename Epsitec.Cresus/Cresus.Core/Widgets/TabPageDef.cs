@@ -55,12 +55,23 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.pageWidgets.ForEach (widget => widget.Visibility = visibility);
 		}
 
-		
+
 		public static TabPageDef<T> Create<T>(T id, FormattedText text, System.Action action = null)
 		{
 			return new TabPageDef<T> (id, id.ToString (), text, action);
 		}
 
+		public static TabPageDef<T> Create<T>(T id, FormattedText text, System.Action<T> action)
+		{
+			if (action == null)
+			{
+				return new TabPageDef<T> (id, id.ToString (), text, null);
+			}
+			else
+			{
+				return new TabPageDef<T> (id, id.ToString (), text, () => action (id));
+			}
+		}
 		
 		private readonly string name;
 		private readonly FormattedText text;
