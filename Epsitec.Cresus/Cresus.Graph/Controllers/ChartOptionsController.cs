@@ -21,47 +21,47 @@ namespace Epsitec.Cresus.Graph.Controllers
         /// Create the controller into a frame
         /// </summary>
         /// <param name="commandBar">CommandSelectionBar where to put the configuration buttons</param>
-        /// <param name="fixedCaptions">FrameBox showing the captions to show/hide</param>
-        /// <param name="floatingCaptions">FrameBox showing the floating captions to show/hide</param>
-        public ChartOptionsController (CommandSelectionBar commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
+        /// <param name="summaryCaptions">FrameBox showing the captions to show/hide</param>
+        /// <param name="seriesCaptions">FrameBox showing the floating captions to show/hide</param>
+        public ChartOptionsController (CommandSelectionBar commandBar, AnchoredPalette summaryCaptions, SeriesCaptionsView seriesCaptions)
         {
             this.chartOptions = new ChartOptions()
             {
-                ShowFixedCaptions = true,
-                ShowFloatingCaptions = true,
-                FixedCaptionsPosition = new Margins (0, 4, 4, 0)
+                ShowSummaryCaptions = true,
+                ShowSeriesCaptions = true,
+                SummaryCaptionsPosition = new Margins (0, 4, 4, 0)
             };
 
 			this.dispatcher = new CommandDispatcher ("ChartOptions Dispatcher", CommandDispatcherLevel.Secondary);
 			this.dispatcher.RegisterController (this);
 
             // Change visibility when value is changed
-            this.ChartOptions.ShowFixedCaptionsChanged +=
+            this.ChartOptions.ShowSummaryCaptionsChanged +=
                 (sender, e) =>
                 {
-                    fixedCaptions.Visibility = (bool) e.NewValue;
+                    summaryCaptions.Visibility = (bool) e.NewValue;
                 };
 
             // Change visibility when value is changed
-            this.ChartOptions.ShowFloatingCaptionsChanged +=
+            this.ChartOptions.ShowSeriesCaptionsChanged +=
                 (sender, e) =>
                 {
-                    floatingCaptions.Visibility = (bool) e.NewValue;
+                    seriesCaptions.Visibility = (bool) e.NewValue;
                 };
 
-            this.ChartOptions.FixedCaptionsPositionChanged +=
+            this.ChartOptions.SummaryCaptionsPositionChanged +=
                 (sender, e) =>
                 {
-                    fixedCaptions.Margins = (Margins)e.NewValue;
+                    summaryCaptions.Margins = (Margins)e.NewValue;
                 };
 
-            fixedCaptions.MarginsChanged +=
+            summaryCaptions.MarginsChanged +=
                 (sender, e) =>
                 {
-                    this.ChartOptions.FixedCaptionsPosition = (Margins)e.NewValue;
+                    this.ChartOptions.SummaryCaptionsPosition = (Margins)e.NewValue;
                 };
 
-            this.SetupUI(commandBar, fixedCaptions, floatingCaptions);
+            this.SetupUI(commandBar, summaryCaptions, seriesCaptions);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             }
         }
 
-        private void SetupUI (CommandSelectionBar commandBar, AnchoredPalette fixedCaptions, FloatingCaptionsView floatingCaptions)
+        private void SetupUI (CommandSelectionBar commandBar, AnchoredPalette summaryCaptions, SeriesCaptionsView seriesCaptions)
         {
             new Separator()
             {
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Graph.Controllers
         [Command (Res.CommandIds.ChartOptions.ShowSummaryCaptions)]
         private void ExecuteShowSummaryCaptionsCommand ()
         {
-            this.ChartOptions.ShowFixedCaptions = !this.ChartOptions.ShowFixedCaptions;
+            this.ChartOptions.ShowSummaryCaptions = !this.ChartOptions.ShowSummaryCaptions;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Graph.Controllers
         [Command (Res.CommandIds.ChartOptions.ShowSeriesCaptions)]
         private void ExecuteShowSeriesCaptionsCommand ()
         {
-            this.ChartOptions.ShowFloatingCaptions = !this.ChartOptions.ShowFloatingCaptions;
+            this.ChartOptions.ShowSeriesCaptions = !this.ChartOptions.ShowSeriesCaptions;
         }
 
         // Options for the buttons

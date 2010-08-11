@@ -269,8 +269,8 @@
     <EmbeddedResource Include="Images\GraphType.HorizontalBarChart.icon" />
     <EmbeddedResource Include="Images\GraphType.LineChart.icon" />
     <EmbeddedResource Include="Images\GraphType.VerticalBarChart.icon" />
-    <EmbeddedResource Include="Images\Captions.icon" />
-    <EmbeddedResource Include="Images\FloatingCaptions.icon" />
+    <EmbeddedResource Include="Images\SummaryCaptions.icon" />
+    <EmbeddedResource Include="Images\SeriesCaptions.icon" />
     <EmbeddedResource Include="Images\GraphType.GeoChart.icon" />
   </ItemGroup>
   <ItemGroup>

@@ -16,66 +16,66 @@ namespace Epsitec.Cresus.Graph
     /// </summary>
     public class ChartOptions
     {
-        public bool ShowFixedCaptions
+        public bool ShowSummaryCaptions
         {
             get
             {
-                return showFixedCaptions;
+                return showSummaryCaptions;
             }
             set
             {
-                if (this.showFixedCaptions != value)
+                if (this.showSummaryCaptions != value)
                 {
-                    var oldValue = this.showFixedCaptions;
-                    this.showFixedCaptions = value;
+                    var oldValue = this.showSummaryCaptions;
+                    this.showSummaryCaptions = value;
 
 					GraphProgram.Application.SetActiveState (Res.Commands.ChartOptions.ShowSummaryCaptions, value ? ActiveState.Yes : ActiveState.No);
 
                     // Fire the event if needed
-                    if(this.ShowFixedCaptionsChanged != null)
-                        this.ShowFixedCaptionsChanged(this, new DependencyPropertyChangedEventArgs("ShowFixedCaption", oldValue, value));
+                    if(this.ShowSummaryCaptionsChanged != null)
+                        this.ShowSummaryCaptionsChanged(this, new DependencyPropertyChangedEventArgs("ShowSummaryCaption", oldValue, value));
                 }
             }
         }
 
-        public bool ShowFloatingCaptions
+        public bool ShowSeriesCaptions
         {
             get
             {
-                return showFloatingCaptions;
+                return showSeriesCaptions;
             }
             set
             {
-                if (this.showFloatingCaptions != value)
+                if (this.showSeriesCaptions != value)
                 {
-                    var oldValue = this.showFloatingCaptions;
-                    this.showFloatingCaptions = value;
+                    var oldValue = this.showSeriesCaptions;
+                    this.showSeriesCaptions = value;
 
                     GraphProgram.Application.SetActiveState (Res.Commands.ChartOptions.ShowSeriesCaptions, value ? ActiveState.Yes : ActiveState.No);
 
                     // Fire the event if needed
-                    if(this.ShowFloatingCaptionsChanged != null)
-                        this.ShowFloatingCaptionsChanged(this, new DependencyPropertyChangedEventArgs("ShowFloatingCaptions", oldValue, value));
+                    if(this.ShowSeriesCaptionsChanged != null)
+                        this.ShowSeriesCaptionsChanged(this, new DependencyPropertyChangedEventArgs("ShowSeriesCaptions", oldValue, value));
                 }
             }
         }
 
-        public Margins FixedCaptionsPosition
+        public Margins SummaryCaptionsPosition
         {
             get
             {
-                return fixedCaptionsPosition;
+                return summaryCaptionsPosition;
             }
             set
             {
-                if (this.fixedCaptionsPosition != value)
+                if (this.summaryCaptionsPosition != value)
                 {
-                    var oldValue = this.fixedCaptionsPosition;
-                    this.fixedCaptionsPosition = value;
+                    var oldValue = this.summaryCaptionsPosition;
+                    this.summaryCaptionsPosition = value;
 
                     // Fire the event if needed
-                    if (this.FixedCaptionsPositionChanged != null)
-                        this.FixedCaptionsPositionChanged (this, new DependencyPropertyChangedEventArgs ("FixedCaptionsPosition", oldValue, value));
+                    if (this.SummaryCaptionsPositionChanged != null)
+                        this.SummaryCaptionsPositionChanged (this, new DependencyPropertyChangedEventArgs ("SummaryCaptionsPosition", oldValue, value));
                 }
             }
         }
@@ -86,13 +86,13 @@ namespace Epsitec.Cresus.Graph
         /// <param name="options">XML fragement to save into</param>
         public void SaveOptions(XElement options)
         {
-            var fixedCaptions = new XElement("ShowFixedCaptions", this.ShowFixedCaptions);
-            var floatingCaptions = new XElement("ShowFloatingCaptions", this.ShowFloatingCaptions);
-            var fixedCaptionsPosition = new XElement ("FixedCaptionsPosition", this.fixedCaptionsPosition);
+            var summaryCaptions = new XElement("ShowSummaryCaptions", this.ShowSummaryCaptions);
+            var seriesCaptions = new XElement("ShowSeriesCaptions", this.ShowSeriesCaptions);
+            var summaryCaptionsPosition = new XElement ("SummaryCaptionsPosition", this.SummaryCaptionsPosition);
 
-            options.Add(fixedCaptions);
-            options.Add(floatingCaptions);
-            options.Add (fixedCaptionsPosition);
+            options.Add(summaryCaptions);
+            options.Add(seriesCaptions);
+            options.Add (summaryCaptionsPosition);
         }
 
         /// <summary>
@@ -103,22 +103,22 @@ namespace Epsitec.Cresus.Graph
         {
             XElement tmp;
 
-            tmp = options.Element ("ShowFixedCaptions");
+            tmp = options.Element ("ShowSummaryCaptions");
             if(tmp != null)
-                ShowFixedCaptions = tmp.Value == "true";
+                ShowSummaryCaptions = tmp.Value == "true";
 
-            tmp = options.Element ("ShowFloatingCaptions");
+            tmp = options.Element ("ShowSeriesCaptions");
             if (tmp != null)
-                ShowFloatingCaptions = tmp.Value == "true";
+                ShowSeriesCaptions = tmp.Value == "true";
 
-            tmp = options.Element ("FixedCaptionsPosition");
+            tmp = options.Element ("SummaryCaptionsPosition");
             if (tmp != null)
             {
-                FixedCaptionsPosition = Margins.Parse (tmp.Value);
+                SummaryCaptionsPosition = Margins.Parse (tmp.Value);
             }
             else
             {
-                FixedCaptionsPosition = new Margins (0, 4, 4, 0);
+                SummaryCaptionsPosition = new Margins (0, 4, 4, 0);
             }
         }
 
@@ -129,17 +129,17 @@ namespace Epsitec.Cresus.Graph
         /// <param name="oldValues">Object to copy the values from</param>
         internal void copyValues (ChartOptions oldValues)
         {
-            this.ShowFixedCaptions = oldValues.ShowFixedCaptions;
-            this.ShowFloatingCaptions = oldValues.ShowFloatingCaptions;
-            this.FixedCaptionsPosition = oldValues.FixedCaptionsPosition;
+            this.ShowSummaryCaptions = oldValues.ShowSummaryCaptions;
+            this.ShowSeriesCaptions = oldValues.ShowSeriesCaptions;
+            this.SummaryCaptionsPosition = oldValues.SummaryCaptionsPosition;
         }
 
-        public event EventHandler<DependencyPropertyChangedEventArgs> ShowFixedCaptionsChanged;
-        public event EventHandler<DependencyPropertyChangedEventArgs> ShowFloatingCaptionsChanged;
-        public event EventHandler<DependencyPropertyChangedEventArgs> FixedCaptionsPositionChanged;
+        public event EventHandler<DependencyPropertyChangedEventArgs> ShowSummaryCaptionsChanged;
+        public event EventHandler<DependencyPropertyChangedEventArgs> ShowSeriesCaptionsChanged;
+        public event EventHandler<DependencyPropertyChangedEventArgs> SummaryCaptionsPositionChanged;
 
-        private bool showFixedCaptions;
-        private bool showFloatingCaptions;
-        private Margins fixedCaptionsPosition;
+        private bool showSummaryCaptions;
+        private bool showSeriesCaptions;
+        private Margins summaryCaptionsPosition;
     }
 }
