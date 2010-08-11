@@ -60,31 +60,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				else
 				{
 					this.CreateTabBook (builder);
-
-					//	Crée le contenu de la page "local".
-					this.localPageContent = new List<Epsitec.Common.Widgets.Widget> ();
-					builder.ContentList = this.localPageContent;
-
-					this.CreateUICountry  (builder);
-					this.CreateUIMain     (builder);
-					this.CreateUILocation (builder);
-
-					//	Crée le contenu de la page "global".
-					this.globalPageContent = new List<Epsitec.Common.Widgets.Widget> ();
-					builder.ContentList = this.globalPageContent;
-
-					this.CreateUILegalPerson (builder);
-					this.CreateUIAddress     (builder);
-
-					builder.ContentList = null;
+					this.CreateTabBookLocalPage (builder);
+					this.CreateTabBookGlobalPage (builder);
 
 					if (this.Entity.LegalPerson.IsNull ())
 					{
-						this.SelectTabPage ("local");  // montre l'onglet "local"
+						this.tabBookContainer.SelectTabPage (TabPageId.Local);
 					}
 					else
 					{
-						this.SelectTabPage ("global");  // montre l'onglet "global"
+						this.tabBookContainer.SelectTabPage (TabPageId.Global);
 					}
 				}
 
@@ -152,53 +137,48 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin         (tile, horizontalSeparator: false);
 		}
 
+		private enum TabPageId
+		{
+			Local,
+			Global,
+		}
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			var tile = builder.CreateEditionTile ();
+			builder.CreateEditionTile ();
 
-			List<string> pagesDescription = new List<string>();
-			pagesDescription.Add ("local.Adresse spécifique");
-			pagesDescription.Add ("global.Entreprise existante");
-			this.tabBookContainer = builder.CreateTabBook (tile, pagesDescription, "local", this.HandleTabBookAction);
+			this.tabBookContainer = builder.CreateTabBook (
+				TabPageDef.Create (TabPageId.Local, new FormattedText ("Adresse spécifique"), this.HandleSelectTabPageLocal),
+				TabPageDef.Create (TabPageId.Global, new FormattedText ("Entreprise existante")));
 		}
 
-		private void SelectTabPage(string tabPageName)
+		private void CreateTabBookLocalPage(UIBuilder builder)
 		{
-			foreach (TilePage page in this.tabBookContainer.Children)
-			{
-				if (page != null)
-				{
-					page.SetSelected (page.Name == tabPageName);
-				}
-			}
-
-			this.HandleTabBookAction (tabPageName);
+			builder.BeginTileTabPage (TabPageId.Local);
+			this.CreateUICountry (builder);
+			this.CreateUIMain (builder);
+			this.CreateUILocation (builder);
+			builder.EndTileTabPage ();
 		}
-
-		private void HandleTabBookAction(string tabPageName)
+		
+		private void CreateTabBookGlobalPage(UIBuilder builder)
 		{
-			foreach (var widget in this.localPageContent)
+			builder.BeginTileTabPage (TabPageId.Global);
+			this.CreateUILegalPerson (builder);
+			this.CreateUIAddress (builder);
+			builder.EndTileTabPage ();
+		}
+		
+		private void HandleSelectTabPageLocal()
+		{
+			if (this.Entity.LegalPerson.IsActive ())
 			{
-				widget.Visibility = tabPageName == "local";
-			}
+				this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
+				this.Entity.Address = this.DataContext.CreateEmptyEntity<AddressEntity> ();
+				this.InitializeDefaultCountry ();  // met "Suisse" si rien
+				this.selectedCountry = this.Entity.Address.Location.Country;
 
-			foreach (var widget in this.globalPageContent)
-			{
-				widget.Visibility = tabPageName == "global";
-			}
-
-			if (tabPageName == "local")
-			{
-				if (this.Entity.LegalPerson.IsActive ())
-				{
-					this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
-					this.Entity.Address = this.DataContext.CreateEmptyEntity<AddressEntity> ();
-					this.InitializeDefaultCountry ();  // met "Suisse" si rien
-					this.selectedCountry = this.Entity.Address.Location.Country;
-
-					this.tileContainer.UpdateAllWidgets ();
-				}
+				this.tileContainer.UpdateAllWidgets ();
 			}
 		}
 
@@ -450,9 +430,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private TileContainer							tileContainer;
-		private Epsitec.Common.Widgets.FrameBox			tabBookContainer;
-		private List<Epsitec.Common.Widgets.Widget>		localPageContent;
-		private List<Epsitec.Common.Widgets.Widget>		globalPageContent;
+		private TileTabBook<TabPageId>						tabBookContainer;
 		private AutoCompleteTextField					addressTextField;
 		private AutoCompleteTextField					countryTextField;
 		private AutoCompleteTextField					locationTextField;
