@@ -7,7 +7,7 @@ using Epsitec.Cresus.Database;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.Loader.Data
+namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
 

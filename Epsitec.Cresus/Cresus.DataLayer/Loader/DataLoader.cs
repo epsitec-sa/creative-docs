@@ -7,9 +7,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader.Data;
 using Epsitec.Cresus.DataLayer.Proxies;
-using Epsitec.Cresus.DataLayer.Schema;
+using Epsitec.Cresus.DataLayer.Serialization;
 
 using System.Collections;
 using System.Collections.Generic;

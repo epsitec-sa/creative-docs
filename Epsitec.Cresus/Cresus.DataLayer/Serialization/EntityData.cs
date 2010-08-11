@@ -6,7 +6,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
 
-namespace Epsitec.Cresus.DataLayer.Loader.Data
+namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
 
