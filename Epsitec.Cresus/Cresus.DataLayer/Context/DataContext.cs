@@ -981,32 +981,30 @@ namespace Epsitec.Cresus.DataLayer.Context
 			// entities if we look for an entity which can be targeted only by a location.
 			// Marc
 
-			// There is a bug here. The dictionnary is not build properly
-			// Marc
-
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
 
 			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
 				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
-				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
-			
+				.GroupBy (fp => fp.EntityId, fp => Druid.Parse (fp.Fields[0]))
+				.ToDictionary (g => g.Key, g => g.ToList ());
+
 			foreach (AbstractEntity source in this.GetEntities ())
 			{
-			    Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
-			    var sourceInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
+				var sourceInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
 
-			    foreach (Druid localSourceId in sourceInheritedIds)
-			    {
-			        if (fieldPaths.ContainsKey (localSourceId))
-			        {
-			            Druid fieldId = fieldPaths[localSourceId];
-
-			            yield return new KeyValuePair<AbstractEntity, Druid> (source, fieldId);
-			        }
-			    }
+				foreach (Druid localSourceId in sourceInheritedIds)
+				{
+					if (fieldPaths.ContainsKey (localSourceId))
+					{
+						foreach (Druid fieldId in fieldPaths[localSourceId])
+						{
+							yield return new KeyValuePair<AbstractEntity, Druid> (source, fieldId);
+						}
+					}
+				}
 			}
 		}
-
 
 
 		#region IDisposable Members
