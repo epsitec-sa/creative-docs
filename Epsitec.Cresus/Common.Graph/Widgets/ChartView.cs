@@ -62,17 +62,6 @@ namespace Epsitec.Common.Graph.Widgets
             renderer.HoverIndexChanged(oldValue, newValue);
         }
 
-        /// <summary>
-        /// Method called by <see cref="ChartViewController"/> when there is a click on the graph.
-        /// Allows the renderer to be noticed and it can change its appearance based on the click.
-        /// </summary>
-        /// <param name="sender">Object throwing the click</param>
-        /// <param name="e">Event data</param>
-        public void OnClicked(object sender, MessageEventArgs e)
-        {
-            renderer.OnClicked(sender, e);
-        }
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			graphics.AddFilledRectangle (this.Client.Bounds);
@@ -87,6 +76,17 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.Transform = transform;
 			}
 		}
+
+        /// <summary>
+        /// Method called by <see cref="ChartViewController"/> when there is a click on the graph.
+        /// Allows the renderer to be noticed and it can change its appearance based on the click.
+        /// </summary>
+        /// <param name="sender">Object throwing the click</param>
+        /// <param name="e">Event data</param>
+        private void OnClicked (object sender, MessageEventArgs e)
+        {
+            renderer.OnClicked (sender, e);
+        }
 
 
 		private Renderers.AbstractRenderer renderer;

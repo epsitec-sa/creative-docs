@@ -158,15 +158,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
             };
 
-            this.seriesCaptions = new SeriesCaptionsView()
+            this.seriesCaptions = new SeriesCaptionsView ()
             {
                 Anchor = AnchorStyles.All,
                 Parent = chartSurface,
                 Visibility = this.IsStandalone
             };
-
-            // Handling the mouse click, passing it to the ChartView
-            this.seriesCaptions.Clicked += this.chartView.OnClicked;
 
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
@@ -275,7 +272,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 
-            this.seriesDetection = new SeriesDetectionController (chartView, captionView);
+            this.seriesDetection = new SeriesDetectionController (chartView, captionView, seriesCaptions);
             
             // Tells the renderer that the mouse is over the graph
             this.seriesDetection.HoverIndexChanged += (sender, e) => this.chartView.HoverIndexChanged(e.OldValue, e.NewValue);
