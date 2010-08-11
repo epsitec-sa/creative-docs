@@ -590,7 +590,46 @@ namespace Epsitec.Common.Widgets
 				return totalRect;
 			}
 		}
-		
+
+
+		public bool HasParameters
+		{
+			get
+			{
+				return this.parameters != null && this.parameters.Count > 0;
+			}
+		}
+
+		public IDictionary<string, string> Parameters
+		{
+			get
+			{
+
+				return new Epsitec.Common.Types.Collections.ReadOnlyDictionary<string, string> (this.parameters);
+			}
+		}
+
+
+		public void SetParameter(string key, string value)
+		{
+			if (this.parameters == null)
+			{
+				this.parameters = new Dictionary<string, string> ();
+			}
+
+			string oldValue;
+
+			if ((this.parameters.TryGetValue (key, out oldValue)) &&
+				(oldValue != value))
+			{
+				return;
+			}
+
+			this.parameters[key] = value;
+			
+			this.MarkContentsAsDirty ();
+			this.UpdateEmbedderGeometry ();
+		}
 
 		private Drawing.Rectangle GetRectangleBounds(bool all)
 		{
@@ -4160,8 +4199,8 @@ namespace Epsitec.Common.Widgets
 								break;
 
 							case Tag.Param:
-								string replacement = string.Concat (" ", parameters["code"], "≡", parameters["value"], " ");
-								buffer.Append (TextLayout.CodeObject);
+								string replacement = this.GenerateReplacement (parameters);
+                                buffer.Append (TextLayout.CodeObject);
 								currentIndex ++;
 								supplItem.BackColor = Drawing.Color.FromAlphaRgb (0.3, 0.5, 0.5, 0.5);
 								this.PutRun (runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, null, 0, replacement);
@@ -4199,6 +4238,31 @@ namespace Epsitec.Common.Widgets
 			while ( tagEnding != Tag.None );
 		}
 
+		private string GenerateReplacement(IDictionary<string, string> parameters)
+		{
+			string code;
+			string value;
+
+			parameters.TryGetValue ("code", out code);
+			parameters.TryGetValue ("value", out value);
+
+			if ((!string.IsNullOrEmpty (code)) &&
+				(value == null) &&
+				(this.HasParameters))
+			{
+				this.parameters.TryGetValue (code, out value);
+			}
+
+			if ((value == null) || (code == null))
+			{
+				return string.Concat (" ", code ?? value ?? "—", " ");
+			}
+			else
+			{
+				return string.Concat (" ", code, "≡", value, " ");
+			}
+		}
+		
 		private void GenerateBlocks()
 		{
 			//	Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
@@ -5473,6 +5537,7 @@ noText:
 		private readonly List<JustifBlock>		blocks = new List<JustifBlock> ();
 		private readonly List<JustifLine>		lines  = new List<JustifLine> ();
 		private Queue<Support.SimpleCallback>	textChangeEventQueue;
+		private Dictionary<string, string>		parameters;
 		
 		public const double						Infinite		= 1000000;
 
