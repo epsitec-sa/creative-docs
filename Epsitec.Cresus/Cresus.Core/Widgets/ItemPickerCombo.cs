@@ -337,16 +337,32 @@ namespace Epsitec.Cresus.Core.Widgets
 					text = this.ListTextConverter (text);
 				}
 
-				if (sel.Contains (i))
+				string icon;
+
+				if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne)
 				{
-					text = string.Concat ("● ", text);  // TODO: Mettre un vrai "vu"
+					if (sel.Contains (i))
+					{
+						icon = Misc.GetResourceIconImageTag ("Button.Radio.Yes", 4);
+					}
+					else
+					{
+						icon = Misc.GetResourceIconImageTag ("Button.Radio.No", 4);
+					}
 				}
 				else
 				{
-					text = string.Concat ("   ", text);
+					if (sel.Contains (i))
+					{
+						icon = Misc.GetResourceIconImageTag ("Button.Check.Yes", 4);
+					}
+					else
+					{
+						icon = Misc.GetResourceIconImageTag ("Button.Check.No", 4);
+					}
 				}
 
-				list.Add (name, text);
+				list.Add (name, string.Concat (icon, " ", text));
 			}
 		}
 
