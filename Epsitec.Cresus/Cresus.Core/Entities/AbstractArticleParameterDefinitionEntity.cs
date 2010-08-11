@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -41,50 +40,6 @@ namespace Epsitec.Cresus.Core.Entities
 		public static string Join(params string[] values)
 		{
 			return string.Join (AbstractArticleParameterDefinitionEntity.Separator, values);
-		}
-	}
-
-	public partial class AbstractDocumentItemEntity
-	{
-		public virtual DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.None;
-			}
-		}
-	}
-
-	public partial class ArticleDocumentItemEntity
-	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Article;
-			}
-		}
-	}
-
-	public partial class PriceDocumentItemEntity
-	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Price;
-			}
-		}
-	}
-
-	public partial class TextDocumentItemEntity
-	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Text;
-			}
 		}
 	}
 }

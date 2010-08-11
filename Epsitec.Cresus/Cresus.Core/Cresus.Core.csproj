@@ -112,6 +112,8 @@
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListController.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
+    <Compile Include="Controllers\TabIds\DocumentItemTabId.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleGroupViewController.cs" />
@@ -123,6 +125,13 @@
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
     <Compile Include="Data\ArticleCategoryRepository.cs" />
+    <Compile Include="Entities\AbstractArticleParameterDefinitionEntity1.cs" />
+    <Compile Include="Entities\AbstractDocumentItemEntity.cs" />
+    <Compile Include="Entities\ArticleDocumentItemEntity.cs" />
+    <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity.cs" />
+    <Compile Include="Entities\PriceDocumentItemEntity.cs" />
+    <Compile Include="Entities\TextDocumentItemEntity.cs" />
     <Compile Include="EsrHelper.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />

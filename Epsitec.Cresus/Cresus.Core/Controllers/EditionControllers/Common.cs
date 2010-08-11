@@ -5,7 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Controllers.TabIds;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
@@ -80,23 +80,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			book.SelectTabPage (defaultId);
 		}
 
-		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, string defaultPage)
+		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, ArticleParameterTabId defaultId)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
-			List<string> pagesDescription = new List<string> ();
-			pagesDescription.Add ("Numeric.Valeur numérique");
-			pagesDescription.Add ("Enum.Enumération");
+			var book = builder.CreateTabBook (
+				TabPageDef.Create (ArticleParameterTabId.Numeric, new FormattedText ("Valeur numérique"), id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)),
+				TabPageDef.Create (ArticleParameterTabId.Enum,    new FormattedText ("Énumération"),      id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)));
 
-			builder.CreateTabBook (pagesDescription, x =>
-			{
-				if (x != defaultPage)
-				{
-					Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, x);
-				}
-			});
+			book.SelectTabPage (defaultId);
 		}
 
 	
@@ -156,8 +150,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		public static void ChangeEditedParameterEntity(TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, string tabPageName)
+		public static void ChangeEditedParameterEntity(TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, ArticleParameterTabId id)
 		{
+			if ((entity != null) &&
+				(entity.TabId == id))
+			{
+				return;
+			}
+
 			EntityViewController parentController = Common.GetParentController (tileContainer);
 			ArticleDefinitionEntity articleDefinition = parentController.GetEntity () as ArticleDefinitionEntity;
 
@@ -179,11 +179,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée la nouvelle entité.
 			AbstractArticleParameterDefinitionEntity newEntity = null;
 
-			if (tabPageName == "Numeric")
+			if (id == ArticleParameterTabId.Numeric)
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
 			}
-			else if (tabPageName == "Enum")
+			else if (id == ArticleParameterTabId.Enum)
 			{
 				newEntity = parentController.DataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
 			}
@@ -233,19 +233,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			return null;
 		}
-	}
-	
-	public enum DocumentItemTabId
-	{
-		None,
-		Text,
-		Article,
-		Price,
-	}
-
-	public enum ArticleParameterTabId
-	{
-		Numeric,
-		Enum,
 	}
 }
