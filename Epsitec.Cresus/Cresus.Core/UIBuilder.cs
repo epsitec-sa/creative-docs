@@ -40,18 +40,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public IList<Widget> ContentList
-		{
-			get
-			{
-				return this.contentList;
-			}
-			set
-			{
-				this.contentList = value;
-			}
-		}
-
 		public Widget Container
 		{
 			get
@@ -95,7 +83,7 @@ namespace Epsitec.Cresus.Core
 
 		public void BeginTileTabPage(int index)
 		{
-			this.ContentList = this.tileTabBook.Items.ElementAt (index).PageWidgets;
+			this.contentList = this.tileTabBook.Items.ElementAt (index).PageWidgets;
 		}
 
 		public void BeginTileTabPage<T>(T id)
@@ -103,13 +91,13 @@ namespace Epsitec.Cresus.Core
 			var book = this.tileTabBook as TileTabBook<T>;
 			var item = book.Items.Where (x => x.Id.Equals (id)).First ();
 			
-			this.ContentList = item.PageWidgets;
+			this.contentList = item.PageWidgets;
 		}
 
 
 		public void EndTileTabPage()
 		{
-			this.ContentList = null;
+			this.contentList = null;
 		}
 
 
