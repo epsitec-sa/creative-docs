@@ -343,22 +343,22 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					if (sel.Contains (i))
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.Radio.Yes", 4);
+						icon = Misc.GetResourceIconImageTag ("Button.RadioYes", -4);
 					}
 					else
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.Radio.No", 4);
+						icon = Misc.GetResourceIconImageTag ("Button.RadioNo", -4);
 					}
 				}
 				else
 				{
 					if (sel.Contains (i))
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.Check.Yes", 4);
+						icon = Misc.GetResourceIconImageTag ("Button.CheckYes", -4);
 					}
 					else
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.Check.No", 4);
+						icon = Misc.GetResourceIconImageTag ("Button.CheckNo", -4);
 					}
 				}
 
