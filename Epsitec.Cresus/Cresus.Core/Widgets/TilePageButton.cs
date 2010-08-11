@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget s'utilise un peu à la façon d'un TabPage, pour simuler des onglets
 	/// avec une tuile ayant une flèche 'v' en bas.
 	/// </summary>
-	public sealed class TilePage : Tile
+	public sealed class TilePageButton : Tile
 	{
-		public TilePage()
+		public TilePageButton()
 		{
 			this.ArrowDirection = Direction.Down;
 		}
 
-		public TilePage(TabPageDef tabPageDef)
+		public TilePageButton(TabPageDef tabPageDef)
 			: this ()
 		{
 			this.tabPageDef    = tabPageDef;
