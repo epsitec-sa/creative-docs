@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")")
 				});
 		}
 

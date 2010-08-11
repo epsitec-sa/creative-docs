@@ -89,9 +89,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField             (tile,  90, "Client depuis le",                Marshaler.Create (this.Entity, x => x.FirstContactDate,         (x, v) => x.FirstContactDate = v));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile, 150, "Numéro de TVA",                   Marshaler.Create (this.Entity, x => x.VatNumber,                (x, v) => x.VatNumber = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,                  (x, v) => x.TaxMode = v),                   BusinessLogic.Enumerations.GetAllPossibleTaxModes (),  x => UIBuilder.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 137, "Mode d'assujetissement à la TVA", Marshaler.Create (this.Entity, x => x.TaxMode,                  (x, v) => x.TaxMode = v),                   BusinessLogic.Enumerations.GetAllPossibleTaxModes (),  x => TextFormater.FormatText (x.Values[0]));
 			builder.CreateTextField             (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (this.Entity, x => x.DefaultDebtorBookAccount, (x, v) => x.DefaultDebtorBookAccount = v));
-			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v),       BusinessLogic.Enumerations.GetAllPossibleCurrencyCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 137, "Monnaie utilisée",                Marshaler.Create (this.Entity, x => x.DefaultCurrencyCode,      (x, v) => x.DefaultCurrencyCode = v),       BusinessLogic.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormater.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 

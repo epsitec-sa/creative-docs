@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
-				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
 			};
 
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name),
 				});
 
 			textField.SelectedItemChanged +=
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
 					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
 				});
 		}
 
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}
 
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => this.LocationGetter,
 
 					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
 				});
 		}
 

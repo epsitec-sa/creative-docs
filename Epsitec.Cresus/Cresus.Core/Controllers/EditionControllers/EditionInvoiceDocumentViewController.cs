@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private static FormattedText GetMailText(MailContactEntity x)
 		{
 			//	Retourne le texte compact d'une ligne pour peupler le widget AutoCompleteTextField.
-			return UIBuilder.FormatText (x.LegalPerson.Name, "~,",
+			return TextFormater.FormatText (x.LegalPerson.Name, "~,",
 										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
 										 x.Address.Street.StreetName, "~,",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);

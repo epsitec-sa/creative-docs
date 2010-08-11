@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return UIBuilder.FormatText ("Client", this.entity.Firstname, this.entity.Lastname).ToSimpleText ();
+				return TextFormater.FormatText ("Client", this.entity.Firstname, this.entity.Lastname).ToSimpleText ();
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public override void PrintCurrentPage(IPaintPort port)
 		{
-			string text = UIBuilder.FormatText (this.entity.Firstname, this.entity.Lastname).ToString ();  // TODO: provisoire
+			string text = TextFormater.FormatText (this.entity.Firstname, this.entity.Lastname).ToString ();  // TODO: provisoire
 
 			port.PaintText (10, 10, text, Font.DefaultFont, Font.DefaultFontSize);
 		}

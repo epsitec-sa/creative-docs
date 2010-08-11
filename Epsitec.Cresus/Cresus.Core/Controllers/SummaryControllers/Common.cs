@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : CommentEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("Comment", data.Controller, dataContext)
-				.DefineText        (x => UIBuilder.FormatText (Misc.FirstLine (x.Text)))
-				.DefineCompactText (x => UIBuilder.FormatText (Misc.FirstLine (x.Text)));
+				.DefineText        (x => TextFormater.FormatText (Misc.FirstLine (x.Text)))
+				.DefineCompactText (x => TextFormater.FormatText (Misc.FirstLine (x.Text)));
 
 			data.Add (
 				new SummaryData
@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "Comment",
 					IconUri		 = "Data.Comment",
-					Title		 = UIBuilder.FormatText ("Commentaires"),
-					CompactTitle = UIBuilder.FormatText ("Commentaires"),
+					Title		 = TextFormater.FormatText ("Commentaires"),
+					CompactTitle = TextFormater.FormatText ("Commentaires"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : MailContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, dataContext)
-				.DefineTitle		(x => UIBuilder.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineTitle		(x => TextFormater.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
 				.DefineText			(x => Common.GetMailContactSummary (x))
 				.DefineCompactText	(x => Common.GetCompactMailContactSummary (x));
 
@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name		 = "MailContact",
 					IconUri		 = "Data.Mail",
-					Title		 = UIBuilder.FormatText ("Adresses"),
-					CompactTitle = UIBuilder.FormatText ("Adresses"),
+					Title		 = TextFormater.FormatText ("Adresses"),
+					CompactTitle = TextFormater.FormatText ("Adresses"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static FormattedText GetMailContactSummary(MailContactEntity x)
 		{
-			return UIBuilder.FormatText (x.LegalPerson.Name, "\n",
+			return TextFormater.FormatText (x.LegalPerson.Name, "\n",
 										 x.LegalPerson.Complement, "\n",
 										 x.Complement, "\n",
 										 x.Address.Street.StreetName, "\n",
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
 		{
-			return UIBuilder.FormatText (x.Address.Street.StreetName, "~,",
+			return TextFormater.FormatText (x.Address.Street.StreetName, "~,",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
@@ -106,9 +106,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : TelecomContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, dataContext)
-				.DefineTitle		(x => UIBuilder.FormatText (x.TelecomType.Name))
-				.DefineText			(x => UIBuilder.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText  (x => UIBuilder.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
+				.DefineTitle		(x => TextFormater.FormatText (x.TelecomType.Name))
+				.DefineText			(x => TextFormater.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText  (x => TextFormater.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
 
 			data.Add (
 				new SummaryData
@@ -116,8 +116,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "TelecomContact",
 					IconUri		 = "Data.Telecom",
-					Title		 = UIBuilder.FormatText ("Téléphones"),
-					CompactTitle = UIBuilder.FormatText ("Téléphones"),
+					Title		 = TextFormater.FormatText ("Téléphones"),
+					CompactTitle = TextFormater.FormatText ("Téléphones"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
@@ -137,8 +137,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : UriContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, dataContext, filter: x => x.UriScheme.Code == "mailto")
-				.DefineText			(x => UIBuilder.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
-				.DefineCompactText	(x => UIBuilder.FormatText (x.Uri))
+				.DefineText			(x => TextFormater.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineCompactText	(x => TextFormater.FormatText (x.Uri))
 				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
 
 			data.Add (
@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "UriContact",
 					IconUri		 = "Data.Uri",
-					Title		 = UIBuilder.FormatText ("Emails"),
-					CompactTitle = UIBuilder.FormatText ("Emails"),
+					Title		 = TextFormater.FormatText ("Emails"),
+					CompactTitle = TextFormater.FormatText ("Emails"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 

@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
-				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
 			};
 
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter              = () => this.Entity.TelecomType,
 				ValueSetter              = x => this.Entity.TelecomType = x,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetTelecomTypes (),
-				ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+				ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
 			};
 			
 			builder.CreateEditionDetailedRadio (0, "Type du numéro de téléphone", controller);

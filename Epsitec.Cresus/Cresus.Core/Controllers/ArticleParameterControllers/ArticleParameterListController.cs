@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = buttonSize,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 2, 2),
+				Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
 				TabIndex = 1,
 			};
 
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = 124,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 0),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, 0),
 				TabIndex = 2,
 			};
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Valeur :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 1),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.valueField = new TextFieldEx
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = 3,
 				DefocusAction = DefocusAction.AcceptEdition,
 			};
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Description courte :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 1),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.shortDescriptionField = new TextFieldEx
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = 4,
 				DefocusAction = DefocusAction.AcceptEdition,
 			};
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Description longue :",
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 1),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.longDescriptionField = new TextFieldMultiEx
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = 78,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 2),
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = 5,
 				DefocusAction = DefocusAction.AcceptEdition,
 				ScrollerVisibility = false,
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Text = "Cette valeur est la valeur par défaut",
 				AutoToggle = false,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 5, 2),
+				Margins = new Margins (0, UIBuilder.RightMargin, 5, UIBuilder.MarginUnderTextField),
 				TabIndex = 6,
 			};
 
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				else
 				{
 					string prefix = (enumValue.Value == this.parameterEntity.DefaultValue) ? "● " : "   ";
-					text = UIBuilder.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
+					text = TextFormater.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
 					text = string.Concat (prefix, text);
 				}
 

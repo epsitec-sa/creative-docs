@@ -68,27 +68,27 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (entity is LegalPersonEntity)
 			{
 				var person = entity as LegalPersonEntity;
-				return UIBuilder.FormatText (person.Name);
+				return TextFormater.FormatText (person.Name);
 			}
 			if (entity is NaturalPersonEntity)
 			{
 				var person = entity as NaturalPersonEntity;
-				return UIBuilder.FormatText (person.Firstname, person.Lastname);
+				return TextFormater.FormatText (person.Firstname, person.Lastname);
 			}
 			if (entity is RelationEntity)
 			{
 				var customer = entity as RelationEntity;
-				return UIBuilder.FormatText (this.GenerateEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
+				return TextFormater.FormatText (this.GenerateEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
 			}
 			if (entity is ArticleDefinitionEntity)
 			{
 				var article = entity as ArticleDefinitionEntity;
-				return UIBuilder.FormatText (article.ShortDescription);
+				return TextFormater.FormatText (article.ShortDescription);
 			}
 			if (entity is InvoiceDocumentEntity)
 			{
 				var invoice = entity as InvoiceDocumentEntity;
-				return UIBuilder.FormatText (invoice.IdA);
+				return TextFormater.FormatText (invoice.IdA);
 			}
 
 			return FormattedText.Empty;
