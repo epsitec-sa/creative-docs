@@ -1,9 +1,9 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.DataLayer.Loader.Data;
+using Epsitec.Cresus.DataLayer.Context;
 
 
-namespace Epsitec.Cresus.DataLayer.Context
+namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
 
@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			set;
 		}
+
 
 
 		public EntityData Serialize(AbstractEntity entity)
