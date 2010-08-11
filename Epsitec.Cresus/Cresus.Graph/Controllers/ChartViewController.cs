@@ -151,11 +151,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.container,
 			};
 
-			this.chartView = new ChartView ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = chartSurface,
-				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
+            this.chartView = new ChartView ()
+            {
+                Dock = DockStyle.Fill,
+                Parent = chartSurface,
+                Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
             };
 
             this.seriesCaptionsView = new SeriesCaptionsView ()
@@ -164,6 +164,9 @@ namespace Epsitec.Cresus.Graph.Controllers
                 Parent = chartSurface,
                 Visibility = this.IsStandalone
             };
+
+            // Handling the mouse click, passing it to the ChartView
+            this.seriesCaptionsView.Clicked += this.chartView.OnClicked;
 
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
@@ -188,7 +191,7 @@ namespace Epsitec.Cresus.Graph.Controllers
                 summaryCaptionsPalette.Visibility = this.ChartSnapshot.ChartOptions.ShowSummaryCaptions;
             }
 
-			this.sunnaryCaptionView = new SummaryCaptionsView ()
+			this.summaryCaptionView = new SummaryCaptionsView ()
 			{
 				Dock = DockStyle.Fill,
 				Parent = summaryCaptionsPalette
@@ -272,7 +275,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 
-            this.seriesDetection = new SeriesDetectionController (chartView, sunnaryCaptionView, seriesCaptionsView);
+            this.seriesDetection = new SeriesDetectionController (chartView, summaryCaptionView, seriesCaptionsView);
             
             // Tells the renderer that the mouse is over the graph
             this.seriesDetection.HoverIndexChanged += (sender, e) => this.chartView.HoverIndexChanged(e.OldValue, e.NewValue);
@@ -353,7 +356,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			double dy = this.chartView.ActualHeight;
 
 			var chartRect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
-			var captionRect = this.sunnaryCaptionView.Parent.MapClientToParent (this.sunnaryCaptionView.ActualBounds);
+			var captionRect = this.summaryCaptionView.Parent.MapClientToParent (this.summaryCaptionView.ActualBounds);
 			var captionFrame = Rectangle.Inflate (captionRect, 4, 2);
 
 			System.Action<IPaintPort> painter =
@@ -377,7 +380,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						port.PaintOutline (p);
 					}
 					
-					this.sunnaryCaptionView.Captions.Render (port, captionRect);
+					this.summaryCaptionView.Captions.Render (port, captionRect);
 				};
 
 			callback (painter, dx, dy);
@@ -498,21 +501,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (renderer == null)
 			{
 				this.chartView.Renderer   = null;
-				this.sunnaryCaptionView.Captions = null;
+				this.summaryCaptionView.Captions = null;
                 this.seriesCaptionsView.Renderer = null;
 			}
 			else
 			{
 				this.chartView.Renderer = renderer;
-				this.sunnaryCaptionView.Captions = renderer.Captions;
-				this.sunnaryCaptionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
-				this.sunnaryCaptionView.Parent.PreferredSize = this.sunnaryCaptionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.sunnaryCaptionView.Parent.Padding.Size;
+				this.summaryCaptionView.Captions = renderer.Captions;
+				this.summaryCaptionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
+				this.summaryCaptionView.Parent.PreferredSize = this.summaryCaptionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.summaryCaptionView.Parent.Padding.Size;
                 this.seriesCaptionsView.Renderer = renderer;
                 this.rendererOptions = snapshot.RendererOptions;
 			}
 
 			this.chartView.Invalidate ();
-			this.sunnaryCaptionView.Invalidate ();
+			this.summaryCaptionView.Invalidate ();
             this.seriesCaptionsView.Invalidate ();
 		}
 
@@ -616,7 +619,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Button							commandButton;
 		private Widget							container;
 		private ChartView						chartView;
-		private SummaryCaptionsView				sunnaryCaptionView;
+		private SummaryCaptionsView				summaryCaptionView;
         private SeriesCaptionsView              seriesCaptionsView;
 		private GraphDocument					document;
 		private Command							graphType;
