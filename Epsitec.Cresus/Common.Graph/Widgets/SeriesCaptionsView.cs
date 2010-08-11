@@ -26,17 +26,29 @@ namespace Epsitec.Common.Graph.Widgets
                     var txtWidth = Renderer.Captions.Style.GetTextWidth (txt);
                     var txtHeight = Renderer.Captions.Style.GetTextLineHeight ();
                     var offset = Renderer.Captions.Style.GetTextLineOffset ();
+                    var angle = position.Angle;
 
-                    using (var r = new Path (new Rectangle (position.Position.X - txtWidth / 2 - 2, position.Position.Y - offset.Y, txtWidth + 4, txtHeight)))
+                    // Change orientation for quadrants II and III
+                    if (angle > 90 && angle < 270)
+                        angle -= 180;
+
+                    // Rotate Graphics
+                    graphics.Transform = graphics.Transform.RotateDeg (angle, position.Position);
+
+                    // Create a border
+                    using (var border = new Path (new Rectangle (position.Position.X - txtWidth / 2 - 2, position.Position.Y - offset.Y, txtWidth + 4, txtHeight)))
                     {
                         graphics.Color = Color.FromBrightness(1);
-                        graphics.PaintSurface(r);
+                        graphics.PaintSurface(border);
                         graphics.Color = Color.FromBrightness(0);
-                        graphics.PaintOutline(r);
+                        graphics.PaintOutline(border);
                     }
 
                     graphics.Color = style.FontColor;
                     graphics.PaintText (position.Position.X - txtWidth / 2, position.Position.Y, txt, style.Font, style.FontSize);
+
+                    // Put back rotation
+                    graphics.Transform = graphics.Transform.RotateDeg (-angle, position.Position);
                 }
 
                 ++i;

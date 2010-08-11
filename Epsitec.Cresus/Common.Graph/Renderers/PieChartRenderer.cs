@@ -129,7 +129,8 @@ namespace Epsitec.Common.Graph.Renderers
 
                 return new SeriesCaptionPosition ()
                 {
-                    Position = txtCenter
+                    Position = txtCenter,
+                    Angle = semiAngle
                 };
             }
 
