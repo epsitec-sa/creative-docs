@@ -49,7 +49,7 @@ namespace Epsitec.Common.Graph.Renderers
 					if (pie != null)
 					{
 						pie.Center = new Point (x, y);
-						pie.Radius = 0.9 * d / 2;
+						pie.Radius = this.radiusProportion * d / 2;
 					}
 
 					pieIndex++;
@@ -123,8 +123,8 @@ namespace Epsitec.Common.Graph.Renderers
                 // Cette partie doit être décalée
                 if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
                 {
-                    txtCenter.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
-                    txtCenter.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
+                    txtCenter.X += radius * (1 - this.radiusProportion) * System.Math.Cos (Math.DegToRad (semiAngle));
+                    txtCenter.Y += radius * (1 - this.radiusProportion) * System.Math.Sin (Math.DegToRad (semiAngle));
                 }
 
                 return new SeriesCaptionPosition ()
@@ -279,14 +279,14 @@ namespace Epsitec.Common.Graph.Renderers
                 if (!forDetection && (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex)))
                 {
                     var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
-                    center.X += radius * this.radiusProportion * System.Math.Cos(Math.DegToRad(semiAngle));
-                    center.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
+                    center.X += radius * (1 - this.radiusProportion) * System.Math.Cos(Math.DegToRad(semiAngle));
+                    center.Y += radius * (1 - this.radiusProportion) * System.Math.Sin (Math.DegToRad (semiAngle));
                 }
 
                 // We widen the path for the detection
                 if (forDetection)
                 {
-                	radius *= 1.4;
+                	radius /= this.radiusProportion;
                 }
 				
 				path.MoveTo (center);
@@ -487,6 +487,6 @@ namespace Epsitec.Common.Graph.Renderers
         private List<SeriesPie> pies;
 
         private const int angleToHide = 6;
-        private double radiusProportion = 0.15;
+        private double radiusProportion = 0.9;
 	}
 }
