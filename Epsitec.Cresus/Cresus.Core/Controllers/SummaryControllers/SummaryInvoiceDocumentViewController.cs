@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			
 			template.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 			template.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineSetupItem   (this.SetupBillingDetails);
+			template.DefineSetupItem   (SetupBillingDetails);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private void SetupBillingDetails(BillingDetailEntity billingDetails)
+		private static void SetupBillingDetails(BillingDetailEntity billingDetails)
 		{
 			var date = Date.Today;
 
