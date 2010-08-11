@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -24,6 +25,8 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 		public EntitySerializationManager(DataContext dataContext)
 		{
+			dataContext.ThrowIfNull ("dataContext");
+			
 			this.DataContext = dataContext;
 		}
 
@@ -39,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			get
 			{
-				return this.EntityContext;
+				return this.DataContext.EntityContext;
 			}
 		}
 
@@ -47,6 +50,8 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 		public EntityData Serialize(AbstractEntity entity)
 		{
+			entity.ThrowIfNull ("entity");
+			
 			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
 			Druid loadedEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -119,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 			var fields = from field in this.EntityContext.GetEntityFieldDefinitions (leafEntityId)
 						 where field.Relation == FieldRelation.Collection
-						 where field.Source == FieldSource.Expression
+						 where field.Source == FieldSource.Value
 						 let fieldId = field.CaptionId
 						 let fieldTargets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
 						 let fieldTargetKeys = new List<DbKey>
@@ -150,6 +155,8 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 		public AbstractEntity Deserialize(EntityData data)
 		{
+			data.ThrowIfNull ("data");
+			
 			Druid leafEntityId = data.EntityKey.EntityId;
 			DbKey rowKey = data.EntityKey.RowKey;
 
