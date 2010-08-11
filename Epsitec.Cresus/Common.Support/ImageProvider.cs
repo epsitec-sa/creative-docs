@@ -304,9 +304,10 @@ namespace Epsitec.Common.Support
 				
 				for (int i = 0; i < assemblies.Length; i++)
 				{
-					object assemblyObject = assemblies[i];
-					
-					if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
+					var assemblyObject = assemblies[i];
+
+					if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
+						(assemblyObject.IsDynamic))
 					{
 						//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 						//	puisqu'elles ont été générées dynamiquement.
@@ -466,9 +467,10 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
-				object assemblyObject = assemblies[i];
+				var assemblyObject = assemblies[i];
 				
-				if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
+				if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
+					(assemblyObject.IsDynamic))
 				{
 					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 					//	puisqu'elles ont été générées dynamiquement.
@@ -561,9 +563,10 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
-				object assemblyObject = assemblies[i];
-				
-				if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
+				var assemblyObject = assemblies[i];
+
+				if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
+					(assemblyObject.IsDynamic))
 				{
 					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 					//	puisqu'elles ont été générées dynamiquement.
