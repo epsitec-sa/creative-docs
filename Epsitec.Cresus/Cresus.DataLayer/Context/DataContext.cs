@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
-			//this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
+			this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
 
 			this.eventLock = new object ();
 
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 				
 				entity.UpdateDataGeneration ();
-				//this.ResaveReferencingFields (entity);
+				this.ResaveReferencingFields (entity);
 			}
 		}
 
@@ -557,94 +557,94 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entitiesToDelete.Clear ();
 		}
-		
-		///// <summary>
-		///// Notifies this instance that all the fields referencing an <see cref="AbstractEntity"/>
-		///// must be persisted again, even if their value has not changed.
-		///// </summary>
-		///// <param name="target">The <see cref="AbstractEntity"/> whose referencing fields must be saved again.</param>
-		//private void ResaveReferencingFields(AbstractEntity target)
-		//{
-		//    foreach (var item in this.GetPossibleReferencers (target))
-		//    {
-		//        AbstractEntity source = item.Key;
-		//        Druid fieldId = item.Value;
 
-		//        this.ResaveReferencingField (source, fieldId, target);
-		//    }
-		//}
+		/// <summary>
+		/// Notifies this instance that all the fields referencing an <see cref="AbstractEntity"/>
+		/// must be persisted again, even if their value has not changed.
+		/// </summary>
+		/// <param name="target">The <see cref="AbstractEntity"/> whose referencing fields must be saved again.</param>
+		private void ResaveReferencingFields(AbstractEntity target)
+		{
+			foreach (var item in this.GetPossibleReferencers (target))
+			{
+				AbstractEntity source = item.Key;
+				Druid fieldId = item.Value;
 
-		///// <summary>
-		///// Notifies this instance that the given field of the given <see cref="AbstractEntity"/> must
-		///// be persisted again if it references another <see cref="AbstractEntity"/>.
-		///// </summary>
-		///// <param name="source">The <see cref="AbstractEntity"/> that contains the referencing field.</param>
-		///// <param name="fieldId">The <see cref="Druid"/> that identifies the referencing field.</param>
-		///// <param name="target">The <see cref="AbstractEntity"/> targeted by the referencing field.</param>
-		//private void ResaveReferencingField(AbstractEntity source, Druid fieldId, AbstractEntity target)
-		//{
-		//    StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
+				this.ResaveReferencingField (source, fieldId, target);
+			}
+		}
 
-		//    bool found;
+		/// <summary>
+		/// Notifies this instance that the given field of the given <see cref="AbstractEntity"/> must
+		/// be persisted again if it references another <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="source">The <see cref="AbstractEntity"/> that contains the referencing field.</param>
+		/// <param name="fieldId">The <see cref="Druid"/> that identifies the referencing field.</param>
+		/// <param name="target">The <see cref="AbstractEntity"/> targeted by the referencing field.</param>
+		private void ResaveReferencingField(AbstractEntity source, Druid fieldId, AbstractEntity target)
+		{
+			StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
 
-		//    switch (field.Relation)
-		//    {
-		//        case FieldRelation.Reference:
-		//            found = source.InternalGetValue (field.Id) == target;
-		//            break;
+			bool found;
 
-		//        case FieldRelation.Collection:
-		//            IList collection = source.InternalGetFieldCollection (field.Id) as IList;
-		//            found = collection.Contains (target);
-		//            break;
+			switch (field.Relation)
+			{
+				case FieldRelation.Reference:
+					found = source.InternalGetValue (field.Id) == target;
+					break;
 
-		//        default:
-		//            throw new System.InvalidOperationException ();
-		//    }
+				case FieldRelation.Collection:
+					IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+					found = collection.Contains (target);
+					break;
 
-		//    if (found)
-		//    {
-		//        this.ResaveReferencingField (source, fieldId);
-		//    }
-		//}
+				default:
+					throw new System.InvalidOperationException ();
+			}
+
+			if (found)
+			{
+				this.ResaveReferencingField (source, fieldId);
+			}
+		}
 
 
-		///// <summary>
-		///// Notifies this instance that the given field of the given <see cref="AbstractEntity"/>
-		///// must be saved again.
-		///// </summary>
-		///// <param name="entity">The <see cref="AbstractEntity"/> that contains the field.</param>
-		///// <param name="fieldId">The field that must be saved again.</param>
-		//private void ResaveReferencingField(AbstractEntity entity, Druid fieldId)
-		//{
-		//    entity.UpdateDataGeneration ();
+		/// <summary>
+		/// Notifies this instance that the given field of the given <see cref="AbstractEntity"/>
+		/// must be saved again.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> that contains the field.</param>
+		/// <param name="fieldId">The field that must be saved again.</param>
+		private void ResaveReferencingField(AbstractEntity entity, Druid fieldId)
+		{
+			entity.UpdateDataGeneration ();
 
-		//    if (!this.fieldsToResave.ContainsKey (entity))
-		//    {
-		//        this.fieldsToResave[entity] = new HashSet<Druid> ();
-		//    }
+			if (!this.fieldsToResave.ContainsKey (entity))
+			{
+				this.fieldsToResave[entity] = new HashSet<Druid> ();
+			}
 
-		//    this.fieldsToResave[entity].Add (fieldId);
-		//}
-		
-		///// <summary>
-		///// Gets the fields that must be persisted again for each <see cref="AbstractEntity"/>.
-		///// </summary>
-		///// <returns>The mapping between the <see cref="AbstractEntity"/> and their fields that must be saved again.</returns>
-		//internal Dictionary<AbstractEntity, HashSet<Druid>> GetFieldsToResave()
-		//{
-		//    this.AssertDataContextIsNotDisposed ();
+			this.fieldsToResave[entity].Add (fieldId);
+		}
 
-		//    return this.fieldsToResave;
-		//}
-		
-		///// <summary>
-		///// Resets the list of fields that must be persisted again.
-		///// </summary>
-		//internal void ClearFieldsToResave()
-		//{
-		//    this.fieldsToResave.Clear ();
-		//}
+		/// <summary>
+		/// Gets the fields that must be persisted again for each <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <returns>The mapping between the <see cref="AbstractEntity"/> and their fields that must be saved again.</returns>
+		internal Dictionary<AbstractEntity, HashSet<Druid>> GetFieldsToResave()
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			return this.fieldsToResave;
+		}
+
+		/// <summary>
+		/// Resets the list of fields that must be persisted again.
+		/// </summary>
+		internal void ClearFieldsToResave()
+		{
+			this.fieldsToResave.Clear ();
+		}
 
 
 		/// <summary>
@@ -1351,7 +1351,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		///// Stores the mapping between the <see cref="AbstractEntity"/> and their fields that must be
 		///// saved again event if their value has not changed.
 		///// </summary>
-		//private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;
+		private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;
 
 
 		/// <summary>

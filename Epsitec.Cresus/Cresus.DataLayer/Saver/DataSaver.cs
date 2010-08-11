@@ -1,15 +1,12 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -253,12 +250,12 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		//internal bool CheckIfFieldMustBeResaved(AbstractEntity entity, Druid fieldId)
-		//{
-		//    var fieldsToResave = this.DataContext.GetFieldsToResave ();
+		internal bool CheckIfFieldMustBeResaved(AbstractEntity entity, Druid fieldId)
+		{
+			var fieldsToResave = this.DataContext.GetFieldsToResave ();
 
-		//    return fieldsToResave.ContainsKey (entity) && fieldsToResave[entity].Contains (fieldId);
-		//}
+			return fieldsToResave.ContainsKey (entity) && fieldsToResave[entity].Contains (fieldId);
+		}
 
 
 	}

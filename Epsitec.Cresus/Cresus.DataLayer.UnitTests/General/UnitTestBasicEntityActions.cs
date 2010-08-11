@@ -102,11 +102,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
-				// TODO This behavior is some kind of a bug. Alfred was not saved because from its point
-				// of view, it has not changed. I'm not sure if a solution can be made for that bug.
-				// Marc
-				Assert.AreEqual (2, alfred.Contacts.Count);
-
+				Assert.AreEqual (3, alfred.Contacts.Count);
 				Assert.AreEqual (6, contacts.Count ());
 			}
 		}

@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				   let fieldId = field.CaptionId
 				   where field.Relation == FieldRelation.Reference
 				   where entity.HasReferenceChanged (fieldId)
-					  //|| this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
+					  || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
 				   select this.CreateUpdateReferenceJob (entity, field.CaptionId);
 		}
 
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				   let fieldId = field.CaptionId
 				   where field.Relation == FieldRelation.Collection
 				   where entity.HasCollectionChanged (fieldId)
-					  //|| this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
+					  || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
 				   select this.CreateUpdateCollectionJob (entity, field.CaptionId);
 		}
 
