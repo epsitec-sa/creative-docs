@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
             };
 
-            this.floatingCaptions = new FloatingCaptionsView()
+            this.seriesCaptions = new SeriesCaptionsView()
             {
                 Anchor = AnchorStyles.All,
                 Parent = chartView,
@@ -168,10 +168,10 @@ namespace Epsitec.Cresus.Graph.Controllers
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
             {
-                floatingCaptions.Visibility = this.ChartSnapshot.ChartOptions.ShowFloatingCaptions;
+                seriesCaptions.Visibility = this.ChartSnapshot.ChartOptions.ShowSeriesCaptions;
             }
 
-			var fixedCaptionsPalette = new AnchoredPalette ()
+			var summaryCaptionsPalette = new AnchoredPalette ()
 			{
 				Anchor = AnchorStyles.TopRight,
 				Margins = new Margins (0, 4, 4, 0),
@@ -184,14 +184,14 @@ namespace Epsitec.Cresus.Graph.Controllers
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
             {
-                fixedCaptionsPalette.Margins = this.ChartSnapshot.ChartOptions.FixedCaptionsPosition;
-                fixedCaptionsPalette.Visibility = this.ChartSnapshot.ChartOptions.ShowFixedCaptions;
+                summaryCaptionsPalette.Margins = this.ChartSnapshot.ChartOptions.SummaryCaptionsPosition;
+                summaryCaptionsPalette.Visibility = this.ChartSnapshot.ChartOptions.ShowSummaryCaptions;
             }
 
 			this.captionView = new CaptionView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = fixedCaptionsPalette
+				Parent = summaryCaptionsPalette
 			};
 
 			this.commandBar = new CommandSelectionBar ()
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.CreateLeftToolButtons ();
                 this.CreateGraphTypeButtons();
-                this.chartOptionsController = new ChartOptionsController (this.commandBar, fixedCaptionsPalette, floatingCaptions);
+                this.chartOptionsController = new ChartOptionsController (this.commandBar, summaryCaptionsPalette, seriesCaptions);
                 this.CreateSnapshotButton ();
 
                 // Copy ChartOptions if available
@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.chartView.Renderer   = null;
 				this.captionView.Captions = null;
-                this.floatingCaptions.Renderer = null;
+                this.seriesCaptions.Renderer = null;
 			}
 			else
 			{
@@ -507,13 +507,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
 				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
-                this.floatingCaptions.Renderer = renderer;
+                this.seriesCaptions.Renderer = renderer;
                 this.rendererOptions = snapshot.RendererOptions;
 			}
 
 			this.chartView.Invalidate ();
 			this.captionView.Invalidate ();
-            this.floatingCaptions.Invalidate ();
+            this.seriesCaptions.Invalidate ();
 		}
 
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
@@ -617,7 +617,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Widget							container;
 		private ChartView						chartView;
 		private CaptionView						captionView;
-        private FloatingCaptionsView            floatingCaptions;
+        private SeriesCaptionsView            seriesCaptions;
 		private GraphDocument					document;
 		private Command							graphType;
 		private ColorStyle						colorStyle;
