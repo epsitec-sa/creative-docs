@@ -22,22 +22,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			data.Add (
-				new SummaryData
-				{
-					Name				= "ArticleCategory",
-					IconUri				= "Data.ArticleCategory",
-					Title				= UIBuilder.FormatText ("Catégorie"),
-					CompactTitle		= UIBuilder.FormatText ("Catégorie"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
-					EntityMarshaler		= this.EntityMarshaler,
-				});
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				data.Add (
+					new SummaryData
+					{
+						Name				= "ArticleCategory",
+						IconUri				= "Data.ArticleCategory",
+						Title				= UIBuilder.FormatText ("Catégorie"),
+						CompactTitle		= UIBuilder.FormatText ("Catégorie"),
+						TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
+						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
+						EntityMarshaler		= this.EntityMarshaler,
+					});
+			}
 		}
 	}
 }

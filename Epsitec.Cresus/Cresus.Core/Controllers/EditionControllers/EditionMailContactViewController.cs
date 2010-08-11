@@ -77,12 +77,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			this.CreateUIComments (data);
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				this.CreateUIComments (data);
+			}
 		}
 
 		protected override EditionStatus GetEditionStatus()

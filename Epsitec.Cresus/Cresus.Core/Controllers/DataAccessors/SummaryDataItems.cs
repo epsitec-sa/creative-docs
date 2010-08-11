@@ -26,31 +26,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public IList<SummaryData> SimpleItems
-		{
-			get
-			{
-				return this.simpleItems;
-			}
-		}
-
-		public IList<SummaryData> EmptyItems
-		{
-			get
-			{
-				return this.emptyItems;
-			}
-		}
-
-		public IList<CollectionAccessor> CollectionAccessors
-		{
-			get
-			{
-				return this.collectionAccessors;
-			}
-		}
-
-
 		public object SyncObject
 		{
 			get
@@ -62,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public void Add(SummaryData data)
 		{
-			int rank = this.EmptyItems.Count + this.SimpleItems.Count;
+			int rank = this.emptyItems.Count + this.simpleItems.Count;
 
 			if (data.Rank == 0)
 			{
@@ -74,12 +49,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			if (data.EntityMarshaler == null)
 			{
 				data.DataType = SummaryDataType.EmptyItem;
-				this.EmptyItems.Add (data);
+				this.emptyItems.Add (data);
 			}
 			else
 			{
 				data.DataType = SummaryDataType.SimpleItem;
-				this.SimpleItems.Add (data);
+				this.simpleItems.Add (data);
 			}
 		}
 
@@ -87,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			System.Diagnostics.Debug.Assert (collectionAccessor.Template != null);
 
-			this.CollectionAccessors.Add (collectionAccessor);
+			this.collectionAccessors.Add (collectionAccessor);
 		}
 
 		

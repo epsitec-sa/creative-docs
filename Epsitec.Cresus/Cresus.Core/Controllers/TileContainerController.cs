@@ -26,15 +26,15 @@ using Epsitec.Common.Support.EntityEngine;
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
 	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
-	public class TileContainerController : System.IDisposable
+	public sealed class TileContainerController : System.IDisposable
 	{
-		public TileContainerController(EntityViewController controller, TileContainer container)
+		private TileContainerController(TileContainer container)
 		{
-			this.controller  = controller;
+			this.controller  = container.Controller as EntityViewController;
 			this.container   = container;
-			this.dataItems   = new SummaryDataItems (controller);
-			this.activeItems = new List<SummaryData> ();
-			this.dataContext = controller.DataContext;
+			this.dataItems   = new SummaryDataItems (this.controller);
+			this.liveItems = new List<SummaryData> ();
+			this.dataContext = this.controller.DataContext;
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
@@ -53,6 +53,46 @@ using Epsitec.Common.Support.EntityEngine;
 			this.refreshTimer.Start ();
 		}
 
+
+		public static TileContainerControllerInitializer Setup(TileContainer container)
+		{
+			return new TileContainerControllerInitializer (new TileContainerController (container));
+		}
+
+
+		public class TileContainerControllerInitializer : System.IDisposable
+		{
+			public TileContainerControllerInitializer(TileContainerController controller)
+			{
+				this.controller = controller;
+			}
+
+			public void Add(SummaryData item)
+			{
+				this.controller.DataItems.Add (item);
+			}
+
+			public void Add(CollectionAccessor item)
+			{
+				this.controller.DataItems.Add (item);
+			}
+
+			public static implicit operator SummaryDataItems(TileContainerControllerInitializer x)
+			{
+				return x.controller.DataItems;
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.controller.GenerateTiles ();
+			}
+
+			#endregion
+
+			private readonly TileContainerController controller;
+		}
 
 		public SummaryDataItems DataItems
 		{
@@ -83,7 +123,7 @@ using Epsitec.Common.Support.EntityEngine;
 				{
 					if (expandWhenSpaceIsAvailable)
 					{
-						var lastCompactItem = this.activeItems.FirstOrDefault (item => item.AutoGroup == false && item.IsCompact);
+						var lastCompactItem = this.liveItems.FirstOrDefault (item => item.AutoGroup == false && item.IsCompact);
 
 						if (lastCompactItem != null)
 						{
@@ -96,7 +136,7 @@ using Epsitec.Common.Support.EntityEngine;
 				{
 					expandWhenSpaceIsAvailable = false;
 					
-					var lastExpandedItem = this.activeItems.LastOrDefault (item => item.AutoGroup == false && !item.IsCompact);
+					var lastExpandedItem = this.liveItems.LastOrDefault (item => item.AutoGroup == false && !item.IsCompact);
 
 					if (lastExpandedItem != null)
 					{
@@ -154,30 +194,30 @@ using Epsitec.Common.Support.EntityEngine;
 
 			this.QueueTasklets ("RefreshCollectionItems",
 				new TaskletJob (() => this.dataItems.RefreshCollectionItems (), TaskletRunMode.Async),
-				new TaskletJob (() => this.RefreshActiveItems (), TaskletRunMode.BeforeAndAfter));
+				new TaskletJob (() => this.RefreshLiveItems (), TaskletRunMode.BeforeAndAfter));
 		}
 		
-		private void RefreshActiveItems()
+		private void RefreshLiveItems()
 		{
 			var currentItems  = new List<SummaryData> (this.dataItems);
-			var obsoleteItems = new List<SummaryData> (this.activeItems.Except (currentItems));
+			var obsoleteItems = new List<SummaryData> (this.liveItems.Except (currentItems));
 
-			this.activeItems.Clear ();
-			this.activeItems.AddRange (currentItems);
+			this.liveItems.Clear ();
+			this.liveItems.AddRange (currentItems);
 
 			TileContainerController.DisposeDataItems (obsoleteItems);
 
-			System.Diagnostics.Debug.WriteLine ("About to RefreshActiveItems on DataContext #" + this.dataContext.UniqueId);
+			System.Diagnostics.Debug.WriteLine ("About to RefreshLiveItems on DataContext #" + this.dataContext.UniqueId);
 
 			this.QueueTasklets ("ExecuteAccessors",
-				new TaskletJob (() => this.activeItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
+				new TaskletJob (() => this.liveItems.ForEach (x => x.ExecuteAccessors ()), TaskletRunMode.Async),
 				new TaskletJob (() => this.RefreshDataTiles (), TaskletRunMode.BeforeAndAfter));
 		}
 
 		private void RefreshDataTiles()
 		{
 			this.refreshNeeded = false;
-			this.SortActiveItems ();
+			this.SortLiveItems ();
 			this.CreateMissingSummaryTiles ();
 			this.RefreshTitleTiles ();
 			this.RefreshTitleTilesFreezeMode ();
@@ -225,14 +265,14 @@ using Epsitec.Common.Support.EntityEngine;
 		}
 
 		
-		private void SortActiveItems()
+		private void SortLiveItems()
 		{
-			this.activeItems.Sort ();
+			this.liveItems.Sort ();
 		}
 
 		private void CreateMissingSummaryTiles()
 		{
-			foreach (var item in this.activeItems)
+			foreach (var item in this.liveItems)
 			{
 				if (item.SummaryTile == null)
 				{
@@ -254,7 +294,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 		private void CreateTitleTileClickHandler(SummaryData item, TitleTile tile)
 		{
-			tile.Clicked += (sender, e) => this.HandleTileClicked (this.activeItems.First (x => x.TitleTile == tile));
+			tile.Clicked += (sender, e) => this.HandleTileClicked (this.liveItems.First (x => x.TitleTile == tile));
 			tile.AddClicked += (sender, e) =>
 				{
 					string itemName = SummaryData.GetNamePrefix (item.Name);
@@ -304,7 +344,7 @@ using Epsitec.Common.Support.EntityEngine;
 			//	Ouvre une vue correspondant à une entité dans une collection.
 			SummaryData sel = null;
 
-			foreach (var x in this.activeItems)
+			foreach (var x in this.liveItems)
 			{
 				if (SummaryData.GetNamePrefix (x.Name) == itemName)
 				{
@@ -318,7 +358,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 			if (sel == null)
 			{
-				var last = this.activeItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
+				var last = this.liveItems.LastOrDefault (x => SummaryData.GetNamePrefix (x.Name) == itemName);
 
 				if (last != null)
 				{
@@ -392,7 +432,7 @@ using Epsitec.Common.Support.EntityEngine;
 			var visualIds = new HashSet<long> ();
 			var tileCache = new Dictionary<string, TitleTile> ();
 
-			foreach (var item in this.activeItems)
+			foreach (var item in this.liveItems)
 			{
 				System.Diagnostics.Debug.Assert (item.SummaryTile != null);
 
@@ -429,7 +469,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 		private void RefreshTitleTilesFreezeMode()
 		{
-			foreach (var item in this.activeItems)
+			foreach (var item in this.liveItems)
 			{
 				if (item.AutoGroup)
 				{
@@ -482,7 +522,7 @@ using Epsitec.Common.Support.EntityEngine;
 		
 		private void RefreshTilesContent()
 		{
-			foreach (var item in this.activeItems)
+			foreach (var item in this.liveItems)
 			{
 				TileContainerController.SetTileContent (item);
 			}
@@ -508,7 +548,7 @@ using Epsitec.Common.Support.EntityEngine;
 		{
 			var visualIds  = new HashSet<long> ();
 
-			foreach (var item in this.activeItems)
+			foreach (var item in this.liveItems)
 			{
 				if (visualIds.Add (item.TitleTile.GetVisualSerialId ()))
 				{
@@ -519,7 +559,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 		private IEnumerable<SummaryTile> GetSummaryTiles()
 		{
-			return this.activeItems.Select (x => x.SummaryTile);
+			return this.liveItems.Select (x => x.SummaryTile);
 		}
 
 		private IEnumerable<SummaryTile> GetCyclicSummaryTiles(bool cyclic)
@@ -534,7 +574,7 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 		
-		private static SummaryTile GetNextActiveSummaryTile(IEnumerable<SummaryTile> tiles)
+		private static SummaryTile GetNextLiveSummaryTile(IEnumerable<SummaryTile> tiles)
 		{
 			return tiles.SkipWhile (x => x.IsSelected == false).Skip (1).FirstOrDefault ();
 		}
@@ -589,7 +629,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 		private bool ActivateNextSummaryTile(IEnumerable<SummaryTile> tiles)
 		{
-			var tile = TileContainerController.GetNextActiveSummaryTile (tiles);
+			var tile = TileContainerController.GetNextLiveSummaryTile (tiles);
 
 			if (tile == null)
 			{
@@ -633,7 +673,7 @@ using Epsitec.Common.Support.EntityEngine;
 		private readonly TileContainer			container;
 		private readonly EntityViewController	controller;
 		private readonly SummaryDataItems		dataItems;
-		private readonly List<SummaryData>		activeItems;
+		private readonly List<SummaryData>		liveItems;
 		private readonly DataContext			dataContext;
 		private readonly Timer					refreshTimer;
 

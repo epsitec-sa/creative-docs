@@ -25,15 +25,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			this.CreateUIInvoice  (data);
-			this.CreateUILines    (data);
-			this.CreateUIBillings (data);
-			this.CreateUIComments (data);
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				this.CreateUIInvoice (data);
+				this.CreateUILines (data);
+				this.CreateUIBillings (data);
+				this.CreateUIComments (data);
+			}
 		}
 
 
