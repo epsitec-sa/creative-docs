@@ -1285,7 +1285,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="sender"/>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not persistent.</exception>
-		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity, new ()
+		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity
 		{
 			sender.ThrowIfNull ("sender");
 			receiver.ThrowIfNull ("receiver");
