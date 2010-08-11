@@ -155,15 +155,25 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				{
 					using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
 					{
-						newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
+						try
+						{
+							newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
 
-						transaction.Commit ();
+							transaction.Commit ();
+						}
+						catch (System.Exception e)
+						{
+							transaction.Rollback ();
+							throw;
+						}
 					}
 
 					done = true;
 				}
 				catch (Database.Exceptions.GenericException e)
 				{
+					
+					
 					if (nbTries <= 25)
 					{
 						int minWaitTime = 10;
