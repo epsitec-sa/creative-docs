@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	public sealed class SeriesDetectionController
 	{
-		public SeriesDetectionController(ChartView chartView, CaptionView summaryCaptionsView, SeriesCaptionsView seriesCaptionsView)
+		public SeriesDetectionController(ChartView chartView, SummaryCaptionsView summaryCaptionsView, SeriesCaptionsView seriesCaptionsView)
 		{
 			this.chartView   = chartView;
 			this.summaryCaptionsView = summaryCaptionsView;
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public event EventHandler<DependencyPropertyChangedEventArgs> ActiveIndexChanged;
 
         private readonly ChartView chartView;
-        private readonly CaptionView summaryCaptionsView;
+        private readonly SummaryCaptionsView summaryCaptionsView;
         private readonly SeriesCaptionsView seriesCaptionsView;
 
 		private int hoverIndex;

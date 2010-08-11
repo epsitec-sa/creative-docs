@@ -4,18 +4,10 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Common.Graph.Widgets
 {
-	public class CaptionView : FrameBox
+	public class SummaryCaptionsView : FrameBox
 	{
-		public CaptionView()
-		{
-		}
-
-
 		public CaptionPainter Captions
 		{
 			get
