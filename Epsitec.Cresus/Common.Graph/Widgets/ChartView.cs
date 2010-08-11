@@ -83,7 +83,7 @@ namespace Epsitec.Common.Graph.Widgets
         /// </summary>
         /// <param name="sender">Object throwing the click</param>
         /// <param name="e">Event data</param>
-        private void OnClicked (object sender, MessageEventArgs e)
+        public void OnClicked (object sender, MessageEventArgs e)
         {
             renderer.OnClicked (sender, e);
         }
