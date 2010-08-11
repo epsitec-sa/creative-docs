@@ -14,16 +14,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	public sealed class SeriesDetectionController
 	{
-		public SeriesDetectionController(ChartView chartView, CaptionView captionView)
+		public SeriesDetectionController(ChartView chartView, CaptionView summaryCaptionsView, SeriesCaptionsView seriesCaptionsView)
 		{
 			this.chartView   = chartView;
-			this.captionView = captionView;
+			this.summaryCaptionsView = summaryCaptionsView;
+            this.seriesCaptionsView = seriesCaptionsView;
 
 			if (this.chartView != null)
-			{
-				this.chartView.MouseMove += this.HandleChartViewMouseMove;
-				this.chartView.Released  += this.HandleChartViewReleased;
-				this.chartView.Exited    += (sender, e) => this.HoverIndex = -1;
+            {
+                this.chartView.MouseMove += this.HandleChartViewMouseMove;
+                this.chartView.Released += this.HandleChartViewReleased;
+                this.chartView.Exited += (sender, e) => this.HoverIndex = -1;
+
+                this.seriesCaptionsView.MouseMove += this.HandleChartViewMouseMove;
+                this.seriesCaptionsView.Released += this.HandleChartViewReleased;
+                this.seriesCaptionsView.Exited += (sender, e) => this.HoverIndex = -1;
 
 				this.chartView.PaintForeground +=
 					delegate (object sender, PaintEventArgs e)
@@ -48,13 +53,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 					};
 			}
 			
-			if (this.captionView != null)
+			if (this.summaryCaptionsView != null)
 			{
-				this.captionView.MouseMove += this.HandleCaptionViewMouseMove;
-				this.captionView.Released  += this.HandleChartViewReleased;
-				this.captionView.Exited    += (sender, e) => this.HoverIndex = -1;
+				this.summaryCaptionsView.MouseMove += this.HandleCaptionViewMouseMove;
+				this.summaryCaptionsView.Released  += this.HandleChartViewReleased;
+				this.summaryCaptionsView.Exited    += (sender, e) => this.HoverIndex = -1;
 				
-				this.captionView.BackgroundPaintCallback =
+				this.summaryCaptionsView.BackgroundPaintCallback =
 					delegate (CaptionPainter painter, int index, Rectangle bounds, IPaintPort port)
 					{
 						Graphics graphics = port as Graphics;
@@ -137,7 +142,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 				else
 				{
-					return Rectangle.Inflate (this.captionView.GetCaptionBounds (this.ActiveIndex), 2, 2);
+					return Rectangle.Inflate (this.summaryCaptionsView.GetCaptionBounds (this.ActiveIndex), 2, 2);
 				}
 			}
 		}
@@ -172,7 +177,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleCaptionViewMouseMove(object sender, MessageEventArgs e)
 		{
-			int index = this.captionView.FindCaptionIndex (e.Point);
+			int index = this.summaryCaptionsView.FindCaptionIndex (e.Point);
 			this.NotifyHover (index);
 		}
 
@@ -193,9 +198,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private IEnumerable<Widget> GetWidgets()
 		{
-			if (this.captionView != null)
+			if (this.summaryCaptionsView != null)
 			{
-				yield return this.captionView;
+				yield return this.summaryCaptionsView;
 			}
 			if (this.chartView != null)
 			{
@@ -226,9 +231,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public event EventHandler<DependencyPropertyChangedEventArgs> HoverIndexChanged;
 		public event EventHandler<DependencyPropertyChangedEventArgs> ActiveIndexChanged;
-		
-		private readonly ChartView chartView;
-		private readonly CaptionView captionView;
+
+        private readonly ChartView chartView;
+        private readonly CaptionView summaryCaptionsView;
+        private readonly SeriesCaptionsView seriesCaptionsView;
 
 		private int hoverIndex;
 		private int activeIndex;
