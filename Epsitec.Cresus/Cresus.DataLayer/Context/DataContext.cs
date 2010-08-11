@@ -14,6 +14,7 @@ using Epsitec.Cresus.DataLayer.Proxies;
 using Epsitec.Cresus.DataLayer.Saver;
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 using Epsitec.Cresus.DataLayer.Schema;
+using Epsitec.Cresus.DataLayer.Serialization;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -44,6 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.EntityContext = new EntityContext ();
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
+			this.SerializationManager = new EntitySerializationManager (this);
 
 			this.EnableNullVirtualization = enableNullVirtualization;
 
@@ -169,6 +171,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 			get;
 			private set;
 		}
+
+
+		/// <summary>
+		/// Gets the <see cref="SerializationManager"/> associated with this instance.
+		/// </summary>
+		internal EntitySerializationManager SerializationManager
+		{
+			get;
+			private set;
+		}
+
 
 		/// <summary>
 		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> created by this

@@ -18,6 +18,10 @@ using System.Linq;
 namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
+	
+	// TODO Comment this class.
+	// Marc
+	
 
 	internal sealed class EntitySerializationManager
 	{
