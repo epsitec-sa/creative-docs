@@ -63,56 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var group = builder.CreateGroup (tile, "Contenu de l'énumération");
 			this.parameterController = new ArticleParameterControllers.ArticleParameterListController (this.tileContainer, this.Entity);
 			this.parameterController.CreateUI (group);
-
-#if false
-			builder.CreateTextField (tile, 0, "Valeur", Marshaler.Create (() => this.Value, x => this.Value = x));
-			builder.CreateTextField (tile, 0, "Description courte", Marshaler.Create (() => this.ShortDescription, x => this.ShortDescription = x));
-			builder.CreateTextFieldMulti (tile, 78, "Description longue", Marshaler.Create (() => this.LongDescription, x => this.LongDescription = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
-#endif
 		}
-
-
-#if false
-		private string Value
-		{
-			get
-			{
-				return this.parameterController.SelectedValue;
-			}
-			set
-			{
-				this.parameterController.SelectedValue = value;
-			}
-		}
-
-		private string ShortDescription
-		{
-			get
-			{
-				return this.parameterController.SelectedShortDescription;
-			}
-			set
-			{
-				this.parameterController.SelectedShortDescription = value;
-			}
-		}
-
-		private string LongDescription
-		{
-			get
-			{
-				return this.parameterController.SelectedLongDescription;
-			}
-			set
-			{
-				this.parameterController.SelectedLongDescription = value;
-			}
-		}
-#endif
 
 
 		protected override EditionStatus GetEditionStatus()

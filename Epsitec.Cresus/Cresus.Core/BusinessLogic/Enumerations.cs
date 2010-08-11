@@ -75,8 +75,16 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 			yield return EnumKeyValues.Create (EnumValueCardinality.Any,        "Zéro, un ou plusieurs");
 			yield return EnumKeyValues.Create (EnumValueCardinality.AtLeastOne, "Au moins un");
-			yield return EnumKeyValues.Create (EnumValueCardinality.ExactlyOne, "Un et un seul");
+			yield return EnumKeyValues.Create (EnumValueCardinality.ExactlyOne, "Exactement un");
 			yield return EnumKeyValues.Create (EnumValueCardinality.ZeroOrOne,  "Un ou aucun");
+		}
+
+		public static IEnumerable<EnumKeyValues<ArticleQuantityType>> GetAllPossibleValueArticleQuantityType()
+		{
+			yield return EnumKeyValues.Create (ArticleQuantityType.Ordered,     "Commandé");
+			yield return EnumKeyValues.Create (ArticleQuantityType.Billed,      "Livré");
+			yield return EnumKeyValues.Create (ArticleQuantityType.Delayed,     "Suivra");
+			yield return EnumKeyValues.Create (ArticleQuantityType.Information, "Information");
 		}
 	}
 }

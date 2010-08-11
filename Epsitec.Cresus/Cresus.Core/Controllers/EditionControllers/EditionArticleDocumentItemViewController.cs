@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.TabIds;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Helpers;
@@ -43,11 +44,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIArticleDefinition (builder);
 				this.CreateUIParameter (builder);
 
+#if false
 				this.CreateUIQuantity (builder);
 				this.CreateUIUnitOfMeasure (builder);
 
 				this.CreateUIDelayedQuantity1 (builder);
 				this.CreateUIDelayedUnitOfMeasure1 (builder);
+#endif
 
 #if false
 				this.CreateUIDelayedQuantity2 (builder);
@@ -58,6 +61,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				builder.CreateFooterEditorTile ();
 			}
+
+			//	Summary:
+			this.TileContainerController = new TileContainerController (this, container);
+			var data = this.TileContainerController.DataItems;
+
+			this.CreateUIQuantities (data);
+
+			this.TileContainerController.GenerateTiles ();
 		}
 
 
@@ -183,6 +194,51 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetPrice,      this.SetPrice));
 			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
 			t.IsReadOnly = true;
+		}
+
+		private void CreateUIQuantities(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "ArticleQuantities",
+					IconUri		 = "Data.ArticleQuantity",
+					Title		 = UIBuilder.FormatText ("Quantités"),
+					CompactTitle = UIBuilder.FormatText ("Quantités"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", data.Controller, this.DataContext);
+
+			template.DefineText        (x => UIBuilder.FormatText (GetArticleQuantitySummary (x)));
+			template.DefineCompactText (x => UIBuilder.FormatText (GetArticleQuantitySummary (x)));
+			template.DefineSetupItem   (SetupArticleQuantity);
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleQuantities, template));
+		}
+
+		private static string GetArticleQuantitySummary(ArticleQuantityEntity quantity)
+		{
+			string type = null;
+			foreach (var q in BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			{
+				if (q.Key == quantity.QuantityType)
+				{
+					type = q.Values[0];
+					break;
+				}
+			}
+
+			string unit = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
+
+			return string.Concat (type, " ", unit);
+		}
+
+		private static void SetupArticleQuantity(ArticleQuantityEntity quantity)
+		{
+			quantity.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
+			quantity.Quantity = 1;
 		}
 
 
