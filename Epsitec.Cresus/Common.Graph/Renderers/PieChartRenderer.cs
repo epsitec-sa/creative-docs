@@ -95,48 +95,40 @@ namespace Epsitec.Common.Graph.Renderers
 
         public override SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
-            foreach (var item in series.Values)
+            // we only show captions if there is only one type of values
+            if (series.Values.Count != 1)
+                return new SeriesCaptionPosition { ShowCaption = false };
+
+            var item = series.Values[0];
+            var label = item.Label;
+            var pie = this.pies.FirstOrDefault(x => x.Label == label);
+
+            if ((pie == null) || (seriesIndex >= pie.Sectors.Count))
+                return new SeriesCaptionPosition { ShowCaption = false };
+
+            var sector = pie.Sectors[seriesIndex];
+            var center = pie.Center + this.PortSize.Location;
+            var radius = pie.Radius;
+
+            // Do not show captions for small angles
+            if ((sector.Angle2 - sector.Angle1) < angleToHide)
+                return new SeriesCaptionPosition { ShowCaption = false };
+
+            // Compute caption center
+            var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
+            var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
+
+            // This part has to be out of the pie
+            if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
             {
-                var label = item.Label;
-                var pie = this.pies.FirstOrDefault(x => x.Label == label);
-
-                if ((pie == null) ||
-                    (seriesIndex >= pie.Sectors.Count))
-                {
-                    continue;
-                }
-
-                var sector = pie.Sectors[seriesIndex];
-                var center = pie.Center + this.PortSize.Location;
-                var radius = pie.Radius;
-
-                // N'affiche pas les légendes pour de petits angles
-                if ((sector.Angle2 - sector.Angle1) < angleToHide)
-                {
-                    continue;
-                }
-
-                var semiAngle = sector.Angle1 + (sector.Angle2 - sector.Angle1) / 2;
-
-                var txtCenter = center + new Point(radius * System.Math.Cos(Math.DegToRad(semiAngle)), radius * System.Math.Sin(Math.DegToRad(semiAngle)));
-
-                // Cette partie doit être décalée
-                if (seriesIndex == this.activeIndex || this.PieRendererOptions.OutParts.Contains (seriesIndex))
-                {
-                    txtCenter.X += radius * (1 - this.radiusProportion) * System.Math.Cos (Math.DegToRad (semiAngle));
-                    txtCenter.Y += radius * (1 - this.radiusProportion) * System.Math.Sin (Math.DegToRad (semiAngle));
-                }
-
-                return new SeriesCaptionPosition ()
-                {
-                    Position = txtCenter,
-                    Angle = semiAngle
-                };
+                txtCenter.X += radius * (1 - this.radiusProportion) * System.Math.Cos (Math.DegToRad (semiAngle));
+                txtCenter.Y += radius * (1 - this.radiusProportion) * System.Math.Sin (Math.DegToRad (semiAngle));
             }
 
             return new SeriesCaptionPosition ()
             {
-                ShowCaption = false
+                Position = txtCenter,
+                Angle = semiAngle
             };
         }
 
