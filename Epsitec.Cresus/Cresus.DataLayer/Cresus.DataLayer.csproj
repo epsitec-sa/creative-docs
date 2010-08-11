@@ -141,6 +141,7 @@
     <Compile Include="Context\EntityChangedEventArgs.cs" />
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
+    <Compile Include="Context\EntitySerializationManager.cs" />
     <Compile Include="Expressions\Operation.cs" />
     <Compile Include="Loader\ExpressionConversion.cs" />
     <Compile Include="Loader\DataLoader.cs" />
