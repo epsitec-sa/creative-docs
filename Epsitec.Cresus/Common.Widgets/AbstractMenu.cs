@@ -186,8 +186,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.Focus ();
 		}
-		
-		public void ShowAsComboList(Widget parent, Drawing.Point pos, Widget button)
+
+		public void ShowAsComboList(Widget parent, Drawing.Point pos, Widget button, Behaviors.MenuBehavior.Animate animate=Behaviors.MenuBehavior.Animate.Yes)
 		{
 			this.AdjustSize ();
 
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.ConnectEventHandlers ();
-			this.Behavior.OpenCombo (window, Behaviors.MenuBehavior.Animate.Yes);
+			this.Behavior.OpenCombo (window, animate);
 			
 			this.Focus ();
 			this.Window.MakeFocused ();

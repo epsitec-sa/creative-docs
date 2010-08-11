@@ -895,7 +895,7 @@ namespace Epsitec.Common.Widgets
 					this.menu.AdjustSize();
 					
 					size      = this.menu.ActualSize;
-					location  = pos;
+					location  = new Point (pos.X, pos.Y+1);
 					animation = Animation.RollDown;
 				}
 				else

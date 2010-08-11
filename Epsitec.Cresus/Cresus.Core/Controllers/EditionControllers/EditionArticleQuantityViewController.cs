@@ -69,12 +69,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Entity.Unit,
 					ValueSetter = x => this.Entity.Unit = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
+					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
 					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
 				});
 		}
+
+		// TODO: Dès qu'il sera possible de connaître l'entité parente, il faudra réactiver le code ci-dessous:
+#if false
+		private IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
+		{
+			//	Retourne les unités appartenant au même groupe que l'article.
+			return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == this.Entity.ArticleDefinition.Units.Category);
+		}
+#endif
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{

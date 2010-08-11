@@ -42,22 +42,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateTabBook (builder);
 
 				this.CreateUIArticleDefinition (builder);
-				this.CreateUIParameter (builder);
-
-#if false
-				this.CreateUIQuantity (builder);
-				this.CreateUIUnitOfMeasure (builder);
-
-				this.CreateUIDelayedQuantity1 (builder);
-				this.CreateUIDelayedUnitOfMeasure1 (builder);
-#endif
-
-#if false
-				this.CreateUIDelayedQuantity2 (builder);
-				this.CreateUIDelayedUnitOfMeasure2 (builder);
-#endif
-
-				this.CreateUIPrice (builder);
+				this.CreateUIParameter         (builder);
+				this.CreateUIDesignation       (builder);
+				this.CreateUIPrice             (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -101,83 +88,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.parameterController.UpdateUI (this.Entity);
 		}
 
-		private void CreateUIUnitOfMeasure(UIBuilder builder)
-		{
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
-				{
-					ValueGetter = () => this.UnitOfMeasure,
-					ValueSetter = x => this.UnitOfMeasure = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
-
-					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
-				});
-		}
-
-		private void CreateUIDelayedUnitOfMeasure1(UIBuilder builder)
-		{
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
-				{
-					ValueGetter = () => this.DelayedUnitOfMeasure1,
-					ValueSetter = x => this.DelayedUnitOfMeasure1 = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure1, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
-
-					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
-				});
-		}
-
-		private void CreateUIDelayedUnitOfMeasure2(UIBuilder builder)
-		{
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
-				{
-					ValueGetter = () => this.DelayedUnitOfMeasure2,
-					ValueSetter = x => this.DelayedUnitOfMeasure2 = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.DelayedUnitOfMeasure2, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
-
-					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
-				});
-		}
-
-		private void CreateUIQuantity(Epsitec.Cresus.Core.UIBuilder builder)
+		private void CreateUIDesignation(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextFieldMulti (tile, 80, "Désignation", Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			FrameBox group = builder.CreateGroup (tile, "Quantité livrée");
-			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetQuantity, this.SetQuantity));
-		}
-
-		private void CreateUIDelayedQuantity1(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			FrameBox group = builder.CreateGroup (tile, "Quantité livrée ultérieurement et date");
-			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetDelayedQuantity1, this.SetDelayedQuantity1));
-			builder.CreateTextField (group, DockStyle.Fill,  0, Marshaler.Create (this.GetDelayedDate1, this.SetDelayedDate1));
-		}
-
-		private void CreateUIDelayedQuantity2(Epsitec.Cresus.Core.UIBuilder builder)
-		{
-			var tile = builder.CreateEditionTile ();
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			FrameBox group = builder.CreateGroup (tile, "Deuxième quantité livrée ultérieurement et date");
-			builder.CreateTextField (group, DockStyle.Left, 60, Marshaler.Create (this.GetDelayedQuantity2, this.SetDelayedQuantity2));
-			builder.CreateTextField (group, DockStyle.Fill,  0, Marshaler.Create (this.GetDelayedDate2, this.SetDelayedDate2));
 		}
 
 		private void CreateUIPrice(Epsitec.Cresus.Core.UIBuilder builder)
@@ -240,30 +155,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
-		{
-			//	Retourne les unités appartenant au même groupe que l'article.
-#if false
-			//	Version normale :
-			var fullList = CoreProgram.Application.Data.GetUnitOfMeasure ();
-			var groupList = new List<UnitOfMeasureEntity> ();
-
-			foreach (var uom in fullList)
-			{
-				if (uom.Category == this.Entity.ArticleDefinition.Units.Category)
-				{
-					groupList.Add (uom);
-				}
-			}
-
-			return groupList;
-#else
-			//	With lambda expression and query operator :
-			return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == this.Entity.ArticleDefinition.Units.Category);
-#endif
-		}
-
-
 		private ArticleDefinitionEntity ArticleDefinition
 		{
 			get
@@ -276,7 +167,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					this.Entity.ArticleDefinition = value;
 
-					//?this.SetQuantity (1);
 					this.UnitOfMeasure = value.BillingUnit;
 					this.SetPrice (this.GetArticlePrice ());
 
@@ -300,30 +190,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		private UnitOfMeasureEntity DelayedUnitOfMeasure1
-		{
-			get
-			{
-				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 0);
-			}
-			set
-			{
-				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
-			}
-		}
-
-		private UnitOfMeasureEntity DelayedUnitOfMeasure2
-		{
-			get
-			{
-				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 1);
-			}
-			set
-			{
-				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
-			}
-		}
-
 
 		private string GetArticleDescription()
 		{
@@ -336,126 +202,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.Entity.ReplacementText = value;
 			}
-		}
-
-
-		private decimal? GetQuantity()
-		{
-			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Billed, 0);
-		}
-
-
-		private void SetQuantity(decimal? value)
-		{
-			this.SetQuantity (BusinessLogic.ArticleQuantityType.Billed, 0, value);
-		}
-
-
-		private decimal? GetDelayedQuantity1()
-		{
-			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 0);
-		}
-
-
-		private void SetDelayedQuantity1(decimal? value)
-		{
-			this.SetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
-		}
-
-
-		private decimal? GetDelayedQuantity2()
-		{
-			return this.GetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 1);
-		}
-
-
-		private void SetDelayedQuantity2(decimal? value)
-		{
-			this.SetQuantity (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
-		}
-
-
-		private Date? GetDelayedDate1()
-		{
-			return this.GetDate (BusinessLogic.ArticleQuantityType.Delayed, 0);
-		}
-
-		private void SetDelayedDate1(Date? value)
-		{
-			this.SetDate (BusinessLogic.ArticleQuantityType.Delayed, 0, value);
-		}
-
-
-		private Date? GetDelayedDate2()
-		{
-			return this.GetDate (BusinessLogic.ArticleQuantityType.Delayed, 1);
-		}
-
-		private void SetDelayedDate2(Date? value)
-		{
-			this.SetDate (BusinessLogic.ArticleQuantityType.Delayed, 1, value);
-		}
-
-
-		private decimal? GetQuantity(BusinessLogic.ArticleQuantityType quantityType, int rank)
-		{
-			foreach (var quantity in this.Entity.ArticleQuantities)
-			{
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					if (quantity.Quantity == 0)
-					{
-						return null;
-					}
-					else
-					{
-						return quantity.Quantity;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		private void SetQuantity(BusinessLogic.ArticleQuantityType quantityType, int rank, decimal? value)
-		{
-			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
-			{
-				var quantity = this.Entity.ArticleQuantities[i];
-
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					if (value.HasValue)
-					{
-						quantity.Quantity = value.Value;
-					}
-					else
-					{
-						quantity.Quantity = 0;
-					}
-
-					if (IsEmpty (quantity))
-					{
-						this.Entity.ArticleQuantities.RemoveAt (i);
-					}
-
-					this.UpdatePrices ();
-					return;
-				}
-			}
-
-			if (value.HasValue)
-			{
-				var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
-
-				newQuantity.QuantityType = quantityType;
-				newQuantity.Quantity     = value.Value;
-				newQuantity.Unit         = this.Entity.ArticleDefinition.BillingUnit;
-
-				this.Entity.ArticleQuantities.Add (newQuantity);
-			}
-
-			this.UpdatePrices ();
 		}
 
 
@@ -505,53 +251,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.tileContainer.UpdateAllWidgets ();
 			}
-		}
-
-
-		private Date? GetDate(BusinessLogic.ArticleQuantityType quantityType, int rank)
-		{
-			foreach (var quantity in this.Entity.ArticleQuantities)
-			{
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					return quantity.ExpectedDate;
-				}
-			}
-
-			return null;
-		}
-
-		private void SetDate(BusinessLogic.ArticleQuantityType quantityType, int rank, Date? value)
-		{
-			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
-			{
-				var quantity = this.Entity.ArticleQuantities[i];
-
-				if (quantity.QuantityType == quantityType && rank-- == 0)
-				{
-					quantity.ExpectedDate = value;
-
-					if (IsEmpty (quantity))
-					{
-						this.Entity.ArticleQuantities.RemoveAt (i);
-
-						this.tileContainer.UpdateAllWidgets ();
-					}
-
-					return;
-				}
-			}
-
-			var newQuantity = this.DataContext.CreateEntity<ArticleQuantityEntity> ();
-
-			newQuantity.QuantityType = quantityType;
-			newQuantity.Quantity     = 1;
-			newQuantity.Unit         = this.Entity.ArticleDefinition.BillingUnit;
-			newQuantity.ExpectedDate = value;
-
-			this.Entity.ArticleQuantities.Add (newQuantity);
-
-			this.tileContainer.UpdateAllWidgets ();
 		}
 
 

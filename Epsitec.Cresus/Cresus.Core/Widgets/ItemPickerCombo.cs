@@ -169,11 +169,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.menu.AutoDispose = true;
-			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point (0, 0)), this.Button);
+			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point (0, 0)), this.Button, Common.Widgets.Behaviors.MenuBehavior.Animate.No);
 
 			if (this.scrollList != null)
 			{
-				this.scrollList.SelectedItemIndex = this.MapIndexToComboList (this.SelectedItemIndex);
 				this.scrollList.ShowSelected (ScrollShowMode.Center);
 			}
 
