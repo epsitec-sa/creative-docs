@@ -161,9 +161,12 @@ namespace Epsitec.Cresus.Graph.Controllers
             this.seriesCaptions = new SeriesCaptionsView()
             {
                 Anchor = AnchorStyles.All,
-                Parent = chartView,
+                Parent = chartSurface,
                 Visibility = this.IsStandalone
             };
+
+            // Handling the mouse click, passing it to the ChartView
+            this.seriesCaptions.Clicked += this.chartView.OnClicked;
 
             // Loading a snapshot with available options
             if (this.ChartSnapshot != null)
