@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Graph.Controllers
                     this.ChartOptions.SummaryCaptionsPosition = (Margins)e.NewValue;
                 };
 
-            this.SetupUI(commandBar, summaryCaptions, seriesCaptions);
+            this.SetupUI(commandBar);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Graph.Controllers
             }
         }
 
-        private void SetupUI (CommandSelectionBar commandBar, AnchoredPalette summaryCaptions, SeriesCaptionsView seriesCaptions)
+        private void SetupUI (CommandSelectionBar commandBar)
         {
             new Separator()
             {
