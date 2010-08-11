@@ -124,6 +124,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
+    <Compile Include="TextFormater.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
     <Compile Include="Data\ArticleCategoryRepository.cs" />
     <Compile Include="Entities\AbstractArticleParameterDefinitionEntity1.cs" />

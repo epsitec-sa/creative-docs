@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return UIBuilder.FormatText ("Client", this.entity.IdA).ToSimpleText ();
+				return TextFormater.FormatText ("Client", this.entity.IdA).ToSimpleText ();
 			}
 		}
 
@@ -122,13 +122,13 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Firstname, x.Lastname).ToString ();
+				text = TextFormater.FormatText ("N°", this.entity.IdA, "-", x.Firstname, x.Lastname).ToString ();
 			}
 
 			if (this.entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-				text = UIBuilder.FormatText ("N°", this.entity.IdA, "-", x.Name).ToString ();
+				text = TextFormater.FormatText ("N°", this.entity.IdA, "-", x.Name).ToString ();
 			}
 
 			var band = new TextBand ();
@@ -146,13 +146,13 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = UIBuilder.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate).ToString ();
+				text = TextFormater.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate).ToString ();
 			}
 
 			if (this.entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-				text = UIBuilder.FormatText (x.Name).ToString ();
+				text = TextFormater.FormatText (x.Name).ToString ();
 			}
 
 			var band = new TextBand ();
@@ -215,8 +215,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as MailContactEntity;
 
-					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, UIBuilder.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name).ToString ());
+					table.SetText (0, index, TextFormater.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, TextFormater.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name).ToString ());
 					table.SetText (2, index, x.Address.Location.PostalCode);
 					table.SetText (3, index, x.Address.Location.Name);
 					table.SetText (4, index, x.Address.Location.Country.Name);
@@ -270,9 +270,9 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as TelecomContactEntity;
 
-					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, UIBuilder.FormatText (x.TelecomType.Name).ToString ());
-					table.SetText (2, index, UIBuilder.FormatText (x.Number).ToString ());
+					table.SetText (0, index, TextFormater.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, TextFormater.FormatText (x.TelecomType.Name).ToString ());
+					table.SetText (2, index, TextFormater.FormatText (x.Number).ToString ());
 					index++;
 				}
 			}
@@ -321,8 +321,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as UriContactEntity;
 
-					table.SetText (0, index, UIBuilder.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, UIBuilder.FormatText (x.Uri).ToString ());
+					table.SetText (0, index, TextFormater.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
+					table.SetText (1, index, TextFormater.FormatText (x.Uri).ToString ());
 					index++;
 				}
 			}

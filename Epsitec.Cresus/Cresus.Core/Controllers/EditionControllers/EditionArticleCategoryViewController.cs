@@ -52,10 +52,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateWarning               (tile);
 			builder.CreateTextField             (tile, 0, "Nom",                    Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à l'achat",		Marshaler.Create (this.Entity, x => x.DefaultInputVatCode, (x, v) => x.DefaultInputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à la vente",	Marshaler.Create (this.Entity, x => x.DefaultOutputVatCode, (x, v) => x.DefaultOutputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à l'achat",		Marshaler.Create (this.Entity, x => x.DefaultInputVatCode, (x, v) => x.DefaultInputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => TextFormater.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Code TVA à la vente",	Marshaler.Create (this.Entity, x => x.DefaultOutputVatCode, (x, v) => x.DefaultOutputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => TextFormater.FormatText (x.Values[0], "-", x.Values[1]));
 			builder.CreateTextField             (tile, 0, "Numéro TVA",             Marshaler.Create (() => this.Entity.VatNumber, x => this.Entity.VatNumber = x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Type d'article",         Marshaler.Create (this.Entity, x => x.ArticleType, (x, v) => x.ArticleType = v), BusinessLogic.Enumerations.GetAllPossibleArticleTypes (), x => UIBuilder.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Type d'article",         Marshaler.Create (this.Entity, x => x.ArticleType, (x, v) => x.ArticleType = v), BusinessLogic.Enumerations.GetAllPossibleArticleTypes (), x => TextFormater.FormatText (x.Values[0]));
 		}
 	}
 }

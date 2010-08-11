@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA", Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => UIBuilder.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA", Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetAllPossibleVatCodes (), x => TextFormater.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")")
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")")
 				});
 		}
 
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
 				});
 		}
 
@@ -124,15 +124,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup    = true,
 					Name		 = "ArticleGroup",
 					IconUri		 = "Data.ArticleGroup",
-					Title		 = UIBuilder.FormatText ("Groupes d'articles"),
-					CompactTitle = UIBuilder.FormatText ("Groupes"),
+					Title		 = TextFormater.FormatText ("Groupes d'articles"),
+					CompactTitle = TextFormater.FormatText ("Groupes"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroup", data.Controller, this.DataContext);
 
-			template.DefineText (x => UIBuilder.FormatText (x.Name));
-			template.DefineCompactText (x => UIBuilder.FormatText (x.Name));
+			template.DefineText (x => TextFormater.FormatText (x.Name));
+			template.DefineCompactText (x => TextFormater.FormatText (x.Name));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleGroups, template));
 		}
@@ -145,15 +145,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup    = true,
 					Name		 = "ArticleParameterDefinition",
 					IconUri		 = "Data.ArticleParameter",
-					Title		 = UIBuilder.FormatText ("Paramètres"),
-					CompactTitle = UIBuilder.FormatText ("Paramètres"),
+					Title		 = TextFormater.FormatText ("Paramètres"),
+					CompactTitle = TextFormater.FormatText ("Paramètres"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
 			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", data.Controller, this.DataContext);
 
-			template.DefineText (x => UIBuilder.FormatText (GetParameterSummary (x)));
-			template.DefineCompactText (x => UIBuilder.FormatText (GetParameterSummary (x)));
+			template.DefineText (x => TextFormater.FormatText (GetParameterSummary (x)));
+			template.DefineCompactText (x => TextFormater.FormatText (GetParameterSummary (x)));
 			template.DefineCreateItem (this.CreateParameter);  // le bouton [+] crée une ligne d'article
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));

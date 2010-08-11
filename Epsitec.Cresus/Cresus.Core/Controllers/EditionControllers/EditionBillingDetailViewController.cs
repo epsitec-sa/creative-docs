@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetPaymentModes (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name)
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
 				});
 		}
 

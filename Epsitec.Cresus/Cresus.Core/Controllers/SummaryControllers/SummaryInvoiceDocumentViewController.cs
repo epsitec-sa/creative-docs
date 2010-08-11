@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "InvoiceDocument",
 					IconUri				= "Data.InvoiceDocument",
-					Title				= UIBuilder.FormatText ("Facture"),
-					CompactTitle		= UIBuilder.FormatText ("Facture"),
+					Title				= TextFormater.FormatText ("Facture"),
+					CompactTitle		= TextFormater.FormatText ("Facture"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => InvoiceDocumentHelper.GetSummary (x)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("N°", x.IdA)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("N°", x.IdA)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
@@ -58,15 +58,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "DocumentItem",
 					IconUri		 = "Data.DocumentItems",
-					Title		 = UIBuilder.FormatText ("Lignes"),
-					CompactTitle = UIBuilder.FormatText ("Lignes"),
+					Title		 = TextFormater.FormatText ("Lignes"),
+					CompactTitle = TextFormater.FormatText ("Lignes"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext);
 
-			template.DefineText           (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
-			template.DefineCompactText    (x => UIBuilder.FormatText (GetDocumentItemSummary (x)));
+			template.DefineText           (x => TextFormater.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCompactText    (x => TextFormater.FormatText (GetDocumentItemSummary (x)));
 			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
 			template.Filter = LineFilter;
@@ -82,15 +82,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "BillingDetails",
 					IconUri		 = "Data.BillingDetails",
-					Title		 = UIBuilder.FormatText ("Facturation"),
-					CompactTitle = UIBuilder.FormatText ("Facturation"),
+					Title		 = TextFormater.FormatText ("Facturation"),
+					CompactTitle = TextFormater.FormatText ("Facturation"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext);
 			
-			template.DefineText        (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineCompactText (x => UIBuilder.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineText        (x => TextFormater.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineCompactText (x => TextFormater.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 			template.DefineSetupItem   (SetupBillingDetails);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
@@ -285,11 +285,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (ratio == null)
 			{
-				return UIBuilder.FormatText (amount, title).ToString ();
+				return TextFormater.FormatText (amount, title).ToString ();
 			}
 			else
 			{
-				return UIBuilder.FormatText (amount, ratio, title).ToString ();
+				return TextFormater.FormatText (amount, ratio, title).ToString ();
 			}
 		}
 

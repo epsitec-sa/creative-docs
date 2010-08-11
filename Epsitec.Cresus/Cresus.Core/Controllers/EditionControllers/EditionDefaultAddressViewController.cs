@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.Name, "(", x.Code, ")"),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}
 
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
 
 					ToTextArrayConverter     = x => new string[] { x.PostalCode, x.Name },
-					ToFormattedTextConverter = x => UIBuilder.FormatText (x.PostalCode, x.Name),
+					ToFormattedTextConverter = x => TextFormater.FormatText (x.PostalCode, x.Name),
 				});
 		}
 	}
