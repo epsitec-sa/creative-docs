@@ -83,9 +83,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
+			this.UpdateText ();
+
 			if (dirty)
 			{
-				this.UpdateText ();
 				this.OnMultiSelectionChanged ();
 			}
 		}
@@ -102,9 +103,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
+			this.UpdateText ();
+
 			if (dirty)
 			{
-				this.UpdateText ();
 				this.OnMultiSelectionChanged ();
 			}
 		}
@@ -289,14 +291,23 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
 				{
-					if (sels.Contains (index))
+					if (index == 0)
 					{
-						this.RemoveSelection (new int[] { index });
+						this.ClearSelection ();
 					}
 					else
 					{
-						this.ClearSelection ();
-						this.AddSelection (new int[] { index });
+						index--;
+
+						if (sels.Contains (index))
+						{
+							this.RemoveSelection (new int[] { index });
+						}
+						else
+						{
+							this.ClearSelection ();
+							this.AddSelection (new int[] { index });
+						}
 					}
 				}
 				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
@@ -327,6 +338,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			var sel = this.GetSortedSelection ();
 
+			if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
+			{
+				string icon;
+
+				if (sel.Count == 0)
+				{
+					icon = "Button.RadioYes";
+				}
+				else
+				{
+					icon = "Button.RadioNo";
+				}
+
+				list.Add (null, string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", "Aucun"));
+			}
+
 			for (int i = 0; i < this.items.Count; i++)
 			{
 				string name = this.items.GetKey (i);
@@ -339,34 +366,35 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				string icon;
 
-				if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne)
+				if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
+					this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
 				{
 					if (sel.Contains (i))
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.RadioYes", -4);
+						icon = "Button.RadioYes";
 					}
 					else
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.RadioNo", -4);
+						icon = "Button.RadioNo";
 					}
 				}
 				else
 				{
 					if (sel.Contains (i))
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.CheckYes", -4);
+						icon = "Button.CheckYes";
 					}
 					else
 					{
-						icon = Misc.GetResourceIconImageTag ("Button.CheckNo", -4);
+						icon = "Button.CheckNo";
 					}
 				}
 
-				list.Add (name, string.Concat (icon, " ", text));
+				list.Add (name, string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text));
 			}
 		}
 
-		private void UpdateText()
+		public void UpdateText()
 		{
 			var sels = this.GetSortedSelection ();
 			var list = new List<string> ();
@@ -374,6 +402,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			foreach (int sel in sels)
 			{
 				list.Add (this.items[sel]);
+			}
+
+			if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne && list.Count == 0)
+			{
+				list.Add ("Aucun");
 			}
 
 			this.Text = Misc.Join (this.MultipleSelectionTextSeparator, list);
