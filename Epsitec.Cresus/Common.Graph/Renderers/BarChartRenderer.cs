@@ -79,6 +79,9 @@ namespace Epsitec.Common.Graph.Renderers
         /// </summary>
         public override SeriesCaptionPosition GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
         {
+            if (series.Values.Count != 1)
+                return new SeriesCaptionPosition () { ShowCaption = false };
+
             using (Path path = this.CreateSurfacePath(series, seriesIndex))
             {
                 PathElement[] elems;
@@ -86,7 +89,7 @@ namespace Epsitec.Common.Graph.Renderers
 
                 path.GetElements(out elems, out points);
 
-                double minX = 99999;
+                double minX = double.MaxValue;
                 double maxX = 0;
                 double maxY = 0;
 
