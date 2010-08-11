@@ -90,6 +90,7 @@
     <Compile Include="Data\Dimension.cs" />
     <Compile Include="Data\DimensionVector.cs" />
     <Compile Include="Data\DataTable.cs" />
+    <Compile Include="Data\SeriesCaptionPosition.cs" />
     <Compile Include="Renderers\GeoChartRenderer.cs" />
     <Compile Include="Widgets\SeriesCaptionsView.cs" />
     <Compile Include="PaintLayer.cs" />

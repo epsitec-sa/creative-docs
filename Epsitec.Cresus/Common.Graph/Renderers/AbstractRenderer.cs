@@ -360,7 +360,7 @@ namespace Epsitec.Common.Graph.Renderers
         /// <param name="seriesIndex">Numéro de la série</param>
         /// <returns>Position centrale où afficher la légende.
         /// Peut retourner Point.Zero pour empècher d'afficher la légende.</returns>
-        public abstract Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex);
+        public abstract SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex);
 
         protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);
 

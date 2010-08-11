@@ -77,7 +77,7 @@ namespace Epsitec.Common.Graph.Renderers
         /// <summary>
         /// Retourne la position de la légende en haut d'une barre, centrée.
         /// </summary>
-        public override Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
+        public override SeriesCaptionPosition GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
         {
             using (Path path = this.CreateSurfacePath(series, seriesIndex))
             {
@@ -101,7 +101,10 @@ namespace Epsitec.Common.Graph.Renderers
                     maxY = System.Math.Max(maxY, p.Y);
                 }
 
-                return new Point(minX + (maxX - minX) / 2, maxY + 5);
+                return new SeriesCaptionPosition ()
+                {
+                    Position = new Point (minX + (maxX - minX) / 2, maxY + 5)
+                };
             }
         }
 

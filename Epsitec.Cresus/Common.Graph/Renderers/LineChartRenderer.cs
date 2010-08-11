@@ -86,11 +86,14 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
         /// <summary>
-        /// Retourne le point Zero pour éviter d'afficher les légendes flottantes.
+        /// Does not show these captions
         /// </summary>
-        public override Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
+        public override SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
-            return new Point(0, 0);
+            return new SeriesCaptionPosition ()
+            {
+                ShowCaption = false
+            };
         }
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)

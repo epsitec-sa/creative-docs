@@ -18,16 +18,16 @@ namespace Epsitec.Common.Graph.Widgets
             var i = 0;
             foreach (var item in Renderer.SeriesItems)
             {
-                var point = Renderer.GetSeriesCaptionPosition(item, i);
+                var position = Renderer.GetSeriesCaptionPosition(item, i);
 
-                if (!point.IsZero)
+                if (position.ShowCaption)
                 {
                     var txt = DataCube.CleanUpLabel (item.Label);
                     var txtWidth = Renderer.Captions.Style.GetTextWidth (txt);
                     var txtHeight = Renderer.Captions.Style.GetTextLineHeight ();
                     var offset = Renderer.Captions.Style.GetTextLineOffset ();
 
-                    using (var r = new Path(new Rectangle(point.X - txtWidth / 2 - 2, point.Y - offset.Y, txtWidth + 4, txtHeight)))
+                    using (var r = new Path (new Rectangle (position.Position.X - txtWidth / 2 - 2, position.Position.Y - offset.Y, txtWidth + 4, txtHeight)))
                     {
                         graphics.Color = Color.FromBrightness(1);
                         graphics.PaintSurface(r);
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Graph.Widgets
                     }
 
                     graphics.Color = style.FontColor;
-                    graphics.PaintText(point.X - txtWidth / 2, point.Y, txt, style.Font, style.FontSize);
+                    graphics.PaintText (position.Position.X - txtWidth / 2, position.Position.Y, txt, style.Font, style.FontSize);
                 }
 
                 ++i;

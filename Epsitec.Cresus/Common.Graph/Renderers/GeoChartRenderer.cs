@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using Epsitec.BingMapsWrapper;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -64,9 +65,15 @@ namespace Epsitec.Common.Graph.Renderers
             return new Path(new Epsitec.Common.Drawing.Rectangle(0, 0, 200, 300));
         }
 
-        public override Point GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
+        /// <summary>
+        /// Does not show these captions
+        /// </summary>
+        public override SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
-            return new Point ();
+            return new SeriesCaptionPosition ()
+            {
+                ShowCaption = false
+            };
         }
     
         protected override void Render (IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
