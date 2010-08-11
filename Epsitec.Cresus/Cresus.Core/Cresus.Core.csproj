@@ -341,10 +341,10 @@
     <EmbeddedResource Include="Images\Data.ArticleCategory.icon" />
     <EmbeddedResource Include="Images\Data.ArticleGroup.icon" />
     <EmbeddedResource Include="Images\Data.ArticleParameter.icon" />
-    <EmbeddedResource Include="Images\Button.Check.No.icon" />
-    <EmbeddedResource Include="Images\Button.Check.Yes.icon" />
-    <EmbeddedResource Include="Images\Button.Radio.No.icon" />
-    <EmbeddedResource Include="Images\Button.Radio.Yes.icon" />
+    <EmbeddedResource Include="Images\Button.CheckNo.icon" />
+    <EmbeddedResource Include="Images\Button.CheckYes.icon" />
+    <EmbeddedResource Include="Images\Button.RadioNo.icon" />
+    <EmbeddedResource Include="Images\Button.RadioYes.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
