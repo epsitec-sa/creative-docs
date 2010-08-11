@@ -64,7 +64,7 @@ namespace Epsitec.Common.Graph.Renderers
             return new Path(new Epsitec.Common.Drawing.Rectangle(0, 0, 200, 300));
         }
 
-        public override Point GetFloatingLabelPosition (Data.ChartSeries series, int seriesIndex)
+        public override Point GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
             return new Point ();
         }

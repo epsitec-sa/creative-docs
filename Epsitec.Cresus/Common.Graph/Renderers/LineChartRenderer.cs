@@ -88,7 +88,7 @@ namespace Epsitec.Common.Graph.Renderers
         /// <summary>
         /// Retourne le point Zero pour éviter d'afficher les légendes flottantes.
         /// </summary>
-        public override Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex)
+        public override Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
         {
             return new Point(0, 0);
         }
