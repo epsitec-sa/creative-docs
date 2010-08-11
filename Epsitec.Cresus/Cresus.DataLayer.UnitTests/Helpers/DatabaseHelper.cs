@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 
 			for (int i = 0; i < number; i++)
 			{
-				roles[i] = DatabaseHelper.CreateContactRole (dataContext, "name" + i);
+				roles[i] = DatabaseHelper.CreateContactRole (dataContext, "name" + i, i);
 			}
 
 			return roles;
@@ -390,11 +390,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 		}
 
 
-		public static ContactRoleEntity CreateContactRole(DataContext dataContext, string name)
+		public static ContactRoleEntity CreateContactRole(DataContext dataContext, string name, int? rank)
 		{
 			ContactRoleEntity contactRole = dataContext.CreateEntity<ContactRoleEntity> ();
 
 			contactRole.Name = name;
+			contactRole.Rank = rank;
 
 			return contactRole;
 		}
