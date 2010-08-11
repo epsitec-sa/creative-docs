@@ -93,7 +93,7 @@ namespace Epsitec.Common.Graph.Renderers
             return path;
 		}
 
-        public override Point GetFloatingLabelPosition(Data.ChartSeries series, int seriesIndex)
+        public override Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
         {
             foreach (var item in series.Values)
             {

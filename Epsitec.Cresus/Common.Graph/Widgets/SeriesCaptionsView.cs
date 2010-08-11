@@ -18,7 +18,7 @@ namespace Epsitec.Common.Graph.Widgets
             var i = 0;
             foreach (var item in Renderer.SeriesItems)
             {
-                var point = Renderer.GetFloatingLabelPosition(item, i);
+                var point = Renderer.GetSeriesCaptionPosition(item, i);
 
                 if (!point.IsZero)
                 {
