@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -592,6 +592,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		/// <summary>
+		/// Gets a value indicating whether parameters were defined for this text layout.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this text layout has parameters; otherwise, <c>false</c>.
+		/// </value>
 		public bool HasParameters
 		{
 			get
@@ -600,6 +606,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the parameters as a read-only dictionary of code/value pairs. See method
+		/// <see cref="SetParameter"/> if you need to define or clear some parameters.
+		/// </summary>
+		/// <value>The parameters.</value>
 		public IDictionary<string, string> Parameters
 		{
 			get
@@ -610,8 +621,30 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void SetParameter(string key, string value)
+		/// <summary>
+		/// Sets a default parameter for the <c>&lt;param code="..."/&gt;</c> element, which will
+		/// be used if no <c>value</c> attribute was specified in the XML <c>param</c> element.
+		/// </summary>
+		/// <param name="code">The code.</param>
+		/// <param name="value">The value (or <c>null</c> to clear the value).</param>
+		public void SetParameter(string code, string value)
 		{
+			if (value == null)
+            {
+				if ((this.parameters != null) &&
+					(this.parameters.ContainsKey (code)))
+                {
+					this.parameters.Remove (code);
+					
+					if (this.parameters.Count == 0)
+					{
+						this.parameters = null;
+					}
+
+					return;
+                }
+            }
+			
 			if (this.parameters == null)
 			{
 				this.parameters = new Dictionary<string, string> ();
@@ -619,13 +652,13 @@ namespace Epsitec.Common.Widgets
 
 			string oldValue;
 
-			if ((this.parameters.TryGetValue (key, out oldValue)) &&
+			if ((this.parameters.TryGetValue (code, out oldValue)) &&
 				(oldValue != value))
 			{
 				return;
 			}
 
-			this.parameters[key] = value;
+			this.parameters[code] = value;
 			
 			this.MarkContentsAsDirty ();
 			this.UpdateEmbedderGeometry ();
