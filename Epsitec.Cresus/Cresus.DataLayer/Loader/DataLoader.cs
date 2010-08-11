@@ -43,15 +43,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private DbInfrastructure DbInfrastructure
-		{
-			get
-			{
-				return this.DataContext.DbInfrastructure;
-			}
-		}
-
-
 		private LoaderQueryGenerator LoaderQueryGenerator
 		{
 			get;
@@ -64,15 +55,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			get
 			{
 				return this.DataContext.EntityContext;
-			}
-		}
-
-
-		private SchemaEngine SchemaEngine
-		{
-			get
-			{
-				return this.DataContext.SchemaEngine;
 			}
 		}
 
