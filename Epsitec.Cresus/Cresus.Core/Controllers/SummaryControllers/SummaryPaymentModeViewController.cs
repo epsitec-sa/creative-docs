@@ -22,22 +22,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			data.Add (
-				new SummaryData
-				{
-					Name				= "PaymentMode",
-					IconUri				= "Data.PaymentMode",
-					Title				= UIBuilder.FormatText ("Mode de paiement"),
-					CompactTitle		= UIBuilder.FormatText ("Mode de paiement"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Code: ", x.Code, "\n", "Résumé: ", x.Name, "\n", "Description: ", x.Description, "\n", "Compte: ", x.BookAccount)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
-					EntityMarshaler		= this.EntityMarshaler,
-				});
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				data.Add (
+					new SummaryData
+					{
+						Name				= "PaymentMode",
+						IconUri				= "Data.PaymentMode",
+						Title				= UIBuilder.FormatText ("Mode de paiement"),
+						CompactTitle		= UIBuilder.FormatText ("Mode de paiement"),
+						TextAccessor		= Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText ("Code: ", x.Code, "\n", "Résumé: ", x.Name, "\n", "Description: ", x.Description, "\n", "Compte: ", x.BookAccount)),
+						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => UIBuilder.FormatText (x.Name)),
+						EntityMarshaler		= this.EntityMarshaler,
+					});
+			}
 		}
 	}
 }

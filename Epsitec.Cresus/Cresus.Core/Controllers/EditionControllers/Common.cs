@@ -65,20 +65,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-
-		public static void CreateAbstractDocumentItemTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, DocumentItemTabId defaultId)
+		public static void CreateDocumentItemTabBook<T>(UIBuilder builder, EntityViewController<T> controller, DocumentItemTabId defaultId)
+			where T : AbstractDocumentItemEntity
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (DocumentItemTabId.Text,    new FormattedText ("Texte"),      id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)),
-				TabPageDef.Create (DocumentItemTabId.Article, new FormattedText ("Article"),    id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)),
-				TabPageDef.Create (DocumentItemTabId.Price,   new FormattedText ("Sous-total"), id => Common.ChangeEditedLineEntity (tileContainer, dataContext, entity, id)));
+				TabPageDef.Create (DocumentItemTabId.Text,    new FormattedText ("Texte"),      id => Common.ChangeEditedLineEntity (controller, id)),
+				TabPageDef.Create (DocumentItemTabId.Article, new FormattedText ("Article"),    id => Common.ChangeEditedLineEntity (controller, id)),
+				TabPageDef.Create (DocumentItemTabId.Price,   new FormattedText ("Sous-total"), id => Common.ChangeEditedLineEntity (controller, id)));
 
 			book.SelectTabPage (defaultId);
 		}
+
 
 		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, ArticleParameterTabId defaultId)
 		{
@@ -93,7 +94,61 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			book.SelectTabPage (defaultId);
 		}
 
-	
+
+		private static void ChangeEditedLineEntity<T>(EntityViewController<T> controller, DocumentItemTabId id)
+			where T : AbstractDocumentItemEntity
+		{
+			var entity       = controller.Entity;
+			var dataContext  = controller.DataContext;
+			var orchestrator = controller.Orchestrator;
+
+			if ((entity != null) &&
+				(entity.TabId == id))
+			{
+				return;
+			}
+
+			var invoiceDocument = dataContext.GetEntities<GenericArticleDocumentEntity> ().Where (x => x.Lines.Contains (entity)).Single ();
+
+			//	Cherche l'index de la ligne dans la collection.
+			int index = invoiceDocument.Lines.IndexOf (entity);
+
+			System.Diagnostics.Debug.Assert (index >= 0);
+
+			//	Ferme la tuile.
+			orchestrator.CloseView (controller);
+
+			//	Crée la nouvelle entité.
+			AbstractDocumentItemEntity newEntity = null;
+
+			if (id == DocumentItemTabId.Text)
+			{
+				newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+			}
+			else if (id == DocumentItemTabId.Article)
+			{
+				newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+				var article = newEntity as ArticleDocumentItemEntity;
+				article.BeginDate = invoiceDocument.CreationDate;
+				article.EndDate   = invoiceDocument.CreationDate;
+			}
+			else if (id == DocumentItemTabId.Price)
+			{
+				newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+			}
+
+			System.Diagnostics.Debug.Assert (newEntity != null);
+			newEntity.Visibility = true;
+
+			//	Remplace l'entité dans la db.
+			invoiceDocument.Lines[index] = newEntity;
+			dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
+
+			//	Crée et montre la nouvelle tuile.
+//-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
+		}
+
 		private static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, DocumentItemTabId id)
 		{
 			if ((entity != null) &&
@@ -102,8 +157,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
+			var invoiceDocument = dataContext.GetEntities<GenericArticleDocumentEntity> ()
+				.Where (x => x.Lines.Contains (entity)).First ();
+
 			EntityViewController parentController = Common.GetParentController (tileContainer);
-			InvoiceDocumentEntity invoiceDocument = parentController.GetEntity () as InvoiceDocumentEntity;
 
 			//	Cherche l'index de la ligne dans la collection.
 			int index = invoiceDocument.Lines.IndexOf (entity);
@@ -146,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			invoiceDocument.Lines.Insert (index, newEntity);
 
 			//	Crée et montre la nouvelle tuile.
-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
+//-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 
 
@@ -193,7 +250,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			articleDefinition.ArticleParameterDefinitions.Insert (index, newEntity);
 
 			//	Crée et montre la nouvelle tuile.
-			parentController.TileContainerController.ShowSubView (index, "ArticleParameterDefinition");
+//-			parentController.TileContainerController.ShowSubView (index, "ArticleParameterDefinition");
 		}
 
 

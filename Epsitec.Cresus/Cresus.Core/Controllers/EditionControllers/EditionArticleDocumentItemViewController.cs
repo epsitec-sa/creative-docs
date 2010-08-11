@@ -63,18 +63,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			this.CreateUIQuantities (data);
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				this.CreateUIQuantities (data);
+			}
 		}
 
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			Common.CreateAbstractDocumentItemTabBook (builder, this.tileContainer, this.DataContext, this.Entity, DocumentItemTabId.Article);
+			Common.CreateDocumentItemTabBook (builder, this, DocumentItemTabId.Article);
 		}
 
 

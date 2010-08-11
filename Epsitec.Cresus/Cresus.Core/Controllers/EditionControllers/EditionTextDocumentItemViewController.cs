@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			Common.CreateAbstractDocumentItemTabBook (builder, this.tileContainer, this.DataContext, this.Entity, DocumentItemTabId.Text);
+			Common.CreateDocumentItemTabBook (builder, this, DocumentItemTabId.Text);
 		}
 
 

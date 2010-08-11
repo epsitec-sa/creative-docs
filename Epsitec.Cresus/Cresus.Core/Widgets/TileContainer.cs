@@ -14,12 +14,14 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
 	/// The <c>TileContainer</c> contains a stack of tiles. It paints a frame which
-	/// takes into account the tile arrows.
+	/// takes into account the tile arrows. There is exactly one <c>TileContainer</c>
+	/// for every column managed by the <see cref="ViewLayoutController"/>.
 	/// </summary>
 	public class TileContainer : FrameBox
 	{
-		public TileContainer()
+		public TileContainer(CoreViewController controller)
 		{
+			this.controller = controller;
 			this.widgetUpdaters = new List<IWidgetUpdater> ();
 
 			this.TabNavigationMode = Common.Widgets.TabNavigationMode.ForwardTabActive | Common.Widgets.TabNavigationMode.ForwardToChildren;
@@ -29,8 +31,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public CoreViewController Controller
 		{
-			get;
-			set;
+			get
+			{
+				return this.controller;
+			}
 		}
 
 		public List<IWidgetUpdater> WidgetUpdaters
@@ -120,6 +124,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public event EventHandler<TabNavigateEventArgs>		TabNavigating;
 
-		private List<IWidgetUpdater> widgetUpdaters;
+		private readonly CoreViewController controller;
+		private readonly List<IWidgetUpdater> widgetUpdaters;
 	}
 }

@@ -44,9 +44,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public TileContainer CreateColumn(CoreViewController controller)
 		{
-			var column = new TileContainer ()
+			var column = new TileContainer (controller)
 			{
-				Controller = controller,
 				Name = string.Format ("Column{0}", this.ColumnCount),
 				DrawFrameState = FrameState.Left | FrameState.Right,
 			};

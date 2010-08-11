@@ -24,16 +24,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI(TileContainer container)
 		{
-			this.TileContainerController = new TileContainerController (this, container);
-			var data = this.TileContainerController.DataItems;
-
-			this.CreateUIRelation        (data);
-			this.CreateUIMailContacts    (data);
-			this.CreateUITelecomContacts (data);
-			this.CreateUIUriContacts     (data);
-			this.CreateUIAffairs         (data);
-
-			this.TileContainerController.GenerateTiles ();
+			using (var data = TileContainerController.Setup (container))
+			{
+				this.CreateUIRelation (data);
+				this.CreateUIMailContacts (data);
+				this.CreateUITelecomContacts (data);
+				this.CreateUIUriContacts (data);
+				this.CreateUIAffairs (data);
+			}
 		}
 
 		protected override void OnChildItemCreated(AbstractEntity entity)
