@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Graph
         /// Events are kept from this object (not copied from oldValues).
         /// </summary>
         /// <param name="oldValues">Object to copy the values from</param>
-        private void copyValues (ChartOptions oldValues)
+        internal void copyValues (ChartOptions oldValues)
         {
             this.ShowSummaryCaptions = oldValues.ShowSummaryCaptions;
             this.ShowSeriesCaptions = oldValues.ShowSeriesCaptions;
