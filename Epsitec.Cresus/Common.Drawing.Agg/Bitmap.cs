@@ -824,11 +824,21 @@ namespace Epsitec.Common.Drawing
 		
 		public static Image FromManifestResource(string namespaceName, string resourceName, System.Type type)
 		{
+			if (resourceName == null)
+			{
+				return null;
+			}
+
 			return Bitmap.FromManifestResource (string.Concat (namespaceName, ".", resourceName), type.Assembly);
 		}
 		
 		public static Image FromManifestResource(string resourceName, System.Reflection.Assembly assembly)
 		{
+			if (resourceName == null)
+            {
+				return null;
+            }
+
 			Image bitmap = Bitmap.FromManifestResource (resourceName, assembly, new Point (0, 0));
 			
 			if (bitmap != null)

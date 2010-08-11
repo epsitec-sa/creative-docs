@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {
@@ -295,66 +296,33 @@ namespace Epsitec.Common.Support
 				//	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
 				//	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
 				//	.NET et des transformations futures pourraient ne pas fonctionner.
-				
-				string resName = name.Remove (0, 9);
-				
-				System.AppDomain             domain     = System.AppDomain.CurrentDomain;
-				System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
-				System.Reflection.Assembly   assembly   = null;
-				
-				for (int i = 0; i < assemblies.Length; i++)
-				{
-					var assemblyObject = assemblies[i];
 
-					if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
-						(assemblyObject.IsDynamic))
+				var assemblies   = ImageProvider.GetAssemblies ();
+				var resourceName = name.Remove (0, 9).ToLowerInvariant ();
+
+				Drawing.Image image = null;
+				
+				foreach (var assembly in assemblies)
+				{
+					var resourceNames = assembly.GetManifestResourceNames ();
+					var matchingName  = resourceNames.Where (x => x.ToLowerInvariant () == resourceName).FirstOrDefault ();
+
+					image = Drawing.Bitmap.FromManifestResource (matchingName, assembly);
+
+					if (image != null)
 					{
-						//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
-						//	puisqu'elles ont été générées dynamiquement.
-						
-						continue;
-					}
-					
-					string[] names = assemblies[i].GetManifestResourceNames ();
-					string lowerResName = resName.ToLower (System.Globalization.CultureInfo.InvariantCulture);
-					
-					for (int j = 0; j < names.Length; j++)
-					{
-						if (names[j].ToLower (System.Globalization.CultureInfo.InvariantCulture) == lowerResName)
+						this.images[name] = new Types.Weak<Drawing.Image> (image);
+
+						if (this.keepAliveImages != null)
 						{
-							assembly = assemblies[i];
-							resName = names[j];
-							break;
+							this.keepAliveImages.Add (image);
 						}
-					}
-					
-					if (assembly != null)
-					{
-						break;
+
+						return image;
 					}
 				}
 				
-				if (assembly == null)
-				{
-					return null;
-				}
-				
-				Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assembly);
-//				image = Drawing.Bitmap.CopyImage (image);
-				
-				System.Diagnostics.Debug.WriteLine ("Loaded image " + resName + " from assembly " + assembly.GetName ());
-				
-				if (image != null)
-				{
-					this.images[name] = new Types.Weak<Drawing.Image> (image);
-					
-					if (this.keepAliveImages != null)
-					{
-						this.keepAliveImages.Add (image);
-					}
-				}
-				
-				return image;
+				return null;
 			}
 			
 			return null;
@@ -462,58 +430,40 @@ namespace Epsitec.Common.Support
 		
 		public void PrefillManifestIconCache()
 		{
-			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
-			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
-			
-			for (int i = 0; i < assemblies.Length; i++)
+			var assemblies = ImageProvider.GetAssemblies ();
+
+			foreach (var assemblyObject in assemblies)
 			{
-				var assemblyObject = assemblies[i];
+				var names = assemblyObject.GetManifestResourceNames ().Where (x => x.EndsWith (".icon"));
 				
-				if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
-					(assemblyObject.IsDynamic))
+				foreach (var resName in names)
 				{
-					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
-					//	puisqu'elles ont été générées dynamiquement.
-					
-					continue;
-				}
-				
-				string[] names = assemblies[i].GetManifestResourceNames ();
-				
-				for (int j = 0; j < names.Length; j++)
-				{
-					if (names[j].EndsWith (".icon"))
+					string name = string.Concat ("manifest:", resName);
+
+					if (this.images.ContainsKey (name))
 					{
-						string                     resName  = names[j];
-						System.Reflection.Assembly assembly = assemblies[i];
-						
-						string name = string.Concat ("manifest:", resName);
+						Types.Weak<Drawing.Image> weakRef = this.images[name];
 
-						if (this.images.ContainsKey (name))
+						if (weakRef.IsAlive == false)
 						{
-							Types.Weak<Drawing.Image> weakRef = this.images[name];
-
-							if (weakRef.IsAlive == false)
+							try
 							{
-								try
+								Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assemblyObject);
+
+								if (image != null)
 								{
-									Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assembly);
+									System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + resName + " from assembly " + assemblyObject.GetName ());
 
-									if (image != null)
+									this.images[name] = new Types.Weak<Drawing.Image> (image);
+
+									if (this.keepAliveImages != null)
 									{
-										System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + resName + " from assembly " + assembly.GetName ());
-
-										this.images[name] = new Types.Weak<Drawing.Image> (image);
-
-										if (this.keepAliveImages != null)
-										{
-											this.keepAliveImages.Add (image);
-										}
+										this.keepAliveImages.Add (image);
 									}
 								}
-								catch
-								{
-								}
+							}
+							catch
+							{
 							}
 						}
 					}
@@ -557,30 +507,12 @@ namespace Epsitec.Common.Support
 		public static string[] GetManifestResourceNames(System.Text.RegularExpressions.Regex regex)
 		{
 			List<string> list = new List<string> ();
-			
-			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
-			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
-			
-			for (int i = 0; i < assemblies.Length; i++)
-			{
-				var assemblyObject = assemblies[i];
 
-				if ((assemblyObject is System.Reflection.Emit.AssemblyBuilder) ||
-					(assemblyObject.IsDynamic))
-				{
-					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
-					//	puisqu'elles ont été générées dynamiquement.
-					
-					continue;
-				}
-				
-				foreach (string name in assemblies[i].GetManifestResourceNames ())
-				{
-					if (regex.IsMatch (name))
-					{
-						list.Add (name);
-					}
-				}
+			var assemblies = ImageProvider.GetAssemblies ();
+
+			foreach (var assembly in assemblies)
+			{
+				list.AddRange (assembly.GetManifestResourceNames ().Where (x => regex.IsMatch (x)));
 			}
 
 			return list.ToArray ();
@@ -638,6 +570,14 @@ namespace Epsitec.Common.Support
 			}
 			
 			return null;
+		}
+
+
+		private static IEnumerable<System.Reflection.Assembly> GetAssemblies()
+		{
+			var domain     = System.AppDomain.CurrentDomain;
+			var assemblies = domain.GetAssemblies ().Where (x => x.IsDynamic == false);
+			return assemblies;
 		}
 
 
