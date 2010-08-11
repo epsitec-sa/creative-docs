@@ -9,7 +9,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 {
 
 

@@ -5,7 +5,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 {
 
 
