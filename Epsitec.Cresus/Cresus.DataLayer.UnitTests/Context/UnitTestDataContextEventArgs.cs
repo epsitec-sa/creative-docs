@@ -1,8 +1,10 @@
 ﻿using Epsitec.Cresus.DataLayer.Context;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+
+namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 {
 
 

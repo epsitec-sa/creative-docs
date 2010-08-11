@@ -2,6 +2,7 @@
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,7 +13,7 @@ using System.Linq;
 using System.Threading;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.General
 {
 
 
@@ -44,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 			DatabaseHelper.DisconnectFromDatabase ();
 		}
 
-		
+
 		[TestMethod]
 		public void ConcurrencySequenceAllTest()
 		{
@@ -173,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 
 			threadFunction (threads);
 
-			this.FinalizeTest("handledExceptions", this.handledExceptions);
+			this.FinalizeTest ("handledExceptions", this.handledExceptions);
 		}
 
 
@@ -455,10 +456,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 		{
 			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 			List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
-				{
-					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
-					dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
-				};
+                {
+                    dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1))),
+                    dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2))),
+                };
 
 			System.Random dice = new System.Random ();
 
@@ -488,6 +489,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 					query.Tables.Add (new SqlField ("X_L0A11_L0AN", "X_L0A11_L0AN"));
 
 					System.Data.DataTable data = dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+					transaction.Commit ();
 
 					Assert.IsTrue (data.Rows.Count == 1);
 				}

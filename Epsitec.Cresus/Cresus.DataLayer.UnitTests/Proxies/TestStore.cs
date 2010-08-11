@@ -3,7 +3,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 {
 
 

@@ -8,7 +8,7 @@ using Epsitec.Cresus.DataLayer.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 {
 
 

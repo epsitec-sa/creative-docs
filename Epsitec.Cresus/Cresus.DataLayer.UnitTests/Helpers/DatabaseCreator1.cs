@@ -4,7 +4,7 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Helpers
 {
 	
 	

@@ -6,7 +6,7 @@ using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Epsitec.Cresus.DataLayer.UnitTests
+namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 {
 
 
