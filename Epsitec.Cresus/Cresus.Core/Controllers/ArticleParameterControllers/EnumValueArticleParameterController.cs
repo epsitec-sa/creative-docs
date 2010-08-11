@@ -94,15 +94,19 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				}
 
 				//	Initialise le contenu.
+				var list = new List<int> ();
+
 				foreach (var parameterValue in parameterValues)
 				{
 					int i = this.GetIndex (parameterValue);
 
 					if (i != -1)
 					{
-						this.editor.AddSelection (new int[] { i });
+						list.Add (i);
 					}
 				}
+
+				this.editor.AddSelection (list);
 
 				//	Initialise le contenu par défaut.
 				if (this.editor.SelectionCount == 0 && !string.IsNullOrEmpty (enumParameter.DefaultValue))
