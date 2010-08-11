@@ -11,6 +11,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// The <c>TileTabBook</c> implements a simplified tab book, for use in the
+	/// edition tiles.
+	/// </summary>
 	public class TileTabBook : FrameBox
 	{
 		public TileTabBook(IEnumerable<TabPageDef> items)
@@ -19,6 +23,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.CreateUI ();
 		}
 
+		
 		public IEnumerable<TabPageDef> Items
 		{
 			get
@@ -27,11 +32,22 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		protected void Add(TabPageDef item)
+		
+		public void SelectTabPage(TabPageDef description)
 		{
-			this.items.Add (item);
+			if (this.selectedItem != description)
+			{
+				this.selectedItem = description;
+				this.RefreshTabPageSelection ();
+
+				if (this.selectedItem != null)
+				{
+					this.selectedItem.ExecuteAction ();
+				}
+			}
 		}
 
+		
 		private void CreateUI()
 		{
 			foreach (var child in this.Children.Widgets)
@@ -73,20 +89,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		protected void SelectTabPage(TabPageDef description)
-		{
-			if (this.selectedItem != description)
-			{
-				this.selectedItem = description;
-				this.RefreshTabPageSelection ();
-
-				if (this.selectedItem != null)
-				{
-					this.selectedItem.ExecuteAction ();
-				}
-			}
-		}
-
 		private void RefreshTabPageSelection()
 		{
 			foreach (TilePageButton page in this.Children.Widgets)
@@ -98,28 +100,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private List<TabPageDef> items;
+		private readonly List<TabPageDef> items;
 		private TabPageDef selectedItem;
-	}
-
-	public class TileTabBook<T> : TileTabBook
-	{
-		public TileTabBook(IEnumerable<TabPageDef<T>> items)
-			: base (items)
-		{
-		}
-
-		public new IEnumerable<TabPageDef<T>> Items
-		{
-			get
-			{
-				return base.Items.Cast<TabPageDef<T>> ();
-			}
-		}
-
-		public void SelectTabPage(T id)
-		{
-			this.SelectTabPage (this.Items.Where (x => x.Id.Equals (id)).FirstOrDefault ());
-		}
 	}
 }
