@@ -93,7 +93,7 @@ namespace Epsitec.Common.Graph.Renderers
             return path;
 		}
 
-        public override Point GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
+        public override SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
             foreach (var item in series.Values)
             {
@@ -127,10 +127,16 @@ namespace Epsitec.Common.Graph.Renderers
                     txtCenter.Y += radius * this.radiusProportion * System.Math.Sin(Math.DegToRad(semiAngle));
                 }
 
-                return txtCenter;
+                return new SeriesCaptionPosition ()
+                {
+                    Position = txtCenter
+                };
             }
 
-            return new Point(0, 0);
+            return new SeriesCaptionPosition ()
+            {
+                ShowCaption = false
+            };
         }
 
 
