@@ -1309,11 +1309,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ObjectDisposedException">If <paramref name="receiver"/> has been disposed.</exception>
 		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity
 		{
+			sender.ThrowIfNull ("sender");
+			receiver.ThrowIfNull ("receiver");
+
 			sender.AssertDataContextIsNotDisposed ();
 			receiver.AssertDataContextIsNotDisposed ();
 			
-			sender.ThrowIfNull ("sender");
-			receiver.ThrowIfNull ("receiver");
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
 			entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
