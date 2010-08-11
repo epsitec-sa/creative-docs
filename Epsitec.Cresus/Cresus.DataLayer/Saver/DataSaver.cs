@@ -243,6 +243,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		//internal bool CheckIfFieldMustBeResaved(AbstractEntity entity, Druid fieldId)
+		//{
+		//    var fieldsToResave = this.DataContext.GetFieldsToResave ();
+
+		//    return fieldsToResave.ContainsKey (entity) && fieldsToResave[entity].Contains (fieldId);
+		//}
+
+
 	}
 
 

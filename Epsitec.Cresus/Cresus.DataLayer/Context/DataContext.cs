@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
+			//this.fieldsToResave = new Dictionary<AbstractEntity, HashSet<Druid>> ();
 
 			this.eventLock = new object ();
 
@@ -329,13 +330,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Registers an <see cref="AbstractEntity"/> as empty, which means that it will be as if it
 		/// didn't exist when saving this instance.
 		/// </summary>
-		/// <remarks>
-		/// Be careful with this feature, because it might create inconsistencies. If an
-		/// <see cref="AbstractEntity"/> is targeted by another and is registered as empty, the relation
-		/// between them won't be persisted to the database, then the first <see cref="AbstractEntity"/>
-		/// is unregistered as empty, so it will be persisted to the database, but no the relation because
-		/// the second <see cref="AbstractEntity"/> wouldn't have changed.
-		/// </remarks>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register as empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void RegisterEmptyEntity(AbstractEntity entity)
@@ -356,7 +350,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// as empty, it will now be considered as a normal <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to unregister as empty.</param>
-		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
@@ -366,9 +359,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 				
-				entity.UpdateDataGenerationAndNotifyEntityContextAboutChange ();
+				entity.UpdateDataGeneration ();
+				//this.ResaveReferencingFields (entity);
 			}
 		}
+
 
 
 		/// <summary>
@@ -376,7 +371,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister as empty.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating whether to register or unregister is at empty.</param>
-		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
@@ -391,7 +385,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.UnregisterEmptyEntity (entity);
 			}
 		}
-
+		
 
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is registered as an empty one within this
@@ -530,6 +524,94 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entitiesToDelete.Clear ();
 		}
+		
+		///// <summary>
+		///// Notifies this instance that all the fields referencing an <see cref="AbstractEntity"/>
+		///// must be persisted again, even if their value has not changed.
+		///// </summary>
+		///// <param name="target">The <see cref="AbstractEntity"/> whose referencing fields must be saved again.</param>
+		//private void ResaveReferencingFields(AbstractEntity target)
+		//{
+		//    foreach (var item in this.GetPossibleReferencers (target))
+		//    {
+		//        AbstractEntity source = item.Key;
+		//        Druid fieldId = item.Value;
+
+		//        this.ResaveReferencingField (source, fieldId, target);
+		//    }
+		//}
+
+		///// <summary>
+		///// Notifies this instance that the given field of the given <see cref="AbstractEntity"/> must
+		///// be persisted again if it references another <see cref="AbstractEntity"/>.
+		///// </summary>
+		///// <param name="source">The <see cref="AbstractEntity"/> that contains the referencing field.</param>
+		///// <param name="fieldId">The <see cref="Druid"/> that identifies the referencing field.</param>
+		///// <param name="target">The <see cref="AbstractEntity"/> targeted by the referencing field.</param>
+		//private void ResaveReferencingField(AbstractEntity source, Druid fieldId, AbstractEntity target)
+		//{
+		//    StructuredTypeField field = this.EntityContext.GetStructuredTypeField (source, fieldId.ToResourceId ());
+
+		//    bool found;
+
+		//    switch (field.Relation)
+		//    {
+		//        case FieldRelation.Reference:
+		//            found = source.InternalGetValue (field.Id) == target;
+		//            break;
+
+		//        case FieldRelation.Collection:
+		//            IList collection = source.InternalGetFieldCollection (field.Id) as IList;
+		//            found = collection.Contains (target);
+		//            break;
+
+		//        default:
+		//            throw new System.InvalidOperationException ();
+		//    }
+
+		//    if (found)
+		//    {
+		//        this.ResaveReferencingField (source, fieldId);
+		//    }
+		//}
+
+
+		///// <summary>
+		///// Notifies this instance that the given field of the given <see cref="AbstractEntity"/>
+		///// must be saved again.
+		///// </summary>
+		///// <param name="entity">The <see cref="AbstractEntity"/> that contains the field.</param>
+		///// <param name="fieldId">The field that must be saved again.</param>
+		//private void ResaveReferencingField(AbstractEntity entity, Druid fieldId)
+		//{
+		//    entity.UpdateDataGeneration ();
+
+		//    if (!this.fieldsToResave.ContainsKey (entity))
+		//    {
+		//        this.fieldsToResave[entity] = new HashSet<Druid> ();
+		//    }
+
+		//    this.fieldsToResave[entity].Add (fieldId);
+		//}
+		
+		///// <summary>
+		///// Gets the fields that must be persisted again for each <see cref="AbstractEntity"/>.
+		///// </summary>
+		///// <returns>The mapping between the <see cref="AbstractEntity"/> and their fields that must be saved again.</returns>
+		//internal Dictionary<AbstractEntity, HashSet<Druid>> GetFieldsToResave()
+		//{
+		//    this.AssertDataContextIsNotDisposed ();
+
+		//    return this.fieldsToResave;
+		//}
+		
+		///// <summary>
+		///// Resets the list of fields that must be persisted again.
+		///// </summary>
+		//internal void ClearFieldsToResave()
+		//{
+		//    this.fieldsToResave.Clear ();
+		//}
 
 
 		/// <summary>
@@ -790,30 +872,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
 		public void RemoveAllReferences(AbstractEntity target, EntityChangedEventSource eventSource)
 		{
-			// This method will probably be too slow for a high number of managed entities, therefore
-			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
-			// other entities, or by looping only on a subset of entities, i.e only on the location
-			// entities if we look for an entity which can be targeted only by a location.
-			// Marc
-
-			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
-
-			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
-				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
-				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
-
-			foreach (AbstractEntity source in this.GetEntities ())
+			foreach (var item in this.GetPossibleReferencers (target))
 			{
-				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
-				var leafInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+				AbstractEntity source = item.Key;
+				Druid fieldId = item.Value;
 
-				foreach (Druid leafInheritedId in leafInheritedIds)
-				{
-					if (fieldPaths.ContainsKey (leafInheritedId))
-					{
-						this.RemoveReference (source, fieldPaths[leafInheritedId], target, eventSource);
-					}
-				}
+				this.RemoveReference (source, fieldId, target, eventSource);
 			}
 		}
 
@@ -874,6 +938,42 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
 			}
 		}
+
+
+		private IEnumerable<KeyValuePair<AbstractEntity, Druid>> GetPossibleReferencers(AbstractEntity target)
+		{
+			// This method will probably be too slow for a high number of managed entities, therefore
+			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
+			// other entities, or by looping only on a subset of entities, i.e only on the location
+			// entities if we look for an entity which can be targeted only by a location.
+			// Marc
+
+			// There is a bug here. The dictionnary is not build properly
+			// Marc
+
+			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
+
+			var fieldPaths = this.EntityContext.GetInheritedEntityIds (leafTargetEntityId)
+				.SelectMany (id => this.DbInfrastructure.GetSourceReferences (id))
+				.ToDictionary (path => path.EntityId, path => Druid.Parse (path.Fields[0]));
+			
+			foreach (AbstractEntity source in this.GetEntities ())
+			{
+			    Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
+			    var sourceInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
+
+			    foreach (Druid localSourceId in sourceInheritedIds)
+			    {
+			        if (fieldPaths.ContainsKey (localSourceId))
+			        {
+			            Druid fieldId = fieldPaths[localSourceId];
+
+			            yield return new KeyValuePair<AbstractEntity, Druid> (source, fieldId);
+			        }
+			    }
+			}
+		}
+
 
 
 		#region IDisposable Members
@@ -1179,6 +1279,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The <see cref="AbstractEntity"/> which have been deleted.
 		/// </summary>
 		private readonly HashSet<AbstractEntity> entitiesDeleted;
+
+
+		///// <summary>
+		///// Stores the mapping between the <see cref="AbstractEntity"/> and their fields that must be
+		///// saved again event if their value has not changed.
+		///// </summary>
+		//private readonly Dictionary<AbstractEntity, HashSet<Druid>> fieldsToResave;
 
 
 		/// <summary>
