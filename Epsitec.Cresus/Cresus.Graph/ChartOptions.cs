@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Graph
         /// Saving the options into the XML fragment
         /// </summary>
         /// <param name="options">XML fragement to save into</param>
-        public void SaveOptions(XElement options)
+        public void SaveOptions (XElement options)
         {
             var summaryCaptions = new XElement("ShowSummaryCaptions", this.ShowSummaryCaptions);
             var seriesCaptions = new XElement("ShowSeriesCaptions", this.ShowSeriesCaptions);
@@ -99,27 +99,28 @@ namespace Epsitec.Cresus.Graph
         /// Restoring the options from an XML fragment
         /// </summary>
         /// <param name="options">XML fragment to use</param>
-        public void RestoreOptions(XElement options)
+        public void RestoreOptions (XElement options)
         {
+
             XElement tmp;
 
             tmp = options.Element ("ShowSummaryCaptions");
-            if(tmp != null)
+            if (tmp != null)
                 ShowSummaryCaptions = tmp.Value == "true";
+            else
+                ShowSummaryCaptions = true;
 
             tmp = options.Element ("ShowSeriesCaptions");
             if (tmp != null)
                 ShowSeriesCaptions = tmp.Value == "true";
+            else
+                ShowSeriesCaptions = true;
 
             tmp = options.Element ("SummaryCaptionsPosition");
             if (tmp != null)
-            {
                 SummaryCaptionsPosition = Margins.Parse (tmp.Value);
-            }
             else
-            {
                 SummaryCaptionsPosition = new Margins (0, 4, 4, 0);
-            }
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace Epsitec.Cresus.Graph
         /// Events are kept from this object (not copied from oldValues).
         /// </summary>
         /// <param name="oldValues">Object to copy the values from</param>
-        internal void copyValues (ChartOptions oldValues)
+        private void copyValues (ChartOptions oldValues)
         {
             this.ShowSummaryCaptions = oldValues.ShowSummaryCaptions;
             this.ShowSeriesCaptions = oldValues.ShowSeriesCaptions;
