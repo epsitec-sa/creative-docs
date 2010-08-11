@@ -788,7 +788,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
 			}
 		}
-
+		
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="ReferenceSynchronizationJob"/>
@@ -1269,6 +1269,35 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
+		/// <summary>
+		/// Copies an <see cref="AbstractEntity"/> present in a <see cref="DataContext"/> in another
+		/// <see cref="DataContext"/>. What happens is exactly the same as if the
+		/// <see cref="AbstractEntity"/> would have been loaded from the database, except that its
+		/// data comes from another <see cref="DataContext"/>.
+		/// </summary>
+		/// <param name="sender">The <see cref="DataContext"/> that manages the <see cref="AbstractEntity"/> to copy.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to copy.</param>
+		/// <param name="receiver">The <see cref="DataContext"/> in which the <see cref="AbstractEntity"/> must be copied.</param>
+		/// <returns>The copy of the <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="sender"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="receiver"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by <paramref name="sender"/>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not persistent.</exception>
+		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity, new ()
+		{
+			sender.ThrowIfNull ("sender");
+			receiver.ThrowIfNull ("receiver");
+			entity.ThrowIfNull ("entity");
+			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
+			entity.ThrowIf (e => !sender.IsPersistent (e), "entity is not persistent.");
+						
+			EntityData data = sender.SerializationManager.Serialize (entity);
+			
+			return (TEntity) receiver.DataLoader.ResolveEntity (data);
+		}
+		
 
 		/// <summary>
 		/// The cache used to cache the <see cref="AbstractEntity"/> managed by this instance.
