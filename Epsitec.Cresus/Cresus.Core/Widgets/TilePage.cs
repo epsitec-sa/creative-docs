@@ -19,20 +19,29 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// Ce widget s'utilise un peu à la façon d'un TabPage, pour simuler des onglets
 	/// avec une tuile ayant une flèche 'v' en bas.
 	/// </summary>
-	public class TilePage : Tile
+	public sealed class TilePage : Tile
 	{
 		public TilePage()
 		{
 			this.ArrowDirection = Direction.Down;
 		}
 
-		public TilePage(Widget embedder)
+		public TilePage(TabPageDef tabPageDef)
 			: this ()
 		{
-			this.SetEmbedder (embedder);
+			this.tabPageDef    = tabPageDef;
+			this.Name          = tabPageDef.Name;
+			this.FormattedText = tabPageDef.Text;
 		}
 
 
+		public TabPageDef TabPageDef
+		{
+			get
+			{
+				return this.tabPageDef;
+			}
+		}
 
 		public override TileArrowMode ArrowMode
 		{
@@ -52,9 +61,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors   (this.OutlineColors);
-				arrow.SetThicknessColors (this.ThicknessColors);
-				arrow.SetSurfaceColors   (this.SurfaceColors);
+				arrow.SetOutlineColors (Tile.BorderColors);
+				arrow.SetThicknessColors (null);
+				arrow.SetSurfaceColors (this.SurfaceColors);
 				arrow.MouseHilite = this.MouseHilite;
 
 				return arrow;
@@ -67,9 +76,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				var arrow = new TileArrow ();
 
-				arrow.SetOutlineColors   (this.ReverseOutlineColors);
-				arrow.SetThicknessColors (this.ReverseThicknessColors);
-				arrow.SetSurfaceColors   (this.ReverseSurfaceColors);
+				arrow.SetOutlineColors (null);
+				arrow.SetThicknessColors (null);
+				arrow.SetSurfaceColors (null);
 				arrow.MouseHilite = true;
 
 				return arrow;
@@ -78,17 +87,18 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 
-		protected override void Dispose(bool disposing)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (disposing)
-			{
-			}
+			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			base.Dispose (disposing);
+			var rect  = this.Client.Bounds;
+			rect.Bottom += TileArrow.Breadth;
+
+			graphics.Color = Color.FromName ("Black");
+			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);
 		}
 
-		
-		protected virtual TileArrowMode GetPaintingArrowMode()
+		private TileArrowMode GetPaintingArrowMode()
 		{
 			if (this.IsSelected)
 			{
@@ -135,56 +145,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private IEnumerable<Color> OutlineColors
-		{
-			get
-			{
-				return Tile.BorderColors;
-			}
-		}
 
-		private IEnumerable<Color> ThicknessColors
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		private IEnumerable<Color> ReverseSurfaceColors
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		private IEnumerable<Color> ReverseOutlineColors
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-		private IEnumerable<Color> ReverseThicknessColors
-		{
-			get
-			{
-				return null;
-			}
-		}
-
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			var rect  = this.Client.Bounds;
-			rect.Bottom += TileArrow.Breadth;
-
-			graphics.Color = Color.FromName ("Black");
-			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, Common.Drawing.ContentAlignment.MiddleCenter);
-		}
+		private readonly TabPageDef tabPageDef;
 	}
 }

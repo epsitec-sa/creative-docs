@@ -291,6 +291,7 @@
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
     <Compile Include="Widgets\TabNavigateEventArgs.cs" />
+    <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TileArrow.cs" />
     <Compile Include="Widgets\Tile.cs" />
     <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
@@ -306,6 +307,7 @@
     <Compile Include="Widgets\Tiles\SummaryTile.cs" />
     <Compile Include="Widgets\Tiles\GenericTile.cs" />
     <Compile Include="Widgets\TileArrowMode.cs" />
+    <Compile Include="Widgets\TileTabBook.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />

@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			pagesDescription.Add ("Article.Article");
 			pagesDescription.Add ("Price.Sous-total");
 
-			builder.CreateTabBook (tile, pagesDescription, defaultPage, x =>
+			builder.CreateTabBook (pagesDescription, x =>
 			{
 				if (x != defaultPage)
 				{
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			pagesDescription.Add ("Numeric.Valeur numérique");
 			pagesDescription.Add ("Enum.Enumération");
 
-			builder.CreateTabBook (tile, pagesDescription, defaultPage, x =>
+			builder.CreateTabBook (pagesDescription, x =>
 			{
 				if (x != defaultPage)
 				{

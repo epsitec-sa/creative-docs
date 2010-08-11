@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public List<Widget> ContentList
+		public IList<Widget> ContentList
 		{
 			get
 			{
@@ -82,6 +82,34 @@ namespace Epsitec.Cresus.Core
 			{
 				return this.titleTile;
 			}
+		}
+
+		public TileTabBook CurrentTileTabBook
+		{
+			get
+			{
+				return this.tileTabBook;
+			}
+		}
+
+
+		public void BeginTileTabPage(int index)
+		{
+			this.ContentList = this.tileTabBook.Items.ElementAt (index).PageWidgets;
+		}
+
+		public void BeginTileTabPage<T>(T id)
+		{
+			var book = this.tileTabBook as TileTabBook<T>;
+			var item = book.Items.Where (x => x.Id.Equals (id)).First ();
+			
+			this.ContentList = item.PageWidgets;
+		}
+
+
+		public void EndTileTabPage()
+		{
+			this.ContentList = null;
 		}
 
 
@@ -155,8 +183,27 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public FrameBox CreateTabBook(EditionTile tile, List<string> pagesDescription, string defaultName, System.Action<string> action)
+		public TileTabBook<T> CreateTabBook<T>(params TabPageDef<T>[] pageDescriptions)
 		{
+			var tile = this.titleTile.Items.Last () as EditionTile;
+
+			var tileTabBook = new TileTabBook<T> (pageDescriptions)
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.tileTabBook = tileTabBook;
+			
+			return tileTabBook;
+		}
+
+		public TileTabBook CreateTabBook(List<string> pageDescriptions, System.Action<string> action)
+		{
+#if false
 			var container = new FrameBox
 			{
 				Parent = tile.Container,
@@ -166,9 +213,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			for (int i = 0; i < pagesDescription.Count; i++)
+			for (int i = 0; i < pageDescriptions.Count; i++)
 			{
-				string[] parts = pagesDescription[i].Split ('.');
+				string[] parts = pageDescriptions[i].Split ('.');
 				System.Diagnostics.Debug.Assert (parts.Length == 2);
 				string name = parts[0];
 				string text = parts[1];
@@ -179,7 +226,7 @@ namespace Epsitec.Cresus.Core
 					Name = name,
 					Text = text,
 					PreferredHeight = 24 + Widgets.TileArrow.Breadth,
-					Margins = new Margins (0, (i == pagesDescription.Count-1) ? 0 : -1, 0, 0),
+					Margins = new Margins (0, (i == pageDescriptions.Count-1) ? 0 : -1, 0, 0),
 					Dock = DockStyle.StackFill,
 				};
 
@@ -201,6 +248,31 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return container;
+#else
+			var list = new List<TabPageDef> ();
+
+			foreach (var def in pageDescriptions)
+			{
+				string[] parts = def.Split ('.');
+				System.Diagnostics.Debug.Assert (parts.Length == 2);
+				string name = parts[0];
+				string text = parts[1];
+				list.Add (new TabPageDef (name, new FormattedText (text), () => action (name)));
+			}
+
+			var tile = this.titleTile.Items.Last () as EditionTile;
+
+			this.tileTabBook = new TileTabBook (list)
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				TabIndex = ++this.tabIndex,
+			};
+
+			return this.tileTabBook;
+#endif
 		}
 
 
@@ -1187,7 +1259,8 @@ namespace Epsitec.Cresus.Core
 		private int tabIndex;
 		private TitleTile titleTile;
 		private PanelTitleTile panelTitleTile;
-		private List<Widget> contentList;
+		private TileTabBook tileTabBook;
+		private IList<Widget> contentList;
 	}
 	
 	static class StringExtension
