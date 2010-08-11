@@ -81,6 +81,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests
 				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction())
 				{
 					processor.ProcessJobs (transaction, null);
+
+					transaction.Commit ();
 				}
 			}
 		}
