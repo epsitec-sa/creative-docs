@@ -976,7 +976,37 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widget CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
+		{
+			var tile = this.CreateEditionTile ();
+
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+			};
+
+			var widget = new Widgets.ItemPicker
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 3),
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (widget);
+
+			controller.Attach (widget);
+
+			return widget;
+		}
+
+
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
@@ -1007,7 +1037,7 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 			};
 
-			var combo = new Widgets.ItemPicker
+			var widget = new Widgets.ItemPicker
 			{
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
@@ -1017,9 +1047,9 @@ namespace Epsitec.Cresus.Core
 			};
 
 			this.ContentListAdd (staticText);
-			this.ContentListAdd (combo);
+			this.ContentListAdd (widget);
 
-			return combo;
+			return widget;
 		}
 
 

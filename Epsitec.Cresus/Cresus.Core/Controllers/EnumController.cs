@@ -1,0 +1,128 @@
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Validators;
+using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.Core.Widgets;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace Epsitec.Cresus.Core.Controllers
+{
+	/// <summary>
+	/// Ce contrôleur fait le pont entre un widget ItemPicker et une énumération quelconque.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public class EnumController<T> : IWidgetUpdater
+		//?where T : enum
+	{
+		public EnumController(IEnumerable<EnumKeyValues<T>> enumeration)
+		{
+			this.enumeration = enumeration;
+		}
+
+
+		public System.Func<object, FormattedText> ValueToDescriptionConverter
+		{
+			get;
+			set;
+		}
+
+		public System.Action<T> ValueSetter
+		{
+			get;
+			set;
+		}
+
+		public Expression<System.Func<T>> ValueGetter
+		{
+			set
+			{
+				this.valueGetterExpression = value;
+				this.valueGetter = null;
+			}
+		}
+
+		public T GetValue()
+		{
+			if (this.valueGetterExpression == null)
+			{
+				//?return null;
+			}
+			if (this.valueGetter == null)
+			{
+				this.valueGetter = this.valueGetterExpression.Compile ();
+			}
+
+
+			return this.valueGetter ();
+		}
+
+
+		public void Attach(ItemPicker widget)
+		{
+			foreach (var e in this.enumeration)
+			{
+				widget.Items.Add (e.Key.ToString (), e.Values);
+			}
+
+			widget.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
+			widget.ValueToDescriptionConverter = this.ValueToDescriptionConverter;
+			widget.CreateUI ();
+
+			//?var initialValue = this.ValueGetter;
+			var initialValue = this.GetValue ();
+			int index = widget.Items.FindIndexByKey (initialValue.ToString ());
+			if (index != -1)
+			{
+				widget.AddSelection (new int[] { index });
+			}
+
+			widget.SelectedItemChanged += delegate
+			{
+				string key = widget.Items.GetKey (widget.SelectedItemIndex);
+
+#if false
+				T result;
+				if (System.Enum.TryParse (key, result))
+				{
+					this.ValueSetter (result);
+				}
+#endif
+
+				//?this.ValueSetter ((T) widget.Items.GetKey (widget.SelectedItemIndex));
+			};
+		}
+
+
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+#if false
+			if (this.widget != null)
+			{
+				if (this.widget is ItemPicker)
+				{
+				}
+				else
+				{
+				}
+			}
+#endif
+		}
+
+		#endregion
+
+		private readonly IEnumerable<EnumKeyValues<T>> enumeration;
+
+		private Expression<System.Func<T>> valueGetterExpression;
+		private System.Func<T> valueGetter;
+	}
+}
