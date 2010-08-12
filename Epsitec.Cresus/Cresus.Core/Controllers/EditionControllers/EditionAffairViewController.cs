@@ -95,15 +95,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup    = true,
 					Name		 = "BusinessEvent",
 					IconUri		 = "Data.BusinessEvent",
-					Title		 = TextFormater.FormatText ("Evénements"),
-					CompactTitle = TextFormater.FormatText ("Evénements"),
+					Title		 = TextFormatter.FormatText ("Evénements"),
+					CompactTitle = TextFormatter.FormatText ("Evénements"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			var template = new CollectionTemplate<AbstractBusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormater.FormatText (GetCaseEventsSummary (x)));
-			template.DefineCompactText (x => TextFormater.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
+			template.DefineText        (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}

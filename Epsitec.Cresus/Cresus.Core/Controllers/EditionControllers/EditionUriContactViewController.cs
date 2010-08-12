@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
-				ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
 			builder.CreateEditionDetailedCheck (0, "Choix du ou des rôles souhaités", controller);

@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter              = () => this.Entity.EventType,
 				ValueSetter              = x => this.Entity.EventType = x,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetCaseEventTypes (),
-				ToFormattedTextConverter = x => TextFormater.FormatText (x.Code)
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Code)
 			};
 
 			builder.CreateEditionDetailedRadio (0, "Type de l'événement", controller);
@@ -100,15 +100,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup    = true,
 					Name		 = "Document",
 					IconUri		 = "Data.Document",
-					Title		 = TextFormater.FormatText ("Documents"),
-					CompactTitle = TextFormater.FormatText ("Documents"),
+					Title		 = TextFormatter.FormatText ("Documents"),
+					CompactTitle = TextFormatter.FormatText ("Documents"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			var template = new CollectionTemplate<DocumentEntity> ("Document", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormater.FormatText (x.Description));
-			template.DefineCompactText (x => TextFormater.FormatText (x.Description));
+			template.DefineText        (x => TextFormatter.FormatText (x.Description));
+			template.DefineCompactText (x => TextFormatter.FormatText (x.Description));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Documents, template));
 		}

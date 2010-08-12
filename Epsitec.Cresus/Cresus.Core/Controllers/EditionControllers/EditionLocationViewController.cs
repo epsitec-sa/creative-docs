@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
-					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")"),
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}
 

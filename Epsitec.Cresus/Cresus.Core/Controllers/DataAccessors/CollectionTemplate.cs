@@ -69,8 +69,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
 
-		public static readonly FormattedText DefaultEmptyText = TextFormater.FormatText ("<i>vide</i>");
-		public static readonly FormattedText DefaultDefinitionInProgressText = TextFormater.FormatText ("<i>définition en cours</i>");
+		public static readonly FormattedText DefaultEmptyText = TextFormatter.FormatText ("<i>vide</i>");
+		public static readonly FormattedText DefaultDefinitionInProgressText = TextFormatter.FormatText ("<i>définition en cours</i>");
 
 		private readonly string name;
 	}

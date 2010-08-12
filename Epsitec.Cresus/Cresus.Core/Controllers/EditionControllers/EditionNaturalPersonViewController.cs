@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetTitles (),
 
 					ToTextArrayConverter     = x => new string[] { x.ShortName, x.Name },
-					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 				});
 		}
 		
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetGenders (),
 				
 					ToTextArrayConverter     = x => new string[] { x.Name },
-					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name)
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 				});
 		}
 

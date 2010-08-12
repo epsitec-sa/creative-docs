@@ -35,12 +35,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				addresses = string.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
-			return TextFormater.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, ", ", total, addresses);
+			return TextFormatter.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, ", ", total, addresses);
 		}
 
 		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
 		{
-			return TextFormater.FormatText (x.LegalPerson.Name, "\n",
+			return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
 										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
 										 x.Address.Street.StreetName, "\n",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
@@ -57,16 +57,16 @@ namespace Epsitec.Cresus.Core.Helpers
 				if (x.BillingMailContact.LegalPerson.IsActive ())
 				{
 					var y = x.BillingMailContact.LegalPerson;
-					legal = TextFormater.FormatText (y.Name).ToString ();
+					legal = TextFormatter.FormatText (y.Name).ToString ();
 				}
 
 				if (x.BillingMailContact.NaturalPerson.IsActive ())
 				{
 					var y = x.BillingMailContact.NaturalPerson;
-					natural = TextFormater.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname).ToString ();
+					natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname).ToString ();
 				}
 
-				return TextFormater.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name).ToString ();
+				return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name).ToString ();
 			}
 
 			return null;
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL)
 		{
 			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
-			string title = TextFormater.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
+			string title = TextFormatter.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
 			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true, isBL));
 		}

@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			var x = article.ArticleDefinition;
 
-			return TextFormater.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
+			return TextFormatter.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
 		}
 
 		public static string GetArticleDescription(ArticleDocumentItemEntity article)

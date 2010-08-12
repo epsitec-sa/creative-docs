@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateAutoCompleteTextField (tile,  87, "Type",        Marshaler.Create (this.Entity, x => x.QuantityType, (x, v) => x.QuantityType = v), BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType (), x => TextFormater.FormatText (x.Values[0]));
+			builder.CreateAutoCompleteTextField (tile,  87, "Type",        Marshaler.Create (this.Entity, x => x.QuantityType, (x, v) => x.QuantityType = v), BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType (), x => TextFormatter.FormatText (x.Values[0]));
 			builder.CreateTextField             (tile, 100, "Date prévue", Marshaler.Create (() => this.Entity.ExpectedDate, x => this.Entity.ExpectedDate = x));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile,  60, "Quantité",    Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => TextFormater.FormatText (x.Name, "(", x.Code, ")")
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
 				});
 		}
 
