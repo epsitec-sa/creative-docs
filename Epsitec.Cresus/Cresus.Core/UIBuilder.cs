@@ -22,7 +22,12 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed class UIBuilder : System.IDisposable
 	{
-		public UIBuilder(TileContainer container, CoreViewController controller)
+		public UIBuilder(EntityViewController controller)
+			: this (controller.TileContainer, controller)
+		{
+		}
+
+		private UIBuilder(TileContainer container, CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (container != null);
 			System.Diagnostics.Debug.Assert (controller != null);

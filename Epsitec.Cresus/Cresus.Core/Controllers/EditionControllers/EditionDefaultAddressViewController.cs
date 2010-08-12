@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Mail", "Adresse par défaut du client");

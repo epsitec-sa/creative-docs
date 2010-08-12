@@ -29,11 +29,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDefinition", "Article");
@@ -46,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			using (var data = TileContainerController.Setup (container))
+			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIGroup (data);
 				this.CreateUIParameters (data);
@@ -218,8 +216,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			return this.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
 		}
-
-
-		private TileContainer							tileContainer;
 	}
 }

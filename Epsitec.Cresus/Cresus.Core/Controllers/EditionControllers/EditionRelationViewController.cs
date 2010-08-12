@@ -32,9 +32,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Customer", "Client");
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.personController = EntityViewController.CreateEntityViewController (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
 				this.personController.DataContext = this.DataContext;
-				this.personController.CreateUI (container);
+				this.personController.CreateUI (this.TileContainer);
 
 				builder.CreateFooterEditorTile ();
 			}

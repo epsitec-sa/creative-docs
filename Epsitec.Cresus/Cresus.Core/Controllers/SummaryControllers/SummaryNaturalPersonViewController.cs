@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			using (var data = TileContainerController.Setup (container))
+			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIPerson (data);
 				this.CreateUIMailContacts (data);

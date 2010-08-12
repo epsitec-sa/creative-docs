@@ -54,6 +54,11 @@ using Epsitec.Common.Support.EntityEngine;
 		}
 
 
+		public static TileContainerControllerInitializer Setup(EntityViewController controller)
+		{
+			return TileContainerController.Setup (controller.TileContainer);
+		}
+
 		public static TileContainerControllerInitializer Setup(TileContainer container)
 		{
 			return new TileContainerControllerInitializer (new TileContainerController (container));

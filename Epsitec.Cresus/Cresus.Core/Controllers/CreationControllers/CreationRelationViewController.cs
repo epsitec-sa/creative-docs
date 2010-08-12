@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		{
 		}
 
-		protected override void CreateUI(Widgets.TileContainer container)
+		protected override void CreateUI()
 		{
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreatePanelTitleTile ("Data.Customer", "Client à créer...");
 

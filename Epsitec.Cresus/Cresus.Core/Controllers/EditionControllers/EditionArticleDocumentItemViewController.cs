@@ -30,11 +30,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDocumentItem", "Ligne d'article");
@@ -50,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			using (var data = TileContainerController.Setup (container))
+			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIQuantities (data);
 			}
@@ -83,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			var group = builder.CreateGroup (tile, null);  // groupe sans titre
-			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.tileContainer, tile);
+			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.TileContainer, tile);
 			this.parameterController.CreateUI (group);
 			this.parameterController.UpdateUI (this.Entity);
 		}
@@ -232,7 +230,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					{
 						this.Entity.ArticleQuantities.RemoveAt (i);
 
-						this.tileContainer.UpdateAllWidgets ();
+						this.TileContainer.UpdateAllWidgets ();
 					}
 
 					return;
@@ -249,7 +247,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				this.Entity.ArticleQuantities.Add (newQuantity);
 
-				this.tileContainer.UpdateAllWidgets ();
+				this.TileContainer.UpdateAllWidgets ();
 			}
 		}
 
@@ -351,14 +349,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void UpdatePrices()
 		{
-			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as InvoiceDocumentEntity;
 
 			if (invoiceDocument != null)
 			{
 				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
 			}
 
-			this.tileContainer.UpdateAllWidgets ();
+			this.TileContainer.UpdateAllWidgets ();
 		}
 
 
@@ -388,8 +386,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-
-		private TileContainer													tileContainer;
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 	}
 }
