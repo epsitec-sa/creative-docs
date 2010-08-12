@@ -90,11 +90,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer, this.Entity);
+			this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer, this.Entity.ArticleDefinition);
 			this.toolbarController.CreateUI (tile.Container, "Désignation");
-			this.toolbarController.UpdateUI ();
 
-			builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
+			this.designationTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
+
+			this.toolbarController.UpdateUI (this.designationTextField);
 		}
 
 		private void CreateUIPrice(Epsitec.Cresus.Core.UIBuilder builder)
@@ -176,7 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.SetArticleDescription (this.GetArticleDescription ());
 
 					this.parameterController.UpdateUI (this.Entity);
-					this.toolbarController.UpdateUI ();
+					this.toolbarController.UpdateUI (this.designationTextField);
 				}
 			}
 		}
@@ -393,5 +394,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
+		private TextFieldMultiEx designationTextField;
 	}
 }

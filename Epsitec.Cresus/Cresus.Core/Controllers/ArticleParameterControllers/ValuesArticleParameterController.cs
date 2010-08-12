@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			{
 				Parent = box,
 				Text = article.ArticleDefinition.ArticleParameterDefinitions[index].Name,
-				PreferredWidth = 100,
+				PreferredWidth = 80,
 				Dock = DockStyle.Left,
 			};
 
