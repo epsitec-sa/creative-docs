@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.nodes = new List<Node> ();
 		}
 
+		/// <summary>
+		/// Adds a node in the navigation history for the controller which was just
+		/// opened.
+		/// </summary>
+		/// <param name="parentController">The parent controller.</param>
+		/// <param name="controller">The controller which was just opened.</param>
 		public void Add(CoreViewController parentController, CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (parentController != controller);
@@ -45,6 +51,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.MakeDirty ();
 		}
 
+		/// <summary>
+		/// Removes the node in the navigation history for the controller which was
+		/// just closed.
+		/// </summary>
+		/// <param name="parentController">The parent controller.</param>
+		/// <param name="controller">The controller which was just closed.</param>
 		public void Remove(CoreViewController parentController, CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (parentController != controller);
@@ -101,6 +113,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			else
 			{
 				System.Diagnostics.Debug.WriteLine ("History: node = " + node.Item.GetType ().Name);
+				foreach (var item in this.WalkToRoot (node.Item))
+				{
+					System.Diagnostics.Debug.Write (" <-- " + (item.Item.GetRelativeNavigationPath () ?? "<null>"));
+				}
+
+				System.Diagnostics.Debug.WriteLine ("");
 			}
 		}
 
