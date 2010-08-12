@@ -62,7 +62,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			string[] preferred = (numericParameter.PreferredValues ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 			foreach (var v in preferred)
 			{
-				editor.Items.Add (v, v);
+				if (!string.IsNullOrEmpty (v))
+				{
+					editor.Items.Add (v, v);
+				}
 			}
 
 			editor.ValueToDescriptionConverter = value => this.GetUserText (value as string);
@@ -70,18 +73,28 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			editor.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 			editor.ContentValidator = x => this.ContentValidator (x);
 
-			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
-			var menuButton = new GlyphButton
+			if (editor.Items.Count != 0)
 			{
-				Parent = parent,
-				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
-				GlyphShape = GlyphShape.Menu,
-				PreferredWidth = buttonWidth,
-				PreferredHeight = 20,
-				Dock = DockStyle.Right,
-				Margins = new Margins (-1, 0, 0, 0),
-				AutoFocus = false,
-			};
+				//	Ce bouton vient juste après (et tout contre) la ligne éditable.
+				var menuButton = new GlyphButton
+				{
+					Parent = parent,
+					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
+					GlyphShape = GlyphShape.Menu,
+					PreferredWidth = buttonWidth,
+					PreferredHeight = 20,
+					Dock = DockStyle.Right,
+					Margins = new Margins (-1, 0, 0, 0),
+					AutoFocus = false,
+				};
+
+				menuButton.Clicked += delegate
+				{
+					editor.SelectAll ();
+					editor.Focus ();
+					editor.OpenComboMenu ();
+				};
+			}
 
 			editor.AcceptingEdition += delegate
 			{
@@ -93,13 +106,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				}
 
 				this.ParameterValue = value;
-			};
-
-			menuButton.Clicked += delegate
-			{
-				editor.SelectAll ();
-				editor.Focus ();
-				editor.OpenComboMenu ();
 			};
 		}
 
