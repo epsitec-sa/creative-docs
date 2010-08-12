@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class EnumController<T> : IWidgetUpdater
-		//?where T : enum
+		where T : struct
 	{
 		public EnumController(IEnumerable<EnumKeyValues<T>> enumeration)
 		{
@@ -53,13 +53,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.valueGetterExpression == null)
 			{
-				//?return null;
+				return default (T);
 			}
 			if (this.valueGetter == null)
 			{
 				this.valueGetter = this.valueGetterExpression.Compile ();
 			}
-
 
 			return this.valueGetter ();
 		}
@@ -69,14 +68,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			foreach (var e in this.enumeration)
 			{
-				widget.Items.Add (e.Key.ToString (), e.Values);
+				widget.Items.Add (e.Key.ToString (), e);
 			}
 
+			widget.ValueToDescriptionConverter = delegate (object o)
+			{
+				var e = o as EnumKeyValues<T>;
+				return this.ValueToDescriptionConverter (e.Values);
+			};
+
 			widget.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
-			widget.ValueToDescriptionConverter = this.ValueToDescriptionConverter;
 			widget.CreateUI ();
 
-			//?var initialValue = this.ValueGetter;
 			var initialValue = this.GetValue ();
 			int index = widget.Items.FindIndexByKey (initialValue.ToString ());
 			if (index != -1)
@@ -86,17 +89,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			widget.SelectedItemChanged += delegate
 			{
-				string key = widget.Items.GetKey (widget.SelectedItemIndex);
-
-#if false
-				T result;
-				if (System.Enum.TryParse (key, result))
-				{
-					this.ValueSetter (result);
-				}
-#endif
-
-				//?this.ValueSetter ((T) widget.Items.GetKey (widget.SelectedItemIndex));
+				var key = widget.Items.GetValue (widget.SelectedItemIndex) as EnumKeyValues<T>;
+				T result = key.Key;
+				this.ValueSetter (result);
 			};
 		}
 

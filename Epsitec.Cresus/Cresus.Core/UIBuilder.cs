@@ -977,6 +977,7 @@ namespace Epsitec.Cresus.Core
 
 
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
+			where T : struct
 		{
 			var tile = this.CreateEditionTile ();
 
