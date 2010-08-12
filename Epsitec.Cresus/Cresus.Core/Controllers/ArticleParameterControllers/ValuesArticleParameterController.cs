@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private readonly TileContainer tileContainer;
 		private readonly EditionTile editionTile;
+
 		private FrameBox frameBox;
 	}
 }
