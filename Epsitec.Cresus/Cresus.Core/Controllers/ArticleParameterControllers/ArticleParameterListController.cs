@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public void CreateUI(FrameBox parent)
 		{
-			int buttonSize = 23;
+			double buttonSize = UIBuilder.TinyButtonSize;
 
 			//	Crée la toolbar.
 			var toolbar = new FrameBox
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.createButton = new GlyphButton
 			{
 				Parent = toolbar,
-				PreferredSize = new Size (buttonSize*2, buttonSize),
+				PreferredSize = new Size (buttonSize*2+1, buttonSize),
 				GlyphShape = GlyphShape.Plus,
 				Margins = new Margins (0, 0, 0, 0),
 				Dock = DockStyle.Left,

@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.toolbar = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = 20,
+				PreferredHeight = UIBuilder.TinyButtonSize,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, 1),
 				Dock = DockStyle.Top,
 			};
@@ -63,10 +63,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				var button = new Button
 				{
 					Parent = this.toolbar,
-					ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+					ButtonStyle = Common.Widgets.ButtonStyle.Icon,
 					Text = parameter.Code,
 					Name = parameter.Code,
-					PreferredHeight = 20,
+					PreferredHeight = UIBuilder.TinyButtonSize,
 					Margins = new Margins (0, 1, 0, 0),
 					Dock = DockStyle.Left,
 				};
@@ -85,21 +85,22 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private static double GetButtonRequiredWidth(Button button)
 		{
+			//	Retourne la largeur requise pour un bouton, selon le texte contenu.
+			//	Au minimum, il sera carré.
 			var size = button.TextLayout.SingleLineSize;
-			return System.Math.Max (20, (int) (size.Width+10));
+			return System.Math.Max (button.PreferredHeight, (int) (size.Width+10));
 		}
 
 		private static string GetTag(string code)
 		{
+			//	Retourne le tag à insérer dans le texte pour un paramètre.
 			return string.Format ("<param code=\"{0}\"/>", code);
 		}
 
 		private static void InsertText(TextFieldMultiEx textField, string text)
 		{
-			int cursor = textField.Cursor;
-
-			textField.Text = textField.Text.Insert (cursor, text);
-			textField.Cursor = cursor + text.Length;
+			//	Insère un texte comme s'il avait été frappé oar l'utilisateur.
+			textField.Selection = text;
 			textField.Focus ();
 		}
 
