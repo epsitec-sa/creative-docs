@@ -55,9 +55,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 		}
 
-		public void UpdateUI(ArticleDefinitionEntity articleDefinition, TextFieldMultiEx textField)
+		public void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
 		{
 			//	Met à jour l'interface en créant les boutons pour chaque paramètre.
+			//	Si articleDocumentItem == null, on ne spécifie pas les valeurs dans le texte éditable.
 			this.toolbar.Children.Clear ();
 
 			foreach (var parameter in articleDefinition.ArticleParameterDefinitions)
@@ -76,6 +77,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 				button.PreferredWidth = ArticleParameterToolbarController.GetButtonRequiredWidth (button);
 
+				ArticleParameterToolbarController.UpdateTextFieldParameter (articleDocumentItem, textField);
+
 				button.Clicked += delegate
 				{
 					ArticleParameterToolbarController.InsertText (textField, ArticleParameterToolbarController.GetTag (button.Name));
@@ -84,6 +87,61 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			//	La toolbar est invisible s'il n'y a aucun paramètre.
 			this.toolbar.Visibility = articleDefinition.ArticleParameterDefinitions.Count != 0;
+		}
+
+
+		private static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
+		{
+			if (articleDocumentItem == null)
+			{
+				return;
+			}
+
+			var dico = new Dictionary<string, string> ();
+			string[] values = (articleDocumentItem.ArticleParameters ?? "").Split (new string[] { AbstractArticleParameterController.Separator }, System.StringSplitOptions.None);
+			for (int i = 0; i < values.Length-1; i+=2)
+			{
+				string key  = values[i+0];
+				string data = values[i+1];
+
+				dico.Add (key, data);
+			}
+
+			foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
+			{
+				string value;
+
+				if (dico.ContainsKey (parameter.Code))
+				{
+					value = dico[parameter.Code];
+				}
+				else
+				{
+					value = ArticleParameterToolbarController.GetParameterDefaultValue (parameter);
+				}
+
+				if (!string.IsNullOrEmpty (value))
+				{
+					textField.TextLayout.SetParameter (parameter.Code, value);
+				}
+			}
+		}
+
+		private static string GetParameterDefaultValue(AbstractArticleParameterDefinitionEntity parameter)
+		{
+			if (parameter is NumericValueArticleParameterDefinitionEntity)
+			{
+				var numericParameter = parameter as NumericValueArticleParameterDefinitionEntity;
+				return numericParameter.DefaultValue.ToString ();
+			}
+
+			if (parameter is EnumValueArticleParameterDefinitionEntity)
+			{
+				var enumParameter = parameter as EnumValueArticleParameterDefinitionEntity;
+				return enumParameter.DefaultValue;
+			}
+
+			return null;
 		}
 
 

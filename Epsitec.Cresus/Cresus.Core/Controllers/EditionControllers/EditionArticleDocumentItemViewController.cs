@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			this.designationTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
 
-			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.designationTextField);
+			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
 		}
 
 		private void CreateUIPrice(Epsitec.Cresus.Core.UIBuilder builder)
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					this.SetArticleDescription (this.GetArticleDescription ());
 
 					this.parameterController.UpdateUI (this.Entity);
-					this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.designationTextField);
+					this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
 				}
 			}
 		}

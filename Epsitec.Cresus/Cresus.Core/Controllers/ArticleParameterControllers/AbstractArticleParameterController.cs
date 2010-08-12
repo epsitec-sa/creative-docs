@@ -110,8 +110,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		private const char				SeparatorChar	= (char) 0x25CA;					// '◊'
-		private static readonly string	Separator		= SeparatorChar.ToString ();		// "◊"
+		public const char				SeparatorChar	= (char) 0x25CA;					// '◊'
+		public static readonly string	Separator		= SeparatorChar.ToString ();		// "◊"
 
 		private readonly ArticleDocumentItemEntity article;
 		private readonly int parameterIndex;

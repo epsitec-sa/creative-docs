@@ -16,11 +16,11 @@ using System.Linq.Expressions;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur fait le pont entre un widget ItemPicker et une énumération quelconque.
+	/// Ce contrôleur fait le pont entre un widget ItemPicker et une énumération C# quelconque.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class EnumController<T> : IWidgetUpdater
-		where T : struct
+		where T : struct  // <T> doit être une énumération C# native
 	{
 		public EnumController(IEnumerable<EnumKeyValues<T>> enumeration)
 		{
