@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConcurrencySequenceAllTest()
 		{
 			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -55,6 +56,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConcurrencyMixedWriteSequenceReadTest()
 		{
 			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
@@ -63,6 +65,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConcurrencySequenceWriteMixedReadTest()
 		{
 			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -71,6 +74,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConcurrencyMixedAllTest()
 		{
 			this.InsertData (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
@@ -79,6 +83,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingValuesUpdatesSequence()
 		{
 			this.ConflictingValueUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -93,6 +98,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingReferenceUpdatesSequence()
 		{
 			this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -100,6 +106,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingReferenceUpdatesMixed()
 		{
 			this.ConflictingReferenceUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
@@ -107,6 +114,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingCollectionUpdatesSequence()
 		{
 			this.ConflictingCollectionUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionSequence (l));
@@ -114,6 +122,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingCollectionUpdatesMixed()
 		{
 			this.ConflictingCollectionUpdates (this.nbThreads, this.nbInsertions, l => this.ThreadActionMixed (l));
@@ -121,6 +130,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
+		[Ignore]
 		public void ConflictingSequence()
 		{
 			this.Conflicting (this.nbThreads, this.nbInsertions / 5, l => this.ThreadActionSequence (l));

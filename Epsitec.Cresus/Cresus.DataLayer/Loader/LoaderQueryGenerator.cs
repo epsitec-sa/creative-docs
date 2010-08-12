@@ -35,10 +35,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public LoaderQueryGenerator(DataContext dataContext)
 		{
 			this.DataContext = dataContext;
+			this.ExpressionConverter = new ExpressionConverter (dataContext);
 		}
 
 
 		private DataContext DataContext
+		{
+			get;
+			set;
+		}
+
+
+		private ExpressionConverter ExpressionConverter
 		{
 			get;
 			set;
@@ -703,7 +711,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			DbSelectCondition selectCondition = new DbSelectCondition ()
 			{
-				Condition = constraint.CreateDbCondition (fieldId =>
+				Condition = constraint.CreateDbCondition (this.ExpressionConverter, fieldId =>
 				{
 					Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 

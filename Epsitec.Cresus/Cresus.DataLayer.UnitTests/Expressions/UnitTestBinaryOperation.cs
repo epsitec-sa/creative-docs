@@ -1,6 +1,9 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,6 +15,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 	[TestClass]
 	public sealed class UnitTestBinaryOperation
 	{
+
+
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
+
+			DatabaseHelper.CreateAndConnectToDatabase ();
+		}
+
+
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			DatabaseHelper.DisconnectFromDatabase ();
+		}
 
 
 		[TestMethod]
@@ -99,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 		[TestMethod]
 		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest()
+		public void CreateDbConditionTest1()
 		{
 			Field leftField = new Field (Druid.FromLong (1));
 			UnaryComparison left = new UnaryComparison (leftField, UnaryComparator.IsNull);
@@ -109,7 +128,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 			BinaryOperation operation = new BinaryOperation (left, BinaryOperator.And, right);
 
-			operation.CreateDbCondition (null);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				operation.CreateDbCondition (converter, null);
+			}
+		}
+
+
+		[TestMethod]
+		[ExpectedException (typeof (System.ArgumentNullException))]
+		public void CreateDbConditionTest2()
+		{
+			Field leftField = new Field (Druid.FromLong (1));
+			UnaryComparison left = new UnaryComparison (leftField, UnaryComparator.IsNull);
+
+			Field rightField = new Field (Druid.FromLong (1));
+			UnaryComparison right = new UnaryComparison (rightField, UnaryComparator.IsNull);
+
+			BinaryOperation operation = new BinaryOperation (left, BinaryOperator.And, right);
+
+			operation.CreateDbCondition (null, id => null);
 		}
 
 

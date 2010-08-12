@@ -4,8 +4,10 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,6 +21,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 	 [TestClass]
 	public sealed class UnitTestExpressionConversion
 	{
+
+
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
+
+			DatabaseHelper.CreateAndConnectToDatabase ();
+		}
+
+
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			DatabaseHelper.DisconnectFromDatabase ();
+		}
 
 
 		[TestMethod]
@@ -37,24 +55,29 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			UnaryOperation operation = new UnaryOperation (op, comparison);
 
-			DbAbstractCondition condition1 = ExpressionConversion_Accessor.CreateDbCondition (operation, (id) => resolver[id]);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-			Assert.IsInstanceOfType (condition1, typeof (DbConditionModifier));
+				DbAbstractCondition condition1 = converter.CreateDbCondition (operation, (id) => resolver[id]);
 
-			DbConditionModifier condition2 = condition1 as DbConditionModifier;
+				Assert.IsInstanceOfType (condition1, typeof (DbConditionModifier));
 
-			Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbConditionModifierOperator (op));
+				DbConditionModifier condition2 = condition1 as DbConditionModifier;
 
-			DbAbstractCondition condition3 = condition2.Condition;
+				Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbConditionModifierOperator (op));
 
-			Assert.IsInstanceOfType(condition3, typeof (DbSimpleCondition));
+				DbAbstractCondition condition3 = condition2.Condition;
 
-			DbSimpleCondition_Accessor condition4 = new DbSimpleCondition_Accessor (new PrivateObject (condition3 as DbSimpleCondition));
+				Assert.IsInstanceOfType (condition3, typeof (DbSimpleCondition));
 
-			Assert.AreSame (condition4.Left, resolver[field.FieldId]);
-			Assert.AreEqual (condition4.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
-			Assert.IsNull (condition4.RightColumn);
-			Assert.AreEqual (1, condition4.argumentCount);
+				DbSimpleCondition_Accessor condition4 = new DbSimpleCondition_Accessor (new PrivateObject (condition3 as DbSimpleCondition));
+
+				Assert.AreSame (condition4.Left, resolver[field.FieldId]);
+				Assert.AreEqual (condition4.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
+				Assert.IsNull (condition4.RightColumn);
+				Assert.AreEqual (1, condition4.argumentCount);
+			}
 		}
 
 
@@ -66,7 +89,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			UnaryOperation operation = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (operation, resolver);
+			}
 		}
 
 
@@ -84,7 +112,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			);
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (operation, resolver);
+			}
 		}
 
 
@@ -111,35 +144,40 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 				comparison2
 			);
 
-			DbAbstractCondition condition1 = ExpressionConversion_Accessor.CreateDbCondition (operation, (id) => resolver[id]);
-
-			Assert.IsInstanceOfType (condition1, typeof (DbConditionCombiner));
-
-			DbConditionCombiner_Accessor condition2 = new DbConditionCombiner_Accessor (new PrivateObject (condition1 as DbConditionCombiner));
-
-			Assert.AreEqual (condition2.Combiner, EnumConverter_Accessor.ToDbConditionCombinerOperator (op));
-			
-			List<DbTableColumn> fields = new List<DbTableColumn> ()
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				resolver[field1.FieldId],
-				resolver[field2.FieldId],
-			};
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-			foreach (DbAbstractCondition condition3 in condition2.conditions)
-			{
-				Assert.IsTrue (condition3 is DbSimpleCondition);
+				DbAbstractCondition condition1 = converter.CreateDbCondition (operation, (id) => resolver[id]);
 
-				DbSimpleCondition_Accessor condition4 = new DbSimpleCondition_Accessor (new PrivateObject (condition3 as DbSimpleCondition));
+				Assert.IsInstanceOfType (condition1, typeof (DbConditionCombiner));
 
-				CollectionAssert.Contains (fields, condition4.Left);
-				Assert.AreEqual (condition4.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
-				Assert.IsNull (condition4.RightColumn);
-				Assert.AreEqual (1, condition4.argumentCount);
+				DbConditionCombiner_Accessor condition2 = new DbConditionCombiner_Accessor (new PrivateObject (condition1 as DbConditionCombiner));
 
-				fields.Remove (condition4.Left);
+				Assert.AreEqual (condition2.Combiner, EnumConverter_Accessor.ToDbConditionCombinerOperator (op));
+
+				List<DbTableColumn> fields = new List<DbTableColumn> ()
+				{
+					resolver[field1.FieldId],
+					resolver[field2.FieldId],
+				};
+
+				foreach (DbAbstractCondition condition3 in condition2.conditions)
+				{
+					Assert.IsTrue (condition3 is DbSimpleCondition);
+
+					DbSimpleCondition_Accessor condition4 = new DbSimpleCondition_Accessor (new PrivateObject (condition3 as DbSimpleCondition));
+
+					CollectionAssert.Contains (fields, condition4.Left);
+					Assert.AreEqual (condition4.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
+					Assert.IsNull (condition4.RightColumn);
+					Assert.AreEqual (1, condition4.argumentCount);
+
+					fields.Remove (condition4.Left);
+				}
+
+				Assert.IsTrue (fields.Count == 0);
 			}
-
-			Assert.IsTrue (fields.Count == 0);
 		}
 
 
@@ -151,7 +189,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			BinaryOperation operation = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (operation, resolver);
+			}
 		}
 
 
@@ -173,7 +216,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			);
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (operation, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (operation, resolver);
+			}
 		}
 
 
@@ -188,16 +236,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			UnaryComparison comparison = new UnaryComparison (field, comparator);
 
-			DbAbstractCondition condition1 = ExpressionConversion_Accessor.CreateDbCondition (comparison, (id) => resolver[id]);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-			Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
+				DbAbstractCondition condition1 = converter.CreateDbCondition (comparison, (id) => resolver[id]);
 
-			DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor (new PrivateObject (condition1 as DbSimpleCondition));
+				Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
 
-			Assert.AreSame (condition2.Left, resolver[field.FieldId]);
-			Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
-			Assert.IsNull (condition2.RightColumn);
-			Assert.AreEqual (1, condition2.argumentCount);
+				DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor (new PrivateObject (condition1 as DbSimpleCondition));
+
+				Assert.AreSame (condition2.Left, resolver[field.FieldId]);
+				Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
+				Assert.IsNull (condition2.RightColumn);
+				Assert.AreEqual (1, condition2.argumentCount);
+			}
 		}
 
 
@@ -209,7 +262,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			UnaryComparison comparison = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -224,7 +282,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			);
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -240,16 +303,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			ComparisonFieldField comparison = new ComparisonFieldField (field1, comparator, field2);
 
-			DbAbstractCondition condition1 = ExpressionConversion_Accessor.CreateDbCondition (comparison, (id) => resolver[id]);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-			Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
+				DbAbstractCondition condition1 = converter.CreateDbCondition (comparison, (id) => resolver[id]);
 
-			DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor (new PrivateObject (condition1 as DbSimpleCondition));
+				Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
 
-			Assert.AreSame (condition2.Left, resolver[field1.FieldId]);
-			Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
-			Assert.AreSame (condition2.RightColumn, resolver[field2.FieldId]);
-			Assert.AreEqual (2, condition2.argumentCount);
+				DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor (new PrivateObject (condition1 as DbSimpleCondition));
+
+				Assert.AreSame (condition2.Left, resolver[field1.FieldId]);
+				Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
+				Assert.AreSame (condition2.RightColumn, resolver[field2.FieldId]);
+				Assert.AreEqual (2, condition2.argumentCount);
+			}
 		}
 
 
@@ -261,7 +329,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			ComparisonFieldField comparison = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -277,7 +350,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			);
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -293,18 +371,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 			ComparisonFieldValue comparison = new ComparisonFieldValue (field, comparator, constant);
 
-			DbAbstractCondition condition1 = ExpressionConversion_Accessor.CreateDbCondition (comparison, (id) => resolver[id]);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-			Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
+				DbAbstractCondition condition1 = converter.CreateDbCondition (comparison, (id) => resolver[id]);
 
-			DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor(new PrivateObject(condition1 as DbSimpleCondition));
+				Assert.IsInstanceOfType (condition1, typeof (DbSimpleCondition));
 
-			Assert.AreSame (condition2.Left, resolver[field.FieldId]);
-			Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
-			Assert.AreEqual (condition2.RightConstantRawType, EnumConverter_Accessor.ToDbRawType (Type_Accessor.Int32));
-			Assert.AreEqual (condition2.RightConstantValue, 1);
-			Assert.IsNull (condition2.RightColumn);
-			Assert.AreEqual (2, condition2.argumentCount);
+				DbSimpleCondition_Accessor condition2 = new DbSimpleCondition_Accessor (new PrivateObject (condition1 as DbSimpleCondition));
+
+				Assert.AreSame (condition2.Left, resolver[field.FieldId]);
+				Assert.AreEqual (condition2.Operator, EnumConverter_Accessor.ToDbSimpleConditionOperator (comparator));
+				Assert.AreEqual (condition2.RightConstantRawType, EnumConverter_Accessor.ToDbRawType (Type_Accessor.Int32));
+				Assert.AreEqual (condition2.RightConstantValue, 1);
+				Assert.IsNull (condition2.RightColumn);
+				Assert.AreEqual (2, condition2.argumentCount);
+			}
 		}
 
 
@@ -316,7 +399,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			ComparisonFieldValue comparison = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -332,7 +420,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			);
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.CreateDbCondition (comparison, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+
+				converter.CreateDbCondition (comparison, resolver);
+			}
 		}
 
 
@@ -340,16 +433,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetDbTableColumnTest1()
 		{
-			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
-
-			foreach (Druid id in resolver.Keys)
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				Field field = new Field (id);
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+				ExpressionConverter_Accessor converterAccessor = new ExpressionConverter_Accessor (new PrivateObject (converter));
 
-				DbTableColumn column1 = resolver[id];
-				DbTableColumn column2 = ExpressionConversion_Accessor.GetDbTableColumn (field, druid => resolver[druid]);
+				Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
 
-				Assert.AreSame (column1, column2);
+				foreach (Druid id in resolver.Keys)
+				{
+					Field field = new Field (id);
+
+					DbTableColumn column1 = resolver[id];
+					DbTableColumn column2 =  converterAccessor.GetDbTableColumn (field, druid => resolver[druid]);
+
+					Assert.AreSame (column1, column2);
+				}
 			}
 		}
 
@@ -362,7 +461,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			Field field = null;
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
-			ExpressionConversion_Accessor.GetDbTableColumn (field, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+				ExpressionConverter_Accessor converterAccessor = new ExpressionConverter_Accessor (new PrivateObject (converter));
+
+				converterAccessor.GetDbTableColumn (field, resolver);
+			}
 		}
 
 
@@ -374,7 +479,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 			Field field = new Field (Druid.FromLong (1));
 			System.Func<Druid, DbTableColumn> resolver = null;
 
-			ExpressionConversion_Accessor.GetDbTableColumn (field, resolver);
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ExpressionConverter converter = new ExpressionConverter (dataContext);
+				ExpressionConverter_Accessor converterAccessor = new ExpressionConverter_Accessor (new PrivateObject (converter));
+
+				converterAccessor.GetDbTableColumn (field, resolver);
+			}
 		}
 
 
