@@ -31,7 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleQuantity", "Quantité");
 
-				this.CreateUIMain (builder);
+				this.CreateUIType          (builder);
+				this.CreateUIMain          (builder);
 				this.CreateUIUnitOfMeasure (builder);
 
 				builder.CreateFooterEditorTile ();
@@ -51,11 +52,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+		private void CreateUIType(Epsitec.Cresus.Core.UIBuilder builder)
+		{
+			var controller = new EnumController<BusinessLogic.ArticleQuantityType> (BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			{
+				ValueGetter = () => this.Entity.QuantityType,
+				ValueSetter = x => this.Entity.QuantityType = x,
+				ValueToDescriptionConverter = x => TextFormatter.FormatText (x as string[]),
+			};
+
+			builder.CreateEditionDetailedItemPicker ("Type", controller);
+		}
+
 		private void CreateUIMain(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateAutoCompleteTextField (tile,  87, "Type",        Marshaler.Create (this.Entity, x => x.QuantityType, (x, v) => x.QuantityType = v), BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType (), x => TextFormatter.FormatText (x.Values[0]));
+			//?builder.CreateAutoCompleteTextField (tile,  87, "Type",        Marshaler.Create (this.Entity, x => x.QuantityType, (x, v) => x.QuantityType = v), BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType (), x => TextFormatter.FormatText (x.Values[0]));
 			builder.CreateTextField             (tile, 100, "Date prévue", Marshaler.Create (() => this.Entity.ExpectedDate, x => this.Entity.ExpectedDate = x));
 			builder.CreateMargin                (tile, horizontalSeparator: true);
 			builder.CreateTextField             (tile,  60, "Quantité",    Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
@@ -86,11 +99,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 #endif
 
+
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
 			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			return title;
 		}
+
 
 
 	}
