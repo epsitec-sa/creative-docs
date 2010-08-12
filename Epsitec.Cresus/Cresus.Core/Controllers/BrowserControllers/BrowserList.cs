@@ -58,6 +58,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public int GetIndex(EntityKey? key)
+		{
+			if (key == null)
+			{
+				return -1;
+			}
+
+			var rowKey = key.Value.RowKey;
+
+			return this.list.FindIndex (x => x.EntityKey.RowKey == rowKey);
+		}
+
 		internal FormattedText GenerateEntityDisplayText(AbstractEntity entity)
 		{
 			if (entity == null)

@@ -8,6 +8,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Orchestrators;
 
 using Epsitec.Cresus.DataLayer;
@@ -23,10 +24,37 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// </summary>
 	public class NavigationOrchestrator
 	{
-		public NavigationOrchestrator()
+		public NavigationOrchestrator(MainViewController mainViewController)
 		{
 			this.nodes = new List<Node> ();
+			this.mainViewController = mainViewController;
 		}
+
+
+		public MainViewController MainViewController
+		{
+			get
+			{
+				return this.mainViewController;
+			}
+		}
+
+		public BrowserViewController BrowserViewController
+		{
+			get
+			{
+				return this.mainViewController.BrowserViewController;
+			}
+		}
+
+		public DataViewController DataViewController
+		{
+			get
+			{
+				return this.mainViewController.DataViewController;
+			}
+		}
+
 
 		/// <summary>
 		/// Adds a node in the navigation history for the controller which was just
@@ -86,11 +114,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if (this.currentActionId != actionId)
 			{
 				this.currentActionId  = actionId;
-				this.RecordTopNode ();
+				this.RecordCurrentStateAfterNewUserAction ();
 			}
 		}
 
-		private void RecordTopNode()
+		private void RecordCurrentStateAfterNewUserAction()
 		{
 			if (this.recordedHistoryId != this.currentHistoryId)
 			{
@@ -104,23 +132,16 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		private void RecordTopNode(Node node)
+		private void RecordTopNode(Node topNode)
 		{
-			if (node == null)
+			if (topNode != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("History: no nodes");
-			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("History: node = " + node.Item.GetType ().Name);
-				foreach (var item in this.WalkToRoot (node.Item))
-				{
-					var nav  = item.Item.NavigationPathElement;
-					var info = nav == null ? "<null>" : nav.ToString ();
-					System.Diagnostics.Debug.Write (" <-- " + info);
-				}
+				var topController = topNode.Item;
+				var fullPath = new Navigation.NavigationPath ();
 
-				System.Diagnostics.Debug.WriteLine ("");
+				fullPath.AddRange (this.WalkToRoot (topController).Select (node => node.Item.NavigationPathElement).Reverse ());
+
+				System.Diagnostics.Debug.WriteLine (fullPath.ToString ());
 			}
 		}
 
@@ -173,6 +194,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private readonly List<Node> nodes;
+		private readonly MainViewController mainViewController;
 		private bool isDirty;
 		private long currentActionId;
 		private long currentHistoryId;

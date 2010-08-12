@@ -6,7 +6,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
-	public class NavigationPathElement
+	public abstract class NavigationPathElement
 	{
+		protected internal NavigationPathElement ()
+		{
+		}
+
+		public virtual bool Navigate(NavigationOrchestrator navigator)
+		{
+			return false;
+		}
 	}
 }
