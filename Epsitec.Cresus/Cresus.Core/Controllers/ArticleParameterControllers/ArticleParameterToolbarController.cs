@@ -24,10 +24,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class ArticleParameterToolbarController
 	{
-		public ArticleParameterToolbarController(TileContainer tileContainer, ArticleDocumentItemEntity articleItem)
+		public ArticleParameterToolbarController(TileContainer tileContainer, ArticleDefinitionEntity articleDefinition)
 		{
 			this.tileContainer = tileContainer;
-			this.articleItem = articleItem;
+			this.articleDefinition = articleDefinition;
 		}
 
 
@@ -54,30 +54,58 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 		}
 
-		public void UpdateUI()
+		public void UpdateUI(TextFieldMultiEx textField)
 		{
 			this.toolbar.Children.Clear ();
 
-			foreach (var parameter in this.articleItem.ArticleDefinition.ArticleParameterDefinitions)
+			foreach (var parameter in this.articleDefinition.ArticleParameterDefinitions)
 			{
 				var button = new Button
 				{
 					Parent = this.toolbar,
 					ButtonStyle = Common.Widgets.ButtonStyle.Normal,
 					Text = parameter.Code,
-					PreferredWidth = 50,
+					Name = parameter.Code,
 					PreferredHeight = 20,
 					Margins = new Margins (0, 1, 0, 0),
 					Dock = DockStyle.Left,
 				};
+
+				button.PreferredWidth = GetButtonRequiredWidth (button);
+
+				button.Clicked += delegate
+				{
+					InsertText (textField, GetTag (button.Name));
+				};
 			}
 
-			this.toolbar.Visibility = this.articleItem.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
+			this.toolbar.Visibility = this.articleDefinition.ArticleParameterDefinitions.Count != 0;
+		}
+
+
+		private static double GetButtonRequiredWidth(Button button)
+		{
+			var size = button.TextLayout.SingleLineSize;
+			return System.Math.Max (20, (int) (size.Width+10));
+		}
+
+		private static string GetTag(string code)
+		{
+			return string.Format ("<param code=\"{0}\"/>", code);
+		}
+
+		private static void InsertText(TextFieldMultiEx textField, string text)
+		{
+			int cursor = textField.Cursor;
+
+			textField.Text = textField.Text.Insert (cursor, text);
+			textField.Cursor = cursor + text.Length;
+			textField.Focus ();
 		}
 
 
 		private readonly TileContainer tileContainer;
-		private readonly ArticleDocumentItemEntity articleItem;
+		private readonly ArticleDefinitionEntity articleDefinition;
 
 		private FrameBox toolbar;
 	}
