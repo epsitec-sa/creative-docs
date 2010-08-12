@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="UnaryComparator"/> to the corresponding <see cref="DbSimpleConditionOperator"/>.
 		/// </summary>
-		/// <param name="unaryComparator">The <see cref="UnaryComparator"/> to converted.</param>
+		/// <param name="unaryComparator">The <see cref="UnaryComparator"/> to convert.</param>
 		/// <returns>The corresponding <see cref="DbSimpleConditionOperator"/>.</returns>
-		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static DbSimpleConditionOperator ToDbSimpleConditionOperator(UnaryComparator unaryComparator)
 		{
 			switch (unaryComparator)
@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="BinaryComparator"/> to the corresponding <see cref="DbSimpleConditionOperator"/>.
 		/// </summary>
-		/// <param name="binaryComparator">The <see cref="BinaryComparator"/> to converted.</param>
+		/// <param name="binaryComparator">The <see cref="BinaryComparator"/> to convert.</param>
 		/// <returns>The corresponding <see cref="DbSimpleConditionOperator"/>.</returns>
-		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static DbSimpleConditionOperator ToDbSimpleConditionOperator(BinaryComparator binaryComparator)
 		{
 			switch (binaryComparator)
@@ -72,9 +72,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="UnaryOperator"/> to the corresponding <see cref="DbConditionModifierOperator"/>.
 		/// </summary>
-		/// <param name="unaryOperator">The <see cref="UnaryOperator"/> to converted.</param>
+		/// <param name="unaryOperator">The <see cref="UnaryOperator"/> to convert.</param>
 		/// <returns>The corresponding <see cref="DbConditionModifierOperator"/>.</returns>
-		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static DbConditionModifierOperator ToDbConditionModifierOperator(UnaryOperator unaryOperator)
 		{
 			switch (unaryOperator)
@@ -90,9 +90,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="BinaryOperator"/> to the corresponding <see cref="DbConditionCombinerOperator"/>.
 		/// </summary>
-		/// <param name="binaryOperator">The <see cref="BinaryOperator"/> to converted.</param>
+		/// <param name="binaryOperator">The <see cref="BinaryOperator"/> to convert.</param>
 		/// <returns>The corresponding <see cref="DbConditionCombinerOperator"/>.</returns>
-		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static DbConditionCombinerOperator ToDbConditionCombinerOperator(BinaryOperator binaryOperator)
 		{
 			switch (binaryOperator)
@@ -110,9 +110,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Converts an <see cref="Type"/> to the corresponding <see cref="DbRawType"/>.
 		/// </summary>
-		/// <param name="type">The <see cref="Type"/> to converted.</param>
+		/// <param name="type">The <see cref="Type"/> to convert.</param>
 		/// <returns>The corresponding <see cref="DbRawType"/>.</returns>
-		/// <exception cref="System.ArgumentException">If the conversion is not possible.</exception>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static DbRawType ToDbRawType(Type type)
 		{
 			switch (type)
@@ -138,6 +138,54 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
 			}
+		}
+
+
+		/// <summary>
+		/// Converts a <see cref="Type"/> to the corresponding <see cref="DbSimpleType"/>.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to convert.</param>
+		/// <returns>The corresponding <see cref="DbSimpleType"/>.</returns>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
+		public static DbSimpleType ToDbSimpleType(Type type)
+		{
+			switch (type)
+			{
+				case Type.Boolean:
+					return DbSimpleType.Decimal;
+				case Type.Int16:
+					return DbSimpleType.Decimal;
+				case Type.Int32:
+					return DbSimpleType.Decimal;
+				case Type.Int64:
+					return DbSimpleType.Decimal;
+				case Type.Double:
+					return DbSimpleType.Decimal;
+				case Type.Date:
+					return DbSimpleType.Date;
+				case Type.Time:
+					return DbSimpleType.Time;
+				case Type.DateTime:
+					return DbSimpleType.DateTime;
+				case Type.String:
+					return DbSimpleType.String;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
+			}
+		}
+
+
+		/// <summary>
+		/// Converts a <see cref="Type"/> to the corresponding <see cref="DbNumDef"/>.
+		/// </summary>
+		/// <param name="type">The <see cref="Type"/> to convert.</param>
+		/// <returns>The corresponding <see cref="DbNumDef"/>.</returns>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
+		public static DbNumDef ToDbNumDef(Type type)
+		{
+			DbRawType rawType = EnumConverter.ToDbRawType (type);
+
+			return DbNumDef.FromRawType (rawType);
 		}
 
 
