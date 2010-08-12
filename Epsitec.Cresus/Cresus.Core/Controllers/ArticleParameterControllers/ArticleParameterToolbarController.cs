@@ -67,6 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				{
 					Parent = this.toolbar,
 					ButtonStyle = Common.Widgets.ButtonStyle.Icon,
+					AutoFocus = false,
 					Text = parameter.Code,
 					Name = parameter.Code,
 					PreferredHeight = UIBuilder.TinyButtonSize,
@@ -98,15 +99,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private static string GetTag(string code)
 		{
 			//	Retourne le tag à insérer dans le texte pour un paramètre.
-			//?return string.Format ("<param code=\"{0}\"/>", code);
-			return string.Format ("**param code={0}**", code);  // debug !!!
+			return string.Format ("<param code=\"{0}\"/>", code);
 		}
 
 		private static void InsertText(TextFieldMultiEx textField, string text)
 		{
 			//	Insère un texte comme s'il avait été frappé par l'utilisateur.
+			textField.Focus ();  // il faut mettre le focus AVANT, à cause de la gestion du focus dans les widgets '*Ex' !
 			textField.Selection = text;
-			textField.Focus ();
 		}
 
 
