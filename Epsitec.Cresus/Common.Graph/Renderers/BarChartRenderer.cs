@@ -75,38 +75,62 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
         /// <summary>
-        /// Retourne la position de la légende en haut d'une barre, centrée.
+        /// Returns the caption position, centered on the bar.
+        /// Position depending on the value sign:
+        /// - On top for positive values
+        /// - On bottom for negative values
         /// </summary>
-        public override SeriesCaptionPosition GetSeriesCaptionPosition(Data.ChartSeries series, int seriesIndex)
+        public override SeriesCaptionPosition GetSeriesCaptionPosition (Data.ChartSeries series, int seriesIndex)
         {
             if (series.Values.Count != 1)
                 return new SeriesCaptionPosition () { ShowCaption = false };
 
-            using (Path path = this.CreateSurfacePath(series, seriesIndex))
+            using (Path path = this.CreateSurfacePath (series, seriesIndex))
             {
                 PathElement[] elems;
                 Point[] points;
 
-                path.GetElements(out elems, out points);
+                path.GetElements (out elems, out points);
 
                 double minX = double.MaxValue;
                 double maxX = 0;
-                double maxY = 0;
+                double minMaxY = 0;
 
-                // Prend chaque point et récupère les points extrèmes.
+                // Take every point and get the extremums
                 foreach (var p in points)
                 {
-                    // Evite un artefact de calcul
-                    if(p.X > 10)
-                        minX = System.Math.Min(minX, p.X);
+                    // Some points are not correct
+                    if (p.X > 10)
+                        minX = System.Math.Min (minX, p.X);
 
-                    maxX = System.Math.Max(maxX, p.X);
-                    maxY = System.Math.Max(maxY, p.Y);
+                    maxX = System.Math.Max (maxX, p.X);
+                    minMaxY = series.Values[0].Value >= 0 ? System.Math.Max (minMaxY, p.Y) : System.Math.Min (minMaxY, p.Y);
+                }
+
+                // Return data
+                var point = new Point ()
+                {
+                    X = minX + (maxX - minX) / 2,
+                    Y = minMaxY
+                };
+                ContentAlignment aligment;
+
+                // Point depends on the value sign
+                if (minMaxY >= 0)
+                {
+                    point.Y += BarChartRenderer.captionVerticalOffset;
+                    aligment = ContentAlignment.BottomCenter;
+                }
+                else
+                {
+                    point.Y -= BarChartRenderer.captionVerticalOffset;
+                    aligment = ContentAlignment.TopCenter;
                 }
 
                 return new SeriesCaptionPosition ()
                 {
-                    Position = new Point (minX + (maxX - minX) / 2, maxY + 5)
+                    Position = point,
+                    Alignment = aligment
                 };
             }
         }
@@ -209,9 +233,10 @@ namespace Epsitec.Common.Graph.Renderers
 			return path;
 		}
 
-		
 
-		private double verticalScale;
+
+        private static readonly int captionVerticalOffset = 5;
+        private double verticalScale;
 		private double horizontalScale;
 	}
 }
