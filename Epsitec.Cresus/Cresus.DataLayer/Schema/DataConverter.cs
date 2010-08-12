@@ -136,12 +136,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		public object ToDatabaseValue(DbTypeDef dbType, object value)
+		public object ToDatabaseValue(DbRawType rawType, DbSimpleType simpleType, DbNumDef numDef, object value)
 		{
-			DbRawType rawType = dbType.RawType;
-			DbSimpleType simpleType = dbType.SimpleType;
-			DbNumDef numDef = dbType.NumDef;
-				
 			object newValue = value;
 
 			newValue = this.ToDotNetValue (newValue, simpleType, numDef);
@@ -151,7 +147,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		public object ToDotNetValue(object value, DbSimpleType simpleType, DbNumDef numDef)
+		private object ToDotNetValue(object value, DbSimpleType simpleType, DbNumDef numDef)
 		{
 			object newValue = value;
 			
