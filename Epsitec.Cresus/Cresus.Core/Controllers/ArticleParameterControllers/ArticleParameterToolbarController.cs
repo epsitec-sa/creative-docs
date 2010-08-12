@@ -25,10 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class ArticleParameterToolbarController
 	{
-		public ArticleParameterToolbarController(TileContainer tileContainer, ArticleDefinitionEntity articleDefinition)
+		public ArticleParameterToolbarController(TileContainer tileContainer)
 		{
 			this.tileContainer = tileContainer;
-			this.articleDefinition = articleDefinition;
 		}
 
 
@@ -56,12 +55,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 		}
 
-		public void UpdateUI(TextFieldMultiEx textField)
+		public void UpdateUI(ArticleDefinitionEntity articleDefinition, TextFieldMultiEx textField)
 		{
 			//	Met à jour l'interface en créant les boutons pour chaque paramètre.
 			this.toolbar.Children.Clear ();
 
-			foreach (var parameter in this.articleDefinition.ArticleParameterDefinitions)
+			foreach (var parameter in articleDefinition.ArticleParameterDefinitions)
 			{
 				var button = new Button
 				{
@@ -84,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 
 			//	La toolbar est invisible s'il n'y a aucun paramètre.
-			this.toolbar.Visibility = this.articleDefinition.ArticleParameterDefinitions.Count != 0;
+			this.toolbar.Visibility = articleDefinition.ArticleParameterDefinitions.Count != 0;
 		}
 
 
@@ -105,13 +104,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private static void InsertText(TextFieldMultiEx textField, string text)
 		{
 			//	Insère un texte comme s'il avait été frappé par l'utilisateur.
-			textField.Focus ();  // il faut mettre le focus AVANT, à cause de la gestion du focus dans les widgets '*Ex' !
+			textField.Focus ();  // il faut mettre le focus AVANT, à cause de la gestion des boutons v/x dans les widgets '*Ex' !
 			textField.Selection = text;
 		}
 
 
 		private readonly TileContainer tileContainer;
-		private readonly ArticleDefinitionEntity articleDefinition;
 
 		private FrameBox toolbar;
 	}
