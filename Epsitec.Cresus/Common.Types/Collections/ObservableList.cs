@@ -1,8 +1,9 @@
 //	Copyright © 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Support;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types.Collections
 {
@@ -33,7 +34,7 @@ namespace Epsitec.Common.Types.Collections
 			{
 				ObservableList<T> that = this.NotifyBeforeChange ();
 				int index = that.list.Count;
-				that.list.AddRange (collection);
+				that.list.AddRange (items.Cast<T> ());
 				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, items));
 			}
 		}
