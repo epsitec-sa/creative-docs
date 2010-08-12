@@ -103,7 +103,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// back to just one root view controller.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		public void SetActiveEntity(AbstractEntity entity)
+		/// <param name="navigationPathElement">The navigation path element describing how to get to the entity.</param>
+		public void SetActiveEntity(AbstractEntity entity, Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)
 		{
 			this.ClearActiveEntity ();
 
@@ -112,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.entity = entity;
 
 				var context    = this.DataContext;
-				var controller = this.CreateRootSummaryViewController ();
+				var controller = this.CreateRootSummaryViewController (navigationPathElement);
 
 				controller.DataContext = context;
 
@@ -353,21 +354,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewControllers.ForEach (controller => controller.AboutToSave (e.DataContext));
 		}
 
-		private EntityViewController CreateRootSummaryViewController()
+		private EntityViewController CreateRootSummaryViewController(Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)
 		{
-#if false
-			var mode = ViewControllerMode.Summary;
-
-			// Hack pour ouvrir les factures directement en édition.
-			if (this.entity is Entities.InvoiceDocumentEntity)
-			{
-				mode = ViewControllerMode.Edition;
-			}
-
-			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, mode, this.Orchestrator);
-#else
-			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator);
-#endif
+			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
 		}
 
 		private CoreViewController GetParentController(int depth)
