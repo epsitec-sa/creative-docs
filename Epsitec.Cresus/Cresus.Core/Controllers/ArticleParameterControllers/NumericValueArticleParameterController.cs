@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private FormattedText GetUserText(string value)
 		{
-			return TextFormater.FormatText (value);
+			return TextFormatter.FormatText (value);
 		}
 
 		private HintComparerResult MatchUserText(string value, string userText)

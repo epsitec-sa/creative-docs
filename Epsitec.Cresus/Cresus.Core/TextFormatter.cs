@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed class TextFormater
+	public sealed class TextFormatter
 	{
 		public static FormattedText FormatText(params object[] values)
 		{

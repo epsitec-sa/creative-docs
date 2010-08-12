@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleDefinitions (this.DataContext),
 
 					ToTextArrayConverter     = x => new string[] { x.IdA, x.ShortDescription },
-					ToFormattedTextConverter = x => TextFormater.FormatText (x.IdA, x.ShortDescription),
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
 				});
 		}
 
@@ -117,15 +117,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					AutoGroup    = true,
 					Name		 = "ArticleQuantities",
 					IconUri		 = "Data.ArticleQuantity",
-					Title		 = TextFormater.FormatText ("Quantités"),
-					CompactTitle = TextFormater.FormatText ("Quantités"),
+					Title		 = TextFormatter.FormatText ("Quantités"),
+					CompactTitle = TextFormatter.FormatText ("Quantités"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
 			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormater.FormatText (GetArticleQuantitySummary (x)));
-			template.DefineCompactText (x => TextFormater.FormatText (GetArticleQuantitySummary (x)));
+			template.DefineText        (x => TextFormatter.FormatText (GetArticleQuantitySummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (GetArticleQuantitySummary (x)));
 			template.DefineSetupItem   (SetupArticleQuantity);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleQuantities, template));

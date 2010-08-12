@@ -63,10 +63,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "Customer",
 					IconUri				= "Data.Customer",
-					Title				= TextFormater.FormatText ("Client"),
-					CompactTitle		= TextFormater.FormatText ("Client"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("N°", x.IdA, "\n", this.PersonText, "\n", "Représentant: ~", this.SalesRepresentativeText)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("N°", x.IdA, "\n", this.PersonCompactText)),
+					Title				= TextFormatter.FormatText ("Client"),
+					CompactTitle		= TextFormatter.FormatText ("Client"),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", this.PersonText, "\n", "Représentant: ~", this.SalesRepresentativeText)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", this.PersonCompactText)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}
@@ -79,14 +79,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					var x = this.Entity.Person as Entities.NaturalPersonEntity;
 
-					return TextFormater.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")");
+					return TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")");
 				}
 
 				if (this.Entity.Person is Entities.LegalPersonEntity)
 				{
 					var x = this.Entity.Person as Entities.LegalPersonEntity;
 
-					return TextFormater.FormatText (x.Name);
+					return TextFormatter.FormatText (x.Name);
 				}
 
 				return FormattedText.Empty;
@@ -101,14 +101,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					var x = this.Entity.Person as Entities.NaturalPersonEntity;
 
-					return TextFormater.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
+					return TextFormatter.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
 				}
 
 				if (this.Entity.Person is Entities.LegalPersonEntity)
 				{
 					var x = this.Entity.Person as Entities.LegalPersonEntity;
 
-					return TextFormater.FormatText (x.Name);
+					return TextFormatter.FormatText (x.Name);
 				}
 
 				return FormattedText.Empty;
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					var x = this.Entity.SalesRepresentative as Entities.NaturalPersonEntity;
 
-					return TextFormater.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
+					return TextFormatter.FormatText (x.Title.ShortName, x.Firstname, x.Lastname);
 				}
 
 				return FormattedText.Empty;
@@ -155,15 +155,15 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "Affair",
 					IconUri		 = "Data.Affair",
-					Title		 = TextFormater.FormatText ("Affaires"),
-					CompactTitle = TextFormater.FormatText ("Affaires"),
+					Title		 = TextFormatter.FormatText ("Affaires"),
+					CompactTitle = TextFormatter.FormatText ("Affaires"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
 			var template = new CollectionTemplate<AffairEntity> ("Affair", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormater.FormatText (GetAffairsSummary (x)));
-			template.DefineCompactText (x => TextFormater.FormatText (x.IdA));
+			template.DefineText        (x => TextFormatter.FormatText (GetAffairsSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (x.IdA));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
 		}

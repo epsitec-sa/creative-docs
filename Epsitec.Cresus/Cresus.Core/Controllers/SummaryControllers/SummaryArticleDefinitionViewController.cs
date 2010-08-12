@@ -39,10 +39,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "ArticleDefinition",
 					IconUri				= "Data.ArticleDefinition",
-					Title				= TextFormater.FormatText ("Article"),
-					CompactTitle		= TextFormater.FormatText ("Article"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
+					Title				= TextFormatter.FormatText ("Article"),
+					CompactTitle		= TextFormatter.FormatText ("Article"),
+					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
+					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
 		}

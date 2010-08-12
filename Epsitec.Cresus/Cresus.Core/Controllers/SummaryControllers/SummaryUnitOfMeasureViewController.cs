@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					{
 						Name				= "UnitOfMeasure",
 						IconUri				= "Data.UnitOfMeasure",
-						Title				= TextFormater.FormatText ("Unité de mesure"),
-						CompactTitle		= TextFormater.FormatText ("Unité"),
-						TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormater.FormatText ("Nom: ", x.Name, "\n", "Code: ", x.Code, "\n", "Catégorie: ", GetCategory (x), "\n", "Valeurs: ", GetFactors (x))),
-						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormater.FormatText (x.Name, "(", x.Code, ")")),
+						Title				= TextFormatter.FormatText ("Unité de mesure"),
+						CompactTitle		= TextFormatter.FormatText ("Unité"),
+						TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("Nom: ", x.Name, "\n", "Code: ", x.Code, "\n", "Catégorie: ", GetCategory (x), "\n", "Valeurs: ", GetFactors (x))),
+						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")),
 						EntityMarshaler		= this.EntityMarshaler,
 					});
 			}
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				if (item.Key == unit.Category)
 				{
-					return TextFormater.FormatText (item.Values).ToSimpleText ();
+					return TextFormatter.FormatText (item.Values).ToSimpleText ();
 				}
 			}
 

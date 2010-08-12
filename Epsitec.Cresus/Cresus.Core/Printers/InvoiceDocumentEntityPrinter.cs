@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return TextFormater.FormatText ("Facture", this.entity.IdA).ToSimpleText ();
+				return TextFormatter.FormatText ("Facture", this.entity.IdA).ToSimpleText ();
 			}
 		}
 
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			string date = Misc.GetDateTimeDescription (this.entity.LastModificationDate);
 			var dateBand = new TextBand ();
-			dateBand.Text = TextFormater.FormatText ("Crissier, le ", date).ToString ();
+			dateBand.Text = TextFormatter.FormatText ("Crissier, le ", date).ToString ();
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.PageSize.Height-82, 80, 10));

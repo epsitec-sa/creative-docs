@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				else
 				{
 					string prefix = (enumValue.Value == this.parameterEntity.DefaultValue) ? "● " : "   ";
-					text = TextFormater.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
+					text = TextFormatter.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
 					text = string.Concat (prefix, text);
 				}
 
