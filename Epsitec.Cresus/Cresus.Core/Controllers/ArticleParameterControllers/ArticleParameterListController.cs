@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = parent,
 				PreferredHeight = buttonSize,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
+				Margins = new Margins (0, UIBuilder.RightMargin, 2, 1),
 				TabIndex = 1,
 			};
 
@@ -350,18 +350,20 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			foreach (var enumValue in this.enumValues)
 			{
-				string text;
+				string icon, text;
 
 				if (enumValue.IsEmpty)
 				{
-					text = "   <i>Vide</i>";
+					icon = "Button.RadioNo";
+					text = "<i>Vide</i>";
 				}
 				else
 				{
-					string prefix = (enumValue.Value == this.parameterEntity.DefaultValue) ? "● " : "   ";
+					icon = (enumValue.Value == this.parameterEntity.DefaultValue) ? "Button.RadioYes" : "Button.RadioNo";
 					text = TextFormatter.FormatText (enumValue.Value, "(", enumValue.ShortDescription, ",~", Misc.FirstLine (enumValue.LongDescription), ")").ToSimpleText ();
-					text = string.Concat (prefix, text);
 				}
+
+				text = string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text);
 
 				this.scrollList.Items.Add (text);
 			}
