@@ -24,9 +24,23 @@ namespace Epsitec.Common.Graph.Data
         /// <summary>Angle that the renderer prefers to use to paint the caption</summary>
         public double Angle { get; set; }
 
-        /// <summary>Center of the caption</summary>
+        /// <summary>Reference point</summary>
         public Point Position { get; set; }
 
+        /// <summary>Aligment of the text, from the <see cref="Position"/></summary>
+        public ContentAlignment Alignment
+        {
+            get
+            {
+                return alignement;
+            }
+            set
+            {
+                alignement = value;
+            }
+        }
+
         private bool showCaption = true;
+        private ContentAlignment alignement = ContentAlignment.MiddleCenter;
     }
 }
