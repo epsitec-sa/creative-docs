@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data = data;
 
-			this.navigator = new NavigationOrchestrator ();
+			this.navigator = new NavigationOrchestrator (this);
 			this.Orchestrator = new DataViewOrchestrator ();
 			this.printEngine = new PrintEngine ();
 
@@ -90,6 +90,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			get
 			{
 				return this.browserViewController;
+			}
+		}
+
+		public DataViewController DataViewController
+		{
+			get
+			{
+				return this.dataViewController;
 			}
 		}
 

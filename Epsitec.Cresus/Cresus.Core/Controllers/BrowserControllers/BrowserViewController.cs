@@ -251,6 +251,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.activeEntityKey, entityKey));
 
+			this.SetActiveEntityKey (entityKey);
+		}
+
+
+		private void SetActiveEntityKey(EntityKey? entityKey)
+		{
 			if (this.activeEntityKey != entityKey)
 			{
 				this.activeEntityKey = entityKey;
@@ -258,7 +264,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.OnCurrentChanged ();
 			}
 		}
-	
 		
 		protected void OnCurrentChanged()
 		{
@@ -293,11 +298,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		
 		private void RefreshScrollList(bool reset = false)
 		{
-			if (this.scrollList != null)
+			if ((this.scrollList != null) &&
+				(this.collection != null))
 			{
 				int newCount = this.collection == null ? 0 : this.collection.Count;
 
-				int oldActive = reset ? 0 : this.scrollList.SelectedItemIndex;
+				int oldActive = reset ? 0 : this.collection.GetIndex (this.activeEntityKey);
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
 				this.suspendUpdates++;
@@ -325,6 +331,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				this.dataSetName = controller.DataSetName;
 				this.entityKey   = entityKey;
+			}
+
+			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
+			{
+				var browserViewController = navigator.BrowserViewController;
+				var browserDataContext    = browserViewController.DataContext;
+
+				browserViewController.SelectDataSet (this.dataSetName);
+				browserViewController.SetActiveEntityKey (this.entityKey);
+				browserViewController.RefreshScrollList ();
+
+				return browserViewController.GetActiveEntity (browserDataContext) != null;
 			}
 
 			public override string ToString()

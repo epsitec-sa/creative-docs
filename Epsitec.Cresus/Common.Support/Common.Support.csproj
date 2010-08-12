@@ -173,6 +173,7 @@
     <Compile Include="Extensions\EntityModifications.cs" />
     <Compile Include="Extensions\ExceptionThrower.cs" />
     <Compile Include="Extensions\QueueExtensions.cs" />
+    <Compile Include="Extensions\StackExtensions.cs" />
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
