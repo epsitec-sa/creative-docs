@@ -10,6 +10,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -695,11 +696,7 @@ namespace Epsitec.Cresus.Core
 		{
 			var tile = this.CreateEditionTile ();
 
-			System.Func<AbstractEntity>   entityGetter = () => controller.GetValue ();
-			System.Action<AbstractEntity> entitySetter = x => controller.SetValue (x as T);
-
-			var referenceController = controller.ReferenceController ?? new ReferenceController (entityGetter);
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, entityGetter, entitySetter, referenceController);
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, x => controller.SetValue (x as T), controller.ReferenceController);
 
 			controller.Attach (autoCompleteTextField);
 			this.container.WidgetUpdaters.Add (controller);
@@ -787,8 +784,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
+		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
+			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");
+
 			tile.AllowSelection = true;
 
 			var staticText = new StaticText
@@ -886,7 +885,7 @@ namespace Epsitec.Cresus.Core
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new ReferenceTileController (referenceController);
-						tile.ToggleSubView (controller.Orchestrator, controller);
+						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (referenceController));
 					}
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
@@ -1008,9 +1007,9 @@ namespace Epsitec.Cresus.Core
 
 			#region ITileController Members
 
-			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 			{
-				return this.referenceController.CreateSubViewController (orchestrator);
+				return this.referenceController.CreateSubViewController (orchestrator, navigationPathElement);
 			}
 
 			#endregion
@@ -1052,6 +1051,24 @@ namespace Epsitec.Cresus.Core
 		}
 
 		#endregion
+
+		private class TileNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
+		{
+			public TileNavigationPathElement(ReferenceController referenceController)
+			{
+				this.id = referenceController.Id;
+			}
+
+
+			public override string ToString()
+			{
+				return string.Concat ("<Tile:", this.id, ">");
+			}
+
+
+			private readonly string id;
+		}
+
 
 		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
 		{
