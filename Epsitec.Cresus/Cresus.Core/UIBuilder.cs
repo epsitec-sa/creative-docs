@@ -979,9 +979,13 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (combo);
 
-			if (combo.SelectionCount == 0)  // aucune sélection ?
+			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
+				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne )
 			{
-				combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+				if (combo.SelectionCount == 0)  // aucune sélection ?
+				{
+					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+				}
 			}
 
 			return combo;
