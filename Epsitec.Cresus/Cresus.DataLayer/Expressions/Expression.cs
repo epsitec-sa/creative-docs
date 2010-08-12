@@ -2,6 +2,8 @@
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Loader;
+
 using System.Collections.Generic;
 
 
@@ -37,9 +39,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// resolver to convert the <see cref="Druid"/> of the fields to the appropriate
 		/// <see cref="DbTableColumn"/>.
 		/// </summary>
+		/// <param name="expressionConverter">The <see cref="ExpressionConverter"/> used to convert this instance.</param>
 		/// <param name="columnResolver">The function used to resolve the <see cref="DbTableColumn"/> given an <see cref="Druid"/>.</param>
 		/// <returns>The new <see cref="DbAbstractCondition"/>.</returns>
-		internal abstract DbAbstractCondition CreateDbCondition(System.Func<Druid, DbTableColumn> columnResolver);
+		internal abstract DbAbstractCondition CreateDbCondition(ExpressionConverter expressionConverter, System.Func<Druid, DbTableColumn> columnResolver);
 
 
 	}

@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -18,7 +19,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		// TODO Comment this class.
 		// Marc
 
-
+		// TODO Argument checks in this class
+		// Marc
+		
 		// TODO All this conversion stuff is kind of low level and it might make sense to move it (or
 		// part of it) somewhere else, like in the Database namespace.
 		// Marc
@@ -104,7 +107,10 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			object newValue = value;
 
-			DbRawType rawType = dbColumn.Type.RawType;
+			DbTypeDef typeDef = dbColumn.Type;
+			DbRawType rawType = typeDef.RawType;
+			DbSimpleType simpleType = typeDef.SimpleType;
+			DbNumDef numDef = typeDef.NumDef;
 
 			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
 
@@ -123,10 +129,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			if (value != System.DBNull.Value)
 			{
-				DbSimpleType typeDef = dbColumn.Type.SimpleType;
-				DbNumDef numDef = dbColumn.Type.NumDef;
-
-				return TypeConverter.ConvertToSimpleType (value, typeDef, numDef);
+				newValue = TypeConverter.ConvertToSimpleType (value, simpleType, numDef);
 			}
 
 			return newValue;
@@ -135,11 +138,26 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		public object ToDatabaseValue(DbTypeDef dbType, object value)
 		{
+			DbRawType rawType = dbType.RawType;
+			DbSimpleType simpleType = dbType.SimpleType;
+			DbNumDef numDef = dbType.NumDef;
+				
 			object newValue = value;
 
+			newValue = this.ToDotNetValue (newValue, simpleType, numDef);
+			newValue = this.ToDatabaseValue (rawType, newValue);
+
+			return newValue;
+		}
+
+
+		public object ToDotNetValue(object value, DbSimpleType simpleType, DbNumDef numDef)
+		{
+			object newValue = value;
+			
 			if (value != System.DBNull.Value)
 			{
-				if (dbType.SimpleType == DbSimpleType.Decimal)
+				if (simpleType == DbSimpleType.Decimal)
 				{
 					decimal decimalValue;
 
@@ -153,10 +171,16 @@ namespace Epsitec.Cresus.DataLayer.Schema
 					newValue = decimalValue;
 				}
 
-				newValue = TypeConverter.ConvertFromSimpleType (newValue, dbType.SimpleType, dbType.NumDef);
+				newValue = TypeConverter.ConvertFromSimpleType (newValue, simpleType, numDef);
 			}
 
-			DbRawType rawType = dbType.RawType;
+			return newValue;
+		}
+
+
+		public object ToDatabaseValue(DbRawType rawType, object value)
+		{
+			object newValue = value;
 
 			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
 
@@ -177,9 +201,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		public DbRawType ToDatabaseType(DbTypeDef dbType)
+		public DbRawType ToDatabaseType(DbRawType rawType)
 		{
-			DbRawType newRawType = dbType.RawType;
+			DbRawType newRawType = rawType;
 
 			ITypeConverter typeConverter = this.DbInfrastructure.Converter;
 

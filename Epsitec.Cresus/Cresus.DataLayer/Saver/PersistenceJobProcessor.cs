@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			DbTypeDef columnType = column.Type;
 			object convertedValue = this.DataConverter.ToDatabaseValue (columnType, value);
-			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (columnType);
+			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (columnType.RawType);
 
 			SqlField constantField = SqlField.CreateConstant (convertedValue, convertedRawType);
 
@@ -583,7 +583,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			DbTypeDef type = column.Type;
 
 			object convertedValue = this.DataConverter.ToDatabaseValue (type, value);
-			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (type);
+			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (type.RawType);
 
 			SqlField SqlField = SqlField.CreateConstant (convertedValue, convertedRawType);
 			SqlField.Alias = column.GetSqlName ();
