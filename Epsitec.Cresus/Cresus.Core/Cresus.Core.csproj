@@ -104,6 +104,7 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
+    <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />

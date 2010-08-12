@@ -971,11 +971,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widget CreateEditionDetailedRadio<T>(int width, string label, SelectionController<T> controller)
+		public Widget CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var combo = this.CreateDetailedRadio (tile, width, label);
+			var combo = this.CreateDetailedItemPicker (tile, label, cardinality);
 
 			controller.Attach (combo);
 
@@ -987,7 +987,7 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
-		private Widgets.ItemPicker CreateDetailedRadio(EditionTile tile, int width, string label)
+		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
 		{
 			var staticText = new StaticText
 			{
@@ -1003,45 +1003,7 @@ namespace Epsitec.Cresus.Core
 				Parent = tile.Container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 3),
-				Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne,
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.ContentListAdd (staticText);
-			this.ContentListAdd (combo);
-
-			return combo;
-		}
-
-
-		public Widget CreateEditionDetailedCheck<T>(int width, string label, SelectionController<T> controller)
-			where T : AbstractEntity
-		{
-			var tile  = this.CreateEditionTile ();
-			var combo = this.CreateDetailedCheck (tile, width, label);
-
-			controller.Attach (combo);
-			
-			return combo;
-		}
-
-		private Widgets.ItemPicker CreateDetailedCheck(EditionTile tile, int width, string label)
-		{
-			var staticText = new StaticText
-			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
-			};
-
-			var combo = new Widgets.ItemPicker
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 3),
-				Cardinality = BusinessLogic.EnumValueCardinality.Any,
+				Cardinality = cardinality,
 				TabIndex = ++this.tabIndex,
 			};
 
