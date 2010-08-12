@@ -53,7 +53,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EditionStatus.Unknown;
 		}
 
-		protected abstract void CreateUI(TileContainer container);
+		public TileContainer TileContainer
+		{
+			get;
+			protected set;
+		}
+		
+		protected abstract void CreateUI();
 
 		public T NotifyChildItemCreated<T>(T entity)
 			where T : AbstractEntity
@@ -239,12 +245,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public sealed override void CreateUI(Widget container)
 		{
-			var context = this.DataContext;
-			var entity  = this.Entity;
+			var context       = this.DataContext;
+			var entity        = this.Entity;
+			var tileContainer = container as TileContainer;
 			
 			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
-			
-			this.CreateUI (container as TileContainer);
+			System.Diagnostics.Debug.Assert (tileContainer != null);
+
+			this.TileContainer = tileContainer;
+			this.CreateUI ();
 		}
 
 		public sealed override AbstractEntity GetEntity()

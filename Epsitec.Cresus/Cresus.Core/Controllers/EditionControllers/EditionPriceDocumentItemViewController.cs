@@ -27,11 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.PriceDocumentItem", "Ligne de sous-total");
@@ -167,14 +165,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void UpdatePrices()
 		{
-			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as InvoiceDocumentEntity;
 
 			if (invoiceDocument != null)
 			{
 				InvoiceDocumentHelper.UpdatePrices (invoiceDocument, this.DataContext);
 			}
 
-			this.tileContainer.UpdateAllWidgets ();
+			this.TileContainer.UpdateAllWidgets ();
 		}
 
 	
@@ -182,8 +180,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return EditionStatus.Valid;
 		}
-
-
-		private TileContainer							tileContainer;
 	}
 }

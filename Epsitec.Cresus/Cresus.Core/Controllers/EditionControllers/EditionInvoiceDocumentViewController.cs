@@ -56,11 +56,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 	
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.InvoiceDocument", "Facture");
@@ -141,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			button.Clicked += delegate
 			{
 				InvoiceDocumentHelper.UpdatePrices (this.Entity, this.DataContext);
-				this.tileContainer.UpdateAllWidgets ();
+				this.TileContainer.UpdateAllWidgets ();
 			};
 #endif
 		}
@@ -199,8 +197,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			InvoiceDocumentHelper.SetFixedPriceTTC (this.Entity, Misc.StringToDecimal (value));
 		}
-
-
-		private TileContainer					tileContainer;
 	}
 }

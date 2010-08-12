@@ -38,11 +38,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		//	Si this.Entity.NaturalPerson nul et this.Entity.LegalPerson existe :
 		//		Pas d'onglets. On définit l'adresse spécifique d'une entreprise.
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.Mail", "Adresse");
@@ -77,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			using (var data = TileContainerController.Setup (container))
+			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIComments (data);
 			}
@@ -176,7 +174,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.InitializeDefaultCountry ();  // met "Suisse" si rien
 				this.selectedCountry = this.Entity.Address.Location.Country;
 
-				this.tileContainer.UpdateAllWidgets ();
+				this.TileContainer.UpdateAllWidgets ();
 			}
 		}
 
@@ -427,8 +425,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer							tileContainer;
-		private TileTabBook<TabPageId>						tabBookContainer;
+		private TileTabBook<TabPageId>					tabBookContainer;
 		private AutoCompleteTextField					addressTextField;
 		private AutoCompleteTextField					countryTextField;
 		private AutoCompleteTextField					locationTextField;

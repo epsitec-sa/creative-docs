@@ -25,11 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.BillingDetails", "Facturation");
@@ -141,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ComputeAmontDue()
 		{
-			var invoiceDocument = Common.GetParentEntity (this.tileContainer) as InvoiceDocumentEntity;
+			var invoiceDocument = Common.GetParentEntity (this.TileContainer) as InvoiceDocumentEntity;
 
 			if (invoiceDocument != null)
 			{
@@ -156,12 +154,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				decimal total = InvoiceDocumentHelper.GetTotalPriceTTC (invoiceDocument).GetValueOrDefault (0);
 				this.Entity.AmountDue.Amount = total-amountDue;
 
-				this.tileContainer.UpdateAllWidgets ();
+				this.TileContainer.UpdateAllWidgets ();
 			}
 		}
-
-
-
-		private TileContainer tileContainer;
 	}
 }

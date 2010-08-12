@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 	
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.BusinessEvent", "Evénement");
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			//	Summary:
-			using (var data = TileContainerController.Setup (container))
+			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIDocuments (data);
 			}

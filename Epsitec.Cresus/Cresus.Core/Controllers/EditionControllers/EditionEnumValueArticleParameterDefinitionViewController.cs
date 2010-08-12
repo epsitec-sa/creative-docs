@@ -27,11 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 		}
 
-		protected override void CreateUI(TileContainer container)
+		protected override void CreateUI()
 		{
-			this.tileContainer = container;
-
-			using (var builder = new UIBuilder (container, this))
+			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleParameter", "Paramètre");
@@ -46,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateTabBook(UIBuilder builder)
 		{
-			Common.CreateAbstractArticleParameterTabBook (builder, this.tileContainer, this.DataContext, this.Entity, ArticleParameterTabId.Enum);
+			Common.CreateAbstractArticleParameterTabBook (builder, this.TileContainer, this.DataContext, this.Entity, ArticleParameterTabId.Enum);
 		}
 
 
@@ -61,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			var group = builder.CreateGroup (tile, "Contenu de l'énumération");
-			this.parameterController = new ArticleParameterControllers.ArticleParameterListController (this.tileContainer, this.Entity);
+			this.parameterController = new ArticleParameterControllers.ArticleParameterListController (this.TileContainer, this.Entity);
 			this.parameterController.CreateUI (group);
 		}
 
@@ -72,7 +70,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private TileContainer														tileContainer;
 		private ArticleParameterControllers.ArticleParameterListController		parameterController;
 	}
 }
