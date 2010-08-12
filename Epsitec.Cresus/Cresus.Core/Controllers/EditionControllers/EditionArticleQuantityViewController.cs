@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
+#if false
 			builder.CreateAutoCompleteTextField ("Unité",
 				new SelectionController<UnitOfMeasureEntity>
 				{
@@ -88,6 +89,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
 				});
+#else
+			builder.CreateEditionDetailedItemPicker ("Unité",
+				new SelectionController<UnitOfMeasureEntity>
+				{
+					ValueGetter = () => this.Entity.Unit,
+					ValueSetter = x => this.Entity.Unit = x.WrapNullEntity (),
+					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
+					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
+					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+
+					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
+				}, BusinessLogic.EnumValueCardinality.ExactlyOne);
+#endif
 		}
 
 		// TODO: Dès qu'il sera possible de connaître l'entité parente, il faudra réactiver le code ci-dessous:
