@@ -567,14 +567,7 @@ namespace Epsitec.Common.Types
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
 
-		public static bool Convert(object obj, StructuredTypeField field, out object value)
-		{
-			return InvariantConverter.Convert (obj, field.Type, out value);
-		}
-		public static bool Convert(object obj, ISystemType type, out object value)
-		{
-			return InvariantConverter.Convert (obj, type.SystemType, out value);
-		}
+		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
 			if (obj == null)
@@ -605,6 +598,16 @@ namespace Epsitec.Common.Types
 				{
 					bool result;
 					
+					if (InvariantConverter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
+				else if (type == typeof (short))
+				{
+					short result;
+
 					if (InvariantConverter.Convert (obj, out result))
 					{
 						value = result;
