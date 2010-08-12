@@ -383,16 +383,19 @@ namespace Epsitec.Cresus.Core
 
 		public Button CreateButton(EditionTile tile, int width, string label, string buttonText)
 		{
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
 
-			this.ContentListAdd (staticText);
+				this.ContentListAdd (staticText);
+			}
 
 			return this.CreateButton (tile.Container, DockStyle.Top, width, buttonText);
 		}
@@ -423,16 +426,19 @@ namespace Epsitec.Cresus.Core
 
 		public TextFieldEx CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
 		{
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
 
-			this.ContentListAdd (staticText);
+				this.ContentListAdd (staticText);
+			}
 
 			return this.CreateTextField (tile.Container, DockStyle.Top, width, marshaler);
 		}
@@ -466,14 +472,19 @@ namespace Epsitec.Cresus.Core
 
 		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, int height, string label, Marshaler marshaler)
 		{
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var textField = new TextFieldMultiEx
 			{
@@ -487,7 +498,6 @@ namespace Epsitec.Cresus.Core
 				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
 			};
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (textField);
 
 			var valueController = new TextValueController (marshaler);
@@ -501,14 +511,19 @@ namespace Epsitec.Cresus.Core
 		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, System.Func<string[], FormattedText> getUserText)
 		{
 			//	possibleItems[0] doit obligatoirement être la 'key' !
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var container = new FrameBox
 			{
@@ -576,7 +591,6 @@ namespace Epsitec.Cresus.Core
 				};
 			}
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
 			menuButton.Clicked +=
@@ -598,14 +612,19 @@ namespace Epsitec.Cresus.Core
 		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, System.Func<EnumKeyValues<T>, FormattedText> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var container = new FrameBox
 			{
@@ -672,7 +691,6 @@ namespace Epsitec.Cresus.Core
 				};
 			}
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
 			menuButton.Clicked +=
@@ -709,14 +727,19 @@ namespace Epsitec.Cresus.Core
 		{
 			var tile = this.CreateEditionTile ();
 
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var widget = new Widgets.ItemPicker
 			{
@@ -726,7 +749,6 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (widget);
 
 			controller.Attach (widget);
@@ -790,14 +812,19 @@ namespace Epsitec.Cresus.Core
 
 			tile.AllowSelection = true;
 
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var container = new FrameBox
 			{
@@ -845,7 +872,6 @@ namespace Epsitec.Cresus.Core
 				AutoFocus = false,
 			};
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (container);
 
 			var changeHandler = UIBuilder.CreateAutoCompleteTextFieldChangeHandler (editor, tileButton, referenceController, createEnabled: referenceController.HasCreator);
@@ -917,14 +943,19 @@ namespace Epsitec.Cresus.Core
 
 		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
 		{
-			var staticText = new StaticText
+			if (!string.IsNullOrEmpty (label))
 			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
-			};
+				var staticText = new StaticText
+				{
+					Parent = tile.Container,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+				};
+
+				this.ContentListAdd (staticText);
+			}
 
 			var widget = new Widgets.ItemPicker
 			{
@@ -935,7 +966,6 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			this.ContentListAdd (staticText);
 			this.ContentListAdd (widget);
 
 			return widget;
