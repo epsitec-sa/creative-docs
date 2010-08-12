@@ -24,15 +24,61 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// </summary>
 	public class ArticleParameterToolbarController
 	{
-		public ArticleParameterToolbarController()
+		public ArticleParameterToolbarController(TileContainer tileContainer, ArticleDocumentItemEntity articleItem)
 		{
+			this.tileContainer = tileContainer;
+			this.articleItem = articleItem;
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public void CreateUI(FrameBox parent, string label)
 		{
+			if (!string.IsNullOrEmpty (label))
+			{
+				var staticText = new StaticText
+				{
+					Parent = parent,
+					Text = string.Concat (label, " :"),
+					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderLabel),
+				};
+			}
+
+			this.toolbar = new FrameBox
+			{
+				Parent = parent,
+				PreferredHeight = 20,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, 1),
+				Dock = DockStyle.Top,
+			};
+		}
+
+		public void UpdateUI()
+		{
+			this.toolbar.Children.Clear ();
+
+			foreach (var parameter in this.articleItem.ArticleDefinition.ArticleParameterDefinitions)
+			{
+				var button = new Button
+				{
+					Parent = this.toolbar,
+					ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+					Text = parameter.Code,
+					PreferredWidth = 50,
+					PreferredHeight = 20,
+					Margins = new Margins (0, 1, 0, 0),
+					Dock = DockStyle.Left,
+				};
+			}
+
+			this.toolbar.Visibility = this.articleItem.ArticleDefinition.ArticleParameterDefinitions.Count != 0;
 		}
 
 
+		private readonly TileContainer tileContainer;
+		private readonly ArticleDocumentItemEntity articleItem;
+
+		private FrameBox toolbar;
 	}
 }
