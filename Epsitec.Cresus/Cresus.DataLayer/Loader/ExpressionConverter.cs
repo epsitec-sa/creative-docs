@@ -154,12 +154,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbTableColumn left = this.GetDbTableColumn (comparison.Left, columnResolver);
 			DbSimpleConditionOperator op = EnumConverter.ToDbSimpleConditionOperator (comparison.Operator);
 			object rightValue = comparison.Right.Value;
-			DbRawType rightType = EnumConverter.ToDbRawType (comparison.Right.Type);
+			Type rightType = comparison.Right.Type;
+			DbRawType rightRawType = EnumConverter.ToDbRawType (rightType);
+			DbSimpleType rightSimpleType = EnumConverter.ToDbSimpleType (rightType);
+			DbNumDef rightNumDef = EnumConverter.ToDbNumDef (rightType);
 
-			object convertedRightValue = this.DataConverter.ToDatabaseValue (rightType, rightValue);
-			object convertedRightType = this.DataConverter.ToDatabaseType (rightType);
+			object convertedRightValue = this.DataConverter.ToDatabaseValue (rightRawType, rightSimpleType, rightNumDef, rightValue);
+			DbRawType convertedRightType = this.DataConverter.ToDatabaseType (rightRawType);
 
-			return new DbSimpleCondition (left, op, rightValue, rightType);
+			return new DbSimpleCondition (left, op, convertedRightValue, convertedRightType);
 		}
 
 
