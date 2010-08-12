@@ -470,8 +470,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			DbSimpleType simpleType = columnType.SimpleType;
 			DbNumDef numDef = columnType.NumDef;
 
-			object convertedValue = this.DataConverter.ToDatabaseValue (rawType, simpleType, numDef, value);
-			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (columnType.RawType);
+			object convertedValue = this.DataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, value);
+			DbRawType convertedRawType = this.DataConverter.FromDotNetToDatabaseType (columnType.RawType);
 
 			SqlField constantField = SqlField.CreateConstant (convertedValue, convertedRawType);
 
@@ -591,8 +591,8 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			DbSimpleType simpleType = columnType.SimpleType;
 			DbNumDef numDef = columnType.NumDef;
 
-			object convertedValue = this.DataConverter.ToDatabaseValue (rawType, simpleType, numDef, value);
-			DbRawType convertedRawType = this.DataConverter.ToDatabaseType (type.RawType);
+			object convertedValue = this.DataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, value);
+			DbRawType convertedRawType = this.DataConverter.FromDotNetToDatabaseType (type.RawType);
 
 			SqlField SqlField = SqlField.CreateConstant (convertedValue, convertedRawType);
 			SqlField.Alias = column.GetSqlName ();

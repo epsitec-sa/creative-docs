@@ -159,8 +159,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbSimpleType rightSimpleType = EnumConverter.ToDbSimpleType (rightType);
 			DbNumDef rightNumDef = EnumConverter.ToDbNumDef (rightType);
 
-			object convertedRightValue = this.DataConverter.ToDatabaseValue (rightRawType, rightSimpleType, rightNumDef, rightValue);
-			DbRawType convertedRightType = this.DataConverter.ToDatabaseType (rightRawType);
+			object convertedRightValue = this.DataConverter.FromCresusToDatabaseValue (rightRawType, rightSimpleType, rightNumDef, rightValue);
+			DbRawType convertedRightType = this.DataConverter.FromDotNetToDatabaseType (rightRawType);
 
 			return new DbSimpleCondition (left, op, convertedRightValue, convertedRightType);
 		}

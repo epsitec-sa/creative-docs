@@ -23,6 +23,9 @@ using System.Linq;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
+	// TODO This class needs some refactoring, as it starts to look ugly in some places.
+	// Marc
+
 
 	// TODO Comment this class
 	// Marc
@@ -180,8 +183,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 						if (internalValue != System.DBNull.Value)
 						{
 							StructuredTypeField field = fields[i];
+							System.Type type = field.Type.SystemType;
 
-							object externalValue = this.DataConverter.ToCresusValue (leafEntityId, field, internalValue);
+							Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
+							string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
+
+							DbTable dbTable = this.SchemaEngine.GetEntityTableDefinition (localEntityId);
+							DbColumn dbColumn = dbTable.Columns[columnName];
+
+							DbTypeDef typeDef = dbColumn.Type;
+							DbRawType rawType = typeDef.RawType;
+							DbSimpleType simpleType = typeDef.SimpleType;
+							DbNumDef numDef = typeDef.NumDef;
+
+							object externalValue = this.DataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, internalValue);
 
 							entityValueData[field.CaptionId] = externalValue;
 						}
