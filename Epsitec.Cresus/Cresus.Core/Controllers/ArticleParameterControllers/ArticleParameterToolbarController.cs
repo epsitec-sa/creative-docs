@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la toolbar pour éditer les paramètres dans la désignation d'un article.
+	/// Chaque paramètre correspond à un bouton avec le code du paramètre.
 	/// </summary>
 	public class ArticleParameterToolbarController
 	{
@@ -33,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public void CreateUI(FrameBox parent, string label)
 		{
+			//	Crée l'interface, c'est-à-dire la toolbar vide.
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
@@ -56,6 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		public void UpdateUI(TextFieldMultiEx textField)
 		{
+			//	Met à jour l'interface en créant les boutons pour chaque paramètre.
 			this.toolbar.Children.Clear ();
 
 			foreach (var parameter in this.articleDefinition.ArticleParameterDefinitions)
@@ -71,14 +74,15 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 					Dock = DockStyle.Left,
 				};
 
-				button.PreferredWidth = GetButtonRequiredWidth (button);
+				button.PreferredWidth = ArticleParameterToolbarController.GetButtonRequiredWidth (button);
 
 				button.Clicked += delegate
 				{
-					InsertText (textField, GetTag (button.Name));
+					ArticleParameterToolbarController.InsertText (textField, ArticleParameterToolbarController.GetTag (button.Name));
 				};
 			}
 
+			//	La toolbar est invisible s'il n'y a aucun paramètre.
 			this.toolbar.Visibility = this.articleDefinition.ArticleParameterDefinitions.Count != 0;
 		}
 
@@ -94,12 +98,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private static string GetTag(string code)
 		{
 			//	Retourne le tag à insérer dans le texte pour un paramètre.
-			return string.Format ("<param code=\"{0}\"/>", code);
+			//?return string.Format ("<param code=\"{0}\"/>", code);
+			return string.Format ("**param code={0}**", code);  // debug !!!
 		}
 
 		private static void InsertText(TextFieldMultiEx textField, string text)
 		{
-			//	Insère un texte comme s'il avait été frappé oar l'utilisateur.
+			//	Insère un texte comme s'il avait été frappé par l'utilisateur.
 			textField.Selection = text;
 			textField.Focus ();
 		}
