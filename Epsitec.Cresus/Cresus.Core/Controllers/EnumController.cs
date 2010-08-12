@@ -66,6 +66,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Attach(ItemPicker widget)
 		{
+			this.attachedWidget = widget;
+
 			foreach (var e in this.enumeration)
 			{
 				widget.Items.Add (e.Key.ToString (), e);
@@ -80,12 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			widget.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
 			widget.CreateUI ();
 
-			var initialValue = this.GetValue ();
-			int index = widget.Items.FindIndexByKey (initialValue.ToString ());
-			if (index != -1)
-			{
-				widget.AddSelection (new int[] { index });
-			}
+			this.Update ();
 
 			widget.SelectedItemChanged += delegate
 			{
@@ -100,17 +97,26 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
-#if false
-			if (this.widget != null)
+			if (this.attachedWidget != null)
 			{
-				if (this.widget is ItemPicker)
+				if (this.attachedWidget is ItemPicker)
 				{
+					var itemPicker = this.attachedWidget as ItemPicker;
+
+					itemPicker.ClearSelection ();
+
+					var initialValue = this.GetValue ();
+					int index = itemPicker.Items.FindIndexByKey (initialValue.ToString ());
+
+					if (index != -1)
+					{
+						itemPicker.AddSelection (new int[] { index });
+					}
 				}
 				else
 				{
 				}
 			}
-#endif
 		}
 
 		#endregion
@@ -119,5 +125,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Expression<System.Func<T>> valueGetterExpression;
 		private System.Func<T> valueGetter;
+		private Widget attachedWidget;
 	}
 }
