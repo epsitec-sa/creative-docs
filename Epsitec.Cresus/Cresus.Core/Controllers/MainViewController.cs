@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				delegate
 				{
 					System.Diagnostics.Debug.WriteLine ("CurrentChanged");
-					this.dataViewController.SetActiveEntity (this.browserViewController.GetActiveEntity (this.dataViewController.DataContext));
+					this.browserViewController.SelectActiveEntity (this.dataViewController);
 				};
 		}
 

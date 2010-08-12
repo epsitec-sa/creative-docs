@@ -67,6 +67,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public void SelectActiveEntity(DataViewController dataViewController)
+		{
+			var dataContext           = dataViewController.DataContext;
+			var activeEntity          = this.GetActiveEntity (dataContext);
+			var activeEntityKey       = dataContext.GetEntityKey (activeEntity).GetValueOrDefault ();
+			var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
+
+			dataViewController.SetActiveEntity (activeEntity, navigationPathElement);
+		}
+
 		public void CreateNewItem()
 		{
 			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
@@ -308,6 +318,26 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		#endregion
 
+		
+		private class BrowserNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
+		{
+			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
+			{
+				this.dataSetName = controller.DataSetName;
+				this.entityKey   = entityKey;
+			}
+
+			public override string ToString()
+			{
+				return string.Concat ("<Browser:", this.dataSetName, ":", this.entityKey.RowKey.ToString (), ">");
+			}
+
+
+			private readonly string dataSetName;
+			private readonly EntityKey entityKey;
+		}
+		
+		
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData data;
