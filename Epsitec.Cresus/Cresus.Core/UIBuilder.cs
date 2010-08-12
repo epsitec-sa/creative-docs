@@ -1193,7 +1193,7 @@ namespace Epsitec.Cresus.Core
 		public static readonly double RightMargin				= 10;
 		public static readonly double MarginUnderLabel			= 1;
 		public static readonly double MarginUnderTextField		= 2;
-		public static readonly double TinyButtonSize			= 19;
+		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
 
 		private static UIBuilder current;
 

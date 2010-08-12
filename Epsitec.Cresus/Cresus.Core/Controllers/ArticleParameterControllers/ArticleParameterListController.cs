@@ -364,7 +364,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				}
 
 				text = string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text);
-
 				this.scrollList.Items.Add (text);
 			}
 
