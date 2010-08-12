@@ -80,6 +80,58 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
+		public void ToDbSimpleTypeTest()
+		{
+			var matches = new Dictionary<Type, DbSimpleType> ()
+			{
+				{ Type.Boolean, DbSimpleType.Decimal },
+				{ Type.Int16, DbSimpleType.Decimal },
+				{ Type.Int32, DbSimpleType.Decimal },
+				{ Type.Int64, DbSimpleType.Decimal },
+				{ Type.Double, DbSimpleType.Decimal },
+				{ Type.Date, DbSimpleType.Date },
+				{ Type.Time, DbSimpleType.Time },
+				{ Type.DateTime, DbSimpleType.DateTime },
+				{ Type.String, DbSimpleType.String },
+			};
+
+			foreach (Type match in matches.Keys)
+			{
+				DbSimpleType result1 = matches[match];
+				DbSimpleType result2 = EnumConverter.ToDbSimpleType (match);
+
+				Assert.AreEqual (result1, result2);
+			}
+		}
+
+
+		[TestMethod]
+		public void ToDbNumDefTest()
+		{
+			var matches = new Dictionary<Type, DbNumDef> ()
+			{
+				{ Type.Boolean, DbNumDef.FromRawType (DbRawType.Boolean) },
+				{ Type.Int16, DbNumDef.FromRawType (DbRawType.Int16) },
+				{ Type.Int32, DbNumDef.FromRawType (DbRawType.Int32) },
+				{ Type.Int64, DbNumDef.FromRawType (DbRawType.Int64) },
+				{ Type.Double, DbNumDef.FromRawType (DbRawType.LargeDecimal) },
+				{ Type.Date, DbNumDef.FromRawType (DbRawType.Date) },
+				{ Type.Time, DbNumDef.FromRawType (DbRawType.Time) },
+				{ Type.DateTime, DbNumDef.FromRawType (DbRawType.DateTime) },
+				{ Type.String, DbNumDef.FromRawType (DbRawType.String) },
+			};
+
+			foreach (Type match in matches.Keys)
+			{
+				DbNumDef result1 = matches[match];
+				DbNumDef result2 = EnumConverter.ToDbNumDef (match);
+
+				Assert.AreEqual (result1, result2);
+			}
+		}
+
+
+		[TestMethod]
 		public void ToDbSimpleConditionOperatorTest1()
 		{
 			var matches = new Dictionary<UnaryComparator, DbSimpleConditionOperator> ()
