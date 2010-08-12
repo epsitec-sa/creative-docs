@@ -115,7 +115,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				System.Diagnostics.Debug.WriteLine ("History: node = " + node.Item.GetType ().Name);
 				foreach (var item in this.WalkToRoot (node.Item))
 				{
-					System.Diagnostics.Debug.Write (" <-- " + (item.Item.GetRelativeNavigationPath () ?? "<null>"));
+					var nav  = item.Item.NavigationPathElement;
+					var info = nav == null ? "<null>" : nav.ToString ();
+					System.Diagnostics.Debug.Write (" <-- " + info);
 				}
 
 				System.Diagnostics.Debug.WriteLine ("");

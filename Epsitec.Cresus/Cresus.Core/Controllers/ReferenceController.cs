@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -24,12 +25,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ReferenceController"/> class.
 		/// </summary>
+		/// <param name="id">The id.</param>
 		/// <param name="entityGetter">The entity getter.</param>
 		/// <param name="entityMapper">The entity mapper.</param>
 		/// <param name="creator">The entity creator.</param>
 		/// <param name="mode">The view controller mode.</param>
 		/// <param name="viewControllerSubTypeId">The sub-type ID of the view controller.</param>
-		public ReferenceController(
+		private ReferenceController(
+			string id,
 			System.Func<AbstractEntity> entityGetter,
 			System.Func<AbstractEntity, AbstractEntity> entityMapper = null,
 			System.Func<DataContext, NewEntityReference> creator = null,
@@ -41,6 +44,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewControllerMode		 = mode;
 			this.creator				 = creator;
 			this.viewControllerSubTypeId = viewControllerSubTypeId;
+			this.id                      = id;
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ReferenceController"/> class.
+		/// </summary>
+		/// <param name="entityGetter">The entity getter.</param>
+		/// <param name="entityMapper">The entity mapper.</param>
+		/// <param name="creator">The entity creator.</param>
+		/// <param name="mode">The view controller mode.</param>
+		/// <param name="viewControllerSubTypeId">The sub-type ID of the view controller.</param>
+		public ReferenceController(
+			Expression<System.Func<AbstractEntity>> entityGetterExpression,
+			System.Func<AbstractEntity, AbstractEntity> entityMapper = null,
+			System.Func<DataContext, NewEntityReference> creator = null,
+			ViewControllerMode mode = ViewControllerMode.Summary,
+			int viewControllerSubTypeId = -1,
+			string id = null)
+		{
+			var entityGetter = entityGetterExpression == null ? null : entityGetterExpression.Compile ();
+			var entitySource = entityGetterExpression == null ? null : entityGetterExpression.ToString ();
+
+			this.entityGetter			 = entityGetter ?? (() => null);
+			this.entityMapper			 = entityMapper;
+			this.viewControllerMode		 = mode;
+			this.creator				 = creator;
+			this.viewControllerSubTypeId = viewControllerSubTypeId;
+			this.id                      = id ?? entitySource;
 		}
 
 
@@ -68,9 +99,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			where T2 : AbstractEntity
 			where T3 : AbstractEntity
 		{
-			return new ReferenceController (rootEntityGetter, x => ReferenceController.Apply (x as T1, rootToFinalMapper), creator, mode, viewControllerSubTypeId);
+			string id = rootToFieldMapper.ToString ();
+			return new ReferenceController (id, rootEntityGetter, x => ReferenceController.Apply (x as T1, rootToFinalMapper), creator, mode, viewControllerSubTypeId);
 		}
 
+
+		public string Id
+		{
+			get
+			{
+				return this.id;
+			}
+		}
 
 
 		public ViewControllerMode Mode
@@ -110,11 +150,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
 			var entity = ReferenceController.Apply (this.entityGetter (), this.entityMapper);
 			var mode   = this.Mode;
-			var ctrl   = EntityViewController.CreateEntityViewController ("ReferenceViewController", entity, mode, orchestrator);
+			var ctrl   = EntityViewController.CreateEntityViewController ("ReferenceViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
 
 			return ctrl;
 		}
@@ -143,5 +183,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly ViewControllerMode viewControllerMode;
 		private readonly System.Func<DataContext, NewEntityReference> creator;
 		private readonly int viewControllerSubTypeId;
+		private readonly string id;
 	}
 }

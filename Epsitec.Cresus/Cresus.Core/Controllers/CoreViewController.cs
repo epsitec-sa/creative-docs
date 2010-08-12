@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -64,6 +66,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			protected set;
 		}
 
+		public NavigationPathElement NavigationPathElement
+		{
+			get;
+			set;
+		}
+		
 
 		public bool Matches(CoreViewController controller)
 		{
@@ -71,11 +79,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				|| (this.GetReplacementController () == controller);
 		}
 
-		public virtual string GetRelativeNavigationPath()
-		{
-			return null;
-		}
-		
 		/// <summary>
 		/// Creates the UI managed by this controller.
 		/// </summary>

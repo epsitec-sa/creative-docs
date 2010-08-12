@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -41,6 +42,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public TileContainer TileContainer
+		{
+			get;
+			protected set;
+		}
+
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -53,12 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return EditionStatus.Unknown;
 		}
 
-		public TileContainer TileContainer
-		{
-			get;
-			protected set;
-		}
-		
 		protected abstract void CreateUI();
 
 		public T NotifyChildItemCreated<T>(T entity)
@@ -73,12 +74,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		public override string GetRelativeNavigationPath()
-		{
-			return this.relativeNavigationPath;
-		}
-
-		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
+		
+		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement = null)
 		{
 			var entity = marshaler.GetValue<AbstractEntity> ();
 			int index  = marshaler.GetCollectionIndex ();
@@ -95,17 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + path);
 
-			var controller = EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
-
-			if (controller != null)
-			{
-				controller.relativeNavigationPath = path;
-			}
-
-			return controller;
+			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator, navigationPathElement: navigationPathElement);
 		}
 
-		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1)
+		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1, NavigationPathElement navigationPathElement = null)
 		{
 			var controller = EntityViewController.ResolveEntityViewController (name, entity, mode, controllerSubTypeId);
 
@@ -121,6 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			controller.Orchestrator = orchestrator;
 			controller.Mode = mode;
+			controller.NavigationPathElement = navigationPathElement;
 
 			return controller;
 		}
@@ -203,106 +194,5 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
-
-
-		private string relativeNavigationPath;
-	}
-
-
-	public abstract class EntityViewController<T> : EntityViewController
-		where T : AbstractEntity
-	{
-		protected EntityViewController(string name, T entity)
-			: base (name)
-		{
-			this.entity = entity;
-			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
-		}
-
-		public T Entity
-		{
-			get
-			{
-				return this.entity;
-			}
-		}
-
-		public System.Func<T> EntityGetter
-		{
-			get
-			{
-				return () => this.entity;
-			}
-		}
-
-		public Marshaler<T> EntityMarshaler
-		{
-			get
-			{
-				return Marshaler.Create (this.entity, x => x, null);
-			}
-		}
-
-		public sealed override void CreateUI(Widget container)
-		{
-			var context       = this.DataContext;
-			var entity        = this.Entity;
-			var tileContainer = container as TileContainer;
-			
-			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
-			System.Diagnostics.Debug.Assert (tileContainer != null);
-
-			this.TileContainer = tileContainer;
-			this.CreateUI ();
-		}
-
-		public sealed override AbstractEntity GetEntity()
-		{
-			return this.Entity;
-		}
-
-		protected void ReplaceEntity(T entity)
-		{
-			this.entity = entity;
-		}
-
-
-		protected override void AboutToCloseUI()
-		{
-			this.UpgradeEmptyEntity ();
-			base.AboutToCloseUI ();
-		}
-
-		protected override void AboutToSave()
-		{
-			this.UpgradeEmptyEntity ();
-			base.AboutToSave ();
-		}
-
-		/// <summary>
-		/// If the current entity was registered in the <see cref="DataContext"/> as an empty
-		/// entity, upgrade it to a real entity if its content is valid.
-		/// </summary>
-		private void UpgradeEmptyEntity()
-		{
-			var entity  = this.Entity;
-			var context = DataContextPool.Instance.FindDataContext (entity);
-
-			bool isEmpty = this.EditionStatus == EditionStatus.Empty;
-
-			this.UpdateEmptyEntityStatus (context, isEmpty);
-		}
-
-		protected virtual void UpdateEmptyEntityStatus(DataContext context, bool isEmpty)
-		{
-			var entity = this.Entity;
-
-			if (context != null)
-			{
-				context.UpdateEmptyEntityStatus (entity, isEmpty);
-			}
-		}
-
-		private T entity;
 	}
 }

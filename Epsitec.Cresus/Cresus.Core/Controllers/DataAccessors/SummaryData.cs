@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
@@ -298,11 +299,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		#region ITileController Members
 
-		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
 			if (this.EntityMarshaler != null)
 			{
-				return EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator);
+				var controller = EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, new SummaryDataNavigationPathElement (this));
+
+				return controller;
 			}
 
 			return null;

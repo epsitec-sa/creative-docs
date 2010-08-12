@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
 
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +121,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 
-		public void ToggleSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController)
+		public void ToggleSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, NavigationPathElement navigationPathElement = null)
 		{
 			if (this.IsSelected)
 			{
@@ -129,7 +130,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			else
 			{
-				this.OpenSubView (orchestrator, parentController);
+				this.OpenSubView (orchestrator, parentController, navigationPathElement: navigationPathElement);
 			}
 		}
 
@@ -146,9 +147,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null)
+		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null, NavigationPathElement navigationPathElement = null)
 		{
-			var controller = subViewController ?? this.CreateSubViewController (orchestrator);
+			var controller = subViewController ?? this.CreateSubViewController (orchestrator, navigationPathElement);
 
 			if (controller != null)
 			{
@@ -309,7 +310,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		private EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
 			if (this.Controller == null)
 			{
@@ -317,7 +318,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 			else
 			{
-				return this.Controller.CreateSubViewController (orchestrator);
+				return this.Controller.CreateSubViewController (orchestrator, navigationPathElement);
 			}
 		}
 		
