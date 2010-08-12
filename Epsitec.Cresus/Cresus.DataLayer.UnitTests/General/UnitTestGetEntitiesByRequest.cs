@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -30,6 +32,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				DatabaseCreator2.PupulateDatabase (dataContext);
+
+				for (int i = 0; i < 5; i++)
+				{
+					int? rank = (i % 2 == 0) ? (int?) null : i;
+
+					DatabaseHelper.CreateContactRole (dataContext, "role" + i, rank);
+				}
+
+				dataContext.SaveChanges ();
 			}
 		}
 
@@ -630,6 +641,159 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@coucou.com", "Alfred")));
 				Assert.IsTrue (contacts.Any (c => DatabaseCreator2.CheckUriContact (c, "alfred@blabla.com", "Alfred")));
+			}
+		}
+
+
+		[TestMethod]
+		public void IntRequest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ContactRoleEntity example = new ContactRoleEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0A03]")),
+						BinaryComparator.IsEqual,
+						new Constant (1)
+					)
+				);
+
+				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+
+				Assert.IsTrue (roles.Count == 1);
+				Assert.AreEqual (1, roles.First ().Rank);
+			}
+		}
+
+
+		[TestMethod]
+		public void IntRequest2()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ContactRoleEntity example = new ContactRoleEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new BinaryOperation(
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A03]")),
+							BinaryComparator.IsLower,
+							new Constant (4)
+						),
+						BinaryOperator.And,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[L0A03]")),
+							BinaryComparator.IsGreaterOrEqual,
+							new Constant (3)
+						)
+					)
+				);
+
+				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+
+				Assert.IsTrue (roles.Count == 1);
+				Assert.AreEqual (3, roles.First ().Rank);
+			}
+		}
+
+
+		[TestMethod]
+		public void IntRequest3()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				ContactRoleEntity example = new ContactRoleEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new UnaryComparison(
+						new Field (new Druid ("[L0A03]")),
+						UnaryComparator.IsNull
+					)
+				);
+
+				var roles = dataContext.GetByRequest<ContactRoleEntity> (request).ToList ();
+
+				Assert.IsTrue (roles.Count == 3);
+				Assert.IsTrue (roles.All (r => r.Rank == null));
+			}
+		}
+
+
+		[TestMethod]
+		public void DateRequest1()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new UnaryComparison (
+						new Field (new Druid ("[L0A61]")),
+						UnaryComparator.IsNotNull
+					)
+				);
+
+				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (persons.Count == 3);
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void DateRequest2()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddLocalConstraint (example,
+					new ComparisonFieldValue (
+						new Field (new Druid ("[L0A61]")),
+						BinaryComparator.IsEqual,
+						new Constant(new Date (1965, 5, 3))
+					)
+				);
+
+				var persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (persons.Count == 1);
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
 			}
 		}
 
