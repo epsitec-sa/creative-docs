@@ -67,21 +67,36 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		public override string GetRelativeNavigationPath()
+		{
+			return this.relativeNavigationPath;
+		}
+
 		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
 			var entity = marshaler.GetValue<AbstractEntity> ();
 			int index  = marshaler.GetCollectionIndex ();
+			string path;
 
 			if (index < 0)
 			{
-				System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + marshaler.GetGetterExpression ().ToString ());
+				path = marshaler.GetGetterExpression ().ToString ();
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + marshaler.GetGetterExpression ().ToString () + " [ " + marshaler.GetCollectionIndex ().ToString () + " ]");
+				path = string.Concat (marshaler.GetGetterExpression ().ToString (), "[", marshaler.GetCollectionIndex ().ToString (System.Globalization.CultureInfo.InvariantCulture), "]");
 			}
-			
-			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
+
+			System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + path);
+
+			var controller = EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator);
+
+			if (controller != null)
+			{
+				controller.relativeNavigationPath = path;
+			}
+
+			return controller;
 		}
 
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1)
@@ -182,6 +197,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
+
+
+		private string relativeNavigationPath;
 	}
 
 

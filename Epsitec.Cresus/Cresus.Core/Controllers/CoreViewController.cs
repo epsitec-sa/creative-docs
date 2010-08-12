@@ -70,6 +70,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			return (this == controller)
 				|| (this.GetReplacementController () == controller);
 		}
+
+		public virtual string GetRelativeNavigationPath()
+		{
+			return null;
+		}
 		
 		/// <summary>
 		/// Creates the UI managed by this controller.
