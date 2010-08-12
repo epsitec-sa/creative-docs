@@ -10,7 +10,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed class TextFormatter
+	public static class TextFormatter
 	{
 		public static FormattedText FormatText(params object[] values)
 		{
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core
 
 			bool emptyItem = true;
 
-			foreach (var value in values.Select (item => UIBuilder.ConvertToText (item)))
+			foreach (var value in values.Select (item => TextFormatter.ConvertToText (item)))
 			{
 				items.Add (value.Replace ("\n", "<br/>").Trim ());
 			}
@@ -69,6 +69,28 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
+		}
+		
+		private static string ConvertToText(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			string text = value as string;
+
+			if (text != null)
+			{
+				return text;
+			}
+
+			if (value is Date)
+			{
+				return ((Date) value).ToDateTime ().ToShortDateString ();
+			}
+
+			return value.ToString ();
 		}
 	}
 

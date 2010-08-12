@@ -60,14 +60,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private void ContentListAdd(Widget widget)
-		{
-			if (this.contentList != null)
-			{
-				this.contentList.Add (widget);
-			}
-		}
-
 
 		public TitleTile CurrentTitleTile
 		{
@@ -715,6 +707,86 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
+			where T : struct
+		{
+			var tile = this.CreateEditionTile ();
+
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+			};
+
+			var widget = new Widgets.ItemPicker
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 3),
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (widget);
+
+			controller.Attach (widget);
+
+			return widget;
+		}
+
+
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
+			where T : AbstractEntity
+		{
+			var tile = this.CreateEditionTile ();
+			var combo = this.CreateDetailedItemPicker (tile, label, cardinality);
+
+			controller.Attach (combo);
+
+			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
+				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+			{
+				if (combo.SelectionCount == 0)  // aucune sélection ?
+				{
+					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+				}
+			}
+
+			return combo;
+		}
+
+
+
+		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)
+		{
+			if (horizontalSeparator)
+			{
+				var separator = new Separator
+				{
+					Parent = tile.Container,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
+					PreferredHeight = 1,
+				};
+
+				this.ContentListAdd (separator);
+			}
+			else
+			{
+				var frame = new FrameBox
+				{
+					Parent = tile.Container,
+					Dock = DockStyle.Top,
+					PreferredHeight = 10,
+				};
+
+				this.ContentListAdd (frame);
+			}
+		}
+
 		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Func<AbstractEntity> entityGetter, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
 			tile.AllowSelection = true;
@@ -804,7 +876,7 @@ namespace Epsitec.Cresus.Core
 					tile.TileArrowHilite = false;
 				};
 
-			var controller = this.GetActiveController ();
+			var controller = this.GetRootController ();
 
 			tileButton.Clicked +=
 				delegate
@@ -844,6 +916,54 @@ namespace Epsitec.Cresus.Core
 			return editor;
 		}
 
+		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
+		{
+			var staticText = new StaticText
+			{
+				Parent = tile.Container,
+				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+			};
+
+			var widget = new Widgets.ItemPicker
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 3),
+				Cardinality = cardinality,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (staticText);
+			this.ContentListAdd (widget);
+
+			return widget;
+		}
+
+		private void ContentListAdd(Widget widget)
+		{
+			if (this.contentList != null)
+			{
+				this.contentList.Add (widget);
+			}
+		}
+
+		private CoreViewController GetRootController()
+		{
+			if (this.nextBuilder != null)
+			{
+				return this.nextBuilder.GetRootController ();
+			}
+			else
+			{
+				return this.controller;
+			}
+		}
+
+
+		#region AutoCompleteItemSynchronizer Class
 
 		class AutoCompleteItemSynchronizer
 		{
@@ -873,6 +993,8 @@ namespace Epsitec.Cresus.Core
 			private readonly EntityViewController controller;
 			private readonly IStructuredData entity;
 		}
+
+		#endregion
 
 		#region ReferenceTileController Class
 
@@ -931,18 +1053,6 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
-		private CoreViewController GetActiveController()
-		{
-			if (this.nextBuilder != null)
-			{
-				return this.nextBuilder.GetActiveController ();
-			}
-			else
-			{
-				return this.controller;
-			}
-		}
-
 		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
 		{
 			return
@@ -970,160 +1080,6 @@ namespace Epsitec.Cresus.Core
 				};
 		}
 
-		void editor_SelectedItemChanged(object sender)
-		{
-			throw new System.NotImplementedException ();
-		}
-
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, EnumController<T> controller)
-			where T : struct
-		{
-			var tile = this.CreateEditionTile ();
-
-			var staticText = new StaticText
-			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
-			};
-
-			var widget = new Widgets.ItemPicker
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 3),
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.ContentListAdd (staticText);
-			this.ContentListAdd (widget);
-
-			controller.Attach (widget);
-
-			return widget;
-		}
-
-
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
-			where T : AbstractEntity
-		{
-			var tile = this.CreateEditionTile ();
-			var combo = this.CreateDetailedItemPicker (tile, label, cardinality);
-
-			controller.Attach (combo);
-
-			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
-				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne )
-			{
-				if (combo.SelectionCount == 0)  // aucune sélection ?
-				{
-					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
-				}
-			}
-
-			return combo;
-		}
-
-		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
-		{
-			var staticText = new StaticText
-			{
-				Parent = tile.Container,
-				Text = string.Concat (label, " :"),
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
-			};
-
-			var widget = new Widgets.ItemPicker
-			{
-				Parent = tile.Container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 3),
-				Cardinality = cardinality,
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.ContentListAdd (staticText);
-			this.ContentListAdd (widget);
-
-			return widget;
-		}
-
-
-		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)
-		{
-			if (horizontalSeparator)
-			{
-				var separator = new Separator
-				{
-					Parent = tile.Container,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
-					PreferredHeight = 1,
-				};
-
-				this.ContentListAdd (separator);
-			}
-			else
-			{
-				var frame = new FrameBox
-				{
-					Parent = tile.Container,
-					Dock = DockStyle.Top,
-					PreferredHeight = 10,
-				};
-
-				this.ContentListAdd (frame);
-			}
-		}
-
-
-#if false
-		public static void ClearAllEditionFields(Widget container)
-		{
-			//	Vide tous les champs éditables des tuiles.
-			foreach (var widget in container.Children)
-			{
-				if (widget is AbstractTextField)
-				{
-					var textField = widget as AbstractTextField;
-					textField.Text = null;
-				}
-
-				if (widget.Children != null && widget.Children.Count > 0)
-				{
-					UIBuilder.ClearAllEditionFields (widget as Widget);
-				}
-			}
-		}
-#endif
-
-
-		public static string ConvertToText(object value)
-		{
-			if (value == null)
-			{
-				return "";
-			}
-
-			string text = value as string;
-
-			if (text != null)
-			{
-				return text;
-			}
-
-			if (value is Date)
-			{
-				return ((Date)value).ToDateTime ().ToShortDateString ();
-			}
-
-			return value.ToString ();
-		}
 
 
 		private static void CreateTitleTileHandler(TitleTile titleTile, CoreViewController controller)
@@ -1170,28 +1126,33 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
-			UI.SetInitialFocus (this.Container);
-
-			if (this.nextBuilder != null)
+			if (!this.isDisposed)
 			{
-				this.nextBuilder.tabIndex = this.tabIndex;
+				UI.SetInitialFocus (this.Container);
+
+				if (this.nextBuilder != null)
+				{
+					this.nextBuilder.tabIndex = this.tabIndex;
+				}
+
+				UIBuilder.current = this.nextBuilder;
+				this.isDisposed = true;
 			}
-			
-			UIBuilder.current = this.nextBuilder;
 		}
 
 		#endregion
 
 
-		public static readonly double RightMargin = 10;
-		public static readonly double MarginUnderLabel = 1;
-		public static readonly double MarginUnderTextField = 2;
+		public static readonly double RightMargin				= 10;
+		public static readonly double MarginUnderLabel			= 1;
+		public static readonly double MarginUnderTextField		= 2;
 
 		private static UIBuilder current;
 
 		private readonly CoreViewController controller;
 		private readonly TileContainer container;
 		private readonly UIBuilder nextBuilder;
+		private bool isDisposed;
 		private int tabIndex;
 		private TitleTile titleTile;
 		private PanelTitleTile panelTitleTile;
