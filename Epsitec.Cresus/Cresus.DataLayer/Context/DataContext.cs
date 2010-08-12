@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
 			this.SerializationManager = new EntitySerializationManager (this);
+			this.DataConverter = new DataConverter (this);
 
 			this.EnableNullVirtualization = enableNullVirtualization;
 
@@ -182,6 +183,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+
+		/// <summary>
+		/// Gets the <see cref="DataConverter"/> associated with this instance.
+		/// </summary>
+		internal DataConverter DataConverter
+		{
+			get;
+			private set;
+		}
+		
 
 		/// <summary>
 		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> created by this
