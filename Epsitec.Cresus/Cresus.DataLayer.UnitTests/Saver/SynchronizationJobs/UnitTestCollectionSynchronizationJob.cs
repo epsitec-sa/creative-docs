@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 
 
 		[TestMethod]
-		public void SynchronizeTest()
+		public void SynchronizeArgumentCheck()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
