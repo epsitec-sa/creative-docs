@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
@@ -28,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 		
 		[TestMethod]
-		public void EntityEventArgsConstructorTest1()
+		public void EntityEventArgsConstructorTest()
 		{
 			foreach (AbstractEntity entity in this.GetSampleEntities ())
 			{
@@ -48,14 +50,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException(typeof(System.ArgumentNullException))]
-		public void EntityEventArgsConstructorTest2()
+		public void EntityEventArgsConstructorArgumentCheck()
 		{
 			AbstractEntity entity = null;
 			EntityChangedEventType eventType = this.GetSampleTypes ().First ();
 			EntityChangedEventSource eventSource = this.GetSampleSources ().First ();
 
-			new DataLayer.Context.EntityChangedEventArgs (entity, eventType, eventSource);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DataLayer.Context.EntityChangedEventArgs (entity, eventType, eventSource)
+			);
 		}
 
 
