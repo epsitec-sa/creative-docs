@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -11,6 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 using System.Linq;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Context
@@ -37,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		public void AddTest1()
+		public void AddTest()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
@@ -65,12 +68,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void AddTest2()
+		public void AddTestArgumentCheck()
 		{
 			EntityCache entityCache = new EntityCache ();
 
-			entityCache.Add (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => entityCache.Add (null)
+			);
 		}
 
 		
@@ -119,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 		
 		[TestMethod]
-		public void DefineRowKeyTest1()
+		public void DefineRowKeyTest()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
@@ -150,34 +155,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void DefineRowKeyTest2()
+		public void DefineRowKeyArgumentCheck()
 		{
 			EntityCache entityCache = new EntityCache ();
-
-			entityCache.DefineRowKey (null, new DbKey (new DbId (1)));
-
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void DefineRowKeyTest3()
-		{
-			EntityCache entityCache = new EntityCache ();
-
-			entityCache.DefineRowKey (new NaturalPersonEntity (), new DbKey (new DbId (0)));
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void DefineRowKeyTest4()
-		{
 			NaturalPersonEntity entity = EntityContext.Current.CreateEntity<NaturalPersonEntity> ();
-			EntityCache entityCache = new EntityCache ();
 
-			entityCache.DefineRowKey (entity, new DbKey (new DbId (1)));
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => entityCache.DefineRowKey (null, new DbKey (new DbId (1)))
+			);
+		
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => entityCache.DefineRowKey (entity, new DbKey (new DbId (1)))
+			);
+
+			entityCache.Add (entity);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => entityCache.DefineRowKey (entity, DbKey.Empty)
+			);
 		}
 
 		
@@ -249,7 +247,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 		
 		[TestMethod]
-		public void GetEntityKeyTest1()
+		public void GetEntityKeyTest()
 		{
 			List<AbstractEntity> entities1 = new List<AbstractEntity> ()
 			{
@@ -301,17 +299,19 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetEntityKeyTest2()
+		public void GetEntityKeyArgumentCheck()
 		{
 			EntityCache entityCache = new EntityCache ();
 
-			entityCache.GetEntityKey (null);
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => entityCache.GetEntityKey (null)
+			);
 		}
 
 		
 		[TestMethod]
-		public void RemoveTest1()
+		public void RemoveTest()
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ()
 			{
@@ -385,12 +385,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void RemoveTest2()
+		public void RemoveTestArgumentCheck()
 		{
 			EntityCache entityCache = new EntityCache ();
 
-			entityCache.Remove (null);
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => entityCache.Remove (null)
+			);
 		}
 
 
