@@ -1,11 +1,14 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
@@ -34,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 		
 		
 		[TestMethod]
-		public void UnaryComparisonConstructorTest1()
+		public void UnaryComparisonConstructorTest()
 		{
 			Field field = new Field (Druid.FromLong (1));
 			
@@ -44,10 +47,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod ]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void UnaryComparisonConstructorTest2()
+		public void UnaryComparisonConstructorArgumentCheck()
 		{
-			new UnaryComparison (null, UnaryComparator.IsNull);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new UnaryComparison (null, UnaryComparator.IsNull)
+			);
 		}
 
 
@@ -76,8 +81,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest1()
+		public void CreateDbConditionArgumentCheck()
 		{
 			Field field = new Field (Druid.FromLong (1));
 
@@ -86,21 +90,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
-				
-				comparison.CreateDbCondition (converter, null);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (converter, null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (null, id => null)
+				);
 			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest2()
-		{
-			Field field = new Field (Druid.FromLong (1));
-
-			UnaryComparison comparison = new UnaryComparison (field, UnaryComparator.IsNull);
-
-			comparison.CreateDbCondition (null, id => null);
 		}
 
 
