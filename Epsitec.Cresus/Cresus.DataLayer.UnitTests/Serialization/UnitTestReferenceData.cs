@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Serialization;
@@ -26,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		public void ItemTest1()
+		public void ItemTest()
 		{
 			ReferenceData referenceData = new ReferenceData ();
 
@@ -63,12 +65,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ItemTest2()
+		public void ItemArgumentCheck()
 		{
 			ReferenceData referenceData = new ReferenceData ();
 
-			referenceData[Druid.FromLong (1)] = null;
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => referenceData[Druid.FromLong (1)] = null
+			);
 		}
 
 
