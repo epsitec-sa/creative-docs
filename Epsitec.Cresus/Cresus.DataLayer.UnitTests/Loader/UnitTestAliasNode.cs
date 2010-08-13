@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.DataLayer.Loader;
+﻿using Epsitec.Common.UnitTesting;
+
+using Epsitec.Cresus.DataLayer.Loader;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -40,44 +42,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AliasNodeConstructorTest3()
-		{
-			AliasNode node1 = new AliasNode ("");
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AliasNodeConstructorTest4()
-		{
-			string name = null;
-			AliasNode node1 = new AliasNode (name);
-		}
-
-
-		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AliasNodeConstructorTest5()
+		public void AliasNodeConstructorArgumentCheck()
 		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = new AliasNode_Accessor (node1, "");
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode (null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode_Accessor (new AliasNode_Accessor ("node1"), "")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode_Accessor (new AliasNode_Accessor ("node1"), null)
+			);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AliasNodeConstructorTest6()
-		{
-			AliasNode_Accessor node1 = new AliasNode_Accessor ("node1");
-			AliasNode_Accessor node2 = new AliasNode_Accessor (node1, null);
-		}
-
-
-		[TestMethod]
-		public void CreateChildTest1()
+		public void CreateChildTest()
 		{
 			AliasNode node1 = new AliasNode ("node1");
 			AliasNode node2 = node1.CreateChild ("node2");
@@ -89,20 +80,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CreateChildTest2()
+		public void CreateChildTestArgumentCheck()
 		{
-			AliasNode node1 = new AliasNode ("node1");
-			AliasNode node2 = node1.CreateChild (null);
-		}
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").CreateChild (null)
+			);
 
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CreateChildTest3()
-		{
-			AliasNode node1 = new AliasNode ("node1");
-			AliasNode node2 = node1.CreateChild ("");
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").CreateChild ("")
+			);
 		}
 
 
@@ -159,7 +147,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		public void GetChildTest1()
+		public void GetChildTest()
 		{
 			AliasNode node = new AliasNode ("node");
 
@@ -188,37 +176,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildTest2()
+		public void GetChildTestArgumentCheck()
 		{
-			AliasNode node1 = new AliasNode ("node1");
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChild (null)
 
-			node1.GetChild (null);
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChild ("")
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChild ("test")
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildTest3()
-		{
-			AliasNode node1 = new AliasNode ("node1");
-
-			node1.GetChild ("");
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildTest4()
-		{
-			AliasNode node1 = new AliasNode ("node1");
-			
-			node1.GetChild ("test");
-		}
-
-
-		[TestMethod]
-		public void GetChildrenTest1()
+		public void GetChildrenTest()
 		{
 			AliasNode node = new AliasNode ("node");
 
@@ -247,32 +226,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildrenTest2()
+		public void GetChildrenArgumentChec()
 		{
-			AliasNode node1 = new AliasNode ("node1");
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChildren (null)
+			);
 
-			node1.GetChildren (null);
-		}
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChildren ("")
+			);
 
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildrenTest3()
-		{
-			AliasNode node1 = new AliasNode ("node1");
-
-			node1.GetChildren ("");
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void GetChildrenTest4()
-		{
-			AliasNode node1 = new AliasNode ("node1");
-
-			node1.GetChildren ("test");
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new AliasNode ("node1").GetChildren ("test")
+			);
 		}
 
 
