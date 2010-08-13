@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.UnitTesting;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Schema;
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 		
 		[TestMethod]
-		public void DataConverterConstructorTest1()
+		public void DataConverterConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -45,10 +47,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void DataConverterConstructorTest2()
+		public void DataConverterConstructorArgumentCheck()
 		{
-			new DataConverter (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DataConverter (null)
+			);
 		}
 
 
@@ -66,6 +70,49 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 					Assert.AreEqual (result1, result2);
 				}
+			}
+		}
+
+
+		[TestMethod]
+		public void FromCresusToDatabaseValueArgumentCheck()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				DataConverter dataConverter = new DataConverter (dataContext);
+
+				DbRawType rawType = DbRawType.Boolean;
+				DbSimpleType simpleType = DbSimpleType.Decimal;
+				DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
+				object value = true;
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (DbRawType.Null, simpleType, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (DbRawType.Unknown, simpleType, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Null, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, DbSimpleType.Unknown, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, null)
+				);
+				
+				// TODO Test with an invalid DbNumDef, but I don't know how to create an invalid one.
+				// Marc
 			}
 		}
 
@@ -94,6 +141,55 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 						Assert.AreEqual (result1, result2);
 					}
 				}
+			}
+		}
+
+
+		[TestMethod]
+		public void FromDatabaseToCresusValueArgumentCheck()
+		{
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				DataConverter dataConverter = new DataConverter (dataContext);
+
+				System.Type type = typeof (bool);
+				DbRawType rawType = DbRawType.Boolean;
+				DbSimpleType simpleType = DbSimpleType.Decimal;
+				DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
+				object value = true;
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (null, rawType, simpleType, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Null, simpleType, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, DbRawType.Unknown, simpleType, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Null, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, DbSimpleType.Unknown, numDef, value)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, null)
+				);
+
+				// TODO Test with an invalid DbNumDef, but I don't know how to create an invalid one.
+				// Marc
 			}
 		}
 
