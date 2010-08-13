@@ -257,14 +257,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void IsLocalyConstrainedTest()
+		public void IsLocalyConstrainedArgumentCheck()
 		{
-			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
+			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (new Request ()));
 
-			requestAccessor.IsLocalyConstrained (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => requestAccessor.IsLocalyConstrained (null)
+			);
 		}
 
 
