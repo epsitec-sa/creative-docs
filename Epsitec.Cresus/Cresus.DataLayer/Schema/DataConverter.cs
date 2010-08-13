@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Converts a value in the intermediate .NET representation to the corresponding value in the Cresus
 		/// representation.
 		/// </summary>
-		/// <param name="rawType">The <see cref="DbRawType"/> of the value in its intermediate .NET representation.</param>
+		/// <param name="type">The expected type of the value in its Cresus representation.</param>
 		/// <param name="simpleType">The <see cref="DbSimpleType"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="numDef">The <see cref="DbNumDef"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="value">The value in its intermediate .NET representation.</param>
@@ -142,29 +142,55 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			newValue = TypeConverter.ConvertToSimpleType (newValue, simpleType, numDef);
 
-			// TODO I don't know why this string conversion call is here. Shouldn't it be in
-			// TypeConverter.ConvertToSimpleType(...) ? Because the "opposite" call is implemented
-			// in TypeConverter.ConvertFromSimpleType(...).
-			// Marc
-
-			IStringType stringType = type as IStringType;
-
-			if (stringType != null)
+			if (simpleType == DbSimpleType.String)
 			{
-				if (stringType.UseFormattedText)
-				{
-					newValue = FormattedText.CastToFormattedText (newValue);
-				}
+				newValue = this.ProcessDotNetToCresusString (type, newValue);
+			}
+			else if (simpleType == DbSimpleType.Decimal)
+			{
+				newValue = this.ProcessDotNetToCresusNumber (type, newValue);
 			}
 
-			if (simpleType == DbSimpleType.Decimal)
-			{
-				bool success = InvariantConverter.Convert (newValue, type, out newValue);
+			return newValue;
+		}
+		
 
-				if (!success)
-				{
-					throw new System.NotSupportedException ("Unable to convert unsupported type: " + type);
-				}
+		/// <summary>
+		/// Applies a special treatment required for the string values.
+		/// </summary>
+		/// <param name="type">The expected type of the value in its Cresus representation.</param>
+		/// <param name="value">The value in its Cresus representation.</param>
+		/// <returns>The processed value in its Cresus representation</returns>
+		private object ProcessDotNetToCresusString(System.Type type, object value)
+		{
+			object newValue = value;
+			
+			IStringType stringType = type as IStringType;
+
+			if (stringType != null && stringType.UseFormattedText)
+			{
+				newValue = FormattedText.CastToFormattedText (newValue);
+			}
+
+			return newValue;
+		}
+
+
+		/// <summary>
+		/// Applies a special treatment required for the number values.
+		/// </summary>
+		/// <param name="type">The expected type of the value in its Cresus representation.</param>
+		/// <param name="value">The value in its Cresus representation.</param>
+		/// <returns>The processed value in its Cresus representation</returns>
+		private object ProcessDotNetToCresusNumber(System.Type type, object value)
+		{
+			object newValue = value;
+
+			bool success = InvariantConverter.Convert (newValue, type, out newValue);
+
+			if (!success)
+			{
+				throw new System.NotSupportedException ("Unable to convert unsupported type: " + type);
 			}
 
 			return newValue;
@@ -219,26 +245,59 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			object newValue = value;
 
-			if (simpleType == DbSimpleType.Decimal)
+			if (simpleType == DbSimpleType.String)
 			{
-				decimal decimalValue;
-
-				bool success = InvariantConverter.Convert (value, out decimalValue);
-
-				if (!success)
-				{
-					throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
-				}
-
-				newValue = decimalValue;
+				newValue = this.ProcessCresusToDotNetString (newValue);
 			}
-
+			else if (simpleType == DbSimpleType.Decimal)
+			{
+				newValue = this.ProcessCresusToDotNetNumber (value);
+			}
+			
 			newValue = TypeConverter.ConvertFromSimpleType (newValue, simpleType, numDef);
 
 			return newValue;
 		}
 
 		
+		/// <summary>
+		/// Applies a special treatment required for the string values.
+		/// </summary>
+		/// <param name="value">The value in its Cresus representation.</param>
+		/// <returns>The processed value in its Cresus representation</returns>
+		private object ProcessCresusToDotNetString(object value)
+		{
+			object newValue = value;
+
+			if (newValue is FormattedText)
+			{
+				newValue = FormattedText.CastToString (newValue);
+			}
+
+			return value;
+		}
+
+
+		/// <summary>
+		/// Applies a special treatment required for the string number.
+		/// </summary>
+		/// <param name="value">The value in its Cresus representation.</param>
+		/// <returns>The processed value in its Cresus representation</returns>
+		private object ProcessCresusToDotNetNumber(object value)
+		{
+			decimal newValue;
+
+			bool success = InvariantConverter.Convert (value, out newValue);
+
+			if (!success)
+			{
+				throw new System.ArgumentException ("Invalid value: not compatible with a numeric type");
+			}
+
+			return newValue;
+		}
+
+
 		/// <summary>
 		/// Converts a value in the intermediate .NET representation to the corresponding value in the database
 		/// representation.
