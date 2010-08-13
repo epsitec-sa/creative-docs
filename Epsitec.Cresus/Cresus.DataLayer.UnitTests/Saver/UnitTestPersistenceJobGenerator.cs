@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -46,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void PersistenceJobGeneratorConstructorTest1()
+		public void PersistenceJobGeneratorConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -56,28 +58,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		[ExpectedException(typeof (System.ArgumentNullException))]
-		public void PersistenceJobGeneratorConstructorTest2()
+		public void PersistenceJobGeneratorConstructorArgumentCheck()
 		{
-			new PersistenceJobGenerator (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new PersistenceJobGenerator (null)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void InsertEntityTest1()
+		public void InsertEntityArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-				generator.CreateInsertionJobs (null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => generator.CreateInsertionJobs (null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		public void InsertEntityTest2()
+		public void InsertEntityTest1()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -116,7 +122,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void InsertEntityTest3()
+		public void InsertEntityTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -143,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void InsertEntityTest4()
+		public void InsertEntityTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -178,7 +184,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void InsertEntityTest5()
+		public void InsertEntityTest4()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -243,20 +249,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void UpdateEntityTest1()
+		public void UpdateEntityArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-				generator.CreateUpdateJobs (null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => generator.CreateUpdateJobs (null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		public void UpdateEntityTest2()
+		public void UpdateEntityTest1()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -281,7 +289,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void UpdateEntityTest3()
+		public void UpdateEntityTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -305,7 +313,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void UpdateEntityTest4()
+		public void UpdateEntityTest3()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -335,7 +343,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void UpdateEntityTest5()
+		public void UpdateEntityTest4()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -380,20 +388,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void DeleteEntityTest1()
+		public void DeleteEntityArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				PersistenceJobGenerator generator = new PersistenceJobGenerator (dataContext);
 
-				generator.CreateDeletionJob (null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => generator.CreateDeletionJob (null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		public void DeleteEntityTest2()
+		public void DeleteEntityTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
