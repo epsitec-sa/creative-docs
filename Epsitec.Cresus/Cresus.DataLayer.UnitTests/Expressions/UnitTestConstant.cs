@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		public void ConstantConstructorTest1()
+		public void ConstantConstructorTest()
 		{
 			new Constant ((short) 0);
 			new Constant ((int) 0);
@@ -32,10 +34,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof(System.ArgumentNullException))]
-		public void ConstantConstructorTest2()
+		public void ConstantConstructorArgumentCheck()
 		{
-			new Constant ((string) null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new Constant ((string) null)
+			);
 		}
 
 
