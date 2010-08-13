@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 				
 
 		[TestMethod]
-		public void BinaryComparisonFieldWithFieldConstructorTest1()
+		public void BinaryComparisonFieldWithFieldConstructorTest()
 		{
 			Field leftField = new Field (Druid.FromLong (1));
 			Field rightField = new Field (Druid.FromLong (2));
@@ -45,24 +47,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void BinaryComparisonFieldWithFieldConstructorTest2()
+		public void BinaryComparisonFieldWithFieldConstructorArgumentCheck()
 		{
 			Field rightField = new Field (Druid.FromLong (2));
 			BinaryComparator op = BinaryComparator.IsEqual;
-
-			new ComparisonFieldField (null, op, rightField);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void BinaryComparisonFieldWithFieldConstructorTest3()
-		{
 			Field leftField = new Field (Druid.FromLong (1));
-			BinaryComparator op = BinaryComparator.IsEqual;
-
-			new ComparisonFieldField (leftField, op, null);
+			
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ComparisonFieldField (null, op, rightField)
+			);
+					
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ComparisonFieldField (leftField, op, null)
+			);
 		}
 
 
@@ -106,8 +105,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest1()
+		public void CreateDbConditionArgumentCheck()
 		{
 			Field leftField = new Field (Druid.FromLong (1));
 			Field rightField = new Field (Druid.FromLong (2));
@@ -119,22 +117,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				comparison.CreateDbCondition (converter, null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (converter, null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (null, id => null)
+				);
 			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest2()
-		{
-			Field leftField = new Field (Druid.FromLong (1));
-			Field rightField = new Field (Druid.FromLong (2));
-			BinaryComparator op = BinaryComparator.IsEqual;
-
-			var comparison = new ComparisonFieldField (leftField, op, rightField);
-
-			comparison.CreateDbCondition (null, id => null);
 		}
 
 
