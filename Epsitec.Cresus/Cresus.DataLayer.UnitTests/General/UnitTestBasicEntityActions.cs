@@ -51,64 +51,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
-		public void DiscardEmptyEntities()
-		{
-			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
-				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
-
-				alfred.Contacts.Add (emptyContact1);
-
-				dataContext.RegisterEmptyEntity (emptyContact1);
-				dataContext.RegisterEmptyEntity (emptyContact2);
-
-				dataContext.SaveChanges ();
-			}
-
-			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
-
-				Assert.AreEqual (2, alfred.Contacts.Count);
-				Assert.AreEqual (4, contacts.Count ());
-			}
-
-			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				var emptyContact1 = dataContext.CreateEntity<UriContactEntity> ();
-				var emptyContact2 = dataContext.CreateEntity<UriContactEntity> ();
-
-				alfred.Contacts.Add (emptyContact1);
-
-				dataContext.RegisterEmptyEntity (emptyContact1);
-				dataContext.RegisterEmptyEntity (emptyContact2);
-
-				dataContext.SaveChanges ();
-
-				dataContext.UnregisterEmptyEntity (emptyContact1);
-				dataContext.UnregisterEmptyEntity (emptyContact2);
-
-				dataContext.SaveChanges ();
-			}
-
-			using (var dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
-			{
-				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
-
-				Assert.AreEqual (3, alfred.Contacts.Count);
-				Assert.AreEqual (6, contacts.Count ());
-			}
-		}
-
-
-		[TestMethod]
 		public void SaveWithoutChanges1()
 		{
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
