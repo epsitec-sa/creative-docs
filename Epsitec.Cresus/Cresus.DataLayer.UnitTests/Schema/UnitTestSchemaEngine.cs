@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Schema;
@@ -46,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void SchemaEngineConstructorTest1()
+		public void SchemaEngineConstructorTest()
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 
@@ -56,12 +58,14 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException(typeof (System.ArgumentNullException))]
-		public void SchemaEngineConstructorTest2()
+		public void SchemaEngineConstructorArgumentCheck()
 		{
 			DbInfrastructure dbInfrastructure = null;
 
-			new SchemaEngine_Accessor (dbInfrastructure);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new SchemaEngine_Accessor (dbInfrastructure)
+			);
 		}
 
 
@@ -297,19 +301,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof(System.ArgumentNullException))]
-		public void SetSchemaEngineTest()
+		public void SetSchemaEngineArgumentCheck()
 		{
-			SchemaEngine_Accessor.SetSchemaEngine (null, null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => SchemaEngine_Accessor.SetSchemaEngine (null, null)
+			);
 		}
 
 
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetSchemaEngineTest()
+		public void GetSchemaEngineArgumentCheck()
 		{
-			SchemaEngine_Accessor.GetSchemaEngine (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => SchemaEngine_Accessor.GetSchemaEngine (null)
+			);
 		}
 
 
