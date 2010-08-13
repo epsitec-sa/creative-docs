@@ -356,15 +356,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register as empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		public void RegisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
+
+			entity.ThrowIfNull ("entity");
+			entity.ThrowIf (e => this.IsPersistent (e), "entity");
 
 			if (this.emptyEntities.Add (entity))
 			{
 				System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 
-				entity.UpdateDataGenerationAndNotifyEntityContextAboutChange ();
+				entity.UpdateDataGeneration ();
+				this.ResaveReferencingFields (entity);
 			}
 		}
 
@@ -375,9 +381,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to unregister as empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
+
+			entity.ThrowIfNull ("entity");
+			entity.ThrowIf (e => this.IsPersistent (e), "entity");
 
 			if (this.emptyEntities.Remove (entity))
 			{
@@ -396,6 +407,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister as empty.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating whether to register or unregister is at empty.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
 			this.AssertDataContextIsNotDisposed ();
