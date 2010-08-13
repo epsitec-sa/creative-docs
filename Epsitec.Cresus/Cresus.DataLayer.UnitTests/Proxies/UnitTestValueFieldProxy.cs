@@ -22,6 +22,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 	{
 
 
+		/// <summary>
+		/// Classes the initialize.
+		/// </summary>
+		/// <param name="testContext"></param>
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{
@@ -72,32 +76,32 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
-						() => new ValueFieldProxy_Accessor (null, person, fieldId)
+						() => new ValueFieldProxy (null, person, fieldId)
 					);
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
-						() => new ValueFieldProxy_Accessor (dataContext1, null, fieldId)
+						() => new ValueFieldProxy (dataContext1, null, fieldId)
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Empty)
+						() => new ValueFieldProxy (dataContext1, person, Druid.Empty)
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Parse ("[L0AN]"))
+						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[L0AN]"))
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Parse ("[L0AD1]"))
+						() => new ValueFieldProxy (dataContext1, person, Druid.Parse ("[L0AD1]"))
 					);
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new ValueFieldProxy_Accessor (dataContext2, person, fieldId)
+						() => new ValueFieldProxy (dataContext2, person, fieldId)
 					);
 				}
 			}
