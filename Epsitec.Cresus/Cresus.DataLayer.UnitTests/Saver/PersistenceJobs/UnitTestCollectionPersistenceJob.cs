@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
@@ -21,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		public void CollectionPersistenceJobConstructor1Test()
+		public void CollectionPersistenceJobConstructor()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			var targets = this.GetSampleTargets ().ToList ();
@@ -48,78 +50,43 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CollectionPersistenceJobConstructor2Test()
+		public void CollectionPersistenceJobConstructorArgumentCheck()
 		{
-			NaturalPersonEntity entity = null;
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
 			Druid fieldId = Druid.FromLong (2);
 			var targets = this.GetSampleTargets ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new CollectionPersistenceJob (null, localEntityId, fieldId, targets, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new CollectionPersistenceJob (entity, Druid.Empty, fieldId, targets, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new CollectionPersistenceJob (entity, localEntityId, Druid.Empty, targets, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new CollectionPersistenceJob (entity, localEntityId, fieldId, null, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new CollectionPersistenceJob (entity, localEntityId, fieldId, new List<AbstractEntity> () { null }, jobType)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CollectionPersistenceJobConstructor3Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.Empty;
-			Druid fieldId = Druid.FromLong (2);
-			var targets = this.GetSampleTargets ();
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CollectionPersistenceJobConstructor4Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.Empty;
-			var targets = this.GetSampleTargets ();
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CollectionPersistenceJobConstructor5Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.FromLong (2);
-			List<AbstractEntity> targets = null;
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CollectionPersistenceJobConstructor6Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.FromLong (2);
-			var targets = this.GetSampleTargets ().Concat (new List<AbstractEntity> () { null });
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ConvertTest()
+		public void ConvertArgumentCheck()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
@@ -127,7 +94,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 			var targets = this.GetSampleTargets ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType).Convert (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType).Convert (null)
+			);
 		}
 
 
