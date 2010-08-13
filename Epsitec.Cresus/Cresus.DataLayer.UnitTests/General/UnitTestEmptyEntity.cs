@@ -386,6 +386,71 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		}
 
 
+		[TestMethod]
+		public void UpdateEmptyEmptyEntitiesStatusTest1()
+		{
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contact = dataContext.CreateEntity<UriContactEntity> ();
+
+				dataContext.UpdateEmptyEntityStatus (contact, true);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
+
+				Assert.AreEqual (4, contacts.Count ());
+			}
+		}
+
+
+		[TestMethod]
+		public void UpdateEmptyEmptyEntitiesStatusTest2()
+		{
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contact = dataContext.CreateEntity<UriContactEntity> ();
+
+				dataContext.RegisterEmptyEntity (contact);
+
+				dataContext.SaveChanges ();
+
+				dataContext.UpdateEmptyEntityStatus (contact, false);
+
+				dataContext.SaveChanges ();
+			}
+
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
+
+				Assert.AreEqual (5, contacts.Count ());
+			}
+		}
+
+
+		[TestMethod]
+		public void CreateEmptyEntityTest()
+		{
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contact = dataContext.CreateEmptyEntity<UriContactEntity> ();
+
+				dataContext.SaveChanges ();
+			}
+
+			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				var contacts = dataContext.GetByExample (new AbstractContactEntity ());
+
+				Assert.AreEqual (4, contacts.Count ());
+			}
+		}
+
+
 	}
 
 
