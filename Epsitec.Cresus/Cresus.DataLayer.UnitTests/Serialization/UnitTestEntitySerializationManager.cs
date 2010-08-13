@@ -3,6 +3,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -51,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		public void EntitySerializationManagerConstructorTest1()
+		public void EntitySerializationManagerConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -61,31 +63,37 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void EntitySerializationManagerConstructorTest2()
+		public void EntitySerializationManagerConstructorArgumentCheck()
 		{
-			new EntitySerializationManager (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntitySerializationManager (null)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void SerializeTest()
+		public void SerializeArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				new EntitySerializationManager (dataContext).Serialize (null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new EntitySerializationManager (dataContext).Serialize (null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void DeserializeTest()
+		public void DeserializeArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				new EntitySerializationManager (dataContext).Deserialize (null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new EntitySerializationManager (dataContext).Deserialize (null)
+				);
 			}
 		}
 
