@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -20,8 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 		
 		
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetFieldsTestUnaryOperation1()
+		public void GetFieldsTestUnaryOperation()
 		{
 			foreach (Field field1 in this.GetSampleFields ())
 			{
@@ -32,7 +33,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 						new ComparisonFieldField (field1, BinaryComparator.IsEqual, field2)
 					);
 
-					List<Druid> fields = ExpressionFields_Accessor.GetFields (operation).ToList ();
+					List<Druid> fields = ExpressionFields.GetFields (operation).ToList ();
 
 					if (field1.FieldId == field2.FieldId)
 					{
@@ -51,19 +52,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetFieldsUnaryOperation2()
+		public void GetFieldsUnaryOperationArgumentCheck()
 		{
-			UnaryOperation operation = null;
-
-			ExpressionFields_Accessor.GetFields (operation);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ExpressionFields.GetFields ((UnaryOperation) null)
+			);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetFieldsTestBinaryOperation1()
+		public void GetFieldsTestBinaryOperation()
 		{
 			foreach (Field field1 in this.GetSampleFields ())
 			{
@@ -75,7 +74,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 						new UnaryComparison (field2, UnaryComparator.IsNull)
 					);
 
-					List<Druid> fields1 = ExpressionFields_Accessor.GetFields(operation1).ToList() ;
+					List<Druid> fields1 = ExpressionFields.GetFields(operation1).ToList() ;
 					HashSet<Druid> fields2 = new HashSet<Druid> () { field1.FieldId, field2.FieldId, };
 
 					Assert.IsTrue (fields1.Count == fields2.Count);
@@ -89,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 							new ComparisonFieldField (field2, BinaryComparator.IsEqual, field3)
 						);
 
-						List<Druid> fields3 = ExpressionFields_Accessor.GetFields (operation2).ToList ();
+						List<Druid> fields3 = ExpressionFields.GetFields (operation2).ToList ();
 						HashSet<Druid> fields4 = new HashSet<Druid> () { field1.FieldId, field2.FieldId, field3.FieldId };
 
 						Assert.IsTrue (fields3.Count == fields4.Count);
@@ -103,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 								new ComparisonFieldField (field3, BinaryComparator.IsEqual, field4)
 							);
 
-							List<Druid> fields5 = ExpressionFields_Accessor.GetFields (operation3).ToList ();
+							List<Druid> fields5 = ExpressionFields.GetFields (operation3).ToList ();
 							HashSet<Druid> fields6 = new HashSet<Druid> () { field1.FieldId, field2.FieldId, field3.FieldId, field4.FieldId };
 
 							Assert.IsTrue (fields5.Count == fields6.Count);
@@ -116,25 +115,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetFieldsBinaryOperation2()
+		public void GetFieldsBinaryOperationArgumentCheck()
 		{
-			BinaryOperation operation = null;
-
-			ExpressionFields_Accessor.GetFields (operation);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ExpressionFields.GetFields ((BinaryOperation) null)
+			);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetFieldsTestUnaryComparison1()
+		public void GetFieldsTestUnaryComparison()
 		{
 			foreach (Field field in this.GetSampleFields ())
 			{
 				UnaryComparison comparison = new UnaryComparison (field, UnaryComparator.IsNull);
 
-				List<Druid> fields = ExpressionFields_Accessor.GetFields (comparison).ToList ();
+				List<Druid> fields = ExpressionFields.GetFields (comparison).ToList ();
 
 				Assert.IsTrue (fields.Count () == 1);
 				Assert.AreEqual (field.FieldId, fields.Single ());
@@ -143,18 +140,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetFieldsUnaryComparison2()
+		public void GetFieldsUnaryComparisonArgumentCheck()
 		{
-			UnaryComparison comparison = null;
-
-			ExpressionFields_Accessor.GetFields (comparison);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ExpressionFields.GetFields ((UnaryComparison) null)
+			);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetFieldsTestComparisonFieldField1()
 		{
 			foreach (Field field1 in this.GetSampleFields ())
@@ -163,7 +158,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 				{
 					ComparisonFieldField comparison = new ComparisonFieldField (field1, BinaryComparator.IsEqual, field2);
 
-					List<Druid> fields = ExpressionFields_Accessor.GetFields (comparison).ToList ();
+					List<Druid> fields = ExpressionFields.GetFields (comparison).ToList ();
 
 					if (field1.FieldId == field2.FieldId)
 					{
@@ -182,25 +177,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetFieldsComparisonFieldField2()
+		public void GetFieldsComparisonFieldFieldArgumentCheck()
 		{
-			ComparisonFieldField comparison = null;
-
-			ExpressionFields_Accessor.GetFields (comparison);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ExpressionFields.GetFields ((ComparisonFieldField) null)
+			);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetFieldsTestComparisonFieldValue1()
+		public void GetFieldsTestComparisonFieldValue()
 		{
 			foreach (Field field in this.GetSampleFields ())
 			{
 				ComparisonFieldValue comparison = new ComparisonFieldValue (field, BinaryComparator.IsEqual, new Constant (0));
 
-				List<Druid> fields = ExpressionFields_Accessor.GetFields (comparison).ToList ();
+				List<Druid> fields = ExpressionFields.GetFields (comparison).ToList ();
 
                 Assert.IsTrue (fields.Count () == 1);
 				Assert.AreEqual (field.FieldId, fields.Single ());
@@ -209,13 +202,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetFieldsComparisonFieldValue2()
+		public void GetFieldsComparisonFieldValueArgumentCheck()
 		{
-			ComparisonFieldValue comparison = null;
-
-			ExpressionFields_Accessor.GetFields (comparison);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ExpressionFields.GetFields ((ComparisonFieldValue) null)
+			);
 		}
 
 
