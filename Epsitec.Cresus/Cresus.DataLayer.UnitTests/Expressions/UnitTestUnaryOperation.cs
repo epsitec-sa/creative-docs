@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 		
 
 		[TestMethod]
-		public void UnaryOperationConstructorTest1()
+		public void UnaryOperationConstructorTest()
 		{
 			Field field = new Field (Druid.FromLong (1));
 			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
@@ -44,10 +46,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void UnaryOperationConstructorTest2()
+		public void UnaryOperationConstructorTestArgumentCheck()
 		{
-			new UnaryOperation (UnaryOperator.Not, null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new UnaryOperation (UnaryOperator.Not, null)
+			);
 		}
 
 
@@ -76,7 +80,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void CreateDbConditionTest1()
 		{
 			Field field = new Field (Druid.FromLong (1));
@@ -88,21 +91,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				operation.CreateDbCondition (converter, null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => operation.CreateDbCondition (converter, null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => operation.CreateDbCondition (null, id => null)
+				);
 			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest2()
-		{
-			Field field = new Field (Druid.FromLong (1));
-			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
-
-			UnaryOperation operation = new UnaryOperation (UnaryOperator.Not, expression);
-
-			operation.CreateDbCondition (null, id => null);
 		}
 
 
