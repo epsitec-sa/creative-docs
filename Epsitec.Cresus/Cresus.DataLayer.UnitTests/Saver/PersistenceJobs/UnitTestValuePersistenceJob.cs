@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
@@ -20,7 +22,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		public void ValuePersistenceJobConstructor1Test()
+		public void ValuePersistenceJobConstructorTest()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Dictionary<Druid, object> fieldIdsWithValues = this.GetSampleFieldIdsWithValues ();
@@ -50,66 +52,41 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValuePersistenceJobConstructor2Test()
-		{
-			NaturalPersonEntity entity = null;
-			Druid localEntityId = Druid.FromLong (1);
-			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ();
-			bool isRootTypeJob = true;
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValuePersistenceJobConstructor3Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.Empty;
-			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ();
-			bool isRootTypeJob = true;
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValuePersistenceJobConstructor4Test()
+		public void ValuePersistenceJobConstructorArgumentCheck()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
-			Dictionary<Druid, object> fieldIdsWithValues = null;
-			bool isRootTypeJob = true;
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValuePersistenceJobConstructor5Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.FromLong (1);
-			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
+			Dictionary<Druid, object> fieldIdsWithValues1 = new Dictionary<Druid, object> ();
+			Dictionary<Druid, object> fieldIdsWithValues2 = new Dictionary<Druid, object> ()
 			{
 				{ Druid.Empty, "test" },
 			};
 			bool isRootTypeJob = true;
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ValuePersistenceJob (null, localEntityId, fieldIdsWithValues1, isRootTypeJob, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() =>new ValuePersistenceJob (entity, Druid.Empty, fieldIdsWithValues1, isRootTypeJob, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ValuePersistenceJob (entity, localEntityId, null, isRootTypeJob, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues2, isRootTypeJob, jobType)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void ConvertTest()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
@@ -121,7 +98,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 			bool isRootTypeJob = true;
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType).Convert (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType).Convert (null)
+			);
 		}
 
 
