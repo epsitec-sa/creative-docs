@@ -3,6 +3,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -54,75 +56,40 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CopyEntityTest1()
+		public void CopyEntityArgumentCheck()
 		{
 			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
 				{
-					NaturalPersonEntity entity = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
+					NaturalPersonEntity entity3 = dataContext1.CreateEntity<NaturalPersonEntity> ();
+					
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => DataContext.CopyEntity (null, entity1, dataContext2)
+					);
 
-					DataContext.CopyEntity (null, entity, dataContext2);
-				}
-			}
-		}
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => DataContext.CopyEntity (dataContext1, entity1, null)
+					);
 
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CopyEntityTest2()
-		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity entity = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				DataContext.CopyEntity (dataContext1, entity, null);
-			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CopyEntityTest3()
-		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
-				{
-					DataContext.CopyEntity (dataContext1, (NaturalPersonEntity) null, dataContext2);
-				}
-			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CopyEntityTest4()
-		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
-				{
-					NaturalPersonEntity entity = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-					DataContext.CopyEntity (dataContext1, entity, dataContext2);
-				}
-			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void CopyEntityTest5()
-		{
-			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				using (DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure))
-				{
-					NaturalPersonEntity entity = dataContext1.CreateEntity<NaturalPersonEntity> ();
-
-					DataContext.CopyEntity (dataContext1, entity, dataContext2);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => DataContext.CopyEntity (dataContext1, (NaturalPersonEntity) null, dataContext2)
+					);
+					
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => DataContext.CopyEntity (dataContext1, entity2, dataContext2)
+					);
+					
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => DataContext.CopyEntity (dataContext1, entity3, dataContext2)
+					);
 				}
 			}
 		}
