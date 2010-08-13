@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -17,7 +19,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 	{
 
 		[TestMethod]
-		public void EntityDataConstructorTest1()
+		public void EntityDataConstructorTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
 			Druid loadedEntityId = Druid.FromLong (1);
@@ -34,42 +36,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void EntityDataConstructorTest2()
-		{
-			Druid leafEntityId = Druid.FromLong (1);
-			Druid loadedEntityId = Druid.FromLong (1);
-			DbKey rowKey = new DbKey (new DbId (1));
-
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
-			ReferenceData referenceData = new ReferenceData ();
-			CollectionData collectionData = new CollectionData ();
-
-			EntityData entityData = new EntityData (entityKey, loadedEntityId, null, referenceData, collectionData);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void EntityDataConstructorTest3()
-		{
-			Druid leafEntityId = Druid.FromLong (1);
-			Druid loadedEntityId = Druid.FromLong (1);
-			DbKey rowKey = new DbKey (new DbId (1));
-
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
-			ValueData valueData = new ValueData ();
-			CollectionData collectionData = new CollectionData ();
-
-			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, null, collectionData);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void EntityDataConstructorTest4()
+		public void EntityDataConstructorArgumentCheck()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
 			Druid loadedEntityId = Druid.FromLong (1);
@@ -79,8 +46,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
+			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, loadedEntityId, valueData, referenceData, null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntityData (entityKey, loadedEntityId, null, referenceData, collectionData)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntityData (entityKey, loadedEntityId, valueData, null, collectionData)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntityData (entityKey, loadedEntityId, valueData, referenceData, null)
+			);
 		}
 
 
