@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -42,8 +44,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void ValueFieldProxyConstructorTest1()
+		public void ValueFieldProxyConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -60,80 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValueFieldProxyConstructorTest2()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-				Druid fieldId = Druid.Parse ("[L0AV]");
-
-				new ValueFieldProxy_Accessor (null, person, fieldId);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValueFieldProxyConstructorTest3()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				Druid fieldId = Druid.Parse ("[L0AV]");
-
-				new ValueFieldProxy_Accessor (dataContext, null, fieldId);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest4()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				new ValueFieldProxy_Accessor (dataContext, person, Druid.Empty);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest5()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AN]"));
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest6()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
-
-				new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AD1]"));
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest7()
+		public void ValueFieldProxyConstructorArgumentCheck()
 		{
 			using (DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -142,23 +70,50 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					Druid fieldId = Druid.Parse ("[L0AV]");
 
-					new ValueFieldProxy_Accessor (dataContext2, person, fieldId);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => new ValueFieldProxy_Accessor (null, person, fieldId)
+					);
+
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => new ValueFieldProxy_Accessor (dataContext1, null, fieldId)
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Empty)
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Parse ("[L0AN]"))
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => new ValueFieldProxy_Accessor (dataContext1, person, Druid.Parse ("[L0AD1]"))
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => new ValueFieldProxy_Accessor (dataContext2, person, fieldId)
+					);
 				}
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetValueTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 
-				var proxy1 = new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0AV]"));
-				var proxy2 = new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0A01]"));
-				var proxy3 = new ValueFieldProxy_Accessor (dataContext, person, Druid.Parse ("[L0A61]"));
+				var proxy1 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0AV]"));
+				var proxy2 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A01]"));
+				var proxy3 = new ValueFieldProxy (dataContext, person, Druid.Parse ("[L0A61]"));
 
 				object value1 = proxy1.GetValue ();
 				object value2 = proxy2.GetValue ();
