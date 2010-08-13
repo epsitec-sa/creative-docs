@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
@@ -19,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 
 		
 		[TestMethod]
-		public void ValueSynchronizationJobConstructorTest1()
+		public void ValueSynchronizationJobConstructorTest()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
@@ -36,33 +38,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueSynchronizationJobConstructorTest2()
-		{
-			int dataContextId = 0;
-			EntityKey entityKey = EntityKey.Empty;
-			Druid fieldId = Druid.FromLong (1);
-			object value = "value";
-
-			var job = new ValueSynchronizationJob (dataContextId, entityKey, fieldId, value);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueSynchronizationJobConstructorTest3()
+		public void ValueSynchronizationJobConstructorArgumentCheck()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
-			Druid fieldId = Druid.Empty;
+			Druid fieldId = Druid.FromLong (1);
 			object value = "value";
 
-			var job = new ValueSynchronizationJob (dataContextId, entityKey, fieldId, value);
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ValueSynchronizationJob (dataContextId, EntityKey.Empty, fieldId, value)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ValueSynchronizationJob (dataContextId, entityKey, Druid.Empty, value)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void SynchronizeTest()
 		{
 			int dataContextId = 0;
@@ -70,7 +65,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 			Druid fieldId = Druid.FromLong (1);
 			object value = "value";
 
-			new ValueSynchronizationJob (dataContextId, entityKey, fieldId, value).Synchronize (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ValueSynchronizationJob (dataContextId, entityKey, fieldId, value).Synchronize (null)
+			);
 		}
 
 
