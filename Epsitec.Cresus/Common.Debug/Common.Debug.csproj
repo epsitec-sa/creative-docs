@@ -129,7 +129,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tracker.cs" />
-    <Compile Include="UnitTesting\ExceptionAssert.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
