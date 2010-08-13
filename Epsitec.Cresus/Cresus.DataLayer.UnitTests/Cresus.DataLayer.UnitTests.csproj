@@ -74,7 +74,7 @@
     <Compile Include="Expressions\UnitTestConstant.cs" />
     <Compile Include="Expressions\UnitTestField.cs" />
     <Compile Include="Expressions\UnitTestBinaryOperation.cs" />
-    <Compile Include="Expressions\UnitTestBinaryComparisonFieldWithField.cs" />
+    <Compile Include="Expressions\UnitTestComparisonFieldField.cs" />
     <Compile Include="Expressions\UnitTestComparisonFieldValue.cs" />
     <Compile Include="Loader\UnitTestExpressionFields.cs" />
     <Compile Include="General\UnitTestConcurrency.cs" />
