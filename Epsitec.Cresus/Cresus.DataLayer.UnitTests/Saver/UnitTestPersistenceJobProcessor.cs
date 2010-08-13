@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -54,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		public void PersistenceJobProcessorConstructorTest1()
+		public void PersistenceJobProcessorConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext(DatabaseHelper.DbInfrastructure))
 			{
@@ -64,16 +66,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void PersistenceJobProcessorConstructorTest2()
+		public void PersistenceJobProcessorConstructorArgumentCheck()
 		{
-			new PersistenceJobProcessor (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new PersistenceJobProcessor (null)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ProcessJobsTest1()
+		public void ProcessJobsArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -81,23 +84,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				
 				using (DbTransaction transaction = DatabaseHelper.DbInfrastructure.BeginTransaction())
 				{
-					processor.ProcessJobs (transaction, null);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => processor.ProcessJobs (transaction, null)
+					);
+
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => processor.ProcessJobs (null, new List<AbstractPersistenceJob> ())
+					);
 
 					transaction.Commit ();
 				}
-			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ProcessJobsTest2()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
-
-				processor.ProcessJobs (null, new List<AbstractPersistenceJob> ());
 			}
 		}
 
