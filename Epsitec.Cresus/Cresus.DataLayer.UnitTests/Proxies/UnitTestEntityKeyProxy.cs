@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -42,8 +44,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void ValueFieldProxyConstructorTest1()
+		public void ValueFieldProxyConstructorTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -59,34 +60,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ValueFieldProxyConstructorTest2()
+		public void ValueFieldProxyConstructorArgumentCheck()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				EntityKey entityKey = new EntityKey (person, new DbKey (new DbId (1)));
 
-				new EntityKeyProxy_Accessor (null, entityKey);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => new EntityKeyProxy (null, entityKey)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => new EntityKeyProxy (dataContext, EntityKey.Empty)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ValueFieldProxyConstructorTest3()
-		{
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				new EntityKeyProxy_Accessor (dataContext, EntityKey.Empty);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void DiscardWriteEntityValueTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
@@ -94,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				EntityKey entityKey = new EntityKey (person, new DbKey (new DbId (1)));
 
-				var proxy = new EntityKeyProxy_Accessor (dataContext, entityKey);
+				var proxy = new EntityKeyProxy (dataContext, entityKey);
 				object obj = new object ();
 
 				Assert.IsFalse (proxy.DiscardWriteEntityValue (new TestStore (), "L0A11", ref obj));
@@ -103,7 +97,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetReadEntityValueTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
@@ -111,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				EntityKey entityKey = new EntityKey (person1, new DbKey (new DbId (1)));
 
-				var proxy = new EntityKeyProxy_Accessor (dataContext, entityKey);
+				var proxy = new EntityKeyProxy (dataContext, entityKey);
 
 				TestStore testStore = new TestStore ();
 
@@ -125,7 +118,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetWriteEntityValueTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
@@ -133,18 +125,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				EntityKey entityKey = new EntityKey (person1, new DbKey (new DbId (1)));
 
-				var proxy = new EntityKeyProxy_Accessor (dataContext, entityKey);
+				var proxy = new EntityKeyProxy (dataContext, entityKey);
 				object obj = new object ();
 
 				object person2 = proxy.GetWriteEntityValue (new TestStore (), "");
 
-				Assert.AreSame (proxy.Target, person2);
+				Assert.AreSame (proxy, person2);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void PromoteToRealInstanceTest1()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
@@ -152,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				EntityKey entityKey = new EntityKey (person1, new DbKey (new DbId (1)));
 
-				var proxy = new EntityKeyProxy_Accessor (dataContext, entityKey);
+				var proxy = new EntityKeyProxy (dataContext, entityKey);
 
 				object person2 = proxy.PromoteToRealInstance ();
 
@@ -162,14 +153,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void PromoteToRealInstanceTest2()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				EntityKey entityKey = new EntityKey (Druid.Parse("[L0AM]"), new DbKey (new DbId (5)));
 
-				var proxy = new EntityKeyProxy_Accessor (dataContext, entityKey);
+				var proxy = new EntityKeyProxy (dataContext, entityKey);
 
 				object person2 = proxy.PromoteToRealInstance ();
 
