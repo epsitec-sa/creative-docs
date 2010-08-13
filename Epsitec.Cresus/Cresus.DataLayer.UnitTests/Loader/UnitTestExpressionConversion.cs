@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -12,6 +14,7 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
@@ -40,8 +43,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateDbConditionUnaryOperationTest1()
+		public void CreateDbConditionUnaryOperationTest()
 		{
 			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
 
@@ -82,26 +84,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionUnaryOperationTest2()
-		{
-			UnaryOperation operation = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-				converter.CreateDbCondition (operation, resolver);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionUnaryOperationTest3()
+		public void CreateDbConditionUnaryOperationArgumentCheck()
 		{
 			UnaryOperation operation = new UnaryOperation (
 				UnaryOperator.Not,
@@ -110,21 +93,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 					UnaryComparator.IsNull
 				)
 			);
-			System.Func<Druid, DbTableColumn> resolver = null;
+			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				converter.CreateDbCondition (operation, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition ((UnaryOperation) null, resolver)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition (operation, null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[DeploymentItem ("Cresusl.Database.dll")]
-		public void CreateDbConditionBinaryOperationTest1()
+		public void CreateDbConditionBinaryOperationTest()
 		{
 			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
 
@@ -182,26 +171,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionBinaryOperationTest2()
-		{
-			BinaryOperation operation = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-				converter.CreateDbCondition (operation, resolver);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionBinaryOperationTest3()
+		public void CreateDbConditionBinaryOperationArgumentCheck()
 		{
 			BinaryOperation operation = new BinaryOperation (
 				new UnaryComparison (
@@ -214,20 +184,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 					UnaryComparator.IsNull
 				)
 			);
-			System.Func<Druid, DbTableColumn> resolver = null;
+			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				converter.CreateDbCondition (operation, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition ((BinaryOperation) null, resolver)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition (operation, null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateDbConditionUnaryComparisonTest1()
+		public void CreateDbConditionUnaryComparisonTest()
 		{
 			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
 
@@ -255,45 +232,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionUnaryComparisonTest2()
+		public void CreateDbConditionUnaryComparisonArgumentCheck()
 		{
-			UnaryComparison comparison = null;
+			UnaryComparison comparison = new UnaryComparison (
+				new Field (Druid.FromLong (1)),
+				UnaryComparator.IsNull
+			);
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				converter.CreateDbCondition (comparison, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition ((UnaryComparison) null, resolver)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition (comparison, null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionUnaryComparisonTest3()
-		{
-			UnaryComparison comparison = new UnaryComparison (
-				new Field (Druid.FromLong (1)),
-				UnaryComparator.IsNull
-			);
-			System.Func<Druid, DbTableColumn> resolver = null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-				converter.CreateDbCondition (comparison, resolver);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateDbConditionComparisonFieldFieldTest1()
+		public void CreateDbConditionComparisonFieldFieldTest()
 		{
 			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver ();
 
@@ -322,46 +287,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonFieldFieldTest2()
-		{
-			ComparisonFieldField comparison = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-				converter.CreateDbCondition (comparison, resolver);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonFieldFieldTest3()
+		public void CreateDbConditionComparisonFieldFieldArgumentCheck()
 		{
 			ComparisonFieldField comparison = new ComparisonFieldField (
 				new Field (Druid.FromLong (1)),
 				BinaryComparator.IsEqual,
 				new Field (Druid.FromLong (2))
 			);
-			System.Func<Druid, DbTableColumn> resolver = null;
+			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				converter.CreateDbCondition (comparison, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition ((ComparisonFieldField) null , null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition (comparison, null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void CreateDbConditionComparisonFieldValueTest1()
+		public void CreateDbConditionComparisonFieldValueTest()
 		{
 			Dictionary<Druid, DbTableColumn> resolver = this.GetResolver();
 
@@ -392,46 +345,34 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonFieldValueTest2()
-		{
-			ComparisonFieldValue comparison = null;
-			System.Func<Druid, DbTableColumn> resolver = d => null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-
-				converter.CreateDbCondition (comparison, resolver);
-			}
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionComparisonFieldValueTest3()
+		public void CreateDbConditionComparisonFieldValueArgumentCheck()
 		{
 			ComparisonFieldValue comparison = new ComparisonFieldValue (
 				new Field (Druid.FromLong (1)),
 				BinaryComparator.IsEqual,
 				new Constant (0)
 			);
-			System.Func<Druid, DbTableColumn> resolver = null;
+			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				converter.CreateDbCondition (comparison, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition ((ComparisonFieldValue) null, null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converter.CreateDbCondition (comparison, null)
+				);
 			}
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void GetDbTableColumnTest1()
+		public void GetDbTableColumnTest()
 		{
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
@@ -454,11 +395,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetDbTableColumnTest2()
+		public void GetDbTableColumnArgumentCheck()
 		{
-			Field field = null;
+			Field field = new Field (Druid.FromLong (1));
 			System.Func<Druid, DbTableColumn> resolver = d => null;
 
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
@@ -466,25 +405,15 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 				ExpressionConverter_Accessor converterAccessor = new ExpressionConverter_Accessor (new PrivateObject (converter));
 
-				converterAccessor.GetDbTableColumn (field, resolver);
-			}
-		}
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converterAccessor.GetDbTableColumn (null, resolver)
+				);
 
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void GetDbTableColumnTest3()
-		{
-			Field field = new Field (Druid.FromLong (1));
-			System.Func<Druid, DbTableColumn> resolver = null;
-
-			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
-			{
-				ExpressionConverter converter = new ExpressionConverter (dataContext);
-				ExpressionConverter_Accessor converterAccessor = new ExpressionConverter_Accessor (new PrivateObject (converter));
-
-				converterAccessor.GetDbTableColumn (field, resolver);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => converterAccessor.GetDbTableColumn (field, null)
+				);
 			}
 		}
 
