@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -13,6 +15,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
 using System.Linq;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
@@ -58,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		public void AddLocalConstraintTest1()
+		public void AddLocalConstraintTest()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
@@ -129,76 +132,53 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AddLocalConstraintTest2()
+		public void AddLocalConstraintArgumentCheck()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
+			PersonTitleEntity title = new PersonTitleEntity ();
+			UriContactEntity uriContact = new UriContactEntity ();
+			
+			person.Title = title;
+			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
 
-			Expression expression =
+			Expression expression1 =
 				new ComparisonFieldField (
 					new Field (new Druid ("[L0AS1]")),
 					BinaryComparator.IsEqual,
 					new Field (new Druid ("[L0AV]"))
 				);
 
-			request.AddLocalConstraint (person, expression);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AddLocalConstraintTest3()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-
-			Request request = new Request ();
-
-			Expression expression =
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => request.AddLocalConstraint (person, expression1)
+			);
+		
+			Expression expression2 =
 				new ComparisonFieldValue (
 					new Field (new Druid ("[L0AS]")),
 					BinaryComparator.IsEqual,
 					new Constant (true)
 				);
 
-			request.AddLocalConstraint (person, expression);
-		}
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => request.AddLocalConstraint (person, expression2)
+			);
 
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AddLocalConstraintTest4()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			UriContactEntity uriContact = new UriContactEntity ();
-
-			person.Contacts.Add (uriContact);
-
-			Request request = new Request ();
-
-			Expression expression =
+			Expression expression3 =
 				new UnaryComparison (
 					new Field (new Druid ("[L0AR]")),
 					UnaryComparator.IsNull
 				);
 
-			request.AddLocalConstraint (uriContact, expression);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void AddLocalConstraintTest5()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
-
-			person.Title = title;
-
-			Request request = new Request ();
-
-			Expression expression =
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => request.AddLocalConstraint (uriContact, expression3)
+			);
+		
+			Expression expression4 =
 				new BinaryOperation (
 					new UnaryComparison (
 						new Field (new Druid ("[L0A61]")),
@@ -211,37 +191,26 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Loader
 					)
 				);
 
-			request.AddLocalConstraint (title, expression);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void AddLocalConstraintTest6()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-
-			Request request = new Request ();
-
-			Expression expression =
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => request.AddLocalConstraint (title, expression4)
+			);
+		
+			Expression expression5 =
 				new UnaryComparison (
 					new Field (new Druid ("[L0AV]")),
 					UnaryComparator.IsNull
 				);
 
-			request.AddLocalConstraint (null, expression);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void AddLocalConstraintTest7()
-		{
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-
-			Request request = new Request ();
-
-			request.AddLocalConstraint (person, null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => request.AddLocalConstraint (null, expression5)
+			);
+		
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => request.AddLocalConstraint (person, null)
+			);
 		}
 
 
