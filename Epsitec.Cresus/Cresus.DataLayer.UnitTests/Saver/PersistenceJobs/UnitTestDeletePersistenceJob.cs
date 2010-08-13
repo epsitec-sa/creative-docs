@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
@@ -16,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		public void DeletePersistenceJobConstructorTest1()
+		public void DeletePersistenceJobConstructorTest()
 		{
 			AbstractEntity entity = new NaturalPersonEntity ();
 
@@ -27,20 +29,24 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void DeletePersistenceJobConstructorTest2()
+		public void DeletePersistenceJobConstructorArgumentCheck()
 		{
-			new DeletePersistenceJob (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DeletePersistenceJob (null)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ConvertTest()
+		public void ConvertArgumentCheck()
 		{
 			AbstractEntity entity = new NaturalPersonEntity ();
 
-			new DeletePersistenceJob (entity).Convert (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DeletePersistenceJob (entity).Convert (null)
+			);
 		}
 
 
