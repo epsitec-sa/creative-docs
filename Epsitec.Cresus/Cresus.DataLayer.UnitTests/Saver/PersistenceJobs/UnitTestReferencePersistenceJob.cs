@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Saver.PersistenceJobs;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
 
@@ -18,7 +20,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		public void ReferencePersistenceJobConstructor1Test()
+		public void ReferencePersistenceJobConstructorTest()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			NaturalPersonEntity target = new NaturalPersonEntity ();
@@ -43,50 +45,33 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ReferencePersistenceJobConstructor2Test()
+		public void ReferencePersistenceJobConstructorArgumentCheck()
 		{
-			NaturalPersonEntity entity = null;
+			NaturalPersonEntity entity = new NaturalPersonEntity ();;
 			Druid localEntityId = Druid.FromLong (1);
 			Druid fieldId = Druid.FromLong (2);
 			NaturalPersonEntity target = new NaturalPersonEntity ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ReferencePersistenceJob (null, localEntityId, fieldId, target, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ReferencePersistenceJob (entity, Druid.Empty, fieldId, target, jobType)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ReferencePersistenceJob (entity, localEntityId, Druid.Empty, target, jobType)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ReferencePersistenceJobConstructor3Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.Empty;
-			Druid fieldId = Druid.FromLong (2);
-			NaturalPersonEntity target = new NaturalPersonEntity ();
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void ReferencePersistenceJobConstructor4Test()
-		{
-			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			Druid localEntityId = Druid.FromLong (1);
-			Druid fieldId = Druid.Empty;
-			NaturalPersonEntity target = new NaturalPersonEntity ();
-			PersistenceJobType jobType = PersistenceJobType.Insert;
-
-			new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ConvertTest()
+		public void ConvertArgumentCheck()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
@@ -94,7 +79,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 			NaturalPersonEntity target = new NaturalPersonEntity ();
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 
-			new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType).Convert (null);
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType).Convert (null)
+			);
 		}
 
 
