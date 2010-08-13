@@ -1,11 +1,14 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
@@ -34,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 		
 		
 		[TestMethod]
-		public void BinaryComparisonFieldWithValueConstructorTest1()
+		public void BinaryComparisonFieldWithValueConstructorTest()
 		{
 			Field left = new Field (Druid.FromLong (1));
 			Constant right = new Constant (0);
@@ -45,24 +48,21 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void BinaryComparisonFieldWithValueConstructorTest2()
+		public void BinaryComparisonFieldWithValueConstructorTestArgumentCheck()
 		{
 			Constant right = new Constant (0);
 			BinaryComparator op = BinaryComparator.IsEqual;
-
-			new ComparisonFieldValue (null, op, right);
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void BinaryComparisonFieldWithValueConstructorTest3()
-		{
 			Field left = new Field (Druid.FromLong (1));
-			BinaryComparator op = BinaryComparator.IsEqual;
 
-			new ComparisonFieldValue (left, op, null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ComparisonFieldValue (null, op, right)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ComparisonFieldValue (left, op, null)
+			);
 		}
 
 
@@ -113,8 +113,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest1()
+		public void CreateDbConditionArgumentCheck()
 		{
 			Field left = new Field (Druid.FromLong (1));
 			Constant right = new Constant (0);
@@ -126,22 +125,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Expressions
 			{
 				ExpressionConverter converter = new ExpressionConverter (dataContext);
 
-				comparison.CreateDbCondition (converter, null);
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (converter, null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentNullException>
+				(
+					() => comparison.CreateDbCondition (null, id => null)
+				);
 			}
-		}
-
-
-		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void CreateDbConditionTest2()
-		{
-			Field left = new Field (Druid.FromLong (1));
-			Constant right = new Constant (0);
-			BinaryComparator op = BinaryComparator.IsEqual;
-
-			var comparison = new ComparisonFieldValue (left, op, right);
-
-			comparison.CreateDbCondition (null, id => null);
 		}
 
 
