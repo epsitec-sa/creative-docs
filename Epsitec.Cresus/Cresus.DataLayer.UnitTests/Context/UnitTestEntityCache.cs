@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			EntityCache entityCache = new EntityCache ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => entityCache.GetEntityKey (null)
 			);
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		{
 			EntityCache entityCache = new EntityCache ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => entityCache.Remove (null)
 			);
