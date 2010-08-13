@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="ExceptionAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -45,6 +51,11 @@
       <Project>{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}</Project>
       <Name>Common.Support</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
