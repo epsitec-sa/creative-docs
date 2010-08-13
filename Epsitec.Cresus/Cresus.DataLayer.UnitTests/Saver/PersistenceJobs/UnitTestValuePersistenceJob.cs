@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 
 
 		[TestMethod]
-		public void ConvertTest()
+		public void ConvertArgumentCheck()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Druid localEntityId = Druid.FromLong (1);
