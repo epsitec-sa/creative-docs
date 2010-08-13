@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
@@ -19,7 +21,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 
 
 		[TestMethod]
-		public void DeleteSynchronizationJobConstructorTest1()
+		public void DeleteSynchronizationJobConstructorTest()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
@@ -32,24 +34,28 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.SynchronizationJobs
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentException))]
-		public void DeleteSynchronizationJobConstructorTest2()
+		public void DeleteSynchronizationJobConstructorArgumentCheck()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = EntityKey.Empty;
 
-			var job = new DeleteSynchronizationJob (dataContextId, entityKey);
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new DeleteSynchronizationJob (dataContextId, entityKey)
+			);
 		}
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void SynchronizeTest()
 		{
 			int dataContextId = 0;
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1)));
 
-			new DeleteSynchronizationJob (dataContextId, entityKey).Synchronize (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DeleteSynchronizationJob (dataContextId, entityKey).Synchronize (null)
+			);
 		}
 
 
