@@ -157,11 +157,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				}
 			}
 
-			bool success = InvariantConverter.Convert (newValue, type, out newValue);
-
-			if (!success)
+			if (simpleType == DbSimpleType.Decimal)
 			{
-				throw new System.NotSupportedException ("Unable to convert unsupported type: " + type);
+				bool success = InvariantConverter.Convert (newValue, type, out newValue);
+
+				if (!success)
+				{
+					throw new System.NotSupportedException ("Unable to convert unsupported type: " + type);
+				}
 			}
 
 			return newValue;
