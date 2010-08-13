@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.UnitTesting;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
@@ -50,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		public void AddTest1()
+		public void AddTest()
 		{
 			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
 
@@ -91,15 +93,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void AddTest2()
+		public void AddTestArgumentCheck()
 		{
-			new DataContextPool_Accessor ().Add (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DataContextPool_Accessor ().Add (null)
+			);
 		}
 
 
 		[TestMethod]
-		public void ContainsTest1()
+		public void ContainsTest()
 		{
 			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
 
@@ -159,10 +163,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void ContainsTest2()
+		public void ContainsTestArgumentCheck()
 		{
-			new DataContextPool_Accessor ().Contains (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DataContextPool_Accessor ().Contains (null)
+			);
 		}
 
 
@@ -349,7 +355,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 		
 		[TestMethod]
-		public void RemoveTest1()
+		public void RemoveTest()
 		{
 			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
 
@@ -400,10 +406,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 
 
 		[TestMethod]
-		[ExpectedException (typeof (System.ArgumentNullException))]
-		public void RemoveTest2()
+		public void RemoveTestArgumentCheck()
 		{
-			new DataContextPool_Accessor ().Remove (null);
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DataContextPool_Accessor ().Remove (null)
+
+			);
 		}
 
 		
