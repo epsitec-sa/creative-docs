@@ -92,57 +92,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
 		{
-			if (articleDocumentItem == null)
+			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem);
+
+			foreach (var pair in dico)
 			{
-				return;
-			}
-
-			var dico = new Dictionary<string, string> ();
-			string[] values = (articleDocumentItem.ArticleParameters ?? "").Split (new string[] { AbstractArticleParameterController.Separator }, System.StringSplitOptions.None);
-			for (int i = 0; i < values.Length-1; i+=2)
-			{
-				string key  = values[i+0];
-				string data = values[i+1];
-
-				dico.Add (key, data);
-			}
-
-			foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
-			{
-				string value;
-
-				if (dico.ContainsKey (parameter.Code))
-				{
-					value = dico[parameter.Code];
-				}
-				else
-				{
-					value = ArticleParameterToolbarController.GetParameterDefaultValue (parameter);
-				}
-
-				if (!string.IsNullOrEmpty (value))
-				{
-					textField.TextLayout.SetParameter (parameter.Code, value);
-				}
+				textField.TextLayout.SetParameter (pair.Key, pair.Value);
 			}
 		}
 
-		private static string GetParameterDefaultValue(AbstractArticleParameterDefinitionEntity parameter)
-		{
-			if (parameter is NumericValueArticleParameterDefinitionEntity)
-			{
-				var numericParameter = parameter as NumericValueArticleParameterDefinitionEntity;
-				return numericParameter.DefaultValue.ToString ();
-			}
-
-			if (parameter is EnumValueArticleParameterDefinitionEntity)
-			{
-				var enumParameter = parameter as EnumValueArticleParameterDefinitionEntity;
-				return enumParameter.DefaultValue;
-			}
-
-			return null;
-		}
 
 
 		private static double GetButtonRequiredWidth(Button button)
@@ -156,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private static string GetTag(string code)
 		{
 			//	Retourne le tag à insérer dans le texte pour un paramètre.
-			return string.Format ("<param code=\"{0}\"/>", code);
+			return string.Concat (ArticleParameterHelper.startParameterTag, code, ArticleParameterHelper.endParameterTag);
 		}
 
 		private static void InsertText(TextFieldMultiEx textField, string text)

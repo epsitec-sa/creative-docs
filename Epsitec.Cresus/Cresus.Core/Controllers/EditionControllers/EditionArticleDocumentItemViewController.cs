@@ -202,6 +202,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void SetArticleDescription(string value)
 		{
+			if (value == this.Entity.ArticleDefinition.LongDescription)  // description standard ?
+			{
+				value = null;
+			}
+
 			if (this.Entity.ReplacementText != value)
 			{
 				this.Entity.ReplacementText = value;

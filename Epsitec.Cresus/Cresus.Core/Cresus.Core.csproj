@@ -128,6 +128,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
+    <Compile Include="Helpers\ArticleParameterHelper.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="TextFormatter.cs" />
