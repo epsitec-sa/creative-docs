@@ -111,24 +111,31 @@ namespace Epsitec.Cresus.Core.Helpers
 			return TextFormatter.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
 		}
 
-		public static string GetArticleDescription(ArticleDocumentItemEntity article)
+		public static string GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false)
 		{
+			string description = null;
+
 			if (!string.IsNullOrEmpty (article.ReplacementText))
 			{
-				return article.ReplacementText;
+				description = article.ReplacementText;
 			}
 
 			if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
 			{
-				return article.ArticleDefinition.LongDescription;
+				description = article.ArticleDefinition.LongDescription;
 			}
 
 			if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
 			{
-				return article.ArticleDefinition.ShortDescription;
+				description = article.ArticleDefinition.ShortDescription;
 			}
 
-			return null;
+			if (replaceTags)
+			{
+				description = ArticleParameterHelper.ArticleDescriptionReplaceTags (article, description);
+			}
+
+			return description;
 		}
 
 

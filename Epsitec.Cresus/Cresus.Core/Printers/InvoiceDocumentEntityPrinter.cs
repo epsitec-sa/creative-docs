@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			string  description = ArticleDocumentItemHelper.GetArticleDescription (line);
+			string  description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true);
 
 			if (q1 != null)
 			{
