@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.hintSelected = 0;  // la première proposition
 			}
 
-			this.UseSelectedHint (startEdition: false);
+			this.UseSelectedHint (SelectedHintMode.HintProcess);
 
 			//	Gère le combo menu.
 			if (this.hintListIndex.Count <= 1)
@@ -502,7 +502,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.hintSelected = sel;
 
 					this.UpdateComboMenuSelection ();
-					this.UseSelectedHint (startEdition: true);
+					this.UseSelectedHint (SelectedHintMode.StartEdition);
 				}
 			}
 			else
@@ -533,13 +533,21 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 
 				this.hintSelected = sel;
-				this.UseSelectedHint (startEdition: true);
+				this.UseSelectedHint (SelectedHintMode.StartEdition);
 
 				this.hintListIndex.Clear ();
 			}
 		}
 
-		private void UseSelectedHint(bool startEdition)
+
+		private enum SelectedHintMode
+		{
+			HintProcess,
+			StartEdition,
+			FinalEdition,
+		}
+
+		private void UseSelectedHint(SelectedHintMode selectedHintMode)
 		{
 			this.ignoreChange = true;
 
@@ -567,7 +575,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 
-			if (startEdition)
+			if (selectedHintMode == SelectedHintMode.StartEdition)
 			{
 				this.StartEdition ();
 				this.TextNavigator.TextLayout.Text = this.HintText;
@@ -575,11 +583,17 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.SelectAll ();
 			}
 
+			if (selectedHintMode == SelectedHintMode.FinalEdition)
+			{
+				this.OnEditionAccepted ();
+				this.OnAcceptingEdition (new CancelEventArgs ());
+				this.SelectAll ();
+			}
+
 			this.ignoreChange = false;
 		}
 
-		// (*)	Il ne faut surtout pas utiliser SelectedItemIndex = i, car il ne faut surtout
-		//		pas modifier this.Text !
+		// (*)	Il ne faut surtout pas utiliser SelectedItemIndex = i, car il ne faut pas modifier this.Text !
 
 		private void SetSilentSelectedItemIndex(int index)
 		{
@@ -848,7 +862,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.hintSelected = this.scrollList.SelectedItemIndex;
-			this.UseSelectedHint (startEdition: true);
+			this.UseSelectedHint (SelectedHintMode.FinalEdition);
 
 			this.CloseComboMenu ();
 		}

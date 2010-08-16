@@ -1153,8 +1153,7 @@ namespace Epsitec.Cresus.Core
 			return
 				delegate
 				{
-					if ((!editor.InError) &&
-						(editor.SelectedItemIndex >= 0))
+					if (!editor.InError && editor.SelectedItemIndex >= 0)
 					{
 						showButton.GlyphShape = GlyphShape.ArrowRight;
 						showButton.Enable = referenceController.Mode != ViewControllerMode.None;
