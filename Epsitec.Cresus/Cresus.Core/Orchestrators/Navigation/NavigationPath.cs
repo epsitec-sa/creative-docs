@@ -19,12 +19,20 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		
 		public void Add(NavigationPathElement element)
 		{
+			if (element == null)
+            {
+				throw new System.ArgumentNullException ("element");
+            }
+
 			this.elements.Add (element);
 		}
 
 		public void AddRange(IEnumerable<NavigationPathElement> collection)
 		{
-			this.elements.AddRange (collection);
+			if (collection != null)
+			{
+				collection.ForEach (item => this.Add (item));
+			}
 		}
 
 

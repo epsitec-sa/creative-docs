@@ -413,6 +413,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
+			if (this.IsPersistent (entity))
+            {
+				return;
+            }
+			
 			if (isEmpty)
 			{
 				this.RegisterEmptyEntity (entity);

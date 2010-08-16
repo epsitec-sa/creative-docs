@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// <see cref="TitleTile"/> and <see cref="SummaryTile"/>. It is
 	/// built to support asynchronous tile initialization.
 	/// </summary>
-	public class SummaryData : System.IComparable<SummaryData>, ITileController
+	public class SummaryData : System.IComparable<SummaryData>, ITileController, IGroupedItem
 	{
 		public SummaryData()
 		{
