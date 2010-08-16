@@ -60,16 +60,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					() => dataContext.RegisterEmptyEntity (alfred)
 				);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataContext.UnregisterEmptyEntity (alfred)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataContext.UpdateEmptyEntityStatus (alfred, true)
-				);
-
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
 					() => dataContext.RegisterEmptyEntity (null)

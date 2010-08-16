@@ -403,12 +403,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Sets the registered empty status of an <see cref="AbstractEntity"/> to a given value.
+		/// Sets the registered empty status of an <see cref="AbstractEntity"/> to a given value, if
+		/// the given <see cref="AbstractEntity"/> is not persistent.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister as empty.</param>
-		/// <param name="isEmpty">A <see cref="bool"/> indicating whether to register or unregister is at empty.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister.</param>
+		/// <param name="isEmpty">A <see cref="bool"/> indicating the future empty status of the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
 			this.AssertDataContextIsNotDisposed ();
