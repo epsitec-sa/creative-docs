@@ -83,6 +83,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Dock = DockStyle.Left,
 			};
 
+			ToolTip.Default.SetToolTip (this.createButton, "Ajoute une nouvelle valeur dans l'énumération");
+			ToolTip.Default.SetToolTip (this.deleteButton, "Supprime la valeur de l'énumération");
+			ToolTip.Default.SetToolTip (this.upButton,     "Montre la valeur dans la liste");
+			ToolTip.Default.SetToolTip (this.downButton,   "Descend la valeur dans la liste");
+
 			this.labelCount = new StaticText
 			{
 				Parent = toolbar,
