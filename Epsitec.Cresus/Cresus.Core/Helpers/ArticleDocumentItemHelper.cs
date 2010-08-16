@@ -119,13 +119,11 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				description = article.ReplacementText;
 			}
-
-			if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+			else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
 			{
 				description = article.ArticleDefinition.LongDescription;
 			}
-
-			if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+			else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
 			{
 				description = article.ArticleDefinition.ShortDescription;
 			}

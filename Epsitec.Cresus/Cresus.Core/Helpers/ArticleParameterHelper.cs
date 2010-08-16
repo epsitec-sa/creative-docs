@@ -56,16 +56,45 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 					else
 					{
-						subst = string.Concat (parameter.Name, ": ", dico[code]);
+						string value = ArticleParameterHelper.GetEnumDescription (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]);
+						subst = string.Concat (parameter.Name, ": ", value);
 					}
 				}
 
 				description = string.Concat (description.Substring (0, index), subst, description.Substring (end+ArticleParameterHelper.endParameterTag.Length));
-
-				index += ArticleParameterHelper.startParameterTag.Length + subst.Length + ArticleParameterHelper.endParameterTag.Length;
+				index += subst.Length;
 			}
 
 			return description;
+		}
+
+		private static string GetEnumDescription(EnumValueArticleParameterDefinitionEntity parameter, string value)
+		{
+			//	Si 'parameter' est une énumération, retourne la description la plus complète possible.
+			if (parameter != null)
+			{
+				string[] values            = (parameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+				string[] shortDescriptions = (parameter.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+				string[] longDescriptions  = (parameter.LongDescriptions  ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+
+				for (int i = 0; i < values.Length; i++)
+				{
+					if (value == values[i])
+					{
+						if (i < longDescriptions.Length && !string.IsNullOrEmpty (longDescriptions[i]))
+						{
+							return longDescriptions[i];
+						}
+
+						if (i < shortDescriptions.Length && !string.IsNullOrEmpty (shortDescriptions[i]))
+						{
+							return shortDescriptions[i];
+						}
+					}
+				}
+			}
+
+			return value;
 		}
 
 		private static AbstractArticleParameterDefinitionEntity GetParameter(ArticleDocumentItemEntity articleDocumentItem, string code)
@@ -87,24 +116,30 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	Retourne le dictionnaire des code/valeur d'un article.
 			var dico = new Dictionary<string, string> ();
 
-			var defaultDico = ArticleParameterHelper.GetArticleParametersDefaultValues (articleDocumentItem);
-			var localDico   = ArticleParameterHelper.GetArticleParametersLocalValues (articleDocumentItem);
-
-			foreach (var pair in defaultDico)
+			if (articleDocumentItem != null)
 			{
-				string key = pair.Key;
-				string value;
+				var defaultDico = ArticleParameterHelper.GetArticleParametersDefaultValues (articleDocumentItem);
+				var localDico   = ArticleParameterHelper.GetArticleParametersLocalValues   (articleDocumentItem);
 
-				if (localDico.ContainsKey (key))  // y a-t-il une valeur spécifique ?
+				foreach (var parameter in articleDocumentItem.ArticleDefinition.ArticleParameterDefinitions)
 				{
-					value = localDico[key];  // value <- valeur spécifique
-				}
-				else
-				{
-					value = pair.Value;  // value <- valeur par défaut
-				}
+					string key = parameter.Code;
+					string value = null;
 
-				dico.Add (key, value);
+					if (localDico.ContainsKey (key))  // valeur définie localement ?
+					{
+						value = localDico[key];
+					}
+					else if (defaultDico.ContainsKey (key))  // valeur par défaut ?
+					{
+						value = defaultDico[key];
+					}
+
+					if (!string.IsNullOrEmpty (value))
+					{
+						dico.Add (key, value);
+					}
+				}
 			}
 
 			return dico;
