@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <param name="filter">The filter used to identify compatible items in the collection.</param>
 		public GroupedItemController(System.Collections.IList items, AbstractEntity item, System.Predicate<AbstractEntity> filter)
 		{
-			System.Diagnostics.Debug.Assert (items is IEntityCollection);
 			System.Diagnostics.Debug.Assert (items.Contains (item));
 			System.Diagnostics.Debug.Assert (filter (item));
 
@@ -64,6 +63,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
 		public bool SetItemIndex(int newIndex)
 		{
+			var collection = this.items as IEntityCollection;
+
+			if ((this.items.IsReadOnly) ||
+				(collection == null))
+			{
+				return false;
+			}
+
 			int oldIndex  = this.GetItemIndex ();
 			int itemCount = this.GetItemCount ();
 
@@ -81,8 +88,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				return false;
 			}
-
-			var collection = this.items as IEntityCollection;
 
 			using (collection.SuspendNotifications ())
 			{

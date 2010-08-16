@@ -44,30 +44,30 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Right,
 				PreferredWidth = 40,
 			};
+		}
 
-			var button1 = new ConfirmationButton
+
+		public void AddButton(string id, string title, string description, System.Action callback)
+		{
+			var button = new ConfirmationButton
 			{
 				Parent = this.buttonFrame,
 				Dock = DockStyle.Top,
-				Text = ConfirmationButton.FormatContent ("Nouvelle offre", "Crée une offre vide"),
+				Text = ConfirmationButton.FormatContent (title, description),
 				PreferredHeight = 52,
 			};
 
-			var button2 = new ConfirmationButton
-			{
-				Parent = this.buttonFrame,
-				Dock = DockStyle.Top,
-				Text = ConfirmationButton.FormatContent ("Variante de l'offre", "Copie l'offre sélectionnée pour en créer une variante"),
-				PreferredHeight = 52,
-			};
+			button.Clicked += (sender, e) => callback ();
+		}
 
-			var button3 = new ConfirmationButton
+		public void RemoveButton(string id)
+		{
+			var widget = this.buttonFrame.FindChild (id);
+
+			if (widget != null)
 			{
-				Parent = this.buttonFrame,
-				Dock = DockStyle.Top,
-				Text = ConfirmationButton.FormatContent ("Imprime l'offre", "Imprime l'offre sélectionnée"),
-				PreferredHeight = 52,
-			};
+				widget.Parent = null;
+			}
 		}
 
 
