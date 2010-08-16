@@ -631,8 +631,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (value == null)
             {
-				if ((this.parameters != null) &&
-					(this.parameters.ContainsKey (code)))
+				if (this.parameters != null && this.parameters.ContainsKey (code))
                 {
 					this.parameters.Remove (code);
 					
@@ -652,8 +651,7 @@ namespace Epsitec.Common.Widgets
 
 			string oldValue;
 
-			if ((this.parameters.TryGetValue (code, out oldValue)) &&
-				(oldValue != value))
+			if (this.parameters.TryGetValue (code, out oldValue) && oldValue == value)
 			{
 				return;
 			}

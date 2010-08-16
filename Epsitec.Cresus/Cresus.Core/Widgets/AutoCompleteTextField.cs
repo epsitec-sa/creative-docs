@@ -424,23 +424,64 @@ namespace Epsitec.Cresus.Core.Widgets
 			base.OnTextChanged ();
 		}
 
-		protected override void OnEditionAccepted()
+		protected override void OnAcceptingEdition(CancelEventArgs e)
 		{
-			base.OnEditionAccepted ();
+			//	OnAcceptingEdition est appelé pendant la phase d'acceptation; l'événement passe une instance de CancelEventArgs
+			//	qui permet à ceux qui écoutent l'événement de faire un e.Cancel=true pour annuler l'opération en cours (donc
+			//	refuser l'acceptation).
+			base.OnAcceptingEdition (e);
 
+#if true
 			if (this.ContentValidator == null)
 			{
 				this.Text = this.HintText;
 			}
 			else
 			{
-				//	Si un validateur existe, il faut accepter les valeurs 'non hint' si elles sont
-				//	conforme au validateur.
-				if (!this.ContentValidator (this.Text))
+				//	Si un validateur existe, il faut accepter les valeurs 'non hint' éditées à la main,
+				//	si elles sont conforme au validateur.
+				if (string.IsNullOrEmpty (this.HintText))  // valeur éditée "à la main" ?
+				{
+					if (!this.ContentValidator (this.Text))  // valeur incorrecte ?
+					{
+						e.Cancel = true;
+					}
+				}
+				else  // valeur choisie dans le menu (donc forcément ok) ?
 				{
 					this.Text = this.HintText;
 				}
 			}
+#endif
+		}
+
+		protected override void OnEditionAccepted()
+		{
+			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
+			base.OnEditionAccepted ();
+
+#if false
+			if (this.ContentValidator == null)
+			{
+				this.Text = this.HintText;
+			}
+			else
+			{
+				//	Si un validateur existe, il faut accepter les valeurs 'non hint' éditées à la main,
+				//	si elles sont conforme au validateur.
+				if (string.IsNullOrEmpty (this.HintText))  // valeur éditée "à la main" ?
+				{
+					if (!this.ContentValidator (this.Text))
+					{
+						this.Text = null;
+					}
+				}
+				else  // valeur choisie dans le menu ?
+				{
+					this.Text = this.HintText;
+				}
+			}
+#endif
 
 			this.CloseComboMenu ();
 		}

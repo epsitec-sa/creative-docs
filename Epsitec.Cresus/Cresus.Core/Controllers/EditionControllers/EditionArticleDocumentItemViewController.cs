@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.CreateUIQuantities (data);
 			}
+
+			this.DataContext.EntityChanged += new Epsitec.Common.Support.EventHandler<EntityChangedEventArgs> (this.HandleDataContextEntityChanged);
 		}
 
 
@@ -399,6 +401,20 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
+
+
+		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+#if false
+			this.parameterController.UpdateUI (this.Entity);
+			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+
+			this.TileContainer.UpdateAllWidgets ();
+#endif
+		}
+
+
+	
 		private ArticleParameterControllers.ValuesArticleParameterController	parameterController;
 		private ArticleParameterControllers.ArticleParameterToolbarController	toolbarController;
 		private TextFieldMultiEx												designationTextField;

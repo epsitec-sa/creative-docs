@@ -159,8 +159,6 @@ namespace Epsitec.Cresus.Core.Widgets
 				return;
 			}
 
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
 			this.menu = this.CreateMenu ();
 
 			if (this.menu == null)
