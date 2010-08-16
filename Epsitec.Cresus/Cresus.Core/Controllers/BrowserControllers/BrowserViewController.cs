@@ -284,6 +284,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		protected void OnDataSetSelected()
 		{
+			var commandHandler = this.Orchestrator.MainViewController.CommandContext.GetCommandHandler<Epsitec.Cresus.Core.CommandHandlers.DatabaseCommandHandler> ();
+			commandHandler.UpdateActiveCommandState (this.dataSetName);
+
 			var handler = this.DataSetSelected;
 
 			if (handler != null)
@@ -333,11 +336,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
 			{
 				var browserViewController = navigator.BrowserViewController;
-				var browserDataContext    = browserViewController.DataContext;
 
 				browserViewController.SelectDataSet (this.dataSetName);
 				browserViewController.SetActiveEntityKey (this.entityKey);
 				browserViewController.RefreshScrollList ();
+				
+				//	Don't access the DataContext before this point in the function, or else
+				//	we would end up using an outdated and disposed data context !
+				
+				var browserDataContext = browserViewController.DataContext;
 
 				return browserViewController.GetActiveEntity (browserDataContext) != null;
 			}

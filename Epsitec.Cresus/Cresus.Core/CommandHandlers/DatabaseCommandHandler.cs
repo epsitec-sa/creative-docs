@@ -24,22 +24,35 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
+        public void UpdateActiveCommandState(string databaseName)
+        {
+			var commandName  = string.Concat (DatabaseCommandHandler.showDatabaseCommandPrefix, databaseName);
+			var commandState = this.databaseCommandStates.Where (state => state.Command.Name == commandName).FirstOrDefault ();
+
+			if (commandState != null)
+            {
+				this.UpdateActiveCommandState (commandState);
+			}
+        }
+        
+
+
 		[Command (Core.Res.CommandIds.Base.ShowCustomers)]
 		public void ProcessBaseShowCustomers(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.SelectDatabase ("Customers", e);
+			this.SelectDatabase (e);
 		}
 
 		[Command (Core.Res.CommandIds.Base.ShowArticleDefinitions)]
 		public void ProcessBaseShowArticleDefinitions(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.SelectDatabase ("ArticleDefinitions", e);
+			this.SelectDatabase (e);
 		}
 
 		[Command (Core.Res.CommandIds.Base.ShowInvoiceDocuments)]
 		public void ProcessBaseShowInvoiceDocuments(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.SelectDatabase ("InvoiceDocuments", e);
+			this.SelectDatabase (e);
 		}
 
 
@@ -59,15 +72,19 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			}
 		}
 
-		private void SelectDatabase(string databaseName, CommandEventArgs e)
+		private void SelectDatabase(CommandEventArgs e)
 		{
-			var activeState = e.CommandState;
-			var context     = e.CommandContext;
-			var controller  = CoreApplication.GetController<BrowserViewController> (context);
+			var commandName   = e.Command.Name;
+
+			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.showDatabaseCommandPrefix));
+
+			var databaseName = commandName.Substring (DatabaseCommandHandler.showDatabaseCommandPrefix.Length);
+			var activeState  = e.CommandState;
+			var context      = e.CommandContext;
+			var controller   = CoreApplication.GetController<BrowserViewController> (context);
 
 			this.ClearActiveEntity (context);
-			this.UpdateActiveCommandState (activeState);
-			
+
 			controller.SelectDataSet (databaseName);
 		}
 
@@ -94,8 +111,9 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			}
 		}
 		private static readonly string databaseSelectionGroup = "DatabaseSelection";
+		private static readonly string showDatabaseCommandPrefix = "Base.Show";
 
-		private readonly CoreCommandDispatcher commandDispatcher;
+        private readonly CoreCommandDispatcher commandDispatcher;
 		private readonly HashSet<CommandState> databaseCommandStates;
 	}
 }

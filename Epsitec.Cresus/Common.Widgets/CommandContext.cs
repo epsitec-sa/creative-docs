@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Widgets
 			this.groupDisables = new Dictionary<string, int> ();
 			this.validations = new Dictionary<long, Validation> ();
 			this.states = new Dictionary<long, CommandState> ();
+			this.commandHandlers = new HashSet<ICommandHandler> ();
 		}
 
 		/// <summary>
@@ -243,6 +245,26 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetCommandState (command, null);
 		}
+
+
+
+		public void AttachCommandHandler(ICommandHandler handler)
+		{
+			this.commandHandlers.Add (handler);
+		}
+
+		public void DetachCommandHandler(ICommandHandler handler)
+		{
+			this.commandHandlers.Remove (handler);
+		}
+
+		public T GetCommandHandler<T>()
+			where T : class, ICommandHandler
+		{
+			return this.commandHandlers.Select (x => x as T).Where (x => x != null).FirstOrDefault ();
+		}
+
+
 		
 		#region Internal Methods
 		
@@ -438,6 +460,7 @@ namespace Epsitec.Common.Widgets
 		readonly Dictionary<long, CommandState>	states;
 		readonly bool							fence;
 		readonly string							name;
+		readonly HashSet<ICommandHandler>		commandHandlers;
 
 #if false
 		private CommandDispatcherChain dispatcherChain;

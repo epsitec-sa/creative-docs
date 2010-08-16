@@ -151,7 +151,6 @@
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
-    <Compile Include="CommandHandlers\ICommandHandler.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsMode.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
