@@ -193,6 +193,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.DetachColumn (column);
 		}
 
+		public CoreViewController GetRootViewController()
+		{
+			return this.viewControllers.LastOrDefault ();
+		}
+
 		/// <summary>
 		/// Disposes the leaf views until we reach the specified controller, which will
 		/// be left untouched. This disposes all sub-views of the specified controller.
