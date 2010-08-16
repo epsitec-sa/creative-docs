@@ -446,6 +446,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Begins the specified transaction for the default database abstraction locking the
+		/// specified given <see cref="DbTable"/>.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <param name="tablesToLock">The <see cref="DbTable"/> to lock during the transaction.</param>
+		/// <returns>The transaction.</returns>
+		public DbTransaction BeginTransaction(DbTransactionMode mode, IEnumerable<DbTable> tablesToLock)
+		{
+			return this.BeginTransaction (mode, tablesToLock, this.abstraction);
+		}
+		
+		/// <summary>
 		/// Begins a transaction for the specified database abstraction.
 		/// </summary>
 		/// <param name="mode">The transaction mode.</param>
@@ -453,32 +465,46 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The transaction.</returns>
 		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction abstraction)
 		{
+			return this.BeginTransaction (mode, new List<DbTable> (), abstraction);
+		}
+
+		/// <summary>
+		/// Begins the specified transaction for the specified database abstraction locking the
+		/// specified <see cref="DbTable"/>.
+		/// </summary>
+		/// <param name="mode">The transaction mode.</param>
+		/// <param name="tablesToLock">The <see cref="DbTable"/> to lock during the transaction.</param>
+		/// <param name="abstraction">The database abstraction.</param>
+		/// <returns>The transaction.</returns>
+		public DbTransaction BeginTransaction(DbTransactionMode mode, IEnumerable<DbTable> tablesToLock, IDbAbstraction abstraction)
+		{
 			System.Diagnostics.Debug.Assert (abstraction != null);
-			
+			System.Diagnostics.Debug.Assert (tablesToLock != null);
+
 			//	We currently allow a single transaction per database abstraction,
 			//	because some ADO.NET providers do not support cascaded transactions.
-			
+
 			DbTransaction transaction = null;
-			
+
 			//	Make sure we can get a lock on the database. If not, this means
 			//	that someone holds a global lock and we may not access the database
 			//	at all, even within a transaction. This is the case when restoring
 			//	a database, for instance.
-			
+
 			this.DatabaseLock (abstraction);
-			
+
 			try
 			{
 				switch (mode)
 				{
 					case DbTransactionMode.ReadOnly:
-						transaction = new DbTransaction (abstraction.BeginReadOnlyTransaction (), abstraction, this, mode);
+						transaction = new DbTransaction (abstraction.BeginReadOnlyTransaction (tablesToLock), abstraction, this, mode);
 						break;
-					
+
 					case DbTransactionMode.ReadWrite:
-						transaction = new DbTransaction (abstraction.BeginReadWriteTransaction (), abstraction, this, mode);
+						transaction = new DbTransaction (abstraction.BeginReadWriteTransaction (tablesToLock), abstraction, this, mode);
 						break;
-					
+
 					default:
 						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not supported", mode.ToString ()));
 				}
@@ -488,7 +514,7 @@ namespace Epsitec.Cresus.Database
 				this.DatabaseUnlock (abstraction);
 				throw;
 			}
-			
+
 			return transaction;
 		}
 

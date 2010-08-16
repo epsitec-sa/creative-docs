@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -112,12 +114,28 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <returns>The database transaction object.</returns>
 		System.Data.IDbTransaction BeginReadOnlyTransaction();
+
+		/// <summary>
+		/// Begins a read only transaction that locks the given <see cref="DbTable"/> for shared
+		/// read access.
+		/// </summary>
+		/// <param name="tablesToLock">The <see cref="DbDable"/> to lock.</param>
+		/// <returns>The database transaction object.</returns>
+		System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<DbTable> tablesToLock);
 		
 		/// <summary>
 		/// Begins a read-write transaction.
 		/// </summary>
 		/// <returns>The database transaction object.</returns>
 		System.Data.IDbTransaction BeginReadWriteTransaction();
+
+		/// <summary>
+		/// Begins a read-write transaction that locks the given <see cref="DbTable"/> for exclusive
+		/// write access.
+		/// </summary>
+		/// <param name="tablesToLock">The <see cref="DbDable"/> to lock.</param>
+		/// <returns>The database transaction object.</returns>
+		System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<DbTable> tablesToLock);
 
 		/// <summary>
 		/// Releases the connection.
