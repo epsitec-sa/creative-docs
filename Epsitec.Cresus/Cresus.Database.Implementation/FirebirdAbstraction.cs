@@ -455,6 +455,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			List<string> list = new List<string> ();
 			
+			// TODO Why is there some null elements in the string array argument of this call ?
+			// Marc
+
 			System.Data.DataTable tables = this.dbConnection.GetSchema ("Tables", new string[] { null, null, null, "TABLE" });
 
 			foreach (System.Data.DataRow row in tables.Rows)
