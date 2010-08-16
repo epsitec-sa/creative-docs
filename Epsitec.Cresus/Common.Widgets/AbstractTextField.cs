@@ -1673,6 +1673,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnEditionAccepted()
 		{
+			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("EditionAccepted");
 			if (handler != null)
 			{
@@ -1691,6 +1692,9 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnAcceptingEdition(CancelEventArgs e)
 		{
+			//	OnAcceptingEdition est appelé pendant la phase d'acceptation; l'événement passe une instance de CancelEventArgs
+			//	qui permet à ceux qui écoutent l'événement de faire un e.Cancel=true pour annuler l'opération en cours (donc
+			//	refuser l'acceptation).
 			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AcceptingEdition");
 			if (handler != null)
 			{

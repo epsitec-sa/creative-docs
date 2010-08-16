@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 					else
 					{
-						string value = ArticleParameterHelper.GetEnumDescription (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]);
-						subst = string.Concat (parameter.Name, ": ", value);
+						string values = string.Join(", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]));
+						subst = string.Concat (parameter.Name, ": ", values);
 					}
 				}
 
@@ -68,9 +68,21 @@ namespace Epsitec.Cresus.Core.Helpers
 			return description;
 		}
 
+		private static IEnumerable<string> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values)
+		{
+			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, pour une série
+			//	de valeurs données.
+			string[] list = (values ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+
+			foreach (var value in list)
+			{
+				yield return ArticleParameterHelper.GetEnumDescription (parameter, value);
+			}
+		}
+
 		private static string GetEnumDescription(EnumValueArticleParameterDefinitionEntity parameter, string value)
 		{
-			//	Si 'parameter' est une énumération, retourne la description la plus complète possible.
+			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, pour une valeur donnée.
 			if (parameter != null)
 			{
 				string[] values            = (parameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
