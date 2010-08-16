@@ -168,20 +168,53 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public SummaryTile CreateSummaryTile()
+		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary)
+			where T : AbstractEntity
 		{
+			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
+
 			var tile = new SummaryTile
 			{
-				AutoHilite = false,
-				IsReadOnly = true,
-				TabIndex = ++this.tabIndex,
+				AutoHilite     = false,
+				IsReadOnly     = true,
+				TabIndex       = ++this.tabIndex,
+				Name           = fullName,
+				Margins        = new Margins (0, 0, 0, -1),
+				ArrowDirection = Direction.Right,
 			};
 
 			this.ContentListAdd (tile);
 			this.titleTile.Items.Add (tile);
+//-			this.titleTile.IsReadOnly = true;
+			
+			tile.Controller = new SummaryTileController<T> (entity, tile);
+			tile.Summary    = summary.ToString ();
 
 			return tile;
 		}
+
+		class SummaryTileController<T> : ITileController
+			where T : AbstractEntity
+		{
+			public SummaryTileController(T entity, SummaryTile tile)
+			{
+				this.entity = entity;
+				this.navigationPathElement = new SummaryTileNavigationPathElement (tile);
+			}
+			#region ITileController Members
+
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
+			{
+				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement);
+			}
+
+			#endregion
+
+			private readonly T entity;
+			private readonly SummaryTileNavigationPathElement navigationPathElement;
+		}
+
+		
 
 
 		public TileTabBook<T> CreateTabBook<T>(params TabPageDef<T>[] pageDescriptions)

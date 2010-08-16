@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
@@ -131,54 +132,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
 
+			int counter = 0;
+
 			foreach (var doc in this.GetDocumentEntities (this.Entity))
 			{
 				builder.CreateEditionTitleTile ("Data.Document", "Documents");
-				
-				var docTile = builder.CreateSummaryTile ();
-				docTile.Controller = new DocumentTileController (doc, this.DataContext);
-				docTile.Summary = TextFormatter.FormatText ("Offre n°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate).ToString ();
+				builder.CreateSummaryTile (string.Format (System.Globalization.CultureInfo.InstalledUICulture, "Document.{0}", counter++), doc, TextFormatter.FormatText ("Offre n°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate));
 			}
-		}
-
-		class DocumentTileController : ITileController
-		{
-			public DocumentTileController(InvoiceDocumentEntity document, Epsitec.Cresus.DataLayer.Context.DataContext context)
-			{
-				this.document = document;
-				this.navigationPathElement = new DocTileNavigationPathElement (context.GetEntityKey (this.document).GetValueOrDefault ());
-			}
-			#region ITileController Members
-
-			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, Orchestrators.Navigation.NavigationPathElement navigationPathElement)
-			{
-				return EntityViewController.CreateEntityViewController ("Document", this.document, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement);
-			}
-
-			#endregion
-
-			private readonly InvoiceDocumentEntity document;
-			private readonly DocTileNavigationPathElement navigationPathElement;
-		}
-
-		class DocTileNavigationPathElement : Orchestrators.Navigation.NavigationPathElement
-		{
-			public DocTileNavigationPathElement(EntityKey entityKey)
-			{
-				this.entityKey = entityKey;
-			}
-
-			public override string ToString()
-			{
-				return string.Concat ("<AffairDoc:", this.entityKey.RowKey.ToString (), ">");
-			}
-
-			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
-			{
-				return base.Navigate (navigator);
-			}
-
-			private readonly EntityKey entityKey;
 		}
 
 		private void CreateUICaseEvents(SummaryDataItems data)
