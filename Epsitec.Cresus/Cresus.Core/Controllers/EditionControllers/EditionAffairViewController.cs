@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
@@ -70,16 +71,58 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUICaseEvents (data);
+				this.CreateUIDocuments (data);
 			}
 
-			this.Orchestrator.MainViewController.SetActionVisibility (true);
+			this.CreateUIActionButtons ();
 		}
 
 		protected override void AboutToCloseUI()
 		{
 			base.AboutToCloseUI ();
 
+			this.CloseUIActionButtons ();
+		}
+
+		private void CreateUIActionButtons()
+		{
+			var mainViewController   = this.Orchestrator.MainViewController;
+			var actionViewController = mainViewController.ActionViewController;
+
+			actionViewController.AddButton ("NewOffer", "Nouvelle offre", "Crée une nouvelle offre (vide)", this.ExecuteNewOffer);
+			
+				
+			mainViewController.SetActionVisibility (true);
+		}
+
+		private void CloseUIActionButtons()
+		{
+			var mainViewController   = this.Orchestrator.MainViewController;
+			var actionViewController = mainViewController.ActionViewController;
+
+			actionViewController.RemoveButton ("NewOffer");
+			
 			this.Orchestrator.MainViewController.SetActionVisibility (false);
+		}
+
+		private void ExecuteNewOffer()
+		{
+			var businessEvent = this.DataContext.CreateEntity<BusinessEventEntity> ();
+			var document = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
+			var now = System.DateTime.Now;
+
+			document.OtherPartyBillingMode = BusinessLogic.Finance.BillingMode.IncludingTax;
+			document.OtherPartyTaxMode     = BusinessLogic.Finance.TaxMode.LiableForVat;
+			document.CurrencyCode          = BusinessLogic.Finance.CurrencyCode.Chf;
+			document.BillingStatus         = BusinessLogic.Finance.BillingStatus.None;
+			document.CreationDate          = now;
+			document.LastModificationDate  = now;
+
+			businessEvent.EventType = CoreProgram.Application.Data.GetCaseEventTypes ().Where (x => x.Code.Contains ("offre")).First ();
+			businessEvent.Date      = now;
+			businessEvent.Documents.Add (document);
+
+			this.Entity.Events.Add (businessEvent);
 		}
 
 
@@ -109,15 +152,53 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<AbstractBusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<BusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext);
 
 			template.DefineText        (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}
-		
-		private static string GetCaseEventsSummary(AbstractBusinessEventEntity caseEventEntity)
+
+		private void CreateUIDocuments(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = false,
+					Name		 = "Document",
+					IconUri		 = "Data.Document",
+					Title		 = TextFormatter.FormatText ("Documents"),
+					CompactTitle = TextFormatter.FormatText ("Documents"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<InvoiceDocumentEntity> ("Document", data.Controller, this.DataContext);
+
+			template.DefineText (x => TextFormatter.FormatText (GetDocumentSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (GetDocumentSummary (x)));
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => this.GetDocumentEntities (x), template));
+		}
+
+		private IList<InvoiceDocumentEntity> GetDocumentEntities(AffairEntity affair)
+		{
+			var documents = new HashSet<InvoiceDocumentEntity> ();
+
+			foreach (var businessEvent in affair.Events)
+			{
+				documents.AddRange (businessEvent.Documents.Select (doc => doc as InvoiceDocumentEntity).Where (doc => doc != null));
+			}
+
+			return documents.OrderBy (doc => doc.CreationDate).ToArray ();
+		}
+
+		private static string GetDocumentSummary(InvoiceDocumentEntity x)
+		{
+			return "Offre";
+		}
+
+		private static string GetCaseEventsSummary(BusinessEventEntity caseEventEntity)
 		{
 			string date = Misc.GetDateTimeShortDescription (caseEventEntity.Date);
 			int count = caseEventEntity.Documents.Count;

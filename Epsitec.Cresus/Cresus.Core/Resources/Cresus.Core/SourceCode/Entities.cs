@@ -38,7 +38,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AC4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AJ4]", typeof (Epsitec.Cresus.Core.Entities.ArticlePriceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AP4]", typeof (Epsitec.Cresus.Core.Entities.CurrencyEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A05]", typeof (Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A05]", typeof (Epsitec.Cresus.Core.Entities.BusinessEventEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A75]", typeof (Epsitec.Cresus.Core.Entities.CaseEventTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AD5]", typeof (Epsitec.Cresus.Core.Entities.AffairEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AM5]", typeof (Epsitec.Cresus.Core.Entities.ArticleQuantityEntity))]
@@ -2370,11 +2370,11 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AG2/L0A95
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A95]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity> Events
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BusinessEventEntity> Events
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity> ("[L0A95]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BusinessEventEntity> ("[L0A95]");
 			}
 		}
 		
@@ -4494,14 +4494,14 @@ namespace Epsitec.Cresus.Core.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Core.AbstractBusinessEvent Entity
+#region Epsitec.Cresus.Core.BusinessEvent Entity
 namespace Epsitec.Cresus.Core.Entities
 {
 	///	<summary>
-	///	The <c>AbstractBusinessEvent</c> entity.
+	///	The <c>BusinessEvent</c> entity.
 	///	designer:cap/L0A05
 	///	</summary>
-	public partial class AbstractBusinessEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class BusinessEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>EventType</c> field.
@@ -4687,11 +4687,11 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Core.Entities.BusinessEventEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Core.Entities.BusinessEventEntity.EntityStructuredTypeKey;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 160);	// [L0A05]
 		public static readonly new string EntityStructuredTypeKey = "[L0A05]";
@@ -5002,11 +5002,11 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AD5/L0APC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0APC]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity> Events
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.BusinessEventEntity> Events
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity> ("[L0APC]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.BusinessEventEntity> ("[L0APC]");
 			}
 		}
 		
@@ -7978,7 +7978,7 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>PaymentDetailEvent</c> entity.
 	///	designer:cap/L0A0C
 	///	</summary>
-	public partial class PaymentDetailEventEntity : global::Epsitec.Cresus.Core.Entities.AbstractBusinessEventEntity
+	public partial class PaymentDetailEventEntity : global::Epsitec.Cresus.Core.Entities.BusinessEventEntity
 	{
 		///	<summary>
 		///	The <c>Payment</c> field.

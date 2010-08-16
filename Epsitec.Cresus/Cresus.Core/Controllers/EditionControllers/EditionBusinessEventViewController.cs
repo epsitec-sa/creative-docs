@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionBusinessEventViewController : EditionViewController<Entities.AbstractBusinessEventEntity>
+	public class EditionBusinessEventViewController : EditionViewController<Entities.BusinessEventEntity>
 	{
-		public EditionBusinessEventViewController(string name, Entities.AbstractBusinessEventEntity entity)
+		public EditionBusinessEventViewController(string name, Entities.BusinessEventEntity entity)
 			: base (name, entity)
 		{
 			this.InitializeDefaultValues ();

@@ -104,6 +104,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public ActionViewController ActionViewController
+		{
+			get
+			{
+				return this.actionViewController;
+			}
+		}
+
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.browserViewController;
