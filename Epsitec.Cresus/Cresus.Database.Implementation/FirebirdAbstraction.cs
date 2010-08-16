@@ -492,64 +492,55 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			return new FbDataAdapter (fbCommand);
 		}
+		
+		// TODO The options given to the BeginTransaction(...) method are wrong and cause a deadlock
+		// when more than one DataContext tries to write in the database. It should be something like
+		// Concurrency | Protected | Wait | Read and Concurrency | Protected | Wait | Write, but I
+		// couldn't manage to make it run correctly.
+		// Marc
+
 
 		public System.Data.IDbTransaction BeginReadOnlyTransaction()
 		{
-			return this.BeginReadOnlyTransaction (new List<string> ());
-		}
-		
-		public System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<string> tablesToLock)
-		{
 			this.EnsureConnection ();
-
-			FbTransactionOptions options = new FbTransactionOptions ()
-			{
-				TransactionBehavior = FbTransactionBehavior.Concurrency
-									| FbTransactionBehavior.Wait
-									| FbTransactionBehavior.Read,
-				LockTables = this.GetLockTables (tablesToLock, FbTransactionBehavior.LockRead | FbTransactionBehavior.Shared),
-			};
-
+			
+#if false
+			FbTransactionOptions options = FbTransactionOptions.Concurrency |
+				/**/					   FbTransactionOptions.Wait |
+				/**/					   FbTransactionOptions.Read;
+			
 			return this.dbConnection.BeginTransaction (options);
-		}
-
-		public System.Data.IDbTransaction BeginReadWriteTransaction()
-		{
-			return this.BeginReadWriteTransaction (new List<string> ());
+#else
+			return this.dbConnection.BeginTransaction (
+				new FbTransactionOptions ()
+				{
+					TransactionBehavior = FbTransactionBehavior.Concurrency | FbTransactionBehavior.Wait | FbTransactionBehavior.Read
+				});
+#endif
 		}
 
 		/// <summary>
 		/// Begins a read-write transaction.
 		/// </summary>
 		/// <returns>The database transaction object.</returns>
-		public System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<string> tablesToLock)
+		public System.Data.IDbTransaction BeginReadWriteTransaction()
 		{
 			this.EnsureConnection ();
-
-			FbTransactionOptions options = new FbTransactionOptions ()
-			{
-				TransactionBehavior = FbTransactionBehavior.Concurrency
-									| FbTransactionBehavior.Wait
-									| FbTransactionBehavior.Write,
-				LockTables = this.GetLockTables (tablesToLock, FbTransactionBehavior.LockWrite | FbTransactionBehavior.Exclusive),
-			};
-
+			
+#if false
+			FbTransactionOptions options = FbTransactionOptions.Concurrency |
+				/**/					   FbTransactionOptions.Wait |
+				/**/					   FbTransactionOptions.Write;
+			
 			return this.dbConnection.BeginTransaction (options);
+#else
+			return this.dbConnection.BeginTransaction (
+				new FbTransactionOptions ()
+				{
+					TransactionBehavior = FbTransactionBehavior.Concurrency | FbTransactionBehavior.Wait | FbTransactionBehavior.Write
+				});
+#endif
 		}
-
-
-		private IDictionary<string, FbTransactionBehavior> GetLockTables(IEnumerable<string> tablesToLock, FbTransactionBehavior behavior)
-		{
-			Dictionary<string, FbTransactionBehavior> locks = new Dictionary<string, FbTransactionBehavior> ();
-
-			foreach (string table in tablesToLock)
-			{
-				locks[table] = behavior;
-			}
-
-			return locks;
-		}
-
 		
 		public void ReleaseConnection()
 		{
