@@ -95,12 +95,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return null;
 			}
 
-			int active    = this.scrollList.SelectedItemIndex;
-			var entityKey = this.collection.GetEntityKey (active);
-
-			if (entityKey.HasValue)
+			if (this.activeEntityKey.HasValue)
 			{
-				return context.ResolveEntity (entityKey.Value);
+				return context.ResolveEntity (this.activeEntityKey.Value);
 			}
 			else
 			{
