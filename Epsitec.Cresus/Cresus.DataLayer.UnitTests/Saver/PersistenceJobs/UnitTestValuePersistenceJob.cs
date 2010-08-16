@@ -105,6 +105,25 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 		}
 
 
+		[TestMethod]
+		public void GetAffectedTablesArgumentCheck()
+		{
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
+			Druid localEntityId = Druid.FromLong (1);
+			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
+			{
+				{ Druid.FromLong (2), "test" },
+			};
+			bool isRootTypeJob = true;
+			PersistenceJobType jobType = PersistenceJobType.Insert;
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, isRootTypeJob, jobType).GetAffectedTables (null)
+			);
+		}
+
+
 		private IEnumerable<Druid> GetSampleDruids()
 		{
 			for (int i = 1; i < 10; i++)

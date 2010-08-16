@@ -50,6 +50,18 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 		}
 
 
+		[TestMethod]
+		public void GetAffectedTablesArgumentCheck()
+		{
+			AbstractEntity entity = new NaturalPersonEntity ();
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new DeletePersistenceJob (entity).GetAffectedTables (null)
+			);
+		}
+
+
 	}
 
 

@@ -86,6 +86,22 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver.PersistenceJobs
 		}
 
 
+		[TestMethod]
+		public void GetAffectedTablesArgumentCheck()
+		{
+			NaturalPersonEntity entity = new NaturalPersonEntity ();
+			Druid localEntityId = Druid.FromLong (1);
+			Druid fieldId = Druid.FromLong (2);
+			NaturalPersonEntity target = new NaturalPersonEntity ();
+			PersistenceJobType jobType = PersistenceJobType.Insert;
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new ReferencePersistenceJob (entity, localEntityId, fieldId, target, jobType).GetAffectedTables (null)
+			);
+		}
+
+
 		private IEnumerable<Druid> GetSampleDruids()
 		{
 			for (int i = 1; i < 10; i++)
