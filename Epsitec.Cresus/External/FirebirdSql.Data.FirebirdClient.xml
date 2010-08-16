@@ -4,6 +4,41 @@
         <name>FirebirdSql.Data.FirebirdClient</name>
     </assembly>
     <members>
+        <member name="T:FirebirdSql.Data.Isql.CommandExecutingEventArgs">
+            <summary>
+            CommandExecutingEventArgs encapsulates the events arguments for the event trigged 
+            from the <see cref="T:FirebirdSql.Data.Isql.FbBatchExecution"/> during the execution. 
+            </summary>
+            <remarks>
+            
+            </remarks>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.CommandExecutingEventArgs.#ctor(FirebirdSql.Data.FirebirdClient.FbCommand)">
+            <summary>
+            Creates an instance of CommandExecutingEventArgs class.
+            </summary>
+            <param name="sqlCommand">The FbCommand properly instanciated.</param>
+            <remarks>The <b>sqlCommand</b> should be proper instanciated with a valid 
+            <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> and with the SQL statement loaded in <see cref="P:FirebirdSql.Data.FirebirdClient.FbCommand.CommandText"/>.
+            </remarks>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.CommandExecutingEventArgs.ToString">
+            <summary>
+            Overrided. Returns the SQL statement that goes for execution.
+            </summary>
+            <returns>The SQL statement that will be executed.</returns>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.SqlCommand">
+            <summary>
+            Returns the <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> instance that created for the SQL statement that goes 
+            for execution. 
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.StatementType">
+            <summary>
+            Returns the <see cref="T:FirebirdSql.Data.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.SqlCommand"/>.
+            </summary>
+        </member>
         <member name="M:FirebirdSql.Data.Client.Managed.Version10.GdsDatabase.DatabaseInfo(System.Byte[],System.Byte[],System.Int32)">
             <summary>
             isc_database_info
@@ -45,6 +80,170 @@
             <summary>
             Chooses the appropriate FbDbType for the given binary type.
             </summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Entity.MetadataHelpers">
+            <summary>
+            A set of static helpers for type metadata
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.MaxLengthFacetName">
+            <summary>
+            Name of the MaxLength Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.UnicodeFacetName">
+            <summary>
+            Name of the Unicode Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.FixedLengthFacetName">
+            <summary>
+            Name of the FixedLength Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.PrecisionFacetName">
+            <summary>
+            Name of the Precision Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.ScaleFacetName">
+            <summary>
+            Name of the Scale Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.DefaultValueFacetName">
+            <summary>
+            Name of the DefaultValue Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.NullableFacetName">
+            <summary>
+            Name of the Nullable Facet
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.StoreGeneratedPatternFacetName">
+            <summary>
+            Name of StoreGeneratedPattern Facet
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetEdmType``1(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Cast the EdmType of the given type usage to the given TEdmType
+            </summary>
+            <typeparam name="TEdmType"></typeparam>
+            <param name="typeUsage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetElementTypeUsage(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Gets the TypeUsage of the elment if the given type is a collection type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetProperties(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Retrieves the properties of in the EdmType underlying the input type usage, 
+             if that EdmType is a structured type (EntityType, RowType). 
+            </summary>
+            <param name="typeUsage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetProperties(System.Data.Metadata.Edm.EdmType)">
+            <summary>
+            Retrieves the properties of the given EdmType, if it is
+             a structured type (EntityType, RowType). 
+            </summary>
+            <param name="edmType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsCollectionType(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Is the given type usage over a collection type
+            </summary>
+            <param name="typeUsage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsCollectionType(System.Data.Metadata.Edm.EdmType)">
+            <summary>
+            Is the given type a collection type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsPrimitiveType(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Is the given type usage over a primitive type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsPrimitiveType(System.Data.Metadata.Edm.EdmType)">
+            <summary>
+            Is the given type a primitive type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsRowType(System.Data.Metadata.Edm.TypeUsage)">
+            <summary>
+            Is the given type usage over a row type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsRowType(System.Data.Metadata.Edm.EdmType)">
+            <summary>
+            Is the given type a row type
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetPrimitiveTypeKind(System.Data.Metadata.Edm.TypeUsage,System.Data.Metadata.Edm.PrimitiveTypeKind@)">
+            <summary>
+            Gets the type of the given type usage if it is a primitive type
+            </summary>
+            <param name="type"></param>
+            <param name="typeKind"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetValueForMetadataProperty``1(System.Data.Metadata.Edm.MetadataItem,System.String)">
+            <summary>
+            Gets the value for the metadata property with the given name
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="item"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetFacetValueOrDefault``1(System.Data.Metadata.Edm.TypeUsage,System.String,``0)">
+            <summary>
+            Get the value specified on the given type usage for the given facet name.
+            If the faces does not have a value specifid or that value is null returns
+            the default value for that facet.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <param name="facetName"></param>
+            <returns></returns>
+            <summary>
+            Get the value specified on the given type usage for the given facet name.
+            If the faces does not have a value specifid or that value is null returns
+            the default value for that facet.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <param name="facetName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetTypeFacetDescriptionByName(System.Data.Metadata.Edm.EdmType,System.String,System.Data.Metadata.Edm.FacetDescription@)">
+            <summary>
+            Given a facet name and an EdmType, tries to get that facet's description.
+            </summary>
+            <param name="edmType"></param>
+            <param name="facetName"></param>
+            <param name="facetDescription"></param>
+            <returns></returns>
         </member>
         <member name="T:FirebirdSql.Data.Entity.JoinSymbol">
             <summary>
@@ -301,6 +500,67 @@
             or things to be renamed.
             </summary>
         </member>
+        <member name="T:FirebirdSql.Data.Isql.CommandExecutedEventHandler">
+            <summary>
+            The event handler type trigged after a SQL statement execution.
+            </summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Entity.SqlWriter">
+            <summary>
+            This extends StringWriter primarily to add the ability to add an indent
+            to each line that is written out.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SqlWriter.#ctor(System.Text.StringBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="b"></param>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SqlWriter.Write(System.String)">
+            <summary>
+            Reset atBeginningofLine if we detect the newline string.
+            <see cref="M:FirebirdSql.Data.Entity.SqlBuilder.AppendLine"/>
+            Add as many tabs as the value of indent if we are at the 
+            beginning of a line.
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SqlWriter.WriteLine">
+            <summary>
+            Writes a line terminator to the text stream.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.IO.TextWriter"/> is closed. </exception>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SqlWriter.Indent">
+            <summary>
+            The number of tabs to be added at the beginning of each new line.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:FirebirdSql.Data.Entity.SqlSelectStatement" -->
+        <member name="M:FirebirdSql.Data.Entity.SqlSelectStatement.WriteSql(FirebirdSql.Data.Entity.SqlWriter,FirebirdSql.Data.Entity.SqlGenerator)">
+            <summary>
+            Write out a SQL select statement as a string.
+            We have to
+            <list type="number">
+            <item>Check whether the aliases extents we use in this statement have
+            to be renamed.
+            We first create a list of all the aliases used by the outer extents.
+            For each of the FromExtents( or AllJoinExtents if it is non-null),
+            rename it if it collides with the previous list.
+            </item>
+            <item>Write each of the clauses (if it exists) as a string</item>
+            </list>
+            </summary>
+            <param name="writer"></param>
+            <param name="sqlGenerator"></param>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SqlSelectStatement.IsDistinct">
+            <summary>
+            Do we need to add a DISTINCT at the beginning of the SELECT
+            </summary>
+        </member>
         <member name="T:FirebirdSql.Data.Entity.SkipClause">
             <summary>
             SkipClause represents the SKIP expression in a SqlSelectStatement. 
@@ -330,6 +590,103 @@
         <member name="P:FirebirdSql.Data.Entity.SkipClause.SkipCount">
             <summary>
             How many rows should be skipped.
+            </summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Entity.SSDLToFBBase">
+            <summary>
+            Base class for this transformation
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.Write(System.String)">
+            <summary>
+            Write text directly into the generated output
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.WriteLine(System.String)">
+            <summary>
+            Write text directly into the generated output
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.Write(System.String,System.Object[])">
+            <summary>
+            Write formatted text directly into the generated output
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.WriteLine(System.String,System.Object[])">
+            <summary>
+            Write formatted text directly into the generated output
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.Error(System.String)">
+            <summary>
+            Raise an error
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.Warning(System.String)">
+            <summary>
+            Raise a warning
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.PushIndent(System.String)">
+            <summary>
+            Increase the indent
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.PopIndent">
+            <summary>
+            Remove the last indent that was added with PushIndent
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFBBase.ClearIndent">
+            <summary>
+            Remove any indentation
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFBBase.GenerationEnvironment">
+            <summary>
+            The string builder that generation-time code is using to assemble generated output
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFBBase.Errors">
+            <summary>
+            The error collection for the generation process
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFBBase.indentLengths">
+            <summary>
+            A list of the lengths of each indent that was added with PushIndent
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFBBase.CurrentIndent">
+            <summary>
+            Gets the current indent we use when adding lines to the output
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFBBase.Session">
+            <summary>
+            Current transformation session
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFB.GetInput``1(System.String)">
+            <summary>
+            Retrieve data of type T from CallContext given a string-based identity.
+            This is used to pass data from a workflow into the template since the workflow
+            utilizes the VS TextTemplatingService which runs the template in a separate AppDomain.
+            </summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Entity.SSDLToFB.ToStringInstanceHelper">
+            <summary>
+            Utility class to produce culture-oriented representation of an object as a string.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.SSDLToFB.ToStringInstanceHelper.ToStringWithCulture(System.Object)">
+            <summary>
+            This is called from the compile/run appdomain to convert objects within an expression block to a string
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Entity.SSDLToFB.ToStringInstanceHelper.FormatProvider">
+            <summary>
+            Gets or sets format provider to be used by ToStringWithCulture method.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Isql.SqlStatementType">
@@ -362,6 +719,11 @@
             Represents the SQL statement: <b>ALTER PROCEDURE</b>
             </summary>
         </member>
+        <member name="F:FirebirdSql.Data.Isql.SqlStatementType.AlterSequence">
+            <summary>
+            Represents the SQL statement: <b>ALTER SEQUENCE</b>
+            </summary>
+        </member>
         <member name="F:FirebirdSql.Data.Isql.SqlStatementType.AlterTable">
             <summary>
             Represents the SQL statement: <b>ALTER TABLE</b>
@@ -375,6 +737,11 @@
         <member name="F:FirebirdSql.Data.Isql.SqlStatementType.Close">
             <summary>
             Represents the SQL statement: <b>CLOSE</b>
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Isql.SqlStatementType.CommentOn">
+            <summary>
+            Represents the SQL statement: <b>COMMENT ON</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Isql.SqlStatementType.Commit">
@@ -525,6 +892,11 @@
         <member name="F:FirebirdSql.Data.Isql.SqlStatementType.DropProcedure">
             <summary>
             Represents the SQL statement: <b>DROP PROCEDURE</b>
+            </summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Isql.SqlStatementType.DropSequence">
+            <summary>
+            Represents the SQL statement: <b>DROP SEQUENCE</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Isql.SqlStatementType.DropRole">
@@ -687,242 +1059,63 @@
             Represents the SQL statement: <b>WHENEVER</b>
             </summary>
         </member>
-        <member name="T:FirebirdSql.Data.Isql.CommandExecutingEventArgs">
+        <member name="T:FirebirdSql.Data.Entity.ExpressionTranslator">
             <summary>
-            CommandExecutingEventArgs encapsulates the events arguments for the event trigged 
-            from the <see cref="T:FirebirdSql.Data.Isql.FbBatchExecution"/> during the execution. 
+            Lightweight expression translator for DML expression trees, which have constrained
+            scope and support.
             </summary>
-            <remarks>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.ExpressionTranslator.#ctor(System.Text.StringBuilder,System.Data.Common.CommandTrees.DbModificationCommandTree,System.Boolean)">
+            <summary>
+            Initialize a new expression translator populating the given string builder
+            with command text. Command text builder and command tree must not be null.
+            </summary>
+            <param name="commandText">Command text with which to populate commands</param>
+            <param name="commandTree">Command tree generating SQL</param>
+            <param name="preserveMemberValues">Indicates whether the translator should preserve
+            member values while compiling t-SQL (only needed for server generation)</param>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.ExpressionTranslator.RegisterMemberValue(System.Data.Common.CommandTrees.DbExpression,System.Data.Common.CommandTrees.DbExpression)">
+            <summary>
+            Call this method to register a property value pair so the translator "remembers"
+            the values for members of the row being modified. These values can then be used
+            to form a predicate for server-generation (based on the key of the row)
+            </summary>
+            <param name="propertyExpression">Expression containing the column reference (property expression).</param>
+            <param name="value">Expression containing the value of the column.</param>
+        </member>
+        <member name="T:FirebirdSql.Data.Entity.DmlSqlGenerator">
+            <summary>
+            Class generating SQL for a DML command tree.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Entity.DmlSqlGenerator.GenerateReturningSql(System.Text.StringBuilder,System.Data.Common.CommandTrees.DbModificationCommandTree,FirebirdSql.Data.Entity.ExpressionTranslator,System.Data.Common.CommandTrees.DbExpression)">
+            <summary>
+            Generates SQL fragment returning server-generated values.
+            Requires: translator knows about member values so that we can figure out
+            how to construct the key predicate.
+            <code>
+            Sample SQL:
+                
+                select IdentityValue
+                from dbo.MyTable
+                where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
             
-            </remarks>
-        </member>
-        <member name="M:FirebirdSql.Data.Isql.CommandExecutingEventArgs.#ctor(FirebirdSql.Data.FirebirdClient.FbCommand)">
-            <summary>
-            Creates an instance of CommandExecutingEventArgs class.
+            or
+            
+                select TimestamptValue
+                from dbo.MyTable
+                where @@ROWCOUNT > 0 and Id = 1
+            
+            Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
+            </code>
             </summary>
-            <param name="sqlCommand">The FbCommand properly instanciated.</param>
-            <remarks>The <b>sqlCommand</b> should be proper instanciated with a valid 
-            <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> and with the SQL statement loaded in <see cref="P:FirebirdSql.Data.FirebirdClient.FbCommand.CommandText"/>.
-            </remarks>
-        </member>
-        <member name="M:FirebirdSql.Data.Isql.CommandExecutingEventArgs.ToString">
-            <summary>
-            Overrided. Returns the SQL statement that goes for execution.
-            </summary>
-            <returns>The SQL statement that will be executed.</returns>
-        </member>
-        <member name="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.SqlCommand">
-            <summary>
-            Returns the <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> instance that created for the SQL statement that goes 
-            for execution. 
-            </summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.StatementType">
-            <summary>
-            Returns the <see cref="T:FirebirdSql.Data.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Isql.CommandExecutingEventArgs.SqlCommand"/>.
-            </summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Entity.MetadataHelpers">
-            <summary>
-            A set of static helpers for type metadata
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.MaxLengthFacetName">
-            <summary>
-            Name of the MaxLength Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.UnicodeFacetName">
-            <summary>
-            Name of the Unicode Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.FixedLengthFacetName">
-            <summary>
-            Name of the FixedLength Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.PrecisionFacetName">
-            <summary>
-            Name of the Precision Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.ScaleFacetName">
-            <summary>
-            Name of the Scale Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.DefaultValueFacetName">
-            <summary>
-            Name of the DefaultValue Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.NullableFacetName">
-            <summary>
-            Name of the Nullable Facet
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Entity.MetadataHelpers.StoreGeneratedPatternFacetName">
-            <summary>
-            Name of StoreGeneratedPattern Facet
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetEdmType``1(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Cast the EdmType of the given type usage to the given TEdmType
-            </summary>
-            <typeparam name="TEdmType"></typeparam>
-            <param name="typeUsage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetElementTypeUsage(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Gets the TypeUsage of the elment if the given type is a collection type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetProperties(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Retrieves the properties of in the EdmType underlying the input type usage, 
-             if that EdmType is a structured type (EntityType, RowType). 
-            </summary>
-            <param name="typeUsage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetProperties(System.Data.Metadata.Edm.EdmType)">
-            <summary>
-            Retrieves the properties of the given EdmType, if it is
-             a structured type (EntityType, RowType). 
-            </summary>
-            <param name="edmType"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsCollectionType(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Is the given type usage over a collection type
-            </summary>
-            <param name="typeUsage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsCollectionType(System.Data.Metadata.Edm.EdmType)">
-            <summary>
-            Is the given type a collection type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsPrimitiveType(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Is the given type usage over a primitive type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsPrimitiveType(System.Data.Metadata.Edm.EdmType)">
-            <summary>
-            Is the given type a primitive type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsRowType(System.Data.Metadata.Edm.TypeUsage)">
-            <summary>
-            Is the given type usage over a row type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.IsRowType(System.Data.Metadata.Edm.EdmType)">
-            <summary>
-            Is the given type a row type
-            </summary>
-            <param name="type"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetPrimitiveTypeKind(System.Data.Metadata.Edm.TypeUsage,System.Data.Metadata.Edm.PrimitiveTypeKind@)">
-            <summary>
-            Gets the type of the given type usage if it is a primitive type
-            </summary>
-            <param name="type"></param>
-            <param name="typeKind"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetValueForMetadataProperty``1(System.Data.Metadata.Edm.MetadataItem,System.String)">
-            <summary>
-            Gets the value for the metadata property with the given name
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="item"></param>
-            <param name="propertyName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.GetFacetValueOrDefault``1(System.Data.Metadata.Edm.TypeUsage,System.String,``0)">
-            <summary>
-            Get the value specified on the given type usage for the given facet name.
-            If the faces does not have a value specifid or that value is null returns
-            the default value for that facet.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="type"></param>
-            <param name="facetName"></param>
-            <returns></returns>
-            <summary>
-            Get the value specified on the given type usage for the given facet name.
-            If the faces does not have a value specifid or that value is null returns
-            the default value for that facet.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="type"></param>
-            <param name="facetName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.MetadataHelpers.TryGetTypeFacetDescriptionByName(System.Data.Metadata.Edm.EdmType,System.String,System.Data.Metadata.Edm.FacetDescription@)">
-            <summary>
-            Given a facet name and an EdmType, tries to get that facet's description.
-            </summary>
-            <param name="edmType"></param>
-            <param name="facetName"></param>
-            <param name="facetDescription"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor">
-            <summary>
-            Creates SSPIHelper with default "NTLM" security package and no remote principal and gets client credentials
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor(System.String)">
-            <summary>
-            Creates SSPIHelper with given security package and no remote principal and gets client credentials
-            </summary>
-            <param name="securPackage">Name of security package (e.g. NTLM, Kerberos, ...)</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor(System.String,System.String)">
-            <summary>
-            Creates SSPIHelper with given security package and remote principal and gets client credentials
-            </summary>
-            <param name="securPackage">Name of security package (e.g. NTLM, Kerberos, ...)</param>
-            <param name="remotePrincipal">SPN of server (may be necessary for Kerberos</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.InitializeClientSecurity">
-            <summary>
-            Creates client security context and returns "client token"
-            </summary>
-            <returns>Client authentication data to be sent to server</returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.GetClientSecurity(System.Byte[])">
-            <summary>
-            Creates client authentication data based on already existing security context and
-            authentication data sent by server
-            This method must not be called before InitializeClientSecurity
-            </summary>
-            <param name="serverToken">Authentication data received from server</param>
-            <returns>Client authentication data to be sent to server</returns>
-        </member>
-        <member name="M:FirebirdSql.Data.FirebirdClient.FbDataAdapter.Update(System.Data.DataRow[],System.Data.Common.DataTableMapping)">
-            <summary>
-            Review .NET	Framework documentation.
-            </summary>
+            <param name="commandText">Builder containing command text</param>
+            <param name="tree">Modification command tree</param>
+            <param name="translator">Translator used to produce DML SQL statement
+            for the tree</param>
+            <param name="returning">Returning expression. If null, the method returns
+            immediately without producing a SELECT statement.</param>
         </member>
         <member name="T:FirebirdSql.Data.Common.Descriptor">
             <summary>
@@ -933,73 +1126,120 @@
             in the Interbase 6.0 API docs.
             </remarks>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:FirebirdSql.Data.Entity.SqlSelectStatement" -->
-        <member name="M:FirebirdSql.Data.Entity.SqlSelectStatement.WriteSql(FirebirdSql.Data.Entity.SqlWriter,FirebirdSql.Data.Entity.SqlGenerator)">
+        <member name="T:FirebirdSql.Data.Client.Native.FbClientFactory">
             <summary>
-            Write out a SQL select statement as a string.
-            We have to
-            <list type="number">
-            <item>Check whether the aliases extents we use in this statement have
-            to be renamed.
-            We first create a list of all the aliases used by the outer extents.
-            For each of the FromExtents( or AllJoinExtents if it is non-null),
-            rename it if it collides with the previous list.
-            </item>
-            <item>Write each of the clauses (if it exists) as a string</item>
-            </list>
-            </summary>
-            <param name="writer"></param>
-            <param name="sqlGenerator"></param>
-        </member>
-        <member name="P:FirebirdSql.Data.Entity.SqlSelectStatement.IsDistinct">
-            <summary>
-            Do we need to add a DISTINCT at the beginning of the SELECT
+            This class generates a dynamic class that implements the <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/> interface and
+            calls the native methods in a given "fbembed.dll" (though you can name it anything you like).
             </summary>
         </member>
-        <member name="T:FirebirdSql.Data.Isql.FbScript">
+        <member name="F:FirebirdSql.Data.Client.Native.FbClientFactory.cache">
             <summary>
-            FbScript parses a SQL file and returns its SQL statements. 
-            The class take in consideration that the statement separator can change in code. 
-            For instance, in Firebird databases the statement <c>SET TERM !! ;</c> will change the
-            statement token terminator <b>;</b> into <b>!!</b>.
+            Because generating the class at runtime is expensive, we cache it here based on the name
+            specified.
             </summary>
         </member>
-        <member name="M:FirebirdSql.Data.Isql.FbScript.#ctor(System.String)">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.#cctor">
             <summary>
-            Creates an instance of FbScript class.
+            Static constructor sets up member variables.
             </summary>
-            <param name="sqlFilename">The filename for the SQL file.</param>
         </member>
-        <member name="M:FirebirdSql.Data.Isql.FbScript.#ctor(System.IO.TextReader)">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GetFbClient(System.String)">
             <summary>
-            Creates an instance of FbScript class.
+            Dynamically generates a class that will load the "fbembed.dll" given in <c>dllName</c>, and that
+            also implements <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>, which you can use to call the library.
             </summary>
-            <param name="sqlCode">A <see cref="T:System.IO.TextReader"/> instance.</param>
-            <remarks>The all data in <see cref="T:System.IO.TextReader"/> is read.</remarks>
+            <param name="dllName">The name of the DLL to load (e.g. "fbembed", "C:\path\to\fbembed.dll", etc)</param>
+            <returns>A class that implements <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/> and calls into the native library you specify.</returns>
         </member>
-        <member name="M:FirebirdSql.Data.Isql.FbScript.Parse">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateFbClient(System.String)">
             <summary>
-            Parses the SQL code and loads the SQL statements into the StringCollection <see cref="P:FirebirdSql.Data.Isql.FbScript.Results"/>.
+            This method does the "heavy-lifting" of actually generating a dynamic class that implements
+            <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>, and calls the native library specified to do the actual work.
             </summary>
-            <returns>The number of statements found.</returns>
+            <param name="dllName">The name of the libarary to use, as passed into the 
+            <see cref="T:System.Runtime.InteropServices.DllImportAttribute"/> that is dynamically generated.</param>
+            <returns>An implementation of <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>.</returns>
+            <remarks>
+            <para>Note: To be completly generic, we actually reflect through <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>
+            to get the methods and parameters to generate.</para>
+            </remarks>
         </member>
-        <member name="M:FirebirdSql.Data.Isql.FbScript.ToString">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateMethod(System.Reflection.Emit.TypeBuilder,System.Reflection.MethodInfo,System.String)">
             <summary>
-            Overrided method, returns the the SQL code to be parsed (with comments removed).
+            Generates a method on our <see cref="T:System.Reflection.Emit.TypeBuilder"/> for the specified <see cref="T:System.Reflection.MethodInfo"/>
             </summary>
-            <returns>The SQL code to be parsed (without comments).</returns>
+            <param name="tb">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> we're generating our type with.</param>
+            <param name="mi">The <see cref="T:System.Reflection.MethodInfo"/> which represents the "template" method.</param>
+            <param name="dllName">The path to the DLL that we'll put in the <see cref="T:System.Runtime.InteropServices.DllImportAttribute"/>.</param>
         </member>
-        <member name="M:FirebirdSql.Data.Isql.FbScript.RemoveComments(System.String)">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.CreateInstance(System.Reflection.Emit.TypeBuilder)">
             <summary>
-            Removes from the SQL code all comments of the type: /*...*/ or --
+            Creates an instance of the type itself and returns it. Cool!!
             </summary>
-            <param name="source">The string containing the original SQL code.</param>
-            <returns>A string containing the SQL code without comments.</returns>
+            <param name="tb">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> that we created our type with.</param>
+            <returns>An instance of our type, cast as an <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>.</returns>
         </member>
-        <member name="P:FirebirdSql.Data.Isql.FbScript.Results">
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.CreateTypeBuilder(System.String)">
             <summary>
-            Returns a FbStatementCollection containing all the SQL statements (without comments) present on the file.
-            This property is loaded after the method call <see cref="M:FirebirdSql.Data.Isql.FbScript.Parse"/>.
+            Creates the assembly and module into which we'll generate our class, and returns
+            a <see cref="T:System.Reflection.Emit.TypeBuilder"/> we can use for building up our type.
+            </summary>
+            <param name="baseName">The "base name" to use for the name of the assembly and mode.</param>
+            <returns>A <see cref="T:System.Reflection.Emit.TypeBuilder"/> which we can use for building our type.</returns>
+            <remarks>
+            <para>Notice that we actually generate a new assembly for every different <c>dllName</c> that is
+            passed into <see cref="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateFbClient(System.String)"/>. This might be inefficient, but since we're mostly
+            only ever going to have one (or maybe two) different <c>dllName</c>s, it's not a big deal.</para>
+            </remarks>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.SanitizeBaseName(System.String)">
+            <summary>
+            Because the <c>baseName</c> could include things like '\' and '/' - which are not legal
+            type names, we need to "sanitize" the name and make it acceptable.
+            </summary>
+            <param name="baseName">The "base name" which we'll make sure contains only legal
+            identfier characters.</param>
+            <returns>A new string that is a value type name.</returns>
+        </member>
+        <member name="T:FirebirdSql.Data.Isql.CommandExecutedEventArgs">
+            <summary>
+            Summary description for CommandExecutedEventArgs.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.CommandExecutedEventArgs.#ctor(FirebirdSql.Data.FirebirdClient.FbDataReader,System.String,System.Int32)">
+            <summary>
+            Creates an instance of CommandExecutedEventArgs class.
+            </summary>
+            <param name="dataReader"></param>
+            <param name="commandText">The CommandText of the <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> that was executed.</param>
+            <param name="rowsAffected"></param>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.CommandExecutedEventArgs.ToString">
+            <summary>
+            Overrided. Returns the SQL statement that was executed.
+            </summary>
+            <returns>The SQL statement that will be executed.</returns>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.StatementType">
+            <summary>
+            Returns the <see cref="T:FirebirdSql.Data.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.CommandText"/>.
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.CommandText">
+            <summary>
+            Returns the SQL statement that was executed.
+            </summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.DataReader">
+            <summary>
+            Returns a <see cref="T:FirebirdSql.Data.FirebirdClient.FbDataReader"/> instance case the executed SQL command returns data. If
+            the executed SQL command does not returns data, (for instance: the case of an UPDATE statement), 
+            the <b>DataReader</b> is setled to <b>null</b>.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.FirebirdClient.FbDataAdapter.Update(System.Data.DataRow[],System.Data.Common.DataTableMapping)">
+            <summary>
+            Review .NET	Framework documentation.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Common.IscException.#ctor(System.String,System.Int32)">
@@ -1036,38 +1276,10 @@
             <param name="storeType">A TypeUsage encapsulating an EDM type and a set of facets</param>
             <returns>A TypeUsage encapsulating a store type and a set of facets</returns>
         </member>
-        <member name="T:FirebirdSql.Data.Entity.DmlSqlGenerator">
+        <member name="T:FirebirdSql.Data.Client.Native.IFbClient">
             <summary>
-            Class generating SQL for a DML command tree.
+            This is the interface that the dynamically-generated class uses to call the native library.
             </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.DmlSqlGenerator.GenerateReturningSql(System.Text.StringBuilder,System.Data.Common.CommandTrees.DbModificationCommandTree,FirebirdSql.Data.Entity.ExpressionTranslator,System.Data.Common.CommandTrees.DbExpression)">
-            <summary>
-            Generates SQL fragment returning server-generated values.
-            Requires: translator knows about member values so that we can figure out
-            how to construct the key predicate.
-            <code>
-            Sample SQL:
-                
-                select IdentityValue
-                from dbo.MyTable
-                where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
-            
-            or
-            
-                select TimestamptValue
-                from dbo.MyTable
-                where @@ROWCOUNT > 0 and Id = 1
-            
-            Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
-            </code>
-            </summary>
-            <param name="commandText">Builder containing command text</param>
-            <param name="tree">Modification command tree</param>
-            <param name="translator">Translator used to produce DML SQL statement
-            for the tree</param>
-            <param name="returning">Returning expression. If null, the method returns
-            immediately without producing a SELECT statement.</param>
         </member>
         <member name="T:FirebirdSql.Data.Isql.FbBatchExecution">
             <summary>
@@ -1186,150 +1398,6 @@
             Represents the list of SQL statements for batch execution.
             </summary>
         </member>
-        <member name="T:FirebirdSql.Data.Client.Native.FbClientFactory">
-            <summary>
-            This class generates a dynamic class that implements the <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/> interface and
-            calls the native methods in a given "fbembed.dll" (though you can name it anything you like).
-            </summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Client.Native.FbClientFactory.cache">
-            <summary>
-            Because generating the class at runtime is expensive, we cache it here based on the name
-            specified.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.#cctor">
-            <summary>
-            Static constructor sets up member variables.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GetFbClient(System.String)">
-            <summary>
-            Dynamically generates a class that will load the "fbembed.dll" given in <c>dllName</c>, and that
-            also implements <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>, which you can use to call the library.
-            </summary>
-            <param name="dllName">The name of the DLL to load (e.g. "fbembed", "C:\path\to\fbembed.dll", etc)</param>
-            <returns>A class that implements <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/> and calls into the native library you specify.</returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateFbClient(System.String)">
-            <summary>
-            This method does the "heavy-lifting" of actually generating a dynamic class that implements
-            <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>, and calls the native library specified to do the actual work.
-            </summary>
-            <param name="dllName">The name of the libarary to use, as passed into the 
-            <see cref="T:System.Runtime.InteropServices.DllImportAttribute"/> that is dynamically generated.</param>
-            <returns>An implementation of <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>.</returns>
-            <remarks>
-            <para>Note: To be completly generic, we actually reflect through <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>
-            to get the methods and parameters to generate.</para>
-            </remarks>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateMethod(System.Reflection.Emit.TypeBuilder,System.Reflection.MethodInfo,System.String)">
-            <summary>
-            Generates a method on our <see cref="T:System.Reflection.Emit.TypeBuilder"/> for the specified <see cref="T:System.Reflection.MethodInfo"/>
-            </summary>
-            <param name="tb">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> we're generating our type with.</param>
-            <param name="mi">The <see cref="T:System.Reflection.MethodInfo"/> which represents the "template" method.</param>
-            <param name="dllName">The path to the DLL that we'll put in the <see cref="T:System.Runtime.InteropServices.DllImportAttribute"/>.</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.CreateInstance(System.Reflection.Emit.TypeBuilder)">
-            <summary>
-            Creates an instance of the type itself and returns it. Cool!!
-            </summary>
-            <param name="tb">The <see cref="T:System.Reflection.Emit.TypeBuilder"/> that we created our type with.</param>
-            <returns>An instance of our type, cast as an <see cref="T:FirebirdSql.Data.Client.Native.IFbClient"/>.</returns>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.CreateTypeBuilder(System.String)">
-            <summary>
-            Creates the assembly and module into which we'll generate our class, and returns
-            a <see cref="T:System.Reflection.Emit.TypeBuilder"/> we can use for building up our type.
-            </summary>
-            <param name="baseName">The "base name" to use for the name of the assembly and mode.</param>
-            <returns>A <see cref="T:System.Reflection.Emit.TypeBuilder"/> which we can use for building our type.</returns>
-            <remarks>
-            <para>Notice that we actually generate a new assembly for every different <c>dllName</c> that is
-            passed into <see cref="M:FirebirdSql.Data.Client.Native.FbClientFactory.GenerateFbClient(System.String)"/>. This might be inefficient, but since we're mostly
-            only ever going to have one (or maybe two) different <c>dllName</c>s, it's not a big deal.</para>
-            </remarks>
-        </member>
-        <member name="M:FirebirdSql.Data.Client.Native.FbClientFactory.SanitizeBaseName(System.String)">
-            <summary>
-            Because the <c>baseName</c> could include things like '\' and '/' - which are not legal
-            type names, we need to "sanitize" the name and make it acceptable.
-            </summary>
-            <param name="baseName">The "base name" which we'll make sure contains only legal
-            identfier characters.</param>
-            <returns>A new string that is a value type name.</returns>
-        </member>
-        <member name="T:FirebirdSql.Data.Entity.SqlWriter">
-            <summary>
-            This extends StringWriter primarily to add the ability to add an indent
-            to each line that is written out.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.SqlWriter.#ctor(System.Text.StringBuilder)">
-            <summary>
-            
-            </summary>
-            <param name="b"></param>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.SqlWriter.Write(System.String)">
-            <summary>
-            Reset atBeginningofLine if we detect the newline string.
-            <see cref="M:FirebirdSql.Data.Entity.SqlBuilder.AppendLine"/>
-            Add as many tabs as the value of indent if we are at the 
-            beginning of a line.
-            </summary>
-            <param name="value"></param>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.SqlWriter.WriteLine">
-            <summary>
-            Writes a line terminator to the text stream.
-            </summary>
-            <exception cref="T:System.ObjectDisposedException">The <see cref="T:System.IO.TextWriter"/> is closed. </exception>
-            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-        </member>
-        <member name="P:FirebirdSql.Data.Entity.SqlWriter.Indent">
-            <summary>
-            The number of tabs to be added at the beginning of each new line.
-            </summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Isql.CommandExecutedEventArgs">
-            <summary>
-            Summary description for CommandExecutedEventArgs.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Isql.CommandExecutedEventArgs.#ctor(FirebirdSql.Data.FirebirdClient.FbDataReader,System.String,System.Int32)">
-            <summary>
-            Creates an instance of CommandExecutedEventArgs class.
-            </summary>
-            <param name="dataReader"></param>
-            <param name="commandText">The CommandText of the <see cref="T:FirebirdSql.Data.FirebirdClient.FbCommand"/> that was executed.</param>
-            <param name="rowsAffected"></param>
-        </member>
-        <member name="M:FirebirdSql.Data.Isql.CommandExecutedEventArgs.ToString">
-            <summary>
-            Overrided. Returns the SQL statement that was executed.
-            </summary>
-            <returns>The SQL statement that will be executed.</returns>
-        </member>
-        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.StatementType">
-            <summary>
-            Returns the <see cref="T:FirebirdSql.Data.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.CommandText"/>.
-            </summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.CommandText">
-            <summary>
-            Returns the SQL statement that was executed.
-            </summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Isql.CommandExecutedEventArgs.DataReader">
-            <summary>
-            Returns a <see cref="T:FirebirdSql.Data.FirebirdClient.FbDataReader"/> instance case the executed SQL command returns data. If
-            the executed SQL command does not returns data, (for instance: the case of an UPDATE statement), 
-            the <b>DataReader</b> is setled to <b>null</b>.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Entity.SymbolPair">
             <summary>
             The SymbolPair exists to solve the record flattening problem.
@@ -1346,41 +1414,6 @@
             
             This is returned by <see cref="!:SqlGenerator.Visit(PropertyExpression)"/>,
             but never makes it into a SqlBuilder.
-            </summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Entity.ExpressionTranslator">
-            <summary>
-            Lightweight expression translator for DML expression trees, which have constrained
-            scope and support.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.ExpressionTranslator.#ctor(System.Text.StringBuilder,System.Data.Common.CommandTrees.DbModificationCommandTree,System.Boolean)">
-            <summary>
-            Initialize a new expression translator populating the given string builder
-            with command text. Command text builder and command tree must not be null.
-            </summary>
-            <param name="commandText">Command text with which to populate commands</param>
-            <param name="commandTree">Command tree generating SQL</param>
-            <param name="preserveMemberValues">Indicates whether the translator should preserve
-            member values while compiling t-SQL (only needed for server generation)</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Entity.ExpressionTranslator.RegisterMemberValue(System.Data.Common.CommandTrees.DbExpression,System.Data.Common.CommandTrees.DbExpression)">
-            <summary>
-            Call this method to register a property value pair so the translator "remembers"
-            the values for members of the row being modified. These values can then be used
-            to form a predicate for server-generation (based on the key of the row)
-            </summary>
-            <param name="propertyExpression">Expression containing the column reference (property expression).</param>
-            <param name="value">Expression containing the value of the column.</param>
-        </member>
-        <member name="T:FirebirdSql.Data.Isql.CommandExecutedEventHandler">
-            <summary>
-            The event handler type trigged after a SQL statement execution.
-            </summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Client.Native.IFbClient">
-            <summary>
-            This is the interface that the dynamically-generated class uses to call the native library.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Entity.FirstClause">
@@ -1413,6 +1446,44 @@
         <member name="P:FirebirdSql.Data.Entity.FirstClause.FirstCount">
             <summary>
             How many first rows should be selected.
+            </summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Isql.FbScript">
+            <summary>
+            FbScript parses a SQL file and returns its SQL statements. 
+            The class take in consideration that the statement separator can change in code. 
+            For instance, in Firebird databases the statement <c>SET TERM !! ;</c> will change the
+            statement token terminator <b>;</b> into <b>!!</b>.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.FbScript.LoadFromFile(System.String)">
+            <summary>
+            Creates FbScript reading content from file.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.FbScript.Parse">
+            <summary>
+            Parses the SQL code and loads the SQL statements into the StringCollection <see cref="P:FirebirdSql.Data.Isql.FbScript.Results"/>.
+            </summary>
+            <returns>The number of statements found.</returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.FbScript.ToString">
+            <summary>
+            Overrided method, returns the the SQL code to be parsed (with comments removed).
+            </summary>
+            <returns>The SQL code to be parsed (without comments).</returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Isql.FbScript.RemoveComments(System.String)">
+            <summary>
+            Removes from the SQL code all comments of the type: /*...*/ or --
+            </summary>
+            <param name="source">The string containing the original SQL code.</param>
+            <returns>A string containing the SQL code without comments.</returns>
+        </member>
+        <member name="P:FirebirdSql.Data.Isql.FbScript.Results">
+            <summary>
+            Returns a FbStatementCollection containing all the SQL statements (without comments) present on the file.
+            This property is loaded after the method call <see cref="M:FirebirdSql.Data.Isql.FbScript.Parse"/>.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Entity.SqlGenerator">
@@ -2650,6 +2721,39 @@
             Whether the builder is empty.  This is used by the <see cref="!:SqlGenerator.Visit(ProjectExpression)"/>
             to determine whether a sql statement can be reused.
             </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor">
+            <summary>
+            Creates SSPIHelper with default "NTLM" security package and no remote principal and gets client credentials
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor(System.String)">
+            <summary>
+            Creates SSPIHelper with given security package and no remote principal and gets client credentials
+            </summary>
+            <param name="securPackage">Name of security package (e.g. NTLM, Kerberos, ...)</param>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.#ctor(System.String,System.String)">
+            <summary>
+            Creates SSPIHelper with given security package and remote principal and gets client credentials
+            </summary>
+            <param name="securPackage">Name of security package (e.g. NTLM, Kerberos, ...)</param>
+            <param name="remotePrincipal">SPN of server (may be necessary for Kerberos</param>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.InitializeClientSecurity">
+            <summary>
+            Creates client security context and returns "client token"
+            </summary>
+            <returns>Client authentication data to be sent to server</returns>
+        </member>
+        <member name="M:FirebirdSql.Data.Client.Managed.Version11.SSPIHelper.GetClientSecurity(System.Byte[])">
+            <summary>
+            Creates client authentication data based on already existing security context and
+            authentication data sent by server
+            This method must not be called before InitializeClientSecurity
+            </summary>
+            <param name="serverToken">Authentication data received from server</param>
+            <returns>Client authentication data to be sent to server</returns>
         </member>
     </members>
 </doc>
