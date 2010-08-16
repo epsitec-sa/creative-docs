@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
@@ -48,13 +49,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionStatus.Valid;
 		}
 
-		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
-		{
-			var entity = this.Entity;
-			context.UpdateEmptyEntityStatus (entity, isEmpty);
-		}
-
-	
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -71,7 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUICaseEvents (data);
-				this.CreateUIDocuments (data);
 			}
 
 			this.CreateUIActionButtons ();
@@ -137,6 +130,55 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
+
+			foreach (var doc in this.GetDocumentEntities (this.Entity))
+			{
+				builder.CreateEditionTitleTile ("Data.Document", "Documents");
+				
+				var docTile = builder.CreateSummaryTile ();
+				docTile.Controller = new DocumentTileController (doc, this.DataContext);
+				docTile.Summary = TextFormatter.FormatText ("Offre n°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate).ToString ();
+			}
+		}
+
+		class DocumentTileController : ITileController
+		{
+			public DocumentTileController(InvoiceDocumentEntity document, Epsitec.Cresus.DataLayer.Context.DataContext context)
+			{
+				this.document = document;
+				this.navigationPathElement = new DocTileNavigationPathElement (context.GetEntityKey (this.document).GetValueOrDefault ());
+			}
+			#region ITileController Members
+
+			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, Orchestrators.Navigation.NavigationPathElement navigationPathElement)
+			{
+				return EntityViewController.CreateEntityViewController ("Document", this.document, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement);
+			}
+
+			#endregion
+
+			private readonly InvoiceDocumentEntity document;
+			private readonly DocTileNavigationPathElement navigationPathElement;
+		}
+
+		class DocTileNavigationPathElement : Orchestrators.Navigation.NavigationPathElement
+		{
+			public DocTileNavigationPathElement(EntityKey entityKey)
+			{
+				this.entityKey = entityKey;
+			}
+
+			public override string ToString()
+			{
+				return string.Concat ("<AffairDoc:", this.entityKey.RowKey.ToString (), ">");
+			}
+
+			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
+			{
+				return base.Navigate (navigator);
+			}
+
+			private readonly EntityKey entityKey;
 		}
 
 		private void CreateUICaseEvents(SummaryDataItems data)
@@ -160,27 +202,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
 		}
 
-		private void CreateUIDocuments(SummaryDataItems data)
-		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = false,
-					Name		 = "Document",
-					IconUri		 = "Data.Document",
-					Title		 = TextFormatter.FormatText ("Documents"),
-					CompactTitle = TextFormatter.FormatText ("Documents"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<InvoiceDocumentEntity> ("Document", data.Controller, this.DataContext);
-
-			template.DefineText (x => TextFormatter.FormatText (GetDocumentSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetDocumentSummary (x)));
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => this.GetDocumentEntities (x), template));
-		}
-
 		private IList<InvoiceDocumentEntity> GetDocumentEntities(AffairEntity affair)
 		{
 			var documents = new HashSet<InvoiceDocumentEntity> ();
@@ -191,11 +212,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			return documents.OrderBy (doc => doc.CreationDate).ToArray ();
-		}
-
-		private static string GetDocumentSummary(InvoiceDocumentEntity x)
-		{
-			return "Offre";
 		}
 
 		private static string GetCaseEventsSummary(BusinessEventEntity caseEventEntity)

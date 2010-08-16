@@ -168,6 +168,21 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
+		public SummaryTile CreateSummaryTile()
+		{
+			var tile = new SummaryTile
+			{
+				AutoHilite = false,
+				IsReadOnly = true,
+				TabIndex = ++this.tabIndex,
+			};
+
+			this.ContentListAdd (tile);
+			this.titleTile.Items.Add (tile);
+
+			return tile;
+		}
+
 
 		public TileTabBook<T> CreateTabBook<T>(params TabPageDef<T>[] pageDescriptions)
 		{

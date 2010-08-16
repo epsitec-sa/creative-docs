@@ -414,6 +414,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				return false;
 			}
+			if (this.GroupId == null)
+			{
+				return false;
+			}
 
 			this.dragBeginPoint = mouseCursor;
 			this.dragBeginSize  = this.PreferredSize;
@@ -433,7 +437,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.dragWindowSource == null)
 			{
-				this.dragGroupId = Tile.GetGroupId (this);
+				this.dragGroupId = this.GroupId;
 
 				double distance = Point.Distance (this.dragBeginPoint, mouseCursor);
 				if (distance >= Tile.dragBeginMinimalMove)  // déplacement minimal atteint ?
@@ -499,7 +503,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				Tile target = this.FindDropTarget (mouseCursor);
 
-				if (target == null || Tile.GetGroupId (target) != this.dragGroupId || target.Controller == null)
+				if (target == null || target.GroupId != this.dragGroupId || target.Controller == null)
 				{
 					this.dragWindowTarget.Hide ();
 				}
@@ -508,15 +512,15 @@ namespace Epsitec.Cresus.Core.Widgets
 					Rectangle bounds = target.MapClientToScreen (target.Client.Bounds);
 					bool dragOnTargetTop = mouseCursor.Y > bounds.Center.Y;
 
-					this.dragTargetIndex = target.Controller.GroupedItemIndex;
+					this.dragTargetIndex = target.GroupedItemIndex;
 
 					if (!dragOnTargetTop)
 					{
 						this.dragTargetIndex++;
 					}
 
-					if (this.Controller.GroupedItemIndex == this.dragTargetIndex ||
-						this.Controller.GroupedItemIndex == this.dragTargetIndex-1)
+					if (this.GroupedItemIndex == this.dragTargetIndex ||
+						this.GroupedItemIndex == this.dragTargetIndex-1)
 					{
 						this.dragWindowTarget.Hide ();
 					}
@@ -570,22 +574,54 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (doDrag)
 				{
-					this.Controller.GroupedItemIndex = this.dragTargetIndex;
+					this.GroupedItemIndex = this.dragTargetIndex;
 				}
 			}
 		}
 
 		#endregion
 
-
-		private static string GetGroupId(Tile tile)
+		private int GroupedItemIndex
 		{
-			if (tile.Controller != null)
+			get
 			{
-				return tile.Controller.GetGroupId ();
+				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+				
+				if (grouped == null)
+				{
+					return -1;
+				}
+				else
+				{
+					return grouped.GroupedItemIndex;
+				}
 			}
+			set
+			{
+				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
 
-			return null;
+				if (grouped != null)
+				{
+					grouped.GroupedItemIndex = value;
+				}
+			}
+		}
+
+		private string GroupId
+		{
+			get
+			{
+				var grouped = this.Controller as Epsitec.Cresus.Core.Controllers.IGroupedItem;
+
+				if (grouped == null)
+				{
+					return null;
+				}
+				else
+				{
+					return grouped.GetGroupId ();
+				}
+			}
 		}
 
 		private static Point MouseCursorLocation

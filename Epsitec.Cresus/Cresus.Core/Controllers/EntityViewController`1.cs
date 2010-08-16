@@ -108,7 +108,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var entity = this.Entity;
 
-			if (context != null)
+			if ((context != null) &&
+				(entity != null))
 			{
 				context.UpdateEmptyEntityStatus (entity, isEmpty);
 			}

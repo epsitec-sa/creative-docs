@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public interface ITileController : IGroupedItem
+	public interface ITileController
 	{
 		/// <summary>
 		/// Creates a sub view controller for the item.

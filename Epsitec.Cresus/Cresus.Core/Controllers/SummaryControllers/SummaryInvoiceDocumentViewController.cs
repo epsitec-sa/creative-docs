@@ -311,12 +311,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var entity = this.Entity;
 			return EditionStatus.Valid;
 		}
-
-		protected override void UpdateEmptyEntityStatus(DataLayer.Context.DataContext context, bool isEmpty)
-		{
-			var entity = this.Entity;
-
-			context.UpdateEmptyEntityStatus (entity, isEmpty);
-		}
 	}
 }

@@ -153,6 +153,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			if (controller != null)
 			{
+				System.Diagnostics.Debug.Assert (controller.NavigationPathElement != null);
+
 				this.subViewController = controller;
 				this.subViewController.Disposing += this.HandleSubViewControllerDisposing;
 
