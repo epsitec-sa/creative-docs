@@ -388,10 +388,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 
 			entity.ThrowIfNull ("entity");
-			entity.ThrowIf (e => this.IsPersistent (e), "entity");
 
 			if (this.emptyEntities.Remove (entity))
 			{
+				entity.ThrowIf (e => this.IsPersistent (e), "entity");
+				
 				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 				
 				entity.UpdateDataGeneration ();
