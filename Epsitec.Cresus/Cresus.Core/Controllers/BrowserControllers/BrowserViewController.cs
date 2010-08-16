@@ -65,6 +65,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.SelectContentsBasedOnDataSet ();
 				this.OnDataSetSelected ();
 			}
+			else
+			{
+				var controller = this.Orchestrator.MainViewController.DataViewController.GetRootViewController ();
+				
+				if (controller != null)
+				{
+					this.Orchestrator.CloseSubViews (controller);
+				}
+			}
 		}
 
 		public void SelectActiveEntity(DataViewController dataViewController)
@@ -324,7 +333,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		#endregion
 
-		
+		#region BrowserNavigationPathElement Class
+
 		private class BrowserNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
 		{
 			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
@@ -358,8 +368,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			private readonly string dataSetName;
 			private readonly EntityKey entityKey;
 		}
-		
-		
+
+		#endregion
+
+
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData data;

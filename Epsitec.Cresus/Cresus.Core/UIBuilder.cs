@@ -1130,6 +1130,8 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
+		
+		
 		private class TileNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
 		{
 			public TileNavigationPathElement(ReferenceController referenceController)
@@ -1141,6 +1143,11 @@ namespace Epsitec.Cresus.Core
 			public override string ToString()
 			{
 				return string.Concat ("<Tile:", this.id, ">");
+			}
+
+			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
+			{
+				return false;
 			}
 
 

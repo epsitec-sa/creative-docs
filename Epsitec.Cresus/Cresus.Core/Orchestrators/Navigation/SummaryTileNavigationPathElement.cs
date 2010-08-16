@@ -21,6 +21,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		}
 
 
+		public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
+		{
+			return false;
+		}
+
 		public override string ToString()
 		{
 			return string.Concat ("<SummaryTile:", this.name, ">");
