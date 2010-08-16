@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
 			this.history = new Navigation.NavigationHistory (this);
+			this.MakeDirty ();
 		}
 
 
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
 
-			this.RecordCurrentState ();
+			this.RecordStateBeforeChange ();
 
 			this.liveNodes.Add (new Node (parentController, controller, this.currentActionId));
 			this.MakeDirty ();
@@ -93,7 +94,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
 			
-			this.RecordCurrentState ();
+			this.RecordStateBeforeChange ();
 			
 			this.liveNodes.RemoveAll (node => node.Item == controller);
 			this.MakeDirty ();
@@ -109,8 +110,17 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
+		/// <summary>
+		/// Notifies the navigation orchestrator that we are about to navigate in the
+		/// history. This should record the current state immediately, if needed.
+		/// </summary>
+		internal void NotifyAboutToNavigateHistory()
+		{
+			this.RecordStateBeforeChange ();
+		}
 
-		private void RecordCurrentState()
+
+		private void RecordStateBeforeChange()
 		{
 			var actionId = NavigationOrchestrator.GetCurrentActionId ();
 

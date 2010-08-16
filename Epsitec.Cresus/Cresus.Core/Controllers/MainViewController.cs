@@ -19,10 +19,11 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController
 	{
-		public MainViewController(CoreData data)
+		public MainViewController(CoreData data, CommandContext commandContext)
 			: base ("MainView")
 		{
 			this.data = data;
+			this.commandContext = commandContext;
 
 			this.navigator = new NavigationOrchestrator (this);
 			this.Orchestrator = new DataViewOrchestrator (this);
@@ -62,6 +63,14 @@ namespace Epsitec.Cresus.Core.Controllers
 					System.Diagnostics.Debug.WriteLine ("CurrentChanged");
 					this.browserViewController.SelectActiveEntity (this.dataViewController);
 				};
+		}
+
+		public CommandContext CommandContext
+		{
+			get
+			{
+				return this.commandContext;
+			}
 		}
 
 		public new NavigationOrchestrator Navigator
@@ -284,6 +293,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		
 		private readonly CoreData data;
+		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;

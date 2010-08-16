@@ -9,7 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
-	public class NavigationPath
+	/// <summary>
+	/// The <c>NavigationPath</c> class represents a path leading to a given
+	/// UI element. It is used by the navigation history to record which UI
+	/// elements were previously active.
+	/// </summary>
+	public sealed class NavigationPath
 	{
 		public NavigationPath()
 		{
@@ -36,11 +41,17 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		}
 
 
+		/// <summary>
+		/// Navigates to the recorded UI element, using the specified navigator.
+		/// </summary>
+		/// <param name="navigator">The navigator.</param>
+		/// <returns><c>true</c> if the navigation was successful; otherwise, <c>false</c>.</returns>
 		public bool Navigate(NavigationOrchestrator navigator)
 		{
 			return this.elements.All (x => x.Navigate (navigator));
 		}
 
+		
 		public override string ToString()
 		{
 			return string.Join (" / ", this.elements.Select (x => x.ToString ()).ToArray ());
