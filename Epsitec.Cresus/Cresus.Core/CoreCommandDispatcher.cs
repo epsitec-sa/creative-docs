@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core
 			this.RegisterCommandHandlers ();
 		}
 
+
 		private void CreateCommandHandlers()
 		{
 			this.commandHandlers.Add (new CommandHandlers.CoreCommandHandler (this));
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Core
 			foreach (var handler in this.commandHandlers)
 			{
 				this.dispatcher.RegisterController (handler);
+				this.commandContext.AttachCommandHandler (handler);
 			}
 		}
 
@@ -79,6 +81,7 @@ namespace Epsitec.Cresus.Core
 		{
 			return this.commandContext.GetCommandState (command);
 		}
+
 
 
 		private CommandHandlerStack GetCommandHandlerStack(Command command)
