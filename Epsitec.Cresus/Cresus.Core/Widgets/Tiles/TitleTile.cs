@@ -300,6 +300,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
 			}
+			else
+			{
+				if (this.HasSelectedChild)
+				{
+					return Widgets.TileArrowMode.VisibleDirect;
+				}
+			}
 
 			return Widgets.TileArrowMode.None;
 		}
@@ -337,6 +344,25 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					}
 
 					return Tile.SurfaceSummaryColors;
+				}
+				else
+				{
+					if (this.IsEntered)
+					{
+						if (this.HasSelectedChild)
+						{
+							return Tile.SurfaceHilitedSelectedColors;
+						}
+						else
+						{
+							return Tile.SurfaceHilitedColors;
+						}
+					}
+
+					if (this.HasSelectedChild)
+					{
+						return Tile.SurfaceSelectedGroupingColors;
+					}
 				}
 
 				return Tile.SurfaceEditingColors;

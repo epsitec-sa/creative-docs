@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var button = new ConfirmationButton
 			{
 				Parent = this.buttonFrame,
+				Name = id,
 				Dock = DockStyle.Top,
 				Text = ConfirmationButton.FormatContent (title, description),
 				PreferredHeight = 52,

@@ -11,20 +11,21 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Controllers.DataAccessors
+namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
-	public class SummaryDataNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
+	public class SummaryTileNavigationPathElement : NavigationPathElement
 	{
-		public SummaryDataNavigationPathElement(SummaryData data)
+		public SummaryTileNavigationPathElement(SummaryTile tile)
 		{
-			this.name = data.Name;
+			this.name = tile.Name;
 		}
 
 
 		public override string ToString()
 		{
-			return string.Concat ("<SummaryData:", this.name, ">");
+			return string.Concat ("<SummaryTile:", this.name, ">");
 		}
+
 
 		private readonly string name;
 	}
