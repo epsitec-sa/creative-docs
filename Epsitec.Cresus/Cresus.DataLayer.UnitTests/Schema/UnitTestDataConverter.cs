@@ -110,9 +110,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 				(
 					() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, numDef, null)
 				);
-				
-				// TODO Test with an invalid DbNumDef, but I don't know how to create an invalid one.
-				// Marc
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromCresusToDatabaseValue (rawType, simpleType, this.GetInvalidNumDef (), value)
+				);
 			}
 		}
 
@@ -188,8 +190,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 					() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, numDef, null)
 				);
 
-				// TODO Test with an invalid DbNumDef, but I don't know how to create an invalid one.
-				// Marc
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => dataConverter.FromDatabaseToCresusValue (type, rawType, simpleType, this.GetInvalidNumDef (), value)
+				);
 			}
 		}
 
@@ -400,6 +404,16 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray1, (object) byteArray1);
 			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray2, (object) byteArray2);
 			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray3, (object) byteArray3);
+		}
+
+
+		private DbNumDef GetInvalidNumDef()
+		{
+			return new DbNumDef (1, 0)
+			{
+				MinValue = -1,
+				MaxValue = 99
+			};
 		}
 
 
