@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			this.JobConverter = new PersistenceJobConverter (dataContext);
 			this.JobGenerator = new PersistenceJobGenerator (dataContext);
 			this.JobProcessor = new PersistenceJobProcessor (dataContext);
+			this.JobTableComputer = new PersistenceJobTableComputer (dataContext);
 		}
 
 
@@ -79,13 +80,23 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		private PersistenceJobTableComputer JobTableComputer
+		{
+			get;
+			set;
+		}
+
+
+
 		public IEnumerable<AbstractSynchronizationJob> SaveChanges()
 		{
 			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
 
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
-			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs);
+			var affectedTables = this.GetAffectedTables (persistenceJobs).ToList ();
+			
+			var newEntityKeys = this.ProcessPersistenceJobs (persistenceJobs, affectedTables);
 
 			this.CleanSavedEntities (entitiesToSave);
 			this.AssignNewEntityKeys (newEntityKeys);
@@ -139,7 +150,13 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs)
+		private IEnumerable<DbTable> GetAffectedTables(IEnumerable<AbstractPersistenceJob> jobs)
+		{
+			return jobs.SelectMany (j => j.GetAffectedTables (this.JobTableComputer));
+		}
+
+
+		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
 		{
 			bool done = false;
 			int nbTries = 0;
@@ -150,7 +167,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			{
 				try
 				{
-					using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 					{
 						try
 						{

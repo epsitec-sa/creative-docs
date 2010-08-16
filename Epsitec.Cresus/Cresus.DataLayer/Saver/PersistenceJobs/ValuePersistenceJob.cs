@@ -2,6 +2,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections.Generic;
@@ -75,6 +77,20 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 			converter.ThrowIfNull ("converter");
 
 			return converter.Convert (this);
+		}
+
+
+		/// <summary>
+		/// Gets the <see cref="DbTable"/> that will be affected in the database when this instance
+		/// will be processed.
+		/// </summary>
+		/// <param name="tableComputer">The <see cref="PersistenceJobTableComputer"/> that will be used for the computation.</param>
+		/// <returns>The sequence of <see cref="DbTable"/> affected by this instance.</returns>
+		public override IEnumerable<DbTable> GetAffectedTables(PersistenceJobTableComputer tableComputer)
+		{
+			tableComputer.ThrowIfNull ("tableComputer");
+
+			return tableComputer.GetAffectedTables (this);
 		}
 
 

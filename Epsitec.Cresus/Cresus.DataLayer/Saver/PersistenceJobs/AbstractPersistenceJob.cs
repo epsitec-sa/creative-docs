@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs;
 
 using System.Collections.Generic;
@@ -49,6 +51,15 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// <param name="converter">The <see cref="PersistenceJobConverter"/> to use for the conversion.</param>
 		/// <returns>The sequence of <see cref="AbstractSynchronizationJob"/>.</returns>
 		public abstract IEnumerable<AbstractSynchronizationJob> Convert(PersistenceJobConverter converter);
+
+
+		/// <summary>
+		/// Gets the <see cref="DbTable"/> that will be affected in the database when this instance
+		/// will be processed.
+		/// </summary>
+		/// <param name="tableComputer">The <see cref="PersistenceJobTableComputer"/> that will be used for the computation.</param>
+		/// <returns>The sequence of <see cref="DbTable"/> affected by this instance.</returns>
+		public abstract IEnumerable<DbTable> GetAffectedTables(PersistenceJobTableComputer tableComputer);
 
 		
 	}
