@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			this.navigator = navigator;
 			this.backwardHistory = new Stack<NavigationPath> ();
 			this.forwardHistory  = new Stack<NavigationPath> ();
+			this.UpdateNavigationCommands ();
 		}
 
 
@@ -34,7 +35,15 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 					break;
 			}
 
-			System.Diagnostics.Debug.WriteLine (fullPath.ToString ());
+			this.UpdateNavigationCommands ();
+		}
+
+		private void UpdateNavigationCommands()
+		{
+			var commandContext = this.navigator.MainViewController.CommandContext;
+
+			commandContext.GetCommandState (Res.Commands.History.NavigateBackward).Enable = this.backwardHistory.Count > 0;
+			commandContext.GetCommandState (Res.Commands.History.NavigateForward).Enable  = this.forwardHistory.Count > 0;
 		}
 
 		public bool NavigateBackward()
@@ -43,6 +52,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
             {
 				using (new StatePreserver (this, State.NavigateBackward))
 				{
+					this.navigator.NotifyAboutToNavigateHistory ();
 					return this.backwardHistory.Pop ().Navigate (this.navigator);
 				}
             }
@@ -56,6 +66,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			{
 				using (new StatePreserver (this, State.NavigateForward))
 				{
+					this.navigator.NotifyAboutToNavigateHistory ();
 					return this.forwardHistory.Pop ().Navigate (this.navigator);
 				}
 			}
@@ -65,14 +76,15 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 
 
-		private void NotifyNavigation()
+		private void DebugDump()
 		{
-			System.Diagnostics.Debug.WriteLine ("------------------------------------------------------------");
+			System.Diagnostics.Debug.WriteLine ("[-----------------------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Past :");
 			System.Diagnostics.Debug.WriteLine (string.Join ("\r\n", this.backwardHistory.Select (x => x.ToString ()).ToArray ()));
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------------------");
 			System.Diagnostics.Debug.WriteLine ("Future :");
 			System.Diagnostics.Debug.WriteLine (string.Join ("\r\n", this.forwardHistory.Select (x => x.ToString ()).ToArray ()));
+			System.Diagnostics.Debug.WriteLine ("-----------------------------------------------------------]");
 		}
 		
 		private enum State
@@ -96,7 +108,8 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			public void Dispose()
 			{
 				this.history.state = this.oldState;
-				this.history.NotifyNavigation ();
+				this.history.UpdateNavigationCommands ();
+				this.history.DebugDump ();
 			}
 
 			#endregion

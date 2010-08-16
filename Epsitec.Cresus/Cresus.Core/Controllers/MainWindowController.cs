@@ -16,13 +16,14 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainWindowController : CoreViewController
 	{
-		public MainWindowController(CoreData data)
+		public MainWindowController(CoreData data, CommandContext commandContext)
 			: base ("MainWindow")
 		{
 			this.data = data;
+			this.commandContext = commandContext;
 			
 			this.ribbonController = new RibbonViewController ();
-			this.contentController = new MainViewController (this.data);
+			this.contentController = new MainViewController (this.data, this.commandContext);
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -73,6 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreData				data;
 		private readonly RibbonViewController	ribbonController;
 		private readonly MainViewController		contentController;
+		private readonly CommandContext			commandContext;
 		
 		private FrameBox						ribbonBox;
 		private FrameBox						contentBox;

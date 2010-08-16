@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
 			
-			this.mainWindowController = new MainWindowController (this.data);
+			this.mainWindowController = new MainWindowController (this.data, this.CommandContext);
 
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 		}
