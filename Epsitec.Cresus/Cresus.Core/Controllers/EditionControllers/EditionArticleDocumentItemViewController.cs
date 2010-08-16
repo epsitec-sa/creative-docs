@@ -178,6 +178,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					this.parameterController.UpdateUI (this.Entity);
 					this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+
+					this.TileContainer.UpdateAllWidgets ();
 				}
 			}
 		}
