@@ -26,8 +26,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	{
 		public NavigationOrchestrator(MainViewController mainViewController)
 		{
-			this.nodes = new List<Node> ();
+			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
+			this.history = new Navigation.NavigationHistory (this);
 		}
 
 
@@ -55,6 +56,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		public Navigation.NavigationHistory History
+		{
+			get
+			{
+				return this.history;
+			}
+		}
+
 
 		/// <summary>
 		/// Adds a node in the navigation history for the controller which was just
@@ -69,13 +78,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.RecordCurrentState ();
 
-			this.nodes.Add (new Node ()
-			{
-				Parent = parentController,
-				Item = controller,
-				Id = this.currentActionId,
-			});
-
+			this.liveNodes.Add (new Node (parentController, controller, this.currentActionId));
 			this.MakeDirty ();
 		}
 
@@ -92,7 +95,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			
 			this.RecordCurrentState ();
 			
-			this.nodes.RemoveAll (node => node.Item == controller);
+			this.liveNodes.RemoveAll (node => node.Item == controller);
 			this.MakeDirty ();
 		}
 
@@ -124,11 +127,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				this.recordedHistoryId = this.currentHistoryId;
 
-				var sorted = from node in this.nodes
-							 orderby node.Id descending
-							 select node;
+				var sortedNodes = this.liveNodes.OrderByDescending (x => x.Id);
+				var topNode     = sortedNodes.FirstOrDefault ();
 
-				this.RecordTopNode (sorted.FirstOrDefault ());
+				this.RecordTopNode (topNode);
 			}
 		}
 
@@ -141,7 +143,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 				fullPath.AddRange (this.WalkToRoot (topController).Select (node => node.Item.NavigationPathElement).Reverse ());
 
-				System.Diagnostics.Debug.WriteLine (fullPath.ToString ());
+				this.history.Record (fullPath);
 			}
 		}
 
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.Refresh ();
 
-			Node node = this.nodes.Find (x => x.Item == controller);
+			Node node = this.liveNodes.Find (x => x.Item == controller);
 
 			while (node != null)
 			{
@@ -168,23 +170,64 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			if (this.isDirty)
 			{
-				foreach (var node in this.nodes)
+				foreach (var node in this.liveNodes)
 				{
-					node.Link = this.nodes.Find (x => x.Item == node.Parent);
+					node.Link = this.liveNodes.Find (x => x.Item == node.Parent);
 				}
 
 				this.isDirty = false;
 			}
 		}
 
+		#region Node Class
 
-		class Node
+		private class Node
 		{
-			public Node Link;
-			public CoreViewController Parent;
-			public CoreViewController Item;
-			public long Id;
+			public Node(CoreViewController parent, CoreViewController item, long id)
+			{
+				this.parent = parent;
+				this.item   = item;
+				this.id     = id;
+			}
+
+			
+			public Node Link
+			{
+				get;
+				set;
+			}
+			
+			public CoreViewController Parent
+			{
+				get
+				{
+					return this.parent;
+				}
+			}
+
+			public CoreViewController Item
+			{
+				get
+				{
+					return this.item;
+				}
+			}
+
+			public long Id
+			{
+				get
+				{
+					return this.id;
+				}
+			}
+
+
+			private readonly CoreViewController		parent;
+			private readonly CoreViewController		item;
+			private readonly long					id;
 		}
+
+		#endregion
 
 		private static long GetCurrentActionId()
 		{
@@ -193,8 +236,9 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
-		private readonly List<Node> nodes;
+		private readonly List<Node> liveNodes;
 		private readonly MainViewController mainViewController;
+		private readonly Navigation.NavigationHistory history;
 		private bool isDirty;
 		private long currentActionId;
 		private long currentHistoryId;

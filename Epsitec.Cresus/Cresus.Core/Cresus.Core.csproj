@@ -104,6 +104,9 @@
     <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
     <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
     <Compile Include="BusinessLogic\Finance\VatCode.cs" />
+    <Compile Include="BusinessLogic\UserManagement\UserPowerLevel.cs" />
+    <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
+    <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\EnumValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\NumericValueArticleParameterController.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />
+    <Compile Include="Controllers\PreviewViewController.cs" />
     <Compile Include="Controllers\TabIds\ArticleParameterTabId.cs" />
     <Compile Include="Controllers\TabIds\DocumentItemTabId.cs" />
     <Compile Include="Controllers\EditionControllers\EditionEnumValueArticleParameterDefinitionViewController.cs" />
@@ -129,6 +133,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryMailContactViewController.cs" />
     <Compile Include="Helpers\ArticleParameterHelper.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="TextFormatter.cs" />

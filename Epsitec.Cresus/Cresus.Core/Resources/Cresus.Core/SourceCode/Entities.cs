@@ -65,6 +65,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AFE]", typeof (Epsitec.Cresus.Core.Entities.NumericValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AOE]", typeof (Epsitec.Cresus.Core.Entities.EnumValueArticleParameterDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0A5F]", typeof (Epsitec.Cresus.Core.Entities.TotalDocumentItemEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AGF]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AKF]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AQF]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -4579,6 +4582,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SoftwareUser</c> field.
+		///	designer:fld/L0A05/L0AUF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AUF]")]
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity SoftwareUser
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0AUF]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue = this.SoftwareUser;
+				if (oldValue != value)
+				{
+					this.OnSoftwareUserChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity> ("[L0AUF]", oldValue, value);
+					this.OnSoftwareUserChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Owner</c> field.
 		///	designer:fld/L0A05/L0A35
 		///	</summary>
@@ -4651,6 +4676,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnSoftwareUserChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
+		partial void OnSoftwareUserChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
 		partial void OnOwnerChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnOwnerChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnRelationContactChanging(global::Epsitec.Cresus.Core.Entities.AbstractContactEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractContactEntity newValue);
@@ -8772,6 +8799,355 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 485);	// [L0A5F]
 		public static readonly new string EntityStructuredTypeKey = "[L0A5F]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.SoftwareUser Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>SoftwareUser</c> entity.
+	///	designer:cap/L0AGF
+	///	</summary>
+	public partial class SoftwareUserEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
+	{
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/L0AGF/L0AU4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AU4]")]
+		public global::System.DateTime? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/L0AGF/L0AV4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AV4]")]
+		public global::System.DateTime? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Person</c> field.
+		///	designer:fld/L0AGF/L0AHF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AHF]")]
+		public global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity Person
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AHF]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue = this.Person;
+				if (oldValue != value)
+				{
+					this.OnPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity> ("[L0AHF]", oldValue, value);
+					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LoginName</c> field.
+		///	designer:fld/L0AGF/L0AIF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AIF]")]
+		public string LoginName
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AIF]");
+			}
+			set
+			{
+				string oldValue = this.LoginName;
+				if (oldValue != value)
+				{
+					this.OnLoginNameChanging (oldValue, value);
+					this.SetField<string> ("[L0AIF]", oldValue, value);
+					this.OnLoginNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LoginPassword</c> field.
+		///	designer:fld/L0AGF/L0AJF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AJF]")]
+		public string LoginPassword
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AJF]");
+			}
+			set
+			{
+				string oldValue = this.LoginPassword;
+				if (oldValue != value)
+				{
+					this.OnLoginPasswordChanging (oldValue, value);
+					this.SetField<string> ("[L0AJF]", oldValue, value);
+					this.OnLoginPasswordChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>UserGroups</c> field.
+		///	designer:fld/L0AGF/L0ANF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ANF]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity> UserGroups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity> ("[L0ANF]");
+			}
+		}
+		///	<summary>
+		///	The <c>Disabled</c> field.
+		///	designer:fld/L0AGF/L0AOF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AOF]")]
+		public bool Disabled
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0AOF]");
+			}
+			set
+			{
+				bool oldValue = this.Disabled;
+				if (oldValue != value)
+				{
+					this.OnDisabledChanging (oldValue, value);
+					this.SetField<bool> ("[L0AOF]", oldValue, value);
+					this.OnDisabledChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnLoginNameChanging(string oldValue, string newValue);
+		partial void OnLoginNameChanged(string oldValue, string newValue);
+		partial void OnLoginPasswordChanging(string oldValue, string newValue);
+		partial void OnLoginPasswordChanged(string oldValue, string newValue);
+		partial void OnDisabledChanging(bool oldValue, bool newValue);
+		partial void OnDisabledChanged(bool oldValue, bool newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 496);	// [L0AGF]
+		public static readonly new string EntityStructuredTypeKey = "[L0AGF]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.SoftwareUserGroup Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>SoftwareUserGroup</c> entity.
+	///	designer:cap/L0AKF
+	///	</summary>
+	public partial class SoftwareUserGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AKF/L0ALF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ALF]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ALF]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0ALF]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0AKF/L0AMF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AMF]")]
+		public string Description
+		{
+			get
+			{
+				return this.GetField<string> ("[L0AMF]");
+			}
+			set
+			{
+				string oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[L0AMF]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Disabled</c> field.
+		///	designer:fld/L0AKF/L0APF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APF]")]
+		public bool Disabled
+		{
+			get
+			{
+				return this.GetField<bool> ("[L0APF]");
+			}
+			set
+			{
+				bool oldValue = this.Disabled;
+				if (oldValue != value)
+				{
+					this.OnDisabledChanging (oldValue, value);
+					this.SetField<bool> ("[L0APF]", oldValue, value);
+					this.OnDisabledChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Roles</c> field.
+		///	designer:fld/L0AKF/L0ATF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATF]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity> Roles
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity> ("[L0ATF]");
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnDescriptionChanging(string oldValue, string newValue);
+		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnDisabledChanging(bool oldValue, bool newValue);
+		partial void OnDisabledChanged(bool oldValue, bool newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 500);	// [L0AKF]
+		public static readonly new string EntityStructuredTypeKey = "[L0AKF]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.SoftwareUserRole Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>SoftwareUserRole</c> entity.
+	///	designer:cap/L0AQF
+	///	</summary>
+	public partial class SoftwareUserRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AQF/L0ARF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ARF]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ARF]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[L0ARF]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0AQF/L0ASF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASF]")]
+		public string Description
+		{
+			get
+			{
+				return this.GetField<string> ("[L0ASF]");
+			}
+			set
+			{
+				string oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[L0ASF]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnDescriptionChanging(string oldValue, string newValue);
+		partial void OnDescriptionChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 506);	// [L0AQF]
+		public static readonly new string EntityStructuredTypeKey = "[L0AQF]";
 	}
 }
 #endregion

@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (mode == ViewControllerMode.Creation)
 				{
-					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Summary, orchestrator);
+					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Summary, orchestrator, controllerSubTypeId, navigationPathElement);
 				}
 
 				return null;

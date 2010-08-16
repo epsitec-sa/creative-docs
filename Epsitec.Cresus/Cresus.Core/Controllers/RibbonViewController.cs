@@ -60,6 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonDatabaseSection ();
 			this.CreateRibbonStateSection ();
 			this.CreateRibbonSettingsSection ();
+			this.CreateRibbonNavigationSection ();
 		}
 
 		private void CreateRibbonEditSection()
@@ -110,6 +111,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
+		private void CreateRibbonNavigationSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Navigation",
+				Title = "Navigation",
+				PreferredWidth = 96,
+				Dock = DockStyle.Right,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+			};
+
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.History.NavigateBackward));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.History.NavigateForward));
+		}
+
 		private void CreateRibbonSettingsSection()
 		{
 			var section = new RibbonSection (this.ribbonPageHome)
@@ -118,7 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = 50,
+				PreferredWidth = 48,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));

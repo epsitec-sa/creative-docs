@@ -22,9 +22,19 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
 		/// </summary>
-		/// <param name="dataViewController">The associated data view controller.</param>
-		public DataViewOrchestrator()
+		/// <param name="mainViewController">The main view controller.</param>
+		public DataViewOrchestrator(MainViewController mainViewController)
 		{
+			this.mainViewController = mainViewController;
+		}
+
+
+		public MainViewController MainViewController
+		{
+			get
+			{
+				return this.mainViewController;
+			}
 		}
 
 		public DataViewController Controller
@@ -101,5 +111,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 		
 		private DataViewController dataViewController;
+		private MainViewController mainViewController;
 	}
 }
