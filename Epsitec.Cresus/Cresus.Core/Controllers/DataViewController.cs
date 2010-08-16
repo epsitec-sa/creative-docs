@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
@@ -13,7 +14,6 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets.Layouts;
 
 namespace Epsitec.Cresus.Core.Controllers
 {

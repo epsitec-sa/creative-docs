@@ -1,0 +1,47 @@
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.BrowserControllers;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.CommandHandlers
+{
+	public class NavigationCommandHandler : ICommandHandler
+	{
+		public NavigationCommandHandler(CoreCommandDispatcher commandDispatcher)
+		{
+			this.commandDispatcher = commandDispatcher;
+		}
+
+		[Command (Core.Res.CommandIds.History.NavigateBackward)]
+		public void ProcessNavigateBackward(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var navigator = NavigationCommandHandler.GetNavigator (e);
+			navigator.History.NavigateBackward ();
+		}
+
+		[Command (Core.Res.CommandIds.History.NavigateForward)]
+		public void ProcessNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var navigator = NavigationCommandHandler.GetNavigator (e);
+			navigator.History.NavigateForward ();
+		}
+
+		private static Epsitec.Cresus.Core.Orchestrators.NavigationOrchestrator GetNavigator(CommandEventArgs e)
+		{
+			var context    = e.CommandContext;
+			var controller = CoreApplication.GetController<MainViewController> (context);
+			var navigator  = controller.Navigator;
+			
+			return navigator;
+		}
+
+		private readonly CoreCommandDispatcher commandDispatcher;
+	}
+}

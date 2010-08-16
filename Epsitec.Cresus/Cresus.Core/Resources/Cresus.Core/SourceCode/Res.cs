@@ -50,6 +50,18 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command Settings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
 			}
 			
+			public static class History
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0AFF
+				public static readonly global::Epsitec.Common.Widgets.Command NavigateBackward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 495));
+				//	designer:cap/L0AEF
+				public static readonly global::Epsitec.Common.Widgets.Command NavigateForward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 494));
+			}
+			
 			public static class Test
 			{
 				internal static void _Initialize()
@@ -65,6 +77,7 @@ namespace Epsitec.Cresus.Core
 				Base._Initialize ();
 				Edition._Initialize ();
 				Global._Initialize ();
+				History._Initialize ();
 				Test._Initialize ();
 			}
 		}
@@ -95,6 +108,14 @@ namespace Epsitec.Cresus.Core
 			{
 				//	designer:cap/L0K1
 				public const long Settings = 0x1500014000001L;
+			}
+			
+			public static class History
+			{
+				//	designer:cap/L0AFF
+				public const long NavigateBackward = 0x150000A0001EFL;
+				//	designer:cap/L0AEF
+				public const long NavigateForward = 0x150000A0001EEL;
 			}
 			
 			public static class Test

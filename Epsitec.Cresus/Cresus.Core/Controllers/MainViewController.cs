@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data = data;
 
 			this.navigator = new NavigationOrchestrator (this);
-			this.Orchestrator = new DataViewOrchestrator ();
+			this.Orchestrator = new DataViewOrchestrator (this);
 			this.printEngine = new PrintEngine ();
 
 			this.dataViewController = new DataViewController ("Data", data)
@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				Orchestrator = this.Orchestrator,
 				Navigator = this.Navigator,
 			};
+
+			this.actionViewController  = new ActionViewController ("ActionPanel", data);
+			this.previewViewController = new PreviewViewController ("Preview", data);
 
 			this.browserViewController = new BrowserViewController ("Browser", data)
 			{
@@ -106,6 +109,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return this.browserViewController;
 			yield return this.browserSettingsController;
 			yield return this.dataViewController;
+			yield return this.actionViewController;
+			yield return this.previewViewController;
 		}
 
 		public override void CreateUI(Widget container)
@@ -114,12 +119,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.browserViewController.CreateUI (this.leftPanel);
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
-			this.dataViewController.CreateUI (this.rightPanel);
+			this.dataViewController.CreateUI (this.mainPanel);
+			this.previewViewController.CreateUI (this.rightPreviewPanel);
+			this.actionViewController.CreateUI (this.rightActionPanel);
 
 			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
 
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.Print ());
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Preview, () => this.Preview ());
+		}
+
+
+		public void SetActionVisibility(bool visibility)
+		{
+			this.rightActionPanel.Visibility = visibility;
 		}
 
 
@@ -136,8 +149,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateUITopPanel ();
 			this.CreateUISettingsPanel ();
 			this.CreateUILeftPanel ();
-			this.CreateUIRightPanel ();
 			this.CreateUISplitter ();
+			this.CreateUIMainPanel ();
+			this.CreateUIRightPanels ();
 		}
 
 		private void CreateUITopPanel()
@@ -173,14 +187,35 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-		private void CreateUIRightPanel()
+		private void CreateUIMainPanel()
 		{
-			this.rightPanel = new FrameBox
+			this.mainPanel = new FrameBox
 			{
 				Parent = this.frame,
-				Name = "RightPanel",
+				Name = "MainPanel",
 				Dock = DockStyle.Fill,
 				Padding = new Margins (0, 0, 0, 0),
+			};
+		}
+
+		private void CreateUIRightPanels()
+		{
+			this.rightActionPanel = new FrameBox
+			{
+				Parent = this.frame,
+				Name = "RightActionPanel",
+				Dock = DockStyle.Right,
+				Padding = new Margins (0, 0, 0, 0),
+				Visibility = false,
+			};
+			
+			this.rightPreviewPanel = new FrameBox
+			{
+				Parent = this.frame,
+				Name = "RightPreviewPanel",
+				Dock = DockStyle.Right,
+				Padding = new Margins (0, 0, 0, 0),
+				Visibility = false,
 			};
 		}
 
@@ -244,6 +279,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
 		private readonly DataViewController dataViewController;
+		private readonly ActionViewController actionViewController;
+		private readonly PreviewViewController previewViewController;
 		private readonly NavigationOrchestrator navigator;
 		private readonly PrintEngine printEngine;
 
@@ -253,7 +290,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		private FrameBox browserSettingsPanel;
 		private FrameBox leftPanel;
 		private VSplitter splitter;
-		private FrameBox rightPanel;
+		private FrameBox mainPanel;
+		private FrameBox rightActionPanel;
+		private FrameBox rightPreviewPanel;
 
 		private BrowserSettingsMode browserSettingsMode;
 	}

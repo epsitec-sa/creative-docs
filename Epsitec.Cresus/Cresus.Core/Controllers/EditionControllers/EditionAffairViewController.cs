@@ -71,6 +71,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.CreateUICaseEvents (data);
 			}
+
+			this.Orchestrator.MainViewController.SetActionVisibility (true);
+		}
+
+		protected override void AboutToCloseUI()
+		{
+			base.AboutToCloseUI ();
+
+			this.Orchestrator.MainViewController.SetActionVisibility (false);
 		}
 
 
