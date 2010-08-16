@@ -109,6 +109,7 @@
     <Compile Include="Saver\UnitTestPersistenceJobProcessor.cs" />
     <Compile Include="Serialization\UnitTestEntitySerializationManager.cs" />
     <Compile Include="Schema\UnitTestDataConverter.cs" />
+    <Compile Include="Saver\UnitTestPersistenceJobTableComputer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
