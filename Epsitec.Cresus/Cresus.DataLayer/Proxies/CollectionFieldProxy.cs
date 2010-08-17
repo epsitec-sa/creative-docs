@@ -135,6 +135,13 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		#endregion
 
 
+		/// <summary>
+		/// Builds the <see cref="EntityCollection"/> that will be the real promoted value of this
+		/// instance or <see cref="Undefined.Value"/> is appropriate.
+		/// </summary>
+		/// <param name="fieldId">The <see cref="Druid"/> identifying the field of this instance.</param>
+		/// <param name="targets">The sequence of targets of this instance.</param>
+		/// <returns>The appropriate <see cref="EntityCollection"/> object.</returns>
 		protected object CreateEntityCollection(Druid fieldId, IEnumerable<AbstractEntity> targets)
 		{
 			var entityCollection = new EntityCollection<AbstractEntity> (fieldId.ToResourceId (), this.Entity, false);
