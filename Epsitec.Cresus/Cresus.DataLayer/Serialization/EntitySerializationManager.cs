@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			entity.ThrowIfNull ("entity");
 			
-			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+			DbKey rowKey = this.DataContext.GetEntityKey (entity).Value.RowKey;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid loadedEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			ReferenceData referenceData = this.GetReferenceData (entity);
 			CollectionData collectionData = this.GetCollectionData (entity);
 			
-			return new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			return new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 		}
 
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			data.ThrowIfNull ("data");
 			
 			Druid leafEntityId = data.LeafEntityId;
-			DbKey rowKey = data.EntityKey.RowKey;
+			DbKey rowKey = data.RowKey;
 
 			AbstractEntity entity = this.DataContext.CreateEntity (leafEntityId);
 
