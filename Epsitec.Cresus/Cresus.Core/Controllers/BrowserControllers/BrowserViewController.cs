@@ -22,6 +22,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			: base (name)
 		{
 			this.data = data;
+
+			this.data.DiscardRecordCommandExecuted +=
+				delegate
+				{
+					var key = this.activeEntityKey;
+					this.SetActiveEntityKey (null);
+					this.SetActiveEntityKey (key);
+				};
 		}
 
 		
@@ -80,10 +88,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			var dataContext           = dataViewController.DataContext;
 			var activeEntity          = this.GetActiveEntity (dataContext);
-			var activeEntityKey       = dataContext.GetEntityKey (activeEntity).GetValueOrDefault ();
-			var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
-			dataViewController.SetActiveEntity (activeEntity, navigationPathElement);
+			if (activeEntity == null)
+			{
+				dataViewController.ClearActiveEntity ();
+			}
+			else
+			{
+				var activeEntityKey       = dataContext.GetEntityKey (activeEntity).GetValueOrDefault ();
+				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
+
+				dataViewController.SetActiveEntity (activeEntity, navigationPathElement);
+			}
 		}
 
 		public void CreateNewItem()
@@ -156,13 +172,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.RefreshScrollList ();
 		}
 
-
-		protected override void AboutToDiscard()
-		{
-			this.SetActiveEntityKey (null);
-
-			base.AboutToDiscard ();
-		}
 
 		private void CreateDataContext()
 		{
