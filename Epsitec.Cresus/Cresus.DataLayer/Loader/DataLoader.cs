@@ -42,6 +42,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private EntityContext EntityContext
+		{
+			get
+			{
+				return this.DataContext.EntityContext;
+			}
+		}
+
+
 		private LoaderQueryGenerator LoaderQueryGenerator
 		{
 			get;
@@ -95,7 +104,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public AbstractEntity ResolveEntity(EntityData entityData)
 		{
-			EntityKey entityKey = entityData.EntityKey;
+			Druid leafEntityId = entityData.LeafEntityId;
+			DbKey rowKey = entityData.RowKey;
+
+			EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, leafEntityId, rowKey);
 
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 

@@ -26,13 +26,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 		}
 
 
@@ -43,25 +41,23 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new EntityData (entityKey, leafEntityId, loadedEntityId, null, referenceData, collectionData)
+				() => new EntityData (rowKey, leafEntityId, loadedEntityId, null, referenceData, collectionData)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, null, collectionData)
+				() => new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, null, collectionData)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, null)
+				() => new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, null)
 			);
 		}
 
@@ -73,34 +69,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreSame (collectionData, entityData.CollectionData);
 		}
 
 
 		[TestMethod]
-		public void EntityKeyTest()
+		public void RowKeyTest()
 		{
 			Druid leafEntityId = Druid.FromLong (1);
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
-			Assert.AreEqual (entityKey, entityData.EntityKey);
+			Assert.AreEqual (rowKey, entityData.RowKey);
 		}
 
 
@@ -111,13 +103,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreEqual (leafEntityId, entityData.LeafEntityId);
 		}
@@ -130,13 +120,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreEqual (loadedEntityId, entityData.LoadedEntityId);
 		}
@@ -149,13 +137,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreSame (referenceData, entityData.ReferenceData);
 		}
@@ -168,13 +154,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 
-			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
-
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();
 
-			EntityData entityData = new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
+			EntityData entityData = new EntityData (rowKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 
 			Assert.AreSame (valueData, entityData.ValueData);
 		}

@@ -2,6 +2,8 @@
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -27,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <summary>
 		/// Creates a new <c>EntityData</c> for an <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/>.</param>
+		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
 		/// <param name="leafEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
@@ -36,13 +38,13 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <exception cref="System.ArgumentNullException">If <paramref name="valueData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="referenceData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
-		public EntityData(EntityKey entityKey, Druid leafEntityId, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		public EntityData(DbKey rowKey, Druid leafEntityId, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
 			valueData.ThrowIfNull ("valueData");
 			referenceData.ThrowIfNull ("referenceData");
 			collectionData.ThrowIfNull ("collectionData");
 			
-			this.EntityKey = entityKey;
+			this.RowKey = rowKey;
 			this.LeafEntityId = leafEntityId;
 			this.LoadedEntityId = loadedEntityId;
 			this.ValueData = valueData;
@@ -52,10 +54,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets or sets the <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/>.
+		/// Gets or sets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
-		/// <value>The key of the <see cref="AbstractEntity"/>.</value>
-		public EntityKey EntityKey
+		/// <value>The <see cref="DbKey"/> of the <see cref="AbstractEntity"/>.</value>
+		public DbKey RowKey
 		{
 			get;
 			private set;

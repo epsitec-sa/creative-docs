@@ -115,9 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				ReferenceData entityReferenceData = referencesData[rowKey];
 				CollectionData entityCollectionData = collectionsData.ContainsKey(rowKey) ? collectionsData[rowKey] : new CollectionData();
 
-				EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, leafEntityId, rowKey);
-
-				yield return new EntityData (entityKey, leafEntityId, loadedEntityId, entityValueData, entityReferenceData, entityCollectionData);
+				yield return new EntityData (rowKey, leafEntityId, loadedEntityId, entityValueData, entityReferenceData, entityCollectionData);
 			}
 		}
 
