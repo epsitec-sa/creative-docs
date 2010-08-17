@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
-		// <summary>
+		/// <summary>
 		/// Gets all the <see cref="DbTable"/> that will be affected by the execution of a given
 		/// <see cref="ValuePersistenceJob"/>.
 		/// </summary>
