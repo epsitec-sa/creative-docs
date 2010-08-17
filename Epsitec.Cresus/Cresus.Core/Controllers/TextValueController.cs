@@ -68,7 +68,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			};
 
-			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
+			//	Je ne sais pas qui a eu l'idée farfelue d'appeler Update lorsque
+			//	le widget perd le focus, mais cela cause des catastrophes. La valeur
+			//	éditée reprend l'ancien contenu !
+			//widget.KeyboardFocusChanged += (sender, e) => this.Update ();
 		}
 
 

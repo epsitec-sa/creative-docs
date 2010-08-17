@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateTextField (tile, 80, "Code", Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
-			builder.CreateTextField (tile, 0, "Nom", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			builder.CreateTextField (tile,  0, "Nom",  Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
@@ -79,14 +79,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 80, "Valeur minimale", Marshaler.Create (() => this.Entity.MinValue, x => this.Entity.MinValue = x));
-			builder.CreateTextField (tile, 80, "Valeur maximale", Marshaler.Create (() => this.Entity.MaxValue, x => this.Entity.MaxValue = x));
-			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
-			builder.CreateTextField (tile, 0, "Valeurs préférentielles", Marshaler.Create (() => this.PreferredValues, x => this.PreferredValues = x));
+			builder.CreateTextField (tile, 80, "Valeur minimale",         Marshaler.Create (() => this.Entity.MinValue, x => this.Entity.MinValue = x));
+			builder.CreateTextField (tile, 80, "Valeur maximale",         Marshaler.Create (() => this.Entity.MaxValue, x => this.Entity.MaxValue = x));
+			builder.CreateTextField (tile, 80, "Valeur par défaut",       Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
+			builder.CreateTextField (tile,  0, "Valeurs préférentielles", Marshaler.Create (() => this.PreferredValues, x => this.PreferredValues = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 80, "Modulo", Marshaler.Create (() => this.Entity.Modulo, x => this.Entity.Modulo = x));
+			builder.CreateTextField (tile, 80, "Modulo",          Marshaler.Create (() => this.Entity.Modulo, x => this.Entity.Modulo = x));
 			builder.CreateTextField (tile, 80, "AddBeforeModulo", Marshaler.Create (() => this.Entity.AddBeforeModulo, x => this.Entity.AddBeforeModulo = x));
 		}
 

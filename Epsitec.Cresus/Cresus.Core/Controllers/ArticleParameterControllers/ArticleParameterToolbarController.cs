@@ -107,8 +107,18 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			//	Retourne la largeur requise pour un bouton, selon le texte contenu.
 			//	Au minimum, il sera carré.
-			var size = button.TextLayout.SingleLineSize;
-			return System.Math.Max (button.PreferredHeight, (int) (size.Width+10));
+			double width;
+
+			if (button.TextLayout == null)
+			{
+				width = 0;
+			}
+			else
+			{
+				width = button.TextLayout.SingleLineSize.Width;
+			}
+
+			return System.Math.Max (button.PreferredHeight, (int) (width+10));
 		}
 
 		private static string GetTag(string code)

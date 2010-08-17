@@ -56,6 +56,9 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 					else
 					{
+						//	Un paramètre est remplacé par sa seule valeur, sans unité si elle est numérique, ou par les descriptions
+						//	séparées par des virgules s'il s'agit d'une énumération.
+						//	TODO: Il faudra faire mieux un jour...
 						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]));
 					}
 				}
