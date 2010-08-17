@@ -1062,9 +1062,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.EntityContext.EntityAttached -= this.HandleEntityCreated;
 				this.EntityContext.EntityChanged -= this.HandleEntityChanged;
 				this.EntityContext.PersistenceManagers.Remove (this);
-
-				// TODO Remove this instance from the DataContextPool singleton if it is present?
-				// Marc
 			}
 
 			this.IsDisposed = true;
