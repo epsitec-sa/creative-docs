@@ -666,15 +666,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
 				NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (4)));
-				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
-
 				Assert.AreEqual ("Albert", albert.Firstname);
 				Assert.AreEqual ("Levert", albert.Lastname);
 				Assert.IsNull (albert.BirthDate);
 				Assert.IsNull (albert.Gender);
 				Assert.IsNull (albert.Title);
 				Assert.IsNull (albert.PreferredLanguage);
+
 				Assert.AreEqual (2, albert.Contacts.Count);
+
+				AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (4)));
+
 				Assert.AreSame (contact, albert.Contacts[0]);
 				Assert.AreSame (contact, albert.Contacts[1]);
 			}
