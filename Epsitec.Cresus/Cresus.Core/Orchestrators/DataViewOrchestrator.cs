@@ -109,6 +109,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.dataViewController.ReplaceViewController (oldViewController, newViewController);
 		}
+
+		public CoreViewController GetLeafViewController()
+		{
+			return this.dataViewController.GetLeafViewController ();
+		}
+
 		
 		private DataViewController dataViewController;
 		private MainViewController mainViewController;

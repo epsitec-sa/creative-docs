@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 {
@@ -23,7 +24,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
 		{
-			return false;
+			var tileContainerController = navigator.GetLeafTileContainerController ();
+
+			System.Diagnostics.Debug.Assert (tileContainerController != null);
+
+			return tileContainerController.SimulateClick (this.name);
 		}
 
 		public override string ToString()

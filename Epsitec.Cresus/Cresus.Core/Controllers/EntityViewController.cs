@@ -109,6 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return null;
 			}
 
+			controller.ParentController = orchestrator.GetLeafViewController ();
 			controller.Orchestrator = orchestrator;
 			controller.Mode = mode;
 			controller.NavigationPathElement = navigationPathElement;

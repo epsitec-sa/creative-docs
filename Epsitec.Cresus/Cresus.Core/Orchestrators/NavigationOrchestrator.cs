@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
 			this.history = new Navigation.NavigationHistory (this);
+			this.tileContainerControllers = new Dictionary<int, TileContainerController> ();
+			
 			this.MakeDirty ();
 		}
 
@@ -54,6 +56,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			get
 			{
 				return this.mainViewController.DataViewController;
+			}
+		}
+
+		public DataViewOrchestrator Orchestrator
+		{
+			get
+			{
+				return this.mainViewController.Orchestrator;
 			}
 		}
 
@@ -110,6 +120,19 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
+		public TileContainerController GetLeafTileContainerController()
+		{
+			var dataViewController = this.DataViewController;
+			var leafViewController = dataViewController.GetLeafViewController ();
+			int level = leafViewController.GetNavigationLevel ();
+
+			TileContainerController tileContainerController;
+
+			this.tileContainerControllers.TryGetValue (level, out tileContainerController);
+
+			return tileContainerController;
+		}
+
 		/// <summary>
 		/// Notifies the navigation orchestrator that we are about to navigate in the
 		/// history. This should record the current state immediately, if needed.
@@ -117,6 +140,29 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		internal void NotifyAboutToNavigateHistory()
 		{
 			this.RecordStateBeforeChange ();
+		}
+
+
+		internal void Register(TileContainerController tileContainerController)
+		{
+			var entityViewController = tileContainerController.EntityViewController;
+			var entityViewPath       = entityViewController.GetNavigationPath ();
+			var entityViewLevel      = entityViewController.GetNavigationLevel ();
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Register TileContainerController {0}, path={1}", entityViewLevel, entityViewPath));
+
+			this.tileContainerControllers[entityViewLevel] = tileContainerController;
+		}
+
+		internal void Unregister(TileContainerController tileContainerController)
+		{
+			var entityViewController = tileContainerController.EntityViewController;
+			var entityViewPath       = entityViewController.GetNavigationPath ();
+			var entityViewLevel      = entityViewController.GetNavigationLevel ();
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Unregister TileContainerController {0}, path={1}", entityViewLevel, entityViewPath));
+
+			this.tileContainerControllers.Remove (entityViewLevel);
 		}
 
 
@@ -247,6 +293,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private readonly List<Node> liveNodes;
+		private readonly Dictionary<int, TileContainerController> tileContainerControllers;
 		private readonly MainViewController mainViewController;
 		private readonly Navigation.NavigationHistory history;
 		private bool isDirty;

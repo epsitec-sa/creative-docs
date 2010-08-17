@@ -34,6 +34,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public CoreViewController ParentController
+		{
+			get;
+			set;
+		}
+
 		public Orchestrators.NavigationOrchestrator Navigator
 		{
 			get
@@ -70,6 +76,27 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get;
 			set;
+		}
+
+		public string GetNavigationPath()
+		{
+			return string.Join ("/", this.GetControllerChain ().Reverse ().Select (x => x.NavigationPathElement.ToString ()));
+		}
+
+		public int GetNavigationLevel()
+		{
+			return this.GetControllerChain ().Count () - 1;
+		}
+
+		public IEnumerable<CoreViewController> GetControllerChain()
+		{
+			var node = this;
+
+			while (node != null)
+			{
+				yield return node;
+				node = node.ParentController;
+			}
 		}
 		
 
