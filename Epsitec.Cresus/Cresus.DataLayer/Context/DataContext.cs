@@ -483,36 +483,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
 		}
 
-
-		// TODO Remove this method and replace with a call to IEnumerable.OfType.
-		// Marc
-
-		/// <summary>
-		/// Gets the entities of the specified type.
-		/// </summary>
-		/// <typeparam name="TEntity">The type of the entity.</typeparam>
-		/// <returns>The collection of entities of the given type, managed by this instance.</returns>
-		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public IEnumerable<TEntity> GetEntities<TEntity>()
-			where TEntity : AbstractEntity
-		{
-			foreach (var entity in this.GetEntities ())
-			{
-				var expectedEntity = entity as TEntity;
-
-				if (expectedEntity != null)
-				{
-					yield return expectedEntity;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance.
 		/// </summary>
 		/// <returns>The collection of <see cref="AbstractEntity"/> managed by this instance.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal IEnumerable<AbstractEntity> GetEntities()
+		public IEnumerable<AbstractEntity> GetEntities()
 		{
 			this.AssertDataContextIsNotDisposed ();
 

@@ -108,8 +108,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntities<GenericArticleDocumentEntity> ().Where (x => x.Lines.Contains (entity)).Single ();
-
+			var invoiceDocument = dataContext.GetEntities ().OfType<GenericArticleDocumentEntity> ().Where (x => x.Lines.Contains (entity)).Single ();
+			
 			//	Cherche l'index de la ligne dans la collection.
 			int index = invoiceDocument.Lines.IndexOf (entity);
 
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntities<GenericArticleDocumentEntity> ()
+			var invoiceDocument = dataContext.GetEntities ().OfType<GenericArticleDocumentEntity> ()
 				.Where (x => x.Lines.Contains (entity)).First ();
 
 			EntityViewController parentController = Common.GetParentController (tileContainer);
