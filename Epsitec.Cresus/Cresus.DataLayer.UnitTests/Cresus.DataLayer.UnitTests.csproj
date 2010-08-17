@@ -110,6 +110,8 @@
     <Compile Include="Serialization\UnitTestEntitySerializationManager.cs" />
     <Compile Include="Schema\UnitTestDataConverter.cs" />
     <Compile Include="Saver\UnitTestPersistenceJobTableComputer.cs" />
+    <Compile Include="Proxies\UnitTestKeyedCollectionFieldProxy.cs" />
+    <Compile Include="Proxies\UnitTestKeyedReferenceFieldProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">

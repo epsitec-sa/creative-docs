@@ -141,6 +141,8 @@
     <Compile Include="Context\EntityChangedEventArgs.cs" />
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
+    <Compile Include="Proxies\KeyedCollectionFieldProxy.cs" />
+    <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
     <Compile Include="Saver\PersistenceJobTableComputer.cs" />
     <Compile Include="Schema\DataConverter.cs" />
     <Compile Include="Serialization\EntitySerializationManager.cs" />
