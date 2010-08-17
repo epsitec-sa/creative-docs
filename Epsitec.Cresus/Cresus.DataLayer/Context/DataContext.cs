@@ -654,30 +654,28 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.fieldsToResave.Clear ();
 		}
 
-		// TODO Make the next method not use an entity key, but a couple of druid and dbkey.
-		// Marc
-
 		/// <summary>
-		/// Gets the <see cref="AbstractEntity"/> corresponding to a <see cref="EntityKey"/>. This
-		/// method looks in the cache and then queries the database.
+		/// Gets the <see cref="AbstractEntity"/> corresponding to a <see cref="DbKey"/> and a type
+		/// of <see cref="AbstractEntity"/>. This method looks in the cache and then queries the
+		/// database.
 		/// </summary>
-		/// <param name="entityKey">The <see cref="EntityKey"/> defining the <see cref="AbstractEntity"/> to get.</param>
+		/// <param name="entityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/> to get.</param>
+		/// <param name="rowKey">The <see cref="DbKey"/> defining which <see cref="AbstractEntity"/> to get.</param>
 		/// <returns>The <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public AbstractEntity ResolveEntity(EntityKey entityKey)
+		public AbstractEntity ResolveEntity(Druid entityId, DbKey rowKey)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			AbstractEntity entity = this.GetEntity (entityKey);
+			EntityKey entityKey = new EntityKey (entityId, rowKey);
 
-			if (entity == null)
-			{
-				return this.DataLoader.ResolveEntity (entityKey);
-			}
-			else
-			{
-				return entity;
-			}
+			// Here we first look in the cache and if we find nothing (the call to this.GetEntity(...)
+			// returns null) we look in the database. Thanks to the ?? operator, we can express that
+			// in a very concise way.
+			// Marc
+
+			return this.GetEntity (entityKey)
+				?? this.DataLoader.ResolveEntity (entityId, rowKey);
 		}
 
 		
@@ -695,9 +693,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.AssertDataContextIsNotDisposed ();
 
 			Druid entityId = EntityClassFactory.GetEntityId (typeof (TEntity));
-			EntityKey entityKey = new EntityKey (entityId, rowKey);
 
-			return (TEntity) this.ResolveEntity (entityKey);
+			return (TEntity) this.ResolveEntity (entityId, rowKey);
 		}
 
 		/// <summary>
@@ -1140,9 +1137,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				if (!key.IsEmpty && !entityId.IsEmpty)
 				{
-					EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, entityId, key);
-
-					entity = this.ResolveEntity (entityKey);
+					entity = this.ResolveEntity (entityId, key);
 				}
 			}
 

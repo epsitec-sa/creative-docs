@@ -122,7 +122,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			if (this.activeEntityKey.HasValue)
 			{
-				return context.ResolveEntity (this.activeEntityKey.Value);
+				EntityKey entityKey = this.activeEntityKey.Value;
+				return context.ResolveEntity (entityKey.EntityId, entityKey.RowKey);
 			}
 			else
 			{
