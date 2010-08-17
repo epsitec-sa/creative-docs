@@ -39,6 +39,28 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			}
 		}
 
+		[Command (Res.CommandIds.Edition.DiscardRecord)]
+		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var widget = e.Source as Widget;
+
+			if (widget.KeyboardFocus)
+			{
+				widget.ClearFocus ();
+			}
+			else
+			{
+				widget = null;
+			}
+
+			this.commandDispatcher.DispatchGenericCommand (e.Command);
+
+			if (widget != null)
+			{
+				widget.SetFocusOnTabWidget ();
+			}
+		}
+
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		internal void AboutToSave(DataLayer.Context.DataContext dataContext)
 		{
-			this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ().ForEach (x => x.AboutToSave (dataContext));
+			this.GetCoreViewControllers ().ForEach (x => x.AboutToSave (dataContext));
 
 			if (this.DataContext == dataContext)
 			{
@@ -112,6 +112,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		internal void AboutToDiscard(DataLayer.Context.DataContext dataContext)
+		{
+			this.GetCoreViewControllers ().ForEach (x => x.AboutToDiscard (dataContext));
+
+			if (this.DataContext == dataContext)
+			{
+				this.AboutToDiscard ();
+			}
+		}
+
+
+		private IEnumerable<CoreViewController> GetCoreViewControllers()
+		{
+			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
+		}
 
 		private void ReleaseUIFocus(Widget container)
 		{
@@ -130,6 +145,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		protected virtual void AboutToSave()
+		{
+		}
+
+		protected virtual void AboutToDiscard()
 		{
 		}
 		

@@ -359,6 +359,7 @@
     <EmbeddedResource Include="Images\Button.CheckYes.icon" />
     <EmbeddedResource Include="Images\Button.RadioNo.icon" />
     <EmbeddedResource Include="Images\Button.RadioYes.icon" />
+    <EmbeddedResource Include="Images\Edition.DiscardRecord.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

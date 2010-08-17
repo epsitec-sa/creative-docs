@@ -32,6 +32,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool CanExpandSubTile
+		{
+			get;
+			set;
+		}
+
 		public bool ContainsCollectionItemTiles
 		{
 			get;
@@ -300,7 +306,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 					return Widgets.TileArrowMode.VisibleDirect;
 				}
 			}
-			else
+			else if (this.CanExpandSubTile)
 			{
 				if (this.HasSelectedChild)
 				{
@@ -345,7 +351,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 					return Tile.SurfaceSummaryColors;
 				}
-				else
+				else if (this.CanExpandSubTile)
 				{
 					if (this.IsEntered)
 					{
