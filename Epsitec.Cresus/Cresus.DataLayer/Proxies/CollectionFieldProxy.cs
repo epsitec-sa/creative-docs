@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 
 		/// <summary>
 		/// Builds the <see cref="EntityCollection"/> that will be the real promoted value of this
-		/// instance or <see cref="Undefined.Value"/> is appropriate.
+		/// instance or <see cref="UndefinedValue.Value"/> is appropriate.
 		/// </summary>
 		/// <param name="fieldId">The <see cref="Druid"/> identifying the field of this instance.</param>
 		/// <param name="targets">The sequence of targets of this instance.</param>
@@ -156,6 +156,8 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 					}
 				}
 			}
+
+			entityCollection.ResetCopyOnWrite ();
 
 			object result;
 
