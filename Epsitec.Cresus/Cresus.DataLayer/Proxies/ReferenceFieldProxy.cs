@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// Promotes the proxy to its real instance.
 		/// </summary>
 		/// <returns>The real instance.</returns>
-		public object PromoteToRealInstance()
+		public virtual object PromoteToRealInstance()
 		{
 			EntityContext entityContext = this.Entity.GetEntityContext ();
 
