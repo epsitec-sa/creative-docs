@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
-						() => new CollectionFieldProxy_Accessor (dataContext2, person, fieldId)
+						() => new CollectionFieldProxy (dataContext2, person, fieldId)
 					);
 				}
 			}
