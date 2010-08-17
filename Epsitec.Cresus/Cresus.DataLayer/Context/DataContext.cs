@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.EnableNullVirtualization = enableNullVirtualization;
 
-			this.entitiesCache = new EntityCache ();
+			this.entitiesCache = new EntityCache (this.EntityContext);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
 			this.entitiesDeleted = new HashSet<AbstractEntity> ();
@@ -484,6 +484,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		// TODO Remove this method and replace with a call to IEnumerable.OfType.
+		// Marc
+
 		/// <summary>
 		/// Gets the entities of the specified type.
 		/// </summary>
@@ -513,7 +516,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			return this.entitiesCache.GetEntities ();
+			return this.entitiesCache.GetEntities ().ToList ();
 		}
 
 
@@ -675,6 +678,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.fieldsToResave.Clear ();
 		}
 
+		// TODO Make the next method not use an entity key, but a couple of druid and dbkey.
+		// Marc
 
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> corresponding to a <see cref="EntityKey"/>. This
@@ -861,19 +866,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 					{
 						using (entity.DisableEvents ())
 						{
-							string fieldId = job.FieldId.ToResourceId ();
 							object fieldValue;
 
-							if (job.NewTargetKey.HasValue)
+							Druid fieldId = job.FieldId;
+							EntityKey? targetKey = job.NewTargetKey;
+
+							if (targetKey.HasValue)
 							{
-								fieldValue = new EntityKeyProxy (this, job.NewTargetKey.Value);
+								fieldValue = new KeyedReferenceFieldProxy (this, entity, fieldId, targetKey.Value);
 							}
 							else
 							{
 								fieldValue = null;
 							}
 
-							entity.InternalSetValue (fieldId, fieldValue);
+							entity.InternalSetValue (fieldId.ToResourceId (), fieldValue);
 						}
 					}
 				}
@@ -905,18 +912,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 					{
 						using (entity.DisableEvents ())
 						{
-							string fieldId = job.FieldId.ToResourceId ();
+							Druid fieldId = job.FieldId;
 
-							IList collection = entity.InternalGetFieldCollection (fieldId);
+							object collection;
 
-							collection.Clear ();
-
-							foreach (EntityKey entityKey in job.NewTargetKeys)
+							if (job.NewTargetKeys.Any ())
 							{
-								object proxy = new EntityKeyProxy (this, entityKey);
-
-								collection.Add (proxy);
+								collection = new KeyedCollectionFieldProxy (this, entity, fieldId, job.NewTargetKeys);
 							}
+							else
+							{
+								collection = null;
+							}
+
+							entity.InternalSetValue (fieldId.ToResourceId (), collection);
 						}
 					}
 				}
@@ -1004,10 +1013,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		private IEnumerable<KeyValuePair<AbstractEntity, Druid>> GetPossibleReferencers(AbstractEntity target)
 		{
-			// This method will probably be too slow for a high number of managed entities, therefore
-			// it would be nice to optimize it, either by keeping somewhere a list of entities targeting
-			// other entities, or by looping only on a subset of entities, i.e only on the location
-			// entities if we look for an entity which can be targeted only by a location.
+			// TODO This method will probably be too slow for a high number of managed entities,
+			// therefore it would be nice to optimize it, either by keeping somewhere a list of
+			// entities targeting other entities, or by looping only on a subset of entities, i.e 
+			// only on the location entities if we look for an entity which can be targeted only by
+			// a location.
 			// Marc
 
 			Druid leafTargetEntityId = target.GetEntityStructuredTypeId ();
@@ -1017,7 +1027,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 				.GroupBy (fp => fp.EntityId, fp => Druid.Parse (fp.Fields[0]))
 				.ToDictionary (g => g.Key, g => g.ToList ());
 
-			foreach (AbstractEntity source in this.GetEntities ())
+			IEnumerable<AbstractEntity> entities = this.GetEntities ();
+
+			foreach (AbstractEntity source in entities)
 			{
 				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
 				var sourceInheritedIds = this.EntityContext.GetInheritedEntityIds (leafSourceEntityId);
@@ -1152,10 +1164,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				if (!key.IsEmpty && !entityId.IsEmpty)
 				{
-					EntityKey entityKey = new EntityKey (entityId, key);
+					EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, entityId, key);
 
 					entity = this.ResolveEntity (entityKey);
-					;
 				}
 			}
 

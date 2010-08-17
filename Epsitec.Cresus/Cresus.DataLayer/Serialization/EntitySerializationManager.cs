@@ -57,13 +57,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			entity.ThrowIfNull ("entity");
 			
 			EntityKey entityKey = this.DataContext.GetEntityKey (entity).Value;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid loadedEntityId = entity.GetEntityStructuredTypeId ();
 
 			ValueData valueData = this.GetValueData (entity);
 			ReferenceData referenceData = this.GetReferenceData (entity);
 			CollectionData collectionData = this.GetCollectionData (entity);
 			
-			return new EntityData (entityKey, loadedEntityId, valueData, referenceData, collectionData);
+			return new EntityData (entityKey, leafEntityId, loadedEntityId, valueData, referenceData, collectionData);
 		}
 
 
@@ -161,7 +162,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			data.ThrowIfNull ("data");
 			
-			Druid leafEntityId = data.EntityKey.EntityId;
+			Druid leafEntityId = data.LeafEntityId;
 			DbKey rowKey = data.EntityKey.RowKey;
 
 			AbstractEntity entity = this.DataContext.CreateEntity (leafEntityId);
@@ -261,35 +262,33 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 		private void DeserializeEntityLocalFieldReference(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
-			DbKey? targetKey = entityData.ReferenceData[field.CaptionId];
+			Druid fieldId = field.CaptionId;
+			DbKey? targetKey = entityData.ReferenceData[fieldId];
 
 			if (targetKey.HasValue)
 			{
-				EntityKey entityKey = new EntityKey (field.TypeId, targetKey.Value);
+				EntityKey entityKey = EntityKey.CreateNormalizedEntityKey (this.EntityContext, field.TypeId, targetKey.Value);
 
-				object target = new EntityKeyProxy (this.DataContext, entityKey);
+				object target = new KeyedReferenceFieldProxy (this.DataContext, entity, fieldId, entityKey);
 
-				entity.InternalSetValue (field.Id, target);
+				entity.InternalSetValue (fieldId.ToResourceId (), target);
 			}
 		}
 
 
 		private void DeserializeEntityLocalFieldCollection(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
-			List<DbKey> collectionKeys = entityData.CollectionData[field.CaptionId];
+			Druid fieldId = field.CaptionId;
+			List<DbKey> collectionKeys = entityData.CollectionData[fieldId];
 
 			if (collectionKeys.Any ())
 			{
-				IList targets = entity.InternalGetFieldCollection (field.Id);
+				var targetKeys = from rowKey in collectionKeys
+								 select EntityKey.CreateNormalizedEntityKey (this.EntityContext, field.TypeId, rowKey);
 
-				foreach (DbKey targetKey in collectionKeys)
-				{
-					EntityKey entityKey = new EntityKey (field.TypeId, targetKey);
+				object target = new KeyedCollectionFieldProxy (this.DataContext, entity, fieldId, targetKeys);
 
-					object target = new EntityKeyProxy (this.DataContext, entityKey);
-
-					targets.Add (target);
-				}
+				entity.InternalSetValue (fieldId.ToResourceId (), target);
 			}
 		}
 

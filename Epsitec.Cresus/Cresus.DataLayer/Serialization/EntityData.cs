@@ -15,10 +15,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 	/// and to transfer this data from the <see cref="LoaderQueryGenerator"/> to the <see cref="DataLoader"/>.
 	/// </summary>
 	/// <remarks>
-	/// Note that this class might be used to store incomplete data. The value of th property
+	/// Note that this class might be used to store incomplete data. The value of the property
 	/// <see cref="LoadedEntityId"/> is the most derived type of the <see cref="AbstractEntity"/>
 	/// which has been loaded in memory. If the <see cref="AbstractEntity"/> has a more derived type,
-	/// that means that its data has not been loaded in memory.
+	/// that means that its data has not been fully loaded in memory.
 	/// </remarks>
 	internal sealed class EntityData
 	{
@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// Creates a new <c>EntityData</c> for an <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entityKey">The <see cref="EntityKey"/> that identifies the <see cref="AbstractEntity"/>.</param>
+		/// <param name="leafEntityId">The concrete entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="loadedEntityId">The loaded entity id of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="valueData">The value data of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="referenceData">The reference data of the <see cref="AbstractEntity"/>.</param>
@@ -35,13 +36,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// <exception cref="System.ArgumentNullException">If <paramref name="valueData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="referenceData"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="collectionData"/> is null.</exception>
-		public EntityData(EntityKey entityKey, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
+		public EntityData(EntityKey entityKey, Druid leafEntityId, Druid loadedEntityId, ValueData valueData, ReferenceData referenceData, CollectionData collectionData)
 		{
 			valueData.ThrowIfNull ("valueData");
 			referenceData.ThrowIfNull ("referenceData");
 			collectionData.ThrowIfNull ("collectionData");
 			
 			this.EntityKey = entityKey;
+			this.LeafEntityId = leafEntityId;
 			this.LoadedEntityId = loadedEntityId;
 			this.ValueData = valueData;
 			this.ReferenceData = referenceData;
@@ -54,6 +56,17 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		/// </summary>
 		/// <value>The key of the <see cref="AbstractEntity"/>.</value>
 		public EntityKey EntityKey
+		{
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// Gets or sets the <see cref="Druid"/> that identifies the concrete type of the
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		public Druid LeafEntityId
 		{
 			get;
 			private set;
