@@ -66,7 +66,6 @@
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.DataLayer.UnitTests\SourceCode\Res.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
-    <Compile Include="Proxies\UnitTestEntityKeyProxy.cs" />
     <Compile Include="Proxies\UnitTestReferenceFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestCollectionFieldProxy.cs" />
     <Compile Include="Loader\UnitTestAliasNode.cs" />
