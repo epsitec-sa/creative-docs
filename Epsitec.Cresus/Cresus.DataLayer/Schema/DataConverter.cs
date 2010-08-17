@@ -236,7 +236,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// Converts a value in the Cresus representation to the corresponding value in the .NET
 		/// representation.
 		/// </summary>
-		/// <param name="rawType">The <see cref="DbRawType"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="simpleType">The <see cref="DbSimpleType"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="numDef">The <see cref="DbNumDef"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="value">The value in its Cresus representation.</param>
