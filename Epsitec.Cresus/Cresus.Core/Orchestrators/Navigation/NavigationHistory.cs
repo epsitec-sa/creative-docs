@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			}
 
 			this.UpdateNavigationCommands ();
+			System.Diagnostics.Debug.WriteLine ("Recorded full path " + fullPath.ToString ());
+			this.DebugDump ();
 		}
 
 		private void UpdateNavigationCommands()

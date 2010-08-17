@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.RecordStateBeforeChange ();
 
-			this.liveNodes.Add (new Node (parentController, controller, this.currentActionId));
+			this.liveNodes.Add (new Node (parentController, controller, this.currentHistoryId));
 			this.MakeDirty ();
 		}
 
