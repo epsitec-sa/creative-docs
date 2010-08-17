@@ -4,13 +4,17 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +22,6 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	using LayoutContext=Epsitec.Common.Widgets.Layouts.LayoutContext;
-using Epsitec.Common.Support.EntityEngine;
-	using Epsitec.Cresus.DataLayer.Context;
 
 	/// <summary>
 	/// The <c>TileContainerController</c> populates a <see cref="TileContainer"/>
@@ -31,6 +33,7 @@ using Epsitec.Common.Support.EntityEngine;
 		private TileContainerController(TileContainer container)
 		{
 			this.controller  = container.Controller as EntityViewController;
+			this.navigator   = this.controller.Navigator;
 			this.container   = container;
 			this.dataItems   = new SummaryDataItems (this.controller);
 			this.liveItems = new List<SummaryData> ();
@@ -50,6 +53,9 @@ using Epsitec.Common.Support.EntityEngine;
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 
 			this.dataContext.EntityChanged += this.HandleEntityChanged;
+
+			this.navigator.Register (this);
+			
 			this.refreshTimer.Start ();
 		}
 
@@ -107,6 +113,33 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
+		public EntityViewController EntityViewController
+		{
+			get
+			{
+				return this.controller;
+			}
+		}
+
+		public SummaryData FindSummaryData(string name)
+		{
+			return this.liveItems.Where (x => x.Name == name).FirstOrDefault ();
+		}
+
+		public bool SimulateClick(string name)
+		{
+			var item = this.FindSummaryData (name);
+
+			if (item != null)
+			{
+				this.HandleTileClicked (item);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public void GenerateTiles()
 		{
@@ -173,6 +206,8 @@ using Epsitec.Common.Support.EntityEngine;
 		public void Dispose()
 		{
 			this.refreshTimer.Stop ();
+
+			this.navigator.Unregister (this);
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
 			this.dataContext.EntityChanged -= this.HandleEntityChanged;
@@ -675,8 +710,9 @@ using Epsitec.Common.Support.EntityEngine;
 			}
 		}
 
-		private readonly TileContainer			container;
 		private readonly EntityViewController	controller;
+		private readonly NavigationOrchestrator	navigator;
+		private readonly TileContainer			container;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		liveItems;
 		private readonly DataContext			dataContext;
