@@ -88,14 +88,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public AbstractEntity ResolveEntity(EntityKey entityKey)
+		public AbstractEntity ResolveEntity(Druid entityId, DbKey rowKey)
 		{
-			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityKey.EntityId);
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
 
 			Request request = new Request ()
 			{
 				RootEntity = entity,
-				RootEntityKey = entityKey.RowKey,
+				RootEntityKey = rowKey,
 			};
 
 			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
