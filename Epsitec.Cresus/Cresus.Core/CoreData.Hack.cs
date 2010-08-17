@@ -722,7 +722,7 @@ namespace Epsitec.Cresus.Core
 			param5_3.Code = "TYPVER";
 			param5_3.Name = "Type de verre";
 			param5_3.Rank = 2;
-			param5_3.DefaultValue = "";
+			param5_3.DefaultValue = "STD";
 			param5_3.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
 			param5_3.Values = AbstractArticleParameterDefinitionEntity.Join ("STD", "UV-1", "UV-2");
 			param5_3.ShortDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Standard", "Anti-UV 1", "Anti-UV 2");

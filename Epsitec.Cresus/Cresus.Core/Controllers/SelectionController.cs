@@ -117,18 +117,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.Update ();
 
-			widget.AcceptingEdition +=
-				delegate
+			widget.EditionAccepted += delegate
+			{
+				if (widget.SelectedItemIndex > -1)
 				{
-					if (widget.SelectedItemIndex > -1)
-					{
-						this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
-					}
-					else
-					{
-						this.ValueSetter (null);
-					}
-				};
+					this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
+				}
+				else
+				{
+					this.ValueSetter (null);
+				}
+			};
 		}
 
 		#region IWidgetUpdater Members

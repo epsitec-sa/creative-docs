@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var group = builder.CreateGroup (tile, null);  // groupe sans titre
 			this.parameterController = new ArticleParameterControllers.ValuesArticleParameterController (this.TileContainer, tile);
+			this.parameterController.CallbackParameterChanged = this.ParameterChanged;
 			this.parameterController.CreateUI (group);
 			this.parameterController.UpdateUI (this.Entity);
 		}
@@ -171,6 +172,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				if (this.Entity.ArticleDefinition.CompareWith (value) == false)
 				{
 					this.Entity.ArticleDefinition = value;
+
+					this.Entity.ArticleParameters = null;
 
 					this.UnitOfMeasure = value.BillingUnit;
 					this.SetPrice (this.GetArticlePrice ());
@@ -403,8 +406,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 
+		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
+		{
+			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
+			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+		}
+
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("HandleDataContextEntityChanged {0}", e.Entity.GetType()));
+
+			if (e.Entity == this.Entity)
+			{
+				//?this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+				//?this.TileContainer.UpdateAllWidgets ();
+			}
 #if false
 			this.parameterController.UpdateUI (this.Entity);
 			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);

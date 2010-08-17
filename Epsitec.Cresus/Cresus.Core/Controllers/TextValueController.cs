@@ -51,23 +51,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			new MarshalerValidator (this.widget, this.marshaler);
 
-			widget.AcceptingEdition +=
-				delegate
+			widget.EditionAccepted += delegate
+			{
+				if (this.widget is AutoCompleteTextField)
 				{
-					if (this.widget is AutoCompleteTextField)
-					{
-						var auto = this.widget as AutoCompleteTextField;
+					var auto = this.widget as AutoCompleteTextField;
 
-						string[] texts = auto.Items.GetValue (auto.SelectedItemIndex) as string[];
-						this.marshaler.SetStringValue (texts[0]);  // utilise key
-					}
-					else
-					{
-						// Il ne faut absolument pas utiliser TextConverter.ConvertToSimpleText, car le texte peut
-						// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
-						this.marshaler.SetStringValue (widget.Text);
-					}
-				};
+					string[] texts = auto.Items.GetValue (auto.SelectedItemIndex) as string[];
+					this.marshaler.SetStringValue (texts[0]);  // utilise key
+				}
+				else
+				{
+					// Il ne faut absolument pas utiliser TextConverter.ConvertToSimpleText, car le texte peut
+					// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
+					this.marshaler.SetStringValue (widget.Text);
+				}
+			};
 
 			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
 		}

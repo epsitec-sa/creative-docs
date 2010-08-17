@@ -45,13 +45,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.widget = widget;
 			this.Update ();
 
-			widget.AcceptingEdition +=
-				delegate
-				{
-					int    index = widget.SelectedItemIndex;
-					string key   = index < 0 ? null : widget.Items.GetKey (index);
-					this.marshaler.SetStringValue (key);
-				};
+			widget.EditionAccepted += delegate
+			{
+				int    index = widget.SelectedItemIndex;
+				string key   = index < 0 ? null : widget.Items.GetKey (index);
+				this.marshaler.SetStringValue (key);
+			};
 
 			widget.KeyboardFocusChanged += (sender, e) => this.Update ();
 		}

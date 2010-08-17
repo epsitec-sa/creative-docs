@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				};
 			}
 
-			editor.AcceptingEdition += delegate
+			editor.EditionAccepted += delegate
 			{
 				string value = editor.Text;
 
