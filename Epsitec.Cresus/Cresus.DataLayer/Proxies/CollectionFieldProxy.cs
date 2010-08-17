@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.DataLayer.Proxies
 {
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// Promotes the proxy to its real instance.
 		/// </summary>
 		/// <returns>The real instance.</returns>
-		public object PromoteToRealInstance()
+		public virtual object PromoteToRealInstance()
 		{
 			EntityContext entityContext = this.Entity.GetEntityContext ();
 
@@ -124,32 +126,43 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 				RequestedEntity = targetExample,
 			};
 
-			var targetsIn = this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request);
-			var targetsOut = new EntityCollection<AbstractEntity> (fieldId, this.Entity, false);
+			var targets = this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request);
+
+			return this.CreateEntityCollection (this.FieldId, targets);
+		}
+
+
+		#endregion
+
+
+		protected object CreateEntityCollection(Druid fieldId, IEnumerable<AbstractEntity> targets)
+		{
+			var entityCollection = new EntityCollection<AbstractEntity> (fieldId.ToResourceId (), this.Entity, false);
 
 			using (this.Entity.UseSilentUpdates ())
 			{
 				using (this.Entity.DisableEvents ())
 				{
-					foreach (AbstractEntity target in targetsIn)
+					foreach (AbstractEntity target in targets)
 					{
-						targetsOut.Add (target);
+						entityCollection.Add (target);
 					}
 				}
 			}
 
-			if (targetsOut.Count > 0)
+			object result;
+
+			if (entityCollection.Count > 0)
 			{
-				return targetsOut;
+				result = entityCollection;
 			}
 			else
 			{
-				return UndefinedValue.Value;
+				result = UndefinedValue.Value;
 			}
+
+			return result;
 		}
-
-
-		#endregion
 
 
 	}
