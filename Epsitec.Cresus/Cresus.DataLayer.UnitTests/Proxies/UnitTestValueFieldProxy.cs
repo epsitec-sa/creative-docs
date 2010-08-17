@@ -22,10 +22,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 	{
 
 
-		/// <summary>
-		/// Classes the initialize.
-		/// </summary>
-		/// <param name="testContext"></param>
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{
