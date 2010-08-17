@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0AVF
+				public static readonly global::Epsitec.Common.Widgets.Command DiscardRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 511));
 				//	designer:cap/L0A3C
 				public static readonly global::Epsitec.Common.Widgets.Command Preview = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 387));
 				//	designer:cap/L0K
@@ -96,6 +98,8 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Edition
 			{
+				//	designer:cap/L0AVF
+				public const long DiscardRecord = 0x150000A0001FFL;
 				//	designer:cap/L0A3C
 				public const long Preview = 0x150000A000183L;
 				//	designer:cap/L0K

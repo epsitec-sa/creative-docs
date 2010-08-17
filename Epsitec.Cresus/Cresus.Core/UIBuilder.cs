@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (tile);
 			this.titleTile.Items.Add (tile);
-//-			this.titleTile.IsReadOnly = true;
+			this.titleTile.CanExpandSubTile = true;
 			
 			tile.Controller = new SummaryTileController<T> (entity, tile);
 			tile.Summary    = summary.ToString ();

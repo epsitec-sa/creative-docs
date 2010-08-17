@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.data = data;
-			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
 
 			this.viewControllers = new Stack<CoreViewController> ();
 			
@@ -250,14 +249,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected override void Dispose(bool disposing)
+		protected override void AboutToDiscard()
 		{
-			if (disposing)
-			{
-				this.data.AboutToSaveDataContext -= this.HandleAboutToSaveDataContext;
-			}
+			this.ClearActiveEntity ();
 
-			base.Dispose (disposing);
+			base.AboutToDiscard ();
 		}
 
 		private void InheritLeafControllerDataContext(CoreViewController controller)
@@ -352,11 +348,6 @@ namespace Epsitec.Cresus.Core.Controllers
 					break;
 				}
 			}
-		}
-
-		private void HandleAboutToSaveDataContext(object sender, DataContextEventArgs e)
-		{
-			this.viewControllers.ForEach (controller => controller.AboutToSave (e.DataContext));
 		}
 
 		private EntityViewController CreateRootSummaryViewController(Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)

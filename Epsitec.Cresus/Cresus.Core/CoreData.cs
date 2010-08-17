@@ -108,16 +108,56 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
 				
 				this.OnAboutToSaveDataContext (context);
-				
-				if (context.ContainsChanges ())
+
+				if ((this.suspendDataContextSave == 0) &&
+					(context.ContainsChanges ()))
 				{
 					context.SaveChanges ();
+					
+					this.UpdateEditionSaveRecordCommandState ();
 				}
-
-				this.UpdateEditionSaveRecordCommandState ();
 				
 				System.Diagnostics.Debug.WriteLine ("Done");
 			}
+		}
+
+		/// <summary>
+		/// Discards the data context.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public void DiscardDataContext(DataContext context)
+		{
+			if (context != null)
+            {
+				System.Diagnostics.Debug.WriteLine ("About to discard context #" + context.UniqueId);
+
+				using (new DataContextDiscarder (this))
+				{
+					this.OnAboutToDiscardDataContext (context);
+
+					System.Diagnostics.Debug.Assert (context.IsDisposed);
+				}
+			}
+		}
+
+		class DataContextDiscarder : System.IDisposable
+		{
+			public DataContextDiscarder(CoreData data)
+			{
+				this.data = data;
+				this.data.suspendDataContextSave++;
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.data.suspendDataContextSave--;
+			}
+
+			#endregion
+
+			private readonly CoreData data;
 		}
 
 		public DataContext CreateDataContext()
@@ -383,9 +423,29 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		private void OnAboutToDiscardDataContext(DataContext context)
+		{
+			var handler = this.AboutToDiscardDataContext;
+
+			if (handler != null)
+			{
+				handler (this, new DataContextEventArgs (context));
+			}
+		}
+
 		private void OnSaveRecordCommandExecuted(DataContext context)
 		{
 			var handler = this.SaveRecordCommandExecuted;
+
+			if (handler != null)
+			{
+				handler (this, new DataContextEventArgs (context));
+			}
+		}
+
+		private void OnDiscardRecordCommandExecuted(DataContext context)
+		{
+			var handler = this.DiscardRecordCommandExecuted;
 
 			if (handler != null)
 			{
@@ -407,6 +467,15 @@ namespace Epsitec.Cresus.Core
 					this.OnSaveRecordCommandExecuted (activeDataContext);
 				});
 
+			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.DiscardRecord,
+				delegate
+				{
+					var activeDataContext = this.DataContext;
+
+					this.DiscardDataContext (activeDataContext);
+					this.OnDiscardRecordCommandExecuted (activeDataContext);
+				});
+
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
@@ -414,6 +483,7 @@ namespace Epsitec.Cresus.Core
 		{
 			context.EntityChanged -= this.HandleEntityContextEntityChanged;
 			CoreProgram.Application.Commands.PopHandler (Res.Commands.Edition.SaveRecord);
+			CoreProgram.Application.Commands.PopHandler (Res.Commands.Edition.DiscardRecord);
 			this.UpdateEditionSaveRecordCommandState ();
 		}
 
@@ -433,21 +503,26 @@ namespace Epsitec.Cresus.Core
 				this.activeDataContext.ContainsChanges ())
 			{
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, true);
 			}
 			else
 			{
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, false);
 			}
 		}
 
 		
 		public event EventHandler<DataContextEventArgs> DataContextChanged;
 		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;
+		public event EventHandler<DataContextEventArgs> AboutToDiscardDataContext;
 		public event EventHandler<DataContextEventArgs> SaveRecordCommandExecuted;
+		public event EventHandler<DataContextEventArgs> DiscardRecordCommandExecuted;
 
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly EntityContext independentEntityContext;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
+		private int suspendDataContextSave;
 	}
 }

@@ -157,6 +157,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
+		protected override void AboutToDiscard()
+		{
+			this.SetActiveEntityKey (null);
+
+			base.AboutToDiscard ();
+		}
+
 		private void CreateDataContext()
 		{
 			base.DataContext = data.CreateDataContext ();

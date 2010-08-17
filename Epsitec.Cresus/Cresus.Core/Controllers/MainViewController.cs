@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -14,6 +15,7 @@ using Epsitec.Cresus.Core.Printers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -24,6 +26,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.data = data;
 			this.commandContext = commandContext;
+
+			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
+			this.data.AboutToDiscardDataContext += this.HandleAboutToDiscardDataContext;
 
 			this.navigator = new NavigationOrchestrator (this);
 			this.Orchestrator = new DataViewOrchestrator (this);
@@ -153,6 +158,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.data.AboutToSaveDataContext -= this.HandleAboutToSaveDataContext;
+				this.data.AboutToDiscardDataContext -= this.HandleAboutToDiscardDataContext;
+			}
+
+			base.Dispose (disposing);
+		}
+
+		
 		private void CreateUIFrame(Widget container)
 		{
 			this.frame = new FrameBox
@@ -277,6 +294,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void HandleAboutToSaveDataContext(object sender, DataContextEventArgs e)
+		{
+			this.GetCoreViewControllers ().ForEach (controller => controller.AboutToSave (e.DataContext));
+		}
+
+		private void HandleAboutToDiscardDataContext(object sender, DataContextEventArgs e)
+		{
+			this.GetCoreViewControllers ().ForEach (controller => controller.AboutToDiscard (e.DataContext));
+		}
+
+		private IEnumerable<CoreViewController> GetCoreViewControllers()
+		{
+			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
+		}
+
+
+
+		
 		private void Print()
 		{
 			var context = this.data.DataContext;
