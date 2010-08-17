@@ -204,17 +204,17 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				this.ActionSelectionChanged ();
 			};
 
-			this.valueField.AcceptingEdition += delegate
+			this.valueField.EditionAccepted += delegate
 			{
 				this.SelectedValue = this.valueField.Text;
 			};
 
-			this.shortDescriptionField.AcceptingEdition += delegate
+			this.shortDescriptionField.EditionAccepted += delegate
 			{
 				this.SelectedShortDescription = this.shortDescriptionField.Text;
 			};
 
-			this.longDescriptionField.AcceptingEdition += delegate
+			this.longDescriptionField.EditionAccepted += delegate
 			{
 				this.SelectedLongDescription = this.longDescriptionField.Text;
 			};

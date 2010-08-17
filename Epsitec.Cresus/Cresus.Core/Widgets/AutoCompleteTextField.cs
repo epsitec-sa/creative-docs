@@ -429,12 +429,24 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	OnAcceptingEdition est appelé pendant la phase d'acceptation; l'événement passe une instance de CancelEventArgs
 			//	qui permet à ceux qui écoutent l'événement de faire un e.Cancel=true pour annuler l'opération en cours (donc
 			//	refuser l'acceptation).
+			if (string.IsNullOrEmpty (this.HintText) && this.ContentValidator != null)  // pas de texte souhaité et validateur existe ?
+			{
+				if (!this.ContentValidator (this.Text))  // valeur incorrecte ?
+				{
+					e.Cancel = true;
+					return;
+				}
+			}
+
 			base.OnAcceptingEdition (e);
 
-#if true
+#if false
 			if (this.ContentValidator == null)
 			{
-				this.Text = this.HintText;
+				if (this.IsComboMenuOpen)
+				{
+					this.Text = this.HintText;
+				}
 			}
 			else
 			{
@@ -449,7 +461,10 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else  // valeur choisie dans le menu (donc forcément ok) ?
 				{
-					this.Text = this.HintText;
+					if (this.IsComboMenuOpen)
+					{
+						this.Text = this.HintText;
+					}
 				}
 			}
 #endif
@@ -458,6 +473,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected override void OnEditionAccepted()
 		{
 			//	OnEditionAccepted est appelé après que l'édition ait été validée et acceptée.
+			if (!string.IsNullOrEmpty (this.HintText))
+			{
+				this.Text = this.HintText;
+			}
+
 			base.OnEditionAccepted ();
 
 #if false

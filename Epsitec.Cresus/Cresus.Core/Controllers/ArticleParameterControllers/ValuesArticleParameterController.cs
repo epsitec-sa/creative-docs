@@ -32,6 +32,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
+		public System.Action<AbstractArticleParameterDefinitionEntity> CallbackParameterChanged
+		{
+			//	Définition de la méthode qui sera appelée lorsqu'un paramètre sera changé.
+			get;
+			set;
+		}
+
+
 		public void CreateUI(FrameBox parent)
 		{
 			this.frameBox = new FrameBox ()
@@ -78,20 +86,24 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{
 				var controller = new NumericValueArticleParameterController (article, index);
+
+				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);
 			}
 
 			if (parameter is EnumValueArticleParameterDefinitionEntity)
 			{
 				var controller = new EnumValueArticleParameterController (article, index);
+
+				controller.CallbackParameterChanged = this.CallbackParameterChanged;
 				controller.CreateUI (box);
 			}
 		}
 
 
-		private readonly TileContainer tileContainer;
-		private readonly EditionTile editionTile;
+		private readonly TileContainer		tileContainer;
+		private readonly EditionTile		editionTile;
 
-		private FrameBox frameBox;
+		private FrameBox					frameBox;
 	}
 }

@@ -34,6 +34,14 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
+		public System.Action<AbstractArticleParameterDefinitionEntity> CallbackParameterChanged
+		{
+			//	Définition de la méthode qui sera appelée lorsque le paramètre sera changé.
+			get;
+			set;
+		}
+
+
 		public virtual void CreateUI(FrameBox parent)
 		{
 		}
@@ -60,6 +68,12 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				parameters[this.Code] = value;
 
 				this.ExportDictionary (parameters);
+
+				//	Appel du callback pour informer le propriétaire du changement du paramètre.
+				if (this.CallbackParameterChanged != null)
+				{
+					this.CallbackParameterChanged (this.ParameterDefinition);
+				}
 			}
 		}
 

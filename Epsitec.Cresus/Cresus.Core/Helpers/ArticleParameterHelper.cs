@@ -56,8 +56,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 					else
 					{
-						string values = string.Join(", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]));
-						subst = string.Concat (parameter.Name, ": ", values);
+						subst = string.Join (", ", ArticleParameterHelper.GetEnumDescriptions (parameter as EnumValueArticleParameterDefinitionEntity, dico[code]));
 					}
 				}
 
