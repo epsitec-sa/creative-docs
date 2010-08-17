@@ -1,10 +1,13 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.UnitTesting;
+
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.UnitTests.Entities;
+using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,6 +21,27 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 	[TestClass]
 	public sealed class UnitTestEntityKey
 	{
+
+
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
+
+			DatabaseHelper.CreateAndConnectToDatabase ();
+
+			using (DataContext dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
+			{
+				DatabaseCreator2.PupulateDatabase (dataContext);
+			}
+		}
+
+
+		[ClassCleanup]
+		public static void ClassCleanup()
+		{
+			DatabaseHelper.DisconnectFromDatabase ();
+		}
 
 		
 		[TestMethod]
@@ -49,7 +73,10 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 				DbKey rowKey = new DbKey (new DbId (1));
 				EntityKey key = new EntityKey (entity, rowKey);
 
-				Assert.AreEqual (key.EntityId, entity.GetEntityStructuredTypeId ());
+				Druid entityId = entity.GetEntityStructuredTypeId ();
+				Druid rootEntityId = entity.GetEntityContext ().GetRootEntityId (entityId);
+
+				Assert.AreEqual (key.EntityId, rootEntityId);
 				Assert.AreEqual (key.RowKey, rowKey);
 			}
 		}
@@ -163,6 +190,73 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 				EntityKey target = this.Create (data);
 
 				Assert.AreEqual (data.Item1, target.RowKey);
+			}
+		}
+
+
+		[TestMethod]
+		public void CreateNormalizedEntityKeyArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => EntityKey.CreateNormalizedEntityKey (null, Druid.FromLong (0), new DbKey (new DbId (1)))
+			);
+		}
+
+
+		[TestMethod]
+		public void CreateNormalizedEntityKeyTest()
+		{
+			EntityContext entityContext = new EntityContext ();
+
+			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
+			{
+				System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AP]")),
+				System.Tuple.Create (Druid.Parse ("[L0A52]"), Druid.Parse ("[L0AP]")),
+				System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AM]")),
+				System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AM]")),
+				System.Tuple.Create (Druid.Parse ("[L0AA1]"), Druid.Parse ("[L0AA1]")),
+			};
+
+			foreach (var sample in samples)
+			{
+				EntityKey key = EntityKey.CreateNormalizedEntityKey (entityContext, sample.Item1, new DbKey (new DbId (1)));
+
+				Assert.AreEqual (sample.Item2, key.EntityId);
+			}
+		}
+
+
+		[TestMethod]
+		public void NormalizeEntityKeyArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => new EntityKey ().GetNormalizedEntityKey (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void NormalizeEntityKeyTest()
+		{
+			EntityContext entityContext = new EntityContext ();
+
+			List<System.Tuple<Druid, Druid>> samples = new List<System.Tuple<Druid, Druid>> ()
+			{
+				System.Tuple.Create (Druid.Parse ("[L0AP]"), Druid.Parse ("[L0AP]")),
+				System.Tuple.Create (Druid.Parse ("[L0A52]"), Druid.Parse ("[L0AP]")),
+				System.Tuple.Create (Druid.Parse ("[L0AM]"), Druid.Parse ("[L0AM]")),
+				System.Tuple.Create (Druid.Parse ("[L0AN]"), Druid.Parse ("[L0AM]")),
+				System.Tuple.Create (Druid.Parse ("[L0AA1]"), Druid.Parse ("[L0AA1]")),
+			};
+
+			foreach (var sample in samples)
+			{
+				EntityKey key1 = new EntityKey (sample.Item1, new DbKey (new DbId (1)));
+				EntityKey key2 = key1.GetNormalizedEntityKey (entityContext);
+
+				Assert.AreEqual (sample.Item2, key2.EntityId);
 			}
 		}
 

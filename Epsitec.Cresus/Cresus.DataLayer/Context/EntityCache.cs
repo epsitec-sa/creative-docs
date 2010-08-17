@@ -25,13 +25,29 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Builds a new empty <see cref="EntityCache"/>.
 		/// </summary>
-		public EntityCache()
+		/// <param name="entityContext">The <see cref="EntityContext"/> used by this instance.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
+		public EntityCache(EntityContext entityContext)
 		{
+			entityContext.ThrowIfNull ("entityContext");
+
+			this.EntityContext = entityContext;
+
 			this.entityIdToEntity = new Dictionary<long, AbstractEntity> ();
 			this.entityIdToEntityKey = new Dictionary<long, EntityKey> ();
 			this.entityKeyToEntity = new Dictionary<EntityKey, AbstractEntity> ();
 		}
 
+
+		/// <summary>
+		/// The <see cref="EntityContext"/> associated with this instance.
+		/// </summary>
+		private EntityContext EntityContext
+		{
+			get;
+			set;
+		}
+		
 
 		/// <summary>
 		/// Adds an <see cref="AbstractEntity"/> to this instance.
@@ -94,9 +110,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 
 			EntityKey entityKey = new EntityKey (entity, key);
+			EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
 
-			this.entityIdToEntityKey[id] = entityKey;
-			this.entityKeyToEntity[entityKey] = entity;
+			this.entityIdToEntityKey[id] = normalizedEntityKey;
+			this.entityKeyToEntity[normalizedEntityKey] = entity;
 		}
 
 
@@ -150,6 +167,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			if (this.entityKeyToEntity.ContainsKey (entityKey))
 			{
+				EntityKey normalizedEntityKey = entityKey.GetNormalizedEntityKey (this.EntityContext);
+
 				return this.entityKeyToEntity[entityKey];
 			}
 			else
@@ -167,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return this.entityIdToEntity.Values;
 		}
-
+		
 
 		/// <summary>
 		/// Maps the entity serial ids to the corresponding <see cref="AbstractEntity"/>.

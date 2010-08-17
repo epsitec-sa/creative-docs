@@ -16,10 +16,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 	public struct EntityKey : System.IEquatable<EntityKey>
 	{
 		/// <summary>
-		/// Builds a new <see cref="EntityKey"></see> which identifies an <see cref="AbstractEntity"></see>.
+		/// Builds a new <c>EntityKey</c> which identifies an <see cref="AbstractEntity"/>.
 		/// </summary>
-		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
-		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the database.</param>
+		/// <param name="entityId">The id of the <see cref="AbstractEntity"/>.</param>
+		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"/> in the database.</param>
 		public EntityKey(Druid entityId, DbKey rowKey)
 		{
 			this.entityId = entityId;
@@ -27,22 +27,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Creates the <see cref="EntityKey"></see> corresponding the <paramref name="entity"></paramref> and
-		/// <paramref name="rowKey"></paramref>.
+		/// Creates the normalized <c>EntityKey</c> corresponding the <paramref name="entity"/> and
+		/// <paramref name="rowKey"/>.
 		/// </summary>
-		/// <param name="rowKey">The <see cref="DbKey"></see> of the <see cref="AbstractEntity"></see> in the database.</param>
-		/// <param name="entity">The <see cref="AbstractEntity"></see> whose <see cref="EntityKey"></see> to create.</param>
-		/// <returns>The corresponding <see cref="EntityKey"></see>.</returns>
+		/// <param name="rowKey">The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.</param>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to create.</param>
+		/// <returns>The corresponding <see cref="EntityKey"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
 		public EntityKey(AbstractEntity entity, DbKey rowKey)
 		{
 			entity.ThrowIfNull ("entity");
 
-			this.entityId = entity.GetEntityStructuredTypeId ();
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = entity.GetEntityContext ().GetRootEntityId (entityId);
+
+			this.entityId = rootEntityId;
 			this.rowKey = rowKey;
 		}
-
-
+		
 		/// <summary>
 		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
@@ -78,11 +80,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.RowKey.IsEmpty || this.EntityId.IsEmpty;
 			}
 		}
-
-
+		
 		#region IEquatable<EntityKey> Members
-
-
+		
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is equal to another.
 		/// </summary>
@@ -92,10 +92,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return (this.rowKey == that.RowKey) && (this.entityId == that.EntityId);
 		}
-
-
+		
 		#endregion
-
 
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is equal to another object.
@@ -106,8 +104,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return (that is EntityKey) && this.Equals ((EntityKey) that);
 		}
-
-
+		
 		/// <summary>
 		/// Computes the hash code of this instance.
 		/// </summary>
@@ -121,8 +118,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
 		}
-
-
+		
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are equal.
 		/// </summary>
@@ -144,8 +140,37 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return !a.Equals (b);
 		}
+		
+		/// <summary>
+		/// Gets the normalized version of this instance. Normalized means that if this instance
+		/// targets a sub type of an <see cref="AbstractEntity"/>, the normalized version targets
+		/// the corresponding root type.
+		/// </summary>
+		/// <param name="entityContext">The <see cref="EntityContext"/> used for the normalization.</param>
+		/// <returns>The normalized version of this instance.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
+		public EntityKey GetNormalizedEntityKey(EntityContext entityContext)
+		{
+			entityContext.ThrowIfNull ("entityContext");
 
+			Druid rootEntityId = entityContext.GetRootEntityId (this.entityId);
 
+			return new EntityKey (rootEntityId, this.rowKey);
+		}
+		
+		/// <summary>
+		/// Creates a normalized <c>EntityKey</c>.
+		/// </summary>
+		/// <param name="entityContext">The <see cref="EntityContext"/> used for the normalization.</param>
+		/// <param name="entityId">The id of the <see cref="AbstractEntity"></see>.</param>
+		/// <param name="rowKey">The row key of the <see cref="AbstractEntity"></see> in the database.</param>
+		/// <returns>A new normalized <c>EntityKey</c>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entityContext"/> is <c>null</c>.</exception>
+		public static EntityKey CreateNormalizedEntityKey(EntityContext entityContext, Druid entityId, DbKey rowKey)
+		{
+			return new EntityKey (entityId, rowKey).GetNormalizedEntityKey (entityContext);
+		}
+		
 		/// <summary>
 		/// The <see cref="DbKey"/> which tells the id of the <see cref="AbstractEntity"/> represented
 		/// by this instance.
@@ -157,7 +182,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// represented by this instance.
 		/// </summary>
 		private readonly Druid entityId;
-
 
 		/// <summary>
 		/// An instance of the empty <see cref="EntityKey"/>.

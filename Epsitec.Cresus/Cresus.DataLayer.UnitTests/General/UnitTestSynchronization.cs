@@ -292,20 +292,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 			for (int i = 0; i < nbDataContexts; i++)
 			{
-				// This behavior is not very nice. In the first case where the deleted element has
-				// been resolved in the collection, it is removed. In the second case, where it has
-				// not been resolved, it is not removed, because we cannot identify its proxy as the
-				// deleted element. This is due to the problem of the outdated collection that
-				// contains EntityKeyProxy in them.
-
-				if (i < 5)
-				{
-					Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
-				}
-				else
-				{
-					Assert.AreEqual (2, naturalPersons[i].Contacts.Count);
-				}
+				Assert.AreEqual (1, naturalPersons[i].Contacts.Count);
 			}
 
 			for (int i = 0; i < nbDataContexts; i++)
