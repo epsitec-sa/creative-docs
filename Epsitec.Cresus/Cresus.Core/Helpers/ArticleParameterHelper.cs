@@ -140,18 +140,21 @@ namespace Epsitec.Cresus.Core.Helpers
 					string key = parameter.Code;
 					string value = null;
 
-					if (localDico.ContainsKey (key))  // valeur définie localement ?
+					if (!string.IsNullOrEmpty (key))
 					{
-						value = localDico[key];
-					}
-					else if (defaultDico.ContainsKey (key))  // valeur par défaut ?
-					{
-						value = defaultDico[key];
-					}
+						if (localDico.ContainsKey (key))  // valeur définie localement ?
+						{
+							value = localDico[key];
+						}
+						else if (defaultDico.ContainsKey (key))  // valeur par défaut ?
+						{
+							value = defaultDico[key];
+						}
 
-					if (!string.IsNullOrEmpty (value))
-					{
-						dico.Add (key, value);
+						if (!string.IsNullOrEmpty (value))
+						{
+							dico.Add (key, value);
+						}
 					}
 				}
 			}

@@ -53,10 +53,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			{
 				var parameters = this.ImportDictionary ();
 
-				string value;
-				if (parameters.TryGetValue (this.Code, out value))
+				if (!string.IsNullOrEmpty (this.Code))
 				{
-					return value;
+					string value;
+					if (parameters.TryGetValue (this.Code, out value))
+					{
+						return value;
+					}
 				}
 
 				return null;

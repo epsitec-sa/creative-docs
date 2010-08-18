@@ -414,19 +414,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("HandleDataContextEntityChanged {0}", e.Entity.GetType()));
+			//?System.Diagnostics.Debug.WriteLine (string.Format ("HandleDataContextEntityChanged {0}", e.Entity.GetType()));
 
-			if (e.Entity == this.Entity)
+			if (e.Entity is ArticleDefinitionEntity ||
+				e.Entity is NumericValueArticleParameterDefinitionEntity ||
+				e.Entity is EnumValueArticleParameterDefinitionEntity)
 			{
-				//?this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
-				//?this.TileContainer.UpdateAllWidgets ();
+				this.parameterController.UpdateUI (this.Entity);
+				this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
 			}
-#if false
-			this.parameterController.UpdateUI (this.Entity);
-			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
-
-			this.TileContainer.UpdateAllWidgets ();
-#endif
 		}
 
 
