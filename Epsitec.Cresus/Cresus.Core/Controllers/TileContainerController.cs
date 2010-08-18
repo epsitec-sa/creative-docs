@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
 	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
-	public sealed class TileContainerController : System.IDisposable
+	public sealed class TileContainerController : System.IDisposable, IClickSimulator
 	{
 		private TileContainerController(TileContainer container)
 		{
@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
 
+			this.controller.Disposing += this.HandleControllerDisposing;
 			this.dataContext.EntityChanged += this.HandleEntityChanged;
 
 			this.navigator.Register (this);
@@ -126,21 +127,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.liveItems.Where (x => x.Name == name).FirstOrDefault ();
 		}
 
-		public bool SimulateClick(string name)
-		{
-			var item = this.FindSummaryData (name);
-
-			if (item != null)
-			{
-				this.HandleTileClicked (item);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
 		public void GenerateTiles()
 		{
 			this.RefreshCollectionItems ();
@@ -199,6 +185,25 @@ namespace Epsitec.Cresus.Core.Controllers
 				new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
 				new TaskletJob (() => this.OpenSubView (index, itemName), TaskletRunMode.After));
 		}
+
+		#region IClickSimulator Members
+
+		bool IClickSimulator.SimulateClick(string name)
+		{
+			var item = this.FindSummaryData (name);
+
+			if (item != null)
+			{
+				this.HandleTileClicked (item);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
 
 
 		#region IDisposable Members
@@ -700,6 +705,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	to its job asynchronously.
 
 			this.refreshNeeded = true;
+		}
+
+		private void HandleControllerDisposing(object sender)
+		{
+			this.navigator.Unregister (this);
 		}
 
 		private void HandleTimerTimeElapsed(object sender)

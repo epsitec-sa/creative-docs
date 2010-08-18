@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -99,10 +100,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (disposing)
 			{
+				this.OnDisposing ();
 				var controllers = this.GetSubControllers ().Where (controller => controller.IsDisposed == false).ToList ();
 				controllers.ForEach (controller => controller.Dispose ());
 			}
 		}
+
+		private void OnDisposing()
+		{
+			var handler = this.Disposing;
+
+			if (handler != null)
+            {
+				handler (this);
+            }
+		}
+
+
+		public event EventHandler Disposing;
 
 		private readonly string name;
 		private bool isDisposed;

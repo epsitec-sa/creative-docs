@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
 		{
-			var tileContainerController = navigator.GetLeafTileContainerController ();
+			var tileContainerController = navigator.GetLeafClickSimulator ();
 
 			System.Diagnostics.Debug.Assert (tileContainerController != null);
 
