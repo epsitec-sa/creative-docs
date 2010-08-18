@@ -190,6 +190,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting", "Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTesting.UnitTests", "Common.UnitTesting.UnitTests\Common.UnitTesting.UnitTests.csproj", "{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.UnitTests", "Cresus.Database.UnitTests\Cresus.Database.UnitTests.csproj", "{48CFC75E-EAA8-46CE-860F-871511583AE2}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus.vsmdi
@@ -1079,6 +1081,18 @@ Global
 		{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}.Release|Win32.ActiveCfg = Release|Any CPU
 		{8DC6CABD-F081-4AF3-AC8B-89BC4C016967}.Release|x86.ActiveCfg = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|Win32.ActiveCfg = Release|Any CPU
+		{48CFC75E-EAA8-46CE-860F-871511583AE2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
