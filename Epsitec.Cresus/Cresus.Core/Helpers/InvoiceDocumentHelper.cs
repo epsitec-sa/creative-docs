@@ -73,10 +73,24 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL)
+		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL, bool isProd)
 		{
-			string text = isBL ? "<b>Bulletin de livraison" : "<b>Facture";
-			string title = TextFormatter.FormatText (text, x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
+			string doc;
+
+			if (isBL)
+			{
+				doc = "Bulletin de livraison";
+			}
+			else if (isProd)
+			{
+				doc = "Ordre de production";
+			}
+			else
+			{
+				doc = "Facture";
+			}
+
+			string title = TextFormatter.FormatText (string.Concat("<b>", doc), x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
 			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true, isBL));
 		}
