@@ -54,6 +54,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public virtual bool InheritDataContext
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public System.Func<bool, bool> ActivateNextSubView
 		{
 			get;

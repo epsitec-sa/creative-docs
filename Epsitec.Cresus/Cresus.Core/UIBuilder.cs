@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer;
 using System.Linq.Expressions;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core
 {
@@ -107,6 +109,27 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (widget);
 		}
+
+		public ConfirmationButton CreateCreationButton<T>(CreationViewController<T> controller, string title, string description, System.Action<DataContext, T> initializer = null)
+			where T : AbstractEntity, new ()
+		{
+			var button = new ConfirmationButton
+			{
+				Text = ConfirmationButton.FormatContent (title, description),
+				PreferredHeight = 52,
+			};
+
+			button.Clicked +=
+				delegate
+				{
+					controller.CreateRealEntity (initializer);
+				};
+
+			this.Add (button);
+
+			return button;
+		}
+
 		
 		public PanelTitleTile CreatePanelTitleTile(string iconUri, string title)
 		{

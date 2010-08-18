@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.Entity;
 		}
 
-		protected void ReplaceEntity(T entity)
+		internal void ReplaceEntity(T entity)
 		{
 			this.entity = entity;
 		}

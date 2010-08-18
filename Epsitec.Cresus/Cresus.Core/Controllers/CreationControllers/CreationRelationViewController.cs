@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	public class CreationRelationViewController : CreationViewController<RelationEntity>
 	{
-		public CreationRelationViewController(string name, Entities.RelationEntity entity)
+		public CreationRelationViewController(string name, RelationEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -34,52 +34,28 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		private void CreateUINewNaturalPersonButton(UIBuilder builder)
 		{
-			var button = new ConfirmationButton
-			{
-				Text = ConfirmationButton.FormatContent ("Personne privée", "Crée un client de type personne privée"),
-				PreferredHeight = 52,
-			};
-
-			button.Clicked +=
-				delegate
+			builder.CreateCreationButton<RelationEntity> (this, "Personne privée", "Crée un client de type personne privée",
+				(context, relation) =>
 				{
-					this.CreateRealEntity (
-						(context, customer) =>
-						{
-							customer.FirstContactDate = Date.Today;
-							customer.Person = context.CreateEntity<NaturalPersonEntity> ();
-						});
-				};
-			
-			builder.Add (button);
+					relation.FirstContactDate = Date.Today;
+					relation.Person = context.CreateEntity<NaturalPersonEntity> ();
+				});
 		}
 
 		private void CreateUINewLegalPersonButton(UIBuilder builder)
 		{
-			var button = new ConfirmationButton
-			{
-				Text = ConfirmationButton.FormatContent ("Entreprise", "Crée un client de type entreprise"),
-				PreferredHeight = 52,
-			};
-
-			button.Clicked +=
-				delegate
+			builder.CreateCreationButton<RelationEntity> (this, "Entreprise", "Crée un client de type entreprise",
+				(context, relation) =>
 				{
-					this.CreateRealEntity (
-						(context, customer) =>
-						{
-							customer.FirstContactDate = Date.Today;
-							customer.Person = context.CreateEntity<LegalPersonEntity> ();
-						});
-				};
-			
-			builder.Add (button);
+					relation.FirstContactDate = Date.Today;
+					relation.Person = context.CreateEntity<LegalPersonEntity> ();
+				});
 		}
 
 		
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (this.Entity.Person.UnwrapNullEntity () == null)
+			if (this.Entity.Person.IsNull ())
 			{
 				return EditionStatus.Empty;
 			}
@@ -87,6 +63,23 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			{
 				return EditionStatus.Valid;
 			}
+		}
+	}
+
+	public class CreationInvoiceDocumentViewController : CreationViewController<InvoiceDocumentEntity>
+	{
+		public CreationInvoiceDocumentViewController(string name, InvoiceDocumentEntity entity)
+			: base (name, entity)
+		{
+		}
+
+		protected override void CreateUI()
+		{
+		}
+
+		protected override ViewControllerMode GetUpgradeControllerMode()
+		{
+			return ViewControllerMode.Summary;
 		}
 	}
 }

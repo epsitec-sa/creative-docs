@@ -111,10 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.entity = entity;
 
-				var context    = this.DataContext;
 				var controller = this.CreateRootSummaryViewController (navigationPathElement);
-
-				controller.DataContext = context;
 
 				this.PushViewController (controller);
 			}
@@ -263,7 +260,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void InheritLeafControllerDataContext(CoreViewController controller)
 		{
-			if (controller.DataContext != null)
+			if ((controller.DataContext != null) ||
+				(controller.InheritDataContext == false))
 			{
 				return;
 			}
@@ -271,11 +269,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			var leafController = this.GetLeafController ();
 
 			if (leafController == null)
-            {
-				return;
-            }
-			
-			controller.DataContext = leafController.DataContext;
+			{
+				controller.DataContext = this.DataContext;
+			}
+			else
+			{
+				controller.DataContext = leafController.DataContext;
+			}
 		}
 
 		private void CreateViewLayoutHandler()
@@ -357,7 +357,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private EntityViewController CreateRootSummaryViewController(Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)
 		{
-			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
+			var controller = EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
+
+			controller.DataContext = this.DataContext;
+
+			return controller;
 		}
 
 		private CoreViewController GetParentController(int depth)

@@ -7,6 +7,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
@@ -243,9 +244,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var entity = value as T;
 			
-			entity = entity.UnwrapNullEntity ();
-
-			if ((entity == null) ||
+			if ((entity.IsNull ()) ||
 				(this.ToFormattedTextConverter == null))
 			{
 				return FormattedText.Empty;

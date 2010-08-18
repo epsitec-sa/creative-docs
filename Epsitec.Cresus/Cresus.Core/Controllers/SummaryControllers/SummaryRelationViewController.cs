@@ -188,10 +188,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void UpdateRelationDefaultAddress()
 		{
 			var customer   = this.Entity;
-			var oldAddress = EntityNullReferenceVirtualizer.UnwrapNullEntity (customer.DefaultAddress);
-			var newAddress = EntityNullReferenceVirtualizer.UnwrapNullEntity (customer.Person.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address).FirstOrDefault ());
+			var oldAddress = customer.DefaultAddress;
+			var newAddress = customer.Person.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address).FirstOrDefault ();
 
-			if (oldAddress != newAddress)
+			if (oldAddress.RefEquals (newAddress) == false)
 			{
 				customer.DefaultAddress = newAddress;
 			}
