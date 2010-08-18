@@ -896,6 +896,9 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
+			var tabIndex1 = ++this.tabIndex;
+			var tabIndex2 = ++this.tabIndex;
+
 			//	Ce bouton vient tout à droite.
 			var tileButton = new GlyphButton
 			{
@@ -905,6 +908,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Right,
 				Margins = new Margins (3, 0, 0, 0),
 				AutoFocus = false,
+				TabIndex = tabIndex2,
 			};
 
 			//	Ce bouton vient juste après (et tout contre) la ligne éditable.
@@ -918,6 +922,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),
 				AutoFocus = false,
+				TabIndex = tabIndex1,
 			};
 
 			this.ContentListAdd (container);
@@ -951,6 +956,8 @@ namespace Epsitec.Cresus.Core
 
 			var controller = this.GetRootController ();
 
+			var clickSimulator = new TileButtonClickSimulator (tileButton, controller);
+
 			tileButton.Clicked +=
 				delegate
 				{
@@ -959,7 +966,7 @@ namespace Epsitec.Cresus.Core
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new ReferenceTileController (referenceController);
-						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (referenceController));
+						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (referenceController, clickSimulator));
 					}
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
@@ -987,6 +994,47 @@ namespace Epsitec.Cresus.Core
 				};
 
 			return editor;
+		}
+
+		class TileButtonClickSimulator : IClickSimulator
+		{
+			public TileButtonClickSimulator(Widget tileButton, CoreViewController controller)
+			{
+				this.name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "TileButton:TabIndex.{0}", tileButton.TabIndex);
+				this.button = tileButton;
+				this.controller = controller;
+				this.controller.Navigator.Register (this);
+				this.controller.Disposing += sender => this.controller.Navigator.Unregister (this);
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.name;
+				}
+			}
+
+			#region IClickSimulator Members
+
+			bool IClickSimulator.SimulateClick(string name)
+			{
+				if (name == this.name)
+				{
+					this.button.SimulateClicked ();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			#endregion
+
+			private readonly string name;
+			private readonly Widget button;
+			private readonly CoreViewController controller;
 		}
 
 		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
@@ -1134,9 +1182,10 @@ namespace Epsitec.Cresus.Core
 		
 		private class TileNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
 		{
-			public TileNavigationPathElement(ReferenceController referenceController)
+			public TileNavigationPathElement(ReferenceController referenceController, TileButtonClickSimulator clickSimulator)
 			{
 				this.id = referenceController.Id;
+				this.name = clickSimulator.Name;
 			}
 
 
@@ -1147,11 +1196,16 @@ namespace Epsitec.Cresus.Core
 
 			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
 			{
-				return false;
+				var clickSimulator = navigator.GetLeafClickSimulator ();
+
+				System.Diagnostics.Debug.Assert (clickSimulator != null);
+
+				return clickSimulator.SimulateClick (this.name);
 			}
 
 
 			private readonly string id;
+			private readonly string name;
 		}
 
 
