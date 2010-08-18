@@ -956,7 +956,7 @@ namespace Epsitec.Cresus.Core
 
 			var controller = this.GetRootController ();
 
-			var clickSimulator = new TileButtonClickSimulator (tileButton, controller);
+			var clickSimulator = new TileButtonClickSimulator (tileButton, controller, referenceController.Id);
 
 			tileButton.Clicked +=
 				delegate
@@ -966,7 +966,7 @@ namespace Epsitec.Cresus.Core
 					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
 					{
 						tile.Controller = new ReferenceTileController (referenceController);
-						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (referenceController, clickSimulator));
+						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (clickSimulator.Name));
 					}
 
 					if (tileButton.GlyphShape == GlyphShape.Plus)
@@ -998,9 +998,9 @@ namespace Epsitec.Cresus.Core
 
 		class TileButtonClickSimulator : IClickSimulator
 		{
-			public TileButtonClickSimulator(Widget tileButton, CoreViewController controller)
+			public TileButtonClickSimulator(Widget tileButton, CoreViewController controller, string name)
 			{
-				this.name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "TileButton:TabIndex.{0}", tileButton.TabIndex);
+				this.name = name;
 				this.button = tileButton;
 				this.controller = controller;
 				this.controller.Navigator.Register (this);
@@ -1180,35 +1180,6 @@ namespace Epsitec.Cresus.Core
 
 		
 		
-		private class TileNavigationPathElement : Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement
-		{
-			public TileNavigationPathElement(ReferenceController referenceController, TileButtonClickSimulator clickSimulator)
-			{
-				this.id = referenceController.Id;
-				this.name = clickSimulator.Name;
-			}
-
-
-			public override string ToString()
-			{
-				return string.Concat ("<Tile:", this.id, ">");
-			}
-
-			public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
-			{
-				var clickSimulator = navigator.GetLeafClickSimulator ();
-
-				System.Diagnostics.Debug.Assert (clickSimulator != null);
-
-				return clickSimulator.SimulateClick (this.name);
-			}
-
-
-			private readonly string id;
-			private readonly string name;
-		}
-
-
 		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
 		{
 			return

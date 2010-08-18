@@ -301,14 +301,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
-			if (this.EntityMarshaler != null)
+			if (this.EntityMarshaler == null)
 			{
-				var controller = EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, new SummaryDataNavigationPathElement (this));
+				return null;
+			}
+			else
+			{
+				navigationPathElement = new TileNavigationPathElement (this.Name);
+				var controller = EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, navigationPathElement);
 
 				return controller;
 			}
-
-			return null;
 		}
 
 		#endregion
