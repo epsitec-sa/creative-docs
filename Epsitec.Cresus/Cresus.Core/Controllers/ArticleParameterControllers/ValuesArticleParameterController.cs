@@ -65,6 +65,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private void CreateParameterUI(FrameBox parent, ArticleDocumentItemEntity article, int index)
 		{
+			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameterDefinitions[index];
+
+			if (string.IsNullOrEmpty (parameter.Code) || string.IsNullOrEmpty (parameter.Name))
+			{
+				return;
+			}
+
 			var box = new FrameBox
 			{
 				Parent = parent,
@@ -80,8 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				PreferredWidth = 80,
 				Dock = DockStyle.Left,
 			};
-
-			AbstractArticleParameterDefinitionEntity parameter = article.ArticleDefinition.ArticleParameterDefinitions[index];
 
 			if (parameter is NumericValueArticleParameterDefinitionEntity)
 			{

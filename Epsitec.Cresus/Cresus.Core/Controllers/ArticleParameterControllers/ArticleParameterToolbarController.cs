@@ -63,6 +63,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			foreach (var parameter in articleDefinition.ArticleParameterDefinitions)
 			{
+				if (string.IsNullOrEmpty (parameter.Code) || string.IsNullOrEmpty (parameter.Name))
+				{
+					continue;
+				}
+
 				var button = new Button
 				{
 					Parent = this.toolbar,
