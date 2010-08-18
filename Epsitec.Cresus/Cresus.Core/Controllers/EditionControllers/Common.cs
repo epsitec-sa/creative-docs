@@ -109,43 +109,51 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			var invoiceDocument = dataContext.GetEntities ().OfType<GenericArticleDocumentEntity> ().Where (x => x.Lines.Contains (entity)).Single ();
-			
-			//	Cherche l'index de la ligne dans la collection.
-			int index = invoiceDocument.Lines.IndexOf (entity);
+			var navigator       = controller.Navigator;
+			var history         = navigator.History;
+			var navigationPath  = navigator.GetLeafNavigationPath ();
 
-			System.Diagnostics.Debug.Assert (index >= 0);
-
-			//	Ferme la tuile.
-			orchestrator.CloseView (controller);
-
-			//	Crée la nouvelle entité.
-			AbstractDocumentItemEntity newEntity = null;
-
-			if (id == DocumentItemTabId.Text)
+			using (history.SuspendRecording ())
 			{
-				newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+				//	Cherche l'index de la ligne dans la collection.
+				int index = invoiceDocument.Lines.IndexOf (entity);
+
+				System.Diagnostics.Debug.Assert (index >= 0);
+
+				//	Ferme la tuile.
+				orchestrator.CloseView (controller);
+
+				//	Crée la nouvelle entité.
+				AbstractDocumentItemEntity newEntity = null;
+
+				if (id == DocumentItemTabId.Text)
+				{
+					newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+				}
+				else if (id == DocumentItemTabId.Article)
+				{
+					newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+					var article = newEntity as ArticleDocumentItemEntity;
+					article.BeginDate = invoiceDocument.CreationDate;
+					article.EndDate   = invoiceDocument.CreationDate;
+				}
+				else if (id == DocumentItemTabId.Price)
+				{
+					newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+				}
+
+				System.Diagnostics.Debug.Assert (newEntity != null);
+				newEntity.Visibility = true;
+
+				//	Remplace l'entité dans la db.
+				invoiceDocument.Lines[index] = newEntity;
+				dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
+
+				//	Crée et montre la nouvelle tuile.
+
+				history.NavigateInPlace (navigationPath);
 			}
-			else if (id == DocumentItemTabId.Article)
-			{
-				newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-
-				var article = newEntity as ArticleDocumentItemEntity;
-				article.BeginDate = invoiceDocument.CreationDate;
-				article.EndDate   = invoiceDocument.CreationDate;
-			}
-			else if (id == DocumentItemTabId.Price)
-			{
-				newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
-			}
-
-			System.Diagnostics.Debug.Assert (newEntity != null);
-			newEntity.Visibility = true;
-
-			//	Remplace l'entité dans la db.
-			invoiceDocument.Lines[index] = newEntity;
-			dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
-
-			//	Crée et montre la nouvelle tuile.
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 

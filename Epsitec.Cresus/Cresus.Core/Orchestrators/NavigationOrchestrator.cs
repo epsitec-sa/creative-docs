@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer;
 
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
-			this.history = new Navigation.NavigationHistory (this);
+			this.history = new NavigationHistory (this);
 			this.clickSimulators = new Dictionary<Key, ClickSimulatorCollection> ();
 			
 			this.MakeDirty ();
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		public Navigation.NavigationHistory History
+		public NavigationHistory History
 		{
 			get
 			{
@@ -111,6 +112,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.MakeDirty ();
 		}
 
+
 		/// <summary>
 		/// Gets the level of the controller.
 		/// </summary>
@@ -119,6 +121,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public int GetLevel(CoreViewController controller)
 		{
 			return this.WalkToRoot (controller).Count () - 1;
+		}
+
+		public NavigationPath GetLeafNavigationPath()
+		{
+			var dataViewController = this.DataViewController;
+			var leafViewController = dataViewController.GetLeafViewController ();
+
+			return this.GetNavigationPath (leafViewController);
 		}
 
 		/// <summary>
@@ -221,12 +231,18 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if (topNode != null)
 			{
 				var topController = topNode.Item;
-				var fullPath = new Navigation.NavigationPath ();
-
-				fullPath.AddRange (this.WalkToRoot (topController).Select (node => node.Item.NavigationPathElement).Reverse ());
-
+				var fullPath = this.GetNavigationPath (topController);
 				this.history.Record (fullPath);
 			}
+		}
+
+		private NavigationPath GetNavigationPath(CoreViewController topController)
+		{
+			var fullPath = new NavigationPath ();
+
+			fullPath.AddRange (this.WalkToRoot (topController).Select (node => node.Item.NavigationPathElement).Reverse ());
+
+			return fullPath;
 		}
 
 		private IEnumerable<Node> WalkToRoot(CoreViewController controller)
@@ -403,6 +419,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		#endregion
 
+
 		private static long GetCurrentActionId()
 		{
 			var message = Epsitec.Common.Widgets.Message.GetLastMessage ();
@@ -413,7 +430,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly List<Node> liveNodes;
 		private readonly Dictionary<Key, ClickSimulatorCollection> clickSimulators;
 		private readonly MainViewController mainViewController;
-		private readonly Navigation.NavigationHistory history;
+		private readonly NavigationHistory history;
 		private bool isDirty;
 		private long currentActionId;
 		private long currentHistoryId;
