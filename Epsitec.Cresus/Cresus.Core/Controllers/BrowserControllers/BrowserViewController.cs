@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
@@ -111,6 +112,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (item != null)
 			{
 				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
+
+				if (controller is ICreationController)
+				{
+					//	OK, we have really been able to create a specific creation controller, which
+					//	will be used to bootstrap the entity creation...
+				}
+				else
+				{
+					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, this.Orchestrator.DataContext);
+					controller = EntityViewController.CreateEntityViewController ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
+				}
 
 				this.Orchestrator.ShowSubView (null, controller);
 			}
