@@ -118,10 +118,10 @@ namespace Epsitec.Cresus.Database
 
 			builder.SelectData (select);
 
-			System.Data.IDbCommand command = builder.Command;
-			command.Transaction = transaction.Transaction;
+			System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction);
 			System.Data.IDataReader reader = command.ExecuteReader ();
 
+			this.command = command;
 			this.dataReader = reader;
 			this.dataReaderClosed = false;
 		}
@@ -267,6 +267,11 @@ namespace Epsitec.Cresus.Database
 				this.dataReader.Close ();
 				this.dataReader.Dispose ();
 				this.dataReader = null;
+			}
+
+			if (this.command != null)
+			{
+				this.command.Dispose ();
 			}
 		}
 
@@ -474,6 +479,7 @@ namespace Epsitec.Cresus.Database
 		private readonly List<DbJoin> joins;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
+		private System.Data.IDbCommand command;
 		private System.Data.IDataReader dataReader;
 		private bool dataReaderClosed;
 	}
