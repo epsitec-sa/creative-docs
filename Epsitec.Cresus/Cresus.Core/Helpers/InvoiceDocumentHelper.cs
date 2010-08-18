@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
 
 			string addresses;
-			if (x.BillingMailContact == x.ShippingMailContact)
+			if (x.BillingMailContact == x.ShippingMailContact || (!x.BillingMailContact.IsActive () && !x.ShippingMailContact.IsActive ()))
 			{
 				addresses = string.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}
@@ -40,10 +40,17 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
 		{
-			return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
-										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
-										 x.Address.Street.StreetName, "\n",
-										 x.Address.Location.PostalCode, x.Address.Location.Name);
+			if (x.IsActive ())
+			{
+				return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
+												 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
+												 x.Address.Street.StreetName, "\n",
+												 x.Address.Location.PostalCode, x.Address.Location.Name);
+			}
+			else
+			{
+				return TextFormatter.FormatText ("<i>Pas encore défini</i>");
+			}
 		}
 
 
