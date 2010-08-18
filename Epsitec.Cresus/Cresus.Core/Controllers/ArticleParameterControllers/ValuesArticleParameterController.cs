@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 0),
+				Margins = new Margins (0, 10, 1, 0),
 			};
 		}
 
