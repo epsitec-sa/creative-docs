@@ -24,11 +24,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		public override bool Navigate(Orchestrators.NavigationOrchestrator navigator)
 		{
-			var tileContainerController = navigator.GetLeafClickSimulator ();
+			var clickSimulator = navigator.GetLeafClickSimulator ();
 
-			System.Diagnostics.Debug.Assert (tileContainerController != null);
+			System.Diagnostics.Debug.Assert (clickSimulator != null);
 
-			return tileContainerController.SimulateClick (this.name);
+			return clickSimulator.SimulateClick (this.name);
 		}
 
 		public override string ToString()
