@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers;
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
 			this.history = new Navigation.NavigationHistory (this);
-			this.tileContainerControllers = new Dictionary<int, TileContainerController> ();
+			this.clickSimulators = new Dictionary<Key, ClickSimulator> ();
 			
 			this.MakeDirty ();
 		}
@@ -120,17 +121,25 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
-		public TileContainerController GetLeafTileContainerController()
+		public IClickSimulator GetLeafClickSimulator()
+		{
+			var key = this.GetLeafViewControllerKey ();
+			
+			ClickSimulator clickSimulator;
+
+			this.clickSimulators.TryGetValue (key, out clickSimulator);
+
+			return clickSimulator;
+		}
+
+		private Key GetLeafViewControllerKey()
 		{
 			var dataViewController = this.DataViewController;
 			var leafViewController = dataViewController.GetLeafViewController ();
+			
 			int level = leafViewController.GetNavigationLevel ();
-
-			TileContainerController tileContainerController;
-
-			this.tileContainerControllers.TryGetValue (level, out tileContainerController);
-
-			return tileContainerController;
+			
+			return new Key (level);
 		}
 
 		/// <summary>
@@ -143,26 +152,103 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
-		internal void Register(TileContainerController tileContainerController)
+		internal void Register(IClickSimulator clickSimulator)
 		{
-			var entityViewController = tileContainerController.EntityViewController;
-			var entityViewPath       = entityViewController.GetNavigationPath ();
-			var entityViewLevel      = entityViewController.GetNavigationLevel ();
+			var key = this.GetLeafViewControllerKey ();
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Register TileContainerController {0}, path={1}", entityViewLevel, entityViewPath));
+			ClickSimulator simulator;
+			
+			if (this.clickSimulators.TryGetValue (key, out simulator) == false)
+			{
+				simulator = new ClickSimulator ();
+				this.clickSimulators[key] = simulator;
+			}
 
-			this.tileContainerControllers[entityViewLevel] = tileContainerController;
+			simulator.Add (clickSimulator);
 		}
 
-		internal void Unregister(TileContainerController tileContainerController)
+		internal void Unregister(IClickSimulator clickSimulator)
 		{
-			var entityViewController = tileContainerController.EntityViewController;
-			var entityViewPath       = entityViewController.GetNavigationPath ();
-			var entityViewLevel      = entityViewController.GetNavigationLevel ();
+			this.clickSimulators.Values.ForEach (x => x.Remove (clickSimulator));
+		}
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Unregister TileContainerController {0}, path={1}", entityViewLevel, entityViewPath));
 
-			this.tileContainerControllers.Remove (entityViewLevel);
+		class ClickSimulator : IClickSimulator
+		{
+			public ClickSimulator()
+			{
+				this.simulators = new HashSet<IClickSimulator> ();
+			}
+
+			public void Add(IClickSimulator simulator)
+			{
+				this.simulators.Add (simulator);
+			}
+
+			public void Remove(IClickSimulator simulator)
+			{
+				if (this.simulators.Remove (simulator))
+				{
+					//	OK, removed successfully the specified simulator from this instance.
+				}
+			}
+
+			#region IClickSimulator Members
+
+			public bool SimulateClick(string name)
+			{
+				return this.simulators.Any (x => x.SimulateClick (name));
+			}
+
+			#endregion
+
+			private readonly HashSet<IClickSimulator> simulators;
+		}
+		
+		struct Key : System.IEquatable<Key>
+		{
+			public Key(int level)
+			{
+				this.level = level;
+			}
+
+
+			public int Level
+			{
+				get
+				{
+					return this.level;
+				}
+			}
+
+
+			public override int GetHashCode()
+			{
+				return this.level;
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is Key)
+				{
+					return this.Equals ((Key) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			#region IEquatable<Key> Members
+
+			public bool Equals(Key other)
+			{
+				return this.level == other.level;
+			}
+
+			#endregion
+
+			private readonly int level;
 		}
 
 
@@ -293,7 +379,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private readonly List<Node> liveNodes;
-		private readonly Dictionary<int, TileContainerController> tileContainerControllers;
+		private readonly Dictionary<Key, ClickSimulator> clickSimulators;
 		private readonly MainViewController mainViewController;
 		private readonly Navigation.NavigationHistory history;
 		private bool isDirty;
