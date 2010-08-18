@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void ParameterChanged(AbstractArticleParameterDefinitionEntity parameterDefinitionEntity)
 		{
 			//	Cette méthode est appelée lorsqu'un paramètre a été changé.
-			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
+			ArticleParameterControllers.ArticleParameterToolbarController.UpdateTextFieldParameter (this.Entity, this.designationTextField);
 		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)

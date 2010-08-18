@@ -83,8 +83,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				button.PreferredWidth = ArticleParameterToolbarController.GetButtonRequiredWidth (button);
 				ToolTip.Default.SetToolTip (button, parameter.Name);
 
-				ArticleParameterToolbarController.UpdateTextFieldParameter (articleDocumentItem, textField);
-
 				button.Clicked += delegate
 				{
 					ArticleParameterToolbarController.InsertText (textField, ArticleParameterToolbarController.GetTag (button.Name));
@@ -93,11 +91,15 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			//	La toolbar est invisible s'il n'y a aucun paramètre.
 			this.toolbar.Visibility = articleDefinition.ArticleParameterDefinitions.Count != 0;
+
+			ArticleParameterToolbarController.UpdateTextFieldParameter (articleDocumentItem, textField);
 		}
 
 
-		private static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
+		public static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
 		{
+			//	Met à jour les paramètres dans le widget qui contient la désignation de l'article.
+			//	Ainsi, les valeurs affichées pour les paramètres sont mises à jour.
 			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem);
 
 			foreach (var pair in dico)
