@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 	/// UI element. It is used by the navigation history to record which UI
 	/// elements were previously active.
 	/// </summary>
-	public sealed class NavigationPath
+	public sealed class NavigationPath : System.IEquatable<NavigationPath>
 	{
 		public NavigationPath()
 		{
@@ -57,7 +57,28 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			return string.Join (" / ", this.elements.Select (x => x.ToString ()).ToArray ());
 		}
 
-		
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as NavigationPath);
+		}
+
+		#region IEquatable<NavigationPath> Members
+
+		public bool Equals(NavigationPath other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.ToString () == other.ToString ();
+			}
+		}
+
+		#endregion
+
+
 		private readonly List<NavigationPathElement> elements;
 	}
 }
