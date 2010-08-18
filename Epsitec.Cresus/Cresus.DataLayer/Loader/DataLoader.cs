@@ -120,11 +120,57 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public object GetFieldValue(AbstractEntity entity, Druid fieldId)
+		public object ResolveValueField(AbstractEntity entity, Druid fieldId)
 		{
 			return this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
 		}
 
+
+		public AbstractEntity ResolveReferenceField(AbstractEntity entity, Druid fieldId)
+		{
+			string fieldName = fieldId.ToResourceId ();
+			
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
+
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
+
+			rootExample.SetField<AbstractEntity> (fieldName, targetExample);
+
+			Request request = new Request ()
+			{
+				RootEntity = rootExample,
+				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
+				RequestedEntity = targetExample,
+			};
+
+			return this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+		}
+
+
+		public IEnumerable<AbstractEntity> ResolveCollectionField(AbstractEntity entity, Druid fieldId)
+		{
+			string fieldName = fieldId.ToResourceId ();
+
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
+
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
+
+			rootExample.GetFieldCollection<AbstractEntity> (fieldName).Add (targetExample);
+
+			Request request = new Request ()
+			{
+				RootEntity = rootExample,
+				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
+				RequestedEntity = targetExample,
+			};
+
+			return this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request);
+		}
+		
 
 	}
 

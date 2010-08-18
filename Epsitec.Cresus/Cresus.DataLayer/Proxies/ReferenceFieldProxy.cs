@@ -107,25 +107,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		/// <returns>The real instance.</returns>
 		public virtual object PromoteToRealInstance()
 		{
-			EntityContext entityContext = this.Entity.GetEntityContext ();
-
-			Druid leafEntityId = this.Entity.GetEntityStructuredTypeId ();
-			string fieldId = this.FieldId.ToResourceId ();
-			StructuredTypeField field = entityContext.GetEntityFieldDefinition (leafEntityId, fieldId);
-
-			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
-			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
-
-			rootExample.SetField<AbstractEntity> (fieldId, targetExample);
-
-			Request request = new Request ()
-			{
-				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey(this.Entity).Value.RowKey,
-				RequestedEntity = targetExample,
-			};
-
-			object result = this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+			object result = this.DataContext.DataLoader.ResolveReferenceField (this.Entity, this.FieldId);
 
 			if (result == null)
 			{
