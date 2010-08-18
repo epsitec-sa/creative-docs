@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core
 	public enum EntityCreationScope
 	{
 		CurrentContext,
+		SpecificContext,
 		Independent,
 	}
 
@@ -188,9 +189,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public AbstractEntity CreateNewEntity(string dataSetName, EntityCreationScope entityCreationScope)
+		public AbstractEntity CreateNewEntity(string dataSetName, EntityCreationScope entityCreationScope, DataContext specificContext = null)
 		{
-			var context = this.GetEntityContext (entityCreationScope);
+			var context = this.GetEntityContext (entityCreationScope, specificContext);
 
 			switch (dataSetName)
 			{
@@ -208,7 +209,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private EntityContext GetEntityContext(EntityCreationScope entityCreationScope)
+		private EntityContext GetEntityContext(EntityCreationScope entityCreationScope, DataContext specificContext)
 		{
 			switch (entityCreationScope)
 			{
@@ -217,6 +218,9 @@ namespace Epsitec.Cresus.Core
 
 				case EntityCreationScope.CurrentContext:
 					return this.DataContext.EntityContext;
+
+				case EntityCreationScope.SpecificContext:
+					return specificContext.EntityContext;
 
 				default:
 					throw new System.NotSupportedException (string.Format ("EntityCreationScope.{0} not supported", entityCreationScope));
