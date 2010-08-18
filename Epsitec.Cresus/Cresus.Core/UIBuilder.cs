@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Core
 			return this.CreateStaticText (tile, 60, "<i><b>ATTENTION:</b><br/>Les modifications effectuées ici seront répercutées<br/>dans tous les enregistrements.</i>");
 		}
 
-		public StaticText CreateStaticText(EditionTile tile, int height, string text)
+		public StaticText CreateStaticText(EditionTile tile, double height, string text)
 		{
 			var staticText = new StaticText
 			{
@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Button CreateButton(EditionTile tile, int width, string label, string buttonText)
+		public Button CreateButton(EditionTile tile, double width, string label, string buttonText)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.Core
 			return this.CreateButton (tile.Container, DockStyle.Top, width, buttonText);
 		}
 
-		public Button CreateButton(FrameBox parent, DockStyle dockStyle, int width, string buttonText)
+		public Button CreateButton(FrameBox parent, DockStyle dockStyle, double width, string buttonText)
 		{
 			var button = new Button
 			{
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public TextFieldEx CreateTextField(EditionTile tile, int width, string label, Marshaler marshaler)
+		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -493,7 +493,7 @@ namespace Epsitec.Cresus.Core
 			return this.CreateTextField (tile.Container, DockStyle.Top, width, marshaler);
 		}
 
-		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, int width, Marshaler marshaler)
+		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler)
 		{
 			var textField = new TextFieldEx
 			{
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, int height, string label, Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -558,7 +558,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, System.Func<string[], FormattedText> getUserText)
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, System.Func<string[], FormattedText> getUserText)
 		{
 			//	possibleItems[0] doit obligatoirement être la 'key' !
 			if (!string.IsNullOrEmpty (label))
@@ -587,14 +587,12 @@ namespace Epsitec.Cresus.Core
 			Widgets.AutoCompleteTextField textField;
 			GlyphButton menuButton;
 
-			double buttonWidth = 14;
-
 			if (width == 0)
 			{
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
-					MenuButtonWidth = buttonWidth-1,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
@@ -607,7 +605,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = buttonWidth,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Right,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -619,7 +617,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
-					MenuButtonWidth = buttonWidth-1,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
@@ -633,7 +631,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = buttonWidth,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -659,7 +657,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, int width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, System.Func<EnumKeyValues<T>, FormattedText> getUserText)
+		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, System.Func<EnumKeyValues<T>, FormattedText> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
 			if (!string.IsNullOrEmpty (label))
@@ -687,14 +685,13 @@ namespace Epsitec.Cresus.Core
 			Widgets.AutoCompleteTextField textField;
 			GlyphButton menuButton;
 
-			double buttonWidth = 14;
 
 			if (width == 0)
 			{
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
-					MenuButtonWidth = buttonWidth-1,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
 					Margins = new Margins (0, 0, 0, 0),
@@ -707,7 +704,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = buttonWidth,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Right,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -719,7 +716,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
-					MenuButtonWidth = buttonWidth-1,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
@@ -733,7 +730,7 @@ namespace Epsitec.Cresus.Core
 					Parent = container,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
-					PreferredWidth = buttonWidth,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock = DockStyle.Left,
 					Margins = new Margins (-1, 0, 0, 0),
@@ -884,12 +881,10 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			double buttonWidth = 14;
-
 			var editor = new Widgets.AutoCompleteTextField
 			{
 				Parent = container,
-				MenuButtonWidth = buttonWidth-1,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 0),
@@ -905,7 +900,7 @@ namespace Epsitec.Cresus.Core
 			var tileButton = new GlyphButton
 			{
 				Parent = container,
-				PreferredWidth = buttonWidth,
+				PreferredWidth = UIBuilder.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (3, 0, 0, 0),
@@ -919,7 +914,7 @@ namespace Epsitec.Cresus.Core
 				Parent = container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
-				PreferredWidth = buttonWidth,
+				PreferredWidth = UIBuilder.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock = DockStyle.Right,
 				Margins = new Margins (-1, 0, 0, 0),
@@ -1275,6 +1270,7 @@ namespace Epsitec.Cresus.Core
 		public static readonly double MarginUnderLabel			= 1;
 		public static readonly double MarginUnderTextField		= 2;
 		public static readonly double TinyButtonSize			= 19;  // doit être impair à cause de GlyphButton !
+		public static readonly double ComboButtonWidth			= 14;
 
 		private static UIBuilder current;
 

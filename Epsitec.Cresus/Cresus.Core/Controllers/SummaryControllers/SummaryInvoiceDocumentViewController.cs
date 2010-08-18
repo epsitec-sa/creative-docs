@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIInvoice (data);
-				this.CreateUILines (data);
+				this.CreateUIInvoice  (data);
+				this.CreateUILines    (data);
 				this.CreateUIBillings (data);
 				this.CreateUIComments (data);
 			}

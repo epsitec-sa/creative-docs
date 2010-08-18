@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIArticleDefinition (data);
 				this.CreateUIGroup             (data);
 				this.CreateUIParameters        (data);
+				this.CreateUIPrices            (data);
 				this.CreateUIComments          (data);
 			}
 		}
@@ -87,11 +88,32 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			template.DefineText        (x => TextFormatter.FormatText (GetParameterSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetParameterSummary (x)));
-			template.DefineCreateItem (this.CreateParameter);  // le bouton [+] crée une ligne d'article
+			template.DefineCreateItem  (this.CreateParameter);  // le bouton [+] crée une ligne d'article
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));
 		}
 
+		private void CreateUIPrices(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "ArticlePrice",
+					IconUri		 = "Data.ArticlePrice",
+					Title		 = TextFormatter.FormatText ("Prix"),
+					CompactTitle = TextFormatter.FormatText ("Prix"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", data.Controller, this.DataContext);
+
+			template.DefineText        (x => TextFormatter.FormatText (GetArticlePriceSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (GetArticlePriceSummary (x)));
+			template.DefineCreateItem  (this.CreateArticlePrice);
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticlePrices, template));
+		}
 		private void CreateUIComments(SummaryDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
@@ -148,13 +170,84 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			return builder.ToString ();
-			;
+		}
+
+		private static string GetArticlePriceSummary(ArticlePriceEntity price)
+		{
+			var builder = new System.Text.StringBuilder ();
+
+			builder.Append (Misc.PriceToString (price.ValueBeforeTax));
+
+			if (price.CurrencyCode.HasValue)
+			{
+				var c = BusinessLogic.Enumerations.GetAllPossibleCurrencyCodes ().Where (x => x.Key == price.CurrencyCode).First ();
+				builder.Append (" ");
+				builder.Append (c.Values[0]);  // code de la monnaie, par exemple "CHF"
+			}
+
+			if (price.BeginDate.HasValue)
+			{
+				builder.Append (" du ");
+				builder.Append (Misc.GetDateTimeShortDescription (price.BeginDate));
+			}
+
+			if (price.EndDate.HasValue)
+			{
+				builder.Append (" au ");
+				builder.Append (Misc.GetDateTimeShortDescription (price.EndDate));
+			}
+
+			return builder.ToString ();
 		}
 
 		private NumericValueArticleParameterDefinitionEntity CreateParameter()
 		{
-			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
+			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			return this.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+		}
+
+		private ArticlePriceEntity CreateArticlePrice()
+		{
+			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
+			var price = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
+
+			price.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			price.MinQuantity = 1;
+
+			var now = System.DateTime.Now;
+			var begin = this.OldestPriceDate;
+
+			if (begin == System.DateTime.MinValue)
+			{
+				begin = new System.DateTime (now.Year, 1, 1);  // le premier janvier de l'année en cours
+			}
+			else
+			{
+				begin = new System.DateTime (begin.Ticks + 10000000);  // begin + une seconde
+			}
+
+			price.BeginDate = begin;
+			price.EndDate = new System.DateTime (begin.Year+10, 12, 31, 23, 59, 59);
+
+			return price;
+		}
+
+		private System.DateTime OldestPriceDate
+		{
+			get
+			{
+				System.DateTime oldest = System.DateTime.MinValue;
+
+				foreach (var price in this.Entity.ArticlePrices)
+				{
+					if (price.EndDate.HasValue && price.EndDate.Value > oldest)
+					{
+						oldest = price.EndDate.Value;
+					}
+				}
+
+				return oldest;
+			}
 		}
 
 
