@@ -205,7 +205,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			foreach (DbKey rowKey in targetKeys)
 			{
-				entityData.Add (targetsData[rowKey]);
+				if (targetsData.ContainsKey (rowKey))
+				{
+					entityData.Add (targetsData[rowKey]);
+				}
 			}
 
 			return entityData;
