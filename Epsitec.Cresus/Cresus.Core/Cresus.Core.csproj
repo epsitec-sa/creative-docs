@@ -118,7 +118,6 @@
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
-    <Compile Include="Orchestrators\Navigation\SummaryTileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleQuantityViewController.cs" />

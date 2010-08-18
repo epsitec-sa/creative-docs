@@ -186,8 +186,10 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (tile);
 			this.titleTile.Items.Add (tile);
 			this.titleTile.CanExpandSubTile = true;
-			
-			tile.Controller = new SummaryTileController<T> (entity, tile);
+
+			var clickSimulator = new TileButtonClickSimulator (this.titleTile, controller, fullName);
+
+			tile.Controller = new SummaryTileController<T> (entity, fullName);
 			tile.Summary    = summary.ToString ();
 
 			return tile;
@@ -196,10 +198,10 @@ namespace Epsitec.Cresus.Core
 		class SummaryTileController<T> : ITileController
 			where T : AbstractEntity
 		{
-			public SummaryTileController(T entity, SummaryTile tile)
+			public SummaryTileController(T entity, string name)
 			{
 				this.entity = entity;
-				this.navigationPathElement = new SummaryTileNavigationPathElement (tile);
+				this.navigationPathElement = new TileNavigationPathElement (name);
 			}
 			#region ITileController Members
 
@@ -211,7 +213,7 @@ namespace Epsitec.Cresus.Core
 			#endregion
 
 			private readonly T entity;
-			private readonly SummaryTileNavigationPathElement navigationPathElement;
+			private readonly TileNavigationPathElement navigationPathElement;
 		}
 
 		
