@@ -145,9 +145,6 @@
     <Compile Include="Collections\DbColumnList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collections\DbCommandList.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\DbTableList.cs">
       <SubType>Code</SubType>
     </Compile>
