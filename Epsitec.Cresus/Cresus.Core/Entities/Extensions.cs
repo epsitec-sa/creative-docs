@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public static bool CompareWith(this AbstractEntity that, AbstractEntity other)
+		public static bool RefEquals(this AbstractEntity that, AbstractEntity other)
 		{
 			return that.UnwrapNullEntity () == other.UnwrapNullEntity ();
 		}

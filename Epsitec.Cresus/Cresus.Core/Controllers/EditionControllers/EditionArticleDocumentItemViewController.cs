@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			set
 			{
-				if (this.Entity.ArticleDefinition.CompareWith (value) == false)
+				if (this.Entity.ArticleDefinition.RefEquals (value) == false)
 				{
 					this.Entity.ArticleDefinition = value;
 

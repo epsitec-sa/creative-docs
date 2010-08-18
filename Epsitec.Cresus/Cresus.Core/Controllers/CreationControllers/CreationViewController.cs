@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
             }
 		}
 
+		public override bool InheritDataContext
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 
 		#region ICreationController Members
 
@@ -61,9 +69,15 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 				if (this.replacementController == null)
 				{
 					var orchestrator = this.Orchestrator;
-					var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator);
+					var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator) as EntityViewController<T>;
+					var context      = orchestrator.DataContext;
 
-					controller.DataContext = orchestrator.DataContext;
+					controller.DataContext = context;
+
+					if (context.Contains (this.Entity) == false)
+					{
+						controller.ReplaceEntity (context.CreateEntity<T> ());
+					}
 
 					this.replacementController = controller;
 				}
@@ -104,7 +118,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
-		protected void CreateRealEntity(System.Action<DataContext, T> initializer = null)
+		internal void CreateRealEntity(System.Action<DataContext, T> initializer = null)
 		{
 			var orchestrator = this.Orchestrator;
 			var context      = orchestrator.DataContext;

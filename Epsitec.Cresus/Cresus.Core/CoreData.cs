@@ -197,6 +197,12 @@ namespace Epsitec.Cresus.Core
 				case "Customers":
 					return CoreData.CreateNewCustomer (context);
 
+				case "InvoiceDocuments":
+					return CoreData.CreateNewInvoiceDocument (context);
+
+				case "ArticleDefinitions":
+					return CoreData.CreateNewArticleDefinition (context);
+
 				default:
 					return null;
 			}
@@ -220,6 +226,16 @@ namespace Epsitec.Cresus.Core
 		private static AbstractEntity CreateNewCustomer(EntityContext context)
 		{
 			return context.CreateEmptyEntity<RelationEntity> ();
+		}
+
+		private static AbstractEntity CreateNewArticleDefinition(EntityContext context)
+		{
+			return context.CreateEmptyEntity<ArticleDefinitionEntity> ();
+		}
+
+		private static AbstractEntity CreateNewInvoiceDocument(EntityContext context)
+		{
+			return context.CreateEmptyEntity<InvoiceDocumentEntity> ();
 		}
 		
 

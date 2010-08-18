@@ -104,11 +104,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void CreateNewItem()
 		{
+			this.Orchestrator.CloseSubViews ();
+
 			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
 
 			if (item != null)
 			{
 				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
+
 				this.Orchestrator.ShowSubView (null, controller);
 			}
 		}
