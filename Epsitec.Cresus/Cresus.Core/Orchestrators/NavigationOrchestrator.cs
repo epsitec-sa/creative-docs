@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			this.liveNodes = new List<Node> ();
 			this.mainViewController = mainViewController;
 			this.history = new Navigation.NavigationHistory (this);
-			this.clickSimulators = new Dictionary<Key, ClickSimulator> ();
+			this.clickSimulators = new Dictionary<Key, ClickSimulatorCollection> ();
 			
 			this.MakeDirty ();
 		}
@@ -121,25 +121,25 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.WalkToRoot (controller).Count () - 1;
 		}
 
+		/// <summary>
+		/// Gets a meta click simulator which contains all registered click simulators for the
+		/// current controller level.
+		/// </summary>
+		/// <returns>The click simulator.</returns>
 		public IClickSimulator GetLeafClickSimulator()
 		{
 			var key = this.GetLeafViewControllerKey ();
 			
-			ClickSimulator clickSimulator;
+			ClickSimulatorCollection collection;
 
-			this.clickSimulators.TryGetValue (key, out clickSimulator);
-
-			return clickSimulator;
-		}
-
-		private Key GetLeafViewControllerKey()
-		{
-			var dataViewController = this.DataViewController;
-			var leafViewController = dataViewController.GetLeafViewController ();
-			
-			int level = leafViewController.GetNavigationLevel ();
-			
-			return new Key (level);
+			if (this.clickSimulators.TryGetValue (key, out collection))
+			{
+				return collection;
+			}
+			else
+			{
+				return ClickSimulatorCollection.Empty;
+			}
 		}
 
 		/// <summary>
@@ -152,105 +152,45 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
+		/// <summary>
+		/// Registers the specified click simulator for the current controller level.
+		/// </summary>
+		/// <param name="clickSimulator">The click simulator.</param>
 		internal void Register(IClickSimulator clickSimulator)
 		{
 			var key = this.GetLeafViewControllerKey ();
 
-			ClickSimulator simulator;
+			ClickSimulatorCollection collection;
 			
-			if (this.clickSimulators.TryGetValue (key, out simulator) == false)
+			if (this.clickSimulators.TryGetValue (key, out collection) == false)
 			{
-				simulator = new ClickSimulator ();
-				this.clickSimulators[key] = simulator;
+				collection = new ClickSimulatorCollection ();
+				this.clickSimulators[key] = collection;
 			}
 
-			simulator.Add (clickSimulator);
+			collection.Add (clickSimulator);
 		}
 
+		/// <summary>
+		/// Unregisters the specified click simulator. This will browse through all registered
+		/// controller levels.
+		/// </summary>
+		/// <param name="clickSimulator">The click simulator.</param>
 		internal void Unregister(IClickSimulator clickSimulator)
 		{
 			this.clickSimulators.Values.ForEach (x => x.Remove (clickSimulator));
 		}
 
 
-		class ClickSimulator : IClickSimulator
+		private Key GetLeafViewControllerKey()
 		{
-			public ClickSimulator()
-			{
-				this.simulators = new HashSet<IClickSimulator> ();
-			}
+			var dataViewController = this.DataViewController;
+			var leafViewController = dataViewController.GetLeafViewController ();
 
-			public void Add(IClickSimulator simulator)
-			{
-				this.simulators.Add (simulator);
-			}
+			int level = leafViewController == null ? -1 : leafViewController.GetNavigationLevel ();
 
-			public void Remove(IClickSimulator simulator)
-			{
-				if (this.simulators.Remove (simulator))
-				{
-					//	OK, removed successfully the specified simulator from this instance.
-				}
-			}
-
-			#region IClickSimulator Members
-
-			public bool SimulateClick(string name)
-			{
-				return this.simulators.Any (x => x.SimulateClick (name));
-			}
-
-			#endregion
-
-			private readonly HashSet<IClickSimulator> simulators;
+			return new Key (level);
 		}
-		
-		struct Key : System.IEquatable<Key>
-		{
-			public Key(int level)
-			{
-				this.level = level;
-			}
-
-
-			public int Level
-			{
-				get
-				{
-					return this.level;
-				}
-			}
-
-
-			public override int GetHashCode()
-			{
-				return this.level;
-			}
-
-			public override bool Equals(object obj)
-			{
-				if (obj is Key)
-				{
-					return this.Equals ((Key) obj);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			#region IEquatable<Key> Members
-
-			public bool Equals(Key other)
-			{
-				return this.level == other.level;
-			}
-
-			#endregion
-
-			private readonly int level;
-		}
-
 
 		private void RecordStateBeforeChange()
 		{
@@ -371,6 +311,98 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		#endregion
 
+		#region ClickSimulatorCollection Class
+
+		/// <summary>
+		/// The <c>ClickSimulatorCollection</c> implements a meta click simulator which dispatches the
+		/// <c>SimulateClick</c> action to any of the simulators found in the collection.
+		/// </summary>
+		private class ClickSimulatorCollection : IClickSimulator
+		{
+			public ClickSimulatorCollection()
+			{
+				this.simulators = new HashSet<IClickSimulator> ();
+			}
+
+			public void Add(IClickSimulator simulator)
+			{
+				this.simulators.Add (simulator);
+			}
+
+			public void Remove(IClickSimulator simulator)
+			{
+				if (this.simulators.Remove (simulator))
+				{
+					//	OK, removed successfully the specified simulator from this instance.
+				}
+			}
+
+			#region IClickSimulator Members
+
+			public bool SimulateClick(string name)
+			{
+				return this.simulators.Any (x => x.SimulateClick (name));
+			}
+
+			#endregion
+
+			public static readonly IClickSimulator Empty = new ClickSimulatorCollection ();
+
+			private readonly HashSet<IClickSimulator> simulators;
+		}
+
+		#endregion
+
+		#region Key Structure
+
+		private struct Key : System.IEquatable<Key>
+		{
+			public Key(int level)
+			{
+				this.level = level;
+			}
+
+
+			public int Level
+			{
+				get
+				{
+					return this.level;
+				}
+			}
+
+
+			public override int GetHashCode()
+			{
+				return this.level;
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj is Key)
+				{
+					return this.Equals ((Key) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			#region IEquatable<Key> Members
+
+			public bool Equals(Key other)
+			{
+				return this.level == other.level;
+			}
+
+			#endregion
+
+			private readonly int level;
+		}
+
+		#endregion
+
 		private static long GetCurrentActionId()
 		{
 			var message = Epsitec.Common.Widgets.Message.GetLastMessage ();
@@ -379,7 +411,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private readonly List<Node> liveNodes;
-		private readonly Dictionary<Key, ClickSimulator> clickSimulators;
+		private readonly Dictionary<Key, ClickSimulatorCollection> clickSimulators;
 		private readonly MainViewController mainViewController;
 		private readonly Navigation.NavigationHistory history;
 		private bool isDirty;
