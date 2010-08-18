@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Si la dernière page actuelle n'est pas vide, crée un nouvelle page vide.
+		/// Si la dernière page actuelle n'est pas vide, crée une nouvelle page vide.
 		/// </summary>
 		public int PrepareEmptyPage()
 		{

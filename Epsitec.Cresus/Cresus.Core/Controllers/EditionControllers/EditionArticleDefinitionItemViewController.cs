@@ -109,7 +109,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return context.CreateEmptyEntity<ArticleCategoryEntity> ();
 		}
-
-
 	}
 }

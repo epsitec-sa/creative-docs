@@ -116,6 +116,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListController.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
@@ -360,6 +361,7 @@
     <EmbeddedResource Include="Images\Button.RadioNo.icon" />
     <EmbeddedResource Include="Images\Button.RadioYes.icon" />
     <EmbeddedResource Include="Images\Edition.DiscardRecord.icon" />
+    <EmbeddedResource Include="Images\Data.ArticlePrice.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

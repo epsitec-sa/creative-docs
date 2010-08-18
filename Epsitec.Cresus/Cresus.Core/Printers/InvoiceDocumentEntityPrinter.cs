@@ -212,6 +212,7 @@ namespace Epsitec.Cresus.Core.Printers
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.PageSize.Height-57, 80, 25));
 
+			//	Génère le groupe "concerne".
 			{
 				string     title, text;
 				CellBorder cellBorder;
@@ -229,7 +230,7 @@ namespace Epsitec.Cresus.Core.Printers
 				else
 				{
 					title      = "Atelier";
-					text       = string.Concat ("<b>", group.Name, "</b>");
+					text       = string.Concat ("<b>", string.IsNullOrWhiteSpace (group.Name) ? group.Code : group.Name, "</b>");
 					cellBorder = CellBorder.Default;
 					margins    = new Margins (1);
 					color      = Color.FromBrightness (0.9);
