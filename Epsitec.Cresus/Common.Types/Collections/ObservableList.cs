@@ -677,7 +677,8 @@ namespace Epsitec.Common.Types.Collections
 				if (this.nextNotifier == null)
 				{
 					//	Last in the chain - we will reactivate the event generation.
-					
+
+					this.list.deferredNotifier = null;
 					this.FireRecordedEvents ();
 				}
 				else
