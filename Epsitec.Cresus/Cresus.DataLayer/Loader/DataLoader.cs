@@ -58,6 +58,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		public AbstractEntity ResolveEntity(Druid entityId, DbKey rowKey)
+		{
+			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
+
+			Request request = new Request ()
+			{
+				RootEntity = entity,
+				RootEntityKey = rowKey,
+			};
+
+			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+		}
+
+
 		public IEnumerable<T> GetByExample<T>(T example) where T : AbstractEntity
 		{
 			Request request = new Request ()
@@ -75,30 +89,37 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			request.ThrowIfNull ("request");
 			request.RootEntity.ThrowIfNull ("request.RootEntity");
 			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
-			
-			foreach (EntityData entityData in this.LoaderQueryGenerator.GetEntitiesData (request))
-			{
-				T entity = this.ResolveEntity (entityData) as T;
 
-				if (entity != null)
-				{
-					yield return entity;
-				}
-			}
+			return from data in this.LoaderQueryGenerator.GetEntitiesData (request)
+				   select (T) this.ResolveEntity (data);
 		}
 
 
-		public AbstractEntity ResolveEntity(Druid entityId, DbKey rowKey)
+		public object ResolveValueField(AbstractEntity entity, Druid fieldId)
 		{
-			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
+			return this.LoaderQueryGenerator.GetValueField (entity, fieldId);
+		}
 
-			Request request = new Request ()
+
+		public AbstractEntity ResolveReferenceField(AbstractEntity entity, Druid fieldId)
+		{
+			EntityData targetData = this.LoaderQueryGenerator.GetReferenceField (entity, fieldId);
+
+			AbstractEntity target = null;
+
+			if (targetData != null)
 			{
-				RootEntity = entity,
-				RootEntityKey = rowKey,
-			};
+				target = this.ResolveEntity (targetData);
+			}
 
-			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+			return target;
+		}
+
+
+		public IEnumerable<AbstractEntity> ResolveCollectionField(AbstractEntity entity, Druid fieldId)
+		{
+			return from data in this.LoaderQueryGenerator.GetCollectionField (entity, fieldId)
+				   select this.ResolveEntity (data);
 		}
 
 
@@ -117,58 +138,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 
 			return entity;
-		}
-
-
-		public object ResolveValueField(AbstractEntity entity, Druid fieldId)
-		{
-			return this.LoaderQueryGenerator.GetFieldValue (entity, fieldId);
-		}
-
-
-		public AbstractEntity ResolveReferenceField(AbstractEntity entity, Druid fieldId)
-		{
-			string fieldName = fieldId.ToResourceId ();
-			
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
-
-			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
-			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
-
-			rootExample.SetField<AbstractEntity> (fieldName, targetExample);
-
-			Request request = new Request ()
-			{
-				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
-				RequestedEntity = targetExample,
-			};
-
-			return this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
-		}
-
-
-		public IEnumerable<AbstractEntity> ResolveCollectionField(AbstractEntity entity, Druid fieldId)
-		{
-			string fieldName = fieldId.ToResourceId ();
-
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			StructuredTypeField field = this.EntityContext.GetEntityFieldDefinition (leafEntityId, fieldName);
-
-			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
-			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
-
-			rootExample.GetFieldCollection<AbstractEntity> (fieldName).Add (targetExample);
-
-			Request request = new Request ()
-			{
-				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
-				RequestedEntity = targetExample,
-			};
-
-			return this.DataContext.DataLoader.GetByRequest<AbstractEntity> (request);
 		}
 		
 
