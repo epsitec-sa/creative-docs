@@ -591,6 +591,12 @@ namespace Epsitec.Cresus.Core
 			articleGroup1.Code = "SOFT";
 			articleGroup1.Name = "Logiciels";
 
+			var articleGroup2 = this.DataContext.CreateEntity<ArticleGroupEntity> ();
+
+			articleGroup2.Rank = 1;
+			articleGroup2.Code = "MAT";
+			articleGroup2.Name = "Matériel";
+
 			var accountingDef = this.DataContext.CreateEntity<ArticleAccountingDefinitionEntity> ();
 
 			accountingDef.BeginDate = new System.DateTime (2010, 1, 1);
@@ -732,7 +738,7 @@ namespace Epsitec.Cresus.Core
 			articleDef5.IdA = "WDO-DESIGN";
 			articleDef5.ShortDescription = "Fenêtre Design";
 			articleDef5.LongDescription  = "Fenêtre Design pour tout type de façades, produite à la main par des artisans de la région";
-			articleDef5.ArticleGroups.Add (articleGroup1);
+			articleDef5.ArticleGroups.Add (articleGroup2);
 			articleDef5.ArticleCategory = articleCategory3;
 			articleDef5.BillingUnit = uomUnit1;
 			articleDef5.Units = uomGroup1;
@@ -744,7 +750,7 @@ namespace Epsitec.Cresus.Core
 			articleDef6.IdA = "FOOD-MILCH";
 			articleDef6.ShortDescription = "Lait";
 			articleDef6.LongDescription  = "Lait pasteurisé";
-			articleDef6.ArticleGroups.Add (articleGroup1);
+			articleDef6.ArticleGroups.Add (articleGroup2);
 			articleDef6.ArticleCategory = articleCategory4;
 			articleDef6.BillingUnit = uomUnit4;
 			articleDef6.Units = uomGroup2;

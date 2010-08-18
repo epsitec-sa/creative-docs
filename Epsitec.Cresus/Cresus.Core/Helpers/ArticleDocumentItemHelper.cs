@@ -111,21 +111,39 @@ namespace Epsitec.Cresus.Core.Helpers
 			return TextFormatter.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
 		}
 
-		public static string GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false)
+		public static string GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
 		{
 			string description = null;
 
-			if (!string.IsNullOrEmpty (article.ReplacementText))
+			if (shortDescription)  // description courte prioritaire ?
 			{
-				description = article.ReplacementText;
+				if (!string.IsNullOrEmpty (article.ReplacementText))
+				{
+					description = article.ReplacementText;
+				}
+				else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+				{
+					description = article.ArticleDefinition.ShortDescription;
+				}
+				else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+				{
+					description = article.ArticleDefinition.LongDescription;
+				}
 			}
-			else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+			else  // description longue prioritaire ?
 			{
-				description = article.ArticleDefinition.LongDescription;
-			}
-			else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
-			{
-				description = article.ArticleDefinition.ShortDescription;
+				if (!string.IsNullOrEmpty (article.ReplacementText))
+				{
+					description = article.ReplacementText;
+				}
+				else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+				{
+					description = article.ArticleDefinition.LongDescription;
+				}
+				else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+				{
+					description = article.ArticleDefinition.ShortDescription;
+				}
 			}
 
 			if (replaceTags)
@@ -158,6 +176,24 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ArticleDefinition.IsActive () &&
 				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
+				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Goods;  // marchandises ?
+			}
+
+			return false;
+		}
+
+		public static bool IsArticleForProd(ArticleDocumentItemEntity article, ArticleGroupEntity group)
+		{
+			//	Retourne true s'il s'agit d'un article qui doit figurer sur un ordre de production.
+			if (article != null &&
+				article.ArticleDefinition.IsActive () &&
+				article.ArticleDefinition.ArticleCategory.IsActive ())
+			{
+				if (!article.ArticleDefinition.ArticleGroups.Contains (group))
+				{
+					return false;
+				}
+
 				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Goods;  // marchandises ?
 			}
 
