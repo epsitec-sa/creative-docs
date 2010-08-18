@@ -89,6 +89,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
 
+			if (controller.NavigationPathElement == null)
+			{
+				return;
+			}
+
 			this.RecordStateBeforeChange ();
 
 			this.liveNodes.Add (new Node (parentController, controller, this.currentHistoryId));
@@ -105,6 +110,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			System.Diagnostics.Debug.Assert (parentController != controller);
 			System.Diagnostics.Debug.Assert (controller != null);
+
+			if (controller.NavigationPathElement == null)
+            {
+				return;
+            }
 			
 			this.RecordStateBeforeChange ();
 			

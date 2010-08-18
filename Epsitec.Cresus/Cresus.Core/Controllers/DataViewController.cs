@@ -143,12 +143,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (controller != null);
 
 			this.InheritLeafControllerDataContext (controller);
+			controller = controller.GetReplacementController ();
 
 			var leaf   = this.GetLeafController ();
 			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);
 
-			controller = controller.GetReplacementController ();
 			controller.CreateUI (column);
 
 			this.AttachColumn (column);
