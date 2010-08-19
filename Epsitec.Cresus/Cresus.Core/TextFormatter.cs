@@ -15,23 +15,37 @@ namespace Epsitec.Cresus.Core
 		public static FormattedText FormatText(params object[] values)
 		{
 			var buffer = new System.Text.StringBuilder ();
-			var items  = new List<string> ();
+			
+			List<string> items = TextFormatter.ConvertItemsToStrings (values);
 
-			bool emptyItem = true;
+			TextFormatter.ProcessTags (items);
+			TextFormatter.FormatText (buffer, items);
+
+			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
+		}
+
+
+		private static List<string> ConvertItemsToStrings(object[] values)
+		{
+			var items  = new List<string> ();
 
 			foreach (var value in values.Select (item => TextFormatter.ConvertToText (item)))
 			{
 				items.Add (value.Replace ("\n", "<br/>").Trim ());
 			}
 
-			int count = items.Count;
-
-			items.Add ("");
+			return items;
+		}
+		private static void FormatText(System.Text.StringBuilder buffer, List<string> items)
+		{
+			bool emptyItem = true;
+			int  count     = items.Count;
 
 			for (int i = 0; i < count; i++)
 			{
+				bool isLast = (i == count-1);
 				string text = items[i];
-				string next = items[i+1];
+				string next = isLast ? "" : items[i+1];
 
 				if (text.Length == 0)
 				{
@@ -39,7 +53,9 @@ namespace Epsitec.Cresus.Core
 					continue;
 				}
 
-				if (text.FirstCharacter () == '~')
+				char prefix = text.FirstCharacter ();
+
+				if (prefix == Prefix.SkipItemIfPreviousEmpty)
 				{
 					if (emptyItem)
 					{
@@ -47,8 +63,12 @@ namespace Epsitec.Cresus.Core
 					}
 
 					text = text.Substring (1);
+					prefix = text.FirstCharacter ();
 				}
-				if (text.LastCharacter () == '~')
+
+				char suffix = text.LastCharacter ();
+
+				if (suffix == Suffix.SkipItemIfNextEmpty)
 				{
 					if (next.Length == 0)
 					{
@@ -56,9 +76,14 @@ namespace Epsitec.Cresus.Core
 					}
 
 					text = text.Substring (0, text.Length-1);
+					suffix = text.LastCharacter ();
 				}
 
-				if (!emptyItem && buffer.LastCharacter () != '(' && !Misc.IsPunctuationMark (text.FirstCharacter ()))
+				char lastCharacter = buffer.LastCharacter ();
+
+				if ((emptyItem == false) &&
+					(lastCharacter != '(') &&
+					(Misc.IsPunctuationMark (prefix) == false))
 				{
 					buffer.Append (" ");
 				}
@@ -67,10 +92,78 @@ namespace Epsitec.Cresus.Core
 
 				emptyItem = text.EndsWith ("<br/>");
 			}
-
-			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
-		
+
+		public static class Prefix
+		{
+			public const char SkipItemIfPreviousEmpty = '~';
+		}
+
+		public static class Suffix
+		{
+			public const char SkipItemIfNextEmpty = '~';
+		}
+
+		public const string Mark = "‼[mark]";
+		public const string ClearGroupIfEmpty = "‼[clear-group-if-empty]";
+
+		private static void ProcessTags(List<string> items)
+		{
+			int count = items.Count;
+			
+			for (int i = 0; i < count; i++)
+			{
+				string item = items[i];
+
+				if ((item == TextFormatter.ClearGroupIfEmpty) &&
+					(i > 0))
+				{
+					string probe = items[i-1];
+
+					if (string.IsNullOrWhiteSpace (probe))
+					{
+						TextFormatter.ClearGroup (items, i);
+						TextFormatter.ProcessTags (items);
+						break;
+					}
+				}
+			}
+
+			items.RemoveAll (x => x.StartsWith ("‼"));
+		}
+
+		private static void ClearGroup(List<string> items, int index)
+		{
+			int startIndex = 0;
+
+			for (int i = index-1; i > 0; i--)
+			{
+				if (items[i] == TextFormatter.Mark)
+				{
+					startIndex = i+1;
+					break;
+				}
+			}
+
+			int count = items.Count;
+			int endIndex = count-1;
+
+			for (int i = index+1; i < count; i++)
+			{
+				if (items[i] == TextFormatter.Mark)
+				{
+					endIndex = i-1;
+					break;
+				}
+			}
+
+			int num = endIndex - startIndex + 1;
+
+			items.RemoveRange (startIndex, num);
+		}
+
+
+
 		private static string ConvertToText(object value)
 		{
 			if (value == null)
