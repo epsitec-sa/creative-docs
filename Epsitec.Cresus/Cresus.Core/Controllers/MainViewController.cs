@@ -19,7 +19,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainViewController : CoreViewController
+	public class MainViewController : CoreViewController, ICommandHandler
 	{
 		public MainViewController(CoreData data, CommandContext commandContext)
 			: base ("MainView")
@@ -68,6 +68,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					System.Diagnostics.Debug.WriteLine ("CurrentChanged");
 					this.browserViewController.SelectActiveEntity (this.dataViewController);
 				};
+
+			this.commandContext.AttachCommandHandler (this);
 		}
 
 		public CommandContext CommandContext
@@ -151,6 +153,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Preview, () => this.Preview ());
 		}
 
+		public static MainViewController Find(CommandContextChain contextChain)
+		{
+			return contextChain.Contexts.Select (x => x.GetCommandHandler<MainViewController> ()).Where (x => x != null).FirstOrDefault ();
+		}
 
 		public void SetActionVisibility(bool visibility)
 		{
@@ -162,6 +168,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (disposing)
 			{
+				this.commandContext.DetachCommandHandler (this);
+
 				this.data.AboutToSaveDataContext -= this.HandleAboutToSaveDataContext;
 				this.data.AboutToDiscardDataContext -= this.HandleAboutToDiscardDataContext;
 			}

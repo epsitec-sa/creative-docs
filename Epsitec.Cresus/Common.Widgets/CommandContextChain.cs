@@ -1,10 +1,11 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -61,12 +62,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				foreach (CommandContext context in this.Contexts)
-				{
-					return context;
-				}
-
-				return null;
+				return this.Contexts.FirstOrDefault ();
 			}
 		}
 
@@ -78,15 +74,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				for (int i = 0; i < this.chain.Count; i++)
-				{
-					if (this.chain[i].IsAlive)
-					{
-						return false;
-					}
-				}
-
-				return true;
+				return this.chain.Any (x => x.IsAlive) ? false : true;
 			}
 		}
 

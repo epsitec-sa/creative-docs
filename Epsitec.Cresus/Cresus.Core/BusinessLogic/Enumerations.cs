@@ -39,6 +39,37 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			yield return EnumKeyValues.Create (UnitOfMeasureCategory.Energy,    "Energie");
 		}
 
+		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetInputVatCodes()
+		{
+			var filter = new HashSet<Finance.VatCode>
+			{
+				Finance.VatCode.Excluded,
+				Finance.VatCode.ZeroRated,
+				Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses,
+				Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses,
+				Finance.VatCode.SpecialInputTaxOnMaterialOrServiceExpenses,
+				Finance.VatCode.StandardInputTaxOnInvestementOrOperatingExpenses,
+				Finance.VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses,
+				Finance.VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses,
+			};
+
+			return Enumerations.GetAllPossibleVatCodes ().Where (x => filter.Contains (x.Key));
+		}
+
+		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetOutputVatCodes()
+		{
+			var filter = new HashSet<Finance.VatCode>
+			{
+				Finance.VatCode.Excluded,
+				Finance.VatCode.ZeroRated,
+				Finance.VatCode.StandardTaxOnTurnover,
+				Finance.VatCode.ReducedTaxOnTurnover,
+				Finance.VatCode.SpecialTaxOnTurnover,
+			};
+
+			return Enumerations.GetAllPossibleVatCodes ().Where (x => filter.Contains (x.Key));
+		}
+
 		public static IEnumerable<EnumKeyValues<Finance.VatCode>> GetAllPossibleVatCodes()
 		{
 			yield return EnumKeyValues.Create (Finance.VatCode.Excluded, "EXCLU", "Exclu de l'impôt");
