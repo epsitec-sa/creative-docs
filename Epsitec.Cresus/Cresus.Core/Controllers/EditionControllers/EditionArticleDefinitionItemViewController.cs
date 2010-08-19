@@ -56,12 +56,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile,  0, "Description courte", Marshaler.Create (() => this.Entity.ShortDescription, x => this.Entity.ShortDescription = x));
+			var shortToolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
+			shortToolbarController.CreateUI (tile.Container, "Description courte");
+			var shortTextField = builder.CreateTextField (tile, 0, null, Marshaler.Create (() => this.Entity.ShortDescription, x => this.Entity.ShortDescription = x));
+			shortToolbarController.UpdateUI (this.Entity, null, shortTextField);
 
-			var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
-			toolbarController.CreateUI (tile.Container, "Description longue");
-			var textField = builder.CreateTextFieldMulti (tile, 68, null, Marshaler.Create (() => this.Entity.LongDescription, x => this.Entity.LongDescription = x));
-			toolbarController.UpdateUI (this.Entity, null, textField);
+			var longToolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
+			longToolbarController.CreateUI (tile.Container, "Description longue");
+			var longTextField = builder.CreateTextFieldMulti (tile, 68, null, Marshaler.Create (() => this.Entity.LongDescription, x => this.Entity.LongDescription = x));
+			longToolbarController.UpdateUI (this.Entity, null, longTextField);
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 

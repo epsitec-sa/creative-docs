@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 		}
 
-		public void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
+		public void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)
 		{
 			//	Met à jour l'interface en créant les boutons pour chaque paramètre.
 			//	Si articleDocumentItem == null, on ne spécifie pas les valeurs dans le texte éditable.
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, TextFieldMultiEx textField)
+		public static void UpdateTextFieldParameter(ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)
 		{
 			//	Met à jour les paramètres dans le widget qui contient la désignation de l'article.
 			//	Ainsi, les valeurs affichées pour les paramètres sont mises à jour.
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			return string.Concat (ArticleParameterHelper.startParameterTag, code, ArticleParameterHelper.endParameterTag);
 		}
 
-		private static void InsertText(TextFieldMultiEx textField, string text)
+		private static void InsertText(AbstractTextField textField, string text)
 		{
 			//	Insère un texte comme s'il avait été frappé par l'utilisateur.
 			textField.Focus ();  // il faut mettre le focus AVANT, à cause de la gestion des boutons v/x dans les widgets '*Ex' !
