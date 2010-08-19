@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 					if (totalRank == 0)  // ligne de total HT ?
 					{
-						//?total.PrimaryPriceBeforeTax = primaryTotalBeforeTax + primarySubtotalBeforeTax;
+						total.PrimaryPriceBeforeTax = primaryTotalBeforeTax + primarySubtotalBeforeTax;
 						total.TextForPrimaryPrice = "Total HT";
 					}
 					else  // ligne de total TTC ?
