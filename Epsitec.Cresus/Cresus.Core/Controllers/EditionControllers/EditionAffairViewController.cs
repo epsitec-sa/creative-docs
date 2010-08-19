@@ -117,6 +117,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			businessEvent.Documents.Add (document);
 
 			this.Entity.Events.Add (businessEvent);
+
+			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
 		}
 
 
@@ -136,9 +138,27 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			foreach (var doc in this.GetDocumentEntities (this.Entity))
 			{
-				builder.CreateEditionTitleTile ("Data.Document", "Documents");
-				builder.CreateSummaryTile (string.Format (System.Globalization.CultureInfo.InstalledUICulture, "Document.{0}", counter++), doc, TextFormatter.FormatText ("Offre n°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate));
+				builder.CreateEditionTitleTile ("Data.Document", "Offre");
+				builder.CreateSummaryTile (EditionAffairViewController.GetOfferTileName (counter++), doc, TextFormatter.FormatText ("N°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate));
 			}
+		}
+
+		private static string GetOfferTileName(int index)
+		{
+
+			if (index < 0)
+			{
+				return null;
+			}
+			else
+			{
+				return string.Format (System.Globalization.CultureInfo.InstalledUICulture, "Offer.{0}", index);
+			}
+		}
+
+		private string GetOfferTileName(InvoiceDocumentEntity doc)
+		{
+			return EditionAffairViewController.GetOfferTileName (this.GetDocumentEntities (this.Entity).IndexOf (doc));
 		}
 
 		private void CreateUICaseEvents(SummaryDataItems data)

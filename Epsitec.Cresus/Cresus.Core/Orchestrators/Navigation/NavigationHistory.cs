@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 				throw new System.InvalidOperationException ("Navigation is forbidden when NavigationHistory is suspended");
             }
 
+			if (fullPath.IsReadOnly == false)
+			{
+				fullPath = new NavigationPath (fullPath);
+				fullPath.Freeze ();
+			}
+
 			switch (this.state)
 			{
 				case State.Neutral:

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.InvoiceDocument", "Facture");
+				builder.CreateEditionTitleTile ("Data.InvoiceDocument", "Document");
 
 				this.CreateUIMain1        (builder);
 				this.CreateUIBillingMail  (builder);
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			FrameBox group = builder.CreateGroup (tile, "N° de la facture (principal, externe et interne)");
+			FrameBox group = builder.CreateGroup (tile, "N° du document (principal, externe et interne)");
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			// TODO: à supprimer un jour...
 			builder.CreateMargin (tile, horizontalSeparator: false);
 			builder.CreateMargin (tile, horizontalSeparator: false);
-			var button = builder.CreateButton (tile, 0, "Action", "Recalculer la facture (provisoire)");
+			var button = builder.CreateButton (tile, 0, "Action", "Recalculer les totaux (provisoire)");
 
 			button.Clicked += delegate
 			{
