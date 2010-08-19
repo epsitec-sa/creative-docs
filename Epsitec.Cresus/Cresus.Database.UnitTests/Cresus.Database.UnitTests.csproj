@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
-    <Compile Include="UnitTestDbUidManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
