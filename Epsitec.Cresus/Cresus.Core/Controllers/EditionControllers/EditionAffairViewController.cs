@@ -60,6 +60,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIMain (builder);
 
 				builder.CreateFooterEditorTile ();
+
+				this.CreateUIActionButtons (builder);
 			}
 			
 			//	Summary:
@@ -67,8 +69,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				this.CreateUICaseEvents (data);
 			}
-
-			this.CreateUIActionButtons ();
 		}
 
 		protected override void AboutToCloseUI()
@@ -78,8 +78,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.CloseUIActionButtons ();
 		}
 
-		private void CreateUIActionButtons()
+		private void CreateUIActionButtons(UIBuilder builder)
 		{
+#if false
 			var mainViewController   = this.Orchestrator.MainViewController;
 			var actionViewController = mainViewController.ActionViewController;
 
@@ -87,16 +88,21 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			
 				
 			mainViewController.SetActionVisibility (true);
+#else
+			builder.AddButton ("NewOffer", "Nouvelle offre", "Crée une nouvelle offre (vide)", this.ExecuteNewOffer);
+#endif
 		}
 
 		private void CloseUIActionButtons()
 		{
+#if false
 			var mainViewController   = this.Orchestrator.MainViewController;
 			var actionViewController = mainViewController.ActionViewController;
 
 			actionViewController.RemoveButton ("NewOffer");
 			
 			this.Orchestrator.MainViewController.SetActionVisibility (false);
+#endif
 		}
 
 		private void ExecuteNewOffer()
