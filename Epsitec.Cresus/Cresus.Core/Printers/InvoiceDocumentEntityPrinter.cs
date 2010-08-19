@@ -625,6 +625,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.LinePrice         ].Visible = true;
+			this.tableColumns[TableColumnKeys.Vat               ].Visible = true;
+			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
 			return 1;
 		}
@@ -638,7 +640,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
-			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
+
+			//?if (line.PrimaryPriceBeforeTax.HasValue)  // ligne de total HT ?
+			if (false)
+			{
+				this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
+			}
+			else  // ligne de total TTC ?
+			{
+				this.tableColumns[TableColumnKeys.Total].Visible = true;
+			}
 
 			return 1;
 		}
@@ -903,7 +914,13 @@ namespace Epsitec.Cresus.Core.Printers
 				return 0;
 			}
 
-			if (line.FixedPriceAfterTax.HasValue)
+			//?if (line.PrimaryPriceBeforeTax.HasValue)  // ligne de total HT ?
+			if (false)
+			{
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, line.TextForPrimaryPrice);
+				//?table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row, Misc.PriceToString (line.PrimaryPriceBeforeTax));
+			}
+			else if (line.FixedPriceAfterTax.HasValue)
 			{
 				string text = string.Join ("<br/>", line.TextForPrimaryPrice, line.TextForFixedPrice);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
