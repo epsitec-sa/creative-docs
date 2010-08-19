@@ -110,6 +110,22 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (widget);
 		}
 
+		public void AddButton(string id, string title, string description, System.Action callback)
+		{
+			var button = new ConfirmationButton
+			{
+				Name = id,
+				Text = ConfirmationButton.FormatContent (title, description),
+				PreferredHeight = 52,
+			};
+
+			this.Add (button);
+
+			button.Clicked += (sender, e) => callback ();
+		}
+
+
+
 		public ConfirmationButton CreateCreationButton<T>(CreationViewController<T> controller, string title, string description, System.Action<DataContext, T> initializer = null)
 			where T : AbstractEntity, new ()
 		{
