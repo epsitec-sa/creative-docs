@@ -27,10 +27,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIInvoice  (data);
-				this.CreateUILines    (data);
-				this.CreateUIBillings (data);
-				this.CreateUIComments (data);
+				this.CreateUIInvoice      (data);
+				this.CreateUIArticleLines (data);
+				this.CreateUIFreightLines (data);
+				this.CreateUITotalLines   (data);
+				this.CreateUIBillings     (data);
+				this.CreateUIComments     (data);
 			}
 		}
 
@@ -50,26 +52,72 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUILines(SummaryDataItems data)
+		private void CreateUIArticleLines(SummaryDataItems data)
 		{
 			data.Add (
 				new SummaryData
 				{
 					AutoGroup    = true,
-					Name		 = "DocumentItem",
+					Name		 = "ArticleDocumentItem",
 					IconUri		 = "Data.DocumentItems",
 					Title		 = TextFormatter.FormatText ("Lignes"),
 					CompactTitle = TextFormatter.FormatText ("Lignes"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("DocumentItem", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleDocumentItem", data.Controller, this.DataContext);
 
 			template.DefineText           (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
 			template.DefineCompactText    (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
 			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
-			template.Filter = LineFilter;
+			template.Filter = ArticleLineFilter;
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+		}
+
+		private void CreateUIFreightLines(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "FreightDocumentItem",
+					IconUri		 = "Data.FreightDocumentItem",
+					Title		 = TextFormatter.FormatText ("Port et emballage"),
+					CompactTitle = TextFormatter.FormatText ("Port et emballage"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightDocumentItem", data.Controller, this.DataContext);
+
+			template.DefineText           (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCompactText    (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
+			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
+			template.Filter = FreightLineFilter;
+
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+		}
+
+		private void CreateUITotalLines(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "TotalDocumentItem",
+					IconUri		 = "Data.TotalDocumentItem",
+					Title		 = TextFormatter.FormatText ("Total"),
+					CompactTitle = TextFormatter.FormatText ("Total"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("TotalDocumentItem", data.Controller, this.DataContext);
+
+			template.DefineText        (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
+			template.Filter = TotalLineFilter;
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
@@ -142,11 +190,29 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return index;
 		}
 
-		private static bool LineFilter(AbstractDocumentItemEntity x)
+		private static bool ArticleLineFilter(AbstractDocumentItemEntity x)
 		{
-			return x is TextDocumentItemEntity    ||
-				   x is ArticleDocumentItemEntity ||
-				   x is PriceDocumentItemEntity;
+			return (x is TextDocumentItemEntity    ||
+				    x is ArticleDocumentItemEntity ||
+				    x is PriceDocumentItemEntity) &&
+					!FreightLineFilter (x);
+		}
+
+		private static bool FreightLineFilter(AbstractDocumentItemEntity x)
+		{
+			if (x is ArticleDocumentItemEntity)
+			{
+				var article = x as ArticleDocumentItemEntity;
+
+				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Freight;
+			}
+
+			return false;
+		}
+
+		private static bool TotalLineFilter(AbstractDocumentItemEntity x)
+		{
+			return x is TotalDocumentItemEntity;
 		}
 
 
@@ -255,9 +321,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var desc = x.TextForPrimaryPrice;
 
 			string total;
-			if (x.FixedPriceAfterTax.HasValue)
+			if (x.PrimaryPriceBeforeTax.HasValue)
 			{
-				 total = Misc.PriceToString (x.FixedPriceAfterTax);
+				total = Misc.PriceToString (x.PrimaryPriceBeforeTax);
+			}
+			else if (x.FixedPriceAfterTax.HasValue)
+			{
+				total = Misc.PriceToString (x.FixedPriceAfterTax);
 			}
 			else
 			{
