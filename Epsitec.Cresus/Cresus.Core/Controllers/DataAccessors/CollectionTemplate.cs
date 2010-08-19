@@ -63,8 +63,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
 
-		public abstract AbstractEntity CreateItem();
-		
 		public abstract void DeleteItem(AbstractEntity item);
 
 		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
@@ -282,11 +280,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		public override AbstractEntity CreateItem()
-		{
-			return this.GenericCreateItem ();
-		}
-
 		public override void DeleteItem(AbstractEntity item)
 		{
 			this.GenericDeleteItem (item as T);
@@ -325,10 +318,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					this.setupItem (item);
 				}
-			}
 
-			// Stuff added for the entity change feature.
-			item.EntityChanged += (s, e) => this.changeItem ((T) s, e);
+				// Stuff added for the entity change feature.
+				item.EntityChanged += (s, e) => this.changeItem ((T) s, e);
+			}
 			
 			return item;
 		}
