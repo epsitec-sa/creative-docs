@@ -79,18 +79,20 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static FormattedText GetMailContactSummary(MailContactEntity x)
 		{
 			return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
-										 x.LegalPerson.Complement, "\n",
-										 x.Complement, "\n",
-										 x.Address.Street.StreetName, "\n",
-										 x.Address.Street.Complement, "\n",
-										 x.Address.PostBox.Number, "\n",
-										 x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name);
+											 x.LegalPerson.Complement, "\n",
+											 x.Complement, "\n",
+											 x.Address.Street.StreetName, "\n",
+											 x.Address.Street.Complement, "\n",
+											 x.Address.PostBox.Number, "\n",
+											 TextFormatter.Mark,
+											 x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
+											 TextFormatter.Mark,
+											 x.Address.Location.Name);
 		}
 
 		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
 		{
-			return TextFormatter.FormatText (x.Address.Street.StreetName, "~,",
-										 x.Address.Location.PostalCode, x.Address.Location.Name);
+			return TextFormatter.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 
