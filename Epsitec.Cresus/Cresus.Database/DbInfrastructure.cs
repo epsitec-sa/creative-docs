@@ -135,6 +135,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbUidManager						UidManager
+		{
+			get
+			{
+				return this.uidManager;
+			}
+		}
+
 		public DbAccess							Access
 		{
 			get
@@ -226,6 +234,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
 				helper.CreateTableLog ();
+				helper.CreateTableUid ();
 				
 				transaction.Commit ();
 			}
@@ -293,6 +302,7 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -2338,6 +2348,7 @@ namespace Epsitec.Cresus.Database
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.SetupLogger (transaction);
+				this.SetupUidManager (transaction);
 
 				transaction.Commit ();
 			}
@@ -2354,6 +2365,13 @@ namespace Epsitec.Cresus.Database
 			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.ResetCurrentLogId (transaction);
 		}
+
+		private void SetupUidManager(DbTransaction transaction)
+		{
+			this.uidManager = new DbUidManager ();
+			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
+		}
+
 
 		/// <summary>
 		/// Sets up the metadata table definitions by filling them with the
@@ -2584,6 +2602,12 @@ namespace Epsitec.Cresus.Database
 					this.logger.Detach ();
 					this.logger = null;
 				}
+
+				if (this.uidManager != null)
+				{
+					this.uidManager.Detach ();
+					this.uidManager = null;
+				}
 				
 				if (this.abstraction != null)
 				{
@@ -2715,6 +2739,26 @@ namespace Epsitec.Cresus.Database
 					};
 				
 				//	TODO: add a column recording the nature of the change and the author of the change...
+
+				this.CreateTable (table, columns);
+			}
+
+			public void CreateTableUid()
+			{
+				TypeHelper types = this.infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableUid);
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidMin, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidMax, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidCurrent, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+				};
 
 				this.CreateTable (table, columns);
 			}
@@ -2966,6 +3010,7 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
+		private DbUidManager					uidManager;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();
