@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core
 {
@@ -82,6 +83,47 @@ namespace Epsitec.Cresus.Core
 			return this.commandContext.GetCommandState (command);
 		}
 
+		public static Orchestrators.DataViewOrchestrator GetOrchestrator(CommandEventArgs e)
+		{
+			var controller = MainViewController.Find (e.CommandContextChain);
+
+			if (controller == null)
+			{
+				return null;
+			}
+			else
+			{
+				return controller.Orchestrator;
+			}
+		}
+
+		public void Dispatch(CommandDispatcher dispatcher, CommandEventArgs e, System.Action<Command> action = null)
+		{
+			var widget = e.Source as Widget;
+
+			if (widget.KeyboardFocus)
+			{
+				widget.ClearFocus ();
+			}
+			else
+			{
+				widget = null;
+			}
+
+			if (action == null)
+			{
+				this.DispatchGenericCommand (e.Command);
+			}
+			else
+			{
+				action (e.Command);
+			}
+
+			if (widget != null)
+			{
+				widget.SetFocusOnTabWidget ();
+			}
+		}
 
 
 		private CommandHandlerStack GetCommandHandlerStack(Command command)

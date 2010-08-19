@@ -20,111 +20,48 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var widget = e.Source as Widget;
-
-			if (widget.KeyboardFocus)
-			{
-				widget.ClearFocus ();
-			}
-			else
-			{
-				widget = null;
-			}
-
-			this.commandDispatcher.DispatchGenericCommand (e.Command);
-
-			if (widget != null)
-			{
-				widget.SetFocusOnTabWidget ();
-			}
+			this.commandDispatcher.Dispatch (dispatcher, e);
 		}
 
 		[Command (Res.CommandIds.Edition.DiscardRecord)]
 		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var widget = e.Source as Widget;
+			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var navigator    = orchestrator.Navigator;
+			var history      = navigator.History;
+			var path         = navigator.GetLeafNavigationPath ();
 
-			if (widget.KeyboardFocus)
+			using (history.SuspendRecording ())
 			{
-				widget.ClearFocus ();
-			}
-			else
-			{
-				widget = null;
-			}
-
-			this.commandDispatcher.DispatchGenericCommand (e.Command);
-
-			if (widget != null)
-			{
-				widget.SetFocusOnTabWidget ();
+				this.commandDispatcher.Dispatch (dispatcher, e);
+				
+				history.NavigateInPlace (path);
 			}
 		}
 
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var widget = e.Source as Widget;
-
-			if (widget.KeyboardFocus)
-			{
-				widget.ClearFocus ();
-			}
-			else
-			{
-				widget = null;
-			}
-
-			this.commandDispatcher.DispatchGenericCommand (e.Command);
-
-			if (widget != null)
-			{
-				widget.SetFocusOnTabWidget ();
-			}
+			this.commandDispatcher.Dispatch (dispatcher, e);
 		}
 
 		[Command (Res.CommandIds.Edition.Preview)]
 		public void ProcessEditionPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var widget = e.Source as Widget;
-
-			if (widget.KeyboardFocus)
-			{
-				widget.ClearFocus ();
-			}
-			else
-			{
-				widget = null;
-			}
-
-			this.commandDispatcher.DispatchGenericCommand (e.Command);
-
-			if (widget != null)
-			{
-				widget.SetFocusOnTabWidget ();
-			}
+			this.commandDispatcher.Dispatch (dispatcher, e);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]
 		public void ProcessGlobalSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var widget = e.Source as Widget;
-
-			if (widget.KeyboardFocus)
-			{
-				widget.ClearFocus ();
-			}
-			else
-			{
-				widget = null;
-			}
-
-			this.commandDispatcher.DispatchGenericCommand (e.Command);
-
-			if (widget != null)
-			{
-				widget.SetFocusOnTabWidget ();
-			}
+			this.commandDispatcher.Dispatch (dispatcher, e,
+				delegate
+				{
+					using (var dialog = new Dialogs.PrinterManagerDialog (CoreProgram.Application))
+					{
+						dialog.OpenDialog ();
+					}
+				});
 		}
 
 
