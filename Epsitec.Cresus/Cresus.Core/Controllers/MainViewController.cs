@@ -351,19 +351,35 @@ namespace Epsitec.Cresus.Core.Controllers
 				foreach (var node in leaf.GetControllerChain ().Select (x => x as EntityViewController))
 				{
 					if (node != null)
-                    {
+					{
 						var entity = node.GetEntity ();
 						var context = DataContextPool.Instance.FindDataContext (entity);
-						
+
 						if (context.IsPersistent (entity))
 						{
 							yield return entity;
 						}
-                    }
+					}
 				}
 			}
 		}
-		
+
+		public IEnumerable<AbstractEntity> GetVisibleEntities()
+		{
+			var leaf = this.dataViewController.GetLeafViewController ();
+
+			if (leaf != null)
+			{
+				foreach (var node in leaf.GetControllerChain ().Select (x => x as EntityViewController))
+				{
+					if (node != null)
+					{
+						yield return node.GetEntity ();
+					}
+				}
+			}
+		}
+
 		private readonly CoreData data;
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;

@@ -109,12 +109,26 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var document = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
 			var now = System.DateTime.Now;
 
+			//	TODO: définir le n° IdA plus proprement (business rule ?)
+			document.IdA                   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1}", this.Entity.IdA, this.Entity.Events.Select (x => x.Documents.FirstOrDefault ()).Distinct ().Count () + 1);
 			document.OtherPartyBillingMode = BusinessLogic.Finance.BillingMode.IncludingTax;
 			document.OtherPartyTaxMode     = BusinessLogic.Finance.TaxMode.LiableForVat;
 			document.CurrencyCode          = BusinessLogic.Finance.CurrencyCode.Chf;
 			document.BillingStatus         = BusinessLogic.Finance.BillingStatus.None;
 			document.CreationDate          = now;
 			document.LastModificationDate  = now;
+
+			var relation = this.Orchestrator.MainViewController.GetVisibleEntities ().Select (x => x as RelationEntity).Where (x => x.IsNull () == false).FirstOrDefault ();
+
+			if (relation.DefaultAddress.IsNull () == false)
+            {
+				var mailContact = relation.Person.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Where (x => x.Address == relation.DefaultAddress).FirstOrDefault ();
+				
+				//	TODO: sélectionner l'adresse de facturation et l'adresse de livraison selon le type d'adresse !
+
+				document.BillingMailContact  = mailContact;
+				document.ShippingMailContact = mailContact;
+            }
 
 			businessEvent.EventType = CoreProgram.Application.Data.GetCaseEventTypes ().Where (x => x.Code.Contains ("offre")).First ();
 			businessEvent.Date      = now;
