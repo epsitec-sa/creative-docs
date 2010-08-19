@@ -71,37 +71,44 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.CreateUidCounter (null, 0, 0)
+					() => manager.CreateUidCounter (null, 0, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.CreateUidCounter ("", 0, 0)
+					() => manager.CreateUidCounter ("", 0, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.CreateUidCounter ("test", -1, 0)
+					() => manager.CreateUidCounter ("test", -1, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.CreateUidCounter ("test", 0, -1)
+					() => manager.CreateUidCounter ("test", 0, -1, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.CreateUidCounter ("test", 0, 0, -1)
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void CreateUidCounter()
+		public void CreateAndExistsUidCounter()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				manager.CreateUidCounter ("myCounter", 0, 10);
-
-				Assert.IsTrue (manager.ExistsUidCounter ("myCounter"));
+				for (int i = 0; i < 10; i++)
+				{
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.IsTrue (manager.ExistsUidCounter ("myCounter", i));
+				}
 			}
 		}
 
@@ -115,31 +122,37 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.DeleteUidCounter (null)
+					() => manager.DeleteUidCounter (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.DeleteUidCounter ("")
+					() => manager.DeleteUidCounter ("", 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.DeleteUidCounter ("test", -1)
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void DeleteUidCounter()
+		public void DeleteAndExistsUidCounter()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				manager.CreateUidCounter ("myCounter", 0, 10);
+				for (int i = 0; i < 10; i++)
+				{
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.IsTrue (manager.ExistsUidCounter ("myCounter", i));
 
-				Assert.IsTrue (manager.ExistsUidCounter ("myCounter"));
-
-				manager.DeleteUidCounter ("myCounter");
-
-				Assert.IsFalse (manager.ExistsUidCounter ("myCounter"));
+					manager.DeleteUidCounter ("myCounter", i);
+					Assert.IsFalse (manager.ExistsUidCounter ("myCounter", i));	
+				}
 			}
 		}
 
@@ -153,33 +166,18 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ExistsUidCounter (null)
+					() => manager.ExistsUidCounter (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ExistsUidCounter ("")
+					() => manager.ExistsUidCounter ("", 0)
 				);
-			}
-		}
 
-
-		[TestMethod]
-		public void ExistsUidCounter()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbUidManager manager = dbInfrastructure.UidManager;
-
-				Assert.IsFalse (manager.ExistsUidCounter ("myCounter"));
-
-				manager.CreateUidCounter ("myCounter", 0, 10);
-
-				Assert.IsTrue (manager.ExistsUidCounter ("myCounter"));
-
-				manager.DeleteUidCounter ("myCounter");
-
-				Assert.IsFalse (manager.ExistsUidCounter ("myCounter"));
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.ExistsUidCounter ("test", -1)
+				);
 			}
 		}
 
@@ -191,46 +189,46 @@ namespace Cresus.Database.UnitTests
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				List<string> counterNames = manager.GetUidCounterNames ().ToList ();
+				var counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 0);
 
-				manager.CreateUidCounter ("myCounter1", 0, 10);
+				manager.CreateUidCounter ("myCounter1", 0, 0, 10);
 
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 1);
-				Assert.IsTrue (counterNames.Contains ("myCounter1"));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
 
-				manager.CreateUidCounter ("myCounter2", 0, 10);
+				manager.CreateUidCounter ("myCounter2", 0, 0, 10);
 
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 2);
-				Assert.IsTrue (counterNames.Contains ("myCounter1"));
-				Assert.IsTrue (counterNames.Contains ("myCounter2"));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
 
-				manager.CreateUidCounter ("myCounter3", 0, 10);
+				manager.CreateUidCounter ("myCounter1", 1, 0, 10);
 
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 3);
-				Assert.IsTrue (counterNames.Contains ("myCounter1"));
-				Assert.IsTrue (counterNames.Contains ("myCounter2"));
-				Assert.IsTrue (counterNames.Contains ("myCounter3"));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
 
-				manager.DeleteUidCounter ("myCounter1");
+				manager.DeleteUidCounter ("myCounter1", 0);
 
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 2);
-				Assert.IsTrue (counterNames.Contains ("myCounter2"));
-				Assert.IsTrue (counterNames.Contains ("myCounter3"));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
 				
-				manager.DeleteUidCounter ("myCounter2");
+				manager.DeleteUidCounter ("myCounter2", 0);
 
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 1);
-				Assert.IsTrue (counterNames.Contains ("myCounter3"));
+				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
 
-				manager.DeleteUidCounter ("myCounter3");
+				manager.DeleteUidCounter ("myCounter1", 1);
 				
-				counterNames = manager.GetUidCounterNames ().ToList ();
+				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
 				Assert.IsTrue (counterNames.Count == 0);
 			}
 		}
@@ -245,27 +243,37 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMin (null)
+					() => manager.GetUidCounterMin (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMin ("")
+					() => manager.GetUidCounterMin ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMin (null, 0)
+					() => manager.GetUidCounterMin ("test", -1)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMin ("", 0)
+					() => manager.SetUidCounterMin (null, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMin ("test", -1)
+					() => manager.SetUidCounterMin ("", 0, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterMin ("test", -1, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterMin ("test", 0, -1)
 				);
 			}
 		}
@@ -278,13 +286,16 @@ namespace Cresus.Database.UnitTests
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				manager.CreateUidCounter ("myCounter", 0, 10);
-				Assert.AreEqual (0, manager.GetUidCounterMin ("myCounter"));
-
 				for (int i = 0; i < 10; i++)
 				{
-					manager.SetUidCounterMin ("myCounter", i);
-					Assert.AreEqual (i, manager.GetUidCounterMin ("myCounter"));
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.AreEqual (0, manager.GetUidCounterMin ("myCounter", i));
+
+					for (int j = 0; j < 10; j++)
+					{
+						manager.SetUidCounterMin ("myCounter", i, j);
+						Assert.AreEqual (j, manager.GetUidCounterMin ("myCounter", i));
+					}
 				}
 			}
 		}
@@ -299,27 +310,37 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMax (null)
+					() => manager.GetUidCounterMax (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterMax ("")
+					() => manager.GetUidCounterMax ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMax (null, 0)
+					() => manager.GetUidCounterMax ("test", -1)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMax ("", 0)
+					() => manager.SetUidCounterMax (null, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterMax ("test", -1)
+					() => manager.SetUidCounterMax ("", 0, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterMax ("test", -1, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterMax ("test", 0, -1)
 				);
 			}
 		}
@@ -332,13 +353,16 @@ namespace Cresus.Database.UnitTests
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				manager.CreateUidCounter ("myCounter", 0, 10);
-				Assert.AreEqual (10, manager.GetUidCounterMax ("myCounter"));
-
-				for (int i = 10; i < 20; i++)
+				for (int i = 0; i < 10; i++)
 				{
-					manager.SetUidCounterMax ("myCounter", i);
-					Assert.AreEqual (i, manager.GetUidCounterMax ("myCounter"));
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.AreEqual (10, manager.GetUidCounterMax ("myCounter", i));
+
+					for (int j = 10; j < 20; j++)
+					{
+						manager.SetUidCounterMax ("myCounter", i, j);
+						Assert.AreEqual (j, manager.GetUidCounterMax ("myCounter", i));
+					}
 				}
 			}
 		}
@@ -353,27 +377,37 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterCurrent (null)
+					() => manager.GetUidCounterCurrent (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterCurrent ("")
+					() => manager.GetUidCounterCurrent ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent (null, 0)
+					() => manager.GetUidCounterCurrent ("test", -1)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent ("", 0)
+					() => manager.SetUidCounterCurrent (null, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent ("test", -1)
+					() => manager.SetUidCounterCurrent ("", 0, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterCurrent ("test", -1, 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.SetUidCounterCurrent ("test", 0, -1)
 				);
 			}
 		}
@@ -386,13 +420,16 @@ namespace Cresus.Database.UnitTests
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				manager.CreateUidCounter ("myCounter", 0, 10);
-				Assert.AreEqual (0, manager.GetUidCounterCurrent ("myCounter"));
-
 				for (int i = 0; i < 10; i++)
 				{
-					manager.SetUidCounterCurrent ("myCounter", i);
-					Assert.AreEqual (i, manager.GetUidCounterCurrent ("myCounter"));
+					manager.CreateUidCounter ("myCounter", i, 0, 10);
+					Assert.AreEqual (0, manager.GetUidCounterCurrent ("myCounter", i));
+
+					for (int j = 0; j < 10; j++)
+					{
+						manager.SetUidCounterCurrent ("myCounter", i, j);
+						Assert.AreEqual (j, manager.GetUidCounterCurrent ("myCounter", i));
+					}	
 				}
 			}
 		}
