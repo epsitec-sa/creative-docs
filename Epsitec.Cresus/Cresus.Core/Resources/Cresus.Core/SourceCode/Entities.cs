@@ -8754,6 +8754,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PrimaryPriceBeforeTax</c> field.
+		///	designer:fld/L0A5F/L0A0G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0G]")]
+		public global::System.Decimal? PrimaryPriceBeforeTax
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[L0A0G]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.PrimaryPriceBeforeTax;
+				if (oldValue != value)
+				{
+					this.OnPrimaryPriceBeforeTaxChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[L0A0G]", oldValue, value);
+					this.OnPrimaryPriceBeforeTaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PrimaryPriceAfterTax</c> field.
 		///	designer:fld/L0A5F/L0A8F
 		///	</summary>
@@ -8802,6 +8824,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTextForPrimaryPriceChanged(string oldValue, string newValue);
 		partial void OnTextForFixedPriceChanging(string oldValue, string newValue);
 		partial void OnTextForFixedPriceChanged(string oldValue, string newValue);
+		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnPrimaryPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryPriceAfterTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFixedPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);

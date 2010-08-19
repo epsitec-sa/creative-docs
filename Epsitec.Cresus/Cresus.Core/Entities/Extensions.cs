@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public static bool IsEmpty(this AddressEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this StreetEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public static bool IsEmpty(this PostBoxEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -45,20 +45,21 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public static bool IsEmpty(this LocationEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
 
+			//	We consider a location to be empty if it has neither postal code, nor
+			//	location name; a location with just a coutry or region is still empty.
+
 			return string.IsNullOrWhiteSpace (entity.PostalCode)
-				&& string.IsNullOrWhiteSpace (entity.Name)
-				&& entity.Country.IsEmpty ()
-				&& entity.Region.IsEmpty ();
+				&& string.IsNullOrWhiteSpace (entity.Name);
 		}
 
 		public static bool IsEmpty(this CountryEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -69,7 +70,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this RegionEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this PersonTitleEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -92,7 +93,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this NaturalPersonEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this LegalPersonEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -114,7 +115,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this AbstractPersonEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this RelationEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
@@ -143,7 +144,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static bool IsEmpty(this ArticleDefinitionEntity entity)
 		{
-			if (entity.UnwrapNullEntity () == null)
+			if (entity.IsNull ())
 			{
 				return true;
 			}
