@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Support.Extensions;
 
@@ -14,11 +15,20 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 	/// UI element. It is used by the navigation history to record which UI
 	/// elements were previously active.
 	/// </summary>
-	public sealed class NavigationPath : System.IEquatable<NavigationPath>
+	public sealed class NavigationPath : System.IEquatable<NavigationPath>, IReadOnly
 	{
 		public NavigationPath()
 		{
 			this.elements = new List<NavigationPathElement> ();
+		}
+
+		public NavigationPath(NavigationPath path)
+			: this ()
+		{
+			if (path != null)
+			{
+				this.AddRange (path.elements);
+			}
 		}
 
 		
@@ -27,6 +37,10 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			if (element == null)
             {
 				throw new System.ArgumentNullException ("element");
+            }
+			if (this.IsReadOnly)
+            {
+				throw new System.InvalidOperationException ("NavigationPath is read-only");
             }
 
 			this.elements.Add (element);
@@ -49,6 +63,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 		public bool Navigate(NavigationOrchestrator navigator)
 		{
 			return this.elements.All (x => x.Navigate (navigator));
+		}
+
+		public void Freeze()
+		{
+			this.frozen = true;
 		}
 
 		
@@ -78,7 +97,19 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 
 		#endregion
 
+		#region IReadOnly Members
+
+		public bool IsReadOnly
+		{
+			get
+			{
+				return this.frozen;
+			}
+		}
+
+		#endregion
 
 		private readonly List<NavigationPathElement> elements;
+		private bool frozen;
 	}
 }

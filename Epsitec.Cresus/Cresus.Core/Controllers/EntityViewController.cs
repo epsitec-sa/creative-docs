@@ -75,6 +75,23 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
+		protected void ReopenSubView(params NavigationPathElement[] elements)
+		{
+			var orchestrator = this.Orchestrator;
+			var navigator    = this.Navigator;
+			var history      = navigator.History;
+			var path         = navigator.GetLeafNavigationPath ();
+
+			path.AddRange (elements);
+
+			using (history.SuspendRecording ())
+			{
+				history.NavigateInPlace (path);
+			}
+		}
+
+
+		
 		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement = null)
 		{
 			var entity = marshaler.GetValue<AbstractEntity> ();
