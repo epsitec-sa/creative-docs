@@ -30,11 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public sealed class TileContainerController : System.IDisposable, IClickSimulator
 	{
-		private TileContainerController(TileContainer container)
+		private TileContainerController(TileContainer container, Widget parent = null)
 		{
 			this.controller  = container.Controller as EntityViewController;
 			this.navigator   = this.controller.Navigator;
 			this.container   = container;
+			this.parent      = parent ?? this.container;
 			this.dataItems   = new SummaryDataItems (this.controller);
 			this.liveItems = new List<SummaryData> ();
 			this.dataContext = this.controller.DataContext;
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
 
 			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
-			this.container.SizeChanged += this.HandleContainerSizeChanged;
+			this.parent.SizeChanged += this.HandleContainerSizeChanged;
 
 			this.controller.ActivateNextSubView = cyclic => UI.ExecuteWithDirectSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => UI.ExecuteWithReverseSetFocus (() => this.ActivateNextSummaryTile (this.GetCyclicSummaryTiles (cyclic).Reverse ()));
@@ -69,6 +70,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		public static TileContainerControllerInitializer Setup(TileContainer container)
 		{
 			return new TileContainerControllerInitializer (new TileContainerController (container));
+		}
+
+		public static TileContainerControllerInitializer Setup(UIBuilder builder)
+		{
+			var frame = new FrameBox
+			{
+				Padding = new Margins (0, 0, 0, 1),
+			};
+
+			builder.Add (frame);
+
+			return new TileContainerControllerInitializer (new TileContainerController (builder.TileContainer, frame));
 		}
 
 
@@ -216,7 +229,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
 			this.dataContext.EntityChanged -= this.HandleEntityChanged;
-			this.container.SizeChanged -= this.HandleContainerSizeChanged;
+			this.parent.SizeChanged -= this.HandleContainerSizeChanged;
 			
 			this.GetTitleTiles ().ForEach (x => x.Parent = null);
 
@@ -267,18 +280,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshTitleTiles ();
 			this.RefreshTitleTilesFreezeMode ();
 			this.RefreshLayout ();
-			this.SetDataTilesParent (this.container);
+			this.SetDataTilesParent (this.parent);
 			this.SetCloseButtonVisibility ();
 		}
 
 		private void RefreshLayout()
 		{
-			if (this.container.IsActualGeometryDirty)
+			if (this.parent.IsActualGeometryDirty)
 			{
-				LayoutContext.SyncArrange (this.container);
+				LayoutContext.SyncArrange (this.parent);
 			}
 
-			this.LayoutTiles (this.container.ActualHeight);
+			this.LayoutTiles (this.parent.ActualHeight);
 		}
 
 		private static void DisposeDataItems(IEnumerable<SummaryData> collection)
@@ -722,7 +735,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly EntityViewController	controller;
 		private readonly NavigationOrchestrator	navigator;
-		private readonly TileContainer			container;
+		private readonly Widget					parent;
+		private readonly TileContainer		container;
 		private readonly SummaryDataItems		dataItems;
 		private readonly List<SummaryData>		liveItems;
 		private readonly DataContext			dataContext;

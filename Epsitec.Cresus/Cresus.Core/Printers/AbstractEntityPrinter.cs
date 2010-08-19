@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
 		{
-			var type = AbstractEntityPrinter.FindType (entity.GetType ());
+			var type = AbstractEntityPrinter.FindEntityPrinterType (entity);
 
 			if (type == null)
 			{
@@ -199,8 +199,20 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return System.Activator.CreateInstance (type, new object[] { entity }) as AbstractEntityPrinter;
 		}
-		
-		private static System.Type FindType(System.Type entityType)
+
+		internal static System.Type FindEntityPrinterType(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return null;
+			}
+			else
+			{
+				return AbstractEntityPrinter.FindEntityPrinterType (entity.GetType ());
+			}
+		}
+
+		private static System.Type FindEntityPrinterType(System.Type entityType)
 		{
 			var baseTypeName = "AbstractEntityPrinter`1";
 

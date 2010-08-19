@@ -22,118 +22,126 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public sealed class PrintEngine
+	public static class PrintEngine
 	{
-		public PrintEngine()
+		public static bool CanPrint(AbstractEntity entity)
 		{
+			return AbstractEntityPrinter.FindEntityPrinterType (entity) != null;
 		}
 
 
-		public void Print(AbstractEntity entity)
+		public static void Print(AbstractEntity entity)
 		{
-			var entities = new List<AbstractEntity> ();
-
-			if (entity != null)
-			{
-				entities.Add (entity);
-			}
-
-			PrintEngine.Print (entities);
+			PrintEngine.Print (new AbstractEntity[] { entity });
 		}
 
 
-		public static void Print(IEnumerable<AbstractEntity> entities)
+		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
-			if (entities == null || entities.Count () == 0)
+			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
+
+			if (entities.Count == 0)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à imprimer.").OpenDialog ();
 				return;
 			}
 
-			List<Printer> printers = new List<Printer>
-			(
-				from printer in Printer.Load ()
-				where PrinterSettings.InstalledPrinters.Contains (printer.Name)
-				select printer
-			);
-
+			List<Printer> printers = PrintEngine.GetInstalledPrinters ();
+			
 			if (printers.Count == 0)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
 				return;
 			}
-
-			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
 
 			if (entityPrinter == null)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Ce type de donnée ne peut pas être imprimé.").OpenDialog ();
-				return;
+				entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
+
+				var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: false);
+				typeDialog.OpenDialog ();
+
+				if (typeDialog.Result != DialogResult.Accept)
+				{
+					return;
+				}
 			}
-
-			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: false);
-			typeDialog.OpenDialog ();
-
-			if (typeDialog.Result == DialogResult.Accept)
-			{
-				var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
-				printDialog.OpenDialog ();
-			}
-		}
-
-		public static void Print(AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
-		{
-			if (entities == null || entities.Count () == 0)
-			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à imprimer.").OpenDialog ();
-				return;
-			}
-
-			List<Printer> printers = new List<Printer>
-			(
-				from printer in Printer.Load ()
-				where PrinterSettings.InstalledPrinters.Contains (printer.Name)
-				select printer
-			);
-
-			if (printers.Count == 0)
-			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
-				return;
-			}
-
+			
 			var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
 			printDialog.OpenDialog ();
 		}
 
-
-		public void Preview(AbstractEntity entity)
+		private static List<Printer> GetInstalledPrinters()
 		{
-			var entities = new List<AbstractEntity> ();
-
-			if (entity != null)
-			{
-				entities.Add (entity);
-			}
-
-			this.Preview (entities);
+			List<Printer> printers = new List<Printer>
+						(
+							from printer in Printer.Load ()
+							where PrinterSettings.InstalledPrinters.Contains (printer.Name)
+							select printer
+						);
+			
+			return printers;
 		}
 
-		public void Preview(IEnumerable<AbstractEntity> entities)
+		private static List<AbstractEntity> PrepareEntities(IEnumerable<AbstractEntity> collection, Operation operation)
 		{
-			if (entities == null || entities.Count () == 0)
+			List<AbstractEntity> entities = new List<AbstractEntity> ();
+
+			if ((collection != null) &&
+				(collection.Any ()))
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Il n'y a rien à montrer.").OpenDialog ();
+				entities.AddRange (collection.Where (x => PrintEngine.CanPrint (x)));
+
+				if (entities.Count == 0)
+				{
+					string message = "";
+					
+					switch (operation)
+					{
+						case Operation.Print:	message = "Ce type de donnée ne peut pas être imprimé.";	break;
+						case Operation.Preview:	message = "Ce type de donnée ne peut pas être visualisé.";	break;
+					}
+
+                    MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+				}
+			}
+			else
+			{
+				string message = "";
+				
+				switch (operation)
+				{
+					case Operation.Print:	message = "Il n'y a rien à imprimer.";	break;
+					case Operation.Preview:	message = "Il n'y a rien à visualier.";	break;
+				}
+
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+			}
+
+			return entities;
+		}
+		
+		private enum Operation
+		{
+			Print,
+			Preview,
+		}
+
+
+		public static void Preview(AbstractEntity entity)
+		{
+			PrintEngine.Preview (new AbstractEntity[] { entity });
+		}
+
+		public static void Preview(IEnumerable<AbstractEntity> collection)
+		{
+			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Preview);
+
+			if (entities.Count == 0)
+			{
 				return;
 			}
 
 			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
-
-			if (entityPrinter == null)
-			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Ce type de donnée ne peut pas être montré.").OpenDialog ();
-				return;
-			}
 
 			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: true);
 			typeDialog.OpenDialog ();

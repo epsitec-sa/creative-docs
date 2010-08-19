@@ -32,15 +32,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			if (string.IsNullOrEmpty (this.Entity.IdA) &&
 				string.IsNullOrEmpty (this.Entity.IdB) &&
 				string.IsNullOrEmpty (this.Entity.IdC) &&
-				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount))
+				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount) &&
+				this.Entity.Events.Count == 0)
 			{
 				return EditionStatus.Empty;
 			}
 
-			if (string.IsNullOrEmpty (this.Entity.IdA) &&
-				(!string.IsNullOrEmpty (this.Entity.IdB) ||
-				 !string.IsNullOrEmpty (this.Entity.IdC) ||
-				 !string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount)))
+			if (string.IsNullOrEmpty (this.Entity.IdA))
 			{
 				return EditionStatus.Invalid;
 			}
@@ -58,16 +56,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.Affair", "Affaire");
 
 				this.CreateUIMain (builder);
+				this.CreateUIActionButtons (builder);
 
 				builder.CreateFooterEditorTile ();
 
-				this.CreateUIActionButtons (builder);
-			}
-			
-			//	Summary:
-			using (var data = TileContainerController.Setup (this))
-			{
-				this.CreateUICaseEvents (data);
+				using (var data = TileContainerController.Setup (builder))
+				{
+					this.CreateUICaseEvents (data);
+				}
 			}
 		}
 
@@ -89,7 +85,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				
 			mainViewController.SetActionVisibility (true);
 #else
-			builder.AddButton ("NewOffer", "Nouvelle offre", "Crée une nouvelle offre (vide)", this.ExecuteNewOffer);
+			builder.CreateMargin ();
+			builder.CreateButton ("NewOffer", "Nouvelle offre", "Crée une nouvelle offre (vide)", this.ExecuteNewOffer);
+			builder.CreateMargin ();
 #endif
 		}
 
