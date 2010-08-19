@@ -130,9 +130,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetArticleQuantitySummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetArticleQuantitySummary (x)));
-			template.DefineSetupItem   (SetupArticleQuantity);
+			template.DefineText        (x => TextFormatter.FormatText (EditionArticleDocumentItemViewController.GetArticleQuantitySummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (EditionArticleDocumentItemViewController.GetArticleQuantitySummary (x)));
+			template.DefineSetupItem   (EditionArticleDocumentItemViewController.SetupArticleQuantity);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleQuantities, template));
 		}
