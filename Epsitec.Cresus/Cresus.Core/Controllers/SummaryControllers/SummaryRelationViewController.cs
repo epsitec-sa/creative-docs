@@ -164,6 +164,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			template.DefineText        (x => TextFormatter.FormatText (GetAffairsSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (x.IdA));
+			template.DefineSetupItem   (x => x.IdA = CoreProgram.Application.Data.GetNewAffairId ());
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
 		}

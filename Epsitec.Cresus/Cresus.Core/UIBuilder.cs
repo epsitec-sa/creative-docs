@@ -63,6 +63,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public TileContainer TileContainer
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 
 		public TitleTile CurrentTitleTile
 		{
@@ -110,10 +118,11 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (widget);
 		}
 
-		public void AddButton(string id, string title, string description, System.Action callback)
+		public void CreateButton(string id, string title, string description, System.Action callback)
 		{
 			var button = new ConfirmationButton
 			{
+				Margins = new Margins (10, 16, 1, 0),
 				Name = id,
 				Text = ConfirmationButton.FormatContent (title, description),
 				PreferredHeight = 52,
@@ -863,6 +872,29 @@ namespace Epsitec.Cresus.Core
 			return combo;
 		}
 
+
+		public void CreateMargin(bool horizontalSeparator = false)
+		{
+			if (horizontalSeparator)
+			{
+				var separator = new Separator
+				{
+					Margins = new Margins (0, UIBuilder.RightMargin, 5, 5),
+					PreferredHeight = 1,
+				};
+
+				this.Add (separator);
+			}
+			else
+			{
+				var frame = new FrameBox
+				{
+					PreferredHeight = 10,
+				};
+
+				this.Add (frame);
+			}
+		}
 
 
 		public void CreateMargin(EditionTile tile, bool horizontalSeparator = false)

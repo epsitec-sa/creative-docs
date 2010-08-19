@@ -532,6 +532,20 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		internal string GetNewAffairId()
+		{
+			var repo = new Epsitec.Cresus.Core.Data.AffairRepository (this.activeDataContext);
+
+			return (repo.GetAllAffairs ().Select (x => CoreData.RobustParseNumber (x.IdA)).OrderByDescending (n => n).FirstOrDefault () + 1).ToString ();
+		}
+
+
+		private static int RobustParseNumber(string value)
+		{
+			int result;
+			int.TryParse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out result);
+			return result;
+		}
 		
 		public event EventHandler<DataContextEventArgs> DataContextChanged;
 		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;

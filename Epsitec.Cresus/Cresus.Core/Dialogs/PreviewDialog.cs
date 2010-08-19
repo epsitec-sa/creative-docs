@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.CloseDialog ();
 
-				PrintEngine.Print (this.entityPrinter, this.entities);
+				PrintEngine.Print (this.entities, this.entityPrinter);
 			};
 
 			this.closeButton.Clicked += delegate

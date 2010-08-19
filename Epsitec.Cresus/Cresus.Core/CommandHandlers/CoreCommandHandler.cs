@@ -42,13 +42,19 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.commandDispatcher.Dispatch (dispatcher, e);
+			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var mainViewController = orchestrator.MainViewController;
+
+			mainViewController.Print ();
 		}
 
 		[Command (Res.CommandIds.Edition.Preview)]
 		public void ProcessEditionPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.commandDispatcher.Dispatch (dispatcher, e);
+			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var mainViewController = orchestrator.MainViewController;
+
+			mainViewController.Preview ();
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Printers;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
+using System.Collections;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -32,7 +33,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.navigator = new NavigationOrchestrator (this);
 			this.Orchestrator = new DataViewOrchestrator (this);
-			this.printEngine = new PrintEngine ();
 
 			this.dataViewController = new DataViewController ("Data", data)
 			{
@@ -148,9 +148,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.actionViewController.CreateUI (this.rightActionPanel);
 
 			this.BrowserSettingsMode = BrowserSettingsMode.Compact;
-
-			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Print, () => this.Print ());
-			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.Preview, () => this.Preview ());
 		}
 
 		public static MainViewController Find(CommandContextChain contextChain)
@@ -320,20 +317,52 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		
-		private void Print()
+		public void Print()
 		{
-			var context = this.data.DataContext;
-			var entity = this.browserViewController.GetActiveEntity (context);
-			this.printEngine.Print (entity);
+			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
+			var context   = this.data.CreateDataContext ();
+			var entity    = context.ResolveEntity (entityKey);
+
+			PrintEngine.Print (entity);
+
+			this.data.DisposeDataContext (context);
 		}
 
-		private void Preview()
+		public void Preview()
 		{
-			var context = this.data.DataContext;
-			var entity = this.browserViewController.GetActiveEntity (context);
-			this.printEngine.Preview (entity);
+			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
+			var context   = this.data.CreateDataContext ();
+			var entity    = context.ResolveEntity (entityKey);
+
+			PrintEngine.Preview (entity);
+
+			this.data.DisposeDataContext (context);
+//			var context = this.data.DataContext;
+//			var entity = this.browserViewController.GetActiveEntity (context);
+//			PrintEngine.Preview (entity);
 		}
 
+		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()
+		{
+			var leaf = this.dataViewController.GetLeafViewController ();
+
+			if (leaf != null)
+			{
+				foreach (var node in leaf.GetControllerChain ().Select (x => x as EntityViewController))
+				{
+					if (node != null)
+                    {
+						var entity = node.GetEntity ();
+						var context = DataContextPool.Instance.FindDataContext (entity);
+						
+						if (context.IsPersistent (entity))
+						{
+							yield return entity;
+						}
+                    }
+				}
+			}
+		}
 		
 		private readonly CoreData data;
 		private readonly CommandContext commandContext;
@@ -343,7 +372,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly ActionViewController actionViewController;
 		private readonly PreviewViewController previewViewController;
 		private readonly NavigationOrchestrator navigator;
-		private readonly PrintEngine printEngine;
 
 		private FrameBox frame;
 

@@ -678,6 +678,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 				?? this.DataLoader.ResolveEntity (entityId, rowKey);
 		}
 
+		public AbstractEntity ResolveEntity(EntityKey? entityKey)
+		{
+			if ((entityKey.HasValue == false) ||
+				(entityKey.Value.IsEmpty))
+			{
+				return null;
+			}
+
+			return this.GetEntity (entityKey.Value)
+				?? this.DataLoader.ResolveEntity (entityKey.Value.EntityId, entityKey.Value.RowKey);
+		}
 		
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> with a given
