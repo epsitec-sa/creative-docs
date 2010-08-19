@@ -172,6 +172,8 @@ namespace Epsitec.Cresus.Core.Helpers
 			decimal primarySubtotalTax       = 0;
 			decimal discountRate = 1;
 
+			int totalRank = 0;
+
 			for (int i=0; i<x.Lines.Count; i++)
 			{
 				var line = x.Lines[i];
@@ -253,18 +255,28 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					var total = line as TotalDocumentItemEntity;
 
-					total.PrimaryPriceAfterTax = primaryTotalBeforeTax + primaryTotalTax + primarySubtotalBeforeTax + primarySubtotalTax;
+					if (totalRank == 0)  // ligne de total HT ?
+					{
+						//?total.PrimaryPriceBeforeTax = primaryTotalBeforeTax + primarySubtotalBeforeTax;
+						total.TextForPrimaryPrice = "Total HT";
+					}
+					else  // ligne de total TTC ?
+					{
+						total.PrimaryPriceAfterTax = primaryTotalBeforeTax + primaryTotalTax + primarySubtotalBeforeTax + primarySubtotalTax;
 
-					if (total.FixedPriceAfterTax.HasValue)
-					{
-						total.TextForPrimaryPrice = "<b>Total TTC</b>";
-						total.TextForFixedPrice   = "<b><i>Total arrêté à</i></b>";
+						if (total.FixedPriceAfterTax.HasValue)
+						{
+							total.TextForPrimaryPrice = "<b>Total TTC</b>";
+							total.TextForFixedPrice   = "<b><i>Total arrêté à</i></b>";
+						}
+						else
+						{
+							total.TextForPrimaryPrice = "<b>Total TTC</b>";
+							total.TextForFixedPrice   = null;
+						}
 					}
-					else
-					{
-						total.TextForPrimaryPrice = "<b>Total TTC</b>";
-						total.TextForFixedPrice   = null;
-					}
+
+					totalRank++;
 				}
 			}
 
@@ -303,8 +315,9 @@ namespace Epsitec.Cresus.Core.Helpers
 		private static void UpdateAutoLines(InvoiceDocumentEntity x, DataContext dataContext)
 		{
 			//	Met à jour toutes les lignes automatiques (taxes et total général).
-			InvoiceDocumentHelper.CreateTotalLine (x, dataContext);
-			InvoiceDocumentHelper.UpdateTaxLines  (x, dataContext);
+			InvoiceDocumentHelper.CreateTotalLineTTC (x, dataContext);
+			InvoiceDocumentHelper.UpdateTaxLines     (x, dataContext);
+			InvoiceDocumentHelper.CreateTotalLineHT  (x, dataContext);
 		}
 
 		private static void UpdateTaxLines(InvoiceDocumentEntity x, DataContext dataContext)
@@ -399,10 +412,10 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		private static void CreateTotalLine(InvoiceDocumentEntity x, DataContext dataContext)
+		private static void CreateTotalLineTTC(InvoiceDocumentEntity x, DataContext dataContext)
 		{
-			//	Crée si nécessaire la dernière ligne de total.
-			var total = InvoiceDocumentHelper.GetTotalEntity (x);
+			//	Crée si nécessaire la dernière ligne de total TTC.
+			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
 			if (total != null)
 			{
 				return;  // la dernière ligne de total existe déjà
@@ -413,6 +426,38 @@ namespace Epsitec.Cresus.Core.Helpers
 			lastPrice.Visibility = true;
 
 			x.Lines.Add (lastPrice);
+		}
+
+		private static void CreateTotalLineHT(InvoiceDocumentEntity x, DataContext dataContext)
+		{
+			//	Crée si nécessaire la dernière ligne de total HT.
+			var total = InvoiceDocumentHelper.GetTotalEntityHT (x);
+			if (total != null)
+			{
+				return;  // la ligne de total existe déjà
+			}
+
+			// Crée la ligne de total.
+			var lastPrice = dataContext.CreateEntity<TotalDocumentItemEntity> ();
+			lastPrice.Visibility = true;
+
+			int index = x.Lines.Count-2;  // avant la ligne de total TTC
+
+			while (index >= 0)
+			{
+				var line = x.Lines[index];
+
+				if (line is TaxDocumentItemEntity)
+				{
+					index--;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			x.Lines.Insert (index+1, lastPrice);
 		}
 
 
@@ -460,7 +505,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static decimal? GetTotalPriceTTC(InvoiceDocumentEntity x)
 		{
 			//	Retourne le prix total TTC d'une facture, en tenant compte du total arrêté s'il existe.
-			var total = InvoiceDocumentHelper.GetTotalEntity (x);
+			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
 
 			if (total != null)
 			{
@@ -479,7 +524,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static decimal? GetPrimaryPriceTTC(InvoiceDocumentEntity x)
 		{
-			var total = InvoiceDocumentHelper.GetTotalEntity (x);
+			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
 
 			if (total != null)
 			{
@@ -491,7 +536,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static decimal? GetFixedPriceTTC(InvoiceDocumentEntity x)
 		{
-			var total = InvoiceDocumentHelper.GetTotalEntity (x);
+			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
 
 			if (total != null)
 			{
@@ -503,7 +548,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static void SetFixedPriceTTC(InvoiceDocumentEntity x, decimal? value)
 		{
-			var total = InvoiceDocumentHelper.GetTotalEntity (x);
+			var total = InvoiceDocumentHelper.GetTotalEntityTTC (x);
 
 			if (total != null)
 			{
@@ -511,9 +556,27 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		private static TotalDocumentItemEntity GetTotalEntity(InvoiceDocumentEntity x)
+		private static TotalDocumentItemEntity GetTotalEntityHT(InvoiceDocumentEntity x)
 		{
-			//	Retourne la ligne de total qui doit obligatoirement terminer une liste.
+			//	Retourne la ligne de total HT qui vient avant les lignes de TVA.
+			int index = x.Lines.Count-2;  // avant la ligne de total TTC
+
+			while (index >= 0)
+			{
+				var line = x.Lines[index--];
+
+				if (line is TotalDocumentItemEntity)
+				{
+					return line as TotalDocumentItemEntity;
+				}
+			}
+
+			return null;
+		}
+
+		private static TotalDocumentItemEntity GetTotalEntityTTC(InvoiceDocumentEntity x)
+		{
+			//	Retourne la ligne de total TTC qui doit obligatoirement terminer une liste.
 			if (x.Lines.Count > 0)
 			{
 				var lastLine = x.Lines.Last ();
