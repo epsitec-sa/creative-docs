@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var builder = new UIBuilder (this);
 
 			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
-			builder.CreateSummaryTile ("Coucou", this.Entity, TextFormatter.FormatText ("Tralala"));
+			builder.CreateSummaryTile ("Coucou", this.Entity, TextFormatter.FormatText ("Tralala"), 1);
 #endif
 		}
 
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 
 		[ControllerSubType (1)]
-		class SummaryInvoiceDocumentViewControllerForTotal : SummaryInvoiceDocumentViewController
+		class SummaryInvoiceDocumentViewControllerForTotal : SummaryViewController<Entities.InvoiceDocumentEntity>
 		{
 			public SummaryInvoiceDocumentViewControllerForTotal(string name, Entities.InvoiceDocumentEntity entity)
 				: base (name, entity)
