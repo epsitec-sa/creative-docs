@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return new string[]
 			{
 				x.LegalPerson.Name,
-				x.NaturalPerson.Firstname,
-				x.NaturalPerson.Lastname,
+				x.NaturalPerson.Firstname.ToString (),
+				x.NaturalPerson.Lastname.ToString (),
 				x.Address.Street.StreetName,
 				x.Address.Location.PostalCode,
 				x.Address.Location.Name

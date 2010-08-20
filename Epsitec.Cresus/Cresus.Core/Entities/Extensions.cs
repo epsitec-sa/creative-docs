@@ -98,8 +98,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Firstname)
-				&& string.IsNullOrWhiteSpace (entity.Lastname);
+			return entity.Firstname.IsNullOrWhiteSpace &&
+				   entity.Lastname.IsNullOrWhiteSpace;
 		}
 
 		public static bool IsEmpty(this LegalPersonEntity entity)
