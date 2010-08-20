@@ -369,7 +369,7 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void GetSetUidCounterCurrentArgumentCheck()
+		public void GetSetUidCounterNextArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -377,44 +377,44 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterCurrent (null, 0)
+					() => manager.GetUidCounterNext (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterCurrent ("", 0)
+					() => manager.GetUidCounterNext ("", 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetUidCounterCurrent ("test", -1)
+					() => manager.GetUidCounterNext ("test", -1)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent (null, 0, 0)
+					() => manager.SetUidCounterNext (null, 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent ("", 0, 0)
+					() => manager.SetUidCounterNext ("", 0, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent ("test", -1, 0)
+					() => manager.SetUidCounterNext ("test", -1, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.SetUidCounterCurrent ("test", 0, -1)
+					() => manager.SetUidCounterNext ("test", 0, -1)
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void GetSetUidCounterCurrent()
+		public void GetSetUidCounterNext()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -423,12 +423,12 @@ namespace Cresus.Database.UnitTests
 				for (int i = 0; i < 10; i++)
 				{
 					manager.CreateUidCounter ("myCounter", i, 0, 10);
-					Assert.AreEqual (0, manager.GetUidCounterCurrent ("myCounter", i));
+					Assert.AreEqual (0, manager.GetUidCounterNext ("myCounter", i));
 
-					for (int j = 0; j < 10; j++)
+					for (int j = 1; j < 10; j++)
 					{
-						manager.SetUidCounterCurrent ("myCounter", i, j);
-						Assert.AreEqual (j, manager.GetUidCounterCurrent ("myCounter", i));
+						manager.SetUidCounterNext ("myCounter", i, j);
+						Assert.AreEqual (j, manager.GetUidCounterNext ("myCounter", i));
 					}	
 				}
 			}

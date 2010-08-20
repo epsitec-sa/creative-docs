@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnUidSlot		= "CR_UID_SLOT";
 		public const string ColumnUidMin		= "CR_UID_MIN";
 		public const string ColumnUidMax		= "CR_UID_MAX";
-		public const string ColumnUidCurrent	= "CR_UID_CURRENT";
+		public const string ColumnUidNext		= "CR_UID_NEXT";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";

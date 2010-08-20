@@ -69,13 +69,13 @@ namespace Epsitec.Cresus.Database
 				DbColumn columnSlot = this.table.Columns[Tags.ColumnUidSlot];
 				DbColumn columnMin = this.table.Columns[Tags.ColumnUidMin];
 				DbColumn columnMax = this.table.Columns[Tags.ColumnUidMax];
-				DbColumn columnCurrent = this.table.Columns[Tags.ColumnUidCurrent];
+				DbColumn columnNext = this.table.Columns[Tags.ColumnUidNext];
 
 				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
 				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
 				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
 				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnCurrent, min));
+				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
 
 				transaction.SqlBuilder.InsertData (this.table.GetSqlName (), fields);
 
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public long GetUidCounterCurrent(string name, int slot)
+		public long GetUidCounterNext(string name, int slot)
 		{
 			this.CheckIsAttached ();
 
@@ -222,11 +222,11 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				long currentValue = this.GetValue (transaction, name, slot, Tags.ColumnUidCurrent);
+				long nextValue = this.GetValue (transaction, name, slot, Tags.ColumnUidNext);
 
 				transaction.Commit ();
 
-				return currentValue;
+				return nextValue;
 			}
 		}
 
@@ -265,17 +265,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void SetUidCounterCurrent(string name, int slot, long current)
+		public void SetUidCounterNext(string name, int slot, long next)
 		{
 			this.CheckIsAttached ();
 
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
-			current.ThrowIf (m => m < 0, "current cannot be lower than zero");
+			next.ThrowIf (m => m < 0, "next cannot be lower than zero");
 
 			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.SetValue (transaction, name, slot, Tags.ColumnUidCurrent, current);
+				this.SetValue (transaction, name, slot, Tags.ColumnUidNext, next);
 
 				transaction.Commit ();
 			}
