@@ -514,6 +514,23 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
+		public static decimal GetVatTotal(InvoiceDocumentEntity x)
+		{
+			decimal total = 0;
+
+			foreach (var line in x.Lines)
+			{
+				if (line is TaxDocumentItemEntity)
+				{
+					var tax = line as TaxDocumentItemEntity;
+
+					total += tax.ResultingTax.GetValueOrDefault (0);
+				}
+			}
+
+			return total;
+		}
+
 		public static decimal? GetTotalPriceTTC(InvoiceDocumentEntity x)
 		{
 			//	Retourne le prix total TTC d'une facture, en tenant compte du total arrêté s'il existe.
@@ -566,6 +583,18 @@ namespace Epsitec.Cresus.Core.Helpers
 			{
 				total.FixedPriceAfterTax = value;
 			}
+		}
+
+		public static decimal? GetPrimaryPriceHT(InvoiceDocumentEntity x)
+		{
+			var total = InvoiceDocumentHelper.GetTotalEntityHT (x);
+
+			if (total != null)
+			{
+				return total.PrimaryPriceBeforeTax;
+			}
+
+			return null;
 		}
 
 		private static TotalDocumentItemEntity GetTotalEntityHT(InvoiceDocumentEntity x)

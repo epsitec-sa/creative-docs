@@ -25,12 +25,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
+			this.CreateUITotalSummary ();
+
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIInvoice      (data);
 				this.CreateUIArticleLines (data);
-				this.CreateUIFreightLines (data);
-				this.CreateUITotalLines   (data);
 				this.CreateUIBillings     (data);
 				this.CreateUIComments     (data);
 			}
@@ -76,57 +76,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
 
-		private void CreateUIFreightLines(SummaryDataItems data)
+		private void CreateUITotalSummary()
 		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "FreightDocumentItem",
-					IconUri		 = "Data.FreightDocumentItem",
-					Title		 = TextFormatter.FormatText ("Port et emballage"),
-					CompactTitle = TextFormatter.FormatText ("Port et emballage"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
-
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("FreightDocumentItem", data.Controller, this.DataContext);
-
-			template.DefineText           (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
-			template.DefineCompactText    (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
-			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
-			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
-			template.Filter = FreightLineFilter;
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
-		}
-
-		private void CreateUITotalLines(SummaryDataItems data)
-		{
-#if false
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "TotalDocumentItem",
-					IconUri		 = "Data.TotalDocumentItem",
-					Title		 = TextFormatter.FormatText ("Total"),
-					CompactTitle = TextFormatter.FormatText ("Total"),
-					Text		 = CollectionTemplate.DefaultEmptyText,
-				});
-
-			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("TotalDocumentItem", data.Controller, this.DataContext);
-
-			template.DefineText        (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
-			template.Filter = TotalLineFilter;
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
-#else
 			var builder = new UIBuilder (this);
 
 			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
-			builder.CreateSummaryTile ("Coucou", this.Entity, TextFormatter.FormatText ("Tralala"), 1);
-#endif
+			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), 1);
 		}
 
 		private void CreateUIBillings(SummaryDataItems data)
@@ -201,25 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			return (x is TextDocumentItemEntity    ||
 				    x is ArticleDocumentItemEntity ||
-				    x is PriceDocumentItemEntity) &&
-					!FreightLineFilter (x);
-		}
-
-		private static bool FreightLineFilter(AbstractDocumentItemEntity x)
-		{
-			if (x is ArticleDocumentItemEntity)
-			{
-				var article = x as ArticleDocumentItemEntity;
-
-				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Freight;
-			}
-
-			return false;
-		}
-
-		private static bool TotalLineFilter(AbstractDocumentItemEntity x)
-		{
-			return x is TotalDocumentItemEntity;
+				    x is PriceDocumentItemEntity   );
 		}
 
 
@@ -382,6 +319,16 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
+		private static FormattedText GetTotalSummary(InvoiceDocumentEntity invoiceDocument)
+		{
+			string ht  = Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceHT  (invoiceDocument));
+			string vat = Misc.PriceToString (InvoiceDocumentHelper.GetVatTotal        (invoiceDocument));
+			string ttc = Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceTTC (invoiceDocument));
+			string fix = Misc.PriceToString (InvoiceDocumentHelper.GetFixedPriceTTC   (invoiceDocument));
+
+			return TextFormatter.FormatText ("HT~", ht, "~,", "TVA~", vat, "\n", "TTC~", ttc, "arrêté à~", fix);
+		}
+
 
 		protected override EditionStatus GetEditionStatus()
 		{
@@ -412,10 +359,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				data.Add (
 					new SummaryData
 					{
-						Name				= "InvoiceDocument",
-						IconUri				= "Data.InvoiceDocument",
-						Title				= TextFormatter.FormatText ("Document"),
-						CompactTitle		= TextFormatter.FormatText ("Document"),
+						Name				= "TotalDocumentItem",
+						IconUri				= "Data.TotalDocumentItem",
+						Title				= TextFormatter.FormatText ("Total"),
+						CompactTitle		= TextFormatter.FormatText ("Total"),
 						TextAccessor		= Accessor.Create (this.EntityGetter, x => InvoiceDocumentHelper.GetSummary (x)),
 						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA)),
 						EntityMarshaler		= this.EntityMarshaler,
