@@ -257,7 +257,9 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 			{
-				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement, controllerSubTypeId: controllerSubType);
+				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator,
+					navigationPathElement: this.navigationPathElement,
+					controllerSubTypeId: this.controllerSubType);
 			}
 
 			#endregion
