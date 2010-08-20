@@ -363,7 +363,6 @@
     <EmbeddedResource Include="Images\Button.RadioYes.icon" />
     <EmbeddedResource Include="Images\Edition.DiscardRecord.icon" />
     <EmbeddedResource Include="Images\Data.ArticlePrice.icon" />
-    <EmbeddedResource Include="Images\Data.FreightDocumentItem.icon" />
     <EmbeddedResource Include="Images\Data.TotalDocumentItem.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
