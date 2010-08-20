@@ -329,10 +329,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The sequence of slot indexes.</returns>
 		private static IEnumerable<int> GetSlots(DbInfrastructure dbInfrastructure, string name)
 		{
-			return from data in dbInfrastructure.UidManager.GetUidCounterNamesAndSlots ()
-				   where data.Item1 == name
-				   orderby data.Item2
-				   select data.Item2;
+			return from slotIndex in dbInfrastructure.UidManager.GetUidCounterSlots (name)
+				   orderby slotIndex
+				   select slotIndex;
 		}
 
 

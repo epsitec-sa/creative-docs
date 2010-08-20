@@ -183,53 +183,67 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void GetUidCounterNames()
+		public void GetUidCounterSlots()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbUidManager manager = dbInfrastructure.UidManager;
 
-				var counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 0);
+				var slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 0);
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 0);
 
 				manager.CreateUidCounter ("myCounter1", 0, 0, 10);
 
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 1);
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 0));
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 0);
 
 				manager.CreateUidCounter ("myCounter2", 0, 0, 10);
 
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 2);
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 0));
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 0));
 
 				manager.CreateUidCounter ("myCounter1", 1, 0, 10);
 
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 3);
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 0));
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 2);
+				Assert.IsTrue (slots.Any (s => s == 0));
+				Assert.IsTrue (slots.Any (s => s == 1));
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 0));
 
 				manager.DeleteUidCounter ("myCounter1", 0);
 
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 2);
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter2" && t.Item2 == 0));
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
-				
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 1));
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 0));
+
 				manager.DeleteUidCounter ("myCounter2", 0);
 
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 1);
-				Assert.IsTrue (counterNames.Any (t => t.Item1 == "myCounter1" && t.Item2 == 1));
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 1);
+				Assert.IsTrue (slots.Any (s => s == 1));
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 0);
 
 				manager.DeleteUidCounter ("myCounter1", 1);
-				
-				counterNames = manager.GetUidCounterNamesAndSlots ().ToList ();
-				Assert.IsTrue (counterNames.Count == 0);
+
+				slots = manager.GetUidCounterSlots ("myCounter1").ToList ();
+				Assert.IsTrue (slots.Count == 0);
+				slots = manager.GetUidCounterSlots ("myCounter2").ToList ();
+				Assert.IsTrue (slots.Count == 0);
 			}
 		}
 
