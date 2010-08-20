@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary)
+		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary, int controllerSubType = -1)
 			where T : AbstractEntity
 		{
 			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core
 
 			var clickSimulator = new TileButtonClickSimulator (this.titleTile, controller, fullName);
 
-			tile.Controller = new SummaryTileController<T> (entity, fullName);
+			tile.Controller = new SummaryTileController<T> (entity, fullName, controllerSubType);
 			tile.Summary    = summary.ToString ();
 
 			return tile;
@@ -246,22 +246,25 @@ namespace Epsitec.Cresus.Core
 		class SummaryTileController<T> : ITileController
 			where T : AbstractEntity
 		{
-			public SummaryTileController(T entity, string name)
+			public SummaryTileController(T entity, string name, int controllerSubType)
 			{
 				this.entity = entity;
 				this.navigationPathElement = new TileNavigationPathElement (name);
+				this.controllerSubType = controllerSubType;
 			}
+			
 			#region ITileController Members
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 			{
-				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement);
+				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator, navigationPathElement: this.navigationPathElement, controllerSubTypeId: controllerSubType);
 			}
 
 			#endregion
 
 			private readonly T entity;
 			private readonly TileNavigationPathElement navigationPathElement;
+			private readonly int controllerSubType;
 		}
 
 		
