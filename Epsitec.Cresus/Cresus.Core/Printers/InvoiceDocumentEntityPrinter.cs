@@ -28,8 +28,30 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			DocumentType type;
 
+			type = new DocumentType ("Offre", "Offre", "Offre pour le client.");
+			type.DocumentOptionsAddInvoice     (isOffre: true);
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddSpecimen    ();
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("Commande", "Commande", "Commande pour le client.");
+			type.DocumentOptionsAddInvoice     (isCommande: true);
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddCommande    ();
+			type.DocumentOptionsAddSpecimen    ();
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType ("Confirm", "Confirmation de commande", "Confirmation de commande pour le client.");
+			type.DocumentOptionsAddInvoice     (isConfirm: true);
+			type.DocumentOptionsAddOrientation ();
+			type.DocumentOptionsAddMargin      ();
+			type.DocumentOptionsAddSpecimen    ();
+			this.DocumentTypes.Add (type);
+
 			type = new DocumentType ("Prod", "Ordres de production", "Ordres de production, pour chaque atelier.");
-			type.DocumentOptionsAddInvoice     (isBL: true, isProd: true);
+			type.DocumentOptionsAddInvoice     (isProd: true);
 			type.DocumentOptionsAddOrientation ();
 			type.DocumentOptionsAddMargin      ();
 			type.DocumentOptionsAddProd        ();
@@ -37,7 +59,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("BL", "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			type.DocumentOptionsAddInvoice     (isBL: true, isProd: false);
+			type.DocumentOptionsAddInvoice     (isBL: true);
 			type.DocumentOptionsAddOrientation ();
 			type.DocumentOptionsAddMargin      ();
 			type.DocumentOptionsAddBL          ();
@@ -45,12 +67,12 @@ namespace Epsitec.Cresus.Core.Printers
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("ESR", "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			type.DocumentOptionsAddInvoice  (isBL: false, isProd: false);
+			type.DocumentOptionsAddInvoice  ();
 			type.DocumentOptionsAddEsr      ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType ("Simple", "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			type.DocumentOptionsAddInvoice     (isBL: false, isProd: false);
+			type.DocumentOptionsAddInvoice     ();
 			type.DocumentOptionsAddOrientation ();
 			type.DocumentOptionsAddMargin      ();
 			type.DocumentOptionsAddSpecimen    ();
@@ -140,7 +162,35 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
-				this.BuildFooterBL ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+			}
+
+			if (this.DocumentTypeSelected == "Offre")
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildPages (null, firstPage);
+			}
+
+			if (this.DocumentTypeSelected == "Commande")
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
+				this.BuildFooter ();
+				this.BuildPages (null, firstPage);
+			}
+
+			if (this.DocumentTypeSelected == "Confirm")
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage ();
+
+				this.BuildHeader (null);
+				this.BuildArticles ();
 				this.BuildPages (null, firstPage);
 			}
 
@@ -153,7 +203,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 					this.BuildHeader (null, group);
 					this.BuildArticles (group);
-					this.BuildFooterBL ();
+					this.BuildFooter ();
 					this.BuildPages (null, firstPage);
 				}
 			}
@@ -255,7 +305,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd, this.IsOffre, this.IsCommande, this.IsConfirm);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
@@ -1000,7 +1050,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void BuildFooterBL()
+		private void BuildFooter()
 		{
 			if (this.HasDocumentOption ("BL.Signing"))
 			{
@@ -1039,6 +1089,25 @@ namespace Epsitec.Cresus.Core.Printers
 
 				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 			}
+
+			if (this.HasDocumentOption ("Commande.Signing"))
+			{
+				var table = new TableBand ();
+
+				table.ColumnsCount = 2;
+				table.RowsCount = 1;
+				table.CellBorder = CellBorder.Default;
+				table.Font = font;
+				table.FontSize = fontSize;
+				table.CellMargins = new Margins (2);
+				table.SetRelativeColumWidth (0, 60);
+				table.SetRelativeColumWidth (1, 100);
+				table.SetText (0, 0, "Bon pour commande");
+				table.SetText (1, 0, "Lieu et date :<br/><br/>Signature :<br/><br/><br/>");
+				table.SetUnbreakableRow (0, true);
+
+				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+			}
 		}
 
 		private void BuildPages(BillingDetailEntity billingDetails, int firstPage)
@@ -1054,7 +1123,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd, this.IsOffre, this.IsCommande, this.IsConfirm);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -1230,7 +1299,7 @@ namespace Epsitec.Cresus.Core.Printers
 				Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
 				Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 				Esr.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
-				Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd);
+				Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.IsBL, this.IsProd, this.IsOffre, this.IsCommande, this.IsConfirm);
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?
 				{
@@ -1262,6 +1331,30 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				return this.DocumentTypeSelected == "Prod";
+			}
+		}
+
+		private bool IsOffre
+		{
+			get
+			{
+				return this.DocumentTypeSelected == "Offre";
+			}
+		}
+
+		private bool IsCommande
+		{
+			get
+			{
+				return this.DocumentTypeSelected == "Commande";
+			}
+		}
+
+		private bool IsConfirm
+		{
+			get
+			{
+				return this.DocumentTypeSelected == "Confirm";
 			}
 		}
 
