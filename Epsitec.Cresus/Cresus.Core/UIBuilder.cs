@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core
 			return tile;
 		}
 
-		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary, int controllerSubType = -1)
+		public SummaryTile CreateSummaryTile<T>(string name, T entity, FormattedText summary, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T : AbstractEntity
 		{
 			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core
 
 			var clickSimulator = new TileButtonClickSimulator (this.titleTile, controller, fullName);
 
-			tile.Controller = new SummaryTileController<T> (entity, fullName, controllerSubType);
+			tile.Controller = new SummaryTileController<T> (entity, fullName, mode, controllerSubType);
 			tile.Summary    = summary.ToString ();
 
 			return tile;
@@ -246,10 +246,11 @@ namespace Epsitec.Cresus.Core
 		class SummaryTileController<T> : ITileController
 			where T : AbstractEntity
 		{
-			public SummaryTileController(T entity, string name, int controllerSubType)
+			public SummaryTileController(T entity, string name, ViewControllerMode mode, int controllerSubType)
 			{
 				this.entity = entity;
 				this.navigationPathElement = new TileNavigationPathElement (name);
+				this.mode = mode;
 				this.controllerSubType = controllerSubType;
 			}
 			
@@ -257,7 +258,7 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 			{
-				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, ViewControllerMode.Summary, orchestrator,
+				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, this.mode, orchestrator,
 					navigationPathElement: this.navigationPathElement,
 					controllerSubTypeId: this.controllerSubType);
 			}
@@ -267,6 +268,7 @@ namespace Epsitec.Cresus.Core
 			private readonly T entity;
 			private readonly TileNavigationPathElement navigationPathElement;
 			private readonly int controllerSubType;
+			private readonly ViewControllerMode mode;
 		}
 
 		

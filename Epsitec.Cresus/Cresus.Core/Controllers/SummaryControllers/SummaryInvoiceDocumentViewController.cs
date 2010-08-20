@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var builder = new UIBuilder (this);
 
 			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
-			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), 1);
+			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
 		}
 
 		private void CreateUIBillings(SummaryDataItems data)
@@ -335,41 +335,5 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var entity = this.Entity;
 			return EditionStatus.Valid;
 		}
-
-
-
-		[ControllerSubType (1)]
-		class SummaryInvoiceDocumentViewControllerForTotal : SummaryViewController<Entities.InvoiceDocumentEntity>
-		{
-			public SummaryInvoiceDocumentViewControllerForTotal(string name, Entities.InvoiceDocumentEntity entity)
-				: base (name, entity)
-			{
-			}
-
-			protected override void CreateUI()
-			{
-				using (var data = TileContainerController.Setup (this))
-				{
-					this.CreateUIMain (data);
-				}
-			}
-
-			private void CreateUIMain(SummaryDataItems data)
-			{
-				data.Add (
-					new SummaryData
-					{
-						Name				= "TotalDocumentItem",
-						IconUri				= "Data.TotalDocumentItem",
-						Title				= TextFormatter.FormatText ("Total"),
-						CompactTitle		= TextFormatter.FormatText ("Total"),
-						TextAccessor		= Accessor.Create (this.EntityGetter, x => InvoiceDocumentHelper.GetSummary (x)),
-						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA)),
-						EntityMarshaler		= this.EntityMarshaler,
-					});
-			}
-		}
-
-
 	}
 }
