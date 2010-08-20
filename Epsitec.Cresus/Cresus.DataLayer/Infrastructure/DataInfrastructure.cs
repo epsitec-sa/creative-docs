@@ -40,11 +40,17 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Creates a new generator for unique ids in the database.
 		/// </summary>
 		/// <remarks>
-		/// The slots of the generator are defined as a sequence of minimum and maximum values for
-		/// each slot. Those bounds are included in each slot. 
+		/// The slots are defined as a sequence of minimum and maximum values, which must be locally
+		/// and globally consistent.
 		/// </remarks>
 		/// <param name="name">The name of the generator.</param>
 		/// <param name="slots">The definition of the slots of the generator.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="slots"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> is empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains negative elements.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains slots with inconsistent bounds.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
 		public void CreateUidGenerator(string name, IEnumerable<System.Tuple<long, long>> slots)
 		{
 			UidGenerator.CreateUidGenerator (this.DbInfrastructure, name, slots);
@@ -55,6 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// Deletes a generator for unique ids from the database.
 		/// </summary>
 		/// <param name="name">The name of the generator.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		public void DeleteUidGenerator(string name)
 		{
 			UidGenerator.DeleteUidGenerator (this.DbInfrastructure, name);
@@ -66,6 +73,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="name">The name of the generator.</param>
 		/// <returns><c>true</c> if a generator with <paramref name="name"/> exists in the database, <c>false</c> if there aren't.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		public bool UidGeneratorExists(string name)
 		{
 			return UidGenerator.UidGeneratorExists (this.DbInfrastructure, name);
@@ -78,6 +86,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="name">The name of the generator.</param>
 		/// <returns>The <see cref="UidGenerator"/> object.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.Exception">If the requested <see cref="UidGenerator"/> does not exists.</exception>
 		public UidGenerator GetUidGenerator(string name)
 		{
 			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
