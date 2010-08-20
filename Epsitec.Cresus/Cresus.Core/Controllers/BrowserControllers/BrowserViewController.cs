@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				var activeEntityKey       = dataContext.GetEntityKey (activeEntity).GetValueOrDefault ();
+				var activeEntityKey       = dataContext.GetNormalizedEntityKey (activeEntity).GetValueOrDefault ();
 				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
 				dataViewController.SetActiveEntity (activeEntity, navigationPathElement);
@@ -137,8 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			if (this.activeEntityKey.HasValue)
 			{
-				EntityKey entityKey = this.activeEntityKey.Value;
-				return context.ResolveEntity (entityKey.EntityId, entityKey.RowKey);
+				return context.ResolveEntity (this.activeEntityKey);
 			}
 			else
 			{

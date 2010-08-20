@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			entity.ThrowIfNull ("entity");
 			
-			DbKey rowKey = this.DataContext.GetEntityKey (entity).Value.RowKey;
+			DbKey rowKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid loadedEntityId = entity.GetEntityStructuredTypeId ();
 
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 						 let fieldTarget = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 						 where fieldTarget != null
 						 where this.DataContext.IsPersistent (fieldTarget)
-						 let fieldTargetKey = this.DataContext.GetEntityKey(fieldTarget).Value.RowKey
+						 let fieldTargetKey = this.DataContext.GetNormalizedEntityKey(fieldTarget).Value.RowKey
 						 select new
 						 {
 							 Id = field.CaptionId,
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 							from t in fieldTargets
 							where t != null
 							where this.DataContext.IsPersistent(t)
-							select this.DataContext.GetEntityKey (t).Value.RowKey
+							select this.DataContext.GetNormalizedEntityKey (t).Value.RowKey
 						 )
 						 where fieldTargetKeys.Count > 0
 						 select new

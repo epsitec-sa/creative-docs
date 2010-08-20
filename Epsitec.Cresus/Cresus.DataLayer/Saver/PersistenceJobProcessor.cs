@@ -603,7 +603,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private DbKey GetPersistentEntityDbKey(AbstractEntity entity)
 		{
-			return this.DataContext.GetEntityKey (entity).Value.RowKey;
+			return this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 		}
 
 

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractSynchronizationJob> ConvertHelper(DeletePersistenceJob job)
 		{
 			int dataContextId = this.DataContext.UniqueId;
-			EntityKey entityKey = this.DataContext.GetEntityKey (job.Entity).Value;
+			EntityKey entityKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 
 			yield return new DeleteSynchronizationJob (dataContextId, entityKey);
 		}
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
-				EntityKey entityKey = this.DataContext.GetEntityKey (job.Entity).Value;
+				EntityKey entityKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 
 				foreach (var update in job.GetFieldIdsWithValues ())
 				{
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
-				EntityKey sourceKey = this.DataContext.GetEntityKey (job.Entity).Value;
+				EntityKey sourceKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 				Druid fieldId = job.FieldId;
 
 				EntityKey? targetKey;
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				}
 				else
 				{
-					targetKey = this.DataContext.GetEntityKey (job.Target).Value;
+					targetKey = this.DataContext.GetNormalizedEntityKey (job.Target).Value;
 				}
 
 				yield return new ReferenceSynchronizationJob (dataContextId, sourceKey, fieldId, targetKey);
@@ -201,10 +201,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			if (job.JobType == PersistenceJobType.Update)
 			{
 				int dataContextId = this.DataContext.UniqueId;
-				EntityKey sourceKey = this.DataContext.GetEntityKey (job.Entity).Value;
+				EntityKey sourceKey = this.DataContext.GetNormalizedEntityKey (job.Entity).Value;
 				Druid fieldId = job.FieldId;
 
-				IEnumerable<EntityKey> targetKeys = job.Targets.Select (e => this.DataContext.GetEntityKey (e).Value);
+				IEnumerable<EntityKey> targetKeys = job.Targets.Select (e => this.DataContext.GetNormalizedEntityKey (e).Value);
 
 				yield return new CollectionSynchronizationJob (dataContextId, sourceKey, fieldId, targetKeys);
 			}

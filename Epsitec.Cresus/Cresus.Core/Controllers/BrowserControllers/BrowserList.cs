@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				throw new System.ArgumentNullException ("entity");
 			}
 
-			var key = this.context.GetEntityKey (entity);
+			var key = this.context.GetNormalizedEntityKey (entity);
 
 			if (key == null)
 			{

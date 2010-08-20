@@ -291,16 +291,40 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 		/// <summary>
-		/// Gets the <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
+		/// Gets the normalized <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
+		/// Normalized means that the <see cref="Druid"/> of the type is the root type of the
+		/// <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
 		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public EntityKey? GetEntityKey(AbstractEntity entity)
+		public EntityKey? GetNormalizedEntityKey(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			return this.entitiesCache.GetEntityKey (entity);
+		}
+
+		/// <summary>
+		/// Gets the leaf <see cref="EntityKey"/> associated with an <see cref="AbstractEntity"/>.
+		/// Leaf means that the <see cref="Druid"/> of the type is the leaf type of the
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
+		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		public EntityKey? GetLeafEntityKey(AbstractEntity entity)
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			EntityKey? key = this.GetNormalizedEntityKey (entity);
+
+			if (key.HasValue)
+			{
+				key = new EntityKey (entity.GetEntityStructuredTypeId (), key.Value.RowKey);
+			}
+
+			return key;
 		}
 
 
@@ -678,16 +702,25 @@ namespace Epsitec.Cresus.DataLayer.Context
 				?? this.DataLoader.ResolveEntity (entityId, rowKey);
 		}
 
+
+		/// <summary>
+		/// Gets the <see cref="AbstractEntity"/> corresponding to an <see cref="EntityKey"/>. This
+		/// method looks in the cache and then queries the database.
+		/// </summary>
+		/// <param name="entityKey">The <see cref="EntityKey"/> defining which <see cref="AbstractEntity"/> to get.</param>
+		/// <returns>The <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		public AbstractEntity ResolveEntity(EntityKey? entityKey)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
 			if ((entityKey.HasValue == false) ||
 				(entityKey.Value.IsEmpty))
 			{
 				return null;
 			}
 
-			return this.GetEntity (entityKey.Value)
-				?? this.DataLoader.ResolveEntity (entityKey.Value.EntityId, entityKey.Value.RowKey);
+			return this.ResolveEntity (entityKey.Value.EntityId, entityKey.Value.RowKey);
 		}
 		
 		/// <summary>
@@ -1090,7 +1123,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (this.IsPersistent (entity))
 			{
 				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-				DbKey key = this.GetEntityKey (entity).Value.RowKey;
+				DbKey key = this.GetNormalizedEntityKey (entity).Value.RowKey;
 
 				if (key.Status == DbRowStatus.Live)
 				{
@@ -1169,7 +1202,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			EntityKey? key = this.GetEntityKey (entity);
+			EntityKey? key = this.GetNormalizedEntityKey (entity);
 
 			return key.HasValue && !key.Value.RowKey.IsEmpty;
 		}

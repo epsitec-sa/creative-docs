@@ -176,8 +176,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				}
 				else
 				{
-					EntityKey? key1 = dataContext1.GetEntityKey (entity1);
-					EntityKey? key2 = dataContext2.GetEntityKey (entity2);
+					EntityKey? key1 = dataContext1.GetNormalizedEntityKey (entity1);
+					EntityKey? key2 = dataContext2.GetNormalizedEntityKey (entity2);
 
 					Assert.AreEqual (key1, key2);
 				}
@@ -204,11 +204,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					values1
 					.Where (t => t!= null)
 					.Where (t => dataContext1.IsPersistent (t))
-					.Select (t => dataContext1.GetEntityKey (t))
+					.Select (t => dataContext1.GetNormalizedEntityKey (t))
 					.SequenceEqual
 					(
 						values2
-					.Select (t => dataContext2.GetEntityKey (t))
+					.Select (t => dataContext2.GetNormalizedEntityKey (t))
 					)
 				);
 

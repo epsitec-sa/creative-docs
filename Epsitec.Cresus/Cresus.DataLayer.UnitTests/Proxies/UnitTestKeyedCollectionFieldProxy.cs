@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				Druid fieldId = Druid.Parse ("[L0AS]");
-				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetEntityKey (c).Value).ToList ();
+				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
 				var proxy = new KeyedCollectionFieldProxy_Accessor (dataContext, person, fieldId, targetKeys);
 
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				{
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					Druid fieldId = Druid.Parse ("[L0AS]");
-					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext1.GetEntityKey (c).Value).ToList ();
+					List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext1.GetNormalizedEntityKey (c).Value).ToList ();
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				Druid fieldId = Druid.Parse ("[L0AS]");
-				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetEntityKey (c).Value).ToList ();
+				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
 				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
 
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 				IList contacts1 = person.Contacts as IList;
 
 				Druid fieldId = Druid.Parse ("[L0AS]");
-				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetEntityKey (c).Value).ToList ();
+				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
 				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
 
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				Druid fieldId = Druid.Parse ("[L0AS]");
-				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetEntityKey (c).Value).ToList ();
+				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
 				var proxy = new KeyedCollectionFieldProxy (dataContext, person, fieldId, targetKeys);
 				object gender = proxy.GetWriteEntityValue (new TestStore (), "L0AS");
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Proxies
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 				IList contacts1 = person.Contacts as IList;
-				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetEntityKey (c).Value).ToList ();
+				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
 				Druid fieldId = Druid.Parse ("[L0AS]");
 

@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			
 			DataContext context = this.FindDataContext (entity);
 
-			return (context == null) ? null : context.GetEntityKey (entity);
+			return (context == null) ? null : context.GetNormalizedEntityKey (entity);
 		}
 
 
