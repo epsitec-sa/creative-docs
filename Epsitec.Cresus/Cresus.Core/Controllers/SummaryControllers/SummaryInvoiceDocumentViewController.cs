@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		protected override void CreateUI()
 		{
+			// TODO: fare en sorte que cette tuile viennent après les lignes d'article !
 			this.CreateUITotalSummary ();
 
 			using (var data = TileContainerController.Setup (this))
