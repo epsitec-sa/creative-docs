@@ -34,10 +34,9 @@ namespace Epsitec.Common.Support.Extensions
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
 			bool modifiedValueExists = (modifiedValue != UndefinedValue.Value);
-			bool noSpecialCase = (!UndefinedValue.IsUndefinedValue (originalValue) || modifiedValue != null);
 			bool bothValuesAreNotEqual = !System.Object.Equals (originalValue, modifiedValue);
 
-			return modifiedValueExists && noSpecialCase && bothValuesAreNotEqual;
+			return modifiedValueExists && bothValuesAreNotEqual;
 		}
 
 
@@ -55,10 +54,9 @@ namespace Epsitec.Common.Support.Extensions
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
 			bool modifiedValueExists = (modifiedValue != UndefinedValue.Value);
-			bool noSpecialCase = (!UndefinedValue.IsUndefinedValue (originalValue) || modifiedValue != null);
 			bool bothValuesAreNotEqual = !System.Object.Equals (originalValue, modifiedValue);
 
-			return modifiedValueExists && noSpecialCase && bothValuesAreNotEqual;
+			return modifiedValueExists && bothValuesAreNotEqual;
 		}
 
 
