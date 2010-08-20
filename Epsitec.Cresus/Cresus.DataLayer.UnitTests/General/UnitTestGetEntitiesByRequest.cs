@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				Request request = new Request ()
 				{
 					RootEntity = new NaturalPersonEntity(),
-					RootEntityKey = dataContext.GetEntityKey(alfred).Value.RowKey,
+					RootEntityKey = dataContext.GetNormalizedEntityKey(alfred).Value.RowKey,
 				};
 
 				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
@@ -604,7 +604,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				Request request = new Request ()
 				{
 					RootEntity = example2,
-					RootEntityKey = dataContext.GetEntityKey(alfred1).Value.RowKey,
+					RootEntityKey = dataContext.GetNormalizedEntityKey(alfred1).Value.RowKey,
 					RequestedEntity = (example2.Contacts[0] as UriContactEntity).UriScheme,
 				};
 
@@ -631,7 +631,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				Request request = new Request ()
 				{
 					RootEntity = example2,
-					RootEntityKey = dataContext.GetEntityKey (alfred1).Value.RowKey,
+					RootEntityKey = dataContext.GetNormalizedEntityKey (alfred1).Value.RowKey,
 					RequestedEntity = example2.Contacts[0],
 				};
 

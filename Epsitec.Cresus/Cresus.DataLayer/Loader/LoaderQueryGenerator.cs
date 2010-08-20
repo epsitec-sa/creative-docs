@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, fieldId);
 
 			AbstractEntity example = EntityClassFactory.CreateEmptyEntity (localEntityId);
-			DbKey exampleKey = this.DataContext.GetEntityKey (entity).Value.RowKey;
+			DbKey exampleKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 
 			Request request = new Request ()
 			{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Request request = new Request ()
 			{
 				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
+				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 				RequestedEntity = targetExample,
 			};
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Request request = new Request ()
 			{
 				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
+				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 				RequestedEntity = targetExample,
 			};
 
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Request request = new Request ()
 			{
 				RootEntity = rootExample,
-				RootEntityKey = this.DataContext.GetEntityKey (entity).Value.RowKey,
+				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
 			};
 			
 			return this.GetCollectionData (transaction, request, fieldId);
@@ -678,7 +678,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			if (this.DataContext.IsPersistent (target))
 			{
-				DbKey key = this.DataContext.GetEntityKey (target).Value.RowKey;
+				DbKey key = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
 
 				this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
 

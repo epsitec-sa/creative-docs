@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (job2.Count == 1);
 				Assert.IsTrue (job2[0] is DeleteSynchronizationJob);
 				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-				Assert.AreEqual (dataContext.GetEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
 			}
 		}
 
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 
 				Assert.IsTrue (jobs2.Count == 3);
 				Assert.IsTrue (jobs2.All (j => j.DataContextId == dataContext.UniqueId));
-				Assert.IsTrue (jobs2.All (j => j.EntityKey == dataContext.GetEntityKey (entity)));
+				Assert.IsTrue (jobs2.All (j => j.EntityKey == dataContext.GetNormalizedEntityKey (entity)));
 				Assert.IsTrue (jobs2.All (j => j is ValueSynchronizationJob));
 
 				foreach (Druid fieldId in fieldIdsWithValues.Keys)
@@ -236,8 +236,8 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (job2.Count == 1);
 				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
 				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-				Assert.AreEqual (dataContext.GetEntityKey (entity), job2[0].EntityKey);
-				Assert.AreEqual (dataContext.GetEntityKey (target), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (target), ((ReferenceSynchronizationJob) job2[0]).NewTargetKey);
 				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
 			}
 		}
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (job2.Count == 1);
 				Assert.IsTrue (job2[0] is ReferenceSynchronizationJob);
 				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-				Assert.AreEqual (dataContext.GetEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
 				Assert.IsFalse (((ReferenceSynchronizationJob) job2[0]).NewTargetKey.HasValue);
 				Assert.AreEqual (fieldId, ((ReferenceSynchronizationJob) job2[0]).FieldId);
 			}
@@ -333,12 +333,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Saver
 				Assert.IsTrue (job2.Count == 1);
 				Assert.IsTrue (job2[0] is CollectionSynchronizationJob);
 				Assert.AreEqual (dataContext.UniqueId, job2[0].DataContextId);
-				Assert.AreEqual (dataContext.GetEntityKey (entity), job2[0].EntityKey);
+				Assert.AreEqual (dataContext.GetNormalizedEntityKey (entity), job2[0].EntityKey);
 				Assert.AreEqual (fieldId, ((CollectionSynchronizationJob) job2[0]).FieldId);
 				Assert.IsTrue
 				(
 					targets
-					.Select (t => dataContext.GetEntityKey (t).Value)
+					.Select (t => dataContext.GetNormalizedEntityKey (t).Value)
 					.SequenceEqual (((CollectionSynchronizationJob) job2[0]).NewTargetKeys)
 				);
 			}
