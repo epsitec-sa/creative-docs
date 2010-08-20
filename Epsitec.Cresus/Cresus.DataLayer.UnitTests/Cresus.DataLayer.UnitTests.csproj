@@ -112,6 +112,7 @@
     <Compile Include="Saver\UnitTestPersistenceJobTableComputer.cs" />
     <Compile Include="Proxies\UnitTestKeyedCollectionFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestKeyedReferenceFieldProxy.cs" />
+    <Compile Include="Infrastructure\UnitTestUidGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
