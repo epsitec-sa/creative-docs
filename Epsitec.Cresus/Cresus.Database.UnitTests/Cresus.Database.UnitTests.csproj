@@ -95,15 +95,6 @@
       <Name>Cresus.Database</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Cresus.Database\Captions.00.resource" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Cresus.Database\module.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Cresus.Database\Strings.00.resource" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
