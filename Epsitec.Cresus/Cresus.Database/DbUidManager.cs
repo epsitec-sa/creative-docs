@@ -190,15 +190,19 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
+		
 		/// <summary>
-		/// Gets the list of all counter names and slots present in the database.
+		/// Gets the list of all slots for a given name.
 		/// </summary>
-		/// <returns>The list of all counter names and slots.</returns>
+		/// <param name="name">The name of the slots to get.</param>
+		/// <returns>The list of slots.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name=""/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		public IEnumerable<System.Tuple<string, int>> GetUidCounterNamesAndSlots()
+		public IEnumerable<int> GetUidCounterSlots(string name)
 		{
 			this.CheckIsAttached ();
+
+			name.ThrowIfNullOrEmpty ("name");
 
 			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -207,19 +211,19 @@ namespace Epsitec.Cresus.Database
 				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.table.GetSqlName ()));
 				query.Fields.Add (Tags.ColumnName, SqlField.CreateName (Tags.TableUid, Tags.ColumnName));
 				query.Fields.Add (Tags.ColumnUidSlot, SqlField.CreateName (Tags.TableUid, Tags.ColumnUidSlot));
+				query.Conditions.Add (this.CreateConditionForName (name));
 
 				transaction.SqlBuilder.SelectData (query);
 
 				DataTable table = this.dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 
-				List<System.Tuple<string, int>> names = new List<System.Tuple<string, int>> ();
-				
+				List<int> names = new List<int> ();
+
 				foreach (DataRow row in table.Rows)
 				{
-					string name = (string) row[Tags.ColumnName];
 					int slot = (int) (long) row[Tags.ColumnUidSlot];
 
-					names.Add (System.Tuple.Create (name, slot));
+					names.Add (slot);
 				}
 
 				transaction.Commit ();
