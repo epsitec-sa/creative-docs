@@ -11,16 +11,24 @@ namespace Epsitec.Cresus.Database
 {
 
 
-	// TODO Comment this class
-	// Marc
-	
-	
+	/// <summary>
+	/// The <c>DbUidManager</c> class provides the low levels tools used to generate unique ids in
+	/// the database. These counters are addressed by a name and a slot number. In addition, each
+	/// contains a minimum value, a maximum value and a next value.
+	/// </summary>
 	public sealed class DbUidManager : IAttachable
 	{
 
 
+		/// <summary>
+		/// Builds a new instance of <see cref="DbUidManager"/>.
+		/// </summary>
 		public DbUidManager()
 		{
+			// TODO Make this internal? Yes but then I must find a way to make it visible to the
+			// unit test project with the InternalsVisibleTo attributes.
+			// Marc
+
 			this.isAttached = false;
 		}
 
@@ -28,6 +36,13 @@ namespace Epsitec.Cresus.Database
 		#region IAttachable Members
 
 		
+		/// <summary>
+		/// Attaches this instance to the specified database table.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The database table.</param>
+		/// <exception cref="System.ArgumentNullException">If <param name="dbInfrastructure"> is <c>null</c>.</param></exception>
+		/// <exception cref="System.ArgumentNullException">If <param name="dbTable"> is <c>null</c>.</param></exception>
 		public void Attach(DbInfrastructure dbInfrastructure, DbTable dbTable)
 		{			
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
@@ -39,7 +54,10 @@ namespace Epsitec.Cresus.Database
 			this.isAttached = true;
 		}
 
-		
+
+		/// <summary>
+		/// Detaches this instance from the database.
+		/// </summary>
 		public void Detach()
 		{
 			this.isAttached = false;
@@ -52,6 +70,18 @@ namespace Epsitec.Cresus.Database
 		#endregion
 
 
+		/// <summary>
+		/// Creates a new counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="min">The minimum value of the counter.</param>
+		/// <param name="max">The maximum value of the counter.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="min"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="max"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void CreateUidCounter(string name, int slot, long min, long max)
 		{
 			this.CheckIsAttached ();
@@ -86,6 +116,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Deletes a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void DeleteUidCounter(string name, int slot)
 		{
 			this.CheckIsAttached ();
@@ -110,6 +148,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Tells whether a counter for uids exists in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <returns><c>true</c> if the counter exists, <c>false</c> if it doesn't.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool ExistsUidCounter(string name, int slot)
 		{
 			this.CheckIsAttached ();
@@ -144,6 +191,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the list of all counter names and slots present in the database.
+		/// </summary>
+		/// <returns>The list of all counter names and slots.</returns>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public IEnumerable<System.Tuple<string, int>> GetUidCounterNamesAndSlots()
 		{
 			this.CheckIsAttached ();
@@ -177,6 +229,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the minimal value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <returns>The minimum value of the counter.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public long GetUidCounterMin(string name, int slot)
 		{
 			this.CheckIsAttached ();
@@ -195,6 +256,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the maximum value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <returns>The maximum value of the counter.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public long GetUidCounterMax(string name, int slot)
 		{
 			this.CheckIsAttached ();
@@ -213,6 +283,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the next value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <returns>The next value of the counter.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public long GetUidCounterNext(string name, int slot)
 		{
 			this.CheckIsAttached ();
@@ -231,6 +310,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Sets the minimal value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="min">The minimum value to set.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="min"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void SetUidCounterMin(string name, int slot, long min)
 		{
 			this.CheckIsAttached ();
@@ -248,6 +337,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Sets the maximal value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="min">The maximal value to set.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="max"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void SetUidCounterMax(string name, int slot, long max)
 		{
 			this.CheckIsAttached ();
@@ -265,6 +364,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Sets the next value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="min">The next value to set.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="next"/> is lower tha zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void SetUidCounterNext(string name, int slot, long next)
 		{
 			this.CheckIsAttached ();
@@ -282,6 +391,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets a given value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use for the request.</param>
+		/// <param name="counterName">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="valueName">The name of the value to get.</param>
+		/// <returns>The requested value.</returns>
+		/// <exception cref="System.Exception">If the counter is invalid.</exception>
 		private long GetValue(DbTransaction transaction, string counterName, int slot, string valueName)
 		{
 			SqlSelect query = new SqlSelect ();
@@ -309,6 +427,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Sets a given value of a counter for uids in the database.
+		/// </summary>
+		/// <param name="transaction">The <see cref="DbTransaction"/> to use for the request.</param>
+		/// <param name="counterName">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="valueName">The name of the value to get.</param>
+		/// <param name="value">The value to use.</param>
 		private void SetValue(DbTransaction transaction, string counterName, int slot, string valueName, long value)
 		{
 			DbColumn column = this.table.Columns[valueName];
@@ -329,6 +455,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> to use as a condition for the name of a counter for
+		/// uids.
+		/// </summary>
+		/// <param name="name">The name of the counter to match.</param>
+		/// <returns>The <see cref="SqlFunction"/> to use as a condition.</returns>
 		private SqlFunction CreateConditionForName(string name)
 		{
 			return new SqlFunction
@@ -340,6 +472,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> to use as a condition for the slot of a counter for
+		/// uids.
+		/// </summary>
+		/// <param name="slot">The slot of the counter to match.</param>
+		/// <returns>The <see cref="SqlFunction"/> to use as a condition.</returns>
 		private SqlFunction CreateConditionForSlot(int slot)
 		{
 			return new SqlFunction
@@ -351,6 +489,10 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Checks that this instance is attached to a <see cref="DbInfrastructure"/>.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		private void CheckIsAttached()
 		{
 			if (!this.isAttached)
@@ -360,12 +502,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// The state of this instance.
+		/// </summary>
 		private bool isAttached;
 
 
+		/// <summary>
+		/// The <see cref="DbInfrastructure"/> object to use to communicate with the database.
+		/// </summary>
 		private DbInfrastructure dbInfrastructure;
 
 
+		/// <summary>
+		/// The <see cref="DbTable"/> used to store the counters data.
+		/// </summary>
 		private DbTable table;
 
 
