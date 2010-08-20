@@ -272,6 +272,7 @@ namespace Epsitec.Cresus.Database
 			if (this.command != null)
 			{
 				this.command.Dispose ();
+				this.command = null;
 			}
 		}
 
