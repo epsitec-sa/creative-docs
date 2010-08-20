@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL, bool isProd)
+		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL=false, bool isProd=false, bool isOffre=false, bool isCommande=false, bool isConfirm=false)
 		{
 			string doc;
 
@@ -91,6 +91,18 @@ namespace Epsitec.Cresus.Core.Helpers
 			else if (isProd)
 			{
 				doc = "Ordre de production";
+			}
+			else if (isOffre)
+			{
+				doc = "Offre";
+			}
+			else if (isCommande)
+			{
+				doc = "Commande";
+			}
+			else if (isConfirm)
+			{
+				doc = "Confirmation de commande";
 			}
 			else
 			{

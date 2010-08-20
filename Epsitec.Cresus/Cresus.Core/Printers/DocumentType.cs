@@ -53,10 +53,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		#region Add options
-		public void DocumentOptionsAddInvoice(bool isBL, bool isProd)
+		public void DocumentOptionsAddInvoice(bool isBL=false, bool isProd=false, bool isOffre=false, bool isCommande=false, bool isConfirm=false)
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			if (!isProd)
+			if (!isProd && !isOffre && !isCommande && !isConfirm)
 			{
 				this.options.Add (new DocumentOption ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
 			}
@@ -112,6 +112,12 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute les options d'impression générales.
 			this.options.Add (new DocumentOption ("Prod.Signing", null, "Cartouche \"Matériel produit\" avec signature", true));
+		}
+
+		public void DocumentOptionsAddCommande()
+		{
+			//	Ajoute les options d'impression générales.
+			this.options.Add (new DocumentOption ("Commande.Signing", null, "Cartouche \"Bon pour commande\" avec signature", true));
 		}
 
 		public void DocumentOptionsAddSpecimen()
