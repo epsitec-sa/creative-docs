@@ -57,6 +57,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this text is null, empty or consists only of white-space characters.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this text is null, empty or consists only of white-space characters; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNullOrWhiteSpace
+		{
+			get
+			{
+				return string.IsNullOrWhiteSpace (this.text);
+			}
+		}
+
 		#region IEquatable<FormattedText> Members
 
 		public bool Equals(FormattedText other)

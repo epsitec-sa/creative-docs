@@ -663,19 +663,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AN/L0AV
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AV]")]
-		public string Firstname
+		public global::Epsitec.Common.Types.FormattedText Firstname
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AV]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AV]");
 			}
 			set
 			{
-				string oldValue = this.Firstname;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Firstname;
 				if (oldValue != value)
 				{
 					this.OnFirstnameChanging (oldValue, value);
-					this.SetField<string> ("[L0AV]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AV]", oldValue, value);
 					this.OnFirstnameChanged (oldValue, value);
 				}
 			}
@@ -685,19 +685,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AN/L0A01
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A01]")]
-		public string Lastname
+		public global::Epsitec.Common.Types.FormattedText Lastname
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A01]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A01]");
 			}
 			set
 			{
-				string oldValue = this.Lastname;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Lastname;
 				if (oldValue != value)
 				{
 					this.OnLastnameChanging (oldValue, value);
-					this.SetField<string> ("[L0A01]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A01]", oldValue, value);
 					this.OnLastnameChanged (oldValue, value);
 				}
 			}
@@ -749,10 +749,10 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnTitleChanging(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
 		partial void OnTitleChanged(global::Epsitec.Cresus.Core.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonTitleEntity newValue);
-		partial void OnFirstnameChanging(string oldValue, string newValue);
-		partial void OnFirstnameChanged(string oldValue, string newValue);
-		partial void OnLastnameChanging(string oldValue, string newValue);
-		partial void OnLastnameChanged(string oldValue, string newValue);
+		partial void OnFirstnameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFirstnameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLastnameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLastnameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnGenderChanging(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
 		partial void OnGenderChanged(global::Epsitec.Cresus.Core.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.Core.Entities.PersonGenderEntity newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);

@@ -143,8 +143,8 @@ namespace Epsitec.Cresus.Core.Data
 			browser.AddColumn (customer => customer.DefaultAddress.Location.PostalCode);
 			browser.AddColumn (customer => customer.DefaultAddress.Location.Name);
 			browser.AddColumn (customer => customer.Person.CastTo<LegalPersonEntity> ().Name);
-			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Firstname);
-			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Lastname);
+			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Firstname.ToString ());
+			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Lastname.ToString ());
 		}
 	}
 }

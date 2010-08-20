@@ -467,8 +467,8 @@ namespace Epsitec.Cresus.Core
 			uriPA2.Roles.Add (rolePrive);
 
 			personPA.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-			personPA.Firstname = "Pierre";
-			personPA.Lastname = "Arnaud";
+			personPA.Firstname = FormattedText.FromSimpleText("Pierre");
+			personPA.Lastname = FormattedText.FromSimpleText("Arnaud");
 			personPA.Title = titleMonsieur;
 			personPA.Contacts.Add (mailPA1);
 			personPA.Contacts.Add (mailPA2);
@@ -480,8 +480,8 @@ namespace Epsitec.Cresus.Core
 			
 			// personDR
 
-			personDR.Firstname = "Daniel";
-			personDR.Lastname  = "Roux";
+			personDR.Firstname = FormattedText.FromSimpleText("Daniel");
+			personDR.Lastname  = FormattedText.FromSimpleText("Roux");
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
 
 			yield return personPA;

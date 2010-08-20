@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(string firstname)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(FormattedText firstname)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByFirstname (firstname);
 
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(string firstname, int index, int count)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByFirstname(FormattedText firstname, int index, int count)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByFirstname (firstname);
 
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Data
 
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByLastname(string lastname)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByLastname(FormattedText lastname)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByLastname (lastname);
 
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Data
 
 
 
-		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByLastname(string lastname, int index, int count)
+		public IEnumerable<NaturalPersonEntity> GetNaturalPersonsByLastname(FormattedText lastname, int index, int count)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExampleByLastname (lastname);
 
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private NaturalPersonEntity CreateNaturalPersonExampleByFirstname(string firstname)
+		private NaturalPersonEntity CreateNaturalPersonExampleByFirstname(FormattedText firstname)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExample ();
 			example.Firstname = firstname;
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private NaturalPersonEntity CreateNaturalPersonExampleByLastname(string lastname)
+		private NaturalPersonEntity CreateNaturalPersonExampleByLastname(FormattedText lastname)
 		{
 			NaturalPersonEntity example = this.CreateNaturalPersonExample ();
 			example.Lastname = lastname;
