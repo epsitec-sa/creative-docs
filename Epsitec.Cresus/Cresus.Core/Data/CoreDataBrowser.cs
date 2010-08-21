@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 
@@ -34,11 +35,25 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		public void AddColumn(System.Linq.Expressions.Expression<System.Func<T, FormattedText>> expression)
+		{
+			switch (expression.NodeType)
+			{
+				case ExpressionType.Lambda:
+					this.fieldPaths.Add (this.GetEntityFieldPath (expression as LambdaExpression));
+					break;
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+		}
+
 		private EntityFieldPath GetEntityFieldPath(LambdaExpression expression)
 		{
 			var body = expression.Body;
 
-			if (expression.ReturnType != typeof (string))
+			if ((expression.ReturnType != typeof (string)) &&
+				(expression.ReturnType != typeof (FormattedText)))
 			{
 				throw new System.InvalidOperationException ("Lambda does not return a supported type");
 			}
@@ -143,8 +158,8 @@ namespace Epsitec.Cresus.Core.Data
 			browser.AddColumn (customer => customer.DefaultAddress.Location.PostalCode);
 			browser.AddColumn (customer => customer.DefaultAddress.Location.Name);
 			browser.AddColumn (customer => customer.Person.CastTo<LegalPersonEntity> ().Name);
-			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Firstname.ToString ());
-			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Lastname.ToString ());
+			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Firstname);
+			browser.AddColumn (customer => customer.Person.CastTo<NaturalPersonEntity> ().Lastname);
 		}
 	}
 }
