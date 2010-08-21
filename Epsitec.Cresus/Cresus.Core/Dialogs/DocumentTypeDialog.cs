@@ -143,14 +143,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.confirmationButtons.Clear ();
 			int tabIndex = 0;
 
-			this.entityPrinter.DocumentTypeSelected = this.GetSettings (true, "SelectedType");
+			this.entityPrinter.DocumentTypeSelected = DocumentType.StringToType (this.GetSettings (true, "SelectedType"));
 
 			foreach (var documentType in this.entityPrinter.DocumentTypes)
 			{
 				var button = new ConfirmationButton
 				{
 					Parent = leftFrame,
-					Name = documentType.Name,
+					Name = DocumentType.TypeToString (documentType.Type),
 					Text = ConfirmationButton.FormatContent (documentType.ShortDescription, documentType.LongDescription),
 					PreferredHeight = 52,
 					Dock = DockStyle.Top,
@@ -159,8 +159,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				button.Clicked += delegate
 				{
-					this.entityPrinter.DocumentTypeSelected = button.Name;
-					this.SetSettings (true, "SelectedType", this.entityPrinter.DocumentTypeSelected);
+					this.entityPrinter.DocumentTypeSelected = DocumentType.StringToType (button.Name);
+					this.SetSettings (true, "SelectedType", DocumentType.TypeToString (this.entityPrinter.DocumentTypeSelected));
 					this.UpdateWidgets ();
 					this.UpdatePreview ();
 				};
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var button in this.confirmationButtons)
 			{
-				if (button.Name == this.entityPrinter.DocumentTypeSelected)
+				if (button.Name == DocumentType.TypeToString (this.entityPrinter.DocumentTypeSelected))
 				{
 					button.ButtonStyle = ButtonStyle.ActivableIcon;
 					button.SetSelected (true);
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			this.acceptButton.Enable = !string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected);
+			this.acceptButton.Enable = this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None;
 
 			this.UpdateOptions ();
 		}
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePreview()
 		{
-			if (!string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected))
+			if (this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None)
 			{
 				this.entityPrinter.Clear ();
 				this.previewFrame.BuildSections (this.entityPrinter);
@@ -499,11 +499,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return null;
 		}
 
-		private DocumentType GetDocumentType(string name)
+		private DocumentType GetDocumentType(DocumentTypeEnum type)
 		{
 			foreach (var documentType in this.entityPrinter.DocumentTypes)
 			{
-				if (documentType.Name == name)
+				if (documentType.Type == type)
 				{
 					return documentType;
 				}
@@ -549,13 +549,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				if (string.IsNullOrEmpty (this.entityPrinter.DocumentTypeSelected))
+				if (this.entityPrinter.DocumentTypeSelected == DocumentTypeEnum.None)
 				{
 					return this.SettingsGlobalPrefix;
 				}
 				else
 				{
-					return string.Concat (this.SettingsGlobalPrefix, ".", this.entityPrinter.DocumentTypeSelected);
+					return string.Concat (this.SettingsGlobalPrefix, ".", this.entityPrinter.DocumentTypeSelected.ToString ());
 				}
 			}
 		}

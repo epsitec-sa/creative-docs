@@ -140,6 +140,7 @@
     <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
+    <Compile Include="Printers\DocumentTypeEnum.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
     <Compile Include="Data\ArticleCategoryRepository.cs" />

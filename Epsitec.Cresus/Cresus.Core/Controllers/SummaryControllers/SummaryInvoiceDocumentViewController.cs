@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
 			string title = Misc.FirstLine (billingDetails.Title);
-			string ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true, false);
+			string ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true);
 
 			if (ratio == null)
 			{

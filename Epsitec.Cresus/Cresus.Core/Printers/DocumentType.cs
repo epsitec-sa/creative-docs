@@ -16,16 +16,16 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class DocumentType
 	{
-		public DocumentType(string name, string shortDescription, string longDescription)
+		public DocumentType(DocumentTypeEnum type, string shortDescription, string longDescription)
 		{
-			this.Name = name;
+			this.Type = type;
 			this.ShortDescription = shortDescription;
 			this.LongDescription = longDescription;
 
 			this.options = new List<DocumentOption> ();
 		}
 
-		public string Name
+		public DocumentTypeEnum Type
 		{
 			get;
 			set;
@@ -53,10 +53,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		#region Add options
-		public void DocumentOptionsAddInvoice(bool isBL=false, bool isProd=false, bool isOffre=false, bool isCommande=false, bool isConfirm=false)
+		public void DocumentOptionsAddInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			if (!isProd && !isOffre && !isCommande && !isConfirm)
+			if (this.Type == DocumentTypeEnum.BL    ||
+				this.Type == DocumentTypeEnum.InvoiceWithESR   ||
+				this.Type == DocumentTypeEnum.InvoiceWithoutESR)
 			{
 				this.options.Add (new DocumentOption ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
 			}
@@ -70,7 +72,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.options.Add (new DocumentOption ("Ordre des colonnes :"));
 
-			if (isBL)
+			if (this.Type == DocumentTypeEnum.BL  ||
+				this.Type == DocumentTypeEnum.ProductionOrder)
 			{
 				this.options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
 				this.options.Add (new DocumentOption ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité"));
@@ -132,6 +135,26 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption (20));
 		}
 		#endregion
+
+
+		public static string TypeToString(DocumentTypeEnum type)
+		{
+			return type.ToString ();
+		}
+
+		public static DocumentTypeEnum StringToType(string name)
+		{
+			DocumentTypeEnum type;
+
+			if (System.Enum.TryParse (name, out type))
+			{
+				return type;
+			}
+			else
+			{
+				return DocumentTypeEnum.None;
+			}
+		}
 
 
 		private readonly List<DocumentOption> options;
