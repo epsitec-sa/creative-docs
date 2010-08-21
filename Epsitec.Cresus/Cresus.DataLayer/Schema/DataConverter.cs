@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <exception cref="System.ArgumentException">If <paramref name="simpleType"/> is <c>unknown</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="numDef"/> is not <c>null</c> and invalid.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
-		public object FromDatabaseToCresusValue(System.Type type, DbRawType rawType, DbSimpleType simpleType, DbNumDef numDef, object value)
+		public object FromDatabaseToCresusValue(INamedType type, DbRawType rawType, DbSimpleType simpleType, DbNumDef numDef, object value)
 		{
 			type.ThrowIfNull ("type");
 			rawType.ThrowIf (rt => rt==DbRawType.Null, "rawType cannot be null");
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="numDef">The <see cref="DbNumDef"/> of the value in its intermediate .NET representation.</param>
 		/// <param name="value">The value in its intermediate .NET representation.</param>
 		/// <returns>The value in its Cresus representation.</returns>
-		private object FromDotNetToCresusValue(System.Type type, DbSimpleType simpleType, DbNumDef numDef, object value)
+		private object FromDotNetToCresusValue(INamedType type, DbSimpleType simpleType, DbNumDef numDef, object value)
 		{
 			object newValue = value;
 
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="type">The expected type of the value in its Cresus representation.</param>
 		/// <param name="value">The value in its Cresus representation.</param>
 		/// <returns>The processed value in its Cresus representation</returns>
-		private object ProcessDotNetToCresusString(System.Type type, object value)
+		private object ProcessDotNetToCresusString(INamedType type, object value)
 		{
 			object newValue = value;
 			
@@ -182,11 +182,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <param name="type">The expected type of the value in its Cresus representation.</param>
 		/// <param name="value">The value in its Cresus representation.</param>
 		/// <returns>The processed value in its Cresus representation</returns>
-		private object ProcessDotNetToCresusNumber(System.Type type, object value)
+		private object ProcessDotNetToCresusNumber(INamedType type, object value)
 		{
 			object newValue = value;
 
-			bool success = InvariantConverter.Convert (newValue, type, out newValue);
+			bool success = InvariantConverter.Convert (newValue, type.SystemType, out newValue);
 
 			if (!success)
 			{
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				newValue = FormattedText.CastToString (newValue);
 			}
 
-			return value;
+			return newValue;
 		}
 
 

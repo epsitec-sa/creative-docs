@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 						if (internalValue != System.DBNull.Value)
 						{
 							StructuredTypeField field = fields[i];
-							System.Type type = field.Type.SystemType;
+							INamedType type = field.Type;
 
 							Druid localEntityId = this.EntityContext.GetLocalEntityId (leafEntityId, field.CaptionId);
 							string columnName = this.SchemaEngine.GetEntityColumnName (field.CaptionId);
