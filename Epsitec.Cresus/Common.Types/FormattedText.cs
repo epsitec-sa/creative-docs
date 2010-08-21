@@ -98,7 +98,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public override string ToString()
 		{
-			return this.text;
+			return this.text ?? "";
 		}
 
 		public override bool Equals(object obj)
