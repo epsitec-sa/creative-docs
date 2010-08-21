@@ -80,41 +80,43 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool isBL=false, bool isProd=false, bool isOffre=false, bool isCommande=false, bool isConfirm=false)
+		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentTypeEnum type)
 		{
 			string doc;
 
-			if (isBL)
+			switch (type)
 			{
-				doc = "Bulletin de livraison";
-			}
-			else if (isProd)
-			{
-				doc = "Ordre de production";
-			}
-			else if (isOffre)
-			{
-				doc = "Offre";
-			}
-			else if (isCommande)
-			{
-				doc = "Commande";
-			}
-			else if (isConfirm)
-			{
-				doc = "Confirmation de commande";
-			}
-			else
-			{
-				doc = "Facture";
+				case Printers.DocumentTypeEnum.BL:
+					doc = "Bulletin de livraison";
+					break;
+
+				case Printers.DocumentTypeEnum.ProductionOrder:
+					doc = "Ordre de production";
+					break;
+
+				case Printers.DocumentTypeEnum.Offer:
+					doc = "Offre";
+					break;
+
+				case Printers.DocumentTypeEnum.Order:
+					doc = "Commande";
+					break;
+
+				case Printers.DocumentTypeEnum.OrderAcknowledge:
+					doc = "Confirmation de commande";
+					break;
+
+				default:
+					doc = "Facture";
+					break;
 			}
 
 			string title = TextFormatter.FormatText (string.Concat("<b>", doc), x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true, isBL));
+			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}
 
-		public static string GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis, bool isBL)
+		public static string GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
 		{
 			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.

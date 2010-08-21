@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
+			this.DocumentTypeSelected = DocumentTypeEnum.None;
+
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
 			this.documentContainer = new DocumentContainer ();
@@ -39,7 +41,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public string DocumentTypeSelected
+		public DocumentTypeEnum DocumentTypeSelected
 		{
 			get;
 			set;

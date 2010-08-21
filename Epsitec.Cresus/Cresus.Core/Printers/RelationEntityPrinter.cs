@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			DocumentType type;
 
-			type = new DocumentType ("Summary", "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+			type = new DocumentType (DocumentTypeEnum.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
 			type.DocumentOptions.Add (new DocumentOption ("Données à inclure :"));
 			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Adresses",   true));
 			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Téléphones", true));
@@ -37,10 +37,10 @@ namespace Epsitec.Cresus.Core.Printers
 			type.DocumentOptionsAddSpecimen    ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("Debug.1", "Test #1", "Page fixe de test pour l'objet TextBand.");
+			type = new DocumentType (DocumentTypeEnum.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType ("Debug.2", "Test #2", "Page fixe de test pour l'objet TableBand.");
+			type = new DocumentType (DocumentTypeEnum.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
 			this.DocumentTypes.Add (type);
 		}
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.BuildSections ();
 
-			if (this.DocumentTypeSelected == "Summary")
+			if (this.DocumentTypeSelected == DocumentTypeEnum.Summary)
 			{
 				this.BuildTitle ();
 				this.BuildSummary ();
@@ -97,17 +97,17 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			if (this.DocumentTypeSelected == "Summary")
+			if (this.DocumentTypeSelected == DocumentTypeEnum.Summary)
 			{
 				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 			}
 
-			if (this.DocumentTypeSelected == "Debug.1")
+			if (this.DocumentTypeSelected == DocumentTypeEnum.Debug1)
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.DocumentTypeSelected == "Debug.2")
+			if (this.DocumentTypeSelected == DocumentTypeEnum.Debug2)
 			{
 				this.PaintTest2 (port);
 			}
