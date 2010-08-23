@@ -1004,19 +1004,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ/L0AK1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AK1]")]
-		public string Complement
+		public global::Epsitec.Common.Types.FormattedText Complement
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AK1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AK1]");
 			}
 			set
 			{
-				string oldValue = this.Complement;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
 				if (oldValue != value)
 				{
 					this.OnComplementChanging (oldValue, value);
-					this.SetField<string> ("[L0AK1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AK1]", oldValue, value);
 					this.OnComplementChanged (oldValue, value);
 				}
 			}
@@ -1044,8 +1044,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnComplementChanging(string oldValue, string newValue);
-		partial void OnComplementChanged(string oldValue, string newValue);
+		partial void OnComplementChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnComplementChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnAddressChanging(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Cresus.Core.Entities.AddressEntity oldValue, global::Epsitec.Cresus.Core.Entities.AddressEntity newValue);
 		

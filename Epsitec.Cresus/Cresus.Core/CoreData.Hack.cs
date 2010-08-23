@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Core
 			mailPA1.NaturalPerson = personPA;
 			mailPA1.LegalPerson = companyEpsitec;
 			mailPA1.Address = addressEpsitec;
-			mailPA1.Complement = "Direction";
+			mailPA1.Complement = FormattedText.FromSimpleText ("Direction");
 			mailPA1.Roles.Add (roleProf);
 
 			MailContactEntity mailPA2 = this.DataContext.CreateEntity<MailContactEntity> ();

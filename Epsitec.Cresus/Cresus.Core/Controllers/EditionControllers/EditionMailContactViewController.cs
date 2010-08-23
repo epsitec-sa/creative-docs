@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if ((string.IsNullOrWhiteSpace (this.Entity.Complement)) &&
+			if ((this.Entity.Complement.IsNullOrWhiteSpace) &&
 				(this.Entity.NaturalPerson.IsNull () || this.Entity.LegalPerson.IsNull ()) &&
 				(this.Entity.Roles.Count == 0) &&
 				(this.Entity.Comments.Count == 0) &&
