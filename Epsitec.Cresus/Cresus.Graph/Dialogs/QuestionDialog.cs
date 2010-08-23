@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Graph.Dialogs
 	{
 		public QuestionDialog(Caption header, IEnumerable<Caption> captions)
 		{
-			this.DefineTitle (FormattedText.FromSimpleText (GraphProgram.Application.ShortWindowTitle));
+			this.DefineTitle (GraphProgram.Application.ShortWindowTitle);
 			this.DefineHeader (QuestionDialog.CreateCaptionText (header));
 
 			this.headerTitle = header.SortedLabels.First ();

@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildSummary()
 		{
 			//	Ajoute le résumé dans le document.
-			FormattedText text = FormattedText.FromSimpleText ("?");
+			FormattedText text = "?";
 
 			if (this.entity.Person is NaturalPersonEntity)
 			{
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = FormattedText.FromSimpleText ("<b>Adresses</b>");
+			title.Text = Misc.Bold ("Adresses");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -202,11 +202,11 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetRelativeColumWidth (4, 0.8);
 
 			int index = 0;
-			table.SetText (0, index, "<b>Rôles</b>");
-			table.SetText (1, index, "<b>Adresse</b>");
-			table.SetText (2, index, "<b>NPA</b>");
-			table.SetText (3, index, "<b>Ville</b>");
-			table.SetText (4, index, "<b>Pays</b>");
+			table.SetText (0, index, Misc.Bold ("Rôles"));
+			table.SetText (1, index, Misc.Bold ("Adresse"));
+			table.SetText (2, index, Misc.Bold ("NPA"));
+			table.SetText (3, index, Misc.Bold ("Ville"));
+			table.SetText (4, index, Misc.Bold ("Pays"));
 			index++;
 
 			foreach (var contact in this.entity.Person.Contacts)
@@ -336,12 +336,12 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 
-			string t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
+			FormattedText t = "Ceci est un <u>texte bidon</u> mais <b>assez long</b>, pour permettre de <font size=\"6\">tester</font> le découpage en plusieurs pavés distincts, qui seront dessinés sur plusieurs pages.<br/><br/><i>Et voilà la <font color=\"#ff0000\">suite et la fin</font> de ce chef d'œuvre littéraire sur une toute nouvelle ligne.</i>";
 
 			var textBand = new TextBand ();
 			textBand.Font = font;
 			textBand.FontSize = fontSize;
-			textBand.Text = FormattedText.FromSimpleText (t);
+			textBand.Text = t;
 			textBand.DebugPaintFrame = true;
 
 			double top = 280;

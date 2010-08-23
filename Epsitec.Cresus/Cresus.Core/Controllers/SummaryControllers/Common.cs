@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : MailContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, dataContext)
-				.DefineTitle		(x => TextFormatter.FormatText ("Adresse", "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineTitle		(x => TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineText			(x => Common.GetMailContactSummary (x))
 				.DefineCompactText	(x => Common.GetCompactMailContactSummary (x));
 
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, dataContext)
 				.DefineTitle		(x => TextFormatter.FormatText (x.TelecomType.Name))
-				.DefineText			(x => TextFormatter.FormatText (x.Number, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineText			(x => TextFormatter.FormatText (x.Number, "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineCompactText  (x => TextFormatter.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
 
 			data.Add (
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : UriContactEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, dataContext, filter: x => x.UriScheme.Code == "mailto")
-				.DefineText			(x => TextFormatter.FormatText (x.Uri, "(", string.Join (", ", x.Roles.Select (role => role.Name)), ")"))
+				.DefineText			(x => TextFormatter.FormatText (x.Uri, "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineCompactText	(x => TextFormatter.FormatText (x.Uri))
 				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
 

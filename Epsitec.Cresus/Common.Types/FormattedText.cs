@@ -8,6 +8,16 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// The <c>FormattedText</c> structure wraps a <c>string</c> which represents
 	/// formatted text.
+	/// Cette structure devrait être utilisée à la place de <c>string</c> partout
+	/// où le texte peut contenir des tags de mise en page.
+	/// Par exemple:
+	///    FormattedText t = "<b>bold</b>";
+	///    t.ToString () retourne la même chaîne
+	///    t.ToSimpleText () retourne "bold"
+	/// Autre exemple:
+	///    FormattedText t = FormattedText.FromSimpleText ("a -> b");
+	///    t.ToString () retourne "a -&gt; b"
+	///    t.ToSimpleText () retourne "a -> b"
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (FormattedText.Converter))]
@@ -31,6 +41,14 @@ namespace Epsitec.Common.Types
 		{
 			this.text = formattedText.text;
 		}
+
+
+		public static implicit operator FormattedText(string formattedTextSource)
+		{
+			//	Permet de faire FormattedText f = "<b>bold</b>".
+			return new FormattedText (formattedTextSource);
+		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether this instance represents a null
@@ -120,13 +138,6 @@ namespace Epsitec.Common.Types
 			}
 
 			return new FormattedText (string.Concat (list));
-		}
-
-
-		public static implicit operator FormattedText(string formattedTextSource)
-		{
-			//	Permet de faire FormattedText f = "<b>bold</b>".
-			return new FormattedText (formattedTextSource);
 		}
 
 
@@ -330,7 +341,7 @@ namespace Epsitec.Common.Types
 
 		public static readonly FormattedText Null = new FormattedText (null);
 
-		public const string						HtmlBreak		= "<br/>";
+		public const string HtmlBreak = "<br/>";
 		
 		private readonly string text;
 	}

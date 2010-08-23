@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core
 			TextFormatter.ProcessTags (items);
 			TextFormatter.FormatText (buffer, items);
 
-			return new FormattedText (string.Join ("<br/>", buffer.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
+			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
 
 
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var value in values.Select (item => TextFormatter.ConvertToText (item)))
 			{
-				items.Add (value.Replace ("\n", "<br/>").Trim ());
+				items.Add (value.Replace ("\n", FormattedText.HtmlBreak).Trim ());
 			}
 
 			return items;
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core
 
 				buffer.Append (text);
 
-				emptyItem = text.EndsWith ("<br/>");
+				emptyItem = text.EndsWith (FormattedText.HtmlBreak);
 			}
 		}
 
