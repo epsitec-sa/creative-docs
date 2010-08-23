@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.ribbonPageHome = RibbonViewController.CreateRibbonPage (this.ribbonBook, "Home", "Principal");
 
 			this.CreateRibbonEditSection ();
+			this.CreateRibbonClipboardSection ();
+			this.CreateRibbonFontSection ();
 			this.CreateRibbonDatabaseSection ();
 			this.CreateRibbonStateSection ();
 			this.CreateRibbonSettingsSection ();
@@ -70,20 +72,76 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Edit",
 				Title = "Édition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 200,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 4,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.DiscardRecord));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Print));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Preview));
+		}
 
-			new FrameBox ()
+		private void CreateRibbonClipboardSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Clipboard",
+				Title = "Presse-papier",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) + RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+			};
+
+			var frame = new FrameBox
 			{
 				Parent = section,
-				Dock = DockStyle.Stacked,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
 			};
+
+			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Cut, dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Copy, dx: RibbonViewController.buttonSmallWidth));
+
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Paste));
+		}
+
+		private void CreateRibbonFontSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Font",
+				Title = "Police",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) * 3,
+			};
+
+			var frame = new FrameBox
+			{
+				Parent = section,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+			};
+
+			var topFrame = new FrameBox
+			{
+				Parent = frame,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var bottomFrame = new FrameBox
+			{
+				Parent = frame,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Bold, dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Italic, dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Underline, dx: RibbonViewController.buttonSmallWidth));
+
+			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Subscript, dx: RibbonViewController.buttonSmallWidth));
+			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Superscript, dx: RibbonViewController.buttonSmallWidth));
 		}
 
 		private void CreateRibbonDatabaseSection()
@@ -93,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Database",
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 240,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 3,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
@@ -118,7 +176,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Name = "Navigation",
 				Title = "Navigation",
-				PreferredWidth = 96,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 2,
 				Dock = DockStyle.Right,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
@@ -135,26 +193,31 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = 48,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
 		}
 
 		
-		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int dx = 31)
+		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int? dx = null)
 		{
 			if (handler != null)
 			{
 				CoreProgram.Application.CommandDispatcher.Register (command, handler);
 			}
 
-			double buttonDx = 2 * ((dx + 1) / 2 + 5);
+			if (!dx.HasValue)
+			{
+				dx = RibbonViewController.buttonLargeWidth;
+			}
+
+			double buttonDx = RibbonViewController.GetButtonWidth (dx.Value);
 
 			return new RibbonIconButton
 			{
 				CommandObject = command,
-				PreferredIconSize = new Size (dx, 31),
+				PreferredIconSize = new Size (dx.Value, 31),
 				PreferredSize = new Size (buttonDx, buttonDx),
 				Dock = dockStyle,
 				Name = command.Name,
@@ -163,6 +226,15 @@ namespace Epsitec.Cresus.Core.Controllers
 				AutoFocus = false,
 			};
 		}
+
+		private static double GetButtonWidth(int dx)
+		{
+			return 2 * ((dx + 1) / 2 + 5);
+		}
+
+
+		private static readonly int buttonSmallWidth = 14;
+		private static readonly int buttonLargeWidth = 31;
 
 
 		private RibbonBook						ribbonBook;

@@ -1343,19 +1343,19 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private Margins GetCellMargins(double bottomForce = 0, double topForce = 0)
+		private Margins GetCellMargins(double? bottomForce = null, double? topForce = null)
 		{
 			//	Retourne les marges à utiliser pour une ligne entière.
 			var margins = this.table.CellMargins;
 
-			if (bottomForce != 0)
+			if (bottomForce.HasValue)
 			{
-				margins.Bottom = bottomForce;
+				margins.Bottom = bottomForce.Value;
 			}
 
-			if (topForce != 0)
+			if (topForce.HasValue)
 			{
-				margins.Top = topForce;
+				margins.Top = topForce.Value;
 			}
 
 			return margins;
