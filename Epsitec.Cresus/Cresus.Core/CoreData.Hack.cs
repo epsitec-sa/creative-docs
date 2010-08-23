@@ -407,8 +407,8 @@ namespace Epsitec.Cresus.Core
 			uriEpsitec2.UriScheme = uriSchemeMailto;
 			uriEpsitec2.Roles.Add (roleProf);
 
-			companyEpsitec.Complement = "Logiciels de gestion Crésus";
-			companyEpsitec.Name = "Epsitec SA";
+			companyEpsitec.Complement = FormattedText.FromSimpleText ("Logiciels de gestion Crésus");
+			companyEpsitec.Name = FormattedText.FromSimpleText ("Epsitec SA");
 			companyEpsitec.Contacts.Add (mailEpsitec1);
 			companyEpsitec.Contacts.Add (telecomEpsitec1);
 			companyEpsitec.Contacts.Add (telecomEpsitec2);
@@ -417,8 +417,8 @@ namespace Epsitec.Cresus.Core
 
 			// companyMigros
 
-			companyMigros.Complement = "Le géant de l'alimentation";
-			companyMigros.Name = "Migros SA";
+			companyMigros.Complement = FormattedText.FromSimpleText ("Le géant de l'alimentation");
+			companyMigros.Name = FormattedText.FromSimpleText ("Migros SA");
 
 			// personPA
 
