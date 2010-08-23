@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static FormattedText GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailEntity billingDetails)
 		{
 			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
-			string title = Misc.FirstLine (billingDetails.Title);
+			FormattedText title = Misc.FirstLine (billingDetails.Title);
 			FormattedText ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true);
 
 			if (ratio.IsNullOrWhiteSpace)
