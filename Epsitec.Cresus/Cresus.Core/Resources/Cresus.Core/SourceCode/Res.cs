@@ -26,6 +26,20 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
 			}
 			
+			public static class Clipboard
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0K5
+				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
+				//	designer:cap/L0K6
+				public static readonly global::Epsitec.Common.Widgets.Command Cut = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
+				//	designer:cap/L0K7
+				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
+			}
+			
 			public static class Edition
 			{
 				internal static void _Initialize()
@@ -40,6 +54,24 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/L0A13
 				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97));
+			}
+			
+			public static class Font
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0K8
+				public static readonly global::Epsitec.Common.Widgets.Command Bold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+				//	designer:cap/L0K9
+				public static readonly global::Epsitec.Common.Widgets.Command Italic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+				//	designer:cap/L0KB
+				public static readonly global::Epsitec.Common.Widgets.Command Subscript = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+				//	designer:cap/L0KC
+				public static readonly global::Epsitec.Common.Widgets.Command Superscript = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
+				//	designer:cap/L0KA
+				public static readonly global::Epsitec.Common.Widgets.Command Underline = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
 			}
 			
 			public static class Global
@@ -77,7 +109,9 @@ namespace Epsitec.Cresus.Core
 			internal static void _Initialize()
 			{
 				Base._Initialize ();
+				Clipboard._Initialize ();
 				Edition._Initialize ();
+				Font._Initialize ();
 				Global._Initialize ();
 				History._Initialize ();
 				Test._Initialize ();
@@ -96,6 +130,16 @@ namespace Epsitec.Cresus.Core
 				public const long ShowInvoiceDocuments = 0x1500014000004L;
 			}
 			
+			public static class Clipboard
+			{
+				//	designer:cap/L0K5
+				public const long Copy = 0x1500014000005L;
+				//	designer:cap/L0K6
+				public const long Cut = 0x1500014000006L;
+				//	designer:cap/L0K7
+				public const long Paste = 0x1500014000007L;
+			}
+			
 			public static class Edition
 			{
 				//	designer:cap/L0AVF
@@ -106,6 +150,20 @@ namespace Epsitec.Cresus.Core
 				public const long Print = 0x1500014000000L;
 				//	designer:cap/L0A13
 				public const long SaveRecord = 0x150000A000061L;
+			}
+			
+			public static class Font
+			{
+				//	designer:cap/L0K8
+				public const long Bold = 0x1500014000008L;
+				//	designer:cap/L0K9
+				public const long Italic = 0x1500014000009L;
+				//	designer:cap/L0KB
+				public const long Subscript = 0x150001400000BL;
+				//	designer:cap/L0KC
+				public const long Superscript = 0x150001400000CL;
+				//	designer:cap/L0KA
+				public const long Underline = 0x150001400000AL;
 			}
 			
 			public static class Global

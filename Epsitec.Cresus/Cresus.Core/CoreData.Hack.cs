@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Core
 			// companyEpsitec
 
 			CommentEntity commentEpsitec = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitec.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
+			commentEpsitec.Text = FormattedText.FromSimpleText ("Bureaux ouverts de 9h-12h et 14h-16h30");
 
 			MailContactEntity mailEpsitec1 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailEpsitec1.LegalPerson = companyEpsitec;
@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.Core
 			mailEpsitec1.Roles.Add (roleFact);
 
 			CommentEntity commentEpsitecT1 = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitecT1.Text = "Administration et vente";
+			commentEpsitecT1.Text = FormattedText.FromSimpleText ("Administration et vente");
 
 			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec1.LegalPerson = companyEpsitec;
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Core
 			telecomEpsitec1.Roles.Add (roleFact);
 
 			CommentEntity commentEpsitecT2 = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitecT2.Text = "Assistance technique (hotline)";
+			commentEpsitecT2.Text = FormattedText.FromSimpleText ("Assistance technique (hotline)");
 
 			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec2.LegalPerson = companyEpsitec;
@@ -467,8 +467,8 @@ namespace Epsitec.Cresus.Core
 			uriPA2.Roles.Add (rolePrive);
 
 			personPA.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-			personPA.Firstname = FormattedText.FromSimpleText("Pierre");
-			personPA.Lastname = FormattedText.FromSimpleText("Arnaud");
+			personPA.Firstname = FormattedText.FromSimpleText ("Pierre");
+			personPA.Lastname = FormattedText.FromSimpleText ("Arnaud");
 			personPA.Title = titleMonsieur;
 			personPA.Contacts.Add (mailPA1);
 			personPA.Contacts.Add (mailPA2);
@@ -480,8 +480,8 @@ namespace Epsitec.Cresus.Core
 			
 			// personDR
 
-			personDR.Firstname = FormattedText.FromSimpleText("Daniel");
-			personDR.Lastname  = FormattedText.FromSimpleText("Roux");
+			personDR.Firstname = FormattedText.FromSimpleText ("Daniel");
+			personDR.Lastname  = FormattedText.FromSimpleText ("Roux");
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
 
 			yield return personPA;
