@@ -25,14 +25,14 @@ namespace Epsitec.Cresus.Core.Helpers
 			string billing  = GetShortMailContactSummary (x.BillingMailContact).ToString ();
 			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
 
-			string addresses;
+			FormattedText addresses;
 			if (x.BillingMailContact == x.ShippingMailContact || (!x.BillingMailContact.IsActive () && !x.ShippingMailContact.IsActive ()))
 			{
-				addresses = string.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
+				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}
 			else
 			{
-				addresses = string.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
+				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation:</b>\n", billing, "\n\n<b>• Adresse de livraison:</b>\n", shipping);
 			}
 
 			return TextFormatter.FormatText ("N°", x.IdA, "/~", x.IdB, "/~", x.IdC, ", ", date, ", ", total, addresses);
@@ -49,28 +49,28 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else
 			{
-				return TextFormatter.FormatText ("<i>Pas encore défini</i>");
+				return Misc.Italic ("Pas encore défini");
 			}
 		}
 
 
 		public static FormattedText GetMailContact(InvoiceDocumentEntity x)
 		{
-			string legal = "";
-			string natural = "";
+			FormattedText legal = "";
+			FormattedText natural = "";
 
 			if (x.BillingMailContact != null)
 			{
 				if (x.BillingMailContact.LegalPerson.IsActive ())
 				{
 					var y = x.BillingMailContact.LegalPerson;
-					legal = TextFormatter.FormatText (y.Name).ToString ();
+					legal = TextFormatter.FormatText (y.Name);
 				}
 
 				if (x.BillingMailContact.NaturalPerson.IsActive ())
 				{
 					var y = x.BillingMailContact.NaturalPerson;
-					natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname).ToString ();
+					natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname);
 				}
 
 				return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name);
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			string title = TextFormatter.FormatText (string.Concat("<b>", doc), x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return TextFormatter.FormatText (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+			return FormattedText.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}
 
 		public static FormattedText GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
@@ -280,12 +280,12 @@ namespace Epsitec.Cresus.Core.Helpers
 
 						if (total.FixedPriceAfterTax.HasValue)
 						{
-							total.TextForPrimaryPrice = "<b>Total TTC</b>";
-							total.TextForFixedPrice   = "<b><i>Total arrêté à</i></b>";
+							total.TextForPrimaryPrice = Misc.Bold ("Total TTC");
+							total.TextForFixedPrice   = Misc.Bold (Misc.Italic ("Total arrêté à"));
 						}
 						else
 						{
-							total.TextForPrimaryPrice = "<b>Total TTC</b>";
+							total.TextForPrimaryPrice = Misc.Bold ("Total TTC");
 							total.TextForFixedPrice   = null;
 						}
 					}
