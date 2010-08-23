@@ -453,8 +453,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.NotSupportedException (string.Format ("Field {0} not supported by value store", id));
 			}
 
-			if (UndefinedValue.IsUndefinedValue (value))
+			if ((UndefinedValue.IsUndefinedValue (value)) ||
+				(value == null))
 			{
+				//	If T is a non-nullable value type, we must return its default value
+				//	instead. A FormattedText, for instance, might be stored as <null> in
+				//	the entity, its equivalent is the default FormattedText instance.
+
 				return default (T);
 			}
 			
