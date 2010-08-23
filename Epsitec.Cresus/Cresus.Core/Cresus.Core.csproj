@@ -366,6 +366,14 @@
     <EmbeddedResource Include="Images\Edition.DiscardRecord.icon" />
     <EmbeddedResource Include="Images\Data.ArticlePrice.icon" />
     <EmbeddedResource Include="Images\Data.TotalDocumentItem.icon" />
+    <EmbeddedResource Include="Images\Clipboard.Copy.icon" />
+    <EmbeddedResource Include="Images\Clipboard.Cut.icon" />
+    <EmbeddedResource Include="Images\Clipboard.Paste.icon" />
+    <EmbeddedResource Include="Images\Font.Bold.icon" />
+    <EmbeddedResource Include="Images\Font.Italic.icon" />
+    <EmbeddedResource Include="Images\Font.Underline.icon" />
+    <EmbeddedResource Include="Images\Font.Subscript.icon" />
+    <EmbeddedResource Include="Images\Font.Superscript.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
