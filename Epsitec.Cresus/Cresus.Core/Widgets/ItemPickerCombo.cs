@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				list.Add ("Aucun");
 			}
 
-			this.Text = Misc.Join (this.MultipleSelectionTextSeparator, list);
+			this.Text = string.Join (this.MultipleSelectionTextSeparator, list);
 		}
 		
 

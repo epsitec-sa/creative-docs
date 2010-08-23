@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				DecimalRange dr = new DecimalRange (-1000000000, 1000000000, resolution);
+				DecimalRange dr = new DecimalRange (-Misc.maxValue, Misc.maxValue, resolution);
 				return dr.Constrain (value);
 			}
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core
 			int i = (int) (value*100);
 			return string.Concat (i.ToString (), "%");
 #else
-			DecimalRange dr = new DecimalRange (-1000000000, 1000000000, 0.1M);
+			DecimalRange dr = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.1M);
 			return string.Concat (dr.ConvertToString (value.Value*100), "%");
 #endif
 		}
@@ -208,18 +208,15 @@ namespace Epsitec.Cresus.Core
 
 		public static FormattedText FirstLine(FormattedText text)
 		{
-			return Misc.FirstLine (text.ToString ());
-		}
+			string t = text.ToString ();
 
-		public static string FirstLine(string text)
-		{
-			if (!string.IsNullOrEmpty (text))
+			if (!string.IsNullOrEmpty (t))
 			{
-				int i = text.IndexOf (FormattedText.HtmlBreak);
+				int i = t.IndexOf (FormattedText.HtmlBreak);
 
 				if (i != -1)
 				{
-					return text.Substring (0, i);
+					return t.Substring (0, i);
 				}
 			}
 
@@ -228,132 +225,17 @@ namespace Epsitec.Cresus.Core
 
 		public static FormattedText AppendLine(FormattedText current, FormattedText text)
 		{
-			return new FormattedText (Misc.AppendLine (current.ToString (), text.ToString ()));
-		}
-
-		public static string AppendLine(string current, string text)
-		{
-			if (string.IsNullOrEmpty (current))
+			if (current.IsNullOrEmpty)
 			{
 				return text;
 			}
 			else
 			{
-				return string.Concat (current, FormattedText.HtmlBreak, text);
+				return FormattedText.Concat (current, FormattedText.HtmlBreak, text);
 			}
 		}
 
 
-		/// <summary>
-		/// Explose une chaîne avec un séparateur à choix en une liste.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <param name="separator">The separator.</param>
-		/// <returns></returns>
-		public static List<string> Split(string text, string separator)
-		{
-			List<string> list = new List<string> ();
-
-			if (!string.IsNullOrEmpty (text))
-			{
-				list.AddRange (text.Split (new string[] { separator }, System.StringSplitOptions.RemoveEmptyEntries));
-			}
-
-			return list;
-		}
-
-		/// <summary>
-		/// Combine une liste en une seule chaîne avec un séparateur à choix.
-		/// C'est un peu l'inverse de Misc.Split().
-		/// </summary>
-		/// <param name="separator">The separator.</param>
-		/// <param name="list">The list.</param>
-		/// <returns></returns>
-		public static string Join(string separator, IEnumerable<string> list)
-		{
-			if (list == null)
-			{
-				return null;
-			}
-
-			return string.Join (separator, list);
-		}
-
-	
-		/// <summary>
-		/// Encapsule un texte au milieu d'une préface et d'une postface, mais seulement s'il existe.
-		/// </summary>
-		/// <param name="preface">The preface.</param>
-		/// <param name="text">The text.</param>
-		/// <param name="postface">The postface.</param>
-		/// <returns></returns>
-		public static string Encapsulate(string preface, string text, string postface)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return text;
-			}
-			else
-			{
-				return string.Concat (preface, text, postface);
-			}
-		}
-
-		/// <summary>
-		/// Supprime l'éventuel "<br/>" qui termine un texte.
-		/// </summary>
-		/// <param name="text">The text.</param>
-		/// <returns></returns>
-		public static string RemoveLastLineBreak(string text)
-		{
-			if (!string.IsNullOrEmpty (text) && text.EndsWith (FormattedText.HtmlBreak))
-			{
-				return text.Substring (0, text.Length-5);
-			}
-
-			return text;
-		}
-
-
-		/// <summary>
-		/// Appond trois chaînes avec des espaces intercalaires.
-		/// </summary>
-		/// <param name="s1">The s1.</param>
-		/// <param name="s2">The s2.</param>
-		/// <param name="s3">The s3.</param>
-		/// <returns></returns>
-		public static string SpacingAppend(string s1, string s2, string s3)
-		{
-			return Misc.SpacingAppend (s1, Misc.SpacingAppend (s2, s3));
-		}
-
-		/// <summary>
-		/// Appond deux chaînes avec un espace intercalaire.
-		/// </summary>
-		/// <param name="s1">The s1.</param>
-		/// <param name="s2">The s2.</param>
-		/// <returns></returns>
-		public static string SpacingAppend(string s1, string s2)
-		{
-			if (!string.IsNullOrEmpty (s1) && !string.IsNullOrEmpty (s2))
-			{
-				return string.Concat (s1, " ", s2);
-			}
-
-			if (!string.IsNullOrEmpty (s1))
-			{
-				return s1;
-			}
-
-			if (!string.IsNullOrEmpty (s2))
-			{
-				return s2;
-			}
-
-			return "";
-		}
-
-	
 		/// <summary>
 		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.
 		/// </summary>
@@ -402,8 +284,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static DecimalRange decimalRange001 = new DecimalRange (-1000000000, 1000000000, 0.01M);
-		private static DecimalRange decimalRange005 = new DecimalRange (-1000000000, 1000000000, 0.05M);
-		private static DecimalRange decimalRange100 = new DecimalRange (-1000000000, 1000000000, 1.00M);
+
+		private static readonly decimal maxValue = 1000000000;  // en francs, 1'000'000'000.-, soit 1 milliard
+
+		private static readonly DecimalRange decimalRange001 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.01M);
+		private static readonly DecimalRange decimalRange005 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 0.05M);
+		private static readonly DecimalRange decimalRange100 = new DecimalRange (-Misc.maxValue, Misc.maxValue, 1.00M);
 	}
 }
