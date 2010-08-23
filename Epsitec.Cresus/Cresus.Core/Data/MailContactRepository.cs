@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactsByComplement(string complement)
+		public IEnumerable<MailContactEntity> GetMailContactsByComplement(FormattedText complement)
 		{
 			MailContactEntity example = this.CreateMailContactExampleByComplement (complement);
 
@@ -112,7 +114,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<MailContactEntity> GetMailContactsByComplement(string complement, int index, int count)
+		public IEnumerable<MailContactEntity> GetMailContactsByComplement(FormattedText complement, int index, int count)
 		{
 			MailContactEntity example = this.CreateMailContactExampleByComplement (complement);
 
@@ -142,7 +144,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private MailContactEntity CreateMailContactExampleByComplement(string complement)
+		private MailContactEntity CreateMailContactExampleByComplement(FormattedText complement)
 		{
 			MailContactEntity example = this.CreateMailContactExample ();
 			example.Complement = complement;
