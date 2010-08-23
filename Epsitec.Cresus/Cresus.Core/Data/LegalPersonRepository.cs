@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -96,7 +98,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByName(string name)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByName(FormattedText name)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByName (name);
 
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByName(string name, int index, int count)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByName(FormattedText name, int index, int count)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByName (name);
 
@@ -112,7 +114,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByShortName(string shortName)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByShortName(FormattedText shortName)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByShortName (shortName);
 
@@ -120,7 +122,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByShortName(string shortName, int index, int count)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByShortName(FormattedText shortName, int index, int count)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByShortName (shortName);
 
@@ -128,7 +130,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByComplement(string complement)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByComplement(FormattedText complement)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByComplement (complement);
 
@@ -136,7 +138,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LegalPersonEntity> GetLegalPersonsByComplement(string complement, int index, int count)
+		public IEnumerable<LegalPersonEntity> GetLegalPersonsByComplement(FormattedText complement, int index, int count)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExampleByComplement (complement);
 
@@ -160,7 +162,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LegalPersonEntity CreateLegalPersonExampleByName(string name)
+		private LegalPersonEntity CreateLegalPersonExampleByName(FormattedText name)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExample ();
 			example.Name = name;
@@ -169,7 +171,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LegalPersonEntity CreateLegalPersonExampleByShortName(string shortName)
+		private LegalPersonEntity CreateLegalPersonExampleByShortName(FormattedText shortName)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExample ();
 			example.ShortName = shortName;
@@ -178,7 +180,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LegalPersonEntity CreateLegalPersonExampleByComplement(string complement)
+		private LegalPersonEntity CreateLegalPersonExampleByComplement(FormattedText complement)
 		{
 			LegalPersonEntity example = this.CreateLegalPersonExample ();
 			example.Complement = complement;

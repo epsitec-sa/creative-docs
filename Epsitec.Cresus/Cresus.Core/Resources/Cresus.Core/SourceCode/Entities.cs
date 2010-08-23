@@ -808,19 +808,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO/L0AH1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH1]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AH1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AH1]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AH1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AH1]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -830,19 +830,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO/L0AI1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AI1]")]
-		public string ShortName
+		public global::Epsitec.Common.Types.FormattedText ShortName
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AI1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AI1]");
 			}
 			set
 			{
-				string oldValue = this.ShortName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
 				if (oldValue != value)
 				{
 					this.OnShortNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AI1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AI1]", oldValue, value);
 					this.OnShortNameChanged (oldValue, value);
 				}
 			}
@@ -852,19 +852,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO/L0AJ1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ1]")]
-		public string Complement
+		public global::Epsitec.Common.Types.FormattedText Complement
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AJ1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ1]");
 			}
 			set
 			{
-				string oldValue = this.Complement;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
 				if (oldValue != value)
 				{
 					this.OnComplementChanging (oldValue, value);
-					this.SetField<string> ("[L0AJ1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ1]", oldValue, value);
 					this.OnComplementChanged (oldValue, value);
 				}
 			}
@@ -872,12 +872,12 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnLegalPersonTypeChanging(global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity newValue);
 		partial void OnLegalPersonTypeChanged(global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonTypeEntity newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnShortNameChanging(string oldValue, string newValue);
-		partial void OnShortNameChanged(string oldValue, string newValue);
-		partial void OnComplementChanging(string oldValue, string newValue);
-		partial void OnComplementChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnComplementChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnComplementChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

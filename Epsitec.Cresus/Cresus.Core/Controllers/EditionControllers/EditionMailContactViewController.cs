@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = this.GetLegalPersonReferenceController (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
-					ToTextArrayConverter     = x => new string[] { x.Name },
+					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name),
 				});
 

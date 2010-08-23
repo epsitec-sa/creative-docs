@@ -109,8 +109,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Name)
-				&& string.IsNullOrWhiteSpace (entity.ShortName);
+			return entity.Name.IsNullOrWhiteSpace &&
+				   entity.ShortName.IsNullOrWhiteSpace;
 		}
 
 		public static bool IsEmpty(this AbstractPersonEntity entity)

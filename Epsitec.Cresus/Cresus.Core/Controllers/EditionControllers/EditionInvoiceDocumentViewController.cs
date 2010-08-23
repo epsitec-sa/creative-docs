@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Retourne la liste des textes pour les recherches 'AutoComplete'.
 			return new string[]
 			{
-				x.LegalPerson.Name,
+				x.LegalPerson.Name.ToSimpleText (),
 				x.NaturalPerson.Firstname.ToString (),
 				x.NaturalPerson.Lastname.ToString (),
 				x.Address.Street.StreetName,
