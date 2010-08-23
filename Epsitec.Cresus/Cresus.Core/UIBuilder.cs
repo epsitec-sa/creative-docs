@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.Assert (parts.Length == 2);
 				string name = parts[0];
 				string text = parts[1];
-				list.Add (new TabPageDef (name, new FormattedText (text), () => action (name)));
+				list.Add (new TabPageDef (name, text, () => action (name)));
 			}
 
 			var tile = this.titleTile.Items.Last () as EditionTile;

@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 			}
 
-			return new FormattedText (builder.ToString ());
+			return builder.ToString ();
 		}
 
 		private static string GetArticlePriceSummary(ArticlePriceEntity price)

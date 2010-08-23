@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateEditionTile ();
 
 			this.tabBookContainer = builder.CreateTabBook (
-				TabPageDef.Create (TabPageId.Local, new FormattedText ("Adresse spécifique"), this.HandleSelectTabPageLocal),
-				TabPageDef.Create (TabPageId.Global, new FormattedText ("Entreprise existante")));
+				TabPageDef.Create (TabPageId.Local, "Adresse spécifique", this.HandleSelectTabPageLocal),
+				TabPageDef.Create (TabPageId.Global, "Entreprise existante"));
 		}
 
 		private void CreateTabBookLocalPage(UIBuilder builder)

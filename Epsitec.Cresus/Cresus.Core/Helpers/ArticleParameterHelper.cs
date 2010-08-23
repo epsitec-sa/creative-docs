@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				index += subst.Length;
 			}
 
-			return new FormattedText (value);
+			return value;
 		}
 
 		private static IEnumerable<FormattedText> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values)
