@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -76,7 +78,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(string name)
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(FormattedText name)
 		{
 			PersonGenderEntity example = this.CreatePersonGenderExampleByName (name);
 
@@ -84,7 +86,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(string name, int index, int count)
+		public IEnumerable<PersonGenderEntity> GetPersonGendersByName(FormattedText name, int index, int count)
 		{
 			PersonGenderEntity example = this.CreatePersonGenderExampleByName (name);
 
@@ -107,7 +109,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private PersonGenderEntity CreatePersonGenderExampleByName(string name)
+		private PersonGenderEntity CreatePersonGenderExampleByName(FormattedText name)
 		{
 			PersonGenderEntity example = this.CreatePersonGenderExample ();
 			example.Name = name;

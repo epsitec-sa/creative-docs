@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -77,7 +79,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LanguageEntity> GetLanguagesByName(string name)
+		public IEnumerable<LanguageEntity> GetLanguagesByName(FormattedText name)
 		{
 			LanguageEntity example = this.CreateLanguageExampleByName (name);
 
@@ -85,7 +87,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LanguageEntity> GetLanguagesByName(string name, int index, int count)
+		public IEnumerable<LanguageEntity> GetLanguagesByName(FormattedText name, int index, int count)
 		{
 			LanguageEntity example = this.CreateLanguageExampleByName (name);
 
@@ -108,7 +110,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LanguageEntity CreateLanguageExampleByName(string name)
+		private LanguageEntity CreateLanguageExampleByName(FormattedText name)
 		{
 			LanguageEntity example = this.CreateLanguageExample ();
 			example.Name = name;

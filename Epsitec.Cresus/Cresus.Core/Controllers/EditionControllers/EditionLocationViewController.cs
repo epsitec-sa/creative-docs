@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					//?ValueCreator = context => context.CreateRegisteredEmptyEntity<Entities.CountryEntity> (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
-					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
+					ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}

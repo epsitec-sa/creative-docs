@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private static string GetDocumentItemSummary(AbstractDocumentItemEntity documentItemEntity)
+		private static FormattedText GetDocumentItemSummary(AbstractDocumentItemEntity documentItemEntity)
 		{
 			if (documentItemEntity is TextDocumentItemEntity)
 			{
@@ -188,14 +188,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				return GetTotalDocumentItemSummary (documentItemEntity as TotalDocumentItemEntity);
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
-		private static string GetTextDocumentItemSummary(TextDocumentItemEntity x)
+		private static FormattedText GetTextDocumentItemSummary(TextDocumentItemEntity x)
 		{
-			if (string.IsNullOrEmpty (x.Text))
+			if (x.Text.IsNullOrEmpty)
 			{
-				return "<i>Texte</i>";
+				return new FormattedText ("<i>Texte</i>");
 			}
 			else
 			{
@@ -203,17 +203,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private static string GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
+		private static FormattedText GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
 			var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (x);
 			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x));
 			var price = Misc.PriceToString (x.PrimaryLinePriceBeforeTax);
 
-			string text = string.Join (" ", quantity, desc, price);
+			FormattedText text = FormattedText.Join (" ", quantity, desc, price);
 
-			if (string.IsNullOrEmpty (text))
+			if (text.IsNullOrEmpty)
 			{
-				return "<i>Article</i>";
+				return new FormattedText ("<i>Article</i>");
 			}
 			else
 			{
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private static string GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
+		private static FormattedText GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
 		{
 			var builder = new System.Text.StringBuilder ();
 
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return builder.ToString ();
 		}
 
-		private static string GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
+		private static FormattedText GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
 		{
 			var desc = x.Text;
 			var tax = Misc.PriceToString (x.ResultingTax);
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private static string GetTotalDocumentItemSummary(TotalDocumentItemEntity x)
+		private static FormattedText GetTotalDocumentItemSummary(TotalDocumentItemEntity x)
 		{
 			var desc = x.TextForPrimaryPrice;
 
@@ -292,19 +292,19 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private static string GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailEntity billingDetails)
+		private static FormattedText GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailEntity billingDetails)
 		{
 			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
 			string title = Misc.FirstLine (billingDetails.Title);
-			string ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true);
+			FormattedText ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true);
 
-			if (ratio == null)
+			if (ratio.IsNullOrWhiteSpace)
 			{
-				return TextFormatter.FormatText (amount, title).ToString ();
+				return TextFormatter.FormatText (amount, title);
 			}
 			else
 			{
-				return TextFormatter.FormatText (amount, ratio, title).ToString ();
+				return TextFormatter.FormatText (amount, ratio, title);
 			}
 		}
 

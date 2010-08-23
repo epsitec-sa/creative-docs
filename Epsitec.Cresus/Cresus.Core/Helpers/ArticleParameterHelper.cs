@@ -16,20 +16,21 @@ namespace Epsitec.Cresus.Core.Helpers
 {
 	public static class ArticleParameterHelper
 	{
-		public static string ArticleDescriptionReplaceTags(ArticleDocumentItemEntity articleDocumentItem, string description)
+		public static FormattedText ArticleDescriptionReplaceTags(ArticleDocumentItemEntity articleDocumentItem, FormattedText description)
 		{
 			//	Remplace les tags <param code="..."/> par les valeurs réelles de l'article.
-			if (string.IsNullOrEmpty (description))
+			if (description.IsNullOrEmpty)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
+			string value = description.ToString ();
 			var dico = ArticleParameterHelper.GetArticleParametersValues (articleDocumentItem);
 
 			int index = 0;
-			while (index < description.Length-ArticleParameterHelper.startParameterTag.Length)
+			while (index < value.Length-ArticleParameterHelper.startParameterTag.Length)
 			{
-				index = description.IndexOf (ArticleParameterHelper.startParameterTag, index);
+				index = value.IndexOf (ArticleParameterHelper.startParameterTag, index);
 				if (index == -1)
 				{
 					break;
@@ -37,13 +38,13 @@ namespace Epsitec.Cresus.Core.Helpers
 
 				int codeIndex = index + ArticleParameterHelper.startParameterTag.Length;
 
-				int end = description.IndexOf (ArticleParameterHelper.endParameterTag, codeIndex);
+				int end = value.IndexOf (ArticleParameterHelper.endParameterTag, codeIndex);
 				if (end == -1)  // garde-fou: ne devrait jamais survenir !
 				{
 					break;
 				}
 
-				string code = description.Substring (codeIndex, end - codeIndex);
+				string code = value.Substring (codeIndex, end - codeIndex);
 				string subst = "";
 
 				if (dico.ContainsKey (code))
@@ -63,14 +64,14 @@ namespace Epsitec.Cresus.Core.Helpers
 					}
 				}
 
-				description = string.Concat (description.Substring (0, index), subst, description.Substring (end+ArticleParameterHelper.endParameterTag.Length));
+				value = string.Concat (value.Substring (0, index), subst, value.Substring (end+ArticleParameterHelper.endParameterTag.Length));
 				index += subst.Length;
 			}
 
-			return description;
+			return new FormattedText (value);
 		}
 
-		private static IEnumerable<string> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values)
+		private static IEnumerable<FormattedText> GetEnumDescriptions(EnumValueArticleParameterDefinitionEntity parameter, string values)
 		{
 			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, pour une série
 			//	de valeurs données.
@@ -82,25 +83,25 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 		}
 
-		private static string GetEnumDescription(EnumValueArticleParameterDefinitionEntity parameter, string value)
+		private static FormattedText GetEnumDescription(EnumValueArticleParameterDefinitionEntity parameter, string value)
 		{
 			//	Si 'parameter' est une énumération, retourne la description la plus complète possible, pour une valeur donnée.
 			if (parameter != null)
 			{
-				string[] values            = (parameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-				string[] shortDescriptions = (parameter.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-				string[] longDescriptions  = (parameter.LongDescriptions  ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+				string[] values = (parameter.Values ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+				FormattedText[] shortDescriptions = FormattedText.Split (parameter.ShortDescriptions, AbstractArticleParameterDefinitionEntity.Separator);
+				FormattedText[] longDescriptions  = FormattedText.Split (parameter.LongDescriptions,  AbstractArticleParameterDefinitionEntity.Separator);
 
 				for (int i = 0; i < values.Length; i++)
 				{
 					if (value == values[i])
 					{
-						if (i < longDescriptions.Length && !string.IsNullOrEmpty (longDescriptions[i]))
+						if (i < longDescriptions.Length && !longDescriptions[i].IsNullOrEmpty)
 						{
 							return longDescriptions[i];
 						}
 
-						if (i < shortDescriptions.Length && !string.IsNullOrEmpty (shortDescriptions[i]))
+						if (i < shortDescriptions.Length && !shortDescriptions[i].IsNullOrEmpty)
 						{
 							return shortDescriptions[i];
 						}

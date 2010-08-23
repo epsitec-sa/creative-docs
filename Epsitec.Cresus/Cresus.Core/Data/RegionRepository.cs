@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RegionEntity> GetRegionsByName(string name)
+		public IEnumerable<RegionEntity> GetRegionsByName(FormattedText name)
 		{
 			RegionEntity example = this.CreateRegionExampleByName (name);
 
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<RegionEntity> GetRegionsByName(string name, int index, int count)
+		public IEnumerable<RegionEntity> GetRegionsByName(FormattedText name, int index, int count)
 		{
 			RegionEntity example = this.CreateRegionExampleByName (name);
 
@@ -114,7 +116,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private RegionEntity CreateRegionExampleByName(string name)
+		private RegionEntity CreateRegionExampleByName(FormattedText name)
 		{
 			RegionEntity example = this.CreateRegionExample ();
 			example.Name = name;

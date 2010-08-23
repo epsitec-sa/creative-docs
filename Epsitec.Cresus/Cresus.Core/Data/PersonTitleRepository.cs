@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -61,7 +63,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(string shortName)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(FormattedText shortName)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByShortName (shortName);
 
@@ -69,7 +71,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(string shortName, int index, int count)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByShortName(FormattedText shortName, int index, int count)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByShortName (shortName);
 
@@ -77,7 +79,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(string name)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(FormattedText name)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByName (name);
 
@@ -85,7 +87,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(string name, int index, int count)
+		public IEnumerable<PersonTitleEntity> GetPersonTitlesByName(FormattedText name, int index, int count)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExampleByName (name);
 
@@ -99,7 +101,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private PersonTitleEntity CreatePersonTitleExampleByShortName(string shortName)
+		private PersonTitleEntity CreatePersonTitleExampleByShortName(FormattedText shortName)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExample ();
 			example.ShortName = shortName;
@@ -108,7 +110,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private PersonTitleEntity CreatePersonTitleExampleByName(string name)
+		private PersonTitleEntity CreatePersonTitleExampleByName(FormattedText name)
 		{
 			PersonTitleEntity example = this.CreatePersonTitleExample ();
 			example.Name = name;

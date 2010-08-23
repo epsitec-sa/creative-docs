@@ -190,6 +190,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static FormattedText FirstLine(FormattedText text)
+		{
+			return new FormattedText (Misc.FirstLine (text.ToString ()));
+		}
+
 		public static string FirstLine(string text)
 		{
 			if (!string.IsNullOrEmpty (text))

@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var band = new TextBand ();
-			band.Text = string.Concat ("<b>", text, "</b>");
+			band.Text = TextFormatter.FormatText ("<b>", text, "</b>");
 			band.FontSize = 6.0;
 
 			this.documentContainer.AddFromTop (band, 5.0);
@@ -141,18 +141,18 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildSummary()
 		{
 			//	Ajoute le résumé dans le document.
-			string text = "?";
+			FormattedText text = FormattedText.FromSimpleText ("?");
 
 			if (this.entity.Person is NaturalPersonEntity)
 			{
 				var x = this.entity.Person as NaturalPersonEntity;
-				text = TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate).ToString ();
+				text = TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "\n", x.Gender.Name, "\n", x.BirthDate);
 			}
 
 			if (this.entity.Person is LegalPersonEntity)
 			{
 				var x = this.entity.Person as LegalPersonEntity;
-				text = TextFormatter.FormatText (x.Name).ToString ();
+				text = TextFormatter.FormatText (x.Name);
 			}
 
 			var band = new TextBand ();
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = "<b>Adresses</b>";
+			title.Text = FormattedText.FromSimpleText ("<b>Adresses</b>");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -215,8 +215,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as MailContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name).ToString ());
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (1, index, TextFormatter.FormatText (x.LegalPerson.Name, "\n", x.LegalPerson.Complement, "\n", x.Complement, "\n", x.Address.Street.StreetName, "\n", x.Address.Street.Complement, "\n", x.Address.PostBox.Number, "\n", x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, x.Address.Location.Name));
 					table.SetText (2, index, x.Address.Location.PostalCode);
 					table.SetText (3, index, x.Address.Location.Name);
 					table.SetText (4, index, x.Address.Location.Country.Name);
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = "<b>Téléphones</b>";
+			title.Text = FormattedText.FromSimpleText ("<b>Téléphones</b>");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -270,9 +270,9 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as TelecomContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, TextFormatter.FormatText (x.TelecomType.Name).ToString ());
-					table.SetText (2, index, TextFormatter.FormatText (x.Number).ToString ());
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (1, index, TextFormatter.FormatText (x.TelecomType.Name));
+					table.SetText (2, index, TextFormatter.FormatText (x.Number));
 					index++;
 				}
 			}
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = "<b>Emails</b>";
+			title.Text = FormattedText.FromSimpleText ("<b>Emails</b>");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -321,8 +321,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					var x = contact as UriContactEntity;
 
-					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))).ToString ());
-					table.SetText (1, index, TextFormatter.FormatText (x.Uri).ToString ());
+					table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.Roles.Select (role => role.Name))));
+					table.SetText (1, index, TextFormatter.FormatText (x.Uri));
 					index++;
 				}
 			}
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var textBand = new TextBand ();
 			textBand.Font = font;
 			textBand.FontSize = fontSize;
-			textBand.Text = t;
+			textBand.Text = FormattedText.FromSimpleText (t);
 			textBand.DebugPaintFrame = true;
 
 			double top = 280;

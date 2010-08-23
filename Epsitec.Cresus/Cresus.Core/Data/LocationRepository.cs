@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -59,7 +61,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByName(string name)
+		public IEnumerable<LocationEntity> GetLocationsByName(FormattedText name)
 		{
 			LocationEntity example = this.CreateLocationExampleByName (name);
 
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByName(string name, int index, int count)
+		public IEnumerable<LocationEntity> GetLocationsByName(FormattedText name, int index, int count)
 		{
 			LocationEntity example = this.CreateLocationExampleByName (name);
 
@@ -75,7 +77,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByPostalCode(string postalCode)
+		public IEnumerable<LocationEntity> GetLocationsByPostalCode(FormattedText postalCode)
 		{
 			LocationEntity example = this.CreateLocationExampleByPostalCode (postalCode);
 
@@ -83,7 +85,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<LocationEntity> GetLocationsByPostalCode(string postalCode, int index, int count)
+		public IEnumerable<LocationEntity> GetLocationsByPostalCode(FormattedText postalCode, int index, int count)
 		{
 			LocationEntity example = this.CreateLocationExampleByPostalCode (postalCode);
 
@@ -129,7 +131,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LocationEntity CreateLocationExampleByName(string name)
+		private LocationEntity CreateLocationExampleByName(FormattedText name)
 		{
 			LocationEntity example = this.CreateLocationExample ();
 			example.Name = name;
@@ -138,7 +140,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private LocationEntity CreateLocationExampleByPostalCode(string postalCode)
+		private LocationEntity CreateLocationExampleByPostalCode(FormattedText postalCode)
 		{
 			LocationEntity example = this.CreateLocationExample ();
 			example.PostalCode = postalCode;

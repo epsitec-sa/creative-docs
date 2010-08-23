@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -76,7 +78,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(string name)
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(FormattedText name)
 		{
 			TelecomTypeEntity example = this.CreateTelecomTypeExampleByName (name);
 
@@ -84,7 +86,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(string name, int index, int count)
+		public IEnumerable<TelecomTypeEntity> GetTelecomTypesByName(FormattedText name, int index, int count)
 		{
 			TelecomTypeEntity example = this.CreateTelecomTypeExampleByName (name);
 
@@ -107,7 +109,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private TelecomTypeEntity CreateTelecomTypeExampleByName(string name)
+		private TelecomTypeEntity CreateTelecomTypeExampleByName(FormattedText name)
 		{
 			TelecomTypeEntity example = this.CreateTelecomTypeExample ();
 			example.Name = name;

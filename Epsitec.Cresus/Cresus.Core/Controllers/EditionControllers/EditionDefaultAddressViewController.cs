@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueSetter = x => this.Entity.Location.Country = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
-					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
+					ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueSetter = x => this.Entity.Location = x.WrapNullEntity (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
 
-					ToTextArrayConverter     = x => new string[] { x.PostalCode, x.Name },
+					ToTextArrayConverter     = x => new string[] { x.PostalCode.ToSimpleText (), x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.PostalCode, x.Name),
 				});
 		}

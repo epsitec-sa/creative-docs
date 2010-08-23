@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -59,7 +61,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByName(string streetName)
+		public IEnumerable<StreetEntity> GetStreetsByName(FormattedText streetName)
 		{
 			StreetEntity example = this.CreateStreetExampleByName (streetName);
 
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByName(string streetName, int index, int count)
+		public IEnumerable<StreetEntity> GetStreetsByName(FormattedText streetName, int index, int count)
 		{
 			StreetEntity example = this.CreateStreetExampleByName (streetName);
 
@@ -75,7 +77,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByComplement(string complement)
+		public IEnumerable<StreetEntity> GetStreetsByComplement(FormattedText complement)
 		{
 			StreetEntity example = this.CreateStreetExampleByComplement (complement);
 
@@ -83,7 +85,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<StreetEntity> GetStreetsByComplement(string complement, int index, int count)
+		public IEnumerable<StreetEntity> GetStreetsByComplement(FormattedText complement, int index, int count)
 		{
 			StreetEntity example = this.CreateStreetExampleByComplement (complement);
 
@@ -97,7 +99,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private StreetEntity CreateStreetExampleByName(string streetName)
+		private StreetEntity CreateStreetExampleByName(FormattedText streetName)
 		{
 			StreetEntity example = this.CreateStreetExample ();
 			example.StreetName = streetName;
@@ -106,7 +108,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private StreetEntity CreateStreetExampleByComplement(string complement)
+		private StreetEntity CreateStreetExampleByComplement(FormattedText complement)
 		{
 			StreetEntity example = this.CreateStreetExample ();
 			example.Complement = complement;

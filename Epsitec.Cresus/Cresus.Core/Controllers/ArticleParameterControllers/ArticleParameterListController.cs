@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -318,10 +319,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 		private void UpdateFields()
 		{
-			this.valueField.Text            = this.SelectedValue;
-			this.shortDescriptionField.Text = this.SelectedShortDescription;
-			this.longDescriptionField.Text  = this.SelectedLongDescription;
-			this.defaultButton.ActiveState  = this.SelectedDefaultValue ? ActiveState.Yes : ActiveState.No;
+			this.valueField.Text                     = this.SelectedValue;
+			this.shortDescriptionField.FormattedText = this.SelectedShortDescription;
+			this.longDescriptionField.FormattedText  = this.SelectedLongDescription;
+			this.defaultButton.ActiveState           = this.SelectedDefaultValue ? ActiveState.Yes : ActiveState.No;
 		}
 
 		private void UpdateButtons()
@@ -433,13 +434,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 		}
 
-		private string SelectedShortDescription
+		private FormattedText SelectedShortDescription
 		{
 			get
 			{
 				if (this.SelectedIndex == -1)
 				{
-					return null;
+					return FormattedText.Null;
 				}
 				else
 				{
@@ -457,13 +458,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			}
 		}
 
-		private string SelectedLongDescription
+		private FormattedText SelectedLongDescription
 		{
 			get
 			{
 				if (this.SelectedIndex == -1)
 				{
-					return null;
+					return FormattedText.Null;
 				}
 				else
 				{
@@ -514,9 +515,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			//	parameterEntity -> enumValues
 			this.enumValues.Clear ();
 
-			string[] values            = (this.parameterEntity.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-			string[] shortDescriptions = (this.parameterEntity.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-			string[] longDescriptions  = (this.parameterEntity.LongDescriptions  ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] values = (this.parameterEntity.Values ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			FormattedText[] shortDescriptions = FormattedText.Split (this.parameterEntity.ShortDescriptions, AbstractArticleParameterDefinitionEntity.Separator);
+			FormattedText[] longDescriptions  = FormattedText.Split (this.parameterEntity.LongDescriptions,  AbstractArticleParameterDefinitionEntity.Separator);
 
 			int max = System.Math.Max (values.Length, System.Math.Max (shortDescriptions.Length, longDescriptions.Length));
 			for (int i = 0; i < max; i++)
@@ -551,25 +552,25 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			//	Génial, cet opérateur Select !
 			var extract = this.enumValues.Where (x => !string.IsNullOrEmpty (x.Value));
 
-			this.parameterEntity.Values            = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.Value));
-			this.parameterEntity.ShortDescriptions = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.ShortDescription));
-			this.parameterEntity.LongDescriptions  = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.LongDescription));
+			this.parameterEntity.Values = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.Value));
+			this.parameterEntity.ShortDescriptions = FormattedText.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.ShortDescription).ToArray ());
+			this.parameterEntity.LongDescriptions  = FormattedText.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.LongDescription ).ToArray ());
 		}
 
 
 		private class EnumValue
 		{
 			public string Value;
-			public string ShortDescription;
-			public string LongDescription;
+			public FormattedText ShortDescription;
+			public FormattedText LongDescription;
 
 			public bool IsEmpty
 			{
 				get
 				{
-					return string.IsNullOrEmpty (this.Value)            &&
-						   string.IsNullOrEmpty (this.ShortDescription) &&
-						   string.IsNullOrEmpty (this.LongDescription);
+					return string.IsNullOrEmpty (this.Value) &&
+						   this.ShortDescription.IsNullOrEmpty &&
+						   this.LongDescription.IsNullOrEmpty;
 				}
 			}
 		}

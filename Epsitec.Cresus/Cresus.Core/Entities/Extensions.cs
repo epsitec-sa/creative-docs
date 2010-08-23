@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Complement)
-				&& string.IsNullOrWhiteSpace (entity.StreetName);
+			return entity.Complement.IsNullOrWhiteSpace &&
+				   entity.StreetName.IsNullOrWhiteSpace;
 		}
 		
 		public static bool IsEmpty(this PostBoxEntity entity)
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Number);
+			return entity.Number.IsNullOrWhiteSpace;
 		}
 		
 		public static bool IsEmpty(this LocationEntity entity)
@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.Core.Entities
 			//	We consider a location to be empty if it has neither postal code, nor
 			//	location name; a location with just a coutry or region is still empty.
 
-			return string.IsNullOrWhiteSpace (entity.PostalCode)
-				&& string.IsNullOrWhiteSpace (entity.Name);
+			return entity.PostalCode.IsNullOrWhiteSpace &&
+				   entity.Name.IsNullOrWhiteSpace;
 		}
 
 		public static bool IsEmpty(this CountryEntity entity)
@@ -64,8 +64,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Code)
-				&& string.IsNullOrWhiteSpace (entity.Name);
+			return string.IsNullOrWhiteSpace (entity.Code) &&
+				   entity.Name.IsNullOrWhiteSpace;
 		}
 
 		public static bool IsEmpty(this RegionEntity entity)
@@ -75,9 +75,9 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Code)
-				&& string.IsNullOrWhiteSpace (entity.Name)
-				&& entity.Country.IsEmpty ();
+			return string.IsNullOrWhiteSpace (entity.Code) &&
+				   entity.Name.IsNullOrWhiteSpace &&
+				   entity.Country.IsEmpty ();
 		}
 
 		public static bool IsEmpty(this PersonTitleEntity entity)
@@ -87,8 +87,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.Name)
-				&& string.IsNullOrWhiteSpace (entity.ShortName);
+			return entity.Name.IsNullOrWhiteSpace &&
+				   entity.ShortName.IsNullOrWhiteSpace;
 		}
 
 		public static bool IsEmpty(this NaturalPersonEntity entity)
@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			return string.IsNullOrWhiteSpace (entity.IdA)
-				&& string.IsNullOrWhiteSpace (entity.ShortDescription)
-				&& string.IsNullOrWhiteSpace (entity.LongDescription);
+			return string.IsNullOrWhiteSpace (entity.IdA) &&
+				   entity.ShortDescription.IsNullOrWhiteSpace &&
+				   entity.LongDescription.IsNullOrWhiteSpace;
 
 			//	TODO: compléter...
 		}

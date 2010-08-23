@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -35,9 +36,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			var enumParameter = this.ParameterDefinition as EnumValueArticleParameterDefinitionEntity;
 
-			string[] values            = (enumParameter.Values            ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-			string[] shortDescriptions = (enumParameter.ShortDescriptions ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
-			string[] parameterValues   = (this.ParameterValue             ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			string[] values = (enumParameter.Values ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
+			FormattedText[] shortDescriptions = FormattedText.Split (enumParameter.ShortDescriptions, AbstractArticleParameterDefinitionEntity.Separator);
+			string[] parameterValues = (this.ParameterValue ?? "").Split (new string[] { AbstractArticleParameterDefinitionEntity.Separator }, System.StringSplitOptions.None);
 
 			int enumCount = System.Math.Min (values.Length, shortDescriptions.Length);
 
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				var button = new CheckButton
 				{
 					Parent = parent,
-					Text = shortDescriptions[0],
+					FormattedText = shortDescriptions[0],
 					Dock = DockStyle.Fill,
 				};
 

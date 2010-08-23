@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -76,7 +78,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<UriSchemeEntity> GetUriSchemesByName(string name)
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByName(FormattedText name)
 		{
 			UriSchemeEntity example = this.CreateUriSchemeExampleByName (name);
 
@@ -84,7 +86,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<UriSchemeEntity> GetUriSchemesByName(string name, int index, int count)
+		public IEnumerable<UriSchemeEntity> GetUriSchemesByName(FormattedText name, int index, int count)
 		{
 			UriSchemeEntity example = this.CreateUriSchemeExampleByName (name);
 
@@ -107,7 +109,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private UriSchemeEntity CreateUriSchemeExampleByName(string name)
+		private UriSchemeEntity CreateUriSchemeExampleByName(FormattedText name)
 		{
 			UriSchemeEntity example = this.CreateUriSchemeExample ();
 			example.Name = name;
