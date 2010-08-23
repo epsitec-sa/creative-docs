@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
 			};
 
-			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Cut, dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Cut,  dx: RibbonViewController.buttonSmallWidth));
 			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Copy, dx: RibbonViewController.buttonSmallWidth));
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Paste));
@@ -136,11 +136,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Bold, dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Italic, dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Underline, dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Bold,           dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Italic,         dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Underline,      dx: RibbonViewController.buttonSmallWidth));
 
-			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Subscript, dx: RibbonViewController.buttonSmallWidth));
+			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Subscript,   dx: RibbonViewController.buttonSmallWidth));
 			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Superscript, dx: RibbonViewController.buttonSmallWidth));
 		}
 
@@ -212,13 +212,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				dx = RibbonViewController.buttonLargeWidth;
 			}
 
-			double buttonDx = RibbonViewController.GetButtonWidth (dx.Value);
+			double buttonWidth = RibbonViewController.GetButtonWidth (dx.Value);
 
 			return new RibbonIconButton
 			{
 				CommandObject = command,
-				PreferredIconSize = new Size (dx.Value, 31),
-				PreferredSize = new Size (buttonDx, buttonDx),
+				PreferredIconSize = new Size (dx.Value, dx.Value),
+				PreferredSize = new Size (buttonWidth, buttonWidth),
 				Dock = dockStyle,
 				Name = command.Name,
 				VerticalAlignment = VerticalAlignment.Top,

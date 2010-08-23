@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (string.IsNullOrEmpty (this.Entity.Text))
+			if (this.Entity.Text.IsNullOrWhiteSpace)
 			{
 				return EditionStatus.Empty;
 			}

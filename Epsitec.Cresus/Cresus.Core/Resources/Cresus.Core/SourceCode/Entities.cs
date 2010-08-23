@@ -1490,26 +1490,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ1/L0AR1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AR1]")]
-		public string Text
+		public global::Epsitec.Common.Types.FormattedText Text
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AR1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AR1]");
 			}
 			set
 			{
-				string oldValue = this.Text;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
 				if (oldValue != value)
 				{
 					this.OnTextChanging (oldValue, value);
-					this.SetField<string> ("[L0AR1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AR1]", oldValue, value);
 					this.OnTextChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnTextChanging(string oldValue, string newValue);
-		partial void OnTextChanged(string oldValue, string newValue);
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

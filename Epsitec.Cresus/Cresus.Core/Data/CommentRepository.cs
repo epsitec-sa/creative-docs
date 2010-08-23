@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByText(string text)
+		public IEnumerable<CommentEntity> GetCommentsByText(FormattedText text)
 		{
 			CommentEntity example = this.CreateCommentExampleByText (text);
 
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CommentEntity> GetCommentsByText(string text, int index, int count)
+		public IEnumerable<CommentEntity> GetCommentsByText(FormattedText text, int index, int count)
 		{
 			CommentEntity example = this.CreateCommentExampleByText (text);
 
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private CommentEntity CreateCommentExampleByText(string text)
+		private CommentEntity CreateCommentExampleByText(FormattedText text)
 		{
 			CommentEntity example = this.CreateCommentExample ();
 			example.Text = text;
