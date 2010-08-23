@@ -73,9 +73,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (DocumentItemTabId.Text,    new FormattedText ("Texte"),      id => Common.ChangeEditedLineEntity (controller, id)),
-				TabPageDef.Create (DocumentItemTabId.Article, new FormattedText ("Article"),    id => Common.ChangeEditedLineEntity (controller, id)),
-				TabPageDef.Create (DocumentItemTabId.Price,   new FormattedText ("Sous-total"), id => Common.ChangeEditedLineEntity (controller, id)));
+				TabPageDef.Create (DocumentItemTabId.Text,    "Texte",      id => Common.ChangeEditedLineEntity (controller, id)),
+				TabPageDef.Create (DocumentItemTabId.Article, "Article",    id => Common.ChangeEditedLineEntity (controller, id)),
+				TabPageDef.Create (DocumentItemTabId.Price,   "Sous-total", id => Common.ChangeEditedLineEntity (controller, id)));
 
 			book.SelectTabPage (defaultId);
 		}
@@ -88,8 +88,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (ArticleParameterTabId.Numeric, new FormattedText ("Valeur numérique"), id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)),
-				TabPageDef.Create (ArticleParameterTabId.Enum,    new FormattedText ("Énumération"),      id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)));
+				TabPageDef.Create (ArticleParameterTabId.Numeric, "Valeur numérique", id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)),
+				TabPageDef.Create (ArticleParameterTabId.Enum,    "Énumération",      id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)));
 
 			book.SelectTabPage (defaultId);
 		}

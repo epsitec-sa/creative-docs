@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			if (x.Text.IsNullOrEmpty)
 			{
-				return new FormattedText ("<i>Texte</i>");
+				return "<i>Texte</i>";
 			}
 			else
 			{
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (text.IsNullOrEmpty)
 			{
-				return new FormattedText ("<i>Article</i>");
+				return "<i>Article</i>";
 			}
 			else
 			{
