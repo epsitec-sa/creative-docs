@@ -3987,19 +3987,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AC4/L0AD4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AD4]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AD4]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AD4]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AD4]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AD4]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -4093,8 +4093,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNeverApplyDiscountChanging(bool oldValue, bool newValue);
 		partial void OnNeverApplyDiscountChanged(bool oldValue, bool newValue);
 		partial void OnDivideRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -4548,19 +4548,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A05/L0A55
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A55]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A55]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A55]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0A55]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A55]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -4690,8 +4690,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnEventTypeChanging(global::Epsitec.Cresus.Core.Entities.CaseEventTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.CaseEventTypeEntity newValue);
 		partial void OnEventTypeChanged(global::Epsitec.Cresus.Core.Entities.CaseEventTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.CaseEventTypeEntity newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnSoftwareUserChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity newValue);
@@ -5987,19 +5987,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AS6/L0A97
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A97]")]
-		public string Title
+		public global::Epsitec.Common.Types.FormattedText Title
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A97]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A97]");
 			}
 			set
 			{
-				string oldValue = this.Title;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Title;
 				if (oldValue != value)
 				{
 					this.OnTitleChanging (oldValue, value);
-					this.SetField<string> ("[L0A97]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A97]", oldValue, value);
 					this.OnTitleChanged (oldValue, value);
 				}
 			}
@@ -6137,8 +6137,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTitleChanging(string oldValue, string newValue);
-		partial void OnTitleChanged(string oldValue, string newValue);
+		partial void OnTitleChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnAmountDueChanging(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnAmountDueChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnTransactionIdChanging(string oldValue, string newValue);
