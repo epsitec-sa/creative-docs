@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Types
 {
 	/// <summary>
@@ -70,6 +72,51 @@ namespace Epsitec.Common.Types
 				return string.IsNullOrWhiteSpace (this.text);
 			}
 		}
+
+
+		public FormattedText[] Split(string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
+		{
+			string[] x = this.ToString ().Split (new string[] { separator }, options);
+
+			List<FormattedText> list = new List<FormattedText> ();
+
+			foreach (var t in x)
+			{
+				list.Add (new FormattedText (t));
+			}
+
+			return list.ToArray ();
+		}
+
+		public static FormattedText[] Split(FormattedText text, string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
+		{
+			if (text.IsNull)
+			{
+				text = new FormattedText ("");
+			}
+
+			return text.Split (separator, options);
+		}
+
+		public static FormattedText Join(string separator, params FormattedText[] values)
+		{
+			List<string> list = new List<string> ();
+
+			foreach (var t in values)
+			{
+				list.Add (t.ToString ());
+			}
+
+			return new FormattedText (string.Join (separator, list));
+		}
+
+
+		public static implicit operator FormattedText(string formattedTextSource)
+		{
+			//	Permet de faire FormattedText f = "<b>bold</b>".
+			return new FormattedText (formattedTextSource);
+		}
+
 
 		#region IEquatable<FormattedText> Members
 

@@ -111,36 +111,36 @@ namespace Epsitec.Cresus.Core.Helpers
 			return TextFormatter.FormatText (x.IdA, "/~", x.IdB, "/~", x.IdC).ToSimpleText ();
 		}
 
-		public static string GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
+		public static FormattedText GetArticleDescription(ArticleDocumentItemEntity article, bool replaceTags=false, bool shortDescription=false)
 		{
-			string description = null;
+			FormattedText description = FormattedText.Null;
 
 			if (shortDescription)  // description courte prioritaire ?
 			{
-				if (!string.IsNullOrEmpty (article.ReplacementText))
+				if (!article.ReplacementText.IsNullOrEmpty)
 				{
 					description = article.ReplacementText;
 				}
-				else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+				else if (!article.ArticleDefinition.ShortDescription.IsNullOrEmpty)
 				{
 					description = article.ArticleDefinition.ShortDescription;
 				}
-				else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+				else if (!article.ArticleDefinition.LongDescription.IsNullOrEmpty)
 				{
 					description = article.ArticleDefinition.LongDescription;
 				}
 			}
 			else  // description longue prioritaire ?
 			{
-				if (!string.IsNullOrEmpty (article.ReplacementText))
+				if (!article.ReplacementText.IsNullOrEmpty)
 				{
 					description = article.ReplacementText;
 				}
-				else if (!string.IsNullOrEmpty (article.ArticleDefinition.LongDescription))
+				else if (!article.ArticleDefinition.LongDescription.IsNullOrEmpty)
 				{
 					description = article.ArticleDefinition.LongDescription;
 				}
-				else if (!string.IsNullOrEmpty (article.ArticleDefinition.ShortDescription))
+				else if (!article.ArticleDefinition.ShortDescription.IsNullOrEmpty)
 				{
 					description = article.ArticleDefinition.ShortDescription;
 				}

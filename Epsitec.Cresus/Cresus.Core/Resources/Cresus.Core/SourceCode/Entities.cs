@@ -100,26 +100,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A1/L0A3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A3]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A3]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A3]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A3]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A3]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -167,19 +167,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A4/L0AC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AC]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AC]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AC]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -207,8 +207,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnCountryChanging(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		
@@ -240,19 +240,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A5/L0A6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A6]")]
-		public string PostalCode
+		public global::Epsitec.Common.Types.FormattedText PostalCode
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A6]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6]");
 			}
 			set
 			{
-				string oldValue = this.PostalCode;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.PostalCode;
 				if (oldValue != value)
 				{
 					this.OnPostalCodeChanging (oldValue, value);
-					this.SetField<string> ("[L0A6]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6]", oldValue, value);
 					this.OnPostalCodeChanged (oldValue, value);
 				}
 			}
@@ -262,19 +262,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A5/L0A7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A7]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A7]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A7]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -324,10 +324,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnPostalCodeChanging(string oldValue, string newValue);
-		partial void OnPostalCodeChanged(string oldValue, string newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnPostalCodeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPostalCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnCountryChanging(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		partial void OnRegionChanging(global::Epsitec.Cresus.Core.Entities.RegionEntity oldValue, global::Epsitec.Cresus.Core.Entities.RegionEntity newValue);
@@ -458,26 +458,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AF/L0AG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AG]")]
-		public string Number
+		public global::Epsitec.Common.Types.FormattedText Number
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AG]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AG]");
 			}
 			set
 			{
-				string oldValue = this.Number;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Number;
 				if (oldValue != value)
 				{
 					this.OnNumberChanging (oldValue, value);
-					this.SetField<string> ("[L0AG]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AG]", oldValue, value);
 					this.OnNumberChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNumberChanging(string oldValue, string newValue);
-		partial void OnNumberChanged(string oldValue, string newValue);
+		partial void OnNumberChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNumberChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -507,19 +507,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AI/L0AL
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AL]")]
-		public string Complement
+		public global::Epsitec.Common.Types.FormattedText Complement
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AL]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AL]");
 			}
 			set
 			{
-				string oldValue = this.Complement;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Complement;
 				if (oldValue != value)
 				{
 					this.OnComplementChanging (oldValue, value);
-					this.SetField<string> ("[L0AL]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AL]", oldValue, value);
 					this.OnComplementChanged (oldValue, value);
 				}
 			}
@@ -529,28 +529,28 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AI/L0AJ
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJ]")]
-		public string StreetName
+		public global::Epsitec.Common.Types.FormattedText StreetName
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AJ]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ]");
 			}
 			set
 			{
-				string oldValue = this.StreetName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.StreetName;
 				if (oldValue != value)
 				{
 					this.OnStreetNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AJ]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AJ]", oldValue, value);
 					this.OnStreetNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnComplementChanging(string oldValue, string newValue);
-		partial void OnComplementChanged(string oldValue, string newValue);
-		partial void OnStreetNameChanging(string oldValue, string newValue);
-		partial void OnStreetNameChanged(string oldValue, string newValue);
+		partial void OnComplementChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnComplementChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnStreetNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnStreetNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1095,19 +1095,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AT/L0AS1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AS1]")]
-		public string ShortName
+		public global::Epsitec.Common.Types.FormattedText ShortName
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AS1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS1]");
 			}
 			set
 			{
-				string oldValue = this.ShortName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
 				if (oldValue != value)
 				{
 					this.OnShortNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AS1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS1]", oldValue, value);
 					this.OnShortNameChanged (oldValue, value);
 				}
 			}
@@ -1117,19 +1117,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AT/L0AT1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AT1]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AT1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT1]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AT1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT1]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -1147,10 +1147,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnShortNameChanging(string oldValue, string newValue);
-		partial void OnShortNameChanged(string oldValue, string newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnShortNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1198,26 +1198,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A21/L0A41
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A41]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A41]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A41]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A41]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A41]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1283,26 +1283,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AA1/L0AC1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AC1]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AC1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC1]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AC1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AC1]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1350,26 +1350,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AE1/L0AF1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AF1]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AF1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AF1]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AF1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AF1]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1417,19 +1417,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AL1/L0AM1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AM1]")]
-		public string ShortName
+		public global::Epsitec.Common.Types.FormattedText ShortName
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AM1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AM1]");
 			}
 			set
 			{
-				string oldValue = this.ShortName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
 				if (oldValue != value)
 				{
 					this.OnShortNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AM1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AM1]", oldValue, value);
 					this.OnShortNameChanged (oldValue, value);
 				}
 			}
@@ -1439,28 +1439,28 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AL1/L0AN1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AN1]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AN1]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AN1]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AN1]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AN1]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnShortNameChanging(string oldValue, string newValue);
-		partial void OnShortNameChanged(string oldValue, string newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnShortNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1672,26 +1672,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AV1/L0A02
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A02]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A02]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A02]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A02]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A02]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1830,26 +1830,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A62/L0A82
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A82]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A82]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A82]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A82]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A82]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2503,19 +2503,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO2/L0A6E
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A6E]")]
-		public string DocumentTitle
+		public global::Epsitec.Common.Types.FormattedText DocumentTitle
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A6E]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6E]");
 			}
 			set
 			{
-				string oldValue = this.DocumentTitle;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.DocumentTitle;
 				if (oldValue != value)
 				{
 					this.OnDocumentTitleChanging (oldValue, value);
-					this.SetField<string> ("[L0A6E]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6E]", oldValue, value);
 					this.OnDocumentTitleChanged (oldValue, value);
 				}
 			}
@@ -2525,19 +2525,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AO2/L0AP2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AP2]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AP2]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AP2]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0AP2]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AP2]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -2645,10 +2645,10 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? newValue);
 		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.DocumentSource? newValue);
-		partial void OnDocumentTitleChanging(string oldValue, string newValue);
-		partial void OnDocumentTitleChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnDocumentTitleChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDocumentTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnFileNameChanging(string oldValue, string newValue);
 		partial void OnFileNameChanged(string oldValue, string newValue);
 		partial void OnMimeTypeChanging(string oldValue, string newValue);
@@ -2882,19 +2882,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A63/L0A73
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A73]")]
-		public string ShortDescription
+		public global::Epsitec.Common.Types.FormattedText ShortDescription
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A73]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A73]");
 			}
 			set
 			{
-				string oldValue = this.ShortDescription;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortDescription;
 				if (oldValue != value)
 				{
 					this.OnShortDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0A73]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A73]", oldValue, value);
 					this.OnShortDescriptionChanged (oldValue, value);
 				}
 			}
@@ -2904,19 +2904,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A63/L0A83
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A83]")]
-		public string LongDescription
+		public global::Epsitec.Common.Types.FormattedText LongDescription
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A83]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A83]");
 			}
 			set
 			{
-				string oldValue = this.LongDescription;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.LongDescription;
 				if (oldValue != value)
 				{
 					this.OnLongDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0A83]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A83]", oldValue, value);
 					this.OnLongDescriptionChanged (oldValue, value);
 				}
 			}
@@ -3104,10 +3104,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnShortDescriptionChanging(string oldValue, string newValue);
-		partial void OnShortDescriptionChanged(string oldValue, string newValue);
-		partial void OnLongDescriptionChanging(string oldValue, string newValue);
-		partial void OnLongDescriptionChanged(string oldValue, string newValue);
+		partial void OnShortDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnInputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
 		partial void OnInputVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
 		partial void OnOutputVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode? newValue);
@@ -3183,26 +3183,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AA3/L0AE3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AE3]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AE3]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AE3]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AE3]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AE3]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3312,26 +3312,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AF3/L0AG3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AG3]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AG3]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AG3]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AG3]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AG3]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3602,19 +3602,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ3/L0AT3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AT3]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AT3]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT3]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0AT3]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AT3]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -3686,8 +3686,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDiscountRateChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDiscountRateChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDiscountAmountChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -3872,19 +3872,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A24/L0A34
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A34]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A34]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A34]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A34]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A34]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -3934,8 +3934,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -5511,26 +5511,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AR5/L0AS5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AS5]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AS5]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS5]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AS5]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS5]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -5866,19 +5866,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AL6/L0AM6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AM6]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AM6]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AM6]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AM6]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AM6]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -5888,19 +5888,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AL6/L0AA7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AA7]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AA7]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AA7]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0AA7]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AA7]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -5950,10 +5950,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnBookAccountChanging(string oldValue, string newValue);
 		partial void OnBookAccountChanged(string oldValue, string newValue);
 		partial void OnStandardPaymentTermChanging(int? oldValue, int? newValue);
@@ -6119,19 +6119,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AS6/L0A5E
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A5E]")]
-		public string InstalmentName
+		public global::Epsitec.Common.Types.FormattedText InstalmentName
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A5E]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A5E]");
 			}
 			set
 			{
-				string oldValue = this.InstalmentName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.InstalmentName;
 				if (oldValue != value)
 				{
 					this.OnInstalmentNameChanging (oldValue, value);
-					this.SetField<string> ("[L0A5E]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A5E]", oldValue, value);
 					this.OnInstalmentNameChanged (oldValue, value);
 				}
 			}
@@ -6149,8 +6149,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnEsrReferenceNumberChanged(string oldValue, string newValue);
 		partial void OnInstalmentRankChanging(int? oldValue, int? newValue);
 		partial void OnInstalmentRankChanged(int? oldValue, int? newValue);
-		partial void OnInstalmentNameChanging(string oldValue, string newValue);
-		partial void OnInstalmentNameChanged(string oldValue, string newValue);
+		partial void OnInstalmentNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnInstalmentNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6511,19 +6511,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A99/L0AGC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AGC]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AGC]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AGC]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AGC]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AGC]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -6617,8 +6617,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDivideRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDivideRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMultiplyRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -6656,19 +6656,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AD9/L0AF9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AF9]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AF9]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AF9]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AF9]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AF9]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -6730,8 +6730,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.BusinessLogic.UnitOfMeasureCategory newValue);
@@ -6799,19 +6799,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ9/L0AR9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AR9]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AR9]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AR9]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0AR9]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AR9]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -6821,19 +6821,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQ9/L0AS9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AS9]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AS9]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS9]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0AS9]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AS9]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -6861,10 +6861,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnPriceRoundingPolicyChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy newValue);
 		partial void OnPriceRoundingPolicyChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.RoundingPolicy newValue);
 		
@@ -7329,19 +7329,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A9A/L0AVA
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AVA]")]
-		public string ArticleShortDescriptionCache
+		public global::Epsitec.Common.Types.FormattedText ArticleShortDescriptionCache
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AVA]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AVA]");
 			}
 			set
 			{
-				string oldValue = this.ArticleShortDescriptionCache;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleShortDescriptionCache;
 				if (oldValue != value)
 				{
 					this.OnArticleShortDescriptionCacheChanging (oldValue, value);
-					this.SetField<string> ("[L0AVA]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AVA]", oldValue, value);
 					this.OnArticleShortDescriptionCacheChanged (oldValue, value);
 				}
 			}
@@ -7351,19 +7351,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A9A/L0A0B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A0B]")]
-		public string ArticleLongDescriptionCache
+		public global::Epsitec.Common.Types.FormattedText ArticleLongDescriptionCache
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A0B]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A0B]");
 			}
 			set
 			{
-				string oldValue = this.ArticleLongDescriptionCache;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ArticleLongDescriptionCache;
 				if (oldValue != value)
 				{
 					this.OnArticleLongDescriptionCacheChanging (oldValue, value);
-					this.SetField<string> ("[L0A0B]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A0B]", oldValue, value);
 					this.OnArticleLongDescriptionCacheChanged (oldValue, value);
 				}
 			}
@@ -7373,19 +7373,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A9A/L0AUA
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AUA]")]
-		public string ReplacementText
+		public global::Epsitec.Common.Types.FormattedText ReplacementText
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AUA]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AUA]");
 			}
 			set
 			{
-				string oldValue = this.ReplacementText;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ReplacementText;
 				if (oldValue != value)
 				{
 					this.OnReplacementTextChanging (oldValue, value);
-					this.SetField<string> ("[L0AUA]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AUA]", oldValue, value);
 					this.OnReplacementTextChanged (oldValue, value);
 				}
 			}
@@ -7413,12 +7413,12 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnFinalLinePriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLineTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFinalLineTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnArticleShortDescriptionCacheChanging(string oldValue, string newValue);
-		partial void OnArticleShortDescriptionCacheChanged(string oldValue, string newValue);
-		partial void OnArticleLongDescriptionCacheChanging(string oldValue, string newValue);
-		partial void OnArticleLongDescriptionCacheChanged(string oldValue, string newValue);
-		partial void OnReplacementTextChanging(string oldValue, string newValue);
-		partial void OnReplacementTextChanged(string oldValue, string newValue);
+		partial void OnArticleShortDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleShortDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleLongDescriptionCacheChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnArticleLongDescriptionCacheChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnReplacementTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -7448,26 +7448,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A8B/L0A9B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A9B]")]
-		public string Text
+		public global::Epsitec.Common.Types.FormattedText Text
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A9B]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A9B]");
 			}
 			set
 			{
-				string oldValue = this.Text;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
 				if (oldValue != value)
 				{
 					this.OnTextChanging (oldValue, value);
-					this.SetField<string> ("[L0A9B]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A9B]", oldValue, value);
 					this.OnTextChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnTextChanging(string oldValue, string newValue);
-		partial void OnTextChanged(string oldValue, string newValue);
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -7519,19 +7519,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AAB/L0AIC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AIC]")]
-		public string TextForPrimaryPrice
+		public global::Epsitec.Common.Types.FormattedText TextForPrimaryPrice
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AIC]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AIC]");
 			}
 			set
 			{
-				string oldValue = this.TextForPrimaryPrice;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForPrimaryPrice;
 				if (oldValue != value)
 				{
 					this.OnTextForPrimaryPriceChanging (oldValue, value);
-					this.SetField<string> ("[L0AIC]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AIC]", oldValue, value);
 					this.OnTextForPrimaryPriceChanged (oldValue, value);
 				}
 			}
@@ -7541,19 +7541,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AAB/L0ABD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ABD]")]
-		public string TextForResultingPrice
+		public global::Epsitec.Common.Types.FormattedText TextForResultingPrice
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ABD]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ABD]");
 			}
 			set
 			{
-				string oldValue = this.TextForResultingPrice;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForResultingPrice;
 				if (oldValue != value)
 				{
 					this.OnTextForResultingPriceChanging (oldValue, value);
-					this.SetField<string> ("[L0ABD]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ABD]", oldValue, value);
 					this.OnTextForResultingPriceChanged (oldValue, value);
 				}
 			}
@@ -7563,19 +7563,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AAB/L0A6D
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A6D]")]
-		public string TextForFixedPrice
+		public global::Epsitec.Common.Types.FormattedText TextForFixedPrice
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A6D]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6D]");
 			}
 			set
 			{
-				string oldValue = this.TextForFixedPrice;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForFixedPrice;
 				if (oldValue != value)
 				{
 					this.OnTextForFixedPriceChanging (oldValue, value);
-					this.SetField<string> ("[L0A6D]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6D]", oldValue, value);
 					this.OnTextForFixedPriceChanged (oldValue, value);
 				}
 			}
@@ -7781,12 +7781,12 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDisplayModesChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? newValue);
 		partial void OnDisplayModesChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.PriceDisplayModes? newValue);
-		partial void OnTextForPrimaryPriceChanging(string oldValue, string newValue);
-		partial void OnTextForPrimaryPriceChanged(string oldValue, string newValue);
-		partial void OnTextForResultingPriceChanging(string oldValue, string newValue);
-		partial void OnTextForResultingPriceChanged(string oldValue, string newValue);
-		partial void OnTextForFixedPriceChanging(string oldValue, string newValue);
-		partial void OnTextForFixedPriceChanged(string oldValue, string newValue);
+		partial void OnTextForPrimaryPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForPrimaryPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForResultingPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForResultingPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForFixedPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForFixedPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDiscountChanging(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
 		partial void OnDiscountChanged(global::Epsitec.Cresus.Core.Entities.DiscountEntity oldValue, global::Epsitec.Cresus.Core.Entities.DiscountEntity newValue);
 		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -8076,26 +8076,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQC/L0ARC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ARC]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ARC]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARC]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0ARC]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARC]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -8125,19 +8125,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AGD/L0AHD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AHD]")]
-		public string Text
+		public global::Epsitec.Common.Types.FormattedText Text
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AHD]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]");
 			}
 			set
 			{
-				string oldValue = this.Text;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Text;
 				if (oldValue != value)
 				{
 					this.OnTextChanging (oldValue, value);
-					this.SetField<string> ("[L0AHD]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AHD]", oldValue, value);
 					this.OnTextChanged (oldValue, value);
 				}
 			}
@@ -8275,8 +8275,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTextChanging(string oldValue, string newValue);
-		partial void OnTextChanged(string oldValue, string newValue);
+		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnVatCodeChanging(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnVatCodeChanged(global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.BusinessLogic.Finance.VatCode newValue);
 		partial void OnBaseAmountChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -8635,19 +8635,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AOE/L0ARE
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ARE]")]
-		public string ShortDescriptions
+		public global::Epsitec.Common.Types.FormattedText ShortDescriptions
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ARE]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARE]");
 			}
 			set
 			{
-				string oldValue = this.ShortDescriptions;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortDescriptions;
 				if (oldValue != value)
 				{
 					this.OnShortDescriptionsChanging (oldValue, value);
-					this.SetField<string> ("[L0ARE]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARE]", oldValue, value);
 					this.OnShortDescriptionsChanged (oldValue, value);
 				}
 			}
@@ -8657,19 +8657,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AOE/L0ASE
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ASE]")]
-		public string LongDescriptions
+		public global::Epsitec.Common.Types.FormattedText LongDescriptions
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ASE]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASE]");
 			}
 			set
 			{
-				string oldValue = this.LongDescriptions;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.LongDescriptions;
 				if (oldValue != value)
 				{
 					this.OnLongDescriptionsChanging (oldValue, value);
-					this.SetField<string> ("[L0ASE]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASE]", oldValue, value);
 					this.OnLongDescriptionsChanged (oldValue, value);
 				}
 			}
@@ -8681,10 +8681,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultValueChanged(string oldValue, string newValue);
 		partial void OnValuesChanging(string oldValue, string newValue);
 		partial void OnValuesChanged(string oldValue, string newValue);
-		partial void OnShortDescriptionsChanging(string oldValue, string newValue);
-		partial void OnShortDescriptionsChanged(string oldValue, string newValue);
-		partial void OnLongDescriptionsChanging(string oldValue, string newValue);
-		partial void OnLongDescriptionsChanged(string oldValue, string newValue);
+		partial void OnShortDescriptionsChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortDescriptionsChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongDescriptionsChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLongDescriptionsChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -8714,19 +8714,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A5F/L0A6F
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A6F]")]
-		public string TextForPrimaryPrice
+		public global::Epsitec.Common.Types.FormattedText TextForPrimaryPrice
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A6F]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6F]");
 			}
 			set
 			{
-				string oldValue = this.TextForPrimaryPrice;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForPrimaryPrice;
 				if (oldValue != value)
 				{
 					this.OnTextForPrimaryPriceChanging (oldValue, value);
-					this.SetField<string> ("[L0A6F]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A6F]", oldValue, value);
 					this.OnTextForPrimaryPriceChanged (oldValue, value);
 				}
 			}
@@ -8736,19 +8736,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A5F/L0A7F
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A7F]")]
-		public string TextForFixedPrice
+		public global::Epsitec.Common.Types.FormattedText TextForFixedPrice
 		{
 			get
 			{
-				return this.GetField<string> ("[L0A7F]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7F]");
 			}
 			set
 			{
-				string oldValue = this.TextForFixedPrice;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.TextForFixedPrice;
 				if (oldValue != value)
 				{
 					this.OnTextForFixedPriceChanging (oldValue, value);
-					this.SetField<string> ("[L0A7F]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A7F]", oldValue, value);
 					this.OnTextForFixedPriceChanged (oldValue, value);
 				}
 			}
@@ -8820,10 +8820,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnTextForPrimaryPriceChanging(string oldValue, string newValue);
-		partial void OnTextForPrimaryPriceChanged(string oldValue, string newValue);
-		partial void OnTextForFixedPriceChanging(string oldValue, string newValue);
-		partial void OnTextForFixedPriceChanged(string oldValue, string newValue);
+		partial void OnTextForPrimaryPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForPrimaryPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForFixedPriceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTextForFixedPriceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnPrimaryPriceBeforeTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryPriceBeforeTaxChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnPrimaryPriceAfterTaxChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
@@ -9026,19 +9026,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AKF/L0ALF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ALF]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ALF]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ALF]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0ALF]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ALF]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -9048,19 +9048,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AKF/L0AMF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AMF]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AMF]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0AMF]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0AMF]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0AMF]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
@@ -9100,10 +9100,10 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDisabledChanging(bool oldValue, bool newValue);
 		partial void OnDisabledChanged(bool oldValue, bool newValue);
 		
@@ -9135,19 +9135,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQF/L0ARF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ARF]")]
-		public string Name
+		public global::Epsitec.Common.Types.FormattedText Name
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ARF]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARF]");
 			}
 			set
 			{
-				string oldValue = this.Name;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
 				if (oldValue != value)
 				{
 					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[L0ARF]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ARF]", oldValue, value);
 					this.OnNameChanged (oldValue, value);
 				}
 			}
@@ -9157,28 +9157,28 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AQF/L0ASF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0ASF]")]
-		public string Description
+		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return this.GetField<string> ("[L0ASF]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASF]");
 			}
 			set
 			{
-				string oldValue = this.Description;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
 				if (oldValue != value)
 				{
 					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[L0ASF]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASF]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

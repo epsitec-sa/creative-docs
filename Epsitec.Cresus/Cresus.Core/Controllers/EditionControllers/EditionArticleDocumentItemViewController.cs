@@ -73,8 +73,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleDefinitions (this.DataContext),
 
-					ToTextArrayConverter     = x => new string[] { x.IdA, x.ShortDescription },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
+					ToTextArrayConverter     = x => new string[] { x.IdA, x.ShortDescription.ToSimpleText () },
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription.ToSimpleText ()),
 				});
 		}
 
@@ -202,16 +202,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private string GetArticleDescription()
+		private FormattedText GetArticleDescription()
 		{
 			return ArticleDocumentItemHelper.GetArticleDescription (this.Entity);
 		}
 
-		private void SetArticleDescription(string value)
+		private void SetArticleDescription(FormattedText value)
 		{
 			if (value == this.Entity.ArticleDefinition.LongDescription)  // description standard ?
 			{
-				value = null;
+				value = FormattedText.Null;
 			}
 
 			if (this.Entity.ReplacementText != value)

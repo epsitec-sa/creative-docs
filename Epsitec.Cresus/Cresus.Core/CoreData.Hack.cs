@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core
 				CountryEntity country = this.DataContext.CreateEntity<CountryEntity> ();
 
 				country.Code = CoreData.countries[i + 0];
-				country.Name = CoreData.countries[i + 1];
+				country.Name = FormattedText.FromSimpleText (CoreData.countries[i + 1]);
 
 				yield return country;
 			}
@@ -189,8 +189,8 @@ namespace Epsitec.Cresus.Core
 				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = swiss;
-				location.PostalCode = CoreData.swissLocations[i + 0];
-				location.Name = CoreData.swissLocations[i + 1];
+				location.PostalCode = FormattedText.FromSimpleText (CoreData.swissLocations[i + 0]);
+				location.Name       = FormattedText.FromSimpleText (CoreData.swissLocations[i + 1]);
 
 				yield return location;
 			}
@@ -202,8 +202,8 @@ namespace Epsitec.Cresus.Core
 				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = french;
-				location.PostalCode = CoreData.frenchLocations[i + 0];
-				location.Name = CoreData.frenchLocations[i + 1];
+				location.PostalCode = FormattedText.FromSimpleText (CoreData.frenchLocations[i + 0]);
+				location.Name       = FormattedText.FromSimpleText (CoreData.frenchLocations[i + 1]);
 
 				yield return location;
 			}
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core
 
 			UriSchemeEntity uriSchemeMailto = uriSchemes.Where (x => x.Code == "mailto").First ();
 
-			LocationEntity locationYverdon = locations.Where (x => x.PostalCode == "1400").First ();
+			LocationEntity locationYverdon = locations.Where (x => x.PostalCode == FormattedText.FromSimpleText ("1400")).First ();
 
 			PersonTitleEntity titleMonsieur = personTitles.Where (x => x.ShortName == "M.").First ();
 			PersonGenderEntity genderHomme = personGenders.Where (x => x.Code == "♂").First ();
@@ -343,11 +343,11 @@ namespace Epsitec.Cresus.Core
 			// addressEpsitec
 
 			StreetEntity streetEpsitec = this.DataContext.CreateEntity<StreetEntity> ();
-			streetEpsitec.StreetName = "Ch. du Fontenay 3";
-			streetEpsitec.Complement = "2ème étage";
+			streetEpsitec.StreetName = FormattedText.FromSimpleText ("Ch. du Fontenay 3");
+			streetEpsitec.Complement = FormattedText.FromSimpleText ("2ème étage");
 
 			PostBoxEntity postboxEpsitec = this.DataContext.CreateEntity<PostBoxEntity> ();
-			postboxEpsitec.Number = "Case postale 1234";
+			postboxEpsitec.Number = FormattedText.FromSimpleText ("Case postale 1234");
 
 			AddressEntity addressEpsitec = this.DataContext.CreateEntity<AddressEntity> ();
 			addressEpsitec.Location = locationYverdon;
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Core
 			// addressPA
 
 			StreetEntity streetPA = this.DataContext.CreateEntity<StreetEntity> ();
-			streetPA.StreetName = "Ch. du Fontenay 6";
+			streetPA.StreetName = FormattedText.FromSimpleText ("Ch. du Fontenay 6");
 
 			AddressEntity addressPA = this.DataContext.CreateEntity<AddressEntity> ();
 			addressPA.Location = locationYverdon;

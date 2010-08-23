@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Texte multi-lignes "versé par".
 		/// </summary>
-		public string From
+		public FormattedText From
 		{
 			get;
 			set;
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Texte multi-lignes "versement pour".
 		/// </summary>
-		public string To
+		public FormattedText To
 		{
 			get;
 			set;
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Texte pour la zone de communication (seulement pour les BV, pas les BVR).
 		/// </summary>
-		public string Communication
+		public FormattedText Communication
 		{
 			get;
 			set;
@@ -357,14 +357,19 @@ namespace Epsitec.Cresus.Core.Printers
 
 		protected static void PaintText(IPaintPort port, Rectangle bounds, ContentAlignment alignment, Font font, double fontSize, string text)
 		{
-			if (string.IsNullOrEmpty (text))
+			AbstractEsrBand.PaintText (port, bounds, alignment, font, fontSize, FormattedText.FromSimpleText (text));
+		}
+
+		protected static void PaintText(IPaintPort port, Rectangle bounds, ContentAlignment alignment, Font font, double fontSize, FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
 			{
 				return;
 			}
 
 			var textLayout = new TextLayout ()
 			{
-				Text = text,
+				Text = text.ToString (),
 				Alignment = alignment,
 				LayoutSize = bounds.Size,
 				DefaultFont = font,

@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				x.LegalPerson.Name.ToSimpleText (),
 				x.NaturalPerson.Firstname.ToString (),
 				x.NaturalPerson.Lastname.ToString (),
-				x.Address.Street.StreetName,
-				x.Address.Location.PostalCode,
-				x.Address.Location.Name
+				x.Address.Street.StreetName.ToSimpleText (),
+				x.Address.Location.PostalCode.ToSimpleText (),
+				x.Address.Location.Name.ToSimpleText (),
 			};
 		}
 

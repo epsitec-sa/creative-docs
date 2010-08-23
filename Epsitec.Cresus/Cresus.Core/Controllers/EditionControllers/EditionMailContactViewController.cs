@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = this.GetAddressReferenceController (),
 					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
-					ToTextArrayConverter     = x => new string[] { x.Street.StreetName, x.Location.PostalCode, x.Location.Name },
+					ToTextArrayConverter     = x => new string[] { x.Street.StreetName.ToSimpleText (), x.Location.PostalCode.ToSimpleText (), x.Location.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
 				});
 		}
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
-					ToTextArrayConverter     = x => new string[] { x.Code, x.Name },
+					ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
 				});
 		}
@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
 					PossibleItemsGetter = () => this.LocationGetter,
 
-					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode, x.Name },
+					ToTextArrayConverter     = x => new string[] { x.Country.Code, x.PostalCode.ToSimpleText (), x.Name.ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
 				});
 		}

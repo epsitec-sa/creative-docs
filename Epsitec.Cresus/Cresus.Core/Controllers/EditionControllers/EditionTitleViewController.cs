@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			else
 			{
-				if (string.IsNullOrWhiteSpace (entity.Name))
+				if (entity.Name.IsNullOrEmpty)
 				{
 					return EditionStatus.Invalid;
 				}

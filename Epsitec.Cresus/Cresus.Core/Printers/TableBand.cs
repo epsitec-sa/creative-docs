@@ -123,13 +123,13 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public string GetText(int column, int row)
+		public FormattedText GetText(int column, int row)
 		{
 			TextBand textBand = this.GetTextBand (column, row);
 
 			if (textBand == null)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 			else
 			{
@@ -138,6 +138,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		public void SetText(int column, int row, string value)
+		{
+			this.SetText (column, row, FormattedText.FromSimpleText (value));
+		}
+
+		public void SetText(int column, int row, FormattedText value)
 		{
 			TextBand textBand = this.GetTextBand (column, row);
 
@@ -572,7 +577,7 @@ namespace Epsitec.Cresus.Core.Printers
 							rowEnding = false;
 						}
 
-						if (textBand.LastLineCount == 0 && !string.IsNullOrEmpty (textBand.Text))
+						if (textBand.LastLineCount == 0 && !textBand.Text.IsNullOrEmpty)
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
 							//	il faut rejeter cette 'row' et essayer dans une nouvelle section.

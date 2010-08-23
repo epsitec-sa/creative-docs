@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(string number)
+		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(FormattedText number)
 		{
 			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
 
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(string number, int index, int count)
+		public IEnumerable<PostBoxEntity> GetPostBoxesByNumber(FormattedText number, int index, int count)
 		{
 			PostBoxEntity example = this.CreatePostBoxExampleByNumber (number);
 
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private PostBoxEntity CreatePostBoxExampleByNumber(string number)
+		private PostBoxEntity CreatePostBoxExampleByNumber(FormattedText number)
 		{
 			PostBoxEntity example = this.CreatePostBoxExample ();
 			example.Number = number;

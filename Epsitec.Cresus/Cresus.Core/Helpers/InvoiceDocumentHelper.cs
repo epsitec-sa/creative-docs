@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static string GetMailContact(InvoiceDocumentEntity x)
+		public static FormattedText GetMailContact(InvoiceDocumentEntity x)
 		{
 			string legal = "";
 			string natural = "";
@@ -73,14 +73,14 @@ namespace Epsitec.Cresus.Core.Helpers
 					natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname).ToString ();
 				}
 
-				return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name).ToString ();
+				return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name);
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 
-		public static string GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentTypeEnum type)
+		public static FormattedText GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentTypeEnum type)
 		{
 			string doc;
 
@@ -113,10 +113,10 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			string title = TextFormatter.FormatText (string.Concat("<b>", doc), x.IdA, "/~", x.IdB, "/~", x.IdC, "</b>").ToString ();
 
-			return string.Concat (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
+			return TextFormatter.FormatText (title, " ", InvoiceDocumentHelper.GetInstalmentName (x, billingDetails, true));
 		}
 
-		public static string GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
+		public static FormattedText GetInstalmentName(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, bool parenthesis)
 		{
 			//	Retourne la description d'une mensualité. Si aucun texte n'est défini, il est généré automatiquement,
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				return null;
 			}
 
-			if (!string.IsNullOrEmpty (billingDetails.InstalmentName))
+			if (!billingDetails.InstalmentName.IsNullOrEmpty)
 			{
 				if (parenthesis)
 				{

@@ -81,9 +81,10 @@ namespace Epsitec.Cresus.Core
 
 				char lastCharacter = buffer.LastCharacter ();
 
-				if ((emptyItem == false) &&
-					(lastCharacter != '(') &&
-					(Misc.IsPunctuationMark (prefix) == false))
+				if (emptyItem == false &&
+					lastCharacter != '(' &&
+					lastCharacter != '>' &&
+					Misc.IsPunctuationMark (prefix) == false)
 				{
 					buffer.Append (" ");
 				}

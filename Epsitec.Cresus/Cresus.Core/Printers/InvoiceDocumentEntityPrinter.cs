@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.PageSize.Height-10-50, 60, 50));
 
 			var textBand = new TextBand ();
-			textBand.Text = "<b>Les logiciels de gestion</b>";
+			textBand.Text = TextFormatter.FormatText ("<b>", "Les logiciels de gestion" , "</b>");
 			textBand.Font = font;
 			textBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.PageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
@@ -264,14 +264,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Génère le groupe "concerne".
 			{
-				string     title, text;
-				CellBorder cellBorder;
-				Margins    margins;
-				Color      color;
+				FormattedText title, text;
+				CellBorder    cellBorder;
+				Margins       margins;
+				Color         color;
 
 				if (group == null)
 				{
-					title      = "Concerne";
+					title      = FormattedText.FromSimpleText ("Concerne");
 					text       = this.entity.DocumentTitle;
 					cellBorder = CellBorder.Empty;
 					margins    = new Margins (0);
@@ -279,14 +279,14 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					title      = "Atelier";
-					text       = string.Concat ("<b>", string.IsNullOrWhiteSpace (group.Name) ? group.Code : group.Name, "</b>");
+					title      = FormattedText.FromSimpleText ("Atelier");
+					text       = TextFormatter.FormatText ("<b>", group.Name.IsNullOrWhiteSpace ? FormattedText.FromSimpleText (group.Code) : group.Name, "</b>");
 					cellBorder = CellBorder.Default;
 					margins    = new Margins (1);
 					color      = Color.FromBrightness (0.9);
 				}
 
-				if (!string.IsNullOrEmpty (text))
+				if (!text.IsNullOrEmpty)
 				{
 					var band = new TableBand ();
 					band.ColumnsCount = 2;
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			string date = Misc.GetDateTimeDescription (this.entity.LastModificationDate);
 			var dateBand = new TextBand ();
-			dateBand.Text = TextFormatter.FormatText ("Crissier, le ", date).ToString ();
+			dateBand.Text = TextFormatter.FormatText ("Crissier, le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.PageSize.Height-82, 80, 10));
@@ -707,7 +707,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private int BuildTextLine(TableBand table, int row, TextDocumentItemEntity line)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			string text = string.Concat ("<b>", line.Text, "</b>");
+			var text = TextFormatter.FormatText ("<b>", line.Text, "</b>");
 			table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
 			return 1;
@@ -753,7 +753,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			string  description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.DocumentTypeSelected == DocumentTypeEnum.ProductionOrder);
+			FormattedText  description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.DocumentTypeSelected == DocumentTypeEnum.ProductionOrder);
 
 			if (q1 != null)
 			{
@@ -1039,9 +1039,9 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			string conditions = string.Join("<br/>", billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description);
+			FormattedText conditions = TextFormatter.FormatText (string.Join("<br/>", billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description.ToString ()));
 
-			if (!string.IsNullOrEmpty (conditions))
+			if (!conditions.IsNullOrEmpty)
 			{
 				var band = new TextBand ();
 				band.Text = conditions;
@@ -1129,7 +1129,7 @@ namespace Epsitec.Cresus.Core.Printers
 				leftHeader.FontSize = 4.0;
 
 				var rightHeader = new TextBand ();
-				rightHeader.Text = string.Format ("page {0}", (page-firstPage+1).ToString ());
+				rightHeader.Text = TextFormatter.FormatText ("page ", (page-firstPage+1).ToString ());
 				rightHeader.Alignment = ContentAlignment.BottomRight;
 				rightHeader.Font = font;
 				rightHeader.FontSize = fontSize;
@@ -1298,7 +1298,7 @@ namespace Epsitec.Cresus.Core.Printers
 				Esr.PaintEsrSimulator = this.HasDocumentOption ("ESR.Simul");
 				Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
 				Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
-				Esr.To = "EPSITEC SA<br/>1400 Yverdon-les-Bains";
+				Esr.To = FormattedText.FromSimpleText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
 				Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeSelected);
 
 				if (page == this.documentContainer.PageCount-1)  // dernière page ?

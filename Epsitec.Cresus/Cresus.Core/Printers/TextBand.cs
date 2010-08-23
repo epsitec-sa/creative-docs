@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public string Text
+		public FormattedText Text
 		{
 			get;
 			set;
@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.textLayout.LayoutSize            = new Size (this.width, double.MaxValue);
 			this.textLayout.DefaultUnderlineWidth = 0.1;
 			this.textLayout.DefaultWaveWidth      = 0.75;
-			this.textLayout.Text                  = this.Text;
+			this.textLayout.Text                  = this.Text.ToString ();
 		}
 
 

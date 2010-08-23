@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 
 			foreach (var parameter in articleDefinition.ArticleParameterDefinitions)
 			{
-				if (string.IsNullOrEmpty (parameter.Code) || string.IsNullOrEmpty (parameter.Name))
+				if (string.IsNullOrEmpty (parameter.Code) || parameter.Name.IsNullOrEmpty)
 				{
 					continue;
 				}

@@ -120,11 +120,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private static string GetParameterSummary(AbstractArticleParameterDefinitionEntity parameter)
+		private static FormattedText GetParameterSummary(AbstractArticleParameterDefinitionEntity parameter)
 		{
 			var builder = new System.Text.StringBuilder ();
 
-			if (!string.IsNullOrEmpty (parameter.Name))
+			if (!parameter.Name.IsNullOrEmpty)
 			{
 				builder.Append (parameter.Name);
 				builder.Append (": ");
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				}
 			}
 
-			return builder.ToString ();
+			return new FormattedText (builder.ToString ());
 		}
 
 		private static string GetArticlePriceSummary(ArticlePriceEntity price)

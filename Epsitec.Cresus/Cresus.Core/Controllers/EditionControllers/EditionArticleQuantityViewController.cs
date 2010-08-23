@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
-					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
+					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
 				}, BusinessLogic.EnumValueCardinality.ExactlyOne);
 #endif

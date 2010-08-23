@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
@@ -79,7 +81,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CountryEntity> GetCountriesByName(string name)
+		public IEnumerable<CountryEntity> GetCountriesByName(FormattedText name)
 		{
 			CountryEntity example = this.CreateCountryExampleByName (name);
 
@@ -87,7 +89,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<CountryEntity> GetCountriesByName(string name, int index, int count)
+		public IEnumerable<CountryEntity> GetCountriesByName(FormattedText name, int index, int count)
 		{
 			CountryEntity example = this.CreateCountryExampleByName (name);
 
@@ -110,7 +112,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private CountryEntity CreateCountryExampleByName(string name)
+		private CountryEntity CreateCountryExampleByName(FormattedText name)
 		{
 			CountryEntity example = this.CreateCountryExample ();
 			example.Name = name;

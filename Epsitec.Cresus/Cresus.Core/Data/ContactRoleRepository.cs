@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Entities;
+﻿using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<ContactRoleEntity> GetContactRolesByName(string name)
+		public IEnumerable<ContactRoleEntity> GetContactRolesByName(FormattedText name)
 		{
 			ContactRoleEntity example = this.CreateContactRoleExampleByName (name);
 
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		public IEnumerable<ContactRoleEntity> GetContactRolesByName(string name, int index, int count)
+		public IEnumerable<ContactRoleEntity> GetContactRolesByName(FormattedText name, int index, int count)
 		{
 			ContactRoleEntity example = this.CreateContactRoleExampleByName (name);
 
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private ContactRoleEntity CreateContactRoleExampleByName(string name)
+		private ContactRoleEntity CreateContactRoleExampleByName(FormattedText name)
 		{
 			ContactRoleEntity example = this.CreateContactRoleExample ();
 			example.Name = name;
