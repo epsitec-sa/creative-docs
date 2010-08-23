@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				DecimalRange dr = new DecimalRange (0, 1000000000, resolution);
+				DecimalRange dr = new DecimalRange (-1000000000, 1000000000, resolution);
 				return dr.Constrain (value);
 			}
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core
 			int i = (int) (value*100);
 			return string.Concat (i.ToString (), "%");
 #else
-			DecimalRange dr = new DecimalRange (0, 1000000000, 0.1M);
+			DecimalRange dr = new DecimalRange (-1000000000, 1000000000, 0.1M);
 			return string.Concat (dr.ConvertToString (value.Value*100), "%");
 #endif
 		}
@@ -190,6 +190,22 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static FormattedText Bold(FormattedText text)
+		{
+			return Misc.Tagged (text, "b");
+		}
+
+		public static FormattedText Italic(FormattedText text)
+		{
+			return Misc.Tagged (text, "i");
+		}
+
+		private static FormattedText Tagged(FormattedText text, string tag)
+		{
+			return FormattedText.Concat ("<", tag, ">", text, "</", tag, ">");
+		}
+
+
 		public static FormattedText FirstLine(FormattedText text)
 		{
 			return Misc.FirstLine (text.ToString ());
@@ -208,6 +224,11 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return text;
+		}
+
+		public static FormattedText AppendLine(FormattedText current, FormattedText text)
+		{
+			return new FormattedText (Misc.AppendLine (current.ToString (), text.ToString ()));
 		}
 
 		public static string AppendLine(string current, string text)
@@ -381,8 +402,8 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static DecimalRange decimalRange001 = new DecimalRange (0, 1000000000, 0.01M);
-		private static DecimalRange decimalRange005 = new DecimalRange (0, 1000000000, 0.05M);
-		private static DecimalRange decimalRange100 = new DecimalRange (0, 1000000000, 1.00M);
+		private static DecimalRange decimalRange001 = new DecimalRange (-1000000000, 1000000000, 0.01M);
+		private static DecimalRange decimalRange005 = new DecimalRange (-1000000000, 1000000000, 0.05M);
+		private static DecimalRange decimalRange100 = new DecimalRange (-1000000000, 1000000000, 1.00M);
 	}
 }

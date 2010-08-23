@@ -110,6 +110,18 @@ namespace Epsitec.Common.Types
 			return new FormattedText (string.Join (separator, list));
 		}
 
+		public static FormattedText Concat(params FormattedText[] values)
+		{
+			List<string> list = new List<string> ();
+
+			foreach (var t in values)
+			{
+				list.Add (t.ToString ());
+			}
+
+			return new FormattedText (string.Concat (list));
+		}
+
 
 		public static implicit operator FormattedText(string formattedTextSource)
 		{
