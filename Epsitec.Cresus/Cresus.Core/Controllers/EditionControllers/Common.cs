@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			else
 			{
-				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, "<br/>");
+				return value.Replace (AbstractArticleParameterDefinitionEntity.Separator, FormattedText.HtmlBreak);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 			else
 			{
-				return value.Replace ("<br/>", AbstractArticleParameterDefinitionEntity.Separator);
+				return value.Replace (FormattedText.HtmlBreak, AbstractArticleParameterDefinitionEntity.Separator);
 			}
 		}
 

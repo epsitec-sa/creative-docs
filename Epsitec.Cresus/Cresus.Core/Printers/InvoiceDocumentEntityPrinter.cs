@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (group == null)
 				{
-					title      = FormattedText.FromSimpleText ("Concerne");
+					title      = "Concerne";
 					text       = this.entity.DocumentTitle;
 					cellBorder = CellBorder.Empty;
 					margins    = new Margins (0);
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					title      = FormattedText.FromSimpleText ("Atelier");
+					title      = "Atelier";
 					text       = FormattedText.Concat ("<b>", group.Name.IsNullOrWhiteSpace ? group.Code : group.Name, "</b>");
 					cellBorder = CellBorder.Default;
 					margins    = new Margins (1);
@@ -830,7 +830,7 @@ namespace Epsitec.Cresus.Core.Printers
 					rabais = "Rabais";
 				}
 
-				FormattedText text = FormattedText.Concat (line.TextForPrimaryPrice, "<br/>", rabais);
+				FormattedText text = FormattedText.Concat (line.TextForPrimaryPrice, FormattedText.HtmlBreak, rabais);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+0, text);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row+1, line.TextForResultingPrice);
 			}
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.Core.Printers
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, FormattedText.Concat (p1, "<br/>", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
 				table.SetText (this.tableColumns[TableColumnKeys.LinePrice].Rank, row+1, p3);
 			}
 
@@ -873,7 +873,7 @@ namespace Epsitec.Cresus.Core.Printers
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, FormattedText.Concat (p1, "<br/>", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
 				table.SetText (this.tableColumns[TableColumnKeys.Vat].Rank, row+1, p3);
 			}
 
@@ -894,7 +894,7 @@ namespace Epsitec.Cresus.Core.Printers
 				string p2 = Misc.PriceToString (v3 - v1);
 				string p3 = Misc.PriceToString (v3);
 
-				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, FormattedText.Concat (p1, "<br/>", p2));
+				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+0, FormattedText.Concat (p1, FormattedText.HtmlBreak, p2));
 				table.SetText (this.tableColumns[TableColumnKeys.Total].Rank, row+1, p3);
 			}
 
@@ -970,7 +970,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else if (line.FixedPriceAfterTax.HasValue)
 			{
-				FormattedText text = FormattedText.Join ("<br/>", line.TextForPrimaryPrice, line.TextForFixedPrice);
+				FormattedText text = FormattedText.Join (FormattedText.HtmlBreak, line.TextForPrimaryPrice, line.TextForFixedPrice);
 				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, row, text);
 
 				FormattedText total = FormattedText.Concat ("<b>", Misc.PriceToString (line.PrimaryPriceAfterTax), "</b><br/><b><i>", Misc.PriceToString (line.FixedPriceAfterTax), "</i></b>");
@@ -1039,7 +1039,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			FormattedText conditions = FormattedText.Join ("<br/>", billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description);
+			FormattedText conditions = FormattedText.Join (FormattedText.HtmlBreak, billingDetails.Title, billingDetails.AmountDue.PaymentMode.Description);
 
 			if (!conditions.IsNullOrEmpty)
 			{

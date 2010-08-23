@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -128,17 +129,17 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			return System.Math.Max (button.PreferredHeight, (int) (width+10));
 		}
 
-		private static string GetTag(string code)
+		private static FormattedText GetTag(string code)
 		{
 			//	Retourne le tag à insérer dans le texte pour un paramètre.
-			return string.Concat (ArticleParameterHelper.startParameterTag, code, ArticleParameterHelper.endParameterTag);
+			return FormattedText.Concat (ArticleParameterHelper.startParameterTag, code, ArticleParameterHelper.endParameterTag);
 		}
 
-		private static void InsertText(AbstractTextField textField, string text)
+		private static void InsertText(AbstractTextField textField, FormattedText text)
 		{
 			//	Insère un texte comme s'il avait été frappé par l'utilisateur.
 			textField.Focus ();  // il faut mettre le focus AVANT, à cause de la gestion des boutons v/x dans les widgets '*Ex' !
-			textField.Selection = text;
+			textField.Selection = text.ToString ();
 		}
 
 

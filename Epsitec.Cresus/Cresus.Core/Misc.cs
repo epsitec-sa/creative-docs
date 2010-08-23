@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				int i = text.IndexOf ("<br/>");
+				int i = text.IndexOf (FormattedText.HtmlBreak);
 
 				if (i != -1)
 				{
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				return string.Concat (current, "<br/>", text);
+				return string.Concat (current, FormattedText.HtmlBreak, text);
 			}
 		}
 
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Core
 		/// <returns></returns>
 		public static string RemoveLastLineBreak(string text)
 		{
-			if (!string.IsNullOrEmpty(text) && text.EndsWith ("<br/>"))
+			if (!string.IsNullOrEmpty (text) && text.EndsWith (FormattedText.HtmlBreak))
 			{
 				return text.Substring (0, text.Length-5);
 			}

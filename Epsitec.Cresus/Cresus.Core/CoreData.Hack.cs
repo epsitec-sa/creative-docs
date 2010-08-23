@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core
 				CountryEntity country = this.DataContext.CreateEntity<CountryEntity> ();
 
 				country.Code = CoreData.countries[i + 0];
-				country.Name = FormattedText.FromSimpleText (CoreData.countries[i + 1]);
+				country.Name = CoreData.countries[i + 1];
 
 				yield return country;
 			}
@@ -189,8 +189,8 @@ namespace Epsitec.Cresus.Core
 				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = swiss;
-				location.PostalCode = FormattedText.FromSimpleText (CoreData.swissLocations[i + 0]);
-				location.Name       = FormattedText.FromSimpleText (CoreData.swissLocations[i + 1]);
+				location.PostalCode = CoreData.swissLocations[i + 0];
+				location.Name       = CoreData.swissLocations[i + 1];
 
 				yield return location;
 			}
@@ -202,8 +202,8 @@ namespace Epsitec.Cresus.Core
 				LocationEntity location = this.DataContext.CreateEntity<LocationEntity> ();
 
 				location.Country = french;
-				location.PostalCode = FormattedText.FromSimpleText (CoreData.frenchLocations[i + 0]);
-				location.Name       = FormattedText.FromSimpleText (CoreData.frenchLocations[i + 1]);
+				location.PostalCode = CoreData.frenchLocations[i + 0];
+				location.Name       = CoreData.frenchLocations[i + 1];
 
 				yield return location;
 			}
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core
 
 			UriSchemeEntity uriSchemeMailto = uriSchemes.Where (x => x.Code == "mailto").First ();
 
-			LocationEntity locationYverdon = locations.Where (x => x.PostalCode == FormattedText.FromSimpleText ("1400")).First ();
+			LocationEntity locationYverdon = locations.Where (x => x.PostalCode == "1400").First ();
 
 			PersonTitleEntity titleMonsieur = personTitles.Where (x => x.ShortName == "M.").First ();
 			PersonGenderEntity genderHomme = personGenders.Where (x => x.Code == "♂").First ();
@@ -343,11 +343,11 @@ namespace Epsitec.Cresus.Core
 			// addressEpsitec
 
 			StreetEntity streetEpsitec = this.DataContext.CreateEntity<StreetEntity> ();
-			streetEpsitec.StreetName = FormattedText.FromSimpleText ("Ch. du Fontenay 3");
-			streetEpsitec.Complement = FormattedText.FromSimpleText ("2ème étage");
+			streetEpsitec.StreetName = "Ch. du Fontenay 3";
+			streetEpsitec.Complement = "2ème étage";
 
 			PostBoxEntity postboxEpsitec = this.DataContext.CreateEntity<PostBoxEntity> ();
-			postboxEpsitec.Number = FormattedText.FromSimpleText ("Case postale 1234");
+			postboxEpsitec.Number = "Case postale 1234";
 
 			AddressEntity addressEpsitec = this.DataContext.CreateEntity<AddressEntity> ();
 			addressEpsitec.Location = locationYverdon;
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Core
 			// addressPA
 
 			StreetEntity streetPA = this.DataContext.CreateEntity<StreetEntity> ();
-			streetPA.StreetName = FormattedText.FromSimpleText ("Ch. du Fontenay 6");
+			streetPA.StreetName = "Ch. du Fontenay 6";
 
 			AddressEntity addressPA = this.DataContext.CreateEntity<AddressEntity> ();
 			addressPA.Location = locationYverdon;
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Core
 			// companyEpsitec
 
 			CommentEntity commentEpsitec = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitec.Text = FormattedText.FromSimpleText ("Bureaux ouverts de 9h-12h et 14h-16h30");
+			commentEpsitec.Text = "Bureaux ouverts de 9h-12h et 14h-16h30";
 
 			MailContactEntity mailEpsitec1 = this.DataContext.CreateEntity<MailContactEntity> ();
 			mailEpsitec1.LegalPerson = companyEpsitec;
@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.Core
 			mailEpsitec1.Roles.Add (roleFact);
 
 			CommentEntity commentEpsitecT1 = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitecT1.Text = FormattedText.FromSimpleText ("Administration et vente");
+			commentEpsitecT1.Text = "Administration et vente";
 
 			TelecomContactEntity telecomEpsitec1 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec1.LegalPerson = companyEpsitec;
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Core
 			telecomEpsitec1.Roles.Add (roleFact);
 
 			CommentEntity commentEpsitecT2 = this.DataContext.CreateEntity<CommentEntity> ();
-			commentEpsitecT2.Text = FormattedText.FromSimpleText ("Assistance technique (hotline)");
+			commentEpsitecT2.Text = "Assistance technique (hotline)";
 
 			TelecomContactEntity telecomEpsitec2 = this.DataContext.CreateEntity<TelecomContactEntity> ();
 			telecomEpsitec2.LegalPerson = companyEpsitec;
@@ -407,8 +407,8 @@ namespace Epsitec.Cresus.Core
 			uriEpsitec2.UriScheme = uriSchemeMailto;
 			uriEpsitec2.Roles.Add (roleProf);
 
-			companyEpsitec.Complement = FormattedText.FromSimpleText ("Logiciels de gestion Crésus");
-			companyEpsitec.Name = FormattedText.FromSimpleText ("Epsitec SA");
+			companyEpsitec.Complement = "Logiciels de gestion Crésus";
+			companyEpsitec.Name = "Epsitec SA";
 			companyEpsitec.Contacts.Add (mailEpsitec1);
 			companyEpsitec.Contacts.Add (telecomEpsitec1);
 			companyEpsitec.Contacts.Add (telecomEpsitec2);
@@ -417,8 +417,8 @@ namespace Epsitec.Cresus.Core
 
 			// companyMigros
 
-			companyMigros.Complement = FormattedText.FromSimpleText ("Le géant de l'alimentation");
-			companyMigros.Name = FormattedText.FromSimpleText ("Migros SA");
+			companyMigros.Complement = "Le géant de l'alimentation";
+			companyMigros.Name = "Migros SA";
 
 			// personPA
 
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Core
 			mailPA1.NaturalPerson = personPA;
 			mailPA1.LegalPerson = companyEpsitec;
 			mailPA1.Address = addressEpsitec;
-			mailPA1.Complement = FormattedText.FromSimpleText ("Direction");
+			mailPA1.Complement = "Direction";
 			mailPA1.Roles.Add (roleProf);
 
 			MailContactEntity mailPA2 = this.DataContext.CreateEntity<MailContactEntity> ();
@@ -467,8 +467,8 @@ namespace Epsitec.Cresus.Core
 			uriPA2.Roles.Add (rolePrive);
 
 			personPA.BirthDate = new Common.Types.Date (day: 11, month: 2, year: 1972);
-			personPA.Firstname = FormattedText.FromSimpleText ("Pierre");
-			personPA.Lastname = FormattedText.FromSimpleText ("Arnaud");
+			personPA.Firstname = "Pierre";
+			personPA.Lastname = "Arnaud";
 			personPA.Title = titleMonsieur;
 			personPA.Contacts.Add (mailPA1);
 			personPA.Contacts.Add (mailPA2);
@@ -480,7 +480,7 @@ namespace Epsitec.Cresus.Core
 			
 			// personDR
 
-			personDR.Firstname = FormattedText.FromSimpleText ("Daniel");
+			personDR.Firstname = "Daniel";
 			personDR.Lastname  = FormattedText.FromSimpleText ("Roux");
 			personDR.BirthDate = new Common.Types.Date (day: 31, month: 3, year: 1958);
 
