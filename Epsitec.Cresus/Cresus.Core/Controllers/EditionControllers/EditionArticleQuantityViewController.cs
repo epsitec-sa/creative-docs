@@ -61,40 +61,29 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			//?builder.CreateAutoCompleteTextField (tile,  87, "Type",        Marshaler.Create (this.Entity, x => x.QuantityType, (x, v) => x.QuantityType = v), BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType (), x => TextFormatter.FormatText (x.Values[0]));
-			builder.CreateTextField             (tile, 100, "Date prévue", Marshaler.Create (() => this.Entity.ExpectedDate, x => this.Entity.ExpectedDate = x));
-			builder.CreateMargin                (tile, horizontalSeparator: true);
-			builder.CreateTextField             (tile,  60, "Quantité",    Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+			builder.CreateTextField (tile, 100, "Date prévue", Marshaler.Create (() => this.Entity.ExpectedDate, x => this.Entity.ExpectedDate = x));
+			builder.CreateMargin    (tile, horizontalSeparator: true);
+			builder.CreateTextField (tile,  60, "Quantité",    Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-#if false
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
+			var controller = new SelectionController<UnitOfMeasureEntity>
 				{
-					ValueGetter = () => this.Entity.Unit,
-					ValueSetter = x => this.Entity.Unit = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
-					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
-
-					ToTextArrayConverter     = x => new string[] { x.Name, x.Code },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
-				});
-#else
-			builder.CreateEditionDetailedItemPicker ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
-				{
-					ValueGetter = () => this.Entity.Unit,
-					ValueSetter = x => this.Entity.Unit = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.Unit,
+					ValueSetter         = x => this.Entity.Unit = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
 					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
-				}, BusinessLogic.EnumValueCardinality.ExactlyOne);
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
+				};
+
+#if false
+			builder.CreateAutoCompleteTextField ("Unité", controller);
+#else
+			builder.CreateEditionDetailedItemPicker ("Unité", controller, BusinessLogic.EnumValueCardinality.ExactlyOne);
 #endif
 		}
 

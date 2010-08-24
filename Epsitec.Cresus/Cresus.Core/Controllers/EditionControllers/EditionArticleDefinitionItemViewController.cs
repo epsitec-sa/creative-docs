@@ -36,16 +36,18 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDefinition", "Article");
 
-				this.CreateUIMain (builder);
+				this.CreateUIMain1         (builder);
+				this.CreateUIGroup         (builder);
+				this.CreateUIMain2         (builder);
 				this.CreateUIUnitOfMeasure (builder);
-				this.CreateUICategory (builder);
+				this.CreateUICategory      (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
 		}
 
 
-		private void CreateUIMain(UIBuilder builder)
+		private void CreateUIMain1(UIBuilder builder)
 		{
 			var tile = builder.CreateEditionTile ();
 
@@ -53,6 +55,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdA, x => this.Entity.IdA = x));
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdB, x => this.Entity.IdB = x));
 			builder.CreateTextField (group, DockStyle.Left, 74, Marshaler.Create (() => this.Entity.IdC, x => this.Entity.IdC = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+		}
+
+		private void CreateUIGroup(UIBuilder builder)
+		{
+			var controller = new SelectionController<ArticleGroupEntity>
+			{
+				CollectionValueGetter    = () => this.Entity.ArticleGroups,
+				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateEditionDetailedItemPicker ("Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any);
+		}
+
+		private void CreateUIMain2(UIBuilder builder)
+		{
+			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
@@ -68,8 +89,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode, (x, v) => x.InputVatCode = v),   BusinessLogic.Enumerations.GetInputVatCodes (),  x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)",       Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode, (x, v) => x.InputVatCode = v), BusinessLogic.Enumerations.GetInputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)", Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
