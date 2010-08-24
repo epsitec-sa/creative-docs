@@ -73,8 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter         = () => this.Entity.Unit,
 					ValueSetter         = x => this.Entity.Unit = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
-					//?PossibleItemsGetter = () => this.GetUnitOfMeasure (),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
@@ -87,14 +86,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #endif
 		}
 
-		// TODO: Dès qu'il sera possible de connaître l'entité parente, il faudra réactiver le code ci-dessous:
-#if false
 		private IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
 		{
 			//	Retourne les unités appartenant au même groupe que l'article.
-			return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == this.Entity.ArticleDefinition.Units.Category);
+
+			// Retrouve la ligne d'article correspondante (ArticleDocumentItemEntity),
+			// qui est donc l'entité parente de l'entité elle-même (UnitOfMeasureEntity):
+			var article = this.DataContext.GetEntities ().OfType<ArticleDocumentItemEntity> ().Where (x => x.ArticleQuantities.Contains (this.Entity)).Single ();
+
+			if (article == null)
+			{
+				return CoreProgram.Application.Data.GetUnitOfMeasure ();
+			}
+			else
+			{
+				return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == article.ArticleDefinition.Units.Category);
+			}
 		}
-#endif
 
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
@@ -102,8 +110,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
 			return title;
 		}
-
-
-
 	}
 }

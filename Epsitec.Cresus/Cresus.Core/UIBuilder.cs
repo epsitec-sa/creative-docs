@@ -865,6 +865,20 @@ namespace Epsitec.Cresus.Core
 			var tile = this.CreateEditionTile ();
 			var combo = this.CreateDetailedItemPicker (tile, label, cardinality);
 
+#if false
+			// code provisoire:
+			var tileButton = new GlyphButton
+			{
+				Parent = container,
+				PreferredWidth = UIBuilder.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock = DockStyle.Right,
+				Margins = new Margins (3, 0, 0, 0),
+				AutoFocus = false,
+				//?TabIndex = tabIndex2,
+			};
+#endif
+
 			controller.Attach (combo);
 
 			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
@@ -875,6 +889,45 @@ namespace Epsitec.Cresus.Core
 					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
 				}
 			}
+
+#if false
+			var referenceController = controller.ReferenceController;
+			var rootController = this.GetRootController ();
+			var clickSimulator = new TileButtonClickSimulator (tileButton, rootController, referenceController.Id);
+
+			tileButton.Clicked +=
+				delegate
+				{
+					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
+					{
+						tile.Controller = new ReferenceTileController (referenceController);
+						tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
+					}
+
+					if (tileButton.GlyphShape == GlyphShape.Plus)
+					{
+						if (referenceController.HasCreator)
+						{
+							if (tile.IsSelected)
+							{
+								tile.CloseSubView (rootController.Orchestrator);
+							}
+							else
+							{
+								var newValue  = referenceController.CreateNewValue (rootController.DataContext);
+								var newEntity = newValue.GetEditionEntity ();
+								var refEntity = newValue.GetReferenceEntity ();
+								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, rootController.Orchestrator);
+								tile.OpenSubView (rootController.Orchestrator, rootController, newController);
+								//?editor.SelectedItemIndex = editor.Items.Add (refEntity);
+								//?valueSetter (refEntity);
+
+								//?new AutoCompleteItemSynchronizer (editor, newController, refEntity);
+							}
+						}
+					}
+				};
+#endif
 
 			return combo;
 		}

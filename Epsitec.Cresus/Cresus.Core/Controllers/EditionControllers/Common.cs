@@ -102,8 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var dataContext  = controller.DataContext;
 			var orchestrator = controller.Orchestrator;
 
-			if ((entity != null) &&
-				(entity.TabId == id))
+			if (entity != null && entity.TabId == id)
 			{
 				return;
 			}
@@ -148,10 +147,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 				//	Remplace l'entité dans la db.
 				invoiceDocument.Lines[index] = newEntity;
-				dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
+				dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
 
 				//	Crée et montre la nouvelle tuile.
-
 				history.NavigateInPlace (navigationPath);
 			}
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
