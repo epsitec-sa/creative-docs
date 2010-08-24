@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<ArticleGroupEntity>
 			{
 				CollectionValueGetter    = () => this.Entity.ArticleGroups,
+				//?ReferenceController      = new ReferenceController (() => this.Entity.ArticleGroups, creator: this.CreateNewArticleGroups),
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
@@ -89,40 +90,48 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode, (x, v) => x.InputVatCode = v), BusinessLogic.Enumerations.GetInputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)", Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode,  (x, v) => x.InputVatCode = v),  BusinessLogic.Enumerations.GetInputVatCodes  (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)",       Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
+			var controller = new SelectionController<UnitOfMeasureEntity>
 				{
-					ValueGetter = () => this.Entity.BillingUnit,
-					ValueSetter = x => this.Entity.BillingUnit = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.BillingUnit,
+					ValueSetter         = x => this.Entity.BillingUnit = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
-				});
+				};
+
+			builder.CreateAutoCompleteTextField ("Unité", controller);
 		}
 
 		private void CreateUICategory(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Catégorie",
-				new SelectionController<ArticleCategoryEntity>
+			var controller = new SelectionController<ArticleCategoryEntity>
 				{
-					ValueGetter = () => this.Entity.ArticleCategory,
-					ValueSetter = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
+					ValueGetter         = () => this.Entity.ArticleCategory,
+					ValueSetter         = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
 					ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
 
 					ToTextArrayConverter     = x => new string[] { x.Name },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				});
+				};
+
+			builder.CreateAutoCompleteTextField ("Catégorie", controller);
 		}
 
+
+		private NewEntityReference CreateNewArticleGroups(DataContext context)
+		{
+			var title = context.CreateEmptyEntity<ArticleGroupEntity> ();
+			return title;
+		}
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
