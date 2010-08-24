@@ -144,11 +144,10 @@ namespace Epsitec.Cresus.Core
 				PreferredHeight = 52,
 			};
 
-			button.Clicked +=
-				delegate
-				{
-					controller.CreateRealEntity (initializer);
-				};
+			button.Clicked += delegate
+			{
+				controller.CreateRealEntity (initializer);
+			};
 
 			this.Add (button);
 
@@ -235,7 +234,7 @@ namespace Epsitec.Cresus.Core
 			this.titleTile.Items.Add (tile);
 			this.titleTile.CanExpandSubTile = true;
 
-			var clickSimulator = new TileButtonClickSimulator (this.titleTile, controller, fullName);
+			var clickSimulator = new TileButtonClickSimulator (this.titleTile, this.controller, fullName);
 
 			tile.Controller = new SummaryTileController<T> (entity, fullName, mode, controllerSubType);
 			tile.Summary    = summary.ToString ();
@@ -326,8 +325,7 @@ namespace Epsitec.Cresus.Core
 					tilePage.SetSelected (true);
 				}
 
-				tilePage.Clicked +=
-				delegate
+				tilePage.Clicked += delegate
 				{
 					foreach (Widgets.TilePage t in container.Children)
 					{
@@ -422,11 +420,10 @@ namespace Epsitec.Cresus.Core
 				Name = "ColumnTileCloseButton",
 			};
 
-			closeButton.Clicked +=
-				delegate
-				{
-					orchestrator.CloseView (controller);
-				};
+			closeButton.Clicked += delegate
+			{
+				orchestrator.CloseView (controller);
+			};
 
 			return closeButton;
 		}
@@ -696,8 +693,7 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (container);
 
-			menuButton.Clicked +=
-			delegate
+			menuButton.Clicked += delegate
 			{
 				textField.SelectAll ();
 				textField.Focus ();
@@ -795,8 +791,7 @@ namespace Epsitec.Cresus.Core
 
 			this.ContentListAdd (container);
 
-			menuButton.Clicked +=
-			delegate
+			menuButton.Clicked += delegate
 			{
 				textField.SelectAll ();
 				textField.Focus ();
@@ -859,25 +854,57 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, BusinessLogic.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+			where T1 : AbstractEntity
+			where T2 : AbstractEntity
+		{
+			var tile = this.CreateEditionTile ();
+
+			Button tileButton;
+			var combo = this.CreateDetailedItemPicker (tile, label, cardinality, true, out tileButton);
+
+			controller.Attach (combo);
+
+			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
+				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+			{
+				if (combo.SelectionCount == 0)  // aucune sélection ?
+				{
+					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+				}
+			}
+
+			tileButton.Entered += delegate
+			{
+				tile.TileArrowHilite = true;
+			};
+
+			tileButton.Exited += delegate
+			{
+				tile.TileArrowHilite = false;
+			};
+
+			var rootController = this.GetRootController ();
+			var fullName = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "{0}.{1}", name, this.titleTile.Items.Count);
+			var clickSimulator = new TileButtonClickSimulator (tileButton, this.controller, fullName);
+
+			tile.Controller = new SummaryTileController<T1> (entity, fullName, mode, controllerSubType);
+
+			tileButton.Clicked += delegate
+			{
+				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
+			};
+
+			return combo;
+		}
+
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
-			var combo = this.CreateDetailedItemPicker (tile, label, cardinality);
 
-#if false
-			// code provisoire:
-			var tileButton = new GlyphButton
-			{
-				Parent = container,
-				PreferredWidth = UIBuilder.ComboButtonWidth,
-				PreferredHeight = 20,
-				Dock = DockStyle.Right,
-				Margins = new Margins (3, 0, 0, 0),
-				AutoFocus = false,
-				//?TabIndex = tabIndex2,
-			};
-#endif
+			Button tileButton;
+			var combo = this.CreateDetailedItemPicker (tile, label, cardinality, false, out tileButton);
 
 			controller.Attach (combo);
 
@@ -895,38 +922,11 @@ namespace Epsitec.Cresus.Core
 			var rootController = this.GetRootController ();
 			var clickSimulator = new TileButtonClickSimulator (tileButton, rootController, referenceController.Id);
 
-			tileButton.Clicked +=
-				delegate
-				{
-					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
-					{
-						tile.Controller = new ReferenceTileController (referenceController);
-						tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
-					}
-
-					if (tileButton.GlyphShape == GlyphShape.Plus)
-					{
-						if (referenceController.HasCreator)
-						{
-							if (tile.IsSelected)
-							{
-								tile.CloseSubView (rootController.Orchestrator);
-							}
-							else
-							{
-								var newValue  = referenceController.CreateNewValue (rootController.DataContext);
-								var newEntity = newValue.GetEditionEntity ();
-								var refEntity = newValue.GetReferenceEntity ();
-								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, rootController.Orchestrator);
-								tile.OpenSubView (rootController.Orchestrator, rootController, newController);
-								//?editor.SelectedItemIndex = editor.Items.Add (refEntity);
-								//?valueSetter (refEntity);
-
-								//?new AutoCompleteItemSynchronizer (editor, newController, refEntity);
-							}
-						}
-					}
-				};
+			tileButton.Clicked += delegate
+			{
+				tile.Controller = new ReferenceTileController (referenceController);
+				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
+			};
 #endif
 
 			return combo;
@@ -1062,64 +1062,59 @@ namespace Epsitec.Cresus.Core
 
 			changeHandler ();  // met à jour tout de suite le bouton '>/+' selon l'état actuel
 
-			menuButton.Clicked +=
-				delegate
-				{
-					editor.SelectAll ();
-					editor.Focus ();
-					editor.OpenComboMenu ();
-				};
+			menuButton.Clicked += delegate
+			{
+				editor.SelectAll ();
+				editor.Focus ();
+				editor.OpenComboMenu ();
+			};
 
-			tileButton.Entered +=
-				delegate
-				{
-					tile.TileArrowHilite = true;
-				};
+			tileButton.Entered += delegate
+			{
+				tile.TileArrowHilite = true;
+			};
 
-			tileButton.Exited +=
-				delegate
-				{
-					tile.TileArrowHilite = false;
-				};
+			tileButton.Exited += delegate
+			{
+				tile.TileArrowHilite = false;
+			};
 
 			var controller = this.GetRootController ();
-
 			var clickSimulator = new TileButtonClickSimulator (tileButton, controller, referenceController.Id);
 
-			tileButton.Clicked +=
-				delegate
-				{
-					editor.DefocusAndAcceptOrReject ();
+			tileButton.Clicked += delegate
+			{
+				editor.DefocusAndAcceptOrReject ();
 					
-					if (tileButton.GlyphShape == GlyphShape.ArrowRight)
-					{
-						tile.Controller = new ReferenceTileController (referenceController);
-						tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (clickSimulator.Name));
-					}
+				if (tileButton.GlyphShape == GlyphShape.ArrowRight)
+				{
+					tile.Controller = new ReferenceTileController (referenceController);
+					tile.ToggleSubView (controller.Orchestrator, controller, new TileNavigationPathElement (clickSimulator.Name));
+				}
 
-					if (tileButton.GlyphShape == GlyphShape.Plus)
+				if (tileButton.GlyphShape == GlyphShape.Plus)
+				{
+					if (referenceController.HasCreator)
 					{
-						if (referenceController.HasCreator)
+						if (tile.IsSelected)
 						{
-							if (tile.IsSelected)
-							{
-								tile.CloseSubView (controller.Orchestrator);
-							}
-							else
-							{
-								var newValue  = referenceController.CreateNewValue (controller.DataContext);
-								var newEntity = newValue.GetEditionEntity ();
-								var refEntity = newValue.GetReferenceEntity ();
-								var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
-								tile.OpenSubView (controller.Orchestrator, controller, newController);
-								editor.SelectedItemIndex = editor.Items.Add (refEntity);
-								valueSetter (refEntity);
+							tile.CloseSubView (controller.Orchestrator);
+						}
+						else
+						{
+							var newValue  = referenceController.CreateNewValue (controller.DataContext);
+							var newEntity = newValue.GetEditionEntity ();
+							var refEntity = newValue.GetReferenceEntity ();
+							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
+							tile.OpenSubView (controller.Orchestrator, controller, newController);
+							editor.SelectedItemIndex = editor.Items.Add (refEntity);
+							valueSetter (refEntity);
 
-								new AutoCompleteItemSynchronizer (editor, newController, refEntity);
-							}
+							new AutoCompleteItemSynchronizer (editor, newController, refEntity);
 						}
 					}
-				};
+				}
+			};
 
 			return editor;
 		}
@@ -1165,20 +1160,48 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality)
+		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
 		{
+			tile.AllowSelection = true;
+
+			var header = new FrameBox
+			{
+				Parent = tile.Container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, UIBuilder.RightMargin, 2, UIBuilder.MarginUnderTextField),
+				TabIndex = ++this.tabIndex,
+			};
+
 			if (!string.IsNullOrEmpty (label))
 			{
 				var staticText = new StaticText
 				{
-					Parent = tile.Container,
+					Parent = header,
 					Text = string.Concat (label, " :"),
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
+					Dock = DockStyle.Fill,
 				};
 
 				this.ContentListAdd (staticText);
+			}
+
+			if (createTileButton)
+			{
+				tileButton = new GlyphButton
+				{
+					Parent = header,
+					GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
+					PreferredHeight = 20,
+					Dock = DockStyle.Right,
+					Margins = new Margins (3, 0, 0, 0),
+					AutoFocus = false,
+					TabIndex = ++this.tabIndex,
+				};
+			}
+			else
+			{
+				tileButton = null;
 			}
 
 			var widget = new Widgets.ItemPicker
@@ -1338,42 +1361,40 @@ namespace Epsitec.Cresus.Core
 
 		private static void CreateTitleTileHandler(TitleTile titleTile, CoreViewController controller)
 		{
-			titleTile.Clicked +=
-				delegate
+			titleTile.Clicked += delegate
+			{
+				if (titleTile.Items.Count == 1)
 				{
-					if (titleTile.Items.Count == 1)
+					//	Si on a cliqué dans le conteneur TitleTile d'un seul SummaryTile, il
+					//	faut faire comme si on avait cliqué dans ce dernier.
+					var summaryTile = titleTile.Items[0] as SummaryTile;
+					if (summaryTile != null)
 					{
-						//	Si on a cliqué dans le conteneur TitleTile d'un seul SummaryTile, il
-						//	faut faire comme si on avait cliqué dans ce dernier.
-						var summaryTile = titleTile.Items[0] as SummaryTile;
-						if (summaryTile != null)
+						if (!summaryTile.IsClickForDrag)
 						{
-							if (!summaryTile.IsClickForDrag)
-							{
-								summaryTile.ToggleSubView (controller.Orchestrator, controller);
-							}
+							summaryTile.ToggleSubView (controller.Orchestrator, controller);
 						}
 					}
-				};
+				}
+			};
 		}
 
 		private static void CreateComboHandler(Widget widget, System.Action<string> valueSetter, System.Func<string, bool> validator, System.Func<string, string> converter)
 		{
-			widget.TextChanged +=
-				delegate
-				{
-					string text = converter (widget.Text);
+			widget.TextChanged += delegate
+			{
+				string text = converter (widget.Text);
 
-					if (validator == null || validator (text))
-					{
-						valueSetter (text);
-						widget.SetError (false);
-					}
-					else
-					{
-						widget.SetError (true);
-					}
-				};
+				if (validator == null || validator (text))
+				{
+					valueSetter (text);
+					widget.SetError (false);
+				}
+				else
+				{
+					widget.SetError (true);
+				}
+			};
 		}
 
 		#region IDisposable Members

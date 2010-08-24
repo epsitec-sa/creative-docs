@@ -64,12 +64,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<ArticleGroupEntity>
 			{
 				CollectionValueGetter    = () => this.Entity.ArticleGroups,
-				//?ReferenceController      = new ReferenceController (() => this.Entity.ArticleGroups, creator: this.CreateNewArticleGroups),
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
-			builder.CreateEditionDetailedItemPicker ("Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any);
+			//?builder.CreateEditionDetailedItemPicker ("Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any);
+			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Edition, 2);
 		}
 
 		private void CreateUIMain2(UIBuilder builder)
@@ -97,15 +97,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
 			var controller = new SelectionController<UnitOfMeasureEntity>
-				{
-					ValueGetter         = () => this.Entity.BillingUnit,
-					ValueSetter         = x => this.Entity.BillingUnit = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
+			{
+				ValueGetter         = () => this.Entity.BillingUnit,
+				ValueSetter         = x => this.Entity.BillingUnit = x.WrapNullEntity (),
+				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
-					ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
-				};
+				ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
+			};
 
 			builder.CreateAutoCompleteTextField ("Unité", controller);
 		}
@@ -113,25 +113,19 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUICategory(UIBuilder builder)
 		{
 			var controller = new SelectionController<ArticleCategoryEntity>
-				{
-					ValueGetter         = () => this.Entity.ArticleCategory,
-					ValueSetter         = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
-					ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
+			{
+				ValueGetter         = () => this.Entity.ArticleCategory,
+				ValueSetter         = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
+				ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
 
-					ToTextArrayConverter     = x => new string[] { x.Name },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				};
+				ToTextArrayConverter     = x => new string[] { x.Name },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
 
 			builder.CreateAutoCompleteTextField ("Catégorie", controller);
 		}
 
-
-		private NewEntityReference CreateNewArticleGroups(DataContext context)
-		{
-			var title = context.CreateEmptyEntity<ArticleGroupEntity> ();
-			return title;
-		}
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{

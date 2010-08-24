@@ -61,16 +61,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			this.selectedCountry = this.Entity.Country;
 
-			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
-				new SelectionController<CountryEntity>
-				{
-					ValueGetter         = () => this.Entity.Country,
-					ValueSetter         = x  => this.Entity.Country = x.WrapNullEntity (),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
+			var controller = new SelectionController<CountryEntity>
+			{
+				ValueGetter         = () => this.Entity.Country,
+				ValueSetter         = x  => this.Entity.Country = x.WrapNullEntity (),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
-					ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
-				});
+				ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
+			};
+
+			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
 		}
 
 		private void CreateUIMain(UIBuilder builder)
