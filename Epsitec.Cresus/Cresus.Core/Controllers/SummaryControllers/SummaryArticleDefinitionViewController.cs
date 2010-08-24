@@ -27,7 +27,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIArticleDefinition (data);
-				this.CreateUIGroup             (data);
 				this.CreateUIParameters        (data);
 				this.CreateUIPrices            (data);
 				this.CreateUIComments          (data);
@@ -42,33 +41,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "ArticleDefinition",
 					IconUri				= "Data.ArticleDefinition",
-					Title				= TextFormatter.FormatText ("Article"),
+					Title				= TextFormatter.FormatText ("Article", "(", string.Join (", ", this.Entity.ArticleGroups.Select (g => g.Name)), ")"),
 					CompactTitle		= TextFormatter.FormatText ("Article"),
 					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
 					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
 					EntityMarshaler		= this.EntityMarshaler,
 				});
-		}
-
-		private void CreateUIGroup(SummaryDataItems data)
-		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "ArticleGroup",
-					IconUri		 = "Data.ArticleGroup",
-					Title		 = TextFormatter.FormatText ("Groupes d'articles"),
-					CompactTitle = TextFormatter.FormatText ("Groupes"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroup", data.Controller, this.DataContext);
-
-			template.DefineText        (x => TextFormatter.FormatText (x.Name));
-			template.DefineCompactText (x => TextFormatter.FormatText (x.Name));
-
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleGroups, template));
 		}
 
 		private void CreateUIParameters(SummaryDataItems data)
