@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 	
-		static int CompareItems(T a, T b)
+		public static int CompareItems(T a, T b)
 		{
 			var ra = a as Entities.IItemRank;
 			var rb = b as Entities.IItemRank;
@@ -171,6 +171,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			List<T> list = new List<T> (this.PossibleItemsGetter ());
 
+			//	Si les entités gérées implémentent l'interface IItemRank, on les trient
+			//	selon les propriétés Rank.
 			if (typeof (T).GetInterfaces ().Contains (typeof (Entities.IItemRank)))
 			{
 				list.Sort (SelectionController<T>.CompareItems);

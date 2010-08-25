@@ -63,31 +63,42 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
 		public bool SetItemIndex(int newIndex)
 		{
-			var collection = this.items as IEntityCollection;
-
-			if ((this.items.IsReadOnly) ||
-				(collection == null))
+			if (this.items.IsReadOnly)
 			{
 				return false;
 			}
 
 			int oldIndex  = this.GetItemIndex ();
-			int itemCount = this.GetItemCount ();
+
+			if (newIndex == oldIndex || newIndex == oldIndex+1)
+			{
+				return false;
+			}
+
+			var collection = this.items as IEntityCollection;
+
+			if (collection == null)
+			{
+				//	Si les entités gérées implémentent l'interface IItemRank, il faut mettre à jour
+				//	les propriétés Rank.
+				if (this.item.GetType ().GetInterfaces ().Contains (typeof (Entities.IItemRank)))
+				{
+					this.UpdateItemRank (newIndex);
+					return true;
+				}
+
+				return false;
+			}
 
 			//	Be careful: the caller is specifying an index relative to the CompatibleItems
 			//	collection, not relative to all items. We have to map from the index in the
 			//	filtered array to the one in the real array :
-			
+
+			int itemCount = this.GetItemCount ();
 			int realOldIndex = this.items.IndexOf (this.item);
 			int realNewIndex = newIndex == itemCount ? this.items.Count : this.items.IndexOf (this.CompatibleItems.ElementAt (newIndex));
 
 			System.Diagnostics.Debug.Assert (realOldIndex >= 0);
-
-			if ((newIndex == oldIndex) ||
-				(newIndex == oldIndex+1))
-			{
-				return false;
-			}
 
 			using (collection.SuspendNotifications ())
 			{
@@ -106,6 +117,45 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 
 			return true;
+		}
+
+		private void UpdateItemRank(int newIndex)
+		{
+			int oldIndex  = this.GetItemIndex ();
+			int itemCount = this.GetItemCount ();
+
+			var list = this.CompatibleItems.ToList ();
+			for (int i = 0; i < list.Count; i++)
+			{
+				var entity = list[i] as Entities.IItemRank;
+
+				if (entity != null)
+				{
+					if (newIndex > oldIndex)  // déplacement vers le bas ?
+					{
+						if (entity.Rank == oldIndex)
+						{
+							entity.Rank = newIndex-1;
+						}
+						else if (entity.Rank > oldIndex && entity.Rank < newIndex)
+						{
+							entity.Rank--;
+						}
+					}
+
+					if (newIndex < oldIndex)  // déplacement vers le haut ?
+					{
+						if (entity.Rank == oldIndex)
+						{
+							entity.Rank = newIndex;
+						}
+						else if (entity.Rank >= newIndex && entity.Rank < oldIndex)
+						{
+							entity.Rank++;
+						}
+					}
+				}
+			}
 		}
 
 		
