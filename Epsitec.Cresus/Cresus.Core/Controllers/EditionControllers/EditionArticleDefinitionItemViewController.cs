@@ -152,9 +152,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		public static IList<ArticleGroupEntity> AllArticleGroups(this ArticleDefinitionEntity entity)
 		{
-			return ArticleDefinitionEntityExtension.allArticleGroups;
-		}
+			List<ArticleGroupEntity> list = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
+			list.Sort (SelectionController<ArticleGroupEntity>.CompareItems);
 
-		private static readonly IList<ArticleGroupEntity> allArticleGroups = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
+			return list;
+		}
 	}
 }
