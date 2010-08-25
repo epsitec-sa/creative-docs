@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -65,12 +65,8 @@ namespace Epsitec.Common.Widgets
 			public const long Stop			= Res.CommandIds.Stop;
 			public const long Refresh		= Res.CommandIds.Refresh;
 		}
-		
-		//	Référence: http://winfx.msdn.microsoft.com/library/default.asp?url=/library/en-us/cpref/html/T_System_Windows_Input_ApplicationCommands_Members.asp
 
-		
-		public static readonly string	ContextMenu		= "ContextMenu";
-		public static readonly string	CorrectionList	= "CorrectionList";
-		public static readonly string	Replace			= "Replace";
+		//	See also <http://msdn.microsoft.com/en-us/library/system.windows.input.applicationcommands_members.aspx> for
+		//	the list of application commands defined in WPF
 	}
 }

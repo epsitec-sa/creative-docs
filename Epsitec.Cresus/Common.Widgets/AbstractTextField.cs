@@ -1,10 +1,13 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets.Behaviors;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -12,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextField implémente la ligne éditable, tout en permettant
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
 	/// </summary>
-	public abstract class AbstractTextField : Widget, Types.IReadOnly
+	public abstract partial class AbstractTextField : Widget, Types.IReadOnly
 	{
 		public AbstractTextField()
 		{
@@ -30,25 +33,18 @@ namespace Epsitec.Common.Widgets
 			this.CreateTextLayout ();
 
 			this.navigator = new TextNavigator (this, base.TextLayout);
-			this.navigator.AboutToChange += this.HandleNavigatorAboutToChange;
-			this.navigator.TextDeleted += this.HandleNavigatorTextDeleted;
-			this.navigator.TextInserted += this.HandleNavigatorTextInserted;
+			
+			this.navigator.AboutToChange  += this.HandleNavigatorAboutToChange;
+			this.navigator.TextDeleted    += this.HandleNavigatorTextDeleted;
+			this.navigator.TextInserted   += this.HandleNavigatorTextInserted;
 			this.navigator.CursorScrolled += this.HandleNavigatorCursorScrolled;
-			this.navigator.CursorChanged += this.HandleNavigatorCursorChanged;
-			this.navigator.StyleChanged += this.HandleNavigatorStyleChanged;
+			this.navigator.CursorChanged  += this.HandleNavigatorCursorChanged;
+			this.navigator.StyleChanged   += this.HandleNavigatorStyleChanged;
 
 			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior (this);
-			this.OnCursorChanged (true);
+//?			this.OnCursorChanged (true);
 
-			CommandDispatcher dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
-			CommandContext    context    = new CommandContext (true);
-
-			dispatcher.AutoForwardCommands = true;
-			dispatcher.RegisterController (new CommandController (this));
-
-			CommandDispatcher.SetDispatcher (this, dispatcher);
-			CommandContext.SetContext (this, context);
-
+			this.CreateCommandController ();
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 
@@ -117,6 +113,12 @@ namespace Epsitec.Common.Widgets
 					this.OnReadOnlyChanged ();
 				}
 			}
+		}
+
+		public bool IsFormattedText
+		{
+			get;
+			set;
 		}
 
 		public bool AcceptsNullValue
@@ -1265,6 +1267,18 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
+		private void CreateCommandController()
+		{
+			var dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
+			var context    = new CommandContext (true);
+
+			dispatcher.AutoForwardCommands = true;
+			dispatcher.RegisterController (new CommandController (this));
+
+			CommandDispatcher.SetDispatcher (this, dispatcher);
+			CommandContext.SetContext (this, context);
+		}
+
 		private void EnableScroll(Drawing.Point pos)
 		{
 			ScrollDirection   dir = ScrollDirection.None;
@@ -1607,6 +1621,8 @@ namespace Epsitec.Common.Widgets
 			this.ResetCursor ();
 			this.Invalidate ();
 
+			System.Diagnostics.Debug.Assert (this.navigator != null);
+			
 			if (this.navigator == null)
 				return;
 
@@ -2144,156 +2160,6 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
-		#region CommandController Class
-
-		private sealed class CommandController
-		{
-			public CommandController(AbstractTextField host)
-			{
-				this.host = host;
-			}
-
-
-			[Command (Res.CommandIds.Copy)]
-			public void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				string value = this.host.Selection;
-
-				if (value == "")
-				{
-					value = this.host.Text;
-				}
-
-				ClipboardWriteData data = new ClipboardWriteData ();
-
-				data.WriteTextLayout (value);
-				data.WriteHtmlFragment (value);
-				Clipboard.SetData (data);
-
-				e.Executed = true;
-			}
-
-			[Command (Res.CommandIds.Cut)]
-			public void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				if (this.host.IsReadOnly)
-				{
-					return;
-				}
-
-				string value = this.host.Selection;
-
-				if (value == "")
-				{
-					value = this.host.Text;
-					this.host.SelectAll ();
-				}
-
-				ClipboardWriteData data = new ClipboardWriteData ();
-
-				data.WriteTextLayout (value);
-				data.WriteHtmlFragment (value);
-				Clipboard.SetData (data);
-
-				this.host.TextNavigator.DeleteSelection ();
-				this.host.SimulateEdited ();
-
-				e.Executed = true;
-			}
-
-			[Command (Res.CommandIds.Delete)]
-			public void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				if (this.host.IsReadOnly)
-				{
-					return;
-				}
-
-				string value = this.host.Selection;
-
-				if (value == "")
-				{
-					this.host.SelectAll ();
-				}
-
-				this.host.TextNavigator.DeleteSelection ();
-				this.host.SimulateEdited ();
-
-				e.Executed = true;
-			}
-
-			[Command (Res.CommandIds.SelectAll)]
-			public void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				this.host.SelectAll ();
-
-				e.Executed = true;
-			}
-
-			[Command (Res.CommandIds.Paste)]
-			public void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				if (this.host.IsReadOnly)
-				{
-					return;
-				}
-
-				ClipboardReadData data = Clipboard.GetData ();
-
-				string textLayout = data.ReadTextLayout ();
-				string html        = null;
-
-				if (textLayout != null)
-				{
-					html = textLayout;
-				}
-				else
-				{
-					html = data.ReadHtmlFragment ();
-
-					if (html != null)
-					{
-						html = Clipboard.ConvertHtmlToSimpleXml (html);
-					}
-					else
-					{
-						html = TextConverter.ConvertToTaggedText (data.ReadText ());
-					}
-				}
-
-				if ((html != null) &&
-					(html.Length > 0))
-				{
-					if (this.host.TextFieldStyle != TextFieldStyle.Multiline)
-					{
-						html = html.Replace ("<br/>", " ");
-					}
-
-					this.host.Selection = html;
-					this.host.SimulateEdited ();
-
-					e.Executed = true;
-				}
-			}
-
-			[Command (Res.CommandIds.UseDefaultValue)]
-			public void CommandUseDefaultValue(CommandDispatcher dispatcher, CommandEventArgs e)
-			{
-				if (this.host.IsReadOnly)
-				{
-					return;
-				}
-
-				this.host.StartEdition ();
-				this.host.navigator.ReplaceWithText (ResourceBundle.Field.Null);
-			}
-
-
-			private readonly AbstractTextField host;
-		}
-
-		#endregion
-
 
 		public event EventHandler TextEdited
 		{
@@ -2496,9 +2362,9 @@ namespace Epsitec.Common.Widgets
 		private bool							swallowReturn;
 		private bool							swallowEscape;
 
-		private TextNavigator					navigator;
+		private readonly TextNavigator			navigator;
 
-		private Behaviors.CopyPasteBehavior		copyPasteBehavior;
+		private readonly CopyPasteBehavior		copyPasteBehavior;
 		private VMenu							contextMenu;
 
 		private static Timer					flashTimer;
