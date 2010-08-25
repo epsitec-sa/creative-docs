@@ -135,8 +135,18 @@ namespace Epsitec.Common.Widgets
 		{
 			CommandDispatcherChain that = null;
 
+			var window = visual.Window;
+
+#if true
+			if ((window != null) &&
+				(window.FocusedWidget != null))
+			{
+				CommandDispatcherChain.BuildChain (window.FocusedWidget, ref that);
+			}
+#endif
+			
 			CommandDispatcherChain.BuildChain (visual, ref that);
-			CommandDispatcherChain.BuildChain (visual.Window, ref that);
+			CommandDispatcherChain.BuildChain (window, ref that);
 
 			return that;
 		}
