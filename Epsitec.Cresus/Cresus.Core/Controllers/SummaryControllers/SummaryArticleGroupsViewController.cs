@@ -67,6 +67,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			var group = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
 
+			group.Rank = this.Entity.AllArticleGroups ().Count;
+
 			return group;
 		}
 
