@@ -99,10 +99,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
 			};
 
-			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Cut,  dx: RibbonViewController.buttonSmallWidth));
-			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Copy, dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Cut,  dx: RibbonViewController.buttonSmallWidth));
+			frame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Copy, dx: RibbonViewController.buttonSmallWidth));
 
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Clipboard.Paste));
+			section.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Paste));
 		}
 
 		private void CreateRibbonFontSection()
