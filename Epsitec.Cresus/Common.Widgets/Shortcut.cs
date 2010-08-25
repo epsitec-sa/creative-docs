@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using System.Collections.Generic;
@@ -19,22 +19,22 @@ namespace Epsitec.Common.Widgets
 		
 		public Shortcut(KeyCode code)
 		{
-			this.KeyCode = code;
+			this.keyCode = code;
 		}
 		
 		public Shortcut(char code, ModifierKeys modifier)
 		{
 			if ((code >= 'a') && (code <= 'z'))
 			{
-				this.KeyCode = (KeyCode)(KeyCode.AlphaA + code - 'a' + (int) modifier);
+				this.keyCode = (KeyCode) (KeyCode.AlphaA + code - 'a' + (int) modifier);
 			}
 			else if ((code >= 'A') && (code <= 'Z'))
 			{
-				this.KeyCode = (KeyCode)(KeyCode.AlphaA + code - 'A' + (int) modifier);
+				this.keyCode = (KeyCode) (KeyCode.AlphaA + code - 'A' + (int) modifier);
 			}
 			else if ((code >= '0') && (code <= '9'))
 			{
-				this.KeyCode = (KeyCode)(KeyCode.Digit0 + code - '0' + (int) modifier);
+				this.keyCode = (KeyCode) (KeyCode.Digit0 + code - '0' + (int) modifier);
 			}
 			else
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets or sets the key code for this shortcut.
 		/// </summary>
 		/// <value>The key code.</value>
-		public KeyCode					KeyCode
+		public KeyCode KeyCode
 		{
 			get
 			{
@@ -69,11 +69,11 @@ namespace Epsitec.Common.Widgets
 				if (this.keyCode != value)
 				{
 					string oldValue = this.keyCode.ToString ();
-					
+
 					this.keyCode = value;
 
 					string newValue = this.keyCode.ToString ();
-					
+
 					this.InvalidateProperty (Shortcut.KeyCodeProperty, oldValue, newValue);
 				}
 			}
@@ -397,6 +397,12 @@ namespace Epsitec.Common.Widgets
 			return shortcuts;
 		}
 
+		private static object GetKeyCodeValue(DependencyObject obj)
+		{
+			Shortcut that = (Shortcut) obj;
+			return that.KeyCode.ToString ();
+		}
+
 		private static void SetKeyCodeValue(DependencyObject obj, object value)
 		{
 			Shortcut that = (Shortcut) obj;
@@ -411,18 +417,12 @@ namespace Epsitec.Common.Widgets
 				that.KeyCode = KeyCode.None;
 			}
 		}
-
-		private static object GetKeyCodeValue(DependencyObject obj)
-		{
-			Shortcut that = (Shortcut) obj;
-			return that.KeyCode.ToString ();
-		}
-
+		
 		#endregion
 
-		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
-		public static readonly DependencyProperty KeyCodeProperty = DependencyProperty.Register ("KeyCode", typeof (string), typeof (Shortcut), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
+		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached<Shortcut> ("Shortcuts", typeof (Collections.ShortcutCollection), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
+		public static readonly DependencyProperty KeyCodeProperty   = DependencyProperty.Register<Shortcut> ("KeyCode", typeof (string), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
 		
-		private KeyCode					keyCode;
+		private KeyCode			keyCode;
 	}
 }

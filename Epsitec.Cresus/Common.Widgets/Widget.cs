@@ -88,6 +88,7 @@ namespace Epsitec.Common.Widgets
 
 					Platform.Window.Initialize ();
 					Res.Initialize ();
+					ApplicationCommands.Initialize ();
 
 					Support.ImageProvider.Initialize ();
 				});
