@@ -37,6 +37,8 @@ namespace Epsitec.Designer
 			//	Juste pour forcer le chargement des ressources manifest:... correspondantes.
 			var loadCresusCoreApplication = typeof (Epsitec.Cresus.Core.CoreApplication);
 			var loadCresusGraphApplication = typeof (Epsitec.Cresus.Graph.GraphApplication);
+			var loadCresusDocumentsApplication = typeof (Epsitec.App.CresusDocuments.Application);
+			var loadCommonDocumentEditorApplication = typeof (Epsitec.Common.DocumentEditor.Application);
 
 			List<string> addPaths = new List<string> ();
 			bool noDefaultPaths = false;
