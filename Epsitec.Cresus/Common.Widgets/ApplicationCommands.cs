@@ -9,6 +9,10 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public static class ApplicationCommands
 	{
+		internal static void Initialize()
+		{
+		}
+
 		public static readonly Command Cut			= Res.Commands.Cut;
 		public static readonly Command Copy			= Res.Commands.Copy;
 		public static readonly Command Paste		= Res.Commands.Paste;

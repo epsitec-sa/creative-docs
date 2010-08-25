@@ -575,10 +575,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		
+		public static DependencyProperty Register<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
+			where T : DependencyObject
+		{
+			return DependencyProperty.Register (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
+		}
+
 		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.Register (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
+		
 		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
 			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
@@ -587,11 +595,19 @@ namespace Epsitec.Common.Types
 			
 			return dp;
 		}
+
 		
+		public static DependencyProperty RegisterAttached<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
+			where T : DependencyObject
+		{
+			return DependencyProperty.RegisterAttached (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
+		}
+
 		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
+		
 		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
 			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
@@ -607,11 +623,19 @@ namespace Epsitec.Common.Types
 			
 			return dp;
 		}
+
 		
+		public static DependencyProperty RegisterReadOnly<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
+			where T : DependencyObject
+		{
+			return DependencyProperty.RegisterReadOnly (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
+		}
+
 		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.RegisterReadOnly (name, propertyType, ownerType, new DependencyPropertyMetadata ());
 		}
+		
 		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
 			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
