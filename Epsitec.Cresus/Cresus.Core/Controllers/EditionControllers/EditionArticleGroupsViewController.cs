@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	[ControllerSubType (2)]
+	[ControllerSubType (3)]
 	public class EditionArticleGroupsViewController : EditionViewController<Entities.ArticleDefinitionEntity>
 	{
 		public EditionArticleGroupsViewController(string name, Entities.ArticleDefinitionEntity entity)

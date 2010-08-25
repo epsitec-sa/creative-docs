@@ -861,16 +861,16 @@ namespace Epsitec.Cresus.Core
 			var tile = this.CreateEditionTile ();
 
 			Button tileButton;
-			var combo = this.CreateDetailedItemPicker (tile, label, cardinality, true, out tileButton);
+			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, true, out tileButton);
 
-			controller.Attach (combo);
+			controller.Attach (picker);
 
 			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
 				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
 			{
-				if (combo.SelectionCount == 0)  // aucune sélection ?
+				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
-					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+					picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
 				}
 			}
 
@@ -895,7 +895,7 @@ namespace Epsitec.Cresus.Core
 				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
 			};
 
-			return combo;
+			return picker;
 		}
 
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
@@ -904,16 +904,16 @@ namespace Epsitec.Cresus.Core
 			var tile = this.CreateEditionTile ();
 
 			Button tileButton;
-			var combo = this.CreateDetailedItemPicker (tile, label, cardinality, false, out tileButton);
+			var picker = this.CreateDetailedItemPicker (tile, label, cardinality, false, out tileButton);
 
-			controller.Attach (combo);
+			controller.Attach (picker);
 
 			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
 				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
 			{
-				if (combo.SelectionCount == 0)  // aucune sélection ?
+				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
-					combo.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
+					picker.AddSelection (Enumerable.Range (0, 1));  // sélectionne le premier
 				}
 			}
 
@@ -929,7 +929,7 @@ namespace Epsitec.Cresus.Core
 			};
 #endif
 
-			return combo;
+			return picker;
 		}
 
 
