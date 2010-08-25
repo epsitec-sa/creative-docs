@@ -68,8 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
-			//?builder.CreateEditionDetailedItemPicker ("Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any);
-			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Edition, 2);
+			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
 		}
 
 		private void CreateUIMain2(UIBuilder builder)
@@ -137,5 +136,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return context.CreateEmptyEntity<ArticleCategoryEntity> ();
 		}
+	}
+
+
+	/// <summary>
+	/// Méthode d'extension pour l'entité ArticleDefinitionEntity, qui ajoute une méthode AllArticleGroups()
+	/// contenant toutes les définitions de groupe (et pas seulement celles utilisées par l'article).
+	/// Il n'est hélas pas possible de définir une propriété d'extension, mais seulement une méthode.
+	/// D'où l'écriture AllArticleGroups() avec les parenthèses.
+	/// Donc:
+	/// article.ArticleGroups       -> liste des ArticleGroupEntity de cet article
+	/// article.AllArticleGroups () -> liste de tous les ArticleGroupEntity connus
+	/// </summary>
+	public static class ArticleDefinitionEntityExtension
+	{
+		public static IList<ArticleGroupEntity> AllArticleGroups(this ArticleDefinitionEntity entity)
+		{
+			return ArticleDefinitionEntityExtension.allArticleGroups;
+		}
+
+		private static readonly IList<ArticleGroupEntity> allArticleGroups = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
 	}
 }

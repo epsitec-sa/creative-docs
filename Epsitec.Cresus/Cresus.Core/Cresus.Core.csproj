@@ -120,6 +120,7 @@
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTotalInvoiceDocumentViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupsViewController.cs" />
     <Compile Include="Data\AffairRepository.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
