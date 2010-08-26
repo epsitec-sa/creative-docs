@@ -121,6 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void UpdateItemRank(int newIndex)
 		{
+			//	Modifie les propriétés Rank pour numéroter toutes les entités de 0 à n.
 			int oldIndex  = this.GetItemIndex ();
 			int itemCount = this.GetItemCount ();
 
