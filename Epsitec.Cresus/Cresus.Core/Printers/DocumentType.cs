@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddPrinterBase()
 		{
 			//	Ajoute l'imprimante de base, qui devrait toujours exister.
-			this.printersToUse.Add (new PrinterToUse ("Base", "Pour l'ensemble des pages :"));
+			this.printersToUse.Add (new PrinterToUse ("All", "Pour l'ensemble des pages :"));
 		}
 
 		public void AddPrinterFirst()

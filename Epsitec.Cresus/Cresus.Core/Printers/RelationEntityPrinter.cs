@@ -68,9 +68,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void BuildSections()
+		public override void BuildSections(string printerCode)
 		{
-			base.BuildSections ();
+			base.BuildSections (printerCode);
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{

@@ -576,19 +576,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 					string settings = this.GetSettings (false, string.Concat ("Printer.", printerToUse.Code));
 					if (!string.IsNullOrEmpty (settings))
 					{
-						field.Text = settings;
-						printerToUse.LogicalPrinterName = settings;
+						Printer p = this.printerList.Where (x => x.LogicalName == settings).FirstOrDefault ();
+
+						if (p != null)
+						{
+							field.Text = p.GetNiceDescription ();
+							printerToUse.LogicalPrinterName = p.LogicalName;
+						}
 					}
 
 					foreach (var printer in this.printerList)
 					{
-						field.Items.Add (printer.LogicalName, printer.GetNiceDescription ());
+						field.Items.Add (printer.LogicalName, printer.GetNiceDescription ());  // key, value
 					}
 
 					field.SelectedItemChanged += delegate
 					{
 						PrinterToUse p = documentType.GetPrinterToUse (field.Name);
-						p.LogicalPrinterName = field.Text;
+						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 
 						this.SetSettings (false, string.Concat("Printer.", p.Code), p.LogicalPrinterName);
 

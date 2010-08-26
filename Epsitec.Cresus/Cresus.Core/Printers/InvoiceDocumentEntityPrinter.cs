@@ -133,14 +133,14 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void BuildSections()
+		public override void BuildSections(string printerCode)
 		{
-			base.BuildSections ();
+			base.BuildSections (printerCode);
 			this.documentContainer.Clear ();
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Offer)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage ();
+				int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Order)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage ();
+				int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.OrderAcknowledge)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage ();
+				int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var groups = this.GetProdGroups ();
 				foreach (var group in groups)
 				{
-					int firstPage = this.documentContainer.PrepareEmptyPage ();
+					int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 					this.BuildHeader (null, group);
 					this.BuildArticles (group);
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage ();
+				int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
-					int firstPage = this.documentContainer.PrepareEmptyPage ();
+					int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.entity.BillingDetails.Count != 0)
 				{
 					var billingDetails = this.entity.BillingDetails[0];
-					int firstPage = this.documentContainer.PrepareEmptyPage ();
+					int firstPage = this.documentContainer.PrepareEmptyPage ("First");
 
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
@@ -222,6 +222,8 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildReportFooters (firstPage);
 				}
 			}
+
+			this.documentContainer.KeepOnlyPrinterCodePages (printerCode);
 		}
 
 		public override void PrintCurrentPage(IPaintPort port)
@@ -1317,7 +1319,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildOutsideEsr(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			this.documentContainer.PrepareEmptyPage ();
+			this.documentContainer.PrepareEmptyPage ("BV");
 
 			this.BuildEsr (billingDetails);
 		}

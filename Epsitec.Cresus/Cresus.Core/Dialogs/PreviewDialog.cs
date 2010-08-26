@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		public void Update()
 		{
 			this.entityPrinter.Clear ();
-			this.entityPrinter.BuildSections ();
+			this.entityPrinter.BuildSections (null);
 
 			this.entityPrinter.CurrentPage = System.Math.Min (this.entityPrinter.CurrentPage, this.entityPrinter.PageCount-1);
 			this.UpdatePage ();

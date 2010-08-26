@@ -24,10 +24,20 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class PageContainer
 	{
-		public PageContainer(int page)
+		public PageContainer(int page, string printerCode)
 		{
 			this.page = page;
+			this.printerCode = printerCode;
+
 			this.bands = new List<BandContainer> ();
+		}
+
+		public string PrinterCode
+		{
+			get
+			{
+				return this.printerCode;
+			}
 		}
 
 		public int Count
@@ -73,6 +83,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private readonly int					page;
+		private readonly string					printerCode;
 		private readonly List<BandContainer>	bands;
 	}
 }
