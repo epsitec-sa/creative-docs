@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
-					Text = FormattedText.Escape (printer.Name),
+					Text = FormattedText.Escape (printer.PhysicalName),
 				};
 
 				this.PopulateNameTextField (printer, nameTextField);
@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				nameTextField.TextChanged += (sender) =>
 				{
-					printer.Name = FormattedText.Unescape (nameTextField.Text);
+					printer.PhysicalName = FormattedText.Unescape (nameTextField.Text);
 					this.PopulateTraysTextField (printer, trayTextField);
 				};
 
@@ -338,9 +338,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			List<string> printerNames = PrinterSettings.InstalledPrinters.ToList ();
 
-			if (!printerNames.Contains (printer.Name) && printer.Name != "")
+			if (!printerNames.Contains (printer.PhysicalName) && printer.PhysicalName != "")
 			{
-				printerNames.Add (printer.Name);
+				printerNames.Add (printer.PhysicalName);
 			}
 
 			printerNames.ForEach (printerName => nameTextField.Items.Add (FormattedText.Escape (printerName)));
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			List<string> trayNames = new List<string> ();
 
-			PrinterSettings settings = PrinterSettings.FindPrinter (printer.Name);
+			PrinterSettings settings = PrinterSettings.FindPrinter (printer.PhysicalName);
 			
 			if (settings != null)
 			{
@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			string text = FormattedText.Unescape (nameTextField.Text);
 
 			bool empty = (text.Trim ().Length == 0);
-			bool duplicate = this.Printers.Count (printer => printer.Name == text) > 1;
+			bool duplicate = this.Printers.Count (printer => printer.PhysicalName == text) > 1;
 			
 			return !empty && !duplicate;
 		}
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		/// </remarks>
 		protected void AddPrinter()
 		{
-			this.Printers.Add (new Printer ("", "", true, 0, 0, ""));
+			this.Printers.Add (new Printer ("", "", "", true, 0, 0, ""));
 			this.SetupPrintersCellTable (this.DialogWindow);
 		}
 

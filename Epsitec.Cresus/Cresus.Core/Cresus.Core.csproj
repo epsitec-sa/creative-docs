@@ -123,6 +123,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="Data\AffairRepository.cs" />
+    <Compile Include="Dialogs\PrinterListDialog.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />

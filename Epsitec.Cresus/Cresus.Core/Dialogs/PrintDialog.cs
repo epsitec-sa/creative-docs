@@ -107,18 +107,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 				IsReadOnly = true,
 			};
 
-			this.printers.ForEach (printer => this.printerTextField.Items.Add (printer.Name));
+			this.printers.ForEach (printer => this.printerTextField.Items.Add (printer.PhysicalName));
 
 			string preferredPrinter;
 			bool preferredPrinterDefined = Settings.Load ().TryGetValue ("preferredPrinter", out preferredPrinter);
 
-			if (preferredPrinterDefined && this.printers.Any (printer => printer.Name == preferredPrinter))
+			if (preferredPrinterDefined && this.printers.Any (printer => printer.PhysicalName == preferredPrinter))
 			{
 				this.printerTextField.Text = FormattedText.Escape (preferredPrinter);
 			}
 			else
 			{
-				this.printerTextField.Text = FormattedText.Escape (this.printers[0].Name);
+				this.printerTextField.Text = FormattedText.Escape (this.printers[0].PhysicalName);
 			}
 
 			GroupBox nbPagesGroupBox = new GroupBox ()
@@ -228,8 +228,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void Print()
 		{
-			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
-			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.Name);
+			Printer printer = this.printers.Find (p => p.PhysicalName == FormattedText.Unescape (this.printerTextField.Text));
+			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.PhysicalName);
 			
 			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
 
@@ -259,18 +259,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				string message = string.Format ("Le bac ({0}) de l'imprimante séléctionnée ({1}) n'existe pas.", printer.Tray, printer.Name);
+				string message = string.Format ("Le bac ({0}) de l'imprimante séléctionnée ({1}) n'existe pas.", printer.Tray, printer.PhysicalName);
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 			}
 		}
 
 		protected void PrintEntities(Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
-			Printer printer = this.printers.Find (p => p.Name == FormattedText.Unescape (this.printerTextField.Text));
+			Printer printer = this.printers.Find (p => p.PhysicalName == FormattedText.Unescape (this.printerTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
 
 			printDocument.DocumentName = entityPrinter.JobName;
-			printDocument.SelectPrinter(printer.Name);
+			printDocument.SelectPrinter(printer.PhysicalName);
 			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.nbCopiesTextField.Text), CultureInfo.InvariantCulture);
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
