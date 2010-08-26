@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Choix du type de document";
-			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
+			this.window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			bool showOptions  = this.GetSettings (true, "ShowOptions" ) != "No";
 			bool showPrinters = this.GetSettings (true, "ShowPrinters") != "No";
@@ -561,6 +561,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, 10),
 						TabIndex = ++tabIndex,
+					};
+
+					button.Clicked += delegate
+					{
+						// TODO:
 					};
 
 					this.printerButtons.Add (button);

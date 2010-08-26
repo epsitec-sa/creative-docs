@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 			List<Printer> printers = new List<Printer>
 						(
 							from printer in Printer.Load ()
-							where PrinterSettings.InstalledPrinters.Contains (printer.Name)
+							where PrinterSettings.InstalledPrinters.Contains (printer.PhysicalName)
 							select printer
 						);
 			

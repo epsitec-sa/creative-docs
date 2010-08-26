@@ -30,15 +30,17 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Printer"/> class.
 		/// </summary>
-		/// <param name="name">The name of the printer.</param>
+		/// <param name="logicalName">The logical name of the printer.</param>
+		/// <param name="physicalName">The name of the printer.</param>
 		/// <param name="tray">The selected tray.</param>
 		/// <param name="horizontal">True for horizontal orientation, false for vertical orientation.</param>
 		/// <param name="xOffset">The offset on the x axis.</param>
 		/// <param name="yOffset">The offset on the y axis.</param>
 		/// <param name="comment">The comment on the printer.</param>
-		public Printer(string name, string tray, bool horizontal, double xOffset, double yOffset, string comment)
+		public Printer(string logicalName, string physicalName, string tray, bool horizontal, double xOffset, double yOffset, string comment)
 		{
-			this.Name = name;
+			this.LogicalName = logicalName;
+			this.PhysicalName = physicalName;
 			this.Tray = tray;
 			this.Horizontal = horizontal;
 			this.XOffset = xOffset;
@@ -47,10 +49,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
+		/// Gets or sets the logical name of the printer.
+		/// </summary>
+		/// <value>The logical name of the printer.</value>
+		public string LogicalName
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets the name of the <see cref="Printer"/>.
 		/// </summary>
 		/// <value>The name of the <see cref="Printer"/>.</value>
-		public string Name
+		public string PhysicalName
 		{
 			get;
 			set;
@@ -107,6 +119,89 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
+
+		public string GetNiceDescription()
+		{
+			return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalName, ",~", this.Tray, ")").ToString ();
+		}
+
+
+		public string GetSerializableContent()
+		{
+			return string.Concat
+				(
+					"LogicalName=",
+					this.LogicalName,
+
+					Printer.serializableSeparator,
+					
+					"PhysicalName=",
+					this.PhysicalName,
+
+					Printer.serializableSeparator,
+					
+					"Tray=",
+					this.Tray,
+
+					Printer.serializableSeparator,
+					
+					"XOffset=",
+					this.XOffset.ToString (CultureInfo.InvariantCulture),
+
+					Printer.serializableSeparator,
+					
+					"YOffset=",
+					this.YOffset.ToString (CultureInfo.InvariantCulture),
+
+					Printer.serializableSeparator,
+					
+					"Comment=",
+					this.Comment
+				);
+		}
+
+		public void SetSerializableContent(string content)
+		{
+			var list = content.Split (new string[] { Printer.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var line in list)
+			{
+				var words = line.Split (new string[] { "=" }, System.StringSplitOptions.None);
+
+				if (words.Length == 2)
+				{
+					switch (words[0])
+					{
+						case "LogicalName":
+							this.LogicalName = words[1];
+							break;
+
+						case "PhysicalName":
+							this.PhysicalName = words[1];
+							break;
+
+						case "Tray":
+							this.Tray = words[1];
+							break;
+
+						case "XOffset":
+							this.XOffset = double.Parse (words[1]);
+							break;
+
+						case "YOffset":
+							this.YOffset = double.Parse (words[1]);
+							break;
+
+						case "Comment":
+							this.Comment = words[1];
+							break;
+					}
+				}
+			}
+		}
+
+
+
 		/// <summary>
 		/// Saves a list of <see cref="Printer"/>s to the configuration file. The file is overwritten,
 		/// therefore all <see cref="Printer"/>s which might be in the file but not in printers will
@@ -121,7 +216,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				xPrinters.Add (
 					new XElement ("printer",
-						new XElement ("name", printer.Name),
+						new XElement ("name", printer.PhysicalName),
 						new XElement ("tray", printer.Tray),
 						new XElement ("horizontal", printer.Horizontal), 
 						new XElement ("xOffset", printer.XOffset.ToString (CultureInfo.InvariantCulture)),
@@ -165,7 +260,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return from xPrinter in xPrinters.Elements ("printer")
 				   select new Printer ()
 				   {
-					   Name = xPrinter.Element ("name").Value,
+					   PhysicalName = xPrinter.Element ("name").Value,
 					   Tray = xPrinter.Element ("tray").Value,
 					   Horizontal = bool.Parse(xPrinter.Element ("horizontal").Value),
 					   XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
@@ -179,6 +274,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		protected static readonly string configurationFile = string.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
 
+
+
+		private static readonly string serializableSeparator = "•";  // puce, unicode 2022
 	}
 
 }
