@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
 
-			entityPrinter.BuildSections ();
+			entityPrinter.BuildSections (null);
 
 			Transform transform;
 

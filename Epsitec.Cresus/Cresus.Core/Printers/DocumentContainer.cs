@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Clear()
 		{
 			this.pages.Clear ();
-			this.pages.Add (new PageContainer (0));  // crée la première page
+			this.pages.Add (new PageContainer (0, "First"));  // crée la première page
 
 			this.currentPage = 0;
 
@@ -83,14 +83,42 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Si la dernière page actuelle n'est pas vide, crée une nouvelle page vide.
 		/// </summary>
-		public int PrepareEmptyPage()
+		public int PrepareEmptyPage(string printerCode)
 		{
 			if (this.pages.Last ().Count > 0)  // dernière page non vide ?
 			{
-				this.AddNewPage ();
+				this.AddNewPage (printerCode);
 			}
 
 			return this.currentPage;
+		}
+
+
+		/// <summary>
+		/// Supprime toutes les pages utilisant un autre printerCode, et qui ne doivent donc
+		/// pas être imprimées sur l'imprimante concernée.
+		/// </summary>
+		/// <param name="printerCode"></param>
+		public void KeepOnlyPrinterCodePages(string printerCode)
+		{
+			if (string.IsNullOrEmpty (printerCode) || printerCode == "All")
+			{
+				return;
+			}
+
+			int i = 0;
+
+			while (i < this.pages.Count)
+			{
+				if (this.pages[i].PrinterCode == printerCode)
+				{
+					i++;
+				}
+				else
+				{
+					this.pages.RemoveAt (i);
+				}
+			}
 		}
 
 
@@ -131,7 +159,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.AddNewPage ();
+					this.AddNewPage ("Following");
 				}
 
 				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
@@ -160,7 +188,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
 			{
-				this.AddNewPage ();
+				this.AddNewPage ("Following");
 			}
 
 			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
@@ -225,9 +253,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void AddNewPage()
+		private void AddNewPage(string printerCode)
 		{
-			this.pages.Add (new PageContainer (this.pages.Count));  // crée une nouvelle page
+			this.pages.Add (new PageContainer (this.pages.Count, printerCode));  // crée une nouvelle page
 
 			this.currentPage++;
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
