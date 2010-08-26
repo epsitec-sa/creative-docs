@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.confirmationButtons = new List<ConfirmationButton> ();
 			this.optionButtons = new List<AbstractButton> ();
+			this.printerButtons = new List<AbstractButton> ();
 
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
 		}
@@ -63,10 +64,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.Text = "Choix du type de document";
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
-			bool showOptions = this.GetSettings (true, "ShowOptions") != "No";
-			bool showPreview = this.GetSettings (true, "ShowPreview") != "No";
+			bool showOptions  = this.GetSettings (true, "ShowOptions" ) != "No";
+			bool showPrinters = this.GetSettings (true, "ShowPrinters") != "No";
+			bool showPreview  = this.GetSettings (true, "ShowPreview" ) != "No";
 
-			this.UpdateWindowSize (showOptions, showPreview);
+			this.UpdateWindowSize (showOptions, showPrinters, showPreview);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -75,14 +77,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 		}
 
-		private void UpdateWindowSize(bool showOptions, bool showPreview)
+		private void UpdateWindowSize(bool showOptions, bool showPrinters, bool showPreview)
 		{
-			double width = 300;
+			double width = DocumentTypeDialog.panelWidth;
 			double height = (int) (width*297/210);  // place pour une page A4 verticale
 
 			int columns = 1;
 
 			if (showOptions)
+			{
+				columns++;
+			}
+
+			if (showPrinters)
 			{
 				columns++;
 			}
@@ -106,14 +113,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 10, 10, 40),
 			};
 
-			//	Crée les 3 panneaux côte-à-côte.
-			bool showOptions = this.GetSettings (true, "ShowOptions") != "No";
-			bool showPreview = this.GetSettings (true, "ShowPreview") != "No";
+			//	Crée les 4 panneaux côte-à-côte.
+			bool showOptions  = this.GetSettings (true, "ShowOptions" ) != "No";
+			bool showPrinters = this.GetSettings (true, "ShowPrinters") != "No";
+			bool showPreview  = this.GetSettings (true, "ShowPreview" ) != "No";
 
 			var leftFrame = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 300,
+				PreferredWidth = DocumentTypeDialog.panelWidth,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -125,7 +133,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DrawFrameState = FrameState.All,
 				DrawFrameWidth = 1,
 				Visibility = showOptions,
-				PreferredWidth = 300,
+				PreferredWidth = DocumentTypeDialog.panelWidth,
+				Dock = DockStyle.Left,
+				Margins = new Margins (10, 0, 0, 0),
+				Padding = new Margins (10),
+			};
+
+			this.printersFrame = new FrameBox
+			{
+				Parent = frame,
+				DrawFullFrame = true,
+				DrawFrameState = FrameState.All,
+				DrawFrameWidth = 1,
+				Visibility = showPrinters,
+				PreferredWidth = DocumentTypeDialog.panelWidth,
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 0, 0, 0),
 				Padding = new Margins (10),
@@ -187,6 +208,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 3,
 			};
 
+			this.showPrintersCheckButton = new CheckButton ()
+			{
+				Parent = footer,
+				Text = "Montrer les imprimantes",
+				PreferredWidth = 150,
+				ActiveState = showPrinters ? ActiveState.Yes : ActiveState.No,
+				Dock = DockStyle.Left,
+				TabIndex = 4,
+			};
+
 			this.previewCheckButton = new CheckButton ()
 			{
 				Parent = footer,
@@ -194,7 +225,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredWidth = 110,
 				ActiveState = showPreview ? ActiveState.Yes : ActiveState.No,
 				Dock = DockStyle.Left,
-				TabIndex = 4,
+				TabIndex = 5,
 			};
 
 			this.cancelButton = new Button ()
@@ -232,15 +263,22 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.showOptionsCheckButton.ActiveStateChanged += delegate
 			{
 				this.optionsFrame.Visibility = this.showOptionsCheckButton.ActiveState == ActiveState.Yes;
-				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
+				this.UpdateWindowSize (this.optionsFrame.Visibility, this.printersFrame.Visibility, this.previewFrame.Visibility);
 				this.SetSettings (true, "ShowOptions", this.optionsFrame.Visibility ? "Yes" : "No");
+			};
+
+			this.showPrintersCheckButton.ActiveStateChanged += delegate
+			{
+				this.printersFrame.Visibility = this.showPrintersCheckButton.ActiveState == ActiveState.Yes;
+				this.UpdateWindowSize (this.optionsFrame.Visibility, this.printersFrame.Visibility, this.previewFrame.Visibility);
+				this.SetSettings (true, "ShowPrinters", this.printersFrame.Visibility ? "Yes" : "No");
 			};
 
 			this.previewCheckButton.ActiveStateChanged += delegate
 			{
 				this.previewFrame.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
 				this.pagesInfo.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
-				this.UpdateWindowSize (this.optionsFrame.Visibility, this.previewFrame.Visibility);
+				this.UpdateWindowSize (this.optionsFrame.Visibility, this.printersFrame.Visibility, this.previewFrame.Visibility);
 				this.SetSettings (true, "ShowPreview", this.previewFrame.Visibility ? "Yes" : "No");
 			};
 
@@ -284,6 +322,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.acceptButton.Enable = this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None;
 
 			this.UpdateOptions ();
+			this.UpdatePrinters ();
 		}
 
 		private void UpdateOptions()
@@ -473,6 +512,63 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private void UpdatePrinters()
+		{
+			this.printersFrame.Children.Clear ();
+			this.printerButtons.Clear ();
+
+			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeSelected);
+			if (documentType != null)
+			{
+				if (documentType.PrintersToUse.Count == 0)
+				{
+					var title = new StaticText
+					{
+						Parent = this.printersFrame,
+						Text = "<font size=\"30\" color=\"#ffffff\"><i>Aucune imprimante</i></font>",
+						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+						Dock = DockStyle.Fill,
+					};
+				}
+				else
+				{
+					var title = new StaticText
+					{
+						Parent = this.printersFrame,
+						Text = "<font size=\"16\">Imprimantes et bacs à utiliser</font>",
+						ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
+						PreferredHeight = 30,
+						Dock = DockStyle.Top,
+					};
+				}
+
+				int tabIndex = 0;
+
+				foreach (var printer in documentType.PrintersToUse)
+				{
+					var label = new StaticText
+					{
+						Parent = this.printersFrame,
+						Text = printer.Description,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 10, 5),
+					};
+
+					var button = new Button
+					{
+						Parent = this.printersFrame,
+						Text = string.IsNullOrWhiteSpace (printer.PrinterName) ? "Choisir..." : printer.PrinterName,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, 10),
+						TabIndex = ++tabIndex,
+					};
+
+					this.printerButtons.Add (button);
+				}
+			}
+		}
+
+
 		private void UpdatePreview()
 		{
 			if (this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None)
@@ -582,6 +678,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		#endregion
 
 
+		private static readonly double panelWidth = 250;
+
 		private readonly CoreApplication				application;
 		private readonly IEnumerable<AbstractEntity>	entities;
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
@@ -590,9 +688,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Window									window;
 		private List<ConfirmationButton>				confirmationButtons;
 		private List<AbstractButton>					optionButtons;
+		private List<AbstractButton>					printerButtons;
 		private FrameBox								optionsFrame;
+		private FrameBox								printersFrame;
 		private Widgets.PreviewEntity					previewFrame;
 		private CheckButton								showOptionsCheckButton;
+		private CheckButton								showPrintersCheckButton;
 		private CheckButton								previewCheckButton;
 		private StaticText								pagesInfo;
 		private Button									acceptButton;

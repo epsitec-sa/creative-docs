@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.LongDescription = longDescription;
 
 			this.options = new List<DocumentOption> ();
+			this.printersToUse = new List<PrinterToUse> ();
 		}
 
 		public DocumentTypeEnum Type
@@ -51,9 +52,17 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public List<PrinterToUse> PrintersToUse
+		{
+			get
+			{
+				return this.printersToUse;
+			}
+		}
+
 
 		#region Add options
-		public void DocumentOptionsAddInvoice()
+		public void AddDocumentOptionInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
 			if (this.Type == DocumentTypeEnum.BL                   ||
@@ -86,7 +95,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public void DocumentOptionsAddEsr()
+		public void AddDocumentOptionEsr()
 		{
 			//	Ajoute les options d'impression liées aux BV.
 			this.options.Add (new DocumentOption ("Type de bulletin de versement :"));
@@ -98,7 +107,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption ("ESR.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
-		public void DocumentOptionsAddOrientation()
+		public void AddDocumentOptionOrientation()
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
 			this.options.Add (new DocumentOption ("Orientation du papier :"));
@@ -106,37 +115,58 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOption ("Orientation.Horizontal", "Orientation", "Paysage"));
 		}
 
-		public void DocumentOptionsAddBL()
+		public void AddDocumentOptionBL()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\" avec signature", true));
+			this.options.Add (new DocumentOption ("BL.Signing", null, "Cartouche \"Matériel reçu\"", true));
 		}
 
-		public void DocumentOptionsAddProd()
+		public void AddDocumentOptionProd()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOption ("Prod.Signing", null, "Cartouche \"Matériel produit\" avec signature", true));
+			this.options.Add (new DocumentOption ("Prod.Signing", null, "Cartouche \"Matériel produit\"", true));
 		}
 
-		public void DocumentOptionsAddCommande()
+		public void AddDocumentOptionCommande()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOption ("Commande.Signing", null, "Cartouche \"Bon pour commande\" avec signature", true));
+			this.options.Add (new DocumentOption ("Commande.Signing", null, "Cartouche \"Bon pour commande\"", true));
 		}
 
-		public void DocumentOptionsAddSpecimen()
+		public void AddDocumentOptionSpecimen()
 		{
 			//	Ajoute les options d'impression générales.
 			this.options.Add (new DocumentOption ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
 		}
 
-		public void DocumentOptionsAddMargin()
+		public void AddDocumentOptionMargin()
 		{
 			//	Ajoute une marge verticale.
 			this.options.Add (new DocumentOption (20));
 		}
 		#endregion
 
+
+		#region Add printers to use
+		public void AddPrinterBase()
+		{
+			//	Ajoute l'imprimante de base, qui devrait toujours exister.
+			this.printersToUse.Add (new PrinterToUse ("Base", "Pour l'ensemble des pages :"));
+		}
+
+		public void AddPrinterFirst()
+		{
+			//	Ajoute les imprimantes de base, qui devraient toujours exister.
+			this.printersToUse.Add (new PrinterToUse ("First", "Pour la première page :"));
+			this.printersToUse.Add (new PrinterToUse ("Following", "Pour les pages suivantes :"));
+		}
+
+		public void AddPrinterEsr()
+		{
+			//	Ajoute l'imprimante spécifique pour les BV.
+			this.printersToUse.Add (new PrinterToUse ("Esr", "Pour le BV :"));
+		}
+		#endregion
 
 		public static string TypeToString(DocumentTypeEnum type)
 		{
@@ -158,6 +188,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly List<DocumentOption> options;
+		private readonly List<DocumentOption>		options;
+		private readonly List<PrinterToUse>			printersToUse;
 	}
 }

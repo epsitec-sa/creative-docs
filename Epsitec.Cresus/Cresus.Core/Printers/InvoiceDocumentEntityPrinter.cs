@@ -29,58 +29,67 @@ namespace Epsitec.Cresus.Core.Printers
 			DocumentType type;
 
 			type = new DocumentType (DocumentTypeEnum.Offer, "Offre", "Offre pour le client.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.Order, "Commande", "Commande pour le client.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddCommande    ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionCommande ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.OrderAcknowledge, "Confirmation de commande", "Confirmation de commande pour le client.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddProd        ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionProd ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.BL, "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddBL          ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionBL ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
-			type.DocumentOptionsAddInvoice ();
-			type.DocumentOptionsAddEsr     ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionEsr ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture A4 avec un bulletin de versement orange ou rose imprimé sur une page séparée.");
-			type.DocumentOptionsAddInvoice ();
-			type.DocumentOptionsAddEsr     ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionEsr ();
+			type.AddPrinterFirst ();
+			type.AddPrinterEsr ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.InvoiceWithoutESR, "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
-			type.DocumentOptionsAddInvoice     ();
-			type.DocumentOptionsAddOrientation ();
-			type.DocumentOptionsAddMargin      ();
-			type.DocumentOptionsAddSpecimen    ();
+			type.AddDocumentOptionInvoice ();
+			type.AddDocumentOptionOrientation ();
+			type.AddDocumentOptionMargin ();
+			type.AddDocumentOptionSpecimen ();
+			type.AddPrinterFirst ();
 			this.DocumentTypes.Add (type);
 		}
 
