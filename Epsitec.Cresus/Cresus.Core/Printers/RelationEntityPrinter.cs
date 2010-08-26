@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.BuildSections ();
 
-			if (this.DocumentTypeSelected == DocumentTypeEnum.Summary)
+			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
 				this.BuildTitle ();
 				this.BuildSummary ();
@@ -98,17 +98,17 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			if (this.DocumentTypeSelected == DocumentTypeEnum.Summary)
+			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
 				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 			}
 
-			if (this.DocumentTypeSelected == DocumentTypeEnum.Debug1)
+			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.DocumentTypeSelected == DocumentTypeEnum.Debug2)
+			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
 			{
 				this.PaintTest2 (port);
 			}

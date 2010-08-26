@@ -36,9 +36,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.confirmationButtons = new List<ConfirmationButton> ();
 			this.optionButtons = new List<AbstractButton> ();
-			this.printerButtons = new List<AbstractButton> ();
+			this.printerCombos = new List<TextFieldCombo> ();
 
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
+			this.printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
 		}
 
 
@@ -164,7 +165,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.confirmationButtons.Clear ();
 			int tabIndex = 0;
 
-			this.entityPrinter.DocumentTypeSelected = DocumentType.StringToType (this.GetSettings (true, "SelectedType"));
+			this.entityPrinter.DocumentTypeEnumSelected = DocumentType.StringToType (this.GetSettings (true, "SelectedType"));
 
 			foreach (var documentType in this.entityPrinter.DocumentTypes)
 			{
@@ -180,8 +181,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				button.Clicked += delegate
 				{
-					this.entityPrinter.DocumentTypeSelected = DocumentType.StringToType (button.Name);
-					this.SetSettings (true, "SelectedType", DocumentType.TypeToString (this.entityPrinter.DocumentTypeSelected));
+					this.entityPrinter.DocumentTypeEnumSelected = DocumentType.StringToType (button.Name);
+					this.SetSettings (true, "SelectedType", DocumentType.TypeToString (this.entityPrinter.DocumentTypeEnumSelected));
 					this.UpdateWidgets ();
 					this.UpdatePreview ();
 				};
@@ -303,7 +304,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var button in this.confirmationButtons)
 			{
-				if (button.Name == DocumentType.TypeToString (this.entityPrinter.DocumentTypeSelected))
+				if (button.Name == DocumentType.TypeToString (this.entityPrinter.DocumentTypeEnumSelected))
 				{
 					button.ButtonStyle = ButtonStyle.ActivableIcon;
 					button.SetSelected (true);
@@ -319,7 +320,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			this.acceptButton.Enable = this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None;
+			if (this.isPreview)
+			{
+				this.acceptButton.Enable = this.entityPrinter.DocumentTypeEnumSelected != DocumentTypeEnum.None;
+			}
+			else
+			{
+				this.acceptButton.Enable = this.entityPrinter.DocumentTypeEnumSelected != DocumentTypeEnum.None && this.entityPrinter.DocumentTypeSelected.IsPrintersToUseDefined;
+			}
 
 			this.UpdateOptions ();
 			this.UpdatePrinters ();
@@ -330,7 +338,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.optionsFrame.Children.Clear ();
 			this.optionButtons.Clear ();
 
-			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeSelected);
+			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeEnumSelected);
 			if (documentType != null)
 			{
 				if (documentType.DocumentOptions.Count == 0)
@@ -469,7 +477,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetRadio(string name)
 		{
-			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeSelected);
+			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeEnumSelected);
 
 			string radioName = null;
 			var documentOption = this.GetDocumentOption (documentType, name);
@@ -515,9 +523,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdatePrinters()
 		{
 			this.printersFrame.Children.Clear ();
-			this.printerButtons.Clear ();
+			this.printerCombos.Clear ();
 
-			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeSelected);
+			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeEnumSelected);
 			if (documentType != null)
 			{
 				if (documentType.PrintersToUse.Count == 0)
@@ -544,31 +552,50 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				int tabIndex = 0;
 
-				foreach (var printer in documentType.PrintersToUse)
+				foreach (var printerToUse in documentType.PrintersToUse)
 				{
 					var label = new StaticText
 					{
 						Parent = this.printersFrame,
-						Text = printer.Description,
+						Text = printerToUse.Description,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 10, 5),
 					};
 
-					var button = new Button
+					var field = new TextFieldCombo
 					{
+						IsReadOnly = true,
+						Name = printerToUse.Code,
 						Parent = this.printersFrame,
-						Text = string.IsNullOrWhiteSpace (printer.PrinterName) ? "Choisir..." : printer.PrinterName,
+						Text = printerToUse.LogicalPrinterName,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, 10),
 						TabIndex = ++tabIndex,
 					};
 
-					button.Clicked += delegate
+					string settings = this.GetSettings (false, string.Concat ("Printer.", printerToUse.Code));
+					if (!string.IsNullOrEmpty (settings))
 					{
-						// TODO:
+						field.Text = settings;
+						printerToUse.LogicalPrinterName = settings;
+					}
+
+					foreach (var printer in this.printerList)
+					{
+						field.Items.Add (printer.LogicalName, printer.GetNiceDescription ());
+					}
+
+					field.SelectedItemChanged += delegate
+					{
+						PrinterToUse p = documentType.GetPrinterToUse (field.Name);
+						p.LogicalPrinterName = field.Text;
+
+						this.SetSettings (false, string.Concat("Printer.", p.Code), p.LogicalPrinterName);
+
+						this.UpdateWidgets ();
 					};
 
-					this.printerButtons.Add (button);
+					this.printerCombos.Add (field);
 				}
 			}
 		}
@@ -576,7 +603,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePreview()
 		{
-			if (this.entityPrinter.DocumentTypeSelected != DocumentTypeEnum.None)
+			if (this.entityPrinter.DocumentTypeEnumSelected != DocumentTypeEnum.None)
 			{
 				this.entityPrinter.Clear ();
 				this.previewFrame.BuildSections (this.entityPrinter);
@@ -650,13 +677,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				if (this.entityPrinter.DocumentTypeSelected == DocumentTypeEnum.None)
+				if (this.entityPrinter.DocumentTypeEnumSelected == DocumentTypeEnum.None)
 				{
 					return this.SettingsGlobalPrefix;
 				}
 				else
 				{
-					return string.Concat (this.SettingsGlobalPrefix, ".", this.entityPrinter.DocumentTypeSelected.ToString ());
+					return string.Concat (this.SettingsGlobalPrefix, ".", this.entityPrinter.DocumentTypeEnumSelected.ToString ());
 				}
 			}
 		}
@@ -693,7 +720,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Window									window;
 		private List<ConfirmationButton>				confirmationButtons;
 		private List<AbstractButton>					optionButtons;
-		private List<AbstractButton>					printerButtons;
+		private List<TextFieldCombo>					printerCombos;
 		private FrameBox								optionsFrame;
 		private FrameBox								printersFrame;
 		private Widgets.PreviewEntity					previewFrame;
@@ -704,5 +731,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button									acceptButton;
 		private Button									cancelButton;
 		private Dictionary<string, string>				settings;
+		private List<Printer>							printerList;
 	}
 }

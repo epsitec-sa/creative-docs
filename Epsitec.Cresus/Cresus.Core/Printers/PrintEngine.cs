@@ -45,14 +45,6 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			List<Printer> printers = PrintEngine.GetInstalledPrinters ();
-			
-			if (printers.Count == 0)
-			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
-				return;
-			}
-
 			if (entityPrinter == null)
 			{
 				entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
@@ -65,29 +57,65 @@ namespace Epsitec.Cresus.Core.Printers
 					return;
 				}
 			}
-			
-			var printDialog = new Dialogs.PrintDialog (CoreProgram.Application, entityPrinter, entities, printers);
-			printDialog.OpenDialog ();
+
+			DocumentType documentType = entityPrinter.DocumentTypeSelected;
+
+			foreach (PrinterToUse printerToUse in documentType.PrintersToUse)
+			{
+				if (string.IsNullOrWhiteSpace (printerToUse.LogicalPrinterName))
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs imprimantes n'ont pas été choisies.").OpenDialog ();
+					return;
+				}
+			}
+
+			List<Printer> printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
+
+			foreach (PrinterToUse printerToUse in documentType.PrintersToUse)
+			{
+				Printer printer = printerList.Where (p => p.LogicalName == printerToUse.LogicalPrinterName).FirstOrDefault ();
+
+				if (printer != null)
+				{
+					PrintEngine.PrintEntities (printer, entityPrinter, entities);
+				}
+			}
 		}
 
-		private static List<Printer> GetInstalledPrinters()
+
+		public static void Preview(AbstractEntity entity)
 		{
-			List<Printer> printers = new List<Printer>
-						(
-							from printer in Printer.Load ()
-							where PrinterSettings.InstalledPrinters.Contains (printer.PhysicalName)
-							select printer
-						);
-			
-			return printers;
+			PrintEngine.Preview (new AbstractEntity[] { entity });
 		}
 
+		public static void Preview(IEnumerable<AbstractEntity> collection)
+		{
+			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Preview);
+
+			if (entities.Count == 0)
+			{
+				return;
+			}
+
+			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
+
+			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: true);
+			typeDialog.OpenDialog ();
+
+			if (typeDialog.Result == DialogResult.Accept)
+			{
+				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
+				printDialog.IsModal = false;
+				printDialog.OpenDialog ();
+			}
+		}
+
+	
 		private static List<AbstractEntity> PrepareEntities(IEnumerable<AbstractEntity> collection, Operation operation)
 		{
 			List<AbstractEntity> entities = new List<AbstractEntity> ();
 
-			if ((collection != null) &&
-				(collection.Any ()))
+			if (collection != null && collection.Any ())
 			{
 				entities.AddRange (collection.Where (x => PrintEngine.CanPrint (x)));
 
@@ -119,39 +147,74 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return entities;
 		}
-		
+
+
+		private static void PrintEntities(Printer printer, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
+		{
+			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.PhysicalName);
+
+			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
+
+			if (checkTray)
+			{
+				try
+				{
+					foreach (var entity in entities)
+					{
+						PrintEngine.PrintEntity (printer, entityPrinter, entity);
+					}
+				}
+				catch (System.Exception e)
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de l'impression").OpenDialog ();
+				}
+			}
+			else
+			{
+				string message = string.Format ("Le bac ({0}) de l'imprimante séléctionnée ({1}) n'existe pas.", printer.Tray, printer.PhysicalName);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+			}
+		}
+
+		private static void PrintEntity(Printer printer, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		{
+			PrintDocument printDocument = new PrintDocument ();
+
+			printDocument.DocumentName = entityPrinter.JobName;
+			printDocument.SelectPrinter (printer.PhysicalName);
+			//?printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.nbCopiesTextField.Text), CultureInfo.InvariantCulture);
+			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
+			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
+
+			Size size = entityPrinter.PageSize;
+			double height = size.Height;
+			double width  = size.Width;
+
+			double xOffset = printer.XOffset;
+			double yOffset = printer.YOffset;
+
+			entityPrinter.BuildSections ();
+
+			Transform transform;
+
+			if (entityPrinter.PageSize.Width < entityPrinter.PageSize.Height)  // portrait ?
+			{
+				transform = Transform.Identity;
+			}
+			else  // paysage ?
+			{
+				transform = Transform.CreateRotationDegTransform (90, entityPrinter.PageSize.Height/2, entityPrinter.PageSize.Height/2);
+			}
+
+			var engine = new MultiPagePrintEngine (entityPrinter, transform);
+			printDocument.Print (engine);
+		}
+
+
 		private enum Operation
 		{
 			Print,
 			Preview,
-		}
-
-
-		public static void Preview(AbstractEntity entity)
-		{
-			PrintEngine.Preview (new AbstractEntity[] { entity });
-		}
-
-		public static void Preview(IEnumerable<AbstractEntity> collection)
-		{
-			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Preview);
-
-			if (entities.Count == 0)
-			{
-				return;
-			}
-
-			var entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
-
-			var typeDialog = new Dialogs.DocumentTypeDialog (CoreProgram.Application, entityPrinter, entities, isPreview: true);
-			typeDialog.OpenDialog ();
-
-			if (typeDialog.Result == DialogResult.Accept)
-			{
-				var printDialog = new Dialogs.PreviewDialog (CoreProgram.Application, entityPrinter, entities);
-				printDialog.IsModal = false;
-				printDialog.OpenDialog ();
-			}
 		}
 	}
 }
