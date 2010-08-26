@@ -11,13 +11,14 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		None,
 
-		Offer,				// offre
-		Order,				// commande
-		OrderAcknowledge,	// confirmation de commande
-		ProductionOrder,	// ordre de production
-		BL,					// bulletin de livraison
-		InvoiceWithESR,		// facture avec BV
-		InvoiceWithoutESR,	// facture sans BV
+		Offer,					// offre
+		Order,					// commande
+		OrderAcknowledge,		// confirmation de commande
+		ProductionOrder,		// ordre de production
+		BL,						// bulletin de livraison
+		InvoiceWithInsideESR,	// facture avec BV intégré
+		InvoiceWithOutsideESR,	// facture avec BV séparé
+		InvoiceWithoutESR,		// facture sans BV
 
 		Summary,
 		Debug1,

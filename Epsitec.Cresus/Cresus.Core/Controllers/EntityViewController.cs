@@ -181,6 +181,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//	Si on n'a rien trouvé et qu'on cherche un controllerSubTypeId précis, on effectue une nouvelle
 			//	recherche moins restrictive. Ceci est nécessaire pour trouver SummaryContactRoleListViewController !
+			//	TODO: C'est une verrue qu'il faudra probablement améliorer.
 
 			if (types.Count () == 0 && controllerSubTypeId >= 0)
 			{

@@ -56,9 +56,10 @@ namespace Epsitec.Cresus.Core.Printers
 		public void DocumentOptionsAddInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			if (this.Type == DocumentTypeEnum.BL    ||
-				this.Type == DocumentTypeEnum.InvoiceWithESR   ||
-				this.Type == DocumentTypeEnum.InvoiceWithoutESR)
+			if (this.Type == DocumentTypeEnum.BL                   ||
+				this.Type == DocumentTypeEnum.InvoiceWithInsideESR ||
+				this.Type == DocumentTypeEnum.InvoiceWithOutsideESR||
+				this.Type == DocumentTypeEnum.InvoiceWithoutESR    )
 			{
 				this.options.Add (new DocumentOption ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
 			}
@@ -72,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.options.Add (new DocumentOption ("Ordre des colonnes :"));
 
-			if (this.Type == DocumentTypeEnum.BL  ||
+			if (this.Type == DocumentTypeEnum.BL             ||
 				this.Type == DocumentTypeEnum.ProductionOrder)
 			{
 				this.options.Add (new DocumentOption ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
