@@ -66,7 +66,12 @@ namespace Epsitec.Cresus.Core.Printers
 			type.DocumentOptionsAddSpecimen    ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.InvoiceWithESR, "Facture avec BV", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			type = new DocumentType (DocumentTypeEnum.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			type.DocumentOptionsAddInvoice ();
+			type.DocumentOptionsAddEsr     ();
+			this.DocumentTypes.Add (type);
+
+			type = new DocumentType (DocumentTypeEnum.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture A4 avec un bulletin de versement orange ou rose imprimé sur une page séparée.");
 			type.DocumentOptionsAddInvoice ();
 			type.DocumentOptionsAddEsr     ();
 			this.DocumentTypes.Add (type);
@@ -108,7 +113,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double h = this.IsDocumentWithoutPrice ? 0 : InvoiceDocumentEntityPrinter.reportHeight;
 
-				if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithESR)
+				if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithInsideESR)
 				{
 					return new Margins (20, 10, 20+h*2, h+10+AbstractEsrBand.DefautlSize.Height);
 				}
@@ -175,8 +180,9 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildFooter ();
 				this.BuildPages (null, firstPage);
 			}
-			
-			if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithESR)
+
+			if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithInsideESR ||
+				this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
 			{
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
@@ -1277,44 +1283,70 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
+			if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithInsideESR)
+			{
+				this.BuildInsideEsrs (billingDetails, firstPage);
+			}
 
+			if (this.DocumentTypeSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
+			{
+				this.BuildOutsideEsr (billingDetails, firstPage);
+			}
+		}
+
+		private void BuildInsideEsrs(BillingDetailEntity billingDetails, int firstPage)
+		{
+			//	Met un BVR orangé ou un BV rose en bas de chaque page.
 			for (int page = firstPage; page < this.documentContainer.PageCount; page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				AbstractEsrBand Esr;
-
-				if (this.HasDocumentOption ("ESR"))
-				{
-					Esr = new EsrBand ();  // BVR orangé
-				}
-				else
-				{
-					Esr = new EsBand ();  // BV rose
-				}
-
-				Esr.PaintEsrSimulator = this.HasDocumentOption ("ESR.Simul");
-				Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
-				Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
-				Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
-				Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeSelected);
-
-				if (page == this.documentContainer.PageCount-1)  // dernière page ?
-				{
-					Esr.NotForUse          = false;  // c'est LE vrai BV
-					Esr.Price              = billingDetails.AmountDue.Amount;
-					Esr.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
-					Esr.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
-				}
-				else  // faux BV ?
-				{
-					Esr.NotForUse = true;  // pour imprimer "XXXXX XX"
-				}
-
-				this.documentContainer.AddAbsolute (Esr, bounds);
+				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount-1);
 			}
+		}
+
+		private void BuildOutsideEsr(BillingDetailEntity billingDetails, int firstPage)
+		{
+			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
+			this.documentContainer.PrepareEmptyPage ();
+
+			this.BuildEsr (billingDetails);
+		}
+
+		private void BuildEsr(BillingDetailEntity billingDetails, bool mackle=false)
+		{
+			//	Met un BVR orangé ou un BV rose au bas de la page courante.
+			AbstractEsrBand Esr;
+
+			if (this.HasDocumentOption ("ESR"))
+			{
+				Esr = new EsrBand ();  // BVR orangé
+			}
+			else
+			{
+				Esr = new EsBand ();  // BV rose
+			}
+
+			Esr.PaintEsrSimulator = this.HasDocumentOption ("ESR.Simul");
+			Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
+			Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
+			Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
+			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeSelected);
+
+			if (mackle)  // faux BV ?
+			{
+				Esr.NotForUse = true;  // pour imprimer "XXXXX XX"
+			}
+			else  // vrai BV ?
+			{
+				Esr.NotForUse          = false;  // c'est LE vrai BV
+				Esr.Price              = billingDetails.AmountDue.Amount;
+				Esr.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
+				Esr.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
+			}
+
+			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
+			this.documentContainer.AddAbsolute (Esr, bounds);
 		}
 
 
