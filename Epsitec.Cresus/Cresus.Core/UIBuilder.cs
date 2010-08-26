@@ -917,18 +917,6 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-#if false
-			var referenceController = controller.ReferenceController;
-			var rootController = this.GetRootController ();
-			var clickSimulator = new TileButtonClickSimulator (tileButton, rootController, referenceController.Id);
-
-			tileButton.Clicked += delegate
-			{
-				tile.Controller = new ReferenceTileController (referenceController);
-				tile.ToggleSubView (rootController.Orchestrator, rootController, new TileNavigationPathElement (clickSimulator.Name));
-			};
-#endif
-
 			return picker;
 		}
 

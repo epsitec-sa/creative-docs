@@ -191,5 +191,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 			return list;
 		}
+
+		public static IList<ContactRoleEntity> AllRoles(this AbstractContactEntity entity)
+		{
+			List<ContactRoleEntity> list = CoreProgram.Application.Data.GetRoles ().ToList ();
+			list.Sort (Controllers.SelectionController<ContactRoleEntity>.CompareItems);
+
+			return list;
+		}
 	}
 }
