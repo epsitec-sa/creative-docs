@@ -264,7 +264,6 @@
     <Compile Include="Printers\TextBand.cs" />
     <Compile Include="Printers\RelationEntityPrinter.cs" />
     <Compile Include="Printers\NaturalPersonEntityPrinter.cs" />
-    <Compile Include="Dialogs\PrintDialog.cs" />
     <Compile Include="Printers\PrintEngine.cs" />
     <Compile Include="Data\CaseEventTypeRepository.cs" />
     <Compile Include="Entities\Extensions.cs" />
