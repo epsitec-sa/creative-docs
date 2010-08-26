@@ -50,9 +50,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Choix des imprimantes";
+			this.window.Text = "Choix des imprimantes disponibles";
 			this.window.MakeFixedSizeWindow ();
-			this.window.ClientSize = new Size (800, 500);
+			this.window.ClientSize = new Size (600, 400);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -564,7 +564,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			List<Printer> list = new List<Printer> ();
 
-			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("PrinterList");
+			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("Printer");
 
 			foreach (var setting in settings.Values)
 			{
@@ -587,12 +587,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 				if (!string.IsNullOrWhiteSpace (printer.LogicalName) &&
 					!string.IsNullOrWhiteSpace (printer.PhysicalName))
 				{
-					string key = string.Concat ("PrinterList", (index++).ToString (CultureInfo.InvariantCulture));
+					string key = string.Concat ("Printer", (index++).ToString (CultureInfo.InvariantCulture));
 					settings.Add (key, printer.GetSerializableContent ());
 				}
 			}
 
-			CoreApplication.MergeSettings ("PrinterList", settings);
+			CoreApplication.MergeSettings ("Printer", settings);
 		}
 		#endregion
 

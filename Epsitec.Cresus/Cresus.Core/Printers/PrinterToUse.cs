@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public string PrinterName
+		public string LogicalPrinterName
 		{
 			get;
 			set;

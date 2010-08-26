@@ -60,6 +60,27 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public PrinterToUse GetPrinterToUse(string code)
+		{
+			return this.printersToUse.Where (x => x.Code == code).FirstOrDefault ();
+		}
+
+		public bool IsPrintersToUseDefined
+		{
+			get
+			{
+				foreach (var p in this.printersToUse)
+				{
+					if (string.IsNullOrWhiteSpace (p.LogicalPrinterName))
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
 
 		#region Add options
 		public void AddDocumentOptionInvoice()
