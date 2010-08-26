@@ -116,10 +116,12 @@
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListController.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTotalInvoiceDocumentViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupsViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="Data\AffairRepository.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
@@ -375,6 +377,7 @@
     <EmbeddedResource Include="Images\Font.Underline.icon" />
     <EmbeddedResource Include="Images\Font.Subscript.icon" />
     <EmbeddedResource Include="Images\Font.Superscript.icon" />
+    <EmbeddedResource Include="Images\Data.ContactRole.icon" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

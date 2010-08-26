@@ -179,6 +179,20 @@ namespace Epsitec.Cresus.Core.Controllers
 				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
 			}
 
+			//	Si on n'a rien trouvé et qu'on cherche un controllerSubTypeId précis, on effectue une nouvelle
+			//	recherche moins restrictive. Ceci est nécessaire pour trouver SummaryContactRoleListViewController !
+
+			if (types.Count () == 0 && controllerSubTypeId >= 0)
+			{
+				types = from type in typeof (EntityViewController).Assembly.GetTypes ()
+						where type.IsClass && !type.IsAbstract
+						let baseType = type.BaseType
+						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
+						select type;
+
+				types = types.Where (type => type.GetCustomAttributes (typeof (ControllerSubTypeAttribute), false).Cast<ControllerSubTypeAttribute> ().Any (attribute => attribute.Id == controllerSubTypeId));
+			}
+
 			return types.FirstOrDefault ();
 		}
 

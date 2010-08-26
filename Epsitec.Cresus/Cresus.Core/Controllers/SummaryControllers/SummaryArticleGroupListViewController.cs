@@ -16,9 +16,9 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	[ControllerSubType (2)]
-	public class SummaryArticleGroupsViewController : SummaryViewController<ArticleDefinitionEntity>
+	public class SummaryArticleGroupListViewController : SummaryViewController<ArticleDefinitionEntity>
 	{
-		public SummaryArticleGroupsViewController(string name, ArticleDefinitionEntity entity)
+		public SummaryArticleGroupListViewController(string name, ArticleDefinitionEntity entity)
 			: base (name, entity)
 		{
 		}
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "ArticleGroups",
 					IconUri		 = "Data.ArticleGroup",
-					Title		 = TextFormatter.FormatText ("Groupes d'article"),
-					CompactTitle = TextFormatter.FormatText ("Groupes d'article"),
+					Title		 = TextFormatter.FormatText ("Tous les groupes d'article connus"),
+					CompactTitle = TextFormatter.FormatText ("Tous les groupes d'article connus"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
@@ -63,7 +63,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private ArticleGroupEntity CreateArticleGroup()
 		{
-			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			var group = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
 
 			group.Rank = this.Entity.AllArticleGroups ().Count;
