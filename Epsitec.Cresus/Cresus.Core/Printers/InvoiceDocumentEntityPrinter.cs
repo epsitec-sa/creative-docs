@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			this.documentContainer.Paint (port, this.PageType, this.CurrentPage, this.IsPreview);
+			this.documentContainer.Paint (port, this.PageTypeFilter, this.CurrentPage, this.IsPreview);
 		}
 
 
@@ -1133,7 +1133,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageType); page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageTypeFilter); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -1160,7 +1160,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	d'en-tête (noms des colonnes).
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageType); page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageTypeFilter); page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1212,7 +1212,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met un report en bas des pages concernées.
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageType)-1; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageTypeFilter)-1; page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1306,11 +1306,11 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildInsideEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageType); page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageTypeFilter); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount (this.PageType)-1);
+				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount (this.PageTypeFilter)-1);
 			}
 		}
 

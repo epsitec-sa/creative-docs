@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Printers
 			: base ()
 		{
 			this.DocumentTypeEnumSelected = DocumentTypeEnum.None;
-			this.PageType = PageTypeEnum.All;
+			this.PageTypeFilter = PageTypeEnum.All;
 
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public PageTypeEnum PageType
+		public PageTypeEnum PageTypeFilter
 		{
 			get;
 			set;
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.documentContainer.IsEmpty (this.PageType);
+				return this.documentContainer.IsEmpty (this.PageTypeFilter);
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.documentContainer.PageCount (this.PageType);
+				return this.documentContainer.PageCount (this.PageTypeFilter);
 			}
 		}
 

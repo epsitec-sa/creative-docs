@@ -441,7 +441,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				sel++;  // insère après la ligne sélectionnée
 			}
 
-			Printer printer = new Printer (this.DefaultLogicalName, null, null, false, 0, 0, null);
+			Printer printer = new Printer (this.DefaultLogicalName);
 
 			this.printerList.Insert (sel, printer);
 
@@ -619,6 +619,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				if (string.IsNullOrWhiteSpace (this.printerList[i].Tray))
 				{
 					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerList[i].LogicalName);
+				}
+
+				if (!Printer.CheckString (this.printerList[i].LogicalName))
+				{
+					return string.Format ("<b>{0}</b>: Ce nom d'imprimante est incorrect.", this.printerList[i].LogicalName);
+				}
+
+				if (!Printer.CheckString (this.printerList[i].Comment))
+				{
+					return string.Format ("<b>{0}</b>: La description est incorrecte.", this.printerList[i].LogicalName);
 				}
 
 				for (int j = 0; j < this.printerList.Count; j++)

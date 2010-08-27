@@ -19,18 +19,19 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 		}
 
-		public Printer(string logicalName, string physicalName, string tray, bool horizontal, double xOffset, double yOffset, string comment)
+		public Printer(string logicalName)
 		{
-			this.LogicalName  = logicalName;
-			this.PhysicalName = physicalName;
-			this.Tray         = tray;
-			this.Horizontal   = horizontal;
-			this.XOffset      = xOffset;
-			this.YOffset      = yOffset;
-			this.Comment      = comment;
+			this.LogicalName = logicalName;
 		}
 
+
 		public string LogicalName
+		{
+			get;
+			set;
+		}
+
+		public string Comment
 		{
 			get;
 			set;
@@ -48,12 +49,6 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public bool Horizontal
-		{
-			get;
-			set;
-		}
-
 		public double XOffset
 		{
 			get;
@@ -61,12 +56,6 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		public double YOffset
-		{
-			get;
-			set;
-		}
-
-		public string Comment
 		{
 			get;
 			set;
@@ -92,6 +81,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string GetSerializableContent()
 		{
+			//	Retourne une string permettant de sérialiser l'ensemble de la classe.
 			return string.Concat
 				(
 					"LogicalName=",
@@ -126,6 +116,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public void SetSerializableContent(string content)
 		{
+			//	Initialise l'ensemble de la classe à partir d'une string sérialisée.
 			var list = content.Split (new string[] { Printer.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
 
 			foreach (var line in list)
@@ -161,6 +152,19 @@ namespace Epsitec.Cresus.Core.Printers
 							break;
 					}
 				}
+			}
+		}
+
+
+		public static bool CheckString(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return true;
+			}
+			else
+			{
+				return !value.Contains (Printer.serializableSeparator);
 			}
 		}
 
