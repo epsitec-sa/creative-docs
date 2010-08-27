@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					builder.Append (pair.Key);
 					builder.Append (" (");
-					builder.Append (pair.Value.ToString ());
+					builder.Append (pair.Value.ToString ());  // par exemple: "Imprimante (2×)"
 					builder.Append ("×)");
 
 					i++;

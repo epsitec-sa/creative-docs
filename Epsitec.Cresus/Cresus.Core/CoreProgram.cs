@@ -45,12 +45,14 @@ namespace Epsitec.Cresus.Core
 
 			System.Diagnostics.Debug.Assert (CoreProgram.application.ResourceManagerPool.PoolName == "Core");
 
+			CoreApplication.LoadSettings ();
 			CoreProgram.application.SetupData ();
 			CoreProgram.application.CreateUI ();
 			
 			CoreProgram.application.Window.Show ();
 			CoreProgram.application.Window.Run ();
 
+			CoreApplication.SaveSettings ();
 			UI.ShutDown ();
 
 			CoreProgram.application.Dispose ();

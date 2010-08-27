@@ -196,6 +196,62 @@ namespace Epsitec.Cresus.Core
 				CoreApplication.settings.Add (pair.Key, pair.Value);
 			}
 		}
+
+		public static void SaveSettings()
+		{
+			try
+			{
+				System.IO.File.WriteAllLines (CoreApplication.GetSettingsPath (), CoreApplication.GetDataToSerialize ());
+			}
+			catch
+			{
+			}
+
+		}
+
+		public static void LoadSettings()
+		{
+			try
+			{
+				string[] lines = System.IO.File.ReadAllLines (CoreApplication.GetSettingsPath ());
+				CoreApplication.SetDeserializedData (lines);
+			}
+			catch
+			{
+			}
+		}
+
+		private static string GetSettingsPath()
+		{
+			return System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus.Core.settings.data");
+		}
+
+		private static string[] GetDataToSerialize()
+		{
+			var lines = new List<string> ();
+
+			foreach (var pair in CoreApplication.settings)
+			{
+				lines.Add (string.Concat (pair.Key, "=", pair.Value));
+			}
+
+			return lines.ToArray ();
+		}
+
+		private static void SetDeserializedData(string[] lines)
+		{
+			foreach (var line in lines)
+			{
+				int i = line.IndexOf ("=");
+				if (i != -1)
+				{
+					string key   = line.Substring (0, i);
+					string value = line.Substring (i+1);
+
+					CoreApplication.settings.Add (key, value);
+				}
+			}
+		}
 		#endregion
 
 
