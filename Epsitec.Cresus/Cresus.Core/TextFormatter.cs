@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core
 
 			return items;
 		}
+
 		private static void FormatText(System.Text.StringBuilder buffer, List<string> items)
 		{
 			bool emptyItem = true;
@@ -84,7 +85,8 @@ namespace Epsitec.Cresus.Core
 				if (emptyItem == false &&
 					lastCharacter != '(' &&
 					lastCharacter != '>' &&
-					Misc.IsPunctuationMark (prefix) == false)
+					Misc.IsPunctuationMark (prefix) == false ||
+					(lastCharacter == '>' && prefix == '('))
 				{
 					buffer.Append (" ");
 				}

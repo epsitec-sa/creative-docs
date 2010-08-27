@@ -73,9 +73,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public string GetNiceDescription()
+		public string NiceDescription
 		{
-			return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalName, ",~", this.Tray, ")").ToString ();
+			//	Retourne une description consise et claire de l'imprimante.
+			get
+			{
+				if (string.IsNullOrWhiteSpace (this.Comment))
+				{
+					return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalName, ",~", this.Tray, ")").ToString ();
+				}
+				else
+				{
+					return TextFormatter.FormatText (this.LogicalName, "(", this.Comment, ")").ToString ();
+				}
+			}
 		}
 
 

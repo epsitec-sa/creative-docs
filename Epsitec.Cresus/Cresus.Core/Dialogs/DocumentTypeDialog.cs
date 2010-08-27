@@ -551,15 +551,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 
 				int tabIndex = 0;
+				string lastGroup = null;
 
 				foreach (var printerToUse in documentType.PrintersToUse)
 				{
+					double space = (lastGroup !=null && printerToUse.Group != lastGroup) ? 30 : 2;
+
 					var label = new StaticText
 					{
 						Parent = this.printersFrame,
 						Text = printerToUse.Description,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 10, 5),
+						Margins = new Margins (0, 0, space, UIBuilder.MarginUnderLabel),
 					};
 
 					var field = new TextFieldCombo
@@ -569,7 +572,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						Parent = this.printersFrame,
 						Text = printerToUse.LogicalPrinterName,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, 10),
+						Margins = new Margins (0, 0, 0, 0),
 						TabIndex = ++tabIndex,
 					};
 
@@ -580,14 +583,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 						if (p != null)
 						{
-							field.Text = p.GetNiceDescription ();
+							field.Text = p.NiceDescription;
 							printerToUse.LogicalPrinterName = p.LogicalName;
 						}
 					}
 
 					foreach (var printer in this.printerList)
 					{
-						field.Items.Add (printer.LogicalName, printer.GetNiceDescription ());  // key, value
+						field.Items.Add (printer.LogicalName, printer.NiceDescription);  // key, value
 					}
 
 					field.SelectedItemChanged += delegate
@@ -602,6 +605,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 					};
 
 					this.printerCombos.Add (field);
+
+					lastGroup = printerToUse.Group;
 				}
 			}
 		}
