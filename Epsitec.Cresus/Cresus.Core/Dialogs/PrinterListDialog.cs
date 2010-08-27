@@ -140,9 +140,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.logicalLabel = new StaticText
 			{
 				Parent = rightFrame,
-				Text = "Votre dénomination de l'imprimante :",
+				Text = "Dénomination de l'imprimante :",
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 23+2, 2),
+				Margins = new Margins (0, 0, 23+2, UIBuilder.MarginUnderLabel),
 			};
 
 			this.logicalField = new TextFieldEx
@@ -150,8 +150,25 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 				Parent = rightFrame,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 20),
+				Margins = new Margins (0, 0, 0, 5),
 				TabIndex = 1,
+			};
+
+			this.commentLabel = new StaticText
+			{
+				Parent = rightFrame,
+				Text = "Description :",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+			};
+
+			this.commentField = new TextFieldEx
+			{
+				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+				Parent = rightFrame,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 25),
+				TabIndex = 2,
 			};
 
 			this.physicalLabel = new StaticText
@@ -159,7 +176,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = rightFrame,
 				Text = "Choix de l'imprimante physique :",
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.physicalField = new TextFieldCombo
@@ -167,8 +184,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				IsReadOnly = true,
 				Parent = rightFrame,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
-				TabIndex = 2,
+				Margins = new Margins (0, 0, 0, 5),
+				TabIndex = 3,
 			};
 
 			this.trayLabel = new StaticText
@@ -176,7 +193,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = rightFrame,
 				Text = "Choix du bac de l'imprimante :",
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 2),
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.trayField = new TextFieldCombo
@@ -184,8 +201,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				IsReadOnly = true,
 				Parent = rightFrame,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 10),
-				TabIndex = 3,
+				Margins = new Margins (0, 0, 0, 25),
+				TabIndex = 4,
 			};
 
 			//	Rempli le pied de page.
@@ -195,6 +212,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredHeight = 20,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (10, 10, 10, 10),
+			};
+
+			this.errorInfo = new StaticText
+			{
+				Parent = footer,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 10, 0, 0),
 			};
 
 			this.cancelButton = new Button ()
@@ -251,6 +276,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionLogicalChanged ();
 			};
 
+			this.commentField.AcceptingEdition += delegate
+			{
+				this.ActionCommentChanged ();
+			};
+
 			this.physicalField.SelectedItemChanged += delegate
 			{
 				this.ActionPhysicalChanged ();
@@ -291,7 +321,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.logicalLabel.Enable = sel != -1;
 			this.logicalField.Enable = sel != -1;
-			
+
+			this.commentLabel.Enable = sel != -1;
+			this.commentField.Enable = sel != -1;
+
 			this.physicalLabel.Enable = sel != -1;
 			this.physicalField.Enable = sel != -1;
 			
@@ -301,6 +334,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (sel == -1)
 			{
 				this.logicalField.Text  = null;
+				this.commentField.Text  = null;
 				this.physicalField.Text = null;
 				this.trayField.Text     = null;
 			}
@@ -308,9 +342,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Printer printer = this.SelectedPrinter;
 
+				bool printerChanged = (this.physicalField.Text != printer.PhysicalName);
+
 				this.logicalField.Text  = printer.LogicalName;
+				this.commentField.Text  = printer.Comment;
 				this.physicalField.Text = printer.PhysicalName;
 				this.trayField.Text     = printer.Tray;
+
+				if (printerChanged)
+				{
+					this.UpdateTrayField ();
+				}
+			}
+
+			string error = this.GetError ();
+
+			if (string.IsNullOrEmpty (error))
+			{
+				this.errorInfo.Text = null;
+				this.errorInfo.BackColor = Color.Empty;
+
+				this.acceptButton.Enable = true;
+			}
+			else
+			{
+				this.errorInfo.Text = error;
+				this.errorInfo.BackColor = Color.FromName ("Gold");
+
+				this.acceptButton.Enable = false;
 			}
 		}
 
@@ -327,7 +386,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var printer in this.printerList)
 			{
-				this.scrollList.Items.Add (printer.GetNiceDescription ());
+				this.scrollList.Items.Add (printer.NiceDescription);
 			}
 
 			this.ignoreChange = false;
@@ -444,27 +503,70 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void ActionLogicalChanged()
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			int sel = this.SelectedIndex;
 
-			this.printerList[sel].LogicalName = this.logicalField.Text;
-			this.UpdateScrollList (sel);
+			if (this.printerList[sel].LogicalName != this.logicalField.Text)
+			{
+				this.printerList[sel].LogicalName = this.logicalField.Text;
+				this.UpdateScrollList (sel);
+				this.UpdateWidgets ();
+			}
+		}
+
+		private void ActionCommentChanged()
+		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			int sel = this.SelectedIndex;
+
+			if (this.printerList[sel].Comment != this.commentField.Text)
+			{
+				this.printerList[sel].Comment = this.commentField.Text;
+				this.UpdateScrollList (sel);
+				this.UpdateWidgets ();
+			}
 		}
 
 		private void ActionPhysicalChanged()
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			int sel = this.SelectedIndex;
 
-			this.printerList[sel].PhysicalName = this.physicalField.Text;
-			this.UpdateScrollList (sel);
-			this.UpdateTrayField ();
+			if (this.printerList[sel].PhysicalName != this.physicalField.Text)
+			{
+				this.printerList[sel].PhysicalName = this.physicalField.Text;
+				this.UpdateScrollList (sel);
+				this.UpdateWidgets ();
+			}
 		}
 
 		private void ActionTrayChanged()
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
 			int sel = this.SelectedIndex;
 
-			this.printerList[sel].Tray = this.trayField.Text;
-			this.UpdateScrollList (sel);
+			if (this.printerList[sel].Tray != this.trayField.Text)
+			{
+				this.printerList[sel].Tray = this.trayField.Text;
+				this.UpdateScrollList (sel);
+				this.UpdateWidgets ();
+			}
 		}
 
 
@@ -495,35 +597,40 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				int count = this.DefaultLogicalNameCount;
-
-				if (count == 0)
-				{
-					return PrinterListDialog.defaultLogicalName;
-				}
-				else
-				{
-					return string.Concat (PrinterListDialog.defaultLogicalName, " n° ", (count+1).ToString ());
-				}
+				return string.Format ("Imprimante {0}", (this.printerList.Count+1).ToString ());
 			}
 		}
 
-		private int DefaultLogicalNameCount
-		{
-			get
-			{
-				int count = 0;
 
-				foreach (var printer in this.printerList)
+		private string GetError()
+		{
+			for (int i = 0; i < this.printerList.Count; i++)
+			{
+				if (string.IsNullOrWhiteSpace (this.printerList[i].LogicalName))
 				{
-					if (printer.LogicalName.StartsWith (PrinterListDialog.defaultLogicalName))
-					{
-						count++;
-					}
+					return string.Format ("<b>Rang {0}</b>: L'imprimante n'est pas nommée.", (i+1).ToString ());
 				}
 
-				return count;
+				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalName))
+				{
+					return string.Format ("<b>{0}</b>: Il faut choisir l'imprimante physique.", this.printerList[i].LogicalName);
+				}
+
+				if (string.IsNullOrWhiteSpace (this.printerList[i].Tray))
+				{
+					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerList[i].LogicalName);
+				}
+
+				for (int j = 0; j < this.printerList.Count; j++)
+				{
+					if (j != i && this.printerList[j].LogicalName == this.printerList[i].LogicalName)
+					{
+						return string.Format ("<b>{0}</b>: Ces deux imprimantes ont la même dénomination.", this.printerList[i].LogicalName);
+					}
+				}
 			}
+
+			return null;
 		}
 
 
@@ -597,8 +704,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		#endregion
 
 
-		private static readonly string defaultLogicalName = "Votre imprimante";
-
 		private readonly CoreApplication				application;
 
 		private Window									window;
@@ -608,11 +713,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private GlyphButton								moveDownButton;
 		private ScrollList								scrollList;
 		private StaticText								logicalLabel;
+		private StaticText								commentLabel;
 		private StaticText								physicalLabel;
 		private StaticText								trayLabel;
 		private TextFieldEx								logicalField;
+		private TextFieldEx								commentField;
 		private TextFieldCombo							physicalField;
 		private TextFieldCombo							trayField;
+		private StaticText								errorInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;
 		private List<Printer>							printerList;

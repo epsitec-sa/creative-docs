@@ -184,16 +184,17 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddPrinterBase()
 		{
 			//	Ajoute les imprimantes de base, qui devraient toujours exister.
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.All, "Pour l'ensemble des pages :"));
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Copy, "Pour une copie de l'ensemble des pages :"));
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.First, "Pour la première page :"));
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Following, "Pour les pages suivantes :"));
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.All,       "Pour l'ensemble des pages :",              "Base"));
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Copy,      "Pour une copie de l'ensemble des pages :", "Base"));
+
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.First,     "Pour la première page :",                  "Spec"));
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Following, "Pour les pages suivantes :",               "Spec"));
 		}
 
 		public void AddPrinterEsr()
 		{
 			//	Ajoute l'imprimante spécifique pour les BV.
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.ESR, "Pour le BV :"));
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.ESR,       "Pour le BV :",                             "Spec"));
 		}
 		#endregion
 
