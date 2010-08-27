@@ -68,9 +68,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void BuildSections(PageTypeEnum pageType)
+		public override void BuildSections()
 		{
-			base.BuildSections (pageType);
+			base.BuildSections ();
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
-				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
+				this.documentContainer.Paint (port, this.PageType, this.CurrentPage, this.IsPreview);
 			}
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)
