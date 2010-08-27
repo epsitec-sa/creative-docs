@@ -807,7 +807,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int index = this.SelectedItemIndex;
 				
-				if (index < 0)
+				if (index < 0 || index >= this.items.Count)
 				{
 					return "";
 				}
