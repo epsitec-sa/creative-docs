@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = FormattedText.FromSimpleText ("<b>Téléphones</b>");
+			title.Text = Misc.Bold ("Téléphones");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -260,9 +260,9 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetRelativeColumWidth (2, 2.0+0.3+1.0+0.8-1.5);
 
 			int index = 0;
-			table.SetText (0, index, "<b>Rôles</b>");
-			table.SetText (1, index, "<b>Type</b>");
-			table.SetText (2, index, "<b>Numéro</b>");
+			table.SetText (0, index, Misc.Bold ("Rôles"));
+			table.SetText (1, index, Misc.Bold ("Type"));
+			table.SetText (2, index, Misc.Bold ("Numéro"));
 			index++;
 
 			foreach (var contact in this.entity.Person.Contacts)
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var title = new TextBand ();
-			title.Text = FormattedText.FromSimpleText ("<b>Emails</b>");
+			title.Text = Misc.Bold ("Emails");
 			title.FontSize = 4.5;
 			this.documentContainer.AddFromTop (title, 1.0);
 
@@ -312,8 +312,8 @@ namespace Epsitec.Cresus.Core.Printers
 			table.SetRelativeColumWidth (1, 2.0+0.3+1.0+0.8);
 
 			int index = 0;
-			table.SetText (0, index, "<b>Rôles</b>");
-			table.SetText (1, index, "<b>Adresses électroniques</b>");
+			table.SetText (0, index, Misc.Bold ("Rôles"));
+			table.SetText (1, index, Misc.Bold ("Adresses électroniques"));
 			index++;
 
 			foreach (var contact in this.entity.Person.Contacts)

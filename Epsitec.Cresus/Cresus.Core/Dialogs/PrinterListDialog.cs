@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Choix des imprimantes disponibles";
+			this.window.Text = "Définitions des imprimantes et bacs disponibles";
 			this.window.MakeFixedSizeWindow ();
 			this.window.ClientSize = new Size (600, 400);
 
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.logicalLabel = new StaticText
 			{
 				Parent = rightFrame,
-				Text = "Dénomination de l'imprimante :",
+				Text = "Fonction de l'imprimante :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 23+2, UIBuilder.MarginUnderLabel),
 			};
@@ -608,7 +608,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (string.IsNullOrWhiteSpace (this.printerList[i].LogicalName))
 				{
-					return string.Format ("<b>Rang {0}</b>: L'imprimante n'est pas nommée.", (i+1).ToString ());
+					return string.Format ("<b>Rang {0}</b>: Il faut spécifier la fonction de l'imprimante.", (i+1).ToString ());
 				}
 
 				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalName))
@@ -623,7 +623,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				if (!Printer.CheckString (this.printerList[i].LogicalName))
 				{
-					return string.Format ("<b>{0}</b>: Ce nom d'imprimante est incorrect.", this.printerList[i].LogicalName);
+					return string.Format ("<b>{0}</b>: Ce nom de fonction est incorrect.", this.printerList[i].LogicalName);
 				}
 
 				if (!Printer.CheckString (this.printerList[i].Comment))
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					if (j != i && this.printerList[j].LogicalName == this.printerList[i].LogicalName)
 					{
-						return string.Format ("<b>{0}</b>: Ces deux imprimantes ont la même dénomination.", this.printerList[i].LogicalName);
+						return string.Format ("<b>{0}</b>: Ces deux imprimantes ont la même fonction.", this.printerList[i].LogicalName);
 					}
 				}
 			}

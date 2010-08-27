@@ -82,10 +82,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printerPageInfo = new StaticText
 			{
 				Parent = window.Root,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				PreferredHeight = 20,
 				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-				Margins = new Margins (10, 10, 0, 38),
+				Margins = new Margins (10, 10, 0, 43),
 			};
 
 			this.footer = new FrameBox
@@ -336,9 +336,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.preview.Invalidate ();
 
-			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
-
 			this.printerPageInfo.Text = this.GetPrintersUsedDescription ();
+			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
 		}
 
 		private string GetPrintersUsedDescription()
@@ -347,7 +346,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (dico.Count == 0)
 			{
-				return "Cette page ne sera pas imprimée.";
+				return "<font color=\"#ff0000\">^^^  Cette page ne sera pas imprimée  ^^^</font>";
 			}
 			else
 			{
@@ -370,13 +369,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					builder.Append (pair.Key);
 					builder.Append (" (");
-					builder.Append (pair.Value.ToString ());  // par exemple: "Imprimante (2×)"
+					builder.Append (pair.Value.ToString ());  // par exemple: "Brouillon (2×)"
 					builder.Append ("×)");
 
 					i++;
 				}
 
-				return string.Format ("Cette page sera imprimée avec {0}.", builder.ToString ());
+				string printer = (dico.Count > 1) ? "les imprimantes" : "l'imprimante";
+
+				return string.Format ("^^^  Cette page sera imprimée avec {0} {1}  ^^^", printer, builder.ToString ());
 			}
 		}
 
@@ -411,6 +412,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			return dico;
 		}
+
 
 		private void UpdateDebug()
 		{

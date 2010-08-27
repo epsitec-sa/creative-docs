@@ -335,6 +335,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateOptions()
 		{
+			//	Met à jour le panneau du choix des options.
 			this.optionsFrame.Children.Clear ();
 			this.optionButtons.Clear ();
 
@@ -346,7 +347,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var title = new StaticText
 					{
 						Parent = this.optionsFrame,
-						Text = "<font size=\"30\" color=\"#ffffff\"><i>Aucune option</i></font>",
+						Text = "<font size=\"24\" color=\"#ffffff\"><i>Aucune option</i></font>",
 						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 						Dock = DockStyle.Fill,
 					};
@@ -522,6 +523,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePrinters()
 		{
+			//	Met à jour le panneau du choix des imprimantes et des bacs.
 			this.printersFrame.Children.Clear ();
 			this.printerCombos.Clear ();
 
@@ -533,7 +535,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var title = new StaticText
 					{
 						Parent = this.printersFrame,
-						Text = "<font size=\"30\" color=\"#ffffff\"><i>Aucune imprimante</i></font>",
+						Text = "<font size=\"24\" color=\"#ffffff\"><i>Aucune imprimante</i></font>",
 						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 						Dock = DockStyle.Fill,
 					};
@@ -630,28 +632,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private DocumentOption GetDocumentOption(DocumentType documentType, string name)
 		{
-			foreach (var documentOption in documentType.DocumentOptions)
-			{
-				if (documentOption.Name == name)
-				{
-					return documentOption;
-				}
-			}
-
-			return null;
+			return documentType.DocumentOptions.Where (x => x.Name == name).FirstOrDefault ();
 		}
 
 		private DocumentType GetDocumentType(DocumentTypeEnum type)
 		{
-			foreach (var documentType in this.entityPrinter.DocumentTypes)
-			{
-				if (documentType.Type == type)
-				{
-					return documentType;
-				}
-			}
-
-			return null;
+			return this.entityPrinter.DocumentTypes.Where (x => x.Type == type).FirstOrDefault ();
 		}
 
 
