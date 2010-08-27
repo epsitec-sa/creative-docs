@@ -66,6 +66,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
+			//	Construit l'ensemble des pages.
 			entityPrinter.BuildSections ();
 
 			List<Printer> printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
@@ -76,7 +77,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (printer != null)
 				{
-					entityPrinter.PageType = printerToUse.PageType;
+					//	Indique le type des pages auxquelles on s'intéresse. Les autres
+					//	seront ignorées.
+					entityPrinter.PageTypeFilter = printerToUse.PageType;
 
 					if (!entityPrinter.IsEmpty)
 					{
