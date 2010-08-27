@@ -588,6 +588,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 						}
 					}
 
+					field.Items.Add ("", "");  // une première case vide
+
 					foreach (var printer in this.printerList)
 					{
 						field.Items.Add (printer.LogicalName, printer.NiceDescription);  // key, value

@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Aperçu avant impression";
-			window.ClientSize = new Size (pageSize.Width*3+10+10, pageSize.Height*3+10+40);
+			window.ClientSize = new Size (pageSize.Width*3+10+10, pageSize.Height*3+10+62);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
 			window.WindowCloseClicked += delegate
@@ -76,7 +76,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = window.Root,
 				Anchor = AnchorStyles.All,
-				Margins = new Margins (10, 10, 10, 40),
+				Margins = new Margins (10, 10, 10, 62),
+			};
+
+			this.printerPageInfo = new StaticText
+			{
+				Parent = window.Root,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				PreferredHeight = 20,
+				Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+				Margins = new Margins (10, 10, 0, 38),
 			};
 
 			this.footer = new FrameBox
@@ -328,6 +337,79 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.preview.Invalidate ();
 
 			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
+
+			this.printerPageInfo.Text = this.GetPrintersUsedDescription ();
+		}
+
+		private string GetPrintersUsedDescription()
+		{
+			Dictionary<string, int> dico = this.GetPrintersUsed ();
+
+			if (dico.Count == 0)
+			{
+				return "Cette page ne sera pas imprimée.";
+			}
+			else
+			{
+				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
+				int i = 0;
+
+				foreach (var pair in dico)
+				{
+					if (i > 0)
+					{
+						if (i < dico.Count-1)
+						{
+							builder.Append (", ");
+						}
+						else
+						{
+							builder.Append (" et ");
+						}
+					}
+
+					builder.Append (pair.Key);
+					builder.Append (" (");
+					builder.Append (pair.Value.ToString ());
+					builder.Append ("×)");
+
+					i++;
+				}
+
+				return string.Format ("Cette page sera imprimée avec {0}.", builder.ToString ());
+			}
+		}
+
+		private Dictionary<string, int> GetPrintersUsed()
+		{
+			Dictionary<string, int> dico = new Dictionary<string, int> ();
+
+			PageTypeEnum pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
+
+			DocumentType documentType = this.entityPrinter.DocumentTypeSelected;
+			List<PrinterToUse> printersToUse = documentType.PrintersToUse;
+
+			foreach (PrinterToUse printerToUse in printersToUse)
+			{
+				if (!string.IsNullOrEmpty (printerToUse.LogicalPrinterName))
+				{
+					if (printerToUse.PageType == PageTypeEnum.All ||
+						printerToUse.PageType == PageTypeEnum.Copy||
+						printerToUse.PageType == pageType         )
+					{
+						if (dico.ContainsKey (printerToUse.LogicalPrinterName))
+						{
+							dico[printerToUse.LogicalPrinterName]++;
+						}
+						else
+						{
+							dico.Add (printerToUse.LogicalPrinterName, 1);
+						}
+					}
+				}
+			}
+
+			return dico;
 		}
 
 		private void UpdateDebug()
@@ -375,6 +457,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 
 		private Widgets.PreviewEntity preview;
+		private StaticText printerPageInfo;
 		private FrameBox footer;
 
 		private GlyphButton pagePrevButton;

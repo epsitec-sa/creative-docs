@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				PrinterToUse all = this.GetPrinterToUse (PageTypeEnum.All);
-				if (all != null && string.IsNullOrWhiteSpace (all.LogicalPrinterName))
+				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
 					return true;
 				}

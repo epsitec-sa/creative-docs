@@ -108,6 +108,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public PageTypeEnum GetPageType(int page)
+		{
+			return this.documentContainer.GetPageType (page);
+		}
+
 		public int PageCount
 		{
 			get

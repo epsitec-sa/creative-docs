@@ -197,6 +197,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public PageTypeEnum GetPageType(int page)
+		{
+			return this.pages[page].PageType;
+		}
+
 		/// <summary>
 		/// Retourne le nombre de pages d'un type donné que contient le document.
 		/// </summary>
