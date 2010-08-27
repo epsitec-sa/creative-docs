@@ -69,8 +69,20 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
+				PrinterToUse all = this.GetPrinterToUse (PageTypeEnum.All);
+				if (all != null && string.IsNullOrWhiteSpace (all.LogicalPrinterName))
+				{
+					return true;
+				}
+
 				foreach (var p in this.printersToUse)
 				{
+					if (p.PageType == PageTypeEnum.All ||
+						p.PageType == PageTypeEnum.Copy)
+					{
+						continue;
+					}
+
 					if (string.IsNullOrWhiteSpace (p.LogicalPrinterName))
 					{
 						return false;
@@ -171,13 +183,9 @@ namespace Epsitec.Cresus.Core.Printers
 		#region Add printers to use
 		public void AddPrinterBase()
 		{
-			//	Ajoute l'imprimante de base, qui devrait toujours exister.
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.All, "Pour l'ensemble des pages :"));
-		}
-
-		public void AddPrinterFirst()
-		{
 			//	Ajoute les imprimantes de base, qui devraient toujours exister.
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.All, "Pour l'ensemble des pages :"));
+			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Copy, "Pour une copie de l'ensemble des pages :"));
 			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.First, "Pour la première page :"));
 			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Following, "Pour les pages suivantes :"));
 		}

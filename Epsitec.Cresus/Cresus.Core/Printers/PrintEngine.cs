@@ -60,14 +60,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 			DocumentType documentType = entityPrinter.DocumentTypeSelected;
 
-			foreach (PrinterToUse printerToUse in documentType.PrintersToUse)
+			if (!documentType.IsPrintersToUseDefined)
 			{
-				if (string.IsNullOrWhiteSpace (printerToUse.LogicalPrinterName))
-				{
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs imprimantes n'ont pas été choisies.").OpenDialog ();
-					return;
-				}
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs imprimantes n'ont pas été définies.").OpenDialog ();
+				return;
 			}
+
+			entityPrinter.BuildSections ();
 
 			List<Printer> printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
 
@@ -77,7 +76,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (printer != null)
 				{
-					PrintEngine.PrintEntities (printer, printerToUse.PageType, entityPrinter, entities);
+					entityPrinter.PageType = printerToUse.PageType;
+
+					if (!entityPrinter.IsEmpty)
+					{
+						PrintEngine.PrintEntities (printer, entityPrinter, entities);
+					}
 				}
 			}
 		}
@@ -149,7 +153,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void PrintEntities(Printer printer, PageTypeEnum pageType, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
+		private static void PrintEntities(Printer printer, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
 		{
 			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.PhysicalName);
 
@@ -161,7 +165,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					foreach (var entity in entities)
 					{
-						PrintEngine.PrintEntity (printer, pageType, entityPrinter, entity);
+						PrintEngine.PrintEntity (printer, entityPrinter, entity);
 					}
 				}
 				catch (System.Exception e)
@@ -176,7 +180,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private static void PrintEntity(Printer printer, PageTypeEnum pageType, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		private static void PrintEntity(Printer printer, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
 			PrintDocument printDocument = new PrintDocument ();
 
@@ -192,8 +196,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
-
-			entityPrinter.BuildSections (pageType);
 
 			Transform transform;
 

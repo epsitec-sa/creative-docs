@@ -95,34 +95,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// Supprime toutes les pages utilisant un autre printerCode, et qui ne doivent donc
-		/// pas être imprimées sur l'imprimante concernée.
-		/// </summary>
-		/// <param name="printerCode"></param>
-		public void KeepOnlyPrinterCodePages(PageTypeEnum pageType)
-		{
-			if (pageType == PageTypeEnum.All)
-			{
-				return;
-			}
-
-			int i = 0;
-
-			while (i < this.pages.Count)
-			{
-				if (this.pages[i].PageType == pageType)
-				{
-					i++;
-				}
-				else
-				{
-					this.pages.RemoveAt (i);
-				}
-			}
-		}
-
-
-		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
 		/// </summary>
 		/// <param name="band">Objet à ajouter</param>
@@ -226,30 +198,62 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Retourne le nombre de pages que contient le document.
+		/// Retourne le nombre de pages d'un type donné que contient le document.
 		/// </summary>
-		public int PageCount
+		public int PageCount(PageTypeEnum pageType)
 		{
-			get
-			{
-				return this.pages.Count;
-			}
+			return this.GetPagesFromType (pageType).Count;
 		}
 
 		/// <summary>
-		/// Dessine une page du document.
+		/// Retourne true s'il n'y a rien à imprimer.
+		/// </summary>
+		public bool IsEmpty(PageTypeEnum pageType)
+		{
+			var pages = this.GetPagesFromType (pageType);
+
+			if (pages.Count <= 0)
+			{
+				return true;
+			}
+
+			if (pages.Count > 1)
+			{
+				return false;
+			}
+
+			return pages[0].Count == 0;
+		}
+
+		/// <summary>
+		/// Dessine une page d'un type donné du document.
 		/// </summary>
 		/// <param name="port">Port graphique</param>
 		/// <param name="page">Rang de la page (0..n)</param>
 		/// <returns></returns>
-		public bool Paint(IPaintPort port, int page, bool isPreview)
+		public bool Paint(IPaintPort port, PageTypeEnum pageType, int page, bool isPreview)
 		{
-			if (page >= 0 && page < this.pages.Count)
+			var pages = this.GetPagesFromType (pageType);
+
+			if (page >= 0 && page < pages.Count)
 			{
-				return this.pages[page].Paint (port, isPreview);
+				return pages[page].Paint (port, isPreview);
 			}
 
 			return true;
+		}
+
+		private List<PageContainer> GetPagesFromType(PageTypeEnum pageType)
+		{
+			if (pageType == PageTypeEnum.All ||
+				pageType == PageTypeEnum.Copy)
+			{
+				return this.pages;
+			}
+			else
+			{
+				return this.pages.Where (x => x.PageType == pageType).ToList ();
+			}
 		}
 
 

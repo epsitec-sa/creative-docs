@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.Order, "Commande", "Commande pour le client.");
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionCommande ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.OrderAcknowledge, "Confirmation de commande", "Confirmation de commande pour le client.");
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionProd ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.BL, "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
@@ -68,19 +68,19 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionBL ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentType (DocumentTypeEnum.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture A4 avec un bulletin de versement orange ou rose imprimé sur une page séparée.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			type.AddPrinterEsr ();
 			this.DocumentTypes.Add (type);
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterFirst ();
+			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 		}
 
@@ -133,9 +133,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void BuildSections(PageTypeEnum pageType)
+		public override void BuildSections()
 		{
-			base.BuildSections (pageType);
+			base.BuildSections ();
 			this.documentContainer.Clear ();
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Offer)
@@ -222,15 +222,13 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildReportFooters (firstPage);
 				}
 			}
-
-			this.documentContainer.KeepOnlyPrinterCodePages (pageType);
 		}
 
 		public override void PrintCurrentPage(IPaintPort port)
 		{
 			base.PrintCurrentPage (port);
 
-			this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
+			this.documentContainer.Paint (port, this.PageType, this.CurrentPage, this.IsPreview);
 		}
 
 
@@ -1135,7 +1133,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageType); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -1162,7 +1160,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	d'en-tête (noms des colonnes).
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PageType); page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1214,7 +1212,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met un report en bas des pages concernées.
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage; page < this.documentContainer.PageCount-1; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageType)-1; page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1308,11 +1306,11 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildInsideEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			for (int page = firstPage; page < this.documentContainer.PageCount; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PageType); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount-1);
+				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount (this.PageType)-1);
 			}
 		}
 

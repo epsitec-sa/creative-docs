@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Core.Printers
 	public enum PageTypeEnum
 	{
 		All,
+		Copy,
 		First,
 		Following,
 		ESR,

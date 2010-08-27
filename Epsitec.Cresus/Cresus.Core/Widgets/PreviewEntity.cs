@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.entityPrinter = entityPrinter;
 
 			this.entityPrinter.IsPreview = true;
-			this.entityPrinter.BuildSections (Printers.PageTypeEnum.All);
+			this.entityPrinter.BuildSections ();
 		}
 
 
