@@ -45,14 +45,18 @@ namespace Epsitec.Cresus.Core.Widgets
 				double sy = this.Client.Bounds.Height / this.entityPrinter.PageSize.Height;
 				double scale = System.Math.Min (sx, sy);
 
+				double offsetX = System.Math.Ceiling ((this.Client.Bounds.Width  - this.entityPrinter.PageSize.Width *scale) / 2);
+				double offsetY = System.Math.Ceiling ((this.Client.Bounds.Height - this.entityPrinter.PageSize.Height*scale) / 2);
+
 				//	Dessine le fond d'une page blanche.
-				Rectangle bounds = new Rectangle (0, 0, System.Math.Floor (this.entityPrinter.PageSize.Width*scale), System.Math.Floor (this.entityPrinter.PageSize.Height*scale));
+				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.entityPrinter.PageSize.Width*scale), System.Math.Floor (this.entityPrinter.PageSize.Height*scale));
 
 				graphics.AddFilledRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				//	Dessine l'entité dans la page.
 				Transform initial = graphics.Transform;
+				graphics.TranslateTransform (offsetX, offsetY);
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
 				this.entityPrinter.PrintCurrentPage (graphics);

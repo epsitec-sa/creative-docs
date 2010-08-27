@@ -201,7 +201,8 @@ namespace Epsitec.Cresus.Core
 		{
 			try
 			{
-				System.IO.File.WriteAllLines (CoreApplication.GetSettingsPath (), CoreApplication.GetDataToSerialize ());
+				string[] lines = CoreApplication.GetDataToSerialize ();
+				System.IO.File.WriteAllLines (CoreApplication.GetSettingsPath (), lines);
 			}
 			catch
 			{
