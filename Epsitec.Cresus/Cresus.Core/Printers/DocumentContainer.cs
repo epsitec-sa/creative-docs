@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Clear()
 		{
 			this.pages.Clear ();
-			this.pages.Add (new PageContainer (0, "First"));  // crée la première page
+			this.pages.Add (new PageContainer (0, PageTypeEnum.First));  // crée la première page
 
 			this.currentPage = 0;
 
@@ -83,11 +83,11 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Si la dernière page actuelle n'est pas vide, crée une nouvelle page vide.
 		/// </summary>
-		public int PrepareEmptyPage(string printerCode)
+		public int PrepareEmptyPage(PageTypeEnum pageType)
 		{
 			if (this.pages.Last ().Count > 0)  // dernière page non vide ?
 			{
-				this.AddNewPage (printerCode);
+				this.AddNewPage (pageType);
 			}
 
 			return this.currentPage;
@@ -99,9 +99,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// pas être imprimées sur l'imprimante concernée.
 		/// </summary>
 		/// <param name="printerCode"></param>
-		public void KeepOnlyPrinterCodePages(string printerCode)
+		public void KeepOnlyPrinterCodePages(PageTypeEnum pageType)
 		{
-			if (string.IsNullOrEmpty (printerCode) || printerCode == "All")
+			if (pageType == PageTypeEnum.All)
 			{
 				return;
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			while (i < this.pages.Count)
 			{
-				if (this.pages[i].PrinterCode == printerCode)
+				if (this.pages[i].PageType == pageType)
 				{
 					i++;
 				}
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.AddNewPage ("Following");
+					this.AddNewPage (PageTypeEnum.Following);
 				}
 
 				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
 			{
-				this.AddNewPage ("Following");
+				this.AddNewPage (PageTypeEnum.Following);
 			}
 
 			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
@@ -253,9 +253,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private void AddNewPage(string printerCode)
+		private void AddNewPage(PageTypeEnum pageType)
 		{
-			this.pages.Add (new PageContainer (this.pages.Count, printerCode));  // crée une nouvelle page
+			this.pages.Add (new PageContainer (this.pages.Count, pageType));  // crée une nouvelle page
 
 			this.currentPage++;
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut

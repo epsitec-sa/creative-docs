@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (printer != null)
 				{
-					PrintEngine.PrintEntities (printer, printerToUse.Code, entityPrinter, entities);
+					PrintEngine.PrintEntities (printer, printerToUse.PageType, entityPrinter, entities);
 				}
 			}
 		}
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void PrintEntities(Printer printer, string printerCode, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
+		private static void PrintEntities(Printer printer, PageTypeEnum pageType, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
 		{
 			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.PhysicalName);
 
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					foreach (var entity in entities)
 					{
-						PrintEngine.PrintEntity (printer, printerCode, entityPrinter, entity);
+						PrintEngine.PrintEntity (printer, pageType, entityPrinter, entity);
 					}
 				}
 				catch (System.Exception e)
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private static void PrintEntity(Printer printer, string printerCode, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		private static void PrintEntity(Printer printer, PageTypeEnum pageType, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
 			PrintDocument printDocument = new PrintDocument ();
 
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Printers
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
 
-			entityPrinter.BuildSections (printerCode);
+			entityPrinter.BuildSections (pageType);
 
 			Transform transform;
 

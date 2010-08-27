@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.Clear ();
 		}
 
-		public virtual void BuildSections(string printerCode)
+		public virtual void BuildSections(PageTypeEnum pageType)
 		{
 			this.documentContainer.PageSize    = this.PageSize;
 			this.documentContainer.PageMargins = this.PageMargins;
