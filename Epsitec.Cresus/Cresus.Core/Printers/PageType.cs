@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public enum PageType
 	{
-		First,			// page de garde (0)
+		First,			// première page (0)
 		Following,		// page suivante (1..n)
 
 		ESR,			// page avec BV

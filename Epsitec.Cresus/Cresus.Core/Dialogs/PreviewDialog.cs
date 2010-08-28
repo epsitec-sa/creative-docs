@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (dico.Count == 0)
 			{
-				return "<font color=\"#ff0000\">^^^  Cette page ne sera pas imprimée  ^^^</font>";
+				return "<font color=\"#ff0000\">^^^  Cette page ne sera pas imprimée  ^^^</font>";  // texte en rouge
 			}
 			else
 			{
