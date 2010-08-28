@@ -14,26 +14,6 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
-		public static bool IsCompatiblePrinterPage(Printers.PrinterType printerType, Printers.PageType pageType)
-		{
-			//	Retourne true si une imprimante est compatible pour imprimer une page d'un type donné.
-			if (printerType == Printers.PrinterType.All ||
-				printerType == Printers.PrinterType.Copy)  // imprimente pour tous les types de page ?
-			{
-				return true;
-			}
-
-			if ((printerType == Printers.PrinterType.First     && pageType == Printers.PageType.First    ) ||
-				(printerType == Printers.PrinterType.Following && pageType == Printers.PageType.Following) ||
-				(printerType == Printers.PrinterType.ESR       && pageType == Printers.PageType.ESR      ) )
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-
 		public static decimal? PriceConstrain(decimal? value, decimal resolution=0.01M)
 		{
 			if (!value.HasValue)

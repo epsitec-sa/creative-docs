@@ -398,7 +398,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (!string.IsNullOrEmpty (documentPrinter.LogicalPrinterName))
 				{
-					if (Misc.IsCompatiblePrinterPage (documentPrinter.PrinterType, pageType))
+					if (Printers.Common.IsPrinterAndPageMatching (documentPrinter.PrinterFunction, pageType))
 					{
 						if (dico.ContainsKey (documentPrinter.LogicalPrinterName))
 						{

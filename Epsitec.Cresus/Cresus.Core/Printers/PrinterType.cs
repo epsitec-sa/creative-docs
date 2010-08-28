@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public enum PrinterType
+	public enum PrinterFunction
 	{
 		All,			// imprimante pour toutes les pages
 		Copy,			// imprimante pour une copie de toutes les pages
