@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public DocumentType(DocumentTypeEnum type, string shortDescription, string longDescription)
 		{
-			this.Type = type;
-			this.ShortDescription = shortDescription;
-			this.LongDescription = longDescription;
+			this.type             = type;
+			this.shortDescription = shortDescription;
+			this.longDescription  = longDescription;
 
 			this.options = new List<DocumentOption> ();
 			this.printers = new List<DocumentPrinter> ();
@@ -28,20 +28,26 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public DocumentTypeEnum Type
 		{
-			get;
-			set;
+			get
+			{
+				return this.type;
+			}
 		}
 
 		public string ShortDescription
 		{
-			get;
-			set;
+			get
+			{
+				return this.shortDescription;
+			}
 		}
 
 		public string LongDescription
 		{
-			get;
-			set;
+			get
+			{
+				return this.longDescription;
+			}
 		}
 
 		public List<DocumentOption> DocumentOptions
@@ -218,6 +224,9 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private readonly DocumentTypeEnum			type;
+		private readonly string						shortDescription;
+		private readonly string						longDescription;
 		private readonly List<DocumentOption>		options;
 		private readonly List<DocumentPrinter>		printers;
 	}

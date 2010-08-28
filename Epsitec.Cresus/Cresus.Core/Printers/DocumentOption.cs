@@ -18,75 +18,101 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public DocumentOption(string title)
 		{
-			this.IsMargin = false;
-			this.IsTitle = true;
-			this.Title = title;
+			this.isMargin = false;
+			this.isTitle  = true;
+			this.title    = title;
 		}
 
 		public DocumentOption(double height)
 		{
-			this.IsMargin = true;
-			this.IsTitle = false;
-			this.Height = height;
+			this.isMargin = true;
+			this.isTitle  = false;
+			this.height   = height;
 		}
 
 		public DocumentOption(string name, string radioName, string description, bool defautState=false)
 		{
-			this.IsMargin = false;
-			this.IsTitle = false;
-			this.Name = name;
-			this.RadioName = radioName;
-			this.Description = description;
-			this.DefautState = defautState;
+			this.isMargin    = false;
+			this.isTitle     = false;
+			this.name        = name;
+			this.radioName   = radioName;
+			this.description = description;
+			this.defautState = defautState;
 		}
 
 
 		public bool IsTitle
 		{
-			get;
-			set;
+			get
+			{
+				return this.isTitle;
+			}
 		}
 
 		public bool IsMargin
 		{
-			get;
-			set;
+			get
+			{
+				return this.isMargin;
+			}
 		}
 
 		public double Height
 		{
-			get;
-			set;
+			get
+			{
+				return this.height;
+			}
 		}
 
 		public string Title
 		{
-			get;
-			set;
+			get
+			{
+				return this.title;
+			}
 		}
 
 		public string Name
 		{
-			get;
-			set;
+			get
+			{
+				return this.name;
+			}
 		}
 
 		public string RadioName
 		{
-			get;
-			set;
+			get
+			{
+				return this.radioName;
+			}
 		}
 
 		public string Description
 		{
-			get;
-			set;
+			get
+			{
+				return this.description;
+			}
 		}
 
 		public bool DefautState
 		{
-			get;
-			set;
+			get
+			{
+				return this.defautState;
+			}
 		}
+
+
+		private readonly bool		isTitle;
+		private readonly bool		isMargin;
+		private readonly double		height;
+		private readonly string		title;
+		private readonly string		name;
+		private readonly string		radioName;
+		private readonly string		description;
+		private readonly bool		defautState;
 	}
 }
