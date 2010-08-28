@@ -626,7 +626,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.previewFrame.BuildSections (this.entityPrinter);
 				this.previewFrame.Invalidate ();  // pour forcer le dessin
 
-				int pageCount = this.entityPrinter.PageCount;
+				int pageCount = this.entityPrinter.PageCount ();
 				this.pagesInfo.Text = string.Format ("{0} page{1}", pageCount.ToString (), (pageCount<=1)?"":"s");
 			}
 		}

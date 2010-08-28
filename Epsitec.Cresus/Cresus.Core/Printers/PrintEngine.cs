@@ -118,13 +118,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (printer != null)
 					{
-						//	Indique le type des pages auxquelles on s'intéresse. Les autres
-						//	seront ignorées.
-						entityPrinter.PrinterFunctionUsed = documentPrinter.PrinterFunction;
-
-						if (!entityPrinter.IsEmpty)
+						if (!entityPrinter.IsEmpty (documentPrinter.PrinterFunction))
 						{
-							var physicalPages = entityPrinter.GetPhysicalPages ();
+							var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
 
 							foreach (var physicalPage in physicalPages)
 							{
