@@ -9,12 +9,12 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public enum PrinterFunction
 	{
-		All,			// imprimante pour toutes les pages
-		Copy,			// imprimante pour une copie de toutes les pages
+		ForAllPages,			// imprimante pour toutes les pages
+		ForPagesCopy,			// imprimante pour une copie de toutes les pages
 
-		First,			// imprimante pour la première page (0)
-		Following,		// imprimante pour les pages suivantes (1..n)
+		ForFirstPage,			// imprimante pour la première page (0)
+		ForFollowingPages,		// imprimante pour les pages suivantes (1..n)
 		
-		ESR,			// imprimante pour BV
+		ForEsrPage,				// imprimante pour BV
 	}
 }

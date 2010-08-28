@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
+			System.Diagnostics.Debug.Assert (collection.Count () > 1 && entityPrinter == null);
+
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
 
 			if (entities.Count == 0)
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 					if (!entityPrinter.IsEmpty)
 					{
-						PrintEngine.PrintEntities (printer, entityPrinter, entities);
+						PrintEngine.PrintEntity (printer, entityPrinter);
 					}
 				}
 			}
@@ -155,7 +157,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void PrintEntities(Printer printer, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
+		private static void PrintEntity(Printer printer, AbstractEntityPrinter entityPrinter)
 		{
 			var printerSettings = Epsitec.Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
 
@@ -165,10 +167,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				try
 				{
-					foreach (var entity in entities)
-					{
-						PrintEngine.PrintEntity (printer, entityPrinter, entity);
-					}
+					PrintEngine.PrintEntityBase (printer, entityPrinter);
 				}
 				catch (System.Exception e)
 				{
@@ -182,7 +181,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private static void PrintEntity(Printer printer, Printers.AbstractEntityPrinter entityPrinter, AbstractEntity entity)
+		private static void PrintEntityBase(Printer printer, Printers.AbstractEntityPrinter entityPrinter)
 		{
 			PrintDocument printDocument = new PrintDocument ();
 
