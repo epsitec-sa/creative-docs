@@ -12,10 +12,12 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class MultiPagePrintEngine : IPrintEngine
 	{
-		public MultiPagePrintEngine(Printers.AbstractEntityPrinter entityPrinter, Transform transform)
+		public MultiPagePrintEngine(Printers.AbstractEntityPrinter entityPrinter, Transform transform, int firstPage, int pageCount)
 		{
 			this.entityPrinter = entityPrinter;
-			this.transform = transform;
+			this.transform     = transform;
+			this.firstPage     = firstPage;
+			this.lastPage      = firstPage + pageCount;
 		}
 
 		#region IPrintEngine Members
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void StartingPrintJob()
 		{
 			this.entityPrinter.IsPreview = false;
-			this.entityPrinter.CurrentPage = 0;
+			this.entityPrinter.CurrentPage = this.firstPage;
 		}
 
 		public PrintEngineStatus PrintPage(PrintPort port)
@@ -41,7 +43,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.entityPrinter.CurrentPage++;
 
-			if (this.entityPrinter.CurrentPage < this.entityPrinter.PageCount)
+			if (this.entityPrinter.CurrentPage < this.lastPage)
 			{
 				return PrintEngineStatus.MorePages;
 			}
@@ -52,5 +54,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private readonly Printers.AbstractEntityPrinter entityPrinter;
 		private readonly Transform transform;
+		private readonly int firstPage;
+		private readonly int lastPage;
 	}
 }

@@ -202,12 +202,25 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.pages[page].PageType;
 		}
 
+		public int[] GetPhysicalPages(PrinterFunction printerFunctionUsed)
+		{
+			var list = new List<int> ();
+			var pages = this.GetPagesForFunction (printerFunctionUsed);
+
+			foreach (var page in pages)
+			{
+				list.Add (this.pages.IndexOf (page));
+			}
+
+			return list.ToArray ();
+		}
+
 		/// <summary>
 		/// Retourne le nombre de pages pour une imprimante donnée que contient le document.
 		/// </summary>
 		public int PageCount(PrinterFunction printerFunctionUsed)
 		{
-			return this.GetFilteredPages (printerFunctionUsed).Count;
+			return this.GetPagesForFunction (printerFunctionUsed).Count;
 		}
 
 		/// <summary>
@@ -215,7 +228,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		public bool IsEmpty(PrinterFunction printerFunctionUsed)
 		{
-			var pages = this.GetFilteredPages (printerFunctionUsed);
+			var pages = this.GetPagesForFunction (printerFunctionUsed);
 
 			if (pages.Count <= 0)
 			{
@@ -233,19 +246,17 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
-		public bool Paint(IPaintPort port, PrinterFunction printerFunctionUsed, int page, bool isPreview)
+		public bool Paint(IPaintPort port, int page, bool isPreview)
 		{
-			var pages = this.GetFilteredPages (printerFunctionUsed);
-
-			if (page >= 0 && page < pages.Count)
+			if (page >= 0 && page < this.pages.Count)
 			{
-				return pages[page].Paint (port, isPreview);
+				return this.pages[page].Paint (port, isPreview);
 			}
 
 			return true;
 		}
 
-		private List<PageContainer> GetFilteredPages(PrinterFunction printerFunctionUsed)
+		private List<PageContainer> GetPagesForFunction(PrinterFunction printerFunctionUsed)
 		{
 			//	Retourne la liste des pages pour une imprimante donnée.
 			return this.pages.Where (x => Common.IsPrinterAndPageMatching (printerFunctionUsed, x.PageType)).ToList ();

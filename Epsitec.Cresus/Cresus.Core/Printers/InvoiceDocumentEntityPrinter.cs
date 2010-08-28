@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			this.documentContainer.Paint (port, this.PrinterFunctionUsed, this.CurrentPage, this.IsPreview);
+			this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 		}
 
 
