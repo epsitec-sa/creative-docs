@@ -102,6 +102,11 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.documentContainer.GetPageType (page);
 		}
 
+		public int[] GetPhysicalPages()
+		{
+			return this.documentContainer.GetPhysicalPages (this.PrinterFunctionUsed);
+		}
+
 		public int PageCount
 		{
 			get

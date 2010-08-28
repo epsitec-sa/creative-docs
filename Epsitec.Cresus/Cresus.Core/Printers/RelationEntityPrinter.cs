@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
-				this.documentContainer.Paint (port, this.PrinterFunctionUsed, this.CurrentPage, this.IsPreview);
+				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 			}
 
 			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)

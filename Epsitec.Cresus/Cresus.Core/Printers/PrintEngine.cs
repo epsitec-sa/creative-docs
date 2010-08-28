@@ -37,6 +37,27 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
+			//	Imprime plusieurs entités sur les imprimantes/bacs correspondants.
+			//	Par exemple:
+			//		page 1: Imprimante A bac 1
+			//		page 2: Imprimante A bac 1
+			//		page 3: Imprimante A bac 2
+			//		page 4: Imprimante A bac 1
+			//		page 5: Imprimante A bac 1
+			//		page 6: Imprimante A bac 2
+			//	Sections générées:
+			//		page 1: Imprimante A bac 1
+			//		page 2: Imprimante A bac 1
+			//		page 4: Imprimante A bac 1
+			//		page 5: Imprimante A bac 1
+			//		page 3: Imprimante A bac 2
+			//		page 6: Imprimante A bac 2
+			//	Sections imprimées:
+			//		page 1..2: Imprimante A bac 1
+			//		page 3:    Imprimante A bac 2
+			//		page 4..4: Imprimante A bac 1
+			//		page 6:    Imprimante A bac 2
+
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
 
 			if (entities.Count == 0)
@@ -68,7 +89,9 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			//	Imprime toutes les entités.
+			//	Prépare toutes les pages à imprimer, pour toutes les entités.
+			//	On crée autant de sections que de pages, soit une section par page.
+			List<SectionToPrint> sections = new List<SectionToPrint> ();
 			List<Printer> printerList = PrinterSettings.GetPrinterList ();
 
 			for (int i=0; i<entities.Count; i++)
@@ -100,10 +123,44 @@ namespace Epsitec.Cresus.Core.Printers
 
 						if (!entityPrinter.IsEmpty)
 						{
-							PrintEngine.PrintEntity (printer, entityPrinter);
+							var physicalPages = entityPrinter.GetPhysicalPages ();
+
+							foreach (var physicalPage in physicalPages)
+							{
+								sections.Add (new SectionToPrint (printer, physicalPage, i, entityPrinter));
+							}
 						}
 					}
 				}
+			}
+
+			//	Trie toutes les pages, qui sont regroupées logiquement par imprimante physique.
+			sections.Sort (PrintEngine.CompareSectionToPrint);
+
+			//	Fusionne toutes les pages contigües qui utilisent la même imprimante en sections de plusieurs pages.
+			int index = 0;
+			while (index < sections.Count-1)
+			{
+				SectionToPrint p1 = sections[index];
+				SectionToPrint p2 = sections[index+1];
+
+				if (p1.Printer == p2.Printer &&
+					p1.EntityRank == p2.EntityRank &&
+					p1.FirstPage+p1.PageCount == p2.FirstPage)
+				{
+					p1.PageCount += p2.PageCount;  // ajoute les pages de p2 à p1
+					sections.RemoveAt (index+1);  // supprime p2
+				}
+				else
+				{
+					index++;
+				}
+			}
+
+			//	Imprime toutes les sections.
+			foreach (var page in sections)
+			{
+				PrintEngine.PrintEntity (page.Printer, page.EntityPrinter, page.FirstPage, page.PageCount);
 			}
 		}
 
@@ -174,7 +231,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void PrintEntity(Printer printer, AbstractEntityPrinter entityPrinter)
+		private static void PrintEntity(Printer printer, AbstractEntityPrinter entityPrinter, int firstPage, int pageCount)
 		{
 			var printerSettings = Epsitec.Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
 
@@ -184,7 +241,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				try
 				{
-					PrintEngine.PrintEntityBase (printer, entityPrinter);
+					PrintEngine.PrintEntityBase (printer, entityPrinter, firstPage, pageCount);
 				}
 				catch (System.Exception e)
 				{
@@ -198,13 +255,13 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private static void PrintEntityBase(Printer printer, Printers.AbstractEntityPrinter entityPrinter)
+		private static void PrintEntityBase(Printer printer, Printers.AbstractEntityPrinter entityPrinter, int firstPage, int pageCount)
 		{
 			PrintDocument printDocument = new PrintDocument ();
 
 			printDocument.DocumentName = entityPrinter.JobName;
 			printDocument.SelectPrinter (printer.PhysicalName);
-			//?printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.nbCopiesTextField.Text), CultureInfo.InvariantCulture);
+			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
 
@@ -226,9 +283,93 @@ namespace Epsitec.Cresus.Core.Printers
 				transform = Transform.CreateRotationDegTransform (90, entityPrinter.PageSize.Height/2, entityPrinter.PageSize.Height/2);
 			}
 
-			var engine = new MultiPagePrintEngine (entityPrinter, transform);
+			var engine = new MultiPagePrintEngine (entityPrinter, transform, firstPage, pageCount);
 			printDocument.Print (engine);
 		}
+
+
+		#region Page to print
+		private class SectionToPrint
+		{
+			public SectionToPrint(Printer printer, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
+			{
+				//	Crée une section d'une page.
+				this.printer       = printer;
+				this.firstPage     = firstPage;
+				this.PageCount     = 1;
+				this.entityRank    = entityRank;
+				this.entityPrinter = entityPrinter;
+			}
+
+			public Printer Printer
+			{
+				get
+				{
+					return this.printer;
+				}
+			}
+
+			public int FirstPage
+			{
+				get
+				{
+					return this.firstPage;
+				}
+			}
+
+			public int PageCount
+			{
+				get;
+				set;
+			}
+
+			public int EntityRank
+			{
+				get
+				{
+					return this.entityRank;
+				}
+			}
+
+			public AbstractEntityPrinter EntityPrinter
+			{
+				get
+				{
+					return this.entityPrinter;
+				}
+			}
+
+			private readonly Printer				printer;
+			private readonly int					firstPage;
+			private readonly int					entityRank;
+			private readonly AbstractEntityPrinter	entityPrinter;
+		}
+
+		private static int CompareSectionToPrint(SectionToPrint x, SectionToPrint y)
+		{
+			//	Détermine comment regrouper les pages. On cherche à grouper les pages
+			//	qui utilisent une même imprimante physique.
+			int result;
+
+			result = string.Compare (x.Printer.PhysicalName, y.Printer.PhysicalName);
+			if (result != 0)
+			{
+				return result;
+			}
+
+			if (x.EntityRank != y.EntityRank)
+			{
+				return (x.EntityRank < y.EntityRank) ? -1 : 1;
+			}
+
+			if (x.FirstPage != y.FirstPage)
+			{
+				return (x.FirstPage < y.FirstPage) ? -1 : 1;
+			}
+
+			return 0;
+		}
+		#endregion
 
 
 		private enum Operation
