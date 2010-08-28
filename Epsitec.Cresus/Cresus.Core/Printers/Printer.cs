@@ -13,7 +13,7 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core.Printers
 {
 
-	class Printer
+	public class Printer
 	{
 		public Printer()
 		{

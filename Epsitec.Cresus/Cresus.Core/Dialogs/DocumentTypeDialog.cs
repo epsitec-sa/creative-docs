@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printerCombos = new List<TextFieldCombo> ();
 
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
-			this.printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
+			this.printerList = Printers.PrinterSettings.GetPrinterList ();
 		}
 
 

@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Construit l'ensemble des pages.
 			entityPrinter.BuildSections ();
 
-			List<Printer> printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
+			List<Printer> printerList = PrinterSettings.GetPrinterList ();
 
 			foreach (DocumentPrinter documentPrinter in documentType.DocumentPrinters)
 			{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static void PrintEntities(Printer printer, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
 		{
-			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.PhysicalName);
+			var printerSettings = Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
 
 			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
 
