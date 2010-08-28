@@ -331,13 +331,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdatePage()
 		{
 			this.pagePrevButton.Enable = this.entityPrinter.CurrentPage > 0;
-			this.pageNextButton.Enable = this.entityPrinter.CurrentPage < this.entityPrinter.PageCount-1;
+			this.pageNextButton.Enable = this.entityPrinter.CurrentPage < this.entityPrinter.PageCount ()-1;
 			this.pageRank.Text = (this.entityPrinter.CurrentPage+1).ToString ();
 
 			this.preview.Invalidate ();
 
 			this.printerPageInfo.Text = this.GetPrintersUsedDescription ();
-			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount.ToString (), (this.entityPrinter.PageCount<=1)?"":"s");
+			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount ().ToString (), (this.entityPrinter.PageCount ()<=1)?"":"s");
 		}
 
 		private string GetPrintersUsedDescription()
@@ -449,7 +449,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.entityPrinter.Clear ();
 			this.entityPrinter.BuildSections ();
 
-			this.entityPrinter.CurrentPage = System.Math.Min (this.entityPrinter.CurrentPage, this.entityPrinter.PageCount-1);
+			this.entityPrinter.CurrentPage = System.Math.Min (this.entityPrinter.CurrentPage, this.entityPrinter.PageCount ()-1);
 			this.UpdatePage ();
 		}
 

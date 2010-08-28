@@ -24,8 +24,6 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.PrinterFunctionUsed = PrinterFunction.ForAllPages;
-
 			this.documentTypes = new List<DocumentType> ();
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
@@ -81,38 +79,24 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public PrinterFunction PrinterFunctionUsed
+		public bool IsEmpty(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
 		{
-			//	Détermine le type de l'imprimante utilisée pour imprimer le document.
-			//	IsEmpty, PageCount, etc. dépendent de PrinterFunctionUsed.
-			get;
-			set;
+			return this.documentContainer.IsEmpty (printerFunctionUsed);
 		}
 
-		public bool IsEmpty
+		public int[] GetPhysicalPages(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
 		{
-			get
-			{
-				return this.documentContainer.IsEmpty (this.PrinterFunctionUsed);
-			}
+			return this.documentContainer.GetPhysicalPages (printerFunctionUsed);
+		}
+
+		public int PageCount(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
+		{
+			return this.documentContainer.PageCount (printerFunctionUsed);
 		}
 
 		public PageType GetPageType(int page)
 		{
 			return this.documentContainer.GetPageType (page);
-		}
-
-		public int[] GetPhysicalPages()
-		{
-			return this.documentContainer.GetPhysicalPages (this.PrinterFunctionUsed);
-		}
-
-		public int PageCount
-		{
-			get
-			{
-				return this.documentContainer.PageCount (this.PrinterFunctionUsed);
-			}
 		}
 
 		public int CurrentPage
