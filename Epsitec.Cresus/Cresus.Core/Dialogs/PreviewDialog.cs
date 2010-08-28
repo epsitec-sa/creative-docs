@@ -368,9 +368,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 					}
 
 					builder.Append (pair.Key);
-					builder.Append (" (");
-					builder.Append (pair.Value.ToString ());  // par exemple: "Brouillon (2×)"
-					builder.Append ("×)");
+
+					if (pair.Value > 1)
+					{
+						builder.Append (" (");
+						builder.Append (pair.Value.ToString ());  // par exemple: "Brouillon (2×)"
+						builder.Append ("×)");
+					}
 
 					i++;
 				}
@@ -394,9 +398,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (!string.IsNullOrEmpty (printerToUse.LogicalPrinterName))
 				{
-					if (printerToUse.PageType == PageTypeEnum.All ||
-						printerToUse.PageType == PageTypeEnum.Copy||
-						printerToUse.PageType == pageType         )
+					if (Misc.IsCompatiblePrinterPage (printerToUse.PrinterType, pageType))
 					{
 						if (dico.ContainsKey (printerToUse.LogicalPrinterName))
 						{

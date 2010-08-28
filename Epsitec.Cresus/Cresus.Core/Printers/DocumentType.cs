@@ -60,16 +60,16 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public PrinterToUse GetPrinterToUse(PageTypeEnum pageType)
+		public PrinterToUse GetPrinterToUse(PrinterTypeEnum printerType)
 		{
-			return this.printersToUse.Where (x => x.PageType == pageType).FirstOrDefault ();
+			return this.printersToUse.Where (x => x.PrinterType == printerType).FirstOrDefault ();
 		}
 
 		public bool IsPrintersToUseDefined
 		{
 			get
 			{
-				PrinterToUse all = this.GetPrinterToUse (PageTypeEnum.All);
+				PrinterToUse all = this.GetPrinterToUse (PrinterTypeEnum.All);
 				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
 					return true;
@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 				foreach (var p in this.printersToUse)
 				{
-					if (p.PageType == PageTypeEnum.All ||
-						p.PageType == PageTypeEnum.Copy)
+					if (p.PrinterType == PrinterTypeEnum.All ||
+						p.PrinterType == PrinterTypeEnum.Copy)
 					{
 						continue;
 					}
@@ -184,17 +184,17 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddPrinterBase()
 		{
 			//	Ajoute les imprimantes de base, qui devraient toujours exister.
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.All,       "Pour l'ensemble des pages :",              "Base"));
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Copy,      "Pour une copie de l'ensemble des pages :", "Base"));
+			this.printersToUse.Add (new PrinterToUse (PrinterTypeEnum.All,       "Pour l'ensemble des pages :",              "Base"));
+			this.printersToUse.Add (new PrinterToUse (PrinterTypeEnum.Copy,      "Pour une copie de l'ensemble des pages :", "Base"));
 
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.First,     "Pour la première page :",                  "Spec"));
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.Following, "Pour les pages suivantes :",               "Spec"));
+			this.printersToUse.Add (new PrinterToUse (PrinterTypeEnum.First,     "Pour la première page :",                  "Spec"));
+			this.printersToUse.Add (new PrinterToUse (PrinterTypeEnum.Following, "Pour les pages suivantes :",               "Spec"));
 		}
 
 		public void AddPrinterEsr()
 		{
 			//	Ajoute l'imprimante spécifique pour les BV.
-			this.printersToUse.Add (new PrinterToUse (PageTypeEnum.ESR,       "Pour le BV :",                             "Spec"));
+			this.printersToUse.Add (new PrinterToUse (PrinterTypeEnum.ESR,       "Pour le BV :",                             "Spec"));
 		}
 		#endregion
 

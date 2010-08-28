@@ -205,17 +205,17 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Retourne le nombre de pages d'un type donné que contient le document.
 		/// </summary>
-		public int PageCount(PageTypeEnum pageTypeFilter)
+		public int PageCount(PrinterTypeEnum printerTypeFilter)
 		{
-			return this.GetFilteredPages (pageTypeFilter).Count;
+			return this.GetFilteredPages (printerTypeFilter).Count;
 		}
 
 		/// <summary>
 		/// Retourne true s'il n'y a rien à imprimer pour un type donné.
 		/// </summary>
-		public bool IsEmpty(PageTypeEnum pageTypeFilter)
+		public bool IsEmpty(PrinterTypeEnum printerTypeFilter)
 		{
-			var pages = this.GetFilteredPages (pageTypeFilter);
+			var pages = this.GetFilteredPages (printerTypeFilter);
 
 			if (pages.Count <= 0)
 			{
@@ -236,9 +236,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="port">Port graphique</param>
 		/// <param name="page">Rang de la page (0..n)</param>
 		/// <returns></returns>
-		public bool Paint(IPaintPort port, PageTypeEnum pageTypeFilter, int page, bool isPreview)
+		public bool Paint(IPaintPort port, PrinterTypeEnum printerTypeFilter, int page, bool isPreview)
 		{
-			var pages = this.GetFilteredPages (pageTypeFilter);
+			var pages = this.GetFilteredPages (printerTypeFilter);
 
 			if (page >= 0 && page < pages.Count)
 			{
@@ -248,17 +248,9 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private List<PageContainer> GetFilteredPages(PageTypeEnum pageTypeFilter)
+		private List<PageContainer> GetFilteredPages(PrinterTypeEnum printerTypeFilter)
 		{
-			if (pageTypeFilter == PageTypeEnum.All ||
-				pageTypeFilter == PageTypeEnum.Copy)
-			{
-				return this.pages;
-			}
-			else
-			{
-				return this.pages.Where (x => x.PageType == pageTypeFilter).ToList ();
-			}
+			return this.pages.Where (x => Misc.IsCompatiblePrinterPage (printerTypeFilter, x.PageType)).ToList ();
 		}
 
 

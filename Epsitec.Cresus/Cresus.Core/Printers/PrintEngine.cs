@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					//	Indique le type des pages auxquelles on s'intéresse. Les autres
 					//	seront ignorées.
-					entityPrinter.PageTypeFilter = printerToUse.PageType;
+					entityPrinter.PrinterTypeFilter = printerToUse.PrinterType;
 
 					if (!entityPrinter.IsEmpty)
 					{
