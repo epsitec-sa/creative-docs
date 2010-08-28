@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					field.SelectedItemChanged += delegate
 					{
-						PrinterTypeEnum printerType = (PrinterTypeEnum) System.Enum.Parse (typeof (PrinterTypeEnum), field.Name);
+						PrinterType printerType = (PrinterType) System.Enum.Parse (typeof (PrinterType), field.Name);
 						PrinterToUse p = documentType.GetPrinterToUse (printerType);
 						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 

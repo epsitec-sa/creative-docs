@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void Clear()
 		{
 			this.pages.Clear ();
-			this.pages.Add (new PageContainer (0, PageTypeEnum.First));  // crée la première page
+			this.pages.Add (new PageContainer (0, PageType.First));  // crée la première page
 
 			this.currentPage = 0;
 
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Si la dernière page actuelle n'est pas vide, crée une nouvelle page vide.
 		/// </summary>
-		public int PrepareEmptyPage(PageTypeEnum pageType)
+		public int PrepareEmptyPage(PageType pageType)
 		{
 			if (this.pages.Last ().Count > 0)  // dernière page non vide ?
 			{
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.currentVerticalPosition - requiredHeight < this.pageMargins.Bottom)  // pas assez de place en bas ?
 				{
-					this.AddNewPage (PageTypeEnum.Following);
+					this.AddNewPage (PageType.Following);
 				}
 
 				this.pages[this.currentPage].AddBand (band, section, new Point (this.pageMargins.Left, this.currentVerticalPosition));
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.currentVerticalPosition-h < bottomPosition)  // pas assez de place ?
 			{
-				this.AddNewPage (PageTypeEnum.Following);
+				this.AddNewPage (PageType.Following);
 			}
 
 			Rectangle bounds = new Rectangle (this.pageMargins.Left, bottomPosition, width, h);
@@ -197,25 +197,25 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public PageTypeEnum GetPageType(int page)
+		public PageType GetPageType(int page)
 		{
 			return this.pages[page].PageType;
 		}
 
 		/// <summary>
-		/// Retourne le nombre de pages d'un type donné que contient le document.
+		/// Retourne le nombre de pages pour une imprimante donnée que contient le document.
 		/// </summary>
-		public int PageCount(PrinterTypeEnum printerTypeFilter)
+		public int PageCount(PrinterType printerTypeUsed)
 		{
-			return this.GetFilteredPages (printerTypeFilter).Count;
+			return this.GetFilteredPages (printerTypeUsed).Count;
 		}
 
 		/// <summary>
-		/// Retourne true s'il n'y a rien à imprimer pour un type donné.
+		/// Retourne true s'il n'y a rien à imprimer pour une imprimante donnée.
 		/// </summary>
-		public bool IsEmpty(PrinterTypeEnum printerTypeFilter)
+		public bool IsEmpty(PrinterType printerTypeUsed)
 		{
-			var pages = this.GetFilteredPages (printerTypeFilter);
+			var pages = this.GetFilteredPages (printerTypeUsed);
 
 			if (pages.Count <= 0)
 			{
@@ -231,14 +231,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Dessine une page d'un type donné du document.
+		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
-		/// <param name="port">Port graphique</param>
-		/// <param name="page">Rang de la page (0..n)</param>
-		/// <returns></returns>
-		public bool Paint(IPaintPort port, PrinterTypeEnum printerTypeFilter, int page, bool isPreview)
+		public bool Paint(IPaintPort port, PrinterType printerTypeUsed, int page, bool isPreview)
 		{
-			var pages = this.GetFilteredPages (printerTypeFilter);
+			var pages = this.GetFilteredPages (printerTypeUsed);
 
 			if (page >= 0 && page < pages.Count)
 			{
@@ -248,13 +245,14 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private List<PageContainer> GetFilteredPages(PrinterTypeEnum printerTypeFilter)
+		private List<PageContainer> GetFilteredPages(PrinterType printerTypeUsed)
 		{
-			return this.pages.Where (x => Misc.IsCompatiblePrinterPage (printerTypeFilter, x.PageType)).ToList ();
+			//	Retourne la liste des pages pour une imprimante donnée.
+			return this.pages.Where (x => Misc.IsCompatiblePrinterPage (printerTypeUsed, x.PageType)).ToList ();
 		}
 
 
-		private void AddNewPage(PageTypeEnum pageType)
+		private void AddNewPage(PageType pageType)
 		{
 			this.pages.Add (new PageContainer (this.pages.Count, pageType));  // crée une nouvelle page
 

@@ -144,8 +144,8 @@
     <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
-    <Compile Include="Printers\PrinterTypeEnum.cs" />
-    <Compile Include="Printers\PageTypeEnum.cs" />
+    <Compile Include="Printers\PrinterType.cs" />
+    <Compile Include="Printers\PageType.cs" />
     <Compile Include="Printers\PrinterToUse.cs" />
     <Compile Include="Printers\DocumentTypeEnum.cs" />
     <Compile Include="TextFormatter.cs" />

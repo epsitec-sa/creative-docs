@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class PageContainer
 	{
-		public PageContainer(int page, PageTypeEnum pageType)
+		public PageContainer(int page, PageType pageType)
 		{
 			this.page = page;
 			this.pageType = pageType;
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.bands = new List<BandContainer> ();
 		}
 
-		public PageTypeEnum PageType
+		public PageType PageType
 		{
 			get
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private readonly int					page;
-		private readonly PageTypeEnum			pageType;
+		private readonly PageType			pageType;
 		private readonly List<BandContainer>	bands;
 	}
 }
