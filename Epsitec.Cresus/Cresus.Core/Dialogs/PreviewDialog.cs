@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			Dictionary<string, int> dico = new Dictionary<string, int> ();
 
-			PageTypeEnum pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
+			PageType pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
 
 			DocumentType documentType = this.entityPrinter.DocumentTypeSelected;
 			List<PrinterToUse> printersToUse = documentType.PrintersToUse;

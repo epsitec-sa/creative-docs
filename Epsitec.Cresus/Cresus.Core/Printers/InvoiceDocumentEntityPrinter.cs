@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Offer)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Order)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.OrderAcknowledge)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var groups = this.GetProdGroups ();
 				foreach (var group in groups)
 				{
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (null, group);
 					this.BuildArticles (group);
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
 			{
-				int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 				this.BuildHeader (null);
 				this.BuildArticles ();
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.Printers
 				if (this.entity.BillingDetails.Count != 0)
 				{
 					var billingDetails = this.entity.BillingDetails[0];
-					int firstPage = this.documentContainer.PrepareEmptyPage (PageTypeEnum.First);
+					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (billingDetails);
 					this.BuildArticles ();
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			this.documentContainer.Paint (port, this.PrinterTypeFilter, this.CurrentPage, this.IsPreview);
+			this.documentContainer.Paint (port, this.PrinterTypeUsed, this.CurrentPage, this.IsPreview);
 		}
 
 
@@ -1133,7 +1133,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PrinterTypeFilter); page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PrinterTypeUsed); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
@@ -1160,7 +1160,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	d'en-tête (noms des colonnes).
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PrinterTypeFilter); page++)
+			for (int page = firstPage+1; page < this.documentContainer.PageCount (this.PrinterTypeUsed); page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1212,7 +1212,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met un report en bas des pages concernées.
 			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
-			for (int page = firstPage; page < this.documentContainer.PageCount (this.PrinterTypeFilter)-1; page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PrinterTypeUsed)-1; page++)
 			{
 				int relativePage = page-firstPage;
 
@@ -1306,18 +1306,18 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildInsideEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose en bas de chaque page.
-			for (int page = firstPage; page < this.documentContainer.PageCount (this.PrinterTypeFilter); page++)
+			for (int page = firstPage; page < this.documentContainer.PageCount (this.PrinterTypeUsed); page++)
 			{
 				this.documentContainer.CurrentPage = page;
 
-				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount (this.PrinterTypeFilter)-1);
+				this.BuildEsr (billingDetails, mackle: page != this.documentContainer.PageCount (this.PrinterTypeUsed)-1);
 			}
 		}
 
 		private void BuildOutsideEsr(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			this.documentContainer.PrepareEmptyPage (PageTypeEnum.ESR);
+			this.documentContainer.PrepareEmptyPage (PageType.ESR);
 
 			this.BuildEsr (billingDetails);
 		}

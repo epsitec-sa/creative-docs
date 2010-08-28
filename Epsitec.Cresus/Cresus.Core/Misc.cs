@@ -14,18 +14,18 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
-		public static bool IsCompatiblePrinterPage(Printers.PrinterTypeEnum printerType, Printers.PageTypeEnum pageType)
+		public static bool IsCompatiblePrinterPage(Printers.PrinterType printerType, Printers.PageType pageType)
 		{
 			//	Retourne true si une imprimante est compatible pour imprimer une page d'un type donné.
-			if (printerType == Printers.PrinterTypeEnum.All ||
-				printerType == Printers.PrinterTypeEnum.Copy)
+			if (printerType == Printers.PrinterType.All ||
+				printerType == Printers.PrinterType.Copy)  // imprimente pour tous les types de page ?
 			{
 				return true;
 			}
 
-			if ((printerType == Printers.PrinterTypeEnum.First     && pageType == Printers.PageTypeEnum.First    ) ||
-				(printerType == Printers.PrinterTypeEnum.Following && pageType == Printers.PageTypeEnum.Following) ||
-				(printerType == Printers.PrinterTypeEnum.ESR       && pageType == Printers.PageTypeEnum.ESR      ) )
+			if ((printerType == Printers.PrinterType.First     && pageType == Printers.PageType.First    ) ||
+				(printerType == Printers.PrinterType.Following && pageType == Printers.PageType.Following) ||
+				(printerType == Printers.PrinterType.ESR       && pageType == Printers.PageType.ESR      ) )
 			{
 				return true;
 			}

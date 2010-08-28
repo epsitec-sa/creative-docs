@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class PrinterToUse
 	{
-		public PrinterToUse(PrinterTypeEnum printerType, string description, string group)
+		public PrinterToUse(PrinterType printerType, string description, string group)
 		{
 			this.PrinterType = printerType;
 			this.Description = description;
 			this.Group       = group;
 		}
 
-		public PrinterTypeEnum PrinterType
+		public PrinterType PrinterType
 		{
 			get;
 			set;

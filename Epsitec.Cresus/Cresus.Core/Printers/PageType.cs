@@ -7,10 +7,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public enum PageTypeEnum
+	public enum PageType
 	{
-		First,			// page de garde
-		Following,		// page suivante
+		First,			// page de garde (0)
+		Following,		// page suivante (1..n)
+
 		ESR,			// page avec BV
 	}
 }
