@@ -145,8 +145,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			if (this.entityPrinter.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1 ||
-				this.entityPrinter.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
+			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1 ||
+				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
 			{
 				this.debugPrevButton1 = new GlyphButton
 				{

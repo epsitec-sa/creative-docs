@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.HasDocumentOption ("Orientation.Horizontal"))
+				if (this.EntityPrintingSettings.HasDocumentOption ("Orientation.Horizontal"))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				double h = this.IsDocumentWithoutPrice ? 0 : InvoiceDocumentEntityPrinter.reportHeight;
 
-				if (this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR)
+				if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR)
 				{
 					return new Margins (20, 10, 20+h*2, h+10+AbstractEsrBand.DefautlSize.Height);
 				}
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Printers
 			base.BuildSections ();
 			this.documentContainer.Clear ();
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Offer)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Offer)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages (null, firstPage);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Order)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Order)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages (null, firstPage);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.OrderAcknowledge)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.OrderAcknowledge)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages (null, firstPage);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder)
 			{
 				var groups = this.GetProdGroups ();
 				foreach (var group in groups)
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
 			{
 				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
@@ -190,8 +190,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildPages (null, firstPage);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR ||
-				this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR ||
+				this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
 			{
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithoutESR)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithoutESR)
 			{
 				if (this.entity.BillingDetails.Count != 0)
 				{
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var titleBand = new TextBand ();
-			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeEnumSelected);
+			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.EntityPrintingSettings.DocumentTypeEnumSelected);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
 			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.BL)
 			{
 				this.tableColumns[TableColumnKeys.Discount ].Visible = false;
 				this.tableColumns[TableColumnKeys.UnitPrice].Visible = false;
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Total    ].Visible = false;
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder)
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
@@ -428,13 +428,13 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Total          ].Visible = false;
 			}
 
-			if (!this.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			if (!this.EntityPrintingSettings.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
 			}
 
-			if (!this.HasDocumentOption ("ArticleId"))  // n'imprime pas les numéros d'article ?
+			if (!this.EntityPrintingSettings.HasDocumentOption ("ArticleId"))  // n'imprime pas les numéros d'article ?
 			{
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
@@ -614,12 +614,12 @@ namespace Epsitec.Cresus.Core.Printers
 		private int InitializeColumnArticleLine(ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return 0;
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
 			{
 				return 0;
 			}
@@ -731,12 +731,12 @@ namespace Epsitec.Cresus.Core.Printers
 		private int BuildArticleLine(TableBand table, int row, ArticleDocumentItemEntity line, ArticleGroupEntity group)
 		{
 			//	Retourne le nombre de lignes à utiliser dans le tableau.
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.BL && !ArticleDocumentItemHelper.IsArticleForBL (line))
 			{
 				return 0;
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder && !ArticleDocumentItemHelper.IsArticleForProd (line, group))
 			{
 				return 0;
 			}
@@ -768,7 +768,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder);
+			FormattedText description = ArticleDocumentItemHelper.GetArticleDescription (line, replaceTags: true, shortDescription: this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder);
 
 			if (q1 != null)
 			{
@@ -1017,7 +1017,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
 		{
-			if (!this.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			if (!this.EntityPrintingSettings.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
 			{
 				foreach (var quantity in line.ArticleQuantities)
 				{
@@ -1067,7 +1067,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildFooter()
 		{
-			if (this.HasDocumentOption ("BL.Signing"))
+			if (this.EntityPrintingSettings.HasDocumentOption ("BL.Signing"))
 			{
 				var table = new TableBand ();
 
@@ -1086,7 +1086,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 			}
 
-			if (this.HasDocumentOption ("Prod.Signing"))
+			if (this.EntityPrintingSettings.HasDocumentOption ("Prod.Signing"))
 			{
 				var table = new TableBand ();
 
@@ -1105,7 +1105,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
 			}
 
-			if (this.HasDocumentOption ("Commande.Signing"))
+			if (this.EntityPrintingSettings.HasDocumentOption ("Commande.Signing"))
 			{
 				var table = new TableBand ();
 
@@ -1138,7 +1138,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.documentContainer.CurrentPage = page;
 
 				var leftHeader = new TextBand ();
-				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeEnumSelected);
+				leftHeader.Text = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.EntityPrintingSettings.DocumentTypeEnumSelected);
 				leftHeader.Alignment = ContentAlignment.BottomLeft;
 				leftHeader.Font = font;
 				leftHeader.FontSize = 4.0;
@@ -1292,12 +1292,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildEsrs(BillingDetailEntity billingDetails, int firstPage)
 		{
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithInsideESR)
 			{
 				this.BuildInsideEsrs (billingDetails, firstPage);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.InvoiceWithOutsideESR)
 			{
 				this.BuildOutsideEsr (billingDetails, firstPage);
 			}
@@ -1327,7 +1327,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
 			AbstractEsrBand Esr;
 
-			if (this.HasDocumentOption ("ESR"))
+			if (this.EntityPrintingSettings.HasDocumentOption ("ESR"))
 			{
 				Esr = new EsrBand ();  // BVR orangé
 			}
@@ -1336,11 +1336,11 @@ namespace Epsitec.Cresus.Core.Printers
 				Esr = new EsBand ();  // BV rose
 			}
 
-			Esr.PaintEsrSimulator = this.HasDocumentOption ("ESR.Simul");
-			Esr.PaintSpecimen     = this.HasDocumentOption ("ESR.Specimen");
+			Esr.PaintEsrSimulator = this.EntityPrintingSettings.HasDocumentOption ("ESR.Simul");
+			Esr.PaintSpecimen     = this.EntityPrintingSettings.HasDocumentOption ("ESR.Specimen");
 			Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 			Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
-			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.DocumentTypeEnumSelected);
+			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.EntityPrintingSettings.DocumentTypeEnumSelected);
 
 			if (mackle)  // faux BV ?
 			{
@@ -1363,8 +1363,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.DocumentTypeEnumSelected == DocumentTypeEnum.BL ||
-					   this.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder;
+				return this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.BL ||
+					   this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.ProductionOrder;
 			}
 		}
 
@@ -1372,7 +1372,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.HasDocumentOption ("ColumnsOrderQD");
+				return this.EntityPrintingSettings.HasDocumentOption ("ColumnsOrderQD");
 			}
 		}
 
@@ -1451,7 +1451,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.HasDocumentOption ("WithLine");
+				return this.EntityPrintingSettings.HasDocumentOption ("WithLine");
 			}
 		}
 
@@ -1459,7 +1459,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.HasDocumentOption ("WithFrame");
+				return this.EntityPrintingSettings.HasDocumentOption ("WithFrame");
 			}
 		}
 

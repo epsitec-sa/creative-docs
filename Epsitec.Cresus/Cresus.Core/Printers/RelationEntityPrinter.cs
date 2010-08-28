@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.HasDocumentOption ("Orientation.Horizontal"))
+				if (this.EntityPrintingSettings.HasDocumentOption ("Orientation.Horizontal"))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -72,22 +72,22 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.BuildSections ();
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
 				this.BuildTitle ();
 				this.BuildSummary ();
 
-				if (this.HasDocumentOption ("Mail"))
+				if (this.EntityPrintingSettings.HasDocumentOption ("Mail"))
 				{
 					this.BuildContacts (this.BuildMailContacts);
 				}
 
-				if (this.HasDocumentOption ("Telecom"))
+				if (this.EntityPrintingSettings.HasDocumentOption ("Telecom"))
 				{
 					this.BuildContacts (this.BuildTelecomContacts);
 				}
 
-				if (this.HasDocumentOption ("Uri"))
+				if (this.EntityPrintingSettings.HasDocumentOption ("Uri"))
 				{
 					this.BuildContacts (this.BuildUriContacts);
 				}
@@ -98,17 +98,17 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
 			{
 				this.documentContainer.Paint (port, this.PrinterFunctionUsed, this.CurrentPage, this.IsPreview);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
 			{
 				this.PaintTest2 (port);
 			}
