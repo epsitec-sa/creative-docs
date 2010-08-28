@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Printers
 		All,			// imprimante pour toutes les pages
 		Copy,			// imprimante pour une copie de toutes les pages
 
-		First,			// imprimante pour la page de garde (0)
+		First,			// imprimante pour la première page (0)
 		Following,		// imprimante pour les pages suivantes (1..n)
 		
 		ESR,			// imprimante pour BV
