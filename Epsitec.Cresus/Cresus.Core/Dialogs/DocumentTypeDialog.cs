@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				this.acceptButton.Enable = this.entityPrinter.DocumentTypeEnumSelected != DocumentTypeEnum.None && this.entityPrinter.DocumentTypeSelected.IsPrintersToUseDefined;
+				this.acceptButton.Enable = this.entityPrinter.DocumentTypeEnumSelected != DocumentTypeEnum.None && this.entityPrinter.DocumentTypeSelected.IsDocumentPrintersDefined;
 			}
 
 			this.UpdateOptions ();
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var documentType = this.GetDocumentType (this.entityPrinter.DocumentTypeEnumSelected);
 			if (documentType != null)
 			{
-				if (documentType.PrintersToUse.Count == 0)
+				if (documentType.DocumentPrinters.Count == 0)
 				{
 					var title = new StaticText
 					{
@@ -555,14 +555,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 				int tabIndex = 0;
 				string lastGroup = null;
 
-				foreach (var printerToUse in documentType.PrintersToUse)
+				foreach (var documentPrinter in documentType.DocumentPrinters)
 				{
-					double space = (lastGroup !=null && printerToUse.Group != lastGroup) ? 30 : 2;
+					double space = (lastGroup !=null && documentPrinter.Group != lastGroup) ? 30 : 2;
 
 					var label = new StaticText
 					{
 						Parent = this.printersFrame,
-						Text = printerToUse.Description,
+						Text = documentPrinter.Description,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, space, UIBuilder.MarginUnderLabel),
 					};
@@ -570,15 +570,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var field = new TextFieldCombo
 					{
 						IsReadOnly = true,
-						Name = printerToUse.PrinterType.ToString (),
+						Name = documentPrinter.PrinterType.ToString (),
 						Parent = this.printersFrame,
-						Text = printerToUse.LogicalPrinterName,
+						Text = documentPrinter.LogicalPrinterName,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, 0),
 						TabIndex = ++tabIndex,
 					};
 
-					string settings = this.GetSettings (false, string.Concat ("Printer.", printerToUse.PrinterType));
+					string settings = this.GetSettings (false, string.Concat ("Printer.", documentPrinter.PrinterType));
 					if (!string.IsNullOrEmpty (settings))
 					{
 						Printer p = this.printerList.Where (x => x.LogicalName == settings).FirstOrDefault ();
@@ -586,7 +586,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						if (p != null)
 						{
 							field.Text = p.NiceDescription;
-							printerToUse.LogicalPrinterName = p.LogicalName;
+							documentPrinter.LogicalPrinterName = p.LogicalName;
 						}
 					}
 
@@ -600,7 +600,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					field.SelectedItemChanged += delegate
 					{
 						PrinterType printerType = (PrinterType) System.Enum.Parse (typeof (PrinterType), field.Name);
-						PrinterToUse p = documentType.GetPrinterToUse (printerType);
+						DocumentPrinter p = documentType.GetDocumentPrinter (printerType);
 						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 
 						this.SetSettings (false, string.Concat("Printer.", p.PrinterType), p.LogicalPrinterName);
@@ -610,7 +610,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					this.printerCombos.Add (field);
 
-					lastGroup = printerToUse.Group;
+					lastGroup = documentPrinter.Group;
 				}
 			}
 		}

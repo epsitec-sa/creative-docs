@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.LongDescription = longDescription;
 
 			this.options = new List<DocumentOption> ();
-			this.printersToUse = new List<PrinterToUse> ();
+			this.printers = new List<DocumentPrinter> ();
 		}
 
 		public DocumentTypeEnum Type
@@ -52,30 +52,30 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public List<PrinterToUse> PrintersToUse
+		public List<DocumentPrinter> DocumentPrinters
 		{
 			get
 			{
-				return this.printersToUse;
+				return this.printers;
 			}
 		}
 
-		public PrinterToUse GetPrinterToUse(PrinterType printerType)
+		public DocumentPrinter GetDocumentPrinter(PrinterType printerType)
 		{
-			return this.printersToUse.Where (x => x.PrinterType == printerType).FirstOrDefault ();
+			return this.printers.Where (x => x.PrinterType == printerType).FirstOrDefault ();
 		}
 
-		public bool IsPrintersToUseDefined
+		public bool IsDocumentPrintersDefined
 		{
 			get
 			{
-				PrinterToUse all = this.GetPrinterToUse (PrinterType.All);
+				DocumentPrinter all = this.GetDocumentPrinter (PrinterType.All);
 				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
 					return true;
 				}
 
-				foreach (var p in this.printersToUse)
+				foreach (var p in this.printers)
 				{
 					if (p.PrinterType == PrinterType.All ||
 						p.PrinterType == PrinterType.Copy)
@@ -184,17 +184,17 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddPrinterBase()
 		{
 			//	Ajoute les imprimantes de base, qui devraient toujours exister.
-			this.printersToUse.Add (new PrinterToUse (PrinterType.All,       "Pour l'ensemble des pages :",              "Base"));
-			this.printersToUse.Add (new PrinterToUse (PrinterType.Copy,      "Pour une copie de l'ensemble des pages :", "Base"));
+			this.printers.Add (new DocumentPrinter (PrinterType.All,       "Pour l'ensemble des pages :",              "Base"));
+			this.printers.Add (new DocumentPrinter (PrinterType.Copy,      "Pour une copie de l'ensemble des pages :", "Base"));
 
-			this.printersToUse.Add (new PrinterToUse (PrinterType.First,     "Pour la première page :",                  "Spec"));
-			this.printersToUse.Add (new PrinterToUse (PrinterType.Following, "Pour les pages suivantes :",               "Spec"));
+			this.printers.Add (new DocumentPrinter (PrinterType.First,     "Pour la première page :",                  "Spec"));
+			this.printers.Add (new DocumentPrinter (PrinterType.Following, "Pour les pages suivantes :",               "Spec"));
 		}
 
 		public void AddPrinterEsr()
 		{
 			//	Ajoute l'imprimante spécifique pour les BV.
-			this.printersToUse.Add (new PrinterToUse (PrinterType.ESR,       "Pour le BV :",                             "Spec"));
+			this.printers.Add (new DocumentPrinter (PrinterType.ESR,       "Pour le BV :",                             "Spec"));
 		}
 		#endregion
 
@@ -219,6 +219,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private readonly List<DocumentOption>		options;
-		private readonly List<PrinterToUse>			printersToUse;
+		private readonly List<DocumentPrinter>		printers;
 	}
 }

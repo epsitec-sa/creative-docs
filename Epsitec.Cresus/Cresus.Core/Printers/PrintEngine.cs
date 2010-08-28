@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			DocumentType documentType = entityPrinter.DocumentTypeSelected;
 
-			if (!documentType.IsPrintersToUseDefined)
+			if (!documentType.IsDocumentPrintersDefined)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs imprimantes n'ont pas été définies.").OpenDialog ();
 				return;
@@ -71,15 +71,15 @@ namespace Epsitec.Cresus.Core.Printers
 
 			List<Printer> printerList = Dialogs.PrinterListDialog.GetPrinterSettings ();
 
-			foreach (PrinterToUse printerToUse in documentType.PrintersToUse)
+			foreach (DocumentPrinter documentPrinter in documentType.DocumentPrinters)
 			{
-				Printer printer = printerList.Where (p => p.LogicalName == printerToUse.LogicalPrinterName).FirstOrDefault ();
+				Printer printer = printerList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
 
 				if (printer != null)
 				{
 					//	Indique le type des pages auxquelles on s'intéresse. Les autres
 					//	seront ignorées.
-					entityPrinter.PrinterTypeUsed = printerToUse.PrinterType;
+					entityPrinter.PrinterTypeUsed = documentPrinter.PrinterType;
 
 					if (!entityPrinter.IsEmpty)
 					{

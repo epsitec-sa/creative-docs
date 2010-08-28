@@ -146,7 +146,7 @@
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Printers\PrinterType.cs" />
     <Compile Include="Printers\PageType.cs" />
-    <Compile Include="Printers\PrinterToUse.cs" />
+    <Compile Include="Printers\DocumentPrinter.cs" />
     <Compile Include="Printers\DocumentTypeEnum.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
