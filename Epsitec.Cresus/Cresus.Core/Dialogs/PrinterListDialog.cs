@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.application = application;
 
-			this.printerList = PrinterListDialog.GetPrinterSettings ();
+			this.printerList = Printers.PrinterSettings.GetPrinterList ();
 		}
 
 
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.acceptButton.Clicked += delegate
 			{
-				PrinterListDialog.SetPrinterSettings (this.printerList);
+				Printers.PrinterSettings.SetPrinterList (this.printerList);
 
 				this.Result = DialogResult.Accept;
 				this.CloseDialog ();
@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePhysicalField()
 		{
-			List<string> physicalNames = PrinterSettings.InstalledPrinters.ToList ();
+			List<string> physicalNames = Common.Printing.PrinterSettings.InstalledPrinters.ToList ();
 
 			this.physicalField.Items.Clear ();
 			foreach (var physicalName in physicalNames)
@@ -576,7 +576,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (printer != null)
 			{
-				PrinterSettings settings = PrinterSettings.FindPrinter (printer.PhysicalName);
+				var settings = Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
 
 				if (settings != null)
 				{
@@ -676,44 +676,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 	
-		#region Settings
-		public static List<Printer> GetPrinterSettings()
-		{
-			List<Printer> list = new List<Printer> ();
-
-			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("Printer");
-
-			foreach (var setting in settings.Values)
-			{
-				Printer printer = new Printer ();
-				printer.SetSerializableContent (setting);
-
-				list.Add (printer);
-			}
-
-			return list;
-		}
-
-		private static void SetPrinterSettings(List<Printer> list)
-		{
-			Dictionary<string, string> settings = new Dictionary<string,string>();
-			int index = 0;
-
-			foreach (var printer in list)
-			{
-				if (!string.IsNullOrWhiteSpace (printer.LogicalName) &&
-					!string.IsNullOrWhiteSpace (printer.PhysicalName))
-				{
-					string key = string.Concat ("Printer", (index++).ToString (CultureInfo.InvariantCulture));
-					settings.Add (key, printer.GetSerializableContent ());
-				}
-			}
-
-			CoreApplication.MergeSettings ("Printer", settings);
-		}
-		#endregion
-
-
 		private readonly CoreApplication				application;
 
 		private Window									window;
