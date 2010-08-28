@@ -37,8 +37,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
-			System.Diagnostics.Debug.Assert (collection.Count () > 1 && entityPrinter == null);
-
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
 
 			if (entities.Count == 0)
@@ -46,6 +44,8 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
+			//	Si l'entityPrinter n'existe pas, on le crée pour la première entité, et on affiche le dialogue
+			//	pour choisir comment imprimer l'entité (choix du type de document et des options).
 			if (entityPrinter == null)
 			{
 				entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entities.FirstOrDefault ());
@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
+			//	Vérifie si un minimun d'imprimantes sont définies pour imprimer l'entité.
 			DocumentType documentType = entityPrinter.DocumentTypeSelected;
 
 			if (!documentType.IsDocumentPrintersDefined)
@@ -67,24 +68,40 @@ namespace Epsitec.Cresus.Core.Printers
 				return;
 			}
 
-			//	Construit l'ensemble des pages.
-			entityPrinter.BuildSections ();
-
+			//	Imprime toutes les entités.
 			List<Printer> printerList = PrinterSettings.GetPrinterList ();
 
-			foreach (DocumentPrinter documentPrinter in documentType.DocumentPrinters)
+			for (int i=0; i<entities.Count; i++)
 			{
-				Printer printer = printerList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
+				var entity = entities[i];
 
-				if (printer != null)
+				if (i > 0)
 				{
-					//	Indique le type des pages auxquelles on s'intéresse. Les autres
-					//	seront ignorées.
-					entityPrinter.PrinterFunctionUsed = documentPrinter.PrinterFunction;
+					//	S'il ne s'agit pas de la première entité, on crée un nouveau entityPrinter en
+					//	reprenant les réglages du précédent.
+					EntityPrintingSettings settings = entityPrinter.EntityPrintingSettings;
 
-					if (!entityPrinter.IsEmpty)
+					entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (entity);
+					entityPrinter.EntityPrintingSettings = settings;
+				}
+
+				//	Construit l'ensemble des pages.
+				entityPrinter.BuildSections ();
+
+				foreach (DocumentPrinter documentPrinter in documentType.DocumentPrinters)
+				{
+					Printer printer = printerList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
+
+					if (printer != null)
 					{
-						PrintEngine.PrintEntity (printer, entityPrinter);
+						//	Indique le type des pages auxquelles on s'intéresse. Les autres
+						//	seront ignorées.
+						entityPrinter.PrinterFunctionUsed = documentPrinter.PrinterFunction;
+
+						if (!entityPrinter.IsEmpty)
+						{
+							PrintEngine.PrintEntity (printer, entityPrinter);
+						}
 					}
 				}
 			}

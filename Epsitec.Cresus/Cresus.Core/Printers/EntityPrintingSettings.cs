@@ -31,12 +31,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public DocumentTypeEnum DocumentTypeEnumSelected
 		{
+			//	Indique le type du document sélectionné.
 			get;
 			set;
 		}
 
 		public List<string> DocumentOptionsSelected
 		{
+			//	Liste des options cochées.
 			get
 			{
 				return this.documentOptionsNameSelected;
@@ -45,6 +47,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public bool HasDocumentOption(string name)
 		{
+			//	Retourne true si une option est cochée.
 			return this.documentOptionsNameSelected.Contains (name);
 		}
 
