@@ -96,6 +96,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public PrinterType PrinterTypeUsed
 		{
+			//	Détermine le type de l'imprimante utilisée pour imprimer le document.
+			//	IsEmpty, PageCount, etc. dépendent de PrinterTypeUsed.
 			get;
 			set;
 		}

@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class PrinterToUse
+	public class DocumentPrinter
 	{
-		public PrinterToUse(PrinterType printerType, string description, string group)
+		public DocumentPrinter(PrinterType printerType, string description, string group)
 		{
 			this.PrinterType = printerType;
 			this.Description = description;

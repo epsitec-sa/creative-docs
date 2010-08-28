@@ -392,21 +392,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 			PageType pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
 
 			DocumentType documentType = this.entityPrinter.DocumentTypeSelected;
-			List<PrinterToUse> printersToUse = documentType.PrintersToUse;
+			List<DocumentPrinter> documentPrinters = documentType.DocumentPrinters;
 
-			foreach (PrinterToUse printerToUse in printersToUse)
+			foreach (DocumentPrinter documentPrinter in documentPrinters)
 			{
-				if (!string.IsNullOrEmpty (printerToUse.LogicalPrinterName))
+				if (!string.IsNullOrEmpty (documentPrinter.LogicalPrinterName))
 				{
-					if (Misc.IsCompatiblePrinterPage (printerToUse.PrinterType, pageType))
+					if (Misc.IsCompatiblePrinterPage (documentPrinter.PrinterType, pageType))
 					{
-						if (dico.ContainsKey (printerToUse.LogicalPrinterName))
+						if (dico.ContainsKey (documentPrinter.LogicalPrinterName))
 						{
-							dico[printerToUse.LogicalPrinterName]++;
+							dico[documentPrinter.LogicalPrinterName]++;
 						}
 						else
 						{
-							dico.Add (printerToUse.LogicalPrinterName, 1);
+							dico.Add (documentPrinter.LogicalPrinterName, 1);
 						}
 					}
 				}
