@@ -19,15 +19,15 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Retourne true si la fonction d'une imprimante est compatible avec le type d'une page.
 			//	Si oui, bingo, on peut imprimer !
-			if (printerFunction == Printers.PrinterFunction.All ||
-				printerFunction == Printers.PrinterFunction.Copy)  // imprimente pour tous les types de page ?
+			if (printerFunction == Printers.PrinterFunction.ForAllPages ||
+				printerFunction == Printers.PrinterFunction.ForPagesCopy)  // imprimente pour tous les types de page ?
 			{
 				return true;
 			}
 
-			if ((printerFunction == Printers.PrinterFunction.First     && pageType == Printers.PageType.First    ) ||
-				(printerFunction == Printers.PrinterFunction.Following && pageType == Printers.PageType.Following) ||
-				(printerFunction == Printers.PrinterFunction.ESR       && pageType == Printers.PageType.ESR      ))
+			if ((printerFunction == Printers.PrinterFunction.ForFirstPage      && pageType == Printers.PageType.First    ) ||
+				(printerFunction == Printers.PrinterFunction.ForFollowingPages && pageType == Printers.PageType.Following) ||
+				(printerFunction == Printers.PrinterFunction.ForEsrPage        && pageType == Printers.PageType.ESR      ))
 			{
 				return true;
 			}

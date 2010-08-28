@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Printers
 			: base ()
 		{
 			this.DocumentTypeEnumSelected = DocumentTypeEnum.None;
-			this.PrinterFunctionUsed = PrinterFunction.All;
+			this.PrinterFunctionUsed = PrinterFunction.ForAllPages;
 
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
@@ -271,6 +271,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private int											debugParam1;
 		private int											debugParam2;
 	}
+
 
 	public class AbstractEntityPrinter<T> : AbstractEntityPrinter
 		where T : AbstractEntity
