@@ -35,7 +35,6 @@ namespace Epsitec.Cresus.Core.Printers
 			PrintEngine.Print (new AbstractEntity[] { entity });
 		}
 
-
 		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
@@ -79,7 +78,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					//	Indique le type des pages auxquelles on s'intéresse. Les autres
 					//	seront ignorées.
-					entityPrinter.PrinterTypeUsed = documentPrinter.PrinterType;
+					entityPrinter.PrinterFunctionUsed = documentPrinter.PrinterFunction;
 
 					if (!entityPrinter.IsEmpty)
 					{
@@ -158,7 +157,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static void PrintEntities(Printer printer, AbstractEntityPrinter entityPrinter, List<AbstractEntity> entities)
 		{
-			var printerSettings = Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
+			var printerSettings = Epsitec.Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
 
 			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
 

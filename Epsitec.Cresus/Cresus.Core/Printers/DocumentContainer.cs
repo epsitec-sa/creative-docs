@@ -205,17 +205,17 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Retourne le nombre de pages pour une imprimante donnée que contient le document.
 		/// </summary>
-		public int PageCount(PrinterType printerTypeUsed)
+		public int PageCount(PrinterFunction printerFunctionUsed)
 		{
-			return this.GetFilteredPages (printerTypeUsed).Count;
+			return this.GetFilteredPages (printerFunctionUsed).Count;
 		}
 
 		/// <summary>
 		/// Retourne true s'il n'y a rien à imprimer pour une imprimante donnée.
 		/// </summary>
-		public bool IsEmpty(PrinterType printerTypeUsed)
+		public bool IsEmpty(PrinterFunction printerFunctionUsed)
 		{
-			var pages = this.GetFilteredPages (printerTypeUsed);
+			var pages = this.GetFilteredPages (printerFunctionUsed);
 
 			if (pages.Count <= 0)
 			{
@@ -233,9 +233,9 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
-		public bool Paint(IPaintPort port, PrinterType printerTypeUsed, int page, bool isPreview)
+		public bool Paint(IPaintPort port, PrinterFunction printerFunctionUsed, int page, bool isPreview)
 		{
-			var pages = this.GetFilteredPages (printerTypeUsed);
+			var pages = this.GetFilteredPages (printerFunctionUsed);
 
 			if (page >= 0 && page < pages.Count)
 			{
@@ -245,10 +245,10 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private List<PageContainer> GetFilteredPages(PrinterType printerTypeUsed)
+		private List<PageContainer> GetFilteredPages(PrinterFunction printerFunctionUsed)
 		{
 			//	Retourne la liste des pages pour une imprimante donnée.
-			return this.pages.Where (x => Misc.IsCompatiblePrinterPage (printerTypeUsed, x.PageType)).ToList ();
+			return this.pages.Where (x => Common.IsPrinterAndPageMatching (printerFunctionUsed, x.PageType)).ToList ();
 		}
 
 

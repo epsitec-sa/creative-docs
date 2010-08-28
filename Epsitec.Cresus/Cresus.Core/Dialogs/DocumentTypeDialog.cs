@@ -570,7 +570,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var field = new TextFieldCombo
 					{
 						IsReadOnly = true,
-						Name = documentPrinter.PrinterType.ToString (),
+						Name = documentPrinter.PrinterFunction.ToString (),
 						Parent = this.printersFrame,
 						Text = documentPrinter.LogicalPrinterName,
 						Dock = DockStyle.Top,
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						TabIndex = ++tabIndex,
 					};
 
-					string settings = this.GetSettings (false, string.Concat ("Printer.", documentPrinter.PrinterType));
+					string settings = this.GetSettings (false, string.Concat ("Printer.", documentPrinter.PrinterFunction));
 					if (!string.IsNullOrEmpty (settings))
 					{
 						Printer p = this.printerList.Where (x => x.LogicalName == settings).FirstOrDefault ();
@@ -599,11 +599,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					field.SelectedItemChanged += delegate
 					{
-						PrinterType printerType = (PrinterType) System.Enum.Parse (typeof (PrinterType), field.Name);
-						DocumentPrinter p = documentType.GetDocumentPrinter (printerType);
+						PrinterFunction printerFunction = (PrinterFunction) System.Enum.Parse (typeof (PrinterFunction), field.Name);
+						DocumentPrinter p = documentType.GetDocumentPrinter (printerFunction);
 						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 
-						this.SetSettings (false, string.Concat("Printer.", p.PrinterType), p.LogicalPrinterName);
+						this.SetSettings (false, string.Concat("Printer.", p.PrinterFunction), p.LogicalPrinterName);
 
 						this.UpdateWidgets ();
 					};

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Printers
 			: base ()
 		{
 			this.DocumentTypeEnumSelected = DocumentTypeEnum.None;
-			this.PrinterTypeUsed = PrinterType.All;
+			this.PrinterFunctionUsed = PrinterFunction.All;
 
 			this.documentTypes = new List<DocumentType> ();
 			this.documentOptionsNameSelected = new List<string> ();
@@ -94,10 +94,10 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public PrinterType PrinterTypeUsed
+		public PrinterFunction PrinterFunctionUsed
 		{
 			//	Détermine le type de l'imprimante utilisée pour imprimer le document.
-			//	IsEmpty, PageCount, etc. dépendent de PrinterTypeUsed.
+			//	IsEmpty, PageCount, etc. dépendent de PrinterFunctionUsed.
 			get;
 			set;
 		}
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.documentContainer.IsEmpty (this.PrinterTypeUsed);
+				return this.documentContainer.IsEmpty (this.PrinterFunctionUsed);
 			}
 		}
 
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.documentContainer.PageCount (this.PrinterTypeUsed);
+				return this.documentContainer.PageCount (this.PrinterFunctionUsed);
 			}
 		}
 
