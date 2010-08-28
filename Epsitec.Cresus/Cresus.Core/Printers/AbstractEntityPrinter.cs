@@ -24,15 +24,21 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.DocumentTypeEnumSelected = DocumentTypeEnum.None;
 			this.PrinterFunctionUsed = PrinterFunction.ForAllPages;
 
 			this.documentTypes = new List<DocumentType> ();
-			this.documentOptionsNameSelected = new List<string> ();
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
+
+			this.EntityPrintingSettings = new EntityPrintingSettings ();
 		}
 
+
+		public EntityPrintingSettings EntityPrintingSettings
+		{
+			get;
+			set;
+		}
 
 		public List<DocumentType> DocumentTypes
 		{
@@ -42,31 +48,12 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public DocumentTypeEnum DocumentTypeEnumSelected
-		{
-			get;
-			set;
-		}
-
 		public DocumentType DocumentTypeSelected
 		{
 			get
 			{
-				return this.DocumentTypes.Where (x => x.Type == this.DocumentTypeEnumSelected).FirstOrDefault ();
+				return this.DocumentTypes.Where (x => x.Type == this.EntityPrintingSettings.DocumentTypeEnumSelected).FirstOrDefault ();
 			}
-		}
-
-		public List<string> DocumentOptionsSelected
-		{
-			get
-			{
-				return this.documentOptionsNameSelected;
-			}
-		}
-
-		public bool HasDocumentOption(string name)
-		{
-			return this.documentOptionsNameSelected.Contains (name);
 		}
 
 
@@ -188,7 +175,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void PrintCurrentPage(IPaintPort port)
 		{
-			if (this.HasDocumentOption ("Generic.Specimen"))
+			if (this.EntityPrintingSettings.HasDocumentOption ("Generic.Specimen"))
 			{
 				this.PaintSpecimen(port);
 			}
@@ -264,7 +251,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
 		private readonly List<DocumentType>					documentTypes;
-		private readonly List<string>						documentOptionsNameSelected;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		private int											currentPage;

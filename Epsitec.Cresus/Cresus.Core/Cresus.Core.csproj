@@ -145,6 +145,7 @@
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Printers\Common.cs" />
+    <Compile Include="Printers\EntityPrintingSettings.cs" />
     <Compile Include="Printers\PrinterSettings.cs" />
     <Compile Include="Printers\PrinterFunction.cs" />
     <Compile Include="Printers\PageType.cs" />
