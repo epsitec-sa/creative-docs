@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//		page 3:    Imprimante A bac 2
 			//		page 4..4: Imprimante A bac 1
 			//		page 6:    Imprimante A bac 2
+			//	Le tri est effectué par CompareSectionToPrint.
 
 			List<AbstractEntity> entities = PrintEngine.PrepareEntities (collection, Operation.Print);
 
@@ -288,7 +289,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		#region Page to print
+		#region Section to print
 		private class SectionToPrint
 		{
 			public SectionToPrint(Printer printer, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)

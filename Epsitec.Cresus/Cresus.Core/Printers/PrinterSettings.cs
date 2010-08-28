@@ -21,8 +21,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("Printer");
 
-			foreach (var setting in settings.Values)
+			for (int i = 0; i < settings.Count; i++)
 			{
+				string key = PrinterSettings.GetKey (i);
+				string setting = settings[key];
+
 				Printer printer = new Printer ();
 				printer.SetSerializableContent (setting);
 
@@ -42,12 +45,17 @@ namespace Epsitec.Cresus.Core.Printers
 				if (!string.IsNullOrWhiteSpace (printer.LogicalName) &&
 					!string.IsNullOrWhiteSpace (printer.PhysicalName))
 				{
-					string key = string.Concat ("Printer", (index++).ToString (CultureInfo.InvariantCulture));
+					string key = PrinterSettings.GetKey (index++);
 					settings.Add (key, printer.GetSerializableContent ());
 				}
 			}
 
 			CoreApplication.MergeSettings ("Printer", settings);
+		}
+
+		private static string GetKey(int index)
+		{
+			return string.Concat ("Printer", (index++).ToString (CultureInfo.InvariantCulture));
 		}
 	}
 }
