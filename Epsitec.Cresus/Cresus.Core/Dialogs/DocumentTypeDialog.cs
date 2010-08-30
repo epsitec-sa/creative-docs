@@ -322,6 +322,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
+			this.UpdateOptions ();
+			this.UpdatePrinters ();
+
 			if (this.isPreview)
 			{
 				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeEnumSelected != DocumentTypeEnum.None;
@@ -330,9 +333,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeEnumSelected != DocumentTypeEnum.None && this.entityPrinter.DocumentTypeSelected.IsDocumentPrintersDefined;
 			}
-
-			this.UpdateOptions ();
-			this.UpdatePrinters ();
 		}
 
 		private void UpdateOptions()
