@@ -52,8 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
 			template.DefineCreateItem  (this.CreateContactRole);
 
-			// AllRoles est une méthode d'extension de AbstractContactEntity !
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.AllRoles (), template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetAllRoles (), template));
 		}
 
 		private static FormattedText GetContactRoleSummary(ContactRoleEntity group)
@@ -65,10 +64,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var role = this.DataContext.CreateEmptyEntity<ContactRoleEntity> ();
 
-			role.Rank = this.Entity.AllRoles ().Count;
+			role.Rank = GetAllRoles ().Count;
 
 			return role;
 		}
 
+		private static IList<ContactRoleEntity> GetAllRoles()
+		{
+			List<ContactRoleEntity> list = CoreProgram.Application.Data.GetRoles ().ToList ();
+			list.Sort (Controllers.SelectionController<ContactRoleEntity>.CompareItems);
+
+			return list;
+		}
 	}
 }

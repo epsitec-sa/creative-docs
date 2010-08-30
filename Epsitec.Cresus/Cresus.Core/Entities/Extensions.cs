@@ -173,31 +173,5 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return that.UnwrapNullEntity () == other.UnwrapNullEntity ();
 		}
-
-
-		/// <summary>
-		/// Méthode d'extension pour l'entité ArticleDefinitionEntity, qui ajoute une méthode AllArticleGroups()
-		/// contenant toutes les définitions de groupe (et pas seulement celles utilisées par l'article).
-		/// Il n'est hélas pas possible de définir une propriété d'extension, mais seulement une méthode.
-		/// D'où l'écriture AllArticleGroups() avec les parenthèses.
-		/// Donc:
-		/// article.ArticleGroups       -> liste des ArticleGroupEntity de cet article
-		/// article.AllArticleGroups () -> liste de tous les ArticleGroupEntity connus
-		/// </summary>
-		public static IList<ArticleGroupEntity> AllArticleGroups(this ArticleDefinitionEntity entity)
-		{
-			List<ArticleGroupEntity> list = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
-			list.Sort (Controllers.SelectionController<ArticleGroupEntity>.CompareItems);
-
-			return list;
-		}
-
-		public static IList<ContactRoleEntity> AllRoles(this AbstractContactEntity entity)
-		{
-			List<ContactRoleEntity> list = CoreProgram.Application.Data.GetRoles ().ToList ();
-			list.Sort (Controllers.SelectionController<ContactRoleEntity>.CompareItems);
-
-			return list;
-		}
 	}
 }
