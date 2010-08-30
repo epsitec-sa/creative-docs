@@ -512,11 +512,27 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		/// <returns>The collection of <see cref="AbstractEntity"/> managed by this instance.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public IEnumerable<AbstractEntity> GetEntities()
+		public IList<AbstractEntity> GetEntities()
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			return this.entitiesCache.GetEntities ().ToList ();
+		}
+
+		public IList<T> GetEntitiesOfType<T>(System.Predicate<T> filter = null)
+			where T : AbstractEntity
+		{
+			this.AssertDataContextIsNotDisposed ();
+
+			if (filter == null)
+			{
+				return this.entitiesCache.GetEntities ().OfType<T> ().ToList ();
+			}
+			else
+			{
+				return this.entitiesCache.GetEntities ().OfType<T> ().Where (x => filter (x)).ToList ();
+			}
+
 		}
 
 
