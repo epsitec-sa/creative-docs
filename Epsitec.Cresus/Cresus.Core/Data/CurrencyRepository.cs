@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class CurrencyRepository : Repository
+	public class CurrencyRepository : Repository<CurrencyEntity>
 	{
 		public CurrencyRepository(DataContext dataContext)
 			: base (dataContext)

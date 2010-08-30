@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class ArticleGroupRepository : Repository
+	public class ArticleGroupRepository : Repository<ArticleGroupEntity>
 	{
 		public ArticleGroupRepository(DataContext dataContext)
 			: base (dataContext)

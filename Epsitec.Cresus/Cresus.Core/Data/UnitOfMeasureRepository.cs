@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class UnitOfMeasureRepository : Repository
+	public class UnitOfMeasureRepository : Repository<UnitOfMeasureEntity>
 	{
 		public UnitOfMeasureRepository(DataContext dataContext)
 			: base (dataContext)

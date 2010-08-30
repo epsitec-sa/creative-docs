@@ -11,9 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class PersonTitleRepository : Repository
+	public class PersonTitleRepository : Repository<PersonTitleEntity>
 	{
 
 
