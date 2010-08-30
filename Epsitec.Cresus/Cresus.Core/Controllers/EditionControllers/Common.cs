@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntities ().OfType<GenericArticleDocumentEntity> ().Where (x => x.Lines.Contains (entity)).Single ();
+			var invoiceDocument = dataContext.GetEntitiesOfType<GenericArticleDocumentEntity> (x => x.Lines.Contains (entity)).Single ();
 			var navigator       = controller.Navigator;
 			var history         = navigator.History;
 			var navigationPath  = navigator.GetLeafNavigationPath ();
