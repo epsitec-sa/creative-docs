@@ -321,6 +321,7 @@
     <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />
     <Compile Include="Widgets\PreviewEntity.cs" />

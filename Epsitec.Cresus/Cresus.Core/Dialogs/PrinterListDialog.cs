@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Définitions des imprimantes et bacs disponibles";
 			this.window.MakeFixedSizeWindow ();
-			this.window.ClientSize = new Size (600, 400);
+			this.window.ClientSize = new Size (640, 400);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -82,16 +82,35 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = frame,
 				PreferredWidth = 300,
 				Dock = DockStyle.Right,
-				Margins = new Margins (10, 0, 0, 0),
+				Margins = new Margins (0, 0, 0, 0),
+			};
+
+			var centerFrame = new FrameBox
+			{
+				Parent = frame,
+				PreferredWidth = 30,
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 0, 0, 0),
 			};
 
 			//	Rempli le panneau de gauche.
+			var leftTitle = new StaticText
+			{
+				Parent = leftFrame,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Text = "<font size=\"16\">Liste des imprimantes</font>",
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
 			var toolbar = new FrameBox
 			{
 				Parent = leftFrame,
+				DrawFullFrame = true,
 				Dock = DockStyle.Top,
-				PreferredHeight = 23,
-				Margins = new Margins (0, 0, 0, 2),
+				PreferredHeight = 23+2*2,
+				Margins = new Margins (0, 0, 0, -1),
+				Padding = new Margins (2),
 			};
 
 			this.addButton = new GlyphButton
@@ -109,7 +128,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				GlyphShape = Common.Widgets.GlyphShape.Minus,
 				PreferredWidth = 23,
 				Dock = DockStyle.Left,
-				Margins = new Margins (2, 0, 0, 0),
+				Margins = new Margins (1, 0, 0, 0),
 			};
 
 			this.moveUpButton = new GlyphButton
@@ -127,7 +146,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				GlyphShape = Common.Widgets.GlyphShape.ArrowDown,
 				PreferredWidth = 23,
 				Dock = DockStyle.Left,
-				Margins = new Margins (2, 0, 0, 0),
+				Margins = new Margins (1, 0, 0, 0),
 			};
 
 			this.scrollList = new ScrollList
@@ -136,19 +155,47 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Dock = DockStyle.Fill,
 			};
 
+			//	Rempli le panneau central.
+			var rightArrow = new Widgets.StaticGlyph
+			{
+				Parent = centerFrame,
+				GlyphShape = Common.Widgets.GlyphShape.TriangleRight,
+				PreferredWidth = 30,
+				PreferredHeight = 30,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 20+10, 0),
+			};
+
 			//	Rempli le panneau de droite.
-			this.logicalLabel = new StaticText
+			var rightTitle = new StaticText
 			{
 				Parent = rightFrame,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Text = "<font size=\"16\">Choix pour l'imprimante sélectionnée</font>",
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			var rightBox = new FrameBox
+			{
+				Parent = rightFrame,
+				DrawFullFrame = true,
+				Dock = DockStyle.Fill,
+				Padding = new Margins (10),
+			};
+
+			this.logicalLabel = new StaticText
+			{
+				Parent = rightBox,
 				Text = "Fonction de l'imprimante :",
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 23+2, UIBuilder.MarginUnderLabel),
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 			};
 
 			this.logicalField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightFrame,
+				Parent = rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 				TabIndex = 1,
@@ -156,7 +203,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.commentLabel = new StaticText
 			{
-				Parent = rightFrame,
+				Parent = rightBox,
 				Text = "Description :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -165,7 +212,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.commentField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightFrame,
+				Parent = rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 25),
 				TabIndex = 2,
@@ -173,7 +220,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.physicalLabel = new StaticText
 			{
-				Parent = rightFrame,
+				Parent = rightBox,
 				Text = "Choix de l'imprimante physique :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -182,7 +229,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.physicalField = new TextFieldCombo
 			{
 				IsReadOnly = true,
-				Parent = rightFrame,
+				Parent = rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 				TabIndex = 3,
@@ -190,7 +237,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.trayLabel = new StaticText
 			{
-				Parent = rightFrame,
+				Parent = rightBox,
 				Text = "Choix du bac de l'imprimante :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -199,7 +246,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.trayField = new TextFieldCombo
 			{
 				IsReadOnly = true,
-				Parent = rightFrame,
+				Parent = rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 25),
 				TabIndex = 4,
