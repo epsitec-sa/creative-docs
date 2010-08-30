@@ -516,7 +516,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
-			return this.entitiesCache.GetEntities ().ToList ();
+			IEnumerable<AbstractEntity> allLiveEntities = this.entitiesCache.GetEntities ().Except (this.entitiesDeleted);
+
+			return allLiveEntities.ToList ();
 		}
 
 		public IList<T> GetEntitiesOfType<T>(System.Predicate<T> filter = null)
@@ -524,13 +526,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 
+			var allLiveEntities = this.entitiesCache.GetEntities ().Except (this.entitiesDeleted);
+
 			if (filter == null)
 			{
-				return this.entitiesCache.GetEntities ().OfType<T> ().ToList ();
+				return allLiveEntities.OfType<T> ().ToList ();
 			}
 			else
 			{
-				return this.entitiesCache.GetEntities ().OfType<T> ().Where (x => filter (x)).ToList ();
+				return allLiveEntities.OfType<T> ().Where (x => filter (x)).ToList ();
 			}
 
 		}
