@@ -327,7 +327,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		private void HandleSubViewControllerDisposing(object sender)
 		{
 			this.SetSelected (false);
-			this.subViewController = null;
+
+			if (sender == this.subViewController)
+			{
+				this.subViewController = null;
+			}
 		}
 
 
