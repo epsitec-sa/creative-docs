@@ -53,8 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCreateItem  (this.CreateArticleGroup);
 			template.DefineDeleteItem  (this.DeleteArticleGroup);
 
-			// AllArticleGroups est une méthode d'extension de ArticleDefinitionEntity !
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.AllArticleGroups (), template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetAllArticleGroups (), template));
 		}
 
 		private static FormattedText GetArticleGroupSummary(ArticleGroupEntity group)
@@ -66,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var group = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
 
-			group.Rank = this.Entity.AllArticleGroups ().Count;
+			group.Rank = GetAllArticleGroups ().Count;
 
 			return group;
 		}
@@ -74,6 +73,14 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void DeleteArticleGroup(ArticleGroupEntity entity)
 		{
 			this.DataContext.DeleteEntity (entity);
+		}
+
+		private static IList<ArticleGroupEntity> GetAllArticleGroups()
+		{
+			List<ArticleGroupEntity> list = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
+			list.Sort (Controllers.SelectionController<ArticleGroupEntity>.CompareItems);
+
+			return list;
 		}
 	}
 }
