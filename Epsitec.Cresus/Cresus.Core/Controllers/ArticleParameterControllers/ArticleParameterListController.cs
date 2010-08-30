@@ -42,9 +42,11 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var toolbar = new FrameBox
 			{
 				Parent = parent,
+				DrawFullFrame = true,
 				PreferredHeight = buttonSize,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, UIBuilder.RightMargin, 2, 1),
+				Margins = new Margins (0, UIBuilder.RightMargin, 2, -1),
+				Padding = new Margins (2),
 				TabIndex = 1,
 			};
 
@@ -94,6 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				Parent = toolbar,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 10, 0, 0),
 			};
 
 			//	Crée la liste.
