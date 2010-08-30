@@ -108,9 +108,15 @@ namespace Epsitec.Cresus.Core
 			return new ArticleCategoryRepository (this.DataContext).GetAllArticleCategories ();
 		}
 
-		public IEnumerable<ArticleGroupEntity> GetArticleGroups()
+		public IList<ArticleGroupEntity> GetArticleGroups()
 		{
-			return new ArticleGroupRepository (this.DataContext).GetAllArticleGroups ();
+			var values = new ArticleGroupRepository (this.DataContext).GetAllArticleGroups ();
+			
+			//	Force loading of all entities returned by the repository, so that they will
+			//	show up in the data context :
+			values.ToList ();
+
+			return this.DataContext.GetEntitiesOfType<ArticleGroupEntity> ();
 		}
 
 		public IEnumerable<PaymentModeEntity> GetPaymentModes()
