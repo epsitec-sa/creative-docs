@@ -92,7 +92,19 @@ namespace Epsitec.Common.Types
 		}
 
 
-		public FormattedText[] Split(string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
+		public FormattedText IfNullOrEmptyReplaceWith(FormattedText defaultText)
+		{
+			if (this.IsNullOrEmpty)
+			{
+				return defaultText;
+			}
+			else
+			{
+				return this;
+			}
+		}
+
+        public FormattedText[] Split(string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
 		{
 			string[] x = this.ToString ().Split (new string[] { separator }, options);
 
