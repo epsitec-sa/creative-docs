@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Core
 		{
 		}
 
+		~UIBuilder()
+		{
+			throw new System.InvalidOperationException ("UIBuilder must be used within a 'using' block or properly disposed by calling 'Dispose'");
+		}
+
 		private UIBuilder(TileContainer container, CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (container != null);
@@ -1401,6 +1406,8 @@ namespace Epsitec.Cresus.Core
 				UIBuilder.current = this.nextBuilder;
 				this.isDisposed = true;
 			}
+
+			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion

@@ -26,14 +26,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		protected override void CreateUI()
 		{
 			// TODO: faire en sorte que cette tuile viennent après les lignes d'article !
-			this.CreateUITotalSummary ();
-
-			using (var data = TileContainerController.Setup (this))
+			using (var builder = new UIBuilder (this))
 			{
-				this.CreateUIInvoice      (data);
-				this.CreateUIArticleLines (data);
-				this.CreateUIBillings     (data);
-				this.CreateUIComments     (data);
+				this.CreateUITotalSummary (builder);
+				
+				using (var data = TileContainerController.Setup (builder))
+				{
+					this.CreateUIInvoice (data);
+					this.CreateUIArticleLines (data);
+					this.CreateUIBillings (data);
+					this.CreateUIComments (data);
+				}
 			}
 		}
 
@@ -77,10 +80,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
 
-		private void CreateUITotalSummary()
+		private void CreateUITotalSummary(UIBuilder builder)
 		{
-			var builder = new UIBuilder (this);
-
 			builder.CreateEditionTitleTile ("Data.TotalDocumentItem", "Total");
 			builder.CreateSummaryTile ("TotalDocumentItem", this.Entity, GetTotalSummary (this.Entity), ViewControllerMode.Edition, 1);
 		}
