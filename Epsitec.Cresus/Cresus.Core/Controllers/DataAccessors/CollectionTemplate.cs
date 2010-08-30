@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
 
-		public abstract void DeleteItem(AbstractEntity item);
+//		public abstract void DeleteItem(AbstractEntity item);
 
 		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
 
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
 			{
 				data.AddNewItem = () => this.CreateItem (data, collectionAccessor);
-				data.DeleteItem = () => collectionAccessor.RemoveItem (source);
+				data.DeleteItem = () => this.DeleteItem (data, source, collectionAccessor);
 			}
 
 			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
@@ -234,16 +234,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				index = this.createGetIndex ();  // index selon l'action
 			}
 
-			collectionAccessor.InsertItem (index, this.GenericCreateItem ());
+			T item = this.GenericCreateItem ();
+			collectionAccessor.InsertItem (index, item);
 
 			// Mémorise l'index de l'entité insérée, pour permettre de la sélectionner dans la tuile.
 			data.CreatedIndex = index;
 		}
 
 		
-		public override void DeleteItem(AbstractEntity item)
+		private void DeleteItem(SummaryData data, T item, ICollectionAccessor collectionAccessor)
 		{
-			this.GenericDeleteItem (item as T);
+			collectionAccessor.RemoveItem (item);
+			this.GenericDeleteItem (item);
 		}
 
 		private static T CreateEmptyItem(DataContext dataContext)
