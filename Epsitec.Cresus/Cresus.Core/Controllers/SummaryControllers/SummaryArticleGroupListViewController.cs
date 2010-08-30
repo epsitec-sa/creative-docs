@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroups", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetArticleGroupSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetArticleGroupSummary (x)));
+			template.DefineText        (x => TextFormatter.FormatText (SummaryArticleGroupListViewController.GetArticleGroupSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleGroupListViewController.GetArticleGroupSummary (x)));
 			template.DefineCreateItem  (this.CreateArticleGroup);
 
 			// AllArticleGroups est une méthode d'extension de ArticleDefinitionEntity !
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static FormattedText GetArticleGroupSummary(ArticleGroupEntity group)
 		{
-			return TextFormatter.FormatText (group.Code, ":", group.Name);
+			return TextFormatter.FormatText (group.Code, "~:", group.Name);
 		}
 
 		private ArticleGroupEntity CreateArticleGroup()
