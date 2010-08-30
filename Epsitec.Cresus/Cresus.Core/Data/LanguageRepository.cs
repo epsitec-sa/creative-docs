@@ -11,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class LanguageRepository : Repository
+	public class LanguageRepository : Repository<LanguageEntity>
 	{
-
-
 		public LanguageRepository(DataContext dataContext)
 			: base (dataContext)
 		{

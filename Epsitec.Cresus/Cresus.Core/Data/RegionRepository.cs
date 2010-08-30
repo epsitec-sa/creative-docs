@@ -11,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class RegionRepository : Repository
+	public class RegionRepository : Repository<RegionEntity>
 	{
-
-
 		public RegionRepository(DataContext dataContext) : base (dataContext)
 		{
 		}

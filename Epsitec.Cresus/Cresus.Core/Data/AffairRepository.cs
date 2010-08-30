@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class AffairRepository : Repository
+	public class AffairRepository : Repository<AffairEntity>
 	{
 		public AffairRepository(DataContext dataContext)
 			: base (dataContext)
