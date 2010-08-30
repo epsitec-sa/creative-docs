@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class CaseEventTypeRepository : Repository
+	public class CaseEventTypeRepository : Repository<CaseEventTypeEntity>
 	{
 		public CaseEventTypeRepository(DataContext dataContext)
 			: base (dataContext)

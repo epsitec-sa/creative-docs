@@ -13,12 +13,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
 	public abstract class Repository
 	{
-
-
 		protected Repository(DataContext dataContext)
 		{
 			this.dataContext = dataContext;
@@ -59,10 +55,6 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-		private readonly DataContext dataContext;
-
-
+		protected readonly DataContext dataContext;
 	}
-
-
 }

@@ -48,29 +48,29 @@ namespace Epsitec.Cresus.Core
 			return new LocationRepository (this.DataContext).GetLocationsByCountry (country);
 		}
 
-		public IEnumerable<CaseEventTypeEntity> GetCaseEventTypes()
+		public IList<CaseEventTypeEntity> GetCaseEventTypes()
 		{
-			return new CaseEventTypeRepository (this.DataContext).GetAllCaseEventTypes ();
+			return new CaseEventTypeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<ContactRoleEntity> GetRoles()
+		public IList<ContactRoleEntity> GetRoles()
 		{
-			return new ContactRoleRepository (this.DataContext).GetAllContactRoles ();
+			return new ContactRoleRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<UriSchemeEntity> GetUriSchemes()
+		public IList<UriSchemeEntity> GetUriSchemes()
 		{
-			return new UriSchemeRepository (this.DataContext).GetAllUriSchemes ();
+			return new UriSchemeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public UriSchemeEntity GetUriScheme(string code)
 		{
-			return new UriSchemeRepository (this.DataContext).GetUriSchemesByCode (code, 0, 1).FirstOrDefault ();
+			return this.GetUriSchemes ().Where (x => x.Code == code).FirstOrDefault ();
 		}
 
-		public IEnumerable<TelecomTypeEntity> GetTelecomTypes()
+		public IList<TelecomTypeEntity> GetTelecomTypes()
 		{
-			return new TelecomTypeRepository (this.DataContext).GetAllTelecomTypes ();
+			return new TelecomTypeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IEnumerable<AbstractPersonEntity> GetAbstractPersons()
@@ -78,14 +78,14 @@ namespace Epsitec.Cresus.Core
 			return new AbstractPersonRepository (this.DataContext).GetAllAbstractPersons ();
 		}
 
-		public IEnumerable<PersonTitleEntity> GetTitles()
+		public IList<PersonTitleEntity> GetTitles()
 		{
-			return new PersonTitleRepository (this.DataContext).GetAllPersonTitles ();
+			return new PersonTitleRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<PersonGenderEntity> GetGenders()
+		public IList<PersonGenderEntity> GetGenders()
 		{
-			return new PersonGenderRepository (this.DataContext).GetAllPersonGenders ();
+			return new PersonGenderRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IEnumerable<RelationEntity> GetCustomers(DataContext context)
@@ -93,43 +93,37 @@ namespace Epsitec.Cresus.Core
 			return new RelationRepository (context).GetAllRelations ();
 		}
 
-		public IEnumerable<UnitOfMeasureEntity> GetUnitOfMeasure()
+		public IList<UnitOfMeasureEntity> GetUnitOfMeasure()
 		{
-			return new UnitOfMeasureRepository (this.DataContext).GetAllUnitOfMeasure ();
+			return new UnitOfMeasureRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<ArticleDefinitionEntity> GetArticleDefinitions(DataContext context)
+		public IList<ArticleDefinitionEntity> GetArticleDefinitions(DataContext context)
 		{
-			return new ArticleDefinitionRepository (context).GetAllArticleDefinitions ();
+			return new ArticleDefinitionRepository (context).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<ArticleCategoryEntity> GetArticleCategories()
+		public IList<ArticleCategoryEntity> GetArticleCategories()
 		{
-			return new ArticleCategoryRepository (this.DataContext).GetAllArticleCategories ();
+			return new ArticleCategoryRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<ArticleGroupEntity> GetArticleGroups()
 		{
-			var values = new ArticleGroupRepository (this.DataContext).GetAllArticleGroups ();
-			
-			//	Force loading of all entities returned by the repository, so that they will
-			//	show up in the data context :
-			values.ToList ();
-
-			return this.DataContext.GetEntitiesOfType<ArticleGroupEntity> ();
+			return new ArticleGroupRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<PaymentModeEntity> GetPaymentModes()
+		public IList<PaymentModeEntity> GetPaymentModes()
 		{
-			return new PaymentModeRepository (this.DataContext).GetAllPaymentModes ();
+			return new PaymentModeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<CurrencyEntity> GetCurrencies()
+		public IList<CurrencyEntity> GetCurrencies()
 		{
-			return new CurrencyRepository (this.DataContext).GetAllCurrencies ();
+			return new CurrencyRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IEnumerable<VatDefinitionEntity> GetVatDefinitions()
+		public IList<VatDefinitionEntity> GetVatDefinitions()
 		{
 			//	TODO: implement the repository
 			//return new VatDefinitionRepository (this.DataContext).GetAllVatDefinitions ();

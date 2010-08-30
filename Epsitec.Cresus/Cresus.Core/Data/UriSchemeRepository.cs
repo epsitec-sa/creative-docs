@@ -11,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class UriSchemeRepository : Repository
+	public class UriSchemeRepository : Repository<UriSchemeEntity>
 	{
-
-
 		public UriSchemeRepository(DataContext dataContext) : base (dataContext)
 		{
 		}

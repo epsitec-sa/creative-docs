@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-	public class PaymentModeRepository : Repository
+	public class PaymentModeRepository : Repository<PaymentModeEntity>
 	{
 		public PaymentModeRepository(DataContext dataContext)
 			: base (dataContext)

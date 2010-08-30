@@ -11,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class TelecomTypeRepository : Repository
+	public class TelecomTypeRepository : Repository<TelecomTypeEntity>
 	{
-
-
 		public TelecomTypeRepository(DataContext dataContext) : base (dataContext)
 		{	
 		}
