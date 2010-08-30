@@ -298,6 +298,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Escapes the specified text, i.e. converts special characters found
 		/// in the source text to their equivalent formatted encoding.
+		/// "a&b" return "a&amp;b"
+		/// "a&amp;b" return "a&amp;amp;b"
 		/// </summary>
 		/// <param name="text">The source text.</param>
 		/// <returns>The escaped text.</returns>
@@ -316,6 +318,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Un-escapes the specified text, i.e. converts formatted encoding
 		/// to their equivalent characters.
+		/// "a&amp;b" return "a&b"
+		/// "a&b" make exception
 		/// </summary>
 		/// <param name="text">The escaped text.</param>
 		/// <returns>The source text.</returns>

@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.BL, "Bulletin de livraison", "Bulletin de livraison A4, sans prix.");
+			type = new DocumentType (DocumentTypeEnum.BL, "Bulletin de livraison", "Bulletin de livraison, sans prix.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
@@ -71,20 +71,20 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture A4 avec un bulletin de versement orange ou rose intégré au bas de chaque page.");
+			type = new DocumentType (DocumentTypeEnum.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture avec un bulletin de versement intégré au bas de chaque page.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
 			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture A4 avec un bulletin de versement orange ou rose imprimé sur une page séparée.");
+			type = new DocumentType (DocumentTypeEnum.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture avec un bulletin de versement imprimé sur une page séparée.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
 			type.AddPrinterBase ();
 			type.AddPrinterEsr ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.InvoiceWithoutESR, "Facture sans BV", "Facture A4 simple sans bulletin de versement.");
+			type = new DocumentType (DocumentTypeEnum.InvoiceWithoutESR, "Facture sans BV", "Facture simple sans bulletin de versement.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
