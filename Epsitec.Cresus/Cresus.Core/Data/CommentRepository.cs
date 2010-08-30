@@ -11,12 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class CommentRepository : Repository
+	public class CommentRepository : Repository<CommentEntity>
 	{
-
-
 		public CommentRepository(DataContext dataContext) : base (dataContext)
 		{
 		}

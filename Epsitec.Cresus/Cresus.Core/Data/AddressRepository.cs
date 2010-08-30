@@ -9,12 +9,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-	
-	public class AddressRepository : Repository
+	public class AddressRepository : Repository<AddressEntity>
 	{
-
-
 		public AddressRepository(DataContext dataContext) : base (dataContext)
 		{
 		}

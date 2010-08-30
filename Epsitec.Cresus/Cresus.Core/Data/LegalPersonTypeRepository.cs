@@ -9,12 +9,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Data
 {
-
-
-	public class LegalPersonTypeRepository : Repository
+	public class LegalPersonTypeRepository : Repository<LegalPersonTypeEntity>
 	{
-
-
 		public LegalPersonTypeRepository(DataContext dataContext) : base (dataContext)
 		{
 		}
