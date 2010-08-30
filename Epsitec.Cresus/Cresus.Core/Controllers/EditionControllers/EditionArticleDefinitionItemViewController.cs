@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				CollectionValueGetter    = () => this.Entity.ArticleGroups,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
 			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
