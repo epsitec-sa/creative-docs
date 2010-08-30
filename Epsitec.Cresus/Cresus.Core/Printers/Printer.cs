@@ -27,24 +27,38 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string LogicalName
 		{
+			//	Nom logique choisi par l'utilisateur (nom de fonction).
+			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
+			//	Cette propriété est donc compatible avec Widget.Text.
 			get;
 			set;
 		}
 
 		public string Comment
 		{
+			//	Description de l'imprimante.
+			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
+			//	Cette propriété est donc compatible avec Widget.Text.
 			get;
 			set;
 		}
 
 		public string PhysicalName
 		{
+			//	Nom physique de l'imprimante.
+			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
+			//	Cette propriété est donc compatible avec Widget.Text.
+			//	En revanche, il faut utiliser FormattedText.Unescape avant de passer la chaîne à Epsitec.Common.Printing.
 			get;
 			set;
 		}
 
 		public string Tray
 		{
+			//	Nom physique du bac de l'impriante.
+			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
+			//	Cette propriété est donc compatible avec Widget.Text.
+			//	En revanche, il faut utiliser FormattedText.Unescape avant de passer la chaîne à Epsitec.Common.Printing.
 			get;
 			set;
 		}

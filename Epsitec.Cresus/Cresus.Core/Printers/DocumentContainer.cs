@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.pages.Add (new PageContainer (this.pages.Count, pageType));  // crée une nouvelle page
 
-			this.currentPage++;
+			this.currentPage = this.pages.Count-1;
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
 		}
 

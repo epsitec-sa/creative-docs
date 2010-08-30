@@ -342,17 +342,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Printer printer = this.SelectedPrinter;
 
-				bool printerChanged = (this.physicalField.Text != printer.PhysicalName);
-
 				this.logicalField.Text  = printer.LogicalName;
 				this.commentField.Text  = printer.Comment;
 				this.physicalField.Text = printer.PhysicalName;
 				this.trayField.Text     = printer.Tray;
-
-				if (printerChanged)
-				{
-					this.UpdateTrayField ();
-				}
 			}
 
 			string error = this.GetError ();
@@ -407,7 +400,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (!string.IsNullOrWhiteSpace (physicalName))
 				{
-					this.physicalField.Items.Add (physicalName);
+					this.physicalField.Items.Add (FormattedText.Escape (physicalName));
 				}
 			}
 		}
@@ -420,10 +413,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.trayField.Items.Clear ();
 			foreach (var trayName in trayNames)
 			{
-				if (!string.IsNullOrWhiteSpace (trayName))
+				string name = FormattedText.Escape (trayName);
+
+				if (!string.IsNullOrWhiteSpace (name) && !this.trayField.Items.Contains (name))
 				{
-					this.trayField.Items.Add (trayName);
+					this.trayField.Items.Add (name);
 				}
+			}
+
+			if (this.trayField.Items.Count == 1)
+			{
+				this.trayField.SelectedItemIndex = 0;
 			}
 		}
 
@@ -447,6 +447,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdateScrollList (sel);
 			this.UpdateWidgets ();
+			this.UpdateTrayField ();
 
 			this.logicalField.SelectAll ();
 			this.logicalField.Focus ();
@@ -465,6 +466,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdateScrollList (sel);
 			this.UpdateWidgets ();
+			this.UpdateTrayField ();
 		}
 
 		private void ActionMoveUpPrinter()
@@ -499,6 +501,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.UpdateWidgets ();
+			this.UpdateTrayField ();
 		}
 
 		private void ActionLogicalChanged()
@@ -513,6 +516,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerList[sel].LogicalName != this.logicalField.Text)
 			{
 				this.printerList[sel].LogicalName = this.logicalField.Text;
+
 				this.UpdateScrollList (sel);
 				this.UpdateWidgets ();
 			}
@@ -530,6 +534,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerList[sel].Comment != this.commentField.Text)
 			{
 				this.printerList[sel].Comment = this.commentField.Text;
+
 				this.UpdateScrollList (sel);
 				this.UpdateWidgets ();
 			}
@@ -547,8 +552,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerList[sel].PhysicalName != this.physicalField.Text)
 			{
 				this.printerList[sel].PhysicalName = this.physicalField.Text;
+				this.printerList[sel].Tray = null;
+				this.printerList[sel].XOffset = 0;
+				this.printerList[sel].YOffset = 0;
+
 				this.UpdateScrollList (sel);
 				this.UpdateWidgets ();
+				this.UpdateTrayField ();
 			}
 		}
 
@@ -564,6 +574,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerList[sel].Tray != this.trayField.Text)
 			{
 				this.printerList[sel].Tray = this.trayField.Text;
+
 				this.UpdateScrollList (sel);
 				this.UpdateWidgets ();
 			}
@@ -574,18 +585,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			List<string> trayNames = new List<string> ();
 
-			if (printer != null)
+			if (printer != null && !string.IsNullOrEmpty (printer.PhysicalName))
 			{
-				var settings = Common.Printing.PrinterSettings.FindPrinter (printer.PhysicalName);
+				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printer.PhysicalName));
 
 				if (settings != null)
 				{
-					System.Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (paperSource.Name));
-				}
-
-				if (!trayNames.Contains (printer.Tray) && printer.Tray != "")
-				{
-					trayNames.Add (printer.Tray);
+					System.Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (FormattedText.Escape (paperSource.Name)));
 				}
 			}
 
