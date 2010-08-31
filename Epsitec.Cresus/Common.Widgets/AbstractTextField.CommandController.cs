@@ -160,6 +160,14 @@ namespace Epsitec.Common.Widgets
 				this.host.navigator.ReplaceWithText (ResourceBundle.Field.Null);
 			}
 
+			public void NotifyIsFocusedChanged(bool focused)
+			{
+				var commandContext = CommandContext.GetContext (this.host);
+
+				commandContext.GetCommandState (ApplicationCommands.Copy).Enable  = focused;
+				commandContext.GetCommandState (ApplicationCommands.Cut).Enable   = focused;
+				commandContext.GetCommandState (ApplicationCommands.Paste).Enable = focused;
+			}
 
 			private readonly AbstractTextField host;
 		}
