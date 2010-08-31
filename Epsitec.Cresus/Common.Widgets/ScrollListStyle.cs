@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		AlternatingRows,
 
 		/// <summary>
-		/// Scroll list without frame
+		/// Scroll list without frame and without background
 		/// </summary>
 		FrameLess,
 	}
