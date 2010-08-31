@@ -147,6 +147,9 @@
     <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
     <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
     <Compile Include="Printers\Common.cs" />
+    <Compile Include="Printers\SectionToPrint.cs" />
+    <Compile Include="Printers\JobToPrint.cs" />
+    <Compile Include="Printers\JobPrintEngine.cs" />
     <Compile Include="Printers\EntityPrintingSettings.cs" />
     <Compile Include="Printers\PrinterSettings.cs" />
     <Compile Include="Printers\PrinterFunction.cs" />
@@ -257,7 +260,6 @@
     <Compile Include="Printers\CellBorder.cs" />
     <Compile Include="Printers\EsrBand.cs" />
     <Compile Include="Printers\EsBand.cs" />
-    <Compile Include="Printers\MultiPagePrintEngine.cs" />
     <Compile Include="Printers\SurfaceBand.cs" />
     <Compile Include="Printers\TableColumn.cs" />
     <Compile Include="Printers\DocumentOption.cs" />
