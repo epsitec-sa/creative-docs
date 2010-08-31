@@ -3,21 +3,14 @@
 
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Converters;
-
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer;
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Printers
@@ -132,7 +125,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			//	Trie toutes les pages, qui sont regroupées logiquement par imprimante physique.
-			sections.Sort (PrintEngine.CompareSectionToPrint);
+			sections.Sort (SectionToPrint.CompareSectionToPrint);
 
 			//	Sépare les copies multiples de pages identiques sur une même imprimante.
 			//	Ceci ne peut pas être effectué par le tri !
@@ -176,10 +169,40 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			//	Imprime toutes les sections (pages contigües).
+			//	Fusionne toutes les sections en jobs. Un job est un ensemble de sections utilisant la
+			//	même imprimante, mais pas forcément le même bac.
+			var jobs = new List<JobToPrint> ();
+
 			foreach (var page in sections)
 			{
-				PrintEngine.PrintEntity (page.Printer, page.EntityPrinter, page.FirstPage, page.PageCount);
+				var job = new JobToPrint ();
+				job.Sections.Add (page);
+
+				jobs.Add (job);
+			}
+
+			index = 0;
+			while (index < jobs.Count-1)
+			{
+				JobToPrint j1 = jobs[index];
+				JobToPrint j2 = jobs[index+1];
+
+				if (j1.PrinterPhysicalName == j2.PrinterPhysicalName)
+				{
+					j1.Sections.AddRange (j2.Sections);  // ajoute les sections de j2 à j1
+					jobs.RemoveAt (index+1);             // supprime j2
+				}
+				else
+				{
+					index++;
+				}
+			}
+
+			//	Imprime tous les jobs (pages sur une même imprimante physique, mais éventuellement sur
+			//	plusieurs bacs différents).
+			foreach (var job in jobs)
+			{
+				PrintEngine.PrintJob (job);
 			}
 		}
 
@@ -250,151 +273,27 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private static void PrintEntity(Printer printer, AbstractEntityPrinter entityPrinter, int firstPage, int pageCount)
+		private static void PrintJob(JobToPrint job)
 		{
-			var printerSettings = Epsitec.Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printer.PhysicalName));
-
-			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
-
-			if (checkTray)
+			//	Imprime un job, c'est-à-dire plusieurs pages sur une même imprimante physique, mais éventuellement sur
+			//	plusieurs bacs différents.
+			var firstSection = job.Sections.FirstOrDefault ();
+			if (firstSection == null)
 			{
-				try
-				{
-					PrintEngine.PrintEntityBase (printer, entityPrinter, firstPage, pageCount);
-				}
-				catch (System.Exception e)
-				{
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de l'impression").OpenDialog ();
-				}
+				return;
 			}
-			else
-			{
-				string message = string.Format ("Le bac ({0}) de l'imprimante séléctionnée ({1}) n'existe pas.", printer.Tray, printer.PhysicalName);
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-			}
-		}
 
-		private static void PrintEntityBase(Printer printer, Printers.AbstractEntityPrinter entityPrinter, int firstPage, int pageCount)
-		{
 			PrintDocument printDocument = new PrintDocument ();
 
-			printDocument.DocumentName = entityPrinter.JobName;
-			printDocument.SelectPrinter (FormattedText.Unescape (printer.PhysicalName));
+			printDocument.DocumentName = firstSection.EntityPrinter.JobName;
+			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.Printer.PhysicalName));
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
-			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
 
-			Size size = entityPrinter.PageSize;
-			double height = size.Height;
-			double width  = size.Width;
-
-			double xOffset = printer.XOffset;
-			double yOffset = printer.YOffset;
-
-			Transform transform;
-
-			if (entityPrinter.PageSize.Width < entityPrinter.PageSize.Height)  // portrait ?
-			{
-				transform = Transform.Identity;
-			}
-			else  // paysage ?
-			{
-				transform = Transform.CreateRotationDegTransform (90, entityPrinter.PageSize.Height/2, entityPrinter.PageSize.Height/2);
-			}
-
-			var engine = new MultiPagePrintEngine (entityPrinter, transform, firstPage, pageCount);
+			var engine = new JobPrintEngine (printDocument, job.Sections);
 			printDocument.Print (engine);
 		}
 
-
-		#region Section to print
-		private class SectionToPrint
-		{
-			public SectionToPrint(Printer printer, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
-			{
-				//	Crée une section d'une page.
-				this.printer       = printer;
-				this.firstPage     = firstPage;
-				this.PageCount     = 1;
-				this.entityRank    = entityRank;
-				this.entityPrinter = entityPrinter;
-			}
-
-			public Printer Printer
-			{
-				get
-				{
-					return this.printer;
-				}
-			}
-
-			public int FirstPage
-			{
-				get
-				{
-					return this.firstPage;
-				}
-			}
-
-			public int PageCount
-			{
-				get;
-				set;
-			}
-
-			public int EntityRank
-			{
-				get
-				{
-					return this.entityRank;
-				}
-			}
-
-			public AbstractEntityPrinter EntityPrinter
-			{
-				get
-				{
-					return this.entityPrinter;
-				}
-			}
-
-			public override string ToString()
-			{
-				// Pratique pour le debug.
-				return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, FirstPage={2}, PageCount={3}, EntityRank={4}", this.printer.LogicalName, this.printer.PhysicalName, this.firstPage, this.PageCount, this.entityRank);
-			}
-
-			private readonly Printer				printer;
-			private readonly int					firstPage;
-			private readonly int					entityRank;
-			private readonly AbstractEntityPrinter	entityPrinter;
-		}
-
-		private static int CompareSectionToPrint(SectionToPrint x, SectionToPrint y)
-		{
-			//	Détermine comment regrouper les pages. On cherche à grouper les pages
-			//	qui utilisent une même imprimante physique.
-			int result;
-
-			result = string.Compare (x.Printer.PhysicalName, y.Printer.PhysicalName);
-			if (result != 0)
-			{
-				return result;
-			}
-
-			if (x.EntityRank != y.EntityRank)
-			{
-				return (x.EntityRank < y.EntityRank) ? -1 : 1;
-			}
-
-			if (x.FirstPage != y.FirstPage)
-			{
-				return (x.FirstPage < y.FirstPage) ? -1 : 1;
-			}
-
-			return 0;
-		}
-		#endregion
 
 
 		private enum Operation

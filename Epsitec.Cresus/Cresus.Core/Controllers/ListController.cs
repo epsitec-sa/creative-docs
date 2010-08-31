@@ -15,13 +15,25 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère une liste représentée par des textes surmontée des boutons '+', '-', etc.
+	/// Ce contrôleur gère une liste, représentée par des textes, surmontée des boutons [+] [-] [^] [v].
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class ListController<T>
 	{
 		public ListController(IList<T> collection, System.Func<T, FormattedText> convertItemToText, System.Func<int, FormattedText> getTextInfo, System.Func<int, T> createItem)
 		{
+			//	FormattedText convertItemToText(T value)
+			//		Converti un élément de la collection en un texte qui sera affiché dans la liste.
+			//		Obligatoire.
+			//
+			//	FormattedText getTextInfo(int count)
+			//		Retourne le texte affiché en haut à droite, indiquant le nombre d'éléments contenus.
+			//		Facultatif.
+			//
+			//	T createItem(int index)
+			//		Crée un nouvelle valeur qui sera insérée dans la collection.
+			//		Obligatoire.
+
 			System.Diagnostics.Debug.Assert (collection != null);
 			System.Diagnostics.Debug.Assert (convertItemToText != null);
 			System.Diagnostics.Debug.Assert (createItem != null);
@@ -183,6 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void UpdateList(int? sel=null)
 		{
+			//	Met à jour toute la liste en fonction de la collection.
 			if (!sel.HasValue)
 			{
 				sel = this.SelectedIndex;
@@ -215,6 +228,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public int SelectedIndex
 		{
+			//	Index de la ligne sélectionnée dans la liste.
 			get
 			{
 				return this.scrollList.SelectedItemIndex;
