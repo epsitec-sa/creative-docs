@@ -30,6 +30,15 @@ namespace Epsitec.Cresus.Core
 
 			this.CreateCommandHandlers ();
 			this.RegisterCommandHandlers ();
+			this.SetupDefaultCommandStates ();
+		}
+
+		private void SetupDefaultCommandStates()
+		{
+			this.application.SetEnable (ApplicationCommands.Cut, false);
+			this.application.SetEnable (ApplicationCommands.Copy, false);
+			this.application.SetEnable (ApplicationCommands.Paste, false);
+			// TODO: désactiver aussi les commandes de formatage
 		}
 
 
