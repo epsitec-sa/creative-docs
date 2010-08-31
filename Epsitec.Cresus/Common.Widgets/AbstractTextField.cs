@@ -1272,11 +1272,13 @@ namespace Epsitec.Common.Widgets
 			var dispatcher = new CommandDispatcher ("TextField", CommandDispatcherLevel.Secondary);
 			var context    = new CommandContext (true);
 
-			dispatcher.AutoForwardCommands = true;
-			dispatcher.RegisterController (new CommandController (this));
-
 			CommandDispatcher.SetDispatcher (this, dispatcher);
 			CommandContext.SetContext (this, context);
+
+			this.commandController = new CommandController (this);
+
+			dispatcher.AutoForwardCommands = true;
+			dispatcher.RegisterController (this.commandController);
 		}
 
 		private void EnableScroll(Drawing.Point pos)
@@ -1526,6 +1528,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.HandleDefocused ();
 			}
+
+			this.commandController.NotifyIsFocusedChanged (focused);
 		}
 
 		protected override void OnTextChanged()
@@ -2374,5 +2378,6 @@ namespace Epsitec.Common.Widgets
 		private static AbstractTextField		blinking;
 
 		private List<string>					autocompletionList;
+		private CommandController				commandController;
 	}
 }
