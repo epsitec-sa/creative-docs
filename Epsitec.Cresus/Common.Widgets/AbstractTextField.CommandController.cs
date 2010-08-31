@@ -160,15 +160,35 @@ namespace Epsitec.Common.Widgets
 				this.host.navigator.ReplaceWithText (ResourceBundle.Field.Null);
 			}
 
+			// TODO: gérer aussi les commandes de formatage (gras/italique/...)
+			
 			public void NotifyIsFocusedChanged(bool focused)
+			{
+				this.UpdateCommandStates (focused);
+			}
+
+			
+			private void UpdateCommandStates(bool focused)
 			{
 				var commandContext = CommandContext.GetContext (this.host);
 
-				commandContext.GetCommandState (ApplicationCommands.Copy).Enable  = focused;
-				commandContext.GetCommandState (ApplicationCommands.Cut).Enable   = focused;
-				commandContext.GetCommandState (ApplicationCommands.Paste).Enable = focused;
-			}
+				bool isReadOnly  = this.host.IsReadOnly;
+				bool isReadWrite = !isReadOnly;
+				bool canFormat   = isReadWrite && this.host.IsFormattedText;
 
+				commandContext.GetCommandState (ApplicationCommands.Copy).Enable      = focused;
+				commandContext.GetCommandState (ApplicationCommands.Cut).Enable       = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Paste).Enable     = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Delete).Enable    = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.SelectAll).Enable = focused;
+
+				if (canFormat)
+                {
+					// TODO: gérer aussi les commandes de formatage (gras/italique/...)
+				}
+			}
+			
+			
 			private readonly AbstractTextField host;
 		}
 	}
