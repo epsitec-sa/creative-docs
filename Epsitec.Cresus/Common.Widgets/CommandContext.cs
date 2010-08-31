@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -248,16 +248,30 @@ namespace Epsitec.Common.Widgets
 
 
 
+		/// <summary>
+		/// Attaches a command handler to this context. It will be available through <see cref="GetCommandHandler{T}"/>.
+		/// </summary>
+		/// <param name="handler">The command handler.</param>
 		public void AttachCommandHandler(ICommandHandler handler)
 		{
 			this.commandHandlers.Add (handler);
 		}
 
+		/// <summary>
+		/// Detaches a command handler from this context.
+		/// </summary>
+		/// <param name="handler">The command handler.</param>
 		public void DetachCommandHandler(ICommandHandler handler)
 		{
 			this.commandHandlers.Remove (handler);
 		}
 
+		/// <summary>
+		/// Gets the first command handler of the specific type, if any. The command handlers are
+		/// registered by calling <see cref="AttachCommandHandler"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of the command handler; must implement <see cref="ICommandHandler"/>.</typeparam>
+		/// <returns>The command handler or <c>null</c>.</returns>
 		public T GetCommandHandler<T>()
 			where T : class, ICommandHandler
 		{
@@ -449,9 +463,9 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		public static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached ("Context", typeof (CommandContext), typeof (CommandContext), new DependencyPropertyMetadata ().MakeNotSerializable ());
+
+
+		public static readonly DependencyProperty ContextProperty = DependencyProperty<CommandContext>.RegisterAttached ("Context", typeof (CommandContext), new DependencyPropertyMetadata ().MakeNotSerializable ());
 
 		
 		readonly HashSet<int>					localDisables;
@@ -461,9 +475,5 @@ namespace Epsitec.Common.Widgets
 		readonly bool							fence;
 		readonly string							name;
 		readonly HashSet<ICommandHandler>		commandHandlers;
-
-#if false
-		private CommandDispatcherChain dispatcherChain;
-#endif
 	}
 }

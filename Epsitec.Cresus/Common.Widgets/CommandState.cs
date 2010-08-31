@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -177,9 +177,9 @@ namespace Epsitec.Common.Widgets
 			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
 		}
 
-		public static readonly DependencyProperty AdvancedStateProperty  = DependencyProperty.RegisterAttached ("AdvancedState", typeof (string), typeof (CommandState), new DependencyPropertyMetadata ());
-		public static readonly DependencyProperty CommandProperty        = DependencyProperty.RegisterReadOnly ("Command", typeof (Command), typeof (CommandState), new DependencyPropertyMetadata ());
-		public static readonly DependencyProperty CommandContextProperty = DependencyProperty.RegisterReadOnly ("CommandContext", typeof (CommandContext), typeof (CommandState), new DependencyPropertyMetadata ());
+		public static readonly DependencyProperty AdvancedStateProperty  = DependencyProperty<CommandState>.RegisterAttached ("AdvancedState", typeof (string));
+		public static readonly DependencyProperty CommandProperty        = DependencyProperty<CommandState>.RegisterReadOnly (x => x.Command);
+		public static readonly DependencyProperty CommandContextProperty = DependencyProperty<CommandState>.RegisterReadOnly (x => x.CommandContext);
 
 		private ActiveState						activeState;
 		private bool							disable;

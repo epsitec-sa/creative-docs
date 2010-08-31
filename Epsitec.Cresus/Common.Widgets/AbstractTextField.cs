@@ -2330,11 +2330,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty.Register ("PasswordReplacementCharacter", typeof (char), typeof (AbstractTextField), new DependencyPropertyMetadata ('*'));
-		public static readonly DependencyProperty HintTextProperty = DependencyProperty.Register ("HintText", typeof (string), typeof (AbstractTextField), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty HintOffsetProperty = DependencyProperty.RegisterReadOnly ("HintOffset", typeof (int), typeof (AbstractTextField), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty DefocusActionProperty = DependencyProperty.Register ("DefocusAction", typeof (DefocusAction), typeof (AbstractTextField), new DependencyPropertyMetadata (DefocusAction.None));
-		public static readonly DependencyProperty ButtonShowConditionProperty = DependencyProperty.Register ("ButtonShowCondition", typeof (ButtonShowCondition), typeof (AbstractTextField), new DependencyPropertyMetadata (ButtonShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
+		public static readonly DependencyProperty PasswordReplacementCharacterProperty = DependencyProperty<AbstractTextField>.Register (x => x.PasswordReplacementCharacter, new DependencyPropertyMetadata ('*'));
+		public static readonly DependencyProperty HintTextProperty                     = DependencyProperty<AbstractTextField>.Register (x => x.HintText, new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty HintOffsetProperty                   = DependencyProperty<AbstractTextField>.RegisterReadOnly (x => x.HintOffset, new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty DefocusActionProperty                = DependencyProperty<AbstractTextField>.Register (x => x.DefocusAction, new DependencyPropertyMetadata (DefocusAction.None));
+		public static readonly DependencyProperty ButtonShowConditionProperty          = DependencyProperty<AbstractTextField>.Register (x => x.ButtonShowCondition, new DependencyPropertyMetadata (ButtonShowCondition.Always, AbstractTextField.NotifyButtonShowConditionChanged));
 
 
 		internal const double					TextMargin = 2;
