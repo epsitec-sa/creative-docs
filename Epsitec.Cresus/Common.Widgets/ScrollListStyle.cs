@@ -24,5 +24,10 @@ namespace Epsitec.Common.Widgets
 		/// Scroll list with alternating rows: white/gray/white/...
 		/// </summary>
 		AlternatingRows,
+
+		/// <summary>
+		/// Scroll list without frame
+		/// </summary>
+		FrameLess,
 	}
 }

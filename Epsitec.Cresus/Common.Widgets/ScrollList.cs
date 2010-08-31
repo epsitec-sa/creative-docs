@@ -738,7 +738,7 @@ namespace Epsitec.Common.Widgets
 				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
 				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Simple, TextFieldDisplayMode.Default, false);
 			}
-			else
+			else if (this.scrollListStyle != Widgets.ScrollListStyle.FrameLess)
 			{
 				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
 				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false);
