@@ -1,16 +1,18 @@
-//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// DependencyProperty.
+	/// The <c>DependencyProperty</c> class stores runtime information about a property
+	/// defined for a <see cref="DependencyObject"/>. The concept is very similar to what
+	/// Microsoft implemented for WPF.
 	/// </summary>
 	public sealed class DependencyProperty : System.IEquatable<DependencyProperty>, System.IComparable<DependencyProperty>, IDataConstraint, IName
 	{
-		private DependencyProperty(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
+		private DependencyProperty(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata, DpType dpType = DpType.Standard)
 		{
 			if (name == null)
 			{
@@ -28,6 +30,8 @@ namespace Epsitec.Common.Types
 			this.defaultMetadata = metadata;
 			this.globalIndex = System.Threading.Interlocked.Increment (ref DependencyProperty.globalPropertyCount);
 			this.isPropertyDerivedFromDependencyObject = typeof (DependencyObject).IsAssignableFrom (this.propertyType);
+			this.isAttached = dpType == DpType.Attached;
+			this.isReadOnly = dpType == DpType.ReadOnly;
 
 			this.isPropertyAnICollectionOfDependencyObject = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<DependencyObject>));
 			this.isPropertyAnICollectionOfString = TypeRosetta.DoesTypeImplementInterface (this.propertyType, typeof (ICollection<string>));
@@ -575,12 +579,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		
-		public static DependencyProperty Register<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
-			where T : DependencyObject
-		{
-			return DependencyProperty.Register (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
-		}
 
 		public static DependencyProperty Register(string name, System.Type propertyType, System.Type ownerType)
 		{
@@ -597,12 +595,6 @@ namespace Epsitec.Common.Types
 		}
 
 		
-		public static DependencyProperty RegisterAttached<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
-			where T : DependencyObject
-		{
-			return DependencyProperty.RegisterAttached (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
-		}
-
 		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, new DependencyPropertyMetadata ());
@@ -610,8 +602,7 @@ namespace Epsitec.Common.Types
 		
 		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
-			dp.isAttached = true;
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata, DpType.Attached);
 			
 			DependencyObject.Register (dp, dp.OwnerType);
 
@@ -625,12 +616,6 @@ namespace Epsitec.Common.Types
 		}
 
 		
-		public static DependencyProperty RegisterReadOnly<T>(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
-			where T : DependencyObject
-		{
-			return DependencyProperty.RegisterReadOnly (name, propertyType, typeof (T), metadata ?? new DependencyPropertyMetadata ());
-		}
-
 		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType)
 		{
 			return DependencyProperty.RegisterReadOnly (name, propertyType, ownerType, new DependencyPropertyMetadata ());
@@ -638,13 +623,19 @@ namespace Epsitec.Common.Types
 		
 		public static DependencyProperty RegisterReadOnly(string name, System.Type propertyType, System.Type ownerType, DependencyPropertyMetadata metadata)
 		{
-			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata);
+			DependencyProperty dp = new DependencyProperty (name, propertyType, ownerType, metadata, DpType.ReadOnly);
 
-			dp.isReadOnly = true;
-			
 			DependencyObject.Register (dp, dp.OwnerType);
 			
 			return dp;
+		}
+
+
+		private enum DpType
+		{
+			Standard,
+			ReadOnly,
+			Attached,
 		}
 
 		static DependencyProperty()
@@ -652,33 +643,35 @@ namespace Epsitec.Common.Types
 			DependencyProperty.validNameRegex = new System.Text.RegularExpressions.Regex ("^[a-zA-Z][_a-zA-Z0-9]*$");
 		}
 
-		private string							name;
-		private System.Type						propertyType;
-		private System.Type						ownerType;
-		private List<System.Type>				additionalOwnerTypes;
-		private List<System.Type>				derivedTypes;
-		private DependencyPropertyMetadata		defaultMetadata;
-		private bool							isAttached;
-		private bool							isPropertyDerivedFromDependencyObject;
-		private bool							isPropertyAnICollectionOfDependencyObject;
-		private bool							isPropertyAnICollectionOfString;
-		private bool							isPropertyAnICollectionOfAny;
-		private bool							isReadOnly;
-		private int								globalIndex;
-		private int								inheritedPropertyCacheMask;
-		private bool							hasTypeConverter;
-		private bool							typeConverterOk;
-		private ISerializationConverter			typeConverter;
-		private Support.Druid					captionId;
+		private readonly string						name;
+		private readonly System.Type				propertyType;
+		private readonly System.Type				ownerType;
+		private readonly DependencyPropertyMetadata	defaultMetadata;
+		private readonly bool						isAttached;
+		private readonly bool						isPropertyDerivedFromDependencyObject;
+		private readonly bool						isPropertyAnICollectionOfDependencyObject;
+		private readonly bool						isPropertyAnICollectionOfString;
+		private readonly bool						isPropertyAnICollectionOfAny;
+		private readonly bool						isReadOnly;
+		private readonly int						globalIndex;
+		private readonly int						inheritedPropertyCacheMask;
+
+		private List<System.Type>					additionalOwnerTypes;
+		private List<System.Type>					derivedTypes;
 		
-		Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
+		private bool								hasTypeConverter;
+		private bool								typeConverterOk;
+		private ISerializationConverter				typeConverter;
+		private Support.Druid						captionId;
 		
-		static object							exclusion = new object ();
-		static List<DependencyProperty>			attachedPropertiesList = new List<DependencyProperty> ();
-		static DependencyProperty[]				attachedPropertiesArray;
-		static int								globalPropertyCount;
-		static DependencyProperty[]				bitsetBasedCachedInheritedProperties = new DependencyProperty[InheritedPropertyCache.MaskBits];
-		static int								bitsetBasedCachedInheritedPropertyCount = 0;
+		private Dictionary<System.Type, DependencyPropertyMetadata>	overriddenMetadata;
+		
+		static readonly object						exclusion = new object ();
+		static readonly List<DependencyProperty>	attachedPropertiesList = new List<DependencyProperty> ();
+		static DependencyProperty[]					attachedPropertiesArray;
+		static int									globalPropertyCount;
+		static readonly DependencyProperty[]		bitsetBasedCachedInheritedProperties = new DependencyProperty[InheritedPropertyCache.MaskBits];
+		static int									bitsetBasedCachedInheritedPropertyCount;
 		static System.Text.RegularExpressions.Regex validNameRegex;
 	}
 }

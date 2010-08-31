@@ -420,8 +420,8 @@ namespace Epsitec.Common.Widgets
 		
 		#endregion
 
-		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty.RegisterAttached<Shortcut> ("Shortcuts", typeof (Collections.ShortcutCollection), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
-		public static readonly DependencyProperty KeyCodeProperty   = DependencyProperty.Register<Shortcut> ("KeyCode", typeof (string), new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
+		public static readonly DependencyProperty ShortcutsProperty = DependencyProperty<Shortcut>.RegisterAttached ("Shortcuts", typeof (Collections.ShortcutCollection), new DependencyPropertyMetadata (Shortcut.GetShortcutsValue));
+		public static readonly DependencyProperty KeyCodeProperty   = DependencyProperty<Shortcut>.Register (x => x.KeyCode, new DependencyPropertyMetadata (Shortcut.GetKeyCodeValue, Shortcut.SetKeyCodeValue));
 		
 		private KeyCode			keyCode;
 	}
