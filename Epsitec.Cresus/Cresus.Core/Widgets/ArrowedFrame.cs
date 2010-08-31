@@ -15,6 +15,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
+	/// <summary>
+	/// Ce widget permet de dessiner un cadre avec une pointe/flèche sur l'un des côtés.
+	/// Il sert de conteneur pour ListController.
+	/// </summary>
 	public sealed class ArrowedFrame : Tile
 	{
 		public ArrowedFrame()
