@@ -74,21 +74,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
+				Margins = new Margins (0, 4, 0, 0),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent = frame,
 				PreferredWidth = 300,
-				Dock = DockStyle.Right,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-
-			var centerFrame = new FrameBox
-			{
-				Parent = frame,
-				PreferredWidth = 30,
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -103,68 +95,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			var toolbar = new FrameBox
-			{
-				Parent = leftFrame,
-				DrawFullFrame = true,
-				Dock = DockStyle.Top,
-				PreferredHeight = 23+2*2,
-				Margins = new Margins (0, 0, 0, -1),
-				Padding = new Margins (2),
-			};
+			this.listController = new Controllers.ListController<Printer> (this.printerList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
+			this.listController.CreateUI (leftFrame, Direction.Right, 23);
 
-			this.addButton = new GlyphButton
-			{
-				Parent = toolbar,
-				GlyphShape = Common.Widgets.GlyphShape.Plus,
-				PreferredWidth = 23*2-1,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
-
-			this.removeButton = new GlyphButton
-			{
-				Parent = toolbar,
-				GlyphShape = Common.Widgets.GlyphShape.Minus,
-				PreferredWidth = 23,
-				Dock = DockStyle.Left,
-				Margins = new Margins (1, 0, 0, 0),
-			};
-
-			this.moveUpButton = new GlyphButton
-			{
-				Parent = toolbar,
-				GlyphShape = Common.Widgets.GlyphShape.ArrowUp,
-				PreferredWidth = 23,
-				Dock = DockStyle.Left,
-				Margins = new Margins (12, 0, 0, 0),
-			};
-
-			this.moveDownButton = new GlyphButton
-			{
-				Parent = toolbar,
-				GlyphShape = Common.Widgets.GlyphShape.ArrowDown,
-				PreferredWidth = 23,
-				Dock = DockStyle.Left,
-				Margins = new Margins (1, 0, 0, 0),
-			};
-
-			this.scrollList = new ScrollList
-			{
-				Parent = leftFrame,
-				Dock = DockStyle.Fill,
-			};
-
-			//	Rempli le panneau central.
-			var rightArrow = new Widgets.StaticGlyph
-			{
-				Parent = centerFrame,
-				GlyphShape = Common.Widgets.GlyphShape.TriangleRight,
-				PreferredWidth = 30,
-				PreferredHeight = 30,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 20+10, 0),
-			};
+			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle impriante");
+			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'imprimante");
+			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'imprimante dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'imprimante dans la liste");
 
 			//	Rempli le panneau de droite.
 			var rightTitle = new StaticText
@@ -180,6 +117,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = rightFrame,
 				DrawFullFrame = true,
+				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
 				Dock = DockStyle.Fill,
 				Padding = new Margins (10),
 			};
@@ -286,36 +224,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 100,
 			};
 
-			//	Initialise les tooltips.
-			ToolTip.Default.SetToolTip (this.addButton,      "Ajoute une nouvelle impriante");
-			ToolTip.Default.SetToolTip (this.removeButton,   "Supprime l'imprimante");
-			ToolTip.Default.SetToolTip (this.moveUpButton,   "Montre l'imprimante dans la liste");
-			ToolTip.Default.SetToolTip (this.moveDownButton, "Descend l'imprimante dans la liste");
-
 			//	Connection des événements.
-			this.addButton.Clicked += delegate
+			this.listController.SelectedItemChanged += delegate
 			{
-				this.ActionAddPrinter ();
+				this.ActionSelectedItemChanged ();
 			};
 
-			this.removeButton.Clicked += delegate
+			this.listController.ItemInserted += delegate
 			{
-				this.ActionRemovePrinter ();
-			};
-
-			this.moveUpButton.Clicked += delegate
-			{
-				this.ActionMoveUpPrinter ();
-			};
-
-			this.moveDownButton.Clicked += delegate
-			{
-				this.ActionMoveDownPrinter ();
-			};
-
-			this.scrollList.SelectedItemChanged += delegate
-			{
-				this.ActionSelectPrinter ();
+				this.ActionItemInserted ();
 			};
 
 			this.logicalField.AcceptingEdition += delegate
@@ -352,19 +269,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.CloseDialog ();
 			};
 
-			this.UpdateScrollList ();
 			this.UpdatePhysicalField ();
 			this.UpdateWidgets ();
 		}
 
 		private void UpdateWidgets()
 		{
-			int sel = this.SelectedIndex;
-
-			this.addButton.Enable = true;
-			this.removeButton.Enable = sel != -1;
-			this.moveUpButton.Enable = sel > 0;
-			this.moveDownButton.Enable = sel != -1 && sel < this.printerList.Count-1;
+			int sel = this.listController.SelectedIndex;
 
 			this.logicalLabel.Enable = sel != -1;
 			this.logicalField.Enable = sel != -1;
@@ -413,31 +324,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private void UpdateScrollList(int? sel=null)
-		{
-			if (!sel.HasValue)
-			{
-				sel = this.SelectedIndex;
-			}
-
-			this.ignoreChange = true;
-
-			this.scrollList.Items.Clear ();
-
-			foreach (var printer in this.printerList)
-			{
-				this.scrollList.Items.Add (printer.NiceDescription);
-			}
-
-			this.ignoreChange = false;
-
-			if (sel.HasValue)
-			{
-				this.SelectedIndex = sel.Value;
-				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
-			}
-		}
-
 		private void UpdatePhysicalField()
 		{
 			List<string> physicalNames = Common.Printing.PrinterSettings.InstalledPrinters.ToList ();
@@ -475,126 +361,47 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private void ActionAddPrinter()
+		private void ActionSelectedItemChanged()
 		{
-			int sel = this.SelectedIndex;
-
-			if (sel == -1)
-			{
-				sel = this.printerList.Count;  // insère à la fin
-			}
-			else
-			{
-				sel++;  // insère après la ligne sélectionnée
-			}
-
-			Printer printer = new Printer (this.DefaultLogicalName);
-
-			this.printerList.Insert (sel, printer);
-
-			this.UpdateScrollList (sel);
 			this.UpdateWidgets ();
 			this.UpdateTrayField ();
+		}
 
+		private void ActionItemInserted()
+		{
 			this.logicalField.SelectAll ();
 			this.logicalField.Focus ();
 		}
 
-		private void ActionRemovePrinter()
-		{
-			int sel = this.SelectedIndex;
-
-			this.printerList.RemoveAt (sel);
-
-			if (sel >= this.printerList.Count)
-			{
-				sel = this.printerList.Count-1;
-			}
-
-			this.UpdateScrollList (sel);
-			this.UpdateWidgets ();
-			this.UpdateTrayField ();
-		}
-
-		private void ActionMoveUpPrinter()
-		{
-			int sel = this.SelectedIndex;
-
-			var t = this.printerList[sel];
-			this.printerList.RemoveAt (sel);
-			this.printerList.Insert (sel-1, t);
-
-			this.UpdateScrollList (sel-1);
-			this.UpdateWidgets ();
-		}
-
-		private void ActionMoveDownPrinter()
-		{
-			int sel = this.SelectedIndex;
-
-			var t = this.printerList[sel];
-			this.printerList.RemoveAt (sel);
-			this.printerList.Insert (sel+1, t);
-
-			this.UpdateScrollList (sel+1);
-			this.UpdateWidgets ();
-		}
-
-		private void ActionSelectPrinter()
-		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			this.UpdateWidgets ();
-			this.UpdateTrayField ();
-		}
-
 		private void ActionLogicalChanged()
 		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			int sel = this.SelectedIndex;
+			int sel = this.listController.SelectedIndex;
 
 			if (this.printerList[sel].LogicalName != this.logicalField.Text)
 			{
 				this.printerList[sel].LogicalName = this.logicalField.Text;
 
-				this.UpdateScrollList (sel);
+				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
 
 		private void ActionCommentChanged()
 		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			int sel = this.SelectedIndex;
+			int sel = this.listController.SelectedIndex;
 
 			if (this.printerList[sel].Comment != this.commentField.Text)
 			{
 				this.printerList[sel].Comment = this.commentField.Text;
 
-				this.UpdateScrollList (sel);
+				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
 
 		private void ActionPhysicalChanged()
 		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			int sel = this.SelectedIndex;
+			int sel = this.listController.SelectedIndex;
 
 			if (this.printerList[sel].PhysicalName != this.physicalField.Text)
 			{
@@ -603,7 +410,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.printerList[sel].XOffset = 0;
 				this.printerList[sel].YOffset = 0;
 
-				this.UpdateScrollList (sel);
+				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 				this.UpdateTrayField ();
 			}
@@ -611,18 +418,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void ActionTrayChanged()
 		{
-			if (this.ignoreChange)
-			{
-				return;
-			}
-
-			int sel = this.SelectedIndex;
+			int sel = this.listController.SelectedIndex;
 
 			if (this.printerList[sel].Tray != this.trayField.Text)
 			{
 				this.printerList[sel].Tray = this.trayField.Text;
 
-				this.UpdateScrollList (sel);
+				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 			}
 		}
@@ -701,7 +503,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				int sel = this.SelectedIndex;
+				int sel = this.listController.SelectedIndex;
 
 				if (sel == -1)
 				{
@@ -714,29 +516,40 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private int SelectedIndex
+
+		#region ListController callbacks
+		private FormattedText ListControllerItemToText(Printer printer)
 		{
-			get
-			{
-				return this.scrollList.SelectedItemIndex;
-			}
-			set
-			{
-				this.ignoreChange = true;
-				this.scrollList.SelectedItemIndex = value;
-				this.ignoreChange = false;
-			}
+			return printer.NiceDescription;
 		}
 
-	
+		private FormattedText ListControllerGetTextInfo(int count)
+		{
+			if (count == 0)
+			{
+				return "Aucune imprimante définie";
+			}
+			else if (count == 1)
+			{
+				return string.Format ("{0} imprimante définie", count.ToString ());
+			}
+			else
+			{
+				return string.Format ("{0} imprimantes définies", count.ToString ());
+			}
+		}
+		
+		private Printer ListControllerCreateItem(int sel)
+		{
+			return new Printer (this.DefaultLogicalName);
+		}
+		#endregion
+
+
 		private readonly CoreApplication				application;
 
 		private Window									window;
-		private GlyphButton								addButton;
-		private GlyphButton								removeButton;
-		private GlyphButton								moveUpButton;
-		private GlyphButton								moveDownButton;
-		private ScrollList								scrollList;
+		private Controllers.ListController<Printer>		listController;
 		private StaticText								logicalLabel;
 		private StaticText								commentLabel;
 		private StaticText								physicalLabel;
@@ -749,6 +562,5 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button									acceptButton;
 		private Button									cancelButton;
 		private List<Printer>							printerList;
-		private bool									ignoreChange;
 	}
 }
