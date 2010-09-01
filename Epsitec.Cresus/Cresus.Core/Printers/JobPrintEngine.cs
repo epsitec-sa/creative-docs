@@ -71,6 +71,8 @@ namespace Epsitec.Cresus.Core.Printers
 				transform = Transform.CreateRotationDegTransform (90, section.EntityPrinter.PageSize.Height/2, section.EntityPrinter.PageSize.Height/2);
 			}
 
+			transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
+
 			port.Transform = transform;
 			section.EntityPrinter.PrintCurrentPage (port);
 
