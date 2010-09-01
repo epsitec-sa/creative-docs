@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<ContactRoleEntity> InsertContactRolesInDatabase()
 		{
-			string[] names = new string[] { "professionnel", "commande", "livraison", "facturation", "privé" };
+			string[] names = new string[] { "Professionnel", "Commande", "Livraison", "Facturation", "Privé" };
 			int rank = 0;
 
 			foreach (string name in names)
