@@ -1239,7 +1239,7 @@ namespace Epsitec.Cresus.Core.Printers
 					}
 				}
 
-				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "Reporté");
+				table.SetText (this.tableColumns[TableColumnKeys.ArticleDescription].Rank, 0, "à reporter");
 
 				decimal sumPT, sumTva, sumTot;
 				this.ComputeBottomReports (relativePage, out sumPT, out sumTva, out sumTot);
