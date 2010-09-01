@@ -74,10 +74,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			if ((this.DrawFrameState & FrameState.Right) != 0)
 			{
 				var adorner = Common.Widgets.Adorners.Factory.Active;
-				var gradientRect = new Rectangle (this.Client.Bounds.Right-TileArrow.Breadth, this.Client.Bounds.Bottom, TileArrow.Breadth*0.8, this.Client.Bounds.Height);
+				var gradientRect = new Rectangle (this.Client.Bounds.Right-TileArrow.Breadth, this.Client.Bounds.Bottom, TileArrow.Breadth*0.5, this.Client.Bounds.Height);
 
 				graphics.AddFilledRectangle (gradientRect);
-				Painter.PaintLeftToRightGradient (graphics, gradientRect, Color.FromAlphaColor (0.5, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
+				Painter.PaintLeftToRightGradient (graphics, gradientRect, Color.FromAlphaColor (0.3, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
 			}
 		}
 

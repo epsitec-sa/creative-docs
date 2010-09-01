@@ -130,6 +130,11 @@ namespace Epsitec.Cresus.Core
 			throw new System.NotImplementedException ();
 		}
 
+		public IEnumerable<DocumentEntity> GetDocuments(DataContext context)
+		{
+			return new DocumentRepository (context).GetAllDocuments ();
+		}
+
 		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments(DataContext context)
 		{
 			return new InvoiceDocumentRepository (context).GetAllInvoiceDocuments ();

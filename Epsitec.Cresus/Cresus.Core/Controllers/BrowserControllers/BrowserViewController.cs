@@ -240,6 +240,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					this.SetContents (context => this.data.GetArticleDefinitions (context));
 					break;
 
+				case "Documents":
+					this.SetContents (context => this.data.GetDocuments (context));
+					break;
+
 				case "InvoiceDocuments":
 					this.SetContents (context => this.data.GetInvoiceDocuments (context));
 					break;

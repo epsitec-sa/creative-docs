@@ -124,6 +124,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="Data\AffairRepository.cs" />
+    <Compile Include="Data\DocumentRepository.cs" />
     <Compile Include="Data\Repository`1.cs" />
     <Compile Include="Dialogs\PrinterListDialog.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
@@ -533,6 +534,7 @@
     <EmbeddedResource Include="Images\Data.BusinessEvent.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
     <EmbeddedResource Include="Images\ImportV11.icon" />
+    <EmbeddedResource Include="Images\Base.Documents.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

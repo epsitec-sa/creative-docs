@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = parent,
 				ArrowDirection = arrowDirection,
 				Dock = DockStyle.Fill,
-				Padding = new Margins (0, arrowDirection == Direction.Right ? TileArrow.Breadth : 0, 0, arrowDirection == Direction.Down ? TileArrow.Breadth : 0),
+				Padding = new Margins (1, arrowDirection == Direction.Right ? TileArrow.Breadth+1 : 1, 1, arrowDirection == Direction.Down ? TileArrow.Breadth+1 : 1),
 				TabIndex = 2,
 			};
 
