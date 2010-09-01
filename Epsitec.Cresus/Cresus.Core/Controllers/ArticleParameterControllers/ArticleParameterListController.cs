@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var listContainer = new FrameBox
 			{
 				Parent = parent,
-				PreferredHeight = UIBuilder.TinyButtonSize+3+124+TileArrow.Breadth,
+				PreferredHeight = UIBuilder.TinyButtonSize+3+124+2+TileArrow.Breadth,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 2, 0),
 			};

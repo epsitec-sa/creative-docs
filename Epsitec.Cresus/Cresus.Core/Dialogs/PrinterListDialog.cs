@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Définitions des imprimantes et bacs disponibles";
 			this.window.MakeFixedSizeWindow ();
-			this.window.ClientSize = new Size (640, 400);
+			this.window.ClientSize = new Size (640, 402);
 
 			window.WindowCloseClicked += delegate
 			{

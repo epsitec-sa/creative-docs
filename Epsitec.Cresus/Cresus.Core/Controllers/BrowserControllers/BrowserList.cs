@@ -97,6 +97,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var article = entity as ArticleDefinitionEntity;
 				return TextFormatter.FormatText (article.ShortDescription);
 			}
+			if (entity is DocumentEntity)
+			{
+				var document = entity as DocumentEntity;
+				return TextFormatter.FormatText (document.IdA);
+			}
 			if (entity is InvoiceDocumentEntity)
 			{
 				var invoice = entity as InvoiceDocumentEntity;
