@@ -693,7 +693,7 @@ namespace Epsitec.Common.Widgets
 			that.ViewportOffsetX = (double) value;
 		}
 
-		public static readonly DependencyProperty ViewportProperty = DependencyProperty.Register ("Viewport", typeof (Viewport), typeof (Scrollable), new DependencyPropertyMetadata (null, Scrollable.HandleViewportChanged));
+		public static readonly DependencyProperty ViewportProperty = DependencyProperty<Scrollable>.Register (x => x.Viewport, new DependencyPropertyMetadata (null, Scrollable.HandleViewportChanged));
 		public static readonly DependencyProperty ViewportOffsetXProperty = DependencyProperty.Register ("ViewportOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetXValue, Scrollable.SetViewportOffsetXValue));
 		public static readonly DependencyProperty ViewportOffsetYProperty = DependencyProperty.Register ("ViewportOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetYValue, Scrollable.SetViewportOffsetYValue));
 

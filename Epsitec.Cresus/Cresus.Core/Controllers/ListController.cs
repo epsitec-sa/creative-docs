@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		#region Events manager
+		#region Event manager
 		private void OnItemInserted()
 		{
 			var handler = this.ItemInserted;

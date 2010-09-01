@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.widget = widget;
 			this.Update ();
 
-			new MarshalerValidator (this.widget, this.marshaler);
+			MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 
 			widget.EditionAccepted += this.HandleEditionAccepted;
 		}

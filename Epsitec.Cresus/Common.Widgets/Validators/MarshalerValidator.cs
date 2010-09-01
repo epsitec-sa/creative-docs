@@ -29,6 +29,11 @@ namespace Epsitec.Common.Widgets.Validators
 			this.Marshaler = marshaler;
 		}
 
+		public static MarshalerValidator CreateValidator(Widget widget, Marshaler marshaler)
+		{
+			return new MarshalerValidator (widget, marshaler);
+		}
+
 		/// <summary>
 		/// Gets or sets the marshaler used to validate the widget.
 		/// </summary>
