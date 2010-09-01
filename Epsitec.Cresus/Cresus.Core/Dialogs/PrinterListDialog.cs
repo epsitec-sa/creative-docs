@@ -302,8 +302,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.logicalField.Text  = printer.LogicalName;
 				this.commentField.Text  = printer.Comment;
-				this.physicalField.Text = printer.PhysicalName;
-				this.trayField.Text     = printer.Tray;
+				this.physicalField.Text = printer.PhysicalPrinterName;
+				this.trayField.Text     = printer.PhysicalPrinterTray;
 			}
 
 			string error = this.GetError ();
@@ -403,10 +403,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].PhysicalName != this.physicalField.Text)
+			if (this.printerList[sel].PhysicalPrinterName != this.physicalField.Text)
 			{
-				this.printerList[sel].PhysicalName = this.physicalField.Text;
-				this.printerList[sel].Tray = null;
+				this.printerList[sel].PhysicalPrinterName = this.physicalField.Text;
+				this.printerList[sel].PhysicalPrinterTray = null;
 				this.printerList[sel].XOffset = 0;
 				this.printerList[sel].YOffset = 0;
 
@@ -420,9 +420,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].Tray != this.trayField.Text)
+			if (this.printerList[sel].PhysicalPrinterTray != this.trayField.Text)
 			{
-				this.printerList[sel].Tray = this.trayField.Text;
+				this.printerList[sel].PhysicalPrinterTray = this.trayField.Text;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -434,13 +434,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			List<string> trayNames = new List<string> ();
 
-			if (printer != null && !string.IsNullOrEmpty (printer.PhysicalName))
+			if (printer != null && !string.IsNullOrEmpty (printer.PhysicalPrinterName))
 			{
-				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printer.PhysicalName));
+				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printer.PhysicalPrinterName));
 
 				if (settings != null)
 				{
-					System.Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (FormattedText.Escape (paperSource.Name)));
+					System.Array.ForEach (settings.PaperSources, x => trayNames.Add (FormattedText.Escape (x.Name.Trim ())));
 				}
 			}
 
@@ -466,12 +466,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 					return string.Format ("<b>Rang {0}</b>: Il faut spécifier la fonction de l'imprimante.", (i+1).ToString ());
 				}
 
-				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalName))
+				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalPrinterName))
 				{
 					return string.Format ("<b>{0}</b>: Il faut choisir l'imprimante physique.", this.printerList[i].LogicalName);
 				}
 
-				if (string.IsNullOrWhiteSpace (this.printerList[i].Tray))
+				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalPrinterTray))
 				{
 					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerList[i].LogicalName);
 				}

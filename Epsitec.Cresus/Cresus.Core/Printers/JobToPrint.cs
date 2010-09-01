@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					return this.sections[0].Printer.PhysicalName;
+					return this.sections[0].Printer.PhysicalPrinterName;
 				}
 			}
 		}

@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.Printer.PhysicalName == p2.Printer.PhysicalName &&
+				if (p1.Printer.PhysicalPrinterName == p2.Printer.PhysicalPrinterName &&
 					p1.FirstPage            == p2.FirstPage            )
 				{
 					sections.RemoveAt (index+1);  // supprime p2...
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Printers
 			PrintDocument printDocument = new PrintDocument ();
 
 			printDocument.DocumentName = firstSection.EntityPrinter.JobName;
-			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.Printer.PhysicalName));
+			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.Printer.PhysicalPrinterName));
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 

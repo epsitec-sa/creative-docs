@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public string PhysicalName
+		public string PhysicalPrinterName
 		{
 			//	Nom physique de l'imprimante.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public string Tray
+		public string PhysicalPrinterTray
 		{
 			//	Nom physique du bac de l'impriante.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				if (string.IsNullOrWhiteSpace (this.Comment))
 				{
-					return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalName, ",~", this.Tray, ")").ToString ();
+					return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")").ToString ();
 				}
 				else
 				{
@@ -104,12 +104,12 @@ namespace Epsitec.Cresus.Core.Printers
 					Printer.serializableSeparator,
 					
 					"PhysicalName=",
-					this.PhysicalName,
+					this.PhysicalPrinterName,
 
 					Printer.serializableSeparator,
 					
 					"Tray=",
-					this.Tray,
+					this.PhysicalPrinterTray,
 
 					Printer.serializableSeparator,
 					
@@ -146,11 +146,11 @@ namespace Epsitec.Cresus.Core.Printers
 							break;
 
 						case "PhysicalName":
-							this.PhysicalName = words[1];
+							this.PhysicalPrinterName = words[1];
 							break;
 
 						case "Tray":
-							this.Tray = words[1];
+							this.PhysicalPrinterTray = words[1];
 							break;
 
 						case "XOffset":
