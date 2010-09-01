@@ -162,13 +162,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Database",
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 4,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 3,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowArticleDefinitions));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowDocuments));
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowInvoiceDocuments));
+			//?section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowInvoiceDocuments));
 		}
 
 		private void CreateRibbonStateSection()

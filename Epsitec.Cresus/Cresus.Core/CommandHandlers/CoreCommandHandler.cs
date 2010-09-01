@@ -60,10 +60,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.File.ImportV11)]
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
-			var mainViewController = orchestrator.MainViewController;
-
-			mainViewController.FileImportV11 ();
+			ImportV11.Import (CoreProgram.Application);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

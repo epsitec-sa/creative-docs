@@ -99,16 +99,26 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			if (entity is DocumentEntity)
 			{
-				var document = entity as DocumentEntity;
-				return TextFormatter.FormatText (document.IdA);
-			}
-			if (entity is InvoiceDocumentEntity)
-			{
-				var invoice = entity as InvoiceDocumentEntity;
-				return TextFormatter.FormatText (invoice.IdA);
+				return BrowserList.GetDocumentSummary (entity as DocumentEntity);
 			}
 
 			return FormattedText.Empty;
+		}
+
+
+		private static FormattedText GetDocumentSummary(DocumentEntity document)
+		{
+			if (document is InvoiceDocumentEntity)
+			{
+				return TextFormatter.FormatText ("Facture", document.IdA);
+			}
+
+			if (document is GenericArticleDocumentEntity)
+			{
+				return TextFormatter.FormatText ("Articles", document.IdA);  // TODO: juste ?
+			}
+
+			return TextFormatter.FormatText ("Document", document.IdA);
 		}
 
 

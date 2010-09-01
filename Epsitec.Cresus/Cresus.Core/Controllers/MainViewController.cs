@@ -342,10 +342,6 @@ namespace Epsitec.Cresus.Core.Controllers
 //			PrintEngine.Preview (entity);
 		}
 
-		public void FileImportV11()
-		{
-		}
-
 		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()
 		{
 			var leaf = this.dataViewController.GetLeafViewController ();

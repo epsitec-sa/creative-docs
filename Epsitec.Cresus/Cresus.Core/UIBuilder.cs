@@ -296,6 +296,7 @@ namespace Epsitec.Cresus.Core
 			return tileTabBook;
 		}
 
+#if false
 		public TileTabBook CreateTabBook(List<string> pageDescriptions, System.Action<string> action)
 		{
 #if false
@@ -368,6 +369,7 @@ namespace Epsitec.Cresus.Core
 			return this.tileTabBook;
 #endif
 		}
+#endif
 
 
 		public void CreateHeaderEditorTile()

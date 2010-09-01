@@ -123,6 +123,7 @@
     <Compile Include="Controllers\EditionControllers\EditionTotalInvoiceDocumentViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
+    <Compile Include="ImportV11.cs" />
     <Compile Include="Data\AffairRepository.cs" />
     <Compile Include="Data\DocumentRepository.cs" />
     <Compile Include="Data\Repository`1.cs" />
