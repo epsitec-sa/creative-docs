@@ -47,15 +47,8 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				};
 			}
 
-			this.toolbar = new FrameBox
-			{
-				Parent = parent,
-				DrawFullFrame = true,
-				PreferredHeight = UIBuilder.TinyButtonSize,
-				Margins = new Margins (0, UIBuilder.RightMargin, 0, -1),
-				Padding = new Margins (2),
-				Dock = DockStyle.Top,
-			};
+			this.toolbar = UIBuilder.CreateIntegratedToolbar (parent, UIBuilder.TinyButtonSize);
+			this.toolbar.Margins = new Margins (0, UIBuilder.RightMargin, 0, -1);
 		}
 
 		public void UpdateUI(ArticleDefinitionEntity articleDefinition, ArticleDocumentItemEntity articleDocumentItem, AbstractTextField textField)

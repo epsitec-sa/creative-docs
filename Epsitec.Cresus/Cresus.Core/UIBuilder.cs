@@ -402,6 +402,22 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static FrameBox CreateIntegratedToolbar(Widget parent, double height)
+		{
+			var toolbar = new FrameBox
+			{
+				Parent = parent,
+				DrawFullFrame = true,
+				BackColor = ArrowedFrame.SurfaceColors.First (),
+				PreferredHeight = height,
+				Padding = new Margins (2),
+				Dock = DockStyle.Top,
+			};
+
+			return toolbar;
+		}
+
+
 		public static Button CreateColumnTileCloseButton(TileContainer container)
 		{
 			Button closeButton = container.FindChild ("ColumnTileCloseButton", Widget.ChildFindMode.Deep) as Button;

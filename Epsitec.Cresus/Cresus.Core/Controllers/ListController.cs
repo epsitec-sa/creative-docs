@@ -53,17 +53,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				buttonSize = UIBuilder.TinyButtonSize;
 			}
 
-			this.toolbar = new FrameBox
-			{
-				Parent = parent,
-				DrawFullFrame = true,
-				BackColor = ArrowedFrame.SurfaceColors.First (),
-				PreferredHeight = buttonSize.Value,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, arrowDirection == Direction.Right ? TileArrow.Breadth : 0, 0, -1),
-				Padding = new Margins (2),
-				TabIndex = 1,
-			};
+			this.toolbar = UIBuilder.CreateIntegratedToolbar (parent, buttonSize.Value);
+			this.toolbar.Margins = new Margins (0, arrowDirection == Direction.Right ? TileArrow.Breadth : 0, 0, -1);
+			this.toolbar.TabIndex = 1;
 
 			this.addButton = new GlyphButton
 			{
