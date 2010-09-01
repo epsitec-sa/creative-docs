@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public override string ToString()
 		{
 			// Pratique pour le debug.
-			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, FirstPage={2}, PageCount={3}, EntityRank={4}", this.printer.LogicalName, this.printer.PhysicalName, this.firstPage, this.PageCount, this.entityRank);
+			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, FirstPage={2}, PageCount={3}, EntityRank={4}", this.printer.LogicalName, this.printer.PhysicalPrinterName, this.firstPage, this.PageCount, this.entityRank);
 		}
 
 
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	qui utilisent une même imprimante physique.
 			int result;
 
-			result = string.Compare (x.Printer.PhysicalName, y.Printer.PhysicalName);
+			result = string.Compare (x.Printer.PhysicalPrinterName, y.Printer.PhysicalPrinterName);
 			if (result != 0)
 			{
 				return result;

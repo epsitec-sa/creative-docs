@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Printers
 			foreach (var printer in list)
 			{
 				if (!string.IsNullOrWhiteSpace (printer.LogicalName) &&
-					!string.IsNullOrWhiteSpace (printer.PhysicalName))
+					!string.IsNullOrWhiteSpace (printer.PhysicalPrinterName))
 				{
 					string key = PrinterSettings.GetKey (index++);
 					settings.Add (key, printer.GetSerializableContent ());

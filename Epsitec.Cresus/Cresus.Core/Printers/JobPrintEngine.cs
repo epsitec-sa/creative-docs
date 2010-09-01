@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			settings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == section.Printer.Tray);
+			settings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.Printer.PhysicalPrinterTray.Trim ());
 			settings.Margins = new Margins (0);
 		}
 
