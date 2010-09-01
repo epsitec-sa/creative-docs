@@ -81,15 +81,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		public static void CreateAbstractArticleParameterTabBook(UIBuilder builder, TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, ArticleParameterTabId defaultId)
+		public static void CreateAbstractArticleParameterTabBook<T>(UIBuilder builder, EntityViewController<T> controller, ArticleParameterTabId defaultId)
+			where T : AbstractArticleParameterDefinitionEntity
 		{
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateMargin (tile, horizontalSeparator: false);
 
 			var book = builder.CreateTabBook (
-				TabPageDef.Create (ArticleParameterTabId.Numeric, "Valeur numérique", id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)),
-				TabPageDef.Create (ArticleParameterTabId.Enum,    "Énumération",      id => Common.ChangeEditedParameterEntity (tileContainer, dataContext, entity, id)));
+				TabPageDef.Create (ArticleParameterTabId.Numeric, "Valeur numérique", id => Common.ChangeEditedParameterEntity (controller, id)),
+				TabPageDef.Create (ArticleParameterTabId.Enum,    "Énumération",      id => Common.ChangeEditedParameterEntity (controller, id)));
 
 			book.SelectTabPage (defaultId);
 		}
@@ -155,108 +156,55 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 
-		private static void ChangeEditedLineEntity(TileContainer tileContainer, DataContext dataContext, AbstractDocumentItemEntity entity, DocumentItemTabId id)
+		private static void ChangeEditedParameterEntity<T>(EntityViewController<T> controller, ArticleParameterTabId id)
+			where T : AbstractArticleParameterDefinitionEntity
 		{
-			if ((entity != null) &&
-				(entity.TabId == id))
+			var entity       = controller.Entity;
+			var dataContext  = controller.DataContext;
+			var orchestrator = controller.Orchestrator;
+
+			if (entity != null && entity.TabId == id)
 			{
 				return;
 			}
 
-			var invoiceDocument = dataContext.GetEntities ().OfType<GenericArticleDocumentEntity> ()
-				.Where (x => x.Lines.Contains (entity)).First ();
+			var articleDefinition = dataContext.GetEntitiesOfType<ArticleDefinitionEntity> (x => x.ArticleParameterDefinitions.Contains (entity)).Single ();
+			var navigator         = controller.Navigator;
+			var history           = navigator.History;
+			var navigationPath    = navigator.GetLeafNavigationPath ();
 
-			EntityViewController parentController = Common.GetParentController (tileContainer);
-
-			//	Cherche l'index de la ligne dans la collection.
-			int index = invoiceDocument.Lines.IndexOf (entity);
-			if (index == -1)
+			using (history.SuspendRecording ())
 			{
-				return;
+				//	Cherche l'index de la ligne dans la collection.
+				int index = articleDefinition.ArticleParameterDefinitions.IndexOf (entity);
+
+				System.Diagnostics.Debug.Assert (index >= 0);
+
+				//	Ferme la tuile.
+				orchestrator.CloseView (controller);
+
+				//	Crée la nouvelle entité.
+				AbstractArticleParameterDefinitionEntity newEntity = null;
+
+				if (id == ArticleParameterTabId.Numeric)
+				{
+					newEntity = dataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+				}
+				else if (id == ArticleParameterTabId.Enum)
+				{
+					newEntity = dataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
+				}
+
+				System.Diagnostics.Debug.Assert (newEntity != null);
+
+				//	Remplace l'entité dans la db.
+				articleDefinition.ArticleParameterDefinitions[index] = newEntity;
+				dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
+
+				//	Crée et montre la nouvelle tuile.
+				history.NavigateInPlace (navigationPath);
 			}
-
-			//	Ferme la tuile.
-			parentController.Orchestrator.CloseSubViews (parentController);
-
-			//	Supprime l'entité dans la db.
-			invoiceDocument.Lines.RemoveAt (index);              // supprime dans la liste de la facture
-			dataContext.DeleteEntity (entity);                   // supprime dans le DataContext de la ligne
-			parentController.DataContext.DeleteEntity (entity);  // supprime dans le DataContext de la facture
-
-			//	Crée la nouvelle entité.
-			AbstractDocumentItemEntity newEntity = null;
-
-			if (id == DocumentItemTabId.Text)
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
-			}
-			else if (id == DocumentItemTabId.Article)
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
-
-				var article = newEntity as ArticleDocumentItemEntity;
-				article.BeginDate = invoiceDocument.CreationDate;
-				article.EndDate   = invoiceDocument.CreationDate;
-			}
-			else if (id == DocumentItemTabId.Price)
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
-			}
-
-			System.Diagnostics.Debug.Assert (newEntity != null);
-			newEntity.Visibility = true;
-
-			invoiceDocument.Lines.Insert (index, newEntity);
-
-			//	Crée et montre la nouvelle tuile.
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
-		}
-
-
-		public static void ChangeEditedParameterEntity(TileContainer tileContainer, DataContext dataContext, AbstractArticleParameterDefinitionEntity entity, ArticleParameterTabId id)
-		{
-			if ((entity != null) &&
-				(entity.TabId == id))
-			{
-				return;
-			}
-
-			EntityViewController parentController = Common.GetParentController (tileContainer);
-			ArticleDefinitionEntity articleDefinition = parentController.GetEntity () as ArticleDefinitionEntity;
-
-			//	Cherche l'index de la ligne dans la collection.
-			int index = articleDefinition.ArticleParameterDefinitions.IndexOf (entity);
-			if (index == -1)
-			{
-				return;
-			}
-
-			//	Ferme la tuile.
-			parentController.Orchestrator.CloseSubViews (parentController);
-
-			//	Supprime l'entité dans la db.
-			articleDefinition.ArticleParameterDefinitions.RemoveAt (index);  // supprime dans la liste de l'article
-			dataContext.DeleteEntity (entity);                     // supprime dans le DataContext de la ligne
-			parentController.DataContext.DeleteEntity (entity);    // supprime dans le DataContext de l'article
-
-			//	Crée la nouvelle entité.
-			AbstractArticleParameterDefinitionEntity newEntity = null;
-
-			if (id == ArticleParameterTabId.Numeric)
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
-			}
-			else if (id == ArticleParameterTabId.Enum)
-			{
-				newEntity = parentController.DataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
-			}
-
-			System.Diagnostics.Debug.Assert (newEntity != null);
-
-			articleDefinition.ArticleParameterDefinitions.Insert (index, newEntity);
-
-			//	Crée et montre la nouvelle tuile.
-//-			parentController.TileContainerController.ShowSubView (index, "ArticleParameterDefinition");
 		}
 
 
