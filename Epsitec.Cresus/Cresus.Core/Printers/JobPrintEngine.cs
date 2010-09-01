@@ -33,7 +33,12 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			settings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.Printer.PhysicalPrinterTray.Trim ());
+			PaperSource ps = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.Printer.PhysicalPrinterTray.Trim ());
+			if (ps != null)
+			{
+				settings.PaperSource = ps;
+			}
+
 			settings.Margins = new Margins (0);
 		}
 
@@ -71,9 +76,8 @@ namespace Epsitec.Cresus.Core.Printers
 				transform = Transform.CreateRotationDegTransform (90, section.EntityPrinter.PageSize.Height/2, section.EntityPrinter.PageSize.Height/2);
 			}
 
-			transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
+			port.Transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
 
-			port.Transform = transform;
 			section.EntityPrinter.PrintCurrentPage (port);
 
 			section.EntityPrinter.CurrentPage++;  // page suivante dans la section

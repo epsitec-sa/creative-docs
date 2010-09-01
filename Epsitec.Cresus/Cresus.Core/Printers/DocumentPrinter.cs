@@ -16,11 +16,12 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class DocumentPrinter
 	{
-		public DocumentPrinter(PrinterFunction printerFunction, string description, string group)
+		public DocumentPrinter(PrinterFunction printerFunction, string description, string group, string job)
 		{
 			this.PrinterFunction = printerFunction;
 			this.Description     = description;
 			this.Group           = group;
+			this.Job             = job;
 		}
 
 		public PrinterFunction PrinterFunction
@@ -36,6 +37,12 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		public string Group
+		{
+			get;
+			set;
+		}
+
+		public string Job
 		{
 			get;
 			set;

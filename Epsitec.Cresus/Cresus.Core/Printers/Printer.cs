@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public Printer()
 		{
+			this.Copies = 1;
 		}
 
 		public Printer(string logicalName)
@@ -75,19 +76,28 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
+		public int Copies
+		{
+			get;
+			set;
+		}
+
 
 		public string NiceDescription
 		{
 			//	Retourne une description consise et claire de l'imprimante.
 			get
 			{
+				string c = this.Copies < 2 ? null : string.Format ("{0}×", this.Copies);
+				var name = TextFormatter.FormatText (this.LogicalName, c);
+
 				if (string.IsNullOrWhiteSpace (this.Comment))
 				{
-					return TextFormatter.FormatText (this.LogicalName, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")").ToString ();
+					return TextFormatter.FormatText (name, "(", this.PhysicalPrinterName, ",~", this.PhysicalPrinterTray, ")").ToString ();
 				}
 				else
 				{
-					return TextFormatter.FormatText (this.LogicalName, "(", this.Comment, ")").ToString ();
+					return TextFormatter.FormatText (name, "(", this.Comment, ")").ToString ();
 				}
 			}
 		}
@@ -117,12 +127,17 @@ namespace Epsitec.Cresus.Core.Printers
 					this.XOffset.ToString (CultureInfo.InvariantCulture),
 
 					Printer.serializableSeparator,
-					
+
 					"YOffset=",
 					this.YOffset.ToString (CultureInfo.InvariantCulture),
 
 					Printer.serializableSeparator,
-					
+
+					"Copies=",
+					this.Copies.ToString (CultureInfo.InvariantCulture),
+
+					Printer.serializableSeparator,
+
 					"Comment=",
 					this.Comment
 				);
@@ -159,6 +174,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 						case "YOffset":
 							this.YOffset = double.Parse (words[1]);
+							break;
+
+						case "Copies":
+							this.Copies = int.Parse (words[1]);
 							break;
 
 						case "Comment":

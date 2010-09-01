@@ -117,7 +117,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 							foreach (var physicalPage in physicalPages)
 							{
-								sections.Add (new SectionToPrint (printer, physicalPage, entityRank, entityPrinter));
+								for (int copy = 0; copy < printer.Copies; copy++)
+								{
+									string jobName = string.Concat (documentPrinter.Job, ".",(copy+1).ToString ());
+									sections.Add (new SectionToPrint (printer, jobName, physicalPage, entityRank, entityPrinter));
+								}
 							}
 						}
 					}
@@ -136,8 +140,9 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.Printer.PhysicalPrinterName == p2.Printer.PhysicalPrinterName &&
-					p1.FirstPage            == p2.FirstPage            )
+				if (p1.Job                         == p2.Job                         &&
+					p1.Printer.PhysicalPrinterName == p2.Printer.PhysicalPrinterName &&
+					p1.FirstPage                   == p2.FirstPage                   )
 				{
 					sections.RemoveAt (index+1);  // supprime p2...
 					sections.Add (p2);            // ...puis remet-la à la fin
@@ -156,7 +161,8 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.Printer                  == p2.Printer    &&
+				if (p1.Job                      == p2.Job        &&
+					p1.Printer                  == p2.Printer    &&
 					p1.EntityRank               == p2.EntityRank &&
 					p1.FirstPage + p1.PageCount == p2.FirstPage  )
 				{
@@ -187,7 +193,8 @@ namespace Epsitec.Cresus.Core.Printers
 				JobToPrint j1 = jobs[index];
 				JobToPrint j2 = jobs[index+1];
 
-				if (j1.PrinterPhysicalName == j2.PrinterPhysicalName)
+				if (j1.Job                 == j2.Job                 &&
+					j1.PrinterPhysicalName == j2.PrinterPhysicalName )
 				{
 					j1.Sections.AddRange (j2.Sections);  // ajoute les sections de j2 à j1
 					jobs.RemoveAt (index+1);             // supprime j2
@@ -202,7 +209,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	plusieurs bacs différents).
 			foreach (var job in jobs)
 			{
-				PrintEngine.PrintJob (job);
+				//?PrintEngine.PrintJob (job);
 			}
 		}
 

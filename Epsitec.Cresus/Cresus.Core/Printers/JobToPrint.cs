@@ -26,6 +26,23 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public string Job
+		{
+			//	Retourne le nom du job de la première section.
+			//	Toutes les sections doivent utiliser le même job.
+			get
+			{
+				if (this.sections.Count == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.sections[0].Job;
+				}
+			}
+		}
+
 		public string PrinterPhysicalName
 		{
 			//	Retourne le nom de l'imprimante physique de la première section.

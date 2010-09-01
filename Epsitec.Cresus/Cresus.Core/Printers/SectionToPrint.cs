@@ -14,10 +14,11 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class SectionToPrint
 	{
-		public SectionToPrint(Printer printer, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
+		public SectionToPrint(Printer printer, string job, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
 		{
 			//	Crée une section d'une page.
 			this.printer       = printer;
+			this.job           = job;
 			this.firstPage     = firstPage;
 			this.PageCount     = 1;
 			this.entityRank    = entityRank;
@@ -29,6 +30,14 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				return this.printer;
+			}
+		}
+
+		public string Job
+		{
+			get
+			{
+				return this.job;
 			}
 		}
 
@@ -65,7 +74,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public override string ToString()
 		{
 			// Pratique pour le debug.
-			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, FirstPage={2}, PageCount={3}, EntityRank={4}", this.printer.LogicalName, this.printer.PhysicalPrinterName, this.firstPage, this.PageCount, this.entityRank);
+			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}, EntityRank={5}", this.printer.LogicalName, this.printer.PhysicalPrinterName, this.job, this.firstPage, this.PageCount, this.entityRank);
 		}
 
 
@@ -74,6 +83,12 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Détermine comment regrouper les pages. On cherche à grouper les pages
 			//	qui utilisent une même imprimante physique.
 			int result;
+
+			result = string.Compare (x.Job, y.Job);
+			if (result != 0)
+			{
+				return result;
+			}
 
 			result = string.Compare (x.Printer.PhysicalPrinterName, y.Printer.PhysicalPrinterName);
 			if (result != 0)
@@ -93,9 +108,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return 0;
 		}
-	
-		
+
+
 		private readonly Printer				printer;
+		private readonly string					job;
 		private readonly int					firstPage;
 		private readonly int					entityRank;
 		private readonly AbstractEntityPrinter	entityPrinter;
