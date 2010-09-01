@@ -132,6 +132,7 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="Converters\ConversionResult.cs" />
+    <Compile Include="Converters\Marshaler`1.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\GenericConverter`1.cs" />
     <Compile Include="Converters\DecimalConverter.cs" />
@@ -148,6 +149,11 @@
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="DependencyProperty`1.cs" />
     <Compile Include="ExpressionAnalyzer.cs" />
+    <Compile Include="Support\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Support\Extensions\HashSetExtensions.cs" />
+    <Compile Include="Support\Extensions\QueueExtensions.cs" />
+    <Compile Include="Support\Extensions\StackExtensions.cs" />
+    <Compile Include="MultilingualText.cs" />
     <Compile Include="TextComparison.cs" />
     <Compile Include="INotifyCurrentChanged.cs" />
     <Compile Include="DataSource.cs" />

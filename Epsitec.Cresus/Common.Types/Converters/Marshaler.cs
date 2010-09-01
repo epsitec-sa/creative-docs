@@ -23,6 +23,11 @@ namespace Epsitec.Common.Types.Converters
 			get;
 		}
 
+		public abstract System.Type MarshaledType
+		{
+			get;
+		}
+
 		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> getter, int index)
 		{
 			var getterFunc = getter.Compile ();
@@ -43,7 +48,7 @@ namespace Epsitec.Common.Types.Converters
 
 			return marshaler;
 		}
-		
+
 		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getter, System.Action<T1, T2?> setter)
 			where T2 : struct
 		{
@@ -51,7 +56,7 @@ namespace Epsitec.Common.Types.Converters
 			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
 
 			marshaler.getterExpression = getter;
-			
+
 			return marshaler;
 		}
 
@@ -111,7 +116,7 @@ namespace Epsitec.Common.Types.Converters
 		/// 	<c>true</c> if the specified text can be converted; otherwise, <c>false</c>.
 		/// </returns>
 		public abstract bool CanConvert(string text);
-		
+
 		public T GetValue<T>()
 		{
 			object value = this.GetObjectValue ();
@@ -138,35 +143,5 @@ namespace Epsitec.Common.Types.Converters
 
 		private Expression getterExpression;
 		private int collectionIndex = -1;
-	}
-
-	public abstract class Marshaler<T> : Marshaler
-	{
-		public System.Func<T> ValueGetter
-		{
-			get;
-			internal set;
-		}
-
-		public System.Action<T> ValueSetter
-		{
-			get;
-			internal set;
-		}
-
-		public T InitialValue
-		{
-			get;
-			internal set;
-		}
-
-		public abstract void SetValue(T value);
-
-		public abstract T GetValue();
-
-		protected override object GetObjectValue()
-		{
-			return this.GetValue ();
-		}
 	}
 }
