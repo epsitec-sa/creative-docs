@@ -116,13 +116,16 @@
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterListController.cs" />
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
     <Compile Include="Controllers\IClickSimulator.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTotalInvoiceDocumentViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
+    <Compile Include="Data\UnitOfMeasureGroupRepository.cs" />
     <Compile Include="ImportV11.cs" />
     <Compile Include="Data\AffairRepository.cs" />
     <Compile Include="Data\DocumentRepository.cs" />
@@ -536,6 +539,7 @@
     <EmbeddedResource Include="Images\Print.icon" />
     <EmbeddedResource Include="Images\ImportV11.icon" />
     <EmbeddedResource Include="Images\Base.Documents.icon" />
+    <EmbeddedResource Include="Images\Data.UnitOfMeasureGroup.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -98,6 +98,11 @@ namespace Epsitec.Cresus.Core
 			return new UnitOfMeasureRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
 		}
 
+		public IList<UnitOfMeasureGroupEntity> GetUnitOfMeasureGroup()
+		{
+			return new UnitOfMeasureGroupRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+		}
+
 		public IList<ArticleDefinitionEntity> GetArticleDefinitions(DataContext context)
 		{
 			return new ArticleDefinitionRepository (context).GetAllEntitiesIncludingLiveEntities ();
