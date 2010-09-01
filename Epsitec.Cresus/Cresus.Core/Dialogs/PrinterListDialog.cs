@@ -190,6 +190,40 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 4,
 			};
 
+			this.xOffsetLabel = new StaticText
+			{
+				Parent = rightBox,
+				Text = "Décalage horizontal en millimètres (+ = à droite) :",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+			};
+
+			this.xOffsetField = new TextFieldEx
+			{
+				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+				Parent = rightBox,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 200, 0, 5),
+				TabIndex = 5,
+			};
+
+			this.yOffsetLabel = new StaticText
+			{
+				Parent = rightBox,
+				Text = "Décalage vertical en millimètres (+ = en haut) :",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+			};
+
+			this.yOffsetField = new TextFieldEx
+			{
+				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+				Parent = rightBox,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 200, 0, 5),
+				TabIndex = 6,
+			};
+
 			//	Rempli le pied de page.
 			var footer = new FrameBox
 			{
@@ -255,6 +289,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionTrayChanged ();
 			};
 
+			this.xOffsetField.AcceptingEdition += delegate
+			{
+				this.ActionOffsetXChanged ();
+			};
+
+			this.yOffsetField.AcceptingEdition += delegate
+			{
+				this.ActionOffsetYChanged ();
+			};
+
 			this.acceptButton.Clicked += delegate
 			{
 				Printers.PrinterSettings.SetPrinterList (this.printerList);
@@ -285,9 +329,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.physicalLabel.Enable = sel != -1;
 			this.physicalField.Enable = sel != -1;
-			
+
 			this.trayLabel.Enable = sel != -1;
 			this.trayField.Enable = sel != -1;
+
+			this.xOffsetLabel.Enable = sel != -1;
+			this.xOffsetField.Enable = sel != -1;
+
+			this.yOffsetLabel.Enable = sel != -1;
+			this.yOffsetField.Enable = sel != -1;
 
 			if (sel == -1)
 			{
@@ -295,6 +345,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.commentField.Text  = null;
 				this.physicalField.Text = null;
 				this.trayField.Text     = null;
+				this.xOffsetField.Text  = null;
+				this.yOffsetField.Text  = null;
 			}
 			else
 			{
@@ -304,6 +356,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.commentField.Text  = printer.Comment;
 				this.physicalField.Text = printer.PhysicalPrinterName;
 				this.trayField.Text     = printer.PhysicalPrinterTray;
+				this.xOffsetField.Text  = printer.XOffset.ToString ();
+				this.yOffsetField.Text  = printer.YOffset.ToString ();
 			}
 
 			string error = this.GetError ();
@@ -426,6 +480,40 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
+			}
+		}
+
+		private void ActionOffsetXChanged()
+		{
+			int sel = this.listController.SelectedIndex;
+
+			double value;
+			if (double.TryParse (this.xOffsetField.Text, out value))
+			{
+				if (this.printerList[sel].XOffset != value)
+				{
+					this.printerList[sel].XOffset = value;
+
+					this.listController.UpdateList (sel);
+					this.UpdateWidgets ();
+				}
+			}
+		}
+
+		private void ActionOffsetYChanged()
+		{
+			int sel = this.listController.SelectedIndex;
+
+			double value;
+			if (double.TryParse (this.yOffsetField.Text, out value))
+			{
+				if (this.printerList[sel].YOffset != value)
+				{
+					this.printerList[sel].YOffset = value;
+
+					this.listController.UpdateList (sel);
+					this.UpdateWidgets ();
+				}
 			}
 		}
 
@@ -554,10 +642,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText								commentLabel;
 		private StaticText								physicalLabel;
 		private StaticText								trayLabel;
+		private StaticText								xOffsetLabel;
+		private StaticText								yOffsetLabel;
 		private TextFieldEx								logicalField;
 		private TextFieldEx								commentField;
 		private TextFieldCombo							physicalField;
 		private TextFieldCombo							trayField;
+		private TextFieldEx								xOffsetField;
+		private TextFieldEx								yOffsetField;
 		private StaticText								errorInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;
