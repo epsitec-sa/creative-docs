@@ -23,23 +23,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.possibleItems = possibleItems;
 			this.getUserText   = getUserText;
 
-			if (this.possibleItems != null)
-			{
-				System.Diagnostics.Debug.Assert (this.getUserText != null);
-			}
+			System.Diagnostics.Debug.Assert (this.marshaler != null);
+			System.Diagnostics.Debug.Assert ((this.possibleItems == null) || (this.getUserText != null));
+
+			this.useFormattedText = this.marshaler.MarshaledType == typeof (FormattedText);
 		}
 
 
 		public void Attach(AutoCompleteTextField widget)
 		{
-			foreach (var item in possibleItems)
+			foreach (string[] item in possibleItems)
 			{
-				widget.Items.Add (item[0], item);
+				widget.Items.Add (item[TextValueController.KeyIndex], item);
 			}
 
 			widget.ValueToDescriptionConverter = value => this.getUserText (value as string[]);
-			widget.HintComparer = (value, text) => TextValueController.MatchUserText (value as string[], text);
-			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
+			widget.HintComparer                = (value, text) => TextValueController.MatchUserText (value as string[], text);
+			widget.HintComparisonConverter     = TextConverter.ConvertToLowerAndStripAccents;
 
 			this.Attach (widget as AbstractTextField);
 		}
@@ -51,27 +51,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			new MarshalerValidator (this.widget, this.marshaler);
 
-			widget.EditionAccepted += delegate
-			{
-				if (this.widget is AutoCompleteTextField)
-				{
-					var auto = this.widget as AutoCompleteTextField;
+			widget.EditionAccepted += this.HandleEditionAccepted;
+		}
 
-					string[] texts = auto.Items.GetValue (auto.SelectedItemIndex) as string[];
-					this.marshaler.SetStringValue (texts[0]);  // utilise key
-				}
-				else
-				{
-					// Il ne faut absolument pas utiliser TextConverter.ConvertToSimpleText, car le texte peut
-					// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
-					this.marshaler.SetStringValue (widget.Text);
-				}
-			};
-
-			//	Je ne sais pas qui a eu l'idée farfelue d'appeler Update lorsque
-			//	le widget perd le focus, mais cela cause des catastrophes. La valeur
-			//	éditée reprend l'ancien contenu !
-			//widget.KeyboardFocusChanged += (sender, e) => this.Update ();
+		private void HandleEditionAccepted(object sender)
+		{
+			string text = this.GetWidgetText ();
+			this.SetMarshalerText (text);
 		}
 
 
@@ -93,6 +79,47 @@ namespace Epsitec.Cresus.Core.Controllers
 			return result;
 		}
 
+		private string GetWidgetText()
+		{
+			if (this.widget is AutoCompleteTextField)
+			{
+				var autoCompleteTextField = this.widget as AutoCompleteTextField;
+
+				string[] item = autoCompleteTextField.Items.GetValue (autoCompleteTextField.SelectedItemIndex) as string[];
+
+				return item[TextValueController.KeyIndex];
+			}
+			else
+			{
+				return this.widget.Text;
+			}
+		}
+
+		private void SetWidgetText(string text)
+		{
+			if (this.widget is AutoCompleteTextField)
+			{
+				var auto = this.widget as AutoCompleteTextField;
+
+				auto.SelectedItemIndex = auto.Items.FindIndexByKey (text);
+			}
+			else
+			{
+				// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
+				// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
+				this.widget.Text = text;
+			}
+		}
+
+		private string GetMarshalerText()
+		{
+			return this.marshaler.GetStringValue ();
+		}
+
+		private void SetMarshalerText(string text)
+		{
+			this.marshaler.SetStringValue (text);
+		}
 
 		#region IWidgetUpdater Members
 
@@ -100,26 +127,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.widget != null)
 			{
-				if (this.widget is AutoCompleteTextField)
-				{
-					var auto = this.widget as AutoCompleteTextField;
-
-					auto.SelectedItemIndex = auto.Items.FindIndexByKey (this.marshaler.GetStringValue ());
-				}
-				else
-				{
-					// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
-					// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
-					this.widget.Text = this.marshaler.GetStringValue ();
-				}
+				string text = this.GetMarshalerText ();
+				this.SetWidgetText (text);
 			}
 		}
 
 		#endregion
 
+
+		private const int KeyIndex = 0;
+		
 		private readonly Marshaler marshaler;
 		private readonly IEnumerable<string[]> possibleItems;
 		private readonly System.Func<string[], FormattedText> getUserText;
+		private readonly bool useFormattedText;
 		private Widget widget;
 	}
 }

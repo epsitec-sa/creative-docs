@@ -7,17 +7,21 @@ namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>FormattedText</c> structure wraps a <c>string</c> which represents
-	/// formatted text.
-	/// Cette structure devrait être utilisée à la place de <c>string</c> partout
-	/// où le texte peut contenir des tags de mise en page.
-	/// Par exemple:
-	///    FormattedText t = "<b>bold</b>";
-	///    t.ToString () retourne la même chaîne
-	///    t.ToSimpleText () retourne "bold"
-	/// Autre exemple:
-	///    FormattedText t = FormattedText.FromSimpleText ("a -> b");
-	///    t.ToString () retourne "a -&gt; b"
-	///    t.ToSimpleText () retourne "a -> b"
+	/// formatted text. It should be used instead of <c>string</c> wherever text
+	/// contains formatting.
+	/// <example>
+	/// <code>
+	///    FormattedText t = "&lt;b&gt;bold&lt;/b&gt;";
+	///    t.ToString () == "&lt;b&gt;bold&lt;/b&gt;"
+	///    t.ToSimpleText () == "bold"
+	/// </code>
+	/// </example>
+	/// <example>
+	/// <code>
+	///    FormattedText t = FormattedText.FromSimpleText ("a &gt; b");
+	///    t.ToString () == "a &amp;gt; b"
+	///    t.ToSimpleText () == "a &gt; b"
+	///	</code>
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (FormattedText.Converter))]
@@ -43,9 +47,14 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Performs an implicit conversion from <see cref="string"/> to <see cref="FormattedText"/>.
+		/// This can be used to write <code>FormattedText t = "&lt;b&gt;bold&lt;b&gt;"</code>.
+		/// </summary>
+		/// <param name="formattedTextSource">The formatted text source.</param>
+		/// <returns>The result of the conversion.</returns>
 		public static implicit operator FormattedText(string formattedTextSource)
 		{
-			//	Permet de faire FormattedText f = "<b>bold</b>".
 			return new FormattedText (formattedTextSource);
 		}
 
@@ -92,6 +101,11 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// If this text is null or empty, return the default text instead.
+		/// </summary>
+		/// <param name="defaultText">The default text.</param>
+		/// <returns>The original text if it is not empty; otherwise, the default text provided by the caller.</returns>
 		public FormattedText IfNullOrEmptyReplaceWith(FormattedText defaultText)
 		{
 			if (this.IsNullOrEmpty)
@@ -110,6 +124,8 @@ namespace Epsitec.Common.Types
 
 			List<FormattedText> list = new List<FormattedText> ();
 
+			// TODO: properly handle special characters ! And avoid splitting &gt; if the user provides 'g' as the separator.
+
 			foreach (var t in x)
 			{
 				list.Add (new FormattedText (t));
@@ -122,7 +138,7 @@ namespace Epsitec.Common.Types
 		{
 			if (text.IsNull)
 			{
-				text = new FormattedText ("");
+				return new FormattedText[] { FormattedText.Empty };
 			}
 
 			return text.Split (separator, options);
@@ -298,8 +314,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Escapes the specified text, i.e. converts special characters found
 		/// in the source text to their equivalent formatted encoding.
-		/// "a&b" return "a&amp;b"
-		/// "a&amp;b" return "a&amp;amp;b"
+		/// <example>"a&amp;b" returns "a&amp;amp;b"</example>
+		/// <example>"a&amp;amp;b" return "a&amp;amp;amp;b</example>
 		/// </summary>
 		/// <param name="text">The source text.</param>
 		/// <returns>The escaped text.</returns>
@@ -318,8 +334,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Un-escapes the specified text, i.e. converts formatted encoding
 		/// to their equivalent characters.
-		/// "a&amp;b" return "a&b"
-		/// "a&b" make exception
+		/// <example>"a&amp;amp;b" returns "a&amp;b"</example>
+		/// <example>"a&amp;b" throws an exception</example>
 		/// </summary>
 		/// <param name="text">The escaped text.</param>
 		/// <returns>The source text.</returns>
