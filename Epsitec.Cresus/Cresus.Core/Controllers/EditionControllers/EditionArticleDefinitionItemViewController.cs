@@ -36,11 +36,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.ArticleDefinition", "Article");
 
-				this.CreateUIMain1         (builder);
-				this.CreateUIGroup         (builder);
-				this.CreateUIMain2         (builder);
-				this.CreateUIUnitOfMeasure (builder);
-				this.CreateUICategory      (builder);
+				this.CreateUIMain1              (builder);
+				this.CreateUIGroup              (builder);
+				this.CreateUIMain2              (builder);
+				this.CreateUIUnitOfMeasure      (builder);
+				this.CreateUIUnitOfMeasureGroup (builder);
+				this.CreateUICategory           (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -109,6 +110,22 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField ("Unité", controller);
 		}
 
+		private void CreateUIUnitOfMeasureGroup(UIBuilder builder)
+		{
+			var controller = new SelectionController<UnitOfMeasureGroupEntity>
+			{
+				ValueGetter         = () => this.Entity.Units,
+				ValueSetter         = x => this.Entity.Units = x.WrapNullEntity (),
+				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasureGroup (),
+
+				ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateAutoCompleteTextField ("Groupe d'unités", controller);
+		}
+
 		private void CreateUICategory(UIBuilder builder)
 		{
 			var controller = new SelectionController<ArticleCategoryEntity>
@@ -128,8 +145,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
-			return title;
+			var entity = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			return entity;
+		}
+
+		private NewEntityReference CreateNewUnitOfMeasureGroup(DataContext context)
+		{
+			var entity = context.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+
+			entity.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			
+			return entity;
 		}
 
 		private NewEntityReference CreateNewCategory(DataContext context)

@@ -59,11 +59,15 @@ namespace Epsitec.Cresus.Core
 			}
 			catch (System.Exception e)
 			{
-				string message = string.Format ("Impossible d'ouvrir le fichier {0}\n\n{1}", filename, e.ToString ());
+				string message = string.Format ("Impossible d'ouvrir le fichier {0}\n\n{1}", filename, e.Message);
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
+				return;
 			}
 
-			// TODO:
+			foreach (var line in lines)
+			{
+				// TODO:
+			}
 		}
 	}
 }
