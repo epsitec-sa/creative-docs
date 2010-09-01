@@ -56,6 +56,16 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97));
 			}
 			
+			public static class File
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0KD
+				public static readonly global::Epsitec.Common.Widgets.Command ImportV11 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
+			}
+			
 			public static class Font
 			{
 				internal static void _Initialize()
@@ -111,6 +121,7 @@ namespace Epsitec.Cresus.Core
 				Base._Initialize ();
 				Clipboard._Initialize ();
 				Edition._Initialize ();
+				File._Initialize ();
 				Font._Initialize ();
 				Global._Initialize ();
 				History._Initialize ();
@@ -150,6 +161,12 @@ namespace Epsitec.Cresus.Core
 				public const long Print = 0x1500014000000L;
 				//	designer:cap/L0A13
 				public const long SaveRecord = 0x150000A000061L;
+			}
+			
+			public static class File
+			{
+				//	designer:cap/L0KD
+				public const long ImportV11 = 0x150001400000DL;
 			}
 			
 			public static class Font

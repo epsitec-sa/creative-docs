@@ -72,13 +72,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				Name = "Edit",
 				Title = "Édition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 4,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 4 +
+								 RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth) * 1,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.SaveRecord));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.DiscardRecord));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Print));
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Edition.Preview));
+
+			var frame = new FrameBox
+			{
+				Parent = section,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
+			};
+
+			frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.File.ImportV11, dx: RibbonViewController.buttonSmallWidth));
 		}
 
 		private void CreateRibbonClipboardSection()

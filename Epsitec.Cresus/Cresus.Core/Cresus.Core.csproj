@@ -389,9 +389,6 @@
     <EmbeddedResource Include="Images\Font.Subscript.icon" />
     <EmbeddedResource Include="Images\Font.Superscript.icon" />
     <EmbeddedResource Include="Images\Data.ContactRole.icon" />
-    <None Include="Printers\printers.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <EmbeddedResource Include="Images\logo-cresus.png" />
     <Content Include="Resources\Cresus.Core\module.info">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -535,6 +532,7 @@
     <EmbeddedResource Include="Images\Data.Comment.icon" />
     <EmbeddedResource Include="Images\Data.BusinessEvent.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
+    <EmbeddedResource Include="Images\ImportV11.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
