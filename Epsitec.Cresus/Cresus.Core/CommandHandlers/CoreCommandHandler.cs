@@ -57,6 +57,15 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			mainViewController.Preview ();
 		}
 
+		[Command (Res.CommandIds.File.ImportV11)]
+		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var mainViewController = orchestrator.MainViewController;
+
+			mainViewController.FileImportV11 ();
+		}
+
 		[Command (Res.CommandIds.Global.Settings)]
 		public void ProcessGlobalSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

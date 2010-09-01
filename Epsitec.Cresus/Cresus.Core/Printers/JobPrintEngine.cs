@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Core.Printers
 	public class JobPrintEngine : IPrintEngine
 	{
 		/// <summary>
+		/// JobPrintEngine s'occupe de l'impression à proprement parler de sections.
 		/// Un job est composé de sections. Une section est composée de pages contigües sur une seule imprimante
 		/// et un seul bac. Les sections utilisent toutes la même imprimante, mais peuvent utiliser plusieurs
 		/// bacs différents.
