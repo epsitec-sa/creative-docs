@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			var rightBox = new FrameBox
+			this.rightBox = new FrameBox
 			{
 				Parent = rightFrame,
 				DrawFullFrame = true,
@@ -122,9 +122,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Padding = new Margins (10),
 			};
 
-			this.logicalLabel = new StaticText
+
+			var logicalLabel = new StaticText
 			{
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Text = "Fonction de l'imprimante :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -133,15 +134,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.logicalField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 				TabIndex = 1,
 			};
 
-			this.commentLabel = new StaticText
+
+			var commentLabel = new StaticText
 			{
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Text = "Description :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -150,15 +152,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.commentField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 25),
 				TabIndex = 2,
 			};
 
-			this.physicalLabel = new StaticText
+
+			var physicalLabel = new StaticText
 			{
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Text = "Choix de l'imprimante physique :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -167,15 +170,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.physicalField = new TextFieldCombo
 			{
 				IsReadOnly = true,
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 5),
 				TabIndex = 3,
 			};
 
-			this.trayLabel = new StaticText
+
+			var trayLabel = new StaticText
 			{
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Text = "Choix du bac de l'imprimante :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
@@ -184,45 +188,88 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.trayField = new TextFieldCombo
 			{
 				IsReadOnly = true,
-				Parent = rightBox,
+				Parent = this.rightBox,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 25),
 				TabIndex = 4,
 			};
 
-			this.xOffsetLabel = new StaticText
+
+			var offsetLabel = new StaticText
 			{
-				Parent = rightBox,
-				Text = "Décalage horizontal en millimètres (+ = à droite) :",
+				Parent = this.rightBox,
+				Text = "Décalages horizontal et vertical en millimètres :",
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+			};
+
+			var offsetGroup = new FrameBox
+			{
+				Parent = this.rightBox,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 20),
+			};
+
+			var xOffsetLabel = new StaticText
+			{
+				Parent = offsetGroup,
+				Text = "A droite",
+				PreferredWidth = 50,
+				Dock = DockStyle.Left,
 			};
 
 			this.xOffsetField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 200, 0, 5),
+				Parent = offsetGroup,
+				PreferredWidth = 80,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 30, 0, 0),
 				TabIndex = 5,
 			};
 
-			this.yOffsetLabel = new StaticText
+			var yOffsetLabel = new StaticText
 			{
-				Parent = rightBox,
-				Text = "Décalage vertical en millimètres (+ = en haut) :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				Parent = offsetGroup,
+				Text = "En haut",
+				PreferredWidth = 50,
+				Dock = DockStyle.Left,
 			};
 
 			this.yOffsetField = new TextFieldEx
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 200, 0, 5),
+				Parent = offsetGroup,
+				PreferredWidth = 80,
+				Dock = DockStyle.Left,
 				TabIndex = 6,
 			};
+
+
+			var copiesGroup = new FrameBox
+			{
+				Parent = this.rightBox,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			var copiesLabel = new StaticText
+			{
+				Parent = copiesGroup,
+				Text = "Nombre de copies souhaitées",
+				PreferredWidth = 160,
+				Dock = DockStyle.Left,
+			};
+
+			this.copiesField = new TextFieldEx
+			{
+				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+				Parent = copiesGroup,
+				PreferredWidth = 60,
+				Dock = DockStyle.Left,
+				TabIndex = 7,
+			};
+
 
 			//	Rempli le pied de page.
 			var footer = new FrameBox
@@ -299,6 +346,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionOffsetYChanged ();
 			};
 
+			this.copiesField.AcceptingEdition += delegate
+			{
+				this.ActionCopiesChanged ();
+			};
+
 			this.acceptButton.Clicked += delegate
 			{
 				Printers.PrinterSettings.SetPrinterList (this.printerList);
@@ -321,23 +373,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			this.logicalLabel.Enable = sel != -1;
-			this.logicalField.Enable = sel != -1;
-
-			this.commentLabel.Enable = sel != -1;
-			this.commentField.Enable = sel != -1;
-
-			this.physicalLabel.Enable = sel != -1;
+			this.rightBox.Enable      = sel != -1;
+			this.logicalField.Enable  = sel != -1;
+			this.commentField.Enable  = sel != -1;
 			this.physicalField.Enable = sel != -1;
-
-			this.trayLabel.Enable = sel != -1;
-			this.trayField.Enable = sel != -1;
-
-			this.xOffsetLabel.Enable = sel != -1;
-			this.xOffsetField.Enable = sel != -1;
-
-			this.yOffsetLabel.Enable = sel != -1;
-			this.yOffsetField.Enable = sel != -1;
+			this.trayField.Enable     = sel != -1;
+			this.xOffsetField.Enable  = sel != -1;
+			this.yOffsetField.Enable  = sel != -1;
+			this.copiesField.Enable   = sel != -1;
 
 			if (sel == -1)
 			{
@@ -347,6 +390,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.trayField.Text     = null;
 				this.xOffsetField.Text  = null;
 				this.yOffsetField.Text  = null;
+				this.copiesField.Text   = null;
 			}
 			else
 			{
@@ -358,6 +402,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.trayField.Text     = printer.PhysicalPrinterTray;
 				this.xOffsetField.Text  = printer.XOffset.ToString ();
 				this.yOffsetField.Text  = printer.YOffset.ToString ();
+				this.copiesField.Text   = printer.Copies.ToString ();
 			}
 
 			string error = this.GetError ();
@@ -517,6 +562,25 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		private void ActionCopiesChanged()
+		{
+			int sel = this.listController.SelectedIndex;
+
+			int value;
+			if (int.TryParse (this.copiesField.Text, out value))
+			{
+				value = System.Math.Max (value, 1);
+
+				if (this.printerList[sel].Copies != value)
+				{
+					this.printerList[sel].Copies = value;
+
+					this.listController.UpdateList (sel);
+					this.UpdateWidgets ();
+				}
+			}
+		}
+
 
 		private static List<string> GetTrayList(Printer printer)
 		{
@@ -638,18 +702,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private Window									window;
 		private Controllers.ListController<Printer>		listController;
-		private StaticText								logicalLabel;
-		private StaticText								commentLabel;
-		private StaticText								physicalLabel;
-		private StaticText								trayLabel;
-		private StaticText								xOffsetLabel;
-		private StaticText								yOffsetLabel;
+		private FrameBox								rightBox;
 		private TextFieldEx								logicalField;
 		private TextFieldEx								commentField;
 		private TextFieldCombo							physicalField;
 		private TextFieldCombo							trayField;
 		private TextFieldEx								xOffsetField;
 		private TextFieldEx								yOffsetField;
+		private TextFieldEx								copiesField;
 		private StaticText								errorInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;

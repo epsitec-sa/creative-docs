@@ -79,8 +79,14 @@ namespace Epsitec.Common.Printing
 		
 		public bool								Landscape
 		{
-			get { return this.ps.Landscape; }
-			set { this.ps.Landscape = value; }
+			get
+			{
+				return this.ps.Landscape;
+			}
+			set
+			{
+				this.ps.Landscape = value;
+			}
 		}
 		
 		public PaperSource						PaperSource
@@ -91,7 +97,10 @@ namespace Epsitec.Common.Printing
 			}
 			set
 			{
-				this.ps.PaperSource = value.GetPaperSource ();
+				if (value != null)
+				{
+					this.ps.PaperSource = value.GetPaperSource ();
+				}
 			}
 		}
 		
