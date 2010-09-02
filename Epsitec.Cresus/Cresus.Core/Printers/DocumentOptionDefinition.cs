@@ -14,23 +14,23 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class DocumentOption
+	public class DocumentOptionDefinition
 	{
-		public DocumentOption(string title)
+		public DocumentOptionDefinition(string title)
 		{
 			this.isMargin = false;
 			this.isTitle  = true;
 			this.title    = title;
 		}
 
-		public DocumentOption(double height)
+		public DocumentOptionDefinition(double height)
 		{
 			this.isMargin = true;
 			this.isTitle  = false;
 			this.height   = height;
 		}
 
-		public DocumentOption(string name, string radioName, string description, bool defautState=false)
+		public DocumentOptionDefinition(string name, string radioName, string description, bool defautState=false)
 		{
 			this.isMargin    = false;
 			this.isTitle     = false;

@@ -160,7 +160,7 @@
     <Compile Include="Printers\PrinterFunction.cs" />
     <Compile Include="Printers\PageType.cs" />
     <Compile Include="Printers\DocumentPrinter.cs" />
-    <Compile Include="Printers\DocumentTypeEnum.cs" />
+    <Compile Include="Printers\DocumentType.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
     <Compile Include="Data\ArticleCategoryRepository.cs" />
@@ -267,8 +267,8 @@
     <Compile Include="Printers\EsBand.cs" />
     <Compile Include="Printers\SurfaceBand.cs" />
     <Compile Include="Printers\TableColumn.cs" />
-    <Compile Include="Printers\DocumentOption.cs" />
-    <Compile Include="Printers\DocumentType.cs" />
+    <Compile Include="Printers\DocumentOptionDefinition.cs" />
+    <Compile Include="Printers\DocumentTypeDefinition.cs" />
     <Compile Include="Printers\ImageBand.cs" />
     <Compile Include="Printers\InvoiceDocumentEntityPrinter.cs" />
     <Compile Include="Printers\DocumentContainer.cs" />
