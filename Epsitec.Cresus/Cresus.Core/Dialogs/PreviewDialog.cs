@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.entities      = entities;
 
 			this.application.AttachDialog (this);
+
+			this.printerList = Printers.PrinterSettings.GetPrinterList ();
 		}
 
 
@@ -401,13 +403,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					if (Printers.Common.IsPrinterAndPageMatching (documentPrinter.PrinterFunction, pageType))
 					{
+						var p = this.printerList.Where (x => x.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault();
+						int copies = (p == null) ? 1 : p.Copies;
+
 						if (dico.ContainsKey (documentPrinter.LogicalPrinterName))
 						{
-							dico[documentPrinter.LogicalPrinterName]++;
+							dico[documentPrinter.LogicalPrinterName] += copies;
 						}
 						else
 						{
-							dico.Add (documentPrinter.LogicalPrinterName, 1);
+							dico.Add (documentPrinter.LogicalPrinterName, copies);
 						}
 					}
 				}
@@ -481,5 +486,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText pagesInfo;
 		private Button printButton;
 		private Button closeButton;
+
+		private List<Printer>							printerList;
 	}
 }
