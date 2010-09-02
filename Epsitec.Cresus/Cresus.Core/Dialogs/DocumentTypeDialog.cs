@@ -152,7 +152,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredWidth = DocumentTypeDialog.panelWidth,
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 0, 0, 0),
-				Padding = new Margins (10),
 			};
 
 			this.previewFrame = new Widgets.PreviewEntity
@@ -549,34 +548,46 @@ namespace Epsitec.Cresus.Core.Dialogs
 						Parent = this.printersFrame,
 						Text = "<font size=\"16\">Imprimantes et bacs à utiliser</font>",
 						ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
-						PreferredHeight = 30,
+						PreferredHeight = 24,
 						Dock = DockStyle.Top,
+						Margins = new Margins (10),
 					};
 				}
 
 				int tabIndex = 0;
-				string lastGroup = null;
+				string lastJob = null;
+				FrameBox box = null;
 
 				foreach (var documentPrinter in documentType.DocumentPrinters)
 				{
-					double space = (lastGroup !=null && documentPrinter.Group != lastGroup) ? 30 : 2;
+					if (documentPrinter.Job != lastJob)
+					{
+						box = new FrameBox
+						{
+							DrawFullFrame = true,
+							Parent = this.printersFrame,
+							Dock = DockStyle.Top,
+							Margins = new Margins (0, 0, 0, -1),
+							Padding = new Margins (10),
+						};
+					}
 
 					var label = new StaticText
 					{
-						Parent = this.printersFrame,
+						Parent = box,
 						Text = documentPrinter.Description,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, space, UIBuilder.MarginUnderLabel),
+						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 					};
 
 					var field = new TextFieldCombo
 					{
 						IsReadOnly = true,
 						Name = documentPrinter.PrinterFunction.ToString (),
-						Parent = this.printersFrame,
+						Parent = box,
 						Text = documentPrinter.LogicalPrinterName,
 						Dock = DockStyle.Top,
-						Margins = new Margins (0, 0, 0, 0),
+						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
 						TabIndex = ++tabIndex,
 					};
 
@@ -612,7 +623,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					this.printerCombos.Add (field);
 
-					lastGroup = documentPrinter.Group;
+					lastJob = documentPrinter.Job;
 				}
 			}
 		}

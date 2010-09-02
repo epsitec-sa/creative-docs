@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public string Job
 		{
 			//	Retourne le nom du job de la première section.
-			//	Toutes les sections doivent utiliser le même job.
+			//	Toutes les sections sont dans le même job.
 			get
 			{
 				if (this.sections.Count == 0)
