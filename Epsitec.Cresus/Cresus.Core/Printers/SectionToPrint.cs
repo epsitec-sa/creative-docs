@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Core.Printers
 			this.PageCount     = 1;
 			this.entityRank    = entityRank;
 			this.entityPrinter = entityPrinter;
+
+			this.PrintThisSection = true;
 		}
 
 		public Printer Printer
@@ -68,6 +70,27 @@ namespace Epsitec.Cresus.Core.Printers
 			get
 			{
 				return this.entityPrinter;
+			}
+		}
+
+		public bool PrintThisSection
+		{
+			get;
+			set;
+		}
+
+		public string PagesDescription
+		{
+			get
+			{
+				if (this.PageCount == 1)
+				{
+					return string.Format ("Page {0}", (this.FirstPage+1).ToString ());
+				}
+				else
+				{
+					return string.Format ("Pages {0} à {1}", (this.FirstPage+1).ToString (), (this.FirstPage+this.PageCount).ToString ());
+				}
 			}
 		}
 
