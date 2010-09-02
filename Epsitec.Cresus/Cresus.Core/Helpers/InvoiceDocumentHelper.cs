@@ -80,29 +80,29 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static FormattedText GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentTypeEnum type)
+		public static FormattedText GetTitle(InvoiceDocumentEntity x, BillingDetailEntity billingDetails, Printers.DocumentType type)
 		{
 			string doc;
 
 			switch (type)
 			{
-				case Printers.DocumentTypeEnum.BL:
+				case Printers.DocumentType.BL:
 					doc = "Bulletin de livraison";
 					break;
 
-				case Printers.DocumentTypeEnum.ProductionOrder:
+				case Printers.DocumentType.ProductionOrder:
 					doc = "Ordre de production";
 					break;
 
-				case Printers.DocumentTypeEnum.Offer:
+				case Printers.DocumentType.Offer:
 					doc = "Offre";
 					break;
 
-				case Printers.DocumentTypeEnum.Order:
+				case Printers.DocumentType.Order:
 					doc = "Commande";
 					break;
 
-				case Printers.DocumentTypeEnum.OrderAcknowledge:
+				case Printers.DocumentType.OrderAcknowledge:
 					doc = "Confirmation de commande";
 					break;
 

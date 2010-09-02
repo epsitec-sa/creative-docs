@@ -25,23 +25,23 @@ namespace Epsitec.Cresus.Core.Printers
 		public RelationEntityPrinter(RelationEntity entity)
 			: base (entity)
 		{
-			DocumentType type;
+			DocumentTypeDefinition type;
 
-			type = new DocumentType (DocumentTypeEnum.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
-			type.DocumentOptions.Add (new DocumentOption ("Données à inclure :"));
-			type.DocumentOptions.Add (new DocumentOption ("Mail",    null, "Adresses",   true));
-			type.DocumentOptions.Add (new DocumentOption ("Telecom", null, "Téléphones", true));
-			type.DocumentOptions.Add (new DocumentOption ("Uri",     null, "Emails",     true));
+			type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+			type.DocumentOptions.Add (new DocumentOptionDefinition ("Données à inclure :"));
+			type.DocumentOptions.Add (new DocumentOptionDefinition ("Mail",    null, "Adresses",   true));
+			type.DocumentOptions.Add (new DocumentOptionDefinition ("Telecom", null, "Téléphones", true));
+			type.DocumentOptions.Add (new DocumentOptionDefinition ("Uri",     null, "Emails",     true));
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
 			type.AddPrinterBase ();
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
+			type = new DocumentTypeDefinition (DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
 			this.DocumentTypes.Add (type);
 
-			type = new DocumentType (DocumentTypeEnum.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
+			type = new DocumentTypeDefinition (DocumentType.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
 			this.DocumentTypes.Add (type);
 		}
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.BuildSections ();
 
-			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Summary)
 			{
 				this.BuildTitle ();
 				this.BuildSummary ();
@@ -98,17 +98,17 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			base.PrintCurrentPage (port);
 
-			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Summary)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Summary)
 			{
 				this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
 			}
 
-			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1)
 			{
 				this.PaintTest1 (port);
 			}
 
-			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
+			if (this.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
 			{
 				this.PaintTest2 (port);
 			}

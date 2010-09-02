@@ -145,8 +145,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug1 ||
-				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentTypeEnum.Debug2)
+			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1 ||
+				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
 			{
 				this.debugPrevButton1 = new GlyphButton
 				{
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			PageType pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
 
-			DocumentType documentType = this.entityPrinter.DocumentTypeSelected;
+			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
 			List<DocumentPrinter> documentPrinters = documentType.DocumentPrinters;
 
 			foreach (DocumentPrinter documentPrinter in documentPrinters)

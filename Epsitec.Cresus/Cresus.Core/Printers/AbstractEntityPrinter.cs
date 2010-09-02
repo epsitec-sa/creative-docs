@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.documentTypes = new List<DocumentType> ();
+			this.documentTypes = new List<DocumentTypeDefinition> ();
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public List<DocumentType> DocumentTypes
+		public List<DocumentTypeDefinition> DocumentTypes
 		{
 			get
 			{
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public DocumentType DocumentTypeSelected
+		public DocumentTypeDefinition DocumentTypeSelected
 		{
 			get
 			{
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
-		private readonly List<DocumentType>					documentTypes;
+		private readonly List<DocumentTypeDefinition>					documentTypes;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		private int											currentPage;
