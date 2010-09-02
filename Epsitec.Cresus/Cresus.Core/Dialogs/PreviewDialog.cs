@@ -223,7 +223,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printButton = new Button ()
 			{
 				Parent = this.footer,
-				Text = "Imprimer",
+				Text = "Tâches d'impression",
+				PreferredWidth = 120,
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 10, 0, 0),
 				TabIndex = 1,

@@ -242,7 +242,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.acceptButton = new Button ()
 			{
 				Parent = footer,
-				Text = this.isPreview ? "Aperçu" : "Imprimer",
+				Text = this.isPreview ? "Aperçu" : "Tâches d'impression",
+				PreferredWidth = 120,
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};

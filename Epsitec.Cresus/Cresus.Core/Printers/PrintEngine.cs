@@ -204,11 +204,18 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			//	Imprime tous les jobs (pages sur une même imprimante physique, mais éventuellement sur
-			//	plusieurs bacs différents).
-			foreach (var job in jobs)
+			//	Affiche les jobs.
+			var jobDialog = new Dialogs.PrintingJobDialog (CoreProgram.Application, jobs);
+			jobDialog.OpenDialog ();
+
+			if (jobDialog.Result == DialogResult.Accept)
 			{
-				PrintEngine.PrintJob (job);
+				//	Imprime tous les jobs (pages sur une même imprimante physique, mais éventuellement sur
+				//	plusieurs bacs différents).
+				foreach (var job in jobs)
+				{
+					PrintEngine.PrintJob (job);
+				}
 			}
 		}
 
@@ -283,7 +290,22 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Imprime un job, c'est-à-dire plusieurs pages sur une même imprimante physique, mais éventuellement sur
 			//	plusieurs bacs différents.
-			var firstSection = job.Sections.FirstOrDefault ();
+			List<SectionToPrint> sections = new List<SectionToPrint> ();
+
+			foreach (var s in job.Sections)
+			{
+				if (s.PrintThisSection)
+				{
+					sections.Add (s);
+				}
+			}
+
+			if (sections.Count == 0)
+			{
+				return;
+			}
+
+			var firstSection = sections.FirstOrDefault ();
 			if (firstSection == null)
 			{
 				return;
@@ -296,7 +318,7 @@ namespace Epsitec.Cresus.Core.Printers
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-			var engine = new JobPrintEngine (printDocument, job.Sections);
+			var engine = new JobPrintEngine (printDocument, sections);
 			printDocument.Print (engine);
 		}
 
