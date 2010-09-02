@@ -203,8 +203,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var title = new StaticText
 			{
 				Parent = box,
-				Text = string.Format ("<font size=\"22\"><b>{0}.{1} </b></font><font size=\"14\">{2}</font>", (job.Sections[0].EntityRank+1).ToString (), (jobIndex+1).ToString (), job.Sections[0].Printer.PhysicalPrinterName),
-				PreferredHeight = 30,
+				Text = string.Format ("<font size=\"22\"><b>{0}.{1} </b></font><font size=\"14\">{2}</font>", job.Sections[0].EntityPrinter.JobName, (jobIndex+1).ToString (), job.Sections[0].Printer.PhysicalPrinterName),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
+				PreferredHeight = 25,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 10),
 			};
@@ -238,7 +239,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			check.ActiveStateChanged += delegate
 			{
-				section.PrintThisSection = check.ActiveState == ActiveState.Yes;
+				section.Enable = check.ActiveState == ActiveState.Yes;
 				this.UpdateInformation ();
 				this.UpdateWidgets ();
 			};
@@ -368,7 +369,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					foreach (var section in job.Sections)
 					{
-						if (section.PrintThisSection)
+						if (section.Enable)
 						{
 							count += section.PageCount;
 						}

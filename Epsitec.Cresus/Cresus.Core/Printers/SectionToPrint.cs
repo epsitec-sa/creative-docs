@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.entityRank    = entityRank;
 			this.entityPrinter = entityPrinter;
 
-			this.PrintThisSection = true;
+			this.Enable = true;
 		}
 
 		public Printer Printer
@@ -73,8 +73,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool PrintThisSection
+		public bool Enable
 		{
+			//	Indique si la section doit être imprimée.
 			get;
 			set;
 		}
