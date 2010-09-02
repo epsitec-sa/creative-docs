@@ -217,11 +217,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupSectionWidgets(FrameBox parent, SectionToPrint section)
 		{
+			double size = 18;
+
 			var box = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 1),
+				Margins = new Margins (0, 0, 0, -1),
 			};
 
 			var check = new CheckButton
@@ -246,7 +248,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					Parent = box,
 					DrawFullFrame = true,
-					PreferredHeight = 22,
+					PreferredHeight = size,
 					PreferredWidth = 80,
 					Dock = DockStyle.Left,
 				};
@@ -266,9 +268,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					Parent = box,
 					DrawFullFrame = true,
-					PreferredHeight = 22,
+					PreferredHeight = size,
 					Dock = DockStyle.Fill,
-					Margins = new Margins (1, 1, 0, 0),
+					Margins = new Margins (-1, 1, 0, 0),
 				};
 
 				var tray = new StaticText
@@ -285,8 +287,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var button = new GlyphButton
 			{
 				Parent = box,
-				PreferredHeight = 22,
-				PreferredWidth = 22,
+				PreferredHeight = size,
+				PreferredWidth = size,
 				Dock = DockStyle.Right,
 			};
 
