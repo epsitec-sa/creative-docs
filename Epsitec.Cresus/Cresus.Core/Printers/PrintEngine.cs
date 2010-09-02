@@ -113,13 +113,13 @@ namespace Epsitec.Cresus.Core.Printers
 					{
 						if (!entityPrinter.IsEmpty (documentPrinter.PrinterFunction))
 						{
-							var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
-
-							foreach (var physicalPage in physicalPages)
+							for (int copy = 0; copy < printer.Copies; copy++)
 							{
-								for (int copy = 0; copy < printer.Copies; copy++)
+								string jobName = string.Concat (documentPrinter.Job, ".", (entityRank+1).ToString (), ".", (copy+1).ToString ());
+
+								var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
+								foreach (var physicalPage in physicalPages)
 								{
-									string jobName = string.Concat (documentPrinter.Job, ".",(copy+1).ToString ());
 									sections.Add (new SectionToPrint (printer, jobName, physicalPage, entityRank, entityPrinter));
 								}
 							}
@@ -128,11 +128,10 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			//	Trie toutes les pages, qui sont regroupées logiquement par imprimante physique.
+			//	Trie toutes les pages, qui sont regroupées logiquement par jobs et par imprimantes physiques.
 			sections.Sort (SectionToPrint.CompareSectionToPrint);
 
 			//	Sépare les copies multiples de pages identiques sur une même imprimante.
-			//	Ceci ne peut pas être effectué par le tri !
 			//	Par exemple: 0,0,0,1,1,1,2,2,2 devient 0,1,2,0,1,2,0,1,2
 			int index = 0;
 			while (index < sections.Count-1)
@@ -153,7 +152,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			//	Fusionne toutes les pages contigües qui utilisent la même imprimante en sections de plusieurs pages.
+			//	Fusionne toutes les pages contigües qui font partie du même job en sections de plusieurs pages.
 			//	Par exemple: 0,1,2,0,1,2,0,1,2 devient 0..2, 0..2, 0..2
 			index = 0;
 			while (index < sections.Count-1)
@@ -209,7 +208,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	plusieurs bacs différents).
 			foreach (var job in jobs)
 			{
-				//?PrintEngine.PrintJob (job);
+				PrintEngine.PrintJob (job);
 			}
 		}
 

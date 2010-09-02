@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public Printer(string logicalName)
 		{
 			this.LogicalName = logicalName;
+			this.Copies = 1;
 		}
 
 

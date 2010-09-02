@@ -80,8 +80,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static int CompareSectionToPrint(SectionToPrint x, SectionToPrint y)
 		{
-			//	Détermine comment regrouper les pages. On cherche à grouper les pages
-			//	qui utilisent une même imprimante physique.
+			//	Détermine comment regrouper les pages. On cherche à grouper les pages ansi:
+			//	- par jobs
+			//	- par impriante physique
+			//	- par pages croissantes
 			int result;
 
 			result = string.Compare (x.Job, y.Job);
@@ -94,11 +96,6 @@ namespace Epsitec.Cresus.Core.Printers
 			if (result != 0)
 			{
 				return result;
-			}
-
-			if (x.EntityRank != y.EntityRank)
-			{
-				return (x.EntityRank < y.EntityRank) ? -1 : 1;
 			}
 
 			if (x.FirstPage != y.FirstPage)

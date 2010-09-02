@@ -63,6 +63,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void SetupWidgets()
 		{
+			int tabIndex = 0;
+
 			var frame = new FrameBox
 			{
 				Parent = this.window.Root,
@@ -98,9 +100,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.listController = new Controllers.ListController<Printer> (this.printerList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
 			this.listController.CreateUI (leftFrame, Direction.Right, 23);
 
-			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle impriante");
-			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'imprimante");
-			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'imprimante dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.AddButton, "Ajoute une nouvelle impriante");
+			ToolTip.Default.SetToolTip (this.listController.RemoveButton, "Supprime l'imprimante");
+			ToolTip.Default.SetToolTip (this.listController.MoveUpButton, "Montre l'imprimante dans la liste");
 			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'imprimante dans la liste");
 
 			//	Rempli le panneau de droite.
@@ -119,157 +121,128 @@ namespace Epsitec.Cresus.Core.Dialogs
 				DrawFullFrame = true,
 				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
 				Dock = DockStyle.Fill,
-				Padding = new Margins (10),
 			};
 
-
-			var logicalLabel = new StaticText
 			{
-				Parent = this.rightBox,
-				Text = "Fonction de l'imprimante :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-			};
+				var box = new FrameBox
+				{
+					Parent = this.rightBox,
+					DrawFullFrame = true,
+					Dock = DockStyle.Top,
+					Padding = new Margins (10),
+					Margins = new Margins (0, 0, 0, -1),
+				};
 
-			this.logicalField = new TextFieldEx
+
+				var logicalLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Fonction de l'imprimante :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.logicalField = new TextFieldEx
+				{
+					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
+
+
+				var commentLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Description :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.commentField = new TextFieldEx
+				{
+					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
+			}
+
 			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = 1,
-			};
+				var box = new FrameBox
+				{
+					Parent = this.rightBox,
+					DrawFullFrame = true,
+					Dock = DockStyle.Top,
+					Padding = new Margins (10),
+					Margins = new Margins (0, 0, 0, -1),
+				};
 
 
-			var commentLabel = new StaticText
+				var physicalLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Choix de l'imprimante physique :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.physicalField = new TextFieldCombo
+				{
+					IsReadOnly = true,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
+
+
+				var trayLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Choix du bac de l'imprimante :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.trayField = new TextFieldCombo
+				{
+					IsReadOnly = true,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
+			}
+
 			{
-				Parent = this.rightBox,
-				Text = "Description :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-			};
+				var box = new FrameBox
+				{
+					Parent = this.rightBox,
+					DrawFullFrame = true,
+					Dock = DockStyle.Top,
+					Padding = new Margins (10),
+					Margins = new Margins (0, 0, 0, -1),
+				};
 
-			this.commentField = new TextFieldEx
+				this.xOffsetField = PrinterListDialog.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
+				this.yOffsetField = PrinterListDialog.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
+			}
+
 			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 25),
-				TabIndex = 2,
-			};
+				var box = new FrameBox
+				{
+					Parent = this.rightBox,
+					DrawFullFrame = true,
+					Dock = DockStyle.Top,
+					Padding = new Margins (10),
+					Margins = new Margins (0, 0, 0, -1),
+				};
 
-
-			var physicalLabel = new StaticText
-			{
-				Parent = this.rightBox,
-				Text = "Choix de l'imprimante physique :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-			};
-
-			this.physicalField = new TextFieldCombo
-			{
-				IsReadOnly = true,
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
-				TabIndex = 3,
-			};
-
-
-			var trayLabel = new StaticText
-			{
-				Parent = this.rightBox,
-				Text = "Choix du bac de l'imprimante :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-			};
-
-			this.trayField = new TextFieldCombo
-			{
-				IsReadOnly = true,
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 25),
-				TabIndex = 4,
-			};
-
-
-			var offsetLabel = new StaticText
-			{
-				Parent = this.rightBox,
-				Text = "Décalages horizontal et vertical en millimètres :",
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-			};
-
-			var offsetGroup = new FrameBox
-			{
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 20),
-			};
-
-			var xOffsetLabel = new StaticText
-			{
-				Parent = offsetGroup,
-				Text = "A droite",
-				PreferredWidth = 50,
-				Dock = DockStyle.Left,
-			};
-
-			this.xOffsetField = new TextFieldEx
-			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = offsetGroup,
-				PreferredWidth = 80,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 30, 0, 0),
-				TabIndex = 5,
-			};
-
-			var yOffsetLabel = new StaticText
-			{
-				Parent = offsetGroup,
-				Text = "En haut",
-				PreferredWidth = 50,
-				Dock = DockStyle.Left,
-			};
-
-			this.yOffsetField = new TextFieldEx
-			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = offsetGroup,
-				PreferredWidth = 80,
-				Dock = DockStyle.Left,
-				TabIndex = 6,
-			};
-
-
-			var copiesGroup = new FrameBox
-			{
-				Parent = this.rightBox,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 5),
-			};
-
-			var copiesLabel = new StaticText
-			{
-				Parent = copiesGroup,
-				Text = "Nombre de copies souhaitées",
-				PreferredWidth = 160,
-				Dock = DockStyle.Left,
-			};
-
-			this.copiesField = new TextFieldEx
-			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
-				Parent = copiesGroup,
-				PreferredWidth = 60,
-				Dock = DockStyle.Left,
-				TabIndex = 7,
-			};
-
+				this.copiesField = PrinterListDialog.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
+			}
 
 			//	Rempli le pied de page.
 			var footer = new FrameBox
@@ -367,6 +340,43 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.UpdatePhysicalField ();
 			this.UpdateWidgets ();
+		}
+
+		private static TextFieldEx CreateTextField(Widget parent, FormattedText topText, FormattedText leftText, int tabIndex)
+		{
+			var xOffsetLabel = new StaticText
+			{
+				Parent = parent,
+				FormattedText = topText,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+			};
+
+			var box = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+			};
+
+			var field = new TextFieldEx
+			{
+				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
+				Parent = box,
+				PreferredWidth = 80,
+				Dock = DockStyle.Left,
+				TabIndex = tabIndex,
+			};
+
+			var label = new StaticText
+			{
+				Parent = box,
+				FormattedText = leftText,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			return field;
 		}
 
 		private void UpdateWidgets()
