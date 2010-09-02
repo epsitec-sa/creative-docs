@@ -290,27 +290,14 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Imprime un job, c'est-à-dire plusieurs pages sur une même imprimante physique, mais éventuellement sur
 			//	plusieurs bacs différents.
-			List<SectionToPrint> sections = new List<SectionToPrint> ();
+			List<SectionToPrint> sectionsToPrint = job.Sections.Where (x => x.Enable).ToList ();
 
-			foreach (var s in job.Sections)
-			{
-				if (s.PrintThisSection)
-				{
-					sections.Add (s);
-				}
-			}
-
-			if (sections.Count == 0)
+			if (sectionsToPrint.Count == 0)  // rien à imprimer ?
 			{
 				return;
 			}
 
-			var firstSection = sections.FirstOrDefault ();
-			if (firstSection == null)
-			{
-				return;
-			}
-
+			var firstSection = sectionsToPrint.FirstOrDefault ();
 			PrintDocument printDocument = new PrintDocument ();
 
 			printDocument.DocumentName = firstSection.EntityPrinter.JobName;
@@ -318,7 +305,7 @@ namespace Epsitec.Cresus.Core.Printers
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 
-			var engine = new JobPrintEngine (printDocument, sections);
+			var engine = new JobPrintEngine (printDocument, sectionsToPrint);
 			printDocument.Print (engine);
 		}
 
