@@ -35,8 +35,13 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public string Job
+		public string InternalJobName
 		{
+			//	Le nom interne du job a la forme "job.e.c":
+			//		job		nom interne du job ("All", "Copy", "Spec", etc.)
+			//		e		rang de l'entité (1..n)
+			//		c		rang de la copie (1..n)
+			//	Par exemple "All.1.1".
 			get
 			{
 				return this.job;
@@ -110,7 +115,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	- par pages croissantes
 			int result;
 
-			result = string.Compare (x.Job, y.Job);
+			result = string.Compare (x.InternalJobName, y.InternalJobName);
 			if (result != 0)
 			{
 				return result;

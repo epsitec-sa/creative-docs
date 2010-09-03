@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Printers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Core.Dialogs
 {
@@ -34,6 +35,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.checkButtons   = new List<CheckButton> ();
 			this.previewButtons = new List<GlyphButton> ();
+			this.pagePreviews   = new List<Widgets.PreviewEntity> ();
 		}
 
 
@@ -126,11 +128,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.SetupJobWidgets (scrollable.Viewport, job, jobIndex++);
 			}
 
-			this.previewFrame = new Widgets.PreviewEntity
+			this.previewFrame = new FrameBox
 			{
 				Parent = frame,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 0, 0, 0),
+			};
+
+			this.previewFrame.SizeChanged += delegate
+			{
+				this.UpdatePagePreviewsGeometry ();
 			};
 
 			//	Rempli le pied de page.
@@ -177,12 +184,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.PreviewButtonsReset ();
 
+#if false
 			//	Montre l'aperçu de la première section.
 			if (this.jobs.Count > 0 && this.jobs[0].Sections.Count > 0)
 			{
 				this.previewedSection = this.jobs[0].Sections[0];
 				PrintingJobDialog.SetPreviewButtonState (this.previewButtons[0], true);
 			}
+#endif
 
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
@@ -203,9 +212,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var title = new StaticText
 			{
 				Parent = box,
-				Text = string.Format ("<font size=\"22\"><b>{0}.{1} </b></font><font size=\"14\">{2}</font>", job.Sections[0].EntityPrinter.JobName, (jobIndex+1).ToString (), job.Sections[0].Printer.PhysicalPrinterName),
+				Text = string.Format ("<font size=\"16\"><b>{0} </b></font>sur l'imprimante {1}", job.JobFullName, job.Sections[0].Printer.PhysicalPrinterName),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
-				PreferredHeight = 25,
+				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 10),
 			};
@@ -352,15 +361,89 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (this.previewedSection != null)
 			{
+				this.pagePreviews.Clear ();
+				this.previewFrame.Children.Clear ();
 				this.previewedSection.EntityPrinter.Clear ();
-				this.previewFrame.BuildSections (this.previewedSection.EntityPrinter);
-				this.previewedSection.EntityPrinter.CurrentPage = this.previewedSection.FirstPage;
-				this.previewFrame.Invalidate ();  // pour forcer le dessin
+
+				int count = this.previewedSection.PageCount;
+				int pageRank = this.previewedSection.FirstPage;
+
+				for (int i = 0; i < count; i++)
+				{
+					var preview = new Widgets.PreviewEntity
+					{
+						Parent = this.previewFrame,
+						//?Anchor = AnchorStyles.BottomLeft,
+						CurrentPage = pageRank++,
+					};
+
+					preview.BuildSections (this.previewedSection.EntityPrinter);
+
+					this.pagePreviews.Add (preview);
+				}
+
+				this.UpdatePagePreviewsGeometry ();
+			}
+		}
+
+		private void UpdatePagePreviewsGeometry()
+		{
+			if (this.previewedSection == null || this.pagePreviews.Count == 0)
+			{
+				return;
+			}
+
+			double spacing = 5;
+			int n = (int) System.Math.Ceiling (System.Math.Sqrt (this.previewedSection.PageCount));
+			int nx = n;
+			int ny = (this.previewedSection.PageCount+(n-1)) / n;
+
+			double pageWidth  = System.Math.Floor ((this.previewFrame.Client.Bounds.Width  + spacing) / nx) - spacing;
+			double pageHeight = System.Math.Floor ((this.previewFrame.Client.Bounds.Height + spacing) / ny) - spacing;
+
+			Size pageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
+
+			double virtualWidth  = System.Math.Floor (pageHeight * pageSize.Width  / pageSize.Height);
+			double virtualHeight = System.Math.Floor (pageWidth  * pageSize.Height / pageSize.Width );
+
+			if (pageWidth < virtualWidth)
+			{
+				pageHeight = virtualHeight;
+			}
+			else
+			{
+				pageWidth = virtualWidth;
+			}
+
+			int index = 0;
+			double posY = this.previewFrame.Client.Bounds.Height;
+
+			for (int y=0; y<n; y++)
+			{
+				double posX = 0;
+
+				for (int x=0; x<n; x++)
+				{
+					if (index >= this.previewedSection.PageCount)
+					{
+						break;
+					}
+
+					var preview = this.pagePreviews[index++];
+
+					preview.SetManualBounds (new Rectangle (posX, posY-pageHeight, pageWidth, pageHeight));
+					preview.Invalidate ();  // pour forcer le dessin
+
+					posX += pageWidth + spacing;
+				}
+
+				posY -= pageHeight + spacing;
 			}
 		}
 
 		private int PageCountToPrint
 		{
+			//	Retourne le nombre de pages à imprimer.
 			get
 			{
 				int count = 0;
@@ -416,7 +499,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<JobToPrint>				jobs;
 
 		private Window									window;
-		private Widgets.PreviewEntity					previewFrame;
+		private FrameBox								previewFrame;
 		private StaticText								informationText;
 		private Button									invertButton;
 		private Button									acceptButton;
@@ -424,5 +507,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private SectionToPrint							previewedSection;
 		private List<CheckButton>						checkButtons;
 		private List<GlyphButton>						previewButtons;
+		private List<Widgets.PreviewEntity>				pagePreviews;
 	}
 }
