@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Common.Types
 {
+	/// <summary>
+	/// The <c>MultilingualText</c> class implements transforms from and to global,
+	/// multilingual <see cref="FormattedText"/> strings.
+	/// </summary>
 	public class MultilingualText
 	{
 		public MultilingualText()
@@ -15,14 +19,43 @@ namespace Epsitec.Common.Types
 			this.texts = new Dictionary<string, string> ();
 		}
 
-		public MultilingualText(FormattedText text)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MultilingualText"/> class.
+		/// </summary>
+		/// <param name="globalText">The global text (containing all languages).</param>
+		public MultilingualText(FormattedText globalText)
 			: this ()
 		{
-			this.texts.AddRange (MultilingualText.GetLanguageTexts (text.ToString ()));
+			this.texts.AddRange (MultilingualText.GetLanguageTexts (globalText.ToString ()));
 		}
 
 
-		public FormattedText GetText(string languageId)
+		/// <summary>
+		/// Determines whether this multilingual text contains the specified language.
+		/// </summary>
+		/// <param name="languageId">The language id.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified language exists; otherwise, <c>false</c>.
+		/// </returns>
+		public bool ContainsLanguage(string languageId)
+		{
+			if (string.IsNullOrEmpty (languageId))
+			{
+				return false;
+			}
+			else
+			{
+				return this.texts.ContainsKey (languageId);
+			}
+		}
+
+		/// <summary>
+		/// Gets the formatted text for the specified language, or the
+		/// default language text if the language cannot be found.
+		/// </summary>
+		/// <param name="languageId">The language id.</param>
+		/// <returns>The <see cref="FormattedText"/> for the specified language or the default language text if the specified language does not exist.</returns>
+		public FormattedText GetTextOrDefault(string languageId)
 		{
 			string text;
 
@@ -36,6 +69,29 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the formatted text for the specified language.
+		/// </summary>
+		/// <param name="languageId">The language id.</param>
+		/// <returns>The <see cref="FormattedText"/> for the specified language if it exists; otherwise, <c>null</c>.</returns>
+		public FormattedText? GetText(string languageId)
+		{
+			string text;
+
+			if (this.texts.TryGetValue (languageId, out text))
+			{
+				return new FormattedText (text);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Gets the text in the default language.
+		/// </summary>
+		/// <returns>The <see cref="FormattedText"/> in the default language.</returns>
 		public FormattedText GetDefaultText()
 		{
 			string text;
@@ -50,13 +106,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Sets the text for the specified language.
+		/// </summary>
+		/// <param name="languageId">The language id.</param>
+		/// <param name="text">The formatted text.</param>
 		public void SetText(string languageId, FormattedText text)
 		{
 			this.texts[languageId] = text.ToString ();
 		}
 
 
-		public FormattedText GetFormattedText()
+		/// <summary>
+		/// Gets the global text containing all languages.
+		/// </summary>
+		/// <returns>The <see cref="FormattedText"/> containing all texts embedded in <c>&lt;div&gt;</c> elements.</returns>
+		public FormattedText GetGlobalText()
 		{
 			if (this.texts.Count == 0)
 			{
@@ -80,12 +145,20 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Determines whether the specified text is multilingual.
+		/// </summary>
+		/// <param name="text">The formatted text.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified text is multilingual; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsMultilingual(FormattedText text)
 		{
 			return MultilingualText.IsMultilingual (text.ToString ());
 		}
 
-		public static bool IsMultilingual(string text)
+		
+		private static bool IsMultilingual(string text)
 		{
 			if (string.IsNullOrEmpty (text))
             {
@@ -155,12 +228,14 @@ namespace Epsitec.Common.Types
 			return new KeyValuePair<string, string> (languageId, languageText);
 		}
 
-		private readonly Dictionary<string, string> texts;
+		
+		public static readonly string DefaultLanguageId = "*";
 		
 		private const string DivBeginWithLanguageAttribute = MultilingualText.DivBegin + MultilingualText.LanguageAttribute;
 		private const string LanguageAttribute = "lang=";
 		private const string DivBegin = "<div ";
 		private const string DivEnd   = "</div>";
-		private const string DefaultLanguageId = "*";
+
+		private readonly Dictionary<string, string> texts;
 	}
 }
