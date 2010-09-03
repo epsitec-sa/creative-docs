@@ -34,6 +34,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.entityPrinter.BuildSections ();
 		}
 
+		public int CurrentPage
+		{
+			get;
+			set;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -59,6 +65,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.TranslateTransform (offsetX, offsetY);
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
+				this.entityPrinter.CurrentPage = this.CurrentPage;
 				this.entityPrinter.PrintCurrentPage (graphics);
 
 				graphics.Transform = initial;

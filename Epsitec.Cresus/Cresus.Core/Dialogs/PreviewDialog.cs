@@ -280,13 +280,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void pagePrevButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.entityPrinter.CurrentPage -= GetStep (e);
+			this.preview.CurrentPage -= GetStep (e);
 			this.UpdatePage ();
 		}
 
 		private void pageNextButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.entityPrinter.CurrentPage += GetStep (e);
+			this.preview.CurrentPage += GetStep (e);
 			this.UpdatePage ();
 		}
 
@@ -333,9 +333,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePage()
 		{
-			this.pagePrevButton.Enable = this.entityPrinter.CurrentPage > 0;
-			this.pageNextButton.Enable = this.entityPrinter.CurrentPage < this.entityPrinter.PageCount ()-1;
-			this.pageRank.Text = (this.entityPrinter.CurrentPage+1).ToString ();
+			this.pagePrevButton.Enable = this.preview.CurrentPage > 0;
+			this.pageNextButton.Enable = this.preview.CurrentPage < this.entityPrinter.PageCount ()-1;
+			this.pageRank.Text = (this.preview.CurrentPage+1).ToString ();
 
 			this.preview.Invalidate ();
 
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			Dictionary<string, int> dico = new Dictionary<string, int> ();
 
-			PageType pageType = this.entityPrinter.GetPageType (this.entityPrinter.CurrentPage);
+			PageType pageType = this.entityPrinter.GetPageType (this.preview.CurrentPage);
 
 			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
 			List<DocumentPrinter> documentPrinters = documentType.DocumentPrinters;
@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.entityPrinter.Clear ();
 			this.entityPrinter.BuildSections ();
 
-			this.entityPrinter.CurrentPage = System.Math.Min (this.entityPrinter.CurrentPage, this.entityPrinter.PageCount ()-1);
+			this.preview.CurrentPage = System.Math.Min (this.preview.CurrentPage, this.entityPrinter.PageCount ()-1);
 			this.UpdatePage ();
 		}
 

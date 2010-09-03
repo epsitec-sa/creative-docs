@@ -26,9 +26,15 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public string Job
+		public string JobFullName
 		{
-			//	Retourne le nom du job de la première section.
+			get;
+			set;
+		}
+
+		public string InternalJobName
+		{
+			//	Retourne le nom interne du job de la première section.
 			//	Toutes les sections sont dans le même job.
 			get
 			{
@@ -38,7 +44,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					return this.sections[0].Job;
+					return this.sections[0].InternalJobName;
 				}
 			}
 		}

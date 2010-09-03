@@ -115,12 +115,12 @@ namespace Epsitec.Cresus.Core.Printers
 						{
 							for (int copy = 0; copy < printer.Copies; copy++)
 							{
-								string jobName = string.Concat (documentPrinter.Job, ".", (entityRank+1).ToString (), ".", (copy+1).ToString ());
+								string internalJobName = string.Concat (documentPrinter.Job, ".", (entityRank+1).ToString (), ".", (copy+1).ToString ());
 
 								var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
 								foreach (var physicalPage in physicalPages)
 								{
-									sections.Add (new SectionToPrint (printer, jobName, physicalPage, entityRank, entityPrinter));
+									sections.Add (new SectionToPrint (printer, internalJobName, physicalPage, entityRank, entityPrinter));
 								}
 							}
 						}
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.Job                         == p2.Job                         &&
+				if (p1.InternalJobName             == p2.InternalJobName             &&
 					p1.Printer.PhysicalPrinterName == p2.Printer.PhysicalPrinterName &&
 					p1.FirstPage                   == p2.FirstPage                   )
 				{
@@ -160,10 +160,10 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.Job                      == p2.Job        &&
-					p1.Printer                  == p2.Printer    &&
-					p1.EntityRank               == p2.EntityRank &&
-					p1.FirstPage + p1.PageCount == p2.FirstPage  )
+				if (p1.InternalJobName          == p2.InternalJobName &&
+					p1.Printer                  == p2.Printer         &&
+					p1.EntityRank               == p2.EntityRank      &&
+					p1.FirstPage + p1.PageCount == p2.FirstPage       )
 				{
 					p1.PageCount += p2.PageCount;  // ajoute les pages de p2 à p1
 					sections.RemoveAt (index+1);   // supprime p2
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Printers
 				JobToPrint j1 = jobs[index];
 				JobToPrint j2 = jobs[index+1];
 
-				if (j1.Job                 == j2.Job                 &&
+				if (j1.InternalJobName     == j2.InternalJobName     &&
 					j1.PrinterPhysicalName == j2.PrinterPhysicalName )
 				{
 					j1.Sections.AddRange (j2.Sections);  // ajoute les sections de j2 à j1
@@ -202,6 +202,14 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					index++;
 				}
+			}
+
+			//	Nomme tous les jobs.
+			index = 0;
+			foreach (var job in jobs)
+			{
+				job.JobFullName = string.Concat (job.Sections[0].EntityPrinter.JobName, ".", (index+1).ToString ());
+				index++;
 			}
 
 			//	Affiche les jobs.
