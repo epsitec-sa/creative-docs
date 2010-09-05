@@ -34,9 +34,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.entityPrinter = entityPrinter;
 			this.entities      = entities;
 
+			this.currentZoom = 1;
+
 			this.application.AttachDialog (this);
 
+			this.pagePreviews = new List<Widgets.PreviewEntity> ();
 			this.printerList = Printers.PrinterSettings.GetPrinterList ();
+
+			this.entityPrinter.Clear ();
+			this.entityPrinter.BuildSections ();
 		}
 
 
@@ -74,11 +80,18 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		protected void SetupWidgets(Window window)
 		{
-			this.preview = new Widgets.PreviewEntity
+			this.previewFrame = new Scrollable
 			{
 				Parent = window.Root,
 				Anchor = AnchorStyles.All,
 				Margins = new Margins (10, 10, 10, 62),
+			};
+
+			this.previewFrame.Viewport.IsAutoFitting = true;
+
+			this.previewFrame.SizeChanged += delegate
+			{
+				this.UpdatePagePreviewsGeometry ();
 			};
 
 			this.printerPageInfo = new StaticText
@@ -106,46 +119,38 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var label = new StaticText
 			{
-				Parent = this.footer,
-				Text = "Aperçu de la page",
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
-				PreferredWidth = 100,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (20, 0, 0, 0),
-			};
+				var frame = UIBuilder.CreateIntegratedToolbar (this.footer, 24);
+				frame.PreferredWidth = 100;
+				frame.Margins = new Margins (20, 0, 0, 0);
+				frame.Dock = DockStyle.Left;
 
-			this.pagePrevButton = new GlyphButton
-			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.ArrowLeft,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.pagePrevButton = new GlyphButton
+				{
+					Parent = frame,
+					GlyphShape = Common.Widgets.GlyphShape.ArrowLeft,
+					PreferredWidth = 20,
+					Dock = DockStyle.Left,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
-			this.pageRank = new StaticText
-			{
-				Parent = this.footer,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				PreferredWidth = 30,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.pageRank = new StaticText
+				{
+					Parent = frame,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 0, 0, 0),
+				};
 
-			this.pageNextButton = new GlyphButton
-			{
-				Parent = this.footer,
-				GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
-				PreferredWidth = 20,
-				PreferredHeight = 20,
-				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				this.pageNextButton = new GlyphButton
+				{
+					Parent = frame,
+					GlyphShape = Common.Widgets.GlyphShape.ArrowRight,
+					PreferredWidth = 20,
+					Dock = DockStyle.Right,
+					Margins = new Margins (0, 0, 0, 0),
+				};
+			}
 
 			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1 ||
 				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
@@ -214,6 +219,67 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateDebug ();
 			}
 
+			{
+				var frame = UIBuilder.CreateIntegratedToolbar (this.footer, 24);
+				frame.Margins = new Margins (10, 10, 0, 0);
+				frame.Dock = DockStyle.Left;
+
+				this.zoom18Button = new Button
+				{
+					Parent = frame,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					AutoFocus = false,
+					Text = "÷8",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+				};
+
+				this.zoom14Button = new Button
+				{
+					Parent = frame,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					AutoFocus = false,
+					Text = "÷4",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+				};
+
+				this.zoom11Button = new Button
+				{
+					Parent = frame,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					AutoFocus = false,
+					Text = "×1",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+				};
+
+				this.zoom21Button = new Button
+				{
+					Parent = frame,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					AutoFocus = false,
+					Text = "×2",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+				};
+
+				this.zoom41Button = new Button
+				{
+					Parent = frame,
+					ButtonStyle = Common.Widgets.ButtonStyle.ToolItem,
+					AutoFocus = false,
+					Text = "×4",
+					PreferredWidth = 20,
+					PreferredHeight = 20,
+					Dock = DockStyle.Left,
+				};
+			}
+
 			this.closeButton = new Button ()
 			{
 				Parent = this.footer,
@@ -232,21 +298,43 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			this.pagesInfo = new StaticText ()
-			{
-				Parent = this.footer,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-				PreferredWidth = 100,
-				Dock = DockStyle.Right,
-				Margins = new Margins (0, 20, 0, 0),
-			};
+			this.placer = new PreviewOptimalPlacer (this.pagePreviews, this.entityPrinter.PageSize);
 
-			this.preview.BuildSections (this.entityPrinter);
-			this.UpdatePage ();
+			this.UpdatePages ();
 		}
 
 		protected void SetupEvents(Window window)
 		{
+			this.zoom18Button.Clicked += delegate
+			{
+				this.currentZoom = 1.0/8.0;
+				this.UpdatePages ();
+			};
+
+			this.zoom14Button.Clicked += delegate
+			{
+				this.currentZoom = 1.0/4.0;
+				this.UpdatePages ();
+			};
+
+			this.zoom11Button.Clicked += delegate
+			{
+				this.currentZoom = 1;
+				this.UpdatePages ();
+			};
+
+			this.zoom21Button.Clicked += delegate
+			{
+				this.currentZoom = 2;
+				this.UpdatePages ();
+			};
+
+			this.zoom41Button.Clicked += delegate
+			{
+				this.currentZoom = 4;
+				this.UpdatePages ();
+			};
+
 			this.pagePrevButton.Clicked += new EventHandler<MessageEventArgs> (pagePrevButton_Clicked);
 			this.pageNextButton.Clicked += new EventHandler<MessageEventArgs> (pageNextButton_Clicked);
 
@@ -280,14 +368,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void pagePrevButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.preview.CurrentPage -= GetStep (e);
-			this.UpdatePage ();
+			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
+			this.UpdatePages ();
 		}
 
 		private void pageNextButton_Clicked(object sender, MessageEventArgs e)
 		{
-			this.preview.CurrentPage += GetStep (e);
-			this.UpdatePage ();
+			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.entityPrinter.PageCount () - this.showedPageCount);
+			this.UpdatePages ();
 		}
 
 		private void debugPrevButton1_Clicked(object sender, MessageEventArgs e)
@@ -331,16 +419,102 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return step;
 		}
 
-		private void UpdatePage()
+		private void UpdatePages()
 		{
-			this.pagePrevButton.Enable = this.preview.CurrentPage > 0;
-			this.pageNextButton.Enable = this.preview.CurrentPage < this.entityPrinter.PageCount ()-1;
-			this.pageRank.Text = (this.preview.CurrentPage+1).ToString ();
+			this.UpdateZoom ();
+			this.UpdatePreview ();
+			this.UpdateButtons ();
+		}
 
-			this.preview.Invalidate ();
+		private void UpdateZoom()
+		{
+			this.zoom18Button.ActiveState = this.currentZoom == 1.0/8.0 ? ActiveState.Yes : ActiveState.No;
+			this.zoom14Button.ActiveState = this.currentZoom == 1.0/4.0 ? ActiveState.Yes : ActiveState.No;
+			this.zoom11Button.ActiveState = this.currentZoom == 1       ? ActiveState.Yes : ActiveState.No;
+			this.zoom21Button.ActiveState = this.currentZoom == 2       ? ActiveState.Yes : ActiveState.No;
+			this.zoom41Button.ActiveState = this.currentZoom == 4       ? ActiveState.Yes : ActiveState.No;
+		}
 
-			this.printerPageInfo.Text = this.GetPrintersUsedDescription ();
-			this.pagesInfo.Text = string.Format ("{0} page{1}", this.entityPrinter.PageCount ().ToString (), (this.entityPrinter.PageCount ()<=1)?"":"s");
+		private void UpdatePreview()
+		{
+			this.showedPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
+
+			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.entityPrinter.PageCount ());
+			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
+
+			this.pagePreviews.Clear ();
+			this.previewFrame.Viewport.Children.Clear ();
+
+			int pageRank = this.currentPage;
+
+			for (int i = 0; i < this.showedPageCount; i++)
+			{
+				if (pageRank >= this.entityPrinter.PageCount ())
+				{
+					break;
+				}
+
+				var preview = new Widgets.PreviewEntity
+				{
+					Parent = this.previewFrame.Viewport,
+					EntityPrinter = this.entityPrinter,
+					CurrentPage = pageRank++,
+				};
+
+				this.pagePreviews.Add (preview);
+			}
+
+			this.UpdatePagePreviewsGeometry ();
+		}
+
+		private void UpdatePagePreviewsGeometry()
+		{
+			//	Positionne tous les Widgets.PreviewEntity, selon le parent this.previewFrame.
+			if (this.currentZoom > 1)  // agrandissement ?
+			{
+				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
+				this.previewFrame.PaintViewportFrame = true;
+
+				this.pagePreviews[0].PreferredSize = this.placer.AdjustRatioPageSize (this.previewFrame.Client.Bounds.Size * this.currentZoom);
+				this.pagePreviews[0].Dock = DockStyle.Left | DockStyle.Bottom;
+			}
+			else  // 1:1 ou réduction ?
+			{
+				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
+				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
+				this.previewFrame.PaintViewportFrame = false;
+
+				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
+				this.placer.PageCount = this.pagePreviews.Count;
+				this.placer.UpdateGeometry ();
+			}
+		}
+
+		private void UpdateButtons()
+		{
+			this.pagePrevButton.Enable = this.currentPage > 0;
+			this.pageNextButton.Enable = this.currentPage < this.entityPrinter.PageCount () - this.showedPageCount;
+
+			int t = this.entityPrinter.PageCount ();
+			int p = this.currentPage+1;
+
+			if (this.showedPageCount <= 1)
+			{
+
+				this.pageRank.Text = string.Format ("{0} / {1}", p.ToString (), t.ToString ());
+			}
+			else
+			{
+				int q = System.Math.Min (p + this.showedPageCount-1, t);
+
+				this.pageRank.Text = string.Format ("{0}..{1} / {2}", p.ToString (), q.ToString (), t.ToString ());
+			}
+
+			this.zoom14Button.Enable = t > 1;
+			this.zoom18Button.Enable = t > 4;
+
+			//?this.printerPageInfo.Text = this.GetPrintersUsedDescription ();
 		}
 
 		private string GetPrintersUsedDescription()
@@ -392,7 +566,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			Dictionary<string, int> dico = new Dictionary<string, int> ();
 
-			PageType pageType = this.entityPrinter.GetPageType (this.preview.CurrentPage);
+			PageType pageType = this.entityPrinter.GetPageType (this.currentPage);
 
 			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
 			List<DocumentPrinter> documentPrinters = documentType.DocumentPrinters;
@@ -427,7 +601,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.debugParam1.Text = this.entityPrinter.DebugParam1.ToString ();
 			this.debugParam2.Text = this.entityPrinter.DebugParam2.ToString ();
 
-			this.preview.Invalidate ();
+			this.pagePreviews[0].Invalidate ();
 		}
 
 
@@ -452,41 +626,53 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		public void Update()
 		{
-			this.entityPrinter.Clear ();
-			this.entityPrinter.BuildSections ();
+			//?this.entityPrinter.Clear ();
+			//?this.entityPrinter.BuildSections ();
 
-			this.preview.CurrentPage = System.Math.Min (this.preview.CurrentPage, this.entityPrinter.PageCount ()-1);
-			this.UpdatePage ();
+			//?this.preview.CurrentPage = System.Math.Min (this.preview.CurrentPage, this.entityPrinter.PageCount ()-1);
+			//?this.UpdatePage ();
 		}
 
 		#endregion
 
 
-		private readonly CoreApplication application;
-		private readonly IEnumerable<AbstractEntity> entities;
-		private readonly Printers.AbstractEntityPrinter entityPrinter;
+		private readonly CoreApplication				application;
+		private readonly IEnumerable<AbstractEntity>	entities;
+		private readonly Printers.AbstractEntityPrinter	entityPrinter;
 
-		private Widgets.PreviewEntity preview;
-		private StaticText printerPageInfo;
-		private FrameBox footer;
+		private Scrollable								previewFrame;
+		private List<Widgets.PreviewEntity>				pagePreviews;
+		private PreviewOptimalPlacer					placer;
 
-		private GlyphButton pagePrevButton;
-		private StaticText pageRank;
-		private GlyphButton pageNextButton;
+		private StaticText								printerPageInfo;
+		private FrameBox								footer;
 
-		private GlyphButton debugPrevButton1;
-		private StaticText debugParam1;
-		private GlyphButton debugNextButton1;
+		private GlyphButton								pagePrevButton;
+		private StaticText								pageRank;
+		private GlyphButton								pageNextButton;
 
-		private GlyphButton debugPrevButton2;
-		private StaticText debugParam2;
-		private GlyphButton debugNextButton2;
+		private GlyphButton								debugPrevButton1;
+		private StaticText								debugParam1;
+		private GlyphButton								debugNextButton1;
 
-		private Button updateButton;
-		private StaticText pagesInfo;
-		private Button printButton;
-		private Button closeButton;
+		private GlyphButton								debugPrevButton2;
+		private StaticText								debugParam2;
+		private GlyphButton								debugNextButton2;
 
+		private Button									zoom18Button;
+		private Button									zoom14Button;
+		private Button									zoom11Button;
+		private Button									zoom21Button;
+		private Button									zoom41Button;
+
+		private Button									updateButton;
+		private Button									printButton;
+		private Button									closeButton;
+
+		private double									currentZoom;
 		private List<Printer>							printerList;
+
+		private int										currentPage;
+		private int										showedPageCount;
 	}
 }

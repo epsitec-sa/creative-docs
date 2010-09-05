@@ -19,13 +19,20 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 		}
 
-		public PreviewEntity(Widget embedder)
-			: this ()
+
+		public Printers.AbstractEntityPrinter EntityPrinter
 		{
-			this.SetEmbedder (embedder);
+			get
+			{
+				return this.entityPrinter;
+			}
+			set
+			{
+				this.entityPrinter = value;
+			}
 		}
 
-
+#if false
 		public void BuildSections(Printers.AbstractEntityPrinter entityPrinter)
 		{
 			this.entityPrinter = entityPrinter;
@@ -33,6 +40,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.entityPrinter.IsPreview = true;
 			this.entityPrinter.BuildSections ();
 		}
+#endif
 
 		public int CurrentPage
 		{

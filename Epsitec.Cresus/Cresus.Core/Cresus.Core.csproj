@@ -126,6 +126,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
     <Compile Include="Data\UnitOfMeasureGroupRepository.cs" />
+    <Compile Include="Dialogs\PreviewOptimalPlacer.cs" />
     <Compile Include="Dialogs\PrintingJobDialog.cs" />
     <Compile Include="ImportV11.cs" />
     <Compile Include="Data\AffairRepository.cs" />
