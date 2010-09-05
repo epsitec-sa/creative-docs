@@ -404,7 +404,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static FrameBox CreateIntegratedToolbar(Widget parent, double height)
+		public static FrameBox CreateMiniToolbar(Widget parent, double height)
 		{
 			var toolbar = new FrameBox
 			{

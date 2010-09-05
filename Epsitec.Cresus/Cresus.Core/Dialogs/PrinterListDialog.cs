@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.listController = new Controllers.ListController<Printer> (this.printerList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
 			this.listController.CreateUI (leftFrame, Direction.Right, 23);
 
-			ToolTip.Default.SetToolTip (this.listController.AddButton, "Ajoute une nouvelle impriante");
-			ToolTip.Default.SetToolTip (this.listController.RemoveButton, "Supprime l'imprimante");
-			ToolTip.Default.SetToolTip (this.listController.MoveUpButton, "Montre l'imprimante dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle impriante");
+			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'imprimante");
+			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'imprimante dans la liste");
 			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'imprimante dans la liste");
 
 			//	Rempli le panneau de droite.

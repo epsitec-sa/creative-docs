@@ -386,8 +386,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.previewFrame.DrawFullFrame = false;
 
-				//?this.previewedSection.EntityPrinter.Clear ();
-
 				int count = this.previewedSection.PageCount;
 				int pageRank = this.previewedSection.FirstPage;
 

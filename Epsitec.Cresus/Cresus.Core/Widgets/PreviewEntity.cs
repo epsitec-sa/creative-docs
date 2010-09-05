@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public PreviewEntity()
 		{
+			this.currentPage = -1;
 		}
 
 
@@ -32,20 +33,36 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-#if false
-		public void BuildSections(Printers.AbstractEntityPrinter entityPrinter)
-		{
-			this.entityPrinter = entityPrinter;
-
-			this.entityPrinter.IsPreview = true;
-			this.entityPrinter.BuildSections ();
-		}
-#endif
-
 		public int CurrentPage
 		{
-			get;
-			set;
+			get
+			{
+				return this.currentPage;
+			}
+			set
+			{
+				if (this.currentPage != value)
+				{
+					this.currentPage = value;
+					this.UpdateTooltip ();
+				}
+			}
+		}
+
+		public string Description
+		{
+			get
+			{
+				return this.description;
+			}
+			set
+			{
+				if (this.description != value)
+				{
+					this.description = value;
+					this.UpdateTooltip ();
+				}
+			}
 		}
 
 
@@ -73,7 +90,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.TranslateTransform (offsetX, offsetY);
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
-				this.entityPrinter.CurrentPage = this.CurrentPage;
+				this.entityPrinter.CurrentPage = this.currentPage;
 				this.entityPrinter.PrintCurrentPage (graphics);
 
 				graphics.Transform = initial;
@@ -87,7 +104,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private void UpdateTooltip()
+		{
+			var builder = new System.Text.StringBuilder ();
 
-		private Printers.AbstractEntityPrinter entityPrinter;
+			builder.Append ("<font size=\"13\"><b>");
+			builder.Append ("Page ");
+			builder.Append ((this.currentPage+1).ToString ());
+			builder.Append ("</b></font>");
+
+			if (!string.IsNullOrEmpty (this.description))
+			{
+				builder.Append ("<br/>");
+				builder.Append (this.description);
+			}
+
+			ToolTip.Default.SetToolTip (this, builder.ToString ());
+		}
+
+
+		private Printers.AbstractEntityPrinter		entityPrinter;
+		private int									currentPage;
+		private string								description;
 	}
 }

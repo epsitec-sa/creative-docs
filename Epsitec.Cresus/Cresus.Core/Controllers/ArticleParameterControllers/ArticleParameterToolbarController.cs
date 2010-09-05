@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				};
 			}
 
-			this.toolbar = UIBuilder.CreateIntegratedToolbar (parent, UIBuilder.TinyButtonSize);
+			this.toolbar = UIBuilder.CreateMiniToolbar (parent, UIBuilder.TinyButtonSize);
 			this.toolbar.Margins = new Margins (0, UIBuilder.RightMargin, 0, -1);
 		}
 
