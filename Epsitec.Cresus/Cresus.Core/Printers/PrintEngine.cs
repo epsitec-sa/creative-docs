@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var firstSection = sectionsToPrint.FirstOrDefault ();
 			PrintDocument printDocument = new PrintDocument ();
 
-			printDocument.DocumentName = firstSection.EntityPrinter.JobName;
+			printDocument.DocumentName = job.JobFullName;
 			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.Printer.PhysicalPrinterName));
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);

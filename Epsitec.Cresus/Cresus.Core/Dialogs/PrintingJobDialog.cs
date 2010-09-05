@@ -193,6 +193,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 #endif
 
+			Size pageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
+			this.placer = new PreviewOptimalPlacer (this.pagePreviews, pageSize);
+
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
 			this.UpdateInformation ();
@@ -310,6 +313,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PrintingJobDialog.SetPreviewButtonState (button, true);
 
 				this.previewedSection = section;
+				this.previewedSection.EntityPrinter.IsPreview = true;
+				this.previewedSection.EntityPrinter.BuildSections ();
+
 				this.UpdatePreview ();
 			};
 		}
@@ -380,7 +386,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.previewFrame.DrawFullFrame = false;
 
-				this.previewedSection.EntityPrinter.Clear ();
+				//?this.previewedSection.EntityPrinter.Clear ();
 
 				int count = this.previewedSection.PageCount;
 				int pageRank = this.previewedSection.FirstPage;
@@ -390,10 +396,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var preview = new Widgets.PreviewEntity
 					{
 						Parent = this.previewFrame,
+						EntityPrinter = this.previewedSection.EntityPrinter,
 						CurrentPage = pageRank++,
 					};
-
-					preview.BuildSections (this.previewedSection.EntityPrinter);
 
 					this.pagePreviews.Add (preview);
 				}
@@ -405,100 +410,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdatePagePreviewsGeometry()
 		{
 			//	Positionne tous les Widgets.PreviewEntity, selon le parent this.previewFrame.
-			if (this.previewedSection == null || this.pagePreviews.Count == 0)
+			if (this.previewedSection != null)
 			{
-				return;
+				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
+				this.placer.PageCount = this.previewedSection.PageCount;
+				this.placer.UpdateGeometry ();
 			}
-
-			int pageCount = this.previewedSection.PageCount;
-			double maxSurface = 0;
-			int bestNx = -1;
-			int bestNy = -1;
-			Size pageSize;
-			double spacing = 5;
-
-			//	Pour toutes les combinaisons nx * ny, cherche celle avec laquelle la surface d'un
-			//	aperçu est maximale.
-			for (int ny = 1; ny <= pageCount; ny++)
-			{
-				for (int nx = 1; nx <= pageCount; nx++)
-				{
-					if (nx*ny < pageCount)  // insuffisant pour tout caser ?
-					{
-						continue;
-					}
-
-					if (nx*ny > pageCount*2)  // beaucoup trop ?
-					{
-						continue;
-					}
-
-					pageSize = this.ComputePreviewSize (nx, ny, spacing);
-					double surface = pageSize.Width * pageSize.Height;  // calcule la surface pour un preview
-
-					if (maxSurface < surface)  // mieux ?
-					{
-						maxSurface = surface;
-						bestNx = nx;
-						bestNy = ny;
-					}
-				}
-			}
-
-			if (maxSurface == 0)  // garde-fou
-			{
-				return;
-			}
-
-			pageSize = this.ComputePreviewSize (bestNx, bestNy, spacing);
-
-			int index = 0;
-			double posY = this.previewFrame.Client.Bounds.Height;
-
-			for (int y=0; y<bestNy; y++)
-			{
-				double posX = 0;
-
-				for (int x=0; x<bestNx; x++)
-				{
-					if (index >= this.previewedSection.PageCount)
-					{
-						break;
-					}
-
-					var preview = this.pagePreviews[index++];
-
-					preview.SetManualBounds (new Rectangle (posX, posY-pageSize.Height, pageSize.Width, pageSize.Height));
-					preview.Invalidate ();  // pour forcer le dessin
-
-					posX += pageSize.Width + spacing;
-				}
-
-				posY -= pageSize.Height + spacing;
-			}
-		}
-
-		private Size ComputePreviewSize(int nx, int ny, double spacing)
-		{
-			//	Retourne les dimensions d'un preview, sachant qu'on cherche à en caser nx * ny.
-			double width  = System.Math.Floor ((this.previewFrame.Client.Bounds.Width  + spacing) / nx) - spacing;
-			double height = System.Math.Floor ((this.previewFrame.Client.Bounds.Height + spacing) / ny) - spacing;
-
-			Size pageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
-
-			double virtualWidth  = System.Math.Floor (height * pageSize.Width  / pageSize.Height);
-			double virtualHeight = System.Math.Floor (width  * pageSize.Height / pageSize.Width);
-
-			if (width < virtualWidth)
-			{
-				height = virtualHeight;
-			}
-			else
-			{
-				width = virtualWidth;
-			}
-
-			return new Size (width, height);
 		}
 
 		private int PageCountToPrint
@@ -559,6 +476,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<JobToPrint>				jobs;
 
 		private Window									window;
+		private PreviewOptimalPlacer					placer;
 		private FrameBox								previewFrame;
 		private StaticText								informationText;
 		private Button									invertButton;

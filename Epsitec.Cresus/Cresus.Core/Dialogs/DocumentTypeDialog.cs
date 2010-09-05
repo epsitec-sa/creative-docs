@@ -635,7 +635,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.entityPrintingSettings.DocumentTypeEnumSelected != DocumentType.None)
 			{
 				this.entityPrinter.Clear ();
-				this.previewFrame.BuildSections (this.entityPrinter);
+				this.entityPrinter.IsPreview = true;
+				this.entityPrinter.BuildSections ();
+
+				this.previewFrame.EntityPrinter = this.entityPrinter;
 				this.previewFrame.Invalidate ();  // pour forcer le dessin
 
 				int pageCount = this.entityPrinter.PageCount ();
