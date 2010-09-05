@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				buttonSize = UIBuilder.TinyButtonSize;
 			}
 
-			this.toolbar = UIBuilder.CreateIntegratedToolbar (parent, buttonSize.Value);
+			this.toolbar = UIBuilder.CreateMiniToolbar (parent, buttonSize.Value);
 			this.toolbar.Margins = new Margins (0, arrowDirection == Direction.Right ? TileArrow.Breadth : 0, 0, -1);
 			this.toolbar.TabIndex = 1;
 
