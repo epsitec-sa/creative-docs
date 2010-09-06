@@ -31,10 +31,36 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			//	TODO: ...
+			this.mainFrame = new FrameBox
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+//-				MinWidth = 200,
+				BackColor = Color.FromRgb (1.0, 1.0, 0.9)
+			};
 		}
 
+		public void Add(Widget widget)
+		{
+			if ((widget.Dock == DockStyle.None) &&
+				(widget.Anchor == AnchorStyles.None))
+			{
+				widget.Dock = DockStyle.Stacked;
+			}
+
+			this.mainFrame.Children.Add (widget);
+		}
+
+
+		public void Clear()
+		{
+			var widgets = this.mainFrame.Children.Widgets;
+			widgets.ForEach (x => x.Dispose ());
+		}
 		
 		private readonly CoreData data;
+		
+		private FrameBox mainFrame;
 	}
 }

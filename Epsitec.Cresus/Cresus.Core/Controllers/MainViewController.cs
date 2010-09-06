@@ -128,6 +128,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public PreviewViewController PreviewViewController
+		{
+			get
+			{
+				return this.previewViewController;
+			}
+		}
+
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.browserViewController;
@@ -155,9 +163,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			return contextChain.Contexts.Select (x => x.GetCommandHandler<MainViewController> ()).Where (x => x != null).FirstOrDefault ();
 		}
 
-		public void SetActionVisibility(bool visibility)
+		public void SetActionActionVisibility(bool visibility)
 		{
 			this.rightActionPanel.Visibility = visibility;
+			this.rightSplitter.Visibility = this.rightActionPanel.Visibility | this.rightPreviewPanel.Visibility;
+		}
+
+		public void SetPreviewPanelVisibility(bool visibility)
+		{
+			this.rightPreviewPanel.Visibility = visibility;
+			this.rightSplitter.Visibility = this.rightActionPanel.Visibility | this.rightPreviewPanel.Visibility;
 		}
 
 
@@ -255,6 +270,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Right,
 				Padding = new Margins (0, 0, 0, 0),
 				Visibility = false,
+			};
+			
+			this.rightSplitter = new VSplitter
+			{
+				Parent = this.frame,
+				Dock = DockStyle.Right,
+				PreferredWidth = 8,
 			};
 		}
 
@@ -395,6 +417,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private FrameBox browserSettingsPanel;
 		private FrameBox leftPanel;
 		private VSplitter splitter;
+		private VSplitter rightSplitter;
 		private FrameBox mainPanel;
 		private FrameBox rightActionPanel;
 		private FrameBox rightPreviewPanel;
