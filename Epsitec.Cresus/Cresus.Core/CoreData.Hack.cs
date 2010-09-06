@@ -335,9 +335,9 @@ namespace Epsitec.Cresus.Core
 			NaturalPersonEntity personPA = this.DataContext.CreateEntity<NaturalPersonEntity> ();
 			NaturalPersonEntity personDR = this.DataContext.CreateEntity<NaturalPersonEntity> ();
 
-			ContactRoleEntity roleFact  = roles.Where (x => x.Name == "facturation").First ();
-			ContactRoleEntity roleProf  = roles.Where (x => x.Name == "professionnel").First ();
-			ContactRoleEntity rolePrive = roles.Where (x => x.Name == "privé").First ();
+			ContactRoleEntity roleFact  = roles.Where (x => x.Name == "Facturation").First ();
+			ContactRoleEntity roleProf  = roles.Where (x => x.Name == "Professionnel").First ();
+			ContactRoleEntity rolePrive = roles.Where (x => x.Name == "Privé").First ();
 
 			TelecomTypeEntity telecomTypeFix    = telecomTypes.Where (x => x.Code == "fixnet").First ();
 			TelecomTypeEntity telecomTypeMobile = telecomTypes.Where (x => x.Code == "mobile").First ();
