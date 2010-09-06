@@ -1,8 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -38,8 +40,45 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					this.CreateUIComments (data);
 				}
 			}
+
+			this.CreateUIPreviewPanel ();
 		}
 
+		protected override void AboutToCloseUI()
+		{
+			this.CloseUIPreviewPanel ();
+			base.AboutToCloseUI ();
+		}
+
+		
+		private void CreateUIPreviewPanel()
+		{
+			var mainViewController = this.Orchestrator.MainViewController;
+			var previewController  = mainViewController.PreviewViewController;
+			
+			mainViewController.SetPreviewPanelVisibility (true);
+
+			var previewFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Margins = new Margins (2, 2, 2, 2),
+				BackColor = Color.FromName ("White"),
+			};
+
+			//	TODO: crééer une previsualisation ici plutôt qu'un frame bidon...
+			
+			previewController.Add (previewFrame);
+		}
+
+		private void CloseUIPreviewPanel()
+		{
+			var mainViewController = this.Orchestrator.MainViewController;
+			var previewController  = mainViewController.PreviewViewController;
+
+			mainViewController.SetPreviewPanelVisibility (false);
+			
+			previewController.Clear ();
+		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
 		{
@@ -71,11 +110,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleDocumentItem", data.Controller, this.DataContext);
 
-			template.DefineText           (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
-			template.DefineCompactText    (x => TextFormatter.FormatText (GetDocumentItemSummary (x)));
+			template.DefineText           (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
+			template.DefineCompactText    (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
 			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
-			template.Filter = ArticleLineFilter;
+			template.Filter = SummaryInvoiceDocumentViewController.ArticleLineFilter;
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
 		}
@@ -103,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			
 			template.DefineText        (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineSetupItem   (SetupBillingDetails);
+			template.DefineSetupItem   (SummaryInvoiceDocumentViewController.SetupBillingDetails);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
 		}
@@ -166,27 +205,27 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			if (documentItemEntity is TextDocumentItemEntity)
 			{
-				return GetTextDocumentItemSummary (documentItemEntity as TextDocumentItemEntity);
+				return SummaryInvoiceDocumentViewController.GetTextDocumentItemSummary (documentItemEntity as TextDocumentItemEntity);
 			}
 
 			if (documentItemEntity is ArticleDocumentItemEntity)
 			{
-				return GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
+				return SummaryInvoiceDocumentViewController.GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
 			}
 
 			if (documentItemEntity is PriceDocumentItemEntity)
 			{
-				return GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
+				return SummaryInvoiceDocumentViewController.GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
 			}
 
 			if (documentItemEntity is TaxDocumentItemEntity)
 			{
-				return GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
+				return SummaryInvoiceDocumentViewController.GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
 			}
 
 			if (documentItemEntity is TotalDocumentItemEntity)
 			{
-				return GetTotalDocumentItemSummary (documentItemEntity as TotalDocumentItemEntity);
+				return SummaryInvoiceDocumentViewController.GetTotalDocumentItemSummary (documentItemEntity as TotalDocumentItemEntity);
 			}
 
 			return FormattedText.Null;
@@ -207,10 +246,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static FormattedText GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
 		{
 			var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (x);
-			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x));
+			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x, shortDescription: true));
 			var price = Misc.PriceToString (x.PrimaryLinePriceBeforeTax);
 
-			FormattedText text = FormattedText.Join (" ", quantity, desc, price);
+			FormattedText text = TextFormatter.FormatText (quantity, desc, price); // FormattedText.Join (" ", quantity, desc, price);
 
 			if (text.IsNullOrEmpty)
 			{
@@ -250,9 +289,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var desc = x.Text;
 			var tax = Misc.PriceToString (x.ResultingTax);
 
-			string text = string.Join (" ", desc, tax);
+			var text = TextFormatter.FormatText (desc, tax);
 
-			if (string.IsNullOrEmpty (text))
+			if (text.IsNullOrEmpty)
 			{
 				return "<i>TVA</i>";
 			}
@@ -280,9 +319,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				total = Misc.PriceToString (x.PrimaryPriceAfterTax);
 			}
 
-			string text = string.Join (" ", desc, total);
+			var text = TextFormatter.FormatText (desc, total);
 
-			if (string.IsNullOrEmpty (text))
+			if (text.IsNullOrEmpty)
 			{
 				return "<i>Total</i>";
 			}
