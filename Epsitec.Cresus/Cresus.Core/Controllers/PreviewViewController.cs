@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
@@ -15,7 +16,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class PreviewViewController : CoreViewController
+	public class PreviewViewController : CoreViewController, IWidgetUpdater
 	{
 		public PreviewViewController(string name, CoreData data)
 			: base (name)
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = container,
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-//-				MinWidth = 200,
+				MinWidth = 0,
 				BackColor = Color.FromRgb (1.0, 1.0, 0.9)
 			};
 		}
@@ -58,7 +59,29 @@ namespace Epsitec.Cresus.Core.Controllers
 			var widgets = this.mainFrame.Children.Widgets;
 			widgets.ForEach (x => x.Dispose ());
 		}
+
+		#region IWidgetUpdater Members
+
+		void IWidgetUpdater.Update()
+		{
+			this.OnUpdating ();
+		}
+
+		#endregion
+
+		private void OnUpdating()
+		{
+			var handler = this.Updating;
+
+			if (handler != null)
+            {
+				handler (this);
+            }
+		}
+
 		
+		public event EventHandler	Updating;
+
 		private readonly CoreData data;
 		
 		private FrameBox mainFrame;

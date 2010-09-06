@@ -44,10 +44,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void UpdateAllWidgets()
 		{
-			foreach (var updater in this.widgetUpdaters)
-			{
-				updater.Update ();
-			}
+			CoreProgram.Application.MainWindowController.Update ();
 		}
 
 
@@ -55,7 +52,10 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public void Update()
 		{
-			this.UpdateAllWidgets ();
+			foreach (var updater in this.widgetUpdaters)
+			{
+				updater.Update ();
+			}
 		}
 
 		#endregion
