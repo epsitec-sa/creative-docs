@@ -39,10 +39,10 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Attaches this instance to the specified database table.
 		/// </summary>
-		/// <param name="infrastructure">The infrastructure.</param>
-		/// <param name="table">The database table.</param>
-		/// <exception cref="System.ArgumentNullException">If <param name="dbInfrastructure"> is <c>null</c>.</param></exception>
-		/// <exception cref="System.ArgumentNullException">If <param name="dbTable"> is <c>null</c>.</param></exception>
+		/// <param name="dbInfrastructure">The infrastructure.</param>
+		/// <param name="dbTable">The database table.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure" /> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dbTable" /> is <c>null</c>.</exception>
 		public void Attach(DbInfrastructure dbInfrastructure, DbTable dbTable)
 		{			
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The name of the slots to get.</param>
 		/// <returns>The list of slots.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name=""/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public IEnumerable<int> GetUidCounterSlots(string name)
 		{
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Database
 
 				foreach (DataRow row in table.Rows)
 				{
-					int slot = (int) (long) row[Tags.ColumnUidSlot];
+					int slot = (int) row[Tags.ColumnUidSlot];
 
 					names.Add (slot);
 				}
@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The name of the counter.</param>
 		/// <param name="slot">The slot number of the counter.</param>
-		/// <param name="min">The maximal value to set.</param>
+		/// <param name="max">The maximal value to set.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="max"/> is lower than zero.</exception>
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The name of the counter.</param>
 		/// <param name="slot">The slot number of the counter.</param>
-		/// <param name="min">The next value to set.</param>
+		/// <param name="next">The next value to set.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slot"/> is lower than zero.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="next"/> is lower tha zero.</exception>
