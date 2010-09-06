@@ -23,13 +23,13 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		public EntityPrintingSettings()
 		{
-			this.DocumentTypeEnumSelected = DocumentType.None;
+			this.DocumentTypeSelected = DocumentType.None;
 
 			this.documentOptionsNameSelected = new List<string> ();
 		}
 
 
-		public DocumentType DocumentTypeEnumSelected
+		public DocumentType DocumentTypeSelected
 		{
 			//	Indique le type du document sélectionné.
 			get;

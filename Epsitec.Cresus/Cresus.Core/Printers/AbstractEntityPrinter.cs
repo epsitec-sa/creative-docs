@@ -50,7 +50,25 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.DocumentTypes.Where (x => x.Type == this.EntityPrintingSettings.DocumentTypeEnumSelected).FirstOrDefault ();
+				return this.DocumentTypes.Where (x => x.Type == this.EntityPrintingSettings.DocumentTypeSelected).FirstOrDefault ();
+			}
+		}
+
+
+		public void DefaultPrepare(DocumentType type)
+		{
+			this.EntityPrintingSettings.DocumentTypeSelected = type;
+
+			var documentType = this.DocumentTypeSelected;
+			if (documentType != null)
+			{
+				foreach (var option in documentType.DocumentOptions)
+				{
+					if (option.DefautState)
+					{
+						this.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Name);
+					}
+				}
 			}
 		}
 

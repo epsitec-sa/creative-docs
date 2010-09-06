@@ -157,8 +157,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1 ||
-				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
+			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug1 ||
+				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug2)
 			{
 				{
 					var frame = UIBuilder.CreateMiniToolbar (this.footer, 24);

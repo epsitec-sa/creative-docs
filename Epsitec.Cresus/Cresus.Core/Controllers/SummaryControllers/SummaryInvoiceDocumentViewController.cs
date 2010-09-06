@@ -53,20 +53,39 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		
 		private void CreateUIPreviewPanel()
 		{
+			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (this.Entity);
+
+			if (entityPrinter == null)
+			{
+				return;
+			}
+
 			var mainViewController = this.Orchestrator.MainViewController;
 			var previewController  = mainViewController.PreviewViewController;
-			
+
+			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithInsideESR);
+			entityPrinter.IsPreview = true;
+			entityPrinter.BuildSections ();
+
 			mainViewController.SetPreviewPanelVisibility (true);
 
 			var previewFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Margins = new Margins (2, 2, 2, 2),
-				BackColor = Color.FromName ("White"),
+				PreferredWidth = 300,  // TODO: ignoré !
+				//?MinWidth = 300,
+				Padding = new Margins (5),
+				BackColor = Color.FromBrightness (0.95),
 			};
 
-			//	TODO: crééer une previsualisation ici plutôt qu'un frame bidon...
-			
+			var previewEntity = new PreviewEntity
+			{
+				Parent = previewFrame,
+				Dock = DockStyle.Fill,
+				EntityPrinter = entityPrinter,
+				CurrentPage = 0,
+			};
+
 			previewController.Add (previewFrame);
 		}
 
