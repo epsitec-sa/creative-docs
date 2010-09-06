@@ -2,17 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-
-[assembly: DependencyClass (typeof (Epsitec.Cresus.Core.UI.Properties))]
 
 namespace Epsitec.Cresus.Core
 {
@@ -40,6 +36,18 @@ namespace Epsitec.Cresus.Core
 		public static void ShutDown()
 		{
 			Epsitec.Common.Drawing.ImageManager.ShutDownDefaultCache ();
+		}
+
+		
+		public static class Settings
+		{
+			public static CultureSettings CultureForData
+			{
+				get
+				{
+					return UI.cultureSettingsForData;
+				}
+			}
 		}
 
 
@@ -373,12 +381,8 @@ namespace Epsitec.Cresus.Core
 		private const string								StringMessageFontElement			= @"<font size=""125%"">";
 		private const string								StringEndFontElement				= "</font>";
 		
-		internal sealed class Properties : DependencyObject
-		{
-			public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty.RegisterAttached ("isWindowPositionSaverActive", typeof (bool), typeof (Properties));
-		}
-
 		private static readonly List<WindowPlacementHint>	windowPlacementHints				= new List<WindowPlacementHint> ();
+		private static readonly CultureSettings				cultureSettingsForData				= new CultureSettings ();
 		private static bool									reverseSetFocus;
 	}
 }

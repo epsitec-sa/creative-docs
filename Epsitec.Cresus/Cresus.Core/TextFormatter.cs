@@ -165,8 +165,6 @@ namespace Epsitec.Cresus.Core
 			items.RemoveRange (startIndex, num);
 		}
 
-
-
 		private static string ConvertToText(object value)
 		{
 			if (value == null)
@@ -189,11 +187,14 @@ namespace Epsitec.Cresus.Core
 			if (value is FormattedText)
 			{
 				FormattedText formattedText = (FormattedText) value;
+
+				//	Multilingual texts must be "flattened" : only one language may survive the conversion
+				//	to text, or else TextLayout would crash, not recognizing <div> tags:
 				
 				if (MultilingualText.IsMultilingual (formattedText))
                 {
 					MultilingualText multilingualText = new MultilingualText (formattedText);
-					return multilingualText.GetDefaultText ().ToString ();
+					return multilingualText.GetTextOrDefault (UI.Settings.CultureForData.LanguageId).ToString ();
                 }
 			}
 
