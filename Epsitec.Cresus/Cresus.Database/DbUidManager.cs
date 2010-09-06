@@ -16,58 +16,16 @@ namespace Epsitec.Cresus.Database
 	/// the database. These counters are addressed by a name and a slot number. In addition, each
 	/// contains a minimum value, a maximum value and a next value.
 	/// </summary>
-	public sealed class DbUidManager : IAttachable
+	public sealed class DbUidManager : DbAbstractAttachable
 	{
 
 
 		/// <summary>
 		/// Builds a new instance of <see cref="DbUidManager"/>.
 		/// </summary>
-		public DbUidManager()
+		public DbUidManager() : base()
 		{
-			// TODO Make this internal? Yes but then I must find a way to make it visible to the
-			// unit test project with the InternalsVisibleTo attributes.
-			// Marc
-
-			this.isAttached = false;
 		}
-
-
-		#region IAttachable Members
-
-		
-		/// <summary>
-		/// Attaches this instance to the specified database table.
-		/// </summary>
-		/// <param name="dbInfrastructure">The infrastructure.</param>
-		/// <param name="dbTable">The database table.</param>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure" /> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="dbTable" /> is <c>null</c>.</exception>
-		public void Attach(DbInfrastructure dbInfrastructure, DbTable dbTable)
-		{			
-			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
-			dbTable.ThrowIfNull ("dbTable");
-
-			this.dbInfrastructure = dbInfrastructure;
-			this.table = dbTable;
-
-			this.isAttached = true;
-		}
-
-
-		/// <summary>
-		/// Detaches this instance from the database.
-		/// </summary>
-		public void Detach()
-		{
-			this.isAttached = false;
-
-			this.dbInfrastructure = null;
-			this.table = null;
-		}
-
-
-		#endregion
 
 
 		/// <summary>
@@ -91,25 +49,25 @@ namespace Epsitec.Cresus.Database
 			min.ThrowIf (m => m < 0, "min cannot be lower than zero");
 			max.ThrowIf (m => m < 0, "max cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				SqlFieldList fields = new SqlFieldList ();
 
-				DbColumn columnName = this.table.Columns[Tags.ColumnName];
-				DbColumn columnSlot = this.table.Columns[Tags.ColumnUidSlot];
-				DbColumn columnMin = this.table.Columns[Tags.ColumnUidMin];
-				DbColumn columnMax = this.table.Columns[Tags.ColumnUidMax];
-				DbColumn columnNext = this.table.Columns[Tags.ColumnUidNext];
+				DbColumn columnName = this.DbTable.Columns[Tags.ColumnName];
+				DbColumn columnSlot = this.DbTable.Columns[Tags.ColumnUidSlot];
+				DbColumn columnMin = this.DbTable.Columns[Tags.ColumnUidMin];
+				DbColumn columnMax = this.DbTable.Columns[Tags.ColumnUidMax];
+				DbColumn columnNext = this.DbTable.Columns[Tags.ColumnUidNext];
 
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
-				fields.Add (this.dbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
 
-				transaction.SqlBuilder.InsertData (this.table.GetSqlName (), fields);
+				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fields);
 
-				this.dbInfrastructure.ExecuteSilent (transaction);
+				this.DbInfrastructure.ExecuteSilent (transaction);
 
 				transaction.Commit ();
 			}
@@ -131,7 +89,7 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				SqlFieldList conditions = new SqlFieldList ()
 				{
@@ -139,9 +97,9 @@ namespace Epsitec.Cresus.Database
 					this.CreateConditionForSlot (slot),
 				};
 
-				transaction.SqlBuilder.RemoveData (this.table.GetSqlName (), conditions);
+				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), conditions);
 
-				this.dbInfrastructure.ExecuteSilent (transaction);
+				this.DbInfrastructure.ExecuteSilent (transaction);
 
 				transaction.Commit ();
 			}
@@ -164,11 +122,11 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = new SqlSelect ();
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.table.GetSqlName ()));
+				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
 				query.Fields.Add
 				(
 					SqlField.CreateAggregate
@@ -182,7 +140,7 @@ namespace Epsitec.Cresus.Database
 
 				transaction.SqlBuilder.SelectData (query);
 
-				object value = this.dbInfrastructure.ExecuteScalar (transaction);
+				object value = this.DbInfrastructure.ExecuteScalar (transaction);
 
 				transaction.Commit ();
 
@@ -204,18 +162,18 @@ namespace Epsitec.Cresus.Database
 
 			name.ThrowIfNullOrEmpty ("name");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = new SqlSelect ();
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.table.GetSqlName ()));
+				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
 				query.Fields.Add (Tags.ColumnName, SqlField.CreateName (Tags.TableUid, Tags.ColumnName));
 				query.Fields.Add (Tags.ColumnUidSlot, SqlField.CreateName (Tags.TableUid, Tags.ColumnUidSlot));
 				query.Conditions.Add (this.CreateConditionForName (name));
 
 				transaction.SqlBuilder.SelectData (query);
 
-				DataTable table = this.dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 
 				List<int> names = new List<int> ();
 
@@ -249,7 +207,7 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				long minValue = this.GetValue (transaction, name, slot, Tags.ColumnUidMin);
 
@@ -276,7 +234,7 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				long maxValue = this.GetValue (transaction, name, slot, Tags.ColumnUidMax);
 
@@ -303,7 +261,7 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				long nextValue = this.GetValue (transaction, name, slot, Tags.ColumnUidNext);
 
@@ -332,7 +290,7 @@ namespace Epsitec.Cresus.Database
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 			min.ThrowIf (m => m < 0, "min cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.SetValue (transaction, name, slot, Tags.ColumnUidMin, min);
 
@@ -359,7 +317,7 @@ namespace Epsitec.Cresus.Database
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 			max.ThrowIf (m => m < 0, "max cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.SetValue (transaction, name, slot, Tags.ColumnUidMax, max);
 
@@ -386,7 +344,7 @@ namespace Epsitec.Cresus.Database
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 			next.ThrowIf (m => m < 0, "next cannot be lower than zero");
 
-			using (DbTransaction transaction = this.dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.SetValue (transaction, name, slot, Tags.ColumnUidNext, next);
 
@@ -408,14 +366,14 @@ namespace Epsitec.Cresus.Database
 		{
 			SqlSelect query = new SqlSelect ();
 
-			query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.table.GetSqlName ()));
+			query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
 			query.Fields.Add (valueName, SqlField.CreateName (Tags.TableUid, valueName));
 			query.Conditions.Add (this.CreateConditionForName (counterName));
 			query.Conditions.Add (this.CreateConditionForSlot (slot));
 
 			transaction.SqlBuilder.SelectData (query);
 
-			DataTable table = this.dbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+			DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 
 			if (table.Rows.Count == 0)
 			{
@@ -441,11 +399,11 @@ namespace Epsitec.Cresus.Database
 		/// <param name="value">The value to use.</param>
 		private void SetValue(DbTransaction transaction, string counterName, int slot, string valueName, long value)
 		{
-			DbColumn column = this.table.Columns[valueName];
+			DbColumn column = this.DbTable.Columns[valueName];
 
 			SqlFieldList fields = new SqlFieldList ()
 			{
-				this.dbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
+				this.DbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
 			};
 
 			SqlFieldList conditions = new SqlFieldList ()
@@ -454,8 +412,8 @@ namespace Epsitec.Cresus.Database
 				this.CreateConditionForSlot (slot),
 			};
 
-			transaction.SqlBuilder.UpdateData (this.table.GetSqlName (), fields, conditions);
-			this.dbInfrastructure.ExecuteNonQuery (transaction);
+			transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
+			this.DbInfrastructure.ExecuteNonQuery (transaction);
 		}
 
 
@@ -470,7 +428,7 @@ namespace Epsitec.Cresus.Database
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
-				SqlField.CreateName (this.table.Columns[Tags.ColumnName].GetSqlName ()),
+				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnName].GetSqlName ()),
 				SqlField.CreateConstant (name, DbRawType.String)
 			);
 		}
@@ -487,41 +445,10 @@ namespace Epsitec.Cresus.Database
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
-				SqlField.CreateName (this.table.Columns[Tags.ColumnUidSlot].GetSqlName ()),
+				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnUidSlot].GetSqlName ()),
 				SqlField.CreateConstant (slot, DbRawType.Int32)
 			);
 		}
-
-
-		/// <summary>
-		/// Checks that this instance is attached to a <see cref="DbInfrastructure"/>.
-		/// </summary>
-		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
-		private void CheckIsAttached()
-		{
-			if (!this.isAttached)
-			{
-				throw new System.InvalidOperationException ("Cannot use this instance because it is detached.");
-			}
-		}
-
-
-		/// <summary>
-		/// The state of this instance.
-		/// </summary>
-		private bool isAttached;
-
-
-		/// <summary>
-		/// The <see cref="DbInfrastructure"/> object to use to communicate with the database.
-		/// </summary>
-		private DbInfrastructure dbInfrastructure;
-
-
-		/// <summary>
-		/// The <see cref="DbTable"/> used to store the counters data.
-		/// </summary>
-		private DbTable table;
 
 
 	}
