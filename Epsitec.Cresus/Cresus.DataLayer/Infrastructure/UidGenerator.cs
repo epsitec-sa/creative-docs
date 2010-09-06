@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		/// <summary>
 		/// Gets the next unique id in any slot, starting from the slot given by
-		/// <paramref name="startSlotIndex."/>
+		/// <paramref name="startSlotIndex"/>
 		/// </summary>
 		/// <param name="startSlotIndex">The index of the first slot in which to try to generate the next unique id.</param>
 		/// <returns>The next unique id.</returns>
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Gets the next unique id in the given slot.
 		/// </summary>
-		/// <param name="startSlotIndex">The index of the slot in which to try to generate the next unique id.</param>
+		/// <param name="slotIndex">The index of the slot in which to try to generate the next unique id.</param>
 		/// <returns>The next unique id.</returns>
 		private long? InternalGetNextUidInSlot(int slotIndex)
 		{
