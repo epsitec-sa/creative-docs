@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		/// <summary>
+		/// Gets the active language id (either the language specific to this controller, or the
+		/// one defined globally in the UI settings).
+		/// </summary>
+		/// <value>The active language id.</value>
 		public string LanguageId
 		{
 			get
@@ -46,8 +51,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				return null;
 			}
+			set
+			{
+				this.languageId = value;
+			}
 		}
 
+		
 		public void Attach(AutoCompleteTextField widget)
 		{
 			foreach (string[] item in possibleItems)
@@ -137,6 +147,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				FormattedText formattedText = new FormattedText (value);
 
+				//	Handle formatted text, which could be stored as a multilingual text : the UI
+				//	can only display and handle one language at any given time.
+				
 				if (MultilingualText.IsMultilingual (formattedText))
 				{
 					MultilingualText multilingual = new MultilingualText (formattedText);
@@ -157,6 +170,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				var originalValue = this.marshaler.GetStringValue ();
 				var originalFormattedText = new FormattedText (originalValue);
+
+				//	Handle formatted text, which could be stored as a multilingual text : the UI
+				//	can only display and handle one language at any given time.
 
 				if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
 					(MultilingualText.IsDefaultLanguageId (this.LanguageId) == false))
