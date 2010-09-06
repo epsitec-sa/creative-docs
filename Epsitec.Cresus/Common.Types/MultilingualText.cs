@@ -12,7 +12,7 @@ namespace Epsitec.Common.Types
 	/// The <c>MultilingualText</c> class implements transforms from and to global,
 	/// multilingual <see cref="FormattedText"/> strings.
 	/// </summary>
-	public class MultilingualText
+	public class MultilingualText : System.IEquatable<MultilingualText>
 	{
 		public MultilingualText()
 		{
@@ -29,6 +29,46 @@ namespace Epsitec.Common.Types
 			this.texts.AddRange (MultilingualText.GetLanguageTexts (globalText.ToString ()));
 		}
 
+
+		/// <summary>
+		/// Gets the number of texts stored in this multilingual text instance.
+		/// </summary>
+		/// <value>The number of texts.</value>
+		public int Count
+		{
+			get
+			{
+				return this.texts.Count;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this multilingual text instance contains any localizations.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this multilingual text instance contains any localizations; otherwise, <c>false</c>.
+		/// </value>
+		public bool ContainsLocalizations
+		{
+			get
+			{
+				int count = this.Count;
+				
+				if (count > 1)
+                {
+					return true;
+                }
+				else if (count == 1)
+                {
+					if (this.ContainsLanguage (MultilingualText.DefaultLanguageId) == false)
+					{
+						return true;
+					}
+                }
+
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Determines whether this multilingual text contains the specified language.
@@ -48,6 +88,7 @@ namespace Epsitec.Common.Types
 				return this.texts.ContainsKey (languageId);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the formatted text for the specified language, or the
@@ -116,6 +157,15 @@ namespace Epsitec.Common.Types
 			this.texts[languageId] = text.ToString ();
 		}
 
+		/// <summary>
+		/// Clears the text for the specified language.
+		/// </summary>
+		/// <param name="languageId">The language id.</param>
+		public void ClearText(string languageId)
+		{
+			this.texts.Remove (languageId);
+		}
+
 
 		/// <summary>
 		/// Gets the global text containing all languages.
@@ -144,6 +194,21 @@ namespace Epsitec.Common.Types
 			return new FormattedText (buffer.ToString ());
 		}
 
+		public override string ToString()
+		{
+			return this.GetGlobalText ().ToString ();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as MultilingualText);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.texts.GetHashCode ();
+		}
+
 
 		/// <summary>
 		/// Determines whether the specified text is multilingual.
@@ -156,6 +221,22 @@ namespace Epsitec.Common.Types
 		{
 			return MultilingualText.IsMultilingual (text.ToString ());
 		}
+
+		#region IEquatable<MultilingualText> Members
+
+		public bool Equals(MultilingualText other)
+		{
+			if (other == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.GetGlobalText () == other.GetGlobalText ();
+			}
+		}
+
+		#endregion
 
 		
 		private static bool IsMultilingual(string text)
