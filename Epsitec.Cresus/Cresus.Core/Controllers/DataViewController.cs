@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// instances which have a parent/child relationship. The <see cref="ViewLayoutController"/>
 	/// is used for the layout.
 	/// </summary>
-	public class DataViewController : CoreViewController
+	public class DataViewController : CoreViewController, IWidgetUpdater
 	{
 		public DataViewController(string name, CoreData data)
 			: base (name)
@@ -250,6 +250,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.viewControllers.Any (x => x.Matches (controller));
 		}
 
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			this.viewLayoutController.Update ();
+		}
+
+		#endregion
+		
 
 		protected override void AboutToDiscard()
 		{

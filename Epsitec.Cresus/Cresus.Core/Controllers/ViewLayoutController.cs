@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Widgets;
@@ -12,7 +13,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class ViewLayoutController : CoreController
+	public class ViewLayoutController : CoreController, IWidgetUpdater
 	{
 		public ViewLayoutController(string name, Widget container)
 			: base (name)
@@ -81,6 +82,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			this.columns.ForEach (column => column.Update ());
+		}
+
+		#endregion
+		
+		
 		private void UpdateColumnLayout()
 		{
 			List<Visual> visuals = new List<Visual> ();
