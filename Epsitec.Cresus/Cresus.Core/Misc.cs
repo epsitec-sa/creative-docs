@@ -202,13 +202,13 @@ namespace Epsitec.Cresus.Core
 
 		private static FormattedText Tagged(FormattedText text, string tag)
 		{
-			return FormattedText.Concat ("<", tag, ">", text, "</", tag, ">");
+			return FormattedText.Concat ("<", tag, ">", TextFormatter.FormatText (text), "</", tag, ">");
 		}
 
 
 		public static FormattedText FirstLine(FormattedText text)
 		{
-			string t = text.ToString ();
+			string t = TextFormatter.FormatText (text).ToString ();
 
 			if (!string.IsNullOrEmpty (t))
 			{
@@ -225,6 +225,9 @@ namespace Epsitec.Cresus.Core
 
 		public static FormattedText AppendLine(FormattedText current, FormattedText text)
 		{
+			current = TextFormatter.FormatText (current);
+			text    = TextFormatter.FormatText (text);
+
 			if (current.IsNullOrEmpty)
 			{
 				return text;

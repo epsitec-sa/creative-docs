@@ -146,12 +146,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Retourne la liste des textes pour les recherches 'AutoComplete'.
 			return new string[]
 			{
-				x.LegalPerson.Name.ToSimpleText (),
-				x.NaturalPerson.Firstname.ToString (),
-				x.NaturalPerson.Lastname.ToString (),
-				x.Address.Street.StreetName.ToSimpleText (),
-				x.Address.Location.PostalCode.ToSimpleText (),
-				x.Address.Location.Name.ToSimpleText (),
+				TextFormatter.FormatText (x.LegalPerson.Name).ToSimpleText (),
+				TextFormatter.FormatText (x.NaturalPerson.Firstname).ToSimpleText (),
+				TextFormatter.FormatText (x.NaturalPerson.Lastname).ToSimpleText (),
+				TextFormatter.FormatText (x.Address.Street.StreetName).ToSimpleText (),
+				TextFormatter.FormatText (x.Address.Location.PostalCode).ToSimpleText (),
+				TextFormatter.FormatText (x.Address.Location.Name).ToSimpleText (),
 			};
 		}
 

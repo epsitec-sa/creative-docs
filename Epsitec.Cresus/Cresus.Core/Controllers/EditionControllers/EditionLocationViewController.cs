@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x  => this.Entity.Country = x.WrapNullEntity (),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
-				ToTextArrayConverter     = x => new string[] { x.Code, x.Name.ToSimpleText () },
+				ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
 			};
 

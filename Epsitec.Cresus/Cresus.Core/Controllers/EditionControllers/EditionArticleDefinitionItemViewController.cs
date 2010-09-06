@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
-				ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText (), x.Code },
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
 			};
 
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasureGroup (),
 
-				ToTextArrayConverter     = x => new string[] { x.Name.ToSimpleText () },
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
