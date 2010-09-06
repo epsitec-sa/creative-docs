@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.Types;
+using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 
@@ -154,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			{
 				DataConverter dataConverter = new DataConverter (dataContext);
 
-				System.Type type = typeof (bool);
+				INamedType type = new BooleanType ();
 				DbRawType rawType = DbRawType.Boolean;
 				DbSimpleType simpleType = DbSimpleType.Decimal;
 				DbNumDef numDef = DbNumDef.FromRawType (DbRawType.Boolean);
@@ -325,85 +326,73 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 		}
 
 
-		private IEnumerable<System.Tuple<System.Type, DbRawType, DbSimpleType, DbNumDef, object, object>> GetSampleValues2()
+		private IEnumerable<System.Tuple<INamedType, DbRawType, DbSimpleType, DbNumDef, object, object>> GetSampleValues2()
 		{
-			yield return System.Tuple.Create (typeof (bool), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (bool), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) (short) 1, (object) true);
-			yield return System.Tuple.Create (typeof (bool), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) (short) 0, (object) false);
+			yield return System.Tuple.Create ((INamedType) new BooleanType (), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new BooleanType (), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) (short) 1, (object) true);
+			yield return System.Tuple.Create ((INamedType) new BooleanType (), DbRawType.Boolean, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Boolean), (object) (short) 0, (object) false);
 
-			yield return System.Tuple.Create (typeof (short), DbRawType.Int16, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int16), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (short), DbRawType.Int16, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int16), (object) (short) 0, (object) (short) 0);
-			yield return System.Tuple.Create (typeof (short), DbRawType.Int16, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int16), (object) (short) 1, (object) (short) 1);
-			yield return System.Tuple.Create (typeof (short), DbRawType.Int16, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int16), (object) (short) 2, (object) (short) 2);
+			yield return System.Tuple.Create ((INamedType) new IntegerType (), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new IntegerType (), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 0, (object) (int) 0);
+			yield return System.Tuple.Create ((INamedType) new IntegerType (), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 1, (object) (int) 1);
+			yield return System.Tuple.Create ((INamedType) new IntegerType (), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 2, (object) (int) 2);
 
-			yield return System.Tuple.Create (typeof (int), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (int), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 0, (object) (int) 0);
-			yield return System.Tuple.Create (typeof (int), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 1, (object) (int) 1);
-			yield return System.Tuple.Create (typeof (int), DbRawType.Int32, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int32), (object) (int) 2, (object) (int) 2);
+			yield return System.Tuple.Create ((INamedType) new LongIntegerType (), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new LongIntegerType (), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 0, (object) (long) 0);
+			yield return System.Tuple.Create ((INamedType) new LongIntegerType (), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 1, (object) (long) 1);
+			yield return System.Tuple.Create ((INamedType) new LongIntegerType (), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 2, (object) (long) 2);
 
-			yield return System.Tuple.Create (typeof (long), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (long), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 0, (object) (long) 0);
-			yield return System.Tuple.Create (typeof (long), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 1, (object) (long) 1);
-			yield return System.Tuple.Create (typeof (long), DbRawType.Int64, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.Int64), (object) (long) 2, (object) (long) 2);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 0, (object) (decimal) 0);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 1, (object) (decimal) 1);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 2, (object) (decimal) 2);
 
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 0, (object) (decimal) 0);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 1, (object) (decimal) 1);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.SmallDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.SmallDecimal), (object) (decimal) 2, (object) (decimal) 2);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 0, (object) (decimal) 0);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 1, (object) (decimal) 1);
+			yield return System.Tuple.Create ((INamedType) new DecimalType (), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 2, (object) (decimal) 2);
 
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 0, (object) (decimal) 0);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 1, (object) (decimal) 1);
-			yield return System.Tuple.Create (typeof (decimal), DbRawType.LargeDecimal, DbSimpleType.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal), (object) (decimal) 2, (object) (decimal) 2);
-
-			yield return System.Tuple.Create (typeof (string), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (string), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) "test", (object) "test");
-			yield return System.Tuple.Create (typeof (string), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) "&<>;.!üä£ö", (object) "&<>;.!üä£ö");
+			yield return System.Tuple.Create ((INamedType) new StringType (), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new StringType (), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) "test", (object) "test");
+			yield return System.Tuple.Create ((INamedType) new StringType (), DbRawType.String, DbSimpleType.String, DbNumDef.FromRawType (DbRawType.String), (object) "&<>;.!üä£ö", (object) "&<>;.!üä£ö");
 
 			Epsitec.Common.Types.Time time1 = new Epsitec.Common.Types.Time (0);
 			Epsitec.Common.Types.Time time2 = new Epsitec.Common.Types.Time (1);
 			Epsitec.Common.Types.Time time3 = new Epsitec.Common.Types.Time (2);
 
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Time), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Time), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time1.ToDateTime (), (object) time1);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Time), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time2.ToDateTime (), (object) time2);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Time), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time3.ToDateTime (), (object) time3);
+			yield return System.Tuple.Create ((INamedType) new TimeType (), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new TimeType (), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time1.ToDateTime (), (object) time1);
+			yield return System.Tuple.Create ((INamedType) new TimeType (), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time2.ToDateTime (), (object) time2);
+			yield return System.Tuple.Create ((INamedType) new TimeType (), DbRawType.Time, DbSimpleType.Time, DbNumDef.FromRawType (DbRawType.Time), (object) time3.ToDateTime (), (object) time3);
 
 			Epsitec.Common.Types.Date date1 = new Epsitec.Common.Types.Date (1950, 12, 12);
 			Epsitec.Common.Types.Date date2 = new Epsitec.Common.Types.Date (1964, 7, 5);
 			Epsitec.Common.Types.Date date3 = new Epsitec.Common.Types.Date (1998, 1, 4);
 
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Date), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Date), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date1.ToDateTime (), (object) date1);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Date), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date2.ToDateTime (), (object) date2);
-			yield return System.Tuple.Create (typeof (Epsitec.Common.Types.Date), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date3.ToDateTime (), (object) date3);
+			yield return System.Tuple.Create ((INamedType) new DateType (), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new DateType (), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date1.ToDateTime (), (object) date1);
+			yield return System.Tuple.Create ((INamedType) new DateType (), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date2.ToDateTime (), (object) date2);
+			yield return System.Tuple.Create ((INamedType) new DateType (), DbRawType.Date, DbSimpleType.Date, DbNumDef.FromRawType (DbRawType.Date), (object) date3.ToDateTime (), (object) date3);
 
 			System.DateTime dateTime1 = new System.DateTime (7348923);
 			System.DateTime dateTime2 = new System.DateTime (5423523);
 			System.DateTime dateTime3 = new System.DateTime (5423542);
 
-			yield return System.Tuple.Create (typeof (System.DateTime), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (System.DateTime), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime1, (object) dateTime1);
-			yield return System.Tuple.Create (typeof (System.DateTime), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime2, (object) dateTime2);
-			yield return System.Tuple.Create (typeof (System.DateTime), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime3, (object) dateTime3);
-
-			System.Guid guid1 = System.Guid.NewGuid ();
-			System.Guid guid2 = System.Guid.NewGuid ();
-			System.Guid guid3 = System.Guid.NewGuid ();
-
-			yield return System.Tuple.Create (typeof (System.Guid), DbRawType.Guid, DbSimpleType.Guid, DbNumDef.FromRawType (DbRawType.Guid), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (System.Guid), DbRawType.Guid, DbSimpleType.Guid, DbNumDef.FromRawType (DbRawType.Guid), (object) guid1.ToString ("N"), (object) guid1);
-			yield return System.Tuple.Create (typeof (System.Guid), DbRawType.Guid, DbSimpleType.Guid, DbNumDef.FromRawType (DbRawType.Guid), (object) guid2.ToString ("N"), (object) guid2);
-			yield return System.Tuple.Create (typeof (System.Guid), DbRawType.Guid, DbSimpleType.Guid, DbNumDef.FromRawType (DbRawType.Guid), (object) guid3.ToString ("N"), (object) guid3);
+			yield return System.Tuple.Create ((INamedType) new DateTimeType (), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new DateTimeType (), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime1, (object) dateTime1);
+			yield return System.Tuple.Create ((INamedType) new DateTimeType (), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime2, (object) dateTime2);
+			yield return System.Tuple.Create ((INamedType) new DateTimeType (), DbRawType.DateTime, DbSimpleType.DateTime, DbNumDef.FromRawType (DbRawType.DateTime), (object) dateTime3, (object) dateTime3);
 
 			byte[] byteArray1 = System.Guid.NewGuid ().ToByteArray ();
 			byte[] byteArray2 = System.Guid.NewGuid ().ToByteArray ();
 			byte[] byteArray3 = System.Guid.NewGuid ().ToByteArray ();
 
-			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) System.DBNull.Value, (object) System.DBNull.Value);
-			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray1, (object) byteArray1);
-			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray2, (object) byteArray2);
-			yield return System.Tuple.Create (typeof (byte[]), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray3, (object) byteArray3);
+			yield return System.Tuple.Create ((INamedType) new BinaryType (), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) System.DBNull.Value, (object) System.DBNull.Value);
+			yield return System.Tuple.Create ((INamedType) new BinaryType (), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray1, (object) byteArray1);
+			yield return System.Tuple.Create ((INamedType) new BinaryType (), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray2, (object) byteArray2);
+			yield return System.Tuple.Create ((INamedType) new BinaryType (), DbRawType.ByteArray, DbSimpleType.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray), (object) byteArray3, (object) byteArray3);
+
+			yield break;
 		}
 
 
