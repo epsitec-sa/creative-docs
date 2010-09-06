@@ -158,53 +158,14 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 		private IEnumerable<KeyValuePair<AbstractEntity, DbKey>> ProcessPersistenceJobs(IEnumerable<AbstractPersistenceJob> jobs, IEnumerable<DbTable> affectedTables)
 		{
-			bool done = false;
-			int nbTries = 0;
-			System.Random dice = new System.Random ();
 			IEnumerable<KeyValuePair<AbstractEntity, DbKey>> newEntityKeys = new List<KeyValuePair<AbstractEntity, DbKey>> ();
 
-			do
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
 			{
-				try
-				{
-					using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, affectedTables))
-					{
-						try
-						{
-							newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
+				newEntityKeys = this.JobProcessor.ProcessJobs (transaction, jobs);
 
-							transaction.Commit ();
-						}
-						catch (System.Exception e)
-						{
-							transaction.Rollback ();
-							throw;
-						}
-					}
-
-					done = true;
-				}
-				catch (Database.Exceptions.GenericException e)
-				{
-					
-					
-					if (nbTries <= 25)
-					{
-						int minWaitTime = 10;
-						int maxWaitTime = minWaitTime + (10 * nbTries);
-						int waitTime = dice.Next (minWaitTime, maxWaitTime);
-
-						System.Threading.Thread.Sleep (waitTime);
-
-						nbTries++;
-					}
-					else
-					{
-						throw new System.Exception ("Impossible to persist changes to the database.", e);
-					}
-				}
+				transaction.Commit ();
 			}
-			while (!done);
 
 			return newEntityKeys;
 		}
