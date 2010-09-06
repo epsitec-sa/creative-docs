@@ -216,6 +216,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
 			};
 
+			//	HACK: faire cela proprement avec des commandes multi-états
+
 			var selectLanaugage1 = new Button ()
 			{
 				Parent = frame,
