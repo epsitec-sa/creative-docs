@@ -228,7 +228,7 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < this.records.Length; i++)
 			{
-				if (this.records[i].CommandState == state)
+				if (this.records[i].Command == state.Command)
 				{
 					if (this.records[i].ClearCommandState ())
 					{
