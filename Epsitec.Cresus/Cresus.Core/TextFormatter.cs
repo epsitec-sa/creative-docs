@@ -186,6 +186,17 @@ namespace Epsitec.Cresus.Core
 				return ((Date) value).ToDateTime ().ToShortDateString ();
 			}
 
+			if (value is FormattedText)
+			{
+				FormattedText formattedText = (FormattedText) value;
+				
+				if (MultilingualText.IsMultilingual (formattedText))
+                {
+					MultilingualText multilingualText = new MultilingualText (formattedText);
+					return multilingualText.GetDefaultText ().ToString ();
+                }
+			}
+
 			return value.ToString ();
 		}
 	}

@@ -113,11 +113,43 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetMarshalerText()
 		{
-			return this.marshaler.GetStringValue ();
+			string value = this.marshaler.GetStringValue ();
+
+			if (marshaler.MarshaledType == typeof (FormattedText))
+			{
+				FormattedText formattedText = new FormattedText (value);
+
+				if (MultilingualText.IsMultilingual (formattedText))
+				{
+					MultilingualText multilingual = new MultilingualText (formattedText);
+
+					if (multilingual.ContainsLocalizations)
+					{
+						value = multilingual.GetTextOrDefault (this.languageId).ToString ();
+					}
+				}
+			}
+
+			return value;
 		}
 
 		private void SetMarshalerText(string text)
 		{
+			if (marshaler.MarshaledType == typeof (FormattedText))
+			{
+				var originalValue = this.marshaler.GetStringValue ();
+				var originalFormattedText = new FormattedText (originalValue);
+
+				if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
+					(MultilingualText.IsDefaultLanguageId (this.languageId) == false))
+				{
+					var multilingual = new MultilingualText (originalFormattedText);
+
+					multilingual.SetText (this.languageId, new FormattedText (text));
+					text = multilingual.ToString ();
+				}
+			}
+			
 			this.marshaler.SetStringValue (text);
 		}
 
@@ -141,6 +173,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly IEnumerable<string[]> possibleItems;
 		private readonly System.Func<string[], FormattedText> getUserText;
 		private readonly bool useFormattedText;
+		
 		private Widget widget;
+		private string languageId;
 	}
 }
