@@ -100,6 +100,8 @@ namespace Epsitec.Common.Types
 		{
 			string text;
 
+			MultilingualText.FixLanguageId (ref languageId);			
+
 			if (this.texts.TryGetValue (languageId, out text))
 			{
 				return new FormattedText (text);
@@ -118,6 +120,8 @@ namespace Epsitec.Common.Types
 		public FormattedText? GetText(string languageId)
 		{
 			string text;
+
+			MultilingualText.FixLanguageId (ref languageId);
 
 			if (this.texts.TryGetValue (languageId, out text))
 			{
@@ -154,6 +158,7 @@ namespace Epsitec.Common.Types
 		/// <param name="text">The formatted text.</param>
 		public void SetText(string languageId, FormattedText text)
 		{
+			MultilingualText.FixLanguageId (ref languageId);			
 			this.texts[languageId] = text.ToString ();
 		}
 
@@ -163,6 +168,7 @@ namespace Epsitec.Common.Types
 		/// <param name="languageId">The language id.</param>
 		public void ClearText(string languageId)
 		{
+			MultilingualText.FixLanguageId (ref languageId);			
 			this.texts.Remove (languageId);
 		}
 
@@ -222,6 +228,15 @@ namespace Epsitec.Common.Types
 			return MultilingualText.IsMultilingual (text.ToString ());
 		}
 
+		public static bool IsDefaultLanguageId(string languageId)
+		{
+			if (string.IsNullOrEmpty (languageId))
+            {
+				return true;
+            }
+			return (languageId == MultilingualText.DefaultLanguageId);
+		}
+
 		#region IEquatable<MultilingualText> Members
 
 		public bool Equals(MultilingualText other)
@@ -238,6 +253,14 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+
+		private static void FixLanguageId(ref string languageId)
+		{
+			if (string.IsNullOrEmpty (languageId))
+			{
+				languageId = MultilingualText.DefaultLanguageId;
+			}
+		}
 		
 		private static bool IsMultilingual(string text)
 		{
