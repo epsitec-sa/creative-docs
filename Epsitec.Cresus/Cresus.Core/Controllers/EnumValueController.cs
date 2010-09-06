@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				foreach (var item in possibleItems)
 				{
-					string text = this.getUserText (item).ToSimpleText ();
+					string text = TextFormatter.FormatText (this.getUserText (item)).ToSimpleText ();
 					list.Add (text);
 				}
 

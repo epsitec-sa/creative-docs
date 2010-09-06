@@ -146,6 +146,8 @@ namespace Epsitec.Cresus.Core.Helpers
 				}
 			}
 
+			description = TextFormatter.FormatText (description);  // enlève les balises <div>, selon la langue
+
 			if (replaceTags)
 			{
 				description = ArticleParameterHelper.ArticleDescriptionReplaceTags (article, description);

@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Core.Helpers
 			string date = Misc.GetDateTimeShortDescription (x.LastModificationDate);
 			string total = Misc.PriceToString (InvoiceDocumentHelper.GetTotalPriceTTC (x));
 
-			string billing  = GetShortMailContactSummary (x.BillingMailContact).ToString ();
-			string shipping = GetShortMailContactSummary (x.ShippingMailContact).ToString ();
+			FormattedText billing  = GetShortMailContactSummary (x.BillingMailContact);
+			FormattedText shipping = GetShortMailContactSummary (x.ShippingMailContact);
 
 			FormattedText addresses;
 			if (x.BillingMailContact == x.ShippingMailContact || (!x.BillingMailContact.IsActive () && !x.ShippingMailContact.IsActive ()))
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			if (x.IsActive ())
 			{
 				return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
-												 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "\n",
+												 x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, "\n",
 												 x.Address.Street.StreetName, "\n",
 												 x.Address.Location.PostalCode, x.Address.Location.Name);
 			}
@@ -130,15 +130,17 @@ namespace Epsitec.Cresus.Core.Helpers
 				return null;
 			}
 
-			if (!billingDetails.InstalmentName.IsNullOrEmpty)
+			var instalmentName = TextFormatter.FormatText (billingDetails.InstalmentName);
+
+			if (!instalmentName.IsNullOrEmpty)
 			{
 				if (parenthesis)
 				{
-					return string.Concat ("(", billingDetails.InstalmentName, ")");
+					return TextFormatter.FormatText ("(", instalmentName, ")");
 				}
 				else
 				{
-					return billingDetails.InstalmentName;
+					return instalmentName;
 				}
 			}
 

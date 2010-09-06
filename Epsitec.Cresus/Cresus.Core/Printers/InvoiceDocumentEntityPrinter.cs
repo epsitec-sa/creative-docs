@@ -287,15 +287,17 @@ namespace Epsitec.Cresus.Core.Printers
 				if (group == null)
 				{
 					title      = "Concerne";
-					text       = this.entity.DocumentTitle;
+					text       = TextFormatter.FormatText (this.entity.DocumentTitle);
 					cellBorder = CellBorder.Empty;
 					margins    = new Margins (0);
 					color      = Color.Empty;
 				}
 				else
 				{
+					var groupName = TextFormatter.FormatText (group.Name);
+
 					title      = "Atelier";
-					text       = FormattedText.Concat ("<b>", group.Name.IsNullOrWhiteSpace ? group.Code : group.Name, "</b>");
+					text       = FormattedText.Concat ("<b>", groupName.IsNullOrWhiteSpace ? group.Code : groupName, "</b>");
 					cellBorder = CellBorder.Default;
 					margins    = new Margins (1);
 					color      = Color.FromBrightness (0.9);

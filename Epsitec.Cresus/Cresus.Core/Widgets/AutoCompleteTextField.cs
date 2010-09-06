@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					var value = this.items.GetValue (i);
 
-					string full = this.ValueToDescriptionConverter (value).ToString ();
+					string full = TextFormatter.FormatText (this.ValueToDescriptionConverter (value)).ToString ();
 					if (full == original)  // trouvé exactement ?
 					{
 						list1.Clear ();
@@ -675,12 +675,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.ValueToDescriptionConverter == null)
 				{
-					return this.items.GetValue (index).ToString ();
+					return TextFormatter.FormatText (this.items.GetValue (index)).ToString ();
 				}
 				else
 				{
 					object value = this.items.GetValue (index);
-					return this.ValueToDescriptionConverter (value).ToString ();
+					return TextFormatter.FormatText (this.ValueToDescriptionConverter (value)).ToString ();
 				}
 			}
 		}

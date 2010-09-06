@@ -73,8 +73,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleDefinitions (this.DataContext),
 
-					ToTextArrayConverter     = x => new string[] { x.IdA, x.ShortDescription.ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription.ToSimpleText ()),
+					ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
+					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
 				});
 		}
 
