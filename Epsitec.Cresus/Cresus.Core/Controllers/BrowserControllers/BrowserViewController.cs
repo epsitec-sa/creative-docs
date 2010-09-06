@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserViewController : CoreViewController, INotifyCurrentChanged
+	public class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
 		public BrowserViewController(string name, CoreData data)
 			: base (name)
@@ -359,6 +359,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.NotifySelectedItemChange ();
 			}
 		}
+
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			this.collection.Invalidate ();
+			this.RefreshScrollList ();
+		}
+
+		#endregion
 
 		#region INotifyCurrentChanged Members
 
