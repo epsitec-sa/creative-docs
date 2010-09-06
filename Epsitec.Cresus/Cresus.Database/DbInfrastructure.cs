@@ -2755,10 +2755,10 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidSlot, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidMin, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidMax, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidNext, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
@@ -2793,6 +2793,12 @@ namespace Epsitec.Cresus.Database
 		
 		private sealed class TypeHelper
 		{
+
+			// TODO I'm not convinced that how I implemented the stuff for the default types is the
+			// most elegant one. It might require some kind of refactoring, or maybe the usage of
+			// resources. I don't really know.
+			// Marc
+
 			public TypeHelper(DbInfrastructure infrastructure)
 			{
 				this.infrastructure = infrastructure;
@@ -2887,11 +2893,29 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
+			public DbTypeDef					DefaultInteger
+			{
+				get
+				{
+					return this.defaultInteger;
+				}
+			}
+
+			public DbTypeDef					DefaultLongInteger
+			{
+				get
+				{
+					return this.defaultLongInteger;
+				}
+			}
+
+
 			public void RegisterTypes()
 			{
 				this.InitializeNumTypes ();
 				this.InitializeStrTypes ();
 				this.InitializeOtherTypes ();
+				this.InitializeDefaultTypes ();
 				
 				this.AssertAllTypesReady ();
 			}
@@ -2911,6 +2935,9 @@ namespace Epsitec.Cresus.Database
 				
 				this.otherTypeDateTime     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
 				this.otherTypeReqData      = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
+
+				this.defaultInteger		   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (IntegerType.Default).Name);
+				this.defaultLongInteger	   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (LongIntegerType.Default).Name);
 				
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
@@ -2925,6 +2952,9 @@ namespace Epsitec.Cresus.Database
 				
 				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
 				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
+
+				this.infrastructure.internalTypes.Add (this.defaultInteger);
+				this.infrastructure.internalTypes.Add (this.defaultLongInteger);
 				
 				this.AssertAllTypesReady ();
 			}
@@ -2966,6 +2996,15 @@ namespace Epsitec.Cresus.Database
 				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
 			}
 
+			public void InitializeDefaultTypes()
+			{
+				this.defaultInteger		= new DbTypeDef (IntegerType.Default);
+				this.defaultLongInteger = new DbTypeDef (LongIntegerType.Default);
+
+				this.infrastructure.internalTypes.Add (this.defaultInteger);
+				this.infrastructure.internalTypes.Add (this.defaultLongInteger);
+			}
+
 			private void AssertAllTypesReady()
 			{
 				System.Diagnostics.Debug.Assert (this.numTypeKeyId != null);
@@ -2981,6 +3020,9 @@ namespace Epsitec.Cresus.Database
 				
 				System.Diagnostics.Debug.Assert (this.otherTypeDateTime != null);
 				System.Diagnostics.Debug.Assert (this.otherTypeReqData != null);
+				
+				System.Diagnostics.Debug.Assert (this.defaultInteger != null);
+				System.Diagnostics.Debug.Assert (this.defaultLongInteger != null);
 			}
 
 			private DbInfrastructure			infrastructure;
@@ -2998,6 +3040,9 @@ namespace Epsitec.Cresus.Database
 			private DbTypeDef					strTypeInfoXml;
 			private DbTypeDef					strTypeDictKey;
 			private DbTypeDef					strTypeDictValue;
+
+			private DbTypeDef					defaultInteger;
+			private DbTypeDef					defaultLongInteger;
 		}
 		
 		#endregion

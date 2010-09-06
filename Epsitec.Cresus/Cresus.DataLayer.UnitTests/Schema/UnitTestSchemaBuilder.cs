@@ -574,8 +574,13 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 			yield return DateType.Default;
 			yield return DecimalType.Default;
 			yield return DoubleType.Default;
-			yield return IntegerType.Default;
-			yield return LongIntegerType.Default;
+
+			// Don't try with the following ones, because they are already added by DbInfrastructure
+			// for the uid counters.
+			// Marc
+
+			//yield return IntegerType.Default;
+			//yield return LongIntegerType.Default;
 		}
 
 
