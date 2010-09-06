@@ -590,7 +590,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (textField);
-			this.container.WidgetUpdaters.Add (valueController);
+			this.container.Add (valueController);
 
 			return textField;
 		}
@@ -627,7 +627,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new TextValueController (marshaler);
 			valueController.Attach (textField);
-			this.container.WidgetUpdaters.Add (valueController);
+			this.container.Add (valueController);
 
 			return textField;
 		}
@@ -725,7 +725,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new TextValueController (marshaler, possibleItems, getUserText);
 			valueController.Attach (textField);
-			this.container.WidgetUpdaters.Add (valueController);
+			this.container.Add (valueController);
 
 			return textField;
 		}
@@ -823,7 +823,7 @@ namespace Epsitec.Cresus.Core
 
 			var valueController = new EnumValueController<T> (marshaler, possibleItems, getUserText);
 			valueController.Attach (textField);
-			this.container.WidgetUpdaters.Add (valueController);
+			this.container.Add (valueController);
 
 			return textField;
 		}
@@ -837,7 +837,7 @@ namespace Epsitec.Cresus.Core
 			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, x => controller.SetValue (x as T), controller.ReferenceController);
 
 			controller.Attach (autoCompleteTextField);
-			this.container.WidgetUpdaters.Add (controller);
+			this.container.Add (controller);
 
 			return autoCompleteTextField;
 		}

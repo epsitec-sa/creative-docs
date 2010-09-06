@@ -49,7 +49,21 @@ namespace Epsitec.Cresus.Core
 					languageId = null;
 				}
 
+				var oldLanguageId = this.LanguageId;
+
 				this.languageId = languageId;
+
+				var newLanguageId = this.LanguageId;
+
+				if (oldLanguageId != newLanguageId)
+				{
+					this.NotifyLanguageIdChanged (oldLanguageId, newLanguageId);
+				}
+			}
+
+			private void NotifyLanguageIdChanged(string oldLanguageId, string newLanguageId)
+			{
+				CoreProgram.Application.MainWindowController.Update ();
 			}
 
 

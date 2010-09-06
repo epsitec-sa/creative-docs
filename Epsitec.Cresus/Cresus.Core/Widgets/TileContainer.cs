@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// takes into account the tile arrows. There is exactly one <c>TileContainer</c>
 	/// for every column managed by the <see cref="ViewLayoutController"/>.
 	/// </summary>
-	public class TileContainer : FrameBox
+	public class TileContainer : FrameBox, IWidgetUpdater
 	{
 		public TileContainer(CoreViewController controller)
 		{
@@ -37,12 +37,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public List<IWidgetUpdater> WidgetUpdaters
+		public void Add(IWidgetUpdater widgetUpdater)
 		{
-			get
-			{
-				return this.widgetUpdaters;
-			}
+			this.widgetUpdaters.Add (widgetUpdater);
 		}
 
 		public void UpdateAllWidgets()
@@ -53,6 +50,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			this.UpdateAllWidgets ();
+		}
+
+		#endregion
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
 		{

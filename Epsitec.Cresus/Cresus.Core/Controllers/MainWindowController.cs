@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -14,7 +15,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindowController : CoreViewController
+	public class MainWindowController : CoreViewController, IWidgetUpdater
 	{
 		public MainWindowController(CoreData data, CommandContext commandContext)
 			: base ("MainWindow")
@@ -61,6 +62,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.contentController.CreateUI (this.contentBox);
 		}
 
+
+		#region IWidgetUpdater Members
+
+		public void Update()
+		{
+			this.contentController.GetSubControllers ().Select (x => x as IWidgetUpdater).Where (x => x != null).ForEach (x => x.Update ());
+		}
+
+		#endregion
+		
 
 
 		private readonly CoreData				data;
