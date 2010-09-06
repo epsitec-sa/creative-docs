@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// with <see cref="TitleTile"/>s and <see cref="SummaryTile"/>s based on the
 	/// <see cref="SummaryData"/> found in <see cref="SummaryDataItems"/>.
 	/// </summary>
-	public sealed class TileContainerController : System.IDisposable, IClickSimulator
+	public sealed class TileContainerController : System.IDisposable, IClickSimulator, IWidgetUpdater
 	{
 		private TileContainerController(TileContainer container, Widget parent = null)
 		{
@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.navigator.Register (this);
 			
 			this.refreshTimer.Start ();
+			this.container.Add (this);
 		}
 
 
@@ -218,6 +219,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
+		#region IWidgetUpdater Members
+
+		void IWidgetUpdater.Update()
+		{
+			this.RefreshCollectionItems ();
+		}
+
+		#endregion
 
 		#region IDisposable Members
 
