@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");

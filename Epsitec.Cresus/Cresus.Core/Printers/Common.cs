@@ -15,19 +15,19 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public static class Common
 	{
-		public static bool IsPrinterAndPageMatching(Printers.PrinterFunction printerFunction, Printers.PageType pageType)
+		public static bool IsPrinterAndPageMatching(Printers.PrinterUnitFunction printerUnitFunction, Printers.PageType pageType)
 		{
-			//	Retourne true si la fonction d'une imprimante est compatible avec le type d'une page.
+			//	Retourne true si la fonction d'une unité d'impression est compatible avec le type d'une page.
 			//	Si oui, bingo, on peut imprimer !
-			if (printerFunction == Printers.PrinterFunction.ForAllPages ||
-				printerFunction == Printers.PrinterFunction.ForPagesCopy)  // imprimente pour tous les types de page ?
+			if (printerUnitFunction == Printers.PrinterUnitFunction.ForAllPages ||
+				printerUnitFunction == Printers.PrinterUnitFunction.ForPagesCopy)  // unité d'impression pour tous les types de page ?
 			{
 				return true;
 			}
 
-			if ((printerFunction == Printers.PrinterFunction.ForFirstPage      && pageType == Printers.PageType.First    ) ||
-				(printerFunction == Printers.PrinterFunction.ForFollowingPages && pageType == Printers.PageType.Following) ||
-				(printerFunction == Printers.PrinterFunction.ForEsrPage        && pageType == Printers.PageType.ESR      ))
+			if ((printerUnitFunction == Printers.PrinterUnitFunction.ForFirstPage      && pageType == Printers.PageType.First    ) ||
+				(printerUnitFunction == Printers.PrinterUnitFunction.ForFollowingPages && pageType == Printers.PageType.Following) ||
+				(printerUnitFunction == Printers.PrinterUnitFunction.ForEsrPage        && pageType == Printers.PageType.ESR      ))
 			{
 				return true;
 			}

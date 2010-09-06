@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public DocumentPrinter GetDocumentPrinter(PrinterFunction printerFunction)
+		public DocumentPrinter GetDocumentPrinter(PrinterUnitFunction printerFunction)
 		{
 			return this.printers.Where (x => x.PrinterFunction == printerFunction).FirstOrDefault ();
 		}
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				DocumentPrinter all = this.GetDocumentPrinter (PrinterFunction.ForAllPages);
+				DocumentPrinter all = this.GetDocumentPrinter (PrinterUnitFunction.ForAllPages);
 				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
 					return true;
@@ -83,8 +83,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 				foreach (var p in this.printers)
 				{
-					if (p.PrinterFunction == PrinterFunction.ForAllPages ||
-						p.PrinterFunction == PrinterFunction.ForPagesCopy)
+					if (p.PrinterFunction == PrinterUnitFunction.ForAllPages ||
+						p.PrinterFunction == PrinterUnitFunction.ForPagesCopy)
 					{
 						continue;
 					}
@@ -187,20 +187,20 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		#region Add printers to use
-		public void AddPrinterBase()
+		public void AddBasePrinterUnit()
 		{
-			//	Ajoute les imprimantes de base, qui devraient toujours exister.
-			this.printers.Add (new DocumentPrinter (PrinterFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
-			this.printers.Add (new DocumentPrinter (PrinterFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
+			//	Ajoute les unités d'impression de base, qui devraient toujours exister.
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
 
-			this.printers.Add (new DocumentPrinter (PrinterFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
-			this.printers.Add (new DocumentPrinter (PrinterFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
 		}
 
-		public void AddPrinterEsr()
+		public void AddEsrPrinterUnit()
 		{
-			//	Ajoute l'imprimante spécifique pour les BV.
-			this.printers.Add (new DocumentPrinter (PrinterFunction.ForEsrPage,        "Spec", "Pour le BV :"                            ));
+			//	Ajoute l'unité d'impression spécifique pour les BV.
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForEsrPage,        "Spec", "Pour le BV :"                            ));
 		}
 		#endregion
 

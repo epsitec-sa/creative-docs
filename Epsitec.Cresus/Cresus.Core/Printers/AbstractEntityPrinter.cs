@@ -79,17 +79,17 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool IsEmpty(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
+		public bool IsEmpty(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
 			return this.documentContainer.IsEmpty (printerFunctionUsed);
 		}
 
-		public int[] GetPhysicalPages(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
+		public int[] GetPhysicalPages(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
 			return this.documentContainer.GetPhysicalPages (printerFunctionUsed);
 		}
 
-		public int PageCount(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
+		public int PageCount(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
 			return this.documentContainer.PageCount (printerFunctionUsed);
 		}

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application.AttachDialog (this);
 
 			this.pagePreviews = new List<Widgets.PreviewEntity> ();
-			this.printerList = Printers.PrinterSettings.GetPrinterList ();
+			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 
 			this.entityPrinter.IsPreview = true;
 			this.entityPrinter.BuildSections ();
@@ -136,72 +136,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 			}
 
-			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1 ||
-				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
-			{
-				this.debugPrevButton1 = new GlyphButton
-				{
-					Parent = this.footer,
-					GlyphShape = Common.Widgets.GlyphShape.Minus,
-					PreferredWidth = 20,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (50, 0, 0, 0),
-				};
-
-				this.debugParam1 = new StaticText
-				{
-					Parent = this.footer,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredWidth = 30,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-				this.debugNextButton1 = new GlyphButton
-				{
-					Parent = this.footer,
-					GlyphShape = Common.Widgets.GlyphShape.Plus,
-					PreferredWidth = 20,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-
-				this.debugPrevButton2 = new GlyphButton
-				{
-					Parent = this.footer,
-					GlyphShape = Common.Widgets.GlyphShape.Minus,
-					PreferredWidth = 20,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (20, 0, 0, 0),
-				};
-
-				this.debugParam2 = new StaticText
-				{
-					Parent = this.footer,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-					PreferredWidth = 30,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-				this.debugNextButton2 = new GlyphButton
-				{
-					Parent = this.footer,
-					GlyphShape = Common.Widgets.GlyphShape.Plus,
-					PreferredWidth = 20,
-					PreferredHeight = 20,
-					Dock = DockStyle.Left,
-					Margins = new Margins (0, 0, 0, 0),
-				};
-
-				this.UpdateDebug ();
-			}
+			ToolTip.Default.SetToolTip (this.pageRank,     "Page(s) visible(s)");
+			ToolTip.Default.SetToolTip (this.pageScroller, "Montre une autre page");
 
 			this.closeButton = new Button ()
 			{
@@ -220,6 +156,80 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 10, 0, 0),
 				TabIndex = 1,
 			};
+
+			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug1 ||
+				this.entityPrinter.EntityPrintingSettings.DocumentTypeEnumSelected == DocumentType.Debug2)
+			{
+				{
+					var frame = UIBuilder.CreateMiniToolbar (this.footer, 24);
+					frame.PreferredWidth = 70;
+					frame.Margins = new Margins (1, 10, 0, 0);
+					frame.Dock = DockStyle.Right;
+
+					this.debugPrevButton2 = new GlyphButton
+					{
+						Parent = frame,
+						GlyphShape = Common.Widgets.GlyphShape.Minus,
+						PreferredWidth = 20,
+						PreferredHeight = 20,
+						Dock = DockStyle.Left,
+					};
+
+					this.debugParam2 = new StaticText
+					{
+						Parent = frame,
+						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+						PreferredWidth = 30,
+						PreferredHeight = 20,
+						Dock = DockStyle.Fill,
+					};
+
+					this.debugNextButton2 = new GlyphButton
+					{
+						Parent = frame,
+						GlyphShape = Common.Widgets.GlyphShape.Plus,
+						PreferredWidth = 20,
+						PreferredHeight = 20,
+						Dock = DockStyle.Right,
+					};
+				}
+
+				{
+					var frame = UIBuilder.CreateMiniToolbar (this.footer, 24);
+					frame.PreferredWidth = 70;
+					frame.Margins = new Margins (0, 0, 0, 0);
+					frame.Dock = DockStyle.Right;
+
+					this.debugPrevButton1 = new GlyphButton
+					{
+						Parent = frame,
+						GlyphShape = Common.Widgets.GlyphShape.Minus,
+						PreferredWidth = 20,
+						PreferredHeight = 20,
+						Dock = DockStyle.Left,
+					};
+
+					this.debugParam1 = new StaticText
+					{
+						Parent = frame,
+						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+						PreferredWidth = 30,
+						PreferredHeight = 20,
+						Dock = DockStyle.Fill,
+					};
+
+					this.debugNextButton1 = new GlyphButton
+					{
+						Parent = frame,
+						GlyphShape = Common.Widgets.GlyphShape.Plus,
+						PreferredWidth = 20,
+						PreferredHeight = 20,
+						Dock = DockStyle.Right,
+					};
+				}
+
+				this.UpdateDebug ();
+			}
 
 			{
 				var frame = UIBuilder.CreateMiniToolbar (this.footer, 24);
@@ -542,9 +552,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 					i++;
 				}
 
-				string printer = (dico.Count > 1) ? "les imprimantes" : "l'imprimante";
+				string printerUnit = (dico.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
 
-				return string.Format ("Cette page sera imprimée avec {0} {1}", printer, builder.ToString ());
+				return string.Format ("Cette page sera imprimée avec {0} {1}", printerUnit, builder.ToString ());
 			}
 		}
 
@@ -563,8 +573,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					if (Printers.Common.IsPrinterAndPageMatching (documentPrinter.PrinterFunction, pageType))
 					{
-						var p = this.printerList.Where (x => x.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault();
-						int copies = (p == null) ? 1 : p.Copies;
+						var pu = this.printerUnitList.Where (x => x.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault();
+						int copies = (pu == null) ? 1 : pu.Copies;
 
 						if (dico.ContainsKey (documentPrinter.LogicalPrinterName))
 						{
@@ -587,7 +597,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.debugParam1.Text = this.entityPrinter.DebugParam1.ToString ();
 			this.debugParam2.Text = this.entityPrinter.DebugParam2.ToString ();
 
-			this.pagePreviews[0].Invalidate ();
+			if (this.pagePreviews.Count != 0)
+			{
+				this.pagePreviews[0].Invalidate ();
+			}
 		}
 
 
@@ -654,7 +667,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button									closeButton;
 
 		private double									currentZoom;
-		private List<Printer>							printerList;
+		private List<PrinterUnit>						printerUnitList;
 
 		private int										currentPage;
 		private int										showedPageCount;

@@ -161,7 +161,7 @@
     <Compile Include="Printers\JobPrintEngine.cs" />
     <Compile Include="Printers\EntityPrintingSettings.cs" />
     <Compile Include="Printers\PrinterSettings.cs" />
-    <Compile Include="Printers\PrinterFunction.cs" />
+    <Compile Include="Printers\PrinterUnitFunction.cs" />
     <Compile Include="Printers\PageType.cs" />
     <Compile Include="Printers\DocumentPrinter.cs" />
     <Compile Include="Printers\DocumentType.cs" />
@@ -317,7 +317,7 @@
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
-    <Compile Include="Printers\Printer.cs" />
+    <Compile Include="Printers\PrinterUnit.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="CoreApplication.Paths.cs" />

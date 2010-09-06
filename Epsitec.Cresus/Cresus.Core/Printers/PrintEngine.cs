@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static void Print(IEnumerable<AbstractEntity> collection, AbstractEntityPrinter entityPrinter = null)
 		{
-			//	Imprime plusieurs entités sur les imprimantes/bacs correspondants.
+			//	Imprime plusieurs entités sur les unités d'impression correspondantes.
 			//	Par exemple:
 			//		page 1: Imprimante A bac 1
 			//		page 2: Imprimante A bac 1
@@ -74,19 +74,19 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 
-			//	Vérifie si un minimun d'imprimantes sont définies pour imprimer le type de document choisi.
+			//	Vérifie si un minimun d'unités d'impression sont définies pour imprimer le type de document choisi.
 			DocumentTypeDefinition documentType = entityPrinter.DocumentTypeSelected;
 
 			if (!documentType.IsDocumentPrintersDefined)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs imprimantes n'ont pas été définies.").OpenDialog ();
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une ou plusieurs unités d'impression n'ont pas été définies.").OpenDialog ();
 				return;
 			}
 
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
 			List<SectionToPrint> sections = new List<SectionToPrint> ();
-			List<Printer> printerList = PrinterSettings.GetPrinterList ();
+			List<PrinterUnit> printerUnitList = PrinterSettings.GetPrinterUnitList ();
 
 			for (int entityRank = 0; entityRank < entities.Count; entityRank++)
 			{
@@ -107,20 +107,20 @@ namespace Epsitec.Cresus.Core.Printers
 
 				foreach (var documentPrinter in documentType.DocumentPrinters)
 				{
-					Printer printer = printerList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
+					PrinterUnit printerUnit = printerUnitList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
 
-					if (printer != null)
+					if (printerUnit != null)
 					{
 						if (!entityPrinter.IsEmpty (documentPrinter.PrinterFunction))
 						{
-							for (int copy = 0; copy < printer.Copies; copy++)
+							for (int copy = 0; copy < printerUnit.Copies; copy++)
 							{
 								string internalJobName = string.Concat (documentPrinter.Job, ".", (entityRank+1).ToString (), ".", (copy+1).ToString ());
 
 								var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
 								foreach (var physicalPage in physicalPages)
 								{
-									sections.Add (new SectionToPrint (printer, internalJobName, physicalPage, entityRank, entityPrinter));
+									sections.Add (new SectionToPrint (printerUnit, internalJobName, physicalPage, entityRank, entityPrinter));
 								}
 							}
 						}
@@ -139,9 +139,9 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p1 = sections[index];
 				SectionToPrint p2 = sections[index+1];
 
-				if (p1.InternalJobName             == p2.InternalJobName             &&
-					p1.Printer.PhysicalPrinterName == p2.Printer.PhysicalPrinterName &&
-					p1.FirstPage                   == p2.FirstPage                   )
+				if (p1.InternalJobName                 == p2.InternalJobName                 &&
+					p1.PrinterUnit.PhysicalPrinterName == p2.PrinterUnit.PhysicalPrinterName &&
+					p1.FirstPage                       == p2.FirstPage                       )
 				{
 					sections.RemoveAt (index+1);  // supprime p2...
 					sections.Add (p2);            // ...puis remet-la à la fin
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Printers
 				SectionToPrint p2 = sections[index+1];
 
 				if (p1.InternalJobName          == p2.InternalJobName &&
-					p1.Printer                  == p2.Printer         &&
+					p1.PrinterUnit              == p2.PrinterUnit     &&
 					p1.EntityRank               == p2.EntityRank      &&
 					p1.FirstPage + p1.PageCount == p2.FirstPage       )
 				{
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			//	Fusionne toutes les sections en jobs. Un job est un ensemble de sections utilisant la
-			//	même imprimante, mais pas forcément le même bac.
+			//	même imprimante physique, mais pas forcément le même bac.
 			var jobs = new List<JobToPrint> ();
 
 			foreach (var page in sections)
@@ -309,7 +309,7 @@ namespace Epsitec.Cresus.Core.Printers
 			PrintDocument printDocument = new PrintDocument ();
 
 			printDocument.DocumentName = job.JobFullName;
-			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.Printer.PhysicalPrinterName));
+			printDocument.SelectPrinter (FormattedText.Unescape (firstSection.PrinterUnit.PhysicalPrinterName));
 			printDocument.PrinterSettings.Copies = 1;
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printerCombos = new List<TextFieldCombo> ();
 
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
-			this.printerList = Printers.PrinterSettings.GetPrinterList ();
+			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 		}
 
 
@@ -213,8 +213,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.showPrintersCheckButton = new CheckButton ()
 			{
 				Parent = footer,
-				Text = "Montrer les imprimantes",
-				PreferredWidth = 150,
+				Text = "Montrer les unités d'impression",
+				PreferredWidth = 190,
 				ActiveState = showPrinters ? ActiveState.Yes : ActiveState.No,
 				Dock = DockStyle.Left,
 				TabIndex = 4,
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePrinters()
 		{
-			//	Met à jour le panneau du choix des imprimantes et des bacs.
+			//	Met à jour le panneau du choix des unités d'impression.
 			this.printersFrame.Children.Clear ();
 			this.printerCombos.Clear ();
 
@@ -537,7 +537,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var title = new StaticText
 					{
 						Parent = this.printersFrame,
-						Text = "<font size=\"24\" color=\"#ffffff\"><i>Aucune imprimante</i></font>",
+						Text = "<font size=\"24\" color=\"#ffffff\"><i>Aucune unité d'impression</i></font>",
 						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 						Dock = DockStyle.Fill,
 					};
@@ -547,7 +547,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var title = new StaticText
 					{
 						Parent = this.printersFrame,
-						Text = "<font size=\"16\">Imprimantes et bacs à utiliser</font>",
+						Text = "<font size=\"16\">Unités d'impression à utiliser</font>",
 						ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
 						PreferredHeight = 24,
 						Dock = DockStyle.Top,
@@ -592,32 +592,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 						TabIndex = ++tabIndex,
 					};
 
-					string settings = this.GetSettings (false, string.Concat ("Printer.", documentPrinter.PrinterFunction));
+					string settings = this.GetSettings (false, string.Concat ("PrinterUnit.", documentPrinter.PrinterFunction));
 					if (!string.IsNullOrEmpty (settings))
 					{
-						Printer p = this.printerList.Where (x => x.LogicalName == settings).FirstOrDefault ();
+						PrinterUnit pu = this.printerUnitList.Where (x => x.LogicalName == settings).FirstOrDefault ();
 
-						if (p != null)
+						if (pu != null)
 						{
-							field.Text = p.NiceDescription;
-							documentPrinter.LogicalPrinterName = p.LogicalName;
+							field.Text = pu.NiceDescription;
+							documentPrinter.LogicalPrinterName = pu.LogicalName;
 						}
 					}
 
 					field.Items.Add ("", "");  // une première case vide
 
-					foreach (var printer in this.printerList)
+					foreach (var printerUnit in this.printerUnitList)
 					{
-						field.Items.Add (printer.LogicalName, printer.NiceDescription);  // key, value
+						field.Items.Add (printerUnit.LogicalName, printerUnit.NiceDescription);  // key, value
 					}
 
 					field.SelectedItemChanged += delegate
 					{
-						PrinterFunction printerFunction = (PrinterFunction) System.Enum.Parse (typeof (PrinterFunction), field.Name);
+						PrinterUnitFunction printerFunction = (PrinterUnitFunction) System.Enum.Parse (typeof (PrinterUnitFunction), field.Name);
 						DocumentPrinter p = documentType.GetDocumentPrinter (printerFunction);
 						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 
-						this.SetSettings (false, string.Concat("Printer.", p.PrinterFunction), p.LogicalPrinterName);
+						this.SetSettings (false, string.Concat("PrinterUnit.", p.PrinterFunction), p.LogicalPrinterName);
 
 						this.UpdateWidgets ();
 					};
@@ -749,6 +749,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button									acceptButton;
 		private Button									cancelButton;
 		private Dictionary<string, string>				settings;
-		private List<Printer>							printerList;
+		private List<PrinterUnit>						printerUnitList;
 	}
 }

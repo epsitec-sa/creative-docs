@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.Order, "Commande", "Commande pour le client.");
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionCommande ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.OrderAcknowledge, "Confirmation de commande", "Confirmation de commande pour le client.");
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionProd ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.BL, "Bulletin de livraison", "Bulletin de livraison, sans prix.");
@@ -68,20 +68,20 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionBL ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture avec un bulletin de versement intégré au bas de chaque page.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture avec un bulletin de versement imprimé sur une page séparée.");
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionEsr ();
-			type.AddPrinterBase ();
-			type.AddPrinterEsr ();
+			type.AddBasePrinterUnit ();
+			type.AddEsrPrinterUnit ();
 			this.DocumentTypes.Add (type);
 
 			type = new DocumentTypeDefinition (DocumentType.InvoiceWithoutESR, "Facture sans BV", "Facture simple sans bulletin de versement.");
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
-			type.AddPrinterBase ();
+			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
 		}
 
