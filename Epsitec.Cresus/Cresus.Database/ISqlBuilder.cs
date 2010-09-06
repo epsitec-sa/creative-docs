@@ -162,6 +162,11 @@ namespace Epsitec.Cresus.Database
 		void ExecuteProcedure(string procedureName, Collections.SqlFieldList fields);
 
 		/// <summary>
+		/// Gets the value of the current time in the database.
+		/// </summary>
+		void GetCurrentTimeStamp();
+
+		/// <summary>
 		/// Sets the SQL parameters for a stored procedure.
 		/// </summary>
 		/// <param name="command">The command.</param>

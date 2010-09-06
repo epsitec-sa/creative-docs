@@ -763,7 +763,16 @@ namespace Epsitec.Cresus.Database.Implementation
 			throw new System.NotImplementedException ();
 		}
 
-		
+		public void GetCurrentTimeStamp()
+		{
+			this.PrepareCommand ();
+
+			this.commandType = DbCommandType.ReturningData;
+			this.commandCount++;
+
+			this.Append ("select CAST('NOW' AS TIMESTAMP) FROM RDB$DATABASE");
+		}
+				
 		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFieldList fields)
 		{
 			//	TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
@@ -1514,7 +1523,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (sqlQuery.SetQuery);
 			}
 		}
-
+		
 		private bool AppendAlias(SqlField field)
 		{
 			//	Si un alias existe, ajoute celui-ci dans le buffer. Retourne false s'il n'y a pas
