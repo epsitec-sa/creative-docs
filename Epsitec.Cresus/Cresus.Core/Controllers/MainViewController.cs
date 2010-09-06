@@ -270,6 +270,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Right,
 				Padding = new Margins (0, 0, 0, 0),
 				Visibility = false,
+				PreferredWidth = 400,
 			};
 			
 			this.rightSplitter = new VSplitter

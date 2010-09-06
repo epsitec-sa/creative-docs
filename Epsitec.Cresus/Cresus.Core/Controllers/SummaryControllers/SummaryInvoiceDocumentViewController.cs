@@ -72,8 +72,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var previewFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				PreferredWidth = 300,  // TODO: ignoré !
-				//?MinWidth = 300,
 				Padding = new Margins (5),
 				BackColor = Color.FromBrightness (0.95),
 			};
@@ -87,6 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			};
 
 			previewController.Add (previewFrame);
+			previewController.Updating += this.HandlePreviewPanelUpdating;
 		}
 
 		private void CloseUIPreviewPanel()
@@ -97,6 +96,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			mainViewController.SetPreviewPanelVisibility (false);
 			
 			previewController.Clear ();
+			previewController.Updating -= this.HandlePreviewPanelUpdating;
+		}
+
+		private void HandlePreviewPanelUpdating(object sender)
+		{
+			//	TODO: refresh the entity printer
 		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
