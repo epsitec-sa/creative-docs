@@ -127,6 +127,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbAbstractAttachable.cs" />
     <Compile Include="DbAbstractCondition.cs" />
     <Compile Include="DbConditionCombiner.cs" />
     <Compile Include="AssemblyInfo.cs">
