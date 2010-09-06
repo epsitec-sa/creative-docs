@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.pages[page].PageType;
 		}
 
-		public int[] GetPhysicalPages(PrinterFunction printerFunctionUsed)
+		public int[] GetPhysicalPages(PrinterUnitFunction printerFunctionUsed)
 		{
 			var list = new List<int> ();
 			var pages = this.GetPagesForFunction (printerFunctionUsed);
@@ -216,18 +216,18 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Retourne le nombre de pages pour une imprimante donnée que contient le document.
+		/// Retourne le nombre de pages pour une unité d'impression donnée que contient le document.
 		/// </summary>
-		public int PageCount(PrinterFunction printerFunctionUsed = PrinterFunction.ForAllPages)
+		public int PageCount(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
 			return this.GetPagesForFunction (printerFunctionUsed).Count;
 		}
 
 		/// <summary>
-		/// Retourne true s'il n'y a rien à imprimer pour une imprimante donnée.
+		/// Retourne true s'il n'y a rien à imprimer pour une unité d'impression donnée.
 		/// S'il y a une seule page vide, on considère qu'il n'y a rien à imprimer.
 		/// </summary>
-		public bool IsEmpty(PrinterFunction printerFunctionUsed)
+		public bool IsEmpty(PrinterUnitFunction printerFunctionUsed)
 		{
 			var pages = this.GetPagesForFunction (printerFunctionUsed);
 
@@ -257,9 +257,9 @@ namespace Epsitec.Cresus.Core.Printers
 			return true;
 		}
 
-		private List<PageContainer> GetPagesForFunction(PrinterFunction printerFunctionUsed)
+		private List<PageContainer> GetPagesForFunction(PrinterUnitFunction printerFunctionUsed)
 		{
-			//	Retourne la liste des pages pour une imprimante donnée.
+			//	Retourne la liste des pages pour une unité d'impression donnée.
 			return this.pages.Where (x => Common.IsPrinterAndPageMatching (printerFunctionUsed, x.PageType)).ToList ();
 		}
 

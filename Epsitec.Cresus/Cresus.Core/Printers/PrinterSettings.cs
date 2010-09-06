@@ -15,47 +15,47 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public static class PrinterSettings
 	{
-		public static List<Printer> GetPrinterList()
+		public static List<PrinterUnit> GetPrinterUnitList()
 		{
-			List<Printer> list = new List<Printer> ();
+			List<PrinterUnit> list = new List<PrinterUnit> ();
 
-			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("Printer");
+			Dictionary<string, string> settings = CoreApplication.ExtractSettings ("PrinterUnit");
 
 			for (int i = 0; i < settings.Count; i++)
 			{
 				string key = PrinterSettings.GetKey (i);
 				string setting = settings[key];
 
-				Printer printer = new Printer ();
-				printer.SetSerializableContent (setting);
+				PrinterUnit printerUnit = new PrinterUnit ();
+				printerUnit.SetSerializableContent (setting);
 
-				list.Add (printer);
+				list.Add (printerUnit);
 			}
 
 			return list;
 		}
 
-		public static void SetPrinterList(List<Printer> list)
+		public static void SetPrinterList(List<PrinterUnit> list)
 		{
 			var settings = new Dictionary<string, string> ();
 			int index = 0;
 
-			foreach (var printer in list)
+			foreach (var printerUnit in list)
 			{
-				if (!string.IsNullOrWhiteSpace (printer.LogicalName) &&
-					!string.IsNullOrWhiteSpace (printer.PhysicalPrinterName))
+				if (!string.IsNullOrWhiteSpace (printerUnit.LogicalName) &&
+					!string.IsNullOrWhiteSpace (printerUnit.PhysicalPrinterName))
 				{
 					string key = PrinterSettings.GetKey (index++);
-					settings.Add (key, printer.GetSerializableContent ());
+					settings.Add (key, printerUnit.GetSerializableContent ());
 				}
 			}
 
-			CoreApplication.MergeSettings ("Printer", settings);
+			CoreApplication.MergeSettings ("PrinterUnit", settings);
 		}
 
 		private static string GetKey(int index)
 		{
-			return string.Concat ("Printer", (index++).ToString (CultureInfo.InvariantCulture));
+			return string.Concat ("PrinterUnit", (index++).ToString (CultureInfo.InvariantCulture));
 		}
 	}
 }

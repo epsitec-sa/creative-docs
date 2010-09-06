@@ -14,9 +14,8 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		/// <summary>
 		/// JobPrintEngine s'occupe de l'impression à proprement parler de sections.
-		/// Un job est composé de sections. Une section est composée de pages contigües sur une seule imprimante
-		/// et un seul bac. Les sections utilisent toutes la même imprimante, mais peuvent utiliser plusieurs
-		/// bacs différents.
+		/// Un job est composé de sections. Une section est composée de pages contigües sur une seule unité d'impression
+		/// Les sections utilisent toutes la même imprimante physique, mais peuvent utiliser plusieurs bacs différents.
 		/// </summary>
 		/// <param name="printDocument"></param>
 		/// <param name="sections"></param>
@@ -33,7 +32,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			PaperSource ps = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.Printer.PhysicalPrinterTray.Trim ());
+			PaperSource ps = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
 			if (ps != null)
 			{
 				settings.PaperSource = ps;
@@ -62,8 +61,8 @@ namespace Epsitec.Cresus.Core.Printers
 			double height = size.Height;
 			double width  = size.Width;
 
-			double xOffset = section.Printer.XOffset;
-			double yOffset = section.Printer.YOffset;
+			double xOffset = section.PrinterUnit.XOffset;
+			double yOffset = section.PrinterUnit.YOffset;
 
 			Transform transform;
 

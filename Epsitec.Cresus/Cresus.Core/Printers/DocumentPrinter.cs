@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public class DocumentPrinter
 	{
-		public DocumentPrinter(PrinterFunction printerFunction, string job, string description)
+		public DocumentPrinter(PrinterUnitFunction printerFunction, string job, string description)
 		{
 			this.PrinterFunction = printerFunction;
 			this.Job             = job;
 			this.Description     = description;
 		}
 
-		public PrinterFunction PrinterFunction
+		public PrinterUnitFunction PrinterFunction
 		{
 			get;
 			set;

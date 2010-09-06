@@ -12,15 +12,17 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-
-	public class Printer
+	/// <summary>
+	/// Une unité d'impression est un couple imprimante/bac.
+	/// </summary>
+	public class PrinterUnit
 	{
-		public Printer()
+		public PrinterUnit()
 		{
 			this.Copies = 1;
 		}
 
-		public Printer(string logicalName)
+		public PrinterUnit(string logicalName)
 		{
 			this.LogicalName = logicalName;
 			this.Copies = 1;
@@ -38,7 +40,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string Comment
 		{
-			//	Description de l'imprimante.
+			//	Description de l'unité d'impression.
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
 			//	Cette propriété est donc compatible avec Widget.Text.
 			get;
@@ -86,7 +88,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string NiceDescription
 		{
-			//	Retourne une description consise et claire de l'imprimante.
+			//	Retourne une description consise et claire de l'unité d'impression.
 			get
 			{
 				string c = this.Copies < 2 ? null : string.Format ("{0}×", this.Copies);
@@ -112,32 +114,32 @@ namespace Epsitec.Cresus.Core.Printers
 					"LogicalName=",
 					this.LogicalName,
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 					
 					"PhysicalName=",
 					this.PhysicalPrinterName,
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 					
 					"Tray=",
 					this.PhysicalPrinterTray,
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 					
 					"XOffset=",
 					this.XOffset.ToString (CultureInfo.InvariantCulture),
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 
 					"YOffset=",
 					this.YOffset.ToString (CultureInfo.InvariantCulture),
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 
 					"Copies=",
 					this.Copies.ToString (CultureInfo.InvariantCulture),
 
-					Printer.serializableSeparator,
+					PrinterUnit.serializableSeparator,
 
 					"Comment=",
 					this.Comment
@@ -147,7 +149,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public void SetSerializableContent(string content)
 		{
 			//	Initialise l'ensemble de la classe à partir d'une string sérialisée.
-			var list = content.Split (new string[] { Printer.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
+			var list = content.Split (new string[] { PrinterUnit.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
 
 			foreach (var line in list)
 			{
@@ -198,7 +200,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				return !value.Contains (Printer.serializableSeparator);
+				return !value.Contains (PrinterUnit.serializableSeparator);
 			}
 		}
 

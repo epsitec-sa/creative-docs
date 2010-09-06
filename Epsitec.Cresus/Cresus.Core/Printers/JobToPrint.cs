@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Retourne le nom de l'imprimante physique de la première section.
 			//	Toutes les sections doivent utiliser la même imprimante physique.
-			//	Printer peut changer, s'il s'agit d'un autre bac, mais Printer.PhysicalName
+			//	PrinterUnit peut changer, s'il s'agit d'un autre bac, mais PrinterUnit.PhysicalName
 			//	est identique dans toutes les sections.
 			get
 			{
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					return this.sections[0].Printer.PhysicalPrinterName;
+					return this.sections[0].PrinterUnit.PhysicalPrinterName;
 				}
 			}
 		}

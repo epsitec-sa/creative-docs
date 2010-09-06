@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var title = new StaticText
 			{
 				Parent = box,
-				Text = string.Format ("<font size=\"16\"><b>{0} </b></font>sur l'imprimante {1}", job.JobFullName, job.Sections[0].Printer.PhysicalPrinterName),
+				Text = string.Format ("<font size=\"16\"><b>{0} </b></font>sur l'imprimante {1}", job.JobFullName, job.Sections[0].PrinterUnit.PhysicalPrinterName),
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var tray = new StaticText
 				{
 					Parent = rectangle,
-					Text = string.Format ("Imprimante {0}", section.Printer.NiceDescription),
+					Text = string.Format ("Unité d'impression {0}", section.PrinterUnit.NiceDescription),
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 					TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 					Dock = DockStyle.Fill,
@@ -304,6 +304,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PreferredWidth = size,
 				Dock = DockStyle.Right,
 			};
+
+			ToolTip.Default.SetToolTip (button, "Montre les pages correspondantes");
 
 			this.previewButtons.Add (button);
 

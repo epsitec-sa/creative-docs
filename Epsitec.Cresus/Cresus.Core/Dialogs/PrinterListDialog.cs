@@ -21,7 +21,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Dialogue pour choisir les imprimantes à utiliser.
+	/// Dialogue pour choisir les unités d'impression à utiliser.
 	/// </summary>
 	class PrinterListDialog : AbstractDialog
 	{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.application = application;
 
-			this.printerList = Printers.PrinterSettings.GetPrinterList ();
+			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 		}
 
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			this.window.Icon = this.application.Window.Icon;
-			this.window.Text = "Définitions des imprimantes et bacs disponibles";
+			this.window.Text = "Définitions des unités d'impression disponibles";
 			this.window.MakeFixedSizeWindow ();
 			this.window.ClientSize = new Size (640, 402);
 
@@ -93,17 +93,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = leftFrame,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Text = "<font size=\"16\">Liste des imprimantes</font>",
+				Text = "<font size=\"16\">Liste des unités d'impression</font>",
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			this.listController = new Controllers.ListController<Printer> (this.printerList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
+			this.listController = new Controllers.ListController<PrinterUnit> (this.printerUnitList, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
 			this.listController.CreateUI (leftFrame, Direction.Right, 23);
 
-			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle impriante");
-			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'imprimante");
-			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'imprimante dans la liste");
-			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'imprimante dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle unité d'impression");
+			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime l'unité d'impression");
+			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'unité d'impression dans la liste");
+			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'unité d'impression dans la liste");
 
 			//	Rempli le panneau de droite.
 			var rightTitle = new StaticText
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = rightFrame,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
-				Text = "<font size=\"16\">Choix pour l'imprimante sélectionnée</font>",
+				Text = "<font size=\"16\">Choix pour l'unité d'impression sélectionnée</font>",
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var logicalLabel = new StaticText
 				{
 					Parent = box,
-					Text = "Fonction de l'imprimante :",
+					Text = "Fonction de l'unité d'impression :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				var commentLabel = new StaticText
 				{
 					Parent = box,
-					Text = "Description :",
+					Text = "Description de l'unité d'impression :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.acceptButton.Clicked += delegate
 			{
-				Printers.PrinterSettings.SetPrinterList (this.printerList);
+				Printers.PrinterSettings.SetPrinterList (this.printerUnitList);
 
 				this.Result = DialogResult.Accept;
 				this.CloseDialog ();
@@ -404,15 +404,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				Printer printer = this.SelectedPrinter;
+				PrinterUnit printerUnit = this.SelectedPrinter;
 
-				this.logicalField.Text  = printer.LogicalName;
-				this.commentField.Text  = printer.Comment;
-				this.physicalField.Text = printer.PhysicalPrinterName;
-				this.trayField.Text     = printer.PhysicalPrinterTray;
-				this.xOffsetField.Text  = printer.XOffset.ToString ();
-				this.yOffsetField.Text  = printer.YOffset.ToString ();
-				this.copiesField.Text   = printer.Copies.ToString ();
+				this.logicalField.Text  = printerUnit.LogicalName;
+				this.commentField.Text  = printerUnit.Comment;
+				this.physicalField.Text = printerUnit.PhysicalPrinterName;
+				this.trayField.Text     = printerUnit.PhysicalPrinterTray;
+				this.xOffsetField.Text  = printerUnit.XOffset.ToString ();
+				this.yOffsetField.Text  = printerUnit.YOffset.ToString ();
+				this.copiesField.Text   = printerUnit.Copies.ToString ();
 			}
 
 			string error = this.GetError ();
@@ -449,8 +449,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateTrayField()
 		{
-			Printer printer = this.SelectedPrinter;
-			List<string> trayNames = PrinterListDialog.GetTrayList(printer);
+			PrinterUnit printerUnit = this.SelectedPrinter;
+			List<string> trayNames = PrinterListDialog.GetTrayList(printerUnit);
 
 			this.trayField.Items.Clear ();
 			foreach (var trayName in trayNames)
@@ -486,9 +486,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].LogicalName != this.logicalField.Text)
+			if (this.printerUnitList[sel].LogicalName != this.logicalField.Text)
 			{
-				this.printerList[sel].LogicalName = this.logicalField.Text;
+				this.printerUnitList[sel].LogicalName = this.logicalField.Text;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -499,9 +499,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].Comment != this.commentField.Text)
+			if (this.printerUnitList[sel].Comment != this.commentField.Text)
 			{
-				this.printerList[sel].Comment = this.commentField.Text;
+				this.printerUnitList[sel].Comment = this.commentField.Text;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -512,12 +512,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].PhysicalPrinterName != this.physicalField.Text)
+			if (this.printerUnitList[sel].PhysicalPrinterName != this.physicalField.Text)
 			{
-				this.printerList[sel].PhysicalPrinterName = this.physicalField.Text;
-				this.printerList[sel].PhysicalPrinterTray = null;
-				this.printerList[sel].XOffset = 0;
-				this.printerList[sel].YOffset = 0;
+				this.printerUnitList[sel].PhysicalPrinterName = this.physicalField.Text;
+				this.printerUnitList[sel].PhysicalPrinterTray = null;
+				this.printerUnitList[sel].XOffset = 0;
+				this.printerUnitList[sel].YOffset = 0;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -529,9 +529,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			if (this.printerList[sel].PhysicalPrinterTray != this.trayField.Text)
+			if (this.printerUnitList[sel].PhysicalPrinterTray != this.trayField.Text)
 			{
-				this.printerList[sel].PhysicalPrinterTray = this.trayField.Text;
+				this.printerUnitList[sel].PhysicalPrinterTray = this.trayField.Text;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -545,9 +545,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double value;
 			if (double.TryParse (this.xOffsetField.Text, out value))
 			{
-				if (this.printerList[sel].XOffset != value)
+				if (this.printerUnitList[sel].XOffset != value)
 				{
-					this.printerList[sel].XOffset = value;
+					this.printerUnitList[sel].XOffset = value;
 
 					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
@@ -562,9 +562,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double value;
 			if (double.TryParse (this.yOffsetField.Text, out value))
 			{
-				if (this.printerList[sel].YOffset != value)
+				if (this.printerUnitList[sel].YOffset != value)
 				{
-					this.printerList[sel].YOffset = value;
+					this.printerUnitList[sel].YOffset = value;
 
 					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
@@ -581,9 +581,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				value = System.Math.Max (value, 1);
 
-				if (this.printerList[sel].Copies != value)
+				if (this.printerUnitList[sel].Copies != value)
 				{
-					this.printerList[sel].Copies = value;
+					this.printerUnitList[sel].Copies = value;
 
 					this.listController.UpdateList (sel);
 					this.UpdateWidgets ();
@@ -592,13 +592,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private static List<string> GetTrayList(Printer printer)
+		private static List<string> GetTrayList(PrinterUnit printerUnit)
 		{
 			List<string> trayNames = new List<string> ();
 
-			if (printer != null && !string.IsNullOrEmpty (printer.PhysicalPrinterName))
+			if (printerUnit != null && !string.IsNullOrEmpty (printerUnit.PhysicalPrinterName))
 			{
-				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printer.PhysicalPrinterName));
+				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printerUnit.PhysicalPrinterName));
 
 				if (settings != null)
 				{
@@ -614,45 +614,45 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			get
 			{
-				return string.Format ("Imprimante {0}", (this.printerList.Count+1).ToString ());
+				return string.Format ("Unité d'impression {0}", (this.printerUnitList.Count+1).ToString ());
 			}
 		}
 
 
 		private string GetError()
 		{
-			for (int i = 0; i < this.printerList.Count; i++)
+			for (int i = 0; i < this.printerUnitList.Count; i++)
 			{
-				if (string.IsNullOrWhiteSpace (this.printerList[i].LogicalName))
+				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].LogicalName))
 				{
-					return string.Format ("<b>Rang {0}</b>: Il faut spécifier la fonction de l'imprimante.", (i+1).ToString ());
+					return string.Format ("<b>Rang {0}</b>: Il faut spécifier la fonction de l'unité d'impression.", (i+1).ToString ());
 				}
 
-				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalPrinterName))
+				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].PhysicalPrinterName))
 				{
-					return string.Format ("<b>{0}</b>: Il faut choisir l'imprimante physique.", this.printerList[i].LogicalName);
+					return string.Format ("<b>{0}</b>: Il faut choisir l'imprimante physique.", this.printerUnitList[i].LogicalName);
 				}
 
-				if (string.IsNullOrWhiteSpace (this.printerList[i].PhysicalPrinterTray))
+				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].PhysicalPrinterTray))
 				{
-					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerList[i].LogicalName);
+					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerUnitList[i].LogicalName);
 				}
 
-				if (!Printer.CheckString (this.printerList[i].LogicalName))
+				if (!PrinterUnit.CheckString (this.printerUnitList[i].LogicalName))
 				{
-					return string.Format ("<b>{0}</b>: Ce nom de fonction est incorrect.", this.printerList[i].LogicalName);
+					return string.Format ("<b>{0}</b>: Ce nom de fonction est incorrect.", this.printerUnitList[i].LogicalName);
 				}
 
-				if (!Printer.CheckString (this.printerList[i].Comment))
+				if (!PrinterUnit.CheckString (this.printerUnitList[i].Comment))
 				{
-					return string.Format ("<b>{0}</b>: La description est incorrecte.", this.printerList[i].LogicalName);
+					return string.Format ("<b>{0}</b>: La description est incorrecte.", this.printerUnitList[i].LogicalName);
 				}
 
-				for (int j = 0; j < this.printerList.Count; j++)
+				for (int j = 0; j < this.printerUnitList.Count; j++)
 				{
-					if (j != i && this.printerList[j].LogicalName == this.printerList[i].LogicalName)
+					if (j != i && this.printerUnitList[j].LogicalName == this.printerUnitList[i].LogicalName)
 					{
-						return string.Format ("<b>{0}</b>: Ces deux imprimantes ont la même fonction.", this.printerList[i].LogicalName);
+						return string.Format ("<b>{0}</b>: Ces deux unités d'impression ont la même fonction.", this.printerUnitList[i].LogicalName);
 					}
 				}
 			}
@@ -661,7 +661,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private Printer SelectedPrinter
+		private PrinterUnit SelectedPrinter
 		{
 			get
 			{
@@ -673,37 +673,37 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 				else
 				{
-					return this.printerList[sel];
+					return this.printerUnitList[sel];
 				}
 			}
 		}
 
 
 		#region ListController callbacks
-		private FormattedText ListControllerItemToText(Printer printer)
+		private FormattedText ListControllerItemToText(PrinterUnit printerUnit)
 		{
-			return printer.NiceDescription;
+			return printerUnit.NiceDescription;
 		}
 
 		private FormattedText ListControllerGetTextInfo(int count)
 		{
 			if (count == 0)
 			{
-				return "Aucune imprimante définie";
+				return "Aucune unité d'impression définie";
 			}
 			else if (count == 1)
 			{
-				return string.Format ("{0} imprimante définie", count.ToString ());
+				return string.Format ("{0} unité d'impression définie", count.ToString ());
 			}
 			else
 			{
-				return string.Format ("{0} imprimantes définies", count.ToString ());
+				return string.Format ("{0} unités d'impression définies", count.ToString ());
 			}
 		}
 		
-		private Printer ListControllerCreateItem(int sel)
+		private PrinterUnit ListControllerCreateItem(int sel)
 		{
-			return new Printer (this.DefaultLogicalName);
+			return new PrinterUnit (this.DefaultLogicalName);
 		}
 		#endregion
 
@@ -711,7 +711,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly CoreApplication				application;
 
 		private Window									window;
-		private Controllers.ListController<Printer>		listController;
+		private Controllers.ListController<PrinterUnit>	listController;
 		private FrameBox								rightBox;
 		private TextFieldEx								logicalField;
 		private TextFieldEx								commentField;
@@ -723,6 +723,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText								errorInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;
-		private List<Printer>							printerList;
+		private List<PrinterUnit>						printerUnitList;
 	}
 }

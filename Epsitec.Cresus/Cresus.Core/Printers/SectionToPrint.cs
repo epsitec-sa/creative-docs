@@ -9,15 +9,15 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	/// <summary>
 	/// Une instance de SectionToPrint représente une section d'une ou plusieurs pages contigües à imprimer
-	/// sur une imprimante physique et un seul bac (Printer).
+	/// sur une unité d'impression (PrinterUnit).
 	/// Initialement, on crée des sections d'une seule page. Elles sont regroupées par la suite.
 	/// </summary>
 	public class SectionToPrint
 	{
-		public SectionToPrint(Printer printer, string job, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
+		public SectionToPrint(PrinterUnit printerUnit, string job, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
 		{
 			//	Crée une section d'une page.
-			this.printer       = printer;
+			this.printerUnit   = printerUnit;
 			this.job           = job;
 			this.firstPage     = firstPage;
 			this.PageCount     = 1;
@@ -27,11 +27,11 @@ namespace Epsitec.Cresus.Core.Printers
 			this.Enable = true;
 		}
 
-		public Printer Printer
+		public PrinterUnit PrinterUnit
 		{
 			get
 			{
-				return this.printer;
+				return this.printerUnit;
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public override string ToString()
 		{
 			// Pratique pour le debug.
-			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}, EntityRank={5}", this.printer.LogicalName, this.printer.PhysicalPrinterName, this.job, this.firstPage, this.PageCount, this.entityRank);
+			return string.Format ("PrinterLogicalName={0}, PrinterPhysicalName={1}, Job={2}, FirstPage={3}, PageCount={4}, EntityRank={5}", this.printerUnit.LogicalName, this.printerUnit.PhysicalPrinterName, this.job, this.firstPage, this.PageCount, this.entityRank);
 		}
 
 
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return result;
 			}
 
-			result = string.Compare (x.Printer.PhysicalPrinterName, y.Printer.PhysicalPrinterName);
+			result = string.Compare (x.PrinterUnit.PhysicalPrinterName, y.PrinterUnit.PhysicalPrinterName);
 			if (result != 0)
 			{
 				return result;
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly Printer				printer;
+		private readonly PrinterUnit			printerUnit;
 		private readonly string					job;
 		private readonly int					firstPage;
 		private readonly int					entityRank;
