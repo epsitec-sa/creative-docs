@@ -208,6 +208,31 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
 			};
 
+			var frame = new FrameBox
+			{
+				Parent = section,
+				Dock = DockStyle.StackBegin,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
+			};
+
+			var selectLanaugage1 = new Button ()
+			{
+				Parent = frame,
+				Dock = DockStyle.Stacked,
+				Text = "[*] Défaut",
+			};
+
+			var selectLanaugage2 = new Button ()
+			{
+				Parent = frame,
+				Dock = DockStyle.Stacked,
+				Text = "[de] Allemand",
+			};
+
+			selectLanaugage1.Clicked += delegate { UI.Settings.CultureForData.SelectLanguage (null); };
+			selectLanaugage2.Clicked += delegate { UI.Settings.CultureForData.SelectLanguage ("de"); };
+
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
 		}
 

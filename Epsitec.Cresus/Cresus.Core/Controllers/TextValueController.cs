@@ -30,6 +30,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		public string LanguageId
+		{
+			get
+			{
+				if (this.languageId != null)
+				{
+					return this.languageId;
+				}
+
+				if (UI.Settings.CultureForData.HasLanguageId)
+				{
+					return UI.Settings.CultureForData.LanguageId;
+				}
+
+				return null;
+			}
+		}
+
 		public void Attach(AutoCompleteTextField widget)
 		{
 			foreach (string[] item in possibleItems)
@@ -125,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 					if (multilingual.ContainsLocalizations)
 					{
-						value = multilingual.GetTextOrDefault (this.languageId).ToString ();
+						value = multilingual.GetTextOrDefault (this.LanguageId).ToString ();
 					}
 				}
 			}
@@ -141,11 +159,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				var originalFormattedText = new FormattedText (originalValue);
 
 				if ((MultilingualText.IsMultilingual (originalFormattedText)) ||
-					(MultilingualText.IsDefaultLanguageId (this.languageId) == false))
+					(MultilingualText.IsDefaultLanguageId (this.LanguageId) == false))
 				{
 					var multilingual = new MultilingualText (originalFormattedText);
 
-					multilingual.SetText (this.languageId, new FormattedText (text));
+					multilingual.SetText (this.LanguageId, new FormattedText (text));
 					text = multilingual.ToString ();
 				}
 			}
