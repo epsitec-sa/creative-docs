@@ -1,16 +1,16 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
-
 using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-
-
 	/// <summary>
 	/// The <c>UidGenerator</c> class allows the generation of unique ids. Each <c>UidGenerator</c>
 	/// contains one or more slots which are each defined by a minimum and a maximum value. An
@@ -18,8 +18,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	public sealed class UidGenerator
 	{
-
-
 		/// <summary>
 		/// Creates a new instance of <c>UidGenerator</c>.
 		/// </summary>
@@ -153,7 +151,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return uid;
 		}
 
-
 		/// <summary>
 		/// Gets the next unique id in the given slot.
 		/// </summary>
@@ -235,7 +232,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
-
 		/// <summary>
 		/// Deletes a generator for unique ids from the database.
 		/// </summary>
@@ -258,7 +254,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				transaction.Commit ();
 			}
 		}
-
 
 		/// <summary>
 		/// Tells whether a generator for unique ids exists in the database.
@@ -334,7 +329,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				   select slotIndex;
 		}
 
-
 		/// <summary>
 		/// Creates the <see cref="DbTransaction"/> object that must be used when reading data from
 		/// the database.
@@ -345,7 +339,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 		}
-
 
 		/// <summary>
 		/// Creates the <see cref="DbTransaction"/> object that must be used when writing data to
@@ -367,22 +360,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// The <see cref="DbInfrastructure"/> used to communicate with the database.
 		/// </summary>
-		private DbInfrastructure dbInfrastructure;
-
+		private readonly DbInfrastructure dbInfrastructure;
 
 		/// <summary>
 		/// The sequence of minimum values of the slots.
 		/// </summary>
-        private List<long> slotMinValues;
-
+		private readonly List<long> slotMinValues;
 
 		/// <summary>
 		/// The sequence of maximum values of the slots.
 		/// </summary>
-		private List<long> slotMaxValues;
-		
-
+		private readonly List<long> slotMaxValues;
 	}
-
-
 }

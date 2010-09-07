@@ -143,6 +143,7 @@
     <Compile Include="Context\EntityChangedEventType.cs" />
     <Compile Include="Infrastructure\DataInfrastructure.cs" />
     <Compile Include="Infrastructure\UidGenerator.cs" />
+    <Compile Include="Infrastructure\UidSlot.cs" />
     <Compile Include="Proxies\KeyedCollectionFieldProxy.cs" />
     <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
     <Compile Include="Saver\PersistenceJobTableComputer.cs" />
