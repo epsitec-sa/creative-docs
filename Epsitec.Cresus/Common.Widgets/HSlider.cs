@@ -10,9 +10,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ArrowUp.Name   = "Right";
 			this.ArrowDown.Name = "Left";
-
-			this.ArrowMax.GlyphShape = GlyphShape.ArrowRight;
-			this.ArrowMin.GlyphShape = GlyphShape.ArrowLeft;
 		}
 
 		public HSlider(Widget embedder)
