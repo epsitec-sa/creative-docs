@@ -635,23 +635,23 @@ namespace Epsitec.Cresus.Core.Printers
 			this.tableColumns[TableColumnKeys.ArticleDescription].Visible = true;
 			this.tableColumns[TableColumnKeys.Total             ].Visible = true;
 
-			if (line.VatCode != BusinessLogic.Finance.VatCode.None &&
-				line.VatCode != BusinessLogic.Finance.VatCode.Excluded &&
-				line.VatCode != BusinessLogic.Finance.VatCode.ZeroRated)
+			if (line.VatCode != Business.Finance.VatCode.None &&
+				line.VatCode != Business.Finance.VatCode.Excluded &&
+				line.VatCode != Business.Finance.VatCode.ZeroRated)
 			{
 				this.tableColumns[TableColumnKeys.Vat].Visible = true;
 			}
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Billed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					this.tableColumns[TableColumnKeys.Quantity ].Visible = true;
 					this.tableColumns[TableColumnKeys.UnitPrice].Visible = true;
 					this.tableColumns[TableColumnKeys.LinePrice].Visible = true;
 				}
 
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Delayed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
 					this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = true;
 					this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = true;
@@ -754,12 +754,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 			foreach (var quantity in line.ArticleQuantities)
 			{
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Billed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					q1 = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
 
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Delayed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Delayed)
 				{
 					q2 = Misc.AppendLine (q2, Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code));
 
@@ -1023,7 +1023,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				foreach (var quantity in line.ArticleQuantities)
 				{
-					if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Billed)
+					if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
 					{
 						return true;
 					}

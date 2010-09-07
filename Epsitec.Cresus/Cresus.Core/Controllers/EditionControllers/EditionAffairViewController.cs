@@ -111,10 +111,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			//	TODO: définir le n° IdA plus proprement (business rule ?)
 			document.IdA                   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1}", this.Entity.IdA, this.Entity.Events.Select (x => x.Documents.FirstOrDefault ()).Distinct ().Count () + 1);
-			document.OtherPartyBillingMode = BusinessLogic.Finance.BillingMode.IncludingTax;
-			document.OtherPartyTaxMode     = BusinessLogic.Finance.TaxMode.LiableForVat;
-			document.CurrencyCode          = BusinessLogic.Finance.CurrencyCode.Chf;
-			document.BillingStatus         = BusinessLogic.Finance.BillingStatus.None;
+			document.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
+			document.OtherPartyTaxMode     = Business.Finance.TaxMode.LiableForVat;
+			document.CurrencyCode          = Business.Finance.CurrencyCode.Chf;
+			document.BillingStatus         = Business.Finance.BillingStatus.None;
 			document.CreationDate          = now;
 			document.LastModificationDate  = now;
 

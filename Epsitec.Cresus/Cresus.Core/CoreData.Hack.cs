@@ -529,35 +529,35 @@ namespace Epsitec.Cresus.Core
 			uomUnit1.DivideRatio = 1;
 			uomUnit1.MultiplyRatio = 1;
 			uomUnit1.SmallestIncrement = 1;
-			uomUnit1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomUnit1.Category = Business.UnitOfMeasureCategory.Unit;
 
 			uomUnit2.Code = "box";
 			uomUnit2.Name = "Carton de 6";
 			uomUnit2.DivideRatio = 1;
 			uomUnit2.MultiplyRatio = 6;
 			uomUnit2.SmallestIncrement = 1;
-			uomUnit2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomUnit2.Category = Business.UnitOfMeasureCategory.Unit;
 
 			uomUnit3.Code = "×";  // caractère Unicode 00D7
 			uomUnit3.Name = "Fois";
 			uomUnit3.DivideRatio = 1;
 			uomUnit3.MultiplyRatio = 1;
 			uomUnit3.SmallestIncrement = 1;
-			uomUnit3.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
+			uomUnit3.Category = Business.UnitOfMeasureCategory.Unrelated;
 
 			uomUnit4.Code = "mm";
 			uomUnit4.Name = "Millimètre";
 			uomUnit4.DivideRatio = 1;
 			uomUnit4.MultiplyRatio = 1;
 			uomUnit4.SmallestIncrement = 1;
-			uomUnit4.Category = BusinessLogic.UnitOfMeasureCategory.Length;
+			uomUnit4.Category = Business.UnitOfMeasureCategory.Length;
 
 			uomUnit5.Code = "l";
 			uomUnit5.Name = "Litre";
 			uomUnit5.DivideRatio = 1;
 			uomUnit5.MultiplyRatio = 1;
 			uomUnit5.SmallestIncrement = 1;
-			uomUnit5.Category = BusinessLogic.UnitOfMeasureCategory.Volume;
+			uomUnit5.Category = Business.UnitOfMeasureCategory.Volume;
 
 			yield return uomUnit1;
 			yield return uomUnit2;
@@ -578,21 +578,21 @@ namespace Epsitec.Cresus.Core
 			var uomGroup1 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup1.Name = "Unités d'emballage soft/standard";
 			uomGroup1.Description = "Unités d'emballage pour les logiciels Crésus standard";
-			uomGroup1.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup1.Category = Business.UnitOfMeasureCategory.Unit;
 			uomGroup1.Units.Add (uomUnit1);
 			uomGroup1.Units.Add (uomUnit2);
 
 			var uomGroup2 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup2.Name = "Unités pour boissons";
 			uomGroup2.Description = "Unités pour les boissons";
-			uomGroup2.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			uomGroup2.Category = Business.UnitOfMeasureCategory.Unit;
 			uomGroup2.Units.Add (uomUnit2);
 			uomGroup2.Units.Add (uomUnit4);
 
 			var uomGroup3 = this.DataContext.CreateEntity<UnitOfMeasureGroupEntity> ();
 			uomGroup3.Name = "Frais";
 			uomGroup3.Description = "Frais";
-			uomGroup3.Category = BusinessLogic.UnitOfMeasureCategory.Unrelated;
+			uomGroup3.Category = Business.UnitOfMeasureCategory.Unrelated;
 			uomGroup3.Units.Add (uomUnit3);
 
 			var articleGroup1 = this.DataContext.CreateEntity<ArticleGroupEntity> ();
@@ -615,42 +615,42 @@ namespace Epsitec.Cresus.Core
 			accountingDef.SellingDiscountBookAccount = "3900";
 			accountingDef.PurchaseBookAccount = "4200";
 			accountingDef.PurchaseDiscountBookAccount = "4900";
-			accountingDef.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			accountingDef.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 
 			var priceRoundingMode = this.DataContext.CreateEntity<PriceRoundingModeEntity> ();
 
 			priceRoundingMode.Name = "Arrondi à 5ct";
 			priceRoundingMode.Modulo = 0.05M;
 			priceRoundingMode.AddBeforeModulo = 0.025M;
-			priceRoundingMode.PriceRoundingPolicy = BusinessLogic.Finance.RoundingPolicy.OnFinalPriceAfterTax;
+			priceRoundingMode.PriceRoundingPolicy = Business.Finance.RoundingPolicy.OnFinalPriceAfterTax;
 
 			var articleCategory1 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory1.Name = "Logiciels Crésus";
-			articleCategory1.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory1.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
 			articleCategory1.DefaultAccounting.Add (accountingDef);
 			articleCategory1.DefaultRoundingMode = priceRoundingMode;
-			articleCategory1.ArticleType = BusinessLogic.ArticleType.Goods;
+			articleCategory1.ArticleType = Business.ArticleType.Goods;
 
 			var articleCategory2 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory2.Name = "Ports/emballages";
-			articleCategory2.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
+			articleCategory2.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
 			articleCategory2.NeverApplyDiscount = true;
-			articleCategory2.ArticleType = BusinessLogic.ArticleType.Freight;
+			articleCategory2.ArticleType = Business.ArticleType.Freight;
 
 			var articleCategory3 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory3.Name = "Fenêtres";
-			articleCategory3.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.StandardTax;
-			articleCategory3.ArticleType = BusinessLogic.ArticleType.Goods;
+			articleCategory3.DefaultOutputVatCode = Business.Finance.VatCode.StandardTax;
+			articleCategory3.ArticleType = Business.ArticleType.Goods;
 			articleCategory3.DefaultAccounting.Add (accountingDef);
 
 			var articleCategory4 = this.DataContext.CreateEntity<ArticleCategoryEntity> ();
 
 			articleCategory4.Name = "Aliments";
-			articleCategory4.DefaultOutputVatCode = BusinessLogic.Finance.VatCode.ReducedTax;
-			articleCategory4.ArticleType = BusinessLogic.ArticleType.Goods;
+			articleCategory4.DefaultOutputVatCode = Business.Finance.VatCode.ReducedTax;
+			articleCategory4.ArticleType = Business.ArticleType.Goods;
 			articleCategory4.DefaultAccounting.Add (accountingDef);
 
 			var articlePriceGroup1 = this.DataContext.CreateEntity<ArticlePriceGroupEntity> ();
@@ -739,7 +739,7 @@ namespace Epsitec.Cresus.Core
 			param5_3.Name = "Type de verre";
 			param5_3.Rank = 2;
 			param5_3.DefaultValue = "STD";
-			param5_3.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
+			param5_3.Cardinality = Business.EnumValueCardinality.ExactlyOne;
 			param5_3.Values = AbstractArticleParameterDefinitionEntity.Join ("STD", "UV-1", "UV-2");
 			param5_3.ShortDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Standard", "Anti-UV 1", "Anti-UV 2");
 			param5_3.LongDescriptions = AbstractArticleParameterDefinitionEntity.Join ("Verre standard", "Verre anti-UV avec protection à 100%", "Verre anti-UV avec protection à 100%, incluant un laminage anti-reflets");
@@ -813,13 +813,13 @@ namespace Epsitec.Cresus.Core
 			var currency2 = this.DataContext.CreateEntity<CurrencyEntity> ();
 			var currency3 = this.DataContext.CreateEntity<CurrencyEntity> ();
 
-			currency1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			currency1.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 			currency1.ExchangeRate = 1.0M;
 
-			currency2.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Eur;
+			currency2.CurrencyCode = Business.Finance.CurrencyCode.Eur;
 			currency2.ExchangeRate = 1.5M;  // au hasard
 
-			currency3.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Usd;
+			currency3.CurrencyCode = Business.Finance.CurrencyCode.Usd;
 			currency3.ExchangeRate = 1.2M;  // au hasard
 
 			yield return currency1;
@@ -842,56 +842,56 @@ namespace Epsitec.Cresus.Core
 			vatDef2010_1.Rank = 0;
 			vatDef2010_1.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
 			vatDef2010_1.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
-			vatDef2010_1.Code = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2010_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2010_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2010_1.Rate = 7.6M * 0.01M;
 
 			vatDef2010_2.Rank = 1;
 			vatDef2010_2.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
 			vatDef2010_2.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
-			vatDef2010_2.Code = BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2010_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2010_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2010_2.Rate = 2.4M * 0.01M;
 
 			vatDef2010_3.Rank = 2;
 			vatDef2010_3.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
 			vatDef2010_3.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
-			vatDef2010_3.Code = BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2010_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2010_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2010_3.Rate = 3.6M * 0.01M;
 
 			vatDef2010_4.Rank = 3;
 			vatDef2010_4.BeginDate = new System.DateTime (2000, 1, 1, 0, 0, 0);
 			vatDef2010_4.EndDate   = new System.DateTime (2010, 12, 31, 23, 59, 59);
-			vatDef2010_4.Code = BusinessLogic.Finance.VatCode.Excluded;
+			vatDef2010_4.Code = Business.Finance.VatCode.Excluded;
 			vatDef2010_4.Name = "Exclu du champ d'application de la TVA";
 			vatDef2010_4.Rate = 0.0M * 0.01M;
 
 			vatDef2011_1.Rank = 0;
 			vatDef2011_1.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
 			vatDef2011_1.EndDate   = null;
-			vatDef2011_1.Code = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			vatDef2011_1.Code = Business.Finance.VatCode.StandardTaxOnTurnover;
 			vatDef2011_1.Name = "TVA sur le chiffre d'affaires, taux standard";
 			vatDef2011_1.Rate = 8.0M * 0.01M;
 
 			vatDef2011_2.Rank = 1;
 			vatDef2011_2.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
 			vatDef2011_2.EndDate   = null;
-			vatDef2011_2.Code = BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover;
+			vatDef2011_2.Code = Business.Finance.VatCode.ReducedTaxOnTurnover;
 			vatDef2011_2.Name = "TVA sur le chiffre d'affaires, taux réduit";
 			vatDef2011_2.Rate = 2.5M * 0.01M;
 
 			vatDef2011_3.Rank = 2;
 			vatDef2011_3.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
 			vatDef2011_3.EndDate   = null;
-			vatDef2011_3.Code = BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover;
+			vatDef2011_3.Code = Business.Finance.VatCode.SpecialTaxOnTurnover;
 			vatDef2011_3.Name = "TVA sur le chiffre d'affaires, taux spécial";
 			vatDef2011_3.Rate = 3.8M * 0.01M;
 
 			vatDef2011_4.Rank = 3;
 			vatDef2011_4.BeginDate = new System.DateTime (2011, 1, 1, 0, 0, 0);
 			vatDef2011_4.EndDate   = null;
-			vatDef2011_4.Code = BusinessLogic.Finance.VatCode.Excluded;
+			vatDef2011_4.Code = Business.Finance.VatCode.Excluded;
 			vatDef2011_4.Name = "Exclu du champ d'application de la TVA";
 			vatDef2011_4.Rate = 0.0M * 0.01M;
 
@@ -909,24 +909,24 @@ namespace Epsitec.Cresus.Core
 		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs)
 		{
 			var decimalType = DecimalType.Default;
-			decimal vatRate = vatDefs.Where (x => x.Code == BusinessLogic.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
+			decimal vatRate = vatDefs.Where (x => x.Code == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
 
 			var billingA1 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var billingA2 = this.DataContext.CreateEntity<BillingDetailEntity> ();
 			var invoiceA = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
 
 			invoiceA.IdA = "1000-00";
-			invoiceA.DocumentSource = BusinessLogic.DocumentSource.Generated;
+			invoiceA.DocumentSource = Business.DocumentSource.Generated;
 			invoiceA.DocumentTitle = "Votre commande du 5 juillet 2010<br/>S/notre directeur M. P. Arnaud";
 			invoiceA.Description = "Facture de test #1000";
 			invoiceA.CreationDate = new System.DateTime (2010, 7, 8);
 			invoiceA.LastModificationDate = System.DateTime.Now;
 			invoiceA.BillingMailContact = billingAddress;
 			invoiceA.ShippingMailContact = billingAddress;
-			invoiceA.OtherPartyBillingMode = BusinessLogic.Finance.BillingMode.IncludingTax;
-			invoiceA.OtherPartyTaxMode = BusinessLogic.Finance.TaxMode.LiableForVat;
-			invoiceA.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
-			invoiceA.BillingStatus = BusinessLogic.Finance.BillingStatus.DebtorBillOpen;
+			invoiceA.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
+			invoiceA.OtherPartyTaxMode = Business.Finance.TaxMode.LiableForVat;
+			invoiceA.CurrencyCode = Business.Finance.CurrencyCode.Chf;
+			invoiceA.BillingStatus = Business.Finance.BillingStatus.DebtorBillOpen;
 			invoiceA.BillingDetails.Add (billingA1);
 			invoiceA.BillingDetails.Add (billingA2);
 			invoiceA.DebtorBookAccount = "1100";
@@ -944,7 +944,7 @@ namespace Epsitec.Cresus.Core
 			lineA1.BeginDate = invoiceA.CreationDate;
 			lineA1.EndDate = invoiceA.CreationDate;
 			lineA1.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-CP").FirstOrDefault ();
-			lineA1.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA1.PrimaryUnitPriceBeforeTax = lineA1.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA1.PrimaryLinePriceBeforeTax = lineA1.PrimaryUnitPriceBeforeTax * 3;
 			lineA1.NeverApplyDiscount = false;
@@ -954,7 +954,7 @@ namespace Epsitec.Cresus.Core
 			lineA1.ArticleLongDescriptionCache = lineA1.ArticleDefinition.LongDescription;
 			
 			quantityA1.ColumnName = "livré";
-			quantityA1.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
+			quantityA1.QuantityType = Business.ArticleQuantityType.Billed;
 			quantityA1.Quantity = 3;
 			quantityA1.Unit = lineA1.ArticleDefinition.BillingUnit;
 			quantityA1.ExpectedDate = new Date (2010, 7, 8);
@@ -970,7 +970,7 @@ namespace Epsitec.Cresus.Core
 			lineA2.BeginDate = invoiceA.CreationDate;
 			lineA2.EndDate = invoiceA.CreationDate;
 			lineA2.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-FL").FirstOrDefault ();
-			lineA2.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA2.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA2.PrimaryUnitPriceBeforeTax = lineA2.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA2.PrimaryLinePriceBeforeTax = lineA2.PrimaryUnitPriceBeforeTax;
 			lineA2.NeverApplyDiscount = false;
@@ -980,13 +980,13 @@ namespace Epsitec.Cresus.Core
 			lineA2.ArticleLongDescriptionCache = lineA2.ArticleDefinition.LongDescription;
 
 			quantityA2_1.ColumnName = "livré";
-			quantityA2_1.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
+			quantityA2_1.QuantityType = Business.ArticleQuantityType.Billed;
 			quantityA2_1.Quantity = 1;
 			quantityA2_1.Unit = lineA2.ArticleDefinition.BillingUnit;
 			quantityA2_1.ExpectedDate = new Date (2010, 7, 8);
 
 			quantityA2_2.ColumnName = "suivra";
-			quantityA2_2.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
+			quantityA2_2.QuantityType = Business.ArticleQuantityType.Delayed;
 			quantityA2_2.Quantity = 1;
 			quantityA2_2.Unit = lineA2.ArticleDefinition.BillingUnit;
 			quantityA2_2.ExpectedDate = new Date (2010, 7, 19);
@@ -1003,7 +1003,7 @@ namespace Epsitec.Cresus.Core
 			lineA3.BeginDate = invoiceA.CreationDate;
 			lineA3.EndDate = invoiceA.CreationDate;
 			lineA3.ArticleDefinition = articleDefs.Where (x => x.IdA == "CR-SP").FirstOrDefault ();
-			lineA3.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA3.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA3.PrimaryUnitPriceBeforeTax = lineA3.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA3.PrimaryLinePriceBeforeTax = lineA3.PrimaryUnitPriceBeforeTax * 0;
 			lineA3.NeverApplyDiscount = false;
@@ -1013,13 +1013,13 @@ namespace Epsitec.Cresus.Core
 			lineA3.ArticleLongDescriptionCache = lineA3.ArticleDefinition.LongDescription;
 
 			quantityA3_1.ColumnName = "suivra";
-			quantityA3_1.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
+			quantityA3_1.QuantityType = Business.ArticleQuantityType.Delayed;
 			quantityA3_1.Quantity = 2;
 			quantityA3_1.Unit = lineA3.ArticleDefinition.BillingUnit;
 			quantityA3_1.ExpectedDate = new Date (2010, 9, 1);
 
 			quantityA3_2.ColumnName = "suivra";
-			quantityA3_2.QuantityType = BusinessLogic.ArticleQuantityType.Delayed;
+			quantityA3_2.QuantityType = Business.ArticleQuantityType.Delayed;
 			quantityA3_2.Quantity = 1;
 			quantityA3_2.Unit = lineA3.ArticleDefinition.BillingUnit;
 			quantityA3_2.ExpectedDate = new Date (2011, 1, 31);
@@ -1035,7 +1035,7 @@ namespace Epsitec.Cresus.Core
 			lineA4.BeginDate = invoiceA.CreationDate;
 			lineA4.EndDate = invoiceA.CreationDate;
 			lineA4.ArticleDefinition = articleDefs.Where (x => x.IdA == "EMB").FirstOrDefault ();
-			lineA4.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			lineA4.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			lineA4.PrimaryUnitPriceBeforeTax = lineA4.ArticleDefinition.ArticlePrices[0].ValueBeforeTax;
 			lineA4.PrimaryLinePriceBeforeTax = lineA4.PrimaryUnitPriceBeforeTax;
 			lineA4.NeverApplyDiscount = true;
@@ -1045,7 +1045,7 @@ namespace Epsitec.Cresus.Core
 			lineA4.ArticleLongDescriptionCache = lineA4.ArticleDefinition.LongDescription;
 
 			quantityA4.ColumnName = "livré";
-			quantityA4.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
+			quantityA4.QuantityType = Business.ArticleQuantityType.Billed;
 			quantityA4.Quantity = 1;
 			quantityA4.Unit = lineA4.ArticleDefinition.BillingUnit;
 			quantityA4.ExpectedDate = new Date (2010, 7, 8);
@@ -1090,12 +1090,12 @@ namespace Epsitec.Cresus.Core
 			totalA1.ResultingTax = totalA1.ResultingPriceBeforeTax * vatRate;
 			totalA1.TextForPrimaryPrice = "Total HT avant rabais";
 			totalA1.TextForResultingPrice = "Total HT après rabais";
-			totalA1.DisplayModes = BusinessLogic.Finance.PriceDisplayModes.PrimaryTotal | BusinessLogic.Finance.PriceDisplayModes.Discount | BusinessLogic.Finance.PriceDisplayModes.ResultingTotal;
+			totalA1.DisplayModes = Business.Finance.PriceDisplayModes.PrimaryTotal | Business.Finance.PriceDisplayModes.Discount | Business.Finance.PriceDisplayModes.ResultingTotal;
 
 			var taxA1 = this.DataContext.CreateEntity<TaxDocumentItemEntity> ();
 
 			taxA1.Visibility = true;
-			taxA1.VatCode = BusinessLogic.Finance.VatCode.StandardTaxOnTurnover;
+			taxA1.VatCode = Business.Finance.VatCode.StandardTaxOnTurnover;
 			taxA1.Rate = vatRate;
 			taxA1.BaseAmount = totalA1.ResultingPriceBeforeTax + lineA4.ResultingLinePriceBeforeTax;
 			taxA1.ResultingTax = taxA1.Rate * taxA1.BaseAmount; // devrait être égal à 'totalA1.ResultingTax + lineA4.ResultingLineTax'
@@ -1139,16 +1139,16 @@ namespace Epsitec.Cresus.Core
 			var paymentA1 = this.DataContext.CreateEntity<PaymentDetailEntity> ();
 			var paymentA2 = this.DataContext.CreateEntity<PaymentDetailEntity> ();
 
-			paymentA1.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
+			paymentA1.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
 			paymentA1.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
 			paymentA1.Amount = 1000.00M;
-			paymentA1.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
+			paymentA1.Currency = currencyDefs.Where (x => x.CurrencyCode == Business.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA1.Date = new Date (2010, 08, 06);
 
-			paymentA2.PaymentType = BusinessLogic.Finance.PaymentDetailType.AmountDue;
+			paymentA2.PaymentType = Business.Finance.PaymentDetailType.AmountDue;
 			paymentA2.PaymentMode = paymentDefs.Where (x => x.Code == "BILL30").FirstOrDefault ();
 			paymentA2.Amount = totalA2.FixedPriceAfterTax.Value - paymentA1.Amount;
-			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == BusinessLogic.Finance.CurrencyCode.Chf).FirstOrDefault ();
+			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == Business.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA2.Date = new Date (2010, 09, 05);
 
 			billingA1.Title = "Facture 1000-00, 1ère tranche";
@@ -1176,7 +1176,7 @@ namespace Epsitec.Cresus.Core
 			articlePrice1.EndDate   = new System.DateTime (2020, 12, 31, 23, 59, 59);  // 31 décembre 23:59:59 (c'est important de donner l'heure)
 			articlePrice1.MinQuantity = 1;
 			articlePrice1.MaxQuantity = null;
-			articlePrice1.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			articlePrice1.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 			articlePrice1.ValueBeforeTax = price;
 			if (articlePriceGroup1 != null) articlePrice1.PriceGroups.Add (articlePriceGroup1);
 			if (articlePriceGroup2 != null) articlePrice1.PriceGroups.Add (articlePriceGroup2);

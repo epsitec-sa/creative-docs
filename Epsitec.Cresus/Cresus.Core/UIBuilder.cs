@@ -877,7 +877,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, BusinessLogic.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, Business.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity
 		{
@@ -888,8 +888,8 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (picker);
 
-			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
-				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+			if (cardinality == Business.EnumValueCardinality.ExactlyOne ||
+				cardinality == Business.EnumValueCardinality.AtLeastOne)
 			{
 				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
@@ -921,7 +921,7 @@ namespace Epsitec.Cresus.Core
 			return picker;
 		}
 
-		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, BusinessLogic.EnumValueCardinality cardinality)
+		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, Business.EnumValueCardinality cardinality)
 			where T : AbstractEntity
 		{
 			var tile = this.CreateEditionTile ();
@@ -931,8 +931,8 @@ namespace Epsitec.Cresus.Core
 
 			controller.Attach (picker);
 
-			if (cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
-				cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+			if (cardinality == Business.EnumValueCardinality.ExactlyOne ||
+				cardinality == Business.EnumValueCardinality.AtLeastOne)
 			{
 				if (picker.SelectionCount == 0)  // aucune sélection ?
 				{
@@ -1171,7 +1171,7 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreViewController controller;
 		}
 
-		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, BusinessLogic.EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
+		private Widgets.ItemPicker CreateDetailedItemPicker(EditionTile tile, string label, Business.EnumValueCardinality cardinality, bool createTileButton, out Button tileButton)
 		{
 			tile.AllowSelection = true;
 

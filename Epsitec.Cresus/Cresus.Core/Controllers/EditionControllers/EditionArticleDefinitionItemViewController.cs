@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
-			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
+			builder.CreateEditionDetailedItemPicker ("ArticleGroups", this.Entity, "Groupes auxquels l'article appartient", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 2);
 		}
 
 		private void CreateUIMain2(UIBuilder builder)
@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode,  (x, v) => x.InputVatCode = v),  BusinessLogic.Enumerations.GetInputVatCodes  (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
-			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)",       Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), BusinessLogic.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (acquisition)", Marshaler.Create (this.Entity, x => x.InputVatCode,  (x, v) => x.InputVatCode = v),  Business.Enumerations.GetInputVatCodes  (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 0, "Mode de TVA (vente)",       Marshaler.Create (this.Entity, x => x.OutputVatCode, (x, v) => x.OutputVatCode = v), Business.Enumerations.GetOutputVatCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 		}
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var entity = context.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
 
-			entity.Category = BusinessLogic.UnitOfMeasureCategory.Unit;
+			entity.Category = Business.UnitOfMeasureCategory.Unit;
 			
 			return entity;
 		}

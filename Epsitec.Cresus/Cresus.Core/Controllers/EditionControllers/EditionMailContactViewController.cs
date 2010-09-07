@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
-			builder.CreateEditionDetailedItemPicker ("ContactRoles", this.Entity, "Rôles souhaités", controller, BusinessLogic.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
+			builder.CreateEditionDetailedItemPicker ("ContactRoles", this.Entity, "Rôles souhaités", controller, Business.EnumValueCardinality.Any, ViewControllerMode.Summary, 3);
 		}
 
 		private void CreateUICommon(UIBuilder builder)

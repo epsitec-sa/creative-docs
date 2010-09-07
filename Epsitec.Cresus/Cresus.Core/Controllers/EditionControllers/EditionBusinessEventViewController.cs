@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Code)
 			};
 
-			builder.CreateEditionDetailedItemPicker ("Type de l'événement", controller, BusinessLogic.EnumValueCardinality.ExactlyOne);
+			builder.CreateEditionDetailedItemPicker ("Type de l'événement", controller, Business.EnumValueCardinality.ExactlyOne);
 		}
 
 

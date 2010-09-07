@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.UserManagement
+namespace Epsitec.Cresus.Core.Business.UserManagement
 {
 	[DesignerVisible]
 	public enum UserPowerLevel

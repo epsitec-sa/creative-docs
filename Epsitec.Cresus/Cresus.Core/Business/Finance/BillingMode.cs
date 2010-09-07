@@ -6,14 +6,14 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Finance
+namespace Epsitec.Cresus.Core.Business.Finance
 {
 	[DesignerVisible]
-	public enum PaymentDetailType
+	public enum BillingMode
 	{
 		None			= 0,
 
-		AmountDue		= 1,					//	montant dû
-		AmountPaid		= 2,					//	montant payé ou encaissé
+		IncludingTax	= 1,										//	TTC
+		ExcludingTax	= 2,										//	HT
 	}
 }
