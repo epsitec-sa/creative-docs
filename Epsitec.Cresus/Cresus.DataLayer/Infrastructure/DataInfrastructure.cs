@@ -8,12 +8,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
+	
+	
 	/// <summary>
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
 	/// </summary>
 	public sealed class DataInfrastructure
 	{
+
+
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
@@ -54,6 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			UidGenerator.CreateUidGenerator (this.DbInfrastructure, name, slots);
 		}
 
+
 		/// <summary>
 		/// Deletes a generator for unique ids from the database.
 		/// </summary>
@@ -63,6 +68,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			UidGenerator.DeleteUidGenerator (this.DbInfrastructure, name);
 		}
+
 
 		/// <summary>
 		/// Tells whether a generator for unique ids exists in the database.
@@ -88,5 +94,39 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
 		}
+
+
+		public bool TryCreateLockTransaction(IEnumerable<string> lockNames, out LockTransaction lockTransaction)
+		{
+			string userName = this.GetUserName ();
+
+			return LockTransaction.TryCreateLockTransaction (this.DbInfrastructure, lockNames, userName, out lockTransaction);
+		}
+
+
+		// TODO All this user name stuff is temporary and must be changed.
+		// Marc
+
+		
+		[System.Obsolete("This stuff is temporary")]
+		public string GetUserName()
+		{
+			return this.userName;
+		}
+
+
+		[System.Obsolete ("This stuff is temporary")]
+		public void SetUserName(string userName)
+		{
+			this.userName = userName;
+		}
+
+
+		[System.Obsolete ("This stuff is temporary")]
+		private string userName;
+
+
 	}
+
+
 }
