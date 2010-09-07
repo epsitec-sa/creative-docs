@@ -1404,6 +1404,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleNavigatorCursorChanged(object sender)
 		{
 			this.OnCursorChanged (false);
+			this.commandController.NotifyStyleChanged ();
 		}
 
 		private void HandleNavigatorStyleChanged(object sender)

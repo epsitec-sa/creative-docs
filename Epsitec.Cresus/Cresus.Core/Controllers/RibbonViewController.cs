@@ -147,12 +147,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Italic,     dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Underlined, dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       dx: RibbonViewController.buttonSmallWidth, isActivable: true));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Italic,     dx: RibbonViewController.buttonSmallWidth, isActivable: true));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Underlined, dx: RibbonViewController.buttonSmallWidth, isActivable: true));
 
-			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Subscript,   dx: RibbonViewController.buttonSmallWidth));
-			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Superscript, dx: RibbonViewController.buttonSmallWidth));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Subscript,   dx: RibbonViewController.buttonSmallWidth, isActivable: true));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Superscript, dx: RibbonViewController.buttonSmallWidth, isActivable: true));
 		}
 
 		private void CreateRibbonDatabaseSection()
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int? dx = null)
+		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int? dx = null, bool isActivable = false)
 		{
 			if (handler != null)
 			{
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			double buttonWidth = RibbonViewController.GetButtonWidth (dx.Value);
 
-			return new RibbonIconButton
+			var button = new RibbonIconButton
 			{
 				CommandObject = command,
 				PreferredIconSize = new Size (dx.Value, dx.Value),
@@ -264,6 +264,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				HorizontalAlignment = HorizontalAlignment.Center,
 				AutoFocus = false,
 			};
+
+			if (isActivable)
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
+			return button;
 		}
 
 		private static double GetButtonWidth(int dx)

@@ -180,7 +180,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				this.host.navigator.SelectionItalic = !this.host.navigator.SelectionBold;
+				this.host.navigator.SelectionItalic = !this.host.navigator.SelectionItalic;
 			}
 
 			[Command (Res.CommandIds.Underlined)]
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				this.host.navigator.SelectionUnderline = !this.host.navigator.SelectionBold;
+				this.host.navigator.SelectionUnderline = !this.host.navigator.SelectionUnderline;
 			}
 
 			[Command (Res.CommandIds.Subscript)]
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				this.host.navigator.SelectionSubscript = !this.host.navigator.SelectionBold;
+				this.host.navigator.SelectionSubscript = !this.host.navigator.SelectionSubscript;
 			}
 
 			[Command (Res.CommandIds.Superscript)]
@@ -213,17 +213,37 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				this.host.navigator.SelectionSuperscript = !this.host.navigator.SelectionBold;
+				this.host.navigator.SelectionSuperscript = !this.host.navigator.SelectionSuperscript;
 			}
 
 			
 			public void NotifyIsFocusedChanged(bool focused)
 			{
-				this.UpdateCommandStates (focused);
+				this.UpdateCommandStatesEnable (focused);
+			}
+
+			public void NotifyStyleChanged()
+			{
+				this.UpdateCommandStatesActiveState ();
 			}
 
 			
-			private void UpdateCommandStates(bool focused)
+			private void UpdateCommandStatesEnable(bool focused)
+			{
+				var commandContext = CommandContext.GetContext (this.host);
+
+				bool isReadOnly  = this.host.IsReadOnly;
+				bool isReadWrite = !isReadOnly;
+
+				commandContext.GetCommandState (ApplicationCommands.Copy     ).Enable = focused;
+				commandContext.GetCommandState (ApplicationCommands.Cut      ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Paste    ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Delete   ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.SelectAll).Enable = focused;
+
+			}
+
+			private void UpdateCommandStatesActiveState()
 			{
 				var commandContext = CommandContext.GetContext (this.host);
 
@@ -231,15 +251,14 @@ namespace Epsitec.Common.Widgets
 				bool isReadWrite = !isReadOnly;
 				bool canFormat   = isReadWrite && this.host.IsFormattedText;
 
-				commandContext.GetCommandState (ApplicationCommands.Copy).Enable      = focused;
-				commandContext.GetCommandState (ApplicationCommands.Cut).Enable       = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Paste).Enable     = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Delete).Enable    = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.SelectAll).Enable = focused;
-
-				if (canFormat)
-                {
-					// TODO: gérer aussi les commandes de formatage (gras/italique/...)
+				//?if (canFormat)  // TODO: pourquoi IsFormattedText est false ?
+				if (isReadWrite)
+				{
+					commandContext.GetCommandState (ApplicationCommands.Bold       ).ActiveState = this.host.navigator.SelectionBold        ? ActiveState.Yes : ActiveState.No;
+					commandContext.GetCommandState (ApplicationCommands.Italic     ).ActiveState = this.host.navigator.SelectionItalic      ? ActiveState.Yes : ActiveState.No;
+					commandContext.GetCommandState (ApplicationCommands.Underlined ).ActiveState = this.host.navigator.SelectionUnderline   ? ActiveState.Yes : ActiveState.No;
+					commandContext.GetCommandState (ApplicationCommands.Subscript  ).ActiveState = this.host.navigator.SelectionSubscript   ? ActiveState.Yes : ActiveState.No;
+					commandContext.GetCommandState (ApplicationCommands.Superscript).ActiveState = this.host.navigator.SelectionSuperscript ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 			
