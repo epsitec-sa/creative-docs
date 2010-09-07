@@ -876,6 +876,11 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <EmbeddedResource Include="Images\Cmd.Print.icon" />
+    <EmbeddedResource Include="Images\Cmd.Bold.icon" />
+    <EmbeddedResource Include="Images\Cmd.Italic.icon" />
+    <EmbeddedResource Include="Images\Cmd.Subscript.icon" />
+    <EmbeddedResource Include="Images\Cmd.Superscript.icon" />
+    <EmbeddedResource Include="Images\Cmd.Underline.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

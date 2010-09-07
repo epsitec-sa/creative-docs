@@ -160,6 +160,19 @@ namespace Epsitec.Common.Widgets
 				this.host.navigator.ReplaceWithText (ResourceBundle.Field.Null);
 			}
 
+
+#if false
+			[Command (Res.CommandIds.Bold)]
+			public void CommandBold(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+			}
+#endif
+
 			// TODO: gérer aussi les commandes de formatage (gras/italique/...)
 			
 			public void NotifyIsFocusedChanged(bool focused)
