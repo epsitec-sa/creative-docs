@@ -348,7 +348,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (!shortcut.IsEmpty)
 					{
-						return string.Format (Res.Strings.Shortcut.Template.TextWithShortcut, text, shortcut);
+						return string.Format (Res.Strings.Shortcut.Template.TextWithShortcut.ToString (), text, shortcut);
 					}
 				}
 			}

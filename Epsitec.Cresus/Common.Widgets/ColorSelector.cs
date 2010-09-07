@@ -249,21 +249,21 @@ namespace Epsitec.Common.Widgets
 			this.fields[11].BackColor = Drawing.Color.FromRgb (0, 0, 0);
 			ToolTip.Default.SetToolTip (this.fields[11], Res.Strings.ColorSelector.LongGray);
 
-			this.labels[0].Text = Res.Strings.ColorSelector.ShortRed;
-			this.labels[1].Text = Res.Strings.ColorSelector.ShortGreen;
-			this.labels[2].Text = Res.Strings.ColorSelector.ShortBlue;
-			this.labels[3].Text = Res.Strings.ColorSelector.ShortAlpha;
-			this.labels[4].Text = Res.Strings.ColorSelector.ShortHue;
-			this.labels[5].Text = Res.Strings.ColorSelector.ShortSaturation;
-			this.labels[6].Text = Res.Strings.ColorSelector.ShortValue;
-			this.labels[7].Text = Res.Strings.ColorSelector.ShortCyan;
-			this.labels[8].Text = Res.Strings.ColorSelector.ShortMagenta;
-			this.labels[9].Text = Res.Strings.ColorSelector.ShortYellow;
-			this.labels[10].Text = Res.Strings.ColorSelector.ShortBlack;
-			this.labels[11].Text = Res.Strings.ColorSelector.ShortGray;
+			this.labels[ 0].FormattedText = Res.Strings.ColorSelector.ShortRed;
+			this.labels[ 1].FormattedText = Res.Strings.ColorSelector.ShortGreen;
+			this.labels[ 2].FormattedText = Res.Strings.ColorSelector.ShortBlue;
+			this.labels[ 3].FormattedText = Res.Strings.ColorSelector.ShortAlpha;
+			this.labels[ 4].FormattedText = Res.Strings.ColorSelector.ShortHue;
+			this.labels[ 5].FormattedText = Res.Strings.ColorSelector.ShortSaturation;
+			this.labels[ 6].FormattedText = Res.Strings.ColorSelector.ShortValue;
+			this.labels[ 7].FormattedText = Res.Strings.ColorSelector.ShortCyan;
+			this.labels[ 8].FormattedText = Res.Strings.ColorSelector.ShortMagenta;
+			this.labels[ 9].FormattedText = Res.Strings.ColorSelector.ShortYellow;
+			this.labels[10].FormattedText = Res.Strings.ColorSelector.ShortBlack;
+			this.labels[11].FormattedText = Res.Strings.ColorSelector.ShortGray;
 
 			this.labelHexa = new StaticText (this);
-			this.labelHexa.Text = Res.Strings.ColorSelector.ShortHexa;
+			this.labelHexa.FormattedText = Res.Strings.ColorSelector.ShortHexa;
 
 			this.fieldHexa = new TextField (this);
 			this.fieldHexa.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
