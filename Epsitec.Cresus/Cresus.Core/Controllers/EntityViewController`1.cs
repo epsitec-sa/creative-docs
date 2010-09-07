@@ -54,6 +54,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public BusinessLogic.BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
+		}
+
 		public sealed override void CreateUI(Widget container)
 		{
 			var context       = this.DataContext;
@@ -63,8 +71,37 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
 			System.Diagnostics.Debug.Assert (tileContainer != null);
 
+			this.CreateBusinessContext ();
+
 			this.TileContainer = tileContainer;
 			this.CreateUI ();
+		}
+
+		private void CreateBusinessContext()
+		{
+			var entities = this.GetEntitiesForBusinessContext ();
+
+			if (entities != null)
+			{
+				this.businessContext = new BusinessLogic.BusinessContext (this.Orchestrator.DataContext);
+				this.businessContext.Register (entities);
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (this.businessContext != null)
+			{
+				this.businessContext.Dispose ();
+				this.businessContext = null;
+			}
+
+			base.Dispose (disposing);
+		}
+
+		protected virtual IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
+		{
+			return null;
 		}
 
 		public sealed override AbstractEntity GetEntity()
@@ -116,5 +153,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		private T entity;
+		private BusinessLogic.BusinessContext businessContext;
 	}
 }
