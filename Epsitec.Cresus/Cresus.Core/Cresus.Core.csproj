@@ -101,8 +101,8 @@
     <Compile Include="BusinessLogic\Rules\InvoiceDocumentUpdateRule.cs" />
     <Compile Include="BusinessLogic\Rules\RelationSetupRule.cs" />
     <Compile Include="BusinessLogic\RuleType.cs" />
-    <Compile Include="BusinessLogic\UidGenerator.cs" />
-    <Compile Include="BusinessLogic\UidGeneratorPool.cs" />
+    <Compile Include="BusinessLogic\RefIdGenerator.cs" />
+    <Compile Include="BusinessLogic\RefIdGeneratorPool.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
     <Compile Include="Business\ArticleType.cs" />
     <Compile Include="Business\DocumentSource.cs" />
