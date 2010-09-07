@@ -13,6 +13,8 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		public static readonly Command Bold			= Res.Commands.Bold;
+
 		public static readonly Command Cut			= Res.Commands.Cut;
 		public static readonly Command Copy			= Res.Commands.Copy;
 		public static readonly Command Paste		= Res.Commands.Paste;
@@ -42,6 +44,8 @@ namespace Epsitec.Common.Widgets
 
 		public static class Id
 		{
+			public const long Bold			= Res.CommandIds.Bold;
+
 			public const long Cut			= Res.CommandIds.Cut;
 			public const long Copy			= Res.CommandIds.Copy;
 			public const long Paste			= Res.CommandIds.Paste;

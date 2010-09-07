@@ -37,6 +37,7 @@ namespace Epsitec.Common.Types
 			this.text = formattedTextSource;
 		}
 
+#if false
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
 		/// </summary>
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Types
 		{
 			this.text = formattedText.text;
 		}
+#endif
 
 
 		/// <summary>
@@ -56,6 +58,12 @@ namespace Epsitec.Common.Types
 		public static implicit operator FormattedText(string formattedTextSource)
 		{
 			return new FormattedText (formattedTextSource);
+		}
+
+
+		public static implicit operator string(FormattedText source)
+		{
+			return source.ToString ();
 		}
 
 
