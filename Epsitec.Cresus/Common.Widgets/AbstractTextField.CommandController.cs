@@ -161,7 +161,6 @@ namespace Epsitec.Common.Widgets
 			}
 
 
-#if true
 			[Command (Res.CommandIds.Bold)]
 			public void CommandBold(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
@@ -172,9 +171,51 @@ namespace Epsitec.Common.Widgets
 
 				this.host.navigator.SelectionBold = !this.host.navigator.SelectionBold;
 			}
-#endif
 
-			// TODO: gérer aussi les commandes de formatage (gras/italique/...)
+			[Command (Res.CommandIds.Italic)]
+			public void CommandItalic(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+				this.host.navigator.SelectionItalic = !this.host.navigator.SelectionBold;
+			}
+
+			[Command (Res.CommandIds.Underlined)]
+			public void CommandUnderlined(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+				this.host.navigator.SelectionUnderline = !this.host.navigator.SelectionBold;
+			}
+
+			[Command (Res.CommandIds.Subscript)]
+			public void CommandSubscript(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+				this.host.navigator.SelectionSubscript = !this.host.navigator.SelectionBold;
+			}
+
+			[Command (Res.CommandIds.Superscript)]
+			public void CommandSuperscript(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (this.host.IsReadOnly)
+				{
+					return;
+				}
+
+				this.host.navigator.SelectionSuperscript = !this.host.navigator.SelectionBold;
+			}
+
 			
 			public void NotifyIsFocusedChanged(bool focused)
 			{

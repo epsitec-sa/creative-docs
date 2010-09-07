@@ -209,11 +209,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.textLayout.IsSelectionBold(this.context) != value )
+				if (this.textLayout.IsSelectionBold (this.context) != value)
 				{
-					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionBold(this.context, value);
-					this.OnStyleChanged();
+					this.UndoMemorize (UndoType.AutonomusStyle);
+					this.textLayout.SetSelectionBold (this.context, value);
+					this.OnStyleChanged ();
 				}
 			}
 		}
@@ -227,11 +227,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.textLayout.IsSelectionItalic(this.context) != value )
+				if (this.textLayout.IsSelectionItalic (this.context) != value)
 				{
-					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionItalic(this.context, value);
-					this.OnStyleChanged();
+					this.UndoMemorize (UndoType.AutonomusStyle);
+					this.textLayout.SetSelectionItalic (this.context, value);
+					this.OnStyleChanged ();
 				}
 			}
 		}
@@ -245,10 +245,46 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.textLayout.IsSelectionUnderline(this.context) != value )
+				if (this.textLayout.IsSelectionUnderline (this.context) != value)
+				{
+					this.UndoMemorize (UndoType.AutonomusStyle);
+					this.textLayout.SetSelectionUnderline (this.context, value);
+					this.OnStyleChanged ();
+				}
+			}
+		}
+
+		public bool								SelectionSubscript
+		{
+			get
+			{
+				return this.textLayout.IsSelectionSubscript (this.context);
+			}
+
+			set
+			{
+				if (this.textLayout.IsSelectionSubscript (this.context) != value)
 				{
 					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionUnderline(this.context, value);
+					this.textLayout.SetSelectionSubscript (this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public bool								SelectionSuperscript
+		{
+			get
+			{
+				return this.textLayout.IsSelectionSuperscript (this.context);
+			}
+
+			set
+			{
+				if (this.textLayout.IsSelectionSuperscript (this.context) != value)
+				{
+					this.UndoMemorize(UndoType.AutonomusStyle);
+					this.textLayout.SetSelectionSuperscript (this.context, value);
 					this.OnStyleChanged();
 				}
 			}
