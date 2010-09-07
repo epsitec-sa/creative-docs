@@ -17,6 +17,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
+	/// <summary>
+	/// Ce contrôleur supervise une zone de prévisualisation et une barre d'outils. La zone de prévisualisation
+	/// contiendra un ou plusieurs Widgets.EntityPreviewer, et la barre d'outil tout ce qu'il faut pour choisir
+	/// la ou les pages à afficher, ainsi que le zoom (réduction ou agrandissement).
+	/// </summary>
 	public class PreviewerController
 	{
 		public PreviewerController(Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
@@ -36,6 +41,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public void CreateUI(FrameBox previewBox, FrameBox toolbarBox)
 		{
+			//	Crée l'interface dans deux boîtes, l'une pour le ou les aperçus et l'autre pour choisir
+			//	la page et le zoom.
 			this.previewFrame = new Scrollable
 			{
 				Parent = previewBox,
@@ -67,15 +74,22 @@ namespace Epsitec.Cresus.Core.Printers
 				frame.Margins = new Margins (-1, 0, 0, 0);
 				frame.Dock = DockStyle.Fill;
 
+#if false
 				this.pageScroller = new HScroller
 				{
 					Parent = frame,
 					Dock = DockStyle.Fill,
 				};
+#else
+				this.pageSlider = new HSlider
+				{
+					Parent = frame,
+					UseArrowGlyphs = true,
+					Dock = DockStyle.Fill,
+					Margins = new Margins (2),
+				};
+#endif
 			}
-
-			ToolTip.Default.SetToolTip (this.pageRank,     "Page(s) visible(s)");
-			ToolTip.Default.SetToolTip (this.pageScroller, "Montre une autre page");
 
 			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug1 ||
 				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug2)
@@ -220,11 +234,19 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.placer = new Dialogs.PreviewOptimalPlacer (this.pagePreviewers, this.entityPrinter.PageSize);
 
+#if false
 			this.pageScroller.ValueChanged += delegate
 			{
 				this.currentPage = (int) this.pageScroller.Value;
 				this.UpdatePages ();
 			};
+#else
+			this.pageSlider.ValueChanged += delegate
+			{
+				this.currentPage = (int) this.pageSlider.Value;
+				this.UpdatePages ();
+			};
+#endif
 
 			this.zoom18Button.Clicked += delegate
 			{
@@ -269,6 +291,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public void Update()
 		{
+			//	Met à jour le ou les aperçus. Le nombre et pages et leurs contenus peuvent avoir
+			//	été changés.
 			this.entityPrinter.BuildSections ();
 			this.UpdatePages ();
 		}
@@ -321,14 +345,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			this.UpdatePagePreviewsGeometry ();
-
-			this.pageScroller.MinValue = 0;
-			this.pageScroller.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
-			this.pageScroller.Resolution = 1;
-			this.pageScroller.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.entityPrinter.PageCount (), 1);
-			this.pageScroller.SmallChange = 1;
-			this.pageScroller.LargeChange = 10;
-			this.pageScroller.Value = this.currentPage;
+			this.UpdatePageScroller ();
 		}
 
 		private void UpdatePagePreviewsGeometry()
@@ -355,6 +372,27 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		private void UpdatePageScroller()
+		{
+#if false
+			this.pageScroller.MinValue = 0;
+			this.pageScroller.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
+			this.pageScroller.Resolution = 1;
+			this.pageScroller.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.entityPrinter.PageCount (), 1);
+			this.pageScroller.SmallChange = 1;
+			this.pageScroller.LargeChange = 10;
+			this.pageScroller.Value = this.currentPage;
+#else
+			this.pageSlider.MinValue = 0;
+			this.pageSlider.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
+			this.pageSlider.Resolution = 1;
+			//?this.pageSlider.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.entityPrinter.PageCount (), 1);
+			this.pageSlider.SmallChange = 1;
+			this.pageSlider.LargeChange = 10;
+			this.pageSlider.Value = this.currentPage;
+#endif
+		}
+
 		private void UpdateButtons()
 		{
 			int t = this.entityPrinter.PageCount ();
@@ -362,16 +400,21 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.showedPageCount <= 1)
 			{
-
 				this.pageRank.Text = string.Format ("{0} / {1}", p.ToString (), t.ToString ());
+
+				ToolTip.Default.SetToolTip (this.pageRank,     "Page visible / Nombre total de pages");
+				//?ToolTip.Default.SetToolTip (this.pageScroller, "Montre une autre page");
+				ToolTip.Default.SetToolTip (this.pageSlider, "Montre une autre page");
 			}
 			else
 			{
 				int q = System.Math.Min (p + this.showedPageCount-1, t);
-
 				this.pageRank.Text = string.Format ("{0}..{1} / {2}", p.ToString (), q.ToString (), t.ToString ());
-			}
 
+				ToolTip.Default.SetToolTip (this.pageRank,     "Pages visibles / Nombre total de pages");
+				//?ToolTip.Default.SetToolTip (this.pageScroller, "Montre d'autres pages");
+				ToolTip.Default.SetToolTip (this.pageSlider, "Montre d'autres pages");
+			}
 
 			this.zoom14Button.Enable = t > 1;
 			this.zoom18Button.Enable = t > 4;
@@ -519,6 +562,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private StaticText								pageRank;
 		private HScroller								pageScroller;
+		private HSlider									pageSlider;
 
 		private GlyphButton								debugPrevButton1;
 		private StaticText								debugParam1;

@@ -52,6 +52,8 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.StillEngaged += this.HandleButton;
 				this.arrowDown.AutoRepeat = true;
 				this.arrowDown.Dock = this.isVertical ? DockStyle.Bottom : DockStyle.Left;
+
+				this.UpdateGlyphs ();
 			}
 		}
 
@@ -117,6 +119,23 @@ namespace Epsitec.Common.Widgets
 				{
 					this.isInverted = value;
 					this.Invalidate();
+				}
+			}
+		}
+
+		public bool UseArrowGlyphs
+		{
+			get
+			{
+				return this.useArrowGlyphs;
+			}
+			set
+			{
+				if (this.useArrowGlyphs != value)
+				{
+					this.useArrowGlyphs = value;
+					this.UpdateGlyphs ();
+					this.Invalidate ();
 				}
 			}
 		}
@@ -214,22 +233,34 @@ namespace Epsitec.Common.Widgets
 		
 		protected GlyphButton				ArrowUp
 		{
-			get { return this.arrowUp; }
+			get
+			{
+				return this.arrowUp;
+			}
 		}
 		
 		protected GlyphButton				ArrowDown
 		{
-			get { return this.arrowDown; }
+			get
+			{
+				return this.arrowDown;
+			}
 		}
 
 		protected GlyphButton				ArrowMax
 		{
-			get { return this.arrowMax; }
+			get
+			{
+				return this.arrowMax;
+			}
 		}
 
 		protected GlyphButton				ArrowMin
 		{
-			get { return this.arrowMin; }
+			get
+			{
+				return this.arrowMin;
+			}
 		}
 
 
@@ -387,6 +418,43 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void UpdateGlyphs()
+		{
+			if (this.arrowUp == null)
+			{
+				return;
+			}
+
+			if (this.isVertical)
+			{
+				this.arrowMax.GlyphShape = GlyphShape.ArrowUp;
+				this.arrowMin.GlyphShape = GlyphShape.ArrowDown;
+			}
+			else
+			{
+				this.arrowMax.GlyphShape = GlyphShape.ArrowRight;
+				this.arrowMin.GlyphShape = GlyphShape.ArrowLeft;
+			}
+
+			if (this.useArrowGlyphs)
+			{
+				if (this.isVertical)
+				{
+					this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
+					this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
+				}
+				else
+				{
+					this.arrowUp.GlyphShape = GlyphShape.ArrowRight;
+					this.arrowDown.GlyphShape = GlyphShape.ArrowLeft;
+				}
+			}
+			else
+			{
+				this.arrowUp.GlyphShape = GlyphShape.Plus;
+				this.arrowDown.GlyphShape = GlyphShape.Minus;
+			}
+		}
 		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
@@ -876,6 +944,7 @@ namespace Epsitec.Common.Widgets
 		private bool						isInverted;
 		private bool						showMinMaxButtons;
 		private bool						showScrollButtons;
+		private bool						useArrowGlyphs;
 		private decimal						buttonStep = 0.1M;
 		private decimal						pageStep   = 0.2M;
 		private GlyphButton					arrowMax;
