@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.checkButtons   = new List<CheckButton> ();
 			this.previewButtons = new List<GlyphButton> ();
-			this.pagePreviews   = new List<Widgets.PreviewEntity> ();
+			this.pagePreviewers   = new List<Widgets.EntityPreviewer> ();
 		}
 
 
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 #endif
 
 			Size pageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
-			this.placer = new PreviewOptimalPlacer (this.pagePreviews, pageSize);
+			this.placer = new PreviewOptimalPlacer (this.pagePreviewers, pageSize);
 
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
@@ -367,8 +367,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePreview()
 		{
-			//	Crée tous les Widgets.PreviewEntity, sans s'occuper de les positionner.
-			this.pagePreviews.Clear ();
+			//	Crée tous les Widgets.EntityPreviewer, sans s'occuper de les positionner.
+			this.pagePreviewers.Clear ();
 			this.previewFrame.Children.Clear ();
 
 			if (this.previewedSection == null)
@@ -393,14 +393,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				for (int i = 0; i < count; i++)
 				{
-					var preview = new Widgets.PreviewEntity
+					var preview = new Widgets.EntityPreviewer
 					{
 						Parent = this.previewFrame,
 						EntityPrinter = this.previewedSection.EntityPrinter,
 						CurrentPage = pageRank++,
 					};
 
-					this.pagePreviews.Add (preview);
+					this.pagePreviewers.Add (preview);
 				}
 
 				this.UpdatePagePreviewsGeometry ();
@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePagePreviewsGeometry()
 		{
-			//	Positionne tous les Widgets.PreviewEntity, selon le parent this.previewFrame.
+			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
@@ -485,6 +485,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private SectionToPrint							previewedSection;
 		private List<CheckButton>						checkButtons;
 		private List<GlyphButton>						previewButtons;
-		private List<Widgets.PreviewEntity>				pagePreviews;
+		private List<Widgets.EntityPreviewer>			pagePreviewers;
 	}
 }
