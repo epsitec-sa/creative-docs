@@ -275,10 +275,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
 		/// <param name="name">The name of the generator.</param>
-		/// <returns>The <see cref="UidGenerator"/> object.</returns>
+		/// <returns>The <see cref="UidGenerator"/> object or <c>null</c> if it does not exist.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
-		/// <exception cref="System.Exception">If the requested <see cref="UidGenerator"/> does not exists.</exception>
 		internal static UidGenerator GetUidGenerator(DbInfrastructure dbInfrastructure, string name)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
@@ -298,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				if (!slots.Any ())
 				{
-					throw new System.ArgumentException ("Uid generator does not exists.");
+					return null;
 				}
 
 				return new UidGenerator (dbInfrastructure, name, slots);

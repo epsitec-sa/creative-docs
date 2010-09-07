@@ -41,21 +41,24 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Creates a new generator for unique ids in the database.
 		/// </summary>
+		/// <param name="name">The name of the generator.</param>
+		/// <param name="slots">The definition of the slots of the generator.</param>
+		/// <returns>The <see cref="UidGenerator"/>.</returns>
 		/// <remarks>
 		/// The slots are defined as a sequence of minimum and maximum values, which must be locally
 		/// and globally consistent.
 		/// </remarks>
-		/// <param name="name">The name of the generator.</param>
-		/// <param name="slots">The definition of the slots of the generator.</param>
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="slots"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains negative elements.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains slots with inconsistent bounds.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
-		public void CreateUidGenerator(string name, IEnumerable<UidSlot> slots)
+		public UidGenerator CreateUidGenerator(string name, IEnumerable<UidSlot> slots)
 		{
 			UidGenerator.CreateUidGenerator (this.DbInfrastructure, name, slots);
+			
+			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
 		}
 
 
