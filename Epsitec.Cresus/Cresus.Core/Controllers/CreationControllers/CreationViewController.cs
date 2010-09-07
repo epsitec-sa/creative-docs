@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.BusinessLogic;
+
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -118,15 +120,18 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
-		internal void CreateRealEntity(System.Action<DataContext, T> initializer = null)
+		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
 			var orchestrator = this.Orchestrator;
-			var context      = orchestrator.DataContext;
-			var entity       = context.CreateEntity<T> ();
+			var business     = this.BusinessContext;
+
+			System.Diagnostics.Debug.Assert (business != null);
+
+			var entity = business.CreateEntity<T> ();
 
 			if (initializer != null)
 			{
-				initializer (context, entity);
+				initializer (business, entity);
 			}
 
 			this.ReplaceEntity (entity);

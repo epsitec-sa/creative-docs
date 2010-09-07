@@ -11,10 +11,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 	[BusinessRule (RuleType=RuleType.Update)]
 	internal class InvoiceDocumentUpdateRule : GenericBusinessRule<InvoiceDocumentEntity>
 	{
-		public InvoiceDocumentUpdateRule()
-		{
-		}
-
 		protected override void Apply(InvoiceDocumentEntity entity)
 		{
 			var dataContext = Logic.Current.DataContext;

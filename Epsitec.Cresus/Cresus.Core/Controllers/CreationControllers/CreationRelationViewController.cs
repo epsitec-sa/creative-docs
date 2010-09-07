@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.BusinessLogic;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -32,27 +33,32 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
+		protected override IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
+		{
+			yield break;
+		}
+
 		private void CreateUINewNaturalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButton<RelationEntity> (this, "Personne privée", "Crée un client de type personne privée",
-				(context, relation) =>
-				{
-					relation.FirstContactDate = Date.Today;
-					relation.Person = context.CreateEntity<NaturalPersonEntity> ();
-				});
+			builder.CreateCreationButton<RelationEntity> (this, "Personne privée", "Crée un client de type personne privée", this.SetupNaturalPersonRelation);
 		}
 
 		private void CreateUINewLegalPersonButton(UIBuilder builder)
 		{
-			builder.CreateCreationButton<RelationEntity> (this, "Entreprise", "Crée un client de type entreprise",
-				(context, relation) =>
-				{
-					relation.FirstContactDate = Date.Today;
-					relation.Person = context.CreateEntity<LegalPersonEntity> ();
-				});
+			builder.CreateCreationButton<RelationEntity> (this, "Entreprise", "Crée un client de type entreprise", this.SetupLegalPersonRelation);
 		}
 
-		
+		private void SetupNaturalPersonRelation(BusinessContext context, RelationEntity relation)
+		{
+			relation.Person = context.CreateEntity<NaturalPersonEntity> ();
+		}
+
+		private void SetupLegalPersonRelation(BusinessContext context, RelationEntity relation)
+		{
+			relation.Person = context.CreateEntity<LegalPersonEntity> ();
+		}
+
+
 		protected override EditionStatus GetEditionStatus()
 		{
 			if (this.Entity.Person.IsNull ())

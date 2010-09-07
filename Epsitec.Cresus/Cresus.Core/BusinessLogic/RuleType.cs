@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public enum RuleType
 	{
+		Setup,
 		Update,
 	}
 }

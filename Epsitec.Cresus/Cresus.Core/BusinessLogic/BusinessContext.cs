@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -40,9 +41,27 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.entityRecords.Add (new EntityRecord (entity, this));
 		}
 
+		public void Register(IEnumerable<AbstractEntity> collection)
+		{
+			if (collection != null)
+			{
+				collection.ForEach (entity => this.Register (entity));
+			}
+		}
+
 		public void ApplyRules(RuleType ruleType)
 		{
 			this.entityRecords.ForEach (x => x.Logic.ApplyRules (ruleType, x.Entity));
+		}
+
+		public T CreateEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			T entity = this.DataContext.CreateEntity<T> ();
+
+			this.ApplyRules (RuleType.Setup, entity);
+
+			return entity;
 		}
 
 
@@ -81,7 +100,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				{
 					if (this.logic == null)
                     {
-						this.logic = new Logic (this.entity.GetType (), this.businessContext);
+						this.logic = this.businessContext.CreateLogic (this.entity.GetType ());
                     }
 
 					return this.logic;
@@ -95,6 +114,17 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 		#endregion
+
+		private Logic CreateLogic(System.Type entityType)
+		{
+			return new Logic (entityType, this);
+		}
+
+		private void ApplyRules(RuleType ruleType, AbstractEntity entity)
+		{
+			var logic = this.CreateLogic (entity.GetType ());
+			logic.ApplyRules (ruleType, entity);
+		}
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{

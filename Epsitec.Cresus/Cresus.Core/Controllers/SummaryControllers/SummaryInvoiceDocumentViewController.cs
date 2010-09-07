@@ -42,23 +42,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			this.CreateUIPreviewPanel ();
-			// PROVISOIRE:
-			this.bc = new BusinessLogic.BusinessContext (this.DataContext);
-			this.bc.Register (this.Entity);
 		}
 
-		Epsitec.Cresus.Core.BusinessLogic.BusinessContext bc; // PROVISOIRE:
 
-		protected override void Dispose(bool disposing)
+		protected override IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
 		{
-			// PROVISOIRE:
-			if (this.bc != null)
-            {
-				this.bc.Dispose ();
-				this.bc = null;
-            }
-
-			base.Dispose (disposing);
+			yield return this.Entity;
 		}
 
 		protected override void AboutToCloseUI()
