@@ -136,6 +136,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryUnitOfMeasureGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactRoleListViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupListViewController.cs" />
+    <Compile Include="Printers\PreviewerController.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
     <Compile Include="Data\UnitOfMeasureGroupRepository.cs" />

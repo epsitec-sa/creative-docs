@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		
 		private void CreateUIPreviewPanel()
 		{
+			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			Printers.AbstractEntityPrinter entityPrinter = Printers.AbstractEntityPrinter.CreateEntityPrinter (this.Entity);
 
 			if (entityPrinter == null)
@@ -79,16 +80,25 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				Dock = DockStyle.Fill,
 				Padding = new Margins (5),
-				BackColor = Color.FromBrightness (0.95),
+				BackColor = adorner.ColorWindow,
 			};
 
-			this.entityPreviewer = new EntityPreviewer
+			var previewBox = new FrameBox
 			{
 				Parent = previewFrame,
 				Dock = DockStyle.Fill,
-				EntityPrinter = entityPrinter,
-				CurrentPage = 0,
 			};
+
+			var toolbarBox = new FrameBox
+			{
+				Parent = previewFrame,
+				PreferredHeight = 24,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			this.previewerController = new Printers.PreviewerController (entityPrinter, new AbstractEntity[] { this.Entity });
+			this.previewerController.CreateUI (previewBox, toolbarBox);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;
@@ -107,8 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void HandlePreviewPanelUpdating(object sender)
 		{
-			this.entityPreviewer.EntityPrinter.BuildSections ();
-			this.entityPreviewer.Invalidate ();
+			this.previewerController.Update ();
 		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
@@ -409,6 +418,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		private EntityPreviewer entityPreviewer;
+		private Printers.PreviewerController		previewerController;
 	}
 }
