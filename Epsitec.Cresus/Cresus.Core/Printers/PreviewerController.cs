@@ -74,13 +74,6 @@ namespace Epsitec.Cresus.Core.Printers
 				frame.Margins = new Margins (-1, 0, 0, 0);
 				frame.Dock = DockStyle.Fill;
 
-#if false
-				this.pageScroller = new HScroller
-				{
-					Parent = frame,
-					Dock = DockStyle.Fill,
-				};
-#else
 				this.pageSlider = new HSlider
 				{
 					Parent = frame,
@@ -88,7 +81,6 @@ namespace Epsitec.Cresus.Core.Printers
 					Dock = DockStyle.Fill,
 					Margins = new Margins (2),
 				};
-#endif
 			}
 
 			if (this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug1 ||
@@ -234,19 +226,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.placer = new Dialogs.PreviewOptimalPlacer (this.pagePreviewers, this.entityPrinter.PageSize);
 
-#if false
-			this.pageScroller.ValueChanged += delegate
-			{
-				this.currentPage = (int) this.pageScroller.Value;
-				this.UpdatePages ();
-			};
-#else
 			this.pageSlider.ValueChanged += delegate
 			{
 				this.currentPage = (int) this.pageSlider.Value;
 				this.UpdatePages ();
 			};
-#endif
 
 			this.zoom18Button.Clicked += delegate
 			{
@@ -345,7 +329,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			this.UpdatePagePreviewsGeometry ();
-			this.UpdatePageScroller ();
+			this.UpdatePageSlider ();
 		}
 
 		private void UpdatePagePreviewsGeometry()
@@ -372,17 +356,8 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		private void UpdatePageScroller()
+		private void UpdatePageSlider()
 		{
-#if false
-			this.pageScroller.MinValue = 0;
-			this.pageScroller.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
-			this.pageScroller.Resolution = 1;
-			this.pageScroller.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.entityPrinter.PageCount (), 1);
-			this.pageScroller.SmallChange = 1;
-			this.pageScroller.LargeChange = 10;
-			this.pageScroller.Value = this.currentPage;
-#else
 			this.pageSlider.MinValue = 0;
 			this.pageSlider.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
 			this.pageSlider.Resolution = 1;
@@ -390,7 +365,6 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pageSlider.SmallChange = 1;
 			this.pageSlider.LargeChange = 10;
 			this.pageSlider.Value = this.currentPage;
-#endif
 		}
 
 		private void UpdateButtons()
@@ -402,8 +376,7 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.pageRank.Text = string.Format ("{0} / {1}", p.ToString (), t.ToString ());
 
-				ToolTip.Default.SetToolTip (this.pageRank,     "Page visible / Nombre total de pages");
-				//?ToolTip.Default.SetToolTip (this.pageScroller, "Montre une autre page");
+				ToolTip.Default.SetToolTip (this.pageRank,   "Page visible / Nombre total de pages");
 				ToolTip.Default.SetToolTip (this.pageSlider, "Montre une autre page");
 			}
 			else
@@ -411,8 +384,7 @@ namespace Epsitec.Cresus.Core.Printers
 				int q = System.Math.Min (p + this.showedPageCount-1, t);
 				this.pageRank.Text = string.Format ("{0}..{1} / {2}", p.ToString (), q.ToString (), t.ToString ());
 
-				ToolTip.Default.SetToolTip (this.pageRank,     "Pages visibles / Nombre total de pages");
-				//?ToolTip.Default.SetToolTip (this.pageScroller, "Montre d'autres pages");
+				ToolTip.Default.SetToolTip (this.pageRank,   "Pages visibles / Nombre total de pages");
 				ToolTip.Default.SetToolTip (this.pageSlider, "Montre d'autres pages");
 			}
 
@@ -561,7 +533,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private Dialogs.PreviewOptimalPlacer			placer;
 
 		private StaticText								pageRank;
-		private HScroller								pageScroller;
 		private HSlider									pageSlider;
 
 		private GlyphButton								debugPrevButton1;
