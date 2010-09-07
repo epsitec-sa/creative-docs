@@ -143,6 +143,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbLockManager					LockManager
+		{
+			get
+			{
+				return this.lockManager;
+			}
+		}
+
 		public DbAccess							Access
 		{
 			get
@@ -235,6 +243,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableTypeDef ();
 				helper.CreateTableLog ();
 				helper.CreateTableUid ();
+				helper.CreateTableLock ();
 				
 				transaction.Commit ();
 			}
@@ -303,6 +312,7 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -2349,6 +2359,7 @@ namespace Epsitec.Cresus.Database
 			{
 				this.SetupLogger (transaction);
 				this.SetupUidManager (transaction);
+				this.SetupLockManager (transaction);
 
 				transaction.Commit ();
 			}
@@ -2370,6 +2381,12 @@ namespace Epsitec.Cresus.Database
 		{
 			this.uidManager = new DbUidManager ();
 			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
+		}
+
+		private void SetupLockManager(DbTransaction transaction)
+		{
+			this.lockManager = new DbLockManager ();
+			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
 		}
 
 
@@ -2608,6 +2625,12 @@ namespace Epsitec.Cresus.Database
 					this.uidManager.Detach ();
 					this.uidManager = null;
 				}
+
+				if (this.lockManager != null)
+				{
+					this.lockManager.Detach ();
+					this.lockManager = null;
+				}
 				
 				if (this.abstraction != null)
 				{
@@ -2759,6 +2782,25 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+				};
+
+				this.CreateTable (table, columns);
+			}
+
+			public void CreateTableLock()
+			{
+				TypeHelper types = this.infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableLock);
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnUser, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnDateTime, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
@@ -3057,6 +3099,7 @@ namespace Epsitec.Cresus.Database
 		private TypeHelper						types;
 		private DbLogger						logger;
 		private DbUidManager					uidManager;
+		private DbLockManager					lockManager;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();

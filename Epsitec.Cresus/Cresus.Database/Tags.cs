@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnInfoXml		= "CR_INFO";
 		public const string ColumnDateTime		= "CR_DATETIME";
 		public const string ColumnInstanceType	= "CR_TYPE";
+		public const string ColumnUser			= "CR_USER";
 		public const string ColumnUidSlot		= "CR_UID_SLOT";
 		public const string ColumnUidMin		= "CR_UID_MIN";
 		public const string ColumnUidMax		= "CR_UID_MAX";
@@ -54,5 +55,6 @@ namespace Epsitec.Cresus.Database
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
 		public const string TableLog			= "CR_LOG";
 		public const string TableUid			= "CR_UID";
+		public const string TableLock			= "CR_LOCK";
 	}
 }
