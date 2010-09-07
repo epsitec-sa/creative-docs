@@ -8,6 +8,7 @@ using System.Data;
 namespace Epsitec.Cresus.Database
 {
 
+
 	// TODO Comment this class.
 	// Marc
 
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void InsertLock(string lockName, string userName)
+		public void RequestLock(string lockName, string userName)
 		{
 			this.CheckIsAttached ();
 
@@ -30,13 +31,69 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
+				if (this.IsLockOwned (lockName))
+				{
+					if (this.GetLockOwner (lockName) != userName)
+					{
+						throw new System.InvalidOperationException ("Cannot obtain lock because it is owned by another user.");
+					}
+
+					this.IncrementLockCounter (lockName);
+				}
+				else
+				{
+					this.InsertLock (lockName, userName);
+				}
+
+				transaction.Commit ();
+			}
+		}
+
+
+		public void ReleaseLock(string lockName, string userName)
+		{
+			this.CheckIsAttached ();
+
+			lockName.ThrowIfNullOrEmpty ("lockName");
+			userName.ThrowIfNullOrEmpty ("userName");
+
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				if (this.IsLockOwned (lockName))
+				{
+					if (this.GetLockOwner (lockName) != userName)
+					{
+						throw new System.InvalidOperationException ("Cannot release lock because it is owned by another user.");
+					}
+
+					if (this.GetLockCounterValue (lockName) == 0)
+					{
+						this.RemoveLock (lockName);
+					}
+					else
+					{
+						this.DecrementLockCounter (lockName);
+					}
+				}
+
+				transaction.Commit ();
+			}
+		}
+
+
+		private void InsertLock(string lockName, string userName)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
 				SqlFieldList fields = new SqlFieldList ();
 
 				DbColumn columnLockName = this.DbTable.Columns[Tags.ColumnName];
 				DbColumn columnUserName = this.DbTable.Columns[Tags.ColumnUser];
+				DbColumn columnCounter = this.DbTable.Columns[Tags.ColumnCounter];
 
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnLockName, lockName));
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnUserName, userName));
+				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounter, 0));
 
 				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fields);
 
@@ -47,12 +104,8 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void RemoveLock(string lockName)
+		private void RemoveLock(string lockName)
 		{
-			this.CheckIsAttached ();
-
-			lockName.ThrowIfNullOrEmpty ("lockName");
-
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				SqlFieldList conditions = new SqlFieldList ()
@@ -69,7 +122,56 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public bool ExistsLock(string lockName)
+		private void IncrementLockCounter(string lockName)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				int counterValue = this.GetLockCounterValue (lockName);
+
+				this.SetLockCounterValue (lockName, counterValue + 1);
+				
+				transaction.Commit ();
+			}
+		}
+
+
+		private void DecrementLockCounter(string lockName)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				int counterValue = this.GetLockCounterValue (lockName);
+
+				this.SetLockCounterValue (lockName, counterValue - 1);
+
+				transaction.Commit ();
+			}
+		}
+
+		private int GetLockCounterValue(string lockName)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				object counterValue = this.GetValue (transaction, lockName, Tags.ColumnCounter);
+
+				transaction.Commit ();
+
+				return (int) counterValue;
+			}
+		}
+
+
+		private void SetLockCounterValue(string lockName, int counterValue)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.SetValue (transaction, lockName, Tags.ColumnCounter, counterValue);
+
+				transaction.Commit ();
+			}
+		}
+
+		
+		public bool IsLockOwned(string lockName)
 		{
 			this.CheckIsAttached ();
 
@@ -101,7 +203,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public string GetLockUserName(string lockName)
+		public string GetLockOwner(string lockName)
 		{
 			this.CheckIsAttached ();
 
@@ -109,11 +211,16 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				object userName = this.GetValue (transaction, lockName, Tags.ColumnUser);
+				string userName = null;
+								
+				if (this.IsLockOwned (lockName))
+				{
+					userName = (string) this.GetValue (transaction, lockName, Tags.ColumnUser);
+				}
 
 				transaction.Commit ();
 
-				return (string) userName;
+				return userName;
 			}
 		}
 
@@ -130,21 +237,11 @@ namespace Epsitec.Cresus.Database
 
 			DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
 
-			if (table.Rows.Count == 0)
-			{
-				throw new System.Exception ("Not enough rows for counter");
-			}
-
-			if (table.Rows.Count > 1)
-			{
-				throw new System.Exception ("Too much rows for counter");
-			}
-
 			return table.Rows[0][valueName];
 		}
 
 
-		private void SetValue(DbTransaction transaction, string userName, string valueName, object value)
+		private void SetValue(DbTransaction transaction, string lockName, string valueName, object value)
 		{
 			DbColumn column = this.DbTable.Columns[valueName];
 
@@ -155,7 +252,7 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList conditions = new SqlFieldList ()
 			{
-				this.CreateConditionForUserName (userName),
+				this.CreateConditionForLockName (lockName),
 			};
 
 			transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
@@ -170,17 +267,6 @@ namespace Epsitec.Cresus.Database
 				SqlFunctionCode.CompareEqual,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnName].GetSqlName ()),
 				SqlField.CreateConstant (lockName, DbRawType.String)
-			);
-		}
-
-
-		private SqlFunction CreateConditionForUserName(string userName)
-		{
-			return new SqlFunction
-			(
-				SqlFunctionCode.CompareEqual,
-				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnUser].GetSqlName ()),
-				SqlField.CreateConstant (userName, DbRawType.String)
 			);
 		}
 		
