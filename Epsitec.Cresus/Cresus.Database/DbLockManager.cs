@@ -8,6 +8,9 @@ using System.Data;
 namespace Epsitec.Cresus.Database
 {
 
+	// TODO Comment this class.
+	// Marc
+
 
 	public sealed class DbLockManager : DbAbstractAttachable
 	{
@@ -27,17 +30,13 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				System.DateTime dateTime = this.GetCurrentDateTime ();
-				
 				SqlFieldList fields = new SqlFieldList ();
 
 				DbColumn columnLockName = this.DbTable.Columns[Tags.ColumnName];
 				DbColumn columnUserName = this.DbTable.Columns[Tags.ColumnUser];
-				DbColumn columnDateTime = this.DbTable.Columns[Tags.ColumnDateTime];
 
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnLockName, lockName));
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnUserName, userName));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnDateTime, dateTime));
 
 				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fields);
 
@@ -102,43 +101,6 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void UpdateLockDateTime(string userName)
-		{
-			this.CheckIsAttached ();
-
-			userName.ThrowIfNullOrEmpty ("userName");
-			
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				System.DateTime dateTime = this.GetCurrentDateTime ();
-
-				this.SetValue (transaction, userName, Tags.ColumnDateTime, dateTime);
-
-				transaction.Commit ();
-			}
-		}
-
-
-		public System.TimeSpan GetLockTimeSpan(string lockName)
-		{
-			this.CheckIsAttached ();
-
-			lockName.ThrowIfNullOrEmpty ("lockName");
-
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				System.DateTime dateTime = this.GetCurrentDateTime ();
-
-				System.DateTime lockDateTime = (System.DateTime) this.GetValue (transaction, lockName, Tags.ColumnDateTime);
-				System.DateTime currentDateTime = this.GetCurrentDateTime ();
-
-				transaction.Commit ();
-
-				return currentDateTime - lockDateTime;
-			}
-		}
-
-
 		public string GetLockUserName(string lockName)
 		{
 			this.CheckIsAttached ();
@@ -147,8 +109,6 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				System.DateTime dateTime = this.GetCurrentDateTime ();
-
 				object userName = this.GetValue (transaction, lockName, Tags.ColumnUser);
 
 				transaction.Commit ();
@@ -200,21 +160,6 @@ namespace Epsitec.Cresus.Database
 
 			transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
 			this.DbInfrastructure.ExecuteNonQuery (transaction);
-		}
-
-
-		private System.DateTime GetCurrentDateTime()
-		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				transaction.SqlBuilder.GetCurrentTimeStamp ();
-
-				object value = this.DbInfrastructure.ExecuteScalar (transaction);
-
-				transaction.Commit ();
-
-				return (System.DateTime) value;
-			}
 		}
 
 
