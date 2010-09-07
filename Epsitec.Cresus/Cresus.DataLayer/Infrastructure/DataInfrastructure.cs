@@ -1,21 +1,19 @@
-﻿using Epsitec.Cresus.Database;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-
-
 	/// <summary>
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
 	/// </summary>
 	public sealed class DataInfrastructure
 	{
-
-
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
@@ -51,11 +49,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains negative elements.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains slots with inconsistent bounds.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
-		public void CreateUidGenerator(string name, IEnumerable<System.Tuple<long, long>> slots)
+		public void CreateUidGenerator(string name, IEnumerable<UidSlot> slots)
 		{
 			UidGenerator.CreateUidGenerator (this.DbInfrastructure, name, slots);
 		}
-
 
 		/// <summary>
 		/// Deletes a generator for unique ids from the database.
@@ -66,7 +63,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			UidGenerator.DeleteUidGenerator (this.DbInfrastructure, name);
 		}
-
 
 		/// <summary>
 		/// Tells whether a generator for unique ids exists in the database.
@@ -92,9 +88,5 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
 		}
-	
-	
 	}
-
-
 }
