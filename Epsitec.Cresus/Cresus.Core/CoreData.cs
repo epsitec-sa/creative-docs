@@ -33,14 +33,16 @@ namespace Epsitec.Cresus.Core
 			this.ForceDatabaseCreation = forceDatabaseCreation;
 
 			this.dbInfrastructure = new DbInfrastructure ();
+			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
+			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
 		}
 
-		public DbInfrastructure DbInfrastructure
+		public DataLayer.Infrastructure.DataInfrastructure DataInfrastructure
 		{
 			get
 			{
-				return this.dbInfrastructure;
+				return this.dataInfrastructure;
 			}
 		}
 
@@ -62,6 +64,14 @@ namespace Epsitec.Cresus.Core
 				}
 
 				return this.activeDataContext;
+			}
+		}
+
+		public BusinessLogic.RefIdGeneratorPool RefIdGeneratorPool
+		{
+			get
+			{
+				return this.refIdGeneratorPool;
 			}
 		}
 
@@ -271,7 +281,7 @@ namespace Epsitec.Cresus.Core
 				this.DeleteDatabase (access);
 			}
 
-			if (this.DbInfrastructure.AttachToDatabase (access))
+			if (this.dbInfrastructure.AttachToDatabase (access))
 			{
 				System.Diagnostics.Trace.WriteLine ("Connected to database");
 
@@ -283,7 +293,7 @@ namespace Epsitec.Cresus.Core
 
 				try
 				{
-					this.DbInfrastructure.CreateDatabase (access);
+					this.dbInfrastructure.CreateDatabase (access);
 				}
 				catch (System.Exception ex)
 				{
@@ -341,6 +351,15 @@ namespace Epsitec.Cresus.Core
 				this.VerifyDatabaseSchemas ();
 				this.ReloadDatabase ();
 			}
+
+			this.VerifyUidGenerators ();
+		}
+
+		private void VerifyUidGenerators()
+		{
+			this.refIdGeneratorPool.GetGenerator<RelationEntity> ();
+			this.refIdGeneratorPool.GetGenerator<AffairEntity> ();
+			this.refIdGeneratorPool.GetGenerator<ArticleDefinitionEntity> ();
 		}
 
 		private void VerifyDatabaseSchemas()
@@ -554,7 +573,9 @@ namespace Epsitec.Cresus.Core
 		public event EventHandler<DataContextEventArgs> DiscardRecordCommandExecuted;
 
 		private readonly DbInfrastructure dbInfrastructure;
+		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
+		private readonly BusinessLogic.RefIdGeneratorPool refIdGeneratorPool;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 		private int suspendDataContextSave;

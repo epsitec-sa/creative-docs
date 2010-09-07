@@ -15,7 +15,12 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 	{
 		protected override void Apply(RelationEntity relation)
 		{
-			relation.IdA = "1000";
+			var pool = Logic.Current.BusinessContext.Data.RefIdGeneratorPool;
+			var generator = pool.GetGenerator<RelationEntity> ();
+			var nextId    = generator.GetNextId ();
+
+			relation.IdA = string.Format ("{0:000000}", nextId);
+			
 			relation.FirstContactDate = Date.Today;
 			relation.TaxMode = Business.Finance.TaxMode.LiableForVat;
 			relation.DefaultBillingMode =	Business.Finance.BillingMode.IncludingTax;

@@ -30,6 +30,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
+		public CoreData Data
+		{
+			get
+			{
+				return CoreProgram.Application.Data;
+			}
+		}
 
 		public void Register(AbstractEntity entity)
 		{

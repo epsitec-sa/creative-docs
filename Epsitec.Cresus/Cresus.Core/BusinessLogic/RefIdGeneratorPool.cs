@@ -9,28 +9,40 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
-	public class UidGeneratorPool
+	/// <summary>
+	/// The <c>RefIdGeneratorPool</c> maintains a collection of <see cref="RefIdGenerator"/>
+	/// instances.
+	/// </summary>
+	public class RefIdGeneratorPool
 	{
-		public UidGeneratorPool(CoreData data)
+		public RefIdGeneratorPool(CoreData data)
 		{
 			this.data = data;
-			this.generators = new Dictionary<string, UidGenerator> ();
+			this.generators = new Dictionary<string, RefIdGenerator> ();
 		}
 
 
-		public UidGenerator GetGenerator<T>(string suffix = null)
+		public CoreData Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+
+		public RefIdGenerator GetGenerator<T>(string suffix = null)
 			where T : AbstractEntity, new ()
 		{
-			string generatorName = UidGeneratorPool.GetGeneratorName<T> (suffix);
-			UidGenerator generator = null;
+			string generatorName = RefIdGeneratorPool.GetGeneratorName<T> (suffix);
+			RefIdGenerator generator = null;
 
 			if (this.generators.TryGetValue (generatorName, out generator))
 			{
 				return generator;
 			}
 
-			generator = new UidGenerator (generatorName, this);
-
+			generator = new RefIdGenerator (generatorName, this);
 			this.generators[generatorName] = generator;
 
 			return generator;
@@ -54,6 +66,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 
 		private readonly CoreData data;
-		private readonly Dictionary<string, UidGenerator> generators;
+		private readonly Dictionary<string, RefIdGenerator> generators;
 	}
 }
