@@ -188,6 +188,7 @@
     <Compile Include="ClippingFrameBox.cs" />
     <Compile Include="AbstractTextField.CommandController.cs" />
     <Compile Include="ICommandHandler.cs" />
+    <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />
     <Compile Include="TextFieldMultiExPreferredLayout.cs" />
     <Compile Include="TextFieldMultiEx.cs" />
     <Compile Include="IMultipleSelection.cs" />
@@ -616,9 +617,6 @@
     </Compile>
     <Compile Include="RadioIcon.cs" />
     <Compile Include="RadioIconGrid.cs" />
-    <Compile Include="Res.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ResizeKnob.cs">
       <SubType>Code</SubType>
     </Compile>

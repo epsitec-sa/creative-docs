@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -117,8 +118,8 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected string						dialogTitle;
-		protected string						okText;
-		protected string						cancelText;
+		protected FormattedText					okText;
+		protected FormattedText					cancelText;
 		protected string						commandTemplate;
 		protected CommandDispatcher				commandDispatcher;
 	}

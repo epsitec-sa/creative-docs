@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 
-#if false
+#if true
 			[Command (Res.CommandIds.Bold)]
 			public void CommandBold(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
@@ -170,6 +170,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
+				this.host.navigator.SelectionBold = !this.host.navigator.SelectionBold;
 			}
 #endif
 

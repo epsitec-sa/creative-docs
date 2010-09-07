@@ -9,12 +9,32 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
-	public static class EntityId
+	/// <summary>
+	/// The <c>EntityInfo</c> class is used to retrieve runtime information
+	/// about an entity, such as its DRUID.
+	/// </summary>
+	public static class EntityInfo
 	{
+		/// <summary>
+		/// Gets the structured type id for the specified entity.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <returns>The entity id.</returns>
 		public static Druid GetTypeId<T>()
 			where T : AbstractEntity, new ()
 		{
 			return TypeIdProvider<T>.Instance.Id;
+		}
+
+		/// <summary>
+		/// Gets the structured type key for the specified entity.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <returns>The entity key.</returns>
+		public static string GetTypeKey<T>()
+			where T : AbstractEntity, new ()
+		{
+			return TypeIdProvider<T>.Instance.Key;
 		}
 
 		#region TypeIdProvider Class
@@ -25,7 +45,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public TypeIdProvider()
 			{
 				var entity = EmptyEntityContext.Instance.CreateEmptyEntity<T> ();
-				this.id = entity.GetEntityStructuredTypeId ();
+				this.id  = entity.GetEntityStructuredTypeId ();
+				this.key = entity.GetEntityStructuredTypeKey ();
 			}
 
 			public Druid Id
@@ -36,10 +57,19 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+			public string Key
+			{
+				get
+				{
+					return this.key;
+				}
+			}
+
 
 			public static TypeIdProvider<T> Instance = new TypeIdProvider<T> ();
 
 			private readonly Druid id;
+			private readonly string key;
 		}
 
 		#endregion
@@ -61,7 +91,5 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		#endregion
-
-
 	}
 }

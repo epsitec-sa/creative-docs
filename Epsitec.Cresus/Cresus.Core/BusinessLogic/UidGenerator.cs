@@ -13,9 +13,18 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	{
 		internal UidGenerator(string name, UidGeneratorPool pool)
 		{
+			var trace = new System.Diagnostics.StackTrace (skipFrames: 1);
+
+			if (trace.GetFrame (0).GetMethod ().DeclaringType != typeof (UidGeneratorPool))
+            {
+				throw new System.InvalidOperationException ("UidGenerator cannot be created directly: use the UidGeneratorPool instead");
+            }
+
 			this.name = name;
 			this.pool = pool;
 		}
+
+		
 
 
 		private readonly string name;

@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="0" name="Common.Widgets" layer="s">
+<ModuleInfo id="0" name="Common.Widgets" layer="s" namespace="Epsitec.Common.Widgets">
   <Versions>
     <Version id="2" build="4" date="2010-09-07T11:40:51.9432267Z" />
+    <Version id="1" build="3" date="2010-09-07T12:20:00.3703975Z" />
   </Versions>
 </ModuleInfo>

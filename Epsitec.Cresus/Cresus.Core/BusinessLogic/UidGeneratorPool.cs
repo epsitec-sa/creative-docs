@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		private static string GetGeneratorName<T>(string suffix)
 			where T : AbstractEntity, new ()
 		{
-			Druid entityId = EntityId.GetTypeId<T> ();
+			Druid entityId = EntityInfo.GetTypeId<T> ();
 
 			if (string.IsNullOrEmpty (suffix))
 			{

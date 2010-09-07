@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Bold,           dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,         dx: RibbonViewController.buttonSmallWidth));
 			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Italic,         dx: RibbonViewController.buttonSmallWidth));
 			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Underline,      dx: RibbonViewController.buttonSmallWidth));
 

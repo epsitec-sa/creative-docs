@@ -294,10 +294,10 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 				else
 				{
-					var groupName = TextFormatter.FormatText (group.Name);
+					var groupName = TextFormatter.FormatText (group.Name).ToSimpleText ();
 
 					title      = "Atelier";
-					text       = FormattedText.Concat ("<b>", groupName.IsNullOrWhiteSpace ? group.Code : groupName, "</b>");
+					text       = FormattedText.Concat ("<b>", string.IsNullOrWhiteSpace (groupName) ? group.Code : groupName, "</b>");
 					cellBorder = CellBorder.Default;
 					margins    = new Margins (1);
 					color      = Color.FromBrightness (0.9);
