@@ -32,6 +32,22 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Registers a read/write property.
+		/// </summary>
+		/// <typeparam name="TResult">The type of the property.</typeparam>
+		/// <param name="expression">The expression used to access the property (for instance <c>x =&gt; x.Foo</c> for a property named <c>Foo</c>).</param>
+		/// <param name="propertyType">Type of the property (if different from <c>TResult</c>).</param>
+		/// <param name="metadata">The optional metadata.</param>
+		/// <returns>The dependency property.</returns>
+		public static DependencyProperty Register<TResult>(Expression<System.Func<T, TResult>> expression, System.Type propertyType, DependencyPropertyMetadata metadata = null)
+		{
+			string expressionName = ExpressionAnalyzer.GetLambdaPropertyInfo (expression).Name;
+			System.Type ownerType = typeof (T);
+
+			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
+		}
+
+		/// <summary>
 		/// Registers a read-only property.
 		/// </summary>
 		/// <typeparam name="TResult">The type of the property.</typeparam>
