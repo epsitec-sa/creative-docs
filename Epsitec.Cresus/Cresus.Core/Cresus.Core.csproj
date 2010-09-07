@@ -98,6 +98,7 @@
     <Compile Include="BusinessLogic\GenericBusinessRule`1.cs" />
     <Compile Include="BusinessLogic\Logic.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule.cs" />
+    <Compile Include="BusinessLogic\Rules\InvoiceDocumentUpdateRule.cs" />
     <Compile Include="BusinessLogic\RuleType.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />
     <Compile Include="Business\ArticleType.cs" />

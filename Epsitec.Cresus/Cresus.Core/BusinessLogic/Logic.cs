@@ -5,18 +5,37 @@ using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public sealed class Logic
 	{
-		public Logic(System.Type entityType)
+		public Logic(System.Type entityType, BusinessContext businessContext)
 		{
 			this.entityType = entityType;
 			this.rules = new Dictionary<RuleType, GenericBusinessRule> ();
+			this.businessContext = businessContext;
 		}
 
 
+		public BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
+		}
+
+		public DataContext DataContext
+		{
+			get
+			{
+				return this.businessContext.DataContext;
+			}
+		}
+
+		
 		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
 		{
 			var rule = this.ResolveRule (ruleType);
@@ -67,5 +86,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		
 		private readonly System.Type entityType;
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
+		private readonly BusinessContext businessContext;
 	}
 }
