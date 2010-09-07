@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth = section.PreferredWidth,
 			};
 
 			var topFrame = new FrameBox
@@ -138,6 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = frame,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = section.PreferredWidth,
 			};
 
 			var bottomFrame = new FrameBox
@@ -145,6 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = frame,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = section.PreferredWidth,
 			};
 
 			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       dx: RibbonViewController.buttonSmallWidth, isActivable: true));
