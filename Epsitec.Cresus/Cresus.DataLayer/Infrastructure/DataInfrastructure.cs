@@ -98,32 +98,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public bool TryCreateLockTransaction(IEnumerable<string> lockNames, out LockTransaction lockTransaction)
 		{
-			string userName = this.GetUserName ();
+			// TODO Get the real user name.
+			// Marc
+
+			string userName = "DUMMY USER NAME THAT MUST BE CHANGED";
 
 			return LockTransaction.TryCreateLockTransaction (this.DbInfrastructure, lockNames, userName, out lockTransaction);
 		}
-
-
-		// TODO All this user name stuff is temporary and must be changed.
-		// Marc
-
-		
-		[System.Obsolete("This stuff is temporary")]
-		public string GetUserName()
-		{
-			return this.userName;
-		}
-
-
-		[System.Obsolete ("This stuff is temporary")]
-		public void SetUserName(string userName)
-		{
-			this.userName = userName;
-		}
-
-
-		[System.Obsolete ("This stuff is temporary")]
-		private string userName;
 
 
 	}

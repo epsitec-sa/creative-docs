@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		// Marc
 
 
-		internal LockTransaction(DbInfrastructure dbInfrastructure, string userName, IEnumerable<string> lockNames)
+		private LockTransaction(DbInfrastructure dbInfrastructure, string userName, IEnumerable<string> lockNames)
 		{
 			this.dbInfrastructure = dbInfrastructure;
 			this.lockNames = lockNames.ToList ();
