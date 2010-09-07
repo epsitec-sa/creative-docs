@@ -141,7 +141,7 @@ namespace Epsitec.Common.Identity.UI
 			
 			button = new Button (buttonContainer);
 			button.PreferredHeight = 20;
-			button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
+			button.FormattedText = Widgets.Res.Strings.Dialog.Button.Cancel;
 			button.Dock = DockStyle.Right;
 			button.Margins = new Drawing.Margins (0, 0, 0, 0);
 			button.TabIndex = 2;
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Identity.UI
 
 			button = new Button (buttonContainer);
 			button.PreferredHeight = 20;
-			button.Text = Widgets.Res.Strings.Dialog.Button.OK;
+			button.FormattedText = Widgets.Res.Strings.Dialog.Button.OK;
 			button.Dock = DockStyle.Right;
 			button.Margins = new Drawing.Margins (0, 10, 0, 0);
 			button.TabIndex = 1;

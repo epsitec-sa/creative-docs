@@ -37,18 +37,6 @@ namespace Epsitec.Common.Types
 			this.text = formattedTextSource;
 		}
 
-#if false
-		/// <summary>
-		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
-		/// </summary>
-		/// <param name="formattedText">The formatted text.</param>
-		public FormattedText(FormattedText formattedText)
-		{
-			this.text = formattedText.text;
-		}
-#endif
-
-
 		/// <summary>
 		/// Performs an implicit conversion from <see cref="string"/> to <see cref="FormattedText"/>.
 		/// This can be used to write <code>FormattedText t = "&lt;b&gt;bold&lt;b&gt;"</code>.
@@ -58,12 +46,6 @@ namespace Epsitec.Common.Types
 		public static implicit operator FormattedText(string formattedTextSource)
 		{
 			return new FormattedText (formattedTextSource);
-		}
-
-
-		public static implicit operator string(FormattedText source)
-		{
-			return source.ToString ();
 		}
 
 

@@ -860,7 +860,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			string name = Res.Strings.TextNavigator.Action.Modify;
+			var name = Res.Strings.TextNavigator.Action.Modify;
+			
 			switch (type)
 			{
 				case UndoType.Insert:
@@ -878,7 +879,7 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 
-			using (this.opletQueue.BeginAction (name))
+			using (this.opletQueue.BeginAction (name.ToSimpleText ()))
 			{
 				TextOplet oplet = new TextOplet (this, type);
 				this.opletQueue.Insert (oplet);

@@ -243,7 +243,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return Res.Strings.ShortcutEditor.Modifier.None;
+				return Res.Strings.ShortcutEditor.Modifier.None.ToString ();
 			}
 			else
 			{
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Widgets
 
 			if (code == KeyCode.None)
 			{
-				return Res.Strings.ShortcutEditor.Code.None;
+				return Res.Strings.ShortcutEditor.Code.None.ToString ();
 			}
 			else
 			{
