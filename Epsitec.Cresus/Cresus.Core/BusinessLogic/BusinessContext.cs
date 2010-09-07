@@ -10,12 +10,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
-	public class BusinessContext
+	public sealed class BusinessContext : System.IDisposable
 	{
 		public BusinessContext(DataContext dataContext)
 		{
 			this.dataContext = dataContext;
 			this.entityRecords = new List<EntityRecord> ();
+
+			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
 
@@ -43,6 +45,17 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.entityRecords.ForEach (x => x.Logic.ApplyRules (ruleType, x.Entity));
 		}
 
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+			
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
 		
 		#region EntityRecord Class
 
@@ -82,6 +95,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 		#endregion
+
+		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+			if (Logic.Current == null)
+            {
+				this.ApplyRules (RuleType.Update);
+            }
+		}
 
 
 		private readonly DataContext dataContext;
