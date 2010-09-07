@@ -158,17 +158,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns>The next unique id.</returns>
 		private long? InternalGetNextUidInSlot(int slotIndex)
 		{
-			long max = this.slotMaxValues[slotIndex];
-			long next = this.UidManager.GetUidCounterNext (this.Name, slotIndex);
-
-			bool isNextValidUid = (next <= max);
-
-			if (isNextValidUid)
-			{
-				this.UidManager.SetUidCounterNext (this.Name, slotIndex, next + 1);
-			}
-
-			return isNextValidUid ? (long?) next : null;
+			return this.UidManager.GetUidCounterNext (this.Name, slotIndex);
 		}
 
 
