@@ -794,6 +794,62 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "underline=\"" + state + "\"");
 		}
 
+		internal bool IsSelectionSubscript(TextLayoutContext context)
+		{
+			//	Indique si les caractères sélectionnés sont en indice.
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			{
+				return this.IsPrepared (context, "subscript");
+			}
+			else
+			{
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return false;
+				}
+				else
+				{
+					return block.Subscript;
+				}
+			}
+		}
+
+		internal void SetSelectionSubscript(TextLayoutContext context, bool subscript)
+		{
+			//	Met en indice ou en normal tous les caractères sélectionnés.
+			string state = subscript ? "yes" : "no";
+			this.InsertPutCommand (context, "subscript=\"" + state + "\"");
+		}
+
+		internal bool IsSelectionSuperscript(TextLayoutContext context)
+		{
+			//	Indique si les caractères sélectionnés sont en exposant.
+			if (context.PrepareOffset != -1)  // préparation pour l'insertion ?
+			{
+				return this.IsPrepared (context, "superscript");
+			}
+			else
+			{
+				JustifBlock block = this.FindJustifBlock (context);
+				if (block == null)
+				{
+					return false;
+				}
+				else
+				{
+					return block.Superscript;
+				}
+			}
+		}
+
+		internal void SetSelectionSuperscript(TextLayoutContext context, bool superscript)
+		{
+			//	Met en exposant ou en normal tous les caractères sélectionnés.
+			string state = superscript ? "yes" : "no";
+			this.InsertPutCommand (context, "superscript=\"" + state + "\"");
+		}
+
 		internal string GetSelectionFontFace(TextLayoutContext context)
 		{
 			//	Indique le nom de la fonte des caractères sélectionnés.
@@ -5417,6 +5473,8 @@ noText:
 			public bool						Bold;
 			public bool						Italic;
 			public bool						Underline;
+			public bool						Subscript;
+			public bool						Superscript;
 			public bool						Anchor;
 			public bool						Wave;
 			public Drawing.Color			WaveColor = Drawing.Color.Empty;

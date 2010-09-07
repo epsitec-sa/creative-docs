@@ -147,12 +147,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,         dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Italic,         dx: RibbonViewController.buttonSmallWidth));
-			topFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Underline,      dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Bold,       dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Italic,     dx: RibbonViewController.buttonSmallWidth));
+			topFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Underlined, dx: RibbonViewController.buttonSmallWidth));
 
-			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Subscript,   dx: RibbonViewController.buttonSmallWidth));
-			bottomFrame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Font.Superscript, dx: RibbonViewController.buttonSmallWidth));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Subscript,   dx: RibbonViewController.buttonSmallWidth));
+			//?bottomFrame.Children.Add (RibbonViewController.CreateButton (ApplicationCommands.Superscript, dx: RibbonViewController.buttonSmallWidth));
 		}
 
 		private void CreateRibbonDatabaseSection()

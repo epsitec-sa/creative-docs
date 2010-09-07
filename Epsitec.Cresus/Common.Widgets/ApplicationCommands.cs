@@ -14,6 +14,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public static readonly Command Bold			= Res.Commands.Bold;
+		public static readonly Command Italic		= Res.Commands.Italic;
+		public static readonly Command Underlined	= Res.Commands.Underlined;
+		public static readonly Command Subscript	= Res.Commands.Subscript;
+		public static readonly Command Superscript	= Res.Commands.Superscript;
 
 		public static readonly Command Cut			= Res.Commands.Cut;
 		public static readonly Command Copy			= Res.Commands.Copy;
@@ -45,6 +49,10 @@ namespace Epsitec.Common.Widgets
 		public static class Id
 		{
 			public const long Bold			= Res.CommandIds.Bold;
+			public const long Italic		= Res.CommandIds.Italic;
+			public const long Underlined	= Res.CommandIds.Underlined;
+			public const long Subscript		= Res.CommandIds.Subscript;
+			public const long Superscript	= Res.CommandIds.Superscript;
 
 			public const long Cut			= Res.CommandIds.Cut;
 			public const long Copy			= Res.CommandIds.Copy;
