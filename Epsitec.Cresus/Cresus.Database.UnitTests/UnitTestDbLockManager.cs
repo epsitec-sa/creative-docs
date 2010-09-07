@@ -11,7 +11,7 @@ namespace Cresus.Database.UnitTests
 
 
 	[TestClass]
-	public class UnitTestDbLockManager
+	public sealed class UnitTestDbLockManager
 	{
 
 
