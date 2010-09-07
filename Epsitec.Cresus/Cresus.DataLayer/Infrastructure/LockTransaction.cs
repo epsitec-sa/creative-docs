@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	public sealed class LockTransaction : System.IDisposable
 	{
 
+
 		// TODO Comment this class and related stuff.
 		// Marc
 
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.lockNames = lockNames.ToList ();
 			this.userName = userName;
+			this.disposed = false;
 		}
 
 
@@ -84,19 +86,30 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private void Dispose(bool disposing)
 		{
+			if (!this.disposed)
+			{
+				try
+				{
+					using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
+					{
+						foreach (string lockName in this.lockNames)
+						{
+							this.DbLockManager.ReleaseLock (lockName, this.userName);
+						}
+
+						transaction.Commit ();
+					}
+				}
+				finally
+				{
+					this.disposed = true;
+					System.GC.SuppressFinalize (this);
+				}
+			}
+			
 			if (!disposing)
 			{
-				throw new System.InvalidOperationException ("LockTransaction has not been disposed.");
-			}
-
-			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
-			{
-				foreach (string lockName in this.lockNames)
-				{
-					this.DbLockManager.ReleaseLock (lockName, this.userName);
-				}
-
-				transaction.Commit ();
+				throw new System.InvalidOperationException ("LockTransaction has not been disposed properly.");
 			}
 		}
 
@@ -112,6 +125,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		private bool disposed;
+
+
 		private IEnumerable<string> lockNames;
 
 
@@ -122,7 +138,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 	
 	}
-
-
+	
 
 }
