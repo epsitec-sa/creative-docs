@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
-			this.previewFrame = new Widgets.PreviewEntity
+			this.previewFrame = new Widgets.EntityPreviewer
 			{
 				Parent = frame,
 				Visibility = showPreview,
@@ -741,7 +741,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private List<TextFieldCombo>					printerCombos;
 		private FrameBox								optionsFrame;
 		private FrameBox								printersFrame;
-		private Widgets.PreviewEntity					previewFrame;
+		private Widgets.EntityPreviewer					previewFrame;
 		private CheckButton								showOptionsCheckButton;
 		private CheckButton								showPrintersCheckButton;
 		private CheckButton								previewCheckButton;

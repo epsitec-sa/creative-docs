@@ -13,9 +13,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class PreviewEntity : Widget
+	/// <summary>
+	/// Ce widget montre le contenu d'une page dans une zone rectanghlaire.
+	/// </summary>
+	public class EntityPreviewer : Widget
 	{
-		public PreviewEntity()
+		public EntityPreviewer()
 		{
 			this.currentPage = -1;
 		}

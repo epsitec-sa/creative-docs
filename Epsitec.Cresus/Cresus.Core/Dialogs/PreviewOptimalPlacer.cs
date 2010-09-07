@@ -22,12 +22,12 @@ using System;
 namespace Epsitec.Cresus.Core.Dialogs
 {
 	/// <summary>
-	/// Place de façon optimale des rectangles d'aperçu (Widgets.PreviewEntity) dans une zone rectangulaire.
+	/// Place de façon optimale des rectangles d'aperçu (Widgets.EntityPreviewer) dans une zone rectangulaire.
 	/// Pour cela, on cherche à maximiser la surface des aperçus.
 	/// </summary>
 	class PreviewOptimalPlacer
 	{
-		public PreviewOptimalPlacer(List<Widgets.PreviewEntity> pagePreviews, Size pageSize)
+		public PreviewOptimalPlacer(List<Widgets.EntityPreviewer> pagePreviews, Size pageSize)
 		{
 			this.pagePreviews = pagePreviews;
 			this.pageSize     = pageSize;
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		public void UpdateGeometry()
 		{
-			//	Positionne tous les Widgets.PreviewEntity, selon la taille disponible.
+			//	Positionne tous les Widgets.EntityPreviewer, selon la taille disponible.
 			if (this.pagePreviews.Count == 0)
 			{
 				return;
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private readonly List<Widgets.PreviewEntity>	pagePreviews;
+		private readonly List<Widgets.EntityPreviewer>	pagePreviews;
 		private readonly Size							pageSize;
 	}
 }

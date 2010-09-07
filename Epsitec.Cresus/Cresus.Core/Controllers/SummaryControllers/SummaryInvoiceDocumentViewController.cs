@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				BackColor = Color.FromBrightness (0.95),
 			};
 
-			var previewEntity = new PreviewEntity
+			this.entityPreviewer = new EntityPreviewer
 			{
 				Parent = previewFrame,
 				Dock = DockStyle.Fill,
@@ -118,7 +118,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private void HandlePreviewPanelUpdating(object sender)
 		{
-			//	TODO: refresh the entity printer
+			this.entityPreviewer.EntityPrinter.BuildSections ();
+			this.entityPreviewer.Invalidate ();
 		}
 
 		private void CreateUIInvoice(SummaryDataItems data)
@@ -417,5 +418,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var entity = this.Entity;
 			return EditionStatus.Valid;
 		}
+
+
+		private EntityPreviewer entityPreviewer;
 	}
 }

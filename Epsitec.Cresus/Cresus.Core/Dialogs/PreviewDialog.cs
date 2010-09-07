@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.application.AttachDialog (this);
 
-			this.pagePreviews = new List<Widgets.PreviewEntity> ();
+			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
 			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 
 			this.entityPrinter.IsPreview = true;
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				ToolTip.Default.SetToolTip (this.zoom41Button, "Montre une page agrandie 4 fois");
 			}
 
-			this.placer = new PreviewOptimalPlacer (this.pagePreviews, this.entityPrinter.PageSize);
+			this.placer = new PreviewOptimalPlacer (this.pagePreviewers, this.entityPrinter.PageSize);
 
 			this.UpdatePages ();
 		}
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.entityPrinter.PageCount ());
 			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
 
-			this.pagePreviews.Clear ();
+			this.pagePreviewers.Clear ();
 			this.previewFrame.Viewport.Children.Clear ();
 
 			int pageRank = this.currentPage;
@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					break;
 				}
 
-				var preview = new Widgets.PreviewEntity
+				var preview = new Widgets.EntityPreviewer
 				{
 					Parent = this.previewFrame.Viewport,
 					EntityPrinter = this.entityPrinter,
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					CurrentPage = pageRank++,
 				};
 
-				this.pagePreviews.Add (preview);
+				this.pagePreviewers.Add (preview);
 			}
 
 			this.UpdatePagePreviewsGeometry ();
@@ -469,15 +469,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdatePagePreviewsGeometry()
 		{
-			//	Positionne tous les Widgets.PreviewEntity, selon le parent this.previewFrame.
+			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.currentZoom > 1)  // agrandissement ?
 			{
 				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways;
 				this.previewFrame.PaintViewportFrame = true;
 
-				this.pagePreviews[0].PreferredSize = this.placer.AdjustRatioPageSize (this.previewFrame.Client.Bounds.Size * this.currentZoom);
-				this.pagePreviews[0].Dock = DockStyle.Left | DockStyle.Bottom;
+				this.pagePreviewers[0].PreferredSize = this.placer.AdjustRatioPageSize (this.previewFrame.Client.Bounds.Size * this.currentZoom);
+				this.pagePreviewers[0].Dock = DockStyle.Left | DockStyle.Bottom;
 			}
 			else  // 1:1 ou réduction ?
 			{
@@ -486,7 +486,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.previewFrame.PaintViewportFrame = false;
 
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
-				this.placer.PageCount = this.pagePreviews.Count;
+				this.placer.PageCount = this.pagePreviewers.Count;
 				this.placer.UpdateGeometry ();
 			}
 		}
@@ -597,9 +597,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.debugParam1.Text = this.entityPrinter.DebugParam1.ToString ();
 			this.debugParam2.Text = this.entityPrinter.DebugParam2.ToString ();
 
-			if (this.pagePreviews.Count != 0)
+			if (this.pagePreviewers.Count != 0)
 			{
-				this.pagePreviews[0].Invalidate ();
+				this.pagePreviewers[0].Invalidate ();
 			}
 		}
 
@@ -640,7 +640,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
 
 		private Scrollable								previewFrame;
-		private List<Widgets.PreviewEntity>				pagePreviews;
+		private List<Widgets.EntityPreviewer>			pagePreviewers;
 		private PreviewOptimalPlacer					placer;
 
 		private FrameBox								footer;

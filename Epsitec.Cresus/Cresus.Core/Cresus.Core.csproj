@@ -347,7 +347,7 @@
     <Compile Include="Widgets\StaticGlyph.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ItemPickerCombo.cs" />
-    <Compile Include="Widgets\PreviewEntity.cs" />
+    <Compile Include="Widgets\EntityPreviewer.cs" />
     <Compile Include="Widgets\LayeredIconButton.cs" />
     <Compile Include="Widgets\DragTargetMarker.cs" />
     <Compile Include="Widgets\RibbonIconButton.cs" />
