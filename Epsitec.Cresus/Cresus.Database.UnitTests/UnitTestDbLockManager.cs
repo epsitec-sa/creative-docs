@@ -5,10 +5,6 @@ using Epsitec.Cresus.Database.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Collections.Generic;
-
-using System.Linq;
-
 
 namespace Cresus.Database.UnitTests
 {
@@ -63,7 +59,7 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void InsertLockArgumentCheck()
+		public void RequestLockArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -71,45 +67,29 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.InsertLock (null, "test")
+					() => manager.RequestLock (null, "myUser")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.InsertLock ("", "test")
+					() => manager.RequestLock ("", "myUser")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.InsertLock ("test", null)
+					() => manager.RequestLock ("myLock", null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.InsertLock ("test", "")
+					() => manager.RequestLock ("myLock", "")
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void InsertAndExistsLock()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbLockManager manager = dbInfrastructure.LockManager;
-
-				for (int i = 0; i < 10; i++)
-				{
-					manager.InsertLock ("myLock" + i, "test");
-					Assert.IsTrue (manager.ExistsLock ("myLock" + i));
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void DeleteLockArgumentCheck()
+		public void ReleaseLockArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -117,38 +97,29 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RemoveLock (null)
+					() => manager.ReleaseLock (null, "myUser")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RemoveLock ("")
+					() => manager.ReleaseLock ("", "myUser")
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.ReleaseLock ("myLock", null)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.ReleaseLock ("myLock", "")
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void RemoveAndExistsLock()
-		{
-			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
-			{
-				DbLockManager manager = dbInfrastructure.LockManager;
-
-				for (int i = 0; i < 10; i++)
-				{
-					manager.InsertLock ("myLock" + i, "test");
-					Assert.IsTrue (manager.ExistsLock ("myLock" + i));
-
-					manager.RemoveLock ("myLock" + i);
-					Assert.IsFalse (manager.ExistsLock ("myLock" + i));
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void ExistsLockArgumentCheck()
+		public void IsLockOwnedArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -156,19 +127,108 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ExistsLock (null)
+					() => manager.IsLockOwned (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ExistsLock ("")
+					() => manager.IsLockOwned ("")
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void GetLockUserNameArgumentCheck()
+		public void RequestReleaseAndIsLockOwned1()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbLockManager manager = dbInfrastructure.LockManager;
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
+
+				manager.RequestLock ("myLock2", "myUser1");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
+
+				manager.RequestLock ("myLock1", "myUser1");
+				manager.RequestLock ("myLock2", "myUser1");
+				manager.RequestLock ("myLock3", "myUser2");
+
+				Assert.IsTrue (manager.IsLockOwned ("myLock1"));
+				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
+				Assert.IsTrue (manager.IsLockOwned ("myLock3"));
+
+				manager.ReleaseLock ("myLock1", "myUser1");
+				manager.ReleaseLock ("myLock2", "myUser1");
+				manager.ReleaseLock ("myLock3", "myUser2");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
+
+				manager.ReleaseLock ("myLock2", "myUser1");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
+			}
+		}
+
+
+		[TestMethod]
+		public void RequestReleaseAndIsLockOwned2()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbLockManager manager = dbInfrastructure.LockManager;
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				
+				manager.ReleaseLock ("myLock", "myUser1");
+				manager.ReleaseLock ("myLock", "myUser2");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+
+				manager.RequestLock ("myLock", "myUser1");
+
+				Assert.IsTrue (manager.IsLockOwned ("myLock"));
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock"));
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.RequestLock ("myLock", "myUser2")
+				);
+
+				Assert.IsTrue (manager.IsLockOwned ("myLock"));
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock"));
+
+				manager.ReleaseLock ("myLock", "myUser1");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock"));
+
+				manager.RequestLock ("myLock", "myUser2");
+
+				Assert.IsTrue (manager.IsLockOwned ("myLock"));
+				Assert.AreEqual ("myUser2", manager.GetLockOwner ("myLock"));
+
+				manager.ReleaseLock ("myLock", "myUser2");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock"));
+
+				manager.ReleaseLock ("myLock", "myUser2");
+
+				Assert.IsFalse (manager.IsLockOwned ("myLock"));	
+			}
+		}
+
+
+		[TestMethod]
+		public void GetLockOwnerArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -176,36 +236,55 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockUserName (null)
+					() => manager.GetLockOwner (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockUserName ("")
+					() => manager.GetLockOwner ("")
 				);
 			}
 		}
 
 
 		[TestMethod]
-		public void GetLockUserName()
+		public void GetLockOwner()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
-				manager.InsertLock ("myLock1", "test1");
-				Assert.IsTrue (manager.ExistsLock ("myLock1"));
+				Assert.IsNull (manager.GetLockOwner ("myLock1"));
+				Assert.IsNull (manager.GetLockOwner ("myLock2"));
+				Assert.IsNull (manager.GetLockOwner ("myLock3"));
 
-				manager.InsertLock ("myLock2", "test1");
-				Assert.IsTrue (manager.ExistsLock ("myLock2"));
+				manager.RequestLock ("myLock2", "myUser1");
 
-				manager.InsertLock ("myLock3", "test2");
-				Assert.IsTrue (manager.ExistsLock ("myLock3"));
+				Assert.IsNull (manager.GetLockOwner ("myLock1"));
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
+				Assert.IsNull (manager.GetLockOwner ("myLock3"));
 
-				Assert.AreEqual ("test1", manager.GetLockUserName ("myLock1"));
-				Assert.AreEqual ("test1", manager.GetLockUserName ("myLock2"));
-				Assert.AreEqual ("test2", manager.GetLockUserName ("myLock3"));
+				manager.RequestLock ("myLock1", "myUser1");
+				manager.RequestLock ("myLock2", "myUser1");
+				manager.RequestLock ("myLock3", "myUser2");
+				
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock1"));
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
+				Assert.AreEqual ("myUser2", manager.GetLockOwner ("myLock3"));
+
+				manager.ReleaseLock ("myLock1", "myUser1");
+				manager.ReleaseLock ("myLock2", "myUser1");
+				manager.ReleaseLock ("myLock3", "myUser2");
+
+				Assert.IsNull (manager.GetLockOwner ("myLock1"));
+				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
+				Assert.IsNull (manager.GetLockOwner ("myLock3"));
+
+				manager.ReleaseLock ("myLock2", "myUser1");
+
+				Assert.IsNull (manager.GetLockOwner ("myLock1"));
+				Assert.IsNull (manager.GetLockOwner ("myLock2"));
+				Assert.IsNull (manager.GetLockOwner ("myLock3"));
 			}
 		}
 
