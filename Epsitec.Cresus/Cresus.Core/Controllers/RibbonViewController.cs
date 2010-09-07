@@ -253,24 +253,34 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			double buttonWidth = RibbonViewController.GetButtonWidth (dx.Value);
 
-			var button = new RibbonIconButton
-			{
-				CommandObject = command,
-				PreferredIconSize = new Size (dx.Value, dx.Value),
-				PreferredSize = new Size (buttonWidth, buttonWidth),
-				Dock = dockStyle,
-				Name = command.Name,
-				VerticalAlignment = VerticalAlignment.Top,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				AutoFocus = false,
-			};
-
 			if (isActivable)
 			{
-				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				return new IconButton
+				{
+					CommandObject = command,
+					PreferredIconSize = new Size (dx.Value, dx.Value),
+					PreferredSize = new Size (buttonWidth, buttonWidth),
+					Dock = dockStyle,
+					Name = command.Name,
+					VerticalAlignment = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus = false,
+				};
 			}
-
-			return button;
+			else
+			{
+				return new RibbonIconButton
+				{
+					CommandObject = command,
+					PreferredIconSize = new Size (dx.Value, dx.Value),
+					PreferredSize = new Size (buttonWidth, buttonWidth),
+					Dock = dockStyle,
+					Name = command.Name,
+					VerticalAlignment = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus = false,
+				};
+			}
 		}
 
 		private static double GetButtonWidth(int dx)
