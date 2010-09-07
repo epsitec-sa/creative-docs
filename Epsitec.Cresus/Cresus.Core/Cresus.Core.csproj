@@ -96,8 +96,7 @@
     <Compile Include="BusinessLogic\BusinessRuleResolver.cs" />
     <Compile Include="BusinessLogic\CompositeBusinessRule.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule`1.cs" />
-    <Compile Include="BusinessLogic\GenericBusinessLogic`1.cs" />
-    <Compile Include="BusinessLogic\GenericBusinessLogic.cs" />
+    <Compile Include="BusinessLogic\Logic.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule.cs" />
     <Compile Include="BusinessLogic\RuleType.cs" />
     <Compile Include="Business\ArticleQuantityType.cs" />

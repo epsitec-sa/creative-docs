@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
+	/// <summary>
+	/// The <c>BusinessRuleAttribute</c> is used to tag a <see cref="GenericBusinessRule"/> derived
+	/// class in order to define what type of rule it implements.
+	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Class)]
 	public class BusinessRuleAttribute : System.Attribute
 	{

@@ -15,15 +15,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	public static class BusinessRuleResolver
 	{
 		/// <summary>
-		/// Resolves a business rule for the specified entity and rule type. This returns a
+		/// Resolves a business rule for the specified entity and rule types. This returns a
 		/// <see cref="CompositeBusinessRule"/> with zero, one or more simple rules.
 		/// </summary>
-		/// <param name="entity">The entity.</param>
+		/// <param name="entityType">Type of the entity.</param>
 		/// <param name="ruleType">Type of the rule.</param>
 		/// <returns>The business rule.</returns>
-		public static GenericBusinessRule Resolve(AbstractEntity entity, RuleType ruleType)
+		public static GenericBusinessRule Resolve(System.Type entityType, RuleType ruleType)
 		{
-			var entityType    = entity.GetType ();
 			var businessRules = BusinessRuleResolver.CreateBusinessRules (entityType, ruleType);
 
 			return new CompositeBusinessRule (entityType, businessRules);
