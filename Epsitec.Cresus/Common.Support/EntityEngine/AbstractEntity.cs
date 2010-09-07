@@ -1471,5 +1471,4 @@ namespace Epsitec.Common.Support.EntityEngine
 		private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
 	}
 
-
 }
