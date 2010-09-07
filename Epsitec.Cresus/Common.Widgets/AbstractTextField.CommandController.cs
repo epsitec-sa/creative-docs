@@ -241,6 +241,11 @@ namespace Epsitec.Common.Widgets
 				commandContext.GetCommandState (ApplicationCommands.Delete   ).Enable = focused && isReadWrite;
 				commandContext.GetCommandState (ApplicationCommands.SelectAll).Enable = focused;
 
+				commandContext.GetCommandState (ApplicationCommands.Bold       ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Italic     ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Underlined ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Subscript  ).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Superscript).Enable = focused && isReadWrite;
 			}
 
 			private void UpdateCommandStatesActiveState()

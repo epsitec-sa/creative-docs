@@ -406,11 +406,6 @@
     <EmbeddedResource Include="Images\Clipboard.Copy.icon" />
     <EmbeddedResource Include="Images\Clipboard.Cut.icon" />
     <EmbeddedResource Include="Images\Clipboard.Paste.icon" />
-    <EmbeddedResource Include="Images\Font.Bold.icon" />
-    <EmbeddedResource Include="Images\Font.Italic.icon" />
-    <EmbeddedResource Include="Images\Font.Underline.icon" />
-    <EmbeddedResource Include="Images\Font.Subscript.icon" />
-    <EmbeddedResource Include="Images\Font.Superscript.icon" />
     <EmbeddedResource Include="Images\Data.ContactRole.icon" />
     <EmbeddedResource Include="Images\logo-cresus.png" />
     <Content Include="Resources\Cresus.Core\module.info">
