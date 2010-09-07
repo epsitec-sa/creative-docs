@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIType(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new EnumController<BusinessLogic.ArticleQuantityType> (BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			var controller = new EnumController<Business.ArticleQuantityType> (Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
 			{
 				ValueGetter = () => this.Entity.QuantityType,
 				ValueSetter = x => this.Entity.QuantityType = x,
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #if false
 			builder.CreateAutoCompleteTextField ("Unité", controller);
 #else
-			builder.CreateEditionDetailedItemPicker ("Unité", controller, BusinessLogic.EnumValueCardinality.ExactlyOne);
+			builder.CreateEditionDetailedItemPicker ("Unité", controller, Business.EnumValueCardinality.ExactlyOne);
 #endif
 		}
 

@@ -91,20 +91,20 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="BusinessLogic\ArticleQuantityType.cs" />
-    <Compile Include="BusinessLogic\ArticleType.cs" />
-    <Compile Include="BusinessLogic\DocumentSource.cs" />
-    <Compile Include="BusinessLogic\Enumerations.cs" />
-    <Compile Include="BusinessLogic\EnumValueCardinality.cs" />
-    <Compile Include="BusinessLogic\Finance\BillingMode.cs" />
-    <Compile Include="BusinessLogic\Finance\BillingStatus.cs" />
-    <Compile Include="BusinessLogic\Finance\CurrencyCode.cs" />
-    <Compile Include="BusinessLogic\Finance\PaymentDetailType.cs" />
-    <Compile Include="BusinessLogic\Finance\PriceDisplayModes.cs" />
-    <Compile Include="BusinessLogic\Finance\RoundingPolicy.cs" />
-    <Compile Include="BusinessLogic\Finance\TaxMode.cs" />
-    <Compile Include="BusinessLogic\Finance\VatCode.cs" />
-    <Compile Include="BusinessLogic\UserManagement\UserPowerLevel.cs" />
+    <Compile Include="Business\ArticleQuantityType.cs" />
+    <Compile Include="Business\ArticleType.cs" />
+    <Compile Include="Business\DocumentSource.cs" />
+    <Compile Include="Business\Enumerations.cs" />
+    <Compile Include="Business\EnumValueCardinality.cs" />
+    <Compile Include="Business\Finance\BillingMode.cs" />
+    <Compile Include="Business\Finance\BillingStatus.cs" />
+    <Compile Include="Business\Finance\CurrencyCode.cs" />
+    <Compile Include="Business\Finance\PaymentDetailType.cs" />
+    <Compile Include="Business\Finance\PriceDisplayModes.cs" />
+    <Compile Include="Business\Finance\RoundingPolicy.cs" />
+    <Compile Include="Business\Finance\TaxMode.cs" />
+    <Compile Include="Business\Finance\VatCode.cs" />
+    <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
     <Compile Include="CommandHandlers\NavigationCommandHandler.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ArticleParameterToolbarController.cs" />
@@ -250,7 +250,7 @@
     <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="Controllers\DataAccessors\SummaryDataItems.cs" />
-    <Compile Include="BusinessLogic\UnitOfMeasureCategory.cs" />
+    <Compile Include="Business\UnitOfMeasureCategory.cs" />
     <Compile Include="Data\ArticleDefinitionRepository.cs" />
     <Compile Include="Data\CurrencyRepository.cs" />
     <Compile Include="Data\PaymentModeRepository.cs" />

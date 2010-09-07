@@ -6,15 +6,14 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business.Finance
 {
 	[DesignerVisible]
-	public enum DocumentSource
+	public enum PaymentDetailType
 	{
-		None		= 0,
+		None			= 0,
 
-		Generated	= 1,
-		Internal	= 2,
-		External	= 3,
+		AmountDue		= 1,					//	montant dû
+		AmountPaid		= 2,					//	montant payé ou encaissé
 	}
 }

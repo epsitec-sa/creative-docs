@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;

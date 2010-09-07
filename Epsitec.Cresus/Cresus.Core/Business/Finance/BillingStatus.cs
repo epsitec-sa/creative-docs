@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Finance
+namespace Epsitec.Cresus.Core.Business.Finance
 {
 	[DesignerVisible]
 	public enum BillingStatus

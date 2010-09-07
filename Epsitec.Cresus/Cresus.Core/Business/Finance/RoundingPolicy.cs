@@ -2,23 +2,21 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Finance
+namespace Epsitec.Cresus.Core.Business.Finance
 {
 	[DesignerVisible]
-	[System.Flags]
-	public enum PriceDisplayModes
+	public enum RoundingPolicy
 	{
 		None			= 0,
 
-		Discount		= 0x0001,
-		PrimaryTotal	= 0x0002,
-		FixedPrice		= 0x0004,
-		Tax				= 0x0008,
-		ResultingTotal	= 0x0010,
+		OnUnitPriceBeforeTax	= 2,
+		OnUnitPriceAfterTax		= 3,
 
-		WithTax			= 0x1000,
+		OnFinalPriceBeforeTax	= 4,
+		OnFinalPriceAfterTax	= 5,
 	}
 }

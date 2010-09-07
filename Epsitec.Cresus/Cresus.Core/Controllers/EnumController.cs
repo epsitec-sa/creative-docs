@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				return this.ValueToDescriptionConverter (e.Values);
 			};
 
-			widget.Cardinality = BusinessLogic.EnumValueCardinality.ExactlyOne;
+			widget.Cardinality = Business.EnumValueCardinality.ExactlyOne;
 			widget.CreateUI ();
 
 			this.Update ();

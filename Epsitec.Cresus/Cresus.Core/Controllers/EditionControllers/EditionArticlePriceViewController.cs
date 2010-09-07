@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			
 			builder.CreateTextField (tile, 150, "Prix HT", Marshaler.Create (() => this.Entity.ValueBeforeTax, x => this.Entity.ValueBeforeTax = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (this.Entity, x => x.CurrencyCode, (x, v) => x.CurrencyCode = v), BusinessLogic.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (this.Entity, x => x.CurrencyCode, (x, v) => x.CurrencyCode = v), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 			
 			builder.CreateMargin (tile, horizontalSeparator: true);
 			

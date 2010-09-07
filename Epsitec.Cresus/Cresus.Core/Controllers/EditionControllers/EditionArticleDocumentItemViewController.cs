@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private static string GetArticleQuantitySummary(ArticleQuantityEntity quantity)
 		{
 			string type = null;
-			foreach (var q in BusinessLogic.Enumerations.GetAllPossibleValueArticleQuantityType ())
+			foreach (var q in Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
 			{
 				if (q.Key == quantity.QuantityType)
 				{
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private static void SetupArticleQuantity(ArticleQuantityEntity quantity)
 		{
-			quantity.QuantityType = BusinessLogic.ArticleQuantityType.Billed;
+			quantity.QuantityType = Business.ArticleQuantityType.Billed;
 			quantity.Quantity = 1;
 		}
 
@@ -193,11 +193,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			get
 			{
-				return this.GetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Billed, 0);
+				return this.GetUnitOfMeasure (Business.ArticleQuantityType.Billed, 0);
 			}
 			set
 			{
-				this.SetUnitOfMeasure (BusinessLogic.ArticleQuantityType.Billed, 0, value);
+				this.SetUnitOfMeasure (Business.ArticleQuantityType.Billed, 0, value);
 			}
 		}
 
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private UnitOfMeasureEntity GetUnitOfMeasure(BusinessLogic.ArticleQuantityType quantityType, int rank)
+		private UnitOfMeasureEntity GetUnitOfMeasure(Business.ArticleQuantityType quantityType, int rank)
 		{
 			foreach (var quantity in this.Entity.ArticleQuantities)
 			{
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return null;
 		}
 
-		private void SetUnitOfMeasure(BusinessLogic.ArticleQuantityType quantityType, int rank, UnitOfMeasureEntity value)
+		private void SetUnitOfMeasure(Business.ArticleQuantityType quantityType, int rank, UnitOfMeasureEntity value)
 		{
 			for (int i = 0; i < this.Entity.ArticleQuantities.Count; i++)
 			{
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private decimal? GetArticlePrice()
 		{
-			return ArticleDocumentItemHelper.GetArticlePrice (this.Entity, System.DateTime.Now, BusinessLogic.Finance.CurrencyCode.Chf);
+			return ArticleDocumentItemHelper.GetArticlePrice (this.Entity, System.DateTime.Now, Business.Finance.CurrencyCode.Chf);
 		}
 
 		private decimal? GetPrice()

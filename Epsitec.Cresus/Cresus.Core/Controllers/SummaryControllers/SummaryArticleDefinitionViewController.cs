@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (price.CurrencyCode.HasValue)
 			{
-				var c = BusinessLogic.Enumerations.GetAllPossibleCurrencyCodes ().Where (x => x.Key == price.CurrencyCode).First ();
+				var c = Business.Enumerations.GetAllPossibleCurrencyCodes ().Where (x => x.Key == price.CurrencyCode).First ();
 				builder.Append (" ");
 				builder.Append (c.Values[0]);  // code de la monnaie, par exemple "CHF"
 			}
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			var price = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
 
-			price.CurrencyCode = BusinessLogic.Finance.CurrencyCode.Chf;
+			price.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 			price.MinQuantity = 1;
 
 			var now = System.DateTime.Now;

@@ -6,7 +6,7 @@ using Epsitec.Cresus.Core.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	public static class Enumerations
 	{

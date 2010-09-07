@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		public ItemPicketCombo()
 		{
 			this.IsReadOnly = true;
-			this.Cardinality = BusinessLogic.EnumValueCardinality.Any;
+			this.Cardinality = Business.EnumValueCardinality.Any;
 			this.MultipleSelectionTextSeparator = ", ";
 
 			this.selection = new HashSet<int> ();
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public BusinessLogic.EnumValueCardinality Cardinality
+		public Business.EnumValueCardinality Cardinality
 		{
 			get;
 			set;
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (index >= 0)
 			{
-				if (this.Cardinality == BusinessLogic.EnumValueCardinality.Any)
+				if (this.Cardinality == Business.EnumValueCardinality.Any)
 				{
 					if (sels.Contains (index))
 					{
@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						this.AddSelection (new int[] { index });
 					}
 				}
-				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
+				else if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
 				{
 					if (index == 0)
 					{
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						}
 					}
 				}
-				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.AtLeastOne)
+				else if (this.Cardinality == Business.EnumValueCardinality.AtLeastOne)
 				{
 					if (sels.Contains (index))
 					{
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Core.Widgets
 						this.AddSelection (new int[] { index });
 					}
 				}
-				else if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne)
+				else if (this.Cardinality == Business.EnumValueCardinality.ExactlyOne)
 				{
 					this.ClearSelection ();
 					this.AddSelection (new int[] { index });
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			var sel = this.GetSortedSelection ();
 
-			if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
+			if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
 			{
 				string icon;
 
@@ -363,8 +363,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				string icon;
 
-				if (this.Cardinality == BusinessLogic.EnumValueCardinality.ExactlyOne ||
-					this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne)
+				if (this.Cardinality == Business.EnumValueCardinality.ExactlyOne ||
+					this.Cardinality == Business.EnumValueCardinality.ZeroOrOne)
 				{
 					if (sel.Contains (i))
 					{
@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				list.Add (this.items[sel]);
 			}
 
-			if (this.Cardinality == BusinessLogic.EnumValueCardinality.ZeroOrOne && list.Count == 0)
+			if (this.Cardinality == Business.EnumValueCardinality.ZeroOrOne && list.Count == 0)
 			{
 				list.Add ("Aucun");
 			}

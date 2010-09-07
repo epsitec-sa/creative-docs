@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Entities;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
 	/// The <c>EnumValueCardinality</c> defines how many values can be used for

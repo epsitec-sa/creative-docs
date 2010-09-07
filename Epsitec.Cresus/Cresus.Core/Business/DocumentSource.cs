@@ -6,14 +6,15 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Finance
+namespace Epsitec.Cresus.Core.Business
 {
 	[DesignerVisible]
-	public enum BillingMode
+	public enum DocumentSource
 	{
-		None			= 0,
+		None		= 0,
 
-		IncludingTax	= 1,										//	TTC
-		ExcludingTax	= 2,										//	HT
+		Generated	= 1,
+		Internal	= 2,
+		External	= 3,
 	}
 }

@@ -23,26 +23,26 @@ namespace Epsitec.Cresus.Core.Helpers
 			// TODO: Il devrait aussi y avoir une date en entrée !
 			switch (article.ArticleDefinition.ArticleCategory.DefaultOutputVatCode)
 			{
-				case BusinessLogic.Finance.VatCode.Excluded:
-				case BusinessLogic.Finance.VatCode.ZeroRated:
+				case Business.Finance.VatCode.Excluded:
+				case Business.Finance.VatCode.ZeroRated:
 					return 0;
 
-				case BusinessLogic.Finance.VatCode.StandardTax:
-				case BusinessLogic.Finance.VatCode.StandardInputTaxOnInvestementOrOperatingExpenses:
-				case BusinessLogic.Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses:
-				case BusinessLogic.Finance.VatCode.StandardTaxOnTurnover:
+				case Business.Finance.VatCode.StandardTax:
+				case Business.Finance.VatCode.StandardInputTaxOnInvestementOrOperatingExpenses:
+				case Business.Finance.VatCode.StandardInputTaxOnMaterialOrServiceExpenses:
+				case Business.Finance.VatCode.StandardTaxOnTurnover:
 					return 0.076M;
 
-				case BusinessLogic.Finance.VatCode.ReducedTax:
-				case BusinessLogic.Finance.VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses:
-				case BusinessLogic.Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses:
-				case BusinessLogic.Finance.VatCode.ReducedTaxOnTurnover:
+				case Business.Finance.VatCode.ReducedTax:
+				case Business.Finance.VatCode.ReducedInputTaxOnInvestementOrOperatingExpenses:
+				case Business.Finance.VatCode.ReducedInputTaxOnMaterialOrServiceExpenses:
+				case Business.Finance.VatCode.ReducedTaxOnTurnover:
 					return 0.024M;
 
-				case BusinessLogic.Finance.VatCode.SpecialTax:
-				case BusinessLogic.Finance.VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses:
-				case BusinessLogic.Finance.VatCode.SpecialInputTaxOnMaterialOrServiceExpenses:
-				case BusinessLogic.Finance.VatCode.SpecialTaxOnTurnover:
+				case Business.Finance.VatCode.SpecialTax:
+				case Business.Finance.VatCode.SpecialInputTaxOnInvestementOrOperatingExpenses:
+				case Business.Finance.VatCode.SpecialInputTaxOnMaterialOrServiceExpenses:
+				case Business.Finance.VatCode.SpecialTaxOnTurnover:
 					return 0.036M;
 			}
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		}
 
 
-		public static decimal? GetArticlePrice(ArticleDocumentItemEntity article, System.DateTime date, BusinessLogic.Finance.CurrencyCode currency)
+		public static decimal? GetArticlePrice(ArticleDocumentItemEntity article, System.DateTime date, Business.Finance.CurrencyCode currency)
 		{
 			//	Il peut y avoir plusieurs prix, mais un seul prix à une date donnée pour une monnaie donnée.
 			foreach (var price in article.ArticleDefinition.ArticlePrices)
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Billed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					return Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
 				}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			foreach (var quantity in article.ArticleQuantities)
 			{
-				if (quantity.QuantityType == BusinessLogic.ArticleQuantityType.Billed)
+				if (quantity.QuantityType == Business.ArticleQuantityType.Billed)
 				{
 					return quantity.Quantity;
 				}
@@ -164,8 +164,8 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ArticleDefinition.IsActive () &&
 				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
-				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Freight ||
-					   article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Tax;
+				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
+					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Tax;
 			}
 
 			return false;
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				article.ArticleDefinition.IsActive () &&
 				article.ArticleDefinition.ArticleCategory.IsActive ())
 			{
-				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Goods;  // marchandises ?
+				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
 			}
 
 			return false;
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Core.Helpers
 					return false;
 				}
 
-				return article.ArticleDefinition.ArticleCategory.ArticleType == BusinessLogic.ArticleType.Goods;  // marchandises ?
+				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
 			}
 
 			return false;
