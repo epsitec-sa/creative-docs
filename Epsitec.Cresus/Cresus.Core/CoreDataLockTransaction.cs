@@ -21,9 +21,48 @@ namespace Epsitec.Cresus.Core
 			this.lockNames = new List<string> (lockNames);
 		}
 
+
+		public LockState LockSate
+		{
+			get
+			{
+				if (this.isDisposed)
+                {
+					return LockState.Disposed;
+                }
+
+				if (this.lockTransaction == null)
+				{
+					return LockState.Idle;
+				}
+				else
+				{
+					return LockState.Locked;
+				}
+			}
+		}
+
+		
 		internal bool Acquire(DataInfrastructure dataInfrastructure)
 		{
-			return dataInfrastructure.TryCreateLockTransaction (this.lockNames, out this.lockTransaction);
+			System.Diagnostics.Debug.Assert (this.lockTransaction == null);
+
+			this.lockTransaction = this.CreateLockTransaction (dataInfrastructure);
+
+			return this.lockTransaction != null;
+		}
+
+		private LockTransaction CreateLockTransaction(DataInfrastructure dataInfrastructure)
+		{
+			var lockTransaction = dataInfrastructure.CreateLockTransaction (this.lockNames);
+
+			if (lockTransaction.State == LockState.Locked)
+			{
+				return lockTransaction;
+			}
+
+			lockTransaction.Dispose ();
+			return null;
 		}
 
 		#region IDisposable Members
@@ -35,11 +74,15 @@ namespace Epsitec.Cresus.Core
 				this.lockTransaction.Dispose ();
 				this.lockTransaction = null;
 			}
+
+			this.isDisposed = true;
 		}
 
 		#endregion
 
 		private readonly List<string> lockNames;
 		private LockTransaction lockTransaction;
+
+		private bool isDisposed;
 	}
 }

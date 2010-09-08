@@ -112,11 +112,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			public void Dispose()
 			{
-				this.controller.GenerateTiles ();
+				this.ValidateCreation ();
 			}
 
 			#endregion
 
+			private void ValidateCreation()
+			{
+				this.controller.GenerateTiles ();
+
+				var viewController = this.controller.controller;
+				
+				using (var builder = new UIBuilder (viewController))
+				{
+					builder.CreateFooterEditorTile ();
+				}
+			}
+			
 			private readonly TileContainerController controller;
 		}
 

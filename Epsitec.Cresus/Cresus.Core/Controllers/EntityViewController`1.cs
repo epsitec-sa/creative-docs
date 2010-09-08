@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public BusinessLogic.BusinessContext BusinessContext
+		public override BusinessLogic.BusinessContext BusinessContext
 		{
 			get
 			{

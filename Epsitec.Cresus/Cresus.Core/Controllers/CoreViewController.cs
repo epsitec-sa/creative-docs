@@ -62,6 +62,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public virtual BusinessLogic.BusinessContext BusinessContext
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 		public System.Func<bool, bool> ActivateNextSubView
 		{
 			get;
