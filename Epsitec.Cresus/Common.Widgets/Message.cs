@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 		public Message()
 		{
 			this.tickCount = System.Environment.TickCount;
-			this.messageId = Message.nextMessageId++;
+			this.messageId = System.Threading.Interlocked.Increment (ref Message.nextMessageId);
 			
 			Message.state.buttons   = (MouseButtons) (int) System.Windows.Forms.Control.MouseButtons;
 			Message.state.modifiers = (ModifierKeys) (int) System.Windows.Forms.Control.ModifierKeys;
@@ -29,10 +29,10 @@ namespace Epsitec.Common.Widgets
 			Message.lastMessage = this;
 		}
 
-		protected Message(MessageType messageType)
+		private Message(MessageType messageType)
 			: this ()
 		{
-			this.type = messageType;
+			this.messageType = messageType;
 		}
 
 		public bool							IsDummy
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 		
 		public MessageType					MessageType
 		{
-			get { return this.type; }
+			get { return this.messageType; }
 		}
 
 		public long							MessageId
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				switch (this.type)
+				switch (this.messageType)
 				{
 					case MessageType.MouseDown:
 					case MessageType.MouseEnter:
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				switch (this.type)
+				switch (this.messageType)
 				{
 					case MessageType.KeyDown:
 					case MessageType.KeyUp:
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Widgets
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			buffer.Append ("{");
-			buffer.Append (this.type.ToString ());
+			buffer.Append (this.messageType.ToString ());
 			buffer.Append (" ");
 			buffer.Append (this.cursor.ToString ());
 			
@@ -569,6 +569,11 @@ namespace Epsitec.Common.Widgets
 
 		internal static Message PostProcessMessage(Message message)
 		{
+			if (message == null)
+			{
+				return null;
+			}
+
 			//	Simulate Alt-Left and Alt-Right when the user clicks the special
 			//	<-- and --> buttons on the mouse; let's hope that this is indeed
 			//	what the mouse buttons are configured to do !
@@ -828,7 +833,7 @@ namespace Epsitec.Common.Widgets
 				message.modifiers |= ModifierKeys.Control;
 			}
 			
-			if (message.type == MessageType.KeyPress)
+			if (message.messageType == MessageType.KeyPress)
 			{
 				message.keyCode = Message.lastCode;
 				message.keyChar = (int) wParam;
@@ -1028,7 +1033,7 @@ namespace Epsitec.Common.Widgets
 		{
 			string name;
 			
-			if (Platform.Win32Api.GetKeyName (code, out name))
+			if (Win32Api.GetKeyName (code, out name))
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
@@ -1067,7 +1072,15 @@ namespace Epsitec.Common.Widgets
 			
 			return name;
 		}
-		
+
+		private static KeyCode				lastCode;
+		private static Message				lastMessage;
+		private static Message.State		state;
+		private static long					nextMessageId = 1;
+
+		private readonly MessageType		messageType;
+		private readonly long				messageId;
+		private readonly int				tickCount;
 		
 		private bool						filterNoChildren;
 		private bool						filterOnlyFocused;
@@ -1083,11 +1096,7 @@ namespace Epsitec.Common.Widgets
 		private Widget						inWidget;
 		private Widget						consumer;
 		private string						command;
-		
-		readonly private MessageType					type;
-		readonly private int				tickCount;
-		readonly private long				messageId;
-		
+
 		private Drawing.Point				cursor;
 		private MouseButtons				button;
 		private int							buttonDownCount;
@@ -1096,10 +1105,5 @@ namespace Epsitec.Common.Widgets
 		private ModifierKeys				modifiers;
 		private KeyCode						keyCode;
 		private int							keyChar;
-		
-		private static KeyCode				lastCode;
-		private static Message				lastMessage;
-		private static Message.State		state;
-		private static long					nextMessageId = 1;
 	}
 }
