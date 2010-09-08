@@ -102,14 +102,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				bool canLock = lockNames.All (lockName =>
 				{
 					return lockManager.IsLockOwned (lockName)
-						|| lockManager.GetLockOwner (lockName) == this.connectionId + "";
+						|| lockManager.GetLockConnexionId (lockName) == this.connectionId;
 				});
 
 				if (canLock)
 				{
 					foreach (string lockName in lockNames)
 					{
-						lockManager.RequestLock (lockName, this.connectionId + "");
+						lockManager.RequestLock (lockName, this.connectionId);
 					}
 				}
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				foreach (string lockName in this.lockNames)
 				{
-					this.DbLockManager.ReleaseLock (lockName, this.connectionId + "");
+					this.DbLockManager.ReleaseLock (lockName, this.connectionId);
 				}
 
 				transaction.Commit ();

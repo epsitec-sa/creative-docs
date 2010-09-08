@@ -67,22 +67,12 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RequestLock (null, "myUser")
+					() => manager.RequestLock (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RequestLock ("", "myUser")
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.RequestLock ("myLock", null)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.RequestLock ("myLock", "")
+					() => manager.RequestLock ("", 0)
 				);
 			}
 		}
@@ -97,22 +87,12 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ReleaseLock (null, "myUser")
+					() => manager.ReleaseLock (null, 0)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ReleaseLock ("", "myUser")
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.ReleaseLock ("myLock", null)
-				);
-
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => manager.ReleaseLock ("myLock", "")
+					() => manager.ReleaseLock ("", 0)
 				);
 			}
 		}
@@ -149,29 +129,29 @@ namespace Cresus.Database.UnitTests
 				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
-				manager.RequestLock ("myLock2", "myUser1");
+				manager.RequestLock ("myLock2", 0);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
-				manager.RequestLock ("myLock1", "myUser1");
-				manager.RequestLock ("myLock2", "myUser1");
-				manager.RequestLock ("myLock3", "myUser2");
+				manager.RequestLock ("myLock1", 0);
+				manager.RequestLock ("myLock2", 0);
+				manager.RequestLock ("myLock3", 1);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock1"));
 				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
 				Assert.IsTrue (manager.IsLockOwned ("myLock3"));
 
-				manager.ReleaseLock ("myLock1", "myUser1");
-				manager.ReleaseLock ("myLock2", "myUser1");
-				manager.ReleaseLock ("myLock3", "myUser2");
+				manager.ReleaseLock ("myLock1", 0);
+				manager.ReleaseLock ("myLock2", 0);
+				manager.ReleaseLock ("myLock3", 1);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.IsTrue (manager.IsLockOwned ("myLock2"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
-				manager.ReleaseLock ("myLock2", "myUser1");
+				manager.ReleaseLock ("myLock2", 0);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
@@ -189,38 +169,38 @@ namespace Cresus.Database.UnitTests
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				
-				manager.ReleaseLock ("myLock", "myUser1");
-				manager.ReleaseLock ("myLock", "myUser2");
+				manager.ReleaseLock ("myLock", 0);
+				manager.ReleaseLock ("myLock", 1);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 
-				manager.RequestLock ("myLock", "myUser1");
+				manager.RequestLock ("myLock", 0);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock"));
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock"));
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => manager.RequestLock ("myLock", "myUser2")
+					() => manager.RequestLock ("myLock", 1)
 				);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock"));
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock"));
 
-				manager.ReleaseLock ("myLock", "myUser1");
+				manager.ReleaseLock ("myLock", 0);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock"));
 
-				manager.RequestLock ("myLock", "myUser2");
+				manager.RequestLock ("myLock", 1);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual ("myUser2", manager.GetLockOwner ("myLock"));
+				Assert.AreEqual (1, manager.GetLockConnexionId ("myLock"));
 
-				manager.ReleaseLock ("myLock", "myUser2");
+				manager.ReleaseLock ("myLock", 1);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock"));
 
-				manager.ReleaseLock ("myLock", "myUser2");
+				manager.ReleaseLock ("myLock", 1);
 
 				Assert.IsFalse (manager.IsLockOwned ("myLock"));	
 			}
@@ -236,12 +216,12 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockOwner (null)
+					() => manager.GetLockConnexionId (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockOwner ("")
+					() => manager.GetLockConnexionId ("")
 				);
 			}
 		}
@@ -254,37 +234,37 @@ namespace Cresus.Database.UnitTests
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
-				Assert.IsNull (manager.GetLockOwner ("myLock1"));
-				Assert.IsNull (manager.GetLockOwner ("myLock2"));
-				Assert.IsNull (manager.GetLockOwner ("myLock3"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
 
-				manager.RequestLock ("myLock2", "myUser1");
+				manager.RequestLock ("myLock2", 0);
 
-				Assert.IsNull (manager.GetLockOwner ("myLock1"));
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
-				Assert.IsNull (manager.GetLockOwner ("myLock3"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
 
-				manager.RequestLock ("myLock1", "myUser1");
-				manager.RequestLock ("myLock2", "myUser1");
-				manager.RequestLock ("myLock3", "myUser2");
-				
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock1"));
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
-				Assert.AreEqual ("myUser2", manager.GetLockOwner ("myLock3"));
+				manager.RequestLock ("myLock1", 0);
+				manager.RequestLock ("myLock2", 0);
+				manager.RequestLock ("myLock3", 1);
 
-				manager.ReleaseLock ("myLock1", "myUser1");
-				manager.ReleaseLock ("myLock2", "myUser1");
-				manager.ReleaseLock ("myLock3", "myUser2");
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
+				Assert.AreEqual (1, manager.GetLockConnexionId ("myLock3"));
 
-				Assert.IsNull (manager.GetLockOwner ("myLock1"));
-				Assert.AreEqual ("myUser1", manager.GetLockOwner ("myLock2"));
-				Assert.IsNull (manager.GetLockOwner ("myLock3"));
+				manager.ReleaseLock ("myLock1", 0);
+				manager.ReleaseLock ("myLock2", 0);
+				manager.ReleaseLock ("myLock3", 1);
 
-				manager.ReleaseLock ("myLock2", "myUser1");
+				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
 
-				Assert.IsNull (manager.GetLockOwner ("myLock1"));
-				Assert.IsNull (manager.GetLockOwner ("myLock2"));
-				Assert.IsNull (manager.GetLockOwner ("myLock3"));
+				manager.ReleaseLock ("myLock2", 0);
+
+				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
 			}
 		}
 

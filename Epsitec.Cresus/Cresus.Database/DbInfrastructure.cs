@@ -2799,7 +2799,7 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUser, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnexionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 

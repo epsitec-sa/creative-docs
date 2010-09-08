@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnInfoXml		= "CR_INFO";
 		public const string ColumnDateTime		= "CR_DATETIME";
 		public const string ColumnInstanceType	= "CR_TYPE";
-		public const string ColumnUser			= "CR_USER";
+		public const string ColumnConnexionId	= "CR_CONNEXION_ID";
 		public const string ColumnUidSlot		= "CR_UID_SLOT";
 		public const string ColumnUidMin		= "CR_UID_MIN";
 		public const string ColumnUidMax		= "CR_UID_MAX";
