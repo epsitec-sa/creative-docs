@@ -172,12 +172,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="slots"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> is empty.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains negative elements.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains slots with inconsistent bounds.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
-		internal static void CreateUidGenerator(DbInfrastructure dbInfrastructure, string name, IEnumerable<System.Tuple<long, long>> slots)
+		internal static void CreateUidGenerator(DbInfrastructure dbInfrastructure, string name, IEnumerable<UidSlot> slots)
 		{
-			List<System.Tuple<long, long>> slotsAsList = slots.OrderBy (s => s.Item1).ToList ();
+			List<UidSlot> slotsAsList = slots.OrderBy (s => s.MinValue).ToList ();
 
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			name.ThrowIfNullOrEmpty ("name");
@@ -188,19 +186,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.ArgumentException ("No slots defined.");
 			}
 
-			if (slotsAsList.Any (s => s.Item1 < 0 || s.Item2 < 0))
-			{
-				throw new System.ArgumentException ("Min and max values cannot be lower than zero.");
-			}
-
-			if (slotsAsList.Any (s => s.Item1 > s.Item2))
-			{
-				throw new System.ArgumentException ("A min value cannot be greater than a max value.");
-			}
-
 			for (int i = 0; i < slotsAsList.Count - 1; i++)
 			{
-				if (slotsAsList[i].Item2 >= slotsAsList[i + 1].Item1)
+				if (slotsAsList[i].MaxValue >= slotsAsList[i + 1].MinValue)
 				{
 					throw new System.ArgumentException ("Slots cannot overlap each others.");
 				}
@@ -215,7 +203,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				for (int i = 0; i < slotsAsList.Count; i++)
 				{
-					dbInfrastructure.UidManager.CreateUidCounter (name, i, slotsAsList[i].Item1, slotsAsList[i].Item2);
+					dbInfrastructure.UidManager.CreateUidCounter (name, i, slotsAsList[i].MinValue, slotsAsList[i].MaxValue);
 				}
 
 				transaction.Commit ();

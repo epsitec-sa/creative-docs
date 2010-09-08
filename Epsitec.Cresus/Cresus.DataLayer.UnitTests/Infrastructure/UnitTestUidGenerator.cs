@@ -47,11 +47,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
 			string name = "test";
-			List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+			List<UidSlot> slots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long)  0, (long)  9),
-				System.Tuple.Create ((long) 20, (long) 29),
-				System.Tuple.Create ((long) 10, (long) 19),
+				new UidSlot (0, 9),
+				new UidSlot (20, 29),
+				new UidSlot (10, 19),
 			};
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
@@ -74,47 +74,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, null)
 			);
 
-			List<System.Tuple<long,long>> badSlots = new List<System.Tuple<long, long>> ();
+			List<UidSlot> badSlots = new List<UidSlot> ();
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
 				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
 			);
 
-			badSlots = new List<System.Tuple<long, long>> ()
+			badSlots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long) -1, (long) 0),
-			};
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
-			);
-
-			badSlots = new List<System.Tuple<long, long>> ()
-			{
-				System.Tuple.Create ((long) 0, (long) -1),
-			};
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
-			);
-
-			badSlots = new List<System.Tuple<long, long>> ()
-			{
-				System.Tuple.Create ((long) 10, (long) 5),
-			};
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => UidGenerator.CreateUidGenerator (dbInfrastructure, name, badSlots)
-			);
-
-			badSlots = new List<System.Tuple<long, long>> ()
-			{
-				System.Tuple.Create ((long) 0, (long) 5),
-				System.Tuple.Create ((long) 5, (long) 10),
+				new UidSlot (0, 5),
+				new UidSlot (5, 10),
 			};
 
 			ExceptionAssert.Throw<System.ArgumentException>
@@ -130,12 +100,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			for (int i = 0; i < 10; i++)
 			{
 				string name = "myCounter" + i;
-				
-				List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+
+				List<UidSlot> slots = new List<UidSlot> ()
 				{
-					System.Tuple.Create ((long) 10, (long) 19),
-					System.Tuple.Create ((long) 20, (long) 29),
-					System.Tuple.Create ((long)  0, (long)  9),
+					new UidSlot (10, 19),
+					new UidSlot (20, 29),
+					new UidSlot (0, 9),
 				};
 
 				Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));
@@ -185,11 +155,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			{
 				string name = "myCounter";
 
-				List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+				List<UidSlot> slots = new List<UidSlot> ()
 				{
-					System.Tuple.Create ((long)  0, (long)  9),
-					System.Tuple.Create ((long) 20, (long) 29),
-					System.Tuple.Create ((long) 10, (long) 19),
+					new UidSlot (0, 9),
+					new UidSlot (20, 29),
+					new UidSlot (10, 19),
 				};
 
 				UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name + i, slots);
@@ -283,11 +253,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			{
 				string name = "myCounter" + i;
 
-				List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+				List<UidSlot> slots = new List<UidSlot> ()
 				{
-					System.Tuple.Create ((long) 20, (long) 29),
-					System.Tuple.Create ((long) 0, (long) 9),
-					System.Tuple.Create ((long) 10, (long) 19),
+					new UidSlot (20, 29),
+					new UidSlot (0, 9),
+					new UidSlot (10, 19),
 				};
 
 				Assert.IsFalse (UidGenerator.UidGeneratorExists (DatabaseHelper.DbInfrastructure, name));
@@ -318,9 +288,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			string name = "myCounter";
 
-			List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+			List<UidSlot> slots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long) 0, (long) 9),
+				new UidSlot (0, 9),
 			};
 
 			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
@@ -341,11 +311,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			string name = "myCounter";
 
-			List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+			List<UidSlot> slots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long) 15, (long) 15),
-				System.Tuple.Create ((long) 19, (long) 34),
-				System.Tuple.Create ((long) 0, (long) 9),
+				new UidSlot (15, 15),
+				new UidSlot (19, 34),
+				new UidSlot (0, 9),
 			};
 
 			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
@@ -376,9 +346,9 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			string name = "myCounter";
 
-			List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+			List<UidSlot> slots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long) 0, (long) 9),
+				new UidSlot (0, 9),
 			};
 
 			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
@@ -402,11 +372,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		{
 			string name = "myCounter";
 
-			List<System.Tuple<long, long>> slots = new List<System.Tuple<long, long>> ()
+			List<UidSlot> slots = new List<UidSlot> ()
 			{
-				System.Tuple.Create ((long) 12, (long) 17),
-				System.Tuple.Create ((long) 0, (long) 9),
-				System.Tuple.Create ((long) 19, (long) 34),
+				new UidSlot (12, 17),
+				new UidSlot (0, 9),
+				new UidSlot (19, 34),
 			};
 
 			UidGenerator.CreateUidGenerator (DatabaseHelper.DbInfrastructure, name, slots);
