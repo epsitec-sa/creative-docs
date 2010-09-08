@@ -736,12 +736,12 @@ namespace Epsitec.Common.Widgets
 			if (this.scrollListStyle == ScrollListStyle.Menu)
 			{
 				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
-				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Simple, TextFieldDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Simple, TextFieldDisplayMode.Default, false, false);
 			}
 			else if (this.scrollListStyle != Widgets.ScrollListStyle.FrameLess)
 			{
 				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
-				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false, false);
 			}
 
 			int max = System.Math.Min (this.visibleRows, this.items.Count);

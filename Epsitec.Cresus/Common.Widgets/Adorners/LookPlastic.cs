@@ -765,7 +765,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 			//	Dessine le fond d'une ligne éditable.
 			double radius;
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 		}
 
