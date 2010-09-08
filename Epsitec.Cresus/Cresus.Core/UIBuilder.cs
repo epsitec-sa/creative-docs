@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core
 		public UIBuilder(EntityViewController controller)
 			: this (controller.TileContainer, controller)
 		{
-			this.ReadOnly = true;
+			//?this.ReadOnly = true;  // test
 		}
 
 		~UIBuilder()
