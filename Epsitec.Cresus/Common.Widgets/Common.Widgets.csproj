@@ -187,6 +187,7 @@
     <Compile Include="AutoSplitter.cs" />
     <Compile Include="ClippingFrameBox.cs" />
     <Compile Include="AbstractTextField.CommandController.cs" />
+    <Compile Include="GlyphShape.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="MessageHandler.cs" />
     <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />

@@ -1,42 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
 {
-	/// <summary>
-	/// GlyphShape détermine l'aspect d'un "glyph" représenté par la classe
-	/// GlyphButton.
-	/// </summary>
-	public enum GlyphShape
-	{
-		None,
-		ArrowUp,
-		ArrowDown,
-		ArrowLeft,
-		ArrowRight,
-		TriangleUp,
-		TriangleDown,
-		TriangleLeft,
-		TriangleRight,
-		Menu,
-		Close,
-		Dots,
-		Accept,
-		Reject,
-		TabLeft,
-		TabRight,
-		TabCenter,
-		TabDecimal,
-		TabIndent,
-		ResizeKnob,
-		Plus,
-		Minus,
-		HorizontalMove,
-		VerticalMove,
-	}
-	
 	/// <summary>
 	/// La classe GlyphButton dessine un bouton avec une icône simple.
 	/// </summary>
@@ -49,29 +17,33 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.glyphSize = Size.Zero;
 		}
-		
-		public GlyphButton(string command) : this (command, null)
+
+		public GlyphButton(string command)
+			: this (command, null)
 		{
 		}
-		
-		public GlyphButton(string command, string name) : this ()
+
+		public GlyphButton(string command, string name)
+			: this ()
 		{
 			this.CommandObject = Command.Get (command);
 			this.Name = name;
 		}
-		
-		public GlyphButton(Widget embedder) : this()
+
+		public GlyphButton(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
-		
-		public GlyphButton(Widget embedder, GlyphShape shape) : this (embedder)
+
+		public GlyphButton(Widget embedder, GlyphShape shape)
+			: this (embedder)
 		{
 			this.GlyphShape  = shape;
 		}
-		
-		
-		public GlyphShape						GlyphShape
+
+
+		public GlyphShape GlyphShape
 		{
 			//	Forme représentée dans le bouton.
 			get
@@ -80,15 +52,15 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if ( this.shape != value )
+				if (this.shape != value)
 				{
 					this.shape = value;
-					this.Invalidate();
+					this.Invalidate ();
 				}
 			}
 		}
 
-		public Size								GlyphSize
+		public Size GlyphSize
 		{
 			//	Taille de la forme dans le bouton. Utile lorsque la forme est plus petite que le bouton,
 			//	et qu'elle est éventuellement décentrée avec ContentAlignment.
@@ -101,12 +73,12 @@ namespace Epsitec.Common.Widgets
 				if (this.glyphSize != value)
 				{
 					this.glyphSize = value;
-					this.Invalidate();
+					this.Invalidate ();
 				}
 			}
 		}
-		
-		
+
+
 		static GlyphButton()
 		{
 			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
@@ -129,27 +101,13 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Rectangle glyphBounds = this.GlyphBounds;
+			Rectangle glyphBounds = this.GetGlyphBounds ();
 
 			WidgetPaintState paintState = this.GetPaintState ();
+
 			if (this.ButtonStyle != ButtonStyle.None)
 			{
-				Direction dir = Direction.None;
-				switch (this.shape)
-				{
-					case GlyphShape.ArrowUp:
-						dir = Direction.Up;
-						break;
-					case GlyphShape.ArrowDown:
-						dir = Direction.Down;
-						break;
-					case GlyphShape.ArrowLeft:
-						dir = Direction.Left;
-						break;
-					case GlyphShape.ArrowRight:
-						dir = Direction.Right;
-						break;
-				}
+				Direction dir = this.GetGlyphDirection ();
 
 				if (this.glyphSize.IsEmpty)
 				{
@@ -158,12 +116,13 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					WidgetPaintState state = paintState;
+
 					if ((state&WidgetPaintState.Entered) != 0)  // bouton survolé ?
 					{
 						state |=  WidgetPaintState.InheritedEnter;  // mode spécial pour le groupe d'un combo
 					}
-					adorner.PaintButtonBackground (graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
 
+					adorner.PaintButtonBackground (graphics, this.Client.Bounds, state, dir, this.ButtonStyle);
 					adorner.PaintButtonBackground (graphics, glyphBounds, paintState, dir, this.ButtonStyle);
 				}
 			}
@@ -171,49 +130,69 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintGlyph (graphics, glyphBounds, paintState, this.shape, PaintTextStyle.Button);
 		}
 
-		protected Rectangle GlyphBounds
+		private Direction GetGlyphDirection()
 		{
-			//	Retourne le rectangle à utiliser pour le glyph, en tenant compte de GlyphSize et ContentAlignment.
-			get
+			Direction dir = Direction.None;
+
+			switch (this.shape)
 			{
-				Rectangle rect = this.Client.Bounds;
-
-				if (!this.glyphSize.IsEmpty)
-				{
-					if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
-						this.ContentAlignment == ContentAlignment.BottomLeft ||
-						this.ContentAlignment == ContentAlignment.TopLeft    )
-					{
-						rect.Width = this.glyphSize.Width;
-					}
-
-					if (this.ContentAlignment == ContentAlignment.MiddleRight ||
-						this.ContentAlignment == ContentAlignment.BottomRight ||
-						this.ContentAlignment == ContentAlignment.TopRight    )
-					{
-						rect.Left = rect.Right-this.glyphSize.Width;
-					}
-
-					if (this.ContentAlignment == ContentAlignment.BottomCenter ||
-						this.ContentAlignment == ContentAlignment.BottomLeft   ||
-						this.ContentAlignment == ContentAlignment.BottomRight  )
-					{
-						rect.Height = this.glyphSize.Height;
-					}
-
-					if (this.ContentAlignment == ContentAlignment.TopCenter ||
-						this.ContentAlignment == ContentAlignment.TopLeft   ||
-						this.ContentAlignment == ContentAlignment.TopRight  )
-					{
-						rect.Bottom = rect.Top-this.glyphSize.Height;
-					}
-				}
-
-				return rect;
+				case GlyphShape.ArrowUp:
+					dir = Direction.Up;
+					break;
+				case GlyphShape.ArrowDown:
+					dir = Direction.Down;
+					break;
+				case GlyphShape.ArrowLeft:
+					dir = Direction.Left;
+					break;
+				case GlyphShape.ArrowRight:
+					dir = Direction.Right;
+					break;
 			}
+
+			return dir;
 		}
 
-		
+		protected Rectangle GetGlyphBounds()
+		{
+			//	Retourne le rectangle à utiliser pour le glyph, en tenant compte de GlyphSize et ContentAlignment.
+			Rectangle rect = this.Client.Bounds;
+
+			if (!this.glyphSize.IsEmpty)
+			{
+				if (this.ContentAlignment == ContentAlignment.MiddleLeft ||
+						this.ContentAlignment == ContentAlignment.BottomLeft ||
+						this.ContentAlignment == ContentAlignment.TopLeft)
+				{
+					rect.Width = this.glyphSize.Width;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.MiddleRight ||
+						this.ContentAlignment == ContentAlignment.BottomRight ||
+						this.ContentAlignment == ContentAlignment.TopRight)
+				{
+					rect.Left = rect.Right-this.glyphSize.Width;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.BottomCenter ||
+						this.ContentAlignment == ContentAlignment.BottomLeft   ||
+						this.ContentAlignment == ContentAlignment.BottomRight)
+				{
+					rect.Height = this.glyphSize.Height;
+				}
+
+				if (this.ContentAlignment == ContentAlignment.TopCenter ||
+						this.ContentAlignment == ContentAlignment.TopLeft   ||
+						this.ContentAlignment == ContentAlignment.TopRight)
+				{
+					rect.Bottom = rect.Top-this.glyphSize.Height;
+				}
+			}
+
+			return rect;
+		}
+
+
 		private GlyphShape						shape;
 		private Size							glyphSize;
 	}
