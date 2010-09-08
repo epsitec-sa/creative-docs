@@ -22,6 +22,7 @@ namespace Epsitec.Common.Types
 	///    t.ToString () == "a &amp;gt; b"
 	///    t.ToSimpleText () == "a &gt; b"
 	///	</code>
+	///	</example>
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (FormattedText.Converter))]
