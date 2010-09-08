@@ -121,6 +121,12 @@ namespace Epsitec.Common.Widgets
 			set;
 		}
 
+		public bool IsMultilingualText
+		{
+			get;
+			set;
+		}
+
 		public bool AcceptsNullValue
 		{
 			get
