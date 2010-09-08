@@ -401,7 +401,16 @@ namespace Epsitec.Cresus.Core
 				return;
 			}
 
-			UIBuilder.CreateColumnTileCloseButton (this.container);
+			if (controller.Mode == ViewControllerMode.Edition)
+			{
+				UIBuilder.CreateColumnTileCloseButton (this.container);
+			}
+
+			if ((controller.Mode == ViewControllerMode.Summary) &&
+				(controller.BusinessContext != null))
+			{
+				UIBuilder.CreateColumnTileLockButton (this.container);
+			}
 		}
 
 
@@ -450,6 +459,25 @@ namespace Epsitec.Cresus.Core
 			};
 
 			return closeButton;
+		}
+		
+		public static Button CreateColumnTileLockButton(TileContainer container)
+		{
+			var controller   = container.Controller;
+			var orchestrator = controller.Orchestrator;
+
+			var lockButton = new GlyphButton
+			{
+				Parent = container,
+				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Lock,
+				Anchor = AnchorStyles.TopRight,
+				PreferredSize = new Size (18, 18),
+				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
+				Name = "ColumnTileLockButton",
+			};
+
+			return lockButton;
 		}
 		
 		
