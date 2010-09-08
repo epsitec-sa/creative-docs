@@ -1,12 +1,11 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 
 namespace Epsitec.Common.Widgets
 {
 	using Win32Api   = Epsitec.Common.Widgets.Platform.Win32Api;
 	using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
-	
-	public delegate void MessageHandler(object sender, Message message);
 	
 	/// <summary>
 	/// La classe Message décrit un événement en provenance du clavier ou de
@@ -28,6 +27,12 @@ namespace Epsitec.Common.Widgets
 			this.button = MouseButtons.None;
 
 			Message.lastMessage = this;
+		}
+
+		protected Message(MessageType messageType)
+			: this ()
+		{
+			this.type = messageType;
 		}
 
 		public bool							IsDummy
@@ -253,7 +258,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.KeyCode & KeyCode.KeyCodeMask; }
 		}
-		
+
+		public bool							IsNoModifierPressed
+		{
+			get
+			{
+				return (this.modifiers & (ModifierKeys.Alt | ModifierKeys.Control | ModifierKeys.Shift)) == 0;
+			}
+		}
 		
 		public bool							IsShiftPressed
 		{
@@ -380,17 +392,6 @@ namespace Epsitec.Common.Widgets
 			return Message.lastMessage;
 		}
 
-
-		public void CopyFrom(Message other)
-		{
-			this.type = other.type;
-			this.button = other.button;
-			this.buttonDownCount = other.buttonDownCount;
-			this.wheel = other.wheel;
-			this.modifiers = other.modifiers;
-			this.keyCode = other.keyCode;
-			this.keyChar = other.keyChar;
-		}
 
 		public override string ToString()
 		{
@@ -566,7 +567,31 @@ namespace Epsitec.Common.Widgets
 			
 			return System.Windows.Forms.MouseButtons.None;
 		}
-		
+
+		internal static Message PostProcessMessage(Message message)
+		{
+			//	Simulate Alt-Left and Alt-Right when the user clicks the special
+			//	<-- and --> buttons on the mouse; let's hope that this is indeed
+			//	what the mouse buttons are configured to do !
+
+			if ((message.Button == MouseButtons.XButton1) ||
+				(message.Button == MouseButtons.XButton2))
+			{
+				System.Windows.Forms.Keys alt = System.Windows.Forms.Keys.Alt;
+				System.Windows.Forms.Keys key = message.Button == MouseButtons.XButton1 ? System.Windows.Forms.Keys.Left : System.Windows.Forms.Keys.Right;
+
+				switch (message.MessageType)
+				{
+					case MessageType.MouseDown:
+						return Message.FromKeyEvent (MessageType.KeyDown, new System.Windows.Forms.KeyEventArgs (alt | key));
+
+					case MessageType.MouseUp:
+						return Message.FromKeyEvent (MessageType.KeyUp, new System.Windows.Forms.KeyEventArgs (alt | key));
+				}
+			}
+
+			return message;
+		}
 		
 		internal static Message FromWndProcMessage(Platform.Window form, ref System.Windows.Forms.Message msg)
 		{
@@ -1064,10 +1089,10 @@ namespace Epsitec.Common.Widgets
 		private string						command;
 		
 		private MessageType					type;
-		private int							tickCount;
-		private long						messageId;
-		private Drawing.Point				cursor;
+		readonly private int				tickCount;
+		readonly private long				messageId;
 		
+		private Drawing.Point				cursor;
 		private MouseButtons				button;
 		private int							buttonDownCount;
 		private int							wheel;

@@ -579,6 +579,8 @@ namespace Epsitec.Cresus.Core
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
 			};
 
 			this.ContentListAdd (textField);
@@ -622,6 +624,8 @@ namespace Epsitec.Cresus.Core
 				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
 				ScrollerVisibility = false,
 				PreferredLayout = TextFieldMultiExPreferredLayout.PreserveScrollerHeight,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
 			};
 
 			this.ContentListAdd (textField);
@@ -674,6 +678,8 @@ namespace Epsitec.Cresus.Core
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 					TabIndex = ++this.tabIndex,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 				};
 
 				menuButton = new GlyphButton
@@ -700,6 +706,8 @@ namespace Epsitec.Cresus.Core
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 					TabIndex = ++this.tabIndex,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 				};
 
 				menuButton = new GlyphButton
@@ -772,6 +780,8 @@ namespace Epsitec.Cresus.Core
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 					TabIndex = ++this.tabIndex,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 				};
 
 				menuButton = new GlyphButton
@@ -798,6 +808,8 @@ namespace Epsitec.Cresus.Core
 					Margins = new Margins (0, 0, 0, 0),
 					HintEditorComboMenu = Widgets.HintEditorComboMenu.Always,
 					TabIndex = ++this.tabIndex,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 				};
 
 				menuButton = new GlyphButton
@@ -1034,6 +1046,8 @@ namespace Epsitec.Cresus.Core
 				HintEditorComboMenu = Widgets.HintEditorComboMenu.IfReasonable,
 				ComboMenuReasonableItemsLimit = 100,
 				TabIndex = ++this.tabIndex,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
 			};
 
 			var tabIndex1 = ++this.tabIndex;

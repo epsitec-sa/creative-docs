@@ -151,7 +151,7 @@ namespace Epsitec.Common.Widgets
 
 				this.fields[i].DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.fields[i].AutoSelectOnFocus = true;
-				this.fields[i].SwallowEscape = true;
+				this.fields[i].SwallowEscapeOnRejectEdition = true;
 
 				if (i < 3)  // r,g,b ?
 				{
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa = new TextField (this);
 			this.fieldHexa.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldHexa.AutoSelectOnFocus = true;
-			this.fieldHexa.SwallowEscape = true;
+			this.fieldHexa.SwallowEscapeOnRejectEdition = true;
 			this.fieldHexa.EditionAccepted += this.HandleTextHexaChanged;
 			this.fieldHexa.TabIndex = 200;
 			this.fieldHexa.TabNavigationMode = TabNavigationMode.ActivateOnTab;

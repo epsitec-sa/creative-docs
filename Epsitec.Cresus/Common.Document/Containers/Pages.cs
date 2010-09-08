@@ -173,8 +173,8 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.pageSizeWidth.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.pageSizeWidth.AutoSelectOnFocus = true;
-			this.pageSizeWidth.SwallowEscape = true;
-			this.pageSizeWidth.SwallowReturn = true;
+			this.pageSizeWidth.SwallowEscapeOnRejectEdition = true;
+			this.pageSizeWidth.SwallowReturnOnAcceptEdition = true;
 			this.pageSizeWidth.EditionAccepted += this.HandlePageWidthEditionAccepted;
 			ToolTip.Default.SetToolTip(this.pageSizeWidth, Res.Strings.Container.Pages.Size.Width);
 
@@ -201,8 +201,8 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeHeight.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.pageSizeHeight.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.pageSizeHeight.AutoSelectOnFocus = true;
-			this.pageSizeHeight.SwallowEscape = true;
-			this.pageSizeHeight.SwallowReturn = true;
+			this.pageSizeHeight.SwallowEscapeOnRejectEdition = true;
+			this.pageSizeHeight.SwallowReturnOnAcceptEdition = true;
 			this.pageSizeHeight.EditionAccepted += this.HandlePageHeightEditionAccepted;
 			ToolTip.Default.SetToolTip(this.pageSizeHeight, Res.Strings.Container.Pages.Size.Height);
 

@@ -679,8 +679,8 @@ namespace Epsitec.Common.Dialogs
 			this.fieldRename.ButtonShowCondition = ButtonShowCondition.Always;
 			this.fieldRename.EditionAccepted += this.HandleRenameAccepted;
 			this.fieldRename.EditionRejected += this.HandleRenameRejected;
-			this.fieldRename.SwallowEscape = true;
-			this.fieldRename.SwallowReturn = true;
+			this.fieldRename.SwallowEscapeOnRejectEdition = true;
+			this.fieldRename.SwallowReturnOnAcceptEdition = true;
 			this.fieldRename.IsModal = true;
 		}
 

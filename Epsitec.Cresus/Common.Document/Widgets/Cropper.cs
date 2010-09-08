@@ -863,8 +863,8 @@ namespace Epsitec.Common.Document.Widgets
 			field.Resolution = 1.0M;
 			field.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			field.AutoSelectOnFocus = true;
-			field.SwallowEscape = true;
-			field.SwallowReturn = true;
+			field.SwallowEscapeOnRejectEdition = true;
+			field.SwallowReturnOnAcceptEdition = true;
 		}
 
 
