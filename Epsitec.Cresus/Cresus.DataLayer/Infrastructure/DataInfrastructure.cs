@@ -160,9 +160,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
 		{
-			//	TODO: ...
-			return true;
+			return LockTransaction.AreAllLocksAvailable (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
+
 		
 		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
