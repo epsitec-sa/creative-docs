@@ -129,6 +129,68 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.LineTo (center.X-0.1*rect.Width, center.Y+0.1*rect.Height);
 			path.Close ();
 		}
+
+		protected static Drawing.Path GetMultilingualFrame(Drawing.Rectangle bounds, bool isMultilingual)
+		{
+			var path = new Drawing.Path();
+			bounds.Deflate (0.5);
+
+			if (isMultilingual)
+			{
+#if false
+				double d = 5;
+
+				path.MoveTo (bounds.BottomLeft);
+				path.LineTo (bounds.BottomRight);
+				path.LineTo (bounds.TopRight);
+				path.LineTo (bounds.Left+d, bounds.Top);
+				path.LineTo (bounds.Left, bounds.Top-d);
+				path.Close ();
+#endif
+#if false
+				double d = 4;
+
+				path.MoveTo (bounds.BottomLeft);
+				path.LineTo (bounds.BottomRight);
+				path.LineTo (bounds.TopRight);
+				path.LineTo (bounds.TopLeft);
+				path.LineTo (bounds.Left, bounds.Center.Y+d);
+				path.LineTo (bounds.Left+d, bounds.Center.Y);
+				path.LineTo (bounds.Left, bounds.Center.Y-d);
+				path.Close ();
+#endif
+#if true
+				path.MoveTo (bounds.Left+3, bounds.Bottom);
+				path.LineTo (bounds.BottomRight);
+				path.LineTo (bounds.TopRight);
+				path.LineTo (bounds.Left+3, bounds.Top);
+				path.LineTo (bounds.Left+3, bounds.Top-2);
+				path.LineTo (bounds.Left, bounds.Top-2);
+				path.LineTo (bounds.Left, bounds.Top-7);
+				path.LineTo (bounds.Left+3, bounds.Top-7);
+				path.LineTo (bounds.Left+3, bounds.Bottom+7);
+				path.LineTo (bounds.Left, bounds.Bottom+7);
+				path.LineTo (bounds.Left, bounds.Bottom+2);
+				path.LineTo (bounds.Left+3, bounds.Bottom+2);
+				path.Close ();
+
+				path.MoveTo (bounds.Left+1, bounds.Top+0.5);
+				path.LineTo (bounds.Left+1, bounds.Top-2);
+
+				path.MoveTo (bounds.Left+1, bounds.Bottom+7);
+				path.LineTo (bounds.Left+1, bounds.Top-7);
+
+				path.MoveTo (bounds.Left+1, bounds.Bottom-0.5);
+				path.LineTo (bounds.Left+1, bounds.Bottom+2);
+#endif
+			}
+			else
+			{
+				path = Drawing.Path.FromRectangle (bounds);
+			}
+
+			return path;
+		}
 		
 		
 		#region IAdorner Members
@@ -205,9 +267,9 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.PaintSurface (path);
 			}
 		}
-		
-		public abstract void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
-		public abstract void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
+
+		public abstract void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly, bool isMultilingual);
+		public abstract void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly, bool isMultilingual);
 		public abstract void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetPaintState state, Widgets.Direction dir);
 		public abstract void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetPaintState state, Widgets.Direction dir);
 		public abstract void PaintScrollerForeground(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetPaintState state, Widgets.Direction dir);

@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.hasFrame)
 			{
-				adorner.PaintTextFieldBackground (graphics, rect, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false);
+				adorner.PaintTextFieldBackground (graphics, rect, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false, false);
 			}
 			else
 			{

@@ -774,7 +774,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 			//	Dessine le fond d'une ligne éditable.
 			if ( style == TextFieldStyle.Normal ||
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 		}
 

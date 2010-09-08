@@ -724,7 +724,8 @@ namespace Epsitec.Common.Widgets
 				double excess = System.Math.Max ((22-size.Height)/2, 0);
 				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
 				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
-				padding = padding + new Drawing.Margins (x, x, y, y);
+				double m = this.IsMultilingualText ? 3 : 0;
+				padding = padding + new Drawing.Margins (x+m, x, y, y);
 			}
 
 			return padding;
@@ -1905,7 +1906,7 @@ namespace Epsitec.Common.Widgets
 				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond
 				//	de la ligne éditable.
 				state &= ~WidgetPaintState.Selected;
-				adorner.PaintTextFieldBackground (graphics, fill, state, this.textFieldStyle, this.textFieldDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo);
+				adorner.PaintTextFieldBackground (graphics, fill, state, this.textFieldStyle, this.textFieldDisplayMode, this.navigator.IsReadOnly&&!this.IsCombo, this.IsMultilingualText);
 			}
 		}
 

@@ -923,9 +923,11 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 			//	Dessine le fond d'une ligne éditable.
+			var frame = AbstractAdorner.GetMultilingualFrame (rect, isMultilingual);
+
 			if ( style == TextFieldStyle.Normal ||
 				 style == TextFieldStyle.Multiline  ||
 				 style == TextFieldStyle.Combo  ||
@@ -936,31 +938,30 @@ namespace Epsitec.Common.Widgets.Adorners
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
 					if ( (state&WidgetPaintState.Error) != 0 )
 					{
-						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(this.colorError);
+						graphics.Rasterizer.AddSurface (frame);
+						graphics.RenderSolid (this.colorError);
 					}
 					else if ( !color.IsEmpty )
 					{
-						graphics.AddFilledRectangle(rect);
+						graphics.Rasterizer.AddSurface (frame);
 						graphics.RenderSolid(color);
 					}
 					else
 					{
-						this.PaintImageButton(graphics, rect, readOnly?17:16);
+						graphics.Rasterizer.AddSurface (frame);
+						graphics.RenderSolid (readOnly ? Drawing.Color.FromHexa ("e2eeff") : Drawing.Color.FromHexa ("f8f8f9"));
 					}
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
+					graphics.Rasterizer.AddOutline (frame);
+					graphics.RenderSolid (this.colorBorder);
 				}
 				else
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorWhite);
+					graphics.Rasterizer.AddSurface (frame);
+					graphics.RenderSolid (this.colorWhite);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorDisabled);
+					graphics.Rasterizer.AddOutline (frame);
+					graphics.RenderSolid (this.colorDisabled);
 				}
 			}
 			else if ( style == TextFieldStyle.Simple )
@@ -969,24 +970,22 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					this.PaintImageButton(graphics, rect, 16);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorBorder);
+					graphics.Rasterizer.AddOutline (frame);
+					graphics.RenderSolid (this.colorBorder);
 				}
 				else
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorWhite);
+					graphics.Rasterizer.AddSurface (frame);
+					graphics.RenderSolid (this.colorWhite);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.colorDisabled);
+					graphics.Rasterizer.AddOutline (frame);
+					graphics.RenderSolid (this.colorDisabled);
 				}
 			}
 			else
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorWhite);
+				graphics.Rasterizer.AddSurface (frame);
+				graphics.RenderSolid (this.colorWhite);
 			}
 		}
 
@@ -995,7 +994,7 @@ namespace Epsitec.Common.Widgets.Adorners
 											 Widgets.WidgetPaintState state,
 											 Widgets.TextFieldStyle style,
 											 TextFieldDisplayMode mode,
-											 bool readOnly)
+											 bool readOnly, bool isMultilingual)
 		{
 		}
 
