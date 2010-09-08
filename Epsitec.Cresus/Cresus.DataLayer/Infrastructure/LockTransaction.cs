@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Database;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
@@ -17,18 +19,32 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		// Marc
 
 
-		private LockTransaction(DbInfrastructure dbInfrastructure, string userName, IEnumerable<string> lockNames)
+		internal LockTransaction(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
 		{
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			lockNames.ThrowIfNull ("lockNames");
+			lockNames.ThrowIf (names => names.Any (n => string.IsNullOrEmpty (n)), "lock names cannot be null or empty.");
+			lockNames.ThrowIf (names => names.Count () != names.Distinct ().Count (), "lockNames cannot contain duplicates.");
+			
+			this.Status = LockStatus.NotYetLocked;
+			this.disposed = false;
+
 			this.dbInfrastructure = dbInfrastructure;
 			this.lockNames = lockNames.ToList ();
-			this.userName = userName;
-			this.disposed = false;
+			this.connectionId = connectionId;
 		}
 
 
 		~LockTransaction()
 		{
 			this.Dispose (false);
+		}
+
+
+		public LockStatus Status
+		{
+			get;
+			private set;
 		}
 
 
@@ -51,36 +67,77 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			
 		
 		#endregion
+		
 
-
-		internal static bool TryCreateLockTransaction(DbInfrastructure dbInfrastructure, IEnumerable<string> lockNames, string userName, out LockTransaction lockTransaction)
+		public bool Lock()
 		{
-			lockTransaction = null;
+			if (this.Status != LockStatus.NotYetLocked)
+			{
+				throw new System.InvalidOperationException ("Lock operation cannot be performed while in " + this.Status + " status.");
+			}
+			
+			bool isLocked = this.InternalLock();
 
-			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (dbInfrastructure))
+			if (isLocked)
+			{
+				this.Status = LockStatus.Locked;
+			}
+
+			return isLocked;
+		}
+
+
+		public void Release()
+		{
+			if (this.Status != LockStatus.Locked)
+			{
+				throw new System.InvalidOperationException ("Release operation cannot be performed while in " + this.Status + " status.");
+			}
+
+			this.InternalRelease();
+
+			this.Status = LockStatus.Released;
+		}
+
+
+		private bool InternalLock()
+		{
+			using (DbTransaction transaction = this.CreateWriteTransaction ())
 			{
 				DbLockManager lockManager = dbInfrastructure.LockManager;
 
 				bool canLock = lockNames.All (lockName =>
 				{
 					return lockManager.IsLockOwned (lockName)
-						|| lockManager.GetLockOwner (lockName) == userName;
+						|| lockManager.GetLockOwner (lockName) == this.connectionId + "";
 				});
 
 				if (canLock)
 				{
 					foreach (string lockName in lockNames)
 					{
-						lockManager.RequestLock (lockName, userName);
+						lockManager.RequestLock (lockName, this.connectionId + "");
 					}
+				}
 
-					lockTransaction = new LockTransaction (dbInfrastructure, userName, lockNames);
+				transaction.Commit ();
+
+				return canLock;
+			}
+		}
+
+
+		private void InternalRelease()
+		{
+			using (DbTransaction transaction = this.CreateWriteTransaction ())
+			{
+				foreach (string lockName in this.lockNames)
+				{
+					this.DbLockManager.ReleaseLock (lockName, this.connectionId + "");
 				}
 
 				transaction.Commit ();
 			}
-
-			return lockTransaction != null;
 		}
 		
 
@@ -88,53 +145,42 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			if (!this.disposed)
 			{
-				try
+				if (this.Status == LockStatus.NotYetLocked)
 				{
-					using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
-					{
-						foreach (string lockName in this.lockNames)
-						{
-							this.DbLockManager.ReleaseLock (lockName, this.userName);
-						}
+					this.Status = LockStatus.Released;
+				}
 
-						transaction.Commit ();
-					}
-				}
-				finally
+				if (this.Status == LockStatus.Locked)
 				{
-					this.disposed = true;
-					System.GC.SuppressFinalize (this);
+					this.Release ();
 				}
-			}
-			
-			if (!disposing)
-			{
-				throw new System.InvalidOperationException ("LockTransaction has not been disposed properly.");
+
+				this.disposed = true;
 			}
 		}
 
 
-		private static DbTransaction CreateWriteTransaction(DbInfrastructure dbInfrastructure)
+		private DbTransaction CreateWriteTransaction()
 		{
 			List<DbTable> tablesToLock = new List<DbTable> ()
 			{
-				dbInfrastructure.ResolveDbTable (Tags.TableLock),
+				this.dbInfrastructure.ResolveDbTable (Tags.TableLock),
 			};
 
-			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, tablesToLock);
+			return this.dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, tablesToLock);
 		}
-
-
-		private bool disposed;
 
 
 		private IEnumerable<string> lockNames;
 
 
-		private string userName;
+		private long connectionId;
 
 
 		private DbInfrastructure dbInfrastructure;
+
+
+		private bool disposed;
 
 	
 	}
