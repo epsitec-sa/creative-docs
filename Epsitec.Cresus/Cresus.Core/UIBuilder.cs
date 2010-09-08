@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Core
 
 			if (closeButton != null)
 			{
-				//?return closeButton;
+				return closeButton;
 			}
 
 			var controller   = container.Controller;
