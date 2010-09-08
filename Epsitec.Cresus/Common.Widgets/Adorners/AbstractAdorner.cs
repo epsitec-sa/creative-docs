@@ -107,6 +107,27 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			return text;
 		}
+
+
+		protected static void DrawGlyphShapeLook(Drawing.Path path, Drawing.Rectangle rect, Drawing.Point center)
+		{
+			path.MoveTo (center.X-0.2*rect.Width, center.Y+0.1*rect.Height);
+			path.LineTo (center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
+			path.CurveTo (center.X-0.2*rect.Width, center.Y+0.33*rect.Height, center.X-0.13*rect.Width, center.Y+0.4*rect.Height, center.X+0.0*rect.Width, center.Y+0.4*rect.Height);
+			path.CurveTo (center.X+0.13*rect.Width, center.Y+0.4*rect.Height, center.X+0.2*rect.Width, center.Y+0.33*rect.Height, center.X+0.2*rect.Width, center.Y+0.2*rect.Height);
+			path.LineTo (center.X+0.2*rect.Width, center.Y+0.1*rect.Height);
+			path.LineTo (center.X+0.1*rect.Width, center.Y+0.1*rect.Height);
+			path.LineTo (center.X+0.1*rect.Width, center.Y+0.2*rect.Height);
+			path.CurveTo (center.X+0.1*rect.Width, center.Y+0.27*rect.Height, center.X+0.07*rect.Width, center.Y+0.3*rect.Height, center.X+0.0*rect.Width, center.Y+0.3*rect.Height);
+			path.CurveTo (center.X-0.07*rect.Width, center.Y+0.3*rect.Height, center.X-0.1*rect.Width, center.Y+0.27*rect.Height, center.X-0.1*rect.Width, center.Y+0.2*rect.Height);
+			path.LineTo (center.X-0.1*rect.Width, center.Y+0.1*rect.Height);
+			path.Close ();
+
+			path.MoveTo (center.X-0.3*rect.Width, center.Y+0.1*rect.Height);
+			path.CurveTo (center.X-0.3*rect.Width, center.Y-0.3*rect.Height, center.X-0.2*rect.Width, center.Y-0.4*rect.Height, center.X+0.0*rect.Width, center.Y-0.4*rect.Height);
+			path.CurveTo (center.X+0.2*rect.Width, center.Y-0.4*rect.Height, center.X+0.3*rect.Width, center.Y-0.3*rect.Height, center.X+0.3*rect.Width, center.Y+0.1*rect.Height);
+			path.Close ();
+		}
 		
 		
 		#region IAdorner Members

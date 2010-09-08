@@ -124,6 +124,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			double baseShiftV = 0.20*zoom;
 			switch ( type )
 			{
+				case GlyphShape.Lock:
+					AbstractAdorner.DrawGlyphShapeLook (path, rect, center);
+					break;
+
 				case GlyphShape.ArrowUp:
 				case GlyphShape.TriangleUp:
 					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
