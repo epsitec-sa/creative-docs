@@ -1,6 +1,8 @@
 //	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
@@ -48,7 +50,7 @@ namespace Epsitec.Common.Support
 		}
 
 		private VersionChecker(System.Reflection.Assembly assembly)
-			: this (assembly.FullName.Split (',')[1].Split ('=')[1])
+			: this (assembly.GetVersionString ())
 		{
 		}
 

@@ -1,9 +1,10 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -186,7 +187,7 @@ namespace Epsitec.Common.Document
 
 		public void DefineDocumentVersion(System.Reflection.Assembly assembly)
 		{
-			string[] args = assembly.FullName.Split (',')[1].Split ('=')[1].Split ('.');
+			string[] args = assembly.GetVersionString ().Split ('.');
 
 			int revision   = int.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
 			int version    = int.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);

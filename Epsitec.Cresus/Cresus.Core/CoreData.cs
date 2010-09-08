@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
 			this.connectionManager = new CoreDataConnectionManager (this.dataInfrastructure);
+			this.locker = new CoreDataLocker (this.dataInfrastructure);
 		}
 
 		public DataLayer.Infrastructure.DataInfrastructure DataInfrastructure
@@ -260,11 +261,15 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
+			this.locker.Dispose ();
+
 			if (this.activeDataContext != null)
 			{
 				this.activeDataContext.Dispose ();
 				this.activeDataContext = null;
 			}
+			
+			this.connectionManager.Dispose ();
 
 			if (this.dbInfrastructure.IsConnectionOpen)
 			{
@@ -360,6 +365,7 @@ namespace Epsitec.Cresus.Core
 		private void ValidateConnection()
 		{
 			this.connectionManager.Validate ();
+			this.locker.Validate ();
 		}
 
 		private void VerifyUidGenerators()
@@ -584,6 +590,8 @@ namespace Epsitec.Cresus.Core
 		private readonly EntityContext independentEntityContext;
 		private readonly BusinessLogic.RefIdGeneratorPool refIdGeneratorPool;
 		private readonly CoreDataConnectionManager connectionManager;
+		private readonly CoreDataLocker locker;
+
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 		private int suspendDataContextSave;

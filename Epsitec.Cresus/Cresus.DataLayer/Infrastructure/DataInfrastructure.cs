@@ -31,9 +31,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
-
-			//	TODO: get real information
-			this.connectionInformation = new ConnectionInformation ();
 		}
 
 
@@ -121,10 +118,45 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		public void KeepAlive()
 		{
+			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
 			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
 
 			//	TODO: ...
 		}
+
+		/// <summary>
+		/// Opens the high-level connection with the database: this will create a
+		/// new <see cref="ConnectionInformation"/>.
+		/// </summary>
+		/// <param name="identity">The user/machine identity.</param>
+		public void OpenConnection(string identity)
+		{
+			System.Diagnostics.Debug.Assert (this.connectionInformation == null);
+			
+			//	TODO: do real work here...
+			
+			this.connectionInformation = new ConnectionInformation ();
+		}
+
+		public void CloseConnection()
+		{
+			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
+
+			//	TODO: do real work here...
+
+			this.connectionInformation = null;
+		}
+
+		public void RefreshConnectionInformation()
+		{
+			if (this.connectionInformation == null)
+			{
+				return;
+			}
+
+			//	TODO: do real work here...
+		}
+
 		
 		
 		public bool TryCreateLockTransaction(IEnumerable<string> lockNames, out LockTransaction lockTransaction)
