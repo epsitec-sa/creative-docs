@@ -294,7 +294,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					if (this.allowMultipleSelection)
 					{
-						if (!message.IsControlPressed && !message.IsShiftPressed)
+						if (message.IsNoModifierPressed)
 						{
 							this.selectedCells.Clear();
 						}

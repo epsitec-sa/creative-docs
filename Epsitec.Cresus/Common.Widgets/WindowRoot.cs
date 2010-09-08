@@ -102,29 +102,8 @@ namespace Epsitec.Common.Widgets
 		
 		public override void MessageHandler(Message message, Drawing.Point pos)
 		{
-			//	Simulate Alt-Left and Alt-Right when the user clicks the special
-			//	<-- and --> buttons on the mouse; let's hope that this is indeed
-			//	what the mouse buttons are configured to do !
-			
-			if ((message.Button == MouseButtons.XButton1) ||
-				(message.Button == MouseButtons.XButton2))
-			{
-				System.Windows.Forms.Keys alt = System.Windows.Forms.Keys.Alt;
-				System.Windows.Forms.Keys key = message.Button == MouseButtons.XButton1 ? System.Windows.Forms.Keys.Left : System.Windows.Forms.Keys.Right;
-				
-				switch (message.MessageType)
-				{
-					case MessageType.MouseDown:
-						message.CopyFrom (Message.FromKeyEvent (MessageType.KeyDown, new System.Windows.Forms.KeyEventArgs (alt | key)));
-						break;
-					
-					case MessageType.MouseUp:
-						message.CopyFrom (Message.FromKeyEvent (MessageType.KeyUp, new System.Windows.Forms.KeyEventArgs (alt | key)));
-						break;
-				}
-			}
-
 			message.WindowRoot = this;
+			
 			base.MessageHandler (message, pos);
 		}
 

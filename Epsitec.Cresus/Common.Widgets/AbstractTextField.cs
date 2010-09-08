@@ -272,7 +272,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool SwallowReturn
+		public bool SwallowReturnOnAcceptEdition
 		{
 			get
 			{
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool SwallowEscape
+		public bool SwallowEscapeOnRejectEdition
 		{
 			get
 			{
@@ -1172,18 +1172,24 @@ namespace Epsitec.Common.Widgets
 								break;
 
 							case KeyCode.Escape:
-								if (this.RejectEdition () && this.SwallowEscape && !message.IsAltPressed && !message.IsControlPressed && !message.IsShiftPressed)
+								if (message.IsNoModifierPressed)
 								{
-									message.Consumer = this;
-									message.Swallowed = true;
+									if (this.RejectEdition () && this.SwallowEscapeOnRejectEdition)
+									{
+										message.Consumer = this;
+										message.Swallowed = true;
+									}
 								}
 								break;
 
 							case KeyCode.Return:
-								if (this.AcceptEdition () && this.SwallowReturn && !message.IsAltPressed && !message.IsControlPressed && !message.IsShiftPressed)
+								if (message.IsNoModifierPressed)
 								{
-									message.Consumer = this;
-									message.Swallowed = true;
+									if (this.AcceptEdition () && this.SwallowReturnOnAcceptEdition)
+									{
+										message.Consumer = this;
+										message.Swallowed = true;
+									}
 								}
 								break;
 

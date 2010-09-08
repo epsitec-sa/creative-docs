@@ -188,6 +188,7 @@
     <Compile Include="ClippingFrameBox.cs" />
     <Compile Include="AbstractTextField.CommandController.cs" />
     <Compile Include="ICommandHandler.cs" />
+    <Compile Include="MessageHandler.cs" />
     <Compile Include="Resources\Common.Widgets\SourceCode\Res.cs" />
     <Compile Include="TextFieldMultiExPreferredLayout.cs" />
     <Compile Include="TextFieldMultiEx.cs" />

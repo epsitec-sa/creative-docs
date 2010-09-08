@@ -56,8 +56,8 @@ namespace Epsitec.Common.Document.Widgets
 
 				this.textFieldSimple.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldSimple.AutoSelectOnFocus = true;
-				this.textFieldSimple.SwallowEscape = true;
-				this.textFieldSimple.SwallowReturn = true;
+				this.textFieldSimple.SwallowEscapeOnRejectEdition = true;
+				this.textFieldSimple.SwallowReturnOnAcceptEdition = true;
 			}
 
 			if ( this.type == Type.TextFieldReal )
@@ -70,8 +70,8 @@ namespace Epsitec.Common.Document.Widgets
 
 				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldReal.AutoSelectOnFocus = true;
-				this.textFieldReal.SwallowEscape = true;
-				this.textFieldReal.SwallowReturn = true;
+				this.textFieldReal.SwallowEscapeOnRejectEdition = true;
+				this.textFieldReal.SwallowReturnOnAcceptEdition = true;
 			}
 
 			if ( this.type == Type.TextFieldUnit )
@@ -84,8 +84,8 @@ namespace Epsitec.Common.Document.Widgets
 
 				this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldReal.AutoSelectOnFocus = true;
-				this.textFieldReal.SwallowEscape = true;
-				this.textFieldReal.SwallowReturn = true;
+				this.textFieldReal.SwallowEscapeOnRejectEdition = true;
+				this.textFieldReal.SwallowReturnOnAcceptEdition = true;
 
 				this.textFieldPercent = new TextFieldReal(this);
 				this.textFieldPercent.PreferredWidth = TextFieldLabel.DefaultTextWidth;
@@ -95,8 +95,8 @@ namespace Epsitec.Common.Document.Widgets
 
 				this.textFieldPercent.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 				this.textFieldPercent.AutoSelectOnFocus = true;
-				this.textFieldPercent.SwallowEscape = true;
-				this.textFieldPercent.SwallowReturn = true;
+				this.textFieldPercent.SwallowEscapeOnRejectEdition = true;
+				this.textFieldPercent.SwallowReturnOnAcceptEdition = true;
 			}
 		}
 

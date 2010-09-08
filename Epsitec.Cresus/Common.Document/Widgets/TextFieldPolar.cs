@@ -31,8 +31,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldA.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.textFieldA.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.textFieldA.AutoSelectOnFocus = true;
-			this.textFieldA.SwallowEscape = true;
-			this.textFieldA.SwallowReturn = true;
+			this.textFieldA.SwallowEscapeOnRejectEdition = true;
+			this.textFieldA.SwallowReturnOnAcceptEdition = true;
 
 			this.textFieldR = new TextFieldReal(this);
 			this.textFieldR.InternalMinValue     = -100.0M;
@@ -47,8 +47,8 @@ namespace Epsitec.Common.Document.Widgets
 			this.textFieldR.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.textFieldR.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.textFieldR.AutoSelectOnFocus = true;
-			this.textFieldR.SwallowEscape = true;
-			this.textFieldR.SwallowReturn = true;
+			this.textFieldR.SwallowEscapeOnRejectEdition = true;
+			this.textFieldR.SwallowReturnOnAcceptEdition = true;
 		}
 
 		public TextFieldPolar(Widget embedder) : this()

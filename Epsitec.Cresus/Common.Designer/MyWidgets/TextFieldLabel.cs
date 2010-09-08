@@ -27,8 +27,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.textFieldReal.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.textFieldReal.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.textFieldReal.AutoSelectOnFocus = true;
-			this.textFieldReal.SwallowEscape = true;
-			this.textFieldReal.SwallowReturn = true;
+			this.textFieldReal.SwallowEscapeOnRejectEdition = true;
+			this.textFieldReal.SwallowReturnOnAcceptEdition = true;
 		}
 
 		public TextFieldLabel(Widget embedder) : this()

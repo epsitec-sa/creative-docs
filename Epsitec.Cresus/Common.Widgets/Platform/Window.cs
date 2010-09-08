@@ -2250,8 +2250,10 @@ namespace Epsitec.Common.Widgets.Platform
 
 		protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
 		{
-			Message message = Message.FromWndProcMessage (this, ref msg);
-			bool    enabled = Win32Api.IsWindowEnabled (this.Handle);
+			Message rawMessage = Message.FromWndProcMessage (this, ref msg);
+			Message message    = Message.PostProcessMessage (rawMessage);
+			
+			bool enabled = Win32Api.IsWindowEnabled (this.Handle);
 
 			if (!enabled)
 			{

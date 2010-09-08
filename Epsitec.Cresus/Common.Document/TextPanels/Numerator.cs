@@ -24,8 +24,8 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldStart = new TextField(this);
 			this.fieldStart.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldStart.AutoSelectOnFocus = true;
-			this.fieldStart.SwallowEscape = true;
-			this.fieldStart.SwallowReturn = true;
+			this.fieldStart.SwallowEscapeOnRejectEdition = true;
+			this.fieldStart.SwallowReturnOnAcceptEdition = true;
 			this.fieldStart.EditionAccepted += this.HandleStartEditionAccepted;
 			ToolTip.Default.SetToolTip(this.fieldStart, Res.Strings.TextPanel.Numerator.Tooltip.Start);
 
