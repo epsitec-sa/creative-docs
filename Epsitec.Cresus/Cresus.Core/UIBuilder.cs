@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Core
 //-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
 				GlyphShape = GlyphShape.Lock,
 				Anchor = AnchorStyles.TopRight,
-				PreferredSize = new Size (18, 18),
+				PreferredSize = new Size (20, 20),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
 				Name = "ColumnTileLockButton",
 			};

@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle glyphBounds = this.GlyphBounds;
-			glyphBounds.Inflate (System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height)*0.5);
+			//?glyphBounds.Inflate (System.Math.Min (this.Client.Bounds.Width, this.Client.Bounds.Height)*0.5);
 
 			WidgetPaintState paintState = this.GetPaintState ();
 			adorner.PaintGlyph (graphics, glyphBounds, paintState, this.shape, PaintTextStyle.Button);
