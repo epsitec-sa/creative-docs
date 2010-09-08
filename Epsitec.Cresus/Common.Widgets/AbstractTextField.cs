@@ -1324,15 +1324,22 @@ namespace Epsitec.Common.Widgets
 			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
 			bool readWrite = !this.navigator.IsReadOnly;
 
-			context.SetLocalEnable (ApplicationCommands.Cut, sel & readWrite);
-			context.SetLocalEnable (ApplicationCommands.Copy, sel);
-			context.SetLocalEnable (ApplicationCommands.Delete, sel & readWrite);
-			context.SetLocalEnable (ApplicationCommands.SelectAll, true);
+			context.SetLocalEnable (ApplicationCommands.Cut,        sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.Copy,       sel);
+			context.SetLocalEnable (ApplicationCommands.Delete,     sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.Bold,       sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.Italic,     sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.Underlined, sel & readWrite);
+			context.SetLocalEnable (ApplicationCommands.SelectAll,  true);
 
 			this.contextMenu.Items.AddItem (ApplicationCommands.Cut);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Copy);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Paste);
 			this.contextMenu.Items.AddItem (ApplicationCommands.Delete);
+			this.contextMenu.Items.AddSeparator ();
+			this.contextMenu.Items.AddItem (ApplicationCommands.Bold);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Italic);
+			this.contextMenu.Items.AddItem (ApplicationCommands.Underlined);
 			this.contextMenu.Items.AddSeparator ();
 			this.contextMenu.Items.AddItem (ApplicationCommands.SelectAll);
 
