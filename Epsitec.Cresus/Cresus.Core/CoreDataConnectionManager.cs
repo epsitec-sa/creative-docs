@@ -1,22 +1,23 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Cresus.DataLayer.Infrastructure;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
+	/// <summary>
+	/// The <c>CoreDataConnectionManager</c> class maintains an active connection with
+	/// the underlying database. Typically, it updates the connection state periodically.
+	/// </summary>
 	public sealed class CoreDataConnectionManager : System.IDisposable
 	{
-		public CoreDataConnectionManager(DataLayer.Infrastructure.DataInfrastructure dataInfrastructure)
+		public CoreDataConnectionManager(DataInfrastructure dataInfrastructure)
 		{
 			this.dataInfrastructure = dataInfrastructure;
 			
@@ -30,10 +31,65 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public bool IsActive
+		{
+			get
+			{
+				this.dataInfrastructure.RefreshConnectionInformation ();
+				
+				var info = this.dataInfrastructure.ConnectionInformation;
+				
+				return info != null && info.Status == ConnectionStatus.Active;
+			}
+		}
+
+		public bool IsReady
+		{
+			get
+			{
+				return this.isReady;
+			}
+		}
+
+
+		/// <summary>
+		/// Validates the connection once the database infrastructure is ready to be
+		/// used. This will start the keep alive timer which pulses with a 10 second
+		/// period.
+		/// </summary>
 		public void Validate()
 		{
-			this.StartTimerIfNotRunning ();
-			this.KeepAliveConnection ();
+			if (!this.isReady)
+			{
+				this.OpenConnection ();
+				this.StartTimerIfNotRunning ();
+				this.KeepAliveConnection ();
+			}
+		}
+
+		private void OpenConnection()
+		{
+			string identity = this.GetIdentity ();
+			this.dataInfrastructure.OpenConnection (identity);
+			this.isReady = true;
+		}
+
+		private void CloseConnection()
+		{
+			this.isReady = false;
+			this.dataInfrastructure.CloseConnection ();
+		}
+
+
+		private string GetIdentity()
+		{
+			var userName    = System.Environment.UserName;
+			var machineName = System.Environment.MachineName;
+			var osVersion   = System.Environment.OSVersion.VersionString;
+			var clrVersion  = System.Environment.Version.ToString ();
+			var coreVersion = typeof (CoreData).Assembly.GetVersionString ();
+
+			return string.Concat (userName, "@", machineName, "/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
 		}
 
 
@@ -41,6 +97,8 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
+			this.CloseConnection ();
+
 			if (this.keepAliveTimer.State != TimerState.Disposed)
 			{
 				this.keepAliveTimer.TimeElapsed -= this.HandleKeepAliveTimerTimeElapsed;
@@ -71,7 +129,9 @@ namespace Epsitec.Cresus.Core
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 
-		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
+		private readonly DataInfrastructure dataInfrastructure;
 		private readonly Timer keepAliveTimer;
+		
+		private bool isReady;
 	}
 }
