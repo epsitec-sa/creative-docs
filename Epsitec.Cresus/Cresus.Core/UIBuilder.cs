@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core
 		public UIBuilder(EntityViewController controller)
 			: this (controller.TileContainer, controller)
 		{
+			this.ReadOnly = true;
 		}
 
 		~UIBuilder()
@@ -92,6 +93,14 @@ namespace Epsitec.Cresus.Core
 			{
 				return this.tileTabBook;
 			}
+		}
+
+
+		public bool ReadOnly
+		{
+			//	Détermine l'état de tous les widgets qui seront créés.
+			get;
+			set;
 		}
 
 
@@ -608,6 +617,7 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldEx
 			{
 				Parent = parent,
+				IsReadOnly = this.ReadOnly,
 				PreferredHeight = 20,
 				Dock = dockStyle,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
@@ -651,6 +661,7 @@ namespace Epsitec.Cresus.Core
 			var textField = new TextFieldMultiEx
 			{
 				Parent = tile.Container,
+				IsReadOnly = this.ReadOnly,
 				PreferredHeight = height,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
@@ -706,6 +717,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
+					IsReadOnly = this.ReadOnly,
 					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
@@ -719,6 +731,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
+					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = UIBuilder.ComboButtonWidth,
@@ -733,6 +746,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
+					IsReadOnly = this.ReadOnly,
 					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
@@ -747,6 +761,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
+					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = UIBuilder.ComboButtonWidth,
@@ -808,6 +823,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
+					IsReadOnly = this.ReadOnly,
 					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
@@ -821,6 +837,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
+					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = UIBuilder.ComboButtonWidth,
@@ -835,6 +852,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextField
 				{
 					Parent = container,
+					IsReadOnly = this.ReadOnly,
 					MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
@@ -849,6 +867,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
+					Enable = !this.ReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = UIBuilder.ComboButtonWidth,
@@ -911,6 +930,7 @@ namespace Epsitec.Cresus.Core
 			var widget = new Widgets.ItemPicker
 			{
 				Parent = tile.Container,
+				Enable = !this.ReadOnly,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 3),
 				TabIndex = ++this.tabIndex,
@@ -1073,6 +1093,7 @@ namespace Epsitec.Cresus.Core
 			var editor = new Widgets.AutoCompleteTextField
 			{
 				Parent = container,
+				IsReadOnly = this.ReadOnly,
 				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
@@ -1103,6 +1124,7 @@ namespace Epsitec.Cresus.Core
 			var menuButton = new GlyphButton
 			{
 				Parent = container,
+				Enable = !this.ReadOnly,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
 				PreferredWidth = UIBuilder.ComboButtonWidth,
@@ -1267,6 +1289,7 @@ namespace Epsitec.Cresus.Core
 			var widget = new Widgets.ItemPicker
 			{
 				Parent = tile.Container,
+				Enable = !this.ReadOnly,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, 3),
 				Cardinality = cardinality,
