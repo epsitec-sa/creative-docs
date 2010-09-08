@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Core
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
+			this.connectionManager = new CoreDataConnectionManager (this.dataInfrastructure);
 		}
 
 		public DataLayer.Infrastructure.DataInfrastructure DataInfrastructure
@@ -352,7 +353,13 @@ namespace Epsitec.Cresus.Core
 				this.ReloadDatabase ();
 			}
 
+			this.ValidateConnection ();
 			this.VerifyUidGenerators ();
+		}
+
+		private void ValidateConnection()
+		{
+			this.connectionManager.Validate ();
 		}
 
 		private void VerifyUidGenerators()
@@ -576,6 +583,7 @@ namespace Epsitec.Cresus.Core
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
 		private readonly BusinessLogic.RefIdGeneratorPool refIdGeneratorPool;
+		private readonly CoreDataConnectionManager connectionManager;
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 		private int suspendDataContextSave;
