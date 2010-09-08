@@ -461,16 +461,16 @@ namespace Epsitec.Cresus.Core
 			return closeButton;
 		}
 		
-		public static Button CreateColumnTileLockButton(TileContainer container)
+		public static Widget CreateColumnTileLockButton(TileContainer container)
 		{
 			var controller   = container.Controller;
 			var orchestrator = controller.Orchestrator;
 
-			var lockButton = new GlyphButton
+			var lockButton = new StaticGlyph
 			{
 				Parent = container,
-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
-				GlyphShape = GlyphShape.None,
+//-				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Lock,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (18, 18),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
