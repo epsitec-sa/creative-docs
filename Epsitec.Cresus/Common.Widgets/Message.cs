@@ -169,7 +169,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public string						Command
+		public string						ApplicationCommand
 		{
 			get
 			{
@@ -326,9 +326,8 @@ namespace Epsitec.Common.Widgets
 
 		public static Message CreateDummyMessage(MessageType type)
 		{
-			Message message = new Message ();
+			Message message = new Message (type);
 			
-			message.type      = type;
 			message.button    = Message.state.buttons;
 			message.modifiers = Message.state.modifiers;
 
@@ -673,10 +672,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case Win32Const.WM_MOUSELEAVE:
-					message = new Message ();
-					
-					message.type   = MessageType.MouseLeave;
-					message.cursor = Message.state.windowCursor;
+					message = new Message (MessageType.MouseLeave);
 					break;
 			}
 			
@@ -690,9 +686,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message FromMouseEvent(MessageType type, Platform.Window form, System.Windows.Forms.MouseEventArgs e)
 		{
-			Message message = new Message ();
-			
-			message.type = type;
+			Message message = new Message (type);
 			
 			message.filterNoChildren  = false;
 			message.filterOnlyFocused = false;
@@ -766,9 +760,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyEventArgs e)
 		{
-			Message message = new Message ();
+			Message message = new Message (type);
 			
-			message.type     = type;
 			message.keyCode = (KeyCode) (int) e.KeyCode;
 			
 			message.filterNoChildren  = false;
@@ -802,18 +795,20 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Synthétise un événement clavier à partir de la description de
 			//	très bas niveau...
-			
-			Message message = new Message ();
-			
+
+			MessageType messageType = MessageType.None;
+
 			switch (msg)
 			{
-				case Win32Const.WM_SYSKEYDOWN:	message.type = MessageType.KeyDown;		break;
-				case Win32Const.WM_SYSKEYUP:	message.type = MessageType.KeyUp;		break;
-				case Win32Const.WM_KEYDOWN:		message.type = MessageType.KeyDown;		break;
-				case Win32Const.WM_KEYUP:		message.type = MessageType.KeyUp;		break;
-				case Win32Const.WM_CHAR:		message.type = MessageType.KeyPress;	break;
+				case Win32Const.WM_SYSKEYDOWN:	messageType = MessageType.KeyDown;		break;
+				case Win32Const.WM_SYSKEYUP:	messageType = MessageType.KeyUp;		break;
+				case Win32Const.WM_KEYDOWN:		messageType = MessageType.KeyDown;		break;
+				case Win32Const.WM_KEYUP:		messageType = MessageType.KeyUp;		break;
+				case Win32Const.WM_CHAR:		messageType = MessageType.KeyPress;		break;
 			}
-			
+
+			Message message = new Message (messageType);
+						
 			message.filterNoChildren  = false;
 			message.filterOnlyFocused = true;
 			message.filterOnlyOnHit  = false;
@@ -849,9 +844,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyPressEventArgs e)
 		{
-			Message message = new Message ();
+			Message message = new Message (type);
 			
-			message.type     = type;
 			message.keyChar = e.KeyChar;
 			message.keyCode = Message.state.keyDownCode;
 			
@@ -864,9 +858,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message CreateDummyMouseMoveEvent()
 		{
-			Message message = new Message ();
+			Message message = new Message (MessageType.MouseMove);
 			
-			message.type                = MessageType.MouseMove;
 			message.filterNoChildren  = false;
 			message.filterOnlyFocused = false;
 			message.filterOnlyOnHit  = true;
@@ -876,9 +869,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message CreateDummyMouseMoveEvent(Drawing.Point pos)
 		{
-			Message message = new Message ();
+			Message message = new Message (MessageType.MouseMove);
 			
-			message.type                = MessageType.MouseMove;
 			message.cursor              = pos;
 			message.filterNoChildren  = false;
 			message.filterOnlyFocused = false;
@@ -889,9 +881,8 @@ namespace Epsitec.Common.Widgets
 		
 		internal static Message CreateDummyMouseUpEvent(MouseButtons button, Drawing.Point pos)
 		{
-			Message message = new Message ();
+			Message message = new Message (MessageType.MouseUp);
 			
-			message.type                = MessageType.MouseUp;
 			message.button              = button;
 			message.cursor              = pos;
 			message.filterNoChildren  = false;
@@ -903,21 +894,26 @@ namespace Epsitec.Common.Widgets
 
 		internal static Message FromApplicationCommand(int cmd)
 		{
-			Message message = new Message ();
+			Message message = new Message (MessageType.ApplicationCommand);
 
-			message.type = MessageType.ApplicationCommand;
-			
 			switch (cmd)
 			{
 				case Win32Const.APPCOMMAND_BROWSER_BACKWARD:
-					message.command = "BrowserBackward";
+					message.command = ApplicationCommands.BrowserBackward;
 					break;
+				
 				case Win32Const.APPCOMMAND_BROWSER_FORWARD:
-					message.command = "BrowserForward";
+					message.command = ApplicationCommands.BrowserForward;
 					break;
 			}
 			
 			return message;
+		}
+
+		public static class ApplicationCommands
+		{
+			public const string BrowserBackward = "BrowserBackward";
+			public const string BrowserForward  = "BrowserForward";
 		}
 		
 		
@@ -1088,7 +1084,7 @@ namespace Epsitec.Common.Widgets
 		private Widget						consumer;
 		private string						command;
 		
-		private MessageType					type;
+		readonly private MessageType					type;
 		readonly private int				tickCount;
 		readonly private long				messageId;
 		

@@ -302,11 +302,12 @@ namespace Epsitec.Common.Widgets
 			}
 			else if (message.MessageType == MessageType.ApplicationCommand)
 			{
-				switch (message.Command)
+				switch (message.ApplicationCommand)
 				{
-					case "BrowserBackward":
+					case Message.ApplicationCommands.BrowserBackward:
 						return new Shortcut (KeyCode.ModifierAlt | KeyCode.ArrowLeft);
-					case "BrowserForward":
+					
+					case Message.ApplicationCommands.BrowserForward:
 						return new Shortcut (KeyCode.ModifierAlt | KeyCode.ArrowRight);
 				}
 			}
