@@ -16,9 +16,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		// TODO Comment this class and related stuff.
 		// Marc
 
-		internal LockTransaction(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
+		internal LockTransaction(DbInfrastructure dbInfrastructure, long connexionId, IEnumerable<string> lockNames)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
 			lockNames.ThrowIfNull ("lockNames");
 			lockNames.ThrowIf (names => names.Any (n => string.IsNullOrEmpty (n)), "lock names cannot be null or empty.");
 			lockNames.ThrowIf (names => names.Count () != names.Distinct ().Count (), "lockNames cannot contain duplicates.");
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.dbInfrastructure = dbInfrastructure;
 			this.lockNames = lockNames.ToList ();
-			this.connectionId = connectionId;
+			this.connexionId = connexionId;
 		}
 
 		~LockTransaction()
@@ -98,13 +99,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
 			{
-				bool canLock = LockTransaction.AreAllLocksAvailable (this.DbLockManager, this.connectionId, this.lockNames);
+				bool canLock = LockTransaction.AreAllLocksAvailable (this.DbLockManager, this.connexionId, this.lockNames);
 
 				if (canLock)
 				{
 					foreach (string lockName in lockNames)
 					{
-						this.DbLockManager.RequestLock (lockName, this.connectionId);
+						this.DbLockManager.RequestLock (lockName, this.connexionId);
 					}
 				}
 
@@ -120,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				foreach (string lockName in this.lockNames)
 				{
-					this.DbLockManager.ReleaseLock (lockName, this.connectionId);
+					this.DbLockManager.ReleaseLock (lockName, this.connexionId);
 				}
 
 				transaction.Commit ();
@@ -147,9 +148,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		internal static bool AreAllLocksAvailable(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
+		internal static bool AreAllLocksAvailable(DbInfrastructure dbInfrastructure, long connexionId, IEnumerable<string> lockNames)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
 			lockNames.ThrowIfNull ("lockNames");
 			lockNames.ThrowIf (names => names.Any (n => string.IsNullOrEmpty (n)), "lock names cannot be null or empty.");
 			lockNames.ThrowIf (names => names.Count () != names.Distinct ().Count (), "lockNames cannot contain duplicates.");
@@ -158,7 +160,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
 			{
-				bool available = LockTransaction.AreAllLocksAvailable (lockManager, connectionId, lockNames);
+				bool available = LockTransaction.AreAllLocksAvailable (lockManager, connexionId, lockNames);
 
 				transaction.Commit ();
 
@@ -167,12 +169,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 		
-		private static bool AreAllLocksAvailable(DbLockManager lockManager, long connectionId, IEnumerable<string> lockNames)
+		private static bool AreAllLocksAvailable(DbLockManager lockManager, long connexionId, IEnumerable<string> lockNames)
 		{
 			return lockNames.All (lockName =>
 			{
 				return !lockManager.IsLockOwned (lockName)
-                	|| lockManager.GetLockConnexionId (lockName) == connectionId;
+                	|| lockManager.GetLockConnexionId (lockName) == connexionId;
 			});
 		}
 
@@ -196,7 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private IEnumerable<string> lockNames;
 
-		private long connectionId;
+		private long connexionId;
 
 		private DbInfrastructure dbInfrastructure;
 	}
