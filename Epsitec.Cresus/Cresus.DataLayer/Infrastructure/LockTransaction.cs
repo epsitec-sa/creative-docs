@@ -130,6 +130,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		
 		private void Dispose(bool disposing)
 		{
+			if (!disposing && (this.State != LockState.Disposed && this.State != LockState.Idle))
+			{
+				throw new System.InvalidOperationException ("The method Dispose() has not been called before garbage collection.");
+			}
+
 			if (this.State != LockState.Disposed)
 			{
 				if (this.State == LockState.Locked)
@@ -144,6 +149,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		internal static bool AreAllLocksAvailable(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
 		{
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			lockNames.ThrowIfNull ("lockNames");
+			lockNames.ThrowIf (names => names.Any (n => string.IsNullOrEmpty (n)), "lock names cannot be null or empty.");
+			lockNames.ThrowIf (names => names.Count () != names.Distinct ().Count (), "lockNames cannot contain duplicates.");
+
 			DbLockManager lockManager = dbInfrastructure.LockManager;
 
 			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
@@ -161,7 +171,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return lockNames.All (lockName =>
 			{
-				return lockManager.IsLockOwned (lockName)
+				return !lockManager.IsLockOwned (lockName)
                 	|| lockManager.GetLockConnexionId (lockName) == connectionId;
 			});
 		}
