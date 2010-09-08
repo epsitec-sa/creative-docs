@@ -159,14 +159,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		
 		
-		public bool TryCreateLockTransaction(IEnumerable<string> lockNames, out LockTransaction lockTransaction)
+		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
-			// TODO Get the real user name.
-			// Marc
-
-			string userName = this.GetConnectionName ();
-
-			return LockTransaction.TryCreateLockTransaction (this.dbInfrastructure, lockNames, userName, out lockTransaction);
+			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 
 

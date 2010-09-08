@@ -113,6 +113,7 @@
     <Compile Include="Proxies\UnitTestKeyedCollectionFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestKeyedReferenceFieldProxy.cs" />
     <Compile Include="Infrastructure\UnitTestUidGenerator.cs" />
+    <Compile Include="Infrastructure\UnitTestLockTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
