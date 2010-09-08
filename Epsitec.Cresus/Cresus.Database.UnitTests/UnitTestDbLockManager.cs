@@ -74,6 +74,11 @@ namespace Cresus.Database.UnitTests
 				(
 					() => manager.RequestLock ("", 0)
 				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.RequestLock ("test", -1)
+				);
 			}
 		}
 
@@ -93,6 +98,11 @@ namespace Cresus.Database.UnitTests
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
 					() => manager.ReleaseLock ("", 0)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.ReleaseLock ("test", -1)
 				);
 			}
 		}
