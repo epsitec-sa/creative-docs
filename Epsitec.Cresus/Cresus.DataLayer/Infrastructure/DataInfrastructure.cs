@@ -29,8 +29,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.ArgumentException ("DbInfrastructure already attached to another DataInfrastructure object", "dbInfrastructure");
 			}
 
-			this.DbInfrastructure = dbInfrastructure;
-			this.DbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
+			this.dbInfrastructure = dbInfrastructure;
+			this.dbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
+
+			//	TODO: get real information
+			this.connectionInformation = new ConnectionInformation ();
 		}
 
 
@@ -39,8 +42,18 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		public DbInfrastructure DbInfrastructure
 		{
-			get;
-			private set;
+			get
+			{
+				return this.dbInfrastructure;
+			}
+		}
+
+		public ConnectionInformation ConnectionInformation
+		{
+			get
+			{
+				return this.connectionInformation;
+			}
 		}
 
 
@@ -62,9 +75,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="slots"/> contains overlapping slots.</exception>
 		public UidGenerator CreateUidGenerator(string name, IEnumerable<UidSlot> slots)
 		{
-			UidGenerator.CreateUidGenerator (this.DbInfrastructure, name, slots);
+			UidGenerator.CreateUidGenerator (this.dbInfrastructure, name, slots);
 			
-			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
+			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
 		}
 
 		/// <summary>
@@ -74,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		public void DeleteUidGenerator(string name)
 		{
-			UidGenerator.DeleteUidGenerator (this.DbInfrastructure, name);
+			UidGenerator.DeleteUidGenerator (this.dbInfrastructure, name);
 		}
 
 		/// <summary>
@@ -85,7 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.ArgumentException">If <paramref name="name"/> is <c>null</c> or empty.</exception>
 		public bool UidGeneratorExists(string name)
 		{
-			return UidGenerator.UidGeneratorExists (this.DbInfrastructure, name);
+			return UidGenerator.UidGeneratorExists (this.dbInfrastructure, name);
 		}
 
 		/// <summary>
@@ -98,18 +111,30 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <exception cref="System.Exception">If the requested <see cref="UidGenerator"/> does not exists.</exception>
 		public UidGenerator GetUidGenerator(string name)
 		{
-			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
+			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
 		}
 
 
+		/// <summary>
+		/// This method is called periodically in order to notify the database that this
+		/// instance of the application is still up and running.
+		/// </summary>
+		public void KeepAlive()
+		{
+			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
+
+			//	TODO: ...
+		}
+		
+		
 		public bool TryCreateLockTransaction(IEnumerable<string> lockNames, out LockTransaction lockTransaction)
 		{
 			// TODO Get the real user name.
 			// Marc
 
-			string userName = "DUMMY USER NAME THAT MUST BE CHANGED";
+			string userName = this.GetConnectionName ();
 
-			return LockTransaction.TryCreateLockTransaction (this.DbInfrastructure, lockNames, userName, out lockTransaction);
+			return LockTransaction.TryCreateLockTransaction (this.dbInfrastructure, lockNames, userName, out lockTransaction);
 		}
 
 
@@ -117,14 +142,24 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			if (disposing)
 			{
-				this.DbInfrastructure.ClearValue (DataInfrastructure.DbInfrastructureProperty);
-				this.DbInfrastructure = null;
+				this.dbInfrastructure.ClearValue (DataInfrastructure.DbInfrastructureProperty);
 			}
 
 			base.Dispose (disposing);
 		}
+
+		private string GetConnectionName()
+		{
+			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
+			System.Diagnostics.Debug.Assert (this.connectionInformation.Status == ConnectionStatus.Active);
+
+			return this.connectionInformation.ConnectionId.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
 		
 		
 		private static DependencyProperty DbInfrastructureProperty = DependencyProperty<DataInfrastructure>.RegisterAttached ("DataInfrastructure", typeof (DataInfrastructure));
+
+		private readonly DbInfrastructure dbInfrastructure;
+		private ConnectionInformation connectionInformation;
 	}
 }
