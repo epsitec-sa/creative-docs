@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Database
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				long? connexionId = null;
 								
