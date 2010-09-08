@@ -39,6 +39,44 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public CoreDataLockTransaction RequestLock(params string[] lockNames)
+		{
+			return this.RequestLock ((IEnumerable<string>) lockNames);
+		}
+
+		public CoreDataLockTransaction RequestLock(IEnumerable<string> lockNames)
+		{
+			var lockTransaction = new CoreDataLockTransaction (lockNames);
+
+			if (lockTransaction.Acquire (this.dataInfrastructure))
+			{
+				return lockTransaction;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
+		{
+			return this.dataInfrastructure.AreAllLocksAvailable (lockNames);
+		}
+
+
+		public static string GetLockName(DataContext context, AbstractEntity entity)
+		{
+			var key = context.GetNormalizedEntityKey (entity);
+
+			if (key.HasValue)
+			{
+				return key.Value.ToString ();
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		#region IDisposable Members
 
