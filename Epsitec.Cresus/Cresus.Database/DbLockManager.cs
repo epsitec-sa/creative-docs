@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Database
 			this.CheckIsAttached ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
+			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
@@ -54,6 +55,7 @@ namespace Epsitec.Cresus.Database
 			this.CheckIsAttached ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
+			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
