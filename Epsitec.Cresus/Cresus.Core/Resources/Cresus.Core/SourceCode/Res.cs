@@ -68,24 +68,6 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ImportV11 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
 			}
 			
-			public static class Font
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/L0K8
-				public static readonly global::Epsitec.Common.Widgets.Command Bold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
-				//	designer:cap/L0K9
-				public static readonly global::Epsitec.Common.Widgets.Command Italic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
-				//	designer:cap/L0KB
-				public static readonly global::Epsitec.Common.Widgets.Command Subscript = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
-				//	designer:cap/L0KC
-				public static readonly global::Epsitec.Common.Widgets.Command Superscript = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
-				//	designer:cap/L0KA
-				public static readonly global::Epsitec.Common.Widgets.Command Underline = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
-			}
-			
 			public static class Global
 			{
 				internal static void _Initialize()
@@ -124,7 +106,6 @@ namespace Epsitec.Cresus.Core
 				Clipboard._Initialize ();
 				Edition._Initialize ();
 				File._Initialize ();
-				Font._Initialize ();
 				Global._Initialize ();
 				History._Initialize ();
 				Test._Initialize ();
@@ -171,20 +152,6 @@ namespace Epsitec.Cresus.Core
 			{
 				//	designer:cap/L0KD
 				public const long ImportV11 = 0x150001400000DL;
-			}
-			
-			public static class Font
-			{
-				//	designer:cap/L0K8
-				public const long Bold = 0x1500014000008L;
-				//	designer:cap/L0K9
-				public const long Italic = 0x1500014000009L;
-				//	designer:cap/L0KB
-				public const long Subscript = 0x150001400000BL;
-				//	designer:cap/L0KC
-				public const long Superscript = 0x150001400000CL;
-				//	designer:cap/L0KA
-				public const long Underline = 0x150001400000AL;
 			}
 			
 			public static class Global
