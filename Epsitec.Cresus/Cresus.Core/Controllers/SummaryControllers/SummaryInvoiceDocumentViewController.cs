@@ -29,9 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			using (var builder = new UIBuilder (this))
 			{
-				// TODO: faire en sorte que cette tuile viennent après les lignes d'article !
-				this.CreateUITotalSummary (builder);
-				
 				using (var data = TileContainerController.Setup (builder))
 				{
 					this.CreateUIInvoice (data);
@@ -39,6 +36,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					this.CreateUIBillings (data);
 					this.CreateUIComments (data);
 				}
+				
+				// TODO: faire en sorte que cette tuile viennent après les lignes d'article !
+				this.CreateUITotalSummary (builder);
 			}
 
 			this.CreateUIPreviewPanel ();
