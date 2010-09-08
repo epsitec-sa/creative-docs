@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			private set;
 		}
 
+
 		private DbLockManager DbLockManager
 		{
 			get
@@ -95,21 +96,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private bool InternalLock()
 		{
-			using (DbTransaction transaction = this.CreateWriteTransaction ())
+			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
 			{
-				DbLockManager lockManager = dbInfrastructure.LockManager;
-
-				bool canLock = lockNames.All (lockName =>
-				{
-					return lockManager.IsLockOwned (lockName)
-						|| lockManager.GetLockConnexionId (lockName) == this.connectionId;
-				});
+				bool canLock = LockTransaction.AreAllLocksAvailable (this.DbLockManager, this.connectionId, this.lockNames);
 
 				if (canLock)
 				{
 					foreach (string lockName in lockNames)
 					{
-						lockManager.RequestLock (lockName, this.connectionId);
+						this.DbLockManager.RequestLock (lockName, this.connectionId);
 					}
 				}
 
@@ -121,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private void InternalRelease()
 		{
-			using (DbTransaction transaction = this.CreateWriteTransaction ())
+			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
 			{
 				foreach (string lockName in this.lockNames)
 				{
@@ -147,14 +142,45 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		private DbTransaction CreateWriteTransaction()
+		internal static bool AreAllLocksAvailable(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
+		{
+			DbLockManager lockManager = dbInfrastructure.LockManager;
+
+			using (DbTransaction transaction = LockTransaction.CreateReadTransaction (dbInfrastructure))
+			{
+				bool available = LockTransaction.AreAllLocksAvailable (lockManager, connectionId, lockNames);
+
+				transaction.Commit ();
+
+				return available;
+			}
+		}
+
+		
+		private static bool AreAllLocksAvailable(DbLockManager lockManager, long connectionId, IEnumerable<string> lockNames)
+		{
+			return lockNames.All (lockName =>
+			{
+				return lockManager.IsLockOwned (lockName)
+                	|| lockManager.GetLockConnexionId (lockName) == connectionId;
+			});
+		}
+
+
+		private static DbTransaction CreateReadTransaction(DbInfrastructure dbInfrastructure)
+		{
+			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+		}
+
+
+		private static DbTransaction CreateWriteTransaction(DbInfrastructure dbInfrastructure)
 		{
 			List<DbTable> tablesToLock = new List<DbTable> ()
 			{
-				this.dbInfrastructure.ResolveDbTable (Tags.TableLock),
+				dbInfrastructure.ResolveDbTable (Tags.TableLock),
 			};
 
-			return this.dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, tablesToLock);
+			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, tablesToLock);
 		}
 
 
