@@ -59,6 +59,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 				() => new LockTransaction (null, connectionId, lockNames)
 			);
 
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => new LockTransaction (dbInfrastructure, -1, lockNames)
+			);
+
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => new LockTransaction (dbInfrastructure, connectionId, null)
@@ -326,6 +331,11 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => LockTransaction.AreAllLocksAvailable (null, connectionId, lockNames)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => LockTransaction.AreAllLocksAvailable (dbInfrastructure, -1, lockNames)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
