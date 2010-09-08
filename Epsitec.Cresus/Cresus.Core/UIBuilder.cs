@@ -470,12 +470,18 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
-				GlyphShape = GlyphShape.Lock,
+				GlyphShape = GlyphShape.None,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (18, 18),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
 				Name = "ColumnTileLockButton",
 			};
+
+			//	TODO: faire en sorte que lorsque la fiche est verrouillée par un tiers, cela soit
+			//	indiqué visuellement avec un petit verrou en haut à droite.
+
+			//	TODO: rendre tous les champs read-only du moment que le verrou est actif...
+
 
 			return lockButton;
 		}
