@@ -136,6 +136,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Path path = new Drawing.Path();
 			switch ( type )
 			{
+				case GlyphShape.Lock:
+					AbstractAdorner.DrawGlyphShapeLook (path, rect, center);
+					break;
+
 				case GlyphShape.ArrowUp:
 					path.MoveTo(center.X+0.0*rect.Width, center.Y+0.2*rect.Height);
 					path.LineTo(center.X-0.3*rect.Width, center.Y-0.1*rect.Height);
