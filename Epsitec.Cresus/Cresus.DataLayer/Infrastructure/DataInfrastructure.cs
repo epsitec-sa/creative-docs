@@ -1,30 +1,36 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using System.Collections.Generic;
 
+[assembly: DependencyClass (typeof (DataInfrastructure))]
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
 	/// <summary>
 	/// The <c>DataInfrastructure</c> class provides an high level access to the data stored in the
 	/// database.
 	/// </summary>
-	public sealed class DataInfrastructure
+	public sealed class DataInfrastructure : DependencyObject
 	{
-
-
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate to the Database.</param>
 		public DataInfrastructure(DbInfrastructure dbInfrastructure)
 		{
+			if (dbInfrastructure.ContainsValue (DataInfrastructure.DbInfrastructureProperty))
+			{
+				throw new System.ArgumentException ("DbInfrastructure already attached to another DataInfrastructure object", "dbInfrastructure");
+			}
+
 			this.DbInfrastructure = dbInfrastructure;
+			this.DbInfrastructure.SetValue (DataInfrastructure.DbInfrastructureProperty, this);
 		}
 
 
@@ -61,7 +67,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return UidGenerator.GetUidGenerator (this.DbInfrastructure, name);
 		}
 
-
 		/// <summary>
 		/// Deletes a generator for unique ids from the database.
 		/// </summary>
@@ -71,7 +76,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			UidGenerator.DeleteUidGenerator (this.DbInfrastructure, name);
 		}
-
 
 		/// <summary>
 		/// Tells whether a generator for unique ids exists in the database.
@@ -83,7 +87,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return UidGenerator.UidGeneratorExists (this.DbInfrastructure, name);
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="UidGenerator"/> object used to manipulate a generator of unique ids
@@ -110,7 +113,18 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DbInfrastructure.ClearValue (DataInfrastructure.DbInfrastructureProperty);
+				this.DbInfrastructure = null;
+			}
+
+			base.Dispose (disposing);
+		}
+		
+		
+		private static DependencyProperty DbInfrastructureProperty = DependencyProperty<DataInfrastructure>.RegisterAttached ("DataInfrastructure", typeof (DataInfrastructure));
 	}
-
-
 }
