@@ -56,9 +56,15 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public void ApplyRules(RuleType ruleType)
+		public void ApplyRulesToRegisteredEntities(RuleType ruleType)
 		{
 			this.entityRecords.ForEach (x => x.Logic.ApplyRules (ruleType, x.Entity));
+		}
+
+		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
+		{
+			var logic = this.CreateLogic (entity.GetType ());
+			logic.ApplyRules (ruleType, entity);
 		}
 
 		public T CreateEntity<T>()
@@ -91,6 +97,15 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			{
 				this.entity = entity;
 				this.businessContext = businessContext;
+				this.dataContext = DataContextPool.Instance.FindDataContext (entity);
+			}
+
+			public DataContext DataContext
+			{
+				get
+				{
+					return this.dataContext;
+				}
 			}
 
 			public AbstractEntity Entity
@@ -117,6 +132,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 			private readonly AbstractEntity entity;
 			private readonly BusinessContext businessContext;
+			private readonly DataContext dataContext;
 			private Logic logic;
 		}
 
@@ -127,19 +143,19 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			return new Logic (entityType, this);
 		}
 
-		private void ApplyRules(RuleType ruleType, AbstractEntity entity)
-		{
-			var logic = this.CreateLogic (entity.GetType ());
-			logic.ApplyRules (ruleType, entity);
-		}
-
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
 			if (Logic.Current == null)
             {
-				this.ApplyRules (RuleType.Update);
+				this.ApplyRulesToRegisteredEntities (RuleType.Update);
             }
 		}
+
+		private IEnumerable<string> GetLockNames()
+		{
+			return this.entityRecords.Select (x => CoreDataLocker.GetLockName (x.DataContext, x.Entity));
+		}
+
 
 
 		private readonly DataContext dataContext;

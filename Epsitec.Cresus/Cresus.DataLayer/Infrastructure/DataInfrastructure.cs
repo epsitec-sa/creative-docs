@@ -157,7 +157,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			//	TODO: do real work here...
 		}
 
-		
+
+		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
+		{
+			//	TODO: ...
+			return true;
+		}
 		
 		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
