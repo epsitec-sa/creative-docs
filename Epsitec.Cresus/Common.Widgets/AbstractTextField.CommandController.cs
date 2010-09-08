@@ -170,6 +170,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.host.navigator.SelectionBold = !this.host.navigator.SelectionBold;
+				this.host.OnTextEdited ();
 			}
 
 			[Command (Res.CommandIds.Italic)]
@@ -181,6 +182,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.host.navigator.SelectionItalic = !this.host.navigator.SelectionItalic;
+				this.host.OnTextEdited ();
 			}
 
 			[Command (Res.CommandIds.Underlined)]
@@ -192,6 +194,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.host.navigator.SelectionUnderline = !this.host.navigator.SelectionUnderline;
+				this.host.OnTextEdited ();
 			}
 
 			[Command (Res.CommandIds.Subscript)]
@@ -203,6 +206,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.host.navigator.SelectionSubscript = !this.host.navigator.SelectionSubscript;
+				this.host.OnTextEdited ();
 			}
 
 			[Command (Res.CommandIds.Superscript)]
@@ -214,12 +218,14 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.host.navigator.SelectionSuperscript = !this.host.navigator.SelectionSuperscript;
+				this.host.OnTextEdited ();
 			}
 
 			
 			public void NotifyIsFocusedChanged(bool focused)
 			{
 				this.UpdateCommandStatesEnable (focused);
+				this.UpdateCommandStatesActiveState ();
 			}
 
 			public void NotifyStyleChanged()

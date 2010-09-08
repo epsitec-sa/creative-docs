@@ -375,6 +375,8 @@ namespace Epsitec.Cresus.Core.Printers
 				DefaultFont = font,
 				DefaultFontSize = fontSize,
 				DefaultColor = port.Color,
+				DefaultUnderlineWidth = AbstractBand.defaultUnderlineWidth,
+				DefaultWaveWidth = AbstractBand.defaultWaveWidth,
 			};
 
 			textLayout.Paint (bounds.BottomLeft, port);
