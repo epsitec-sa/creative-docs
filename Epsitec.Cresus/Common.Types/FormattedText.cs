@@ -327,6 +327,7 @@ namespace Epsitec.Common.Types
 		/// to their equivalent characters.
 		/// <example>"a&amp;amp;b" returns "a&amp;b"</example>
 		/// <example>"a&amp;b" throws an exception</example>
+		/// <example>"x<b>y</b>z</b>" returns "xyz"</example>
 		/// </summary>
 		/// <param name="text">The escaped text.</param>
 		/// <returns>The source text.</returns>

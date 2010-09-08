@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core
 					continue;
 				}
 
-				char prefix = text.FirstCharacter ();
+				char prefix = text.RemoveTag ().FirstCharacter ();
 
 				if (prefix == Prefix.SkipItemIfPreviousEmpty)
 				{
@@ -64,10 +64,10 @@ namespace Epsitec.Cresus.Core
 					}
 
 					text = text.Substring (1);
-					prefix = text.FirstCharacter ();
+					prefix = text.RemoveTag ().FirstCharacter ();
 				}
 
-				char suffix = text.LastCharacter ();
+				char suffix = text.RemoveTag ().LastCharacter ();
 
 				if (suffix == Suffix.SkipItemIfNextEmpty)
 				{
@@ -77,16 +77,15 @@ namespace Epsitec.Cresus.Core
 					}
 
 					text = text.Substring (0, text.Length-1);
-					suffix = text.LastCharacter ();
+					suffix = text.RemoveTag ().LastCharacter ();
 				}
 
 				char lastCharacter = buffer.LastCharacter ();
 
 				if (emptyItem == false &&
 					lastCharacter != '(' &&
-					lastCharacter != '>' &&
-					Misc.IsPunctuationMark (prefix) == false ||
-					(lastCharacter == '>' && prefix == '('))
+					prefix != '\n' &&
+					Misc.IsPunctuationMark (prefix) == false)
 				{
 					buffer.Append (" ");
 				}
@@ -216,14 +215,19 @@ namespace Epsitec.Cresus.Core
 			int n = text.Length;
 			return n < 1 ? (char) 0 : text[0];
 		}
+
+		public static string RemoveTag(this string text)
+		{
+			return FormattedText.Unescape (text);
+		}
 	}
 	
 	static class StringBuilderExtension
 	{
-		public static char LastCharacter(this System.Text.StringBuilder text)
+		public static char LastCharacter(this System.Text.StringBuilder builder)
 		{
-			int n = text.Length - 1;
-			return n < 0 ? (char) 0 : text[n];
+			string text = builder.ToString ();
+			return text.RemoveTag ().LastCharacter ();
 		}
 	}
 }

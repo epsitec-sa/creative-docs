@@ -38,7 +38,11 @@ namespace Epsitec.Cresus.Core
 			this.application.SetEnable (ApplicationCommands.Cut, false);
 			this.application.SetEnable (ApplicationCommands.Copy, false);
 			this.application.SetEnable (ApplicationCommands.Paste, false);
-			// TODO: désactiver aussi les commandes de formatage
+			this.application.SetEnable (ApplicationCommands.Bold, false);
+			this.application.SetEnable (ApplicationCommands.Italic, false);
+			this.application.SetEnable (ApplicationCommands.Underlined, false);
+			this.application.SetEnable (ApplicationCommands.Subscript, false);
+			this.application.SetEnable (ApplicationCommands.Superscript, false);
 		}
 
 

@@ -97,5 +97,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			return true;
 		}
+
+
+		public static readonly double defaultUnderlineWidth = 0.2;
+		public static readonly double defaultWaveWidth = 0.75;
 	}
 }

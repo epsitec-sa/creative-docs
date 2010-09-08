@@ -1416,6 +1416,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleNavigatorStyleChanged(object sender)
 		{
 			this.CursorScroll (true);
+			this.commandController.NotifyStyleChanged ();
 		}
 
 
