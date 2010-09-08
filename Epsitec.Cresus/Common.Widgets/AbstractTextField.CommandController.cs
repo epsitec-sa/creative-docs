@@ -240,6 +240,7 @@ namespace Epsitec.Common.Widgets
 
 				bool isReadOnly  = this.host.IsReadOnly;
 				bool isReadWrite = !isReadOnly;
+				bool canFormat   = focused && isReadWrite && this.host.IsFormattedText;
 
 				commandContext.GetCommandState (ApplicationCommands.Copy     ).Enable = focused;
 				commandContext.GetCommandState (ApplicationCommands.Cut      ).Enable = focused && isReadWrite;
@@ -247,11 +248,11 @@ namespace Epsitec.Common.Widgets
 				commandContext.GetCommandState (ApplicationCommands.Delete   ).Enable = focused && isReadWrite;
 				commandContext.GetCommandState (ApplicationCommands.SelectAll).Enable = focused;
 
-				commandContext.GetCommandState (ApplicationCommands.Bold       ).Enable = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Italic     ).Enable = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Underlined ).Enable = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Subscript  ).Enable = focused && isReadWrite;
-				commandContext.GetCommandState (ApplicationCommands.Superscript).Enable = focused && isReadWrite;
+				commandContext.GetCommandState (ApplicationCommands.Bold       ).Enable = canFormat;
+				commandContext.GetCommandState (ApplicationCommands.Italic     ).Enable = canFormat;
+				commandContext.GetCommandState (ApplicationCommands.Underlined ).Enable = canFormat;
+				commandContext.GetCommandState (ApplicationCommands.Subscript  ).Enable = canFormat;
+				commandContext.GetCommandState (ApplicationCommands.Superscript).Enable = canFormat;
 			}
 
 			private void UpdateCommandStatesActiveState()
@@ -262,8 +263,7 @@ namespace Epsitec.Common.Widgets
 				bool isReadWrite = !isReadOnly;
 				bool canFormat   = isReadWrite && this.host.IsFormattedText;
 
-				//?if (canFormat)  // TODO: pourquoi IsFormattedText est false ?
-				if (isReadWrite)
+				if (canFormat)
 				{
 					commandContext.GetCommandState (ApplicationCommands.Bold       ).ActiveState = this.host.navigator.SelectionBold        ? ActiveState.Yes : ActiveState.No;
 					commandContext.GetCommandState (ApplicationCommands.Italic     ).ActiveState = this.host.navigator.SelectionItalic      ? ActiveState.Yes : ActiveState.No;

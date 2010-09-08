@@ -139,6 +139,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		private bool CheckIfMarshalerIsUsingFormattedText()
+		{
+			string value = this.marshaler.GetStringValue ();
+			return marshaler.MarshaledType == typeof (FormattedText);
+		}
+
+
 		private string GetMarshalerText()
 		{
 			string value = this.marshaler.GetStringValue ();
@@ -193,6 +200,22 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.widget != null)
 			{
+				AbstractTextField textField = this.widget as AbstractTextField;
+
+				if (textField != null)
+				{
+					if (this.CheckIfMarshalerIsUsingFormattedText ())
+					{
+						textField.IsFormattedText    = true;
+						textField.IsMultilingualText = true;
+					}
+					else
+					{
+						textField.IsFormattedText    = false;
+						textField.IsMultilingualText = false;
+					}
+				}
+
 				string text = this.GetMarshalerText ();
 				this.SetWidgetText (text);
 			}
