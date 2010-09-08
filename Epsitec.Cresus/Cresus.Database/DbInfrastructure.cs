@@ -151,6 +151,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbConnexionManager				ConnexionManager
+		{
+			get
+			{
+				return this.connexionManager;
+			}
+		}
+		
 		public DbAccess							Access
 		{
 			get
@@ -244,6 +252,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableLog ();
 				helper.CreateTableUid ();
 				helper.CreateTableLock ();
+				helper.CreateTableConnexion ();
 				
 				transaction.Commit ();
 			}
@@ -313,6 +322,7 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnexion));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -2358,8 +2368,9 @@ namespace Epsitec.Cresus.Database
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.SetupLogger (transaction);
-				this.SetupUidManager (transaction);
-				this.SetupLockManager (transaction);
+				this.SetupUidManager ();
+				this.SetupLockManager ();
+				this.SetupConnexionManager ();
 
 				transaction.Commit ();
 			}
@@ -2377,16 +2388,22 @@ namespace Epsitec.Cresus.Database
 			this.logger.ResetCurrentLogId (transaction);
 		}
 
-		private void SetupUidManager(DbTransaction transaction)
+		private void SetupUidManager()
 		{
 			this.uidManager = new DbUidManager ();
 			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
 		}
 
-		private void SetupLockManager(DbTransaction transaction)
+		private void SetupLockManager()
 		{
 			this.lockManager = new DbLockManager ();
 			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
+		}
+
+		private void SetupConnexionManager()
+		{
+			this.connexionManager = new DbConnexionManager ();
+			this.connexionManager.Attach (this, this.internalTables[Tags.TableConnexion]);
 		}
 
 
@@ -2631,6 +2648,12 @@ namespace Epsitec.Cresus.Database
 					this.lockManager.Detach ();
 					this.lockManager = null;
 				}
+
+				if (this.connexionManager != null)
+				{
+					this.connexionManager.Detach ();
+					this.connexionManager = null;
+				}
 				
 				if (this.abstraction != null)
 				{
@@ -2801,6 +2824,26 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnexionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+				};
+
+				this.CreateTable (table, columns);
+			}
+
+			public void CreateTableConnexion()
+			{
+				TypeHelper types = this.infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableConnexion);
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnConnexionIdentity, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnexionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnexionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnexionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
@@ -3100,6 +3143,7 @@ namespace Epsitec.Cresus.Database
 		private DbLogger						logger;
 		private DbUidManager					uidManager;
 		private DbLockManager					lockManager;
+		private DbConnexionManager				connexionManager;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();
