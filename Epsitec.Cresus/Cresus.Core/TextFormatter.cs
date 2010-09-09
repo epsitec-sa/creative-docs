@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Core
 			items.RemoveRange (startIndex, num);
 		}
 
-		private static string ConvertToText(object value)
+		public static string ConvertToText(object value)
 		{
 			if (value == null)
 			{

@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 				};
 
 				button.PreferredWidth = ArticleParameterToolbarController.GetButtonRequiredWidth (button);
-				ToolTip.Default.SetToolTip (button, parameter.Name);
+				ToolTip.Default.SetToolTip (button, TextFormatter.ConvertToText (parameter.Name));
 
 				button.Clicked += delegate
 				{

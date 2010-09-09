@@ -64,8 +64,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetParameterSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetParameterSummary (x)));
+			template.DefineText        (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetParameterSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetParameterSummary (x)));
 			template.DefineCreateItem  (this.CreateParameter);  // le bouton [+] crée une ligne d'article
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", data.Controller, this.DataContext);
 
 			template.DefineText        (x => TextFormatter.FormatText (GetArticlePriceSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetArticlePriceSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetArticlePriceSummary (x)));
 			template.DefineCreateItem  (this.CreateArticlePrice);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticlePrices, template));
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			if (!parameter.Name.IsNullOrEmpty)
 			{
-				builder.Append (parameter.Name);
+				builder.Append (TextFormatter.ConvertToText (parameter.Name));
 				builder.Append (": ");
 			}
 
@@ -116,11 +116,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					value.MinValue.HasValue     ||
 					value.MaxValue.HasValue)
 				{
-					builder.Append (value.DefaultValue.ToString ());
+					builder.Append (TextFormatter.ConvertToText (value.DefaultValue));
 					builder.Append (" (");
-					builder.Append (value.MinValue.ToString ());
+					builder.Append (TextFormatter.ConvertToText (value.MinValue));
 					builder.Append ("..");
-					builder.Append (value.MaxValue.ToString ());
+					builder.Append (TextFormatter.ConvertToText (value.MaxValue));
 					builder.Append (")");
 				}
 				else

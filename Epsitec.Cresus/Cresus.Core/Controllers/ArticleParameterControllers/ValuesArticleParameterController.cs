@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			var label = new StaticText
 			{
 				Parent = box,
-				FormattedText = article.ArticleDefinition.ArticleParameterDefinitions[index].Name,
+				FormattedText = TextFormatter.ConvertToText (article.ArticleDefinition.ArticleParameterDefinitions[index].Name),
 				PreferredWidth = 80,
 				Dock = DockStyle.Left,
 			};
