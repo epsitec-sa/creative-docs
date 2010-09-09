@@ -881,6 +881,11 @@
     <EmbeddedResource Include="Images\Cmd.Subscript.icon" />
     <EmbeddedResource Include="Images\Cmd.Superscript.icon" />
     <EmbeddedResource Include="Images\Cmd.Underline.icon" />
+    <EmbeddedResource Include="Images\Flags.FlagDE.icon" />
+    <EmbeddedResource Include="Images\Flags.FlagFR.icon" />
+    <EmbeddedResource Include="Images\Flags.FlagGB.icon" />
+    <EmbeddedResource Include="Images\Flags.FlagIT.icon" />
+    <EmbeddedResource Include="Images\Flags.FlagUS.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
