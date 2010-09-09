@@ -164,6 +164,15 @@ namespace Epsitec.Cresus.Core
 			items.RemoveRange (startIndex, num);
 		}
 
+		public static string CurrentLanguageId
+		{
+			get
+			{
+				UI.CultureSettings culture = UI.Settings.CultureForData;
+				return culture.LanguageId;
+			}
+		}
+		
 		public static string ConvertToText(object value)
 		{
 			if (value == null)
@@ -193,7 +202,7 @@ namespace Epsitec.Cresus.Core
 				if (MultilingualText.IsMultilingual (formattedText))
                 {
 					MultilingualText multilingualText = new MultilingualText (formattedText);
-					return multilingualText.GetTextOrDefault (UI.Settings.CultureForData.LanguageId).ToString ();
+					return multilingualText.GetTextOrDefault (TextFormatter.CurrentLanguageId).ToString ();
                 }
 			}
 

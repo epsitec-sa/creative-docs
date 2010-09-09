@@ -209,14 +209,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void SetArticleDescription(FormattedText value)
 		{
-			if (value == this.Entity.ArticleDefinition.LongDescription)  // description standard ?
+			//	The replacement text of the article item might be defined in several different
+			//	languages; compare and replace only the text for the active language :
+
+			string articleDescription = value.IsNull ? null : TextFormatter.ConvertToText (value);
+			string defaultDescription = TextFormatter.ConvertToText (this.Entity.ArticleDefinition.LongDescription);
+			string currentReplacement = this.Entity.ReplacementText.IsNull ? null : TextFormatter.ConvertToText (this.Entity.ReplacementText);
+			
+			if (articleDescription == defaultDescription)  // description standard ?
 			{
-				value = FormattedText.Null;
+				articleDescription = null;
 			}
 
-			if (this.Entity.ReplacementText != value)
+			if (currentReplacement != articleDescription)
 			{
-				this.Entity.ReplacementText = value;
+				MultilingualText text = new MultilingualText (this.Entity.ReplacementText);
+				text.SetText (TextFormatter.CurrentLanguageId, articleDescription);
+				this.Entity.ReplacementText = text.GetGlobalText ();
 			}
 		}
 

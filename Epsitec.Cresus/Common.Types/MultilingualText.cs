@@ -158,8 +158,15 @@ namespace Epsitec.Common.Types
 		/// <param name="text">The formatted text.</param>
 		public void SetText(string languageId, FormattedText text)
 		{
-			MultilingualText.FixLanguageId (ref languageId);			
-			this.texts[languageId] = text.ToString ();
+			if (text.IsNull)
+			{
+				this.ClearText (languageId);
+			}
+			else
+			{
+				MultilingualText.FixLanguageId (ref languageId);
+				this.texts[languageId] = text.ToString ();
+			}
 		}
 
 		/// <summary>
