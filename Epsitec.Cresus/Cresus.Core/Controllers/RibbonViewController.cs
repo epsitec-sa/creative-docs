@@ -166,6 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 3,
+				Dock = DockStyle.Fill,
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Base.ShowCustomers));
@@ -176,6 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateRibbonStateSection()
 		{
+#if false
 			var section = new RibbonSection (this.ribbonPageHome)
 			{
 				Name = "State",
@@ -183,6 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
+#endif
 		}
 
 		private void CreateRibbonNavigationSection()
@@ -216,27 +219,41 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = section,
 				Dock = DockStyle.StackBegin,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonSmallWidth),
+				PreferredWidth = 21,
 			};
 
 			//	HACK: faire cela proprement avec des commandes multi-états
 
-			var selectLanaugage1 = new Button ()
+			var selectLanaugage1 = new IconButton ()
 			{
 				Parent = frame,
+				Name = "language=fr",
 				Dock = DockStyle.Stacked,
-				Text = "[*] Défaut",
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
+				ActiveState = ActiveState.Yes,
 			};
 
-			var selectLanaugage2 = new Button ()
+			var selectLanaugage2 = new IconButton ()
 			{
 				Parent = frame,
+				Name = "language=de",
 				Dock = DockStyle.Stacked,
-				Text = "[de] Allemand",
+				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
 			};
 
-			selectLanaugage1.Clicked += delegate { UI.Settings.CultureForData.SelectLanguage (null); };
-			selectLanaugage2.Clicked += delegate { UI.Settings.CultureForData.SelectLanguage ("de"); };
+			selectLanaugage1.Clicked += delegate
+			{
+				UI.Settings.CultureForData.SelectLanguage (null);
+				selectLanaugage1.ActiveState = ActiveState.Yes;
+				selectLanaugage2.ActiveState = ActiveState.No;
+			};
+			
+			selectLanaugage2.Clicked += delegate
+			{
+				UI.Settings.CultureForData.SelectLanguage ("de");
+				selectLanaugage1.ActiveState = ActiveState.No;
+				selectLanaugage2.ActiveState = ActiveState.Yes;
+			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
 		}

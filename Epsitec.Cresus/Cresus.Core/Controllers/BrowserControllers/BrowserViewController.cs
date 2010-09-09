@@ -364,8 +364,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void Update()
 		{
-			this.collection.Invalidate ();
-			this.RefreshScrollList ();
+			if (this.collection != null)
+			{
+				this.collection.Invalidate ();
+				this.RefreshScrollList ();
+			}
 		}
 
 		#endregion
