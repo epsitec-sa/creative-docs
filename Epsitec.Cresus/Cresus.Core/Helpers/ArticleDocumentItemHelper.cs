@@ -115,9 +115,11 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			FormattedText description = FormattedText.Null;
 
+			string replacementTextInCurrentLanguage = TextFormatter.ConvertToText (article.ReplacementText);
+
 			if (shortDescription)  // description courte prioritaire ?
 			{
-				if (!article.ReplacementText.IsNullOrEmpty)
+				if (!string.IsNullOrEmpty (replacementTextInCurrentLanguage))
 				{
 					description = article.ReplacementText;
 				}
@@ -132,7 +134,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			}
 			else  // description longue prioritaire ?
 			{
-				if (!article.ReplacementText.IsNullOrEmpty)
+				if (!string.IsNullOrEmpty (replacementTextInCurrentLanguage))
 				{
 					description = article.ReplacementText;
 				}
