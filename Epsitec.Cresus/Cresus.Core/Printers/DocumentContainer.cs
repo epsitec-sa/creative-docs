@@ -93,6 +93,19 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.currentPage;
 		}
 
+		/// <summary>
+		/// Termine la génération d'un document. S'il n'y a qu'une page de type PageType.First, son type
+		/// est replacé par PageType.Single.
+		/// </summary>
+		/// <param name="firstPage"></param>
+		public void Ending(int firstPage)
+		{
+			if (this.pages.Count == firstPage+1 && this.pages[firstPage].PageType == PageType.First)
+			{
+				this.pages[firstPage].PageType = PageType.Single;
+			}
+		}
+
 
 		/// <summary>
 		/// Ajoute un objet à une position absolue, dans la page courante.
