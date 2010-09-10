@@ -1642,7 +1642,7 @@ namespace Epsitec.Cresus.Database
 
 		public System.DateTime GetDatabaseTime()
 		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				transaction.SqlBuilder.GetCurrentTimeStamp ();
 
