@@ -14,7 +14,7 @@ namespace Cresus.Database.UnitTests
 
 
 	[TestClass]
-	public class UnitTestDbConnectionManager
+	public sealed class UnitTestDbConnectionManager
 	{
 
 
