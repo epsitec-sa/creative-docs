@@ -104,22 +104,22 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddDocumentOptionInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.Logo, null, "Imprime le logo de l'entreprise", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.HeaderLogo, null, "Imprime le logo de l'entreprise", true));
 
 			if (this.Type == DocumentType.BL                   ||
 				this.Type == DocumentType.InvoiceWithInsideESR ||
 				this.Type == DocumentType.InvoiceWithOutsideESR||
 				this.Type == DocumentType.InvoiceWithoutESR    )
 			{
-				this.options.Add (new DocumentOptionDefinition (DocumentOption.Delayed, null, "Imprime les articles livrés ultérieurement", true));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.ArticleDelayed, null, "Imprime les articles livrés ultérieurement", true));
 			}
 
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.ArticleId, null, "Imprime les identificateurs d'article", false));
 
 			this.options.Add (new DocumentOptionDefinition ("Aspect de la liste des articles :"));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.Frameless, "TableAspect", "Espacé, sans encadrements"));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.WithLine,  "TableAspect", "Espacé, avec des lignes de séparation", true));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.WithFrame, "TableAspect", "Serré, avec des encadrements"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.LayoutFrameless, "TableAspect", "Espacé, sans encadrements"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.LayoutWithLine,  "TableAspect", "Espacé, avec des lignes de séparation", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.LayoutWithFrame, "TableAspect", "Serré, avec des encadrements"));
 
 			this.options.Add (new DocumentOptionDefinition ("Ordre des colonnes :"));
 
@@ -140,8 +140,8 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute les options d'impression liées aux BV.
 			this.options.Add (new DocumentOptionDefinition ("Type de bulletin de versement :"));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESR, "ESR", "BVR orange", true));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.ES,  "ESR", "BV rose"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithESR, "ESR", "BVR orange", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithES,  "ESR", "BV rose"));
 
 			this.options.Add (new DocumentOptionDefinition ("Mode d'impression du BV :"));
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESRFacsimile, null, "Fac-similé complet du BV (pour des essais)", true));
