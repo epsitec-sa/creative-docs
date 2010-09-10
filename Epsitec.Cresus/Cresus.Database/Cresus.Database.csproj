@@ -158,6 +158,7 @@
     <Compile Include="DbConditionModifier.cs" />
     <Compile Include="DbConditionModifierOperator.cs" />
     <Compile Include="DbConnexionManager.cs" />
+    <Compile Include="DbConnexionStatus.cs" />
     <Compile Include="DbLockManager.cs" />
     <Compile Include="DbSimpleCondition.cs" />
     <Compile Include="DbJoin.cs" />
