@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 
@@ -110,20 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			return UidGenerator.GetUidGenerator (this.dbInfrastructure, name);
 		}
-
-
-		/// <summary>
-		/// This method is called periodically in order to notify the database that this
-		/// instance of the application is still up and running.
-		/// </summary>
-		public void KeepAlive()
-		{
-			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
-			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
-
-			//	TODO: ...
-		}
-
+		
 		/// <summary>
 		/// Opens the high-level connection with the database: this will create a
 		/// new <see cref="ConnectionInformation"/>.
@@ -131,44 +120,82 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="identity">The user/machine identity.</param>
 		public void OpenConnection(string identity)
 		{
-			System.Diagnostics.Debug.Assert (this.connectionInformation == null);
-			
-			//	TODO: do real work here...
-			
-			this.connectionInformation = new ConnectionInformation ();
+			if (this.connectionInformation != null)
+			{
+				ConnectionStatus status = this.connectionInformation.Status;
+
+				if (status == ConnectionStatus.NotYetOpen || status == ConnectionStatus.Open)
+				{
+					throw new System.InvalidOperationException ("This instance is already connected.");
+				}
+			}
+
+			this.connectionInformation = new ConnectionInformation (this.dbInfrastructure, identity);
+			this.connectionInformation.Open ();
 		}
 
 		public void CloseConnection()
 		{
-			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
+			if (this.connectionInformation == null)
+			{
+				throw new System.InvalidOperationException ("This instance is not connected.");
+			}
 
-			//	TODO: do real work here...
-
-			this.connectionInformation = null;
+			this.connectionInformation.Close ();
 		}
+		
+		/// <summary>
+		/// This method is called periodically in order to notify the database that this
+		/// instance of the application is still up and running.
+		/// </summary>
+		public void KeepConnectionAlive()
+		{
+			if (this.connectionInformation == null)
+			{
+				throw new System.InvalidOperationException ("This instance is not connected.");
+			}
 
+			this.connectionInformation.KeepAlive ();
+
+			bool interruptedConnections = ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure);
+
+			if (interruptedConnections)
+			{
+				// TODO Remove all the locks associated with interrupted connections.
+				// 1) Create a method in the low level file DbLockManager that removes those locks,
+				//    with a request like "delete from CR_LOCK where CR_CONNECTION_ID in (select CR_ID from CR_CONNECTION where CR_CONNECTION_STATUS == 2)"
+				//    or something equivalent, if nested requests are not available in the lower level
+				//    layers. Maybe by doing two requests one after the other or by modifying the
+				//    InterruptDeadConnection(...) method so that it returns the id of the connections
+				//    that have been interrupted.
+				// 2) Call that method here.
+				// 3) Should we also take care of locks that are owned by closed connections. In a
+				// perfect world, this case should never happen. But you never know.
+				// Marc
+			}
+
+			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
+		}
+				
 		public void RefreshConnectionInformation()
 		{
 			if (this.connectionInformation == null)
 			{
-				return;
+				throw new System.InvalidOperationException ("This instance has never been connected.");
 			}
 
-			//	TODO: do real work here...
+			this.connectionInformation.RefreshStatus ();
 		}
-
 
 		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
 		{
 			return LockTransaction.AreAllLocksAvailable (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
-
-		
+				
 		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
 			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
-
 
 		protected override void Dispose(bool disposing)
 		{
@@ -183,12 +210,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private string GetConnectionName()
 		{
 			System.Diagnostics.Debug.Assert (this.connectionInformation != null);
-			System.Diagnostics.Debug.Assert (this.connectionInformation.Status == ConnectionStatus.Active);
+			System.Diagnostics.Debug.Assert (this.connectionInformation.Status == ConnectionStatus.Open);
 
 			return this.connectionInformation.ConnectionId.ToString (System.Globalization.CultureInfo.InvariantCulture);
 		}
-		
-		
+				
 		private static DependencyProperty DbInfrastructureProperty = DependencyProperty<DataInfrastructure>.RegisterAttached ("DataInfrastructure", typeof (DataInfrastructure));
 
 		private readonly DbInfrastructure dbInfrastructure;

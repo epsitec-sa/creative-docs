@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core
 				
 				var info = this.dataInfrastructure.ConnectionInformation;
 				
-				return info != null && info.Status == ConnectionStatus.Active;
+				return info != null && info.Status == ConnectionStatus.Open;
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core
 
 		private void KeepAliveConnection()
 		{
-			this.dataInfrastructure.KeepAlive ();
+			this.dataInfrastructure.KeepConnectionAlive ();
 		}
 
 		private void StartTimerIfNotRunning()

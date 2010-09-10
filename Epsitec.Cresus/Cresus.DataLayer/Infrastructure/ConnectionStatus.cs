@@ -6,10 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
+	// TODO Comment this enum.
+	// Marc
 	public enum ConnectionStatus
 	{
-		Active = 0,
-		Closed = 1,
-		Interrupted = 2,
+		NotYetOpen = 0,
+		Open = 1,
+		Closed = 2,
+		Interrupted = 3,
 	}
 }
