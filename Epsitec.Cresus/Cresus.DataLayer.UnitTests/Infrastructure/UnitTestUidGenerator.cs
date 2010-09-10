@@ -276,9 +276,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 				Assert.IsNotNull (generator);
 				Assert.AreEqual (generator.Name, name);
 				Assert.AreEqual (generator.Slots.Count (), 3);
-				Assert.IsTrue (generator.Slots.Any (s => s.Item1 == 0 && s.Item2 == 9));
-				Assert.IsTrue (generator.Slots.Any (s => s.Item1 == 10 && s.Item2 == 19));
-				Assert.IsTrue (generator.Slots.Any (s => s.Item1 == 20 && s.Item2 == 29));
+				Assert.AreEqual (0, generator.Slots.ElementAt (0).MinValue);
+				Assert.AreEqual (9, generator.Slots.ElementAt (0).MaxValue);
+				Assert.AreEqual (10, generator.Slots.ElementAt (1).MinValue);
+				Assert.AreEqual (19, generator.Slots.ElementAt (1).MaxValue);
+				Assert.AreEqual (20, generator.Slots.ElementAt (2).MinValue);
+				Assert.AreEqual (29, generator.Slots.ElementAt (2).MaxValue);
 			}
 		}
 
