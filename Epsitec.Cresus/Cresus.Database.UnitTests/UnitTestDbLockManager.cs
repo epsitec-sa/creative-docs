@@ -187,7 +187,7 @@ namespace Cresus.Database.UnitTests
 				manager.RequestLock ("myLock", 0);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock"));
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
@@ -195,7 +195,7 @@ namespace Cresus.Database.UnitTests
 				);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock"));
 
 				manager.ReleaseLock ("myLock", 0);
 
@@ -204,7 +204,7 @@ namespace Cresus.Database.UnitTests
 				manager.RequestLock ("myLock", 1);
 
 				Assert.IsTrue (manager.IsLockOwned ("myLock"));
-				Assert.AreEqual (1, manager.GetLockConnexionId ("myLock"));
+				Assert.AreEqual (1, manager.GetLockConnectionId ("myLock"));
 
 				manager.ReleaseLock ("myLock", 1);
 
@@ -226,12 +226,12 @@ namespace Cresus.Database.UnitTests
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockConnexionId (null)
+					() => manager.GetLockConnectionId (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.GetLockConnexionId ("")
+					() => manager.GetLockConnectionId ("")
 				);
 			}
 		}
@@ -244,37 +244,37 @@ namespace Cresus.Database.UnitTests
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
-				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
 
 				manager.RequestLock ("myLock2", 0);
 
-				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
 
 				manager.RequestLock ("myLock1", 0);
 				manager.RequestLock ("myLock2", 0);
 				manager.RequestLock ("myLock3", 1);
 
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock1"));
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
-				Assert.AreEqual (1, manager.GetLockConnexionId ("myLock3"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock2"));
+				Assert.AreEqual (1, manager.GetLockConnectionId ("myLock3"));
 
 				manager.ReleaseLock ("myLock1", 0);
 				manager.ReleaseLock ("myLock2", 0);
 				manager.ReleaseLock ("myLock3", 1);
 
-				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
-				Assert.AreEqual (0, manager.GetLockConnexionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
 
 				manager.ReleaseLock ("myLock2", 0);
 
-				Assert.IsNull (manager.GetLockConnexionId ("myLock1"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnexionId ("myLock3"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock2"));
+				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
 			}
 		}
 

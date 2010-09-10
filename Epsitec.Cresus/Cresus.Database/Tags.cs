@@ -32,16 +32,16 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnInfoXml		= "CR_INFO";
 		public const string ColumnDateTime		= "CR_DATETIME";
 		public const string ColumnInstanceType	= "CR_TYPE";
-		public const string ColumnConnexionId	= "CR_CONNEXION_ID";
+		public const string ColumnConnectionId	= "CR_CONNECTION_ID";
 		public const string ColumnUidSlot		= "CR_UID_SLOT";
 		public const string ColumnUidMin		= "CR_UID_MIN";
 		public const string ColumnUidMax		= "CR_UID_MAX";
 		public const string ColumnUidNext		= "CR_UID_NEXT";
 		public const string ColumnCounter		= "CR_COUNTER";
-		public const string ColumnConnexionIdentity	= "CR_IDENTITY";
-		public const string ColumnConnexionSince	= "CR_CONN_SINCE";
-		public const string ColumnConnexionLastSeen	= "CR_LAST_SEEN";
-		public const string ColumnConnexionStatus	= "CR_CONN_SATUS";
+		public const string ColumnConnectionIdentity	= "CR_IDENTITY";
+		public const string ColumnConnectionSince		= "CR_CONN_SINCE";
+		public const string ColumnConnectionLastSeen	= "CR_LAST_SEEN";
+		public const string ColumnConnectionStatus		= "CR_CONN_STATUS";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
@@ -61,6 +61,6 @@ namespace Epsitec.Cresus.Database
 		public const string TableLog			= "CR_LOG";
 		public const string TableUid			= "CR_UID";
 		public const string TableLock			= "CR_LOCK";
-		public const string TableConnexion		= "CR_CONNEXION";
+		public const string TableConnection		= "CR_CONNECTION";
 	}
 }
