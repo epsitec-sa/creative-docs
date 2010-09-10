@@ -59,22 +59,25 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				if (this.IsLockOwned (lockName))
+				if (!this.IsLockOwned (lockName))
 				{
-					if (this.GetLockConnectionId (lockName) != connectionId)
-					{
-						throw new System.InvalidOperationException ("Cannot release lock because it is owned by another user.");
-					}
-
-					if (this.GetLockCounterValue (lockName) == 0)
-					{
-						this.RemoveLock (lockName);
-					}
-					else
-					{
-						this.DecrementLockCounter (lockName);
-					}
+					throw new System.InvalidOperationException ("The lock does not exists.");
 				}
+
+				if (this.GetLockConnectionId (lockName) != connectionId)
+				{
+					throw new System.InvalidOperationException ("The lock is owned by another user.");
+				}
+
+				if (this.GetLockCounterValue (lockName) == 0)
+				{
+					this.RemoveLock (lockName);
+				}
+				else
+				{
+					this.DecrementLockCounter (lockName);
+				}
+				
 
 				transaction.Commit ();
 			}
@@ -160,7 +163,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public long? GetLockConnectionId(string lockName)
+		public long GetLockConnectionId(string lockName)
 		{
 			this.CheckIsAttached ();
 
@@ -168,12 +171,12 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				long? connectionId = null;
-								
-				if (this.IsLockOwned (lockName))
+				if (!this.IsLockOwned (lockName))
 				{
-					connectionId = (long) this.GetValue (lockName, Tags.ColumnConnectionId);
+					throw new System.InvalidOperationException ("The lock does not exists.");
 				}
+
+				long connectionId = (long) this.GetValue (lockName, Tags.ColumnConnectionId);
 
 				transaction.Commit ();
 

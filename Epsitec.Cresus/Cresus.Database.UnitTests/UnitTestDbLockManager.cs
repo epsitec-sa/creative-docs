@@ -177,12 +177,12 @@ namespace Cresus.Database.UnitTests
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
-				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
-				
-				manager.ReleaseLock ("myLock", 0);
-				manager.ReleaseLock ("myLock", 1);
+				Assert.IsFalse (manager.IsLockOwned ("myLock"));
 
-				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.ReleaseLock ("myLock", 0)
+				);
 
 				manager.RequestLock ("myLock", 0);
 
@@ -208,17 +208,13 @@ namespace Cresus.Database.UnitTests
 
 				manager.ReleaseLock ("myLock", 1);
 
-				Assert.IsFalse (manager.IsLockOwned ("myLock"));
-
-				manager.ReleaseLock ("myLock", 1);
-
 				Assert.IsFalse (manager.IsLockOwned ("myLock"));	
 			}
 		}
 
 
 		[TestMethod]
-		public void GetLockOwnerArgumentCheck()
+		public void GetLockConnectionIdArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
@@ -238,21 +234,32 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
-		public void GetLockOwner()
+		public void GetLockConnectionIdInvalidBehavior()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
 				DbLockManager manager = dbInfrastructure.LockManager;
 
-				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.GetLockConnectionId ("test")
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetLockConnectionId()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbLockManager manager = dbInfrastructure.LockManager;
 
 				manager.RequestLock ("myLock2", 0);
 
-				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
 				manager.RequestLock ("myLock1", 0);
 				manager.RequestLock ("myLock2", 0);
@@ -266,15 +273,15 @@ namespace Cresus.Database.UnitTests
 				manager.ReleaseLock ("myLock2", 0);
 				manager.ReleaseLock ("myLock3", 1);
 
-				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
 				Assert.AreEqual (0, manager.GetLockConnectionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 
 				manager.ReleaseLock ("myLock2", 0);
 
-				Assert.IsNull (manager.GetLockConnectionId ("myLock1"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock2"));
-				Assert.IsNull (manager.GetLockConnectionId ("myLock3"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock1"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (manager.IsLockOwned ("myLock3"));
 			}
 		}
 
