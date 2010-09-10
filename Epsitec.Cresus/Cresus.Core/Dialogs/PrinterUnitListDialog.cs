@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour choisir les unités d'impression à utiliser.
 	/// </summary>
-	class PrinterListDialog : AbstractDialog
+	class PrinterUnitListDialog : AbstractDialog
 	{
-		public PrinterListDialog(CoreApplication application)
+		public PrinterUnitListDialog(CoreApplication application)
 		{
 			this.application = application;
 
@@ -227,8 +227,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.xOffsetField = PrinterListDialog.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
-				this.yOffsetField = PrinterListDialog.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
+				this.xOffsetField = PrinterUnitListDialog.CreateTextField (box, "Décalage horizontal :", "[millimètres, vers la droite si positif]", ++tabIndex);
+				this.yOffsetField = PrinterUnitListDialog.CreateTextField (box, "Décalage vertical :",   "[millimètres, vers le haut si positif]",   ++tabIndex);
 			}
 
 			{
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, -1),
 				};
 
-				this.copiesField = PrinterListDialog.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
+				this.copiesField = PrinterUnitListDialog.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
 			}
 
 			//	Rempli le pied de page.
@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateTrayField()
 		{
 			PrinterUnit printerUnit = this.SelectedPrinter;
-			List<string> trayNames = PrinterListDialog.GetTrayList(printerUnit);
+			List<string> trayNames = PrinterUnitListDialog.GetTrayList(printerUnit);
 
 			this.trayField.Items.Clear ();
 			foreach (var trayName in trayNames)

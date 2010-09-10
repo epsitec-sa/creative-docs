@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.optionButtons = new List<AbstractButton> ();
 			this.printerCombos = new List<TextFieldCombo> ();
 
+			this.previewerController = new PreviewerController (this.entityPrinter, this.entities);
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
 			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 		}
@@ -154,13 +155,29 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
-			this.previewFrame = new Widgets.EntityPreviewer
+			this.previewFrame = new FrameBox
 			{
 				Parent = frame,
 				Visibility = showPreview,
 				Dock = DockStyle.Fill,
 				Margins = new Margins (10, 0, 0, 0),
 			};
+
+			var previewBox = new FrameBox
+			{
+				Parent = this.previewFrame,
+				Dock = DockStyle.Fill,
+			};
+
+			var toolbarBox = new FrameBox
+			{
+				Parent = this.previewFrame,
+				PreferredHeight = 24,
+				Dock = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			this.previewerController.CreateUI (previewBox, toolbarBox);
 
 			//	Rempli le panneau de gauche.
 			this.confirmationButtons.Clear ();
@@ -248,15 +265,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			this.pagesInfo = new StaticText ()
-			{
-				Parent = footer,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-				PreferredWidth = 100,
-				Dock = DockStyle.Right,
-				Margins = new Margins (0, 20, 0, 0),
-			};
-
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
 		}
@@ -280,7 +288,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.previewCheckButton.ActiveStateChanged += delegate
 			{
 				this.previewFrame.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
-				this.pagesInfo.Visibility = this.previewCheckButton.ActiveState == ActiveState.Yes;
 				this.UpdateWindowSize (this.optionsFrame.Visibility, this.printersFrame.Visibility, this.previewFrame.Visibility);
 				this.SetSettings (true, "ShowPreview", this.previewFrame.Visibility ? "Yes" : "No");
 			};
@@ -634,15 +641,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			if (this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None)
 			{
-				this.entityPrinter.IsPreview = true;
-				this.entityPrinter.BuildSections ();
-
-				this.previewFrame.EntityPrinter = this.entityPrinter;
-				this.previewFrame.CurrentPage = 0;
-				this.previewFrame.Invalidate ();  // pour forcer le dessin
-
-				int pageCount = this.entityPrinter.PageCount ();
-				this.pagesInfo.Text = string.Format ("{0} page{1}", pageCount.ToString (), (pageCount<=1)?"":"s");
+				this.previewerController.Update ();
 			}
 		}
 
@@ -734,6 +733,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
 		private readonly bool							isPreview;
 		private readonly EntityPrintingSettings			entityPrintingSettings;
+		private readonly Printers.PreviewerController	previewerController;
 
 		private Window									window;
 		private List<ConfirmationButton>				confirmationButtons;
@@ -741,11 +741,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private List<TextFieldCombo>					printerCombos;
 		private FrameBox								optionsFrame;
 		private FrameBox								printersFrame;
-		private Widgets.EntityPreviewer					previewFrame;
+		private FrameBox								previewFrame;
 		private CheckButton								showOptionsCheckButton;
 		private CheckButton								showPrintersCheckButton;
 		private CheckButton								previewCheckButton;
-		private StaticText								pagesInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;
 		private Dictionary<string, string>				settings;

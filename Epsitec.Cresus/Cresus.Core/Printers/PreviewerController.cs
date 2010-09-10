@@ -43,9 +43,12 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Crée l'interface dans deux boîtes, l'une pour le ou les aperçus et l'autre pour choisir
 			//	la page et le zoom.
+			this.previewBox = previewBox;
+			this.toolbarBox = toolbarBox;
+
 			this.previewFrame = new Scrollable
 			{
-				Parent = previewBox,
+				Parent = this.previewBox,
 				Dock = DockStyle.Fill,
 			};
 
@@ -57,7 +60,7 @@ namespace Epsitec.Cresus.Core.Printers
 			};
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
 				frame.PreferredWidth = 60;
 				frame.Dock = DockStyle.Left;
 
@@ -70,7 +73,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
 				frame.Margins = new Margins (-1, 0, 0, 0);
 				frame.Dock = DockStyle.Fill;
 
@@ -87,7 +90,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug2)
 			{
 				{
-					var frame = UIBuilder.CreateMiniToolbar (toolbarBox, 24);
+					var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
 					frame.PreferredWidth = 70;
 					frame.Margins = new Margins (1, 10, 0, 0);
 					frame.Dock = DockStyle.Right;
@@ -121,7 +124,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				{
-					var frame = UIBuilder.CreateMiniToolbar (toolbarBox, 24);
+					var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
 					frame.PreferredWidth = 70;
 					frame.Margins = new Margins (0, 0, 0, 0);
 					frame.Dock = DockStyle.Right;
@@ -158,7 +161,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
 				frame.Margins = new Margins (2, 0, 0, 0);
 				frame.Dock = DockStyle.Right;
 
@@ -277,13 +280,20 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Met à jour le ou les aperçus. Le nombre et pages et leurs contenus peuvent avoir
 			//	été changés.
-			this.entityPrinter.BuildSections ();
+			if (this.HasDocumentTypeSelected)
+			{
+				this.entityPrinter.BuildSections ();
+			}
+
 			this.UpdatePages ();
 		}
 
 
 		private void UpdatePages()
 		{
+			this.previewBox.Visibility = this.HasDocumentTypeSelected;
+			this.toolbarBox.Visibility = this.HasDocumentTypeSelected;
+
 			this.UpdateZoom ();
 			this.UpdatePreview ();
 			this.UpdateButtons ();
@@ -291,6 +301,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateZoom()
 		{
+			if (!this.HasDocumentTypeSelected)
+			{
+				return;
+			}
+
 			this.zoom18Button.ActiveState = this.currentZoom == 1.0/8.0 ? ActiveState.Yes : ActiveState.No;
 			this.zoom14Button.ActiveState = this.currentZoom == 1.0/4.0 ? ActiveState.Yes : ActiveState.No;
 			this.zoom11Button.ActiveState = this.currentZoom == 1       ? ActiveState.Yes : ActiveState.No;
@@ -300,6 +315,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdatePreview()
 		{
+			if (!this.HasDocumentTypeSelected)
+			{
+				return;
+			}
+
 			this.showedPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
 
 			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.entityPrinter.PageCount ());
@@ -369,6 +389,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void UpdateButtons()
 		{
+			if (!this.HasDocumentTypeSelected)
+			{
+				return;
+			}
+
 			int t = this.entityPrinter.PageCount ();
 			int p = this.currentPage+1;
 
@@ -525,8 +550,20 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private bool HasDocumentTypeSelected
+		{
+			get
+			{
+				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected != DocumentType.None;
+			}
+		}
+
+
 		private readonly IEnumerable<AbstractEntity>	entities;
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
+
+		private FrameBox								previewBox;
+		private FrameBox								toolbarBox;
 
 		private Scrollable								previewFrame;
 		private List<Widgets.EntityPreviewer>			pagePreviewers;

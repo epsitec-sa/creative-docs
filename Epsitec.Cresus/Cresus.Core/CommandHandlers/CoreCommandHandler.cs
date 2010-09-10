@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					using (var dialog = new Dialogs.PrinterListDialog (CoreProgram.Application))
+					using (var dialog = new Dialogs.PrinterUnitListDialog (CoreProgram.Application))
 					{
 						dialog.OpenDialog ();
 					}

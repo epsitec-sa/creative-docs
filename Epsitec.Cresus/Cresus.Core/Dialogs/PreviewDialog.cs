@@ -185,8 +185,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly CoreApplication				application;
 		private readonly IEnumerable<AbstractEntity>	entities;
 		private readonly Printers.AbstractEntityPrinter	entityPrinter;
-
-		private Printers.PreviewerController			previewerController;
+		private readonly Printers.PreviewerController	previewerController;
 
 		private FrameBox								footer;
 
