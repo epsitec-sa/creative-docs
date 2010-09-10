@@ -2,7 +2,7 @@ namespace Epsitec.Cresus.Database
 {
 
 
-	public enum DbConnexionStatus : int
+	public enum DbConnectionStatus : int
 	{
 
 

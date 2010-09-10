@@ -151,11 +151,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public DbConnexionManager				ConnexionManager
+		public DbConnectionManager				ConnectionManager
 		{
 			get
 			{
-				return this.connexionManager;
+				return this.connectionManager;
 			}
 		}
 		
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableLog ();
 				helper.CreateTableUid ();
 				helper.CreateTableLock ();
-				helper.CreateTableConnexion ();
+				helper.CreateTableConnection ();
 				
 				transaction.Commit ();
 			}
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnexion));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnection));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -2386,7 +2386,7 @@ namespace Epsitec.Cresus.Database
 				this.SetupLogger (transaction);
 				this.SetupUidManager ();
 				this.SetupLockManager ();
-				this.SetupConnexionManager ();
+				this.SetupConnectionManager ();
 
 				transaction.Commit ();
 			}
@@ -2416,10 +2416,10 @@ namespace Epsitec.Cresus.Database
 			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
 		}
 
-		private void SetupConnexionManager()
+		private void SetupConnectionManager()
 		{
-			this.connexionManager = new DbConnexionManager (System.TimeSpan.FromSeconds (30));
-			this.connexionManager.Attach (this, this.internalTables[Tags.TableConnexion]);
+			this.connectionManager = new DbConnectionManager (System.TimeSpan.FromSeconds (30));
+			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
 		}
 
 
@@ -2665,10 +2665,10 @@ namespace Epsitec.Cresus.Database
 					this.lockManager = null;
 				}
 
-				if (this.connexionManager != null)
+				if (this.connectionManager != null)
 				{
-					this.connexionManager.Detach ();
-					this.connexionManager = null;
+					this.connectionManager.Detach ();
+					this.connectionManager = null;
 				}
 				
 				if (this.abstraction != null)
@@ -2838,28 +2838,28 @@ namespace Epsitec.Cresus.Database
 						IsAutoIncremented = true,
 					},
 					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnexionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
 			}
 
-			public void CreateTableConnexion()
+			public void CreateTableConnection()
 			{
 				TypeHelper types = this.infrastructure.types;
 
-				DbTable table = new DbTable (Tags.TableConnexion);
+				DbTable table = new DbTable (Tags.TableConnection);
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnConnexionIdentity, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnexionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnexionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnexionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionIdentity, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
@@ -3159,7 +3159,7 @@ namespace Epsitec.Cresus.Database
 		private DbLogger						logger;
 		private DbUidManager					uidManager;
 		private DbLockManager					lockManager;
-		private DbConnexionManager				connexionManager;
+		private DbConnectionManager				connectionManager;
 
 		private Collections.DbTableList			internalTables = new Collections.DbTableList ();
 		private Collections.DbTypeDefList		internalTypes = new Collections.DbTypeDefList ();

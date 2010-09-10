@@ -22,18 +22,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void RequestLock(string lockName, long connexionId)
+		public void RequestLock(string lockName, long connectionId)
 		{
 			this.CheckIsAttached ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
-			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
+			connectionId.ThrowIf (c => c < 0, "connectionId cannot be lower than zero");
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				if (this.IsLockOwned (lockName))
 				{
-					if (this.GetLockConnexionId (lockName) != connexionId)
+					if (this.GetLockConnectionId (lockName) != connectionId)
 					{
 						throw new System.InvalidOperationException ("Cannot obtain lock because it is owned by another user.");
 					}
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					this.InsertLock (lockName, connexionId);
+					this.InsertLock (lockName, connectionId);
 				}
 
 				transaction.Commit ();
@@ -50,18 +50,18 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public void ReleaseLock(string lockName, long connexionId)
+		public void ReleaseLock(string lockName, long connectionId)
 		{
 			this.CheckIsAttached ();
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
-			connexionId.ThrowIf (c => c < 0, "connexionId cannot be lower than zero");
+			connectionId.ThrowIf (c => c < 0, "connectionId cannot be lower than zero");
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				if (this.IsLockOwned (lockName))
 				{
-					if (this.GetLockConnexionId (lockName) != connexionId)
+					if (this.GetLockConnectionId (lockName) != connectionId)
 					{
 						throw new System.InvalidOperationException ("Cannot release lock because it is owned by another user.");
 					}
@@ -81,16 +81,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private void InsertLock(string lockName, long connexionId)
+		private void InsertLock(string lockName, long connectionId)
 		{
 			SqlFieldList fields = new SqlFieldList ();
 
 			DbColumn columnLockName = this.DbTable.Columns[Tags.ColumnName];
-			DbColumn columnConnexionId = this.DbTable.Columns[Tags.ColumnConnexionId];
+			DbColumn columnConnectionId = this.DbTable.Columns[Tags.ColumnConnectionId];
 			DbColumn columnCounter = this.DbTable.Columns[Tags.ColumnCounter];
 
 			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnLockName, lockName));
-			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnexionId, connexionId));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnectionId, connectionId));
 			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounter, 0));
 
 			this.AddRow (fields);
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public long? GetLockConnexionId(string lockName)
+		public long? GetLockConnectionId(string lockName)
 		{
 			this.CheckIsAttached ();
 
@@ -168,16 +168,16 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				long? connexionId = null;
+				long? connectionId = null;
 								
 				if (this.IsLockOwned (lockName))
 				{
-					connexionId = (long) this.GetValue (lockName, Tags.ColumnConnexionId);
+					connectionId = (long) this.GetValue (lockName, Tags.ColumnConnectionId);
 				}
 
 				transaction.Commit ();
 
-				return connexionId;
+				return connectionId;
 			}
 		}
 
