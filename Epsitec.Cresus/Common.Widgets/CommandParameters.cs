@@ -1,4 +1,4 @@
-//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -7,7 +7,9 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// The <c>CommandParameters</c> class stores the default parameters associated
-	/// with the <see cref="Command"/> class.
+	/// with a <see cref="Command"/> and is used to configure the look and feel of
+	/// the associated widgets.
+	/// Well known parameters are "ButtonClass", "ButtonStyle" and "Level".
 	/// </summary>
 	public class CommandParameters : Dictionary<string, string>
 	{

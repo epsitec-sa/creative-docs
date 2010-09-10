@@ -175,7 +175,6 @@
     <Compile Include="CommandContextChain.cs" />
     <Compile Include="CommandState.cs" />
     <Compile Include="CloneView.cs" />
-    <Compile Include="CommandType.cs" />
     <Compile Include="ConfirmationButton.cs" />
     <Compile Include="ConfirmationStaticText.cs" />
     <Compile Include="CheckIconGrid.cs" />
@@ -234,9 +233,7 @@
     <Compile Include="PaintTextStyle.cs" />
     <Compile Include="Layouts\BaseLineMeasure.cs" />
     <Compile Include="Layouts\StackLayoutEngine.cs" />
-    <Compile Include="StructuredCommand.cs" />
     <Compile Include="Exceptions\InfiniteCommandLoopException.cs" />
-    <Compile Include="MultiCommand.cs" />
     <Compile Include="Exceptions\CommandLockedException.cs" />
     <Compile Include="Tools\MagnifierZoomView.cs" />
     <Compile Include="Tools\MagnifierDragSource.cs" />

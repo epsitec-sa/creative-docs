@@ -14,21 +14,22 @@ using System.Linq;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
-	/// en maintenant la synchronisation avec l'état des widgets associés.
+	/// The <c>Command</c> class represents a command which can be executed
+	/// by the application. The associated <see cref="CommandState"/> defines
+	/// if the command is enabled; there can be several states for one command.
 	/// </summary>
-	public class Command : DependencyObject, System.IEquatable<Command>, INamedType
+	public sealed class Command : DependencyObject, System.IEquatable<Command>, INamedType
 	{
-		protected Command()
+		private Command()
 		{
 		}
 
-		protected Command(string id)
+		private Command(string id)
 			: this (id, Resources.DefaultManager)
 		{
 		}
-		
-		protected Command(string id, ICaptionResolver manager)
+
+		private Command(string id, ICaptionResolver manager)
 			: this ()
 		{
 			if (string.IsNullOrEmpty (id))
@@ -39,18 +40,18 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (id, manager);
 		}
 
-		protected Command(string id, params Shortcut[] shortcuts)
+		private Command(string id, params Shortcut[] shortcuts)
 			: this (id)
 		{
 			this.Shortcuts.AddRange (shortcuts);
 		}
 
-		protected Command(Druid druid)
+		private Command(Druid druid)
 			: this (druid, Resources.DefaultManager)
 		{
 		}
 
-		protected Command(Druid druid, ICaptionResolver manager)
+		private Command(Druid druid, ICaptionResolver manager)
 			: this ()
 		{
 			string id = druid.ToResourceId ();
@@ -58,7 +59,7 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (id, manager);
 		}
 
-		protected Command(Caption caption, ICaptionResolver manager)
+		private Command(Caption caption, ICaptionResolver manager)
 			: this ()
 		{
 			this.uniqueId = -1;
@@ -87,14 +88,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.commandId;
-			}
-		}
-
-		public CommandType						CommandType
-		{
-			get
-			{
-				return Command.GetCommandType (this.caption);
 			}
 		}
 
@@ -190,30 +183,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool								HasMultiCommands
-		{
-			get
-			{
-				return MultiCommand.HasCommands (this.caption);
-			}
-		}
-
-		public Collections.CommandCollection	MultiCommands
-		{
-			get
-			{
-				return MultiCommand.GetCommands (this.caption);
-			}
-		}
-		
-		public StructuredType					StructuredType
-		{
-			get
-			{
-				return StructuredCommand.GetStructuredType (this.caption);
-			}
-		}
-		
 		public bool								IsReadOnly
 		{
 			get
@@ -274,14 +243,6 @@ namespace Epsitec.Common.Widgets
 			Command.SetStatefull (this.caption, value);
 		}
 
-		public void DefineCommandType(CommandType value)
-		{
-			this.EnsureWriteable ();
-			this.EnsureTemporary ();
-
-			Command.SetCommandType (this.caption, value);
-		}
-
 		public void DefineDefaultParameter(string value)
 		{
 			this.EnsureWriteable ();
@@ -306,34 +267,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void DefineMultiCommands(Collections.CommandCollection value)
-		{
-			this.EnsureWriteable ();
-			this.EnsureTemporary ();
-			
-			Collections.CommandCollection commands = MultiCommand.GetCommands (this.caption);
-
-			commands.Clear ();
-
-			if ((value != null) &&
-				(value.Count > 0))
-			{
-				commands.AddRange (value);
-			}
-		}
-
 		public CommandState CreateDefaultState(CommandContext context)
 		{
-			if (this.stateObjectType != null)
-			{
-				CommandState state = this.stateObjectType.CreateEmptyObject () as CommandState;
-				
-				this.InitializeDefaultState (state, context);
-				
-				return state;
-			}
-			
-			return null;
+			return new SimpleState ();
 		}
 
 		public string GetDescriptionWithShortcut()
@@ -647,30 +583,6 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.caption.Changed += this.HandleCaptionChanged;
-			this.caption.AddEventHandler (Command.CommandTypeProperty, this.HandleCommandTypeChanged);
-
-			this.InitializeCommandType ();
-		}
-
-		private void InitializeCommandType()
-		{
-			switch (this.CommandType)
-			{
-				case CommandType.Standard:
-					this.DefineStateObjectType (DependencyObjectType.FromType<Command.SimpleState> ());
-					break;
-				
-				case CommandType.Multiple:
-					this.DefineStateObjectType (DependencyObjectType.FromType<MultiCommand.MultiState> ());
-					break;
-				
-				case CommandType.Structured:
-					this.DefineStateObjectType (DependencyObjectType.FromType<StructuredCommand.StructuredCommandState> ());
-					break;
-				
-				default:
-					throw new System.InvalidOperationException (string.Format ("Unsupported command type: {0}", this.CommandType));
-			}
 		}
 
 		private void InitializeId(Druid druid, ICaptionResolver manager)
@@ -721,25 +633,7 @@ namespace Epsitec.Common.Widgets
 			CommandCache.Instance.InvalidateCommandCaption (this);
 		}
 
-		private void HandleCommandTypeChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			this.InitializeCommandType ();
-		}
-
 		#endregion
-
-		protected virtual void InitializeDefaultState(CommandState state, CommandContext context)
-		{
-			state.DefineCommand (this);
-			state.DefineCommandContext (context);
-			
-			TypeRosetta.SetTypeObject (state, this);
-		}
-
-		protected void DefineStateObjectType(DependencyObjectType type)
-		{
-			this.stateObjectType = type;
-		}
 
 		private void EnsureWriteable()
 		{
@@ -809,16 +703,6 @@ namespace Epsitec.Common.Widgets
 			return (string) obj.GetValue (Command.GroupProperty);
 		}
 
-		public static void SetCommandType(DependencyObject obj, CommandType value)
-		{
-			obj.SetValue (Command.CommandTypeProperty, value);
-		}
-
-		public static CommandType GetCommandType(DependencyObject obj)
-		{
-			return (CommandType) obj.GetValue (Command.CommandTypeProperty);
-		}
-
 		public static void SetDefaultParameter(DependencyObject obj, string value)
 		{
 			obj.SetValue (Command.DefaultParameterProperty, value);
@@ -861,21 +745,17 @@ namespace Epsitec.Common.Widgets
 
 
 
-		public static readonly DependencyProperty CaptionProperty		= DependencyProperty.RegisterReadOnly ("Caption", typeof (Caption), typeof (Command), new DependencyPropertyMetadata (Command.GetCaptionValue));
-		public static readonly DependencyProperty CommandIdProperty		= DependencyProperty.RegisterReadOnly ("CommandId", typeof (string), typeof (Command), new DependencyPropertyMetadata (Command.GetCommandIdValue));
+		public static readonly DependencyProperty CaptionProperty	= DependencyProperty<Command>.RegisterReadOnly (x => x.Caption, new DependencyPropertyMetadata (Command.GetCaptionValue));
+		public static readonly DependencyProperty CommandIdProperty	= DependencyProperty<Command>.RegisterReadOnly (x => x.CommandId, new DependencyPropertyMetadata (Command.GetCommandIdValue));
 		
-		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
-		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty CommandTypeProperty	= DependencyProperty.RegisterAttached ("CommandType", typeof (CommandType), typeof (Command), new DependencyPropertyMetadata (CommandType.Standard));
+		public static readonly DependencyProperty GroupProperty			   = DependencyProperty<Command>.RegisterAttached ("Group", typeof (string));
+		public static readonly DependencyProperty StatefullProperty		   = DependencyProperty<Command>.RegisterAttached ("Statefull", typeof (bool), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty<Command>.RegisterAttached ("HideWhenDisabled", typeof (bool), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty<Command>.RegisterAttached ("DefaultParameter", typeof (string));
 		
-		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty.RegisterAttached ("HideWhenDisabled", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
-		
-		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty.RegisterAttached ("DefaultParameter", typeof (string), typeof (Command));
-		
-		private static Dictionary<string, Command> commands = new Dictionary<string, Command> ();
+		private static readonly Dictionary<string, Command> commands = new Dictionary<string, Command> ();
 		private static int nextUniqueId;
 
-		private DependencyObjectType			stateObjectType;
 		private int								uniqueId;
 		private bool							frozen;
 		private bool							temporary;

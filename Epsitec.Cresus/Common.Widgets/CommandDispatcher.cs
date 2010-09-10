@@ -633,10 +633,6 @@ namespace Epsitec.Common.Widgets
 			CommandContext commandContext;
 			CommandState   commandState;
 
-			int loopCounter = 0;
-
-		again:
-			
 			if (commandObject.IsTemporary)
 			{
 				//	Don't fetch a state for a temporary command -- anyways, we should never
@@ -686,22 +682,6 @@ namespace Epsitec.Common.Widgets
 
 			if (handled == 0)
 			{
-				if (loopCounter++ > 10)
-				{
-					throw new Exceptions.InfiniteCommandLoopException ();
-				}
-				
-				if ((commandState != null) &&
-					(commandObject.CommandType == CommandType.Multiple))
-				{
-					commandObject = MultiCommand.GetSelectedCommand (commandState);
-
-					if (commandObject != null)
-					{
-						goto again;
-					}
-				}
-
 				System.Diagnostics.Debug.WriteLine ("Command '" + commandObject.CommandId + "' (" + commandObject.Name + ") not handled.");
 				return false;
 			}
