@@ -169,6 +169,40 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public System.DateTime GetConnexionSince(long connexionId)
+		{
+			this.CheckIsAttached ();
+
+			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
+
+			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionSince];
+
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForConnexionId (connexionId),
+			};
+
+			return (System.DateTime) this.GetRowValue (dbColumn, conditions);
+		}
+
+
+		public System.DateTime GetConnexionLastSeen(long connexionId)
+		{
+			this.CheckIsAttached ();
+
+			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
+
+			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionLastSeen];
+
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForConnexionId (connexionId),
+			};
+
+			return (System.DateTime) this.GetRowValue (dbColumn, conditions);
+		}
+
+
 		private SqlFunction CreateConditionForConnexionId(long connexionId)
 		{
 			return new SqlFunction
@@ -194,11 +228,11 @@ namespace Epsitec.Cresus.Database
 		private SqlFunction CreateConditionForTimeOut()
 		{
 			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			System.DateTime timeOutTime = databaseTime.Add (this.TimeOutValue);
+			System.DateTime timeOutTime = databaseTime - this.TimeOutValue;
 			
 			return new SqlFunction
 			(
-				SqlFunctionCode.CompareGreaterThan,
+				SqlFunctionCode.CompareLessThan,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnConnexionLastSeen].GetSqlName ()),
 				SqlField.CreateConstant (timeOutTime, DbRawType.DateTime)
 			);
