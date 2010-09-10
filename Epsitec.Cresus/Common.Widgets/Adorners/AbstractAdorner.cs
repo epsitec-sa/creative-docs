@@ -137,7 +137,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if (isMultilingual)
 			{
-#if false
+#if true
 				double d = 5;
 
 				path.MoveTo (bounds.BottomLeft);
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				path.LineTo (bounds.Left, bounds.Center.Y-d);
 				path.Close ();
 #endif
-#if true
+#if false
 				path.MoveTo (bounds.Left+3, bounds.Bottom);
 				path.LineTo (bounds.BottomRight);
 				path.LineTo (bounds.TopRight);
@@ -191,6 +191,9 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			return path;
 		}
+
+		public static double MultilingualLeftPadding = 0;
+		//?public static double MultilingualLeftPadding = 3;
 		
 		
 		#region IAdorner Members

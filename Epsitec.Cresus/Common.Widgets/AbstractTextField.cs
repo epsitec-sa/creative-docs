@@ -724,7 +724,7 @@ namespace Epsitec.Common.Widgets
 				double excess = System.Math.Max ((22-size.Height)/2, 0);
 				double x = System.Math.Max (1, AbstractTextField.FrameMargin-excess);
 				double y = System.Math.Max (0, AbstractTextField.FrameMargin-excess);
-				double m = this.IsMultilingualText ? 3 : 0;
+				double m = this.IsMultilingualText ? Adorners.AbstractAdorner.MultilingualLeftPadding : 0;
 				padding = padding + new Drawing.Margins (x+m, x, y, y);
 			}
 
