@@ -97,6 +97,45 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void CloseConnectionInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (2));
+
+				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+
+				long connectionId1 = manager.OpenConnection ("connection1");
+
+				manager.CloseConnection (connectionId1);
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.CloseConnection (connectionId1)
+				);
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.CloseConnection (1)
+				);
+
+				long connectionId2 = manager.OpenConnection ("connection2");
+
+				System.Threading.Thread.Sleep (3000);
+
+				manager.InterruptDeadConnections ();
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.CloseConnection (connectionId2)
+				);
+
+				manager.Detach ();
+			}
+		}
+
+
+		[TestMethod]
 		public void GetConnectionIdentityArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -112,6 +151,21 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void GetConnectionIdentityInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.GetConnectionIdentity (1)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void GetConnectionStatusArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -121,6 +175,21 @@ namespace Cresus.Database.UnitTests
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
 					() => manager.GetConnectionStatus (-1)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetConnectionStatusInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.GetConnectionStatus (1)
 				);
 			}
 		}
@@ -197,6 +266,44 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void KeepConnectionAliveInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (2));
+
+				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+
+				long connectionId1 = manager.OpenConnection ("connection1");
+
+				manager.CloseConnection (connectionId1);
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.KeepConnectionAlive (connectionId1)
+				);
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.KeepConnectionAlive (1)
+				);
+				long connectionId2 = manager.OpenConnection ("connection2");
+
+				System.Threading.Thread.Sleep (3000);
+
+				manager.InterruptDeadConnections ();
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.KeepConnectionAlive (connectionId2)
+				);
+
+				manager.Detach ();
+			}
+		}
+
+
+		[TestMethod]
 		public void KeepConnectionAlive()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -246,6 +353,21 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void GetConnectionSinceInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.GetConnectionSince (1)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void GetConnectionLastSeenArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -255,6 +377,21 @@ namespace Cresus.Database.UnitTests
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
 					() => manager.GetConnectionLastSeen (-1)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetConnectionLastSeenInvalidBehavior()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = dbInfrastructure.ConnectionManager;
+
+				ExceptionAssert.Throw<System.InvalidOperationException>
+				(
+					() => manager.GetConnectionLastSeen (1)
 				);
 			}
 		}
