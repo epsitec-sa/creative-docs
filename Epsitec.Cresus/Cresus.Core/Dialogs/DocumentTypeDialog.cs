@@ -375,34 +375,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				int tabIndex = 0;
 
-				foreach (var option in documentType.DocumentOptions)
+				foreach (var documentOption in documentType.DocumentOptions)
 				{
-					if (option.IsTitle)
+					if (documentOption.IsTitle)
 					{
 						var title = new StaticText
 						{
 							Parent = this.optionsFrame,
-							Text = option.Title,
+							Text = documentOption.Title,
 							Dock = DockStyle.Top,
 							Margins = new Margins (0, 0, 10, 5),
 						};
 					}
-					else if (option.IsMargin)
+					else if (documentOption.IsMargin)
 					{
 						var margin = new FrameBox
 						{
 							Parent = this.optionsFrame,
-							PreferredHeight = option.Height,
+							PreferredHeight = documentOption.Height,
 							Dock = DockStyle.Top,
 						};
 					}
 					else
 					{
-						if (string.IsNullOrEmpty (option.RadioName))
+						if (string.IsNullOrEmpty (documentOption.RadioName))
 						{
-							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
+							ActiveState state = documentOption.DefautState ? ActiveState.Yes : ActiveState.No;
 
-							string settings = this.GetSettings (false, option.Name);
+							string settings = this.GetSettings (false, DocumentTypeDefinition.OptionToString (documentOption.Option));
 							if (!string.IsNullOrEmpty (settings))
 							{
 								if (settings == "No")
@@ -419,8 +419,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 							var check = new CheckButton
 							{
 								Parent = this.optionsFrame,
-								Name = option.Name,
-								Text = option.Description,
+								Name = DocumentTypeDefinition.OptionToString (documentOption.Option),
+								Text = documentOption.Description,
 								ActiveState = state,
 								Dock = DockStyle.Top,
 								AutoToggle = false,
@@ -449,20 +449,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 						}
 						else
 						{
-							ActiveState state = option.DefautState ? ActiveState.Yes : ActiveState.No;
+							ActiveState state = documentOption.DefautState ? ActiveState.Yes : ActiveState.No;
 
-							string settings = this.GetSettings (false, option.RadioName);
+							string settings = this.GetSettings (false, documentOption.RadioName);
 							if (!string.IsNullOrEmpty (settings))
 							{
-								state = (settings == option.Name) ? ActiveState.Yes : ActiveState.No;
+								state = (settings == DocumentTypeDefinition.OptionToString (documentOption.Option)) ? ActiveState.Yes : ActiveState.No;
 							}
 
 							var radio = new RadioButton
 							{
 								Parent = this.optionsFrame,
-								Name = option.Name,
-								Group = option.RadioName,
-								Text = option.Description,
+								Name = DocumentTypeDefinition.OptionToString (documentOption.Option),
+								Group = documentOption.RadioName,
+								Text = documentOption.Description,
 								ActiveState = state,
 								Dock = DockStyle.Top,
 								AutoToggle = false,
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 							radio.Clicked += delegate
 							{
 								this.SetSettings (false, radio.Group, radio.Name);
-								this.SetRadio (radio.Name);
+								this.SetRadio (DocumentTypeDefinition.StringToOption (radio.Name));
 								this.UpdatePreview ();
 							};
 
@@ -485,24 +485,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateSelectedOptions ();
 		}
 
-		private void SetRadio(string name)
+		private void SetRadio(DocumentOption option)
 		{
 			var documentType = this.GetDocumentType (this.entityPrintingSettings.DocumentTypeSelected);
 
 			string radioName = null;
-			var documentOption = this.GetDocumentOption (documentType, name);
-			if (documentOption != null)
+			var currentDocumentOption = this.GetDocumentOption (documentType, option);
+			if (currentDocumentOption != null)
 			{
-				radioName = documentOption.RadioName;
+				radioName = currentDocumentOption.RadioName;
 			}
 
 			foreach (var button in this.optionButtons)
 			{
-				var option = this.GetDocumentOption (documentType, button.Name);
+				var documentOption = this.GetDocumentOption (documentType, DocumentTypeDefinition.StringToOption (button.Name));
 
-				if (option.RadioName == radioName)
+				if (documentOption.RadioName == radioName)
 				{
-					if (option.Name == name)
+					if (documentOption.Option == option)
 					{
 						button.ActiveState = ActiveState.Yes;
 					}
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (button.ActiveState == ActiveState.Yes)
 				{
-					this.entityPrintingSettings.DocumentOptionsSelected.Add (button.Name);
+					this.entityPrintingSettings.DocumentOptionsSelected.Add (DocumentTypeDefinition.StringToOption (button.Name));
 				}
 			}
 		}
@@ -646,9 +646,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private DocumentOptionDefinition GetDocumentOption(DocumentTypeDefinition documentType, string name)
+		private DocumentOptionDefinition GetDocumentOption(DocumentTypeDefinition documentType, DocumentOption option)
 		{
-			return documentType.DocumentOptions.Where (x => x.Name == name).FirstOrDefault ();
+			return documentType.DocumentOptions.Where (x => x.Option == option).FirstOrDefault ();
 		}
 
 		private DocumentTypeDefinition GetDocumentType(DocumentType type)

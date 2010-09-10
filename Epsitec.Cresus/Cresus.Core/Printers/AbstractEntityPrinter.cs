@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					if (option.DefautState)
 					{
-						this.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Name);
+						this.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Option);
 					}
 				}
 			}
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public virtual void PrintCurrentPage(IPaintPort port)
 		{
-			if (this.EntityPrintingSettings.HasDocumentOption ("Generic.Specimen"))
+			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Specimen))
 			{
 				this.PaintSpecimen(port);
 			}

@@ -30,11 +30,11 @@ namespace Epsitec.Cresus.Core.Printers
 			this.height   = height;
 		}
 
-		public DocumentOptionDefinition(string name, string radioName, string description, bool defautState=false)
+		public DocumentOptionDefinition(DocumentOption option, string radioName, string description, bool defautState=false)
 		{
 			this.isMargin    = false;
 			this.isTitle     = false;
-			this.name        = name;
+			this.option      = option;
 			this.radioName   = radioName;
 			this.description = description;
 			this.defautState = defautState;
@@ -73,11 +73,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public string Name
+		public DocumentOption Option
 		{
 			get
 			{
-				return this.name;
+				return this.option;
 			}
 		}
 
@@ -106,13 +106,13 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly bool		isTitle;
-		private readonly bool		isMargin;
-		private readonly double		height;
-		private readonly string		title;
-		private readonly string		name;
-		private readonly string		radioName;
-		private readonly string		description;
-		private readonly bool		defautState;
+		private readonly bool				isTitle;
+		private readonly bool				isMargin;
+		private readonly double				height;
+		private readonly string				title;
+		private readonly DocumentOption		option;
+		private readonly string				radioName;
+		private readonly string				description;
+		private readonly bool				defautState;
 	}
 }

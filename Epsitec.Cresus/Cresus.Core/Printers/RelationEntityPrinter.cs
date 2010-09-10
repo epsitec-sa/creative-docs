@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Core.Printers
 
 			type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
 			type.DocumentOptions.Add (new DocumentOptionDefinition ("Données à inclure :"));
-			type.DocumentOptions.Add (new DocumentOptionDefinition ("Mail",    null, "Adresses",   true));
-			type.DocumentOptions.Add (new DocumentOptionDefinition ("Telecom", null, "Téléphones", true));
-			type.DocumentOptions.Add (new DocumentOptionDefinition ("Uri",     null, "Emails",     true));
+			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationMail,    null, "Adresses",   true));
+			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationTelecom, null, "Téléphones", true));
+			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationUri,     null, "Emails",     true));
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
 			type.AddDocumentOptionSpecimen ();
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.EntityPrintingSettings.HasDocumentOption ("Orientation.Horizontal"))
+				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.OrientationHorizontal))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -80,17 +80,17 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildTitle ();
 				this.BuildSummary ();
 
-				if (this.EntityPrintingSettings.HasDocumentOption ("Mail"))
+				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationMail))
 				{
 					this.BuildContacts (this.BuildMailContacts);
 				}
 
-				if (this.EntityPrintingSettings.HasDocumentOption ("Telecom"))
+				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationTelecom))
 				{
 					this.BuildContacts (this.BuildTelecomContacts);
 				}
 
-				if (this.EntityPrintingSettings.HasDocumentOption ("Uri"))
+				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationUri))
 				{
 					this.BuildContacts (this.BuildUriContacts);
 				}
