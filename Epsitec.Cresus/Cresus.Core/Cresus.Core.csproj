@@ -151,7 +151,7 @@
     <Compile Include="Data\AffairRepository.cs" />
     <Compile Include="Data\DocumentRepository.cs" />
     <Compile Include="Data\Repository`1.cs" />
-    <Compile Include="Dialogs\PrinterListDialog.cs" />
+    <Compile Include="Dialogs\PrinterUnitListDialog.cs" />
     <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />

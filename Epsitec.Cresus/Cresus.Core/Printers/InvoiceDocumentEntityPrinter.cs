@@ -274,16 +274,19 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
-			var imageBand = new ImageBand ();
-			imageBand.Load ("logo-cresus.png");
-			imageBand.BuildSections (60, 50, 50, 50);
-			this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.PageSize.Height-10-50, 60, 50));
+			if (this.EntityPrintingSettings.HasDocumentOption ("Logo"))
+			{
+				var imageBand = new ImageBand ();
+				imageBand.Load ("logo-cresus.png");
+				imageBand.BuildSections (60, 50, 50, 50);
+				this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.PageSize.Height-10-50, 60, 50));
 
-			var textBand = new TextBand ();
-			textBand.Text = FormattedText.Concat ("<b>", "Les logiciels de gestion", "</b>");
-			textBand.Font = font;
-			textBand.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.PageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+				var textBand = new TextBand ();
+				textBand.Text = FormattedText.Concat ("<b>", "Les logiciels de gestion", "</b>");
+				textBand.Font = font;
+				textBand.FontSize = 5.0;
+				this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.PageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+			}
 
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = InvoiceDocumentHelper.GetMailContact (this.entity);

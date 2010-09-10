@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddDocumentOptionInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
+			this.options.Add (new DocumentOptionDefinition ("Logo", null, "Imprime le logo de l'entreprise", true));
+
 			if (this.Type == DocumentType.BL                   ||
 				this.Type == DocumentType.InvoiceWithInsideESR ||
 				this.Type == DocumentType.InvoiceWithOutsideESR||
