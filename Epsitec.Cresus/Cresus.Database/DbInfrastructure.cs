@@ -2856,7 +2856,7 @@ namespace Epsitec.Cresus.Database
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnConnectionIdentity, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
@@ -3010,7 +3010,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
-
+			public DbTypeDef					DefaultString
+			{
+				get
+				{
+					return this.defaultString;
+				}
+			}
+			
 			public void RegisterTypes()
 			{
 				this.InitializeNumTypes ();
@@ -3039,6 +3046,7 @@ namespace Epsitec.Cresus.Database
 
 				this.defaultInteger		   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (IntegerType.Default).Name);
 				this.defaultLongInteger	   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (LongIntegerType.Default).Name);
+				this.defaultString		   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (StringType.Default).Name);
 				
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
@@ -3056,6 +3064,7 @@ namespace Epsitec.Cresus.Database
 
 				this.infrastructure.internalTypes.Add (this.defaultInteger);
 				this.infrastructure.internalTypes.Add (this.defaultLongInteger);
+				this.infrastructure.internalTypes.Add (this.defaultString);
 				
 				this.AssertAllTypesReady ();
 			}
@@ -3101,9 +3110,11 @@ namespace Epsitec.Cresus.Database
 			{
 				this.defaultInteger		= new DbTypeDef (IntegerType.Default);
 				this.defaultLongInteger = new DbTypeDef (LongIntegerType.Default);
+				this.defaultString = new DbTypeDef (StringType.Default);
 
 				this.infrastructure.internalTypes.Add (this.defaultInteger);
 				this.infrastructure.internalTypes.Add (this.defaultLongInteger);
+				this.infrastructure.internalTypes.Add (this.defaultString);
 			}
 
 			private void AssertAllTypesReady()
@@ -3124,6 +3135,7 @@ namespace Epsitec.Cresus.Database
 				
 				System.Diagnostics.Debug.Assert (this.defaultInteger != null);
 				System.Diagnostics.Debug.Assert (this.defaultLongInteger != null);
+				System.Diagnostics.Debug.Assert (this.defaultString != null);
 			}
 
 			private DbInfrastructure			infrastructure;
@@ -3144,6 +3156,7 @@ namespace Epsitec.Cresus.Database
 
 			private DbTypeDef					defaultInteger;
 			private DbTypeDef					defaultLongInteger;
+			private DbTypeDef					defaultString;
 		}
 		
 		#endregion
