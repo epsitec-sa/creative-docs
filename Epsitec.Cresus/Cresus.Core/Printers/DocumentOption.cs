@@ -11,19 +11,19 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		None,
 
-		Logo,
-		Delayed,
+		HeaderLogo,
+		ArticleDelayed,
 		ArticleId,
 
-		Frameless,
-		WithLine,
-		WithFrame,
+		LayoutFrameless,
+		LayoutWithLine,
+		LayoutWithFrame,
 
 		ColumnsOrderQD,
 		ColumnsOrderDQ,
 
-		ESR,
-		ES,
+		InvoiceWithESR,
+		InvoiceWithES,
 
 		ESRFacsimile,
 		Specimen,
