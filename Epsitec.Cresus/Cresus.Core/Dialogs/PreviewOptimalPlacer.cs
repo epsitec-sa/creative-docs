@@ -27,10 +27,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class PreviewOptimalPlacer
 	{
-		public PreviewOptimalPlacer(List<Widgets.EntityPreviewer> pagePreviews, Size pageSize)
+		public PreviewOptimalPlacer(List<Widgets.EntityPreviewer> pagePreviews)
 		{
 			this.pagePreviews = pagePreviews;
-			this.pageSize     = pageSize;
+		}
+
+		public Size PageSize
+		{
+			get;
+			set;
 		}
 
 		public Size AvailableSize
@@ -92,7 +97,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			pageSize = this.ComputePreviewSize (bestNx, bestNy, spacing);
 
 			int index = 0;
-			double posY = this.AvailableSize.Height;
+			double posY = pageSize.Height*bestNy + spacing*(bestNy-1);
 
 			for (int y=0; y<bestNy; y++)
 			{
@@ -132,8 +137,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			double width  = size.Width;
 			double height = size.Height;
 
-			double virtualWidth  = System.Math.Floor (height * this.pageSize.Width  / this.pageSize.Height);
-			double virtualHeight = System.Math.Floor (width  * this.pageSize.Height / this.pageSize.Width);
+			double virtualWidth  = System.Math.Floor (height * this.PageSize.Width  / this.PageSize.Height);
+			double virtualHeight = System.Math.Floor (width  * this.PageSize.Height / this.PageSize.Width);
 
 			if (width < virtualWidth)
 			{
@@ -149,6 +154,5 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 		private readonly List<Widgets.EntityPreviewer>	pagePreviews;
-		private readonly Size							pageSize;
 	}
 }
