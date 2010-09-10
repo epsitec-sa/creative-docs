@@ -792,16 +792,8 @@ namespace Epsitec.Common.Document
 
 		static public Command CreateStructuredCommandWithName(string commandName)
 		{
-			Command command = Command.Find(commandName);
-
-			if (command == null || command.CommandType == CommandType.Standard)
-			{
-				command = Command.Get(commandName);
-				Command.SetCommandType(command.Caption, CommandType.Structured);
-				
-				Types.StructuredType type = command.StructuredType;
-				type.Fields.Add("Name", Types.StringType.Default);
-			}
+			Command command = StructuredCommand.GetStructuredCommand (commandName);
+			command.EnsureNameField ();
 
 			return command;
 		}

@@ -1,24 +1,62 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
-using Epsitec.Common.Widgets.Collections;
-using Epsitec.Common.Types;
-
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.StructuredCommand))]
+[assembly: DependencyClass (typeof (StructuredCommand))]
 
 namespace Epsitec.Common.Widgets
 {
-	public class StructuredCommand : DependencyObject
+	public static class StructuredCommand
 	{
-		private StructuredCommand()
+		public static Command GetStructuredCommand(string commandName)
 		{
+			Command command = Command.Find (commandName);
+
+			if ((command == null) || 
+				(command.CommandType == CommandType.Standard))
+			{
+				command = Command.Get (commandName);
+				Command.SetCommandType (command.Caption, CommandType.Structured);
+
+				Types.StructuredType type = command.StructuredType;
+				type.Fields.Add ("Name", Types.StringType.Default);
+			}
+
+			return command;
 		}
+
 		
+		public static string GetNameFieldValue(this CommandState commandState)
+		{
+			return StructuredCommand.GetFieldValue (commandState, "Name") as string;
+		}
+
+		public static void SetNameFieldValue(this CommandState commandState, string value)
+		{
+			StructuredCommand.SetFieldValue (commandState, "Name", value);
+		}
+
+		
+		public static object GetFieldValue(CommandState commandState, string id)
+		{
+			StructuredCommandState state = commandState as StructuredCommandState;
+			IStructuredData data = state as IStructuredData;
+
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (data != null);
+			System.Diagnostics.Debug.Assert (id != null);
+
+			return data.GetValue (id);
+		}
+
 		public static void SetFieldValue(CommandState commandState, string id, object value)
 		{
-			StructuredState state = commandState as StructuredState;
+			StructuredCommandState state = commandState as StructuredCommandState;
 			IStructuredData data = state as IStructuredData;
 
 			System.Diagnostics.Debug.Assert (state != null);
@@ -28,21 +66,37 @@ namespace Epsitec.Common.Widgets
 			data.SetValue (id, value);
 		}
 
-		public static object GetFieldValue(CommandState commandState, string id)
+
+		public static void EnsureNameField(this Command command)
 		{
-			StructuredState state = commandState as StructuredState;
-			IStructuredData data = state as IStructuredData;
+			Types.StructuredType type = command.StructuredType;
 
-			System.Diagnostics.Debug.Assert (state != null);
-			System.Diagnostics.Debug.Assert (data != null);
-			System.Diagnostics.Debug.Assert (id != null);
-
-			return data.GetValue (id);
+			if (type.Fields.ContainsKey ("Name") == false)
+			{
+				type.Fields.Add ("Name", Types.StringType.Default);
+			}
 		}
-	
-		internal class StructuredState : CommandState, IStructuredData
+
+		public static bool ContainsNameField(this Command command)
 		{
-			public StructuredState()
+			if (command.CommandType == CommandType.Structured)
+			{
+				INamedType typeObject = command.StructuredType.GetField ("Name").Type;
+
+				return typeObject is Types.StringType;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
+		#region StructuredState Class
+
+		internal class StructuredCommandState : CommandState, IStructuredData
+		{
+			public StructuredCommandState()
 			{
 			}
 
@@ -55,12 +109,12 @@ namespace Epsitec.Common.Widgets
 
 			#region IStructuredData Members
 
-			void IStructuredData.AttachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.AttachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
 				this.data.AttachListener (id, handler);
 			}
 
-			void IStructuredData.DetachListener(string id, Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs> handler)
+			void IStructuredData.DetachListener(string id, EventHandler<DependencyPropertyChangedEventArgs> handler)
 			{
 				this.data.DetachListener (id, handler);
 			}
@@ -90,7 +144,9 @@ namespace Epsitec.Common.Widgets
 			private Types.StructuredData data;
 		}
 
-		public static StructuredType GetStructuredType(DependencyObject obj)
+		#endregion
+
+		internal static StructuredType GetStructuredType(DependencyObject obj)
 		{
 			return obj.GetValue (StructuredCommand.StructuredTypeProperty) as StructuredType;
 		}

@@ -3255,6 +3255,11 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void QueueCommandForExecution(Command command, CommandState state)
 		{
+			if (command.ContainsNameField ())
+			{
+				state.SetNameFieldValue (this.Name);
+			}
+
 			Window window = this.Window;
 
 			if (window != null)

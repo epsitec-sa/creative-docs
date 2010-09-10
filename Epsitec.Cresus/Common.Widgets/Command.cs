@@ -654,24 +654,22 @@ namespace Epsitec.Common.Widgets
 
 		private void InitializeCommandType()
 		{
-			CommandType type = this.CommandType;
-			
-			switch (type)
+			switch (this.CommandType)
 			{
 				case CommandType.Standard:
-					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (Command.SimpleState)));
+					this.DefineStateObjectType (DependencyObjectType.FromType<Command.SimpleState> ());
 					break;
 				
 				case CommandType.Multiple:
-					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (MultiCommand.MultiState)));
+					this.DefineStateObjectType (DependencyObjectType.FromType<MultiCommand.MultiState> ());
 					break;
 				
 				case CommandType.Structured:
-					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (StructuredCommand.StructuredState)));
+					this.DefineStateObjectType (DependencyObjectType.FromType<StructuredCommand.StructuredCommandState> ());
 					break;
 				
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unsupported command type: {0}", type));
+					throw new System.InvalidOperationException (string.Format ("Unsupported command type: {0}", this.CommandType));
 			}
 		}
 
