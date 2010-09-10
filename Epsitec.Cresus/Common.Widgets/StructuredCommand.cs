@@ -13,35 +13,6 @@ namespace Epsitec.Common.Widgets
 {
 	public static class StructuredCommand
 	{
-		public static Command GetStructuredCommand(string commandName)
-		{
-			Command command = Command.Find (commandName);
-
-			if ((command == null) || 
-				(command.CommandType == CommandType.Standard))
-			{
-				command = Command.Get (commandName);
-				Command.SetCommandType (command.Caption, CommandType.Structured);
-
-				Types.StructuredType type = command.StructuredType;
-				type.Fields.Add ("Name", Types.StringType.Default);
-			}
-
-			return command;
-		}
-
-		
-		public static string GetNameFieldValue(this CommandState commandState)
-		{
-			return StructuredCommand.GetFieldValue (commandState, "Name") as string;
-		}
-
-		public static void SetNameFieldValue(this CommandState commandState, string value)
-		{
-			StructuredCommand.SetFieldValue (commandState, "Name", value);
-		}
-
-		
 		public static object GetFieldValue(CommandState commandState, string id)
 		{
 			StructuredCommandState state = commandState as StructuredCommandState;
@@ -65,32 +36,6 @@ namespace Epsitec.Common.Widgets
 
 			data.SetValue (id, value);
 		}
-
-
-		public static void EnsureNameField(this Command command)
-		{
-			Types.StructuredType type = command.StructuredType;
-
-			if (type.Fields.ContainsKey ("Name") == false)
-			{
-				type.Fields.Add ("Name", Types.StringType.Default);
-			}
-		}
-
-		public static bool ContainsNameField(this Command command)
-		{
-			if (command.CommandType == CommandType.Structured)
-			{
-				INamedType typeObject = command.StructuredType.GetField ("Name").Type;
-
-				return typeObject is Types.StringType;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
 
 		#region StructuredState Class
 

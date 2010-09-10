@@ -1011,7 +1011,7 @@ namespace Epsitec.Common.Designer
 		[Command("UndoRedoListDo")]
 		void CommandUndoRedoListDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string value = e.CommandState.GetNameFieldValue ();
+			string value = e.CommandState.AdvancedState;
 			int i = System.Convert.ToInt32(value);
 			this.UndoRedoMenuGoto(i);
 		}
@@ -1031,7 +1031,7 @@ namespace Epsitec.Common.Designer
 		[Command ("LocatorListDo")]
 		void CommandLocatorListDo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string value = e.CommandState.GetNameFieldValue ();
+			string value = e.CommandState.AdvancedState;
 			int i = System.Convert.ToInt32(value);
 			this.LocatorMenuGoto(i);
 		}
@@ -1063,7 +1063,7 @@ namespace Epsitec.Common.Designer
 		[Command("ZoomChange")]
 		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string value = e.CommandState.GetNameFieldValue ();
+			string value = e.CommandState.AdvancedState;
 			double zoom = System.Convert.ToDouble(value);
 
 			Module module = this.CurrentModule;

@@ -792,10 +792,7 @@ namespace Epsitec.Common.Document
 
 		static public Command CreateStructuredCommandWithName(string commandName)
 		{
-			Command command = StructuredCommand.GetStructuredCommand (commandName);
-			command.EnsureNameField ();
-
-			return command;
+			return null;
 		}
 		
 		static public string FullName(string filename, bool dirtySerialize)
