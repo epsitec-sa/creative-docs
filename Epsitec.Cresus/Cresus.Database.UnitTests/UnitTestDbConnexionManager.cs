@@ -147,6 +147,41 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void ConnexionExistsArgumentCheck()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnexionManager manager = dbInfrastructure.ConnexionManager;
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => manager.ConnexionExists (-1)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void ConnexionExists()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnexionManager manager = dbInfrastructure.ConnexionManager;
+
+				Assert.IsFalse (manager.ConnexionExists (0));
+
+				long connexionId = manager.OpenConnexion ("connexion");
+
+				Assert.IsTrue (manager.ConnexionExists (connexionId));
+
+				manager.CloseConnexion (connexionId);
+
+				Assert.IsTrue (manager.ConnexionExists (connexionId));
+			}
+		}
+
+
+		[TestMethod]
 		public void KeepConnexionAliveArgumentCheck()
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
@@ -249,7 +284,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (1000);
 
-				manager.InterruptDeadConnexions ();
+				Assert.AreEqual (true, manager.InterruptDeadConnexions ());
 
 				Assert.AreEqual (DbConnexionStatus.Closed, manager.GetConnexionStatus (connexionId1));
 				Assert.AreEqual (DbConnexionStatus.Opened, manager.GetConnexionStatus (connexionId2));
