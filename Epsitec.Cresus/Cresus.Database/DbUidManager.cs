@@ -70,9 +70,7 @@ namespace Epsitec.Cresus.Database
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
 				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
 
-				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fields);
-
-				this.DbInfrastructure.ExecuteSilent (transaction);
+				this.AddRow (fields);
 
 				transaction.Commit ();
 			}
@@ -107,9 +105,7 @@ namespace Epsitec.Cresus.Database
 					this.CreateConditionForSlot (slot),
 				};
 
-				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), conditions);
-
-				this.DbInfrastructure.ExecuteSilent (transaction);
+				this.RemoveRow (conditions);
 
 				transaction.Commit ();
 			}
@@ -134,27 +130,15 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				SqlSelect query = new SqlSelect ();
+				SqlFieldList conditions = new SqlFieldList ();
+				conditions.Add (this.CreateConditionForName (name));
+				conditions.Add (this.CreateConditionForSlot (slot));
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
-				query.Fields.Add
-				(
-					SqlField.CreateAggregate
-					(
-						SqlAggregateFunction.Count,
-						SqlField.CreateName (Tags.TableUid, Tags.ColumnId)
-					)
-				);
-				query.Conditions.Add (this.CreateConditionForName (name));
-				query.Conditions.Add (this.CreateConditionForSlot (slot));
-
-				transaction.SqlBuilder.SelectData (query);
-
-				object value = this.DbInfrastructure.ExecuteScalar (transaction);
+				bool exists = this.RowExists (conditions);
 
 				transaction.Commit ();
 
-				return (value != null) && (((int) value) > 0);
+				return exists;
 			}
 		}
 
@@ -315,23 +299,15 @@ namespace Epsitec.Cresus.Database
 		/// <exception cref="System.Exception">If the counter is invalid.</exception>
 		private long GetValue(string counterName, int slot, string valueName)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			DbColumn column = this.DbTable.Columns[valueName];
+			
+			SqlFieldList conditions = new SqlFieldList ()
 			{
-				SqlSelect query = new SqlSelect ();
+				this.CreateConditionForName (counterName),
+				this.CreateConditionForSlot (slot),
+			};
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
-				query.Fields.Add (valueName, SqlField.CreateName (Tags.TableUid, valueName));
-				query.Conditions.Add (this.CreateConditionForName (counterName));
-				query.Conditions.Add (this.CreateConditionForSlot (slot));
-
-				transaction.SqlBuilder.SelectData (query);
-
-				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
-
-				transaction.Commit ();
-
-				return (long) table.Rows[0][valueName];
-			}
+			return (long) this.GetRowValue (column, conditions);
 		}
 
 
@@ -344,27 +320,20 @@ namespace Epsitec.Cresus.Database
 		/// <param name="value">The value to use.</param>
 		private void SetValue(string counterName, int slot, string valueName, long value)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			DbColumn column = this.DbTable.Columns[valueName];
+
+			SqlFieldList fields = new SqlFieldList ()
 			{
-				DbColumn column = this.DbTable.Columns[valueName];
+				this.DbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
+			};
 
-				SqlFieldList fields = new SqlFieldList ()
-				{
-					this.DbInfrastructure.CreateSqlFieldFromAdoValue (column, value)
-				};
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForName (counterName),
+				this.CreateConditionForSlot (slot),
+			};
 
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForName (counterName),
-					this.CreateConditionForSlot (slot),
-				};
-
-				transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
-				
-				this.DbInfrastructure.ExecuteNonQuery (transaction);
-
-				transaction.Commit ();
-			}
+			this.SetRowValue (fields, conditions);
 		}
 
 
