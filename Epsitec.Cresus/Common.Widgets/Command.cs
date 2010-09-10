@@ -269,7 +269,12 @@ namespace Epsitec.Common.Widgets
 
 		public CommandState CreateDefaultState(CommandContext context)
 		{
-			return new SimpleState ();
+			CommandState state = new SimpleState ();
+
+			state.DefineCommand (this);
+			state.DefineCommandContext (context);
+			
+			return state;
 		}
 
 		public string GetDescriptionWithShortcut()
@@ -666,13 +671,6 @@ namespace Epsitec.Common.Widgets
 		public static string JoinGroupNames(params string[] groups)
 		{
 			return string.Join ("|", groups);
-		}
-
-		public static CommandState CreateSimpleState(Command command)
-		{
-			CommandState state = new SimpleState ();
-			state.DefineCommand (command);
-			return state;
 		}
 
 		
