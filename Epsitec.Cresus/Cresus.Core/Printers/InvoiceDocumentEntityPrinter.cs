@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithInsideESR)
 				{
-					return new Margins (20, 10, 20+h*2, h+10+AbstractEsrBand.DefautlSize.Height);
+					return new Margins (20, 10, 20+h*2, h+InvoiceDocumentEntityPrinter.marginBeforeEsr+AbstractEsrBand.DefautlSize.Height);
 				}
 				else
 				{
@@ -1342,7 +1342,7 @@ namespace Epsitec.Cresus.Core.Printers
 			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition < bounds.Top)
+				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentEntityPrinter.marginBeforeEsr < bounds.Top)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture
 				//	et le BV sur une seule page !
@@ -1497,6 +1497,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private static readonly Font font = Font.GetFont ("Arial", "Regular");
 		private static readonly double fontSize = 3.0;
 		private static readonly double reportHeight = 7.0;
+		private static readonly double marginBeforeEsr = 10;
 
 		private TableBand			table;
 		private int					visibleColumnCount;
