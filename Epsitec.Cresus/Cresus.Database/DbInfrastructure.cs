@@ -1639,6 +1639,22 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		public System.DateTime GetDatabaseTime()
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				transaction.SqlBuilder.GetCurrentTimeStamp ();
+
+				object databaseTime = this.ExecuteScalar (transaction);
+
+				transaction.Commit ();
+
+				return (System.DateTime) databaseTime;
+			}
+		}
+
+
 		/// <summary>
 		/// Executes the command attached to the transaction.
 		/// </summary>
