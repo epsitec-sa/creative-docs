@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		protected object GetRowValue(DbColumn dbColumn, IEnumerable<SqlField> conditions)
+		protected object GetRowValue(DbColumn dbColumn, SqlFieldList conditions)
 		{
 			
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))

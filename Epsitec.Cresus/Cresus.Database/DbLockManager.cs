@@ -83,42 +83,28 @@ namespace Epsitec.Cresus.Database
 
 		private void InsertLock(string lockName, long connexionId)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				SqlFieldList fields = new SqlFieldList ();
+			SqlFieldList fields = new SqlFieldList ();
 
-				DbColumn columnLockName = this.DbTable.Columns[Tags.ColumnName];
-				DbColumn columnConnexionId = this.DbTable.Columns[Tags.ColumnConnexionId];
-				DbColumn columnCounter = this.DbTable.Columns[Tags.ColumnCounter];
+			DbColumn columnLockName = this.DbTable.Columns[Tags.ColumnName];
+			DbColumn columnConnexionId = this.DbTable.Columns[Tags.ColumnConnexionId];
+			DbColumn columnCounter = this.DbTable.Columns[Tags.ColumnCounter];
 
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnLockName, lockName));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnexionId, connexionId));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounter, 0));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnLockName, lockName));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnConnexionId, connexionId));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnCounter, 0));
 
-				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fields);
-
-				this.DbInfrastructure.ExecuteSilent (transaction);
-
-				transaction.Commit ();
-			}
+			this.AddRow (fields);
 		}
 
 
 		private void RemoveLock(string lockName)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			SqlFieldList conditions = new SqlFieldList ()
 			{
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForLockName (lockName),
-				};
+				this.CreateConditionForLockName (lockName),
+			};
 
-				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), conditions);
-
-				this.DbInfrastructure.ExecuteSilent (transaction);
-
-				transaction.Commit ();
-			}
+			this.RemoveRow (conditions);
 		}
 
 
@@ -149,25 +135,13 @@ namespace Epsitec.Cresus.Database
 
 		private int GetLockCounterValue(string lockName)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				object counterValue = this.GetValue (transaction, lockName, Tags.ColumnCounter);
-
-				transaction.Commit ();
-
-				return (int) counterValue;
-			}
+			return (int) this.GetValue (lockName, Tags.ColumnCounter);
 		}
 
 
 		private void SetLockCounterValue(string lockName, int counterValue)
 		{
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				this.SetValue (transaction, lockName, Tags.ColumnCounter, counterValue);
-
-				transaction.Commit ();
-			}
+			this.SetValue (lockName, Tags.ColumnCounter, counterValue);
 		}
 
 		
@@ -179,26 +153,16 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				SqlSelect query = new SqlSelect ();
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForLockName (lockName),
+				};
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
-				query.Fields.Add
-				(
-					SqlField.CreateAggregate
-					(
-						SqlAggregateFunction.Count,
-						SqlField.CreateName (Tags.TableUid, Tags.ColumnId)
-					)
-				);
-				query.Conditions.Add (this.CreateConditionForLockName (lockName));
-
-				transaction.SqlBuilder.SelectData (query);
-
-				object value = this.DbInfrastructure.ExecuteScalar (transaction);
+				bool isOwned = this.RowExists (conditions);
 
 				transaction.Commit ();
 
-				return (value != null) && (((int) value) > 0);
+				return isOwned;
 			}
 		}
 
@@ -215,7 +179,7 @@ namespace Epsitec.Cresus.Database
 								
 				if (this.IsLockOwned (lockName))
 				{
-					connexionId = (long) this.GetValue (transaction, lockName, Tags.ColumnConnexionId);
+					connexionId = (long) this.GetValue (lockName, Tags.ColumnConnexionId);
 				}
 
 				transaction.Commit ();
@@ -225,23 +189,20 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private object GetValue(DbTransaction transaction, string lockName, string valueName)
+		private object GetValue(string lockName, string valueName)
 		{
-			SqlSelect query = new SqlSelect ();
+			DbColumn column = this.DbTable.Columns[valueName];
 
-			query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
-			query.Fields.Add (valueName, SqlField.CreateName (Tags.TableUid, valueName));
-			query.Conditions.Add (this.CreateConditionForLockName (lockName));
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForLockName (lockName),
+			};
 
-			transaction.SqlBuilder.SelectData (query);
-
-			DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
-
-			return table.Rows[0][valueName];
+			return this.GetRowValue (column, conditions);
 		}
 
 
-		private void SetValue(DbTransaction transaction, string lockName, string valueName, object value)
+		private void SetValue(string lockName, string valueName, object value)
 		{
 			DbColumn column = this.DbTable.Columns[valueName];
 
@@ -255,8 +216,7 @@ namespace Epsitec.Cresus.Database
 				this.CreateConditionForLockName (lockName),
 			};
 
-			transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
-			this.DbInfrastructure.ExecuteNonQuery (transaction);
+			this.SetRowValue (fields, conditions);
 		}
 
 
