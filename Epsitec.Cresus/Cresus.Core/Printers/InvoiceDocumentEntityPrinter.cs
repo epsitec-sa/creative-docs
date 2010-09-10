@@ -203,12 +203,13 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithInsideESR ||
 				this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithOutsideESR)
 			{
+				bool onlyTotal = false;
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
 					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (billingDetails);
-					this.BuildArticles ();
+					this.BuildArticles (onlyTotal: onlyTotal);
 					this.BuildConditions (billingDetails);
 					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
@@ -216,6 +217,7 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildEsrs (billingDetails, firstPage);
 
 					this.documentContainer.Ending (firstPage);
+					onlyTotal = true;
 				}
 			}
 
@@ -352,7 +354,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.PageSize.Height-82, 80, 10));
 		}
 
-		private void BuildArticles(ArticleGroupEntity group=null)
+		private void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
 		{
 			//	Ajoute les articles dans le document.
 			this.documentContainer.CurrentVerticalPosition = this.PageSize.Height-87;
@@ -390,10 +392,13 @@ namespace Epsitec.Cresus.Core.Printers
 
 			//	Première passe pour déterminer le nombre le lignes du tableau de la facture
 			//	ainsi que les colonnes visibles.
+			int firstLine = onlyTotal ? this.entity.Lines.Count-1 : 0;
 			int rowCount = 1;  // déjà 1 pour l'en-tête (titres des colonnes)
 
-			foreach (var line in this.entity.Lines)
+			for (int i = firstLine; i < this.entity.Lines.Count; i++)
 			{
+				var line = this.entity.Lines[i];
+
 				if (line.Visibility)
 				{
 					int rowUsed = 0;
@@ -506,7 +511,7 @@ namespace Epsitec.Cresus.Core.Printers
 			int linePage = this.documentContainer.CurrentPage;
 			double lineY = this.documentContainer.CurrentVerticalPosition;
 
-			for (int i = 0; i < this.entity.Lines.Count; i++)
+			for (int i = firstLine; i < this.entity.Lines.Count; i++)
 			{
 				var line = this.entity.Lines[i];
 
