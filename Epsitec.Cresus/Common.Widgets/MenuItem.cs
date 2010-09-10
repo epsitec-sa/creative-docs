@@ -345,6 +345,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected override void QueueCommandForExecution(Command command, CommandState state)
+		{
+			state.AdvancedState = this.Name;
+			base.QueueCommandForExecution (command, state);
+		}
+		
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();

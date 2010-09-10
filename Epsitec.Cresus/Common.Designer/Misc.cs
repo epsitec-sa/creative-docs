@@ -609,10 +609,7 @@ namespace Epsitec.Common.Designer
 
 		static public Command CreateStructuredCommandWithName(string commandName)
 		{
-			Command command = StructuredCommand.GetStructuredCommand (commandName);
-			command.EnsureNameField ();
-
-			return command;
+			return null;
 		}
 
 
