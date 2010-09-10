@@ -82,6 +82,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public bool ConnexionExists(long connexionId)
+		{
+			this.CheckIsAttached ();
+
+			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
+
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForConnexionId (connexionId),
+			};
+
+			return this.RowExists (conditions);
+		}
+
+
 		public void KeepConnexionAlive(long connexionId)
 		{
 			this.CheckIsAttached ();
@@ -141,14 +156,26 @@ namespace Epsitec.Cresus.Database
 
 			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionIdentity];
-
-			SqlFieldList conditions = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.CreateConditionForConnexionId (connexionId),
-			};
+				if (!this.ConnexionExists (connexionId))
+				{
+					throw new System.InvalidOperationException ("The connexion does not exist.");
+				}
 
-			return (string) this.GetRowValue (dbColumn, conditions);
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionIdentity];
+
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnexionId (connexionId),
+				};
+
+				object connexionIdentity = this.GetRowValue (dbColumn, conditions);
+
+				transaction.Commit ();
+
+				return (string) connexionIdentity;
+			}
 		}
 
 
@@ -158,14 +185,26 @@ namespace Epsitec.Cresus.Database
 
 			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionStatus];
-
-			SqlFieldList conditions = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.CreateConditionForConnexionId (connexionId),
-			};
+				if (!this.ConnexionExists (connexionId))
+				{
+					throw new System.InvalidOperationException ("The connexion does not exist.");
+				}
 
-			return (DbConnexionStatus) this.GetRowValue (dbColumn, conditions);
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionStatus];
+
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnexionId (connexionId),
+				};
+
+				object connexionStatus = this.GetRowValue (dbColumn, conditions);
+
+				transaction.Commit ();
+
+				return (DbConnexionStatus) connexionStatus;
+			}
 		}
 
 
@@ -175,14 +214,26 @@ namespace Epsitec.Cresus.Database
 
 			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionSince];
-
-			SqlFieldList conditions = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.CreateConditionForConnexionId (connexionId),
-			};
+				if (!this.ConnexionExists (connexionId))
+				{
+					throw new System.InvalidOperationException ("The connexion does not exist.");
+				}
 
-			return (System.DateTime) this.GetRowValue (dbColumn, conditions);
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionSince];
+
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnexionId (connexionId),
+				};
+
+				object connexionSince = this.GetRowValue (dbColumn, conditions);
+
+				transaction.Commit ();
+
+				return (System.DateTime) connexionSince;
+			}
 		}
 
 
@@ -192,14 +243,26 @@ namespace Epsitec.Cresus.Database
 
 			connexionId.ThrowIf (cId => cId < 0, "connexionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionLastSeen];
-
-			SqlFieldList conditions = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.CreateConditionForConnexionId (connexionId),
-			};
+				if (!this.ConnexionExists (connexionId))
+				{
+					throw new System.InvalidOperationException ("The connexion does not exist.");
+				}
 
-			return (System.DateTime) this.GetRowValue (dbColumn, conditions);
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnexionLastSeen];
+
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnexionId (connexionId),
+				};
+
+				object connexionLastSeen = this.GetRowValue (dbColumn, conditions);
+
+				transaction.Commit ();
+
+				return (System.DateTime) connexionLastSeen;
+			}
 		}
 
 
