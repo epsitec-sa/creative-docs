@@ -88,6 +88,30 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 		}
 
 
+		[TestMethod]
+		public void InterruptionCase()
+		{
+			DbInfrastructure dbInfrastructure = DatabaseHelper.DbInfrastructure;
+
+			ConnectionInformation connection = new ConnectionInformation (dbInfrastructure, "connexion");
+			Assert.AreEqual (ConnectionStatus.NotYetOpen, connection.Status);
+
+			connection.Open ();
+			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+
+			System.Threading.Thread.Sleep (31000);
+
+			connection.RefreshStatus ();
+			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+
+			ConnectionInformation.InterruptDeadConnections (dbInfrastructure);
+			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
+			
+			connection.RefreshStatus ();
+			Assert.AreEqual (ConnectionStatus.Interrupted, connection.Status);
+		}
+
+
 	}
 
 

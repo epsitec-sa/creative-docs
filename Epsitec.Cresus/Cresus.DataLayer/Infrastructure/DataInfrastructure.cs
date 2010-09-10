@@ -171,6 +171,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				// 2) Call that method here.
 				// 3) Should we also take care of locks that are owned by closed connections. In a
 				// perfect world, this case should never happen. But you never know.
+				// 4) Maybe change the name of this method since if does something more than just KeepConnectionAlive()
+				//    the connection alive.
+				// 5) Maybe move this in ConnectionInformation because DataInfrastructure should
+				//    avoid to do anything directly but should only call single methods of other
+				//    classes to keep it simple.
+				// 6) Maybe call ConnectionInformation with a different name, or split it in two?
 				// Marc
 			}
 
