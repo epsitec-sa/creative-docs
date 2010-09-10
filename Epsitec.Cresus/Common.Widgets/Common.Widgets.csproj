@@ -423,7 +423,7 @@
     <Compile Include="CommandDispatcherLevel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CommandEvent.cs">
+    <Compile Include="CommandEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Command.cs">

@@ -1,5 +1,5 @@
-﻿//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+﻿//	Copyright © 2005-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -65,6 +65,13 @@ namespace Epsitec.Common.Types
 				return this.systemType.Name;
 			}
 		}
+		public bool								IsStaticClass
+		{
+			get
+			{
+				return this.systemType.IsAbstract && this.systemType.IsSealed;
+			}
+		}
 		
 		public bool IsObjectInstanceOfType(DependencyObject o)
 		{
@@ -114,6 +121,13 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
+				if (this.IsStaticClass)
+                {
+					//	Static classes may not define properties, unless they are attached
+					//	properties.
+					throw new Exceptions.WrongBaseTypeException (this.systemType);
+                }
+
 				this.localStandardProperties.Add (property);
 			}
 		}
@@ -175,6 +189,12 @@ namespace Epsitec.Common.Types
 			//	TODO: trouver une propriété attachée qui conviendrait
 			
 			return null;
+		}
+
+		public static DependencyObjectType FromType<T>()
+			where T : DependencyObject
+		{
+			return DependencyObjectType.FromSystemType (typeof (T));
 		}
 
 		public static DependencyObjectType FromSystemType(System.Type type)
@@ -359,7 +379,16 @@ namespace Epsitec.Common.Types
 				
 				if (baseType == null)
 				{
-					throw new Exceptions.WrongBaseTypeException (systemType);
+					if ((systemType.IsAbstract) &&
+						(systemType.IsSealed))
+					{
+						//	Sealed & abstract means 'static class' : OK to have a static class registered with a
+						//	DependencyObjectType.
+					}
+					else
+					{
+						throw new Exceptions.WrongBaseTypeException (systemType);
+					}
 				}
 				
 				DependencyObjectType thisType = new DependencyObjectType (systemType, baseType);
@@ -378,19 +407,20 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
-		private DependencyObjectType			baseType;
-		private System.Type						systemType;
-		private List<DependencyProperty>		localStandardProperties = new List<DependencyProperty> ();
-		private List<DependencyProperty>		localAttachedProperties = new List<DependencyProperty> ();
-		private DependencyProperty[]			standardPropertiesArray;
-		private DependencyProperty[]			attachedPropertiesArray;
-		private Dictionary<string, DependencyProperty>	lookup;
-		private bool							initialized;
-		private Support.Allocator<DependencyObject> allocator;
-
 		[System.ThreadStatic]
 		static int typeStaticConstructorExecuting;
 
-		static Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
+		static readonly Dictionary<System.Type, DependencyObjectType> types = new Dictionary<System.Type, DependencyObjectType> ();
+
+		
+		private readonly DependencyObjectType			baseType;
+		private readonly System.Type					systemType;
+		private List<DependencyProperty>				localStandardProperties = new List<DependencyProperty> ();
+		private List<DependencyProperty>				localAttachedProperties = new List<DependencyProperty> ();
+		private DependencyProperty[]					standardPropertiesArray;
+		private DependencyProperty[]					attachedPropertiesArray;
+		private Dictionary<string, DependencyProperty>	lookup;
+		private bool									initialized;
+		private Support.Allocator<DependencyObject>		allocator;
 	}
 }

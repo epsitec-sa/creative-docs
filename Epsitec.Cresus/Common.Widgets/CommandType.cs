@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		Multiple,
 
 		/// <summary>
-		/// The <c>Structured</c> command.
+		/// The <c>Structured</c> command; see <see cref="StructuredCommand"/>.
 		/// </summary>
 		Structured
 	}

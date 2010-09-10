@@ -345,21 +345,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void QueueCommandForExecution(Command command, CommandState state)
-		{
-			if (command.CommandType == CommandType.Structured)
-			{
-				object typeObject = command.StructuredType.GetField ("Name").Type;
-
-				if (typeObject is Types.StringType)
-				{
-					StructuredCommand.SetFieldValue (state, "Name", this.Name);
-				}
-			}
-			
-			base.QueueCommandForExecution (command, state);
-		}
-		
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
