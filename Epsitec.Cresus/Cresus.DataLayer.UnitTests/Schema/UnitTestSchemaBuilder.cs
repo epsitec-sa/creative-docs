@@ -563,7 +563,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Schema
 
 		private IEnumerable<INamedType> GetSampleNullableTypes()
 		{
-			yield return StringType.Default;
+			// TODO Find another nullable type for the example otherwise the test will not be
+			// as complete.
+			// Marc
+
+			yield break;
+			
+			// Don't try with the following ones, because they are already added by DbInfrastructure
+			// for the uid counters.
+			// Marc
+			
+			//yield return StringType.Default;
 		}
 
 
