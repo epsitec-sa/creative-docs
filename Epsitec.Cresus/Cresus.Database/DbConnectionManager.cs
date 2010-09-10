@@ -59,25 +59,35 @@ namespace Epsitec.Cresus.Database
 
 			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
-			int status = (int) DbConnectionStatus.Closed;
-
-			SqlFieldList fields = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, status)
-			};
+				if (!this.ConnectionExists (connectionId))
+				{
+					throw new System.InvalidOperationException ("The connection does not exist.");
+				}
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForConnectionId (connectionId),
-				this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
-			};
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionStatus];
+				int status = (int) DbConnectionStatus.Closed;
 
-			int nbRowsAffected = this.SetRowValue (fields, conditions);
+				SqlFieldList fields = new SqlFieldList ()
+				{
+					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, status)
+				};
 
-			if (nbRowsAffected == 0)
-			{
-				throw new System.Exception ("Could not close connection. It does not exist or it is not open anymore.");
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnectionId (connectionId),
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
+				};
+
+				int nbRowsAffected = this.SetRowValue (fields, conditions);
+
+				transaction.Commit ();
+
+				if (nbRowsAffected == 0)
+				{
+					throw new System.InvalidOperationException ("Could not close connection because it not open.");
+				}
 			}
 		}
 
@@ -103,25 +113,35 @@ namespace Epsitec.Cresus.Database
 
 			connectionId.ThrowIf (cId => cId < 0, "connectionId cannot be lower than zero.");
 
-			DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionLastSeen];
-			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			
-			SqlFieldList fields = new SqlFieldList ()
+			using (DbTransaction transaction = DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, databaseTime)
-			};
+				if (!this.ConnectionExists (connectionId))
+				{
+					throw new System.InvalidOperationException ("The connection does not exist.");
+				}
 
-			SqlFieldList conditions = new SqlFieldList ()
-			{
-				this.CreateConditionForConnectionId (connectionId),
-				this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
-			};
+				DbColumn dbColumn = this.DbTable.Columns[Tags.ColumnConnectionLastSeen];
+				System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
 
-			int nbRowsAffected = this.SetRowValue (fields, conditions);
+				SqlFieldList fields = new SqlFieldList ()
+				{
+					this.DbInfrastructure.CreateSqlFieldFromAdoValue (dbColumn, databaseTime)
+				};
 
-			if (nbRowsAffected == 0)
-			{
-				throw new System.Exception ("Could not keep connection alive. It does not exist or it is not open anymore.");
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnectionId (connectionId),
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
+				};
+
+				int nbRowsAffected = this.SetRowValue (fields, conditions);
+
+				transaction.Commit ();
+
+				if (nbRowsAffected == 0)
+				{
+					throw new System.InvalidOperationException ("Could not keep connection alive because it is not open anymore.");
+				}
 			}
 		}
 
