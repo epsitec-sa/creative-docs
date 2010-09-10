@@ -20,6 +20,10 @@ namespace Epsitec.Cresus.Database
 	{
 
 
+		// TODO Comment what is not commented in this class.
+		// Marc
+
+
 		/// <summary>
 		/// Builds a new instance of <see cref="DbUidManager"/>.
 		/// </summary>
@@ -55,25 +59,31 @@ namespace Epsitec.Cresus.Database
 				{
 					throw new System.InvalidOperationException ("The counter already exists.");
 				}
-				
-				SqlFieldList fields = new SqlFieldList ();
 
-				DbColumn columnName = this.DbTable.Columns[Tags.ColumnName];
-				DbColumn columnSlot = this.DbTable.Columns[Tags.ColumnUidSlot];
-				DbColumn columnMin = this.DbTable.Columns[Tags.ColumnUidMin];
-				DbColumn columnMax = this.DbTable.Columns[Tags.ColumnUidMax];
-				DbColumn columnNext = this.DbTable.Columns[Tags.ColumnUidNext];
-
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
-				fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
-
-				this.AddRow (fields);
+				this.InsertUidCounter (name, slot, min, max);
 
 				transaction.Commit ();
 			}
+		}
+		
+
+		private void InsertUidCounter(string name, int slot, long min, long max)
+		{
+			SqlFieldList fields = new SqlFieldList ();
+
+			DbColumn columnName = this.DbTable.Columns[Tags.ColumnName];
+			DbColumn columnSlot = this.DbTable.Columns[Tags.ColumnUidSlot];
+			DbColumn columnMin = this.DbTable.Columns[Tags.ColumnUidMin];
+			DbColumn columnMax = this.DbTable.Columns[Tags.ColumnUidMax];
+			DbColumn columnNext = this.DbTable.Columns[Tags.ColumnUidNext];
+
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnName, name));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnSlot, slot));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMin, min));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnMax, max));
+			fields.Add (this.DbInfrastructure.CreateSqlFieldFromAdoValue (columnNext, min));
+
+			this.AddRow (fields);
 		}
 
 
@@ -99,18 +109,24 @@ namespace Epsitec.Cresus.Database
 					throw new System.InvalidOperationException ("The counter does not exists.");
 				}
 
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForName (name),
-					this.CreateConditionForSlot (slot),
-				};
-
-				this.RemoveRow (conditions);
+				this.RemoveUidCounter (name, slot);
 
 				transaction.Commit ();
 			}
 		}
 
+
+
+		private void RemoveUidCounter(string name, int slot)
+		{
+			SqlFieldList conditions = new SqlFieldList ()
+            {
+                this.CreateConditionForName (name),
+                this.CreateConditionForSlot (slot),
+            };
+
+			this.RemoveRow (conditions);
+		}
 
 		/// <summary>
 		/// Tells whether a counter for uids exists in the database.
@@ -128,18 +144,13 @@ namespace Epsitec.Cresus.Database
 			name.ThrowIfNullOrEmpty ("name");
 			slot.ThrowIf (s => s < 0, "slot cannot be lower than zero");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			SqlFieldList conditions = new SqlFieldList ()
 			{
-				SqlFieldList conditions = new SqlFieldList ();
-				conditions.Add (this.CreateConditionForName (name));
-				conditions.Add (this.CreateConditionForSlot (slot));
+				this.CreateConditionForName (name),
+				this.CreateConditionForSlot (slot),
+			};
 
-				bool exists = this.RowExists (conditions);
-
-				transaction.Commit ();
-
-				return exists;
-			}
+			return this.RowExists (conditions);
 		}
 
 		
