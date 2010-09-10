@@ -94,7 +94,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
 				this.entityPrinter.CurrentPage = this.currentPage;
-				this.entityPrinter.PrintCurrentPage (graphics);
+				this.entityPrinter.PrintBackgroundCurrentPage (graphics);
+				this.entityPrinter.PrintForegroundCurrentPage (graphics);
 
 				graphics.Transform = initial;
 

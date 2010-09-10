@@ -180,12 +180,16 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.PageMargins = this.PageMargins;
 		}
 
-		public virtual void PrintCurrentPage(IPaintPort port)
+		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
 		{
 			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Specimen))
 			{
-				this.PaintSpecimen(port);
+				this.PaintSpecimen (port);
 			}
+		}
+
+		public virtual void PrintForegroundCurrentPage(IPaintPort port)
+		{
 		}
 
 		private void PaintSpecimen(IPaintPort port)

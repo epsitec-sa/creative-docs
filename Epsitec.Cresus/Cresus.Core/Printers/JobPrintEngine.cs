@@ -77,7 +77,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
 
-			section.EntityPrinter.PrintCurrentPage (port);
+			section.EntityPrinter.PrintBackgroundCurrentPage (port);
+			section.EntityPrinter.PrintForegroundCurrentPage (port);
 
 			section.EntityPrinter.CurrentPage++;  // page suivante dans la section
 

@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void PrintCurrentPage(IPaintPort port)
+		public override void PrintForegroundCurrentPage(IPaintPort port)
 		{
 			string text = TextFormatter.FormatText (this.entity.Firstname, this.entity.Lastname).ToString ();  // TODO: provisoire
 
