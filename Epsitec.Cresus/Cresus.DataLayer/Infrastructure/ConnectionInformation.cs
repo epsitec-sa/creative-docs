@@ -138,8 +138,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		internal bool InterruptDeadConnections(DbInfrastructure dbInfrastructure)
+		internal static bool InterruptDeadConnections(DbInfrastructure dbInfrastructure)
 		{
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+
 			return dbInfrastructure.ConnectionManager.InterruptDeadConnections ();
 		}
 		
