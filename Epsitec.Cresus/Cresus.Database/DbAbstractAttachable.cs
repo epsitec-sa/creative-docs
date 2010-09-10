@@ -1,8 +1,18 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Database.Collections;
+
+using System.Collections.Generic;
+
+using System.Data;
+
 
 namespace Epsitec.Cresus.Database
 {
+
+
+	// TODO Comment what is not commented in this class.
+	// Marc
 
 
 	/// <summary>
@@ -97,6 +107,103 @@ namespace Epsitec.Cresus.Database
 			if (!this.IsAttached)
 			{
 				throw new System.InvalidOperationException ("Cannot use this instance because it is detached.");
+			}
+		}
+
+
+		protected long AddRow(SqlFieldList fieldsToInsert)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				DbColumn columnId = this.DbTable.Columns[Tags.ColumnId];
+
+				SqlFieldList fieldsToReturn = new Collections.SqlFieldList ()
+				{
+					new SqlField() { Alias = columnId.GetSqlName (), },
+				};
+
+				transaction.SqlBuilder.InsertData (this.DbTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
+
+				object id = this.DbInfrastructure.ExecuteScalar (transaction);
+
+				transaction.Commit ();
+
+				return (long) id;
+			}
+		}
+
+
+		protected void RemoveRow(SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				transaction.SqlBuilder.RemoveData (this.DbTable.GetSqlName (), conditions);
+
+				this.DbInfrastructure.ExecuteSilent (transaction);
+
+				transaction.Commit ();
+			}
+		}
+
+
+		protected bool RowExists(SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+
+				query.Tables.Add (SqlField.CreateName (this.DbTable.GetSqlName ()));
+				query.Fields.Add
+				(
+					SqlField.CreateAggregate
+					(
+						SqlAggregateFunction.Count,
+						SqlField.CreateName (Tags.ColumnId)
+					)
+				);
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				object value = this.DbInfrastructure.ExecuteScalar (transaction);
+
+				transaction.Commit ();
+
+				return (value != null) && (((int) value) > 0);
+			}
+		}
+
+
+		protected object GetRowValue(DbColumn dbColumn, IEnumerable<SqlField> conditions)
+		{
+			
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+				query.Tables.Add ("t", SqlField.CreateName (this.DbTable.GetSqlName ()));
+				query.Fields.Add ("c", SqlField.CreateName ("t", dbColumn.GetSqlName ()));
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+				transaction.Commit ();
+
+				return table.Rows[0]["c"];
+			}
+		}
+
+
+		protected void SetRowValue(SqlFieldList fields, SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
+
+				this.DbInfrastructure.ExecuteNonQuery (transaction);
+
+				transaction.Commit ();
 			}
 		}
 
