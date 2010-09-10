@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.DocumentTypeSelected = DocumentType.None;
 
-			this.documentOptionsNameSelected = new List<string> ();
+			this.documentOptionsNameSelected = new List<DocumentOption> ();
 		}
 
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
-		public List<string> DocumentOptionsSelected
+		public List<DocumentOption> DocumentOptionsSelected
 		{
 			//	Liste des options cochées.
 			get
@@ -45,13 +45,13 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool HasDocumentOption(string name)
+		public bool HasDocumentOption(DocumentOption option)
 		{
 			//	Retourne true si une option est cochée.
-			return this.documentOptionsNameSelected.Contains (name);
+			return this.documentOptionsNameSelected.Contains (option);
 		}
 
 
-		private readonly List<string>						documentOptionsNameSelected;
+		private readonly List<DocumentOption>		documentOptionsNameSelected;
 	}
 }

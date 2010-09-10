@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
-			type.AddDocumentOptionCommande ();
+			type.AddDocumentOptionOrder ();
 			type.AddDocumentOptionSpecimen ();
 			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Printers
 			type.AddDocumentOptionInvoice ();
 			type.AddDocumentOptionOrientation ();
 			type.AddDocumentOptionMargin ();
-			type.AddDocumentOptionProd ();
+			type.AddDocumentOptionProductionOrder ();
 			type.AddDocumentOptionSpecimen ();
 			type.AddBasePrinterUnit ();
 			this.DocumentTypes.Add (type);
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.EntityPrintingSettings.HasDocumentOption ("Orientation.Horizontal"))
+				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.OrientationHorizontal))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildHeader(BillingDetailEntity billingDetails, ArticleGroupEntity group=null)
 		{
 			//	Ajoute l'en-tête de la facture dans le document.
-			if (this.EntityPrintingSettings.HasDocumentOption ("Logo"))
+			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Logo))
 			{
 				var imageBand = new ImageBand ();
 				imageBand.Load ("logo-cresus.png");
@@ -447,13 +447,13 @@ namespace Epsitec.Cresus.Core.Printers
 				this.tableColumns[TableColumnKeys.Total          ].Visible = false;
 			}
 
-			if (!this.EntityPrintingSettings.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			if (!this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Delayed))  // n'imprime pas les articles retardés ?
 			{
 				this.tableColumns[TableColumnKeys.DelayedQuantity].Visible = false;
 				this.tableColumns[TableColumnKeys.DelayedDate    ].Visible = false;
 			}
 
-			if (!this.EntityPrintingSettings.HasDocumentOption ("ArticleId"))  // n'imprime pas les numéros d'article ?
+			if (!this.EntityPrintingSettings.HasDocumentOption (DocumentOption.ArticleId))  // n'imprime pas les numéros d'article ?
 			{
 				this.tableColumns[TableColumnKeys.ArticleId].Visible = false;
 			}
@@ -1036,7 +1036,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private bool IsPrintableArticle(ArticleDocumentItemEntity line)
 		{
-			if (!this.EntityPrintingSettings.HasDocumentOption ("Delayed"))  // n'imprime pas les articles retardés ?
+			if (!this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Delayed))  // n'imprime pas les articles retardés ?
 			{
 				foreach (var quantity in line.ArticleQuantities)
 				{
@@ -1086,61 +1086,64 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void BuildFooter()
 		{
-			if (this.EntityPrintingSettings.HasDocumentOption ("BL.Signing"))
+			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Signing))
 			{
-				var table = new TableBand ();
+				if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.BL)
+				{
+					var table = new TableBand ();
 
-				table.ColumnsCount = 2;
-				table.RowsCount = 1;
-				table.CellBorder = CellBorder.Default;
-				table.Font = font;
-				table.FontSize = fontSize;
-				table.CellMargins = new Margins (2);
-				table.SetRelativeColumWidth (0,  60);
-				table.SetRelativeColumWidth (1, 100);
-				table.SetText (0, 0, new FormattedText ("Matériel reçu en bonne et due forme"));
-				table.SetText (1, 0, new FormattedText ("Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
-				table.SetUnbreakableRow (0, true);
+					table.ColumnsCount = 2;
+					table.RowsCount = 1;
+					table.CellBorder = CellBorder.Default;
+					table.Font = font;
+					table.FontSize = fontSize;
+					table.CellMargins = new Margins (2);
+					table.SetRelativeColumWidth (0, 60);
+					table.SetRelativeColumWidth (1, 100);
+					table.SetText (0, 0, new FormattedText ("Matériel reçu en bonne et due forme"));
+					table.SetText (1, 0, new FormattedText ("Reçu le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetUnbreakableRow (0, true);
 
-				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-			}
+					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+				}
 
-			if (this.EntityPrintingSettings.HasDocumentOption ("Prod.Signing"))
-			{
-				var table = new TableBand ();
+				if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.ProductionOrder)
+				{
+					var table = new TableBand ();
 
-				table.ColumnsCount = 2;
-				table.RowsCount = 1;
-				table.CellBorder = CellBorder.Default;
-				table.Font = font;
-				table.FontSize = fontSize;
-				table.CellMargins = new Margins (2);
-				table.SetRelativeColumWidth (0, 60);
-				table.SetRelativeColumWidth (1, 100);
-				table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"));
-				table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
-				table.SetUnbreakableRow (0, true);
+					table.ColumnsCount = 2;
+					table.RowsCount = 1;
+					table.CellBorder = CellBorder.Default;
+					table.Font = font;
+					table.FontSize = fontSize;
+					table.CellMargins = new Margins (2);
+					table.SetRelativeColumWidth (0, 60);
+					table.SetRelativeColumWidth (1, 100);
+					table.SetText (0, 0, new FormattedText ("Matériel produit en totalité"));
+					table.SetText (1, 0, new FormattedText ("Terminé le :<br/><br/>Par :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetUnbreakableRow (0, true);
 
-				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
-			}
+					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+				}
 
-			if (this.EntityPrintingSettings.HasDocumentOption ("Commande.Signing"))
-			{
-				var table = new TableBand ();
+				if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Order)
+				{
+					var table = new TableBand ();
 
-				table.ColumnsCount = 2;
-				table.RowsCount = 1;
-				table.CellBorder = CellBorder.Default;
-				table.Font = font;
-				table.FontSize = fontSize;
-				table.CellMargins = new Margins (2);
-				table.SetRelativeColumWidth (0, 60);
-				table.SetRelativeColumWidth (1, 100);
-				table.SetText (0, 0, new FormattedText ("Bon pour commande"));
-				table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"));
-				table.SetUnbreakableRow (0, true);
+					table.ColumnsCount = 2;
+					table.RowsCount = 1;
+					table.CellBorder = CellBorder.Default;
+					table.Font = font;
+					table.FontSize = fontSize;
+					table.CellMargins = new Margins (2);
+					table.SetRelativeColumWidth (0, 60);
+					table.SetRelativeColumWidth (1, 100);
+					table.SetText (0, 0, new FormattedText ("Bon pour commande"));
+					table.SetText (1, 0, new FormattedText ("Lieu et date :<br/><br/>Signature :<br/><br/><br/>"));
+					table.SetUnbreakableRow (0, true);
 
-				this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+					this.documentContainer.AddToBottom (table, this.PageMargins.Bottom);
+				}
 			}
 		}
 
@@ -1354,7 +1357,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
 			AbstractEsrBand Esr;
 
-			if (this.EntityPrintingSettings.HasDocumentOption ("ESR"))
+			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.ESR))
 			{
 				Esr = new EsrBand ();  // BVR orangé
 			}
@@ -1363,8 +1366,8 @@ namespace Epsitec.Cresus.Core.Printers
 				Esr = new EsBand ();  // BV rose
 			}
 
-			Esr.PaintEsrSimulator = this.EntityPrintingSettings.HasDocumentOption ("ESR.Simul");
-			Esr.PaintSpecimen     = this.EntityPrintingSettings.HasDocumentOption ("ESR.Specimen");
+			Esr.PaintEsrSimulator = this.EntityPrintingSettings.HasDocumentOption (DocumentOption.ESRFacsimile);
+			Esr.PaintSpecimen     = this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Specimen);
 			Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 			Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
 			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.EntityPrintingSettings.DocumentTypeSelected);
@@ -1399,7 +1402,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.EntityPrintingSettings.HasDocumentOption ("ColumnsOrderQD");
+				return this.EntityPrintingSettings.HasDocumentOption (DocumentOption.ColumnsOrderQD);
 			}
 		}
 
@@ -1478,7 +1481,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.EntityPrintingSettings.HasDocumentOption ("WithLine");
+				return this.EntityPrintingSettings.HasDocumentOption (DocumentOption.WithLine);
 			}
 		}
 
@@ -1486,7 +1489,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				return this.EntityPrintingSettings.HasDocumentOption ("WithFrame");
+				return this.EntityPrintingSettings.HasDocumentOption (DocumentOption.WithFrame);
 			}
 		}
 

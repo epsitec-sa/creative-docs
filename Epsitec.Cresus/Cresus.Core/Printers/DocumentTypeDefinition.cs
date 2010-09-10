@@ -104,35 +104,35 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddDocumentOptionInvoice()
 		{
 			//	Ajoute les options d'impression liées aux factures.
-			this.options.Add (new DocumentOptionDefinition ("Logo", null, "Imprime le logo de l'entreprise", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Logo, null, "Imprime le logo de l'entreprise", true));
 
 			if (this.Type == DocumentType.BL                   ||
 				this.Type == DocumentType.InvoiceWithInsideESR ||
 				this.Type == DocumentType.InvoiceWithOutsideESR||
 				this.Type == DocumentType.InvoiceWithoutESR    )
 			{
-				this.options.Add (new DocumentOptionDefinition ("Delayed", null, "Imprime les articles livrés ultérieurement", true));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.Delayed, null, "Imprime les articles livrés ultérieurement", true));
 			}
 
-			this.options.Add (new DocumentOptionDefinition ("ArticleId", null, "Imprime les identificateurs d'article", false));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.ArticleId, null, "Imprime les identificateurs d'article", false));
 
 			this.options.Add (new DocumentOptionDefinition ("Aspect de la liste des articles :"));
-			this.options.Add (new DocumentOptionDefinition ("Frameless", "TableAspect", "Espacé, sans encadrements"));
-			this.options.Add (new DocumentOptionDefinition ("WithLine",  "TableAspect", "Espacé, avec des lignes de séparation", true));
-			this.options.Add (new DocumentOptionDefinition ("WithFrame", "TableAspect", "Serré, avec des encadrements"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Frameless, "TableAspect", "Espacé, sans encadrements"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.WithLine,  "TableAspect", "Espacé, avec des lignes de séparation", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.WithFrame, "TableAspect", "Serré, avec des encadrements"));
 
 			this.options.Add (new DocumentOptionDefinition ("Ordre des colonnes :"));
 
 			if (this.Type == DocumentType.BL             ||
 				this.Type == DocumentType.ProductionOrder)
 			{
-				this.options.Add (new DocumentOptionDefinition ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation", true));
-				this.options.Add (new DocumentOptionDefinition ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité"));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderQD, "ColumnsOrder", "Quantité, Désignation", true));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderDQ, "ColumnsOrder", "Désignation, Quantité"));
 			}
 			else
 			{
-				this.options.Add (new DocumentOptionDefinition ("ColumnsOrderQD", "ColumnsOrder", "Quantité, Désignation, Prix", true));
-				this.options.Add (new DocumentOptionDefinition ("ColumnsOrderDQ", "ColumnsOrder", "Désignation, Quantité, Prix"));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderQD, "ColumnsOrder", "Quantité, Désignation, Prix", true));
+				this.options.Add (new DocumentOptionDefinition (DocumentOption.ColumnsOrderDQ, "ColumnsOrder", "Désignation, Quantité, Prix"));
 			}
 		}
 
@@ -140,44 +140,44 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute les options d'impression liées aux BV.
 			this.options.Add (new DocumentOptionDefinition ("Type de bulletin de versement :"));
-			this.options.Add (new DocumentOptionDefinition ("ESR", "ESR", "BVR orange", true));
-			this.options.Add (new DocumentOptionDefinition ("ES",  "ESR", "BV rose"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESR, "ESR", "BVR orange", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.ES,  "ESR", "BV rose"));
 
 			this.options.Add (new DocumentOptionDefinition ("Mode d'impression du BV :"));
-			this.options.Add (new DocumentOptionDefinition ("ESR.Simul",    null, "Fac-similé complet du BV (pour des essais)", true));
-			this.options.Add (new DocumentOptionDefinition ("ESR.Specimen", null, "Incruste la mention SPECIMEN"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESRFacsimile, null, "Fac-similé complet du BV (pour des essais)", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Specimen,     null, "Incruste la mention SPECIMEN"));
 		}
 
 		public void AddDocumentOptionOrientation()
 		{
 			//	Ajoute les options d'impression liées à l'orientation portrait/paysage.
 			this.options.Add (new DocumentOptionDefinition ("Orientation du papier :"));
-			this.options.Add (new DocumentOptionDefinition ("Orientation.Vertical",   "Orientation", "Portrait", true));
-			this.options.Add (new DocumentOptionDefinition ("Orientation.Horizontal", "Orientation", "Paysage"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.OrientationVertical,   "Orientation", "Portrait", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.OrientationHorizontal, "Orientation", "Paysage"));
 		}
 
 		public void AddDocumentOptionBL()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOptionDefinition ("BL.Signing", null, "Cartouche \"Matériel reçu\"", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Signing, null, "Cartouche \"Matériel reçu\"", true));
 		}
 
-		public void AddDocumentOptionProd()
+		public void AddDocumentOptionProductionOrder()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOptionDefinition ("Prod.Signing", null, "Cartouche \"Matériel produit\"", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Signing, null, "Cartouche \"Matériel produit\"", true));
 		}
 
-		public void AddDocumentOptionCommande()
+		public void AddDocumentOptionOrder()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOptionDefinition ("Commande.Signing", null, "Cartouche \"Bon pour commande\"", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Signing, null, "Cartouche \"Bon pour commande\"", true));
 		}
 
 		public void AddDocumentOptionSpecimen()
 		{
 			//	Ajoute les options d'impression générales.
-			this.options.Add (new DocumentOptionDefinition ("Generic.Specimen", null, "Incruste la mention SPECIMEN"));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.Specimen, null, "Incruste la mention SPECIMEN"));
 		}
 
 		public void AddDocumentOptionMargin()
@@ -207,6 +207,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 		#endregion
 
+
 		public static string TypeToString(DocumentType type)
 		{
 			return type.ToString ();
@@ -223,6 +224,26 @@ namespace Epsitec.Cresus.Core.Printers
 			else
 			{
 				return DocumentType.None;
+			}
+		}
+
+
+		public static string OptionToString(DocumentOption option)
+		{
+			return option.ToString ();
+		}
+
+		public static DocumentOption StringToOption(string name)
+		{
+			DocumentOption option;
+
+			if (System.Enum.TryParse (name, out option))
+			{
+				return option;
+			}
+			else
+			{
+				return DocumentOption.None;
 			}
 		}
 
