@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Core.Printers
 			: base ()
 		{
 			this.PaintEsrSimulator = true;
-			this.PaintSpecimen = true;
 		}
 
 
@@ -46,15 +45,6 @@ namespace Epsitec.Cresus.Core.Printers
 		/// false -> Ne dessine que les informations réelles sur du papier avec un BVR/BV préimprimé.
 		/// </summary>
 		public bool PaintEsrSimulator
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Indique s'il faut dessiner un gros "SPECIMEN".
-		/// </summary>
-		public bool PaintSpecimen
 		{
 			get;
 			set;
@@ -186,7 +176,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <param name="section">Rang de la section à dessiner</param>
 		/// <param name="topLeft">Coin supérieur gauche</param>
 		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
-		public override bool Paint(IPaintPort port, bool isPreview, int section, Point topLeft)
+		public override bool PaintBackground(IPaintPort port, bool isPreview, int section, Point topLeft)
 		{
 			if (section != 0)
 			{
@@ -197,12 +187,25 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.PaintFix (port, isPreview, topLeft);
 			}
-			else
+
+			return true;
+		}
+
+		/// <summary>
+		/// Dessine une section de l'objet à une position donnée.
+		/// </summary>
+		/// <param name="port">Port graphique</param>
+		/// <param name="section">Rang de la section à dessiner</param>
+		/// <param name="topLeft">Coin supérieur gauche</param>
+		/// <returns>Retourne false si le contenu est trop grand et n'a pas pu être dessiné</returns>
+		public override bool PaintForeground(IPaintPort port, bool isPreview, int section, Point topLeft)
+		{
+			if (section != 0)
 			{
-				this.PaintSpecimenPattern (port);
+				return true;
 			}
 
-			this.PaintContent(port, topLeft);
+			this.PaintContent (port, topLeft);
 
 			return true;
 		}
@@ -218,8 +221,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Color = Color.FromBrightness (1);
 			port.PaintSurface (Path.FromRectangle (topLeft.X+60, topLeft.Y-106, 150, 25));
-
-			this.PaintSpecimenPattern (port);
 
 			//	Dessine les grandes lignes noires de séparation.
 			port.LineWidth = 0.15;
@@ -288,25 +289,6 @@ namespace Epsitec.Cresus.Core.Printers
 		protected virtual void PaintContent(IPaintPort port, Point topLeft)
 		{
 			//	Dessine tous les textes variables.
-		}
-
-
-		private void PaintSpecimenPattern(IPaintPort port)
-		{
-			//	Dessine un très gros "SPECIMEN" au travers du BV.
-			if (this.PaintSpecimen)
-			{
-				var font = Font.GetFont("Arial", "Bold");
-
-				var initial = port.Transform;
-
-				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (20));
-
-				port.Color = Color.FromBrightness (this.PaintEsrSimulator ? 1.0 : 0.95);
-				port.PaintText (12, 0, "SPECIMEN", AbstractEsrBand.fixFontBold, 40);
-
-				port.Transform = initial;
-			}
 		}
 
 

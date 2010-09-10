@@ -70,13 +70,33 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		/// <param name="port"></param>
 		/// <returns></returns>
-		public bool Paint(IPaintPort port, bool isPreview)
+		public bool PaintBackground(IPaintPort port, bool isPreview)
 		{
 			bool ok = true;
 
 			foreach (var band in this.bands)
 			{
-				if (!band.Paint (port, isPreview))
+				if (!band.PaintBackground (port, isPreview))
+				{
+					ok = false;
+				}
+			}
+
+			return ok;
+		}
+
+		/// <summary>
+		/// Dessine tous les objets AbstractBand contenus dans la page.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <returns></returns>
+		public bool PaintForeground(IPaintPort port, bool isPreview)
+		{
+			bool ok = true;
+
+			foreach (var band in this.bands)
+			{
+				if (!band.PaintForeground (port, isPreview))
 				{
 					ok = false;
 				}

@@ -240,11 +240,18 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void PrintCurrentPage(IPaintPort port)
+		public override void PrintBackgroundCurrentPage(IPaintPort port)
 		{
-			base.PrintCurrentPage (port);
+			this.documentContainer.PaintBackground (port, this.CurrentPage, this.IsPreview);
 
-			this.documentContainer.Paint (port, this.CurrentPage, this.IsPreview);
+			base.PrintBackgroundCurrentPage (port);
+		}
+
+		public override void PrintForegroundCurrentPage(IPaintPort port)
+		{
+			this.documentContainer.PaintForeground (port, this.CurrentPage, this.IsPreview);
+
+			base.PrintForegroundCurrentPage (port);
 		}
 
 
@@ -1372,7 +1379,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			Esr.PaintEsrSimulator = this.EntityPrintingSettings.HasDocumentOption (DocumentOption.ESRFacsimile);
-			Esr.PaintSpecimen     = this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Specimen);
 			Esr.From = InvoiceDocumentHelper.GetMailContact (this.entity);
 			Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
 			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.entity, billingDetails, this.EntityPrintingSettings.DocumentTypeSelected);

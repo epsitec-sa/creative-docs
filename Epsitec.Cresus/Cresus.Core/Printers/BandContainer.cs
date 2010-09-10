@@ -35,9 +35,14 @@ namespace Epsitec.Cresus.Core.Printers
 			this.topLeft = topLeft;
 		}
 
-		public bool Paint(IPaintPort port, bool isPreview)
+		public bool PaintBackground(IPaintPort port, bool isPreview)
 		{
-			return this.band.Paint (port, isPreview, this.section, this.topLeft);
+			return this.band.PaintBackground (port, isPreview, this.section, this.topLeft);
+		}
+
+		public bool PaintForeground(IPaintPort port, bool isPreview)
+		{
+			return this.band.PaintForeground (port, isPreview, this.section, this.topLeft);
 		}
 
 
