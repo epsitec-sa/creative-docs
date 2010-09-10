@@ -151,19 +151,12 @@ namespace Epsitec.Cresus.Database
 
 			lockName.ThrowIfNullOrEmpty ("lockName");
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			SqlFieldList conditions = new SqlFieldList ()
 			{
-				SqlFieldList conditions = new SqlFieldList ()
-				{
-					this.CreateConditionForLockName (lockName),
-				};
+				this.CreateConditionForLockName (lockName),
+			};
 
-				bool isOwned = this.RowExists (conditions);
-
-				transaction.Commit ();
-
-				return isOwned;
-			}
+			return this.RowExists (conditions);
 		}
 
 
