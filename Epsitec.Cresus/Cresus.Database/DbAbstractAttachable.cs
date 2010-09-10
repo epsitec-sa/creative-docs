@@ -195,15 +195,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		protected void SetRowValue(SqlFieldList fields, SqlFieldList conditions)
+		protected int SetRowValue(SqlFieldList fields, SqlFieldList conditions)
 		{
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				transaction.SqlBuilder.UpdateData (this.DbTable.GetSqlName (), fields, conditions);
 
-				this.DbInfrastructure.ExecuteNonQuery (transaction);
+				object nbRowsAffected = this.DbInfrastructure.ExecuteNonQuery (transaction);
 
 				transaction.Commit ();
+
+				return (int) nbRowsAffected;
 			}
 		}
 
