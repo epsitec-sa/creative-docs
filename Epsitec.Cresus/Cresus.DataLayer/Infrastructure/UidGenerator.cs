@@ -23,20 +23,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
 		/// <param name="name">The name of this instance.</param>
-		/// <param name="slots">The sequence of minimum and maximum values defining the slots of this instance.</param>
-		private UidGenerator(DbInfrastructure dbInfrastructure, string name, IEnumerable<System.Tuple<long, long>> slots)
+		/// <param name="slots">The sequence of slots of this instance.</param>
+		private UidGenerator(DbInfrastructure dbInfrastructure, string name, IEnumerable<UidSlot> slots)
 		{
 			this.dbInfrastructure = dbInfrastructure;
-
-			this.slotMinValues = new List<long> ();
-			this.slotMaxValues = new List<long> ();
-
-			foreach (var slot in slots)
-			{
-				this.slotMinValues.Add (slot.Item1);
-				this.slotMaxValues.Add (slot.Item2);
-			}
-
+			this.slots = slots.ToList ();
 			this.Name = name;	
 		}
 
@@ -52,18 +43,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 		/// <summary>
-		/// The sequence of minimum and maximum values defining the slots of this instance.
+		/// The sequence of slots of this instance.
 		/// </summary>
-		public IEnumerable<System.Tuple<long, long>> Slots
+		public IEnumerable<UidSlot> Slots
 		{
 			get
 			{
-				for (int slot = 0; slot < this.slotMinValues.Count; slot++)
+				foreach (UidSlot slot in this.slots)
 				{
-					long min = this.slotMinValues[slot];
-					long max = this.slotMaxValues[slot];
-
-					yield return System.Tuple.Create (min, max);
+					yield return slot;
 				}
 			}
 		}
@@ -115,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public long GetNextUidInSlot(int slotIndex)
 		{
 			slotIndex.ThrowIf (s => s < 0, "slotIndex cannot be lower than zero.");
-			slotIndex.ThrowIf (s => s >= this.slotMinValues.Count, "slotIndex cannot be greater or equal to the number of slots.");
+			slotIndex.ThrowIf (s => s >= this.slots.Count, "slotIndex cannot be greater or equal to the number of slots.");
 
 			using (DbTransaction transaction = UidGenerator.CreateWriteTransaction (dbInfrastructure))
 			{
@@ -143,7 +131,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			long? uid = null;
 
-			for (int slotIndex = startSlotIndex; slotIndex < this.slotMinValues.Count && !uid.HasValue; slotIndex++)
+			for (int slotIndex = startSlotIndex; slotIndex < this.slots.Count && !uid.HasValue; slotIndex++)
 			{
 				uid = this.InternalGetNextUidInSlot (slotIndex);
 			}
@@ -273,12 +261,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			using (DbTransaction transaction = UidGenerator.CreateReadTransaction (dbInfrastructure))
 			{
-				var slots = new List<System.Tuple<long, long>>
+				var slots = new List<UidSlot>
 				(
 					from slot in UidGenerator.GetSlots (dbInfrastructure, name)
 					let minValue = dbInfrastructure.UidManager.GetUidCounterMin (name, slot)
 					let maxValue = dbInfrastructure.UidManager.GetUidCounterMax (name, slot)
-					select System.Tuple.Create (minValue, maxValue)
+					select new UidSlot (minValue, maxValue)
 				);
 
 				transaction.Commit ();
@@ -340,13 +328,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private readonly DbInfrastructure dbInfrastructure;
 
 		/// <summary>
-		/// The sequence of minimum values of the slots.
+		/// The sequence of slots.
 		/// </summary>
-		private readonly List<long> slotMinValues;
-
-		/// <summary>
-		/// The sequence of maximum values of the slots.
-		/// </summary>
-		private readonly List<long> slotMaxValues;
+		private readonly List<UidSlot> slots;
 	}
 }
