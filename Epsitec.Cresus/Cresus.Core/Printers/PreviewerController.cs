@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Core.Printers
 				ToolTip.Default.SetToolTip (this.zoom41Button, "Montre une page agrandie 4 fois");
 			}
 
-			this.placer = new Dialogs.PreviewOptimalPlacer (this.pagePreviewers, this.entityPrinter.PageSize);
+			this.placer = new Dialogs.PreviewOptimalPlacer (this.pagePreviewers);
 
 			this.pageSlider.ValueChanged += delegate
 			{
@@ -370,6 +370,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
+				this.placer.PageSize = this.entityPrinter.PageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.pagePreviewers.Count;
 				this.placer.UpdateGeometry ();

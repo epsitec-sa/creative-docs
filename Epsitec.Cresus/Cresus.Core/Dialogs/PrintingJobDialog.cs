@@ -193,8 +193,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 #endif
 
-			Size pageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
-			this.placer = new PreviewOptimalPlacer (this.pagePreviewers, pageSize);
+			this.placer = new PreviewOptimalPlacer (this.pagePreviewers);
 
 			this.UpdateWidgets ();
 			this.UpdatePreview ();
@@ -412,6 +411,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
+				this.placer.PageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.previewedSection.PageCount;
 				this.placer.UpdateGeometry ();
