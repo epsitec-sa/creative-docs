@@ -38,6 +38,10 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				return this.pageType;
 			}
+			set
+			{
+				this.pageType = value;
+			}
 		}
 
 		public int Count
@@ -83,7 +87,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private readonly int					page;
-		private readonly PageType			pageType;
 		private readonly List<BandContainer>	bands;
+
+		private PageType						pageType;
 	}
 }

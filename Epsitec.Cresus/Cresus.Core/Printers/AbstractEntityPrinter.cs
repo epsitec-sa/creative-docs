@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
-		private readonly List<DocumentTypeDefinition>					documentTypes;
+		private readonly List<DocumentTypeDefinition>		documentTypes;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		private int											currentPage;

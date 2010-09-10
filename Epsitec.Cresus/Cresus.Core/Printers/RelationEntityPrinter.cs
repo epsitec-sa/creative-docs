@@ -71,9 +71,12 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void BuildSections()
 		{
 			base.BuildSections ();
+			this.documentContainer.Clear ();
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Summary)
 			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
+
 				this.BuildTitle ();
 				this.BuildSummary ();
 
@@ -91,6 +94,8 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					this.BuildContacts (this.BuildUriContacts);
 				}
+
+				this.documentContainer.Ending (firstPage);
 			}
 		}
 

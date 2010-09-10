@@ -193,6 +193,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
 
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.SinglePage,        "Spec", "Pour une page unique :"                  ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
 		}

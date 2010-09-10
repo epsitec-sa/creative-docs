@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			if ((printerUnitFunction == Printers.PrinterUnitFunction.ForFirstPage      && pageType == Printers.PageType.First    ) ||
+			if ((printerUnitFunction == Printers.PrinterUnitFunction.SinglePage        && pageType == Printers.PageType.Single   ) ||
+				(printerUnitFunction == Printers.PrinterUnitFunction.ForFirstPage      && pageType == Printers.PageType.First    ) ||
 				(printerUnitFunction == Printers.PrinterUnitFunction.ForFollowingPages && pageType == Printers.PageType.Following) ||
 				(printerUnitFunction == Printers.PrinterUnitFunction.ForEsrPage        && pageType == Printers.PageType.ESR      ))
 			{

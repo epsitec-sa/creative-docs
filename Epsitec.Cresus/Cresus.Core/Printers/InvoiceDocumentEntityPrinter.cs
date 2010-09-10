@@ -145,6 +145,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildHeader (null);
 				this.BuildArticles ();
 				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Order)
@@ -155,6 +157,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildArticles ();
 				this.BuildFooter ();
 				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.OrderAcknowledge)
@@ -164,6 +168,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildHeader (null);
 				this.BuildArticles ();
 				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.ProductionOrder)
@@ -177,6 +183,8 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildArticles (group);
 					this.BuildFooter ();
 					this.BuildPages (null, firstPage);
+
+					this.documentContainer.Ending (firstPage);
 				}
 			}
 
@@ -188,6 +196,8 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildArticles ();
 				this.BuildFooter ();
 				this.BuildPages (null, firstPage);
+
+				this.documentContainer.Ending (firstPage);
 			}
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithInsideESR ||
@@ -204,6 +214,8 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
 					this.BuildEsrs (billingDetails, firstPage);
+
+					this.documentContainer.Ending (firstPage);
 				}
 			}
 
@@ -220,6 +232,8 @@ namespace Epsitec.Cresus.Core.Printers
 					this.BuildPages (billingDetails, firstPage);
 					this.BuildReportHeaders (firstPage);
 					this.BuildReportFooters (firstPage);
+
+					this.documentContainer.Ending (firstPage);
 				}
 			}
 		}
@@ -1319,7 +1333,15 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildOutsideEsr(BillingDetailEntity billingDetails, int firstPage)
 		{
 			//	Met un BVR orangé ou un BV rose sur une dernière page séparée.
-			this.documentContainer.PrepareEmptyPage (PageType.ESR);
+			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
+
+			if (this.documentContainer.PageCount () - firstPage > 1 ||
+				this.documentContainer.CurrentVerticalPosition < bounds.Top)
+			{
+				//	On ne prépare pas une nouvelle page si on peut mettre la facture
+				//	et le BV sur une seule page !
+				this.documentContainer.PrepareEmptyPage (PageType.ESR);
+			}
 
 			this.BuildEsr (billingDetails);
 		}
