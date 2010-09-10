@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnUidMax		= "CR_UID_MAX";
 		public const string ColumnUidNext		= "CR_UID_NEXT";
 		public const string ColumnCounter		= "CR_COUNTER";
-		public const string ColumnConnexionIdentity		= "CR_IDENTITY";
-		public const string ColumnConnexionSince = "CR_CONN_SINCE";
-		public const string ColumnConnexionLastSeen		= "CR_LAST_SEEN";
-		public const string ColumnConnexionStatus = "CR_CONN_SATUS";
+		public const string ColumnConnexionIdentity	= "CR_IDENTITY";
+		public const string ColumnConnexionSince	= "CR_CONN_SINCE";
+		public const string ColumnConnexionLastSeen	= "CR_LAST_SEEN";
+		public const string ColumnConnexionStatus	= "CR_CONN_SATUS";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
