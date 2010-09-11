@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Core.Printers
 				ToolTip.Default.SetToolTip (this.zoom41Button, "Montre une page agrandie 4 fois");
 			}
 
-			this.placer = new Dialogs.PreviewOptimalPlacer (this.pagePreviewers);
+			this.placer = new Dialogs.OptimalPreviewPlacer (this.pagePreviewers);
 
 			this.pageSlider.ValueChanged += delegate
 			{
@@ -568,7 +568,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private Scrollable								previewFrame;
 		private List<Widgets.EntityPreviewer>			pagePreviewers;
-		private Dialogs.PreviewOptimalPlacer			placer;
+		private Dialogs.OptimalPreviewPlacer			placer;
 
 		private StaticText								pageRank;
 		private HSlider									pageSlider;

@@ -132,6 +132,23 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public bool HasDocumentOption(DocumentOption option)
+		{
+			//	Indique si une option est utilisée, en tenant compte des options forcées.
+			if (this.forcingOptionsToClear != null && this.forcingOptionsToClear.Contains (option))
+			{
+				return false;
+			}
+
+			if (this.forcingOptionsToSet != null && this.forcingOptionsToSet.Contains (option))
+			{
+				return true;
+			}
+
+			return this.EntityPrintingSettings.HasDocumentOption (option);
+		}
+
+
 		public int DebugParam1
 		{
 			get
@@ -174,15 +191,18 @@ namespace Epsitec.Cresus.Core.Printers
 			this.documentContainer.Clear ();
 		}
 
-		public virtual void BuildSections()
+		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
+			this.forcingOptionsToClear = forcingOptionsToClear;
+			this.forcingOptionsToSet   = forcingOptionsToSet;
+
 			this.documentContainer.PageSize    = this.PageSize;
 			this.documentContainer.PageMargins = this.PageMargins;
 		}
 
 		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
 		{
-			if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.Specimen))
+			if (this.HasDocumentOption (DocumentOption.Specimen))
 			{
 				this.PaintSpecimen (port);
 			}
@@ -267,6 +287,8 @@ namespace Epsitec.Cresus.Core.Printers
 		private int											currentPage;
 		private int											debugParam1;
 		private int											debugParam2;
+		private List<DocumentOption>						forcingOptionsToClear;
+		private List<DocumentOption>						forcingOptionsToSet;
 	}
 
 

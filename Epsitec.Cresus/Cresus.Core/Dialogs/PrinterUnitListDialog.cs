@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.application = application;
 
+			this.optionButtons = new List<CheckButton> ();
 			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
 		}
 
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.Icon = this.application.Window.Icon;
 			this.window.Text = "Définitions des unités d'impression disponibles";
 			this.window.MakeFixedSizeWindow ();
-			this.window.ClientSize = new Size (640, 402);
+			this.window.ClientSize = new Size (840, 500);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -82,7 +83,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var rightFrame = new FrameBox
 			{
 				Parent = frame,
-				PreferredWidth = 300,
+				PreferredWidth = 270,
+				Dock = DockStyle.Right,
+				Margins = new Margins (5, 0, 0, 0),
+			};
+
+			var centerFrame = new FrameBox
+			{
+				Parent = frame,
+				PreferredWidth = 270,
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 0, 0, 0),
 			};
@@ -105,19 +114,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 			ToolTip.Default.SetToolTip (this.listController.MoveUpButton,   "Montre l'unité d'impression dans la liste");
 			ToolTip.Default.SetToolTip (this.listController.MoveDownButton, "Descend l'unité d'impression dans la liste");
 
-			//	Rempli le panneau de droite.
-			var rightTitle = new StaticText
+			//	Rempli le panneau central.
+			var centerTitle = new StaticText
 			{
-				Parent = rightFrame,
+				Parent = centerFrame,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Text = "<font size=\"16\">Choix pour l'unité d'impression sélectionnée</font>",
 				Margins = new Margins (0, 0, 0, 10),
 			};
 
-			this.rightBox = new FrameBox
+			this.centerBox = new FrameBox
 			{
-				Parent = rightFrame,
+				Parent = centerFrame,
 				DrawFullFrame = true,
 				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
 				Dock = DockStyle.Fill,
@@ -126,7 +135,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var box = new FrameBox
 				{
-					Parent = this.rightBox,
+					Parent = this.centerBox,
 					DrawFullFrame = true,
 					Dock = DockStyle.Top,
 					Padding = new Margins (10),
@@ -173,7 +182,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var box = new FrameBox
 				{
-					Parent = this.rightBox,
+					Parent = this.centerBox,
 					DrawFullFrame = true,
 					Dock = DockStyle.Top,
 					Padding = new Margins (10),
@@ -220,7 +229,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var box = new FrameBox
 				{
-					Parent = this.rightBox,
+					Parent = this.centerBox,
 					DrawFullFrame = true,
 					Dock = DockStyle.Top,
 					Padding = new Margins (10),
@@ -234,7 +243,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var box = new FrameBox
 				{
-					Parent = this.rightBox,
+					Parent = this.centerBox,
 					DrawFullFrame = true,
 					Dock = DockStyle.Top,
 					Padding = new Margins (10),
@@ -243,6 +252,76 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.copiesField = PrinterUnitListDialog.CreateTextField (box, "Nombre de copies :", "[×]", ++tabIndex);
 			}
+
+			//	Rempli le panneau de droite.
+			new StaticText
+			{
+				Parent = rightFrame,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Text = "<font size=\"16\">Options imposées</font>",
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			var rightHelpBox = new FrameBox
+			{
+				Parent = rightFrame,
+				DrawFullFrame = true,
+				BackColor = Color.FromHexa ("fffde8"),  // jaune pâle
+				Dock = DockStyle.Top,
+				Padding = new Margins (10),
+			};
+
+			new StaticText
+			{
+				Parent = rightHelpBox,
+				Text = "<i>Ces options seront imposées chaque fois que cette unité d'impression sera utilisée, selon les états ci-dessous :</i>",
+				PreferredHeight = 16*3,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			new CheckButton
+			{
+				Parent = rightHelpBox,
+				Text = "<i>N'impose pas cette option</i>",
+				AcceptThreeState = true,
+				ActiveState = Common.Widgets.ActiveState.Maybe,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			new CheckButton
+			{
+				Parent = rightHelpBox,
+				Text = "<i>Impose de ne pas utiliser cette option</i>",
+				AcceptThreeState = true,
+				ActiveState = Common.Widgets.ActiveState.No,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			new CheckButton
+			{
+				Parent = rightHelpBox,
+				Text = "<i>Impose l'usage de cette option</i>",
+				AcceptThreeState = true,
+				ActiveState = Common.Widgets.ActiveState.Yes,
+				AutoToggle = false,
+				Dock = DockStyle.Top,
+			};
+
+			this.rightBox = new FrameBox
+			{
+				Parent = rightFrame,
+				DrawFullFrame = true,
+				BackColor = Widgets.ArrowedFrame.SurfaceColors.First (),
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, -1, 0),
+				Padding = new Margins (10),
+			};
+
+			this.UpdateOptions (this.rightBox);
 
 			//	Rempli le pied de page.
 			var footer = new FrameBox
@@ -363,7 +442,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 				Parent = box,
-				PreferredWidth = 80,
+				PreferredWidth = 70,
 				Dock = DockStyle.Left,
 				TabIndex = tabIndex,
 			};
@@ -383,6 +462,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
+			this.centerBox.Enable     = sel != -1;
 			this.rightBox.Enable      = sel != -1;
 			this.logicalField.Enable  = sel != -1;
 			this.commentField.Enable  = sel != -1;
@@ -401,6 +481,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.xOffsetField.Text  = null;
 				this.yOffsetField.Text  = null;
 				this.copiesField.Text   = null;
+
+				foreach (var button in this.optionButtons)
+				{
+					button.ActiveState = ActiveState.Maybe;
+				}
 			}
 			else
 			{
@@ -413,6 +498,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.xOffsetField.Text  = printerUnit.XOffset.ToString ();
 				this.yOffsetField.Text  = printerUnit.YOffset.ToString ();
 				this.copiesField.Text   = printerUnit.Copies.ToString ();
+
+				foreach (var button in this.optionButtons)
+				{
+					var documentOption = DocumentTypeDefinition.StringToOption (button.Name);
+
+					if (printerUnit.ForcingOptionsToClear.Contains (documentOption))
+					{
+						button.ActiveState = ActiveState.No;
+					}
+					else if (printerUnit.ForcingOptionsToSet.Contains (documentOption))
+					{
+						button.ActiveState = ActiveState.Yes;
+					}
+					else
+					{
+						button.ActiveState = ActiveState.Maybe;
+					}
+				}
 			}
 
 			string error = this.GetError ();
@@ -467,6 +570,101 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.trayField.SelectedItemIndex = 0;
 			}
+		}
+
+		private void UpdateOptions(FrameBox parent)
+		{
+			this.optionButtons.Clear ();
+			int tabIndex = 0;
+
+			foreach (var documentOption in DocumentTypeDefinition.GetForcingOptions ())
+			{
+				//	Les options avec des boutons radio ne sont pas supportées !
+				System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (documentOption.RadioName));
+
+				if (documentOption.IsTitle)
+				{
+					new StaticText
+					{
+						Parent = parent,
+						Text = documentOption.Title,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 10, 5),
+					};
+				}
+				else if (documentOption.IsMargin)
+				{
+					new FrameBox
+					{
+						Parent = parent,
+						PreferredHeight = documentOption.Height,
+						Dock = DockStyle.Top,
+					};
+				}
+				else
+				{
+					var check = new CheckButton
+					{
+						Parent = parent,
+						Name = DocumentTypeDefinition.OptionToString (documentOption.Option),
+						Text = documentOption.Description,
+						AcceptThreeState = true,
+						ActiveState = ActiveState.Maybe,
+						Dock = DockStyle.Top,
+						AutoToggle = false,
+						TabIndex = ++tabIndex,
+					};
+
+					check.Clicked += delegate
+					{
+						PrinterUnit printerUnit = this.SelectedPrinter;
+						var option = DocumentTypeDefinition.StringToOption (check.Name);
+
+						if (printerUnit.ForcingOptionsToClear.Contains (option))
+						{
+							printerUnit.ForcingOptionsToClear.Remove (option);
+						}
+
+						if (printerUnit.ForcingOptionsToSet.Contains (option))
+						{
+							printerUnit.ForcingOptionsToSet.Remove (option);
+						}
+
+						if (check.ActiveState == ActiveState.Maybe)
+						{
+							check.ActiveState = ActiveState.No;
+							printerUnit.ForcingOptionsToClear.Add (option);
+						}
+						else if (check.ActiveState == ActiveState.No)
+						{
+							check.ActiveState = ActiveState.Yes;
+							printerUnit.ForcingOptionsToSet.Add (option);
+						}
+						else
+						{
+							check.ActiveState = ActiveState.Maybe;
+						}
+					};
+
+					this.optionButtons.Add (check);
+				}
+			}
+
+			var clearButton = new Button
+			{
+				Parent = parent,
+				Text = "N'impose aucune option",
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			clearButton.Clicked += delegate
+			{
+				PrinterUnit printerUnit = this.SelectedPrinter;
+				printerUnit.ForcingOptionsToClear.Clear ();
+				printerUnit.ForcingOptionsToSet.Clear ();
+				this.UpdateWidgets ();
+			};
 		}
 
 
@@ -712,6 +910,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private Window									window;
 		private Controllers.ListController<PrinterUnit>	listController;
+		private FrameBox								centerBox;
 		private FrameBox								rightBox;
 		private TextFieldEx								logicalField;
 		private TextFieldEx								commentField;
@@ -723,6 +922,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText								errorInfo;
 		private Button									acceptButton;
 		private Button									cancelButton;
+		private List<CheckButton>						optionButtons;
 		private List<PrinterUnit>						printerUnitList;
 	}
 }

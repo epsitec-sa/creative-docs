@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public PrinterUnit()
 		{
 			this.Copies = 1;
+			this.forcingOptionsToClear = new List<DocumentOption> ();
+			this.forcingOptionsToSet   = new List<DocumentOption> ();
 		}
 
 		public PrinterUnit(string logicalName)
@@ -85,6 +87,22 @@ namespace Epsitec.Cresus.Core.Printers
 			set;
 		}
 
+		public List<DocumentOption> ForcingOptionsToClear
+		{
+			get
+			{
+				return this.forcingOptionsToClear;
+			}
+		}
+
+		public List<DocumentOption> ForcingOptionsToSet
+		{
+			get
+			{
+				return this.forcingOptionsToSet;
+			}
+		}
+
 
 		public string NiceDescription
 		{
@@ -142,7 +160,17 @@ namespace Epsitec.Cresus.Core.Printers
 					PrinterUnit.serializableSeparator,
 
 					"Comment=",
-					this.Comment
+					this.Comment,
+
+					PrinterUnit.serializableSeparator,
+
+					"ForcingOptionsToClear=",
+					PrinterUnit.GetDocumentOptions (this.forcingOptionsToClear),
+
+					PrinterUnit.serializableSeparator,
+
+					"ForcingOptionsToSet=",
+					PrinterUnit.GetDocumentOptions (this.forcingOptionsToSet)
 				);
 		}
 
@@ -186,7 +214,46 @@ namespace Epsitec.Cresus.Core.Printers
 						case "Comment":
 							this.Comment = words[1];
 							break;
+
+						case "ForcingOptionsToClear":
+							PrinterUnit.SetDocumentOptions (this.forcingOptionsToClear, words[1]);
+							break;
+
+						case "ForcingOptionsToSet":
+							PrinterUnit.SetDocumentOptions (this.forcingOptionsToSet, words[1]);
+							break;
 					}
+				}
+			}
+		}
+
+
+		private static string GetDocumentOptions(List<DocumentOption> documentOptions)
+		{
+			var builder = new System.Text.StringBuilder ();
+
+			foreach (var documentOption in documentOptions)
+			{
+				builder.Append (DocumentTypeDefinition.OptionToString (documentOption));
+				builder.Append (" ");
+			}
+
+			return builder.ToString ();
+		}
+
+		private static void SetDocumentOptions(List<DocumentOption> documentOptions, string text)
+		{
+			documentOptions.Clear ();
+
+			string[] list = text.Split (new string[] { " " }, System.StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var t in list)
+			{
+				var documentOption = DocumentTypeDefinition.StringToOption (t);
+
+				if (documentOption != DocumentOption.None)
+				{
+					documentOptions.Add (documentOption);
 				}
 			}
 		}
@@ -206,5 +273,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private static readonly string serializableSeparator = "•";  // puce, unicode 2022
+
+		private readonly List<DocumentOption> forcingOptionsToClear;
+		private readonly List<DocumentOption> forcingOptionsToSet;
 	}
 }
