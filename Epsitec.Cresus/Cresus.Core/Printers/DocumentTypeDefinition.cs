@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.InvoiceWithES,  "ESR", "BV rose"));
 
 			this.options.Add (new DocumentOptionDefinition ("Mode d'impression du BV :"));
-			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESRFacsimile, null, "Fac-similé complet du BV (pour des essais)", true));
+			this.options.Add (new DocumentOptionDefinition (DocumentOption.ESRFacsimile, null, "Fac-similé complet du BV", true));
 			this.options.Add (new DocumentOptionDefinition (DocumentOption.Specimen,     null, "Incruste la mention SPECIMEN"));
 		}
 
@@ -184,6 +184,19 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute une marge verticale.
 			this.options.Add (new DocumentOptionDefinition (20));
+		}
+
+
+		public static List<DocumentOptionDefinition> GetForcingOptions()
+		{
+			var list = new List<DocumentOptionDefinition> ();
+
+			list.Add (new DocumentOptionDefinition (DocumentOption.HeaderLogo,   null, "Imprime le logo de l'entreprise"));
+			list.Add (new DocumentOptionDefinition (DocumentOption.ESRFacsimile, null, "Fac-similé complet du BV"));
+			list.Add (new DocumentOptionDefinition (DocumentOption.Signing,      null, "Cartouche"));
+			list.Add (new DocumentOptionDefinition (DocumentOption.Specimen,     null, "Incruste la mention SPECIMEN"));
+
+			return list;
 		}
 		#endregion
 
@@ -248,10 +261,10 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly DocumentType			type;
-		private readonly string						shortDescription;
-		private readonly string						longDescription;
+		private readonly DocumentType						type;
+		private readonly string								shortDescription;
+		private readonly string								longDescription;
 		private readonly List<DocumentOptionDefinition>		options;
-		private readonly List<DocumentPrinter>		printers;
+		private readonly List<DocumentPrinter>				printers;
 	}
 }

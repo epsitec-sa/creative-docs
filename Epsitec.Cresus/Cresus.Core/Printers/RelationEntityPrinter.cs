@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.OrientationHorizontal))
+				if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
 				{
 					return new Size (297, 210);  // A4 horizontal
 				}
@@ -68,9 +68,9 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override void BuildSections()
+		public override void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
-			base.BuildSections ();
+			base.BuildSections (forcingOptionsToClear, forcingOptionsToSet);
 			this.documentContainer.Clear ();
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Summary)
@@ -80,17 +80,17 @@ namespace Epsitec.Cresus.Core.Printers
 				this.BuildTitle ();
 				this.BuildSummary ();
 
-				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationMail))
+				if (this.HasDocumentOption (DocumentOption.RelationMail))
 				{
 					this.BuildContacts (this.BuildMailContacts);
 				}
 
-				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationTelecom))
+				if (this.HasDocumentOption (DocumentOption.RelationTelecom))
 				{
 					this.BuildContacts (this.BuildTelecomContacts);
 				}
 
-				if (this.EntityPrintingSettings.HasDocumentOption (DocumentOption.RelationUri))
+				if (this.HasDocumentOption (DocumentOption.RelationUri))
 				{
 					this.BuildContacts (this.BuildUriContacts);
 				}

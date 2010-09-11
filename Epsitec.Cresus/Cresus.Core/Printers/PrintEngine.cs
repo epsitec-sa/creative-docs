@@ -102,15 +102,15 @@ namespace Epsitec.Cresus.Core.Printers
 					entityPrinter.EntityPrintingSettings = settings;
 				}
 
-				//	Construit l'ensemble des pages.
-				entityPrinter.BuildSections ();
-
 				foreach (var documentPrinter in documentType.DocumentPrinters)
 				{
 					PrinterUnit printerUnit = printerUnitList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
 
 					if (printerUnit != null)
 					{
+						//	Construit l'ensemble des pages, en tenant compte des options forcées de l'unité d'impression.
+						entityPrinter.BuildSections (printerUnit.ForcingOptionsToClear, printerUnit.ForcingOptionsToSet);
+
 						if (!entityPrinter.IsEmpty (documentPrinter.PrinterFunction))
 						{
 							for (int copy = 0; copy < printerUnit.Copies; copy++)

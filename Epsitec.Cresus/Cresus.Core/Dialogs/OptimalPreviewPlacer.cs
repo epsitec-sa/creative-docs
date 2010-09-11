@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// Place de façon optimale des rectangles d'aperçu (Widgets.EntityPreviewer) dans une zone rectangulaire.
 	/// Pour cela, on cherche à maximiser la surface des aperçus.
 	/// </summary>
-	class PreviewOptimalPlacer
+	class OptimalPreviewPlacer
 	{
-		public PreviewOptimalPlacer(List<Widgets.EntityPreviewer> pagePreviews)
+		public OptimalPreviewPlacer(List<Widgets.EntityPreviewer> pagePreviews)
 		{
 			this.pagePreviews = pagePreviews;
 		}
