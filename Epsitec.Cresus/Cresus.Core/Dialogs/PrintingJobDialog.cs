@@ -314,8 +314,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				PrintingJobDialog.SetPreviewButtonState (button, true);
 
 				this.previewedSection = section;
-				this.previewedSection.EntityPrinter.IsPreview = true;
-				this.previewedSection.EntityPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);
+				this.previewedSection.DocumentPrinter.IsPreview = true;
+				this.previewedSection.DocumentPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);
 
 				this.UpdatePreview ();
 			};
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var preview = new Widgets.EntityPreviewer
 					{
 						Parent = this.previewFrame,
-						EntityPrinter = this.previewedSection.EntityPrinter,
+						DocumentPrinter = this.previewedSection.DocumentPrinter,
 						CurrentPage = pageRank++,
 					};
 
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
-				this.placer.PageSize = this.jobs[0].Sections[0].EntityPrinter.PageSize;
+				this.placer.PageSize = this.jobs[0].Sections[0].DocumentPrinter.PageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.previewedSection.PageCount;
 				this.placer.UpdateGeometry ();

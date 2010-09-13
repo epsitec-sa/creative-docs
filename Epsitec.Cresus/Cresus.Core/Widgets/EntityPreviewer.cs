@@ -24,15 +24,15 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public Printers.AbstractEntityPrinter EntityPrinter
+		public Printers.AbstractDocumentPrinter DocumentPrinter
 		{
 			get
 			{
-				return this.entityPrinter;
+				return this.documentPrinter;
 			}
 			set
 			{
-				this.entityPrinter = value;
+				this.documentPrinter = value;
 			}
 		}
 
@@ -73,17 +73,17 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			if (this.entityPrinter != null)
+			if (this.documentPrinter != null)
 			{
-				double sx = this.Client.Bounds.Width  / this.entityPrinter.PageSize.Width;
-				double sy = this.Client.Bounds.Height / this.entityPrinter.PageSize.Height;
+				double sx = this.Client.Bounds.Width  / this.documentPrinter.PageSize.Width;
+				double sy = this.Client.Bounds.Height / this.documentPrinter.PageSize.Height;
 				double scale = System.Math.Min (sx, sy);
 
-				double offsetX = System.Math.Ceiling ((this.Client.Bounds.Width  - this.entityPrinter.PageSize.Width *scale) / 2);
-				double offsetY = System.Math.Ceiling ((this.Client.Bounds.Height - this.entityPrinter.PageSize.Height*scale) / 2);
+				double offsetX = System.Math.Ceiling ((this.Client.Bounds.Width  - this.documentPrinter.PageSize.Width *scale) / 2);
+				double offsetY = System.Math.Ceiling ((this.Client.Bounds.Height - this.documentPrinter.PageSize.Height*scale) / 2);
 
 				//	Dessine le fond d'une page blanche.
-				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.entityPrinter.PageSize.Width*scale), System.Math.Floor (this.entityPrinter.PageSize.Height*scale));
+				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.documentPrinter.PageSize.Width*scale), System.Math.Floor (this.documentPrinter.PageSize.Height*scale));
 
 				graphics.AddFilledRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness (1));
@@ -93,9 +93,9 @@ namespace Epsitec.Cresus.Core.Widgets
 				graphics.TranslateTransform (offsetX, offsetY);
 				graphics.ScaleTransform (scale, scale, 0.0, 0.0);
 
-				this.entityPrinter.CurrentPage = this.currentPage;
-				this.entityPrinter.PrintBackgroundCurrentPage (graphics);
-				this.entityPrinter.PrintForegroundCurrentPage (graphics);
+				this.documentPrinter.CurrentPage = this.currentPage;
+				this.documentPrinter.PrintBackgroundCurrentPage (graphics);
+				this.documentPrinter.PrintForegroundCurrentPage (graphics);
 
 				graphics.Transform = initial;
 
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		private Printers.AbstractEntityPrinter		entityPrinter;
+		private Printers.AbstractDocumentPrinter	documentPrinter;
 		private int									currentPage;
 		private string								description;
 	}

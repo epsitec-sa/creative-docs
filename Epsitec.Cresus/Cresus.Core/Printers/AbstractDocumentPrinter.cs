@@ -172,8 +172,14 @@ namespace Epsitec.Cresus.Core.Printers
 		public bool IsPreview
 		{
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get;
-			set;
+			get
+			{
+				return this.entityPrinter.IsPreview;
+			}
+			set
+			{
+				this.entityPrinter.IsPreview = value;
+			}
 		}
 
 		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
@@ -229,10 +235,10 @@ namespace Epsitec.Cresus.Core.Printers
 		protected readonly AbstractEntity					entity;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
+		private List<DocumentOption>						forcingOptionsToClear;
+		private List<DocumentOption>						forcingOptionsToSet;
 		private int											currentPage;
 		private int											debugParam1;
 		private int											debugParam2;
-		private List<DocumentOption>						forcingOptionsToClear;
-		private List<DocumentOption>						forcingOptionsToSet;
 	}
 }

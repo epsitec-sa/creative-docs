@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public class DocumentPrinter
+	public class DocumentPrinterFunction
 	{
-		public DocumentPrinter(PrinterUnitFunction printerFunction, string job, string description)
+		public DocumentPrinterFunction(PrinterUnitFunction printerFunction, string job, string description)
 		{
 			this.PrinterFunction = printerFunction;
 			this.Job             = job;

@@ -14,15 +14,15 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class SectionToPrint
 	{
-		public SectionToPrint(PrinterUnit printerUnit, string job, int firstPage, int entityRank, AbstractEntityPrinter entityPrinter)
+		public SectionToPrint(PrinterUnit printerUnit, string job, int firstPage, int entityRank, AbstractDocumentPrinter documentPrinter)
 		{
 			//	Crée une section d'une page.
-			this.printerUnit   = printerUnit;
-			this.job           = job;
-			this.firstPage     = firstPage;
-			this.PageCount     = 1;
-			this.entityRank    = entityRank;
-			this.entityPrinter = entityPrinter;
+			this.printerUnit     = printerUnit;
+			this.job             = job;
+			this.firstPage       = firstPage;
+			this.PageCount       = 1;
+			this.entityRank      = entityRank;
+			this.documentPrinter = documentPrinter;
 
 			this.Enable = true;
 		}
@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Le nom interne du job a la forme "job.e.d.c":
 			//		job		nom interne du job ("All", "Copy", "Spec", etc.)
 			//		e		rang de l'entité (1..n)
+			//		p		rang du AbstractDocumentPrinter (1..n)
 			//		d		rang du document (1..n)
 			//		c		rang de la copie (1..n)
 			//	Par exemple "All.1.1".
@@ -71,11 +72,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public AbstractEntityPrinter EntityPrinter
+		public AbstractDocumentPrinter DocumentPrinter
 		{
 			get
 			{
-				return this.entityPrinter;
+				return this.documentPrinter;
 			}
 		}
 
@@ -137,10 +138,10 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly PrinterUnit			printerUnit;
-		private readonly string					job;
-		private readonly int					firstPage;
-		private readonly int					entityRank;
-		private readonly AbstractEntityPrinter	entityPrinter;
+		private readonly PrinterUnit				printerUnit;
+		private readonly string						job;
+		private readonly int						firstPage;
+		private readonly int						entityRank;
+		private readonly AbstractDocumentPrinter	documentPrinter;
 	}
 }

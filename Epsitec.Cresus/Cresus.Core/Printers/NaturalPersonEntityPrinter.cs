@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 		}
 
+#if false
 		public override string JobName
 		{
 			get
@@ -49,5 +50,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.PaintText (10, 10, text, Font.DefaultFont, Font.DefaultFontSize);
 		}
+#endif
 	}
 }

@@ -183,7 +183,7 @@
     <Compile Include="Printers\PrinterSettings.cs" />
     <Compile Include="Printers\PrinterUnitFunction.cs" />
     <Compile Include="Printers\PageType.cs" />
-    <Compile Include="Printers\DocumentPrinter.cs" />
+    <Compile Include="Printers\DocumentPrinterFunction.cs" />
     <Compile Include="Printers\DocumentType.cs" />
     <Compile Include="TextFormatter.cs" />
     <Compile Include="Data\ArticleGroupRepository.cs" />
