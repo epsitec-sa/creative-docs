@@ -24,12 +24,21 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class PageContainer
 	{
-		public PageContainer(int page, PageType pageType)
+		public PageContainer(int page, int documentRank, PageType pageType)
 		{
-			this.page = page;
-			this.pageType = pageType;
+			this.page         = page;
+			this.documentRank = documentRank;
+			this.pageType     = pageType;
 
 			this.bands = new List<BandContainer> ();
+		}
+
+		public int DocumentRank
+		{
+			get
+			{
+				return this.documentRank;
+			}
 		}
 
 		public PageType PageType
@@ -107,6 +116,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private readonly int					page;
+		private readonly int					documentRank;
 		private readonly List<BandContainer>	bands;
 
 		private PageType						pageType;

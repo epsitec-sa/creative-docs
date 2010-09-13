@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
 			base.BuildSections (forcingOptionsToClear, forcingOptionsToSet);
+
 			this.documentContainer.Clear ();
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Summary)
