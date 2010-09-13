@@ -24,9 +24,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public AbstractEntityPrinter()
 			: base ()
 		{
-			this.documentTypes = new List<DocumentTypeDefinition> ();
-			this.documentContainer = new DocumentContainer ();
-			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
+			this.documentPrinters  = new List<AbstractDocumentPrinter> ();
+			this.documentTypes     = new List<DocumentTypeDefinition> ();
 
 			this.EntityPrintingSettings = new EntityPrintingSettings ();
 		}
@@ -36,6 +35,15 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get;
 			set;
+		}
+
+
+		public List<AbstractDocumentPrinter> DocumentPrinters
+		{
+			get
+			{
+				return this.documentPrinters;
+			}
 		}
 
 		public List<DocumentTypeDefinition> DocumentTypes
@@ -73,6 +81,121 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		public bool IsPreview
+		{
+			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
+			get;
+			set;
+		}
+
+
+		public int PageCount(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		{
+			int count = 0;
+
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				count += documentPrinter.PageCount (printerFunctionUsed);
+			}
+
+			return count;
+		}
+
+		public PageType GetPageType(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		{
+			int firstDocumentPage = 0;
+
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				int pageCount = documentPrinter.PageCount (printerFunctionUsed);
+
+				if (page < firstDocumentPage+pageCount)
+				{
+					return documentPrinter.GetPageType (page-firstDocumentPage);
+				}
+
+				firstDocumentPage += pageCount;
+			}
+
+			return PageType.Single;
+		}
+
+		public AbstractDocumentPrinter GetDocumentPrinter(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		{
+			int firstDocumentPage = 0;
+
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				firstDocumentPage += documentPrinter.PageCount (printerFunctionUsed);
+
+				if (page < firstDocumentPage)
+				{
+					return documentPrinter;
+				}
+			}
+
+			return null;
+		}
+
+		public virtual Size MaximalPageSize
+		{
+			get
+			{
+				double width  = 0;
+				double height = 0;
+
+				foreach (var documentPrinter in this.documentPrinters)
+				{
+					width  = System.Math.Max (width,  documentPrinter.PageSize.Width);
+					height = System.Math.Max (height, documentPrinter.PageSize.Height);
+				}
+
+				return new Size (width, height);
+			}
+		}
+
+		public virtual void BuildSections()
+		{
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				documentPrinter.BuildSections ();
+			}
+		}
+
+
+		public int DebugParam1
+		{
+			get
+			{
+				return this.documentPrinters[0].DebugParam1;
+			}
+			set
+			{
+				if (this.documentPrinters[0].DebugParam1 != value)
+				{
+					this.documentPrinters[0].DebugParam1 = value;
+				}
+			}
+		}
+
+		public int DebugParam2
+		{
+			get
+			{
+				return this.documentPrinters[0].DebugParam2;
+			}
+			set
+			{
+				if (this.documentPrinters[0].DebugParam2 != value)
+				{
+					this.documentPrinters[0].DebugParam2 = value;
+				}
+			}
+		}
+
+
+
+#if false
 		public virtual string JobName
 		{
 			get
@@ -184,13 +307,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool IsPreview
-		{
-			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get;
-			set;
-		}
-
 		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
 			this.forcingOptionsToClear = forcingOptionsToClear;
@@ -236,6 +352,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Transform = initial;
 		}
+#endif
 
 
 		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
@@ -281,14 +398,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
+		protected readonly List<AbstractDocumentPrinter>	documentPrinters;
 		private readonly List<DocumentTypeDefinition>		documentTypes;
-		protected readonly DocumentContainer				documentContainer;
-		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
-		private int											currentPage;
-		private int											debugParam1;
-		private int											debugParam2;
-		private List<DocumentOption>						forcingOptionsToClear;
-		private List<DocumentOption>						forcingOptionsToSet;
 	}
 
 

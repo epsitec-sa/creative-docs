@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.DocumentTypes.Add (type);
 		}
 
+#if false
 		public override string JobName
 		{
 			get
@@ -420,5 +421,6 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		private static readonly double fontSize = 4;
+#endif
 	}
 }

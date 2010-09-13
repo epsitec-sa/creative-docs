@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.longDescription  = longDescription;
 
 			this.options = new List<DocumentOptionDefinition> ();
-			this.printers = new List<DocumentPrinter> ();
+			this.printers = new List<DocumentPrinterFunction> ();
 		}
 
 		public DocumentType Type
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public List<DocumentPrinter> DocumentPrinters
+		public List<DocumentPrinterFunction> DocumentPrinterFunctions
 		{
 			get
 			{
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public DocumentPrinter GetDocumentPrinter(PrinterUnitFunction printerFunction)
+		public DocumentPrinterFunction GetDocumentPrinter(PrinterUnitFunction printerFunction)
 		{
 			return this.printers.Where (x => x.PrinterFunction == printerFunction).FirstOrDefault ();
 		}
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				DocumentPrinter all = this.GetDocumentPrinter (PrinterUnitFunction.ForAllPages);
+				DocumentPrinterFunction all = this.GetDocumentPrinter (PrinterUnitFunction.ForAllPages);
 				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
 					return true;
@@ -205,24 +205,24 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddBasePrinterUnit()
 		{
 			//	Ajoute les unités d'impression de base, qui devraient toujours exister.
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
 
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForSinglePage,     "Spec", "Pour une page unique :"                  ));
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForSinglePage,     "Spec", "Pour une page unique :"                  ));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
 		}
 
 		public void AddEsrPrinterUnit()
 		{
 			//	Ajoute l'unité d'impression spécifique pour les BV.
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForEsrPage, "Spec", "Pour le BV :"));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForEsrPage, "Spec", "Pour le BV :"));
 		}
 
 		public void AddLabelPrinterUnit()
 		{
 			//	Ajoute l'unité d'impression spécifique pour les étiquettes.
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForLabelPage, "Label", "Pour l'étiquette :"));
+			this.printers.Add (new DocumentPrinterFunction (PrinterUnitFunction.ForLabelPage, "Label", "Pour l'étiquette :"));
 		}
 		#endregion
 
@@ -271,6 +271,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly string								shortDescription;
 		private readonly string								longDescription;
 		private readonly List<DocumentOptionDefinition>		options;
-		private readonly List<DocumentPrinter>				printers;
+		private readonly List<DocumentPrinterFunction>				printers;
 	}
 }

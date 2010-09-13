@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 
-			var pageSize = this.entityPrinter.PageSize;
+			var pageSize = this.entityPrinter.MaximalPageSize;
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 
 			window.Icon = this.application.Window.Icon;

@@ -539,7 +539,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var documentType = this.GetDocumentType (this.entityPrintingSettings.DocumentTypeSelected);
 			if (documentType != null)
 			{
-				if (documentType.DocumentPrinters.Count == 0)
+				if (documentType.DocumentPrinterFunctions.Count == 0)
 				{
 					var title = new StaticText
 					{
@@ -566,9 +566,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				string lastJob = null;
 				FrameBox box = null;
 
-				foreach (var documentPrinter in documentType.DocumentPrinters)
+				foreach (var documentPrinterFunction in documentType.DocumentPrinterFunctions)
 				{
-					if (documentPrinter.Job != lastJob)
+					if (documentPrinterFunction.Job != lastJob)
 					{
 						box = new FrameBox
 						{
@@ -583,7 +583,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var label = new StaticText
 					{
 						Parent = box,
-						Text = documentPrinter.Description,
+						Text = documentPrinterFunction.Description,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 					};
@@ -591,15 +591,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 					var field = new TextFieldCombo
 					{
 						IsReadOnly = true,
-						Name = documentPrinter.PrinterFunction.ToString (),
+						Name = documentPrinterFunction.PrinterFunction.ToString (),
 						Parent = box,
-						Text = documentPrinter.LogicalPrinterName,
+						Text = documentPrinterFunction.LogicalPrinterName,
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
 						TabIndex = ++tabIndex,
 					};
 
-					string settings = this.GetSettings (false, string.Concat ("PrinterUnit.", documentPrinter.PrinterFunction));
+					string settings = this.GetSettings (false, string.Concat ("PrinterUnit.", documentPrinterFunction.PrinterFunction));
 					if (!string.IsNullOrEmpty (settings))
 					{
 						PrinterUnit pu = this.printerUnitList.Where (x => x.LogicalName == settings).FirstOrDefault ();
@@ -607,7 +607,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						if (pu != null)
 						{
 							field.Text = pu.NiceDescription;
-							documentPrinter.LogicalPrinterName = pu.LogicalName;
+							documentPrinterFunction.LogicalPrinterName = pu.LogicalName;
 						}
 					}
 
@@ -621,7 +621,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					field.SelectedItemChanged += delegate
 					{
 						PrinterUnitFunction printerFunction = (PrinterUnitFunction) System.Enum.Parse (typeof (PrinterUnitFunction), field.Name);
-						DocumentPrinter p = documentType.GetDocumentPrinter (printerFunction);
+						DocumentPrinterFunction p = documentType.GetDocumentPrinter (printerFunction);
 						p.LogicalPrinterName = field.SelectedKey;  // key = LogicalName
 
 						this.SetSettings (false, string.Concat("PrinterUnit.", p.PrinterFunction), p.LogicalPrinterName);
@@ -631,7 +631,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 					this.printerCombos.Add (field);
 
-					lastJob = documentPrinter.Job;
+					lastJob = documentPrinterFunction.Job;
 				}
 			}
 		}

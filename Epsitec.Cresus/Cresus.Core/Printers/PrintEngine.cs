@@ -102,32 +102,39 @@ namespace Epsitec.Cresus.Core.Printers
 					entityPrinter.EntityPrintingSettings = settings;
 				}
 
-				foreach (var documentPrinter in documentType.DocumentPrinters)
+				int documentPrinterRank = 0;
+				foreach (var documentPrinter in entityPrinter.DocumentPrinters)
 				{
-					PrinterUnit printerUnit = printerUnitList.Where (p => p.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
-
-					if (printerUnit != null)
+					foreach (var documentPrinterFunction in documentType.DocumentPrinterFunctions)
 					{
-						//	Construit l'ensemble des pages, en tenant compte des options forcées de l'unité d'impression.
-						entityPrinter.BuildSections (printerUnit.ForcingOptionsToClear, printerUnit.ForcingOptionsToSet);
+						PrinterUnit printerUnit = printerUnitList.Where (p => p.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
 
-						if (!entityPrinter.IsEmpty (documentPrinter.PrinterFunction))
+						if (printerUnit != null)
 						{
-							for (int copy = 0; copy < printerUnit.Copies; copy++)
-							{
-								var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
-								foreach (var physicalPage in physicalPages)
-								{
-									string e = (entityRank+1).ToString ();
-									string d = (entityPrinter.GetDocumentRank (physicalPage)+1).ToString ();
-									string c = (copy+1).ToString ();
-									string internalJobName = string.Concat (documentPrinter.Job, ".", e, ".", d, ".", c);
+							//	Construit l'ensemble des pages, en tenant compte des options forcées de l'unité d'impression.
+							documentPrinter.BuildSections (printerUnit.ForcingOptionsToClear, printerUnit.ForcingOptionsToSet);
 
-									sections.Add (new SectionToPrint (printerUnit, internalJobName, physicalPage, entityRank, entityPrinter));
+							if (!documentPrinter.IsEmpty (documentPrinterFunction.PrinterFunction))
+							{
+								for (int copy = 0; copy < printerUnit.Copies; copy++)
+								{
+									var physicalPages = documentPrinter.GetPhysicalPages (documentPrinterFunction.PrinterFunction);
+									foreach (var physicalPage in physicalPages)
+									{
+										string e = (entityRank+1).ToString ();
+										string p = (documentPrinterRank+1).ToString ();
+										string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
+										string c = (copy+1).ToString ();
+										string internalJobName = string.Concat (documentPrinterFunction.Job, ".", e, ".", d, ".", c);
+
+										sections.Add (new SectionToPrint (printerUnit, internalJobName, physicalPage, entityRank, documentPrinter));
+									}
 								}
 							}
 						}
 					}
+
+					documentPrinterRank++;
 				}
 			}
 
@@ -211,7 +218,7 @@ namespace Epsitec.Cresus.Core.Printers
 			index = 0;
 			foreach (var job in jobs)
 			{
-				job.JobFullName = string.Concat (job.Sections[0].EntityPrinter.JobName, ".", (index+1).ToString ());
+				job.JobFullName = string.Concat (job.Sections[0].DocumentPrinter.JobName, ".", (index+1).ToString ());
 				index++;
 			}
 

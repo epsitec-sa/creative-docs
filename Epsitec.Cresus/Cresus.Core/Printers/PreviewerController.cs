@@ -328,11 +328,12 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pagePreviewers.Clear ();
 			this.previewFrame.Viewport.Children.Clear ();
 
+			int pageCount = this.entityPrinter.PageCount ();
 			int pageRank = this.currentPage;
 
 			for (int i = 0; i < this.showedPageCount; i++)
 			{
-				if (pageRank >= this.entityPrinter.PageCount ())
+				if (pageRank >= pageCount)
 				{
 					break;
 				}
@@ -340,7 +341,7 @@ namespace Epsitec.Cresus.Core.Printers
 				var preview = new Widgets.EntityPreviewer
 				{
 					Parent = this.previewFrame.Viewport,
-					EntityPrinter = this.entityPrinter,
+					DocumentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank),
 					Description = this.GetPrintersUsedDescription (pageRank),
 					CurrentPage = pageRank++,
 				};
@@ -370,7 +371,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
-				this.placer.PageSize = this.entityPrinter.PageSize;
+				this.placer.PageSize = this.entityPrinter.MaximalPageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.pagePreviewers.Count;
 				this.placer.UpdateGeometry ();
@@ -482,24 +483,24 @@ namespace Epsitec.Cresus.Core.Printers
 			PageType pageType = this.entityPrinter.GetPageType (page);
 
 			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
-			List<DocumentPrinter> documentPrinters = documentType.DocumentPrinters;
+			List<DocumentPrinterFunction> documentPrinterFunctions = documentType.DocumentPrinterFunctions;
 
-			foreach (DocumentPrinter documentPrinter in documentPrinters)
+			foreach (DocumentPrinterFunction documentPrinterFunction in documentPrinterFunctions)
 			{
-				if (!string.IsNullOrEmpty (documentPrinter.LogicalPrinterName))
+				if (!string.IsNullOrEmpty (documentPrinterFunction.LogicalPrinterName))
 				{
-					if (Printers.Common.IsPrinterAndPageMatching (documentPrinter.PrinterFunction, pageType))
+					if (Printers.Common.IsPrinterAndPageMatching (documentPrinterFunction.PrinterFunction, pageType))
 					{
-						var pu = this.printerUnitList.Where (x => x.LogicalName == documentPrinter.LogicalPrinterName).FirstOrDefault ();
+						var pu = this.printerUnitList.Where (x => x.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
 						int copies = (pu == null) ? 1 : pu.Copies;
 
-						if (dico.ContainsKey (documentPrinter.LogicalPrinterName))
+						if (dico.ContainsKey (documentPrinterFunction.LogicalPrinterName))
 						{
-							dico[documentPrinter.LogicalPrinterName] += copies;
+							dico[documentPrinterFunction.LogicalPrinterName] += copies;
 						}
 						else
 						{
-							dico.Add (documentPrinter.LogicalPrinterName, copies);
+							dico.Add (documentPrinterFunction.LogicalPrinterName, copies);
 						}
 					}
 				}

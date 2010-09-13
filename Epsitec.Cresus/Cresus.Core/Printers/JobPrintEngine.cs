@@ -49,15 +49,15 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			section.EntityPrinter.IsPreview = false;
-			section.EntityPrinter.CurrentPage = section.FirstPage;
+			section.DocumentPrinter.IsPreview = false;
+			section.DocumentPrinter.CurrentPage = section.FirstPage;
 		}
 
 		public PrintEngineStatus PrintPage(PrintPort port)
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			Size size = section.EntityPrinter.PageSize;
+			Size size = section.DocumentPrinter.PageSize;
 			double height = size.Height;
 			double width  = size.Width;
 
@@ -66,23 +66,23 @@ namespace Epsitec.Cresus.Core.Printers
 
 			Transform transform;
 
-			if (section.EntityPrinter.PageSize.Width < section.EntityPrinter.PageSize.Height)  // portrait ?
+			if (section.DocumentPrinter.PageSize.Width < section.DocumentPrinter.PageSize.Height)  // portrait ?
 			{
 				transform = Transform.Identity;
 			}
 			else  // paysage ?
 			{
-				transform = Transform.CreateRotationDegTransform (90, section.EntityPrinter.PageSize.Height/2, section.EntityPrinter.PageSize.Height/2);
+				transform = Transform.CreateRotationDegTransform (90, section.DocumentPrinter.PageSize.Height/2, section.DocumentPrinter.PageSize.Height/2);
 			}
 
 			port.Transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
 
-			section.EntityPrinter.PrintBackgroundCurrentPage (port);
-			section.EntityPrinter.PrintForegroundCurrentPage (port);
+			section.DocumentPrinter.PrintBackgroundCurrentPage (port);
+			section.DocumentPrinter.PrintForegroundCurrentPage (port);
 
-			section.EntityPrinter.CurrentPage++;  // page suivante dans la section
+			section.DocumentPrinter.CurrentPage++;  // page suivante dans la section
 
-			if (section.EntityPrinter.CurrentPage < section.FirstPage+section.PageCount)  // section pas terminée ?
+			if (section.DocumentPrinter.CurrentPage < section.FirstPage+section.PageCount)  // section pas terminée ?
 			{
 				return PrintEngineStatus.MorePages;
 			}
@@ -93,8 +93,8 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				section = this.sections[this.sectionIndex];  // section <- nouvelle section à imprimer
 
-				section.EntityPrinter.IsPreview = false;
-				section.EntityPrinter.CurrentPage = section.FirstPage;
+				section.DocumentPrinter.IsPreview = false;
+				section.DocumentPrinter.CurrentPage = section.FirstPage;
 
 				return PrintEngineStatus.MorePages;
 			}

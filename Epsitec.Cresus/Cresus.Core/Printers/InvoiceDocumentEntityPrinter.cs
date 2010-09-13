@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Core.Printers
 		public InvoiceDocumentEntityPrinter(InvoiceDocumentEntity entity)
 			: base (entity)
 		{
+			this.documentPrinters.Add (new InvoiceDocumentPrinter (this, this.entity));
+
 			DocumentTypeDefinition type;
 
 			type = new DocumentTypeDefinition (DocumentType.Offer, "Offre", "Offre pour le client.");
@@ -93,6 +95,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.DocumentTypes.Add (type);
 		}
 
+#if false
 		public override string JobName
 		{
 			get
@@ -1519,5 +1522,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private int					visibleColumnCount;
 		private int[]				lastRowForEachSection;
 		private List<Rectangle>		tableBounds;
+#endif
 	}
 }
