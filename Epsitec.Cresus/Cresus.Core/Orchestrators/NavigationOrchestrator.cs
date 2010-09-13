@@ -162,6 +162,20 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+
+		public void PreserveNavigation(System.Action action)
+		{
+			var history         = this.History;
+			var navigationPath  = this.GetLeafNavigationPath ();
+
+			using (history.SuspendRecording ())
+			{
+				action ();
+				history.NavigateInPlace (navigationPath);
+			}
+		}
+
+
 		/// <summary>
 		/// Notifies the navigation orchestrator that we are about to navigate in the
 		/// history. This should record the current state immediately, if needed.

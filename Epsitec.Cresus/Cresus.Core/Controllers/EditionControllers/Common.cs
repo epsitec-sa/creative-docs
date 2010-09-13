@@ -110,49 +110,45 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var invoiceDocument = dataContext.GetEntitiesOfType<GenericArticleDocumentEntity> (x => x.Lines.Contains (entity)).Single ();
 			var navigator       = controller.Navigator;
-			var history         = navigator.History;
-			var navigationPath  = navigator.GetLeafNavigationPath ();
 
-			using (history.SuspendRecording ())
-			{
-				//	Cherche l'index de la ligne dans la collection.
-				int index = invoiceDocument.Lines.IndexOf (entity);
-
-				System.Diagnostics.Debug.Assert (index >= 0);
-
-				//	Ferme la tuile.
-				orchestrator.CloseView (controller);
-
-				//	Crée la nouvelle entité.
-				AbstractDocumentItemEntity newEntity = null;
-
-				if (id == DocumentItemTabId.Text)
+			navigator.PreserveNavigation (
+				delegate
 				{
-					newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
-				}
-				else if (id == DocumentItemTabId.Article)
-				{
-					newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+					//	Cherche l'index de la ligne dans la collection.
+					int index = invoiceDocument.Lines.IndexOf (entity);
 
-					var article = newEntity as ArticleDocumentItemEntity;
-					article.BeginDate = invoiceDocument.CreationDate;
-					article.EndDate   = invoiceDocument.CreationDate;
-				}
-				else if (id == DocumentItemTabId.Price)
-				{
-					newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
-				}
+					System.Diagnostics.Debug.Assert (index >= 0);
 
-				System.Diagnostics.Debug.Assert (newEntity != null);
-				newEntity.Visibility = true;
+					//	Ferme la tuile.
+					orchestrator.CloseView (controller);
 
-				//	Remplace l'entité dans la db.
-				invoiceDocument.Lines[index] = newEntity;
-				dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
+					//	Crée la nouvelle entité.
+					AbstractDocumentItemEntity newEntity = null;
 
-				//	Crée et montre la nouvelle tuile.
-				history.NavigateInPlace (navigationPath);
-			}
+					if (id == DocumentItemTabId.Text)
+					{
+						newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+					}
+					else if (id == DocumentItemTabId.Article)
+					{
+						newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+
+						var article = newEntity as ArticleDocumentItemEntity;
+						article.BeginDate = invoiceDocument.CreationDate;
+						article.EndDate   = invoiceDocument.CreationDate;
+					}
+					else if (id == DocumentItemTabId.Price)
+					{
+						newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+					}
+
+					System.Diagnostics.Debug.Assert (newEntity != null);
+					newEntity.Visibility = true;
+
+					//	Remplace l'entité dans la db.
+					invoiceDocument.Lines[index] = newEntity;
+					dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
+				});
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 
@@ -169,41 +165,37 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			}
 
 			var articleDefinition = dataContext.GetEntitiesOfType<ArticleDefinitionEntity> (x => x.ArticleParameterDefinitions.Contains (entity)).Single ();
-			var navigator         = controller.Navigator;
-			var history           = navigator.History;
-			var navigationPath    = navigator.GetLeafNavigationPath ();
+			var navigator       = controller.Navigator;
 
-			using (history.SuspendRecording ())
-			{
-				//	Cherche l'index de la ligne dans la collection.
-				int index = articleDefinition.ArticleParameterDefinitions.IndexOf (entity);
-
-				System.Diagnostics.Debug.Assert (index >= 0);
-
-				//	Ferme la tuile.
-				orchestrator.CloseView (controller);
-
-				//	Crée la nouvelle entité.
-				AbstractArticleParameterDefinitionEntity newEntity = null;
-
-				if (id == ArticleParameterTabId.Numeric)
+			navigator.PreserveNavigation (
+				delegate
 				{
-					newEntity = dataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
-				}
-				else if (id == ArticleParameterTabId.Enum)
-				{
-					newEntity = dataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
-				}
+					//	Cherche l'index de la ligne dans la collection.
+					int index = articleDefinition.ArticleParameterDefinitions.IndexOf (entity);
 
-				System.Diagnostics.Debug.Assert (newEntity != null);
+					System.Diagnostics.Debug.Assert (index >= 0);
 
-				//	Remplace l'entité dans la db.
-				articleDefinition.ArticleParameterDefinitions[index] = newEntity;
-				dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
+					//	Ferme la tuile.
+					orchestrator.CloseView (controller);
 
-				//	Crée et montre la nouvelle tuile.
-				history.NavigateInPlace (navigationPath);
-			}
+					//	Crée la nouvelle entité.
+					AbstractArticleParameterDefinitionEntity newEntity = null;
+
+					if (id == ArticleParameterTabId.Numeric)
+					{
+						newEntity = dataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+					}
+					else if (id == ArticleParameterTabId.Enum)
+					{
+						newEntity = dataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
+					}
+
+					System.Diagnostics.Debug.Assert (newEntity != null);
+
+					//	Remplace l'entité dans la db.
+					articleDefinition.ArticleParameterDefinitions[index] = newEntity;
+					dataContext.DeleteEntity (entity);  // supprime dans le DataContext de la ligne
+				});
 //-			parentController.TileContainerController.ShowSubView (index, "DocumentItem");
 		}
 
@@ -216,6 +208,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		/// <returns></returns>
 		public static AbstractEntity GetParentEntity(TileContainer container)
 		{
+			//	TODO: supprimer ce code
 			var parentController = Common.GetParentController (container);
 
 			if (parentController != null)
@@ -234,6 +227,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		/// <returns></returns>
 		public static EntityViewController GetParentController(TileContainer container)
 		{
+			//	TODO: supprimer ce code
 			// TODO: Il faudra supprimer cette méthode. Un *ViewController devrait connaître les entités parent !
 			var controllers = container.Controller.Orchestrator.Controller.GetAllSubControllers ();
 
