@@ -19,54 +19,39 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Printers
 {
-	public abstract class AbstractEntityPrinter
+	public abstract class AbstractDocumentPrinter
 	{
-		public AbstractEntityPrinter()
-			: base ()
+		public AbstractDocumentPrinter(AbstractEntityPrinter entityPrinter, AbstractEntity entity)
 		{
-			this.documentTypes = new List<DocumentTypeDefinition> ();
+			this.entityPrinter = entityPrinter;
+			this.entity = entity;
+
 			this.documentContainer = new DocumentContainer ();
 			this.tableColumns = new Dictionary<TableColumnKeys, TableColumn> ();
-
-			this.EntityPrintingSettings = new EntityPrintingSettings ();
 		}
 
 
-		public EntityPrintingSettings EntityPrintingSettings
-		{
-			get;
-			set;
-		}
-
-		public List<DocumentTypeDefinition> DocumentTypes
+		protected DocumentType DocumentTypeSelected
 		{
 			get
 			{
-				return this.documentTypes;
-			}
-		}
-
-		public DocumentTypeDefinition DocumentTypeSelected
-		{
-			get
-			{
-				return this.DocumentTypes.Where (x => x.Type == this.EntityPrintingSettings.DocumentTypeSelected).FirstOrDefault ();
+				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected;
 			}
 		}
 
 
 		public void DefaultPrepare(DocumentType type)
 		{
-			this.EntityPrintingSettings.DocumentTypeSelected = type;
+			this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected = type;
 
-			var documentType = this.DocumentTypeSelected;
+			var documentType = this.entityPrinter.DocumentTypeSelected;
 			if (documentType != null)
 			{
 				foreach (var option in documentType.DocumentOptions)
 				{
 					if (option.DefautState)
 					{
-						this.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Option);
+						this.entityPrinter.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Option);
 					}
 				}
 			}
@@ -150,7 +135,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return true;
 			}
 
-			return this.EntityPrintingSettings.HasDocumentOption (option);
+			return this.entityPrinter.EntityPrintingSettings.HasDocumentOption (option);
 		}
 
 
@@ -224,64 +209,24 @@ namespace Epsitec.Cresus.Core.Printers
 				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (60));
 
 				port.Color = Color.FromBrightness (0.95);
-				port.PaintText (34, -36, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
+				port.PaintText (34, -36, "SPECIMEN", AbstractDocumentPrinter.specimenFont, 56);
 			}
 			else  // paysage ?
 			{
 				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (30));
 
 				port.Color = Color.FromBrightness (0.95);
-				port.PaintText (30, -4, "SPECIMEN", AbstractEntityPrinter.specimenFont, 56);
+				port.PaintText (30, -4, "SPECIMEN", AbstractDocumentPrinter.specimenFont, 56);
 			}
 
 			port.Transform = initial;
 		}
 
 
-		public static AbstractEntityPrinter CreateEntityPrinter(AbstractEntity entity)
-		{
-			var type = AbstractEntityPrinter.FindEntityPrinterType (entity);
-
-			if (type == null)
-			{
-				return null;
-			}
-
-			return System.Activator.CreateInstance (type, new object[] { entity }) as AbstractEntityPrinter;
-		}
-
-		internal static System.Type FindEntityPrinterType(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return null;
-			}
-			else
-			{
-				return AbstractEntityPrinter.FindEntityPrinterType (entity.GetType ());
-			}
-		}
-
-		private static System.Type FindEntityPrinterType(System.Type entityType)
-		{
-			var baseTypeName = "AbstractEntityPrinter`1";
-
-			//	Find all concrete classes which use either the generic AbstractEntityPrinter base classes,
-			//	which match the entity type (usually, there should be exactly one such type).
-
-			var types = from type in typeof (AbstractEntityPrinter).Assembly.GetTypes ()
-						where type.IsClass && !type.IsAbstract
-						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
-						select type;
-
-			return types.FirstOrDefault ();
-		}
-
-
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
-		private readonly List<DocumentTypeDefinition>		documentTypes;
+		protected readonly AbstractEntityPrinter			entityPrinter;
+		protected readonly AbstractEntity					entity;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
 		private int											currentPage;
@@ -289,17 +234,5 @@ namespace Epsitec.Cresus.Core.Printers
 		private int											debugParam2;
 		private List<DocumentOption>						forcingOptionsToClear;
 		private List<DocumentOption>						forcingOptionsToSet;
-	}
-
-
-	public class AbstractEntityPrinter<T> : AbstractEntityPrinter
-		where T : AbstractEntity
-	{
-		public AbstractEntityPrinter(T entity)
-		{
-			this.entity = entity;
-		}
-
-		protected readonly T entity;
 	}
 }

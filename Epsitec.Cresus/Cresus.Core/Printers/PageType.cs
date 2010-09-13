@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Core.Printers
 		Following,		// page suivante (1..n)
 
 		ESR,			// page avec BV
+		Label,			// page avec étiquette
 	}
 }

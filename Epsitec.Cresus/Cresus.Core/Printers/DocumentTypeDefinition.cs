@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForAllPages,       "All",  "Pour l'ensemble des pages :"             ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForPagesCopy,      "Copy", "Pour une copie de l'ensemble des pages :"));
 
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.SinglePage,        "Spec", "Pour une page unique :"                  ));
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForSinglePage,     "Spec", "Pour une page unique :"                  ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFirstPage,      "Spec", "Pour la première page :"                 ));
 			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForFollowingPages, "Spec", "Pour les pages suivantes :"              ));
 		}
@@ -216,7 +216,13 @@ namespace Epsitec.Cresus.Core.Printers
 		public void AddEsrPrinterUnit()
 		{
 			//	Ajoute l'unité d'impression spécifique pour les BV.
-			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForEsrPage,        "Spec", "Pour le BV :"                            ));
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForEsrPage, "Spec", "Pour le BV :"));
+		}
+
+		public void AddLabelPrinterUnit()
+		{
+			//	Ajoute l'unité d'impression spécifique pour les étiquettes.
+			this.printers.Add (new DocumentPrinter (PrinterUnitFunction.ForLabelPage, "Label", "Pour l'étiquette :"));
 		}
 		#endregion
 
