@@ -69,6 +69,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public CoreDataLocker DataLocker
+		{
+			get
+			{
+				return this.locker;
+			}
+		}
+
 		public BusinessLogic.RefIdGeneratorPool RefIdGeneratorPool
 		{
 			get

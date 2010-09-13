@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.Core
 		{
 			var lockTransaction = dataInfrastructure.CreateLockTransaction (this.lockNames);
 
+			lockTransaction.Lock ();
+
 			if (lockTransaction.State == LockState.Locked)
 			{
 				return lockTransaction;

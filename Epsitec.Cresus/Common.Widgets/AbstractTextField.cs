@@ -1635,6 +1635,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextEdited");
+			
 			if (handler != null)
 			{
 				handler (this);

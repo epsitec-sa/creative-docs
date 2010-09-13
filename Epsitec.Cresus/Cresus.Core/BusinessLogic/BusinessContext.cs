@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
 
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			this.locker = this.Data.DataLocker;
 		}
 
 
@@ -45,6 +46,45 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			{
 				return CoreProgram.Application.Data;
 			}
+		}
+
+		public bool IsLocked
+		{
+			get
+			{
+				return this.lockTransaction != null;
+			}
+		}
+
+		
+		public bool AreAllLocksAvailable()
+		{
+			return this.locker.AreAllLocksAvailable (this.GetLockNames ());
+		}
+
+		public bool AcquireLock()
+		{
+			if (this.IsLocked)
+			{
+				return true;
+			}
+
+			var lockTransaction = this.locker.RequestLock (this.GetLockNames ());
+
+			if (lockTransaction == null)
+			{
+				return false;
+			}
+
+			if (lockTransaction.LockSate == DataLayer.Infrastructure.LockState.Locked)
+			{
+				System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
+				this.lockTransaction = lockTransaction;
+				return true;
+			}
+
+			lockTransaction.Dispose ();
+			return false;
 		}
 
 		public void Register(AbstractEntity entity)
@@ -113,6 +153,12 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		public void Dispose()
 		{
 			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+
+			if (this.lockTransaction != null)
+			{
+				this.lockTransaction.Dispose ();
+				this.lockTransaction = null;
+			}
 			
 			System.GC.SuppressFinalize (this);
 		}
@@ -175,10 +221,31 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
-			if (Logic.Current == null)
-            {
-				this.ApplyRulesToRegisteredEntities (RuleType.Update);
-            }
+			try
+			{
+				if (System.Threading.Interlocked.Increment (ref this.dataChangedCounter) == 1)
+				{
+					if (this.dataContextDirty == false)
+					{
+						this.dataContextDirty = true;
+						this.HandleFirstEntityChange ();
+					}
+
+					if (Logic.Current == null)
+					{
+						this.ApplyRulesToRegisteredEntities (RuleType.Update);
+					}
+				}
+			}
+			finally
+			{
+				System.Threading.Interlocked.Decrement (ref this.dataChangedCounter);
+			}
+		}
+
+		private void HandleFirstEntityChange()
+		{
+			this.AcquireLock ();
 		}
 
 		private IEnumerable<string> GetLockNames()
@@ -191,5 +258,10 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private readonly DataContext dataContext;
 		private readonly List<EntityRecord> entityRecords;
+		private readonly CoreDataLocker locker;
+
+		private int dataChangedCounter;
+		private bool dataContextDirty;
+		private CoreDataLockTransaction lockTransaction;
 	}
 }
