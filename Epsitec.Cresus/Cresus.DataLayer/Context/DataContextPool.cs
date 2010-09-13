@@ -43,7 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
-			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId);
+			string name = dataContext.Name ?? "";
+			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId + ", " + name);
 
 			return this.dataContexts.Add (dataContext);
 		}
@@ -59,7 +60,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
-			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId);
+			string name = dataContext.Name ?? "";
+			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId + ", " + name);
 
 			return this.dataContexts.Remove (dataContext);
 		}

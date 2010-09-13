@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Print()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.data.CreateDataContext ();
+			var context   = this.data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
 			PrintEngine.Print (entity);
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Preview()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.data.CreateDataContext ();
+			var context   = this.data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
 			PrintEngine.Preview (entity);

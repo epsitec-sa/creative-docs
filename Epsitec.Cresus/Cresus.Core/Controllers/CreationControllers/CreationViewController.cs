@@ -63,9 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 				{
 					var orchestrator = this.Orchestrator;
 					var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator) as EntityViewController<T>;
-					var context      = orchestrator.DataContext;
-
-					controller.DataContext = context;
+					var context      = controller.DataContext;
 
 					if (context.Contains (this.Entity) == false)
 					{
@@ -114,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
 			var orchestrator = this.Orchestrator;
-			var business     = BusinessContext.GetBusinessContext (this);
+			var business     = this.BusinessContext;
 
 			System.Diagnostics.Debug.Assert (business != null);
 

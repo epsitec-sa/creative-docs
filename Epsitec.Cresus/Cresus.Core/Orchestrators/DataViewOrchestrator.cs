@@ -67,29 +67,40 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		
-		/// <summary>
-		/// Gets the data context of the leaf sub view or the active one taken from the
-		/// associated <see cref="MainViewController"/>.
-		/// </summary>
-		/// <value>The data context.</value>
-		public DataContext DataContext
+		public DataContext DefaultDataContext
 		{
 			get
 			{
-				return this.dataViewController.DataContext;
+				if (this.defaultDataContext == null)
+				{
+					this.defaultDataContext = this.data.CreateDataContext ("Default");
+				}
+
+				return this.defaultDataContext;
 			}
 		}
 
+		
 
 		public void ClearActiveEntity()
 		{
 			this.dataViewController.ClearActiveEntity ();
+
+			if (this.defaultDataContext != null)
+			{
+				this.data.DisposeDataContext (this.defaultDataContext);
+				this.defaultDataContext = null;
+			}
 		}
 
-		public void SetActiveEntity(AbstractEntity entity, NavigationPathElement navigationPathElement)
+		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
-			this.dataViewController.SetActiveEntity (entity, navigationPathElement);
+			this.ClearActiveEntity ();
+
+			var dataContext = this.DefaultDataContext;
+			var realEntity  = dataContext.ResolveEntity (entityKey);
+
+			this.dataViewController.SetActiveEntity (realEntity, navigationPathElement);
 		}
 
 
@@ -141,5 +152,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly MainViewController mainViewController;
 		private readonly DataViewController dataViewController;
 		private readonly NavigationOrchestrator navigator;
+
+		private DataContext defaultDataContext;
 	}
 }

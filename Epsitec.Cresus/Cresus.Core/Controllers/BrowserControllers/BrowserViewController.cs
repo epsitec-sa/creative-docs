@@ -83,15 +83,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.Orchestrator.ClearActiveEntity ();
 
-			var dataContext  = this.Orchestrator.DataContext;
+			var dataContext  = this.Orchestrator.DefaultDataContext;
 			var activeEntity = this.GetActiveEntity (dataContext);
 
 			if (activeEntity != null)
 			{
-				var activeEntityKey       = dataContext.GetNormalizedEntityKey (activeEntity).GetValueOrDefault ();
-				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
+				var activeEntityKey       = dataContext.GetNormalizedEntityKey (activeEntity);
+				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey.GetValueOrDefault ());
 
-				this.Orchestrator.SetActiveEntity (activeEntity, navigationPathElement);
+				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
 			}
 		}
 
@@ -115,8 +115,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					controller.Dispose ();
 
 					//	Create the real entity, then re-create the user interface to edit it:
-					
-					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, this.Orchestrator.DataContext);
+
+					DataContext dataContext = this.Orchestrator.DefaultDataContext;
+
+					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, dataContext);
 					controller = EntityViewController.CreateEntityViewController ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
 				}
 
@@ -186,8 +188,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void CreateBrowserDataContext()
 		{
-			this.browserDataContext = this.data.CreateDataContext ();
-			this.browserDataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
+			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
 			this.collection  = new BrowserList (this.browserDataContext);
 
 			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;

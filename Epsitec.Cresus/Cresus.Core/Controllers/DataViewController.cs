@@ -54,32 +54,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		/// <summary>
-		/// Gets the data context of the leaf sub view or the active one taken from the
-		/// associated <see cref="CoreData"/>.
-		/// </summary>
-		/// <value>The data context.</value>
-		public override DataContext DataContext
-		{
-			get
-			{
-				var leafController = this.GetLeafController ();
-
-				if (leafController == null)
-				{
-					return this.MainViewController.DataContext;
-				}
-				else
-				{
-					return leafController.DataContext ?? this.MainViewController.DataContext;
-				}
-			}
-			set
-			{
-				throw new System.InvalidOperationException ("Cannot set DataContext on DataViewController");
-			}
-		}
-
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			return this.viewControllers;
