@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.Core.Printers
 		public override void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
 			base.BuildSections (forcingOptionsToClear, forcingOptionsToSet);
+
 			this.documentContainer.Clear ();
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Offer)
@@ -174,9 +175,11 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.ProductionOrder)
 			{
+				int documentRank = 0;
 				var groups = this.GetProdGroups ();
 				foreach (var group in groups)
 				{
+					this.documentContainer.DocumentRank = documentRank++;
 					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (null, group);
@@ -203,9 +206,11 @@ namespace Epsitec.Cresus.Core.Printers
 			if (this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithInsideESR ||
 				this.EntityPrintingSettings.DocumentTypeSelected == DocumentType.InvoiceWithOutsideESR)
 			{
+				int documentRank = 0;
 				bool onlyTotal = false;
 				foreach (var billingDetails in this.entity.BillingDetails)
 				{
+					this.documentContainer.DocumentRank = documentRank++;
 					int firstPage = this.documentContainer.PrepareEmptyPage (PageType.First);
 
 					this.BuildHeader (billingDetails);

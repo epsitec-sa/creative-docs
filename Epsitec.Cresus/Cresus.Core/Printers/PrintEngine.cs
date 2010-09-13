@@ -115,11 +115,14 @@ namespace Epsitec.Cresus.Core.Printers
 						{
 							for (int copy = 0; copy < printerUnit.Copies; copy++)
 							{
-								string internalJobName = string.Concat (documentPrinter.Job, ".", (entityRank+1).ToString (), ".", (copy+1).ToString ());
-
 								var physicalPages = entityPrinter.GetPhysicalPages (documentPrinter.PrinterFunction);
 								foreach (var physicalPage in physicalPages)
 								{
+									string e = (entityRank+1).ToString ();
+									string d = (entityPrinter.GetDocumentRank (physicalPage)+1).ToString ();
+									string c = (copy+1).ToString ();
+									string internalJobName = string.Concat (documentPrinter.Job, ".", e, ".", d, ".", c);
+
 									sections.Add (new SectionToPrint (printerUnit, internalJobName, physicalPage, entityRank, entityPrinter));
 								}
 							}

@@ -112,6 +112,11 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.documentContainer.PageCount (printerFunctionUsed);
 		}
 
+		public int GetDocumentRank(int page)
+		{
+			return this.documentContainer.GetDocumentRank (page);
+		}
+
 		public PageType GetPageType(int page)
 		{
 			return this.documentContainer.GetPageType (page);
@@ -184,11 +189,6 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
 			get;
 			set;
-		}
-
-		public void Clear()
-		{
-			this.documentContainer.Clear ();
 		}
 
 		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)

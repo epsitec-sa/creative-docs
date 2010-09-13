@@ -47,6 +47,12 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public int DocumentRank
+		{
+			get;
+			set;
+		}
+
 		public Margins PageMargins
 		{
 			get
@@ -72,8 +78,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public void Clear()
 		{
+			this.DocumentRank = 0;
+
 			this.pages.Clear ();
-			this.pages.Add (new PageContainer (0, PageType.First));  // crée la première page
+			this.pages.Add (new PageContainer (0, this.DocumentRank, PageType.First));  // crée la première page
 
 			this.currentPage = 0;
 
@@ -210,6 +218,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
+		public int GetDocumentRank(int page)
+		{
+			return this.pages[page].DocumentRank;
+		}
+
 		public PageType GetPageType(int page)
 		{
 			return this.pages[page].PageType;
@@ -292,7 +305,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 		private void AddNewPage(PageType pageType)
 		{
-			this.pages.Add (new PageContainer (this.pages.Count, pageType));  // crée une nouvelle page
+			this.pages.Add (new PageContainer (this.pages.Count, this.DocumentRank, pageType));  // crée une nouvelle page
 
 			this.currentPage = this.pages.Count-1;
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // revient en haut
