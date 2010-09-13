@@ -189,24 +189,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		internal void AboutToSave(DataLayer.Context.DataContext dataContext)
+		internal void NotifyAboutToSave()
 		{
-			this.GetCoreViewControllers ().ForEach (x => x.AboutToSave (dataContext));
-
-			if (this.DataContext == dataContext)
-			{
-				this.AboutToSave ();
-			}
+			this.GetCoreViewControllers ().ForEach (x => x.AboutToSave ());
+			this.AboutToSave ();
 		}
 
-		internal void AboutToDiscard(DataLayer.Context.DataContext dataContext)
+		internal void NotifyAboutToDiscard()
 		{
-			this.GetCoreViewControllers ().ForEach (x => x.AboutToDiscard (dataContext));
-
-			if (this.DataContext == dataContext)
-			{
-				this.AboutToDiscard ();
-			}
+			this.GetCoreViewControllers ().ForEach (x => x.AboutToDiscard ());
+			this.AboutToDiscard ();
 		}
 
 

@@ -103,6 +103,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public DataViewOrchestrator				MainWindowOrchestrator
+		{
+			get
+			{
+				return this.mainWindowOrchestrator;
+			}
+		}
+
 		public List<Dialogs.IAttachedDialog>	AttachedDialogs
 		{
 			get

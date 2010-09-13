@@ -311,14 +311,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void HandleAboutToSaveDataContext(object sender, DataContextEventArgs e)
+		private void HandleAboutToSaveDataContext(object sender)
 		{
-			this.GetCoreViewControllers ().ForEach (controller => controller.AboutToSave (e.DataContext));
+			this.NotifyAboutToSave ();
 		}
 
-		private void HandleAboutToDiscardDataContext(object sender, DataContextEventArgs e)
+		private void HandleAboutToDiscardDataContext(object sender)
 		{
-			this.GetCoreViewControllers ().ForEach (controller => controller.AboutToDiscard (e.DataContext));
+			this.NotifyAboutToDiscard ();
 		}
 
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
