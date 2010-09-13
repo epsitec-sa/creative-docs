@@ -142,6 +142,7 @@
     <Compile Include="CoreDataLocker.cs" />
     <Compile Include="CoreDataLockTransaction.cs" />
     <Compile Include="Printers\AbstractDocumentPrinter.cs" />
+    <Compile Include="Printers\NaturalPersonLabelDocumentPrinter.cs" />
     <Compile Include="Printers\RelationDocumentPrinter.cs" />
     <Compile Include="Printers\InvoiceDocumentPrinter.cs" />
     <Compile Include="Printers\DocumentOption.cs" />

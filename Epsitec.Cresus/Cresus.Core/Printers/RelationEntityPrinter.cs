@@ -27,24 +27,28 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.documentPrinters.Add (new RelationDocumentPrinter (this, this.entity));
 
-			DocumentTypeDefinition type;
+			{
+				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
+				type.DocumentOptions.Add (new DocumentOptionDefinition ("Données à inclure :"));
+				type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationMail, null, "Adresses", true));
+				type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationTelecom, null, "Téléphones", true));
+				type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationUri, null, "Emails", true));
+				type.AddDocumentOptionOrientation ();
+				type.AddDocumentOptionMargin ();
+				type.AddDocumentOptionSpecimen ();
+				type.AddBasePrinterUnit ();
+				this.DocumentTypes.Add (type);
+			}
 
-			type = new DocumentTypeDefinition (DocumentType.Summary, "Résumé du client", "Une ou plusieurs pages A4 avec un résumé du client.");
-			type.DocumentOptions.Add (new DocumentOptionDefinition ("Données à inclure :"));
-			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationMail,    null, "Adresses",   true));
-			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationTelecom, null, "Téléphones", true));
-			type.DocumentOptions.Add (new DocumentOptionDefinition (DocumentOption.RelationUri,     null, "Emails",     true));
-			type.AddDocumentOptionOrientation ();
-			type.AddDocumentOptionMargin ();
-			type.AddDocumentOptionSpecimen ();
-			type.AddBasePrinterUnit ();
-			this.DocumentTypes.Add (type);
+			{
+				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
+				this.DocumentTypes.Add (type);
+			}
 
-			type = new DocumentTypeDefinition (DocumentType.Debug1, "Test #1", "Page fixe de test pour l'objet TextBand.");
-			this.DocumentTypes.Add (type);
-
-			type = new DocumentTypeDefinition (DocumentType.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
-			this.DocumentTypes.Add (type);
+			{
+				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Debug2, "Test #2", "Page fixe de test pour l'objet TableBand.");
+				this.DocumentTypes.Add (type);
+			}
 		}
 	}
 }

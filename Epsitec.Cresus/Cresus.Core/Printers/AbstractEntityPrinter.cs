@@ -101,6 +101,25 @@ namespace Epsitec.Cresus.Core.Printers
 			return count;
 		}
 
+		public int GetPageRelativ(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		{
+			int firstDocumentPage = 0;
+
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				int pageCount = documentPrinter.PageCount (printerFunctionUsed);
+
+				if (page < firstDocumentPage+pageCount)
+				{
+					return page-firstDocumentPage;
+				}
+
+				firstDocumentPage += pageCount;
+			}
+
+			return -1;
+		}
+
 		public PageType GetPageType(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
 			int firstDocumentPage = 0;
