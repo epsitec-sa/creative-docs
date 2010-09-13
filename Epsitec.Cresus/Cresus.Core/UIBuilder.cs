@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core
 				this.tabIndex = this.nextBuilder.tabIndex;
 			}
 
-			this.businessContext = BusinessContext.GetBusinessContext (this.controller);
+			this.businessContext = this.controller.BusinessContext;
 
 			if (this.businessContext != null)
 			{

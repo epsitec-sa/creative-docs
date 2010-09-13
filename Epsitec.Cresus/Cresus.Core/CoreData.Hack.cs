@@ -5,7 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Repositories;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
@@ -20,47 +20,47 @@ namespace Epsitec.Cresus.Core
 	{
 		public IEnumerable<MailContactEntity> GetMailContacts()
 		{
-			return new MailContactRepository (this.DataContext).GetAllMailContacts ();
+			return new MailContactRepository (this).GetAllEntities ();
 		}
 
 		public IEnumerable<NaturalPersonEntity> GetNaturalPersons()
 		{
-			return new NaturalPersonRepository (this.DataContext).GetAllNaturalPersons ();
+			return new NaturalPersonRepository (this).GetAllEntities ();
 		}
 
 		public IEnumerable<LegalPersonEntity> GetLegalPersons()
 		{
-			return new LegalPersonRepository (this.DataContext).GetAllLegalPersons ();
+			return new LegalPersonRepository (this).GetAllEntities ();
 		}
 
 		public IEnumerable<CountryEntity> GetCountries()
 		{
-			return new CountryRepository (this.DataContext).GetAllCountries ();
+			return new CountryRepository (this).GetAllEntities ();
 		}
 
 		public IEnumerable<LocationEntity> GetLocations()
 		{
-			return new LocationRepository (this.DataContext).GetAllLocations ();
+			return new LocationRepository (this).GetAllEntities ();
 		}
 
 		public IEnumerable<LocationEntity> GetLocations(CountryEntity country)
 		{
-			return new LocationRepository (this.DataContext).GetLocationsByCountry (country);
+			return new LocationRepository (this).GetByCountry (country);
 		}
 
 		public IList<CaseEventTypeEntity> GetCaseEventTypes()
 		{
-			return new CaseEventTypeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new CaseEventTypeRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<ContactRoleEntity> GetRoles()
 		{
-			return new ContactRoleRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new ContactRoleRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<UriSchemeEntity> GetUriSchemes()
 		{
-			return new UriSchemeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new UriSchemeRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public UriSchemeEntity GetUriScheme(string code)
@@ -70,62 +70,57 @@ namespace Epsitec.Cresus.Core
 
 		public IList<TelecomTypeEntity> GetTelecomTypes()
 		{
-			return new TelecomTypeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
-		}
-
-		public IEnumerable<AbstractPersonEntity> GetAbstractPersons()
-		{
-			return new AbstractPersonRepository (this.DataContext).GetAllAbstractPersons ();
+			return new TelecomTypeRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<PersonTitleEntity> GetTitles()
 		{
-			return new PersonTitleRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new PersonTitleRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<PersonGenderEntity> GetGenders()
 		{
-			return new PersonGenderRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new PersonGenderRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IEnumerable<RelationEntity> GetCustomers(DataContext context)
 		{
-			return new RelationRepository (context).GetAllRelations ();
+			return new RelationRepository (this, context).GetAllEntities ();
 		}
 
 		public IList<UnitOfMeasureEntity> GetUnitOfMeasure()
 		{
-			return new UnitOfMeasureRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new UnitOfMeasureRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<UnitOfMeasureGroupEntity> GetUnitOfMeasureGroup()
 		{
-			return new UnitOfMeasureGroupRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new UnitOfMeasureGroupRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<ArticleDefinitionEntity> GetArticleDefinitions(DataContext context)
 		{
-			return new ArticleDefinitionRepository (context).GetAllEntitiesIncludingLiveEntities ();
+			return new ArticleDefinitionRepository (this, context).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<ArticleCategoryEntity> GetArticleCategories()
 		{
-			return new ArticleCategoryRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new ArticleCategoryRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<ArticleGroupEntity> GetArticleGroups()
 		{
-			return new ArticleGroupRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new ArticleGroupRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<PaymentModeEntity> GetPaymentModes()
 		{
-			return new PaymentModeRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new PaymentModeRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<CurrencyEntity> GetCurrencies()
 		{
-			return new CurrencyRepository (this.DataContext).GetAllEntitiesIncludingLiveEntities ();
+			return new CurrencyRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
 		public IList<VatDefinitionEntity> GetVatDefinitions()
@@ -137,20 +132,20 @@ namespace Epsitec.Cresus.Core
 
 		public IEnumerable<DocumentEntity> GetDocuments(DataContext context)
 		{
-			return new DocumentRepository (context).GetAllDocuments ();
+			return new DocumentRepository (this, context).GetAllEntities ();
 		}
 
 		public IEnumerable<InvoiceDocumentEntity> GetInvoiceDocuments(DataContext context)
 		{
-			return new InvoiceDocumentRepository (context).GetAllInvoiceDocuments ();
+			return new InvoiceDocumentRepository (this, context).GetAllEntities ();
 		}
 
 		public IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)
 		{
-			var repository = new RelationRepository (this.DataContext);
-			var example = repository.CreateRelationExample ();
+			var repository = new RelationRepository (this);
+			var example = repository.CreateExample ();
 			example.Person = person;
-			return repository.GetRelationsByExample (example);
+			return repository.GetByExample (example);
 		}
 
 

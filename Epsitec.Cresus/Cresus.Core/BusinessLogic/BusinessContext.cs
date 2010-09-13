@@ -128,27 +128,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
-		public static BusinessContext GetBusinessContext(CoreViewController controller)
-		{
-			var dataContext = controller.DataContext;
-
-			while (controller != null)
-			{
-				var context = controller.GetLocalBusinessContext ();
-
-				if ((context != null) ||
-					(controller.DataContext != dataContext))
-				{
-					return context;
-				}
-
-				controller = controller.ParentController;
-			}
-
-			return null;
-		}
-
-
 		#region IDisposable Members
 
 		public void Dispose()
@@ -297,8 +276,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 			if (this.IsEmpty)
 			{
-				this.context = this.data.CreateDataContext ();
-				this.context.Name = "BusinessContextPool";
+				this.context = this.data.CreateDataContext ("BusinessContextPool");
 			}
 
 			this.businessContexts.Add (context);

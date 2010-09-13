@@ -25,11 +25,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.name = name;
 		}
 
+		
 		/// <summary>
 		/// Gets the name of this controller.
 		/// </summary>
 		/// <value>The name.</value>
-		public string Name
+		public string							Name
 		{
 			get
 			{
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <value>
 		/// 	<c>true</c> if this instance was disposed; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsDisposed
+		public bool								IsDisposed
 		{
 			get
 			{
@@ -51,6 +52,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets the collection of sub-controllers (or an empty collection
 		/// if there is no child controllers used by this controller).
@@ -117,9 +119,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public event EventHandler Disposing;
+		public event EventHandler				Disposing;
 
-		private readonly string name;
-		private bool isDisposed;
+		private readonly string					name;
+		private bool							isDisposed;
 	}
 }

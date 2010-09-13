@@ -225,9 +225,12 @@ namespace Epsitec.Cresus.Core
 			private readonly CoreData data;
 		}
 
-		public DataContext CreateDataContext()
+		public DataContext CreateDataContext(string name)
 		{
-			var context = new DataContext (this.dbInfrastructure, true);
+			var context = new DataContext (this.dbInfrastructure, true)
+			{
+				Name = name,
+			};
 
 			DataContextPool.Instance.Add (context);
 
@@ -471,7 +474,7 @@ namespace Epsitec.Cresus.Core
 		public void SetupDataContext()
 		{
 			var oldContext = this.activeDataContext;
-			this.activeDataContext = this.CreateDataContext ();
+			this.activeDataContext = this.CreateDataContext ("setup");
 			this.OnDataContextChanged (oldContext);
 		}
 
@@ -618,9 +621,9 @@ namespace Epsitec.Cresus.Core
 
 		internal string GetNewAffairId()
 		{
-			var repo = new Epsitec.Cresus.Core.Data.AffairRepository (this.activeDataContext);
+			var repo = new Epsitec.Cresus.Core.Repositories.AffairRepository (this);
 
-			return (repo.GetAllAffairs ().Select (x => CoreData.RobustParseNumber (x.IdA)).OrderByDescending (n => n).FirstOrDefault () + 1).ToString ();
+			return (repo.GetAllEntities ().Select (x => CoreData.RobustParseNumber (x.IdA)).OrderByDescending (n => n).FirstOrDefault () + 1).ToString ();
 		}
 
 

@@ -67,6 +67,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public BusinessLogic.BusinessContext	BusinessContext
+		{
+			get
+			{
+				var businessContext = this.GetLocalBusinessContext ();
+
+				if ((businessContext !=  null) ||
+					(this.parentController == null))
+				{
+					return businessContext;
+				}
+				else
+				{
+					return this.parentController.BusinessContext;
+				}
+			}
+		}
+
 		public virtual DataContext				DataContext
 		{
 			get
