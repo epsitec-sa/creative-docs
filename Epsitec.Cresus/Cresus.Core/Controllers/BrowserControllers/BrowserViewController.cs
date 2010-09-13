@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.Orchestrator.ClearActiveEntity ();
 
 			this.collectionGetter = collectionGetter;
-			this.data.SetupDataContext ();
+			this.data.SetupDataContext (this.Orchestrator.DefaultDataContext);
 			this.UpdateCollection ();
 		}
 

@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Data;
+
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Context;
@@ -15,8 +17,8 @@ namespace Epsitec.Cresus.Core.Repositories
 	public abstract class Repository<T> : Repository
 		where T : AbstractEntity, new ()
 	{
-		protected Repository(CoreData data, DataContext context = null)
-			: base (data, context)
+		protected Repository(CoreData data, DataContext context, DataLifetimeExpectancy lifetimeExpectancy = DataLifetimeExpectancy.Unknown)
+			: base (data, context, lifetimeExpectancy)
 		{
 		}
 
@@ -45,17 +47,17 @@ namespace Epsitec.Cresus.Core.Repositories
 
 		public IEnumerable<T> GetByExample(T example)
 		{
-			return this.GetEntitiesByExample<T> (example);
+			return this.dataContext.GetByExample<T> (example);
 		}
 
 		public IEnumerable<T> GetByRequest(Request request)
 		{
-			return this.GetEntitiesByRequest<T> (request);
+			return this.dataContext.GetByRequest<T> (request);
 		}
 
 		public T CreateExample()
 		{
-			return this.CreateExample<T> ();
+			return new T ();
 		}
 	}
 }

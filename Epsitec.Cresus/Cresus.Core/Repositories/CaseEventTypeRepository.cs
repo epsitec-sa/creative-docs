@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class CaseEventTypeRepository : Repository<CaseEventTypeEntity>
 	{
 		public CaseEventTypeRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Data.DataLifetimeExpectancy.Immutable)
 		{
 		}
 	}
