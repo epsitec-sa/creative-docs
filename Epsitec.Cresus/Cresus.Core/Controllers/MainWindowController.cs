@@ -12,25 +12,26 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainWindowController : CoreViewController, IWidgetUpdater
 	{
-		public MainWindowController(CoreData data, CommandContext commandContext)
-			: base ("MainWindow")
+		public MainWindowController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator)
+			: base ("MainWindow", orchestrator)
 		{
 			this.data = data;
 			this.commandContext = commandContext;
 			
-			this.ribbonController = new RibbonViewController ();
-			this.contentController = new MainViewController (this.data, this.commandContext);
+			this.ribbonController = new RibbonViewController (this.Orchestrator);
+			this.mainViewController = this.Orchestrator.MainViewController;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.ribbonController;
-			yield return this.contentController;
+			yield return this.mainViewController;
 		}
 
 		public override void CreateUI(Widget container)
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void CreateUIControllers()
 		{
 			this.ribbonController.CreateUI (this.ribbonBox);
-			this.contentController.CreateUI (this.contentBox);
+			this.mainViewController.CreateUI (this.contentBox);
 		}
 
 
@@ -67,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
-			this.contentController.GetSubControllers ().Select (x => x as IWidgetUpdater).Where (x => x != null).ForEach (x => x.Update ());
+			this.mainViewController.GetSubControllers ().Select (x => x as IWidgetUpdater).Where (x => x != null).ForEach (x => x.Update ());
 		}
 
 		#endregion
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private readonly CoreData				data;
 		private readonly RibbonViewController	ribbonController;
-		private readonly MainViewController		contentController;
+		private readonly MainViewController		mainViewController;
 		private readonly CommandContext			commandContext;
 		
 		private FrameBox						ribbonBox;

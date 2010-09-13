@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core
 {
@@ -32,8 +33,9 @@ namespace Epsitec.Cresus.Core
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
-			
-			this.mainWindowController = new MainWindowController (this.data, this.CommandContext);
+
+			this.mainWindowOrchestrator = new DataViewOrchestrator (this.data, this.CommandContext);
+			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator);
 
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 		}
@@ -369,6 +371,7 @@ namespace Epsitec.Cresus.Core
 		private CoreData								data;
 		private ExceptionManager						exceptionManager;
 		private CoreCommandDispatcher					commands;
+		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
 		private List<Dialogs.IAttachedDialog>			attachedDialogs;
 	}

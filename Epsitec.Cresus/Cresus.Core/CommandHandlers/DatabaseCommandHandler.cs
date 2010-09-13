@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		private void SelectDatabase(CommandEventArgs e)
 		{
-			var commandName   = e.Command.Name;
+			var commandName  = e.Command.Name;
 
 			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.showDatabaseCommandPrefix));
 
@@ -89,17 +89,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var context      = e.CommandContext;
 			var controller   = CoreApplication.GetController<BrowserViewController> (context);
 
-			this.ClearActiveEntity (context);
-
 			controller.SelectDataSet (databaseName);
-		}
-
-		private void ClearActiveEntity(CommandContext context)
-		{
-			var controller = CoreApplication.GetController<MainViewController> (context);
-			var orchestrator = controller.Orchestrator;
-
-			orchestrator.Controller.ClearActiveEntity ();
 		}
 
 		private void UpdateActiveCommandState(CommandState activeState)

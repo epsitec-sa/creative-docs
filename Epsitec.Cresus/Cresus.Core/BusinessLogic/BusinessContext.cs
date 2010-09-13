@@ -14,13 +14,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public sealed class BusinessContext : System.IDisposable
 	{
-		public BusinessContext(DataContext dataContext)
+		public BusinessContext(BusinessContextPool pool)
 		{
-			this.dataContext = dataContext;
-			this.entityRecords = new List<EntityRecord> ();
-			
+			this.pool = pool;
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
+			this.pool.Add (this);
+			this.entityRecords = new List<EntityRecord> ();
 
+			this.dataContext = this.pool.DataContext;
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 			this.locker = this.Data.DataLocker;
 		}
@@ -154,6 +155,9 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
 
+			this.Data.LowLevelSaveDataContext (this.dataContext);
+			this.pool.Remove (this);
+
 			if (this.lockTransaction != null)
 			{
 				this.lockTransaction.Dispose ();
@@ -256,6 +260,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private static int nextUniqueId;
 
+		private readonly BusinessContextPool pool;
 		private readonly DataContext dataContext;
 		private readonly List<EntityRecord> entityRecords;
 		private readonly CoreDataLocker locker;
@@ -263,5 +268,55 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		private int dataChangedCounter;
 		private bool dataContextDirty;
 		private CoreDataLockTransaction lockTransaction;
+	}
+
+	public sealed class BusinessContextPool
+	{
+		public BusinessContextPool(CoreData data)
+		{
+			this.data = data;
+			this.businessContexts = new List<BusinessContext> ();
+		}
+
+		public DataContext DataContext
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.businessContexts.Count == 0;
+			}
+		}
+
+		public void Add(BusinessContext context)
+		{
+			if (this.IsEmpty)
+			{
+				this.context = this.data.CreateDataContext ();
+				this.context.Name = "BusinessContextPool";
+			}
+
+			this.businessContexts.Add (context);
+		}
+
+		public void Remove(BusinessContext context)
+		{
+			this.businessContexts.Remove (context);
+
+			if (this.IsEmpty)
+			{
+				this.data.DisposeDataContext (this.context);
+				this.context = null;
+			}
+		}
+
+		private readonly List<BusinessContext> businessContexts;
+		private readonly CoreData data;
+		private DataContext context;
 	}
 }

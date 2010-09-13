@@ -455,10 +455,10 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = container,
 				Anchor = AnchorStyles.TopRight,
-				PreferredSize = new Size (32, 18),
+				PreferredSize = new Size (40, 18),
 				Margins = new Margins (0, Widgets.TileArrow.Breadth+2+offset1+offset2, 2, 0),
 				Name = "DataContext#Debug",
-				Text = string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId),
+				FormattedText = FormattedText.FromSimpleText (string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId)),
 			};
 		}
 

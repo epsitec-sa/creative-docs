@@ -9,6 +9,8 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -22,69 +24,95 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Initializes a new instance of the <see cref="CoreViewController"/> class.
 		/// </summary>
 		/// <param name="name">The name of the controller.</param>
-		public CoreViewController(string name)
+		public CoreViewController(string name, DataViewOrchestrator orchestrator = null)
 			: base (name)
 		{
+			if (EntityViewControllerResolver.Default == null)
+			{
+				this.orchestrator = orchestrator;
+			}
+			else
+			{
+				this.orchestrator          = EntityViewControllerResolver.Default.Orchestrator;
+				this.viewControllerMode    = EntityViewControllerResolver.Default.Mode;
+				this.navigationPathElement = EntityViewControllerResolver.Default.NavigationPathElement;
+				this.parentController      = this.orchestrator.GetLeafViewController ();
+			}
+
+			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
 		}
 
 
-		public Orchestrators.DataViewOrchestrator Orchestrator
-		{
-			get;
-			set;
-		}
-
-		public CoreViewController ParentController
-		{
-			get;
-			set;
-		}
-
-		public Orchestrators.NavigationOrchestrator Navigator
+		public CoreViewController				ParentController
 		{
 			get
 			{
-				return this.Orchestrator == null ? null : this.Orchestrator.Navigator;
+				return this.parentController;
 			}
 		}
 
-		public virtual Epsitec.Cresus.DataLayer.Context.DataContext DataContext
-		{
-			get;
-			set;
-		}
-
-		public virtual bool InheritDataContext
+		public DataViewOrchestrator				Orchestrator
 		{
 			get
 			{
-				return true;
+				return this.orchestrator;
 			}
 		}
 
-		public System.Func<bool, bool> ActivateNextSubView
+		public NavigationOrchestrator			Navigator
+		{
+			get
+			{
+				return this.Orchestrator.Navigator;
+			}
+		}
+
+		public virtual DataContext				DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+			set
+			{
+				if (this.dataContext != value)
+                {
+					this.dataContext = value;
+				}
+			}
+		}
+
+		public ViewControllerMode				Mode
+		{
+			get
+			{
+				return this.viewControllerMode;
+			}
+		}
+
+		public NavigationPathElement			NavigationPathElement
+		{
+			get
+			{
+				return this.navigationPathElement;
+			}			
+		}
+
+	
+		
+		public System.Func<bool, bool>			ActivateNextSubView
 		{
 			get;
 			set;
 		}
 
-		public System.Func<bool, bool> ActivatePrevSubView
+		public System.Func<bool, bool>			ActivatePrevSubView
 		{
 			get;
 			set;
 		}
 
-		public ViewControllerMode Mode
-		{
-			get;
-			protected set;
-		}
 
-		public NavigationPathElement NavigationPathElement
-		{
-			get;
-			set;
-		}
 
 		public string GetNavigationPath()
 		{
@@ -215,5 +243,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		public event EventHandler Disposing;
+
+		private readonly DataViewOrchestrator orchestrator;
+		private readonly CoreViewController parentController;
+		private readonly ViewControllerMode viewControllerMode;
+		private readonly NavigationPathElement navigationPathElement;
+		
+		private DataContext dataContext;
 	}
 }

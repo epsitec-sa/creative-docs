@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 
 namespace Epsitec.Cresus.Core
@@ -39,6 +40,7 @@ namespace Epsitec.Cresus.Core
 			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
 			this.connectionManager = new CoreDataConnectionManager (this.dataInfrastructure);
 			this.locker = new CoreDataLocker (this.dataInfrastructure);
+			this.businessContextPool =  new BusinessContextPool (this);
 		}
 
 		public DataLayer.Infrastructure.DataInfrastructure DataInfrastructure
@@ -170,18 +172,22 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
 
 			this.OnAboutToSaveDataContext (context);
+			this.LowLevelSaveDataContext (context);
 
+			System.Diagnostics.Debug.WriteLine ("Done");
+		}
+
+		internal void LowLevelSaveDataContext(DataContext context)
+		{
 			if ((this.suspendDataContextSave == 0) &&
-							(context.ContainsChanges ()))
+				(context.IsDisposed == false) &&
+				(context.ContainsChanges ()))
 			{
 				context.SaveChanges ();
 
 				this.UpdateEditionSaveRecordCommandState ();
 			}
-
-			System.Diagnostics.Debug.WriteLine ("Done");
 		}
-
 		private void InternalDiscardDataContext(DataContext context)
 		{
 			System.Diagnostics.Debug.WriteLine ("About to discard context #" + context.UniqueId);
@@ -636,10 +642,16 @@ namespace Epsitec.Cresus.Core
 		private readonly EntityContext independentEntityContext;
 		private readonly BusinessLogic.RefIdGeneratorPool refIdGeneratorPool;
 		private readonly CoreDataConnectionManager connectionManager;
+		private readonly BusinessContextPool businessContextPool;
 		private readonly CoreDataLocker locker;
 
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;
 		private int suspendDataContextSave;
+
+		public BusinessLogic.BusinessContext CreateBusinessContext()
+		{
+			return new BusinessContext (this.businessContextPool);
+		}
 	}
 }

@@ -8,13 +8,14 @@ using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
 	class RibbonViewController : CoreViewController
 	{
-		public RibbonViewController()
-			: base ("Ribbon")
+		public RibbonViewController(DataViewOrchestrator orchestrator)
+			: base ("Ribbon", orchestrator)
 		{
 		}
 

@@ -17,10 +17,10 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class ActionViewController : CoreViewController
 	{
-		public ActionViewController(string name, CoreData data)
-			: base (name)
+		public ActionViewController(DataViewOrchestrator orchestrator)
+			: base ("Action", orchestrator)
 		{
-			this.data = data;
+			this.data = this.Orchestrator.Data;
 		}
 
 		
