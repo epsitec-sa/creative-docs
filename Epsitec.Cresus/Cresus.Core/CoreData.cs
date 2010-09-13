@@ -157,6 +157,12 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		private void SaveAllDataContexts()
+		{
+		}
+
+
+
 		/// <summary>
 		/// Discards the data context.
 		/// </summary>
@@ -191,7 +197,7 @@ namespace Epsitec.Cresus.Core
 		{
 			System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
 
-			this.OnAboutToSaveDataContext (context);
+			this.OnAboutToSaveDataContext ();
 			this.LowLevelSaveDataContext (context);
 
 			System.Diagnostics.Debug.WriteLine ("Done");
@@ -214,7 +220,7 @@ namespace Epsitec.Cresus.Core
 
 			using (new DataContextDiscarder (this))
 			{
-				this.OnAboutToDiscardDataContext (context);
+				this.OnAboutToDiscardDataContext ();
 
 				System.Diagnostics.Debug.Assert (context.IsDisposed);
 			}
@@ -540,23 +546,23 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private void OnAboutToSaveDataContext(DataContext context)
+		private void OnAboutToSaveDataContext()
 		{
 			var handler = this.AboutToSaveDataContext;
 
 			if (handler != null)
 			{
-				handler (this, new DataContextEventArgs (context));
+				handler (this);
 			}
 		}
 
-		private void OnAboutToDiscardDataContext(DataContext context)
+		private void OnAboutToDiscardDataContext()
 		{
 			var handler = this.AboutToDiscardDataContext;
 
 			if (handler != null)
 			{
-				handler (this, new DataContextEventArgs (context));
+				handler (this);
 			}
 		}
 
@@ -588,9 +594,7 @@ namespace Epsitec.Cresus.Core
 			CoreProgram.Application.Commands.PushHandler (Res.Commands.Edition.SaveRecord,
 				delegate
 				{
-					var activeDataContext = this.DataContext;
-
-					this.SaveDataContext (activeDataContext);
+					this.SaveAllDataContexts ();
 					this.OnSaveRecordCommandExecuted (activeDataContext);
 				});
 
@@ -655,8 +659,8 @@ namespace Epsitec.Cresus.Core
 		}
 		
 		public event EventHandler<DataContextEventArgs> DataContextChanged;
-		public event EventHandler<DataContextEventArgs> AboutToSaveDataContext;
-		public event EventHandler<DataContextEventArgs> AboutToDiscardDataContext;
+		public event EventHandler AboutToSaveDataContext;
+		public event EventHandler AboutToDiscardDataContext;
 		public event EventHandler<DataContextEventArgs> SaveRecordCommandExecuted;
 		public event EventHandler<DataContextEventArgs> DiscardRecordCommandExecuted;
 

@@ -84,12 +84,13 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public void ClearActiveEntity()
 		{
-			this.dataViewController.ClearActiveEntity ();
-
-			if (this.defaultDataContext != null)
+			if (this.dataViewController.ClearActiveEntity ())
 			{
-				this.data.DisposeDataContext (this.defaultDataContext);
-				this.defaultDataContext = null;
+				if (this.defaultDataContext != null)
+				{
+					this.data.DisposeDataContext (this.defaultDataContext);
+					this.defaultDataContext = null;
+				}
 			}
 		}
 

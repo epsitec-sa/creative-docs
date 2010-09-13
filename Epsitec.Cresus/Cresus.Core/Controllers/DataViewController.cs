@@ -102,13 +102,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <summary>
 		/// Clears the active entity and disposes any visible view controllers.
 		/// </summary>
-		public void ClearActiveEntity()
+		public bool ClearActiveEntity()
 		{
 			if (this.entity != null)
 			{
 				this.PopAllViewControllers ();
 				this.entity = null;
+				return true;
 			}
+
+			return false;
 		}
 
 
@@ -151,26 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Navigator.Remove (leafController, lastController);
 
 			lastController.CloseUI (this.viewLayoutController.LastColumn);
-
-			bool disposeRequired = false;
-
-			if (lastContext != null)
-			{
-				if ((leafController == null) ||
-					(leafController.DataContext != lastController.DataContext))
-				{
-//-					this.data.SaveDataContext (lastContext);
-//-					this.data.DisposeDataContext (lastContext);
-					disposeRequired = true;
-				}
-			}
-
 			lastController.Dispose ();
-
-			if (disposeRequired)
-			{
-				System.Diagnostics.Debug.Assert (lastContext.IsDisposed);
-			}
 			
 			//	Remove the rightmost column in the layout:
 			
