@@ -54,7 +54,14 @@ namespace Epsitec.Cresus.Core
 
 			if (this.businessContext != null)
 			{
-//-				this.ReadOnly = true;
+				if (this.businessContext.AreAllLocksAvailable ())
+				{
+					//	All locks for this business context are still available : read/write mode
+				}
+				else
+				{
+					this.ReadOnly = true;
+				}
 			}
 
 			UIBuilder.current = this;
@@ -666,6 +673,7 @@ namespace Epsitec.Cresus.Core
 				SwallowReturnOnAcceptEdition = true,
 			};
 
+			this.RegisterTextField (textField);
 			this.ContentListAdd (textField);
 
 			if (width > 0)
@@ -712,6 +720,7 @@ namespace Epsitec.Cresus.Core
 				SwallowReturnOnAcceptEdition = true,
 			};
 
+			this.RegisterTextField (textField);
 			this.ContentListAdd (textField);
 
 			var valueController = new TextValueController (marshaler);
@@ -719,6 +728,25 @@ namespace Epsitec.Cresus.Core
 			this.container.Add (valueController);
 
 			return textField;
+		}
+
+		private void RegisterTextField(AbstractTextField textField)
+		{
+			if ((this.businessContext != null) &&
+				(this.ReadOnly == false))
+			{
+				textField.TextEdited +=
+					delegate
+					{
+						if (this.businessContext.AcquireLock ())
+						{
+						}
+						else
+						{
+							textField.RejectEdition ();
+						}
+					};
+			}
 		}
 
 

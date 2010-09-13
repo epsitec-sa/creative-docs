@@ -164,9 +164,13 @@ namespace Epsitec.Cresus.Database
 				this.CreateConditionForTimeOut (),
 			};
 
+#if false	//	HACK: disabled dead connection recycling -- this is a real annoyance when debugging with multiple instances running
 			int nbRowsAffected = this.SetRowValue (fields, conditions);
 
 			return nbRowsAffected > 0;
+#else
+			return false;
+#endif
 		}
 
 

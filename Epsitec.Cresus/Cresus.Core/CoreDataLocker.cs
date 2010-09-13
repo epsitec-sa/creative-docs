@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
+				lockTransaction.Dispose ();
 				return null;
 			}
 		}
