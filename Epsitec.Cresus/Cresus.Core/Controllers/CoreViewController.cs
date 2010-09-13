@@ -62,14 +62,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public virtual BusinessLogic.BusinessContext BusinessContext
-		{
-			get
-			{
-				return null;
-			}
-		}
-
 		public System.Func<bool, bool> ActivateNextSubView
 		{
 			get;
@@ -143,6 +135,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return this;
 		}
+
+		public virtual BusinessLogic.BusinessContext GetLocalBusinessContext()
+		{
+			return null;
+		}
+
 
 
 		internal void AboutToSave(DataLayer.Context.DataContext dataContext)

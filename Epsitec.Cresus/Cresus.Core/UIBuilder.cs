@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Core
 		public UIBuilder(EntityViewController controller)
 			: this (controller.TileContainer, controller)
 		{
-			//?this.ReadOnly = true;  // test
 		}
 
 		~UIBuilder()
@@ -49,6 +48,13 @@ namespace Epsitec.Cresus.Core
 			if (this.nextBuilder != null)
 			{
 				this.tabIndex = this.nextBuilder.tabIndex;
+			}
+
+			this.businessContext = BusinessContext.GetBusinessContext (this.controller);
+
+			if (this.businessContext != null)
+			{
+//-				this.ReadOnly = true;
 			}
 
 			UIBuilder.current = this;
@@ -415,11 +421,38 @@ namespace Epsitec.Cresus.Core
 				UIBuilder.CreateColumnTileCloseButton (this.container);
 			}
 
-			if ((controller.Mode == ViewControllerMode.Summary) &&
-				(controller.BusinessContext != null))
+			if (this.ReadOnly)
 			{
 				UIBuilder.CreateColumnTileLockButton (this.container);
 			}
+
+			this.CreateDataContextDebugInfo ();
+		}
+
+		private void CreateDataContextDebugInfo()
+		{
+			var offset1 = UIBuilder.ContainsWidget (this.container, "ColumnTileCloseButton") ? 18 : 0;
+			var offset2 = UIBuilder.ContainsWidget (this.container, "ColumnTileLockButton")  ? 18 : 0;
+
+			var controller   = this.container.Controller;
+			var orchestrator = controller.Orchestrator;
+
+			string businessContextId = "-";
+
+			if (this.businessContext != null)
+			{
+				businessContextId = this.businessContext.UniqueId.ToString ();
+			}
+
+			var label = new StaticText
+			{
+				Parent = container,
+				Anchor = AnchorStyles.TopRight,
+				PreferredSize = new Size (32, 18),
+				Margins = new Margins (0, Widgets.TileArrow.Breadth+2+offset1+offset2, 2, 0),
+				Name = "DataContext#Debug",
+				Text = string.Format ("#{0}/{1}", controller.DataContext.UniqueId, businessContextId),
+			};
 		}
 
 
@@ -472,6 +505,7 @@ namespace Epsitec.Cresus.Core
 		
 		public static Widget CreateColumnTileLockButton(TileContainer container)
 		{
+			var offset = UIBuilder.ContainsWidget (container, "ColumnTileCloseButton") ? 18 : 0;
 			var controller   = container.Controller;
 			var orchestrator = controller.Orchestrator;
 
@@ -482,7 +516,7 @@ namespace Epsitec.Cresus.Core
 				GlyphShape = GlyphShape.Lock,
 				Anchor = AnchorStyles.TopRight,
 				PreferredSize = new Size (20, 20),
-				Margins = new Margins (0, Widgets.TileArrow.Breadth+2, 2, 0),
+				Margins = new Margins (0, Widgets.TileArrow.Breadth+2 + offset, 2, 0),
 				Name = "ColumnTileLockButton",
 			};
 
@@ -494,8 +528,13 @@ namespace Epsitec.Cresus.Core
 
 			return lockButton;
 		}
-		
-		
+
+
+		private static bool ContainsWidget(TileContainer container, string columnTileCloseButton)
+		{
+			return container.FindChild (columnTileCloseButton, Widget.ChildFindMode.Deep) != null;
+		}
+
 		public StaticText CreateWarning(EditionTile tile)
 		{
 			return this.CreateStaticText (tile, 60, "<i><b>ATTENTION:</b><br/>Les modifications effectuées ici seront répercutées<br/>dans tous les enregistrements.</i>");
@@ -1513,6 +1552,7 @@ namespace Epsitec.Cresus.Core
 
 		private readonly CoreViewController controller;
 		private readonly TileContainer container;
+		private readonly BusinessContext businessContext;
 		private readonly UIBuilder nextBuilder;
 		private bool isDisposed;
 		private int tabIndex;

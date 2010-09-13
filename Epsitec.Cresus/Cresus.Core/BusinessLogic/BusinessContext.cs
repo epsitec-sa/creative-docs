@@ -8,6 +8,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
@@ -17,10 +18,18 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 			this.dataContext = dataContext;
 			this.entityRecords = new List<EntityRecord> ();
+			
+			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
 
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
+
+		public int UniqueId
+		{
+			get;
+			private set;
+		}
 
 		public DataContext DataContext
 		{
@@ -75,6 +84,27 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.ApplyRules (RuleType.Setup, entity);
 
 			return entity;
+		}
+
+
+		public static BusinessContext GetBusinessContext(CoreViewController controller)
+		{
+			var dataContext = controller.DataContext;
+
+			while (controller != null)
+			{
+				var context = controller.GetLocalBusinessContext ();
+
+				if ((context != null) ||
+					(controller.DataContext != dataContext))
+				{
+					return context;
+				}
+
+				controller = controller.ParentController;
+			}
+
+			return null;
 		}
 
 
@@ -157,6 +187,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
+		private static int nextUniqueId;
 
 		private readonly DataContext dataContext;
 		private readonly List<EntityRecord> entityRecords;

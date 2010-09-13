@@ -54,12 +54,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public override BusinessLogic.BusinessContext BusinessContext
+		public override BusinessLogic.BusinessContext GetLocalBusinessContext()
 		{
-			get
-			{
-				return this.businessContext;
-			}
+			return this.businessContext;
 		}
 
 		public sealed override void CreateUI(Widget container)
