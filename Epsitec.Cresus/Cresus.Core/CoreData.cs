@@ -14,6 +14,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Controllers;
 
 
 namespace Epsitec.Cresus.Core
@@ -126,19 +127,11 @@ namespace Epsitec.Cresus.Core
 		{
 			if (context != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
-				
-				this.OnAboutToSaveDataContext (context);
-
-				if ((this.suspendDataContextSave == 0) &&
-					(context.ContainsChanges ()))
-				{
-					context.SaveChanges ();
-					
-					this.UpdateEditionSaveRecordCommandState ();
-				}
-				
-				System.Diagnostics.Debug.WriteLine ("Done");
+				this.PreserveNavigation (
+					delegate
+					{
+						this.InternalSaveDataContext (context);
+					});
 			}
 		}
 
@@ -150,15 +143,60 @@ namespace Epsitec.Cresus.Core
 		{
 			if (context != null)
             {
-				System.Diagnostics.Debug.WriteLine ("About to discard context #" + context.UniqueId);
-
-				using (new DataContextDiscarder (this))
-				{
-					this.OnAboutToDiscardDataContext (context);
-
-					System.Diagnostics.Debug.Assert (context.IsDisposed);
-				}
+				this.PreserveNavigation (
+					delegate
+					{
+						this.InternalDiscardDataContext (context);
+					});
 			}
+		}
+
+		private void PreserveNavigation(System.Action action)
+		{
+			var navigator = this.GetActiveDataViewController ().Navigator;
+
+			if (navigator == null)
+			{
+				action ();
+			}
+			else
+			{
+				navigator.PreserveNavigation (action);
+			}
+		}
+
+		private void InternalSaveDataContext(DataContext context)
+		{
+			System.Diagnostics.Debug.WriteLine ("About to save context #" + context.UniqueId);
+
+			this.OnAboutToSaveDataContext (context);
+
+			if ((this.suspendDataContextSave == 0) &&
+							(context.ContainsChanges ()))
+			{
+				context.SaveChanges ();
+
+				this.UpdateEditionSaveRecordCommandState ();
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Done");
+		}
+
+		private void InternalDiscardDataContext(DataContext context)
+		{
+			System.Diagnostics.Debug.WriteLine ("About to discard context #" + context.UniqueId);
+
+			using (new DataContextDiscarder (this))
+			{
+				this.OnAboutToDiscardDataContext (context);
+
+				System.Diagnostics.Debug.Assert (context.IsDisposed);
+			}
+		}
+
+		private DataViewController GetActiveDataViewController(CommandContext context = null)
+		{
+			return CoreApplication.GetController<DataViewController> (context);
 		}
 
 		class DataContextDiscarder : System.IDisposable
