@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Layouts;
 
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
@@ -24,10 +25,11 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public class DataViewController : CoreViewController, IWidgetUpdater
 	{
-		public DataViewController(string name, CoreData data)
-			: base (name)
+		public DataViewController(MainViewController mainViewController, DataViewOrchestrator orchestrator)
+			: base ("Data", orchestrator)
 		{
-			this.data = data;
+			this.mainViewController = mainViewController;
+			this.data = this.mainViewController.Data;
 
 			this.viewControllers = new Stack<CoreViewController> ();
 			
@@ -35,6 +37,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+		public MainViewController MainViewController
+		{
+			get
+			{
+				return this.mainViewController;
+			}
+		}
 
 		/// <summary>
 		/// Gets the data context of the leaf sub view or the active one taken from the
@@ -49,11 +67,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (leafController == null)
 				{
-					return this.data.DataContext;
+					return this.MainViewController.DataContext;
 				}
 				else
 				{
-					return leafController.DataContext ?? this.data.DataContext;
+					return leafController.DataContext ?? this.MainViewController.DataContext;
 				}
 			}
 			set
@@ -62,16 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the navigator associated with all the view controllers.
-		/// </summary>
-		/// <value>The navigator.</value>
-		public new NavigationOrchestrator Navigator
-		{
-			get;
-			set;
-		}
-		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			return this.viewControllers;
@@ -103,7 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		/// <param name="entity">The entity.</param>
 		/// <param name="navigationPathElement">The navigation path element describing how to get to the entity.</param>
-		public void SetActiveEntity(AbstractEntity entity, Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)
+		public void SetActiveEntity(AbstractEntity entity, NavigationPathElement navigationPathElement)
 		{
 			this.ClearActiveEntity ();
 
@@ -170,17 +178,25 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			lastController.CloseUI (this.viewLayoutController.LastColumn);
 
+			bool disposeRequired = false;
+
 			if (lastContext != null)
 			{
 				if ((leafController == null) ||
 					(leafController.DataContext != lastController.DataContext))
 				{
-					this.data.SaveDataContext (lastContext);
-					this.data.DisposeDataContext (lastContext);
+//-					this.data.SaveDataContext (lastContext);
+//-					this.data.DisposeDataContext (lastContext);
+					disposeRequired = true;
 				}
 			}
 
 			lastController.Dispose ();
+
+			if (disposeRequired)
+			{
+				System.Diagnostics.Debug.Assert (lastContext.IsDisposed);
+			}
 			
 			//	Remove the rightmost column in the layout:
 			
@@ -244,11 +260,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PushViewController (newViewController);
 		}
 
-
-		public bool ContainsViewController(CoreViewController controller)
+		private bool ContainsViewController(CoreViewController controller)
 		{
 			return this.viewControllers.Any (x => x.Matches (controller));
 		}
+
 
 		#region IWidgetUpdater Members
 
@@ -268,7 +284,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		private void InheritLeafControllerDataContext(CoreViewController controller)
-		{
+		{//HACK: verify this
+#if false
 			if ((controller.DataContext != null) ||
 				(controller.InheritDataContext == false))
 			{
@@ -285,6 +302,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				controller.DataContext = leafController.DataContext;
 			}
+#endif
 		}
 
 		private void CreateViewLayoutHandler()
@@ -364,13 +382,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private EntityViewController CreateRootSummaryViewController(Epsitec.Cresus.Core.Orchestrators.Navigation.NavigationPathElement navigationPathElement)
+		private EntityViewController CreateRootSummaryViewController(NavigationPathElement navigationPathElement)
 		{
-			var controller = EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
-
-			controller.DataContext = this.DataContext;
-
-			return controller;
+			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
 		}
 
 		private CoreViewController GetParentController(int depth)
@@ -391,6 +405,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private readonly MainViewController mainViewController;
 		private readonly CoreData data;
 		private readonly Stack<CoreViewController> viewControllers;
 		private readonly ViewLayoutController viewLayoutController;

@@ -18,10 +18,10 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class PreviewViewController : CoreViewController, IWidgetUpdater
 	{
-		public PreviewViewController(string name, CoreData data)
-			: base (name)
+		public PreviewViewController(DataViewOrchestrator orchestrator)
+			: base ("Preview", orchestrator)
 		{
-			this.data = data;
+			this.data = this.Orchestrator.Data;
 		}
 
 		

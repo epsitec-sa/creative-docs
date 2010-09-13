@@ -30,15 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
             }
 		}
 
-		public override bool InheritDataContext
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-
 		#region ICreationController Members
 
 		public ViewControllerMode UpgradeControllerMode

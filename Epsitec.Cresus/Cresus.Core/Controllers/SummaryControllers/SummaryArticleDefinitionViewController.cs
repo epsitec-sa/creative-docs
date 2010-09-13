@@ -32,7 +32,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				this.CreateUIComments          (data);
 			}
 		}
-		
+
+		protected override IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
+		{
+			yield return this.Entity;
+		}
+
 
 		private void CreateUIArticleDefinition(SummaryDataItems data)
 		{

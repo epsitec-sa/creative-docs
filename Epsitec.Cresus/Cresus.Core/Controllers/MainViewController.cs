@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController, ICommandHandler
 	{
-		public MainViewController(CoreData data, CommandContext commandContext)
-			: base ("MainView")
+		public MainViewController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator)
+			: base ("MainView", orchestrator)
 		{
 			this.data = data;
 			this.commandContext = commandContext;
@@ -31,45 +31,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
 			this.data.AboutToDiscardDataContext += this.HandleAboutToDiscardDataContext;
 
-			this.navigator = new NavigationOrchestrator (this);
-			this.Orchestrator = new DataViewOrchestrator (this);
+			this.actionViewController  = new ActionViewController (this.Orchestrator);
+			this.previewViewController = new PreviewViewController (this.Orchestrator);
 
-			this.dataViewController = new DataViewController ("Data", data)
-			{
-				Orchestrator = this.Orchestrator,
-				Navigator = this.Navigator,
-			};
-
-			this.actionViewController  = new ActionViewController ("ActionPanel", data);
-			this.previewViewController = new PreviewViewController ("Preview", data);
-
-			this.browserViewController = new BrowserViewController ("Browser", data)
-			{
-				Orchestrator = this.Orchestrator,
-			};
-
-			this.browserSettingsController = new BrowserSettingsController ("BrowserSettings", this.browserViewController)
-			{
-				Orchestrator = this.Orchestrator,
-			};
-
-			this.Orchestrator.Controller = this.dataViewController;
-
-			this.browserViewController.CurrentChanging +=
-				delegate
-				{
-					System.Diagnostics.Debug.WriteLine ("CurrentChanging");
-					this.dataViewController.ClearActiveEntity ();
-				};
-
-			this.browserViewController.CurrentChanged +=
-				delegate
-				{
-					System.Diagnostics.Debug.WriteLine ("CurrentChanged");
-					this.browserViewController.SelectActiveEntity (this.dataViewController);
-				};
+			this.browserViewController = new BrowserViewController (this.Orchestrator);
+			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
 
 			this.commandContext.AttachCommandHandler (this);
+		}
+
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.data;
+			}
 		}
 
 		public CommandContext CommandContext
@@ -80,11 +57,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public override DataContext DataContext
+		{
+			get
+			{
+				return base.DataContext ?? this.data.DataContext;
+			}
+			set
+			{
+				base.DataContext = value;
+			}
+		}
+
 		public new NavigationOrchestrator Navigator
 		{
 			get
 			{
-				return this.navigator;
+				return this.Orchestrator.Navigator;
 			}
 		}
 
@@ -116,7 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.dataViewController;
+				return this.Orchestrator.Controller;
 			}
 		}
 
@@ -140,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			yield return this.browserViewController;
 			yield return this.browserSettingsController;
-			yield return this.dataViewController;
+			yield return this.DataViewController;
 			yield return this.actionViewController;
 			yield return this.previewViewController;
 		}
@@ -151,7 +140,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.browserViewController.CreateUI (this.leftPanel);
 			this.browserSettingsController.CreateUI (this.browserSettingsPanel);
-			this.dataViewController.CreateUI (this.mainPanel);
+			this.DataViewController.CreateUI (this.mainPanel);
 			this.previewViewController.CreateUI (this.rightPreviewPanel);
 			this.actionViewController.CreateUI (this.rightActionPanel);
 
@@ -367,7 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()
 		{
-			var leaf = this.dataViewController.GetLeafViewController ();
+			var leaf = this.DataViewController.GetLeafViewController ();
 
 			if (leaf != null)
 			{
@@ -389,7 +378,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public IEnumerable<AbstractEntity> GetVisibleEntities()
 		{
-			var leaf = this.dataViewController.GetLeafViewController ();
+			var leaf = this.DataViewController.GetLeafViewController ();
 
 			if (leaf != null)
 			{
@@ -407,10 +396,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;
-		private readonly DataViewController dataViewController;
 		private readonly ActionViewController actionViewController;
 		private readonly PreviewViewController previewViewController;
-		private readonly NavigationOrchestrator navigator;
 
 		private FrameBox frame;
 

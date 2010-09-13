@@ -10,6 +10,9 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {
@@ -23,11 +26,22 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
 		/// </summary>
 		/// <param name="mainViewController">The main view controller.</param>
-		public DataViewOrchestrator(MainViewController mainViewController)
+		public DataViewOrchestrator(CoreData data, CommandContext commandContext)
 		{
-			this.mainViewController = mainViewController;
+			this.data = data;
+			this.mainViewController = new MainViewController (this.data, commandContext, this);
+			this.dataViewController = new DataViewController (this.mainViewController, this);
+			this.navigator = new NavigationOrchestrator (this.mainViewController);
 		}
 
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
 
 		public MainViewController MainViewController
 		{
@@ -37,30 +51,26 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		public NavigationOrchestrator Navigator
+		{
+			get
+			{
+				return this.navigator;
+			}
+		}
+
 		public DataViewController Controller
 		{
 			get
 			{
 				return this.dataViewController;
 			}
-			set
-			{
-				System.Diagnostics.Debug.Assert (this.dataViewController == null);
-				this.dataViewController = value;
-			}
 		}
 
-		public NavigationOrchestrator Navigator
-		{
-			get
-			{
-				return this.Controller.Navigator;
-			}
-		}
-
+		
 		/// <summary>
 		/// Gets the data context of the leaf sub view or the active one taken from the
-		/// associated <see cref="CoreData"/>.
+		/// associated <see cref="MainViewController"/>.
 		/// </summary>
 		/// <value>The data context.</value>
 		public DataContext DataContext
@@ -69,6 +79,17 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				return this.dataViewController.DataContext;
 			}
+		}
+
+
+		public void ClearActiveEntity()
+		{
+			this.dataViewController.ClearActiveEntity ();
+		}
+
+		public void SetActiveEntity(AbstractEntity entity, NavigationPathElement navigationPathElement)
+		{
+			this.dataViewController.SetActiveEntity (entity, navigationPathElement);
 		}
 
 
@@ -115,8 +136,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			return this.dataViewController.GetLeafViewController ();
 		}
 
-		
-		private DataViewController dataViewController;
-		private MainViewController mainViewController;
+
+		private readonly CoreData data;
+		private readonly MainViewController mainViewController;
+		private readonly DataViewController dataViewController;
+		private readonly NavigationOrchestrator navigator;
 	}
 }

@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.entity = entity;
+			
+			this.CreateBusinessContext ();
+			this.SetupDataContext ();
+
 			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
 
@@ -61,14 +65,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public sealed override void CreateUI(Widget container)
 		{
+//-			this.CreateBusinessContext ();
+
 			var context       = this.DataContext;
 			var entity        = this.Entity;
 			var tileContainer = container as TileContainer;
 			
 			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
 			System.Diagnostics.Debug.Assert (tileContainer != null);
-
-			this.CreateBusinessContext ();
 
 			this.TileContainer = tileContainer;
 			this.CreateUI ();
@@ -80,9 +84,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entities != null)
 			{
-				this.businessContext = new BusinessLogic.BusinessContext (this.Orchestrator.DataContext);
+				this.businessContext = this.Orchestrator.Data.CreateBusinessContext ();
+				this.DataContext = this.businessContext.DataContext;
+				this.entity = this.DataContext.ResolveEntity (this.entity);
 				this.businessContext.Register (entities);
 			}
+		}
+
+		private void SetupDataContext()
+		{
+			this.DataContext = DataContextPool.Instance.FindDataContext (this.entity);
 		}
 
 		protected override void Dispose(bool disposing)

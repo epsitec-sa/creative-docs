@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// </summary>
 	class BrowserSettingsController : CoreViewController
 	{
-		public BrowserSettingsController(string name, BrowserViewController browser)
-			: base (name)
+		public BrowserSettingsController(BrowserViewController browser)
+			: base ("BrowserSettings", browser.Orchestrator)
 		{
 			this.browser = browser;
 			this.browser.DataSetSelected += this.HandleBrowserDataSetSelected;

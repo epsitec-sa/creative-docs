@@ -14,15 +14,16 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
-		public BrowserViewController(string name, CoreData data)
-			: base (name)
+		public BrowserViewController(Orchestrators.DataViewOrchestrator orchestrator)
+			: base ("Browser", orchestrator)
 		{
-			this.data = data;
+			this.data = orchestrator.Data;
 
 			this.data.DiscardRecordCommandExecuted +=
 				delegate
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				return base.DataContext;
+				return null;
 			}
 			set
 			{
@@ -67,39 +68,30 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.dataSetName != dataSetName)
 			{
-				this.DisposeDataContext ();
+				this.Orchestrator.ClearActiveEntity ();
+
+				this.DisposeBrowserDataContext ();
 				this.dataSetName = dataSetName;
-				this.CreateDataContext ();
+				this.CreateBrowserDataContext ();
 
 				this.SelectContentsBasedOnDataSet ();
 				this.OnDataSetSelected ();
 			}
-			else
-			{
-				var controller = this.Orchestrator.MainViewController.DataViewController.GetRootViewController ();
-				
-				if (controller != null)
-				{
-					this.Orchestrator.CloseSubViews (controller);
-				}
-			}
 		}
 
-		public void SelectActiveEntity(DataViewController dataViewController)
+		public void SelectActiveEntity()
 		{
-			var dataContext           = dataViewController.DataContext;
-			var activeEntity          = this.GetActiveEntity (dataContext);
+			this.Orchestrator.ClearActiveEntity ();
 
-			if (activeEntity == null)
-			{
-				dataViewController.ClearActiveEntity ();
-			}
-			else
+			var dataContext  = this.Orchestrator.DataContext;
+			var activeEntity = this.GetActiveEntity (dataContext);
+
+			if (activeEntity != null)
 			{
 				var activeEntityKey       = dataContext.GetNormalizedEntityKey (activeEntity).GetValueOrDefault ();
 				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
-				dataViewController.SetActiveEntity (activeEntity, navigationPathElement);
+				this.Orchestrator.SetActiveEntity (activeEntity, navigationPathElement);
 			}
 		}
 
@@ -120,6 +112,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 				else
 				{
+					controller.Dispose ();
+
+					//	Create the real entity, then re-create the user interface to edit it:
+					
 					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, this.Orchestrator.DataContext);
 					controller = EntityViewController.CreateEntityViewController ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
 				}
@@ -188,22 +184,22 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		private void CreateDataContext()
+		private void CreateBrowserDataContext()
 		{
-			base.DataContext = data.CreateDataContext ();
-			this.DataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
-			this.collection  = new BrowserList (this.DataContext);
+			this.browserDataContext = this.data.CreateDataContext ();
+			this.browserDataContext.Name = string.Format ("Browser.DataSet={0}", this.DataSetName);
+			this.collection  = new BrowserList (this.browserDataContext);
 
-			this.DataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
 		}
 
-		private void DisposeDataContext()
+		private void DisposeBrowserDataContext()
 		{
-			if (this.DataContext != null)
+			if (this.browserDataContext != null)
 			{
-				this.DataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-				this.data.DisposeDataContext (this.DataContext);
-				base.DataContext = null;
+				this.browserDataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+				this.data.DisposeDataContext (this.browserDataContext);
+				this.browserDataContext = null;
 				this.collection = null;
 			}
 		}
@@ -256,7 +252,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			//	UI no longer has an actively selected entity; clearing the active entity will
 			//	also make sure that any changes will be automatically persisted:
 
-			this.Orchestrator.Controller.ClearActiveEntity ();
+			this.Orchestrator.ClearActiveEntity ();
 
 			this.collectionGetter = collectionGetter;
 			this.data.SetupDataContext ();
@@ -272,7 +268,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				return this.collectionGetter (this.DataContext).ToArray ();
+				return this.collectionGetter (this.browserDataContext).ToArray ();
 			}
 		}
 		
@@ -314,6 +310,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				handler (this);
 			}
+
+			this.SelectActiveEntity ();
 		}
 
 		protected void OnCurrentChanging(CurrentChangingEventArgs e)
@@ -402,7 +400,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				//	Don't access the DataContext before this point in the function, or else
 				//	we would end up using an outdated and disposed data context !
 				
-				var browserDataContext = browserViewController.DataContext;
+				var browserDataContext = browserViewController.browserDataContext;
 
 				return browserViewController.GetActiveEntity (browserDataContext) != null;
 			}
@@ -425,6 +423,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly CoreData data;
 		private BrowserList collection;
 		private string dataSetName;
+		private DataContext browserDataContext;
 		private System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter;
 		private int suspendUpdates;
 
