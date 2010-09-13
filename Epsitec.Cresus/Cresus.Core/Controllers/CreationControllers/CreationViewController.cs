@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
 			var orchestrator = this.Orchestrator;
-			var business     = this.BusinessContext;
+			var business     = BusinessContext.GetBusinessContext (this);
 
 			System.Diagnostics.Debug.Assert (business != null);
 
