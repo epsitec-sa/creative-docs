@@ -503,11 +503,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					var documentOption = DocumentTypeDefinition.StringToOption (button.Name);
 
-					if (printerUnit.ForcingOptionsToClear.Contains (documentOption))
+					if (printerUnit.ForcingOptionsToClear != null && printerUnit.ForcingOptionsToClear.Contains (documentOption))
 					{
 						button.ActiveState = ActiveState.No;
 					}
-					else if (printerUnit.ForcingOptionsToSet.Contains (documentOption))
+					else if (printerUnit.ForcingOptionsToSet != null && printerUnit.ForcingOptionsToSet.Contains (documentOption))
 					{
 						button.ActiveState = ActiveState.Yes;
 					}

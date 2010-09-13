@@ -343,10 +343,11 @@ namespace Epsitec.Cresus.Core.Printers
 					Parent = this.previewFrame.Viewport,
 					DocumentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank),
 					Description = this.GetPrintersUsedDescription (pageRank),
-					CurrentPage = pageRank++,
+					CurrentPage = this.entityPrinter.GetPageRelativ (pageRank),
 				};
 
 				this.pagePreviewers.Add (preview);
+				pageRank++;
 			}
 
 			this.UpdatePagePreviewsGeometry ();

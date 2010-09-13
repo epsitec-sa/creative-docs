@@ -232,10 +232,13 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var builder = new System.Text.StringBuilder ();
 
-			foreach (var documentOption in documentOptions)
+			if (documentOptions != null)
 			{
-				builder.Append (DocumentTypeDefinition.OptionToString (documentOption));
-				builder.Append (" ");
+				foreach (var documentOption in documentOptions)
+				{
+					builder.Append (DocumentTypeDefinition.OptionToString (documentOption));
+					builder.Append (" ");
+				}
 			}
 
 			return builder.ToString ();
