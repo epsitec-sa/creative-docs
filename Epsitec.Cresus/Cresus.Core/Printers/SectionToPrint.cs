@@ -37,9 +37,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public string InternalJobName
 		{
-			//	Le nom interne du job a la forme "job.e.c":
+			//	Le nom interne du job a la forme "job.e.d.c":
 			//		job		nom interne du job ("All", "Copy", "Spec", etc.)
 			//		e		rang de l'entité (1..n)
+			//		d		rang du document (1..n)
 			//		c		rang de la copie (1..n)
 			//	Par exemple "All.1.1".
 			get

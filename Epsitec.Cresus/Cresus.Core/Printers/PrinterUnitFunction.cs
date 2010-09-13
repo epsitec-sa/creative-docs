@@ -12,10 +12,11 @@ namespace Epsitec.Cresus.Core.Printers
 		ForAllPages,			// unité d'impression pour toutes les pages
 		ForPagesCopy,			// unité d'impression pour une copie de toutes les pages
 
-		SinglePage,				// unité d'impression pour une page unique
+		ForSinglePage,			// unité d'impression pour une page unique
 		ForFirstPage,			// unité d'impression pour la première page (0)
 		ForFollowingPages,		// unité d'impression pour les pages suivantes (1..n)
 
 		ForEsrPage,				// unité d'impression pour BV
+		ForLabelPage,			// unité d'impression pour étiquettes
 	}
 }
