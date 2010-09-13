@@ -147,6 +147,7 @@
     <Compile Include="Printers\InvoiceDocumentPrinter.cs" />
     <Compile Include="Printers\DocumentOption.cs" />
     <Compile Include="Printers\PreviewerController.cs" />
+    <Compile Include="Data\DataLifetimeExpectancy.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />

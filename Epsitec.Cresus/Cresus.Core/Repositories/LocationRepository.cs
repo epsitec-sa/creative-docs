@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class LocationRepository : Repository<LocationEntity>
 	{
 		public LocationRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Data.DataLifetimeExpectancy.Stable)
 		{
 		}
 

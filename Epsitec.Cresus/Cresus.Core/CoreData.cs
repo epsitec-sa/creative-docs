@@ -63,12 +63,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				if (this.activeDataContext == null)
-				{
-					this.SetupDataContext ();
-				}
-
-				return this.activeDataContext;
+				return this.EnsureDataContext (ref this.activeDataContext, "Active");
 			}
 		}
 
@@ -101,6 +96,31 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public DataContext GetDataContext(Data.DataLifetimeExpectancy lifetimeExpectancy)
+		{
+			switch (lifetimeExpectancy)
+			{
+				case Data.DataLifetimeExpectancy.Stable:
+					return this.EnsureDataContext (ref this.stableDataContext, lifetimeExpectancy.ToString ());
+
+				case Data.DataLifetimeExpectancy.Immutable:
+					return this.EnsureDataContext (ref this.immutableDataContext, lifetimeExpectancy.ToString ());
+			}
+
+			return this.DataContext;
+		}
+
+		private DataContext EnsureDataContext(ref DataContext dataContext, string name)
+		{
+			if (dataContext == null)
+			{
+				dataContext = this.CreateDataContext (name);
+			}
+			
+			return dataContext;
+		}
+
+
 		public void SetupDatabase()
 		{
 			if (!this.IsReady)
@@ -114,7 +134,7 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.Assert (this.dbInfrastructure.IsConnectionOpen);
 				System.Diagnostics.Debug.Assert (this.activeDataContext == null);
 
-				this.SetupDataContext ();
+				this.SetupDataContext (this.CreateDataContext ("setup-only"));
 				this.SetupDatabase (databaseIsNew || this.ForceDatabaseCreation);
 				this.DisposeDataContext (this.activeDataContext);
 
@@ -471,10 +491,10 @@ namespace Epsitec.Cresus.Core
 			// TODO
 		}
 
-		public void SetupDataContext()
+		public void SetupDataContext(DataContext dataContext)
 		{
 			var oldContext = this.activeDataContext;
-			this.activeDataContext = this.CreateDataContext ("setup");
+			this.activeDataContext = dataContext;
 			this.OnDataContextChanged (oldContext);
 		}
 
@@ -647,6 +667,9 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreDataConnectionManager connectionManager;
 		private readonly BusinessContextPool businessContextPool;
 		private readonly CoreDataLocker locker;
+
+		private DataContext immutableDataContext;
+		private DataContext stableDataContext;
 
 		private DataContext activeDataContext;
 		private int dataContextChangedLevel;

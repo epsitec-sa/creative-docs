@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Data;
+
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Context;
@@ -15,49 +17,19 @@ namespace Epsitec.Cresus.Core.Repositories
 {
 	public abstract class Repository
 	{
-		protected Repository(CoreData data, DataContext context)
+		protected Repository(CoreData data, DataContext context, DataLifetimeExpectancy lifetimeExpectancy)
 		{
+			this.lifetimeExpectancy = lifetimeExpectancy;
+			
 			this.data = data;
-			this.dataContext = context ?? data.DataContext;
+			this.dataContext = context ?? this.data.GetDataContext (this.lifetimeExpectancy);
 		}
+
 
 		public abstract Druid GetEntityType();
 
 
-		protected T CreateExample<T>() where T : AbstractEntity, new()
-		{
-			return new T ();
-		}
-
-
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example)
-			where T : AbstractEntity
-		{
-			return this.dataContext.GetByExample<T> (example);
-		}
-
-
-		protected IEnumerable<T> GetEntitiesByRequest<T>(Request request)
-			where T : AbstractEntity
-		{
-			return this.dataContext.GetByRequest<T> (request);
-		}
-
-
-		protected IEnumerable<T> GetEntitiesByExample<T>(T example, int index, int count)
-			where T : AbstractEntity
-		{
-			return this.dataContext.GetByExample<T> (example).Skip (index).Take (count);
-		}
-
-
-		protected IEnumerable<T> GetEntitiesByRequest<T>(Request request, int index, int count)
-			where T : AbstractEntity
-		{
-			return this.dataContext.GetByRequest<T> (request).Skip (index).Take (count);
-		}
-
-
+		private readonly DataLifetimeExpectancy lifetimeExpectancy;
 		protected readonly CoreData data;
 		protected readonly DataContext dataContext;
 	}

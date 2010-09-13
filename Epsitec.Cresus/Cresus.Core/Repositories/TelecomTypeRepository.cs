@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Repositories
 {
 	public class TelecomTypeRepository : Repository<TelecomTypeEntity>
 	{
-		public TelecomTypeRepository(CoreData data)
-			: base (data)
+		public TelecomTypeRepository(CoreData data, DataContext context = null)
+			: base (data, context, Data.DataLifetimeExpectancy.Immutable)
 		{	
 		}
 	}

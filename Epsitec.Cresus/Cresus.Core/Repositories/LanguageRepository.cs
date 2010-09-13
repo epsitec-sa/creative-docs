@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class LanguageRepository : Repository<LanguageEntity>
 	{
 		public LanguageRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Data.DataLifetimeExpectancy.Immutable)
 		{
 		}
 	}
