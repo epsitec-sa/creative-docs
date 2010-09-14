@@ -32,6 +32,17 @@ namespace Epsitec.Cresus.Core
 			{
 				return CoreProgram.application;
 			}
+			internal set
+			{
+				if (CoreProgram.application == null)
+				{
+					CoreProgram.application = value;
+				}
+				else
+				{
+					throw new System.InvalidOperationException ();
+				}
+			}
 		}
 
 
@@ -41,7 +52,7 @@ namespace Epsitec.Cresus.Core
 			
 			UI.Initialize ();
 
-			CoreProgram.application = new CoreApplication ();
+			new CoreApplication ();
 
 			System.Diagnostics.Debug.Assert (CoreProgram.application.ResourceManagerPool.PoolName == "Core");
 

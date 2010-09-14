@@ -83,8 +83,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			var dummyEntity  = this.CreateDummyEntity ();
 			var orchestrator = this.Orchestrator;
 			
-			orchestrator.CloseSubViews ();
-			orchestrator.ClearBusinessContext ();
+//-			orchestrator.CloseSubViews ();
+//-			orchestrator.ClearBusinessContext ();
+			orchestrator.ClearActiveEntity ();
 
 			System.Diagnostics.Debug.Assert (dummyEntity != null);
 
@@ -231,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private AbstractEntity CreateRealEntity()
 		{
-			var businessContext = this.Orchestrator.BusinessContext;
+			var businessContext = this.Orchestrator.DefaultBusinessContext;
 			return businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
 		}
 

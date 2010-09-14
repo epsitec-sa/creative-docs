@@ -35,6 +35,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.viewLayoutController.ColumnCount == 0;
+			}
+		}
+
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			return this.viewControllers;
@@ -153,7 +163,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			int widgetIndex = focus.WidgetIndex;
 
 			var focusedColumn = this.viewLayoutController.GetColumn (columnIndex);
-			var focusedWidget = focusedColumn.FindAllChildren (x => x.TabIndex == widgetIndex).FirstOrDefault ();
+			var focusedWidget = focusedColumn == null ? null : focusedColumn.FindAllChildren (x => x.TabIndex == widgetIndex).FirstOrDefault ();
 
 			if (focusedWidget != null)
 			{

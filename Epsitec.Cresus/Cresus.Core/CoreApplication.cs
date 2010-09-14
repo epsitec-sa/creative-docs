@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
+			CoreProgram.Application = this;
 			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData (forceDatabaseCreation: false);

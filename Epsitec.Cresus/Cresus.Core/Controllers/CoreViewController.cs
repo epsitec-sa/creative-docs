@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.parentController      = this.orchestrator.GetLeafViewController ();
 			}
 
-			this.businessContext = this.orchestrator.CurrentBusinessContext;
+			this.businessContext = this.orchestrator.DefaultBusinessContext;
 			
 //-			System.Diagnostics.Debug.Assert (this.BusinessContext != null);
 		}

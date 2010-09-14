@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void PreserveNavigation(System.Action action)
 		{
 			var history            = this.History;
-			var dataViewController = this.Orchestrator.Controller;
+			var dataViewController = this.Orchestrator.DataViewController;
 			var navigationPath     = this.GetLeafNavigationPath ();
 
 			using (history.SuspendRecording ())

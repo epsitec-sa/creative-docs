@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			navigator.PreserveNavigation (
 				delegate
 				{
-					orchestrator.CurrentBusinessContext.Discard ();
+					orchestrator.DefaultBusinessContext.Discard ();
 					orchestrator.ClearActiveEntity ();
 				});
 		}
