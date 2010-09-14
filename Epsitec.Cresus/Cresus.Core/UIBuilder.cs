@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core
 
 			public EntityViewController CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 			{
-				return EntityViewController.CreateEntityViewController (typeof (T).Name, this.entity, this.mode, orchestrator,
+				return EntityViewControllerFactory.Create (typeof (T).Name, this.entity, this.mode, orchestrator,
 					navigationPathElement: this.navigationPathElement,
 					controllerSubTypeId: this.controllerSubType);
 			}
@@ -1254,7 +1254,7 @@ namespace Epsitec.Cresus.Core
 							var newValue  = referenceController.CreateNewValue (controller.DataContext);
 							var newEntity = newValue.GetEditionEntity ();
 							var refEntity = newValue.GetReferenceEntity ();
-							var newController = EntityViewController.CreateEntityViewController ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
+							var newController = EntityViewControllerFactory.Create ("Creation", newEntity, newValue.CreationControllerMode, controller.Orchestrator);
 							tile.OpenSubView (controller.Orchestrator, controller, newController);
 							editor.SelectedItemIndex = editor.Items.Add (refEntity);
 							valueSetter (refEntity);

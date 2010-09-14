@@ -84,11 +84,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.Orchestrator.CloseSubViews ();
 
-			var item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.Independent);
+			var item = this.data.CreateDummyEntity (this.DataSetName);
 
 			if (item != null)
 			{
-				var controller = EntityViewController.CreateEntityViewController ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
+				var controller = EntityViewControllerFactory.Create ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
 
 				if (controller is ICreationController)
 				{
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					DataContext dataContext = this.Orchestrator.DefaultDataContext;
 
 					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, dataContext);
-					controller = EntityViewController.CreateEntityViewController ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
+					controller = EntityViewControllerFactory.Create ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
 				}
 
 				this.Orchestrator.ShowSubView (null, controller);

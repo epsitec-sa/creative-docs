@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else
 			{
 				navigationPathElement = new TileNavigationPathElement (this.Name);
-				var controller = EntityViewController.CreateEntityViewController ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, navigationPathElement);
+				var controller = EntityViewControllerFactory.Create ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, navigationPathElement);
 
 				return controller;
 			}
