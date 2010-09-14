@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.Orchestrator.CloseSubViews ();
 
-			var item = this.data.CreateDummyEntity (this.DataSetName);
+			var item = this.CreateDummyEntity ();
 
 			if (item != null)
 			{
@@ -101,9 +101,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 					//	Create the real entity, then re-create the user interface to edit it:
 
-					DataContext dataContext = this.Orchestrator.DefaultDataContext;
-
-					item = this.data.CreateNewEntity (this.DataSetName, EntityCreationScope.SpecificContext, dataContext);
+					var businessContext = this.Orchestrator.BusinessContext;
+					item = businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
 					controller = EntityViewControllerFactory.Create ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
 				}
 
@@ -225,6 +224,29 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					this.SetContents (context => this.data.GetInvoiceDocuments (context));
 					break;
 			}
+		}
+
+		private AbstractEntity CreateDummyEntity()
+		{
+			return this.data.CreateDummyEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
+		}
+
+		public static Druid GetRootEntityId(string dataSetName)
+		{
+			switch (dataSetName)
+			{
+				case "Customers":
+					return EntityInfo.GetTypeId<RelationEntity> ();
+
+				case "ArticleDefinitions":
+					return EntityInfo.GetTypeId<ArticleDefinitionEntity> ();
+
+				case "Documents":
+				case "InvoiceDocuments":
+					return EntityInfo.GetTypeId<InvoiceDocumentEntity> ();
+			}
+
+			throw new System.NotImplementedException ();
 		}
 	
 		private void SetContents(System.Func<DataContext, IEnumerable<AbstractEntity>> collectionGetter)
