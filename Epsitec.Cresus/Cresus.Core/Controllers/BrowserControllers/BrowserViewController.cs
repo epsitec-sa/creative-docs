@@ -82,32 +82,32 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void CreateNewItem()
 		{
-			this.Orchestrator.CloseSubViews ();
+			var dummyEntity  = this.CreateDummyEntity ();
+			var orchestrator = this.Orchestrator;
+			
+			orchestrator.CloseSubViews ();
+			orchestrator.ClearBusinessContext ();
 
-			var item = this.CreateDummyEntity ();
+			System.Diagnostics.Debug.Assert (dummyEntity != null);
 
-			if (item != null)
+			var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, orchestrator);
+
+			if (controller is ICreationController)
 			{
-				var controller = EntityViewControllerFactory.Create ("ItemCreation", item, ViewControllerMode.Creation, this.Orchestrator);
-
-				if (controller is ICreationController)
-				{
-					//	OK, we have really been able to create a specific creation controller, which
-					//	will be used to bootstrap the entity creation...
-				}
-				else
-				{
-					controller.Dispose ();
-
-					//	Create the real entity, then re-create the user interface to edit it:
-
-					var businessContext = this.Orchestrator.BusinessContext;
-					item = businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
-					controller = EntityViewControllerFactory.Create ("EmptyItem", item, ViewControllerMode.Summary, this.Orchestrator);
-				}
-
-				this.Orchestrator.ShowSubView (null, controller);
+				//	OK, we have really been able to create a specific creation controller, which
+				//	will be used to bootstrap the entity creation...
 			}
+			else
+			{
+				controller.Dispose ();
+
+				//	Create the real entity, then re-create the user interface to edit it:
+
+				var realEntity = this.CreateRealEntity ();
+				controller = EntityViewControllerFactory.Create ("EmptyItem", realEntity, ViewControllerMode.Summary, orchestrator);
+			}
+
+			orchestrator.ShowSubView (null, controller);
 		}
 
 		public AbstractEntity GetActiveEntity(DataContext context)
@@ -229,6 +229,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private AbstractEntity CreateDummyEntity()
 		{
 			return this.data.CreateDummyEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
+		}
+
+		private AbstractEntity CreateRealEntity()
+		{
+			var businessContext = this.Orchestrator.BusinessContext;
+			return businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
 		}
 
 		public static Druid GetRootEntityId(string dataSetName)
