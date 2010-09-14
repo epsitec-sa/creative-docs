@@ -79,41 +79,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateViewLayoutHandler ();
 		}
 
-		/// <summary>
-		/// Sets the active entity visible in the data view. This will collapse everything
-		/// back to just one root view controller.
-		/// </summary>
-		/// <param name="entity">The entity.</param>
-		/// <param name="navigationPathElement">The navigation path element describing how to get to the entity.</param>
-		public void SetActiveEntity(AbstractEntity entity, NavigationPathElement navigationPathElement)
-		{
-			this.ClearActiveEntity ();
-
-			if (entity != null)
-			{
-				this.entity = entity;
-
-				var controller = this.CreateRootSummaryViewController (navigationPathElement);
-
-				this.PushViewController (controller);
-			}
-		}
-
-		/// <summary>
-		/// Clears the active entity and disposes any visible view controllers.
-		/// </summary>
-		public bool ClearActiveEntity()
-		{
-			if (this.entity != null)
-			{
-				this.PopAllViewControllers ();
-				this.entity = null;
-				return true;
-			}
-
-			return false;
-		}
-
 
 		/// <summary>
 		/// Adds a new view controller to the data view. The default is to add a new column
@@ -122,9 +87,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="controller">The controller.</param>
 		public void PushViewController(CoreViewController controller)
 		{
-			System.Diagnostics.Debug.Assert (controller != null);
+			if (controller == null)
+			{
+				return;
+			}
 
-			this.InheritLeafControllerDataContext (controller);
 			controller = controller.GetReplacementController ();
 
 			var leaf   = this.GetLeafController ();
@@ -236,31 +203,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected override void AboutToDiscard()
 		{
-			this.ClearActiveEntity ();
+			//TODO: do we need to do this ?
+//-			this.ClearActiveEntity ();
 
 			base.AboutToDiscard ();
-		}
-
-		private void InheritLeafControllerDataContext(CoreViewController controller)
-		{//HACK: verify this
-#if false
-			if ((controller.DataContext != null) ||
-				(controller.InheritDataContext == false))
-			{
-				return;
-			}
-				
-			var leafController = this.GetLeafController ();
-
-			if (leafController == null)
-			{
-				controller.DataContext = this.DataContext;
-			}
-			else
-			{
-				controller.DataContext = leafController.DataContext;
-			}
-#endif
 		}
 
 		private void CreateViewLayoutHandler()

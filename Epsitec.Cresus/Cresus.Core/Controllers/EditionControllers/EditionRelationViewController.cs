@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIMain (builder);
 
 				this.personController = EntityViewController.CreateEntityViewController (this.Name + "Person", this.Entity.Person, ViewControllerMode.Edition, this.Orchestrator);
-				this.personController.DataContext = this.DataContext;
 				this.personController.CreateUI (this.TileContainer);
 
 				builder.CreateFooterEditorTile ();

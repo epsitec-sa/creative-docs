@@ -114,6 +114,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1, NavigationPathElement navigationPathElement = null)
 		{
+			if (entity == null)
+			{
+				return null;
+			}
+
 			var controller = EntityViewControllerResolver.Resolve (orchestrator, name, entity, mode, controllerSubTypeId, navigationPathElement);
 
 			if (controller == null)
