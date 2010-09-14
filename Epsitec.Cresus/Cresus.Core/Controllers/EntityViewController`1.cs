@@ -21,14 +21,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class EntityViewController<T> : EntityViewController
-		where T : AbstractEntity
+		where T : AbstractEntity, new ()
 	{
 		protected EntityViewController(string name, T entity)
 			: base (name)
 		{
 			this.entity = entity;
 
-			System.Diagnostics.Debug.Assert (DataContextPool.Instance.FindDataContext (this.entity) == this.DataContext);
+			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
+			System.Diagnostics.Debug.Assert ((this.Orchestrator.Data.IsDummyEntity (this.entity)) || (this.DataContext.Contains (this.entity)), "Invalid entity");
 
 			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
@@ -59,13 +60,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public sealed override void CreateUI(Widget container)
 		{
-//-			this.CreateBusinessContext ();
-
 			var context       = this.DataContext;
 			var entity        = this.Entity;
 			var tileContainer = container as TileContainer;
 			
-			System.Diagnostics.Debug.Assert ((context == null) || (context.Contains (entity)));
 			System.Diagnostics.Debug.Assert (tileContainer != null);
 
 			this.TileContainer = tileContainer;
@@ -81,6 +79,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		public sealed override AbstractEntity GetEntity()
 		{
 			return this.Entity;
+		}
+
+		internal void EnsureRealEntity()
+		{
+			var context = this.DataContext;
+			var entity  = this.Entity;
+
+			if (context.Contains (entity) == false)
+			{
+				this.ReplaceEntity (context.CreateEntity<T> ());
+			}
+
 		}
 
 		internal void ReplaceEntity(T entity)

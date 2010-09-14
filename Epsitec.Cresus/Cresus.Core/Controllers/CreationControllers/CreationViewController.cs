@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		protected CreationViewController(string name, T entity)
 			: base (name, entity)
 		{
+			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
+			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (entity));
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -32,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#region ICreationController Members
 
-		public ViewControllerMode UpgradeControllerMode
+		ViewControllerMode ICreationController.UpgradeControllerMode
 		{
 			get
 			{
@@ -44,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		public override CoreViewController GetReplacementController()
 		{
-			var upgradeMode = this.UpgradeControllerMode;
+			var upgradeMode = this.GetUpgradeControllerMode ();
 
 			if (upgradeMode == ViewControllerMode.Creation)
 			{
@@ -61,16 +63,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 				if (this.replacementController == null)
 				{
-					var orchestrator = this.Orchestrator;
-					var controller   = EntityViewController.CreateEntityViewController (this.Name, this.Entity, upgradeMode, orchestrator) as EntityViewController<T>;
-					var context      = controller.DataContext;
-
-					if (context.Contains (this.Entity) == false)
-					{
-						controller.ReplaceEntity (context.CreateEntity<T> ());
-					}
-
-					this.replacementController = controller;
+					this.CreateReplacementController (upgradeMode);
 				}
 				
 				return this.replacementController;
@@ -79,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		protected void UpgradeController()
 		{
-			var upgradeMode = this.UpgradeControllerMode;
+			var upgradeMode = this.GetUpgradeControllerMode ();
 
 			if (upgradeMode == ViewControllerMode.Creation)
 			{
@@ -109,6 +102,16 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
+		private void CreateReplacementController(ViewControllerMode upgradeMode)
+		{
+			var controller = EntityViewControllerFactory.Create (this.Name, this.Entity, upgradeMode, this.Orchestrator) as EntityViewController<T>;
+
+			System.Diagnostics.Debug.Assert (controller.DataContext.Contains (controller.Entity));
+//-			controller.EnsureRealEntity ();
+
+			this.replacementController = controller;
+		}
+		
 		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
 			var orchestrator = this.Orchestrator;

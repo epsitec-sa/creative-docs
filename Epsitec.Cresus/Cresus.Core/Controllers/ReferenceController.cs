@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var entity = ReferenceController.Apply (this.entityGetter (), this.entityMapper);
 			var mode   = this.Mode;
-			var ctrl   = EntityViewController.CreateEntityViewController ("ReferenceViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
+			var ctrl   = EntityViewControllerFactory.Create ("ReferenceViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
 
 			return ctrl;
 		}

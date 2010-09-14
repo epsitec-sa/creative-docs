@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			businessContext.SetActiveEntity (entityKey, navigationPathElement);
 
 			var liveEntity = businessContext.ActiveEntity;
-			var controller = EntityViewController.CreateEntityViewController ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+			var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
 			this.dataViewController.PushViewController (controller);
 		}

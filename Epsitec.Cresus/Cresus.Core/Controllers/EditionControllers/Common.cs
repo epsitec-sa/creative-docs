@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 		public static void CreateDocumentItemTabBook<T>(UIBuilder builder, EntityViewController<T> controller, DocumentItemTabId defaultId)
-			where T : AbstractDocumentItemEntity
+			where T : AbstractDocumentItemEntity, new ()
 		{
 			var tile = builder.CreateEditionTile ();
 
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		public static void CreateAbstractArticleParameterTabBook<T>(UIBuilder builder, EntityViewController<T> controller, ArticleParameterTabId defaultId)
-			where T : AbstractArticleParameterDefinitionEntity
+			where T : AbstractArticleParameterDefinitionEntity, new ()
 		{
 			var tile = builder.CreateEditionTile ();
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 
 		private static void ChangeEditedLineEntity<T>(EntityViewController<T> controller, DocumentItemTabId id)
-			where T : AbstractDocumentItemEntity
+			where T : AbstractDocumentItemEntity, new ()
 		{
 			var entity       = controller.Entity;
 			var dataContext  = controller.DataContext;
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 		private static void ChangeEditedParameterEntity<T>(EntityViewController<T> controller, ArticleParameterTabId id)
-			where T : AbstractArticleParameterDefinitionEntity
+			where T : AbstractArticleParameterDefinitionEntity, new ()
 		{
 			var entity       = controller.Entity;
 			var dataContext  = controller.DataContext;

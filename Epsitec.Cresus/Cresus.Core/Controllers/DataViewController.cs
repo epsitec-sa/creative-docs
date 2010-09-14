@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private EntityViewController CreateRootSummaryViewController(NavigationPathElement navigationPathElement)
 		{
-			return EntityViewController.CreateEntityViewController ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
+			return EntityViewControllerFactory.Create ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
 		}
 
 		private CoreViewController GetParentController(int depth)

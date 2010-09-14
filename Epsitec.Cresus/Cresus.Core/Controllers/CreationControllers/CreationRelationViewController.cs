@@ -71,21 +71,4 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 	}
-
-	public class CreationInvoiceDocumentViewController : CreationViewController<InvoiceDocumentEntity>
-	{
-		public CreationInvoiceDocumentViewController(string name, InvoiceDocumentEntity entity)
-			: base (name, entity)
-		{
-		}
-
-		protected override void CreateUI()
-		{
-		}
-
-		protected override ViewControllerMode GetUpgradeControllerMode()
-		{
-			return ViewControllerMode.Summary;
-		}
-	}
 }

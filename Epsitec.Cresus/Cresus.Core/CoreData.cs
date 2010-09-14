@@ -20,13 +20,6 @@ using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core
 {
-	public enum EntityCreationScope
-	{
-		CurrentContext,
-		SpecificContext,
-		Independent,
-	}
-
 	public sealed partial class CoreData : System.IDisposable
 	{
 		public CoreData(bool forceDatabaseCreation)
@@ -196,6 +189,23 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public AbstractEntity CreateDummyEntity(string dataSetName)
+		{
+			return this.CreateNewEntity (dataSetName, EntityCreationScope.Independent);
+		}
+
+		public bool IsDummyEntity(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return false;
+			}
+			else
+			{
+				return entity.GetEntityContext () == this.independentEntityContext;
+			}
+		}
+
 		public AbstractEntity CreateNewEntity(string dataSetName, EntityCreationScope entityCreationScope, DataContext specificContext = null)
 		{
 			var context = this.GetEntityContext (entityCreationScope, specificContext);
@@ -205,6 +215,7 @@ namespace Epsitec.Cresus.Core
 				case "Customers":
 					return CoreData.CreateNewCustomer (context);
 
+				case "Documents":
 				case "InvoiceDocuments":
 					return CoreData.CreateNewInvoiceDocument (context);
 

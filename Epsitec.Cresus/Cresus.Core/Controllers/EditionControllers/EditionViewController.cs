@@ -12,7 +12,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
 	public abstract class EditionViewController<T> : EntityViewController<T>
-		where T : AbstractEntity
+		where T : AbstractEntity, new ()
 	{
 		protected EditionViewController(string name, T entity)
 			: base (name, entity)

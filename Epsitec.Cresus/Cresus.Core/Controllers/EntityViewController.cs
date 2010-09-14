@@ -90,51 +90,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
-		
-		public static EntityViewController CreateEntityViewController(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement = null)
-		{
-			var entity = marshaler.GetValue<AbstractEntity> ();
-			int index  = marshaler.GetCollectionIndex ();
-			string path;
-
-			if (index < 0)
-			{
-				path = marshaler.GetGetterExpression ().ToString ();
-			}
-			else
-			{
-				path = string.Concat (marshaler.GetGetterExpression ().ToString (), "[", marshaler.GetCollectionIndex ().ToString (System.Globalization.CultureInfo.InvariantCulture), "]");
-			}
-
-			System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + path);
-
-			return EntityViewController.CreateEntityViewController (name, entity, mode, orchestrator, navigationPathElement: navigationPathElement);
-		}
-
-		public static EntityViewController CreateEntityViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, int controllerSubTypeId = -1, NavigationPathElement navigationPathElement = null)
-		{
-			if (entity == null)
-			{
-				return null;
-			}
-
-			var controller = EntityViewControllerResolver.Resolve (orchestrator, name, entity, mode, controllerSubTypeId, navigationPathElement);
-
-			if (controller == null)
-			{
-				if (mode == ViewControllerMode.Creation)
-				{
-					return EntityViewController.CreateEntityViewController (name, entity, ViewControllerMode.Summary, orchestrator, controllerSubTypeId, navigationPathElement);
-				}
-
-				return null;
-			}
-
-			return controller;
-		}
-
-
 		protected virtual void OnChildItemCreated(AbstractEntity entity)
 		{
 		}
