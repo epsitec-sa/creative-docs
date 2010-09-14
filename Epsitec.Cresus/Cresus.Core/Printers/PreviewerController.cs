@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Core.Printers
 						}
 					}
 
-					builder.Append (pair.Key);
+					builder.Append (pair.Key.LogicalName);
 
 					if (pair.Value > 1)
 					{
