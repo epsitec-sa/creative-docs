@@ -339,7 +339,10 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private IEnumerable<string> GetLockNames()
 		{
-			yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
+			if (this.activeEntity != null)
+			{
+				yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
+			}
 //-			return this.entityRecords.Select (x => CoreDataLocker.GetLockName (x.DataContext, x.Entity));
 		}
 

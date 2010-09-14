@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.Orchestrator.Controller;
+				return this.Orchestrator.DataViewController;
 			}
 		}
 
