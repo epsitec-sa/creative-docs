@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
-		public MainViewController MainViewController
+		public MainViewController				MainViewController
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		public BrowserViewController BrowserViewController
+		public BrowserViewController			BrowserViewController
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		public DataViewController DataViewController
+		public DataViewController				DataViewController
 		{
 			get
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		public DataViewOrchestrator Orchestrator
+		public DataViewOrchestrator				Orchestrator
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
-		public NavigationHistory History
+		public NavigationHistory				History
 		{
 			get
 			{
@@ -163,15 +163,24 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
+		/// <summary>
+		/// Executes the specified action without changing the navigation view. If the action
+		/// switches to another view (i.e. closes some panels, moves to another active item
+		/// in the browser, etc.), these changes will be rolled back automatically.
+		/// </summary>
+		/// <param name="action">The action.</param>
 		public void PreserveNavigation(System.Action action)
 		{
-			var history         = this.History;
-			var navigationPath  = this.GetLeafNavigationPath ();
+			var history            = this.History;
+			var dataViewController = this.Orchestrator.Controller;
+			var navigationPath     = this.GetLeafNavigationPath ();
 
 			using (history.SuspendRecording ())
 			{
+				var focus = dataViewController.SaveFocus ();
 				action ();
 				history.NavigateInPlace (navigationPath);
+				dataViewController.RestoreFocus (focus);
 			}
 		}
 
@@ -459,36 +468,5 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private long currentActionId;
 		private long currentHistoryId;
 		private long recordedHistoryId;
-	}
-
-	public class NavigationFieldNode
-	{
-
-		public EntityFieldPath Path
-		{
-			get;
-			set;
-		}
-
-		public Marshaler Marshaler
-		{
-			get;
-			set;
-		}
-	}
-
-	public class NavigationViewNode : NavigationFieldNode
-	{
-		public Druid EntityId
-		{
-			get;
-			set;
-		}
-
-		public ViewControllerMode Mode
-		{
-			get;
-			set;
-		}
 	}
 }

@@ -13,7 +13,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class ViewLayoutController : CoreController, IWidgetUpdater
+	public sealed class ViewLayoutController : CoreController, IWidgetUpdater
 	{
 		public ViewLayoutController(string name, Widget container)
 			: base (name)
@@ -22,12 +22,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.columns = new Stack<TileContainer> ();
 		}
 
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			yield break;
-		}
-
-		public int ColumnCount
+		
+		public int								ColumnCount
 		{
 			get
 			{
@@ -35,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public TileContainer LastColumn
+		public TileContainer					LastColumn
 		{
 			get
 			{
@@ -43,6 +39,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public double							TotalWidth
+		{
+			get
+			{
+				return this.totalWidth;
+			}
+		}
+
+		
 		public TileContainer CreateColumn(CoreViewController controller)
 		{
 			var column = new TileContainer (controller)
@@ -74,12 +79,26 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public double TotalWidth
+
+		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			get
-			{
-				return this.totalWidth;
-			}
+			yield break;
+		}
+		
+		
+		internal TileContainer GetColumn(int columnIndex)
+		{
+			return this.columns.ElementAtOrDefault (columnIndex);
+		}
+
+		internal int GetColumnIndex(TileContainer column)
+		{
+			return this.columns.ToList ().IndexOf (column);
+		}
+
+		internal IEnumerable<TileContainer> GetColumns()
+		{
+			return this.columns.ToList ();
 		}
 
 
@@ -128,33 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static double GetPreferredColumnWidth(int columnCount, int columnIndex)
 		{
-#if false
-			double width = 250 - 250*(columnCount-columnIndex-2)*0.5;
-
-			//	A part la première colonne de gauche, les autres colonnes doivent soit avoir une
-			//	largeur supérieure ou égale à minimalWidth, soit reduceWidth pour ne montrer que
-			//	l'icône, à cause de problèmes de layout !
-			//	TODO: Voir ce problème avec Pierre (mail du 30.04.10 12:07)
-			if (columnIndex != 0 && width < ViewLayoutController.minimalWidth)
-			{
-				width = ViewLayoutController.reducedWidth;
-			}
-
-			return width;
-#endif
-#if false
-			double width = 300 - 300*(columnCount-columnIndex-1)*0.2;
-
-			if (width < ViewLayoutController.minimalWidth)
-			{
-				//?width = ViewLayoutController.reducedWidth;
-			}
-			
-			return width;
-#endif
-#if true
 			return 300;
-#endif
 		}
 
 
@@ -170,11 +163,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public event EventHandler LayoutChanged;
 
-		private static readonly double reducedWidth = Widgets.Tiles.TitleTile.MinimumTileWidth + Widgets.TileArrow.Breadth;
 
-
-		private readonly Widget container;
-		private readonly Stack<TileContainer> columns;
-		private double totalWidth;
+		private readonly Widget					container;
+		private readonly Stack<TileContainer>	columns;
+		private double							totalWidth;
 	}
 }

@@ -25,34 +25,15 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public class DataViewController : CoreViewController, IWidgetUpdater
 	{
-		public DataViewController(MainViewController mainViewController, DataViewOrchestrator orchestrator)
+		public DataViewController(DataViewOrchestrator orchestrator)
 			: base ("Data", orchestrator)
 		{
-			this.mainViewController = mainViewController;
-			this.data = this.mainViewController.Data;
-
 			this.viewControllers = new Stack<CoreViewController> ();
 			
 			this.frame = new FrameBox ();
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
-
-		public CoreData Data
-		{
-			get
-			{
-				return this.data;
-			}
-		}
-
-		public MainViewController MainViewController
-		{
-			get
-			{
-				return this.mainViewController;
-			}
-		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
@@ -128,15 +109,58 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.DetachColumn (column);
 		}
 
-		public CoreViewController GetRootViewController()
-		{
-			return this.viewControllers.LastOrDefault ();
-		}
-
+		/// <summary>
+		/// Gets the leaf view controller (the last one on the stack, i.e. the most
+		/// recently pushed controller).
+		/// </summary>
+		/// <returns>The leaf <see cref="CoreViewController"/> or <c>null</c>.</returns>
 		public CoreViewController GetLeafViewController()
 		{
 			return this.viewControllers.FirstOrDefault ();
 		}
+
+		/// <summary>
+		/// Saves the focus (based on the column and widget tab index).
+		/// </summary>
+		/// <returns>The <c>FocusInformation</c>.</returns>
+		public FocusInformation SaveFocus()
+		{
+			var focusedColumn = this.viewLayoutController.GetColumns ().FirstOrDefault (x => x.ContainsKeyboardFocus);
+
+			if (focusedColumn == null)
+			{
+				return FocusInformation.Empty;
+			}
+
+			int columnIndex = this.viewLayoutController.GetColumnIndex (focusedColumn);
+			int widgetIndex = focusedColumn.Window.FocusedWidget.TabIndex;
+
+			return new FocusInformation (columnIndex, widgetIndex);
+		}
+
+		/// <summary>
+		/// Restores the focus back to what it was when it was saved.
+		/// </summary>
+		/// <param name="focus">The <c>FocusInformation</c> returned by <see cref="SaveFocus"/>.</param>
+		public void RestoreFocus(FocusInformation focus)
+		{
+			if (focus.IsEmpty)
+			{
+				return;
+			}
+
+			int columnIndex = focus.ColumnIndex;
+			int widgetIndex = focus.WidgetIndex;
+
+			var focusedColumn = this.viewLayoutController.GetColumn (columnIndex);
+			var focusedWidget = focusedColumn.FindAllChildren (x => x.TabIndex == widgetIndex).FirstOrDefault ();
+
+			if (focusedWidget != null)
+			{
+				focusedWidget.SetFocusOnTabWidget ();
+			}
+		}
+
 
 		/// <summary>
 		/// Disposes the leaf views until we reach the specified controller, which will
@@ -183,11 +207,48 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PushViewController (newViewController);
 		}
 
-		private bool ContainsViewController(CoreViewController controller)
+		#region FocusInformation Structure
+
+		public struct FocusInformation
 		{
-			return this.viewControllers.Any (x => x.Matches (controller));
+			public FocusInformation(int columnIndex, int widgetIndex)
+			{
+				this.columnIndex = columnIndex;
+				this.widgetIndex = widgetIndex;
+			}
+
+			public int ColumnIndex
+			{
+				get
+				{
+					return this.columnIndex;
+				}
+			}
+
+			public int WidgetIndex
+			{
+				get
+				{
+					return this.widgetIndex;
+				}
+			}
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.columnIndex == -1;
+				}
+			}
+
+			public static readonly FocusInformation Empty = new FocusInformation (-1, -1);
+
+
+			private readonly int columnIndex;
+			private readonly int widgetIndex;
 		}
 
+		#endregion
 
 		#region IWidgetUpdater Members
 
@@ -197,7 +258,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		#endregion
-		
 
 		protected override void Dispose(bool disposing)
 		{
@@ -209,6 +269,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			base.Dispose (disposing);
 		}
 
+		private bool ContainsViewController(CoreViewController controller)
+		{
+			return this.viewControllers.Any (x => x.Matches (controller));
+		}
+		
 		private void CreateViewLayoutHandler()
 		{
 			this.viewLayoutController.LayoutChanged += this.HandleViewLayoutControllerLayoutChanged;
@@ -292,11 +357,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private EntityViewController CreateRootSummaryViewController(NavigationPathElement navigationPathElement)
-		{
-			return EntityViewControllerFactory.Create ("ViewController", this.entity, ViewControllerMode.Summary, this.Orchestrator, navigationPathElement: navigationPathElement);
-		}
-
 		private CoreViewController GetParentController(int depth)
 		{
 			return this.viewControllers.Skip (depth).FirstOrDefault ();
@@ -315,13 +375,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly MainViewController mainViewController;
-		private readonly CoreData data;
-		private readonly Stack<CoreViewController> viewControllers;
-		private readonly ViewLayoutController viewLayoutController;
-		private readonly FrameBox frame;
+		private readonly Stack<CoreViewController>	viewControllers;
+		private readonly ViewLayoutController		viewLayoutController;
+		private readonly FrameBox					frame;
 		
-		private Scrollable scrollable;
-		private AbstractEntity entity;
+		private Scrollable							scrollable;
 	}
 }

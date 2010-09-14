@@ -65,6 +65,9 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			return this.elements.All (x => x.Navigate (navigator));
 		}
 
+		/// <summary>
+		/// Freezes this instance. It may no longer be modified.
+		/// </summary>
 		public void Freeze()
 		{
 			this.frozen = true;

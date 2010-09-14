@@ -18,7 +18,7 @@ using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
+	public sealed class BrowserViewController : CoreViewController, INotifyCurrentChanged, IWidgetUpdater
 	{
 		public BrowserViewController(Orchestrators.DataViewOrchestrator orchestrator)
 			: base ("Browser", orchestrator)
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		
-		public FrameBox SettingsPanel
+		public FrameBox							SettingsPanel
 		{
 			get
 			{
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public string DataSetName
+		public string							DataSetName
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public void SelectActiveEntity()
+		public bool SelectActiveEntity()
 		{
 			this.Orchestrator.ClearActiveEntity ();
 
@@ -69,6 +69,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
 				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
+
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -229,7 +235,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return businessContext.CreateEntity (BrowserViewController.GetRootEntityId (this.DataSetName));
 		}
 
-		public static Druid GetRootEntityId(string dataSetName)
+		private static Druid GetRootEntityId(string dataSetName)
 		{
 			switch (dataSetName)
 			{
@@ -303,7 +309,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 		
-		protected void OnCurrentChanged()
+		private void OnCurrentChanged()
 		{
 			var handler = this.CurrentChanged;
 
@@ -315,7 +321,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.SelectActiveEntity ();
 		}
 
-		protected void OnCurrentChanging(CurrentChangingEventArgs e)
+		private void OnCurrentChanging(CurrentChangingEventArgs e)
 		{
 			var handler = this.CurrentChanging;
 
@@ -325,7 +331,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		protected void OnDataSetSelected()
+		private void OnDataSetSelected()
 		{
 			var commandHandler = this.Orchestrator.MainViewController.CommandContext.GetCommandHandler<Epsitec.Cresus.Core.CommandHandlers.DatabaseCommandHandler> ();
 			commandHandler.UpdateActiveCommandState (this.dataSetName);
@@ -337,7 +343,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				handler (this);
 			}
 		}
-
 		
 		private void RefreshScrollList(bool reset = false)
 		{
@@ -397,14 +402,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				browserViewController.SelectDataSet (this.dataSetName);
 				browserViewController.SetActiveEntityKey (this.entityKey);
 				browserViewController.RefreshScrollList ();
-				browserViewController.SelectActiveEntity ();
 				
-				//	Don't access the DataContext before this point in the function, or else
-				//	we would end up using an outdated and disposed data context !
-				
-				var browserDataContext = browserViewController.browserDataContext;
-
-				return browserViewController.GetActiveEntity (browserDataContext) != null;
+				return browserViewController.SelectActiveEntity ();
 			}
 
 			public override string ToString()
