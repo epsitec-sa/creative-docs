@@ -175,12 +175,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.AboutToSave ();
 		}
 
-		internal void NotifyAboutToDiscard()
-		{
-			this.GetCoreViewControllers ().ForEach (x => x.AboutToDiscard ());
-			this.AboutToDiscard ();
-		}
-
 
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
 		{
@@ -207,10 +201,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		protected virtual void AboutToDiscard()
-		{
-		}
-		
         protected override void Dispose(bool disposing)
 		{
 			if (disposing)

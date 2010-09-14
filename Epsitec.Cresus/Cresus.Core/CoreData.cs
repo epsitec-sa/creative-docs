@@ -179,7 +179,6 @@ namespace Epsitec.Cresus.Core
 				if (this.activeDataContext == context)
 				{
 					this.activeDataContext = null;
-					this.OnDataContextChanged (context);
 				}
 			}
 			else
@@ -372,7 +371,6 @@ namespace Epsitec.Cresus.Core
 		{
 			var oldContext = this.activeDataContext;
 			this.activeDataContext = dataContext;
-			this.OnDataContextChanged (oldContext);
 		}
 
 		private static DbAccess GetDatabaseAccess()
@@ -385,28 +383,6 @@ namespace Epsitec.Cresus.Core
 			return access;
 		}
 
-
-		private void OnDataContextChanged(DataContext oldDataContext)
-		{
-			var newDataContext = this.activeDataContext;
-
-			try
-			{
-				if (System.Threading.Interlocked.Increment (ref this.dataContextChangedLevel) == 1)
-				{
-					var handler = this.DataContextChanged;
-
-					if (handler != null)
-					{
-						handler (this, new DataContextEventArgs (oldDataContext));
-					}
-				}
-			}
-			finally
-			{
-				System.Threading.Interlocked.Decrement (ref this.dataContextChangedLevel);
-			}
-		}
 
 
 		internal string GetNewAffairId()
@@ -424,12 +400,6 @@ namespace Epsitec.Cresus.Core
 			return result;
 		}
 		
-		public event EventHandler<DataContextEventArgs> DataContextChanged;
-		public event EventHandler AboutToSaveDataContext;
-		public event EventHandler AboutToDiscardDataContext;
-		public event EventHandler<DataContextEventArgs> SaveRecordCommandExecuted;
-		public event EventHandler<DataContextEventArgs> DiscardRecordCommandExecuted;
-
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
