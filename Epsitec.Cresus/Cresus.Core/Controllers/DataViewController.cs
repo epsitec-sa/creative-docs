@@ -199,28 +199,36 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 		
 
-		protected override void AboutToDiscard()
+		protected override void Dispose(bool disposing)
 		{
-			//TODO: do we need to do this ?
-//-			this.ClearActiveEntity ();
+			if (disposing)
+			{
+				this.viewLayoutController.LayoutChanged -= this.HandleViewLayoutControllerLayoutChanged;
+			}
 
-			base.AboutToDiscard ();
+			base.Dispose (disposing);
 		}
 
 		private void CreateViewLayoutHandler()
 		{
-			this.viewLayoutController.LayoutChanged +=
-				delegate
-				{
-					LayoutContext.SyncArrange (this.scrollable.Viewport);
-
-					var startValue = this.scrollable.ViewportOffsetX;
-					var endValue   = this.scrollable.HorizontalScroller.MaxValue;
-
-					this.scrollable.HorizontalScroller.Value = endValue;
-				};
+			this.viewLayoutController.LayoutChanged += this.HandleViewLayoutControllerLayoutChanged;
 		}
 
+		private void HandleViewLayoutControllerLayoutChanged(object sender)
+		{
+			if (this.scrollable.IsDisposed)
+			{
+				return;
+			}
+
+			LayoutContext.SyncArrange (this.scrollable.Viewport);
+
+			var startValue = this.scrollable.ViewportOffsetX;
+			var endValue   = this.scrollable.HorizontalScroller.MaxValue;
+
+			this.scrollable.HorizontalScroller.Value = endValue;
+		}
+		
 		private void AttachColumn(TileContainer column)
 		{
 			if (column != null)

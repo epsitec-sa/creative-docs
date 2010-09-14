@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 	/// The <c>DataViewOrchestrator</c> class is used by the various view controllers
 	/// to change what is visible in the data view.
 	/// </summary>
-	public class DataViewOrchestrator
+	public class DataViewOrchestrator : System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataViewOrchestrator"/> class.
@@ -177,6 +177,15 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		}
 
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.ClearActiveEntity ();
+		}
+
+		#endregion
+
 
 		/// <summary>
 		/// Shows the specified sub view of a given controller. The view of the
@@ -228,7 +237,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly DataViewController dataViewController;
 		private readonly NavigationOrchestrator navigator;
 
-		private DataContext defaultDataContext;
 		private BusinessContext businessContext;
 	}
 }
