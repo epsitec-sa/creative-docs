@@ -397,6 +397,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				browserViewController.SelectDataSet (this.dataSetName);
 				browserViewController.SetActiveEntityKey (this.entityKey);
 				browserViewController.RefreshScrollList ();
+				browserViewController.SelectActiveEntity ();
 				
 				//	Don't access the DataContext before this point in the function, or else
 				//	we would end up using an outdated and disposed data context !

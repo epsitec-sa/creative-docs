@@ -26,7 +26,15 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			CoreProgram.Application.MainWindowOrchestrator.CurrentBusinessContext.SaveChanges ();
+			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
+			var navigator    = orchestrator.Navigator;
+
+			navigator.PreserveNavigation (
+				delegate
+				{
+					orchestrator.ClearActiveEntity ();
+				});
+
 			e.Executed = true;
 		}
 

@@ -88,11 +88,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			base.AboutToCloseUI ();
 		}
 
-		protected override void AboutToSave()
-		{
-			this.UpgradeEmptyEntity ();
-			base.AboutToSave ();
-		}
 
 		/// <summary>
 		/// If the current entity was registered in the <see cref="DataContext"/> as an empty

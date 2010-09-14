@@ -168,14 +168,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this;
 		}
 
-
-		internal void NotifyAboutToSave()
-		{
-			this.GetCoreViewControllers ().ForEach (x => x.AboutToSave ());
-			this.AboutToSave ();
-		}
-
-
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
 		{
 			return this.GetSubControllers ().Where (x => x is CoreViewController).Cast<CoreViewController> ();
@@ -194,10 +186,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 		
 		protected virtual void AboutToCloseUI()
-		{
-		}
-
-		protected virtual void AboutToSave()
 		{
 		}
 
