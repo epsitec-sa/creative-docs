@@ -30,13 +30,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
-		public int UniqueId
+		public int								UniqueId
 		{
 			get;
 			private set;
 		}
 
-		public DataContext DataContext
+		public DataContext						DataContext
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public CoreData Data
+		public CoreData							Data
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool IsLocked
+		public bool								IsLocked
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool IsDisposed
+		public bool								IsDisposed
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool IsDiscarded
+		public bool								IsDiscarded
 		{
 			get
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -86,35 +86,34 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool ContainsChanges
-		{
-			get
-			{
-				if ((this.isDisposed) ||
-					(this.IsDiscarded))
-				{
-					return false;
-				}
-				else
-				{
-					return this.dataContext.ContainsChanges ();
-				}
-			}
-		}
-
-		public AbstractEntity ActiveEntity
+		public AbstractEntity					ActiveEntity
 		{
 			get
 			{
 				return this.activeEntity;
 			}
 		}
+
 		
+		public bool ContainsChanges()
+		{
+			if ((this.isDisposed) ||
+				(this.IsDiscarded))
+			{
+				return false;
+			}
+			else
+			{
+				return this.dataContext.ContainsChanges ();
+			}
+		}
+
 		public bool AreAllLocksAvailable()
 		{
 			return this.locker.AreAllLocksAvailable (this.GetLockNames ());
 		}
 
+		
 		public bool AcquireLock()
 		{
 			if (this.IsLocked)
@@ -139,14 +138,15 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			lockTransaction.Dispose ();
 			return false;
 		}
-
 		
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
+			System.Diagnostics.Debug.Assert (this.activeEntity == null);
+			System.Diagnostics.Debug.Assert (this.activeNavigationPathElement == null);
+
 			this.SetActiveEntity (this.dataContext.ResolveEntity (entityKey));
 			this.SetNavigationPathElement (navigationPathElement);
 		}
-
 		
 		public void Discard()
 		{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		public void SaveChanges()
 		{
-			if (this.ContainsChanges)
+			if (this.ContainsChanges ())
             {
 				this.dataContext.SaveChanges ();
 				this.OnContainsChangesChanged ();
