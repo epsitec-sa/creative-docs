@@ -65,7 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		public T NotifyChildItemCreated<T>(T entity)
 			where T : AbstractEntity
 		{
-			this.OnChildItemCreated (entity);
 			return entity;
 		}
 
@@ -88,10 +87,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				history.NavigateInPlace (path);
 			}
-		}
-
-		protected virtual void OnChildItemCreated(AbstractEntity entity)
-		{
 		}
 	}
 }

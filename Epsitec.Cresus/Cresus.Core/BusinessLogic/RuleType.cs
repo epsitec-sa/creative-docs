@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	public enum RuleType
 	{
 		Setup,
+		Bind,
 		Update,
 	}
 }
