@@ -24,14 +24,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			: base ("Browser", orchestrator)
 		{
 			this.data = orchestrator.Data;
-
-			this.data.DiscardRecordCommandExecuted +=
-				delegate
-				{
-					var key = this.activeEntityKey;
-					this.SetActiveEntityKey (null);
-					this.SetActiveEntityKey (key);
-				};
 		}
 
 		

@@ -28,9 +28,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.data = data;
 			this.commandContext = commandContext;
 
-			this.data.AboutToSaveDataContext += this.HandleAboutToSaveDataContext;
-			this.data.AboutToDiscardDataContext += this.HandleAboutToDiscardDataContext;
-
 			this.actionViewController  = new ActionViewController (this.Orchestrator);
 			this.previewViewController = new PreviewViewController (this.Orchestrator);
 
@@ -158,9 +155,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (disposing)
 			{
 				this.commandContext.DetachCommandHandler (this);
-
-				this.data.AboutToSaveDataContext -= this.HandleAboutToSaveDataContext;
-				this.data.AboutToDiscardDataContext -= this.HandleAboutToDiscardDataContext;
 			}
 
 			base.Dispose (disposing);
@@ -298,16 +292,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
-		private void HandleAboutToSaveDataContext(object sender)
-		{
-			this.NotifyAboutToSave ();
-		}
-
-		private void HandleAboutToDiscardDataContext(object sender)
-		{
-			this.NotifyAboutToDiscard ();
-		}
 
 		private IEnumerable<CoreViewController> GetCoreViewControllers()
 		{
