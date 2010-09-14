@@ -27,4 +27,19 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 			relation.DefaultCurrencyCode = Business.Finance.CurrencyCode.Chf;
 		}
 	}
+
+	[BusinessRule (RuleType=RuleType.Update)]
+	internal class RelationUpdateRule : GenericBusinessRule<RelationEntity>
+	{
+		protected override void Apply(RelationEntity relation)
+		{
+			var oldAddress = relation.DefaultAddress;
+			var newAddress = relation.Person.Contacts.Select (x => x as Entities.MailContactEntity).Where (x => x != null).Select (x => x.Address).FirstOrDefault ();
+
+			if (oldAddress.RefDiffers (newAddress))
+			{
+				relation.DefaultAddress = newAddress;
+			}
+		}
+	}
 }
