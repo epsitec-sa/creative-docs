@@ -76,6 +76,16 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				return (this.activeEntity == null)
+					&& (this.entityRecords.Count == 0)
+					&& (this.activeNavigationPathElement == null);
+			}
+		}
+
 		public bool ContainsChanges
 		{
 			get

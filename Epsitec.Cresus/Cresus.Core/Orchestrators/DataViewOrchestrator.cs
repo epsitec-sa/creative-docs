@@ -103,26 +103,34 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void ClearActiveEntity()
 		{
 			this.dataViewController.PopAllViewControllers ();
+			this.ClearBusinessContext ();
+		}
 
-			if (this.businessContext != null)
+		public void ClearBusinessContext()
+		{
+			if ((this.businessContext != null) &&
+				(this.businessContext.IsEmpty == false))
 			{
 				this.businessContext.Dispose ();
 				this.SetActiveBusinessContext (null);
 			}
 		}
-
+		
 		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
 		{
 			this.ClearActiveEntity ();
 
-			var businessContext = this.BusinessContext;
+			if (entityKey.HasValue)
+			{
+				var businessContext = this.BusinessContext;
 
-			businessContext.SetActiveEntity (entityKey, navigationPathElement);
+				businessContext.SetActiveEntity (entityKey, navigationPathElement);
 
-			var liveEntity = businessContext.ActiveEntity;
-			var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+				var liveEntity = businessContext.ActiveEntity;
+				var controller = EntityViewControllerFactory.Create ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
 
-			this.dataViewController.PushViewController (controller);
+				this.dataViewController.PushViewController (controller);
+			}
 		}
 
 
