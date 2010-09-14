@@ -81,23 +81,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.Entity;
 		}
 
-		internal void EnsureRealEntity()
-		{
-			var context = this.DataContext;
-			var entity  = this.Entity;
-
-			if (context.Contains (entity) == false)
-			{
-				this.ReplaceEntity (context.CreateEntity<T> ());
-			}
-
-		}
-
-		internal void ReplaceEntity(T entity)
-		{
-			this.entity = entity;
-		}
-
 
 		protected override void AboutToCloseUI()
 		{

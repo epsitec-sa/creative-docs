@@ -7,18 +7,10 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 {
 	/// <summary>
-	/// The <c>ICreationController</c> interface provides some creation related
-	/// methods, independently of the underlying entity type.
+	/// The <c>ICreationController</c> interface is used to identify view
+	/// controllers used to create new entities.
 	/// </summary>
 	public interface ICreationController
 	{
-		/// <summary>
-		/// Gets the upgrade controller mode based on the active entity.
-		/// </summary>
-		/// <value>The upgrade controller mode.</value>
-		ViewControllerMode UpgradeControllerMode
-		{
-			get;
-		}
 	}
 }

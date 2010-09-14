@@ -92,8 +92,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				return;
 			}
 
-			controller = controller.GetReplacementController ();
-
 			var leaf   = this.GetLeafController ();
 			var column = this.viewLayoutController.CreateColumn (controller);
 			this.viewControllers.Push (controller);

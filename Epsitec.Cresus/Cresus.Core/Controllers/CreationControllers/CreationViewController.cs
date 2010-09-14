@@ -24,93 +24,13 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			System.Diagnostics.Debug.Assert (this.Orchestrator.Data.IsDummyEntity (entity));
 		}
 
-		public override IEnumerable<CoreController> GetSubControllers()
-		{
-			if (this.replacementController != null)
-            {
-				yield return this.replacementController;
-            }
-		}
 
 		#region ICreationController Members
 
-		ViewControllerMode ICreationController.UpgradeControllerMode
-		{
-			get
-			{
-				return this.GetUpgradeControllerMode ();
-			}
-		}
+		/* no member */
 
 		#endregion
 
-		public override CoreViewController GetReplacementController()
-		{
-			var upgradeMode = this.GetUpgradeControllerMode ();
-
-			if (upgradeMode == ViewControllerMode.Creation)
-			{
-				return base.GetReplacementController ();
-			}
-			else
-			{
-				if ((this.replacementController != null) &&
-					(this.replacementController.Mode != upgradeMode))
-				{
-					this.replacementController.Dispose ();
-					this.replacementController = null;
-				}
-
-				if (this.replacementController == null)
-				{
-					this.CreateReplacementController (upgradeMode);
-				}
-				
-				return this.replacementController;
-			}
-		}
-
-		protected void UpgradeController()
-		{
-			var upgradeMode = this.GetUpgradeControllerMode ();
-
-			if (upgradeMode == ViewControllerMode.Creation)
-			{
-				//	Do not upgrade the controller: we are already the creation mode controller
-			}
-			else
-			{
-				var orchestrator = this.Orchestrator;
-				orchestrator.ReplaceView (this, this);
-			}
-		}
-
-		protected virtual ViewControllerMode GetUpgradeControllerMode()
-		{
-			switch (this.EditionStatus)
-			{
-				case EditionStatus.Empty:
-					return ViewControllerMode.Creation;
-
-				case EditionStatus.Invalid:
-				case EditionStatus.Valid:
-					return ViewControllerMode.Summary;
-
-				case EditionStatus.Unknown:
-				default:
-					throw new System.InvalidOperationException (string.Format ("EditionStatus may not be set to {0}", this.EditionStatus));
-			}
-		}
-
-		private void CreateReplacementController(ViewControllerMode upgradeMode)
-		{
-			var controller = EntityViewControllerFactory.Create (this.Name, this.Entity, upgradeMode, this.Orchestrator) as EntityViewController<T>;
-
-			System.Diagnostics.Debug.Assert (controller.DataContext.Contains (controller.Entity));
-//-			controller.EnsureRealEntity ();
-
-			this.replacementController = controller;
-		}
 		
 		internal void CreateRealEntity(System.Action<BusinessContext, T> initializer = null)
 		{
@@ -126,10 +46,20 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 				initializer (business, entity);
 			}
 
-			this.ReplaceEntity (entity);
-			this.UpgradeController ();
+			this.UpgradeController (entity);
 		}
 
-		protected EntityViewController replacementController;
+		private void UpgradeController(T entity)
+		{
+			var orchestrator = this.Orchestrator;
+			var replacementController = this.CreateReplacementController (entity);
+
+			orchestrator.ReplaceView (this, replacementController);
+		}
+
+		private CoreViewController CreateReplacementController(T entity)
+		{
+			return EntityViewControllerFactory.Create (this.Name, entity, ViewControllerMode.Summary, this.Orchestrator);
+		}
 	}
 }
