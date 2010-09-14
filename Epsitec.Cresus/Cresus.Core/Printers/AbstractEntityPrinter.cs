@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Printers
 				firstDocumentPage += pageCount;
 			}
 
-			return PageType.Single;
+			return PageType.Unknown;
 		}
 
 		public AbstractDocumentPrinter GetDocumentPrinter(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
@@ -156,7 +156,22 @@ namespace Epsitec.Cresus.Core.Printers
 			return null;
 		}
 
-		public virtual Size MaximalPageSize
+
+		/// <summary>
+		/// Spécifie aucune unité d'impression, ce qui aura pour effet d'utiliser la taille de page préférentielle.
+		/// </summary>
+		public void SetDefaultPrinterUnit()
+		{
+			foreach (var documentPrinter in this.documentPrinters)
+			{
+				documentPrinter.SetPrinterUnit (null);
+			}
+		}
+
+		/// <summary>
+		/// Retourne la taille qui permet d'englober la plus grande des pages.
+		/// </summary>
+		public virtual Size BoundsPageSize
 		{
 			get
 			{
@@ -165,14 +180,17 @@ namespace Epsitec.Cresus.Core.Printers
 
 				foreach (var documentPrinter in this.documentPrinters)
 				{
-					width  = System.Math.Max (width,  documentPrinter.PageSize.Width);
-					height = System.Math.Max (height, documentPrinter.PageSize.Height);
+					width  = System.Math.Max (width,  documentPrinter.RequiredPageSize.Width);
+					height = System.Math.Max (height, documentPrinter.RequiredPageSize.Height);
 				}
 
 				return new Size (width, height);
 			}
 		}
 
+		/// <summary>
+		/// Construit toutes les sections de tous les documents.
+		/// </summary>
 		public virtual void BuildSections()
 		{
 			foreach (var documentPrinter in this.documentPrinters)

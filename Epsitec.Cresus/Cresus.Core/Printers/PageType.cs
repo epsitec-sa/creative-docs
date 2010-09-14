@@ -9,6 +9,8 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public enum PageType
 	{
+		Unknown,
+
 		Single,			// page unique
 		First,			// première page (0)
 		Following,		// page suivante (1..n)

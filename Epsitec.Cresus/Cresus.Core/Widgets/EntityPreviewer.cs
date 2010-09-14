@@ -52,6 +52,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		/// <summary>
+		/// La description vient dans la deuxième ligne du tooltip.
+		/// </summary>
 		public string Description
 		{
 			get
@@ -68,6 +71,24 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Indique s'il faut mettre en évidence les pages non imprimées (fond rosé avec une croix).
+		/// </summary>
+		public bool NotPrinting
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Indique s'il exite plusieurs options pour représenter cette page.
+		/// </summary>
+		public bool HasManyOptions
+		{
+			get;
+			set;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -75,18 +96,34 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			if (this.documentPrinter != null)
 			{
-				double sx = this.Client.Bounds.Width  / this.documentPrinter.PageSize.Width;
-				double sy = this.Client.Bounds.Height / this.documentPrinter.PageSize.Height;
+				var clientBounds = this.Client.Bounds;
+
+				double sx = clientBounds.Width  / this.documentPrinter.RequiredPageSize.Width;
+				double sy = clientBounds.Height / this.documentPrinter.RequiredPageSize.Height;
 				double scale = System.Math.Min (sx, sy);
 
-				double offsetX = System.Math.Ceiling ((this.Client.Bounds.Width  - this.documentPrinter.PageSize.Width *scale) / 2);
-				double offsetY = System.Math.Ceiling ((this.Client.Bounds.Height - this.documentPrinter.PageSize.Height*scale) / 2);
+				double offsetX = clientBounds.Left   + System.Math.Ceiling ((clientBounds.Width  - this.documentPrinter.RequiredPageSize.Width *scale) / 2);
+				double offsetY = clientBounds.Bottom + System.Math.Ceiling ((clientBounds.Height - this.documentPrinter.RequiredPageSize.Height*scale) / 2);
 
 				//	Dessine le fond d'une page blanche.
-				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.documentPrinter.PageSize.Width*scale), System.Math.Floor (this.documentPrinter.PageSize.Height*scale));
+				Rectangle bounds = new Rectangle (offsetX, offsetY, System.Math.Floor (this.documentPrinter.RequiredPageSize.Width*scale), System.Math.Floor (this.documentPrinter.RequiredPageSize.Height*scale));
 
 				graphics.AddFilledRectangle (bounds);
-				graphics.RenderSolid (Color.FromBrightness (1));
+				graphics.RenderSolid (this.NotPrinting ? Color.FromHexa ("fff0f0") : Color.FromBrightness (1));  // fond rosé ou blanc
+
+				if (this.NotPrinting)
+				{
+					double thickness = System.Math.Min (bounds.Width, bounds.Height) * 0.1;
+
+					var b = bounds;
+					b.Deflate (thickness);
+
+					graphics.LineWidth = thickness;
+					graphics.LineCap = CapStyle.Round;
+					graphics.AddLine (b.BottomLeft, b.TopRight);
+					graphics.AddLine (b.BottomRight, b.TopLeft);
+					graphics.RenderSolid (Color.FromBrightness (1));  // croix blanche
+				}
 
 				//	Dessine l'entité dans la page.
 				Transform initial = graphics.Transform;
@@ -102,9 +139,30 @@ namespace Epsitec.Cresus.Core.Widgets
 				//	Dessine le cadre de la page en dernier, pour recouvrir la page.
 				bounds.Deflate (0.5);
 
-				graphics.LineWidth = 1;
-				graphics.AddRectangle (bounds);
-				graphics.RenderSolid (Color.FromBrightness (0));
+				if (this.HasManyOptions)
+				{
+					graphics.LineWidth = 1;
+					graphics.Color = Color.FromBrightness (0);
+					EntityPreviewer.PaintDashedRectangle (graphics, bounds);
+				}
+				else
+				{
+					graphics.LineWidth = 1;
+					graphics.AddRectangle (bounds);
+					graphics.RenderSolid (Color.FromBrightness (0));
+				}
+			}
+		}
+
+		private static void PaintDashedRectangle(Graphics graphics, Rectangle rect)
+		{
+			var path = new DashedPath ();
+			path.AppendRectangle (rect);
+			path.AddDash (5, 3);
+
+			using (Path dashed = path.GenerateDashedPath ())
+			{
+				graphics.PaintOutline (dashed);
 			}
 		}
 
@@ -118,9 +176,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			builder.Append ("</b></font>");
 
 			builder.Append (" (");
-			builder.Append (documentPrinter.PageSize.Width.ToString ());
+			builder.Append (documentPrinter.RequiredPageSize.Width.ToString ());
 			builder.Append (" × ");
-			builder.Append (documentPrinter.PageSize.Height.ToString ());
+			builder.Append (documentPrinter.RequiredPageSize.Height.ToString ());
 			builder.Append (" mm)");
 
 			if (!string.IsNullOrEmpty (this.description))

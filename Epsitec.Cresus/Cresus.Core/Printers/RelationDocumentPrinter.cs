@@ -35,20 +35,31 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override Size PageSize
+
+		public override Size MinimalPageSize
 		{
 			get
 			{
-				if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
-				{
-					return new Size (297, 210);  // A4 horizontal
-				}
-				else
-				{
-					return new Size (210, 297);  // A4 vertical
-				}
+				return new Size (210, 297);  // A4
 			}
 		}
+
+		public override Size MaximalPageSize
+		{
+			get
+			{
+				return new Size (210, 297);  // A4
+			}
+		}
+
+		public override Size PreferredPageSize
+		{
+			get
+			{
+				return new Size (210, 297);  // A4
+			}
+		}
+
 
 		public override void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{

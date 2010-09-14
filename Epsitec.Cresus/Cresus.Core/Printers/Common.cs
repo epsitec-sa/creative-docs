@@ -36,5 +36,37 @@ namespace Epsitec.Cresus.Core.Printers
 
 			return false;
 		}
+
+
+		public enum PageSizeCompareEnum
+		{
+			Different,
+			Equal,
+			Swaped,		// égal, mais Width et Height sont permutés (rotation de 90 degrés)
+		}
+
+		public static PageSizeCompareEnum PageSizeCompare(Size s1, Size s2, double delta=1)
+		{
+			//	Compare deux tailles de page, avec une tolérence de +/- delta (1mm par défaut).
+			if (System.Math.Abs (s1.Width  - s2.Width ) < delta &&
+				System.Math.Abs (s1.Height - s2.Height) < delta)
+			{
+				return PageSizeCompareEnum.Equal;
+			}
+
+			if (System.Math.Abs (s1.Width  - s2.Height) < delta &&
+				System.Math.Abs (s1.Height - s2.Width ) < delta )
+			{
+				return PageSizeCompareEnum.Swaped;
+			}
+
+			return PageSizeCompareEnum.Different;
+		}
+
+		public static bool InsidePageSize(Size pageSize, Size minimalPageSize, Size maximalPageSize)
+		{
+			return pageSize.Width  >= minimalPageSize.Width  && pageSize.Width  <= maximalPageSize.Width &&
+				   pageSize.Height >= minimalPageSize.Height && pageSize.Height <= maximalPageSize.Height;
+		}
 	}
 }

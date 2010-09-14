@@ -32,10 +32,18 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			PaperSource ps = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
-			if (ps != null)
+			PaperSource paperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
+			if (paperSource != null)
 			{
-				settings.PaperSource = ps;
+				settings.PaperSource = paperSource;
+			}
+
+			PaperSize paperSize = System.Array.Find (printDocument.PrinterSettings.PaperSizes, x => Common.PageSizeCompare (x.Size, section.DocumentPrinter.RequiredPageSize) != Common.PageSizeCompareEnum.Different);
+			if (paperSize != null)
+			{
+				settings.PaperSize = paperSize;
+
+				this.swap = Common.PageSizeCompare (settings.PaperSize.Size, section.DocumentPrinter.RequiredPageSize) == Common.PageSizeCompareEnum.Swaped;
 			}
 
 			settings.Margins = new Margins (0);
@@ -57,22 +65,22 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			Size size = section.DocumentPrinter.PageSize;
-			double height = size.Height;
-			double width  = size.Width;
+			Size pageSize = section.DocumentPrinter.RequiredPageSize;
+			double height = pageSize.Height;
+			double width  = pageSize.Width;
 
 			double xOffset = section.PrinterUnit.XOffset;
 			double yOffset = section.PrinterUnit.YOffset;
 
 			Transform transform;
 
-			if (section.DocumentPrinter.PageSize.Width < section.DocumentPrinter.PageSize.Height)  // portrait ?
+			if (pageSize.Width < pageSize.Height ^ this.swap)  // portrait ?
 			{
 				transform = Transform.Identity;
 			}
 			else  // paysage ?
 			{
-				transform = Transform.CreateRotationDegTransform (90, section.DocumentPrinter.PageSize.Height/2, section.DocumentPrinter.PageSize.Height/2);
+				transform = Transform.CreateRotationDegTransform (90, pageSize.Height/2, pageSize.Height/2);
 			}
 
 			port.Transform = transform.MultiplyByPostfix (Transform.CreateTranslationTransform (xOffset, yOffset));
@@ -107,5 +115,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly List<SectionToPrint>	sections;
 
 		private int sectionIndex;
+		private bool swap;
 	}
 }

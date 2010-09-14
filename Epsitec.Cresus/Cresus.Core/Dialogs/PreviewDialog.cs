@@ -37,8 +37,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application.AttachDialog (this);
 
 			this.previewerController = new PreviewerController (this.entityPrinter, this.entities);
+			this.previewerController.ShowNotPrinting = true;
 
 			this.entityPrinter.IsPreview = true;
+			this.entityPrinter.SetDefaultPrinterUnit ();
 			this.entityPrinter.BuildSections ();
 		}
 
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 
-			var pageSize = this.entityPrinter.MaximalPageSize;
+			var pageSize = this.entityPrinter.BoundsPageSize;
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 
 			window.Icon = this.application.Window.Icon;

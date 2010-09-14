@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
+#if false
 				DocumentPrinterFunction all = this.GetDocumentPrinter (PrinterUnitFunction.ForAllPages);
 				if (all != null && !string.IsNullOrWhiteSpace (all.LogicalPrinterName))
 				{
@@ -94,6 +95,7 @@ namespace Epsitec.Cresus.Core.Printers
 						return false;
 					}
 				}
+#endif
 
 				return true;
 			}
@@ -271,6 +273,6 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly string								shortDescription;
 		private readonly string								longDescription;
 		private readonly List<DocumentOptionDefinition>		options;
-		private readonly List<DocumentPrinterFunction>				printers;
+		private readonly List<DocumentPrinterFunction>		printers;
 	}
 }
