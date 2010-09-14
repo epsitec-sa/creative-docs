@@ -20,23 +20,22 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.commandDispatcher.Dispatch (dispatcher, e);
+			CoreProgram.Application.MainWindowOrchestrator.CurrentBusinessContext.SaveChanges ();
+			e.Executed = true;
 		}
 
 		[Command (Res.CommandIds.Edition.DiscardRecord)]
 		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var orchestrator = CoreCommandDispatcher.GetOrchestrator (e);
+			var orchestrator = CoreProgram.Application.MainWindowOrchestrator;
 			var navigator    = orchestrator.Navigator;
-			var history      = navigator.History;
-			var path         = navigator.GetLeafNavigationPath ();
 
-			using (history.SuspendRecording ())
-			{
-				this.commandDispatcher.Dispatch (dispatcher, e);
-				
-				history.NavigateInPlace (path);
-			}
+			navigator.PreserveNavigation (
+				delegate
+				{
+					orchestrator.CurrentBusinessContext.Discard ();
+					orchestrator.ClearActiveEntity ();
+				});
 		}
 
 		[Command (Res.CommandIds.Edition.Print)]
