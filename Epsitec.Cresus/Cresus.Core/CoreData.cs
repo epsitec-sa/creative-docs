@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public AbstractEntity CreateDummyEntity(string dataSetName)
+		public AbstractEntity CreateDummyEntity(Druid entityId)
 		{
-			return this.CreateNewEntity (dataSetName, EntityCreationScope.Independent);
+			return this.independentEntityContext.CreateEmptyEntity (entityId);
 		}
 
 		public bool IsDummyEntity(AbstractEntity entity)
@@ -206,60 +206,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public AbstractEntity CreateNewEntity(string dataSetName, EntityCreationScope entityCreationScope, DataContext specificContext = null)
-		{
-			var context = this.GetEntityContext (entityCreationScope, specificContext);
-
-			switch (dataSetName)
-			{
-				case "Customers":
-					return CoreData.CreateNewCustomer (context);
-
-				case "Documents":
-				case "InvoiceDocuments":
-					return CoreData.CreateNewInvoiceDocument (context);
-
-				case "ArticleDefinitions":
-					return CoreData.CreateNewArticleDefinition (context);
-
-				default:
-					return null;
-			}
-		}
-
-		private EntityContext GetEntityContext(EntityCreationScope entityCreationScope, DataContext specificContext)
-		{
-			switch (entityCreationScope)
-			{
-				case EntityCreationScope.Independent:
-					return this.independentEntityContext;
-
-				case EntityCreationScope.CurrentContext:
-					return this.DataContext.EntityContext;
-
-				case EntityCreationScope.SpecificContext:
-					return specificContext.EntityContext;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("EntityCreationScope.{0} not supported", entityCreationScope));
-			}
-		}
-
-		private static AbstractEntity CreateNewCustomer(EntityContext context)
-		{
-			return context.CreateEmptyEntity<RelationEntity> ();
-		}
-
-		private static AbstractEntity CreateNewArticleDefinition(EntityContext context)
-		{
-			return context.CreateEmptyEntity<ArticleDefinitionEntity> ();
-		}
-
-		private static AbstractEntity CreateNewInvoiceDocument(EntityContext context)
-		{
-			return context.CreateEmptyEntity<InvoiceDocumentEntity> ();
-		}
-		
 
 
 		#region IDisposable Members
