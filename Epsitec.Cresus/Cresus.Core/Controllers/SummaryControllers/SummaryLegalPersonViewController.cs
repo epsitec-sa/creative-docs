@@ -33,12 +33,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected override void OnChildItemCreated(AbstractEntity entity)
-		{
-			this.SetupNewContact (entity as AbstractContactEntity);
-			base.OnChildItemCreated (entity);
-		}
-
 
 		private void CreateUIPerson(SummaryDataItems data)
 		{
@@ -68,15 +62,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private void CreateUIUriContacts(SummaryDataItems data)
 		{
 			Common.CreateUIUriContacts (this.DataContext, data, this.EntityGetter, x => x.Contacts);
-		}
-
-
-		private void SetupNewContact(AbstractContactEntity contact)
-		{
-			if (contact != null)
-			{
-				contact.LegalPerson = this.Entity;
-			}
 		}
 	}
 }

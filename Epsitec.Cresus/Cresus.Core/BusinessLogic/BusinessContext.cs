@@ -176,17 +176,22 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			System.Diagnostics.Debug.Assert (entity != null);
 
 			this.activeEntity = entity;
-			this.Register (entity);			
+
+			this.Register (entity);
 		}
 
 		public void Register(AbstractEntity entity)
 		{
-			if (this.entityRecords.Any (x => x.Entity == entity))
-            {
-				throw new System.InvalidOperationException ("Duplicate entity registration");
-            }
+			if (entity != null)
+			{
+				if (this.entityRecords.Any (x => x.Entity == entity))
+				{
+					throw new System.InvalidOperationException ("Duplicate entity registration");
+				}
 
-			this.entityRecords.Add (new EntityRecord (entity, this));
+				this.entityRecords.Add (new EntityRecord (entity, this));
+				this.ApplyRules (RuleType.Bind, entity);
+			}
 		}
 
 		public void Register(IEnumerable<AbstractEntity> collection)
@@ -235,6 +240,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 				if (this.lockTransaction != null)
 				{
+					System.Diagnostics.Debug.WriteLine ("*** LOCK RELEASED ***");
 					this.lockTransaction.Dispose ();
 					this.lockTransaction = null;
 				}
@@ -333,7 +339,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private IEnumerable<string> GetLockNames()
 		{
-			return this.entityRecords.Select (x => CoreDataLocker.GetLockName (x.DataContext, x.Entity));
+			yield return CoreDataLocker.GetLockName (this.dataContext, this.activeEntity);
+//-			return this.entityRecords.Select (x => CoreDataLocker.GetLockName (x.DataContext, x.Entity));
 		}
 
 

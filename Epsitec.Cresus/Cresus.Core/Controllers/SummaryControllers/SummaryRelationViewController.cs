@@ -39,12 +39,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			yield return this.Entity;
 		}
 
-		protected override void OnChildItemCreated(AbstractEntity entity)
-		{
-			this.SetupNewContact (entity as AbstractContactEntity);
-			base.OnChildItemCreated (entity);
-		}
-
 		protected override EditionStatus GetEditionStatus()
 		{
 			var entity = this.Entity;
@@ -185,28 +179,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				string date = Misc.GetDateTimeShortDescription (affairEntity.Events[0].Date);  // date du premier événement
 
 				return string.Format ("{0} {1} ({2} év.)", date, affairEntity.IdA, count);
-			}
-		}
-
-
-		private void SetupNewContact(AbstractContactEntity contact)
-		{
-			if (contact != null)
-			{
-				var naturalPerson = this.Entity.Person as NaturalPersonEntity;
-				var legalPerson   = this.Entity.Person as LegalPersonEntity;
-
-				//	Attach the contact to the customer's person entity, which can be either a natural
-				//	person or a legal person:
-
-				if (naturalPerson != null)
-				{
-					contact.NaturalPerson = naturalPerson;
-				}
-				if (legalPerson != null)
-				{
-					contact.LegalPerson = legalPerson;
-				}
 			}
 		}
 	}

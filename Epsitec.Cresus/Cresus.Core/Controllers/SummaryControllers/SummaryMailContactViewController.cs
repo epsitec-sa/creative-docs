@@ -30,13 +30,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		protected override void OnChildItemCreated(AbstractEntity entity)
-		{
-			this.SetupNewContact (entity as AbstractContactEntity);
-			base.OnChildItemCreated (entity);
-		}
-
-
 		private void CreateUIMail(SummaryDataItems data)
 		{
 			data.Add (
@@ -70,17 +63,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			return TextFormatter.FormatText (x.Address.Street.StreetName, "~,",
 										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
 										 x.Address.Location.PostalCode, x.Address.Location.Name);
-		}
-
-	
-		private void SetupNewContact(AbstractContactEntity contact)
-		{
-#if false
-			if (contact != null)
-			{
-				contact.NaturalPerson = this.Entity;
-			}
-#endif
 		}
 	}
 }
