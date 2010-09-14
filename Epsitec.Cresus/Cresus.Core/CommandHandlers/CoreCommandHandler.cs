@@ -17,6 +17,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
+		[Command (ApplicationCommands.Id.Quit)]
+		public void ProcessQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			CoreProgram.Application.Shutdown ();
+		}
+
 		[Command (Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

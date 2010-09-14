@@ -286,11 +286,16 @@ namespace Epsitec.Cresus.Core
 			this.data.SetupDatabase ();
 		}
 
+		internal void Shutdown()
+		{
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				this.mainWindowOrchestrator.Dispose ();
 				this.mainWindowController.Dispose ();
 
 				if (this.data != null)

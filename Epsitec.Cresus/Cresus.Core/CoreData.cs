@@ -408,46 +408,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private void OnAboutToSaveDataContext()
-		{
-			var handler = this.AboutToSaveDataContext;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		private void OnAboutToDiscardDataContext()
-		{
-			var handler = this.AboutToDiscardDataContext;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		private void OnSaveRecordCommandExecuted(DataContext context)
-		{
-			var handler = this.SaveRecordCommandExecuted;
-
-			if (handler != null)
-			{
-				handler (this, new DataContextEventArgs (context));
-			}
-		}
-
-		private void OnDiscardRecordCommandExecuted(DataContext context)
-		{
-			var handler = this.DiscardRecordCommandExecuted;
-
-			if (handler != null)
-			{
-				handler (this, new DataContextEventArgs (context));
-			}
-		}
-
 
 		internal string GetNewAffairId()
 		{
