@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -39,7 +40,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.parentController      = this.orchestrator.GetLeafViewController ();
 			}
 
-			System.Diagnostics.Debug.Assert (this.Orchestrator != null);
+			this.businessContext = this.orchestrator.CurrentBusinessContext;
+			
+			System.Diagnostics.Debug.Assert (this.BusinessContext != null);
 		}
 
 
@@ -71,32 +74,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				var businessContext = this.GetLocalBusinessContext ();
-
-				if ((businessContext !=  null) ||
-					(this.parentController == null))
-				{
-					return businessContext;
-				}
-				else
-				{
-					return this.parentController.BusinessContext;
-				}
+				return this.businessContext;
 			}
 		}
 
-		public virtual DataContext				DataContext
+		public DataContext						DataContext
 		{
 			get
 			{
-				return this.dataContext;
-			}
-			set
-			{
-				if (this.dataContext != value)
-                {
-					this.dataContext = value;
-				}
+				return this.businessContext == null ? null : this.businessContext.DataContext;
 			}
 		}
 
@@ -182,12 +168,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this;
 		}
 
-		public virtual BusinessLogic.BusinessContext GetLocalBusinessContext()
-		{
-			return null;
-		}
-
-
 
 		internal void NotifyAboutToSave()
 		{
@@ -258,7 +238,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreViewController parentController;
 		private readonly ViewControllerMode viewControllerMode;
 		private readonly NavigationPathElement navigationPathElement;
-		
-		private DataContext dataContext;
+
+		private readonly BusinessContext businessContext;
 	}
 }

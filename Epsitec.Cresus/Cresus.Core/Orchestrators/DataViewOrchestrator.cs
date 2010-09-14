@@ -13,6 +13,7 @@ using System.Linq;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {
@@ -67,16 +68,32 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		public BusinessContext BusinessContext
+		{
+			get
+			{
+				if (this.businessContext == null)
+                {
+					this.businessContext = this.data.CreateBusinessContext ();
+                }
+
+				return this.businessContext;
+			}
+		}
+
+		public BusinessContext CurrentBusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
+		}
+
 		public DataContext DefaultDataContext
 		{
 			get
 			{
-				if (this.defaultDataContext == null)
-				{
-					this.defaultDataContext = this.data.CreateDataContext ("Default");
-				}
-
-				return this.defaultDataContext;
+				return this.BusinessContext.DataContext;
 			}
 		}
 
@@ -84,13 +101,12 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public void ClearActiveEntity()
 		{
-			if (this.dataViewController.ClearActiveEntity ())
+			this.dataViewController.PopAllViewControllers ();
+
+			if (this.businessContext != null)
 			{
-				if (this.defaultDataContext != null)
-				{
-					this.data.DisposeDataContext (this.defaultDataContext);
-					this.defaultDataContext = null;
-				}
+				this.businessContext.Dispose ();
+				this.businessContext = null;
 			}
 		}
 
@@ -98,10 +114,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.ClearActiveEntity ();
 
-			var dataContext = this.DefaultDataContext;
-			var realEntity  = dataContext.ResolveEntity (entityKey);
+			var businessContext = this.BusinessContext;
 
-			this.dataViewController.SetActiveEntity (realEntity, navigationPathElement);
+			businessContext.SetActiveEntity (entityKey, navigationPathElement);
+
+			var liveEntity = businessContext.ActiveEntity;
+			var controller = EntityViewController.CreateEntityViewController ("Root", liveEntity, ViewControllerMode.Summary, this, navigationPathElement: navigationPathElement);
+
+			this.dataViewController.PushViewController (controller);
 		}
 
 
@@ -155,5 +175,6 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly NavigationOrchestrator navigator;
 
 		private DataContext defaultDataContext;
+		private BusinessContext businessContext;
 	}
 }

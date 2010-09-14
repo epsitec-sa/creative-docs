@@ -20,13 +20,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.businessContexts = new List<BusinessContext> ();
 		}
 
-		public DataContext DataContext
-		{
-			get
-			{
-				return this.context;
-			}
-		}
 		public bool IsEmpty
 		{
 			get
@@ -35,28 +28,40 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public void Add(BusinessContext context)
+		public BusinessContext CreateBusinessContext()
 		{
-			if (this.IsEmpty)
+			return new BusinessContext (this);
+		}
+
+		internal DataContext CreateDataContext(BusinessContext context)
+		{
+			string name = string.Format ("BusinessContext #{0}", context.UniqueId);
+			return this.data.CreateDataContext (name);
+		}
+
+		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)
+		{
+			if (dataContext.ContainsChanges ())
 			{
-				this.context = CoreProgram.Application.MainWindowOrchestrator.DefaultDataContext;
+				System.Diagnostics.Debug.WriteLine ("DataContext contains changes...");
+				dataContext.SaveChanges ();
+				//	TODO: don't save changes if we rejected the changes for this data context !
 			}
 
+			this.data.DisposeDataContext (dataContext);
+		}
+
+		internal void Add(BusinessContext context)
+		{
 			this.businessContexts.Add (context);
 		}
 
-		public void Remove(BusinessContext context)
+		internal void Remove(BusinessContext context)
 		{
 			this.businessContexts.Remove (context);
-
-			if (this.IsEmpty)
-			{
-				this.context = null;
-			}
 		}
 
 		private readonly List<BusinessContext> businessContexts;
 		private readonly CoreData data;
-		private DataContext context;
 	}
 }

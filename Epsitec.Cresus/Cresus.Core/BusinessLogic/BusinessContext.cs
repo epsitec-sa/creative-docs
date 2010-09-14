@@ -9,6 +9,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
@@ -21,8 +22,9 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.pool.Add (this);
 			this.entityRecords = new List<EntityRecord> ();
 
-			this.dataContext = this.pool.DataContext;
+			this.dataContext = this.pool.CreateDataContext (this);
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			
 			this.locker = this.Data.DataLocker;
 		}
 
@@ -57,6 +59,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
+		public AbstractEntity ActiveEntity
+		{
+			get
+			{
+				return this.activeEntity;
+			}
+		}
 		
 		public bool AreAllLocksAvailable()
 		{
@@ -86,6 +95,29 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 			lockTransaction.Dispose ();
 			return false;
+		}
+
+		
+		public void SetActiveEntity(EntityKey? entityKey, NavigationPathElement navigationPathElement)
+		{
+			this.SetActiveEntity (this.dataContext.ResolveEntity (entityKey));
+			this.SetNavigationPathElement (navigationPathElement);
+		}
+
+		public void ClearActiveEntity()
+		{
+			this.SetActiveEntity (null);
+		}
+
+		
+		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
+		{
+			this.activeNavigationPathElement = navigationPathElement;
+		}
+
+		private void SetActiveEntity(AbstractEntity entity)
+		{
+			this.activeEntity = entity;
 		}
 
 		public void Register(AbstractEntity entity)
@@ -134,7 +166,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
 
-			this.Data.LowLevelSaveDataContext (this.dataContext);
+			this.pool.DisposeDataContext (this, this.dataContext);
 			this.pool.Remove (this);
 
 			if (this.lockTransaction != null)
@@ -247,5 +279,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		private int dataChangedCounter;
 		private bool dataContextDirty;
 		private CoreDataLockTransaction lockTransaction;
+
+		private AbstractEntity activeEntity;
+		private NavigationPathElement activeNavigationPathElement;
 	}
 }

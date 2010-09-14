@@ -57,18 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public override DataContext DataContext
-		{
-			get
-			{
-				return base.DataContext ?? this.data.DataContext;
-			}
-			set
-			{
-				base.DataContext = value;
-			}
-		}
-
 		public new NavigationOrchestrator Navigator
 		{
 			get

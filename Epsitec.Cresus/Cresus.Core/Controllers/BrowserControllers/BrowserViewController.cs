@@ -35,18 +35,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		
-		public override DataContext DataContext
-		{
-			get
-			{
-				return null;
-			}
-			set
-			{
-				throw new System.InvalidOperationException ("Cannot set DataContext");
-			}
-		}
-
 		public FrameBox SettingsPanel
 		{
 			get
@@ -83,13 +71,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.Orchestrator.ClearActiveEntity ();
 
-			var dataContext  = this.Orchestrator.DefaultDataContext;
-			var activeEntity = this.GetActiveEntity (dataContext);
-
-			if (activeEntity != null)
+			if (this.activeEntityKey.HasValue)
 			{
-				var activeEntityKey       = dataContext.GetNormalizedEntityKey (activeEntity);
-				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey.GetValueOrDefault ());
+				var activeEntityKey       = this.activeEntityKey.Value;
+				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
 				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
 			}
@@ -128,11 +113,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public AbstractEntity GetActiveEntity(DataContext context)
 		{
-			if (this.activeEntityKey == null)
-			{
-				return null;
-			}
-
 			if (this.activeEntityKey.HasValue)
 			{
 				return context.ResolveEntity (this.activeEntityKey);

@@ -27,9 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (name)
 		{
 			this.entity = entity;
-			
-			this.CreateBusinessContext ();
-			this.SetupDataContext ();
+
+			System.Diagnostics.Debug.Assert (DataContextPool.Instance.FindDataContext (this.entity) == this.DataContext);
 
 			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
@@ -58,11 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public override BusinessLogic.BusinessContext GetLocalBusinessContext()
-		{
-			return this.businessContext;
-		}
-
 		public sealed override void CreateUI(Widget container)
 		{
 //-			this.CreateBusinessContext ();
@@ -78,34 +72,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateUI ();
 		}
 
-		private void CreateBusinessContext()
-		{
-			var entities = this.GetEntitiesForBusinessContext ();
-
-			if (entities != null)
-			{
-				this.businessContext = this.Orchestrator.Data.CreateBusinessContext ();
-				this.DataContext = this.businessContext.DataContext;
-				this.entity = this.DataContext.ResolveEntity (this.entity);
-				this.businessContext.Register (entities);
-			}
-		}
-
-		private void SetupDataContext()
-		{
-			this.DataContext = DataContextPool.Instance.FindDataContext (this.entity);
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (this.businessContext != null)
-			{
-				this.businessContext.Dispose ();
-				this.businessContext = null;
-			}
-
-			base.Dispose (disposing);
-		}
 
 		protected virtual IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
 		{

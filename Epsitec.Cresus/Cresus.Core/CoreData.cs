@@ -681,7 +681,7 @@ namespace Epsitec.Cresus.Core
 
 		public BusinessLogic.BusinessContext CreateBusinessContext()
 		{
-			return new BusinessContext (this.businessContextPool);
+			return this.businessContextPool.CreateBusinessContext ();
 		}
 	}
 }
