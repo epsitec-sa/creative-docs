@@ -55,8 +55,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var entity = this.Entity;
 			
-			this.UpdateRelationDefaultAddress ();
-			
 			context.UpdateEmptyEntityStatus (entity, isEmpty);
 			context.UpdateEmptyEntityStatus (entity.Person, isEmpty);
 		}
@@ -190,18 +188,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-
-		private void UpdateRelationDefaultAddress()
-		{
-			var customer   = this.Entity;
-			var oldAddress = customer.DefaultAddress;
-			var newAddress = customer.Person.Contacts.Where (x => x is Entities.MailContactEntity).Cast<Entities.MailContactEntity> ().Select (x => x.Address).FirstOrDefault ();
-
-			if (oldAddress.RefEquals (newAddress) == false)
-			{
-				customer.DefaultAddress = newAddress;
-			}
-		}
 
 		private void SetupNewContact(AbstractContactEntity contact)
 		{

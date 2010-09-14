@@ -147,11 +147,6 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.SetNavigationPathElement (navigationPathElement);
 		}
 
-		public void ClearActiveEntity()
-		{
-			this.SetActiveEntity (null);
-		}
-
 		
 		public void Discard()
 		{
@@ -178,7 +173,10 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private void SetActiveEntity(AbstractEntity entity)
 		{
+			System.Diagnostics.Debug.Assert (entity != null);
+
 			this.activeEntity = entity;
+			this.Register (entity);			
 		}
 
 		public void Register(AbstractEntity entity)

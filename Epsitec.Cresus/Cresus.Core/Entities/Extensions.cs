@@ -173,5 +173,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return that.UnwrapNullEntity () == other.UnwrapNullEntity ();
 		}
+		
+		public static bool RefDiffers(this AbstractEntity that, AbstractEntity other)
+		{
+			return that.UnwrapNullEntity () != other.UnwrapNullEntity ();
+		}
 	}
 }
