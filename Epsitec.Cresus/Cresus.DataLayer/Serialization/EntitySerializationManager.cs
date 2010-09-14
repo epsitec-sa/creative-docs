@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			Druid leafEntityId = data.LeafEntityId;
 			DbKey rowKey = data.RowKey;
 
-			AbstractEntity entity = this.DataContext.CreateEntity (leafEntityId);
+			AbstractEntity entity = this.DataContext.EntityContext.CreateEmptyEntity (leafEntityId);
 
 			this.DataContext.DefineRowKey (entity, rowKey);
 

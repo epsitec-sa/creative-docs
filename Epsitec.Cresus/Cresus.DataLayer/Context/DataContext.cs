@@ -227,7 +227,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return entity;
 		}
 
-
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> with the type given by <paramref name="entityId"/>
 		/// associated with this instance.
@@ -235,12 +234,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entityId">The <see cref="Druid"/> of the type of the <see cref="AbstractEntity"/> to create.</param>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		internal AbstractEntity CreateEntity(Druid entityId)
+		public AbstractEntity CreateEntity(Druid entityId)
 		{
 			this.AssertDataContextIsNotDisposed ();
+			
+			AbstractEntity entity = this.EntityContext.CreateEmptyEntity (entityId);
 
-			return this.EntityContext.CreateEmptyEntity (entityId);
+			this.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Created);
+
+			entity.UpdateDataGeneration ();
+
+			return entity;
 		}
+
 
 
 		/// <summary>
@@ -1384,6 +1390,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			sender.AssertDataContextIsNotDisposed ();
 			receiver.AssertDataContextIsNotDisposed ();
+
+			if (sender == receiver)
+			{
+				return entity;
+			}
 			
 			entity.ThrowIfNull ("entity");
 			entity.ThrowIf (e => !sender.Contains (e), "entity is not managed by sender.");
@@ -1392,6 +1403,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 			EntityData data = sender.SerializationManager.Serialize (entity);
 			
 			return (TEntity) receiver.DataLoader.ResolveEntity (data);
+		}
+
+		public TEntity ResolveEntity<TEntity>(TEntity model)
+			where TEntity : AbstractEntity
+		{
+			var sourceContext = DataContextPool.Instance.FindDataContext (model);
+			var sourceEntityKey = sourceContext.GetNormalizedEntityKey (model);
+			var localEntity = this.ResolveEntity (sourceEntityKey);
+
+			return localEntity as TEntity;
 		}
 		
 

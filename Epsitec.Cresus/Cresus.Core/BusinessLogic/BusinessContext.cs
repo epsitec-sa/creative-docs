@@ -194,20 +194,23 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.entityRecords.ForEach (x => x.Logic.ApplyRules (ruleType, x.Entity));
 		}
 
-		public void ApplyRules(RuleType ruleType, AbstractEntity entity)
+		public T ApplyRules<T>(RuleType ruleType, T entity)
+			where T : AbstractEntity
 		{
 			var logic = this.CreateLogic (entity.GetType ());
 			logic.ApplyRules (ruleType, entity);
+			return entity;
 		}
 
+		public AbstractEntity CreateEntity(Druid entityType)
+		{
+			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntity (entityType));
+		}
+		
 		public T CreateEntity<T>()
 			where T : AbstractEntity, new ()
 		{
-			T entity = this.DataContext.CreateEntity<T> ();
-
-			this.ApplyRules (RuleType.Setup, entity);
-
-			return entity;
+			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntity<T> ());
 		}
 
 
