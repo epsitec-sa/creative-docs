@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public DataViewOrchestrator(CoreData data, CommandContext commandContext)
 		{
 			this.data = data;
+			this.commandContext = commandContext;
 			this.mainViewController = new MainViewController (this.data, commandContext, this);
 			this.dataViewController = new DataViewController (this.mainViewController, this);
 			this.navigator = new NavigationOrchestrator (this.mainViewController);
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			{
 				if (this.businessContext == null)
                 {
-					this.businessContext = this.data.CreateBusinessContext ();
+					this.SetActiveBusinessContext (this.data.CreateBusinessContext ());
                 }
 
 				return this.businessContext;
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			if (this.businessContext != null)
 			{
 				this.businessContext.Dispose ();
-				this.businessContext = null;
+				this.SetActiveBusinessContext (null);
 			}
 		}
 
@@ -123,6 +124,50 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 			this.dataViewController.PushViewController (controller);
 		}
+
+
+		private void SetActiveBusinessContext(BusinessContext context)
+		{
+			var oldContext = this.businessContext;
+			var newContext = context;
+
+			if (oldContext != newContext)
+			{
+				this.businessContext = context;
+
+				if (oldContext != null)
+				{
+					oldContext.ContainsChangesChanged -= this.HandleBusinessContextContainsChangesChanged;
+				}
+				if (newContext != null)
+				{
+					newContext.ContainsChangesChanged += this.HandleBusinessContextContainsChangesChanged;
+				}
+
+				this.UpdateBusinessContextContainsChanges ();
+			}
+		}
+
+		private void HandleBusinessContextContainsChangesChanged(object sender)
+		{
+			this.UpdateBusinessContextContainsChanges ();
+		}
+
+		private void UpdateBusinessContextContainsChanges()
+		{
+			if ((this.businessContext != null) &&
+				(this.businessContext.ContainsChanges))
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, true);
+			}
+			else
+			{
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, false);
+				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, false);
+			}
+		}
+
 
 
 		/// <summary>
@@ -170,6 +215,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		private readonly CoreData data;
+		private readonly CommandContext commandContext;
 		private readonly MainViewController mainViewController;
 		private readonly DataViewController dataViewController;
 		private readonly NavigationOrchestrator navigator;

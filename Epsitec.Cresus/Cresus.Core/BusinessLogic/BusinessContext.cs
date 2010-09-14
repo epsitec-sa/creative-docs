@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
@@ -56,6 +57,38 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			get
 			{
 				return this.lockTransaction != null;
+			}
+		}
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		public bool IsDiscarded
+		{
+			get
+			{
+				return this.dataContextDiscarded;
+			}
+		}
+
+		public bool ContainsChanges
+		{
+			get
+			{
+				if ((this.isDisposed) ||
+					(this.IsDiscarded))
+				{
+					return false;
+				}
+				else
+				{
+					return this.dataContext.ContainsChanges ();
+				}
 			}
 		}
 
@@ -107,6 +140,24 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		public void ClearActiveEntity()
 		{
 			this.SetActiveEntity (null);
+		}
+
+		
+		public void Discard()
+		{
+			if (this.dataContextDiscarded == false)
+			{
+				this.dataContextDiscarded = true;
+			}
+		}
+
+		public void SaveChanges()
+		{
+			if (this.ContainsChanges)
+            {
+				this.dataContext.SaveChanges ();
+				this.OnContainsChangesChanged ();
+            }
 		}
 
 		
@@ -164,18 +215,22 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		public void Dispose()
 		{
-			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-
-			this.pool.DisposeDataContext (this, this.dataContext);
-			this.pool.Remove (this);
-
-			if (this.lockTransaction != null)
+			if (this.isDisposed == false)
 			{
-				this.lockTransaction.Dispose ();
-				this.lockTransaction = null;
+				this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+
+				this.pool.DisposeDataContext (this, this.dataContext);
+				this.pool.Remove (this);
+
+				if (this.lockTransaction != null)
+				{
+					this.lockTransaction.Dispose ();
+					this.lockTransaction = null;
+				}
+
+				System.GC.SuppressFinalize (this);
+				this.isDisposed = true;
 			}
-			
-			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion
@@ -251,6 +306,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 						this.ApplyRulesToRegisteredEntities (RuleType.Update);
 					}
 				}
+
+				this.OnContainsChangesChanged ();
 			}
 			finally
 			{
@@ -269,6 +326,19 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
+		private void OnContainsChangesChanged()
+		{
+			var handler = this.ContainsChangesChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+
+		public event EventHandler ContainsChangesChanged;
+
 		private static int nextUniqueId;
 
 		private readonly BusinessContextPool pool;
@@ -278,6 +348,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private int dataChangedCounter;
 		private bool dataContextDirty;
+		private bool dataContextDiscarded;
+		private bool isDisposed;
 		private CoreDataLockTransaction lockTransaction;
 
 		private AbstractEntity activeEntity;

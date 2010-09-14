@@ -41,11 +41,9 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)
 		{
-			if (dataContext.ContainsChanges ())
+			if (context.ContainsChanges)
 			{
-				System.Diagnostics.Debug.WriteLine ("DataContext contains changes...");
-				dataContext.SaveChanges ();
-				//	TODO: don't save changes if we rejected the changes for this data context !
+				context.SaveChanges ();
 			}
 
 			this.data.DisposeDataContext (dataContext);
