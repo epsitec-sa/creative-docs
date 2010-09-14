@@ -32,17 +32,26 @@ namespace Epsitec.Cresus.Core.Printers
 			this.currentZoom = 1;
 
 			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
-			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
+			this.printerUnitsUsed = new List<Dictionary<PrinterUnit, int>> ();
+			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
 
 			this.entityPrinter.IsPreview = true;
+			this.entityPrinter.SetDefaultPrinterUnit ();
 			this.entityPrinter.BuildSections ();
+		}
+
+
+		public bool ShowNotPrinting
+		{
+			get;
+			set;
 		}
 
 
 		public void CreateUI(FrameBox previewBox, FrameBox toolbarBox)
 		{
-			//	Crée l'interface dans deux boîtes, l'une pour le ou les aperçus et l'autre pour choisir
-			//	la page et le zoom.
+			//	Crée l'interface dans deux boîtes, l'une pour le ou les aperçus (previewBox) et l'autre pour choisir
+			//	la page et le zoom (toolbarBox).
 			this.previewBox = previewBox;
 			this.toolbarBox = toolbarBox;
 
@@ -282,6 +291,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	été changés.
 			if (this.HasDocumentTypeSelected)
 			{
+				this.entityPrinter.SetDefaultPrinterUnit ();
 				this.entityPrinter.BuildSections ();
 			}
 
@@ -326,6 +336,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
 
 			this.pagePreviewers.Clear ();
+			this.printerUnitsUsed.Clear ();
 			this.previewFrame.Viewport.Children.Clear ();
 
 			int pageCount = this.entityPrinter.PageCount ();
@@ -338,15 +349,38 @@ namespace Epsitec.Cresus.Core.Printers
 					break;
 				}
 
+				var documentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank);
+				var printerUsed = this.GetPrintersUsed (documentPrinter, pageRank);
+
+				string description;
+				bool notPrinting, hasManyOptions;
+
+				if (this.ShowNotPrinting)  // montre les pages non imprimées ?
+				{
+					description = this.GetPrintersUsedDescription (printerUsed);
+					notPrinting = (printerUsed.Count == 0);
+					hasManyOptions = (printerUsed.Count > 1);
+				}
+				else  // ne montre pas les pages non imprimées ?
+				{
+					description = null;
+					notPrinting = false;
+					hasManyOptions = false;
+				}
+
 				var preview = new Widgets.EntityPreviewer
 				{
 					Parent = this.previewFrame.Viewport,
-					DocumentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank),
-					Description = this.GetPrintersUsedDescription (pageRank),
+					DocumentPrinter = documentPrinter,
+					Description = description,
+					NotPrinting = notPrinting,
+					HasManyOptions = hasManyOptions,
 					CurrentPage = this.entityPrinter.GetPageRelativ (pageRank),
 				};
 
 				this.pagePreviewers.Add (preview);
+				this.printerUnitsUsed.Add (printerUsed);
+
 				pageRank++;
 			}
 
@@ -372,7 +406,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
-				this.placer.PageSize = this.entityPrinter.MaximalPageSize;
+				this.placer.PageSize = this.entityPrinter.BoundsPageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.pagePreviewers.Count;
 				this.placer.UpdateGeometry ();
@@ -431,25 +465,23 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-	
-		private string GetPrintersUsedDescription(int page)
-		{
-			Dictionary<string, int> dico = this.GetPrintersUsed (page);
 
-			if (dico.Count == 0)
+		private string GetPrintersUsedDescription(Dictionary<PrinterUnit, int> printerUsed)
+		{
+			if (printerUsed.Count == 0)
 			{
-				return "<i>Cette page ne sera pas imprimée</i>";  // texte en rouge
+				return "<i>Cette page ne sera pas imprimée</i>";
 			}
 			else
 			{
 				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
 				int i = 0;
 
-				foreach (var pair in dico)
+				foreach (var pair in printerUsed)
 				{
 					if (i > 0)
 					{
-						if (i < dico.Count-1)
+						if (i < printerUsed.Count-1)
 						{
 							builder.Append (", ");
 						}
@@ -471,15 +503,16 @@ namespace Epsitec.Cresus.Core.Printers
 					i++;
 				}
 
-				string printerUnit = (dico.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
+				string printerUnit = (printerUsed.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
 
 				return string.Format ("Cette page sera imprimée avec {0} {1}", printerUnit, builder.ToString ());
 			}
 		}
 
-		private Dictionary<string, int> GetPrintersUsed(int page)
+		private Dictionary<PrinterUnit, int> GetPrintersUsed(AbstractDocumentPrinter documentPrinter, int page)
 		{
-			Dictionary<string, int> dico = new Dictionary<string, int> ();
+			//	Retourne un dictionnaire avec le nom logique de l'unité d'impression et le nombre de copies correspondantes.
+			var dico = new Dictionary<PrinterUnit, int> ();
 
 			PageType pageType = this.entityPrinter.GetPageType (page);
 
@@ -492,22 +525,35 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					if (Printers.Common.IsPrinterAndPageMatching (documentPrinterFunction.PrinterFunction, pageType))
 					{
-						var pu = this.printerUnitList.Where (x => x.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
-						int copies = (pu == null) ? 1 : pu.Copies;
+						var printerUnit = this.printerUnitList.Where (x => x.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
 
-						if (dico.ContainsKey (documentPrinterFunction.LogicalPrinterName))
+						if (printerUnit != null &&
+							Common.InsidePageSize (printerUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
 						{
-							dico[documentPrinterFunction.LogicalPrinterName] += copies;
-						}
-						else
-						{
-							dico.Add (documentPrinterFunction.LogicalPrinterName, copies);
+							if (dico.ContainsKey (printerUnit))
+							{
+								dico[printerUnit] += printerUnit.Copies;
+							}
+							else
+							{
+								dico.Add (printerUnit, printerUnit.Copies);
+							}
 						}
 					}
 				}
 			}
 
 			return dico;
+		}
+
+
+		private void SetPrinterUnits()
+		{
+			foreach (var documentPrinter in this.entityPrinter.DocumentPrinters)
+			{
+				//?documentPrinter.SetPrinterUnit ();
+				// TODO: finir...
+			}
 		}
 
 
@@ -562,37 +608,38 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private readonly IEnumerable<AbstractEntity>	entities;
-		private readonly Printers.AbstractEntityPrinter	entityPrinter;
+		private readonly IEnumerable<AbstractEntity>		entities;
+		private readonly Printers.AbstractEntityPrinter		entityPrinter;
+		private readonly List<Widgets.EntityPreviewer>		pagePreviewers;
+		private readonly List<Dictionary<PrinterUnit, int>>	printerUnitsUsed;
+		private readonly List<PrinterUnit>					printerUnitList;
 
-		private FrameBox								previewBox;
-		private FrameBox								toolbarBox;
+		private FrameBox									previewBox;
+		private FrameBox									toolbarBox;
 
-		private Scrollable								previewFrame;
-		private List<Widgets.EntityPreviewer>			pagePreviewers;
-		private Dialogs.OptimalPreviewPlacer			placer;
+		private Scrollable									previewFrame;
+		private Dialogs.OptimalPreviewPlacer				placer;
 
-		private StaticText								pageRank;
-		private HSlider									pageSlider;
+		private StaticText									pageRank;
+		private HSlider										pageSlider;
 
-		private GlyphButton								debugPrevButton1;
-		private StaticText								debugParam1;
-		private GlyphButton								debugNextButton1;
+		private GlyphButton									debugPrevButton1;
+		private StaticText									debugParam1;
+		private GlyphButton									debugNextButton1;
 
-		private GlyphButton								debugPrevButton2;
-		private StaticText								debugParam2;
-		private GlyphButton								debugNextButton2;
+		private GlyphButton									debugPrevButton2;
+		private StaticText									debugParam2;
+		private GlyphButton									debugNextButton2;
 
-		private Button									zoom18Button;
-		private Button									zoom14Button;
-		private Button									zoom11Button;
-		private Button									zoom21Button;
-		private Button									zoom41Button;
+		private Button										zoom18Button;
+		private Button										zoom14Button;
+		private Button										zoom11Button;
+		private Button										zoom21Button;
+		private Button										zoom41Button;
 
-		private double									currentZoom;
-		private List<PrinterUnit>						printerUnitList;
-
-		private int										currentPage;
-		private int										showedPageCount;
+		private double										currentZoom;
+			
+		private int											currentPage;
+		private int											showedPageCount;
 	}
 }

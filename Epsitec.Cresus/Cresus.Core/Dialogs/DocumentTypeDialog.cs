@@ -41,8 +41,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.printerCombos = new List<TextFieldCombo> ();
 
 			this.previewerController = new PreviewerController (this.entityPrinter, this.entities);
+			this.previewerController.ShowNotPrinting = true;
 			this.settings = CoreApplication.ExtractSettings (this.SettingsGlobalPrefix);
-			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
+			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
 		}
 
 
@@ -602,12 +603,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 					string settings = this.GetSettings (false, string.Concat ("PrinterUnit.", documentPrinterFunction.PrinterFunction));
 					if (!string.IsNullOrEmpty (settings))
 					{
-						PrinterUnit pu = this.printerUnitList.Where (x => x.LogicalName == settings).FirstOrDefault ();
+						PrinterUnit printerUnit = this.printerUnitList.Where (x => x.LogicalName == settings).FirstOrDefault ();
 
-						if (pu != null)
+						if (printerUnit != null)
 						{
-							field.Text = pu.NiceDescription;
-							documentPrinterFunction.LogicalPrinterName = pu.LogicalName;
+							field.Text = printerUnit.NiceDescription;
+							documentPrinterFunction.LogicalPrinterName = printerUnit.LogicalName;
 						}
 					}
 
@@ -627,6 +628,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 						this.SetSettings (false, string.Concat("PrinterUnit.", p.PrinterFunction), p.LogicalPrinterName);
 
 						this.UpdateWidgets ();
+						this.UpdatePreview ();
 					};
 
 					this.printerCombos.Add (field);

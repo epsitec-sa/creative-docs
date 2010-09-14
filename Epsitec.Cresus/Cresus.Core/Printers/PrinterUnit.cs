@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 using System.Collections.Generic;
 using System.IO;
@@ -65,6 +66,12 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
 			//	Cette propriété est donc compatible avec Widget.Text.
 			//	En revanche, il faut utiliser FormattedText.Unescape avant de passer la chaîne à Epsitec.Common.Printing.
+			get;
+			set;
+		}
+
+		public Size PhysicalPaperSize
+		{
 			get;
 			set;
 		}
@@ -170,7 +177,19 @@ namespace Epsitec.Cresus.Core.Printers
 					PrinterUnit.serializableSeparator,
 
 					"ForcingOptionsToSet=",
-					PrinterUnit.GetDocumentOptions (this.forcingOptionsToSet)
+					PrinterUnit.GetDocumentOptions (this.forcingOptionsToSet),
+
+					PrinterUnit.serializableSeparator,
+
+					"PhysicalPaperSize.Width=",
+					this.PhysicalPaperSize.Width.ToString (CultureInfo.InvariantCulture),
+
+					PrinterUnit.serializableSeparator,
+
+					"PhysicalPaperSize.Height=",
+					this.PhysicalPaperSize.Height.ToString (CultureInfo.InvariantCulture),
+
+					null  // pour permettre de termier le dernier par une virgule !
 				);
 		}
 
@@ -178,6 +197,9 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Initialise l'ensemble de la classe à partir d'une string sérialisée.
 			var list = content.Split (new string[] { PrinterUnit.serializableSeparator }, System.StringSplitOptions.RemoveEmptyEntries);
+
+			double paperSizeWidth  = 0;
+			double paperSizeHeight = 0;
 
 			foreach (var line in list)
 			{
@@ -222,8 +244,21 @@ namespace Epsitec.Cresus.Core.Printers
 						case "ForcingOptionsToSet":
 							PrinterUnit.SetDocumentOptions (this.forcingOptionsToSet, words[1]);
 							break;
+
+						case "PhysicalPaperSize.Width":
+							paperSizeWidth = int.Parse (words[1]);
+							break;
+
+						case "PhysicalPaperSize.Height":
+							paperSizeHeight = int.Parse (words[1]);
+							break;
 					}
 				}
+			}
+
+			if (paperSizeWidth != 0 && paperSizeHeight != 0)
+			{
+				this.PhysicalPaperSize = new Size (paperSizeWidth, paperSizeHeight);
 			}
 		}
 

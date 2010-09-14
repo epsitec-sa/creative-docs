@@ -30,104 +30,118 @@ namespace Epsitec.Cresus.Core.Printers
 
 			if (this.entity.BillingMailContact != null)
 			{
-				if (this.entity.BillingMailContact.LegalPerson.IsActive ())
-				{
-					var y = this.entity.BillingMailContact.LegalPerson;
-					//?this.documentPrinters.Add (new LegalPersonLabelDocumentPrinter (this, y));
-				}
-
-				if (this.entity.BillingMailContact.NaturalPerson.IsActive ())
-				{
-					var y = this.entity.BillingMailContact.NaturalPerson;
-					this.documentPrinters.Add (new NaturalPersonLabelDocumentPrinter (this, y));
-				}
+				this.documentPrinters.Add (new MailContactLabelDocumentPrinter (this, this.entity.BillingMailContact));
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Offer, "Offre", "Offre pour le client.");
+
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.Order, "Commande", "Commande pour le client.");
+
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionOrder ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.OrderAcknowledge, "Confirmation de commande", "Confirmation de commande pour le client.");
+				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.ProductionOrder, "Ordres de production", "Ordres de production, pour chaque atelier.");
+				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionProductionOrder ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.BL, "Bulletin de livraison", "Bulletin de livraison, sans prix.");
+
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionBL ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.InvoiceWithInsideESR, "Facture avec BV intégré", "Facture avec un bulletin de versement intégré au bas de chaque page.");
+				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionEsr ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.InvoiceWithOutsideESR, "Facture avec BV séparé", "Facture avec un bulletin de versement imprimé sur une page séparée.");
+				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionEsr ();
+
 				type.AddBasePrinterUnit ();
 				type.AddEsrPrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 
 			{
 				DocumentTypeDefinition type = new DocumentTypeDefinition (DocumentType.InvoiceWithoutESR, "Facture sans BV", "Facture simple sans bulletin de versement.");
+				
 				type.AddDocumentOptionInvoice ();
 				type.AddDocumentOptionOrientation ();
 				type.AddDocumentOptionMargin ();
 				type.AddDocumentOptionSpecimen ();
+
 				type.AddBasePrinterUnit ();
 				type.AddLabelPrinterUnit ();
+
 				this.DocumentTypes.Add (type);
 			}
 		}

@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.application = application;
 
 			this.optionButtons = new List<CheckButton> ();
-			this.printerUnitList = Printers.PrinterSettings.GetPrinterUnitList ();
+			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
 		}
 
 
@@ -224,6 +224,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
 					TabIndex = ++tabIndex,
 				};
+
+
+				var paperSizeLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Taille du papier dans le bac de l'imprimante :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.paperSizeField = new TextFieldCombo
+				{
+					IsReadOnly = true,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
 			}
 
 			{
@@ -388,6 +406,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionTrayChanged ();
 			};
 
+			this.paperSizeField.SelectedItemChanged += delegate
+			{
+				this.ActionPaperSizeChanged ();
+			};
+
 			this.xOffsetField.AcceptingEdition += delegate
 			{
 				this.ActionOffsetXChanged ();
@@ -405,7 +428,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.acceptButton.Clicked += delegate
 			{
-				Printers.PrinterSettings.SetPrinterList (this.printerUnitList);
+				Printers.PrinterApplicationSettings.SetPrinterList (this.printerUnitList);
 
 				this.Result = DialogResult.Accept;
 				this.CloseDialog ();
@@ -462,25 +485,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			this.centerBox.Enable     = sel != -1;
-			this.rightBox.Enable      = sel != -1;
-			this.logicalField.Enable  = sel != -1;
-			this.commentField.Enable  = sel != -1;
-			this.physicalField.Enable = sel != -1;
-			this.trayField.Enable     = sel != -1;
-			this.xOffsetField.Enable  = sel != -1;
-			this.yOffsetField.Enable  = sel != -1;
-			this.copiesField.Enable   = sel != -1;
+			this.centerBox.Enable      = sel != -1;
+			this.rightBox.Enable       = sel != -1;
+			this.logicalField.Enable   = sel != -1;
+			this.commentField.Enable   = sel != -1;
+			this.physicalField.Enable  = sel != -1;
+			this.trayField.Enable      = sel != -1;
+			this.paperSizeField.Enable = sel != -1;
+			this.xOffsetField.Enable   = sel != -1;
+			this.yOffsetField.Enable   = sel != -1;
+			this.copiesField.Enable    = sel != -1;
 
 			if (sel == -1)
 			{
-				this.logicalField.Text  = null;
-				this.commentField.Text  = null;
-				this.physicalField.Text = null;
-				this.trayField.Text     = null;
-				this.xOffsetField.Text  = null;
-				this.yOffsetField.Text  = null;
-				this.copiesField.Text   = null;
+				this.logicalField.Text   = null;
+				this.commentField.Text   = null;
+				this.physicalField.Text  = null;
+				this.trayField.Text      = null;
+				this.paperSizeField.Text = null;
+				this.xOffsetField.Text   = null;
+				this.yOffsetField.Text   = null;
+				this.copiesField.Text    = null;
 
 				foreach (var button in this.optionButtons)
 				{
@@ -491,13 +516,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				PrinterUnit printerUnit = this.SelectedPrinter;
 
-				this.logicalField.Text  = printerUnit.LogicalName;
-				this.commentField.Text  = printerUnit.Comment;
-				this.physicalField.Text = printerUnit.PhysicalPrinterName;
-				this.trayField.Text     = printerUnit.PhysicalPrinterTray;
-				this.xOffsetField.Text  = printerUnit.XOffset.ToString ();
-				this.yOffsetField.Text  = printerUnit.YOffset.ToString ();
-				this.copiesField.Text   = printerUnit.Copies.ToString ();
+				this.logicalField.Text   = printerUnit.LogicalName;
+				this.commentField.Text   = printerUnit.Comment;
+				this.physicalField.Text  = printerUnit.PhysicalPrinterName;
+				this.trayField.Text      = printerUnit.PhysicalPrinterTray;
+				this.paperSizeField.Text = PrinterUnitListDialog.PaperSizeToNiceDescription (printerUnit.PhysicalPaperSize);
+				this.xOffsetField.Text   = printerUnit.XOffset.ToString ();
+				this.yOffsetField.Text   = printerUnit.YOffset.ToString ();
+				this.copiesField.Text    = printerUnit.Copies.ToString ();
 
 				foreach (var button in this.optionButtons)
 				{
@@ -569,6 +595,28 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.trayField.Items.Count == 1)
 			{
 				this.trayField.SelectedItemIndex = 0;
+			}
+		}
+
+		private void UpdatePaperSizeField()
+		{
+			PrinterUnit printerUnit = this.SelectedPrinter;
+			List<PaperSize> paperSizes = PrinterUnitListDialog.GetPaperSizeList (printerUnit);
+
+			this.paperSizeField.Items.Clear ();
+			foreach (var paperSize in paperSizes)
+			{
+				string name = PrinterUnitListDialog.PaperSizeToNiceDescription (paperSize.Size);
+
+				if (!string.IsNullOrWhiteSpace (name) && !this.paperSizeField.Items.Contains (name))
+				{
+					this.paperSizeField.Items.Add (name);
+				}
+			}
+
+			if (this.paperSizeField.Items.Count == 1)
+			{
+				this.paperSizeField.SelectedItemIndex = 0;
 			}
 		}
 
@@ -672,6 +720,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.UpdateWidgets ();
 			this.UpdateTrayField ();
+			this.UpdatePaperSizeField ();
 		}
 
 		private void ActionItemInserted()
@@ -720,6 +769,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
 				this.UpdateTrayField ();
+				this.UpdatePaperSizeField ();
 			}
 		}
 
@@ -730,6 +780,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerUnitList[sel].PhysicalPrinterTray != this.trayField.Text)
 			{
 				this.printerUnitList[sel].PhysicalPrinterTray = this.trayField.Text;
+
+				this.listController.UpdateList (sel);
+				this.UpdateWidgets ();
+			}
+		}
+
+		private void ActionPaperSizeChanged()
+		{
+			int sel = this.listController.SelectedIndex;
+
+			var paperSize = PrinterUnitListDialog.NiceDescriptionToPaperSize (this.paperSizeField.Text);
+
+			if (this.printerUnitList[sel].PhysicalPaperSize != paperSize)
+			{
+				this.printerUnitList[sel].PhysicalPaperSize = paperSize;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -792,7 +857,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static List<string> GetTrayList(PrinterUnit printerUnit)
 		{
-			List<string> trayNames = new List<string> ();
+			var trayNames = new List<string> ();
 
 			if (printerUnit != null && !string.IsNullOrEmpty (printerUnit.PhysicalPrinterName))
 			{
@@ -801,10 +866,56 @@ namespace Epsitec.Cresus.Core.Dialogs
 				if (settings != null)
 				{
 					System.Array.ForEach (settings.PaperSources, x => trayNames.Add (FormattedText.Escape (x.Name.Trim ())));
+
+					var ps = settings.PaperSizes;
 				}
 			}
 
 			return trayNames;
+		}
+
+		private static List<PaperSize> GetPaperSizeList(PrinterUnit printerUnit)
+		{
+			var paperSizes = new List<PaperSize> ();
+
+			if (printerUnit != null && !string.IsNullOrEmpty (printerUnit.PhysicalPrinterName))
+			{
+				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printerUnit.PhysicalPrinterName));
+
+				if (settings != null)
+				{
+					System.Array.ForEach (settings.PaperSizes, x => paperSizes.Add (x));
+
+					var ps = settings.PaperSizes;
+				}
+			}
+
+			paperSizes.Sort (PrinterUnitListDialog.ComparePaperSize);
+
+			return paperSizes;
+		}
+
+		private static int ComparePaperSize(PaperSize x, PaperSize y)
+		{
+			if (x.Width < y.Width)
+			{
+				return -1;
+			}
+			else if (x.Width > y.Width)
+			{
+				return 1;
+			}
+
+			if (x.Height < y.Height)
+			{
+				return -1;
+			}
+			else if (x.Height > y.Height)
+			{
+				return 1;
+			}
+
+			return 0;
 		}
 
 
@@ -834,6 +945,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].PhysicalPrinterTray))
 				{
 					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerUnitList[i].LogicalName);
+				}
+
+				if (this.printerUnitList[i].PhysicalPaperSize.IsEmpty)
+				{
+					return string.Format ("<b>{0}</b>: Il faut choisir la taille du papier.", this.printerUnitList[i].LogicalName);
 				}
 
 				if (!PrinterUnit.CheckString (this.printerUnitList[i].LogicalName))
@@ -877,6 +993,112 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		#region Paper size conversion
+		private static Size NiceDescriptionToPaperSize(string text)
+		{
+			//	Conversion d'une jolie description en taille de papier.
+			if (!string.IsNullOrWhiteSpace (text))
+			{
+				double width, height;
+
+				int i = text.IndexOf (" ");
+				if (i == -1)
+				{
+					return Size.Empty;
+				}
+
+				if (!double.TryParse (text.Substring (0, i), out width))
+				{
+					return Size.Empty;
+				}
+
+				i = text.IndexOf (" × ");
+				if (i == -1)
+				{
+					return Size.Empty;
+				}
+				i += 3;
+
+				int j = text.IndexOf ("mm", i);
+				if (j == -1)
+				{
+					return Size.Empty;
+				}
+
+				if (!double.TryParse (text.Substring (i, j-i), out height))
+				{
+					return Size.Empty;
+				}
+
+				return new Size (width, height);
+			}
+
+			return Size.Empty;
+		}
+
+		private static string PaperSizeToNiceDescription(Size paperSize)
+		{
+			//	Conversion d'une taille de papier en une jolie description.
+			if (paperSize.IsEmpty)
+			{
+				return "<i>Inconnu</i>";
+			}
+			else
+			{
+				double width  = paperSize.Width;
+				double height = paperSize.Height;
+				PrinterUnitListDialog.PaperSizeRounding (ref width, ref height);
+
+				string description = PrinterUnitListDialog.PaperSizeToDescription (paperSize);
+
+				if (description != null)
+				{
+					description = string.Concat (" (", description, ")");
+				}
+
+				return string.Format ("{0} × {1} mm {2}", width.ToString (), height.ToString (), description);
+			}
+		}
+
+		private static string PaperSizeToDescription(Size paperSize)
+		{
+			//	Retourne le nom de quelques formats très courants.
+			double width  = paperSize.Width;
+			double height = paperSize.Height;
+			PrinterUnitListDialog.PaperSizeRounding (ref width, ref height);
+
+			if (width == 297 && height == 420)
+			{
+				return "A3";
+			}
+
+			if (width == 210 && height == 297)
+			{
+				return "A4";
+			}
+
+			if (width == 148 && height == 210)
+			{
+				return "A5";
+			}
+
+			if (width == 62 && height == 29)  // petite étiquette pour Brother QL-560 ?
+			{
+				return "étiquette";
+			}
+
+			return null;
+		}
+
+		private static void PaperSizeRounding(ref double width, ref double height)
+		{
+			//	Arrondi au millimètre le plus proche.
+			width  = System.Math.Floor (width  + 0.5);
+			height = System.Math.Floor (height + 0.5);
+		}
+		#endregion
+
+
 		#region ListController callbacks
 		private FormattedText ListControllerItemToText(PrinterUnit printerUnit)
 		{
@@ -916,6 +1138,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private TextFieldEx								commentField;
 		private TextFieldCombo							physicalField;
 		private TextFieldCombo							trayField;
+		private TextFieldCombo							paperSizeField;
 		private TextFieldEx								xOffsetField;
 		private TextFieldEx								yOffsetField;
 		private TextFieldEx								copiesField;

@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.checkButtons   = new List<CheckButton> ();
 			this.previewButtons = new List<GlyphButton> ();
-			this.pagePreviewers   = new List<Widgets.EntityPreviewer> ();
+			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
 		}
 
 
@@ -315,6 +315,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.previewedSection = section;
 				this.previewedSection.DocumentPrinter.IsPreview = true;
+				this.previewedSection.DocumentPrinter.SetPrinterUnit (section.PrinterUnit);
 				this.previewedSection.DocumentPrinter.BuildSections (section.PrinterUnit.ForcingOptionsToClear, section.PrinterUnit.ForcingOptionsToSet);
 
 				this.UpdatePreview ();
@@ -411,10 +412,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
 			if (this.previewedSection != null)
 			{
-				this.placer.PageSize = this.jobs[0].Sections[0].DocumentPrinter.PageSize;
+				this.placer.PageSize = this.MaximalPageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.previewedSection.PageCount;
 				this.placer.UpdateGeometry ();
+			}
+		}
+
+		private Size MaximalPageSize
+		{
+			//	Retourne la taille de la plus grande page.
+			get
+			{
+				double width  = 0;
+				double height = 0;
+
+				foreach (var job in this.jobs)
+				{
+					foreach (var section in job.Sections)
+					{
+						if (section.Enable)
+						{
+							width  = System.Math.Max (width,  section.DocumentPrinter.RequiredPageSize.Width);
+							height = System.Math.Max (height, section.DocumentPrinter.RequiredPageSize.Height);
+						}
+					}
+				}
+
+				return new Size (width, height);
 			}
 		}
 

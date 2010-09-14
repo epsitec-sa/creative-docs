@@ -66,7 +66,11 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public virtual Size PageSize
+
+		/// <summary>
+		/// Taille minimale possible pour ce document.
+		/// </summary>
+		public virtual Size MinimalPageSize
 		{
 			get
 			{
@@ -74,13 +78,49 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public virtual Margins PageMargins
+		/// <summary>
+		/// Taille maximale possible pour ce document.
+		/// </summary>
+		public virtual Size MaximalPageSize
 		{
 			get
 			{
-				return new Margins (10);
+				return Size.Zero;
 			}
 		}
+
+		/// <summary>
+		/// Taille préférée pour ce document.
+		/// </summary>
+		public virtual Size PreferredPageSize
+		{
+			get
+			{
+				return Size.Zero;
+			}
+		}
+
+		/// <summary>
+		/// Taille du document à générer. Cette taille est définie par SetPrinterUnit.
+		/// </summary>
+		public Size RequiredPageSize
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (!this.requiredPageSize.IsEmpty);
+
+				return this.requiredPageSize;
+			}
+		}
+
+		protected virtual Margins PageMargins
+		{
+			get
+			{
+				return new Margins (10);  // 1 cm
+			}
+		}
+
 
 		public bool IsEmpty(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
 		{
@@ -138,6 +178,111 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.entityPrinter.EntityPrintingSettings.HasDocumentOption (option);
 		}
 
+		public bool HasPrinterUnitDefined(PrinterUnitFunction printerUnitFunction)
+		{
+			//	Indique si une unité d'impression est définie.
+			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
+
+			if (documentType != null)
+			{
+				foreach (var documentPrinterFunction in documentType.DocumentPrinterFunctions)
+				{
+					if (documentPrinterFunction.PrinterFunction == printerUnitFunction)
+					{
+						return !string.IsNullOrEmpty (documentPrinterFunction.LogicalPrinterName);
+					}
+				}
+			}
+
+			return false;
+		}
+
+
+		public bool IsPreview
+		{
+			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
+			get
+			{
+				return this.entityPrinter.IsPreview;
+			}
+			set
+			{
+				this.entityPrinter.IsPreview = value;
+			}
+		}
+
+
+		/// <summary>
+		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
+		/// </summary>
+		public virtual void SetPrinterUnit(PrinterUnit printerUnit)
+		{
+			Size size;
+
+			if (printerUnit == null)
+			{
+				size = this.PreferredPageSize;
+			}
+			else
+			{
+				size = printerUnit.PhysicalPaperSize;
+			}
+
+			if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
+			{
+				size = new Size (size.Height, size.Width);
+			}
+
+			this.requiredPageSize = size;
+		}
+
+		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
+		{
+			this.forcingOptionsToClear = forcingOptionsToClear;
+			this.forcingOptionsToSet   = forcingOptionsToSet;
+
+			this.documentContainer.PageSize    = this.RequiredPageSize;
+			this.documentContainer.PageMargins = this.PageMargins;
+		}
+
+		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
+		{
+			if (this.HasDocumentOption (DocumentOption.Specimen))
+			{
+				this.PaintSpecimen (port);
+			}
+		}
+
+		public virtual void PrintForegroundCurrentPage(IPaintPort port)
+		{
+		}
+
+		private void PaintSpecimen(IPaintPort port)
+		{
+			//	Dessine un très gros "SPECIMEN" au travers de la page.
+			var bounds = new Rectangle (Point.Zero, this.RequiredPageSize);
+			double diagonal = Point.Distance (bounds.BottomLeft, bounds.TopRight);
+			double angle = System.Math.Atan2 (bounds.Height, bounds.Width);
+			bounds.Inflate (diagonal);
+
+			var initial = port.Transform;
+			port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationRadTransform (angle, bounds.Center));
+
+			var layout = new TextLayout
+			{
+				Text = "SPECIMEN",
+				DefaultColor = Color.FromBrightness (this.IsPreview ? 0.95 : 0.80),  // plus foncé si impression réelle
+				DefaultFont = Font.GetFont ("Arial", "Bold"),
+				DefaultFontSize = diagonal / 6.5,
+				Alignment = ContentAlignment.MiddleCenter,
+				LayoutSize = bounds.Size,
+			};
+
+			layout.Paint (bounds.BottomLeft, port);
+
+			port.Transform = initial;
+		}
+
 
 		public int DebugParam1
 		{
@@ -169,65 +314,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public bool IsPreview
-		{
-			//	Permet de savoir si on effectue une impression réelle ou un aperçu avant impression.
-			get
-			{
-				return this.entityPrinter.IsPreview;
-			}
-			set
-			{
-				this.entityPrinter.IsPreview = value;
-			}
-		}
-
-		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
-		{
-			this.forcingOptionsToClear = forcingOptionsToClear;
-			this.forcingOptionsToSet   = forcingOptionsToSet;
-
-			this.documentContainer.PageSize    = this.PageSize;
-			this.documentContainer.PageMargins = this.PageMargins;
-		}
-
-		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
-		{
-			if (this.HasDocumentOption (DocumentOption.Specimen))
-			{
-				this.PaintSpecimen (port);
-			}
-		}
-
-		public virtual void PrintForegroundCurrentPage(IPaintPort port)
-		{
-		}
-
-		private void PaintSpecimen(IPaintPort port)
-		{
-			//	Dessine un très gros "SPECIMEN" au travers de la page.
-			var font = Font.GetFont ("Arial", "Bold");
-
-			var initial = port.Transform;
-
-			if (this.PageSize.Height > this.PageSize.Width)  // portrait ?
-			{
-				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (60));
-
-				port.Color = Color.FromBrightness (0.95);
-				port.PaintText (34, -36, "SPECIMEN", AbstractDocumentPrinter.specimenFont, 56);
-			}
-			else  // paysage ?
-			{
-				port.Transform = port.Transform.MultiplyByPostfix (Transform.CreateRotationDegTransform (30));
-
-				port.Color = Color.FromBrightness (0.95);
-				port.PaintText (30, -4, "SPECIMEN", AbstractDocumentPrinter.specimenFont, 56);
-			}
-
-			port.Transform = initial;
-		}
-
 
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
@@ -235,6 +321,7 @@ namespace Epsitec.Cresus.Core.Printers
 		protected readonly AbstractEntity					entity;
 		protected readonly DocumentContainer				documentContainer;
 		protected Dictionary<TableColumnKeys, TableColumn>	tableColumns;
+		protected Size										requiredPageSize;
 		private List<DocumentOption>						forcingOptionsToClear;
 		private List<DocumentOption>						forcingOptionsToSet;
 		private int											currentPage;

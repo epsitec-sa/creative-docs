@@ -36,22 +36,33 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public override Size PageSize
+
+		public override Size MinimalPageSize
 		{
 			get
 			{
-				if (this.HasDocumentOption (DocumentOption.OrientationHorizontal))
-				{
-					return new Size (297, 210);  // A4 horizontal
-				}
-				else
-				{
-					return new Size (210, 297);  // A4 vertical
-				}
+				return new Size (210, 297);  // A4
 			}
 		}
 
-		public override Margins PageMargins
+		public override Size MaximalPageSize
+		{
+			get
+			{
+				return new Size (210, 297);  // A4
+			}
+		}
+
+		public override Size PreferredPageSize
+		{
+			get
+			{
+				return new Size (210, 297);  // A4
+			}
+		}
+
+
+		protected override Margins PageMargins
 		{
 			get
 			{
@@ -67,6 +78,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 			}
 		}
+
 
 		public override void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
@@ -228,20 +240,20 @@ namespace Epsitec.Cresus.Core.Printers
 				var imageBand = new ImageBand ();
 				imageBand.Load ("logo-cresus.png");
 				imageBand.BuildSections (60, 50, 50, 50);
-				this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.PageSize.Height-10-50, 60, 50));
+				this.documentContainer.AddAbsolute (imageBand, new Rectangle (20, this.RequiredPageSize.Height-10-50, 60, 50));
 
 				var textBand = new TextBand ();
 				textBand.Text = FormattedText.Concat ("<b>", "Les logiciels de gestion", "</b>");
 				textBand.Font = font;
 				textBand.FontSize = 5.0;
-				this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.PageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
+				this.documentContainer.AddAbsolute (textBand, new Rectangle (20, this.RequiredPageSize.Height-10-imageBand.GetSectionHeight (0)-10, 80, 10));
 			}
 
 			var mailContactBand = new TextBand ();
 			mailContactBand.Text = InvoiceDocumentHelper.GetMailContact (this.Entity);
 			mailContactBand.Font = font;
 			mailContactBand.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.PageSize.Height-57, 80, 25));
+			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.RequiredPageSize.Height-57, 80, 25));
 
 			//	Génère le groupe "concerne".
 			{
@@ -283,7 +295,7 @@ namespace Epsitec.Cresus.Core.Printers
 					band.SetText (0, 0, title);
 					band.SetText (1, 0, text);
 					band.SetBackground (1, 0, color);
-					this.documentContainer.AddAbsolute (band, new Rectangle (20, this.PageSize.Height-67, 100-5, 15));
+					this.documentContainer.AddAbsolute (band, new Rectangle (20, this.RequiredPageSize.Height-67, 100-5, 15));
 				}
 			}
 
@@ -291,20 +303,20 @@ namespace Epsitec.Cresus.Core.Printers
 			titleBand.Text = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.DocumentTypeSelected);
 			titleBand.Font = font;
 			titleBand.FontSize = 5.0;
-			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.PageSize.Height-82, 90, 10));
+			this.documentContainer.AddAbsolute (titleBand, new Rectangle (20, this.RequiredPageSize.Height-82, 90, 10));
 
 			string date = Misc.GetDateTimeDescription (this.Entity.LastModificationDate);
 			var dateBand = new TextBand ();
 			dateBand.Text = FormattedText.Concat ("Crissier, le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
-			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.PageSize.Height-82, 80, 10));
+			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10));
 		}
 
 		private void BuildArticles(ArticleGroupEntity group=null, bool onlyTotal=false)
 		{
 			//	Ajoute les articles dans le document.
-			this.documentContainer.CurrentVerticalPosition = this.PageSize.Height-87;
+			this.documentContainer.CurrentVerticalPosition = this.RequiredPageSize.Height-87;
 
 			this.tableColumns.Clear ();
 
@@ -1104,8 +1116,8 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Met les numéros de page.
 			double reportHeight = this.IsDocumentWithoutPrice ? 0 : InvoiceDocumentPrinter.reportHeight*2;
 
-			var leftBounds  = new Rectangle (this.PageMargins.Left, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
-			var rightBounds = new Rectangle (this.PageSize.Width-this.PageMargins.Right-80, this.PageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
+			var leftBounds  = new Rectangle (this.PageMargins.Left, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
+			var rightBounds = new Rectangle (this.RequiredPageSize.Width-this.PageMargins.Right-80, this.RequiredPageSize.Height-this.PageMargins.Top+reportHeight+1, 80, 5);
 
 			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
 			{
@@ -1132,7 +1144,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Met un report en haut des pages concernées, avec une répétition de la ligne
 			//	d'en-tête (noms des colonnes).
-			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+			double width = this.RequiredPageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
 			for (int page = firstPage+1; page < this.documentContainer.PageCount (); page++)
 			{
@@ -1184,7 +1196,7 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildReportFooters(int firstPage)
 		{
 			//	Met un report en bas des pages concernées.
-			double width = this.PageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
+			double width = this.RequiredPageSize.Width-this.PageMargins.Left-this.PageMargins.Right;
 
 			for (int page = firstPage; page < this.documentContainer.PageCount ()-1; page++)
 			{
@@ -1294,7 +1306,8 @@ namespace Epsitec.Cresus.Core.Printers
 			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
 
 			if (this.documentContainer.PageCount () - firstPage > 1 ||
-				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentPrinter.marginBeforeEsr < bounds.Top)
+				this.documentContainer.CurrentVerticalPosition - InvoiceDocumentPrinter.marginBeforeEsr < bounds.Top ||
+				this.HasPrinterUnitDefined (PrinterUnitFunction.ForSinglePage) == false)
 			{
 				//	On ne prépare pas une nouvelle page si on peut mettre la facture
 				//	et le BV sur une seule page !

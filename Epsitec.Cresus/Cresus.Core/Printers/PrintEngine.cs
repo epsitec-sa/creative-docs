@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Prépare toutes les pages à imprimer, pour toutes les entités.
 			//	On crée autant de sections que de pages, soit une section par page.
 			List<SectionToPrint> sections = new List<SectionToPrint> ();
-			List<PrinterUnit> printerUnitList = PrinterSettings.GetPrinterUnitList ();
+			List<PrinterUnit> printerUnitList = PrinterApplicationSettings.GetPrinterUnitList ();
 
 			for (int entityRank = 0; entityRank < entities.Count; entityRank++)
 			{
@@ -109,9 +109,11 @@ namespace Epsitec.Cresus.Core.Printers
 					{
 						PrinterUnit printerUnit = printerUnitList.Where (p => p.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
 
-						if (printerUnit != null)
+						if (printerUnit != null &&
+							Common.InsidePageSize (printerUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
 						{
 							//	Construit l'ensemble des pages, en tenant compte des options forcées de l'unité d'impression.
+							documentPrinter.SetPrinterUnit (printerUnit);
 							documentPrinter.BuildSections (printerUnit.ForcingOptionsToClear, printerUnit.ForcingOptionsToSet);
 
 							if (!documentPrinter.IsEmpty (documentPrinterFunction.PrinterFunction))
@@ -125,7 +127,7 @@ namespace Epsitec.Cresus.Core.Printers
 										string p = (documentPrinterRank+1).ToString ();
 										string d = (documentPrinter.GetDocumentRank (physicalPage)+1).ToString ();
 										string c = (copy+1).ToString ();
-										string internalJobName = string.Concat (documentPrinterFunction.Job, ".", e, ".", d, ".", c);
+										string internalJobName = string.Concat (documentPrinterFunction.Job, ".", e, ".", p, ".", d, ".", c);
 
 										sections.Add (new SectionToPrint (printerUnit, internalJobName, physicalPage, entityRank, documentPrinter));
 									}

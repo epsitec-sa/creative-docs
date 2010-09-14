@@ -56,27 +56,34 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		public static FormattedText GetMailContact(InvoiceDocumentEntity x)
 		{
+			if (x.BillingMailContact == null)
+			{
+				return FormattedText.Null;
+			}
+			else
+			{
+				return InvoiceDocumentHelper.GetMailContact (x.BillingMailContact);
+			}
+		}
+
+		public static FormattedText GetMailContact(MailContactEntity x)
+		{
 			FormattedText legal = "";
 			FormattedText natural = "";
 
-			if (x.BillingMailContact != null)
+			if (x.LegalPerson.IsActive ())
 			{
-				if (x.BillingMailContact.LegalPerson.IsActive ())
-				{
-					var y = x.BillingMailContact.LegalPerson;
-					legal = TextFormatter.FormatText (y.Name);
-				}
-
-				if (x.BillingMailContact.NaturalPerson.IsActive ())
-				{
-					var y = x.BillingMailContact.NaturalPerson;
-					natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname);
-				}
-
-				return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.BillingMailContact.Address.Street.StreetName, "\n", x.BillingMailContact.Address.Location.PostalCode, x.BillingMailContact.Address.Location.Name);
+				var y = x.LegalPerson;
+				legal = TextFormatter.FormatText (y.Name);
 			}
 
-			return FormattedText.Null;
+			if (x.NaturalPerson.IsActive ())
+			{
+				var y = x.NaturalPerson;
+				natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname);
+			}
+
+			return TextFormatter.FormatText (legal, "~\n", natural, "~\n", x.Address.Street.StreetName, "\n", x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 

@@ -76,14 +76,16 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		/// <summary>
+		/// Supprime toutes les pages générées.
+		/// Il ne faut pas oublier PrepareEmptyPage avant de placer des objets !
+		/// </summary>
 		public void Clear()
 		{
 			this.DocumentRank = 0;
 
 			this.pages.Clear ();
-			this.pages.Add (new PageContainer (0, this.DocumentRank, PageType.First));  // crée la première page
-
-			this.currentPage = 0;
+			this.currentPage = -1;
 
 			this.currentVerticalPosition = this.pageSize.Height - this.pageMargins.Top;  // on part en haut
 		}
@@ -93,9 +95,13 @@ namespace Epsitec.Cresus.Core.Printers
 		/// </summary>
 		public int PrepareEmptyPage(PageType pageType)
 		{
-			if (this.pages.Last ().Count > 0)  // dernière page non vide ?
+			if (this.pages.Count == 0 || this.pages.Last ().Count > 0)  // dernière page non vide ?
 			{
 				this.AddNewPage (pageType);
+			}
+			else
+			{
+				this.pages.Last ().PageType = pageType;
 			}
 
 			return this.currentPage;
