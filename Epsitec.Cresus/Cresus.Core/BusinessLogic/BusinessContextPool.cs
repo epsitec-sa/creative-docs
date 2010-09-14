@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)
 		{
-			if (context.ContainsChanges)
+			if (context.ContainsChanges ())
 			{
 				context.SaveChanges ();
 			}

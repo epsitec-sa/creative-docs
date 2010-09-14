@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private void UpdateBusinessContextContainsChanges()
 		{
 			if ((this.businessContext != null) &&
-				(this.businessContext.ContainsChanges))
+				(this.businessContext.ContainsChanges ()))
 			{
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.SaveRecord, true);
 				CoreProgram.Application.SetEnable (Res.Commands.Edition.DiscardRecord, true);
