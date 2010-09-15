@@ -149,6 +149,7 @@
     <Compile Include="Converters\TextConverter.cs" />
     <Compile Include="DependencyProperty`1.cs" />
     <Compile Include="ExpressionAnalyzer.cs" />
+    <Compile Include="ISuspendCollectionChanged.cs" />
     <Compile Include="Support\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\HashSetExtensions.cs" />
     <Compile Include="Support\Extensions\QueueExtensions.cs" />
