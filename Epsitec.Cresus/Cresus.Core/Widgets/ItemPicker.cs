@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 	
-		public void CreateUI()
+		public void RefreshContents()
 		{
 			//	Il faut appeler cette méthode après avoir défini la liste Items.
 			//	Je ne veux pas le faire automatiquement après chaque Items.Add(), pour des raisons

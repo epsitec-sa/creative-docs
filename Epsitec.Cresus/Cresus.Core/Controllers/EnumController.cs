@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			widget.Cardinality = Business.EnumValueCardinality.ExactlyOne;
-			widget.CreateUI ();
+			widget.RefreshContents ();
 
 			this.Update ();
 

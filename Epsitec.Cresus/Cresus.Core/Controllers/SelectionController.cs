@@ -111,41 +111,74 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Attach(Widgets.AutoCompleteTextField widget)
 		{
 			this.attachedWidget = widget;
+			this.widgetItems    = widget.Items;
 
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 
 			widget.HintComparer = (value, text) => this.MatchUserText (value as T, text);
 			widget.HintComparisonConverter = x => TextConverter.ConvertToLowerAndStripAccents (x);
 
-			this.Update ();
+			widget.EditionAccepted += this.HandleEditionAccepted;
 
-			widget.EditionAccepted += delegate
+			this.Update ();
+		}
+
+		public void Attach(Widgets.ItemPicker widget)
+		{
+			this.attachedPicker = widget;
+			this.widgetItems    = widget.Items;
+
+			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
+
+			if (this.CollectionValueGetter != null)
 			{
-				if (widget.SelectedItemIndex > -1)
-				{
-					this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
-				}
-				else
-				{
-					this.ValueSetter (null);
-				}
-			};
+				this.AttachMultipleValueSelector ();
+			}
+			else if ((this.valueGetterExpression != null) &&
+					 (this.ValueSetter != null))
+			{
+				this.AttachSingleValueSelector ();
+			}
+
+			this.Update ();
+		}
+
+		private enum PickerMode
+		{
+			None,
+			SingleValue,
+			MultipleValue,
 		}
 
 		#region IWidgetUpdater Members
 
 		public void Update()
 		{
+			this.widgetItems.Clear ();
+			this.widgetItems.AddRange (this.GetSortedItemList ());
+			
 			if (this.attachedWidget != null)
 			{
-				var widgetItems = this.attachedWidget.Items;
-
-				widgetItems.Clear ();
-				widgetItems.AddRange (this.PossibleItemsGetter ());
-
 				T currentValue = this.GetValue ();
-
 				this.attachedWidget.SelectedItemIndex = widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (currentValue));
+			}
+			if (this.attachedPicker != null)
+			{
+				this.attachedPicker.RefreshContents ();
+
+				switch (this.attachedPickerMode)
+				{
+					case PickerMode.MultipleValue:
+						var originalItems = this.CollectionValueGetter ();
+						this.attachedPicker.AddSelection (originalItems.Select (x => this.widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
+						break;
+
+					case PickerMode.SingleValue:
+						var initialValue  = this.GetValue ();
+						int selectedIndex = this.widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
+						this.attachedPicker.AddSelection (selectedIndex);
+						break;
+				}
 			}
 		}
 
@@ -171,27 +204,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			return 0;
 		}
 		
-		public void Attach(Widgets.ItemPicker widget)
-		{
-			List<T> list = new List<T> (this.PossibleItemsGetter ());
-
-			SelectionController<T>.Sort (list);
-
-			widget.Items.AddRange (list);
-			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
-			widget.CreateUI ();
-
-			if (this.CollectionValueGetter != null)
-			{
-				this.AttachMultipleValueSelector (widget);
-			}
-			else if ((this.valueGetterExpression != null) &&
-					 (this.ValueSetter != null))
-			{
-				this.AttachSingleValueSelector (widget);
-			}
-		}
-
 		private static void Sort(List<T> list)
 		{
 			if ((list.Count > 0) &&
@@ -201,21 +213,42 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void AttachMultipleValueSelector(Widgets.ItemPicker widget)
+		private List<T> GetSortedItemList()
 		{
-			var originalItems = this.CollectionValueGetter ();
-			var widgetItems   = widget.Items;
-			
-			widget.AddSelection (originalItems.Select (x => widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
-			widget.MultiSelectionChanged += this.HandleMultiSelectionChanged;
+			List<T> list = new List<T> (this.PossibleItemsGetter ());
+			SelectionController<T>.Sort (list);
+			return list;
 		}
 
+		private void AttachMultipleValueSelector()
+		{
+			this.attachedPickerMode = PickerMode.MultipleValue;
+			this.attachedPicker.MultiSelectionChanged += this.HandleMultiSelectionChanged;
+		}
+
+		private void AttachSingleValueSelector()
+		{
+			this.attachedPickerMode = PickerMode.SingleValue;
+			this.attachedPicker.SelectedItemChanged += this.HandleSingleSelectionChanged;
+		}
+
+		private void HandleEditionAccepted(object sender)
+		{
+			if (this.attachedWidget.SelectedItemIndex > -1)
+			{
+				this.ValueSetter (this.widgetItems.GetValue<T> (this.attachedWidget.SelectedItemIndex));
+			}
+			else
+			{
+				this.ValueSetter (null);
+			}
+		}
+		
 		private void HandleMultiSelectionChanged(object sender)
 		{
-			var widget        = sender as Widgets.ItemPicker;
 			var selectedItems = this.CollectionValueGetter ();
 
-			var indexes = widget.GetSortedSelection ();
+			var indexes = this.attachedPicker.GetSortedSelection ();
 
 			using (this.SuspendNotifications (selectedItems))
 			{
@@ -223,10 +256,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				foreach (int selectedIndex in indexes)
 				{
-					var item = widget.Items.GetValue<T> (selectedIndex);
+					var item = this.widgetItems.GetValue<T> (selectedIndex);
 					selectedItems.Add (item);
 				}
 			}
+		}
+
+		private void HandleSingleSelectionChanged(object sender)
+		{
+			this.ValueSetter (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
 		}
 
 		private System.IDisposable SuspendNotifications(IList<T> list)
@@ -243,21 +281,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void AttachSingleValueSelector(Widgets.ItemPicker widget)
-		{
-			var initialValue  = this.GetValue ();
-			var widgetItems   = widget.Items;
-			int selectedIndex = widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
-			
-			widget.AddSelection (selectedIndex);
-
-			widget.SelectedItemChanged +=
-				delegate
-				{
-					this.ValueSetter (widget.Items.GetValue (widget.SelectedItemIndex) as T);
-				};
-		}
-		
 		private FormattedText ConvertHintValueToDescription(object value)
 		{
 			var entity = value as T;
@@ -302,6 +325,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Expression<System.Func<T>> valueGetterExpression;
 		private System.Func<T> valueGetter;
-		private Widgets.AutoCompleteTextField attachedWidget;
+
+		private Widgets.AutoCompleteTextField	attachedWidget;
+		private Widgets.ItemPicker				attachedPicker;
+		private PickerMode						attachedPickerMode;
+
+		private Epsitec.Common.Widgets.Collections.StringCollection widgetItems;
 	}
 }
