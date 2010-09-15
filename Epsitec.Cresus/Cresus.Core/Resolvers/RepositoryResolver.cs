@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 			if (type != null)
 			{
-				return System.Activator.CreateInstance (type, new object[] { data }) as Repository;
+				return System.Activator.CreateInstance (type, new object[] { data, null }) as Repository;
 			}
 			else
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 						from type in assembly.GetTypes ()
 						where type.IsClass && !type.IsAbstract
 						let baseType = type.BaseType
-						where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
+						where baseType != null && baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;
 
 			return types;
