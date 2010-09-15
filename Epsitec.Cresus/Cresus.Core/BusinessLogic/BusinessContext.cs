@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -375,5 +377,22 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private AbstractEntity activeEntity;
 		private NavigationPathElement activeNavigationPathElement;
+
+		public T GetLocalEntity<T>(T entity)
+			where T : AbstractEntity, new ()
+		{
+			if (entity.IsNull ())
+            {
+				return entity;
+            }
+			if (this.dataContext.Contains (entity))
+            {
+				return entity;
+            }
+
+			var key = DataContextPool.Instance.FindEntityKey (entity);
+
+			return this.dataContext.ResolveEntity (key) as T;
+		}
 	}
 }
