@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;

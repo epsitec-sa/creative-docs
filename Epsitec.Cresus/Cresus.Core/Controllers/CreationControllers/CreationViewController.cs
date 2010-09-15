@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Factories;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
