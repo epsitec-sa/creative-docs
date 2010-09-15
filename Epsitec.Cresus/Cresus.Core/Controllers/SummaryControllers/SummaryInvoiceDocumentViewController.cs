@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			entityPrinter.DefaultPrepare (Printers.DocumentType.InvoiceWithInsideESR);
 			entityPrinter.IsPreview = true;
-			entityPrinter.SetDefaultPrinterUnit ();
+			entityPrinter.SetPrinterUnit ();
 			entityPrinter.BuildSections ();
 
 			mainViewController.SetPreviewPanelVisibility (true);
@@ -84,22 +84,28 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				BackColor = adorner.ColorWindow,
 			};
 
+			var printerUnitsToolbarBox = new FrameBox
+			{
+				Parent = previewFrame,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
 			var previewBox = new FrameBox
 			{
 				Parent = previewFrame,
 				Dock = DockStyle.Fill,
 			};
 
-			var toolbarBox = new FrameBox
+			var pagesToolbarBox = new FrameBox
 			{
 				Parent = previewFrame,
-				PreferredHeight = 24,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
 			this.previewerController = new Printers.PreviewerController (entityPrinter, new AbstractEntity[] { this.Entity });
-			this.previewerController.CreateUI (previewBox, toolbarBox);
+			this.previewerController.CreateUI (previewBox, pagesToolbarBox, printerUnitsToolbarBox);
 
 			previewController.Add (previewFrame);
 			previewController.Updating += this.HandlePreviewPanelUpdating;

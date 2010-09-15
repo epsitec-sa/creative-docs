@@ -164,21 +164,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (10, 0, 0, 0),
 			};
 
+			var printerUnitsToolbarBox = new FrameBox
+			{
+				Parent = this.previewFrame,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
 			var previewBox = new FrameBox
 			{
 				Parent = this.previewFrame,
 				Dock = DockStyle.Fill,
 			};
 
-			var toolbarBox = new FrameBox
+			var pagesToolbarBox = new FrameBox
 			{
 				Parent = this.previewFrame,
-				PreferredHeight = 24,
 				Dock = DockStyle.Bottom,
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
-			this.previewerController.CreateUI (previewBox, toolbarBox);
+			this.previewerController.CreateUI (previewBox, pagesToolbarBox, printerUnitsToolbarBox);
 
 			//	Rempli le panneau de gauche.
 			this.confirmationButtons.Clear ();

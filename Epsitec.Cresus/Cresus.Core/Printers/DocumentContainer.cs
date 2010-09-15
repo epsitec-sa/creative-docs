@@ -234,6 +234,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return this.pages[page].PageType;
 		}
 
+
 		public int[] GetPhysicalPages(PrinterUnitFunction printerFunctionUsed)
 		{
 			var list = new List<int> ();
@@ -276,6 +277,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return pages[0].Count == 0;
 		}
 
+
 		/// <summary>
 		/// Dessine une page du document pour une imprimante donnée.
 		/// </summary>
@@ -300,6 +302,13 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			return true;
+		}
+
+
+		private List<PageContainer> GetPagesForFilter(System.Func<DocumentContainer, PageContainer, bool> filter)
+		{
+			//	Retourne la liste des pages pour un filtre donné.
+			return this.pages.Where (x => filter (this, x)).ToList ();
 		}
 
 		private List<PageContainer> GetPagesForFunction(PrinterUnitFunction printerFunctionUsed)

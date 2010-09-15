@@ -34,6 +34,10 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pagePreviewers = new List<Widgets.EntityPreviewer> ();
 			this.printerUnitsUsed = new List<Dictionary<PrinterUnit, int>> ();
 			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
+			this.printerUnitFieldList = new List<PrinterUnit> ();
+			this.filteredPages = new List<int> ();
+
+			this.UpdateFilteredPages ();
 
 			this.entityPrinter.IsPreview = true;
 			this.SetPrinterUnits ();
@@ -48,12 +52,13 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public void CreateUI(FrameBox previewBox, FrameBox toolbarBox)
+		public void CreateUI(FrameBox previewBox, FrameBox pagesToolbarBox, FrameBox printerUnitsToolbarBox, bool compact=false)
 		{
 			//	Crée l'interface dans deux boîtes, l'une pour le ou les aperçus (previewBox) et l'autre pour choisir
 			//	la page et le zoom (toolbarBox).
-			this.previewBox = previewBox;
-			this.toolbarBox = toolbarBox;
+			this.previewBox  = previewBox;
+			this.pagesToolbarBox = pagesToolbarBox;
+			this.printerUnitsToolbarBox = printerUnitsToolbarBox;
 
 			this.previewFrame = new Scrollable
 			{
@@ -68,8 +73,11 @@ namespace Epsitec.Cresus.Core.Printers
 				this.UpdatePagePreviewsGeometry ();
 			};
 
+			//	PagesToolbarBox.
+			this.pagesToolbarBox.PreferredHeight = 24;
+
 			{
-				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				frame.PreferredWidth = 60;
 				frame.Dock = DockStyle.Left;
 
@@ -82,7 +90,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				frame.Margins = new Margins (-1, 0, 0, 0);
 				frame.Dock = DockStyle.Fill;
 
@@ -99,7 +107,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected == DocumentType.Debug2)
 			{
 				{
-					var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
+					var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 					frame.PreferredWidth = 70;
 					frame.Margins = new Margins (1, 10, 0, 0);
 					frame.Dock = DockStyle.Right;
@@ -133,7 +141,7 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				{
-					var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
+					var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 					frame.PreferredWidth = 70;
 					frame.Margins = new Margins (0, 0, 0, 0);
 					frame.Dock = DockStyle.Right;
@@ -170,7 +178,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			{
-				var frame = UIBuilder.CreateMiniToolbar (this.toolbarBox, 24);
+				var frame = UIBuilder.CreateMiniToolbar (this.pagesToolbarBox, 24);
 				frame.Margins = new Margins (2, 0, 0, 0);
 				frame.Dock = DockStyle.Right;
 
@@ -236,8 +244,6 @@ namespace Epsitec.Cresus.Core.Printers
 				ToolTip.Default.SetToolTip (this.zoom41Button, "Montre une page agrandie 4 fois");
 			}
 
-			this.placer = new Dialogs.OptimalPreviewPlacer (this.pagePreviewers);
-
 			this.pageSlider.ValueChanged += delegate
 			{
 				this.currentPage = (int) this.pageSlider.Value;
@@ -282,12 +288,51 @@ namespace Epsitec.Cresus.Core.Printers
 				this.debugNextButton2.Clicked += new EventHandler<MessageEventArgs> (this.HandleDebugNextButton2Clicked);
 			}
 
+			//	PrinterUnitsToolbarBox.
+			this.printerUnitsToolbarBox.PreferredHeight = 22;
+
+			{
+				if (!compact)
+				{
+					var label = new StaticText
+					{
+						Parent = this.printerUnitsToolbarBox,
+						Text = "Unité d'impression",
+						PreferredWidth = 100,
+						Dock = DockStyle.Left,
+					};
+				}
+
+				this.printerUnitField = new TextFieldCombo
+				{
+					Parent = this.printerUnitsToolbarBox,
+					IsReadOnly = true,
+					Dock = DockStyle.Fill,
+				};
+
+				this.printerUnitField.SelectedItemChanged += delegate
+				{
+					int sel = this.printerUnitField.SelectedItemIndex;
+
+					if (sel <= 0)
+					{
+						this.ChangePrinterUnit (null);
+					}
+					else
+					{
+						this.ChangePrinterUnit (this.printerUnitFieldList[sel-1]);
+					}
+				};
+
+				ToolTip.Default.SetToolTip (this.printerUnitField, "Choix de l'unité d'impression pour les aperçus");
+			}
+
 			this.UpdatePages ();
 		}
 
 		public void Update()
 		{
-			//	Met à jour le ou les aperçus. Le nombre et pages et leurs contenus peuvent avoir
+			//	Met à jour le ou les aperçus. Le nombre de pages et leurs contenus peuvent avoir
 			//	été changés.
 			if (this.HasDocumentTypeSelected)
 			{
@@ -302,25 +347,40 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePages()
 		{
 			this.previewBox.Visibility = this.HasDocumentTypeSelected;
-			this.toolbarBox.Visibility = this.HasDocumentTypeSelected;
+			this.pagesToolbarBox.Visibility = this.HasDocumentTypeSelected;
 
-			this.UpdateZoom ();
+			this.UpdateFilteredPages ();
 			this.UpdatePreview ();
+			this.UpdatePagePreviewsGeometry ();
+			this.UpdatePageSlider ();
+			this.UpdatePrinterUnitField ();
 			this.UpdateButtons ();
+			this.UpdateZoom ();
 		}
 
-		private void UpdateZoom()
+		private void UpdateFilteredPages()
 		{
-			if (!this.HasDocumentTypeSelected)
-			{
-				return;
-			}
+			//	Construit la liste des numéros de pages en accord avec une unité d'impression donnée.
+			this.filteredPages.Clear ();
 
-			this.zoom18Button.ActiveState = this.currentZoom == 1.0/8.0 ? ActiveState.Yes : ActiveState.No;
-			this.zoom14Button.ActiveState = this.currentZoom == 1.0/4.0 ? ActiveState.Yes : ActiveState.No;
-			this.zoom11Button.ActiveState = this.currentZoom == 1       ? ActiveState.Yes : ActiveState.No;
-			this.zoom21Button.ActiveState = this.currentZoom == 2       ? ActiveState.Yes : ActiveState.No;
-			this.zoom41Button.ActiveState = this.currentZoom == 4       ? ActiveState.Yes : ActiveState.No;
+			for (int page = 0; page < this.entityPrinter.PageCount (); page++)
+			{
+				if (this.selectedPrinterUnit == null)
+				{
+					this.filteredPages.Add (page);
+				}
+				else
+				{
+					var documentPrinter = this.entityPrinter.GetDocumentPrinter (page);
+					var printersUsed = this.GetPrintersUsed (documentPrinter, page);
+
+					if (Common.InsidePageSize (this.selectedPrinterUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize) &&
+					printersUsed.Keys.Contains (this.selectedPrinterUnit))
+					{
+						this.filteredPages.Add (page);
+					}
+				}
+			}
 		}
 
 		private void UpdatePreview()
@@ -332,25 +392,26 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.showedPageCount = (this.currentZoom < 1) ? (int) (1.0/this.currentZoom) : 1;
 
-			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.entityPrinter.PageCount ());
+			this.currentPage = System.Math.Min (this.currentPage + this.showedPageCount, this.filteredPages.Count);
 			this.currentPage = System.Math.Max (this.currentPage - this.showedPageCount, 0);
 
 			this.pagePreviewers.Clear ();
 			this.printerUnitsUsed.Clear ();
 			this.previewFrame.Viewport.Children.Clear ();
 
-			int pageCount = this.entityPrinter.PageCount ();
-			int pageRank = this.currentPage;
-
 			for (int i = 0; i < this.showedPageCount; i++)
 			{
-				if (pageRank >= pageCount)
+				if (this.currentPage+i >= this.filteredPages.Count)
 				{
 					break;
 				}
 
+				int pageRank = this.filteredPages[this.currentPage+i];
+
 				var documentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank);
 				var printersUsed = this.GetPrintersUsed (documentPrinter, pageRank);
+
+				bool hasForcingOptions = PreviewerController.HasForcingOptions (printersUsed);
 
 				string description;
 				bool notPrinting, hasManyOptions;
@@ -359,13 +420,18 @@ namespace Epsitec.Cresus.Core.Printers
 				{
 					description = this.GetPrintersUsedDescription (printersUsed);
 					notPrinting = (printersUsed.Count == 0);
-					hasManyOptions = (printersUsed.Count > 1);
+					hasManyOptions = this.selectedPrinterUnit == null && hasForcingOptions;
 				}
 				else  // ne montre pas les pages non imprimées ?
 				{
 					description = null;
 					notPrinting = false;
 					hasManyOptions = false;
+				}
+
+				if (hasManyOptions)
+				{
+					description = string.Concat (description, "<br/>L'aspect peut varier selon l'unité d'impression.");
 				}
 
 				var preview = new Widgets.EntityPreviewer
@@ -383,14 +449,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 				pageRank++;
 			}
-
-			this.UpdatePagePreviewsGeometry ();
-			this.UpdatePageSlider ();
 		}
 
 		private void UpdatePagePreviewsGeometry()
 		{
 			//	Positionne tous les Widgets.EntityPreviewer, selon le parent this.previewFrame.
+			this.placer = new Dialogs.OptimalPreviewPlacer (this.pagePreviewers);
+			this.placer.PageSize = this.entityPrinter.BoundsPageSize;
+
 			if (this.currentZoom > 1)  // agrandissement ?
 			{
 				this.previewFrame.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
@@ -406,7 +472,6 @@ namespace Epsitec.Cresus.Core.Printers
 				this.previewFrame.VerticalScrollerMode   = ScrollableScrollerMode.HideAlways;
 				this.previewFrame.PaintViewportFrame = false;
 
-				this.placer.PageSize = this.entityPrinter.BoundsPageSize;
 				this.placer.AvailableSize = this.previewFrame.Client.Bounds.Size;
 				this.placer.PageCount = this.pagePreviewers.Count;
 				this.placer.UpdateGeometry ();
@@ -416,9 +481,9 @@ namespace Epsitec.Cresus.Core.Printers
 		private void UpdatePageSlider()
 		{
 			this.pageSlider.MinValue = 0;
-			this.pageSlider.MaxValue = System.Math.Max (this.entityPrinter.PageCount () - this.showedPageCount, 0);
+			this.pageSlider.MaxValue = System.Math.Max (this.filteredPages.Count - this.showedPageCount, 0);
 			this.pageSlider.Resolution = 1;
-			//?this.pageSlider.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.entityPrinter.PageCount (), 1);
+			//?this.pageSlider.VisibleRangeRatio = System.Math.Min ((decimal) this.showedPageCount / (decimal) this.filteredPages.Count, 1);
 			this.pageSlider.SmallChange = 1;
 			this.pageSlider.LargeChange = 10;
 			this.pageSlider.Value = this.currentPage;
@@ -432,9 +497,10 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			int t = this.entityPrinter.PageCount ();
-			int p = this.currentPage+1;
+			int p = this.ReelPage (this.currentPage) + 1;
+			int q = this.ReelPage (this.currentPage+this.showedPageCount-1) + 1;
 
-			if (this.showedPageCount <= 1)
+			if (this.showedPageCount <= 1 || p == q)
 			{
 				this.pageRank.Text = string.Format ("{0} / {1}", p.ToString (), t.ToString ());
 
@@ -443,7 +509,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				int q = System.Math.Min (p + this.showedPageCount-1, t);
 				this.pageRank.Text = string.Format ("{0}..{1} / {2}", p.ToString (), q.ToString (), t.ToString ());
 
 				ToolTip.Default.SetToolTip (this.pageRank,   "Pages visibles / Nombre total de pages");
@@ -452,6 +517,65 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.zoom14Button.Enable = t > 1;
 			this.zoom18Button.Enable = t > 4;
+		}
+
+		private int ReelPage(int rank)
+		{
+			rank = System.Math.Min (rank, this.filteredPages.Count-1);
+			return this.filteredPages[rank];
+		}
+
+		private void UpdateZoom()
+		{
+			if (!this.HasDocumentTypeSelected)
+			{
+				return;
+			}
+
+			this.zoom18Button.ActiveState = this.currentZoom == 1.0/8.0 ? ActiveState.Yes : ActiveState.No;
+			this.zoom14Button.ActiveState = this.currentZoom == 1.0/4.0 ? ActiveState.Yes : ActiveState.No;
+			this.zoom11Button.ActiveState = this.currentZoom == 1       ? ActiveState.Yes : ActiveState.No;
+			this.zoom21Button.ActiveState = this.currentZoom == 2       ? ActiveState.Yes : ActiveState.No;
+			this.zoom41Button.ActiveState = this.currentZoom == 4       ? ActiveState.Yes : ActiveState.No;
+		}
+
+		private void UpdatePrinterUnitField()
+		{
+			//	Met à jour le menu déroulant pour le choix de l'unité d'impression avec toutes les unités d'impression
+			//	définies pour ce document.
+			this.printerUnitField.Items.Clear ();
+			this.printerUnitFieldList.Clear ();
+
+			this.printerUnitField.Items.Add ("Toutes");
+
+			DocumentTypeDefinition documentTypeDefinition = this.entityPrinter.SelectedDocumentTypeDefinition;
+
+			if (documentTypeDefinition != null)
+			{
+				foreach (var documentPrinterFunction in documentTypeDefinition.DocumentPrinterFunctions)
+				{
+					if (!string.IsNullOrEmpty (documentPrinterFunction.LogicalPrinterName))
+					{
+						var printerUnit = this.printerUnitList.Where (x => x.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
+
+						if (printerUnit != null)
+						{
+							string description = printerUnit.NiceDescription;
+
+							if (!this.printerUnitField.Items.Contains (description))
+							{
+								this.printerUnitField.Items.Add (description);
+								this.printerUnitFieldList.Add (printerUnit);
+							}
+						}
+					}
+				}
+			}
+
+			int sel = this.printerUnitFieldList.IndexOf (this.selectedPrinterUnit);
+			this.printerUnitField.SelectedItemIndex = sel+1;
+
+			this.printerUnitsToolbarBox.Visibility = (this.printerUnitField.Items.Count > 1);
 		}
 
 		private void UpdateDebug()
@@ -463,6 +587,25 @@ namespace Epsitec.Cresus.Core.Printers
 			{
 				this.pagePreviewers[0].Invalidate ();
 			}
+		}
+
+
+		private void ChangePrinterUnit(PrinterUnit printerUnit)
+		{
+			this.selectedPrinterUnit = printerUnit;
+
+			if (this.selectedPrinterUnit == null)
+			{
+				this.SetPrinterUnits ();
+				this.entityPrinter.BuildSections ();
+			}
+			else
+			{
+				this.entityPrinter.SetPrinterUnit (this.selectedPrinterUnit);
+				this.entityPrinter.BuildSections (this.selectedPrinterUnit.ForcingOptionsToClear, this.selectedPrinterUnit.ForcingOptionsToSet);
+			}
+
+			this.UpdatePages ();
 		}
 
 
@@ -539,6 +682,23 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private static bool HasForcingOptions(Dictionary<PrinterUnit, int> printersUsed)
+		{
+			//	Retourne true si une unité d'impression a des options forcées.
+			foreach (var printerUsed in printersUsed)
+			{
+				PrinterUnit printerUnit = printerUsed.Key;
+
+				if (printerUnit.ForcingOptionsToClear.Count > 0 || printerUnit.ForcingOptionsToSet.Count > 0)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
 		private string GetPrintersUsedDescription(Dictionary<PrinterUnit, int> printerUsed)
 		{
 			if (printerUsed.Count == 0)
@@ -578,7 +738,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				string printerUnit = (printerUsed.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
 
-				return string.Format ("Cette page sera imprimée avec {0} {1}", printerUnit, builder.ToString ());
+				return string.Format ("Cette page sera imprimée avec {0} {1}.", printerUnit, builder.ToString ());
 			}
 		}
 
@@ -676,9 +836,12 @@ namespace Epsitec.Cresus.Core.Printers
 		private readonly List<Widgets.EntityPreviewer>		pagePreviewers;
 		private readonly List<Dictionary<PrinterUnit, int>>	printerUnitsUsed;
 		private readonly List<PrinterUnit>					printerUnitList;
+		private readonly List<PrinterUnit>					printerUnitFieldList;
+		private readonly List<int>							filteredPages;
 
 		private FrameBox									previewBox;
-		private FrameBox									toolbarBox;
+		private FrameBox									pagesToolbarBox;
+		private FrameBox									printerUnitsToolbarBox;
 
 		private Scrollable									previewFrame;
 		private Dialogs.OptimalPreviewPlacer				placer;
@@ -700,9 +863,13 @@ namespace Epsitec.Cresus.Core.Printers
 		private Button										zoom21Button;
 		private Button										zoom41Button;
 
+		private TextFieldCombo								printerUnitField;
+
 		private double										currentZoom;
 			
 		private int											currentPage;
 		private int											showedPageCount;
+
+		private PrinterUnit									selectedPrinterUnit;
 	}
 }

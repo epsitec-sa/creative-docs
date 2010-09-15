@@ -102,6 +102,11 @@ namespace Epsitec.Cresus.Core.Printers
 				size = new Size (size.Height, size.Width);
 			}
 
+			if (!Common.InsidePageSize (size, this.MinimalPageSize, this.MaximalPageSize))
+			{
+				size = this.PreferredPageSize;
+			}
+
 			this.requiredPageSize = size;
 		}
 
@@ -111,9 +116,12 @@ namespace Epsitec.Cresus.Core.Printers
 
 			this.documentContainer.Clear ();
 
-			int firstPage = this.documentContainer.PrepareEmptyPage (PageType.Label);
-			this.BuildSummary ();
-			this.documentContainer.Ending (firstPage);
+			if (this.HasPrinterUnitDefined (PrinterUnitFunction.ForLabelPage))
+			{
+				int firstPage = this.documentContainer.PrepareEmptyPage (PageType.Label);
+				this.BuildSummary ();
+				this.documentContainer.Ending (firstPage);
+			}
 		}
 
 		public override void PrintForegroundCurrentPage(IPaintPort port)

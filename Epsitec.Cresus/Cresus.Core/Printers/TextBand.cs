@@ -143,6 +143,12 @@ namespace Epsitec.Cresus.Core.Printers
 			do
 			{
 				double heightAvailable = first ? initialHeight : middleheight;
+
+				if (heightAvailable < 0)
+				{
+					break;
+				}
+
 				ending = this.JustifOneSection (ref line, heightAvailable);
 
 				first = false;
@@ -181,6 +187,11 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Essaie de mettre un maximum de lignes sur une section donnée.
 			//	Retourne true s'il y a assez de place pour tout mettre (donc jusqu'à la fin).
+			if (maxHeight <= 0)
+			{
+				return false;  // il reste encore des données
+			}
+
 			double height = 0;
 
 			for (int i = line; i < this.heights.Length; i++)
