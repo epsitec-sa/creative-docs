@@ -175,11 +175,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			builder.Append ((this.currentPage+1).ToString ());
 			builder.Append ("</b></font>");
 
-			builder.Append (" (");
-			builder.Append (documentPrinter.RequiredPageSize.Width.ToString ());
-			builder.Append (" × ");
-			builder.Append (documentPrinter.RequiredPageSize.Height.ToString ());
-			builder.Append (" mm)");
+			if (this.documentPrinter != null)
+			{
+				builder.Append (" (");
+				builder.Append (this.documentPrinter.RequiredPageSize.Width.ToString ());
+				builder.Append (" × ");
+				builder.Append (this.documentPrinter.RequiredPageSize.Height.ToString ());
+				builder.Append (" mm)");
+			}
 
 			if (!string.IsNullOrEmpty (this.description))
 			{

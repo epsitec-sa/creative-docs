@@ -89,25 +89,25 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		public int PageCount(PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public int PageCount()
 		{
 			int count = 0;
 
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				count += documentPrinter.PageCount (printerFunctionUsed);
+				count += documentPrinter.PageCount ();
 			}
 
 			return count;
 		}
 
-		public int GetPageRelativ(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public int GetPageRelativ(int page)
 		{
 			int firstDocumentPage = 0;
 
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				int pageCount = documentPrinter.PageCount (printerFunctionUsed);
+				int pageCount = documentPrinter.PageCount ();
 
 				if (page < firstDocumentPage+pageCount)
 				{
@@ -120,13 +120,13 @@ namespace Epsitec.Cresus.Core.Printers
 			return -1;
 		}
 
-		public PageType GetPageType(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public PageType GetPageType(int page)
 		{
 			int firstDocumentPage = 0;
 
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				int pageCount = documentPrinter.PageCount (printerFunctionUsed);
+				int pageCount = documentPrinter.PageCount ();
 
 				if (page < firstDocumentPage+pageCount)
 				{
@@ -139,13 +139,13 @@ namespace Epsitec.Cresus.Core.Printers
 			return PageType.Unknown;
 		}
 
-		public AbstractDocumentPrinter GetDocumentPrinter(int page, PrinterUnitFunction printerFunctionUsed = PrinterUnitFunction.ForAllPages)
+		public AbstractDocumentPrinter GetDocumentPrinter(int page)
 		{
 			int firstDocumentPage = 0;
 
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				firstDocumentPage += documentPrinter.PageCount (printerFunctionUsed);
+				firstDocumentPage += documentPrinter.PageCount ();
 
 				if (page < firstDocumentPage)
 				{
@@ -158,13 +158,14 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// Spécifie aucune unité d'impression, ce qui aura pour effet d'utiliser la taille de page préférentielle.
+		/// Spécifie l'unité d'impression, afin de déterminer la taille des pages à produire.
+		/// Si on ne spécifie aucune unité d'impression, on utilisera la taille de page préférentielle.
 		/// </summary>
-		public void SetDefaultPrinterUnit()
+		public void SetPrinterUnit(PrinterUnit printerUnit=null)
 		{
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				documentPrinter.SetPrinterUnit (null);
+				documentPrinter.SetPrinterUnit (printerUnit);
 			}
 		}
 
@@ -191,11 +192,11 @@ namespace Epsitec.Cresus.Core.Printers
 		/// <summary>
 		/// Construit toutes les sections de tous les documents.
 		/// </summary>
-		public virtual void BuildSections()
+		public virtual void BuildSections(List<DocumentOption> forcingOptionsToClear = null, List<DocumentOption> forcingOptionsToSet = null)
 		{
 			foreach (var documentPrinter in this.documentPrinters)
 			{
-				documentPrinter.BuildSections ();
+				documentPrinter.BuildSections (forcingOptionsToClear, forcingOptionsToSet);
 			}
 		}
 

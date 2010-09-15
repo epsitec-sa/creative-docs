@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.previewerController.ShowNotPrinting = true;
 
 			this.entityPrinter.IsPreview = true;
-			this.entityPrinter.SetDefaultPrinterUnit ();
+			this.entityPrinter.SetPrinterUnit ();
 			this.entityPrinter.BuildSections ();
 		}
 
@@ -102,11 +102,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Margins = new Margins (0, 0, 0, 0),
 			};
 
-			var toolbarBox = new FrameBox
+			var printerUnitsToolbarBox = new FrameBox
+			{
+				Parent = this.footer,
+				PreferredWidth = 100,
+				Dock = DockStyle.Left,
+				Margins = new Margins (10, 2, 0, 0),
+			};
+
+			var pagesToolbarBox = new FrameBox
 			{
 				Parent = this.footer,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (20, 20, 0, 0),
+				Margins = new Margins (0, 20, 0, 0),
 			};
 
 			this.closeButton = new Button ()
@@ -127,7 +135,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				TabIndex = 1,
 			};
 
-			this.previewerController.CreateUI (previewBox, toolbarBox);
+			this.previewerController.CreateUI (previewBox, pagesToolbarBox, printerUnitsToolbarBox, compact: true);
 		}
 
 		protected void SetupEvents(Window window)

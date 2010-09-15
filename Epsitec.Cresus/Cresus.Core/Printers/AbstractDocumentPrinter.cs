@@ -215,6 +215,11 @@ namespace Epsitec.Cresus.Core.Printers
 				size = new Size (size.Height, size.Width);
 			}
 
+			if (!Common.InsidePageSize (size, this.MinimalPageSize, this.MaximalPageSize))
+			{
+				size = this.PreferredPageSize;
+			}
+
 			this.requiredPageSize = size;
 		}
 
