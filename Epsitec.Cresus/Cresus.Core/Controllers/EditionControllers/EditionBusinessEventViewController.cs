@@ -74,11 +74,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICaseEventTypes(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.CaseEventTypeEntity>
+			var controller = new SelectionController<Entities.CaseEventTypeEntity> (this.BusinessContext)
 			{
 				ValueGetter              = () => this.Entity.EventType,
 				ValueSetter              = x => this.Entity.EventType = x,
-				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetCaseEventTypes (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Code)
 			};
 

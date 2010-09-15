@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIGroup(UIBuilder builder)
 		{
-			var controller = new SelectionController<ArticleGroupEntity>
+			var controller = new SelectionController<ArticleGroupEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.ArticleGroups,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
@@ -96,10 +96,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-			var controller = new SelectionController<UnitOfMeasureEntity>
+			var controller = new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.BillingUnit,
-				ValueSetter         = x => this.Entity.BillingUnit = x.WrapNullEntity (),
+				ValueSetter         = x => this.Entity.BillingUnit = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 
@@ -112,10 +112,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIUnitOfMeasureGroup(UIBuilder builder)
 		{
-			var controller = new SelectionController<UnitOfMeasureGroupEntity>
+			var controller = new SelectionController<UnitOfMeasureGroupEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.Units,
-				ValueSetter         = x => this.Entity.Units = x.WrapNullEntity (),
+				ValueSetter         = x => this.Entity.Units = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasureGroup (),
 
@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICategory(UIBuilder builder)
 		{
-			var controller = new SelectionController<ArticleCategoryEntity>
+			var controller = new SelectionController<ArticleCategoryEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.ArticleCategory,
-				ValueSetter         = x => this.Entity.ArticleCategory = x.WrapNullEntity (),
+				ValueSetter         = x => this.Entity.ArticleCategory = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
 

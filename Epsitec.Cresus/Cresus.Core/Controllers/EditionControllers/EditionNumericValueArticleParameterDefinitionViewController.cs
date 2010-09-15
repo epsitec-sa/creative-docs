@@ -61,10 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity>
+				new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Entity.UnitOfMeasure,
-					ValueSetter = x => this.Entity.UnitOfMeasure = x.WrapNullEntity (),
+					ValueSetter = x => this.Entity.UnitOfMeasure = x,
 					ReferenceController = new ReferenceController (() => this.Entity.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
 

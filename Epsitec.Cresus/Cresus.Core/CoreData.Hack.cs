@@ -48,11 +48,6 @@ namespace Epsitec.Cresus.Core
 			return new LocationRepository (this).GetByCountry (country);
 		}
 
-		public IList<CaseEventTypeEntity> GetCaseEventTypes()
-		{
-			return new CaseEventTypeRepository (this).GetAllEntitiesIncludingLiveEntities ();
-		}
-
 		public IList<ContactRoleEntity> GetRoles()
 		{
 			return new ContactRoleRepository (this).GetAllEntitiesIncludingLiveEntities ();

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.ContactRoleEntity>
+			var controller = new SelectionController<Entities.ContactRoleEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),

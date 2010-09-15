@@ -61,10 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			this.selectedCountry = this.Entity.Country;
 
-			var controller = new SelectionController<CountryEntity>
+			var controller = new SelectionController<CountryEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.Country,
-				ValueSetter         = x  => this.Entity.Country = x.WrapNullEntity (),
+				ValueSetter         = x  => this.Entity.Country = x,
 				PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 				ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },

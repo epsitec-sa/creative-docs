@@ -82,10 +82,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIBillingMail(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Adresse de facturation",
-				new SelectionController<MailContactEntity>
+				new SelectionController<MailContactEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Entity.BillingMailContact,
-					ValueSetter = x => this.Entity.BillingMailContact = x.WrapNullEntity (),
+					ValueSetter = x => this.Entity.BillingMailContact = x,
 					ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
 
@@ -97,10 +97,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIShippingMail(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Adresse de livraison",
-				new SelectionController<MailContactEntity>
+				new SelectionController<MailContactEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Entity.ShippingMailContact,
-					ValueSetter = x => this.Entity.ShippingMailContact = x.WrapNullEntity (),
+					ValueSetter = x => this.Entity.ShippingMailContact = x,
 					ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
 
