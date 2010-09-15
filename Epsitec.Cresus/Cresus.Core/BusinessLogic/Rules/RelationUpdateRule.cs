@@ -23,31 +23,4 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 			}
 		}
 	}
-	
-	[BusinessRule (RuleType=RuleType.Bind)]
-	internal class RelationBindRule : GenericBusinessRule<RelationEntity>
-	{
-		protected override void Apply(RelationEntity relation)
-		{
-			Logic.Current.BusinessContext.Register (relation.Person);
-		}
-	}
-	
-	[BusinessRule (RuleType=RuleType.Update)]
-	internal class NaturalPersonUpdateRule : GenericBusinessRule<NaturalPersonEntity>
-	{
-		protected override void Apply(NaturalPersonEntity person)
-		{
-			person.Contacts.ForEach (x => x.NaturalPerson = person);
-		}
-	}
-	
-	[BusinessRule (RuleType=RuleType.Update)]
-	internal class LegalPersonUpdateRule : GenericBusinessRule<LegalPersonEntity>
-	{
-		protected override void Apply(LegalPersonEntity person)
-		{
-			person.Contacts.ForEach (x => x.LegalPerson = person);
-		}
-	}
 }

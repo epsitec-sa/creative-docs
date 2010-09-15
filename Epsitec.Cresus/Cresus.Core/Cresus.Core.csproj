@@ -100,6 +100,9 @@
     <Compile Include="BusinessLogic\Logic.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule.cs" />
     <Compile Include="BusinessLogic\Rules\InvoiceDocumentUpdateRule.cs" />
+    <Compile Include="BusinessLogic\Rules\LegalPersonUpdateRule.cs" />
+    <Compile Include="BusinessLogic\Rules\NaturalPersonUpdateRule.cs" />
+    <Compile Include="BusinessLogic\Rules\RelationBindRule.cs" />
     <Compile Include="BusinessLogic\Rules\RelationSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\RelationUpdateRule.cs" />
     <Compile Include="BusinessLogic\RuleType.cs" />
