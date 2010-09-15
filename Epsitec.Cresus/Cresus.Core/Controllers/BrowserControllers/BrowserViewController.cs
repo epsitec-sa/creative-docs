@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.DataLayer;

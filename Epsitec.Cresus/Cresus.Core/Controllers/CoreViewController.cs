@@ -5,13 +5,17 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
+
+using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
+using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Resolvers;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -28,15 +32,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		public CoreViewController(string name, DataViewOrchestrator orchestrator = null)
 			: base (name)
 		{
-			if (EntityViewControllerResolver.Default == null)
+			if (EntityViewControllerFactory.Default == null)
 			{
 				this.orchestrator = orchestrator;
 			}
 			else
 			{
-				this.orchestrator          = EntityViewControllerResolver.Default.Orchestrator;
-				this.viewControllerMode    = EntityViewControllerResolver.Default.Mode;
-				this.navigationPathElement = EntityViewControllerResolver.Default.NavigationPathElement;
+				this.orchestrator          = EntityViewControllerFactory.Default.Orchestrator;
+				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
+				this.navigationPathElement = EntityViewControllerFactory.Default.NavigationPathElement;
 				this.parentController      = this.orchestrator.GetLeafViewController ();
 			}
 
@@ -75,6 +79,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			get
 			{
 				return this.businessContext;
+			}
+		}
+
+		public CoreData							Data
+		{
+			get
+			{
+				return this.businessContext.Data;
 			}
 		}
 

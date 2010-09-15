@@ -1,19 +1,21 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.BusinessLogic;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Orchestrators.Navigation;
-using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Orchestrators
 {

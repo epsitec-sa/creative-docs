@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				return rule;
 			}
 
-			rule = BusinessRuleResolver.Resolve (this.entityType, ruleType);
+			rule = Resolvers.BusinessRuleResolver.Resolve (this.entityType, ruleType);
 
 			this.rules[ruleType] = rule;
 

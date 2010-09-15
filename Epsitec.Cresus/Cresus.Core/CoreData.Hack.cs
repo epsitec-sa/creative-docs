@@ -73,16 +73,6 @@ namespace Epsitec.Cresus.Core
 			return new TelecomTypeRepository (this).GetAllEntitiesIncludingLiveEntities ();
 		}
 
-		public IList<PersonTitleEntity> GetTitles()
-		{
-			return new PersonTitleRepository (this).GetAllEntitiesIncludingLiveEntities ();
-		}
-
-		public IList<PersonGenderEntity> GetGenders()
-		{
-			return new PersonGenderRepository (this).GetAllEntitiesIncludingLiveEntities ();
-		}
-
 		public IEnumerable<RelationEntity> GetCustomers(DataContext context)
 		{
 			return new RelationRepository (this, context).GetAllEntities ();

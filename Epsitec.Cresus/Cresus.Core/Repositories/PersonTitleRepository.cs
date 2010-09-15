@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class PersonTitleRepository : Repository<PersonTitleEntity>
 	{
 		public PersonTitleRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Data.DataLifetimeExpectancy.Stable)
 		{
 		}
 	}

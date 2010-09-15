@@ -94,7 +94,7 @@
     <Compile Include="BusinessLogic\BusinessContext.cs" />
     <Compile Include="BusinessLogic\BusinessContextPool.cs" />
     <Compile Include="BusinessLogic\BusinessRuleAttribute.cs" />
-    <Compile Include="BusinessLogic\BusinessRuleResolver.cs" />
+    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="BusinessLogic\CompositeBusinessRule.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule`1.cs" />
     <Compile Include="BusinessLogic\Logic.cs" />
@@ -135,8 +135,8 @@
     <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionUnitOfMeasureGroupViewController.cs" />
-    <Compile Include="Controllers\EntityViewControllerFactory.cs" />
-    <Compile Include="Controllers\EntityViewControllerResolver.cs" />
+    <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticlePriceViewController.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="Printers\DocumentOption.cs" />
     <Compile Include="Printers\PreviewerController.cs" />
     <Compile Include="Data\DataLifetimeExpectancy.cs" />
+    <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="UI.CultureSettings.cs" />
     <Compile Include="UI.Properties.cs" />
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />

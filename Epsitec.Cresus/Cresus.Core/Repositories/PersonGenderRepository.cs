@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Repositories
 	public class PersonGenderRepository : Repository<PersonGenderEntity>
 	{
 		public PersonGenderRepository(CoreData data, DataContext context = null)
-			: base (data, context)
+			: base (data, context, Data.DataLifetimeExpectancy.Immutable)
 		{
 		}
 	}

@@ -3,12 +3,14 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
-using System.Collections.Generic;
-using System.Linq;
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
-namespace Epsitec.Cresus.Core.Controllers
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Resolvers
 {
 	/// <summary>
 	/// The <c>EntityViewControllerResolver</c> is used to instantiate a controller for a given
@@ -18,51 +20,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	{
 		public static EntityViewController Resolve(DataViewOrchestrator orchestrator, string name, AbstractEntity entity, ViewControllerMode mode, int controllerSubTypeId, NavigationPathElement navigationPathElement)
 		{
-			EntityViewControllerResolver.defaults = new DefaultSettings
-			{
-				Orchestrator = orchestrator,
-				Mode = mode,
-				NavigationPathElement = navigationPathElement,
-			};
-			
-			try
-			{
-				return EntityViewControllerResolver.ResolveEntityViewController (name, entity, mode, controllerSubTypeId);
-			}
-			finally
-			{
-				EntityViewControllerResolver.defaults = null;
-			}
-		}
-
-
-		public static DefaultSettings Default
-		{
-			get
-			{
-				return EntityViewControllerResolver.defaults;
-			}
-		}
-
-		public sealed class DefaultSettings
-		{
-			public DataViewOrchestrator Orchestrator
-			{
-				get;
-				set;
-			}
-
-			public ViewControllerMode Mode
-			{
-				get;
-				set;
-			}
-
-			public NavigationPathElement NavigationPathElement
-			{
-				get;
-				set;
-			}
+			return EntityViewControllerResolver.ResolveEntityViewController (name, entity, mode, controllerSubTypeId);
 		}
 
 		
@@ -154,8 +112,5 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return System.Activator.CreateInstance (type, new object[] { name, entity }) as EntityViewController;
 		}
-
-		[System.ThreadStatic]
-		private static DefaultSettings defaults;
 	}
 }

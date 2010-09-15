@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 

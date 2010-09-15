@@ -158,6 +158,29 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+
+		public IEnumerable<T> GetAllEntities<T>()
+			where T : AbstractEntity, new ()
+		{
+			var repository = this.GetRepository<T> ();
+
+			if (repository != null)
+			{
+				return repository.GetAllEntities ();
+			}
+			else
+			{
+				return new T[0];
+			}
+		}
+
+		public Repositories.Repository<T> GetRepository<T>()
+			where T : AbstractEntity, new ()
+		{
+			return Resolvers.RepositoryResolver.Resolve (typeof (T), this) as Repositories.Repository<T>;
+		}
+		
+		
 		public DataContext CreateDataContext(string name)
 		{
 			var context = new DataContext (this.dbInfrastructure, true)
