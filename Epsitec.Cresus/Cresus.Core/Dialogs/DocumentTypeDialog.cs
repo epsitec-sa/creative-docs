@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
-				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None && this.entityPrinter.DocumentTypeSelected.IsDocumentPrintersDefined;
+				this.acceptButton.Enable = this.entityPrintingSettings.DocumentTypeSelected != DocumentType.None && this.entityPrinter.SelectedDocumentTypeDefinition.IsDocumentPrintersDefined;
 			}
 		}
 

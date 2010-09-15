@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 		}
 
-		public DocumentTypeDefinition DocumentTypeSelected
+		public DocumentTypeDefinition SelectedDocumentTypeDefinition
 		{
 			get
 			{
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			this.EntityPrintingSettings.DocumentTypeSelected = type;
 
-			var documentType = this.DocumentTypeSelected;
+			var documentType = this.SelectedDocumentTypeDefinition;
 			if (documentType != null)
 			{
 				foreach (var option in documentType.DocumentOptions)

@@ -31,29 +31,11 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		protected DocumentType DocumentTypeSelected
+		protected DocumentType SelectedDocumentType
 		{
 			get
 			{
 				return this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected;
-			}
-		}
-
-
-		public void DefaultPrepare(DocumentType type)
-		{
-			this.entityPrinter.EntityPrintingSettings.DocumentTypeSelected = type;
-
-			var documentType = this.entityPrinter.DocumentTypeSelected;
-			if (documentType != null)
-			{
-				foreach (var option in documentType.DocumentOptions)
-				{
-					if (option.DefautState)
-					{
-						this.entityPrinter.EntityPrintingSettings.DocumentOptionsSelected.Add (option.Option);
-					}
-				}
 			}
 		}
 
@@ -181,11 +163,11 @@ namespace Epsitec.Cresus.Core.Printers
 		public bool HasPrinterUnitDefined(PrinterUnitFunction printerUnitFunction)
 		{
 			//	Indique si une unité d'impression est définie.
-			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
+			DocumentTypeDefinition documentTypeDefinition = this.entityPrinter.SelectedDocumentTypeDefinition;
 
-			if (documentType != null)
+			if (documentTypeDefinition != null)
 			{
-				foreach (var documentPrinterFunction in documentType.DocumentPrinterFunctions)
+				foreach (var documentPrinterFunction in documentTypeDefinition.DocumentPrinterFunctions)
 				{
 					if (documentPrinterFunction.PrinterFunction == printerUnitFunction)
 					{

@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			//	Vérifie si un minimun d'unités d'impression sont définies pour imprimer le type de document choisi.
-			DocumentTypeDefinition documentType = entityPrinter.DocumentTypeSelected;
+			DocumentTypeDefinition documentType = entityPrinter.SelectedDocumentTypeDefinition;
 
 			if (!documentType.IsDocumentPrintersDefined)
 			{
