@@ -200,6 +200,26 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly HashSet<DataContext> dataContexts;
 
 
+
+		/// <summary>
+		/// Compares two entities and returns <c>true</c> if they refer to the same database key
+		/// or if they are the same memory instance.
+		/// </summary>
+		/// <param name="that">The reference entity.</param>
+		/// <param name="other">The other entity.</param>
+		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
+		public static bool AreEqualDatabaseInstances(AbstractEntity a, AbstractEntity b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+
+			var keyA = DataContextPool.instance.FindEntityKey (a);
+			var keyB = DataContextPool.instance.FindEntityKey (b);
+
+			return keyA == keyB;
+		}
 	}
 
 
