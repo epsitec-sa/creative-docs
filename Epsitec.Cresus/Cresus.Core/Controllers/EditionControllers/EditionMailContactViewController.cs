@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIRoles(UIBuilder builder)
 		{
-			var controller = new SelectionController<ContactRoleEntity>
+			var controller = new SelectionController<ContactRoleEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
@@ -182,10 +182,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
 			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
-				new SelectionController<LegalPersonEntity>
+				new SelectionController<LegalPersonEntity> (this.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.LegalPerson,
-					ValueSetter         = x => this.Entity.LegalPerson = x.WrapNullEntity (),
+					ValueSetter         = x => this.Entity.LegalPerson = x,
 					ReferenceController = this.GetLegalPersonReferenceController (),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
@@ -211,10 +211,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIAddress(UIBuilder builder)
 		{
 			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
-				new SelectionController<AddressEntity>
+				new SelectionController<AddressEntity> (this.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.Address,
-					ValueSetter         = x => this.Entity.Address = x.WrapNullEntity (),
+					ValueSetter         = x => this.Entity.Address = x,
 					ReferenceController = this.GetAddressReferenceController (),
 					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
@@ -279,10 +279,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
-				new SelectionController<CountryEntity>
+				new SelectionController<CountryEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Country,
-					ValueSetter = x => this.Country = x.WrapNullEntity (),
+					ValueSetter = x => this.Country = x,
 					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
@@ -294,10 +294,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUILocation(UIBuilder builder)
 		{
 			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville",
-				new SelectionController<LocationEntity>
+				new SelectionController<LocationEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Location,
-					ValueSetter = x => this.Location = x.WrapNullEntity (),
+					ValueSetter = x => this.Location = x,
 					ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
 					PossibleItemsGetter = () => this.LocationGetter,
 

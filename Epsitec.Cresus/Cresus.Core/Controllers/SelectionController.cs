@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	public class SelectionController<T> : IWidgetUpdater
 		where T : AbstractEntity, new ()
 	{
-		public SelectionController(BusinessContext businessContext = null)
+		public SelectionController(BusinessContext businessContext)
 		{
 			this.businessContext = businessContext;
 		}
@@ -93,6 +93,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.valueGetter ();
 		}
 
+		public IEnumerable<T> GetPossibleItems()
+		{
+			if (this.PossibleItemsGetter == null)
+			{
+				return this.businessContext.Data.GetAllEntities<T> ();
+			}
+			else
+			{
+				return this.PossibleItemsGetter ();
+			}
+		}
+
 		public Expression<System.Func<T>> GetValueExpression()
 		{
 			return this.valueGetterExpression;
@@ -106,19 +118,26 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				if (value.IsNull ())
-				{
-					this.ValueSetter (value.WrapNullEntity ());
-				}
-				else
-				{
-					if (this.businessContext != null)
-					{
-						value = this.businessContext.GetLocalEntity (value);
-					}
+				this.ValueSetter (this.GetBusinessContextCompatibleEntity (value));
+			}
+		}
 
-					this.ValueSetter (value);
-				}
+		private T GetBusinessContextCompatibleEntity(T value)
+		{
+			if (value.IsNull ())
+            {
+				return value.WrapNullEntity ();
+            }
+
+			System.Diagnostics.Debug.Assert (this.businessContext != null);
+
+			if (this.businessContext != null)
+			{
+				return this.businessContext.GetLocalEntity (value);
+			}
+			else
+			{
+				return value;
 			}
 		}
 
@@ -229,7 +248,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private List<T> GetSortedItemList()
 		{
-			List<T> list = new List<T> (this.PossibleItemsGetter ());
+			List<T> list = new List<T> (this.GetPossibleItems ());
 			SelectionController<T>.Sort (list);
 			return list;
 		}
@@ -271,7 +290,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				foreach (int selectedIndex in indexes)
 				{
 					var item = this.widgetItems.GetValue<T> (selectedIndex);
-					selectedItems.Add (item);
+					selectedItems.Add (this.GetBusinessContextCompatibleEntity (item));
 				}
 			}
 		}

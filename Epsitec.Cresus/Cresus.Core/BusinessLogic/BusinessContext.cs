@@ -167,6 +167,33 @@ namespace Epsitec.Cresus.Core.BusinessLogic
             }
 		}
 
+		/// <summary>
+		/// Gets the local equivalent of the specified entity: if the entity belongs to another
+		/// data context, then it will have to be mapped to the local data context through its
+		/// database key.
+		/// </summary>
+		/// <typeparam name="T">The entity type.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The local entity (or a wrapped null entity if <c>entity</c> was <c>null</c>).</returns>
+		public T GetLocalEntity<T>(T entity)
+			where T : AbstractEntity, new ()
+		{
+			if (entity.IsNull ())
+			{
+				return entity;
+			}
+			if (this.dataContext.Contains (entity))
+			{
+				return entity;
+			}
+
+			var key = DataContextPool.Instance.FindEntityKey (entity);
+
+			System.Diagnostics.Debug.Assert (key.HasValue);
+
+			return this.dataContext.ResolveEntity (key) as T;
+		}
+
 		
 		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
 		{
@@ -377,22 +404,5 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		private AbstractEntity activeEntity;
 		private NavigationPathElement activeNavigationPathElement;
-
-		public T GetLocalEntity<T>(T entity)
-			where T : AbstractEntity, new ()
-		{
-			if (entity.IsNull ())
-            {
-				return entity;
-            }
-			if (this.dataContext.Contains (entity))
-            {
-				return entity;
-            }
-
-			var key = DataContextPool.Instance.FindEntityKey (entity);
-
-			return this.dataContext.ResolveEntity (key) as T;
-		}
 	}
 }

@@ -66,10 +66,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIArticleDefinition(UIBuilder builder)
 		{
 			var textField = builder.CreateAutoCompleteTextField ("Article à facturer",
-				new SelectionController<ArticleDefinitionEntity>
+				new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.ArticleDefinition,
-					ValueSetter = x => this.ArticleDefinition = x.WrapNullEntity (),
+					ValueSetter = x => this.ArticleDefinition = x,
 					ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleDefinitions (this.DataContext),
 

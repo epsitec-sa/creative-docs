@@ -68,10 +68,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-			var controller = new SelectionController<UnitOfMeasureEntity>
+			var controller = new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.Unit,
-					ValueSetter         = x => this.Entity.Unit = x.WrapNullEntity (),
+					ValueSetter         = x => this.Entity.Unit = x,
 					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
 					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 

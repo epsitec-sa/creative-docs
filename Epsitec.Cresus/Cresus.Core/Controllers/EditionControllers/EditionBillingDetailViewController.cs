@@ -78,10 +78,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIPaymentMode(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Mode de paiement",
-				new SelectionController<PaymentModeEntity>
+				new SelectionController<PaymentModeEntity> (this.BusinessContext)
 				{
 					ValueGetter = () => this.Entity.AmountDue.PaymentMode,
-					ValueSetter = x => this.Entity.AmountDue.PaymentMode = x.WrapNullEntity (),
+					ValueSetter = x => this.Entity.AmountDue.PaymentMode = x,
 					ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
 					PossibleItemsGetter = () => CoreProgram.Application.Data.GetPaymentModes (),
 

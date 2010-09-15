@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIRoles(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.ContactRoleEntity>
+			var controller = new SelectionController<Entities.ContactRoleEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
 				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		
 		private void CreateUITelecomType(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.TelecomTypeEntity>
+			var controller = new SelectionController<Entities.TelecomTypeEntity> (this.BusinessContext)
 			{
 				ValueGetter              = () => this.Entity.TelecomType,
 				ValueSetter              = x => this.Entity.TelecomType = x,
