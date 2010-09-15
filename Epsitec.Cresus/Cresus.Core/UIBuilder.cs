@@ -965,7 +965,7 @@ namespace Epsitec.Cresus.Core
 
 
 		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
-			where T : AbstractEntity
+			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
 
@@ -1015,7 +1015,7 @@ namespace Epsitec.Cresus.Core
 
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T1, T2>(string name, T1 entity, string label, SelectionController<T2> controller, Business.EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
-			where T2 : AbstractEntity
+			where T2 : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
 
@@ -1058,7 +1058,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 		public Widgets.ItemPicker CreateEditionDetailedItemPicker<T>(string label, SelectionController<T> controller, Business.EnumValueCardinality cardinality)
-			where T : AbstractEntity
+			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
 

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -23,10 +24,11 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class SelectionController<T> : IWidgetUpdater
-		where T : AbstractEntity
+		where T : AbstractEntity, new ()
 	{
-		public SelectionController()
+		public SelectionController(BusinessContext businessContext = null)
 		{
+			this.businessContext = businessContext;
 		}
 		
 
@@ -104,7 +106,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				this.ValueSetter (value);
+				if (value.IsNull ())
+				{
+					this.ValueSetter (value.WrapNullEntity ());
+				}
+				else
+				{
+					if (this.businessContext != null)
+					{
+						value = this.businessContext.GetLocalEntity (value);
+					}
+
+					this.ValueSetter (value);
+				}
 			}
 		}
 
@@ -236,11 +250,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.attachedWidget.SelectedItemIndex > -1)
 			{
-				this.ValueSetter (this.widgetItems.GetValue<T> (this.attachedWidget.SelectedItemIndex));
+				this.SetValue (this.widgetItems.GetValue<T> (this.attachedWidget.SelectedItemIndex));
 			}
 			else
 			{
-				this.ValueSetter (null);
+				this.SetValue (null);
 			}
 		}
 		
@@ -264,7 +278,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleSingleSelectionChanged(object sender)
 		{
-			this.ValueSetter (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
+			this.SetValue (this.widgetItems.GetValue<T> (this.attachedPicker.SelectedItemIndex));
 		}
 
 		private System.IDisposable SuspendNotifications(IList<T> list)
@@ -323,8 +337,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private Expression<System.Func<T>> valueGetterExpression;
-		private System.Func<T> valueGetter;
+		private readonly BusinessContext		businessContext;
+
+		private Expression<System.Func<T>>		valueGetterExpression;
+		private System.Func<T>					valueGetter;
 
 		private Widgets.AutoCompleteTextField	attachedWidget;
 		private Widgets.ItemPicker				attachedPicker;

@@ -55,10 +55,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUITitle(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Titre",
-				new SelectionController<PersonTitleEntity>
+				new SelectionController<PersonTitleEntity> (this.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.Title,
-					ValueSetter         = x => this.Entity.Title = x.WrapNullEntity (),
+					ValueSetter         = x => this.Entity.Title = x,
 					ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
 					PossibleItemsGetter = () => this.Data.GetAllEntities<PersonTitleEntity> (),
 
@@ -79,10 +79,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		private void CreateUIGender(UIBuilder builder)
 		{
 			builder.CreateAutoCompleteTextField ("Sexe",
-				new SelectionController<PersonGenderEntity>
+				new SelectionController<PersonGenderEntity> (this.BusinessContext)
 				{
 					ValueGetter         = () => this.Entity.Gender,
-					ValueSetter         = x => this.Entity.Gender = x.WrapNullEntity (),
+					ValueSetter         = x => this.Entity.Gender = x,
 					ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
 					PossibleItemsGetter = () => this.Data.GetAllEntities<PersonGenderEntity> (),
 
