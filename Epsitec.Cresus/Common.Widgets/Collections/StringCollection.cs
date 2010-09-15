@@ -129,6 +129,12 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.values[index];
 		}
 
+		public T GetValue<T>(int index)
+			where T : class
+		{
+			return this.GetValue (index) as T;
+		}
+
 		
 		public int FindIndexByKey(string key)
 		{
@@ -138,6 +144,12 @@ namespace Epsitec.Common.Widgets.Collections
 		public int FindIndexByValue(object value)
 		{
 			return this.FindIndexByValue (item => item == value);
+		}
+		
+		public int FindIndexByValue<T>(System.Predicate<T> match)
+			where T : class
+		{
+			return this.values.FindIndex (x => match (x as T));
 		}
 		
 		public int FindIndexByValue(System.Predicate<object> match)
