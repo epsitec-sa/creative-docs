@@ -114,6 +114,13 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public void AddSelection(int selectedIndex)
+		{
+			this.AddSelection (new int[] { selectedIndex });
+		}
+
+
+
 		#region IMultipleSelection Members
 
 		public int SelectionCount
@@ -130,9 +137,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			foreach (var index in selection)
 			{
-				if (this.selection.Add (index))
+				if (index > -1)
 				{
-					dirty = true;
+					if (this.selection.Add (index))
+					{
+						dirty = true;
+					}
 				}
 			}
 
