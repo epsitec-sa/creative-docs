@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.printerUnitList = Printers.PrinterApplicationSettings.GetPrinterUnitList ();
 
 			this.entityPrinter.IsPreview = true;
-			this.entityPrinter.SetDefaultPrinterUnit ();
+			this.SetPrinterUnits ();
 			this.entityPrinter.BuildSections ();
 		}
 
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Core.Printers
 			//	été changés.
 			if (this.HasDocumentTypeSelected)
 			{
-				this.entityPrinter.SetDefaultPrinterUnit ();
+				this.SetPrinterUnits ();
 				this.entityPrinter.BuildSections ();
 			}
 
@@ -350,16 +350,16 @@ namespace Epsitec.Cresus.Core.Printers
 				}
 
 				var documentPrinter = this.entityPrinter.GetDocumentPrinter (pageRank);
-				var printerUsed = this.GetPrintersUsed (documentPrinter, pageRank);
+				var printersUsed = this.GetPrintersUsed (documentPrinter, pageRank);
 
 				string description;
 				bool notPrinting, hasManyOptions;
 
 				if (this.ShowNotPrinting)  // montre les pages non imprimées ?
 				{
-					description = this.GetPrintersUsedDescription (printerUsed);
-					notPrinting = (printerUsed.Count == 0);
-					hasManyOptions = (printerUsed.Count > 1);
+					description = this.GetPrintersUsedDescription (printersUsed);
+					notPrinting = (printersUsed.Count == 0);
+					hasManyOptions = (printersUsed.Count > 1);
 				}
 				else  // ne montre pas les pages non imprimées ?
 				{
@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.Core.Printers
 				};
 
 				this.pagePreviewers.Add (preview);
-				this.printerUnitsUsed.Add (printerUsed);
+				this.printerUnitsUsed.Add (printersUsed);
 
 				pageRank++;
 			}
@@ -466,6 +466,79 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		private void SetPrinterUnits()
+		{
+			//	On spécifie les unités d'impressions pour tous les documents.
+			//	L'astuce consiste à fouiller dans toutes les unités d'impressions utilisées pour un document, et à voir
+			//	si elles utilisent toutes la même taille de page. Si oui, on peut spécifier n'importe laquelle de ces
+			//	unités d'impressions, puisque AbstractDocumentPrinter.SetPrinterUnit ne sert qu'à déterminer la taille
+			//	des pages.
+			foreach (var documentPrinter in this.entityPrinter.DocumentPrinters)
+			{
+				var printerUnits = this.GetPrinterUnits (documentPrinter);
+
+				Size pageSize = PreviewerController.GetCommonPageSize (printerUnits);
+
+				if (pageSize.IsEmpty)
+				{
+					documentPrinter.SetPrinterUnit (null);
+				}
+				else
+				{
+					documentPrinter.SetPrinterUnit (printerUnits[0]);
+				}
+			}
+		}
+
+		private List<PrinterUnit> GetPrinterUnits(AbstractDocumentPrinter documentPrinter)
+		{
+			//	Retourne la liste des unités d'impression utilisées pour un AbstractDocumentPrinter donné.
+			var list = new List<PrinterUnit> ();
+
+			for (int page=0; page<this.entityPrinter.PageCount (); page++)
+			{
+				if (this.entityPrinter.GetDocumentPrinter (page) == documentPrinter)
+				{
+					var printersUsed = this.GetPrintersUsed (documentPrinter, page);
+
+					foreach (var printerUsed in printersUsed)
+					{
+						if (!list.Contains (printerUsed.Key))
+						{
+							list.Add (printerUsed.Key);
+						}
+					}
+				}
+			}
+
+			return list;
+		}
+
+		private static Size GetCommonPageSize(List<PrinterUnit> printerUnits)
+		{
+			//	Retourne la taille commune à plusieurs unités d'impression, ou Size.Empty si les
+			//	tailles diffèrent.
+			Size size = Size.Empty;
+
+			foreach (var printerUnit in printerUnits)
+			{
+				if (size.IsEmpty)
+				{
+					size = printerUnit.PhysicalPaperSize;
+				}
+				else
+				{
+					if (size != printerUnit.PhysicalPaperSize)
+					{
+						return Size.Empty;
+					}
+				}
+			}
+
+			return size;
+		}
+
+
 		private string GetPrintersUsedDescription(Dictionary<PrinterUnit, int> printerUsed)
 		{
 			if (printerUsed.Count == 0)
@@ -516,7 +589,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			PageType pageType = this.entityPrinter.GetPageType (page);
 
-			DocumentTypeDefinition documentType = this.entityPrinter.DocumentTypeSelected;
+			DocumentTypeDefinition documentType = this.entityPrinter.SelectedDocumentTypeDefinition;
 			List<DocumentPrinterFunction> documentPrinterFunctions = documentType.DocumentPrinterFunctions;
 
 			foreach (DocumentPrinterFunction documentPrinterFunction in documentPrinterFunctions)
@@ -544,16 +617,6 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			return dico;
-		}
-
-
-		private void SetPrinterUnits()
-		{
-			foreach (var documentPrinter in this.entityPrinter.DocumentPrinters)
-			{
-				//?documentPrinter.SetPrinterUnit ();
-				// TODO: finir...
-			}
 		}
 
 
