@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -135,14 +136,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
-			this.attachedWidget.Items.Clear ();
-
-			foreach (var item in this.PossibleItemsGetter ())
+			if (this.attachedWidget != null)
 			{
-				this.attachedWidget.Items.Add (item);
-			}
+				var widgetItems = this.attachedWidget.Items;
 
-			this.attachedWidget.SelectedItemIndex = this.attachedWidget.Items.FindIndexByValue (this.GetValue ());
+				widgetItems.Clear ();
+				widgetItems.AddRange (this.PossibleItemsGetter ());
+
+				T currentValue = this.GetValue ();
+
+				this.attachedWidget.SelectedItemIndex = widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (currentValue));
+			}
 		}
 
 		#endregion
@@ -171,18 +175,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			List<T> list = new List<T> (this.PossibleItemsGetter ());
 
-			//	Si les entités gérées implémentent l'interface IItemRank, on les trient
-			//	selon les propriétés Rank.
-			if (typeof (T).GetInterfaces ().Contains (typeof (Entities.IItemRank)))
-			{
-				list.Sort (SelectionController<T>.CompareItems);
-			}
+			SelectionController<T>.Sort (list);
 
-			foreach (var item in list)
-			{
-				widget.Items.Add (item);
-			}
-
+			widget.Items.AddRange (list);
 			widget.ValueToDescriptionConverter = this.ConvertHintValueToDescription;
 			widget.CreateUI ();
 
@@ -197,43 +192,64 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		private static void Sort(List<T> list)
+		{
+			if ((list.Count > 0) &&
+				(list[0] is IItemRank))
+			{
+				list.Sort ((a, b) => SelectionController<T>.CompareItems (a, b));
+			}
+		}
+
 		private void AttachMultipleValueSelector(Widgets.ItemPicker widget)
 		{
-			foreach (var item in this.CollectionValueGetter ())
-			{
-				int index = widget.Items.FindIndexByValue (item);
+			var originalItems = this.CollectionValueGetter ();
+			var widgetItems   = widget.Items;
+			
+			widget.AddSelection (originalItems.Select (x => widgetItems.FindIndexByValue<T> (y => x.DbKeyEquals (y))).Where (x => x != -1));
+			widget.MultiSelectionChanged += this.HandleMultiSelectionChanged;
+		}
 
-				if (index != -1)
+		private void HandleMultiSelectionChanged(object sender)
+		{
+			var widget        = sender as Widgets.ItemPicker;
+			var selectedItems = this.CollectionValueGetter ();
+
+			var indexes = widget.GetSortedSelection ();
+
+			using (this.SuspendNotifications (selectedItems))
+			{
+				selectedItems.Clear ();
+
+				foreach (int selectedIndex in indexes)
 				{
-					widget.AddSelection (new int[] { index });
+					var item = widget.Items.GetValue<T> (selectedIndex);
+					selectedItems.Add (item);
 				}
 			}
+		}
 
-			widget.MultiSelectionChanged +=
-				delegate
-				{
-					var selectedItems = this.CollectionValueGetter ();
-
-					selectedItems.Clear ();
-					var list = widget.GetSortedSelection ();
-
-					foreach (int sel in list)
-					{
-						var item = widget.Items.GetValue (sel) as T;
-						selectedItems.Add (item);
-					}
-				};
+		private System.IDisposable SuspendNotifications(IList<T> list)
+		{
+			var suspendCollection = list as ISuspendCollectionChanged;
+			
+			if (suspendCollection != null)
+			{
+				return suspendCollection.SuspendNotifications ();
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private void AttachSingleValueSelector(Widgets.ItemPicker widget)
 		{
-			var initialValue = this.GetValue ();
-
-			int index = widget.Items.FindIndexByValue (initialValue);
-			if (index != -1)
-			{
-				widget.AddSelection (new int[] { index });
-			}
+			var initialValue  = this.GetValue ();
+			var widgetItems   = widget.Items;
+			int selectedIndex = widgetItems.FindIndexByValue<T> (x => x.DbKeyEquals (initialValue));
+			
+			widget.AddSelection (selectedIndex);
 
 			widget.SelectedItemChanged +=
 				delegate
