@@ -65,8 +65,17 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static bool InsidePageSize(Size pageSize, Size minimalPageSize, Size maximalPageSize)
 		{
-			return pageSize.Width  >= minimalPageSize.Width  && pageSize.Width  <= maximalPageSize.Width &&
-				   pageSize.Height >= minimalPageSize.Height && pageSize.Height <= maximalPageSize.Height;
+			double px = pageSize.Width;
+			double py = pageSize.Height;
+
+			double minx = minimalPageSize.Width;
+			double miny = minimalPageSize.Height;
+
+			double maxx = maximalPageSize.Width;
+			double maxy = maximalPageSize.Height;
+
+			return ((px >= minx && py >= miny) || (px >= miny && py >= minx)) &&
+				   ((px <= maxx && py <= maxy) || (px <= maxy && py <= maxx));
 		}
 	}
 }

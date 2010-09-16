@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core
 {
 	public static class ImportV11
 	{
-		public static void Import(CoreApplication application)
+		public static void Import(CoreApplication application, string noClient)
 		{
 			string filename = ImportV11.OpenFileDialog (application);
 
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core
 				return;
 			}
 
-			ImportV11.ImportFile (application, filename);
+			ImportV11.ImportFile (application, filename, noClient);
 		}
 
 		private static string OpenFileDialog(CoreApplication application)
@@ -49,8 +49,15 @@ namespace Epsitec.Cresus.Core
 			return dialog.FileName;
 		}
 
-		private static void ImportFile(CoreApplication application, string filename)
+		private static string ImportFile(CoreApplication application, string filename, string noClient)
 		{
+			if (noClient == null)
+			{
+				noClient = "10694443";  // TODO: provisoire...
+			}
+
+			noClient = noClient.TrimStart ('0');
+
 			string[] lines;
 
 			try
@@ -61,13 +68,50 @@ namespace Epsitec.Cresus.Core
 			{
 				string message = string.Format ("Impossible d'ouvrir le fichier {0}\n\n{1}", filename, e.Message);
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-				return;
+				return e.Message;
 			}
+
+			int type = 0;
 
 			foreach (var line in lines)
 			{
+				if (line.Length < 100)
+				{
+					continue;
+				}
+
+				if (type == 0)  // type inconnu ?
+				{
+					string s = line.Substring (3, 9).TrimStart ('0');
+					if (s == noClient)
+					{
+						type = 3;
+					}
+					else
+					{
+						s = line.Substring (6, 9).TrimStart ('0');
+						if (s == noClient)
+						{
+							type = 4;
+						}
+						else
+						{
+							return "Aucune donnée pour ce client";
+						}
+					}
+				}
+
+
+
 				// TODO:
 			}
+
+			return null;  // ok
+		}
+
+
+		public class V11Line
+		{
 		}
 	}
 }
