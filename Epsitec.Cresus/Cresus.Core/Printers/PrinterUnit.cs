@@ -280,6 +280,41 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		#region Duplex converter
+		public static string DuplexToDescription(DuplexMode duplex)
+		{
+			switch (duplex)
+			{
+				case DuplexMode.Simplex:
+					return "Simple face";
+
+				case DuplexMode.Horizontal:
+					return "Recto verso horizontal";
+
+				case DuplexMode.Vertical:
+					return "Recto verso vertical";
+
+				default:
+					return "Par défaut";
+
+			}
+		}
+
+		public static DuplexMode DescriptionToDuplex(string name)
+		{
+			DuplexMode[] modes = { DuplexMode.Default, DuplexMode.Simplex, DuplexMode.Horizontal, DuplexMode.Vertical };
+
+			foreach (var mode in modes)
+			{
+				if (name == PrinterUnit.DuplexToDescription (mode))
+				{
+					return mode;
+				}
+			}
+
+			return DuplexMode.Default;
+		}
+
 		public static string DuplexToString(DuplexMode duplex)
 		{
 			return duplex.ToString ();
@@ -298,6 +333,7 @@ namespace Epsitec.Cresus.Core.Printers
 				return DuplexMode.Default;
 			}
 		}
+		#endregion
 
 
 		private static readonly string serializableSeparator = "•";  // puce, unicode 2022

@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.swap = Common.PageSizeCompare (pageSettings.PaperSize.Size, section.DocumentPrinter.RequiredPageSize) == Common.PageSizeCompareEnum.Swaped;
 			}
 
+			// TODO: Hélas, cela semble n'avoir aucun effet lors d'une impression réelle !
 			pageSettings.PrinterSettings.Duplex = section.PrinterUnit.PhysicalDuplexMode;
 
 			pageSettings.Margins = new Margins (0);
