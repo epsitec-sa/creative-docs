@@ -32,19 +32,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 		
 
-		public System.Func<IEnumerable<T>> PossibleItemsGetter
+		public System.Func<IEnumerable<T>>		PossibleItemsGetter
 		{
 			get;
 			set;
 		}
 
-		public System.Action<T> ValueSetter
+		public System.Action<T>					ValueSetter
 		{
 			get;
 			set;
 		}
 
-		public Expression<System.Func<T>> ValueGetter
+		public Expression<System.Func<T>>		ValueGetter
 		{
 			set
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public ReferenceController ReferenceController
+		public ReferenceController				ReferenceController
 		{
 			get;
 			set;
@@ -65,81 +65,18 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
-		public System.Func<T, string[]> ToTextArrayConverter
+		public System.Func<T, string[]>			ToTextArrayConverter
 		{
 			get;
 			set;
 		}
 
-		public System.Func<T, FormattedText> ToFormattedTextConverter
+		public System.Func<T, FormattedText>	ToFormattedTextConverter
 		{
 			get;
 			set;
 		}
 
-
-		public T GetValue()
-		{
-			if (this.valueGetterExpression == null)
-			{
-				return null;
-			}
-			if (this.valueGetter == null)
-			{
-				this.valueGetter = this.valueGetterExpression.Compile ();
-			}
-
-
-			return this.valueGetter ();
-		}
-
-		public IEnumerable<T> GetPossibleItems()
-		{
-			if (this.PossibleItemsGetter == null)
-			{
-				return this.businessContext.Data.GetAllEntities<T> ();
-			}
-			else
-			{
-				return this.PossibleItemsGetter ();
-			}
-		}
-
-		public Expression<System.Func<T>> GetValueExpression()
-		{
-			return this.valueGetterExpression;
-		}
-
-		public void SetValue(T value)
-		{
-			if (this.ValueSetter == null)
-			{
-				throw new System.InvalidOperationException ("Cannot set value without setter");
-			}
-			else
-			{
-				this.ValueSetter (this.GetBusinessContextCompatibleEntity (value));
-			}
-		}
-
-		private T GetBusinessContextCompatibleEntity(T value)
-		{
-			if (value.IsNull ())
-            {
-				return value.WrapNullEntity ();
-            }
-
-			System.Diagnostics.Debug.Assert (this.businessContext != null);
-
-			if (this.businessContext != null)
-			{
-				return this.businessContext.GetLocalEntity (value);
-			}
-			else
-			{
-				return value;
-			}
-		}
 
 		public void Attach(Widgets.AutoCompleteTextField widget)
 		{
@@ -176,12 +113,80 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.Update ();
 		}
 
+		public void SetValue(T value)
+		{
+			if (this.ValueSetter == null)
+			{
+				throw new System.InvalidOperationException ("Cannot set value without setter");
+			}
+			else
+			{
+				this.ValueSetter (this.GetBusinessContextCompatibleEntity (value));
+			}
+		}
+
+		public T GetValue()
+		{
+			if (this.valueGetterExpression == null)
+			{
+				return null;
+			}
+			if (this.valueGetter == null)
+			{
+				this.valueGetter = this.valueGetterExpression.Compile ();
+			}
+
+
+			return this.valueGetter ();
+		}
+
+		public IEnumerable<T> GetPossibleItems()
+		{
+			if (this.PossibleItemsGetter == null)
+			{
+				return this.businessContext.Data.GetAllEntities<T> ();
+			}
+			else
+			{
+				return this.PossibleItemsGetter ();
+			}
+		}
+
+		public Expression<System.Func<T>> GetValueExpression()
+		{
+			return this.valueGetterExpression;
+		}
+
+		private T GetBusinessContextCompatibleEntity(T value)
+		{
+			if (value.IsNull ())
+            {
+				return value.WrapNullEntity ();
+            }
+
+			System.Diagnostics.Debug.Assert (this.businessContext != null);
+
+			if (this.businessContext != null)
+			{
+				return this.businessContext.GetLocalEntity (value);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+
+		#region PickerMode Enumeration
+
 		private enum PickerMode
 		{
 			None,
 			SingleValue,
 			MultipleValue,
 		}
+
+		#endregion
 
 		#region IWidgetUpdater Members
 
@@ -217,8 +222,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		#endregion
 
-	
-		public static int CompareItems(T a, T b)
+		
+		public static void Sort(List<T> list)
+		{
+			if ((list.Count > 0) &&
+				(list[0] is IItemRank))
+			{
+				list.Sort ((a, b) => SelectionController<T>.CompareItems (a, b));
+			}
+		}
+
+		private static int CompareItems(T a, T b)
 		{
 			var ra = a as Entities.IItemRank;
 			var rb = b as Entities.IItemRank;
@@ -227,23 +241,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			int valueB = rb.Rank ?? -1;
 
 			if (valueA < valueB)
-            {
+			{
 				return -1;
-            }
+			}
 			if (valueA > valueB)
 			{
 				return 1;
 			}
 			return 0;
-		}
-		
-		private static void Sort(List<T> list)
-		{
-			if ((list.Count > 0) &&
-				(list[0] is IItemRank))
-			{
-				list.Sort ((a, b) => SelectionController<T>.CompareItems (a, b));
-			}
 		}
 
 		private List<T> GetSortedItemList()

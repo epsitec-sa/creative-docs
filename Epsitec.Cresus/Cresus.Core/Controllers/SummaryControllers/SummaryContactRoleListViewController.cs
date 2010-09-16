@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static IList<ContactRoleEntity> GetAllRoles()
 		{
 			List<ContactRoleEntity> list = CoreProgram.Application.Data.GetRoles ().ToList ();
-			list.Sort (Controllers.SelectionController<ContactRoleEntity>.CompareItems);
+			SelectionController<ContactRoleEntity>.Sort (list);
 
 			return list;
 		}

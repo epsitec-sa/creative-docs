@@ -73,7 +73,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter         = () => this.Entity.Unit,
 					ValueSetter         = x => this.Entity.Unit = x,
 					ReferenceController = new ReferenceController (() => this.Entity.Unit, creator: this.CreateNewUnitOfMeasure),
-					PossibleItemsGetter = () => this.GetUnitOfMeasure (),
 
 					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),

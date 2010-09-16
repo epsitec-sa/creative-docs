@@ -83,7 +83,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Entity.AmountDue.PaymentMode,
 					ValueSetter = x => this.Entity.AmountDue.PaymentMode = x,
 					ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetPaymentModes (),
 
 					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)

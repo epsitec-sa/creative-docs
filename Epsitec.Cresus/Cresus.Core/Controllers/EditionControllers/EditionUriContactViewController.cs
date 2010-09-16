@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<Entities.ContactRoleEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
-				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 

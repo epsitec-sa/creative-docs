@@ -65,7 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<ArticleGroupEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.ArticleGroups,
-				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetArticleGroups (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name).IfNullOrEmptyReplaceWith (CollectionTemplate.DefaultEmptyText),
 			};
 
@@ -101,8 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.BillingUnit,
 				ValueSetter         = x => this.Entity.BillingUnit = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasure (),
-
+	
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
 			};
@@ -117,7 +115,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Units,
 				ValueSetter         = x => this.Entity.Units = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetUnitOfMeasureGroup (),
 
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
@@ -133,7 +130,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.ArticleCategory,
 				ValueSetter         = x => this.Entity.ArticleCategory = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetArticleCategories (),
 
 				ToTextArrayConverter     = x => new string[] { x.Name },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
