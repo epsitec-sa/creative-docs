@@ -48,17 +48,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroups", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (SummaryArticleGroupListViewController.GetArticleGroupSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleGroupListViewController.GetArticleGroupSummary (x)));
+			template.DefineText        (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
+			template.DefineCompactText (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
 			template.DefineCreateItem  (this.CreateArticleGroup);
 			template.DefineDeleteItem  (this.DeleteArticleGroup);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetAllArticleGroups (), template));
-		}
-
-		private static FormattedText GetArticleGroupSummary(ArticleGroupEntity group)
-		{
-			return TextFormatter.FormatText (group.Code, "~:", group.Name);
 		}
 
 		private ArticleGroupEntity CreateArticleGroup()
@@ -78,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private static IList<ArticleGroupEntity> GetAllArticleGroups()
 		{
 			List<ArticleGroupEntity> list = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
-			list.Sort (Controllers.SelectionController<ArticleGroupEntity>.CompareItems);
+			SelectionController<ArticleGroupEntity>.Sort (list);
 
 			return list;
 		}

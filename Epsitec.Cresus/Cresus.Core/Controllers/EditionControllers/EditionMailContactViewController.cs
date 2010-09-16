@@ -118,7 +118,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var controller = new SelectionController<ContactRoleEntity> (this.BusinessContext)
 			{
 				CollectionValueGetter    = () => this.Entity.Roles,
-				PossibleItemsGetter      = () => CoreProgram.Application.Data.GetRoles (),
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
 			};
 
@@ -284,7 +283,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					ValueGetter = () => this.Country,
 					ValueSetter = x => this.Country = x,
 					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetCountries (),
 
 					ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
 					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
