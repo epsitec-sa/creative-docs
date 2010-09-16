@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Core.Printers
 			this.previewFrame = new Scrollable
 			{
 				Parent = this.previewBox,
+				ScrollWithHand = true,
 				Dock = DockStyle.Fill,
 			};
 
@@ -441,7 +442,7 @@ namespace Epsitec.Cresus.Core.Printers
 					Description = description,
 					NotPrinting = notPrinting,
 					HasManyOptions = hasManyOptions,
-					CurrentPage = this.entityPrinter.GetPageRelativ (pageRank),
+					CurrentPage = this.entityPrinter.GetPageRelative (pageRank),
 				};
 
 				this.pagePreviewers.Add (preview);

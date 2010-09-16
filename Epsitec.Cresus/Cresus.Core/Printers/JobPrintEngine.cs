@@ -28,25 +28,27 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		#region IPrintEngine Members
-		public void PrepareNewPage(PageSettings settings)
+		public void PrepareNewPage(PageSettings pageSettings)
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
 			PaperSource paperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
 			if (paperSource != null)
 			{
-				settings.PaperSource = paperSource;
+				pageSettings.PaperSource = paperSource;
 			}
 
 			PaperSize paperSize = System.Array.Find (printDocument.PrinterSettings.PaperSizes, x => Common.PageSizeCompare (x.Size, section.DocumentPrinter.RequiredPageSize) != Common.PageSizeCompareEnum.Different);
 			if (paperSize != null)
 			{
-				settings.PaperSize = paperSize;
+				pageSettings.PaperSize = paperSize;
 
-				this.swap = Common.PageSizeCompare (settings.PaperSize.Size, section.DocumentPrinter.RequiredPageSize) == Common.PageSizeCompareEnum.Swaped;
+				this.swap = Common.PageSizeCompare (pageSettings.PaperSize.Size, section.DocumentPrinter.RequiredPageSize) == Common.PageSizeCompareEnum.Swaped;
 			}
 
-			settings.Margins = new Margins (0);
+			pageSettings.PrinterSettings.Duplex = section.PrinterUnit.PhysicalDuplexMode;
+
+			pageSettings.Margins = new Margins (0);
 		}
 
 		public void FinishingPrintJob()
