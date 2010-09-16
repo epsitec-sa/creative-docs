@@ -396,13 +396,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
-			var title = context.CreateEmptyEntity<ArticleDefinitionEntity> ();
+			var title = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
 			return title;
 		}
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var title = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 			return title;
 		}
 

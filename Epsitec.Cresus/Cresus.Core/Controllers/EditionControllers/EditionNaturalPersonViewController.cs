@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewTitle(DataContext context)
 		{
-			var title = context.CreateEmptyEntity<PersonTitleEntity> ();
+			var title = context.CreateEntityAndRegisterAsEmpty<PersonTitleEntity> ();
 			return title;
 		}
 	}

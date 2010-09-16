@@ -28,36 +28,25 @@ namespace Epsitec.Common.Types.Converters
 			get;
 		}
 
-		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, System.Collections.Generic.IList<T2>>> getter, int index)
+		public static Marshaler<T> Create<T>(System.Func<IEnumerable<T>> getter, int index)
 		{
-			var getterFunc = getter.Compile ();
-			var marshaler  = Marshaler.Create (() => getterFunc (source)[index], null);
-
-			marshaler.getterExpression = getter;
-			marshaler.collectionIndex = index;
-
-			return marshaler;
+			return Marshaler.Create (() => getter ().ElementAt (index), null);
 		}
 
-		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2>> getter, System.Action<T1, T2> setter)
+		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, IList<T2>> getter, int index)
 		{
-			var getterFunc = getter.Compile ();
-			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
-
-			marshaler.getterExpression = getter;
-
-			return marshaler;
+			return Marshaler.Create (() => getter (source)[index], null);
 		}
 
-		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getter, System.Action<T1, T2?> setter)
+		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, T2> getter, System.Action<T1, T2> setter)
+		{
+			return Marshaler.Create (() => getter (source), x => setter (source, x));
+		}
+
+		public static Marshaler<T2?> Create<T1, T2>(T1 source, System.Func<T1, T2?> getter, System.Action<T1, T2?> setter)
 			where T2 : struct
 		{
-			var getterFunc = getter.Compile ();
-			var marshaler  = Marshaler.Create (() => getterFunc (source), x => setter (source, x));
-
-			marshaler.getterExpression = getter;
-
-			return marshaler;
+			return Marshaler.Create (() => getter (source), x => setter (source, x));
 		}
 
 		/// <summary>
@@ -120,28 +109,9 @@ namespace Epsitec.Common.Types.Converters
 		public T GetValue<T>()
 		{
 			object value = this.GetObjectValue ();
-
-			if (value is T)
-			{
-				return (T) value;
-			}
-
-			return default (T);
-		}
-
-		public Expression GetGetterExpression()
-		{
-			return this.getterExpression;
-		}
-
-		public int GetCollectionIndex()
-		{
-			return this.collectionIndex;
+			return (value is T) ? (T) value : default (T);
 		}
 
 		protected abstract object GetObjectValue();
-
-		private Expression getterExpression;
-		private int collectionIndex = -1;
 	}
 }

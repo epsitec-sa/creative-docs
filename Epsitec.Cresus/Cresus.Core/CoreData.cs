@@ -157,16 +157,85 @@ namespace Epsitec.Cresus.Core
 			return CoreApplication.GetController<DataViewController> (context);
 		}
 
+		public static void Sort<T>(List<T> list)
+			where T : AbstractEntity
+		{
+			T x = null;
+
+			if ((list.Count > 0) &&
+				(x is IItemRank))
+			{
+				list.Sort ((a, b) => CoreData.CompareItems (a as IItemRank, b as IItemRank));
+			}
+		}
+
+		private static int CompareItems<T>(T ra, T rb)
+			where T : IItemRank
+		{
+			int valueA = ra.Rank ?? -1;
+			int valueB = rb.Rank ?? -1;
+
+			if (valueA < valueB)
+			{
+				return -1;
+			}
+			if (valueA > valueB)
+			{
+				return 1;
+			}
+			return 0;
+		}
+
+		class ItemRankComparer : IComparer<IItemRank>
+		{
+			#region IComparer<IItemRank> Members
+
+			public int Compare(IItemRank x, IItemRank y)
+			{
+				int valueA = x.Rank ?? -1;
+				int valueB = y.Rank ?? -1;
+
+				if (valueA < valueB)
+				{
+					return -1;
+				}
+				if (valueA > valueB)
+				{
+					return 1;
+				}
+				return 0;
+			}
+
+			#endregion
+		}
+
+		private static ItemRankComparer itemRankComparer = new ItemRankComparer ();
 
 
-		public IEnumerable<T> GetAllEntities<T>()
+		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default)
 			where T : AbstractEntity, new ()
 		{
 			var repository = this.GetRepository<T> ();
+			T t = null;
 
 			if (repository != null)
 			{
-				return repository.GetAllEntities ();
+				var all = repository.GetAllEntities ();
+
+				if ((extraction & Extraction.IncludeArchives) == 0)
+				{
+					all = all.Where (x => (x is ILifetime) ? !((ILifetime) x).IsArchive : true);
+				}
+
+				if ((extraction & Extraction.Sorted) != 0)
+				{
+					if (t is IItemRank)
+					{
+						all = all.OrderBy (x => x as IItemRank, CoreData.itemRankComparer);
+					}
+				}
+
+				return all;
 			}
 			else
 			{
@@ -441,5 +510,15 @@ namespace Epsitec.Cresus.Core
 		{
 			return this.businessContextPool.CreateBusinessContext ();
 		}
+	}
+
+	[System.Flags]
+	public enum Extraction
+	{
+		Default = 0,
+		
+		Sorted			= 0x0001,
+
+		IncludeArchives = 0x00010000,
 	}
 }

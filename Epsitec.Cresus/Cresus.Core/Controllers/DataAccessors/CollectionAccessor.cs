@@ -13,12 +13,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
 	public abstract class CollectionAccessor : ICollectionAccessor
 	{
-		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
+		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : T2, new ()
 		{
 			return new CollectionAccessor<T1, T2, T3> (source, collectionResolver, template);
+		}
+
+		public static CollectionAccessor Create<T1, T2>(System.Func<T1> source, CollectionTemplate<T2> template)
+			where T1 : AbstractEntity, new ()
+			where T2 : AbstractEntity, new ()
+		{
+			return new CollectionAccessor<T1, T2, T2> (source, () => template.BusinessContext.Data.GetAllEntities<T2> (), template);
 		}
 
 		public abstract CollectionTemplate Template
@@ -113,85 +120,5 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
 			};
 		}
-	}
-	
-	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
-		where T1 : AbstractEntity, new ()
-		where T2 : AbstractEntity, new ()
-		where T3 : T2, new ()
-	{
-		public CollectionAccessor(System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver, CollectionTemplate<T3> template)
-		{
-			this.source = source;
-			this.collectionResolver = collectionResolver.Compile ();
-			this.collectionResolverExpression = collectionResolver;
-			this.template = template;
-		}
-
-		public override CollectionTemplate Template
-		{
-			get
-			{
-				return this.template;
-			}
-		}
-
-		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
-		{
-			var source = this.source ();
-			var collection = this.collectionResolver (source);
-
-			int index = 0;
-
-			foreach (var item in collection)
-			{
-				if (this.template.IsCompatible (item))
-				{
-					var name = SummaryData.BuildName (this.template.NamePrefix, index);
-					var data = summaryDataGetter (name, index);
-
-					var marshaler = Marshaler.Create (source, this.collectionResolverExpression, collection.IndexOf (item));
-
-					this.template.BindSummaryData (data, item, marshaler, this);
-
-					yield return data;
-
-					index++;
-				}
-			}
-		}
-
-		public override void InsertItem(int index, AbstractEntity item)
-		{
-			var source = this.source ();
-			var collection = this.collectionResolver (source);
-			collection.Insert (index, item as T3);
-		}
-
-		public override void AddItem(AbstractEntity item)
-		{
-			var source = this.source ();
-			var collection = this.collectionResolver (source);
-			collection.Add (item as T3);
-		}
-
-		public override bool RemoveItem(AbstractEntity item)
-		{
-			var source = this.source ();
-			var collection = this.collectionResolver (source);
-			return collection.Remove (item as T3);
-		}
-
-		public override System.Collections.IList GetItemCollection()
-		{
-			var source = this.source ();
-			var collection = this.collectionResolver (source);
-			return collection as System.Collections.IList;
-		}
-
-		private readonly System.Func<T1> source;
-		private readonly System.Func<T1, IList<T2>> collectionResolver;
-		private readonly Expression<System.Func<T1, IList<T2>>> collectionResolverExpression;
-		private readonly CollectionTemplate<T3> template;
 	}
 }

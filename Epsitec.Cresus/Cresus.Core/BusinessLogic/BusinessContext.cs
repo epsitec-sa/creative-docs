@@ -255,6 +255,34 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntity<T> ());
 		}
 
+		public T CreateEntityAndRegisterAsEmpty<T>()
+			where T : AbstractEntity, new ()
+		{
+			return this.ApplyRules (RuleType.Setup, this.DataContext.CreateEntityAndRegisterAsEmpty<T> ());
+		}
+
+		public bool ArchiveEntity<T>(T entity)
+			where T : AbstractEntity, new ()
+		{
+			ILifetime lifetime = entity as ILifetime;
+
+			if (lifetime != null)
+			{
+				if (this.DataContext.IsPersistent (entity))
+				{
+					lifetime.IsArchive = true;
+				}
+				else
+				{
+					this.DataContext.DeleteEntity (entity);
+				}
+
+				return true;
+			}
+
+			throw new System.InvalidOperationException ("ArchiveEntity not possible on this entity type");
+		}
+
 
 		#region IDisposable Members
 

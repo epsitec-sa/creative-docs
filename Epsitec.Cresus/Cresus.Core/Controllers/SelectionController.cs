@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.PossibleItemsGetter == null)
 			{
-				return this.businessContext.Data.GetAllEntities<T> ();
+				return this.businessContext.Data.GetAllEntities<T> (Extraction.Sorted);
 			}
 			else
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Update()
 		{
 			this.widgetItems.Clear ();
-			this.widgetItems.AddRange (this.GetSortedItemList ());
+			this.widgetItems.AddRange (this.GetPossibleItems ());
 			
 			if (this.attachedWidget != null)
 			{
@@ -223,41 +223,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		#endregion
 
 		
-		public static void Sort(List<T> list)
-		{
-			if ((list.Count > 0) &&
-				(list[0] is IItemRank))
-			{
-				list.Sort ((a, b) => SelectionController<T>.CompareItems (a, b));
-			}
-		}
-
-		private static int CompareItems(T a, T b)
-		{
-			var ra = a as Entities.IItemRank;
-			var rb = b as Entities.IItemRank;
-
-			int valueA = ra.Rank ?? -1;
-			int valueB = rb.Rank ?? -1;
-
-			if (valueA < valueB)
-			{
-				return -1;
-			}
-			if (valueA > valueB)
-			{
-				return 1;
-			}
-			return 0;
-		}
-
-		private List<T> GetSortedItemList()
-		{
-			List<T> list = new List<T> (this.GetPossibleItems ());
-			SelectionController<T>.Sort (list);
-			return list;
-		}
-
 		private void AttachMultipleValueSelector()
 		{
 			this.attachedPickerMode = PickerMode.MultipleValue;

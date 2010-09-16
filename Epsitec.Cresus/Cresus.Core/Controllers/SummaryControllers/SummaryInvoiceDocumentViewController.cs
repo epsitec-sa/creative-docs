@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private ArticleDocumentItemEntity CreateArticleDocumentItem()
 		{
 			//	Crée un nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			var article = this.DataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+			var article = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
 			article.Visibility = true;
 			article.BeginDate  = this.Entity.CreationDate;

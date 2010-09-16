@@ -186,13 +186,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		private NumericValueArticleParameterDefinitionEntity CreateParameter()
 		{
 			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			return this.DataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+			return this.DataContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
 		}
 
 		private ArticlePriceEntity CreateArticlePrice()
 		{
 			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			var price = this.DataContext.CreateEmptyEntity<ArticlePriceEntity> ();
+			var price = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticlePriceEntity> ();
 
 			price.CurrencyCode = Business.Finance.CurrencyCode.Chf;
 			price.MinQuantity = 1;

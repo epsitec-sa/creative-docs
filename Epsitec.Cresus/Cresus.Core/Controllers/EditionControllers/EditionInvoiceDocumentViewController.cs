@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	
 		private NewEntityReference CreateNewMailContact(DataContext context)
 		{
-			var country = context.CreateEmptyEntity<MailContactEntity> ();
+			var country = context.CreateEntityAndRegisterAsEmpty<MailContactEntity> ();
 
 			return country;
 		}

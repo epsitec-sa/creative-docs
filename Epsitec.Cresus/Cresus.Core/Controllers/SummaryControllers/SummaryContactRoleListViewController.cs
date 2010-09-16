@@ -46,35 +46,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ContactRoleEntity> ("ContactRoles", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<ContactRoleEntity> ("ContactRoles", this.BusinessContext);
 
 			template.DefineText        (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
-			template.DefineCreateItem  (this.CreateContactRole);
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetAllRoles (), template));
+			data.Add (CollectionAccessor.Create (this.EntityGetter, template));
 		}
 
 		private static FormattedText GetContactRoleSummary(ContactRoleEntity group)
 		{
 			return TextFormatter.FormatText (group.Name);
-		}
-
-		private ContactRoleEntity CreateContactRole()
-		{
-			var role = this.DataContext.CreateEmptyEntity<ContactRoleEntity> ();
-
-			role.Rank = GetAllRoles ().Count;
-
-			return role;
-		}
-
-		private static IList<ContactRoleEntity> GetAllRoles()
-		{
-			List<ContactRoleEntity> list = CoreProgram.Application.Data.GetRoles ().ToList ();
-			SelectionController<ContactRoleEntity>.Sort (list);
-
-			return list;
 		}
 	}
 }

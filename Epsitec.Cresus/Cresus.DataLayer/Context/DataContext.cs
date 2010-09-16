@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to create.</typeparam>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		public TEntity CreateEmptyEntity<TEntity>()
+		public TEntity CreateEntityAndRegisterAsEmpty<TEntity>()
 			where TEntity : AbstractEntity, new ()
 		{
 			this.AssertDataContextIsNotDisposed ();
