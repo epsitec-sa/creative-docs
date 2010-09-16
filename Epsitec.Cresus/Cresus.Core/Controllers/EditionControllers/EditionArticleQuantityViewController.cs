@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var title = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var title = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 			return title;
 		}
 	}

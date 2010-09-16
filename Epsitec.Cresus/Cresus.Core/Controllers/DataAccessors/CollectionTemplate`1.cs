@@ -1,16 +1,16 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.BusinessLogic;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -23,10 +23,28 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.DefineCreateItem (() => CollectionTemplate<T>.CreateEmptyItem (dataContext));
 		}
 
+		public CollectionTemplate(string name, BusinessContext businessContext)
+			: base (name)
+		{
+			this.businessContext = businessContext;
+
+			this.DefineCreateItem (() => this.businessContext.CreateEntityAndRegisterAsEmpty<T> ());
+			this.DefineDeleteItem (x => this.businessContext.ArchiveEntity<T> (x));
+		}
+
 		public CollectionTemplate(string name, EntityViewController controller, DataContext dataContext, System.Predicate<T> filter)
 			: this (name, controller, dataContext)
 		{
 			this.Filter = filter;
+		}
+
+
+		public BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
 		}
 
 		
@@ -218,7 +236,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private static T CreateEmptyItem(DataContext dataContext)
 		{
-			return dataContext.CreateEmptyEntity<T> ();
+			return dataContext.CreateEntityAndRegisterAsEmpty<T> ();
 		}
 
 		private void BindEmptyEntitySummaryData(SummaryData data, T source)
@@ -259,6 +277,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.deleteItem (item);
 		}
 
+		private readonly BusinessContext businessContext;
 
 		private System.Func<T> createItem;
 		private System.Func<int> createGetIndex;

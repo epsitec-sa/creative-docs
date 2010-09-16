@@ -46,36 +46,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroups", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroups", this.BusinessContext);
 
 			template.DefineText        (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
 			template.DefineCompactText (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
-			template.DefineCreateItem  (this.CreateArticleGroup);
-			template.DefineDeleteItem  (this.DeleteArticleGroup);
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => GetAllArticleGroups (), template));
-		}
-
-		private ArticleGroupEntity CreateArticleGroup()
-		{
-			var group = this.DataContext.CreateEmptyEntity<ArticleGroupEntity> ();
-
-			group.Rank = GetAllArticleGroups ().Count;
-
-			return group;
-		}
-
-		private void DeleteArticleGroup(ArticleGroupEntity entity)
-		{
-			this.DataContext.DeleteEntity (entity);
-		}
-
-		private static IList<ArticleGroupEntity> GetAllArticleGroups()
-		{
-			List<ArticleGroupEntity> list = CoreProgram.Application.Data.GetArticleGroups ().ToList ();
-			SelectionController<ArticleGroupEntity>.Sort (list);
-
-			return list;
+			data.Add (CollectionAccessor.Create (this.EntityGetter, template));
 		}
 	}
 }

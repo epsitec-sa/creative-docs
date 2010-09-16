@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewPaymentMode(DataContext context)
 		{
-			var paymentMode = context.CreateEmptyEntity<PaymentModeEntity> ();
+			var paymentMode = context.CreateEntityAndRegisterAsEmpty<PaymentModeEntity> ();
 			return paymentMode;
 		}
 

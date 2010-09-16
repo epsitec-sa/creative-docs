@@ -9,20 +9,19 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	internal static class Common
 	{
-		public static void CreateUIComments<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<CommentEntity>>> collectionResolver)
+		public static void CreateUIComments<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<CommentEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIComments<T1, CommentEntity, CommentEntity> (dataContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIComments<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
+		private static void InternalCreateUIComments<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : CommentEntity, new ()
 			where T3 : CommentEntity, T2, new ()
@@ -46,13 +45,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIMailContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
+		public static void CreateUIMailContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIMailContacts<T1, AbstractContactEntity, MailContactEntity> (dataContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIMailContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
+		private static void InternalCreateUIMailContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : MailContactEntity, T2, new ()
@@ -96,13 +95,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUITelecomContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
+		public static void CreateUITelecomContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUITelecomContacts<T1, AbstractContactEntity, TelecomContactEntity> (dataContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUITelecomContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
+		private static void InternalCreateUITelecomContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : TelecomContactEntity, T2, new ()
@@ -127,13 +126,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIUriContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<AbstractContactEntity>>> collectionResolver)
+		public static void CreateUIUriContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
 			Common.InternalCreateUIUriContacts<T1, AbstractContactEntity, UriContactEntity> (dataContext, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIUriContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, Expression<System.Func<T1, IList<T2>>> collectionResolver)
+		private static void InternalCreateUIUriContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : UriContactEntity, T2, new ()

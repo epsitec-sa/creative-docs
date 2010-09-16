@@ -27,20 +27,7 @@ namespace Epsitec.Cresus.Core.Factories
 		public static EntityViewController Create(string name, Marshaler marshaler, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement = null)
 		{
 			var entity = marshaler.GetValue<AbstractEntity> ();
-			int index  = marshaler.GetCollectionIndex ();
-			string path;
-
-			if (index < 0)
-			{
-				path = marshaler.GetGetterExpression ().ToString ();
-			}
-			else
-			{
-				path = string.Concat (marshaler.GetGetterExpression ().ToString (), "[", marshaler.GetCollectionIndex ().ToString (System.Globalization.CultureInfo.InvariantCulture), "]");
-			}
-
-			System.Diagnostics.Debug.WriteLine ("EntityViewController --> " + path);
-
+			
 			return EntityViewControllerFactory.Create (name, entity, mode, orchestrator, navigationPathElement: navigationPathElement);
 		}
 

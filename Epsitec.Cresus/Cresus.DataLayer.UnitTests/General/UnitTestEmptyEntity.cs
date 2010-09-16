@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 		{
 			using (var dataContext = new DataContext (DatabaseHelper.DbInfrastructure))
 			{
-				var contact = dataContext.CreateEmptyEntity<UriContactEntity> ();
+				var contact = dataContext.CreateEntityAndRegisterAsEmpty<UriContactEntity> ();
 
 				dataContext.SaveChanges ();
 			}

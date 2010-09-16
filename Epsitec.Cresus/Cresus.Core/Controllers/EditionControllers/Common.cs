@@ -127,11 +127,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					if (id == DocumentItemTabId.Text)
 					{
-						newEntity = dataContext.CreateEmptyEntity<TextDocumentItemEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<TextDocumentItemEntity> ();
 					}
 					else if (id == DocumentItemTabId.Article)
 					{
-						newEntity = dataContext.CreateEmptyEntity<ArticleDocumentItemEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<ArticleDocumentItemEntity> ();
 
 						var article = newEntity as ArticleDocumentItemEntity;
 						article.BeginDate = invoiceDocument.CreationDate;
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 					}
 					else if (id == DocumentItemTabId.Price)
 					{
-						newEntity = dataContext.CreateEmptyEntity<PriceDocumentItemEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<PriceDocumentItemEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);
@@ -183,11 +183,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 					if (id == ArticleParameterTabId.Numeric)
 					{
-						newEntity = dataContext.CreateEmptyEntity<NumericValueArticleParameterDefinitionEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
 					}
 					else if (id == ArticleParameterTabId.Enum)
 					{
-						newEntity = dataContext.CreateEmptyEntity<EnumValueArticleParameterDefinitionEntity> ();
+						newEntity = dataContext.CreateEntityAndRegisterAsEmpty<EnumValueArticleParameterDefinitionEntity> ();
 					}
 
 					System.Diagnostics.Debug.Assert (newEntity != null);

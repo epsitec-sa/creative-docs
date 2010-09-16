@@ -141,13 +141,13 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var entity = context.CreateEmptyEntity<UnitOfMeasureEntity> ();
+			var entity = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
 			return entity;
 		}
 
 		private NewEntityReference CreateNewUnitOfMeasureGroup(DataContext context)
 		{
-			var entity = context.CreateEmptyEntity<UnitOfMeasureGroupEntity> ();
+			var entity = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureGroupEntity> ();
 
 			entity.Category = Business.UnitOfMeasureCategory.Unit;
 			
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewCategory(DataContext context)
 		{
-			return context.CreateEmptyEntity<ArticleCategoryEntity> ();
+			return context.CreateEntityAndRegisterAsEmpty<ArticleCategoryEntity> ();
 		}
 	}
 }
