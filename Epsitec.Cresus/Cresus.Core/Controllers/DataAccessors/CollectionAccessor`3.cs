@@ -23,13 +23,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.template = template;
 		}
 
-		public CollectionAccessor(System.Func<T1> source, System.Func<IEnumerable<T2>> collectionResolver, CollectionTemplate<T3> template)
+		public CollectionAccessor(System.Func<T1> source, System.Func<IEnumerable<T2>> readOnlyCollectionResolver, CollectionTemplate<T3> template)
 		{
 			this.source = source;
-			this.readOnlyCollectionResolver = collectionResolver;
+			this.readOnlyCollectionResolver = readOnlyCollectionResolver;
 			this.template = template;
 		}
 
+		
 		public override CollectionTemplate Template
 		{
 			get
@@ -38,9 +39,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+
 		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
 		{
-			var source = this.source ();
+			var source     = this.GetSource ();
 			var collection = this.GetItemCollection ();
 
 			int index = 0;
@@ -54,13 +56,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 					Marshaler<T2> marshaler;
 
+					int collectionIndex = collection.IndexOf (item);
+
 					if (this.collectionResolver != null)
 					{
-						marshaler = Marshaler.Create (source, this.collectionResolver, collection.IndexOf (item));
+						marshaler = Marshaler.Create (() => this.collectionResolver (source)[collectionIndex], null);
 					}
 					else
 					{
-						marshaler = Marshaler.Create (this.readOnlyCollectionResolver, collection.IndexOf (item));
+						marshaler = Marshaler.Create (() => this.readOnlyCollectionResolver ().ElementAt (collectionIndex), null);
 					}
 
 					this.template.BindSummaryData (data, item, marshaler, this);
@@ -74,21 +78,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public override void InsertItem(int index, AbstractEntity item)
 		{
-			var source = this.source ();
+			var source = this.GetSource ();
 			var collection = this.collectionResolver (source);
 			collection.Insert (index, item as T3);
 		}
 
 		public override void AddItem(AbstractEntity item)
 		{
-			var source = this.source ();
+			var source = this.GetSource ();
 			var collection = this.collectionResolver (source);
 			collection.Add (item as T3);
 		}
 
 		public override bool RemoveItem(AbstractEntity item)
 		{
-			var source = this.source ();
+			var source = this.GetSource ();
 			var collection = this.collectionResolver (source);
 			return collection.Remove (item as T3);
 		}
@@ -97,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (this.collectionResolver != null)
 			{
-				var source = this.source ();
+				var source = this.GetSource ();
 				return this.collectionResolver (source) as System.Collections.IList;
 			}
 			else
@@ -106,9 +110,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		private readonly System.Func<T1> source;
-		private readonly System.Func<T1, IList<T2>> collectionResolver;
-		private readonly System.Func<IEnumerable<T2>> readOnlyCollectionResolver;
-		private readonly CollectionTemplate<T3> template;
+		private T1 GetSource()
+		{
+			return this.source ();
+		}
+
+		private readonly System.Func<T1>				source;
+		private readonly System.Func<T1, IList<T2>>		collectionResolver;
+		private readonly System.Func<IEnumerable<T2>>	readOnlyCollectionResolver;
+		private readonly CollectionTemplate<T3>			template;
 	}
 }

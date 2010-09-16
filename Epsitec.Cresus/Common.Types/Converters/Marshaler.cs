@@ -28,16 +28,6 @@ namespace Epsitec.Common.Types.Converters
 			get;
 		}
 
-		public static Marshaler<T> Create<T>(System.Func<IEnumerable<T>> getter, int index)
-		{
-			return Marshaler.Create (() => getter ().ElementAt (index), null);
-		}
-
-		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, IList<T2>> getter, int index)
-		{
-			return Marshaler.Create (() => getter (source)[index], null);
-		}
-
 		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, T2> getter, System.Action<T1, T2> setter)
 		{
 			return Marshaler.Create (() => getter (source), x => setter (source, x));
