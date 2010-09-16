@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public CollectionAccessor(System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
 		{
 			this.source = source;
-			this.collectionResolver = collectionResolver;
+			this.writableCollectionResolver = collectionResolver;
 			this.template = template;
 		}
 
@@ -51,22 +51,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.template.IsCompatible (item))
 				{
-					var name = SummaryData.BuildName (this.template.NamePrefix, index);
-					var data = summaryDataGetter (name, index);
-
-					Marshaler<T2> marshaler;
-
-					int collectionIndex = collection.IndexOf (item);
-
-					if (this.collectionResolver != null)
-					{
-						marshaler = Marshaler.Create (() => this.collectionResolver (source)[collectionIndex], null);
-					}
-					else
-					{
-						marshaler = Marshaler.Create (() => this.readOnlyCollectionResolver ().ElementAt (collectionIndex), null);
-					}
-
+					var name      = SummaryData.BuildName (this.template.NamePrefix, index);
+					var data      = summaryDataGetter (name, index);
+					var marshaler = Marshaler.Create (() => item, null);
+					
 					this.template.BindSummaryData (data, item, marshaler, this);
 
 					yield return data;
@@ -78,31 +66,28 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public override void InsertItem(int index, AbstractEntity item)
 		{
-			var source = this.GetSource ();
-			var collection = this.collectionResolver (source);
+			var collection = this.GetWritableCollection ();
 			collection.Insert (index, item as T3);
 		}
 
 		public override void AddItem(AbstractEntity item)
 		{
-			var source = this.GetSource ();
-			var collection = this.collectionResolver (source);
+			var collection = this.GetWritableCollection ();
 			collection.Add (item as T3);
 		}
 
 		public override bool RemoveItem(AbstractEntity item)
 		{
-			var source = this.GetSource ();
-			var collection = this.collectionResolver (source);
+			var collection = this.GetWritableCollection ();
 			return collection.Remove (item as T3);
 		}
 
 		public override System.Collections.IList GetItemCollection()
 		{
-			if (this.collectionResolver != null)
+			if (this.writableCollectionResolver != null)
 			{
 				var source = this.GetSource ();
-				return this.collectionResolver (source) as System.Collections.IList;
+				return this.writableCollectionResolver (source) as System.Collections.IList;
 			}
 			else
 			{
@@ -115,8 +100,21 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.source ();
 		}
 
+		private IList<T2> GetWritableCollection()
+		{
+			var source = this.GetSource ();
+			var collection = this.writableCollectionResolver (source);
+
+			if (collection == null)
+			{
+				throw new System.InvalidOperationException ("Read-only collection cannot be modified");
+			}
+			
+			return collection;
+		}
+
 		private readonly System.Func<T1>				source;
-		private readonly System.Func<T1, IList<T2>>		collectionResolver;
+		private readonly System.Func<T1, IList<T2>>		writableCollectionResolver;
 		private readonly System.Func<IEnumerable<T2>>	readOnlyCollectionResolver;
 		private readonly CollectionTemplate<T3>			template;
 	}
