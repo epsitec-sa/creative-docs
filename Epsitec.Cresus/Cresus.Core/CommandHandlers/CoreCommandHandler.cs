@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.File.ImportV11)]
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			ImportV11.Import (CoreProgram.Application);
+			ImportV11.Import (CoreProgram.Application, null);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

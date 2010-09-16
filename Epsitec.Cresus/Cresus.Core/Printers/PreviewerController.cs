@@ -248,37 +248,37 @@ namespace Epsitec.Cresus.Core.Printers
 			this.pageSlider.ValueChanged += delegate
 			{
 				this.currentPage = (int) this.pageSlider.Value;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			this.zoom18Button.Clicked += delegate
 			{
 				this.currentZoom = 1.0/8.0;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			this.zoom14Button.Clicked += delegate
 			{
 				this.currentZoom = 1.0/4.0;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			this.zoom11Button.Clicked += delegate
 			{
 				this.currentZoom = 1;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			this.zoom21Button.Clicked += delegate
 			{
 				this.currentZoom = 2;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			this.zoom41Button.Clicked += delegate
 			{
 				this.currentZoom = 4;
-				this.UpdatePages ();
+				this.UpdatePages (rebuild: false);
 			};
 
 			if (this.debugPrevButton1 != null)
@@ -328,27 +328,27 @@ namespace Epsitec.Cresus.Core.Printers
 				ToolTip.Default.SetToolTip (this.printerUnitField, "Choix de l'unité d'impression pour les aperçus");
 			}
 
-			this.UpdatePages ();
+			this.UpdatePages (rebuild: false);
 		}
 
 		public void Update()
 		{
 			//	Met à jour le ou les aperçus. Le nombre de pages et leurs contenus peuvent avoir
 			//	été changés.
-			if (this.HasDocumentTypeSelected)
+			this.UpdatePages (rebuild: true);
+		}
+
+
+		private void UpdatePages(bool rebuild)
+		{
+			this.previewBox.Visibility = this.HasDocumentTypeSelected;
+			this.pagesToolbarBox.Visibility = this.HasDocumentTypeSelected;
+
+			if (this.HasDocumentTypeSelected && rebuild)
 			{
 				this.SetPrinterUnits ();
 				this.entityPrinter.BuildSections ();
 			}
-
-			this.UpdatePages ();
-		}
-
-
-		private void UpdatePages()
-		{
-			this.previewBox.Visibility = this.HasDocumentTypeSelected;
-			this.pagesToolbarBox.Visibility = this.HasDocumentTypeSelected;
 
 			this.UpdateFilteredPages ();
 			this.UpdatePreview ();
@@ -498,8 +498,8 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			int t = this.entityPrinter.PageCount ();
-			int p = this.ReelPage (this.currentPage) + 1;
-			int q = this.ReelPage (this.currentPage+this.showedPageCount-1) + 1;
+			int p = this.RealPage (this.currentPage) + 1;
+			int q = this.RealPage (this.currentPage+this.showedPageCount-1) + 1;
 
 			if (this.showedPageCount <= 1 || p == q)
 			{
@@ -520,10 +520,18 @@ namespace Epsitec.Cresus.Core.Printers
 			this.zoom18Button.Enable = t > 4;
 		}
 
-		private int ReelPage(int rank)
+		private int RealPage(int rank)
 		{
 			rank = System.Math.Min (rank, this.filteredPages.Count-1);
-			return this.filteredPages[rank];
+
+			if (rank < 0)
+			{
+				return 0;
+			}
+			else
+			{
+				return this.filteredPages[rank];
+			}
 		}
 
 		private void UpdateZoom()
@@ -606,7 +614,7 @@ namespace Epsitec.Cresus.Core.Printers
 				this.entityPrinter.BuildSections (this.selectedPrinterUnit.ForcingOptionsToClear, this.selectedPrinterUnit.ForcingOptionsToSet);
 			}
 
-			this.UpdatePages ();
+			this.UpdatePages (rebuild: true);
 		}
 
 
@@ -639,17 +647,20 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Retourne la liste des unités d'impression utilisées pour un AbstractDocumentPrinter donné.
 			var list = new List<PrinterUnit> ();
 
-			for (int page=0; page<this.entityPrinter.PageCount (); page++)
-			{
-				if (this.entityPrinter.GetDocumentPrinter (page) == documentPrinter)
-				{
-					var printersUsed = this.GetPrintersUsed (documentPrinter, page);
+			DocumentTypeDefinition documentTypeDefinition = this.entityPrinter.SelectedDocumentTypeDefinition;
 
-					foreach (var printerUsed in printersUsed)
+			if (documentTypeDefinition != null)
+			{
+				foreach (var documentPrinterFunction in documentTypeDefinition.DocumentPrinterFunctions)
+				{
+					if (!string.IsNullOrEmpty (documentPrinterFunction.LogicalPrinterName))
 					{
-						if (!list.Contains (printerUsed.Key))
+						var printerUnit = this.printerUnitList.Where (x => x.LogicalName == documentPrinterFunction.LogicalPrinterName).FirstOrDefault ();
+
+						if (printerUnit != null &&
+							Common.InsidePageSize (printerUnit.PhysicalPaperSize, documentPrinter.MinimalPageSize, documentPrinter.MaximalPageSize))
 						{
-							list.Add (printerUsed.Key);
+							list.Add (printerUnit);
 						}
 					}
 				}
