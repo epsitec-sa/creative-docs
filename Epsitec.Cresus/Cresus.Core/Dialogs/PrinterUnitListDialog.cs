@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.physicalField.Text  = printerUnit.PhysicalPrinterName;
 				this.trayField.Text      = printerUnit.PhysicalPrinterTray;
 				this.paperSizeField.Text = PrinterUnitListDialog.PaperSizeToNiceDescription (printerUnit.PhysicalPaperSize);
-				this.duplexField.Text    = PrinterUnit.DuplexToString (printerUnit.PhysicalDuplexMode);
+				this.duplexField.Text    = PrinterUnit.DuplexToDescription (printerUnit.PhysicalDuplexMode);
 				this.xOffsetField.Text   = printerUnit.XOffset.ToString ();
 				this.yOffsetField.Text   = printerUnit.YOffset.ToString ();
 				this.copiesField.Text    = printerUnit.Copies.ToString ();
@@ -656,10 +656,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.duplexField.Enable = true;
 				
 				this.duplexField.Items.Clear ();
-				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Default));
-				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Simplex));
-				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Horizontal));
-				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Vertical));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToDescription (DuplexMode.Default));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToDescription (DuplexMode.Simplex));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToDescription (DuplexMode.Horizontal));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToDescription (DuplexMode.Vertical));
 			}
 			else
 			{
@@ -858,7 +858,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			int sel = this.listController.SelectedIndex;
 
-			var duplex = PrinterUnit.StringToDuplex (this.duplexField.Text);
+			var duplex = PrinterUnit.DescriptionToDuplex (this.duplexField.Text);
 
 			if (this.printerUnitList[sel].PhysicalDuplexMode != duplex)
 			{
