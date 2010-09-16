@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Printing;
 
 using System.Collections.Generic;
 using System.IO;
@@ -66,6 +67,12 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Les caractères spéciaux sont encodés (par exemple, un "&" vaut "&amp;").
 			//	Cette propriété est donc compatible avec Widget.Text.
 			//	En revanche, il faut utiliser FormattedText.Unescape avant de passer la chaîne à Epsitec.Common.Printing.
+			get;
+			set;
+		}
+
+		public DuplexMode PhysicalDuplexMode
+		{
 			get;
 			set;
 		}
@@ -136,60 +143,19 @@ namespace Epsitec.Cresus.Core.Printers
 			//	Retourne une string permettant de sérialiser l'ensemble de la classe.
 			return string.Concat
 				(
-					"LogicalName=",
-					this.LogicalName,
-
-					PrinterUnit.serializableSeparator,
-					
-					"PhysicalName=",
-					this.PhysicalPrinterName,
-
-					PrinterUnit.serializableSeparator,
-					
-					"Tray=",
-					this.PhysicalPrinterTray,
-
-					PrinterUnit.serializableSeparator,
-					
-					"XOffset=",
-					this.XOffset.ToString (CultureInfo.InvariantCulture),
-
-					PrinterUnit.serializableSeparator,
-
-					"YOffset=",
-					this.YOffset.ToString (CultureInfo.InvariantCulture),
-
-					PrinterUnit.serializableSeparator,
-
-					"Copies=",
-					this.Copies.ToString (CultureInfo.InvariantCulture),
-
-					PrinterUnit.serializableSeparator,
-
-					"Comment=",
-					this.Comment,
-
-					PrinterUnit.serializableSeparator,
-
-					"ForcingOptionsToClear=",
-					PrinterUnit.GetDocumentOptions (this.forcingOptionsToClear),
-
-					PrinterUnit.serializableSeparator,
-
-					"ForcingOptionsToSet=",
-					PrinterUnit.GetDocumentOptions (this.forcingOptionsToSet),
-
-					PrinterUnit.serializableSeparator,
-
-					"PhysicalPaperSize.Width=",
-					this.PhysicalPaperSize.Width.ToString (CultureInfo.InvariantCulture),
-
-					PrinterUnit.serializableSeparator,
-
-					"PhysicalPaperSize.Height=",
-					this.PhysicalPaperSize.Height.ToString (CultureInfo.InvariantCulture),
-
-					null  // pour permettre de termier le dernier par une virgule !
+					                                   "LogicalName=",              this.LogicalName,
+					PrinterUnit.serializableSeparator, "PhysicalName=",             this.PhysicalPrinterName,
+					PrinterUnit.serializableSeparator, "Tray=",                     this.PhysicalPrinterTray,
+					PrinterUnit.serializableSeparator, "XOffset=",                  this.XOffset.ToString (CultureInfo.InvariantCulture),
+					PrinterUnit.serializableSeparator, "YOffset=",                  this.YOffset.ToString (CultureInfo.InvariantCulture),
+					PrinterUnit.serializableSeparator, "Copies=",                   this.Copies.ToString (CultureInfo.InvariantCulture),
+					PrinterUnit.serializableSeparator, "Comment=",                  this.Comment,
+					PrinterUnit.serializableSeparator, "ForcingOptionsToClear=",    PrinterUnit.GetDocumentOptions (this.forcingOptionsToClear),
+					PrinterUnit.serializableSeparator, "ForcingOptionsToSet=",      PrinterUnit.GetDocumentOptions (this.forcingOptionsToSet),
+					PrinterUnit.serializableSeparator, "PhysicalPaperSize.Width=",  this.PhysicalPaperSize.Width.ToString (CultureInfo.InvariantCulture),
+					PrinterUnit.serializableSeparator, "PhysicalPaperSize.Height=", this.PhysicalPaperSize.Height.ToString (CultureInfo.InvariantCulture),
+					PrinterUnit.serializableSeparator, "PhysicalDuplexMode=",       PrinterUnit.DuplexToString (this.PhysicalDuplexMode),
+					null  // pour permettre de terminer le dernier par une virgule !
 				);
 		}
 
@@ -252,6 +218,10 @@ namespace Epsitec.Cresus.Core.Printers
 						case "PhysicalPaperSize.Height":
 							paperSizeHeight = int.Parse (words[1]);
 							break;
+
+						case "PhysicalDuplexMode":
+							this.PhysicalDuplexMode = PrinterUnit.StringToDuplex (words[1]);
+							break;
 					}
 				}
 			}
@@ -306,6 +276,26 @@ namespace Epsitec.Cresus.Core.Printers
 			else
 			{
 				return !value.Contains (PrinterUnit.serializableSeparator);
+			}
+		}
+
+
+		public static string DuplexToString(DuplexMode duplex)
+		{
+			return duplex.ToString ();
+		}
+
+		public static DuplexMode StringToDuplex(string name)
+		{
+			DuplexMode type;
+
+			if (System.Enum.TryParse (name, out type))
+			{
+				return type;
+			}
+			else
+			{
+				return DuplexMode.Default;
 			}
 		}
 

@@ -242,6 +242,24 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
 					TabIndex = ++tabIndex,
 				};
+
+
+				this.duplexLabel = new StaticText
+				{
+					Parent = box,
+					Text = "Mode recto/verso de l'imprimante :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.duplexField = new TextFieldCombo
+				{
+					IsReadOnly = true,
+					Parent = box,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					TabIndex = ++tabIndex,
+				};
 			}
 
 			{
@@ -411,6 +429,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionPaperSizeChanged ();
 			};
 
+			this.duplexField.SelectedItemChanged += delegate
+			{
+				this.ActionDuplexChanged ();
+			};
+
 			this.xOffsetField.AcceptingEdition += delegate
 			{
 				this.ActionOffsetXChanged ();
@@ -492,6 +515,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.physicalField.Enable  = sel != -1;
 			this.trayField.Enable      = sel != -1;
 			this.paperSizeField.Enable = sel != -1;
+			this.duplexField.Enable    = sel != -1;
 			this.xOffsetField.Enable   = sel != -1;
 			this.yOffsetField.Enable   = sel != -1;
 			this.copiesField.Enable    = sel != -1;
@@ -503,6 +527,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.physicalField.Text  = null;
 				this.trayField.Text      = null;
 				this.paperSizeField.Text = null;
+				this.duplexField.Text    = null;
 				this.xOffsetField.Text   = null;
 				this.yOffsetField.Text   = null;
 				this.copiesField.Text    = null;
@@ -521,6 +546,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.physicalField.Text  = printerUnit.PhysicalPrinterName;
 				this.trayField.Text      = printerUnit.PhysicalPrinterTray;
 				this.paperSizeField.Text = PrinterUnitListDialog.PaperSizeToNiceDescription (printerUnit.PhysicalPaperSize);
+				this.duplexField.Text    = PrinterUnit.DuplexToString (printerUnit.PhysicalDuplexMode);
 				this.xOffsetField.Text   = printerUnit.XOffset.ToString ();
 				this.yOffsetField.Text   = printerUnit.YOffset.ToString ();
 				this.copiesField.Text    = printerUnit.Copies.ToString ();
@@ -617,6 +643,31 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.paperSizeField.Items.Count == 1)
 			{
 				this.paperSizeField.SelectedItemIndex = 0;
+			}
+		}
+
+		private void UpdateDuplexField()
+		{
+			PrinterUnit printerUnit = this.SelectedPrinter;
+
+			if (PrinterUnitListDialog.CanDuplex (printerUnit))
+			{
+				this.duplexLabel.Enable = true;
+				this.duplexField.Enable = true;
+				
+				this.duplexField.Items.Clear ();
+				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Default));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Simplex));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Horizontal));
+				this.duplexField.Items.Add (PrinterUnit.DuplexToString (DuplexMode.Vertical));
+			}
+			else
+			{
+				this.duplexLabel.Enable = false;
+				this.duplexField.Enable = false;
+
+				this.duplexField.Items.Clear ();
+				this.duplexField.Text = null;
 			}
 		}
 
@@ -721,6 +772,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateWidgets ();
 			this.UpdateTrayField ();
 			this.UpdatePaperSizeField ();
+			this.UpdateDuplexField ();
 		}
 
 		private void ActionItemInserted()
@@ -770,6 +822,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateWidgets ();
 				this.UpdateTrayField ();
 				this.UpdatePaperSizeField ();
+				this.UpdateDuplexField ();
 			}
 		}
 
@@ -795,6 +848,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 			if (this.printerUnitList[sel].PhysicalPaperSize != paperSize)
 			{
 				this.printerUnitList[sel].PhysicalPaperSize = paperSize;
+
+				this.listController.UpdateList (sel);
+				this.UpdateWidgets ();
+			}
+		}
+
+		private void ActionDuplexChanged()
+		{
+			int sel = this.listController.SelectedIndex;
+
+			var duplex = PrinterUnit.StringToDuplex (this.duplexField.Text);
+
+			if (this.printerUnitList[sel].PhysicalDuplexMode != duplex)
+			{
+				this.printerUnitList[sel].PhysicalDuplexMode = duplex;
 
 				this.listController.UpdateList (sel);
 				this.UpdateWidgets ();
@@ -916,6 +984,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			return 0;
+		}
+
+		private static bool CanDuplex(PrinterUnit printerUnit)
+		{
+			if (printerUnit != null && !string.IsNullOrEmpty (printerUnit.PhysicalPrinterName))
+			{
+				var settings = Common.Printing.PrinterSettings.FindPrinter (FormattedText.Unescape (printerUnit.PhysicalPrinterName));
+
+				if (settings != null)
+				{
+					return settings.CanDuplex;
+				}
+			}
+
+			return false;
 		}
 
 
@@ -1139,6 +1222,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private TextFieldCombo							physicalField;
 		private TextFieldCombo							trayField;
 		private TextFieldCombo							paperSizeField;
+		private StaticText								duplexLabel;
+		private TextFieldCombo							duplexField;
 		private TextFieldEx								xOffsetField;
 		private TextFieldEx								yOffsetField;
 		private TextFieldEx								copiesField;

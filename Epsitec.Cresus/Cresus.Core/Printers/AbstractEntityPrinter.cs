@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Printers
 			return count;
 		}
 
-		public int GetPageRelativ(int page)
+		public int GetPageRelative(int page)
 		{
 			int firstDocumentPage = 0;
 

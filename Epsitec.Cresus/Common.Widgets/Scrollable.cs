@@ -9,10 +9,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// The <c>Scrollable</c> class manages a <see cref="Viewport"/> which can
 	/// have an arbitrary surface size. Scrollers will be added as required.
-	public class Scrollable : AbstractGroup
+	public class Scrollable : AbstractGroup, Behaviors.IDragBehaviorHost
 	{
 		public Scrollable()
 		{
+			this.dragBehavior = this.CreateDragBehavior ();
+
 			this.hScroller = new HScroller (this)
 			{
 				Name = "HorizontalScroller",
@@ -43,7 +45,12 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder (embedder);
 		}
-		
+
+		protected virtual Behaviors.DragBehavior CreateDragBehavior()
+		{
+			return new Behaviors.DragBehavior (this, true, false);
+		}
+
 		
 		public Viewport							Viewport
 		{
@@ -149,6 +156,21 @@ namespace Epsitec.Common.Widgets
 				{
 					this.paintForegroundFrame = value;
 					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public bool								ScrollWithHand
+		{
+			get
+			{
+				return this.scrollWithHand;
+			}
+			set
+			{
+				if (this.scrollWithHand != value)
+				{
+					this.scrollWithHand = value;
 				}
 			}
 		}
@@ -650,6 +672,59 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (this.IsEnabled == false)
+			{
+				return;
+			}
+
+			if (!this.dragBehavior.ProcessMessage (message, pos))
+			{
+				base.ProcessMessage (message, pos);
+			}
+		}
+
+		#region IDragBehaviorHost Members
+
+		public Point DragLocation
+		{
+			get
+			{
+				return Point.Zero;
+			}
+		}
+
+		public bool OnDragBegin(Point cursor)
+		{
+			this.MouseCursor = MouseCursor.AsHand;
+
+			this.isDragging = true;
+			this.draggingInitialViewportOffset = this.ViewportOffset;
+
+			return true;
+		}
+
+		public void OnDragging(DragEventArgs e)
+		{
+			Point cursor = e.ToPoint;
+
+			double x = System.Math.Max (this.draggingInitialViewportOffset.X-cursor.X, 0);
+			double y = System.Math.Max (this.draggingInitialViewportOffset.Y+cursor.Y, 0);
+
+			this.ViewportOffset = new Point (x, y);
+		}
+
+		public void OnDragEnd()
+		{
+			this.MouseCursor = MouseCursor.AsArrow;
+			this.isDragging = false;
+		}
+
+		#endregion
+				
+		
 		private static void HandleViewportChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Scrollable that = (Scrollable) o;
@@ -697,6 +772,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ViewportOffsetXProperty = DependencyProperty.Register ("ViewportOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetXValue, Scrollable.SetViewportOffsetXValue));
 		public static readonly DependencyProperty ViewportOffsetYProperty = DependencyProperty.Register ("ViewportOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetYValue, Scrollable.SetViewportOffsetYValue));
 
+		private readonly Behaviors.DragBehavior	dragBehavior;
+
 		private bool							isGeometryValid;
 		private Rectangle						viewportAperture;
 		private Point							viewportOffset;
@@ -714,5 +791,9 @@ namespace Epsitec.Common.Widgets
 
 		protected const double					SmallScrollPixels  = 5;
 		protected const double					LargeScrollPercent = 50;
+
+		private bool							scrollWithHand;
+		private bool							isDragging;
+		private Point							draggingInitialViewportOffset;
 	}
 }
