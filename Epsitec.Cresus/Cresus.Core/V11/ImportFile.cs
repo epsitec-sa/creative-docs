@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.V11
 		public ImportFile()
 		{
 			this.records = new List<V11Record> ();
+			this.errors  = new List<V11Message> ();
 		}
 
 
@@ -36,14 +37,21 @@ namespace Epsitec.Cresus.Core.V11
 				return V11Message.Aborted;
 			}
 
-			V11Message message = this.ReadFile (application, filename, noClient);
+			this.ReadFile (application, filename, noClient);
 
-			if (message.IsError)
+			if (this.errors.Count > 0)
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message.Description.ToString ()).OpenDialog ();
-			}
+				FormattedText description = V11Message.Descriptions (this.errors);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, description.ToString ()).OpenDialog ();
 
-			return message;
+				return V11Message.GenericError;
+			}
+			else
+			{
+				MessageDialog.CreateOk ("Terminé", DialogIcon.Question, "Importation réussie").OpenDialog ();
+
+				return V11Message.OK;
+			}
 		}
 
 		/// <summary>
@@ -54,6 +62,14 @@ namespace Epsitec.Cresus.Core.V11
 			get
 			{
 				return this.records;
+			}
+		}
+
+		public List<V11Message> Errors
+		{
+			get
+			{
+				return this.errors;
 			}
 		}
 
@@ -82,8 +98,11 @@ namespace Epsitec.Cresus.Core.V11
 			return dialog.FileName;
 		}
 
-		private V11Message ReadFile(CoreApplication application, string filename, string noClient)
+		private void ReadFile(CoreApplication application, string filename, string noClient)
 		{
+			this.records.Clear ();
+			this.errors.Clear ();
+
 			if (string.IsNullOrWhiteSpace (noClient))
 			{
 				noClient = "10694443";  // TODO: provisoire...
@@ -91,59 +110,71 @@ namespace Epsitec.Cresus.Core.V11
 
 			noClient = noClient.TrimStart ('0');
 
-			string[] records;
+			string[] lines;
 
 			try
 			{
-				records = System.IO.File.ReadAllLines (filename);
+				lines = System.IO.File.ReadAllLines (filename);
 			}
 			catch (System.Exception e)
 			{
 				FormattedText description = TextFormatter.FormatText ("Impossible d'ouvrir le fichier", filename, "<br/><br/>", e.Message);
-				return new V11Message (V11Error.FileNotFound, null, description);
+				this.errors.Add (new V11Message (V11Error.FileNotFound, null, null, description));
+				return;
 			}
 
-			this.records.Clear ();
 			V11Record.TypeEnum type = V11Record.TypeEnum.Unknown;
 			int lineRank = -1;
 
-			foreach (var line in records)
+			foreach (var l in lines)
 			{
-				lineRank++;
+				string line = l.TrimEnd ();  // supprime les espaces en fin de ligne
+				lineRank++;  // 0..n
 
-				if (line.Length < 100)
+				if (string.IsNullOrWhiteSpace (line))
 				{
-					continue;
+					continue;  // une ligne vide ne génère pas d'erreur
 				}
 
 				if (type == V11Record.TypeEnum.Unknown)  // type inconnu ?
 				{
-					string s = line.Substring (3, 9).TrimStart ('0');
-					if (s == noClient)
+					if (line.Length >= 126)
+					{
+						type = V11Record.TypeEnum.Type4;
+					}
+					else if (line.Length >= 100)
 					{
 						type = V11Record.TypeEnum.Type3;
 					}
 					else
 					{
-						s = line.Substring (6, 9).TrimStart ('0');
-						if (s == noClient)
-						{
-							type = V11Record.TypeEnum.Type4;
-						}
-						else
-						{
-							FormattedText description = TextFormatter.FormatText ("Aucune donnée pour le client", noClient);
-							return new V11Message (V11Error.EmptyData, null, description);
-						}
+						FormattedText description = TextFormatter.FormatText ("Erreur à la ligne", (lineRank+1).ToString ());
+						this.errors.Add (new V11Message (V11Error.InvalidFormat, lineRank, line, description));
+						continue;
+					}
+				}
+
+				var record = new V11Record ();
+				record.Type = type;
+
+				if (type == V11Record.TypeEnum.Type3)
+				{
+					string client = line.Substring (3, 9).TrimStart ('0');
+					if (client != noClient)
+					{
+						FormattedText description = TextFormatter.FormatText ("Les données sont pour un autre client (", client, "au lieu de ", noClient, ")");
+						this.errors.Add (new V11Message (V11Error.WrongCustomer, lineRank, line, description));
+						continue;
 					}
 
-					var record = new V11Record ();
-					record.Type = type;
+					string genre = line.Substring (0, 3);
 
-					if (type == V11Record.TypeEnum.Type3)
+					if (genre == "999" || genre == "995")
 					{
-						record.CodeTransaction  = V11Record.CodeTransactionEnum.Normal;
-						record.GenreTransaction = ImportFile.StringToGenreTransaction (line.Substring (0, 1));
+					}
+					else
+					{
+						ImportFile.StringToTransaction3 (record, line.Substring (0, 3));
 						record.Origine          = V11Record.OrigineEnum.OfficePoste;
 						record.GenreRemise      = V11Record.GenreRemiseEnum.Original;
 						record.NoReference      = line.Substring (12, 27);
@@ -158,10 +189,26 @@ namespace Epsitec.Cresus.Core.V11
 						record.MonnaieTaxes     = "CHF";
 						record.Taxes            = ImportFile.StringToPrice (line.Substring (96, 4));
 					}
+				}
 
-					if (type == V11Record.TypeEnum.Type4)
+				if (type == V11Record.TypeEnum.Type4)
+				{
+					string client = line.Substring (6, 9).TrimStart ('0');
+					if (client != noClient)
 					{
-						ImportFile.StringToTransaction (record, line.Substring (0, 2));
+						FormattedText description = TextFormatter.FormatText ("Les données sont pour un autre client (", client, "au lieu de ", noClient, ")");
+						this.errors.Add (new V11Message (V11Error.WrongCustomer, lineRank, line, description));
+						continue;
+					}
+
+					string genre = line.Substring (0, 2);
+
+					if (genre == "99" || genre == "98")
+					{
+					}
+					else
+					{
+						ImportFile.StringToTransaction4 (record, line.Substring (0, 2));
 						record.GenreTransaction = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
 						record.Origine          = ImportFile.StringToOrigine (line.Substring (3, 2));
 						record.GenreRemise      = ImportFile.StringToGenreRemise (line.Substring (5, 1));
@@ -177,28 +224,137 @@ namespace Epsitec.Cresus.Core.V11
 						record.MonnaieTaxes     = line.Substring (117, 3);
 						record.Taxes            = ImportFile.StringToPrice (line.Substring (120, 6));
 					}
+				}
 
-					if (!record.IsValid)
-					{
-						FormattedText description = TextFormatter.FormatText ("Erreur à la ligne", (lineRank+1).ToString ());
-						return new V11Message (V11Error.InvalidFormat, lineRank, description);
-					}
-
+				if (record.IsValid)
+				{
 					this.records.Add (record);
+				}
+				else
+				{
+					FormattedText description = TextFormatter.FormatText ("Erreur à la ligne", (lineRank+1).ToString ());
+					this.errors.Add (new V11Message (V11Error.InvalidFormat, lineRank, line, description));
 				}
 			}
 
 			if (this.records.Count == 0)
 			{
 				FormattedText description = TextFormatter.FormatText ("Aucune donnée pour le client", noClient);
-				return new V11Message (V11Error.EmptyData, null, description);
+				this.errors.Add (new V11Message (V11Error.EmptyData, null, null, description));
 			}
-
-			return V11Message.OK;
 		}
 
 
-		private static void StringToTransaction(V11Record record, string text)
+		private static void StringToTransaction3(V11Record record, string text)
+		{
+			switch (text)
+			{
+				case "002":
+				case "012":
+				case "022":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Credit;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "005":
+				case "015":
+				case "025":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.ContrePrestation;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "008":
+				case "018":
+				case "028":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Correction;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+
+				case "032":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Credit;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "035":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.ContrePrestation;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "038":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Correction;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVR;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+
+				case "102":
+				case "112":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Credit;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "105":
+				case "115":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.ContrePrestation;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "108":
+				case "118":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Correction;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Normal;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+
+				case "132":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Credit;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "135":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.ContrePrestation;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+				case "138":
+					record.GenreTransaction   = V11Record.GenreTransactionEnum.Correction;
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.PropreCompte;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.BVRPlus;
+					record.MonnaieTransaction = "CHF";
+					break;
+
+
+				default:
+					record.CodeTransaction    = V11Record.CodeTransactionEnum.Unknown;
+					record.BVRTransaction     = V11Record.BVRTransactionEnum.Unknown;
+					record.MonnaieTransaction = null;
+					break;
+			}
+		}
+
+		private static void StringToTransaction4(V11Record record, string text)
 		{
 			switch (text)
 			{
@@ -357,6 +513,11 @@ namespace Epsitec.Cresus.Core.V11
 		{
 			text = text.TrimStart ('0');
 
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+
 			int value;
 			if (int.TryParse (text, out value))
 			{
@@ -373,6 +534,11 @@ namespace Epsitec.Cresus.Core.V11
 			//	Par exemple "0000029800" pour 298.00 francs.
 			text = text.TrimStart ('0');
 
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+
 			decimal value;
 			if (decimal.TryParse (text, out value))
 			{
@@ -388,7 +554,9 @@ namespace Epsitec.Cresus.Core.V11
 		{
 			//	Par exemple "080109" pour 09.01.2008
 			//	Par exemple "20080109" pour 09.01.2008
-			int year, month, day;
+			int year  = 0;
+			int month = 0;
+			int day   = 0;
 
 			if (text.Length == 6)
 			{
@@ -396,6 +564,8 @@ namespace Epsitec.Cresus.Core.V11
 				{
 					return null;
 				}
+
+				year += 2000;
 
 				if (!int.TryParse (text.Substring (2, 2), out month))
 				{
@@ -406,8 +576,6 @@ namespace Epsitec.Cresus.Core.V11
 				{
 					return null;
 				}
-
-				return new Date (2000+year, month, day);
 			}
 
 			if (text.Length == 8)
@@ -426,15 +594,28 @@ namespace Epsitec.Cresus.Core.V11
 				{
 					return null;
 				}
-
-				return new Date (year, month, day);
 			}
 
-			return null;
+			if (year >= 2000 && year <= 2099 && month >= 1 && month <= 12 && day >= 1 && day <= 31)
+			{
+				try
+				{
+					return new Date (year, month, day);
+				}
+				catch
+				{
+					return null;
+				}
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
 		private readonly List<V11Record>		records;
+		private readonly List<V11Message>		errors;
 		private string							initialDirectory;
 	}
 }
