@@ -36,15 +36,24 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public abstract IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter);
 
 
+		#region IReadOnly Members
+
+		public abstract bool IsReadOnly
+		{
+			get;
+		}
+
+		#endregion
+
 		#region ICollectionAccessor Members
 
 		public abstract void InsertItem(int index, AbstractEntity item);
 
-		public abstract void AddItem(AbstractEntity item);
+		public abstract int AddItem(AbstractEntity item);
 
 		public abstract bool RemoveItem(AbstractEntity item);
 
-		public abstract System.Collections.IList GetItemCollection();
+		public abstract IEnumerable<AbstractEntity> GetItemCollection();
 
 		#endregion
 

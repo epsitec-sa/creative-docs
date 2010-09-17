@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -21,24 +22,27 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GroupedItemController"/> class.
 		/// </summary>
-		/// <param name="items">The collection of items.</param>
+		/// <param name="collectionAccessor">The collection accessor.</param>
 		/// <param name="item">The item.</param>
 		/// <param name="filter">The filter used to identify compatible items in the collection.</param>
-		public GroupedItemController(System.Collections.IList items, AbstractEntity item, System.Predicate<AbstractEntity> filter)
+		public GroupedItemController(ICollectionAccessor collectionAccessor, AbstractEntity item, System.Predicate<AbstractEntity> filter)
 		{
-			System.Diagnostics.Debug.Assert (items.Contains (item));
-			System.Diagnostics.Debug.Assert (filter (item));
-
-			this.items  = items;
+			this.collectionAccessor = collectionAccessor;
 			this.item   = item;
 			this.filter = filter;
+			
+			var items = this.collectionAccessor.GetItemCollection ();
+			
+			System.Diagnostics.Debug.Assert (items.Contains (item));
+			System.Diagnostics.Debug.Assert (filter (item));
 		}
 
 		private IEnumerable<AbstractEntity> CompatibleItems
 		{
 			get
 			{
-				return this.items.Cast<AbstractEntity> ().Where (x => this.filter (x));
+				var items = this.collectionAccessor.GetItemCollection ();
+				return items.Where (x => this.filter (x));
 			}
 		}
 
@@ -64,7 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
 		public bool SetItemIndex(int newIndex)
 		{
-			if (this.items.IsReadOnly)
+			if (this.collectionAccessor.IsReadOnly)
 			{
 				return false;
 			}
@@ -83,7 +87,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			//	collection, not relative to all items. We have to map from the index in the
 			//	filtered array to the one in the real array :
 
-			var collection = this.items as IEntityCollection;
+			var items      = this.collectionAccessor.GetItemCollection ();
+			var collection = items as ISuspendCollectionChanged;
 
 			if (collection == null)
 			{
@@ -95,6 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					this.UpdateCollection (newIndex, compatibleItems);
 				}
+				
 			}
 
 			return true;
@@ -102,23 +108,28 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private void UpdateCollection(int newIndex, List<AbstractEntity> compatibleItems)
 		{
+			var items = this.collectionAccessor.GetItemCollection ();
+
 			int itemCount    = compatibleItems.Count;
-			int realOldIndex = this.items.IndexOf (this.item);
-			int realNewIndex = newIndex == itemCount ? this.items.Count : this.items.IndexOf (compatibleItems[newIndex]);
+			int realOldIndex = items.IndexOf (this.item);
+			int realNewIndex = newIndex >= itemCount ? -1 : items.IndexOf (compatibleItems[newIndex]);
 
 			System.Diagnostics.Debug.Assert (realOldIndex >= 0);
 
-			var item = this.items[realOldIndex];
-
-			this.items.Insert (realNewIndex, item);
-
-			if (realNewIndex < realOldIndex)
+			if (realOldIndex < realNewIndex)
 			{
-				this.items.RemoveAt (realOldIndex+1);
+				realNewIndex--;
+			}
+
+			this.collectionAccessor.RemoveItem (this.item);
+
+			if (realNewIndex < 0)
+			{
+				this.collectionAccessor.AddItem (this.item);
 			}
 			else
 			{
-				this.items.RemoveAt (realOldIndex);
+				this.collectionAccessor.InsertItem (realNewIndex, this.item);
 			}
 
 			compatibleItems = this.CompatibleItems.ToList ();
@@ -140,8 +151,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		
-		readonly System.Collections.IList items;
+
+		readonly ICollectionAccessor collectionAccessor;
 		readonly AbstractEntity item;
 		readonly System.Predicate<AbstractEntity> filter;
 	}

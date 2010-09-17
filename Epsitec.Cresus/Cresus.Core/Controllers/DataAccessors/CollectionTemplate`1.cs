@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				data.DeleteItem = () => this.DeleteItem (data, source, collectionAccessor);
 			}
 
-			data.GroupController = new GroupedItemController (collectionAccessor.GetItemCollection (), source, x => this.IsCompatible (x));
+			data.GroupController = new GroupedItemController (collectionAccessor, source, x => this.IsCompatible (x));
 		}
 
 		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			//	Crée une nouvelle entité et insère-la au bon endroit.
 			//	Si aucune action CreateGetIndex n'est définie, elle est insérée à la fin.
 			//	Sinon, CreateGetIndex détermine l'index à utiliser.
-			int index = collectionAccessor.GetItemCollection ().Count;  // index pour insérer à la fin
+			int index = -1;
 
 			if (this.HasCreateGetIndex)  // action CreateGetIndex définie ?
 			{
@@ -221,7 +221,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 
 			T item = this.GenericCreateItem ();
-			collectionAccessor.InsertItem (index, item);
+
+			if (index < 0)
+			{
+				index = collectionAccessor.AddItem (item);
+			}
+			else
+			{
+				collectionAccessor.InsertItem (index, item);
+			}
 
 			// Mémorise l'index de l'entité insérée, pour permettre de la sélectionner dans la tuile.
 			data.CreatedIndex = index;
