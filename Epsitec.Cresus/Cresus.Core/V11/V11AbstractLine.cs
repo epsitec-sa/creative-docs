@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
+		public string MonnaieTransaction
+		{
+			get;
+			set;
+		}
+
 		public string NoClient
 		{
 			get;
@@ -78,6 +84,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				return
 					this.GenreTransaction != V11LineGenreTransaction.Unknown &&
+					V11AbstractLine.CheckMonnaie (this.MonnaieTransaction) &&
 					this.GenreRemise      != V11LineGenreRemise.Unknown &&
 					this.Montant          != null &&
 					V11AbstractLine.CheckMonnaie (this.MonnaieMontant) &&

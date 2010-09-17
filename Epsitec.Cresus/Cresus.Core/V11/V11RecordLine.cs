@@ -28,12 +28,6 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public string MonnaieTransaction
-		{
-			get;
-			set;
-		}
-
 		public V11LineOrigine Origine
 		{
 			get;
@@ -95,7 +89,6 @@ namespace Epsitec.Cresus.Core.V11
 				return
 					this.CodeTransaction  != V11LineCodeTransaction.Unknown &&
 					this.BVRTransaction   != V11LineBVRTransaction.Unknown &&
-					V11AbstractLine.CheckMonnaie (this.MonnaieTransaction) &&
 					this.Origine          != V11LineOrigine.Unknown &&
 					this.DateDepot        != null &&
 					this.DateTraitement   != null &&
