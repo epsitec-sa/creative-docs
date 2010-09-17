@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.V11
 
 
 		/// <summary>
-		/// Choix interactif d'un fichier *.v11 puis importation des données.
+		/// Choix interactif d'un fichier *.v11 puis importation des données contenues.
 		/// </summary>
 		/// <param name="application"></param>
 		/// <param name="noClient"></param>
@@ -66,6 +66,9 @@ namespace Epsitec.Cresus.Core.V11
 			}
 		}
 
+		/// <summary>
+		/// Retourne la liste des erreurs rencontrées.
+		/// </summary>
 		public List<V11Message> Errors
 		{
 			get
@@ -117,7 +120,7 @@ namespace Epsitec.Cresus.Core.V11
 				return;
 			}
 
-			V11AbstractLine.TypeEnum type = V11AbstractLine.TypeEnum.Unknown;
+			V11LineType type = V11LineType.Unknown;
 			int lineRank = -1;
 
 			foreach (var l in lines)
@@ -130,15 +133,15 @@ namespace Epsitec.Cresus.Core.V11
 					continue;  // une ligne vide ne génère pas d'erreur
 				}
 
-				if (type == V11AbstractLine.TypeEnum.Unknown)  // type inconnu ?
+				if (type == V11LineType.Unknown)  // type inconnu ?
 				{
 					if (line.Length >= 126)
 					{
-						type = V11AbstractLine.TypeEnum.Type4;
+						type = V11LineType.Type4;
 					}
 					else if (line.Length >= 100)
 					{
-						type = V11AbstractLine.TypeEnum.Type3;
+						type = V11LineType.Type3;
 					}
 					else
 					{
@@ -150,7 +153,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				V11AbstractLine abstractRecord = null;
 
-				if (type == V11AbstractLine.TypeEnum.Type3)
+				if (type == V11LineType.Type3)
 				{
 					string genre = line.Substring (0, 3);
 
@@ -158,9 +161,9 @@ namespace Epsitec.Cresus.Core.V11
 					{
 						var record = new V11TotalLine (type);
 
-						record.GenreTransaction  = (genre == "996") ? V11AbstractLine.GenreTransactionEnum.ContrePrestation : V11AbstractLine.GenreTransactionEnum.Credit;
+						record.GenreTransaction  = (genre == "995") ? V11LineGenreTransaction.ContrePrestation : V11LineGenreTransaction.Credit;
 						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
-						record.GenreRemise       = V11AbstractLine.GenreRemiseEnum.Original;
+						record.GenreRemise       = V11LineGenreRemise.Original;
 						record.CleTri            = line.Substring (12, 27);
 						record.MonnaieMontant    = "CHF";
 						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 12));
@@ -176,9 +179,9 @@ namespace Epsitec.Cresus.Core.V11
 						var record = new V11RecordLine (type);
 
 						ImportFile.StringToTransaction3 (record, line.Substring (0, 3));
-						record.Origine           = V11RecordLine.OrigineEnum.OfficePoste;
+						record.Origine           = V11LineOrigine.OfficePoste;
 						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
-						record.GenreRemise       = V11AbstractLine.GenreRemiseEnum.Original;
+						record.GenreRemise       = V11LineGenreRemise.Original;
 						record.NoReference       = line.Substring (12, 27);
 						record.MonnaieMontant    = "CHF";
 						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 10));
@@ -195,7 +198,7 @@ namespace Epsitec.Cresus.Core.V11
 					}
 				}
 
-				if (type == V11AbstractLine.TypeEnum.Type4)
+				if (type == V11LineType.Type4)
 				{
 					string genre = line.Substring (0, 2);
 
@@ -261,103 +264,103 @@ namespace Epsitec.Cresus.Core.V11
 				case "002":
 				case "012":
 				case "022":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.Credit;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "005":
 				case "015":
 				case "025":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.ContrePrestation;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "008":
 				case "018":
 				case "028":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.Correction;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				case "032":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.Credit;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "035":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.ContrePrestation;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "038":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.GenreTransaction   = V11LineGenreTransaction.Correction;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				case "102":
 				case "112":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.Credit;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "105":
 				case "115":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.ContrePrestation;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "108":
 				case "118":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.Correction;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				case "132":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.Credit;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "135":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.ContrePrestation;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "138":
-					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.GenreTransaction   = V11LineGenreTransaction.Correction;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				default:
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Unknown;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.Unknown;
+					record.CodeTransaction    = V11LineCodeTransaction.Unknown;
+					record.BVRTransaction     = V11LineBVRTransaction.Unknown;
 					record.MonnaieTransaction = null;
 					break;
 			}
@@ -368,155 +371,156 @@ namespace Epsitec.Cresus.Core.V11
 			switch (text)
 			{
 				case "01":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "02":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Remboursement;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.Remboursement;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "03":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				case "11":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "13":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 
 				case "21":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "EUR";
 					break;
 
 				case "22":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Remboursement;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.Remboursement;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "EUR";
 					break;
 
 				case "23":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVR;
 					record.MonnaieTransaction = "EUR";
 					break;
 
 
 				case "31":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.CodeTransaction    = V11LineCodeTransaction.Normal;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "EUR";
 					break;
 
 				case "33":
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
+					record.CodeTransaction    = V11LineCodeTransaction.PropreCompte;
+					record.BVRTransaction     = V11LineBVRTransaction.BVRPlus;
 					record.MonnaieTransaction = "EUR";
 					break;
 
 
 				default:
-					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Unknown;
-					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.Unknown;
+					record.CodeTransaction    = V11LineCodeTransaction.Unknown;
+					record.BVRTransaction     = V11LineBVRTransaction.Unknown;
 					record.MonnaieTransaction = null;
 					break;
 			}
 		}
 
-		private static V11AbstractLine.GenreTransactionEnum StringToGenreTransaction(string text)
+		private static V11LineGenreTransaction StringToGenreTransaction(string text)
 		{
 			switch (text)
 			{
 				case "1":
-					return V11AbstractLine.GenreTransactionEnum.Credit;
+					return V11LineGenreTransaction.Credit;
 
 				case "2":
-					return V11AbstractLine.GenreTransactionEnum.ContrePrestation;
+					return V11LineGenreTransaction.ContrePrestation;
 
 				case "3":
-					return V11AbstractLine.GenreTransactionEnum.Correction;
+					return V11LineGenreTransaction.Correction;
 
 				default:
-					return V11AbstractLine.GenreTransactionEnum.Unknown;
+					return V11LineGenreTransaction.Unknown;
 
 			}
 		}
 
-		private static V11RecordLine.OrigineEnum StringToOrigine(string text)
+		private static V11LineOrigine StringToOrigine(string text)
 		{
 			switch (text)
 			{
 				case "01":
-					return V11RecordLine.OrigineEnum.OfficePoste;
+					return V11LineOrigine.OfficePoste;
 
 				case "02":
-					return V11RecordLine.OrigineEnum.OPA;
+					return V11LineOrigine.OPA;
 
 				case "03":
-					return V11RecordLine.OrigineEnum.yellownet;
+					return V11LineOrigine.yellownet;
 
 				case "04":
-					return V11RecordLine.OrigineEnum.EuroSIC;
+					return V11LineOrigine.EuroSIC;
 
 				default:
-					return V11RecordLine.OrigineEnum.Unknown;
+					return V11LineOrigine.Unknown;
 
 			}
 		}
 
-		private static V11AbstractLine.GenreRemiseEnum StringToGenreRemise(string text)
+		private static V11LineGenreRemise StringToGenreRemise(string text)
 		{
 			switch (text)
 			{
 				case "1":
-					return V11AbstractLine.GenreRemiseEnum.Original;
+					return V11LineGenreRemise.Original;
 
 				case "2":
-					return V11AbstractLine.GenreRemiseEnum.Reconstruction;
+					return V11LineGenreRemise.Reconstruction;
 
 				case "3":
-					return V11AbstractLine.GenreRemiseEnum.Test;
+					return V11LineGenreRemise.Test;
 
 				default:
-					return V11AbstractLine.GenreRemiseEnum.Unknown;
+					return V11LineGenreRemise.Unknown;
 
 			}
 		}
 
-		private static V11RecordLine.CodeRejetEnum StringToCodeRejet(string text)
+		private static V11LineCodeRejet StringToCodeRejet(string text)
 		{
 			switch (text)
 			{
 				case "0":
-					return V11RecordLine.CodeRejetEnum.Aucun;
+					return V11LineCodeRejet.Aucun;
 
 				case "1":
-					return V11RecordLine.CodeRejetEnum.Rejet;
+					return V11LineCodeRejet.Rejet;
 
 				case "5":
-					return V11RecordLine.CodeRejetEnum.RejetMasse;
+					return V11LineCodeRejet.RejetMasse;
 
 				default:
-					return V11RecordLine.CodeRejetEnum.Unknown;
+					return V11LineCodeRejet.Unknown;
 
 			}
 		}
+
 
 		private static int? StringToInt(string text)
 		{

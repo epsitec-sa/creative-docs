@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.V11
 {
 	public class V11TotalLine : V11AbstractLine
 	{
-		public V11TotalLine(TypeEnum type)
+		public V11TotalLine(V11LineType type)
 			: base (type)
 		{
 		}

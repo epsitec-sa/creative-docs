@@ -174,6 +174,13 @@
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintingJobDialog.cs" />
+    <Compile Include="V11\V11LineCodeRejet.cs" />
+    <Compile Include="V11\V11LineOrigine.cs" />
+    <Compile Include="V11\V11LineBVRTransaction.cs" />
+    <Compile Include="V11\V11LineCodeTransaction.cs" />
+    <Compile Include="V11\V11LineGenreRemise.cs" />
+    <Compile Include="V11\V11LineGenreTransaction.cs" />
+    <Compile Include="V11\V11LineType.cs" />
     <Compile Include="V11\V11AbstractLine.cs" />
     <Compile Include="V11\V11TotalLine.cs" />
     <Compile Include="V11\V11Message.cs" />
