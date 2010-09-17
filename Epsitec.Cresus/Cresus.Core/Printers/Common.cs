@@ -65,6 +65,8 @@ namespace Epsitec.Cresus.Core.Printers
 
 		public static bool InsidePageSize(Size pageSize, Size minimalPageSize, Size maximalPageSize)
 		{
+			//	Compare si une taille de page est comprise entre deux tailles min/max, en acceptant
+			//	les formats portrait et paysage.
 			double px = pageSize.Width;
 			double py = pageSize.Height;
 

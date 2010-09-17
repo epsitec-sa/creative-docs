@@ -73,7 +73,10 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.File.ImportV11)]
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			ImportV11.Import (CoreProgram.Application, null);
+			string noClient = null;  // TODO: choisir le n° de client
+
+			var v11 = new V11.ImportFile ();
+			v11.Import (CoreProgram.Application, noClient);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]
