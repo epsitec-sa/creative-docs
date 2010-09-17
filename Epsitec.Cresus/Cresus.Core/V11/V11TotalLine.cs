@@ -16,6 +16,25 @@ namespace Epsitec.Cresus.Core.V11
 		}
 
 
+		public string CleTri
+		{
+			get;
+			set;
+		}
+
+		public int? NbTransactions
+		{
+			get;
+			set;
+		}
+
+		public Date? DateEtablissement
+		{
+			get;
+			set;
+		}
+
+
 		public override bool IsValid
 		{
 			get
