@@ -1,16 +1,17 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
+	/// <summary>
+	/// The <c>CollectionAccessor</c> class implements the <see cref="ICollectionAccessor"/> interface.
+	/// It is used to wrap a collection of entities and provide optional insert/delete access to it.
+	/// </summary>
 	public abstract class CollectionAccessor : ICollectionAccessor
 	{
 		public static CollectionAccessor Create<T1, T2, T3>(System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
@@ -56,78 +57,5 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public abstract IEnumerable<AbstractEntity> GetItemCollection();
 
 		#endregion
-
-		public static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
-		{
-			SummaryData template;
-
-			System.Diagnostics.Debug.Assert (name.Contains ('.'));
-
-			if (CollectionAccessor.FindTemplate (collection, name, out template))
-			{
-				return CollectionAccessor.CreateSummayData (template, name, index);
-			}
-			else
-			{
-				return template;
-			}
-		}
-
-		/// <summary>
-		/// Finds the template and returns <c>true</c> if the template must be used to create a
-		/// new instance of <see cref="SummaryData"/>.
-		/// </summary>
-		/// <param name="collection">The collection.</param>
-		/// <param name="name">The item name.</param>
-		/// <param name="result">The matching template (if any).</param>
-		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryData"/>; otherwise, <c>false</c>.</returns>
-		private static bool FindTemplate(IEnumerable<SummaryData> collection, string name, out SummaryData result)
-		{
-			string prefix = SummaryData.GetNamePrefix (name);
-			string search = prefix + ".";
-
-			SummaryData template = null;
-
-			foreach (var item in collection)
-			{
-				if (item.Name == name)
-				{
-					//	Exact match: return the item and tell the caller there is no need to
-					//	create a new SummaryData -- the template can be reused as is.
-
-					result = item;
-					return false;
-				}
-
-				if (item.Name == prefix)
-				{
-					template = item;
-				}
-
-				if ((template == null) &&
-							(item.Name.StartsWith (search, System.StringComparison.Ordinal)))
-				{
-					template = item;
-				}
-			}
-
-			result = template;
-			return result != null;
-		}
-
-		private static SummaryData CreateSummayData(SummaryData template, string name, int index)
-		{
-			string prefix = SummaryData.GetNamePrefix (name);
-
-			return new SummaryData
-			{
-				Name         = SummaryData.BuildName (prefix, index),
-				AutoGroup    = template.AutoGroup,
-				IconUri      = template.IconUri,
-				Title        = template.Title,
-				CompactTitle = template.CompactTitle,
-				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
-			};
-		}
 	}
 }

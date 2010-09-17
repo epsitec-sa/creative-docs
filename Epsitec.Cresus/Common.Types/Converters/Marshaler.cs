@@ -23,16 +23,42 @@ namespace Epsitec.Common.Types.Converters
 			get;
 		}
 
+		/// <summary>
+		/// Gets the type of the marshaled data (basically, <code>typeof (T)</code>).
+		/// </summary>
+		/// <value>The type of the marshaled data.</value>
 		public abstract System.Type MarshaledType
 		{
 			get;
 		}
 
+		/// <summary>
+		/// Creates a marshaler compatible with the specified getter and setter.
+		/// </summary>
+		/// <typeparam name="T1">The type of the data source.</typeparam>
+		/// <typeparam name="T2">The type of the marshaled data.</typeparam>
+		/// <param name="source">The data source.</param>
+		/// <param name="getter">The getter.</param>
+		/// <param name="setter">The setter.</param>
+		/// <returns>
+		/// The <see cref="Marshaler"/> for the underlying type.
+		/// </returns>
 		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, T2> getter, System.Action<T1, T2> setter)
 		{
 			return Marshaler.Create (() => getter (source), x => setter (source, x));
 		}
 
+		/// <summary>
+		/// Creates a marshaler compatible with the specified getter and setter.
+		/// </summary>
+		/// <typeparam name="T1">The type of the data source.</typeparam>
+		/// <typeparam name="T2">The type of the marshaled data.</typeparam>
+		/// <param name="source">The data source.</param>
+		/// <param name="getter">The getter.</param>
+		/// <param name="setter">The setter.</param>
+		/// <returns>
+		/// The <see cref="Marshaler"/> for the underlying type.
+		/// </returns>
 		public static Marshaler<T2?> Create<T1, T2>(T1 source, System.Func<T1, T2?> getter, System.Action<T1, T2?> setter)
 			where T2 : struct
 		{
@@ -96,6 +122,11 @@ namespace Epsitec.Common.Types.Converters
 		/// </returns>
 		public abstract bool CanConvert(string text);
 
+		/// <summary>
+		/// Gets the value using the internal getter.
+		/// </summary>
+		/// <typeparam name="T">The type of the marshaled data.</typeparam>
+		/// <returns>The value.</returns>
 		public T GetValue<T>()
 		{
 			object value = this.GetObjectValue ();

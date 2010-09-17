@@ -12,15 +12,22 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
+	/// <summary>
+	/// The <c>CollectionAccessor{T1,T2,T3}</c> class is a specific implementation of
+	/// <see cref="CollectionAccessor"/>.
+	/// </summary>
+	/// <typeparam name="T1">The type of the data source.</typeparam>
+	/// <typeparam name="T2">The type of the data items.</typeparam>
+	/// <typeparam name="T3">The type of the data items represented by the collection template (same type as <c>T2</c> or derived from <c>T2</c>).</typeparam>
 	public class CollectionAccessor<T1, T2, T3> : CollectionAccessor
 		where T1 : AbstractEntity, new ()
 		where T2 : AbstractEntity, new ()
 		where T3 : T2, new ()
 	{
-		public CollectionAccessor(System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver, CollectionTemplate<T3> template)
+		public CollectionAccessor(System.Func<T1> source, System.Func<T1, IList<T2>> writableCollectionResolver, CollectionTemplate<T3> template)
 		{
 			this.source = source;
-			this.writableCollectionResolver = collectionResolver;
+			this.writableCollectionResolver = writableCollectionResolver;
 			this.template = template;
 		}
 
@@ -32,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		public override CollectionTemplate Template
+		public override CollectionTemplate		Template
 		{
 			get
 			{
@@ -40,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
-		public override bool IsReadOnly
+		public override bool					IsReadOnly
 		{
 			get
 			{
@@ -48,6 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		
 		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
 		{
 			var source     = this.GetSource ();
@@ -97,6 +105,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.IsReadOnly ? this.GetReadOnlyCollection () : this.GetWritableCollection ();
 		}
 
+		
 		private T1 GetSource()
 		{
 			return this.source ();
@@ -120,6 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return collection;
 		}
 
+		
 		private readonly System.Func<T1>				source;
 		private readonly System.Func<T1, IList<T2>>		writableCollectionResolver;
 		private readonly System.Func<IEnumerable<T2>>	readOnlyCollectionResolver;

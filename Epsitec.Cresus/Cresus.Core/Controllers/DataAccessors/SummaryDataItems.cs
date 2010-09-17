@@ -109,8 +109,94 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			//	in the empty items. This will enforce reuse of existing items.
 
 			var items = this.collectionItems.Concat (this.emptyItems);
-			return CollectionAccessor.GetTemplate (items, name, index);
+			return SummaryDataItems.GetTemplate (items, name, index);
 		}
+
+		/// <summary>
+		/// Gets the <see cref="SummaryData"/> template for the specified name; look it up in the
+		/// collection. If an exact match (name + index) cannot be found, this will create a new
+		/// template.
+		/// </summary>
+		/// <param name="collection">The collection of templates.</param>
+		/// <param name="name">The name of the template.</param>
+		/// <param name="index">The index of the template.</param>
+		/// <returns>The <see cref="SummaryData"/> template.</returns>
+		private static SummaryData GetTemplate(IEnumerable<SummaryData> collection, string name, int index)
+		{
+			SummaryData template;
+
+			System.Diagnostics.Debug.Assert (name.Contains ('.'));
+
+			if (SummaryDataItems.FindTemplate (collection, name, out template))
+			{
+				return SummaryDataItems.CreateSummayData (template, name, index);
+			}
+			else
+			{
+				return template;
+			}
+		}
+
+		/// <summary>
+		/// Finds the template and returns <c>true</c> if the template must be used to create a
+		/// new instance of <see cref="SummaryData"/>.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <param name="name">The item name.</param>
+		/// <param name="result">The matching template (if any).</param>
+		/// <returns><c>true</c> if the caller should create a new <see cref="SummaryData"/>; otherwise, <c>false</c>.</returns>
+		private static bool FindTemplate(IEnumerable<SummaryData> collection, string name, out SummaryData result)
+		{
+			string prefix = SummaryData.GetNamePrefix (name);
+			string search = prefix + ".";
+
+			SummaryData template = null;
+
+			foreach (var item in collection)
+			{
+				if (item.Name == name)
+				{
+					//	Exact match: return the item and tell the caller there is no need to
+					//	create a new SummaryData -- the template can be reused as is.
+
+					result = item;
+					return false;
+				}
+
+				//	If there is a partial match, remember the item as a possible template for
+				//	creating the expected summary data instance :
+
+				if (item.Name == prefix)
+				{
+					template = item;
+				}
+
+				if ((template == null) &&
+					(item.Name.StartsWith (search, System.StringComparison.Ordinal)))
+				{
+					template = item;
+				}
+			}
+
+			result = template;
+			return result != null;
+		}
+
+		private static SummaryData CreateSummayData(SummaryData template, string name, int index)
+		{
+			string prefix = SummaryData.GetNamePrefix (name);
+
+			return new SummaryData
+			{
+				Name         = SummaryData.BuildName (prefix, index),
+				AutoGroup    = template.AutoGroup,
+				IconUri      = template.IconUri,
+				Title        = template.Title,
+				CompactTitle = template.CompactTitle,
+				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
+			};
+		}
+
 
 		private IEnumerable<SummaryData> GetItems()
 		{
