@@ -18,8 +18,25 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// </summary>
 	public interface ICollectionAccessor : IReadOnly
 	{
+		/// <summary>
+		/// Inserts the item at the specified index.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="item">The item.</param>
 		void InsertItem(int index, AbstractEntity item);
+
+		/// <summary>
+		/// Adds the item at the end of the collection and returns its index.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns>The index of the inserted item.</returns>
 		int AddItem(AbstractEntity item);
+
+		/// <summary>
+		/// Removes the first occurrence of the item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
 		bool RemoveItem(AbstractEntity item);
 
 		/// <summary>
