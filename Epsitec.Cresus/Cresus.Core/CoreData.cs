@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private static int RobustParseNumber(string value)
+		public static int RobustParseNumber(string value)
 		{
 			int result;
 			int.TryParse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out result);

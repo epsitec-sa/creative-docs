@@ -33,11 +33,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 			}
 		}
 
-		protected override IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
-		{
-			yield break;
-		}
-
 		private void CreateUINewNaturalPersonButton(UIBuilder builder)
 		{
 			builder.CreateCreationButton<RelationEntity> (this, "Personne privée", "Crée un client de type personne privée", this.SetupNaturalPersonRelation);

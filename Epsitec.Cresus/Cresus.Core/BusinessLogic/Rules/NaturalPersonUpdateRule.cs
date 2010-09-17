@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Update)]
+	[BusinessRule (RuleType.Update)]
 	internal class NaturalPersonUpdateRule : GenericBusinessRule<NaturalPersonEntity>
 	{
 		protected override void Apply(NaturalPersonEntity person)

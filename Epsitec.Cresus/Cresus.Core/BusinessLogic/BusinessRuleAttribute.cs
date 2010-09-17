@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		{
 		}
 
+		public BusinessRuleAttribute(RuleType ruleType)
+		{
+			this.RuleType = ruleType;
+		}
+
 		public RuleType RuleType
 		{
 			get;

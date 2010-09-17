@@ -10,12 +10,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Setup)]
+	[BusinessRule (RuleType.Setup)]
 	internal class RelationSetupRule : GenericBusinessRule<RelationEntity>
 	{
 		protected override void Apply(RelationEntity relation)
 		{
-			var pool = Logic.Current.BusinessContext.Data.RefIdGeneratorPool;
+			var pool = Logic.Current.Data.RefIdGeneratorPool;
 			var generator = pool.GetGenerator<RelationEntity> ();
 			var nextId    = generator.GetNextId ();
 

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Update)]
+	[BusinessRule (RuleType.Update)]
 	internal class InvoiceDocumentUpdateRule : GenericBusinessRule<InvoiceDocumentEntity>
 	{
 		protected override void Apply(InvoiceDocumentEntity entity)

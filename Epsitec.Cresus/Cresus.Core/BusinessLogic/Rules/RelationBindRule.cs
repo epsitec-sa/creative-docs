@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Bind)]
+	[BusinessRule (RuleType.Bind)]
 	internal class RelationBindRule : GenericBusinessRule<RelationEntity>
 	{
 		protected override void Apply(RelationEntity relation)

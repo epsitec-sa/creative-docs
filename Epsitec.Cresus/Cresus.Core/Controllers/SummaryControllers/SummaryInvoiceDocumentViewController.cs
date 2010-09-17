@@ -45,11 +45,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		protected override IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
-		{
-			yield return this.Entity;
-		}
-
 		protected override void AboutToCloseUI()
 		{
 			this.CloseUIPreviewPanel ();
