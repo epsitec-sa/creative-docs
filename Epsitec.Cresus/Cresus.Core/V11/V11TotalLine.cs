@@ -1,0 +1,32 @@
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.V11
+{
+	public class V11TotalLine : V11AbstractLine
+	{
+		public V11TotalLine(TypeEnum type)
+			: base (type)
+		{
+		}
+
+
+		public override bool IsValid
+		{
+			get
+			{
+				if (!base.IsValid)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+	}
+}
