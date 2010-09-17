@@ -109,6 +109,22 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static bool IsDateInRange(System.DateTime date, System.DateTime? beginDate, System.DateTime? endDate)
+		{
+			if ((beginDate.HasValue) &&
+				(beginDate.Value > date))
+			{
+				return false;
+			}
+			if ((endDate.HasValue) &&
+				(endDate.Value < date))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 
 		public static bool ColorsCompare(IEnumerable<Color> colors1, IEnumerable<Color> colors2)
 		{

@@ -96,6 +96,7 @@
     <Compile Include="BusinessLogic\BusinessRuleAttribute.cs" />
     <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />
+    <Compile Include="BusinessLogic\Rules\ArticlePriceSetupRule.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
