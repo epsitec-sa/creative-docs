@@ -8,7 +8,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
-	public abstract class IndirectAccessor
+	public abstract class IndirectAccessor<T> : IndirectAccessor
+		where T : new ()
 	{
+		public static IndirectAccessor<T, TResult> Create<TResult>(System.Func<T, TResult> action)
+		{
+			return new IndirectAccessor<T, TResult> (action);
+		}
 	}
 }

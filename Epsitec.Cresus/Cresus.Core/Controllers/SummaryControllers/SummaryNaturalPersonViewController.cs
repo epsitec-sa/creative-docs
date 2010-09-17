@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.NaturalPerson",
 					Title				= TextFormatter.FormatText ("Personne physique"),
 					CompactTitle		= TextFormatter.FormatText ("Personne"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
-					EntityMarshaler		= this.EntityMarshaler,
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText (x.Title.Name, "\n", x.Firstname, x.Lastname, "(", x.Gender.Name, ")", "\n", x.BirthDate)),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Title.ShortName, x.Firstname, x.Lastname)),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
 

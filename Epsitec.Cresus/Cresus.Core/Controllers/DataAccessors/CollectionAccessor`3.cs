@@ -67,11 +67,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.template.IsCompatible (item))
 				{
+					var current   = item;
 					var name      = SummaryData.BuildName (this.template.NamePrefix, index);
 					var data      = summaryDataGetter (name, index);
-					var marshaler = Marshaler.Create (() => item, null);
+					var marshaler = Marshaler.Create (() => current, null);
 					
-					this.template.BindSummaryData (data, item, marshaler, this);
+					this.template.BindSummaryData (data, current, marshaler, this);
 
 					yield return data;
 

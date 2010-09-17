@@ -1,13 +1,15 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
+using Epsitec.Cresus.Core.Controllers.EditionControllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -50,15 +52,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public Marshaler<T> EntityMarshaler
-		{
-			get
-			{
-				return Marshaler.Create (this.entity, x => x, null);
-			}
-		}
 
-		public sealed override void CreateUI(Widget container)
+        public sealed override void CreateUI(Widget container)
 		{
 			var context       = this.DataContext;
 			var entity        = this.Entity;
@@ -70,13 +65,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateUI ();
 		}
 
-
 		public sealed override AbstractEntity GetEntity()
 		{
 			return this.Entity;
 		}
 
 
+		protected internal Marshaler<T> CreateEntityMarshaler()
+		{
+			return Marshaler.Create (this.entity, x => x, null);
+		}
+		
+		protected Accessor<FormattedText> CreateAccessor(System.Func<T, FormattedText> formatter)
+		{
+			return Accessor.Create (this.EntityGetter, formatter);
+		}
+		
 		protected override void AboutToCloseUI()
 		{
 			this.UpgradeEmptyEntity ();

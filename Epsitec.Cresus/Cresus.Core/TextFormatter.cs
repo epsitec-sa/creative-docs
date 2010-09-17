@@ -209,7 +209,6 @@ namespace Epsitec.Cresus.Core
 			return value.ToString ();
 		}
 	}
-
 	
 	static class StringExtension
 	{

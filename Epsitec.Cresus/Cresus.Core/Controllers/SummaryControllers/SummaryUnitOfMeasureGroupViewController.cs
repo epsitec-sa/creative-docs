@@ -43,9 +43,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.UnitOfMeasureGroup",
 					Title				= TextFormatter.FormatText ("Groupe d'unités de mesure"),
 					CompactTitle		= TextFormatter.FormatText ("Groupe d'unités"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("Nom: ", x.Name, "\n", "Description: ", x.Description, "\n", "Catégorie: ", GetCategory (x))),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-					EntityMarshaler		= this.EntityMarshaler,
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("Nom: ", x.Name, "\n", "Description: ", x.Description, "\n", "Catégorie: ", GetCategory (x))),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
 

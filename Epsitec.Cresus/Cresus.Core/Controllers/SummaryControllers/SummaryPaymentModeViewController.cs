@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						IconUri				= "Data.PaymentMode",
 						Title				= TextFormatter.FormatText ("Mode de paiement"),
 						CompactTitle		= TextFormatter.FormatText ("Mode de paiement"),
-						TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("Code: ", x.Code, "\n", "Résumé: ", x.Name, "\n", "Description: ", x.Description, "\n", "Compte: ", x.BookAccount)),
-						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-						EntityMarshaler		= this.EntityMarshaler,
+						TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("Code: ", x.Code, "\n", "Résumé: ", x.Name, "\n", "Description: ", x.Description, "\n", "Compte: ", x.BookAccount)),
+						CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+						EntityMarshaler		= this.CreateEntityMarshaler (),
 					});
 			}
 		}
