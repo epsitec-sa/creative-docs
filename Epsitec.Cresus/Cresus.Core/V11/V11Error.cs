@@ -11,8 +11,10 @@ namespace Epsitec.Cresus.Core.V11
 	{
 		OK,
 		Aborted,
+		GenericError,
 
 		FileNotFound,
+		WrongCustomer,
 		InvalidFormat,
 		EmptyData,
 	}
