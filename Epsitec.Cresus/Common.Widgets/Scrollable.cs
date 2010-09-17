@@ -675,7 +675,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (this.IsEnabled == false)
+			if ((this.IsEnabled == false) ||
+				(this.ScrollWithHand == false))
 			{
 				return;
 			}
