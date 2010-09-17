@@ -80,8 +80,16 @@ namespace Epsitec.Cresus.Core.V11
 					this.GenreTransaction != V11LineGenreTransaction.Unknown &&
 					this.GenreRemise      != V11LineGenreRemise.Unknown &&
 					this.Montant          != null &&
-					this.Taxes            != null;
+					V11AbstractLine.CheckMonnaie (this.MonnaieMontant) &&
+					this.Taxes            != null &&
+					V11AbstractLine.CheckMonnaie (this.MonnaieTaxes);
 			}
+		}
+
+
+		protected static bool CheckMonnaie(string monnaie)
+		{
+			return monnaie != null && monnaie.Length == 3;
 		}
 
 
