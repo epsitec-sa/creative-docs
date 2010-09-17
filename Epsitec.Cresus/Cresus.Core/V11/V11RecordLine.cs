@@ -10,54 +10,19 @@ namespace Epsitec.Cresus.Core.V11
 {
 	public class V11RecordLine : V11AbstractLine
 	{
-#region Enumerations
-		public enum CodeTransactionEnum
-		{
-			Unknown,
-			Normal,
-			Remboursement,
-			PropreCompte,
-		}
-
-		public enum BVRTransactionEnum
-		{
-			Unknown,
-			BVR,
-			BVRPlus,
-		}
-
-		public enum OrigineEnum
-		{
-			Unknown,
-			OfficePoste,
-			OPA,
-			yellownet,
-			EuroSIC,
-		}
-
-		public enum CodeRejetEnum
-		{
-			Unknown,
-			Aucun,
-			Rejet,
-			RejetMasse,
-		}
-#endregion
-
-
-		public V11RecordLine(TypeEnum type)
+		public V11RecordLine(V11LineType type)
 			: base (type)
 		{
 		}
 
 
-		public CodeTransactionEnum CodeTransaction
+		public V11LineCodeTransaction CodeTransaction
 		{
 			get;
 			set;
 		}
 
-		public BVRTransactionEnum BVRTransaction
+		public V11LineBVRTransaction BVRTransaction
 		{
 			get;
 			set;
@@ -69,7 +34,7 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public OrigineEnum Origine
+		public V11LineOrigine Origine
 		{
 			get;
 			set;
@@ -111,7 +76,7 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public CodeRejetEnum CodeRejet
+		public V11LineCodeRejet CodeRejet
 		{
 			get;
 			set;
@@ -128,13 +93,13 @@ namespace Epsitec.Cresus.Core.V11
 				}
 
 				return
-					this.CodeTransaction  != CodeTransactionEnum.Unknown &&
-					this.BVRTransaction   != BVRTransactionEnum.Unknown &&
-					this.Origine          != OrigineEnum.Unknown &&
+					this.CodeTransaction  != V11LineCodeTransaction.Unknown &&
+					this.BVRTransaction   != V11LineBVRTransaction.Unknown &&
+					this.Origine          != V11LineOrigine.Unknown &&
 					this.DateDepot        != null &&
 					this.DateTraitement   != null &&
 					this.DateCredit       != null &&
-					this.CodeRejet        != CodeRejetEnum.Unknown;
+					this.CodeRejet        != V11LineCodeRejet.Unknown;
 			}
 		}
 	}

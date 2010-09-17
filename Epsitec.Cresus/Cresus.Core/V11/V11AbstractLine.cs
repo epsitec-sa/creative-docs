@@ -10,39 +10,13 @@ namespace Epsitec.Cresus.Core.V11
 {
 	public abstract class V11AbstractLine
 	{
-		#region Enumerations
-		public enum TypeEnum
-		{
-			Unknown,
-			Type3,
-			Type4,
-		}
-
-		public enum GenreTransactionEnum
-		{
-			Unknown,
-			Credit,
-			ContrePrestation,
-			Correction,
-		}
-
-		public enum GenreRemiseEnum
-		{
-			Unknown,
-			Original,
-			Reconstruction,
-			Test,
-		}
-		#endregion
-
-
-		public V11AbstractLine(TypeEnum type)
+		public V11AbstractLine(V11LineType type)
 		{
 			this.type = type;
 		}
 
 
-		public TypeEnum Type
+		public V11LineType Type
 		{
 			get
 			{
@@ -50,7 +24,7 @@ namespace Epsitec.Cresus.Core.V11
 			}
 		}
 
-		public GenreTransactionEnum GenreTransaction
+		public V11LineGenreTransaction GenreTransaction
 		{
 			get;
 			set;
@@ -62,7 +36,7 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public GenreRemiseEnum GenreRemise
+		public V11LineGenreRemise GenreRemise
 		{
 			get;
 			set;
@@ -97,20 +71,20 @@ namespace Epsitec.Cresus.Core.V11
 		{
 			get
 			{
-				if (this.Type == TypeEnum.Unknown)
+				if (this.Type == V11LineType.Unknown)
 				{
 					return false;
 				}
 
 				return
-					this.GenreTransaction != GenreTransactionEnum.Unknown &&
-					this.GenreRemise      != GenreRemiseEnum.Unknown &&
+					this.GenreTransaction != V11LineGenreTransaction.Unknown &&
+					this.GenreRemise      != V11LineGenreRemise.Unknown &&
 					this.Montant          != null &&
 					this.Taxes            != null;
 			}
 		}
 
 
-		private readonly TypeEnum type;
+		private readonly V11LineType type;
 	}
 }
