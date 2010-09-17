@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineText        (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
 			template.DefineCompactText (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, template));
+			data.Add (this.CreateCollectionAccessor (template));
 		}
 	}
 }

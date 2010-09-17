@@ -80,7 +80,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return Accessor.Create (this.EntityGetter, formatter);
 		}
-		
+
+		protected CollectionAccessor CreateCollectionAccessor<T1, T2>(CollectionTemplate<T1> template, System.Func<T, IList<T2>> collectionResolver)
+			where T1 : T2, new ()
+			where T2 : AbstractEntity, new ()
+		{
+			return CollectionAccessor.Create (this.EntityGetter, collectionResolver, template);
+		}
+
+		protected CollectionAccessor CreateCollectionAccessor<T1>(CollectionTemplate<T1> template)
+			where T1 : AbstractEntity, new ()
+		{
+			return CollectionAccessor.Create (this.EntityGetter, template);
+		}
+
 		protected override void AboutToCloseUI()
 		{
 			this.UpgradeEmptyEntity ();

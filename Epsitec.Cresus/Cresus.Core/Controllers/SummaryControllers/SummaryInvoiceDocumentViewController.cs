@@ -152,13 +152,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleDocumentItem", data.Controller, this.DataContext);
 
-			template.DefineText           (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
-			template.DefineCompactText    (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
-			template.DefineCreateItem     (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
+			template.DefineText (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
+			template.DefineCreateItem (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
 			template.Filter = SummaryInvoiceDocumentViewController.ArticleLineFilter;
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Lines, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Lines));
 		}
 
 		private void CreateUITotalSummary(UIBuilder builder)
@@ -181,12 +181,12 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext);
-			
-			template.DefineText        (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineSetupItem   (SummaryInvoiceDocumentViewController.SetupBillingDetails);
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.BillingDetails, template));
+			template.DefineText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineCompactText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineSetupItem (SummaryInvoiceDocumentViewController.SetupBillingDetails);
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
 		}
 
 		private void CreateUIComments(SummaryDataItems data)

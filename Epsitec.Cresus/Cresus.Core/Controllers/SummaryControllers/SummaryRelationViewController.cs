@@ -94,10 +94,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AffairEntity> ("Affair", this.BusinessContext);
 
-			template.DefineText        (x => x.GetSummary ());
+			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => TextFormatter.FormatText (x.IdA));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Affairs, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Affairs));
 		}
 	}
 }

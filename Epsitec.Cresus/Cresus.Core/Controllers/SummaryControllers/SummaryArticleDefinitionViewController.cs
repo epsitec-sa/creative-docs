@@ -61,13 +61,13 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", this.BusinessContext);
 
-			template.DefineText        (x => x.GetSummary ());
+			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
-			template.DefineCreateItem  (this.CreateParameter);  // le bouton [+] crée une ligne d'article
+			template.CreateItemsOfType<NumericValueArticleParameterDefinitionEntity> ();
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.ArticleParameterDefinitions));
 		}
 
 		private void CreateUIPrices(SummaryDataItems data)
@@ -85,23 +85,17 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", this.BusinessContext);
 
-			template.DefineText        (x => x.GetSummary ());
+			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
-//			template.DefineCreateItem  (this.CreateArticlePrice);
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticlePrices, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.ArticlePrices));
 		}
+		
 		private void CreateUIComments(SummaryDataItems data)
 		{
 			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
 		}
 
-
-		private NumericValueArticleParameterDefinitionEntity CreateParameter()
-		{
-			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			return this.DataContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
-		}
 
 		protected override EditionStatus GetEditionStatus()
 		{
