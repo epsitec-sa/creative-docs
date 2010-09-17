@@ -14,8 +14,6 @@ namespace Epsitec.Cresus.Core.V11
 		GenericError,
 
 		FileNotFound,
-		WrongCustomer,
 		InvalidFormat,
-		EmptyData,
 	}
 }

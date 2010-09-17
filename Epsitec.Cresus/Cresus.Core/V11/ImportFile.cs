@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.V11
 		/// <param name="application"></param>
 		/// <param name="noClient"></param>
 		/// <returns></returns>
-		public V11Message Import(CoreApplication application, string noClient)
+		public V11Message Import(CoreApplication application)
 		{
 			string filename = this.OpenFileDialog (application);
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.V11
 				return V11Message.Aborted;
 			}
 
-			this.ReadFile (application, filename, noClient);
+			this.ReadFile (application, filename);
 
 			if (this.errors.Count > 0)
 			{
@@ -48,7 +48,8 @@ namespace Epsitec.Cresus.Core.V11
 			}
 			else
 			{
-				MessageDialog.CreateOk ("Terminé", DialogIcon.Question, "Importation réussie").OpenDialog ();
+				FormattedText description = TextFormatter.FormatText ("Importation réussie de", this.records.Count.ToString(), "lignes");
+				MessageDialog.CreateOk ("Terminé", DialogIcon.Question, description.ToString ()).OpenDialog ();
 
 				return V11Message.OK;
 			}
@@ -98,17 +99,10 @@ namespace Epsitec.Cresus.Core.V11
 			return dialog.FileName;
 		}
 
-		private void ReadFile(CoreApplication application, string filename, string noClient)
+		private void ReadFile(CoreApplication application, string filename)
 		{
 			this.records.Clear ();
 			this.errors.Clear ();
-
-			if (string.IsNullOrWhiteSpace (noClient))
-			{
-				noClient = "10694443";  // TODO: provisoire...
-			}
-
-			noClient = noClient.TrimStart ('0');
 
 			string[] lines;
 
@@ -158,19 +152,22 @@ namespace Epsitec.Cresus.Core.V11
 
 				if (type == V11AbstractLine.TypeEnum.Type3)
 				{
-					string client = line.Substring (3, 9).TrimStart ('0');
-					if (client != noClient)
-					{
-						FormattedText description = TextFormatter.FormatText ("Les données sont pour un autre client (", client, "au lieu de ", noClient, ")");
-						this.errors.Add (new V11Message (V11Error.WrongCustomer, lineRank, line, description));
-						continue;
-					}
-
 					string genre = line.Substring (0, 3);
 
 					if (genre == "999" || genre == "995")
 					{
 						var record = new V11TotalLine (type);
+
+						record.GenreTransaction  = (genre == "996") ? V11AbstractLine.GenreTransactionEnum.ContrePrestation : V11AbstractLine.GenreTransactionEnum.Credit;
+						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
+						record.GenreRemise       = V11AbstractLine.GenreRemiseEnum.Original;
+						record.CleTri            = line.Substring (12, 27);
+						record.MonnaieMontant    = "CHF";
+						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 12));
+						record.NbTransactions    = ImportFile.StringToInt (line.Substring (51, 12));
+						record.DateEtablissement = ImportFile.StringToDate (line.Substring (63, 6));
+						record.MonnaieTaxes      = "CHF";
+						record.Taxes             = ImportFile.StringToPrice (line.Substring (69, 9));
 
 						abstractRecord = record;
 					}
@@ -179,19 +176,20 @@ namespace Epsitec.Cresus.Core.V11
 						var record = new V11RecordLine (type);
 
 						ImportFile.StringToTransaction3 (record, line.Substring (0, 3));
-						record.Origine          = V11RecordLine.OrigineEnum.OfficePoste;
-						record.GenreRemise      = V11RecordLine.GenreRemiseEnum.Original;
-						record.NoReference      = line.Substring (12, 27);
-						record.MonnaieMontant   = "CHF";
-						record.Montant          = ImportFile.StringToPrice (line.Substring (39, 10));
-						record.RefDepot         = line.Substring (49, 10);
-						record.DateDepot        = ImportFile.StringToDate (line.Substring (59, 6));
-						record.DateTraitement   = ImportFile.StringToDate (line.Substring (65, 6));
-						record.DateCredit       = ImportFile.StringToDate (line.Substring (71, 6));
-						record.NoMicrofilm      = line.Substring (77, 9).TrimStart ('0');
-						record.CodeRejet        = ImportFile.StringToCodeRejet (line.Substring (86, 1));
-						record.MonnaieTaxes     = "CHF";
-						record.Taxes            = ImportFile.StringToPrice (line.Substring (96, 4));
+						record.Origine           = V11RecordLine.OrigineEnum.OfficePoste;
+						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
+						record.GenreRemise       = V11AbstractLine.GenreRemiseEnum.Original;
+						record.NoReference       = line.Substring (12, 27);
+						record.MonnaieMontant    = "CHF";
+						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 10));
+						record.RefDepot          = line.Substring (49, 10);
+						record.DateDepot         = ImportFile.StringToDate (line.Substring (59, 6));
+						record.DateTraitement    = ImportFile.StringToDate (line.Substring (65, 6));
+						record.DateCredit        = ImportFile.StringToDate (line.Substring (71, 6));
+						record.NoMicrofilm       = line.Substring (77, 9).TrimStart ('0');
+						record.CodeRejet         = ImportFile.StringToCodeRejet (line.Substring (86, 1));
+						record.MonnaieTaxes      = "CHF";
+						record.Taxes             = ImportFile.StringToPrice (line.Substring (96, 4));
 
 						abstractRecord = record;
 					}
@@ -199,19 +197,22 @@ namespace Epsitec.Cresus.Core.V11
 
 				if (type == V11AbstractLine.TypeEnum.Type4)
 				{
-					string client = line.Substring (6, 9).TrimStart ('0');
-					if (client != noClient)
-					{
-						FormattedText description = TextFormatter.FormatText ("Les données sont pour un autre client (", client, "au lieu de ", noClient, ")");
-						this.errors.Add (new V11Message (V11Error.WrongCustomer, lineRank, line, description));
-						continue;
-					}
-
 					string genre = line.Substring (0, 2);
 
 					if (genre == "99" || genre == "98")
 					{
 						var record = new V11TotalLine (type);
+
+						record.GenreTransaction  = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
+						record.NoClient          = line.Substring (6, 9).TrimStart ('0');
+						record.GenreRemise       = ImportFile.StringToGenreRemise (line.Substring (5, 1));
+						record.CleTri            = line.Substring (15, 27);
+						record.MonnaieMontant    = line.Substring (42, 3);
+						record.Montant           = ImportFile.StringToPrice (line.Substring (45, 12));
+						record.NbTransactions    = ImportFile.StringToInt (line.Substring (57, 12));
+						record.DateEtablissement = ImportFile.StringToDate (line.Substring (69, 8));
+						record.MonnaieTaxes      = line.Substring (77, 3);
+						record.Taxes             = ImportFile.StringToPrice (line.Substring (80, 11));
 
 						abstractRecord = record;
 					}
@@ -220,20 +221,21 @@ namespace Epsitec.Cresus.Core.V11
 						var record = new V11RecordLine (type);
 
 						ImportFile.StringToTransaction4 (record, line.Substring (0, 2));
-						record.GenreTransaction = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
-						record.Origine          = ImportFile.StringToOrigine (line.Substring (3, 2));
-						record.GenreRemise      = ImportFile.StringToGenreRemise (line.Substring (5, 1));
-						record.NoReference      = line.Substring (15, 27);
-						record.MonnaieMontant   = line.Substring (42, 3);
-						record.Montant          = ImportFile.StringToPrice (line.Substring (45, 10));
-						record.RefDepot         = "";
-						record.DateDepot        = ImportFile.StringToDate (line.Substring (92, 8));
-						record.DateTraitement   = ImportFile.StringToDate (line.Substring (100, 8));
-						record.DateCredit       = ImportFile.StringToDate (line.Substring (108, 8));
-						record.NoMicrofilm      = "";
-						record.CodeRejet        = ImportFile.StringToCodeRejet (line.Substring (116, 1));
-						record.MonnaieTaxes     = line.Substring (117, 3);
-						record.Taxes            = ImportFile.StringToPrice (line.Substring (120, 6));
+						record.GenreTransaction  = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
+						record.Origine           = ImportFile.StringToOrigine (line.Substring (3, 2));
+						record.NoClient          = line.Substring (6, 9).TrimStart ('0');
+						record.GenreRemise       = ImportFile.StringToGenreRemise (line.Substring (5, 1));
+						record.NoReference       = line.Substring (15, 27);
+						record.MonnaieMontant    = line.Substring (42, 3);
+						record.Montant           = ImportFile.StringToPrice (line.Substring (45, 12));
+						record.RefDepot          = "";
+						record.DateDepot         = ImportFile.StringToDate (line.Substring (92, 8));
+						record.DateTraitement    = ImportFile.StringToDate (line.Substring (100, 8));
+						record.DateCredit        = ImportFile.StringToDate (line.Substring (108, 8));
+						record.NoMicrofilm       = "";
+						record.CodeRejet         = ImportFile.StringToCodeRejet (line.Substring (116, 1));
+						record.MonnaieTaxes      = line.Substring (117, 3);
+						record.Taxes             = ImportFile.StringToPrice (line.Substring (120, 6));
 
 						abstractRecord = record;
 					}
@@ -249,12 +251,6 @@ namespace Epsitec.Cresus.Core.V11
 					this.errors.Add (new V11Message (V11Error.InvalidFormat, lineRank, line, description));
 				}
 			}
-
-			if (this.records.Count == 0)
-			{
-				FormattedText description = TextFormatter.FormatText ("Aucune donnée pour le client", noClient);
-				this.errors.Add (new V11Message (V11Error.EmptyData, null, null, description));
-			}
 		}
 
 
@@ -265,7 +261,7 @@ namespace Epsitec.Cresus.Core.V11
 				case "002":
 				case "012":
 				case "022":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Credit;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
@@ -274,7 +270,7 @@ namespace Epsitec.Cresus.Core.V11
 				case "005":
 				case "015":
 				case "025":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.ContrePrestation;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
@@ -283,7 +279,7 @@ namespace Epsitec.Cresus.Core.V11
 				case "008":
 				case "018":
 				case "028":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Correction;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
@@ -291,21 +287,21 @@ namespace Epsitec.Cresus.Core.V11
 
 
 				case "032":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Credit;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "035":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.ContrePrestation;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "038":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Correction;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVR;
 					record.MonnaieTransaction = "CHF";
@@ -314,7 +310,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				case "102":
 				case "112":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Credit;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
@@ -322,7 +318,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				case "105":
 				case "115":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.ContrePrestation;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
@@ -330,7 +326,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				case "108":
 				case "118":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Correction;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.Normal;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
@@ -338,21 +334,21 @@ namespace Epsitec.Cresus.Core.V11
 
 
 				case "132":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Credit;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Credit;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "135":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.ContrePrestation;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.ContrePrestation;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
 					break;
 
 				case "138":
-					record.GenreTransaction   = V11RecordLine.GenreTransactionEnum.Correction;
+					record.GenreTransaction   = V11AbstractLine.GenreTransactionEnum.Correction;
 					record.CodeTransaction    = V11RecordLine.CodeTransactionEnum.PropreCompte;
 					record.BVRTransaction     = V11RecordLine.BVRTransactionEnum.BVRPlus;
 					record.MonnaieTransaction = "CHF";
@@ -443,21 +439,21 @@ namespace Epsitec.Cresus.Core.V11
 			}
 		}
 
-		private static V11RecordLine.GenreTransactionEnum StringToGenreTransaction(string text)
+		private static V11AbstractLine.GenreTransactionEnum StringToGenreTransaction(string text)
 		{
 			switch (text)
 			{
 				case "1":
-					return V11RecordLine.GenreTransactionEnum.Credit;
+					return V11AbstractLine.GenreTransactionEnum.Credit;
 
 				case "2":
-					return V11RecordLine.GenreTransactionEnum.ContrePrestation;
+					return V11AbstractLine.GenreTransactionEnum.ContrePrestation;
 
 				case "3":
-					return V11RecordLine.GenreTransactionEnum.Correction;
+					return V11AbstractLine.GenreTransactionEnum.Correction;
 
 				default:
-					return V11RecordLine.GenreTransactionEnum.Unknown;
+					return V11AbstractLine.GenreTransactionEnum.Unknown;
 
 			}
 		}
@@ -484,21 +480,21 @@ namespace Epsitec.Cresus.Core.V11
 			}
 		}
 
-		private static V11RecordLine.GenreRemiseEnum StringToGenreRemise(string text)
+		private static V11AbstractLine.GenreRemiseEnum StringToGenreRemise(string text)
 		{
 			switch (text)
 			{
 				case "1":
-					return V11RecordLine.GenreRemiseEnum.Original;
+					return V11AbstractLine.GenreRemiseEnum.Original;
 
 				case "2":
-					return V11RecordLine.GenreRemiseEnum.Reconstruction;
+					return V11AbstractLine.GenreRemiseEnum.Reconstruction;
 
 				case "3":
-					return V11RecordLine.GenreRemiseEnum.Test;
+					return V11AbstractLine.GenreRemiseEnum.Test;
 
 				default:
-					return V11RecordLine.GenreRemiseEnum.Unknown;
+					return V11AbstractLine.GenreRemiseEnum.Unknown;
 
 			}
 		}

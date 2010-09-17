@@ -17,6 +17,22 @@ namespace Epsitec.Cresus.Core.V11
 			Type3,
 			Type4,
 		}
+
+		public enum GenreTransactionEnum
+		{
+			Unknown,
+			Credit,
+			ContrePrestation,
+			Correction,
+		}
+
+		public enum GenreRemiseEnum
+		{
+			Unknown,
+			Original,
+			Reconstruction,
+			Test,
+		}
 		#endregion
 
 
@@ -34,12 +50,63 @@ namespace Epsitec.Cresus.Core.V11
 			}
 		}
 
+		public GenreTransactionEnum GenreTransaction
+		{
+			get;
+			set;
+		}
+
+		public string NoClient
+		{
+			get;
+			set;
+		}
+
+		public GenreRemiseEnum GenreRemise
+		{
+			get;
+			set;
+		}
+
+		public decimal? Montant
+		{
+			get;
+			set;
+		}
+
+		public string MonnaieMontant
+		{
+			get;
+			set;
+		}
+
+		public decimal? Taxes
+		{
+			get;
+			set;
+		}
+
+		public string MonnaieTaxes
+		{
+			get;
+			set;
+		}
+
 
 		public virtual bool IsValid
 		{
 			get
 			{
-				return this.Type != TypeEnum.Unknown;
+				if (this.Type == TypeEnum.Unknown)
+				{
+					return false;
+				}
+
+				return
+					this.GenreTransaction != GenreTransactionEnum.Unknown &&
+					this.GenreRemise      != GenreRemiseEnum.Unknown &&
+					this.Montant          != null &&
+					this.Taxes            != null;
 			}
 		}
 
