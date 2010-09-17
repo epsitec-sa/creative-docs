@@ -40,10 +40,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					Name				= "ArticleDefinition",
 					IconUri				= "Data.ArticleDefinition",
-					Title				= TextFormatter.FormatText ("Article", "(", string.Join (", ", this.Entity.ArticleGroups.Select (g => g.Name)), ")"),
+					Title				= TextFormatter.FormatText ("Article", "(", TextFormatter.Join (", ", this.Entity.ArticleGroups.Select (group => group.Name)), ")"),
 					CompactTitle		= TextFormatter.FormatText ("Article"),
-					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
-					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("N°~", x.IdA, "\n", x.ShortDescription, "\n", x.LongDescription)),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("N°~", x.IdA, "~, ~", x.ShortDescription)),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
@@ -83,11 +83,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", this.BusinessContext);
 
 			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetSummary ());
-			template.DefineCreateItem  (this.CreateArticlePrice);
+//			template.DefineCreateItem  (this.CreateArticlePrice);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticlePrices, template));
 		}
@@ -102,51 +102,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
 			return this.DataContext.CreateEntityAndRegisterAsEmpty<NumericValueArticleParameterDefinitionEntity> ();
 		}
-
-		private ArticlePriceEntity CreateArticlePrice()
-		{
-			//	Crée une nouvelle ligne dans la facture du type le plus courant, c'est-à-dire ArticleDocumentItemEntity.
-			var price = this.DataContext.CreateEntityAndRegisterAsEmpty<ArticlePriceEntity> ();
-
-			price.CurrencyCode = Business.Finance.CurrencyCode.Chf;
-			price.MinQuantity = 1;
-
-			var now = System.DateTime.Now;
-			var begin = this.OldestPriceDate;
-
-			if (begin == System.DateTime.MinValue)
-			{
-				begin = new System.DateTime (now.Year, 1, 1);  // le premier janvier de l'année en cours
-			}
-			else
-			{
-				begin = new System.DateTime (begin.Ticks + 10000000);  // begin + une seconde
-			}
-
-			price.BeginDate = begin;
-			price.EndDate = new System.DateTime (begin.Year+10, 12, 31, 23, 59, 59);
-
-			return price;
-		}
-
-		private System.DateTime OldestPriceDate
-		{
-			get
-			{
-				System.DateTime oldest = System.DateTime.MinValue;
-
-				foreach (var price in this.Entity.ArticlePrices)
-				{
-					if (price.EndDate.HasValue && price.EndDate.Value > oldest)
-					{
-						oldest = price.EndDate.Value;
-					}
-				}
-
-				return oldest;
-			}
-		}
-
 
 		protected override EditionStatus GetEditionStatus()
 		{

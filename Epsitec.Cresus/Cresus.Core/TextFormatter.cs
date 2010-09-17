@@ -208,6 +208,11 @@ namespace Epsitec.Cresus.Core
 
 			return value.ToString ();
 		}
+
+		public static FormattedText Join(string separator, IEnumerable<FormattedText> collection)
+		{
+			return new FormattedText (string.Join (separator, collection.Select (x => TextFormatter.ConvertToText (x)).ToArray ()));
+		}
 	}
 	
 	static class StringExtension

@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				builder.Append (new FormattedText ("<i>Vide</i>"));
+				builder.Append ("<i>Vide</i>");
 			}
 		}
 	}

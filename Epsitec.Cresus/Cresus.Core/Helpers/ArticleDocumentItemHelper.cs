@@ -53,14 +53,11 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static decimal? GetArticlePrice(ArticleDocumentItemEntity article, System.DateTime date, Business.Finance.CurrencyCode currency)
 		{
 			//	Il peut y avoir plusieurs prix, mais un seul prix à une date donnée pour une monnaie donnée.
-			foreach (var price in article.ArticleDefinition.ArticlePrices)
+			foreach (var price in article.ArticleDefinition.ArticlePrices.Where (price => price.CurrencyCode == currency))
 			{
-				if (price.BeginDate.HasValue && price.EndDate.HasValue)
+				if (Misc.IsDateInRange (date, price.BeginDate, price.EndDate))
 				{
-					if (date >= price.BeginDate && date <= price.EndDate && currency == price.CurrencyCode)
-					{
-						return price.ValueBeforeTax;
-					}
+					return price.ValueBeforeTax;
 				}
 			}
 
