@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
@@ -39,6 +40,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public override bool IsReadOnly
+		{
+			get
+			{
+				return this.writableCollectionResolver == null;
+			}
+		}
 
 		public override IEnumerable<SummaryData> Resolve(System.Func<string, int, SummaryData> summaryDataGetter)
 		{
@@ -70,10 +78,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			collection.Insert (index, item as T3);
 		}
 
-		public override void AddItem(AbstractEntity item)
+		public override int AddItem(AbstractEntity item)
 		{
 			var collection = this.GetWritableCollection ();
+			int index = collection.Count;
 			collection.Add (item as T3);
+			return index;
 		}
 
 		public override bool RemoveItem(AbstractEntity item)
@@ -82,17 +92,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return collection.Remove (item as T3);
 		}
 
-		public override System.Collections.IList GetItemCollection()
+		public override IEnumerable<AbstractEntity> GetItemCollection()
 		{
-			if (this.writableCollectionResolver != null)
-			{
-				var source = this.GetSource ();
-				return this.writableCollectionResolver (source) as System.Collections.IList;
-			}
-			else
-			{
-				return this.readOnlyCollectionResolver ().ToList ();
-			}
+			return this.IsReadOnly ? this.GetReadOnlyCollection () : this.GetWritableCollection ();
 		}
 
 		private T1 GetSource()
@@ -100,9 +102,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.source ();
 		}
 
+		private IEnumerable<T2> GetReadOnlyCollection()
+		{
+			return this.readOnlyCollectionResolver ();
+		}
+
 		private IList<T2> GetWritableCollection()
 		{
-			var source = this.GetSource ();
+			var source     = this.GetSource ();
 			var collection = this.writableCollectionResolver (source);
 
 			if (collection == null)

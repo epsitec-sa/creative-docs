@@ -16,16 +16,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// The <c>ICollectionAccessor</c> interface is used to access items in an entity
 	/// collection.
 	/// </summary>
-	public interface ICollectionAccessor
+	public interface ICollectionAccessor : IReadOnly
 	{
 		void InsertItem(int index, AbstractEntity item);
-		void AddItem(AbstractEntity item);
+		int AddItem(AbstractEntity item);
 		bool RemoveItem(AbstractEntity item);
 
 		/// <summary>
 		/// Gets the item collection.
 		/// </summary>
 		/// <returns>The item collection.</returns>
-		System.Collections.IList GetItemCollection();
+		IEnumerable<AbstractEntity> GetItemCollection();
 	}
 }
