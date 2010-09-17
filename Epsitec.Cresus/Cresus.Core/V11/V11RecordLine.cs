@@ -8,16 +8,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.V11
 {
-	public class V11Record
+	public class V11RecordLine : V11AbstractLine
 	{
 #region Enumerations
-		public enum TypeEnum
-		{
-			Unknown,
-			Type3,
-			Type4,
-		}
-
 		public enum CodeTransactionEnum
 		{
 			Unknown,
@@ -68,11 +61,11 @@ namespace Epsitec.Cresus.Core.V11
 #endregion
 
 
-		public TypeEnum Type
+		public V11RecordLine(TypeEnum type)
+			: base (type)
 		{
-			get;
-			set;
 		}
+
 
 		public CodeTransactionEnum CodeTransaction
 		{
@@ -176,10 +169,16 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public bool IsValid
+
+		public override bool IsValid
 		{
 			get
 			{
+				if (!base.IsValid)
+				{
+					return false;
+				}
+
 				return
 					this.Type             != TypeEnum.Unknown &&
 					this.CodeTransaction  != CodeTransactionEnum.Unknown &&

@@ -168,9 +168,11 @@
     <Compile Include="Repositories\UnitOfMeasureGroupRepository.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintingJobDialog.cs" />
+    <Compile Include="V11\V11AbstractLine.cs" />
+    <Compile Include="V11\V11TotalLine.cs" />
     <Compile Include="V11\V11Message.cs" />
     <Compile Include="V11\V11Error.cs" />
-    <Compile Include="V11\V11Record.cs" />
+    <Compile Include="V11\V11RecordLine.cs" />
     <Compile Include="V11\ImportFile.cs" />
     <Compile Include="Repositories\AffairRepository.cs" />
     <Compile Include="Repositories\DocumentRepository.cs" />
