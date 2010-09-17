@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Core.V11
 					this.CodeTransaction  != V11LineCodeTransaction.Unknown &&
 					this.BVRTransaction   != V11LineBVRTransaction.Unknown &&
 					this.Origine          != V11LineOrigine.Unknown &&
+					!string.IsNullOrEmpty (this.NoReference) && 
 					this.DateDepot        != null &&
 					this.DateTraitement   != null &&
 					this.DateCredit       != null &&

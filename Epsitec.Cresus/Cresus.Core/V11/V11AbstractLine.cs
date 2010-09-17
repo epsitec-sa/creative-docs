@@ -85,6 +85,7 @@ namespace Epsitec.Cresus.Core.V11
 				return
 					this.GenreTransaction != V11LineGenreTransaction.Unknown &&
 					V11AbstractLine.CheckMonnaie (this.MonnaieTransaction) &&
+					!string.IsNullOrEmpty(this.NoClient) &&
 					this.GenreRemise      != V11LineGenreRemise.Unknown &&
 					this.Montant          != null &&
 					V11AbstractLine.CheckMonnaie (this.MonnaieMontant) &&
