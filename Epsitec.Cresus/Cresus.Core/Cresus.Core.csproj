@@ -94,8 +94,13 @@
     <Compile Include="BusinessLogic\BusinessContext.cs" />
     <Compile Include="BusinessLogic\BusinessContextPool.cs" />
     <Compile Include="BusinessLogic\BusinessRuleAttribute.cs" />
+    <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
+    <Compile Include="Entities\AbstractPersonEntity.cs" />
+    <Compile Include="Entities\AffairEntity.cs" />
+    <Compile Include="Entities\LegalPersonEntity.cs" />
+    <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="BusinessLogic\CompositeBusinessRule.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule`1.cs" />

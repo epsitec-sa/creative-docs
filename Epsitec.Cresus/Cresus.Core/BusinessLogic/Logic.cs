@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.businessContext = businessContext;
 		}
 
+		public CoreData Data
+		{
+			get
+			{
+				return this.BusinessContext.Data;
+			}
+		}
 
 		public BusinessContext BusinessContext
 		{
@@ -54,6 +61,11 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
+		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default)
+			where T : AbstractEntity, new ()
+		{
+			return this.Data.GetAllEntities<T> (extraction);
+		}
 
 
 		private GenericBusinessRule ResolveRule(RuleType ruleType)

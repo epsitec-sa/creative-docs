@@ -149,6 +149,25 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.SetActiveEntity (this.dataContext.ResolveEntity (entityKey));
 			this.SetNavigationPathElement (navigationPathElement);
 		}
+
+		public T GetMasterEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			var entities = this.DataContext.GetEntitiesOfType<T> ();
+			T   master   = null;
+
+			foreach (var entity in entities)
+			{
+				if (master != null)
+				{
+					throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
+				}
+
+				master = entity;
+			}
+
+			return EntityNullReferenceVirtualizer.WrapNullEntity (master);
+		}
 		
 		public void Discard()
 		{

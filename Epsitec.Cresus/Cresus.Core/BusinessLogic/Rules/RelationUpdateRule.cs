@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Update)]
+	[BusinessRule (RuleType.Update)]
 	internal class RelationUpdateRule : GenericBusinessRule<RelationEntity>
 	{
 		protected override void Apply(RelationEntity relation)
@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 			{
 				relation.DefaultAddress = newAddress;
 			}
+
+			relation.Affairs.ForEach (affair => affair.Relation = relation);
 		}
 	}
 }

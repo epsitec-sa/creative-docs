@@ -6,11 +6,10 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -36,8 +35,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public abstract bool IsCompatible(AbstractEntity entity);
 
 		public abstract void BindSummaryData(SummaryData data, AbstractEntity entity, Marshaler marshaler, ICollectionAccessor collectionAccessor);
-
-//		public abstract void DeleteItem(AbstractEntity item);
 
 		public abstract void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor);
 

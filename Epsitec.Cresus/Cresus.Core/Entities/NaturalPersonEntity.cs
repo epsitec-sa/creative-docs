@@ -1,0 +1,23 @@
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Entities
+{
+	public partial class NaturalPersonEntity
+	{
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.Title.ShortName, this.Firstname, this.Lastname);
+		}
+
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText (this.Title.Name, "\n", this.Firstname, this.Lastname, "(", this.Gender.Name, ")");
+		}
+	}
+}

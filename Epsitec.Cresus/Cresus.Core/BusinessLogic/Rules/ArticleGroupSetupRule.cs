@@ -10,12 +10,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 {
-	[BusinessRule (RuleType=RuleType.Setup)]
+	[BusinessRule (RuleType.Setup)]
 	internal class ArticleGroupSetupRule : GenericBusinessRule<ArticleGroupEntity>
 	{
 		protected override void Apply(ArticleGroupEntity articleGroup)
 		{
-			int? maxRank = Logic.Current.BusinessContext.Data.GetAllEntities<ArticleGroupEntity> ().Max (x => x.Rank);
+			int? maxRank = Logic.Current.GetAllEntities<ArticleGroupEntity> ().Max (x => x.Rank);
 
 			if (maxRank.HasValue)
 			{

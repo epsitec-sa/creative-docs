@@ -71,11 +71,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected virtual IEnumerable<AbstractEntity> GetEntitiesForBusinessContext()
-		{
-			return null;
-		}
-
 		public sealed override AbstractEntity GetEntity()
 		{
 			return this.Entity;
