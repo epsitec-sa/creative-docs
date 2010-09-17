@@ -120,12 +120,12 @@ namespace Epsitec.Cresus.Core.V11
 				return;
 			}
 
-			V11LineType type = V11LineType.Unknown;
+			V11LineType type = V11LineType.Unknown;  // sera déterminé à la lecture de la 1ère ligne
 			int lineRank = -1;
 
-			foreach (var l in lines)
+			foreach (var originalLine in lines)
 			{
-				string line = l.TrimEnd ();  // supprime les espaces en fin de ligne
+				string line = originalLine.TrimEnd ();  // supprime les espaces en fin de ligne
 				lineRank++;  // 0..n
 
 				if (string.IsNullOrWhiteSpace (line))
@@ -161,16 +161,17 @@ namespace Epsitec.Cresus.Core.V11
 					{
 						var record = new V11TotalLine (type);
 
-						record.GenreTransaction  = (genre == "995") ? V11LineGenreTransaction.ContrePrestation : V11LineGenreTransaction.Credit;
-						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
-						record.GenreRemise       = V11LineGenreRemise.Original;
-						record.CleTri            = line.Substring (12, 27);
-						record.MonnaieMontant    = "CHF";
-						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 12));
-						record.NbTransactions    = ImportFile.StringToInt (line.Substring (51, 12));
-						record.DateEtablissement = ImportFile.StringToDate (line.Substring (63, 6));
-						record.MonnaieTaxes      = "CHF";
-						record.Taxes             = ImportFile.StringToPrice (line.Substring (69, 9));
+						record.MonnaieTransaction = "CHF";
+						record.GenreTransaction   = (genre == "995") ? V11LineGenreTransaction.ContrePrestation : V11LineGenreTransaction.Credit;
+						record.NoClient           = line.Substring (3, 9).TrimStart ('0');
+						record.GenreRemise        = V11LineGenreRemise.Original;
+						record.CleTri             = line.Substring (12, 27);
+						record.MonnaieMontant     = "CHF";
+						record.Montant            = ImportFile.StringToPrice (line.Substring (39, 12));
+						record.NbTransactions     = ImportFile.StringToInt (line.Substring (51, 12));
+						record.DateEtablissement  = ImportFile.StringToDate (line.Substring (63, 6));
+						record.MonnaieTaxes       = "CHF";
+						record.Taxes              = ImportFile.StringToPrice (line.Substring (69, 9));
 
 						abstractRecord = record;
 					}
@@ -179,20 +180,20 @@ namespace Epsitec.Cresus.Core.V11
 						var record = new V11RecordLine (type);
 
 						ImportFile.StringToTransaction3 (record, line.Substring (0, 3));
-						record.Origine           = V11LineOrigine.OfficePoste;
-						record.NoClient          = line.Substring (3, 9).TrimStart ('0');
-						record.GenreRemise       = V11LineGenreRemise.Original;
-						record.NoReference       = line.Substring (12, 27);
-						record.MonnaieMontant    = "CHF";
-						record.Montant           = ImportFile.StringToPrice (line.Substring (39, 10));
-						record.RefDepot          = line.Substring (49, 10);
-						record.DateDepot         = ImportFile.StringToDate (line.Substring (59, 6));
-						record.DateTraitement    = ImportFile.StringToDate (line.Substring (65, 6));
-						record.DateCredit        = ImportFile.StringToDate (line.Substring (71, 6));
-						record.NoMicrofilm       = line.Substring (77, 9).TrimStart ('0');
-						record.CodeRejet         = ImportFile.StringToCodeRejet (line.Substring (86, 1));
-						record.MonnaieTaxes      = "CHF";
-						record.Taxes             = ImportFile.StringToPrice (line.Substring (96, 4));
+						record.Origine            = V11LineOrigine.OfficePoste;
+						record.NoClient           = line.Substring (3, 9).TrimStart ('0');
+						record.GenreRemise        = V11LineGenreRemise.Original;
+						record.NoReference        = line.Substring (12, 27);
+						record.MonnaieMontant     = "CHF";
+						record.Montant            = ImportFile.StringToPrice (line.Substring (39, 10));
+						record.RefDepot           = line.Substring (49, 10);
+						record.DateDepot          = ImportFile.StringToDate (line.Substring (59, 6));
+						record.DateTraitement     = ImportFile.StringToDate (line.Substring (65, 6));
+						record.DateCredit         = ImportFile.StringToDate (line.Substring (71, 6));
+						record.NoMicrofilm        = line.Substring (77, 9).TrimStart ('0');
+						record.CodeRejet          = ImportFile.StringToCodeRejet (line.Substring (86, 1));
+						record.MonnaieTaxes       = "CHF";
+						record.Taxes              = ImportFile.StringToPrice (line.Substring (96, 4));
 
 						abstractRecord = record;
 					}
@@ -206,16 +207,17 @@ namespace Epsitec.Cresus.Core.V11
 					{
 						var record = new V11TotalLine (type);
 
-						record.GenreTransaction  = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
-						record.NoClient          = line.Substring (6, 9).TrimStart ('0');
-						record.GenreRemise       = ImportFile.StringToGenreRemise (line.Substring (5, 1));
-						record.CleTri            = line.Substring (15, 27);
-						record.MonnaieMontant    = line.Substring (42, 3);
-						record.Montant           = ImportFile.StringToPrice (line.Substring (45, 12));
-						record.NbTransactions    = ImportFile.StringToInt (line.Substring (57, 12));
-						record.DateEtablissement = ImportFile.StringToDate (line.Substring (69, 8));
-						record.MonnaieTaxes      = line.Substring (77, 3);
-						record.Taxes             = ImportFile.StringToPrice (line.Substring (80, 11));
+						record.MonnaieTransaction = genre == "98" ? "EUR" : "CHF";
+						record.GenreTransaction   = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
+						record.NoClient           = line.Substring (6, 9).TrimStart ('0');
+						record.GenreRemise        = ImportFile.StringToGenreRemise (line.Substring (5, 1));
+						record.CleTri             = line.Substring (15, 27);
+						record.MonnaieMontant     = line.Substring (42, 3);
+						record.Montant            = ImportFile.StringToPrice (line.Substring (45, 12));
+						record.NbTransactions     = ImportFile.StringToInt (line.Substring (57, 12));
+						record.DateEtablissement  = ImportFile.StringToDate (line.Substring (69, 8));
+						record.MonnaieTaxes       = line.Substring (77, 3);
+						record.Taxes              = ImportFile.StringToPrice (line.Substring (80, 11));
 
 						abstractRecord = record;
 					}
@@ -224,21 +226,21 @@ namespace Epsitec.Cresus.Core.V11
 						var record = new V11RecordLine (type);
 
 						ImportFile.StringToTransaction4 (record, line.Substring (0, 2));
-						record.GenreTransaction  = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
-						record.Origine           = ImportFile.StringToOrigine (line.Substring (3, 2));
-						record.NoClient          = line.Substring (6, 9).TrimStart ('0');
-						record.GenreRemise       = ImportFile.StringToGenreRemise (line.Substring (5, 1));
-						record.NoReference       = line.Substring (15, 27);
-						record.MonnaieMontant    = line.Substring (42, 3);
-						record.Montant           = ImportFile.StringToPrice (line.Substring (45, 12));
-						record.RefDepot          = "";
-						record.DateDepot         = ImportFile.StringToDate (line.Substring (92, 8));
-						record.DateTraitement    = ImportFile.StringToDate (line.Substring (100, 8));
-						record.DateCredit        = ImportFile.StringToDate (line.Substring (108, 8));
-						record.NoMicrofilm       = "";
-						record.CodeRejet         = ImportFile.StringToCodeRejet (line.Substring (116, 1));
-						record.MonnaieTaxes      = line.Substring (117, 3);
-						record.Taxes             = ImportFile.StringToPrice (line.Substring (120, 6));
+						record.GenreTransaction   = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
+						record.Origine            = ImportFile.StringToOrigine (line.Substring (3, 2));
+						record.NoClient           = line.Substring (6, 9).TrimStart ('0');
+						record.GenreRemise        = ImportFile.StringToGenreRemise (line.Substring (5, 1));
+						record.NoReference        = line.Substring (15, 27);
+						record.MonnaieMontant     = line.Substring (42, 3);
+						record.Montant            = ImportFile.StringToPrice (line.Substring (45, 12));
+						record.RefDepot           = "";
+						record.DateDepot          = ImportFile.StringToDate (line.Substring (92, 8));
+						record.DateTraitement     = ImportFile.StringToDate (line.Substring (100, 8));
+						record.DateCredit         = ImportFile.StringToDate (line.Substring (108, 8));
+						record.NoMicrofilm        = "";
+						record.CodeRejet          = ImportFile.StringToCodeRejet (line.Substring (116, 1));
+						record.MonnaieTaxes       = line.Substring (117, 3);
+						record.Taxes              = ImportFile.StringToPrice (line.Substring (120, 6));
 
 						abstractRecord = record;
 					}
