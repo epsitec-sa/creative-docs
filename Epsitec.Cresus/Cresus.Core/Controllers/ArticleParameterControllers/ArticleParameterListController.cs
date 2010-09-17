@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			get
 			{
-				return this.parameterEntity.DefaultValue == this.enumValues[this.listController.SelectedIndex].Value;
+				return this.listController.SelectedIndex < 0 ? false : this.parameterEntity.DefaultValue == this.enumValues[this.listController.SelectedIndex].Value;
 			}
 			set
 			{

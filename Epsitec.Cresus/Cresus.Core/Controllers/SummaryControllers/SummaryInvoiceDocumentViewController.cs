@@ -131,9 +131,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.InvoiceDocument",
 					Title				= TextFormatter.FormatText ("Document"),
 					CompactTitle		= TextFormatter.FormatText ("Document"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => InvoiceDocumentHelper.GetSummary (x)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA)),
-					EntityMarshaler		= this.EntityMarshaler,
+					TextAccessor		= this.CreateAccessor (x => InvoiceDocumentHelper.GetSummary (x)),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("N°", x.IdA)),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
 

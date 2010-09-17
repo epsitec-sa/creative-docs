@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.ArticleDefinition",
 					Title				= TextFormatter.FormatText ("Article", "(", string.Join (", ", this.Entity.ArticleGroups.Select (g => g.Name)), ")"),
 					CompactTitle		= TextFormatter.FormatText ("Article"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
-					EntityMarshaler		= this.EntityMarshaler,
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.ShortDescription)),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("N°", x.IdA, "\n", x.LongDescription)),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
 
@@ -63,8 +63,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractArticleParameterDefinitionEntity> ("ArticleParameterDefinition", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetParameterSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetParameterSummary (x)));
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
 			template.DefineCreateItem  (this.CreateParameter);  // le bouton [+] crée une ligne d'article
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticleParameterDefinitions, template));
@@ -85,8 +85,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticlePriceEntity> ("ArticlePrice", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetArticlePriceSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (SummaryArticleDefinitionViewController.GetArticlePriceSummary (x)));
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
 			template.DefineCreateItem  (this.CreateArticlePrice);
 
 			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.ArticlePrices, template));
@@ -96,86 +96,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
 		}
 
-
-		private static FormattedText GetParameterSummary(AbstractArticleParameterDefinitionEntity parameter)
-		{
-			var builder = new System.Text.StringBuilder ();
-
-			if (!parameter.Name.IsNullOrEmpty)
-			{
-				builder.Append (TextFormatter.ConvertToText (parameter.Name));
-				builder.Append (": ");
-			}
-
-			if (parameter is NumericValueArticleParameterDefinitionEntity)
-			{
-				var value = parameter as NumericValueArticleParameterDefinitionEntity;
-
-				if (value.DefaultValue.HasValue ||
-					value.MinValue.HasValue     ||
-					value.MaxValue.HasValue)
-				{
-					builder.Append (TextFormatter.ConvertToText (value.DefaultValue));
-					builder.Append (" (");
-					builder.Append (TextFormatter.ConvertToText (value.MinValue));
-					builder.Append ("..");
-					builder.Append (TextFormatter.ConvertToText (value.MaxValue));
-					builder.Append (")");
-				}
-				else
-				{
-					builder.Append ("<i>Vide</i>");
-				}
-			}
-
-			if (parameter is EnumValueArticleParameterDefinitionEntity)
-			{
-				var value = parameter as EnumValueArticleParameterDefinitionEntity;
-
-				if (!string.IsNullOrWhiteSpace (value.DefaultValue) ||
-					!string.IsNullOrWhiteSpace (value.Values))
-				{
-					builder.Append (value.DefaultValue);
-					builder.Append (" (");
-					builder.Append (EditionControllers.Common.EnumInternalToSingleLine (value.Values));
-					builder.Append (")");
-				}
-				else
-				{
-					builder.Append ("<i>Vide</i>");
-				}
-			}
-
-			return builder.ToString ();
-		}
-
-		private static string GetArticlePriceSummary(ArticlePriceEntity price)
-		{
-			var builder = new System.Text.StringBuilder ();
-
-			builder.Append (Misc.PriceToString (price.ValueBeforeTax));
-
-			if (price.CurrencyCode.HasValue)
-			{
-				var c = Business.Enumerations.GetAllPossibleCurrencyCodes ().Where (x => x.Key == price.CurrencyCode).First ();
-				builder.Append (" ");
-				builder.Append (c.Values[0]);  // code de la monnaie, par exemple "CHF"
-			}
-
-			if (price.BeginDate.HasValue)
-			{
-				builder.Append (" du ");
-				builder.Append (Misc.GetDateTimeShortDescription (price.BeginDate));
-			}
-
-			if (price.EndDate.HasValue)
-			{
-				builder.Append (" au ");
-				builder.Append (Misc.GetDateTimeShortDescription (price.EndDate));
-			}
-
-			return builder.ToString ();
-		}
 
 		private NumericValueArticleParameterDefinitionEntity CreateParameter()
 		{

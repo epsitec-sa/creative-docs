@@ -1,9 +1,6 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
@@ -31,9 +28,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						IconUri				= "Data.ArticleCategory",
 						Title				= TextFormatter.FormatText ("Catégorie"),
 						CompactTitle		= TextFormatter.FormatText ("Catégorie"),
-						TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-						CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-						EntityMarshaler		= this.EntityMarshaler,
+						TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+						CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+						EntityMarshaler		= this.CreateEntityMarshaler (),
 					});
 			}
 		}

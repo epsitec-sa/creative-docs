@@ -43,9 +43,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.LegalPerson",
 					Title				= TextFormatter.FormatText ("Personne morale"),
 					CompactTitle		= TextFormatter.FormatText ("Personne"),
-					TextAccessor		= Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-					CompactTextAccessor = Accessor.Create (this.EntityGetter, x => TextFormatter.FormatText (x.Name)),
-					EntityMarshaler		= this.EntityMarshaler,
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
 
