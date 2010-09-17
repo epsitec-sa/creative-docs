@@ -100,10 +100,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<DocumentEntity> ("Document", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (x.Description));
+			template.DefineText (x => TextFormatter.FormatText (x.Description));
 			template.DefineCompactText (x => TextFormatter.FormatText (x.Description));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Documents, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
 		}
 	}
 }

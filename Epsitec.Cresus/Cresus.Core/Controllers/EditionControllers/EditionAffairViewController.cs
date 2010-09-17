@@ -194,10 +194,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<BusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
+			template.DefineText (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Events, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Events));
 		}
 
 		private IList<InvoiceDocumentEntity> GetDocumentEntities(AffairEntity affair)

@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineText (x => TextFormatter.FormatText (GetUnitOfMeasuresSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetUnitOfMeasuresSummary (x)));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, x => x.Units, template));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Units));
 		}
 
 

@@ -72,6 +72,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public CollectionTemplate<T> CreateItemsOfType<T1>()
+			where T1 : T, new ()
+		{
+			System.Diagnostics.Debug.Assert (this.businessContext != null);
+			System.Diagnostics.Debug.Assert (this.createItem != null);
+			System.Diagnostics.Debug.Assert (this.deleteItem != null);
+
+			this.createItem = () => this.businessContext.CreateEntityAndRegisterAsEmpty<T1> ();
+			
+			return this;
+		}
+
 		
 		public CollectionTemplate<T> DefineCreateItem(System.Func<T> action)
 		{

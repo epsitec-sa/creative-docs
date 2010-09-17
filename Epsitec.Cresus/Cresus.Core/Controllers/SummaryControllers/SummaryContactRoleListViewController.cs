@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineText        (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
 
-			data.Add (CollectionAccessor.Create (this.EntityGetter, template));
+			data.Add (this.CreateCollectionAccessor (template));
 		}
 
 		private static FormattedText GetContactRoleSummary(ContactRoleEntity group)
