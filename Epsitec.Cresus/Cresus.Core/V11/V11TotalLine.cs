@@ -44,7 +44,10 @@ namespace Epsitec.Cresus.Core.V11
 					return false;
 				}
 
-				return true;
+				return
+					!string.IsNullOrEmpty (this.CleTri) &&
+					this.NbTransactions    != null &&
+					this.DateEtablissement != null;
 			}
 		}
 	}
