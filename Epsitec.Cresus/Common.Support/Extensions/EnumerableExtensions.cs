@@ -25,5 +25,24 @@ namespace Epsitec.Common.Support.Extensions
 
 			return true;
 		}
+		
+		public static int IndexOf<T>(this IEnumerable<T> collection, T value, IEqualityComparer<T> comparer = null)
+		{
+			comparer = comparer ?? EqualityComparer<T>.Default;
+
+			int index = 0;
+
+			foreach (var item in collection)
+			{
+				if (comparer.Equals (item, value))
+				{
+					return index;
+				}
+
+				index++;
+			}
+
+			return -1;
+		}
 	}
 }
