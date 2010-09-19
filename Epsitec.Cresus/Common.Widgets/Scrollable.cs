@@ -452,6 +452,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Viewport viewport = this.Viewport;
 
+			this.somethingToScroll = false;
+
 			if (viewport == null)
 			{
 				this.hScroller.Hide ();
@@ -465,7 +467,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.paintForegroundFrame)
 			{
-				double mx = this.viewportFrameMargins.Width + this.viewportPadding.Width + 2;
+				double mx = this.viewportFrameMargins.Width  + this.viewportPadding.Width  + 2;
 				double my = this.viewportFrameMargins.Height + this.viewportPadding.Height + 2;
 
 				totalDx -= mx;
@@ -474,7 +476,7 @@ namespace Epsitec.Common.Widgets
 
 			double viewportDx = viewport.SurfaceWidth;
 			double viewportDy = viewport.SurfaceHeight;
-			double marginX = this.GetVerticalShowAlways () ? this.vScroller.PreferredWidth : 0;
+			double marginX = this.GetVerticalShowAlways   () ? this.vScroller.PreferredWidth  : 0;
 			double marginY = this.GetHorizontalShowAlways () ? this.hScroller.PreferredHeight : 0;
 			
 			double deltaDx;
@@ -540,6 +542,8 @@ namespace Epsitec.Common.Widgets
 				
 				this.hScrollerValue  = (decimal) offsetX;
 				this.hScroller.Value = (decimal) offsetX;
+
+				this.somethingToScroll = true;
 			}
 			else
 			{
@@ -566,6 +570,8 @@ namespace Epsitec.Common.Widgets
 				
 				this.vScrollerValue = (decimal) offsetY;
 				this.vScroller.Value = (decimal) offsetY;
+
+				this.somethingToScroll = true;
 			}
 			else
 			{
@@ -675,10 +681,31 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if ((this.IsEnabled == false) ||
-				(this.ScrollWithHand == false))
+			if (this.IsEnabled == false || this.ScrollWithHand == false)
 			{
 				return;
+			}
+
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == MessageType.MouseMove)
+				{
+					var rect = this.GetViewportRectangle ();
+
+					if (this.somethingToScroll && rect.Contains (pos))
+					{
+						if (this.mouseCursorHand == null)
+						{
+							this.mouseCursorHand = MouseCursor.FromImage (Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Support.Resources.DefaultManager));
+						}
+
+						this.MouseCursor = this.mouseCursorHand;
+					}
+					else
+					{
+						this.MouseCursor = MouseCursor.AsArrow;
+					}
+				}
 			}
 
 			if (!this.dragBehavior.ProcessMessage (message, pos))
@@ -699,8 +726,6 @@ namespace Epsitec.Common.Widgets
 
 		public bool OnDragBegin(Point cursor)
 		{
-			this.MouseCursor = MouseCursor.AsHand;
-
 			this.isDragging = true;
 			this.draggingInitialViewportOffset = this.ViewportOffset;
 
@@ -719,13 +744,12 @@ namespace Epsitec.Common.Widgets
 
 		public void OnDragEnd()
 		{
-			this.MouseCursor = MouseCursor.AsArrow;
 			this.isDragging = false;
 		}
 
 		#endregion
-				
-		
+
+
 		private static void HandleViewportChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Scrollable that = (Scrollable) o;
@@ -796,5 +820,8 @@ namespace Epsitec.Common.Widgets
 		private bool							scrollWithHand;
 		private bool							isDragging;
 		private Point							draggingInitialViewportOffset;
+
+		private bool							somethingToScroll;
+		private MouseCursor						mouseCursorHand;
 	}
 }
