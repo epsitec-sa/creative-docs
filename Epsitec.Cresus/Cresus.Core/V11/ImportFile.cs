@@ -48,8 +48,14 @@ namespace Epsitec.Cresus.Core.V11
 			}
 			else
 			{
+#if false
 				FormattedText description = TextFormatter.FormatText ("Importation réussie de", this.records.Count.ToString(), "lignes");
 				MessageDialog.CreateOk ("Terminé", DialogIcon.Question, description.ToString ()).OpenDialog ();
+#else
+				var dialog = new Dialogs.V11ImportDialog (CoreProgram.Application, this.records);
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
+#endif
 
 				return V11Message.OK;
 			}
