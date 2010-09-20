@@ -85,6 +85,18 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static string GetDateShortDescription(Date? date)
+		{
+			if (date == null)
+			{
+				return null;
+			}
+			else
+			{
+				return string.Concat (date.Value.Day.ToString ("D2"), ".", date.Value.Month.ToString ("D2"), ".", date.Value.Year.ToString ("D4"));
+			}
+		}
+
 		public static string GetDateTimeShortDescription(System.DateTime? dateTime)
 		{
 			if (dateTime == null)
