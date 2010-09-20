@@ -16,12 +16,6 @@ namespace Epsitec.Cresus.Core.V11
 		}
 
 
-		public string CleTri
-		{
-			get;
-			set;
-		}
-
 		public int? NbTransactions
 		{
 			get;
@@ -45,7 +39,6 @@ namespace Epsitec.Cresus.Core.V11
 				}
 
 				return
-					!string.IsNullOrEmpty (this.CleTri) &&
 					this.NbTransactions    != null &&
 					this.DateEtablissement != null;
 			}

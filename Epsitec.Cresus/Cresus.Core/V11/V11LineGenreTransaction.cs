@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.V11
 	public enum V11LineGenreTransaction
 	{
 		Unknown,
-		Credit,
+		Crédit,
 		ContrePrestation,
 		Correction,
 	}

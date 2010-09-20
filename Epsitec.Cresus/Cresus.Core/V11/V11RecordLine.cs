@@ -34,19 +34,43 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
+		public string FormatedNoReference
+		{
+			//	Retourne le numéro au format "96 13070 01000 02173 50356 73892".
+			get
+			{
+				string no = this.NoReference;
+
+				if (!string.IsNullOrEmpty (no) && no.Length == 27)
+				{
+					string s1 = no.Substring (0, 2);
+					string s2 = no.Substring (2, 5);
+					string s3 = no.Substring (7, 5);
+					string s4 = no.Substring (12, 5);
+					string s5 = no.Substring (17, 5);
+					string s6 = no.Substring (22, 5);
+
+					return string.Concat (s1, " ", s2, " ", s3, " ", s4, " ", s5, " ", s6);
+				}
+
+				return no;
+			}
+		}
+
 		public string NoReference
 		{
+			//	Numéro de référence de 27 chiffres.
 			get;
 			set;
 		}
 
-		public string RefDepot
+		public string RéfDépot
 		{
 			get;
 			set;
 		}
 
-		public Date? DateDepot
+		public Date? DateDépot
 		{
 			get;
 			set;
@@ -58,7 +82,7 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
-		public Date? DateCredit
+		public Date? DateCrédit
 		{
 			get;
 			set;
@@ -91,9 +115,9 @@ namespace Epsitec.Cresus.Core.V11
 					this.BVRTransaction   != V11LineBVRTransaction.Unknown &&
 					this.Origine          != V11LineOrigine.Unknown &&
 					!string.IsNullOrEmpty (this.NoReference) && 
-					this.DateDepot        != null &&
+					this.DateDépot        != null &&
 					this.DateTraitement   != null &&
-					this.DateCredit       != null &&
+					this.DateCrédit       != null &&
 					this.CodeRejet        != V11LineCodeRejet.Unknown;
 			}
 		}

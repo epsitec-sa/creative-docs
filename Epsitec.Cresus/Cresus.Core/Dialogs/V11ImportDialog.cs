@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 
 			window.Icon = this.application.Window.Icon;
-			window.Text = "Lignes importées";
+			window.Text = "Contenu du fichier importé";
 			window.ClientSize = new Size (800, 400);
 			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.table.SetWidthColumn (5, 50);
 			this.table.SetWidthColumn (6, 30);
 			this.table.SetWidthColumn (7, 70);
-			this.table.SetWidthColumn (8, 170);
+			this.table.SetWidthColumn (8, 190);
 
 			this.table.SetWidthColumn (9, 70);
 			this.table.SetWidthColumn (10, 70);
@@ -194,11 +194,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateTableContentCell (row, 3, record.CodeTransaction.ToString ());
 				this.UpdateTableContentCell (row, 4, record.Origine.ToString ());
 				this.UpdateTableContentCell (row, 5, record.BVRTransaction.ToString ());
-				this.UpdateTableContentCell (row, 8, record.NoReference);
+				this.UpdateTableContentCell (row, 8, record.FormatedNoReference);
 
-				this.UpdateTableContentCell (row, 9, Misc.GetDateShortDescription (record.DateDepot));
+				this.UpdateTableContentCell (row, 9, Misc.GetDateShortDescription (record.DateDépot));
 				this.UpdateTableContentCell (row, 10, Misc.GetDateShortDescription (record.DateTraitement));
-				this.UpdateTableContentCell (row, 11, Misc.GetDateShortDescription (record.DateCredit));
+				this.UpdateTableContentCell (row, 11, Misc.GetDateShortDescription (record.DateCrédit));
 
 				this.UpdateTableContentCell (row, 12, Misc.PriceToString (line.Montant));
 				this.UpdateTableContentCell (row, 13, line.MonnaieMontant);
