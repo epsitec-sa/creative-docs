@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Identity;
@@ -28,7 +28,8 @@ namespace Epsitec.Common.Identity
 			this.MergeWithCard (card);
 		}
 
-		public int DeveloperId
+		
+		public int								DeveloperId
 		{
 			get
 			{
@@ -47,7 +48,7 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
-		public string UserName
+		public string							UserName
 		{
 			get
 			{
@@ -75,7 +76,7 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
-		public byte[] RawImage
+		public byte[]							RawImage
 		{
 			get
 			{
@@ -103,6 +104,7 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
+		
 		public Drawing.Image GetImage()
 		{
 			if (this.cachedImage == null)
@@ -137,6 +139,7 @@ namespace Epsitec.Common.Identity
 			}
 		}
 
+		
 		internal void Attach(IdentityRepository repository)
 		{
 			if (this.repository != repository)
@@ -152,15 +155,17 @@ namespace Epsitec.Common.Identity
 			this.repository = null;
 		}
 
+		
 		private static void NotifyRawImageChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			IdentityCard that = (IdentityCard) obj;
 			that.cachedImage = null;
 		}
 
-		public static readonly DependencyProperty DeveloperIdProperty = DependencyProperty.Register ("DeveloperId", typeof (int), typeof (IdentityCard), new DependencyPropertyMetadata (-1));
-		public static readonly DependencyProperty RawImageProperty = DependencyProperty.Register ("RawImage", typeof (byte[]), typeof (IdentityCard), new DependencyPropertyMetadata (IdentityCard.NotifyRawImageChanged));
-		public static readonly DependencyProperty UserNameProperty = DependencyProperty.Register ("UserName", typeof (string), typeof (IdentityCard), new DependencyPropertyMetadata ());
+		
+		public static readonly DependencyProperty DeveloperIdProperty = DependencyProperty<IdentityCard>.Register (x => x.DeveloperId, new DependencyPropertyMetadata (-1));
+		public static readonly DependencyProperty RawImageProperty    = DependencyProperty<IdentityCard>.Register (x => x.RawImage, new DependencyPropertyMetadata (IdentityCard.NotifyRawImageChanged));
+		public static readonly DependencyProperty UserNameProperty    = DependencyProperty<IdentityCard>.Register (x => x.UserName, new DependencyPropertyMetadata ());
 
 		private Drawing.Image cachedImage;
 		private IdentityRepository repository;
