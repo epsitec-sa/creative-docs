@@ -36,8 +36,45 @@ namespace Epsitec.Cresus.Core.V11
 			set;
 		}
 
+		public string FormatedNoClient
+		{
+			//	Retourne le numéro de client au format "01-069444-3".
+			get
+			{
+				string no = this.NoClient;
+
+				if (!string.IsNullOrEmpty (no) && no.Length == 9)
+				{
+					string s1 = no.Substring (0, 2);
+					string s2 = no.Substring (2, 6);
+					string s3 = no.Substring (8, 1);
+
+					return string.Concat (s1, "-", s2, "-", s3);
+				}
+
+				return no;
+			}
+		}
+
+		public bool CheckNoClient
+		{
+			get
+			{
+				string no = this.NoClient;
+
+				if (!string.IsNullOrEmpty (no) && no.Length == 9)
+				{
+					char c = EsrHelper.ComputeControlKey (no.Substring (0, 8));
+					return no[8] == c;
+				}
+
+				return false;
+			}
+		}
+
 		public string NoClient
 		{
+			//	Numéro de client à 9 chiffres. Par exemple "010694443".
 			get;
 			set;
 		}

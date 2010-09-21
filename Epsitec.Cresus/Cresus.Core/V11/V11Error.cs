@@ -15,5 +15,7 @@ namespace Epsitec.Cresus.Core.V11
 
 		FileNotFound,
 		InvalidFormat,
+		InvalidNoClient,
+		InvalidNoRéférence,
 	}
 }

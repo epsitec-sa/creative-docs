@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Core.V11
 		/// Choix interactif d'un fichier *.v11 puis importation des données contenues.
 		/// </summary>
 		/// <param name="application"></param>
-		/// <param name="noClient"></param>
 		/// <returns></returns>
 		public V11Message Import(CoreApplication application)
 		{
@@ -169,7 +168,7 @@ namespace Epsitec.Cresus.Core.V11
 
 						record.MonnaieTransaction = "CHF";
 						record.GenreTransaction   = (genre == "995") ? V11LineGenreTransaction.ContrePrestation : V11LineGenreTransaction.Crédit;
-						record.NoClient           = line.Substring (3, 9).TrimStart ('0');
+						record.NoClient           = line.Substring (3, 9);
 						record.GenreRemise        = V11LineGenreRemise.Original;
 						record.MonnaieMontant     = "CHF";
 						record.Montant            = ImportFile.StringToPrice (line.Substring (39, 12));
@@ -186,9 +185,9 @@ namespace Epsitec.Cresus.Core.V11
 
 						ImportFile.StringToTransaction3 (total, line.Substring (0, 3));
 						total.Origine            = V11LineOrigine.OfficePoste;
-						total.NoClient           = line.Substring (3, 9).TrimStart ('0');
+						total.NoClient           = line.Substring (3, 9);
 						total.GenreRemise        = V11LineGenreRemise.Original;
-						total.NoReference        = line.Substring (12, 27);
+						total.NoRéférence        = line.Substring (12, 27);
 						total.MonnaieMontant     = "CHF";
 						total.Montant            = ImportFile.StringToPrice (line.Substring (39, 10));
 						total.RéfDépot           = line.Substring (49, 10);
@@ -214,7 +213,7 @@ namespace Epsitec.Cresus.Core.V11
 
 						total.MonnaieTransaction = genre == "98" ? "EUR" : "CHF";
 						total.GenreTransaction   = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
-						total.NoClient           = line.Substring (6, 9).TrimStart ('0');
+						total.NoClient           = line.Substring (6, 9);
 						total.GenreRemise        = ImportFile.StringToGenreRemise (line.Substring (5, 1));
 						total.MonnaieMontant     = line.Substring (42, 3);
 						total.Montant            = ImportFile.StringToPrice (line.Substring (45, 12));
@@ -232,9 +231,9 @@ namespace Epsitec.Cresus.Core.V11
 						ImportFile.StringToTransaction4 (record, line.Substring (0, 2));
 						record.GenreTransaction   = ImportFile.StringToGenreTransaction (line.Substring (2, 1));
 						record.Origine            = ImportFile.StringToOrigine (line.Substring (3, 2));
-						record.NoClient           = line.Substring (6, 9).TrimStart ('0');
+						record.NoClient           = line.Substring (6, 9);
 						record.GenreRemise        = ImportFile.StringToGenreRemise (line.Substring (5, 1));
-						record.NoReference        = line.Substring (15, 27);
+						record.NoRéférence        = line.Substring (15, 27);
 						record.MonnaieMontant     = line.Substring (42, 3);
 						record.Montant            = ImportFile.StringToPrice (line.Substring (45, 12));
 						record.RéfDépot           = "";
@@ -250,14 +249,24 @@ namespace Epsitec.Cresus.Core.V11
 					}
 				}
 
-				if (abstractRecord != null && abstractRecord.IsValid)
-				{
-					this.records.Add (abstractRecord);
-				}
-				else
+				if (abstractRecord == null || !abstractRecord.IsValid)
 				{
 					FormattedText description = TextFormatter.FormatText ("Erreur à la ligne", (lineRank+1).ToString ());
 					this.errors.Add (new V11Message (V11Error.InvalidFormat, lineRank, line, description));
+				}
+				else if (!abstractRecord.CheckNoClient)
+				{
+					FormattedText description = TextFormatter.FormatText ("Numéro de client incorrect à la ligne", (lineRank+1).ToString ());
+					this.errors.Add (new V11Message (V11Error.InvalidNoClient, lineRank, line, description));
+				}
+				else if (abstractRecord is V11RecordLine && !(abstractRecord as V11RecordLine).CheckNoRéférence)
+				{
+					FormattedText description = TextFormatter.FormatText ("Numéro de référence incorrect à la ligne", (lineRank+1).ToString ());
+					this.errors.Add (new V11Message (V11Error.InvalidNoRéférence, lineRank, line, description));
+				}
+				else
+				{
+					this.records.Add (abstractRecord);
 				}
 			}
 		}
