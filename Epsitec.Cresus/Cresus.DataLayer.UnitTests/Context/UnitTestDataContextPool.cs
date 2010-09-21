@@ -430,6 +430,67 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Context
 		}
 
 
+		[TestMethod]
+		public void AreEqualDatabaseInstancesTest1()
+		{
+			DataContextPool_Accessor dataContextPool = new DataContextPool_Accessor ();
+
+			DataContext dataContext1 = new DataContext (DatabaseHelper.DbInfrastructure);
+			DataContext dataContext2 = new DataContext (DatabaseHelper.DbInfrastructure);
+			DataContext dataContext3 = new DataContext (DatabaseHelper.DbInfrastructure);
+
+			dataContextPool.Add (dataContext1);
+			dataContextPool.Add (dataContext2);
+
+			DbKey dbKey1 = new DbKey (new DbId (1));
+			DbKey dbKey2 = new DbKey (new DbId (2));
+
+			NaturalPersonEntity person11 = dataContext1.ResolveEntity<NaturalPersonEntity> (dbKey1);
+			NaturalPersonEntity person12 = dataContext1.ResolveEntity<NaturalPersonEntity> (dbKey2);
+			NaturalPersonEntity person21 = dataContext2.ResolveEntity<NaturalPersonEntity> (dbKey1);
+			NaturalPersonEntity person22 = dataContext2.ResolveEntity<NaturalPersonEntity> (dbKey2);
+			NaturalPersonEntity person31 = dataContext3.ResolveEntity<NaturalPersonEntity> (dbKey1);
+			NaturalPersonEntity person32 = dataContext3.ResolveEntity<NaturalPersonEntity> (dbKey2);
+
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person11, person11));
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person12, person12));
+
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person21, person21));
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person22, person22));
+
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person11, person21));
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person12, person22));
+
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person11, person12));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person21, person22));
+
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person11, person22));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person12, person21));
+
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person21, person12));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person22, person11));
+
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (null, null));
+
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (null, person11));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person11, null));
+
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person31, person31));
+			Assert.IsTrue (dataContextPool.AreEqualDatabaseInstances (person32, person32));
+
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person31, person32));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person11, person31));
+			Assert.IsFalse (dataContextPool.AreEqualDatabaseInstances (person12, person32));
+			
+			dataContextPool.Remove (dataContext1);
+			dataContextPool.Remove (dataContext2);
+
+			dataContext1.Dispose ();
+			dataContext2.Dispose ();
+			dataContext3.Dispose ();
+		}
+
+
 	}
 
 
