@@ -44,30 +44,46 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
 		public bool Authenticate(SoftwareUserEntity user = null)
 		{
+			user = null;  // TODO: provisoire
 			string defaultPassword = null;
 
-			//?if (user == null)
+			for (int i = 0; i < 3; i++)
 			{
-				//	TODO: display dialog box with list of users and let the user
-				//	pick a user (and maybe also type in a password, if the user
-				//	authentication mode is set to 'Password')
-				var dialog = new Dialogs.SelectUserDialog (CoreProgram.Application);
-				dialog.IsModal = true;
-				dialog.OpenDialog ();
-			}
+				if (user == null)
+				{
+					var dialog = new Dialogs.SelectUserDialog (CoreProgram.Application);
+					dialog.IsModal = true;
+					dialog.OpenDialog ();
 
-			if (this.CheckUserAuthentication (user, defaultPassword))
-			{
-				this.OnAuthenticatedUserChanging ();
-				this.authenticatedUser = user;
-				this.OnAuthenticatedUserChanged ();
-				
-				return true;
+					if (dialog.Result == Common.Dialogs.DialogResult.Cancel)
+					{
+						return false;
+					}
+
+					user            = dialog.SelectedUser;
+					defaultPassword = dialog.DefaultPassword;
+				}
+
+				var result = this.CheckUserAuthentication (user, defaultPassword);
+
+				if (result == CheckResult.OK)
+				{
+					this.OnAuthenticatedUserChanging ();
+					this.authenticatedUser = user;
+					this.OnAuthenticatedUserChanged ();
+
+					return true;
+				}
+				else if (result == CheckResult.Error)
+				{
+					return false;
+				}
+
+				user = null;  // on redemande l'utilisateur
 			}
 
 			return false;
 		}
-
 
 
 		/// <summary>
@@ -109,12 +125,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
 		}
 
-		private bool CheckUserAuthentication(SoftwareUserEntity user, string defaultPassword)
+		private CheckResult CheckUserAuthentication(SoftwareUserEntity user, string defaultPassword)
 		{
 			switch (user.AuthenticationMethod)
             {
             	case UserAuthenticationMethod.None:
-            		return true;
+					return CheckResult.OK;
 
 				case UserAuthenticationMethod.System:
 					return this.CheckSystemUserAuthentication (user);
@@ -123,16 +139,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 					return this.CheckPasswordUserAuthentication (user, defaultPassword);
 
 				default:
-					return false;
+					return CheckResult.Error;
             }
 		}
 
-		private bool CheckSystemUserAuthentication(SoftwareUserEntity user)
+		private CheckResult CheckSystemUserAuthentication(SoftwareUserEntity user)
 		{
-			return (user.LoginName == System.Environment.UserName);
+			return (user.LoginName == System.Environment.UserName) ? CheckResult.OK : CheckResult.Error;
 		}
 
-		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string defaultPassword)
+		private CheckResult CheckPasswordUserAuthentication(SoftwareUserEntity user, string defaultPassword)
 		{
 			if (defaultPassword == null)
 			{
@@ -144,13 +160,30 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (user.CheckPassword (defaultPassword))
 				{
-					return true;
+					return CheckResult.OK;
 				}
 
 				//	TODO: display dialog box to request the password (the one provided was not valid).
+				var dialog = new Dialogs.PasswordDialog (CoreProgram.Application, user);
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
+
+				if (dialog.Result == Common.Dialogs.DialogResult.Cancel)
+				{
+					return CheckResult.Cancel;
+				}
+
+				defaultPassword = dialog.DefaultPassword;
 			}
 
-			return false;
+			return CheckResult.Error;
+		}
+
+		private enum CheckResult
+		{
+			OK,
+			Error,
+			Cancel,
 		}
 
 
