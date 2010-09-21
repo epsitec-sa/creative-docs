@@ -126,13 +126,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Gets the <see cref="EntityContext"/> associated with this instance.
 		/// </summary>
-		[System.Obsolete ("This field should be used only internally")]
-		public EntityContext EntityContext
+		internal EntityContext EntityContext
 		{
-			// TODO Make this field internal and apply the changes in core data and remove the
-			// obsolete tag.
-			// Marc
-
 			get;
 			private set;
 		}
