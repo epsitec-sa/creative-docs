@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Compares two entities and returns <c>true</c> if they refer to the same database key
 		/// or if they are the same memory instance.
 		/// </summary>
-		/// <param name="that">The reference entity.</param>
-		/// <param name="other">The other entity.</param>
+		/// <param name="a">The reference entity.</param>
+		/// <param name="b">The other entity.</param>
 		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
 		public bool AreEqualDatabaseInstances(AbstractEntity a, AbstractEntity b)
 		{
