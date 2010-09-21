@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core
 			CoreProgram.Application = this;
 			this.persistenceManager = new PersistenceManager ();
 
-			this.data = new CoreData (forceDatabaseCreation: true);
+			this.data = new CoreData (forceDatabaseCreation: false);
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 
 			this.userManager = new Business.UserManagement.UserManager (this.data);
+			this.userManager.AuthenticatedUserChanged += sender => this.data.ConnectionManager.ReopenConnection ();
 		}
 
 

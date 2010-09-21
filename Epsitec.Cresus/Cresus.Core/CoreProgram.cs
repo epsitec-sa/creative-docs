@@ -59,6 +59,8 @@ namespace Epsitec.Cresus.Core
 			CoreApplication.LoadSettings ();
 			CoreProgram.application.SetupData ();
 			CoreProgram.application.CreateUI ();
+
+			CoreProgram.application.UserManager.Authenticate (CoreProgram.application.UserManager.FindActiveSystemUser ());
 			
 			CoreProgram.application.Window.Show ();
 			CoreProgram.application.Window.Run ();

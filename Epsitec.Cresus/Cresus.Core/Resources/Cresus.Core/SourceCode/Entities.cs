@@ -8965,6 +8965,28 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/L0AGF/L0ASG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ASG]")]
+		public global::Epsitec.Common.Types.FormattedText DisplayName
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASG]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.DisplayName;
+				if (oldValue != value)
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ASG]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>LoginName</c> field.
 		///	designer:fld/L0AGF/L0AIF
 		///	</summary>
@@ -9067,6 +9089,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
+		partial void OnDisplayNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDisplayNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLoginNameChanging(string oldValue, string newValue);
 		partial void OnLoginNameChanged(string oldValue, string newValue);
 		partial void OnLoginPasswordHashChanging(string oldValue, string newValue);
