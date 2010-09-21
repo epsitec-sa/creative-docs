@@ -153,6 +153,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = footer,
 				Text = "Annuler",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 				TabIndex = 2,
@@ -162,6 +163,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = footer,
 				Text = "Imprimer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};

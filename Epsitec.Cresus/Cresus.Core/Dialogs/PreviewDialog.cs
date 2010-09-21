@@ -63,7 +63,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.OwnerWindow = this.application.Window;
 
 			var pageSize = this.entityPrinter.BoundsPageSize;
-			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Aperçu avant impression";
@@ -121,6 +120,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = this.footer,
 				Text = "Fermer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};
@@ -129,6 +129,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = this.footer,
 				Text = "Tâches d'impression",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				PreferredWidth = 120,
 				Dock = DockStyle.Right,
 				Margins = new Margins (0, 10, 0, 0),
@@ -156,8 +157,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.CloseDialog ();
 			};
-
-			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
 		}
 
 
