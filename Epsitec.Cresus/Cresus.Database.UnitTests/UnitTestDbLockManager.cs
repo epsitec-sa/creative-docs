@@ -312,7 +312,7 @@ namespace Cresus.Database.UnitTests
 
 				connectionManager.CloseConnection (connectionId2);
 
-				for (int i = 0; i < 30; i++)
+				for (int i = 0; i < 5; i++)
 				{
 					connectionManager.KeepConnectionAlive (connectionId1);
 
@@ -321,7 +321,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (1000);
 
-				connectionManager.InterruptDeadConnections ();
+				connectionManager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5));
 
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock1"));
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock2"));

@@ -99,12 +99,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.Infrastructure
 			connection.Open ();
 			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			System.Threading.Thread.Sleep (31000);
+			System.Threading.Thread.Sleep (3000);
 
 			connection.RefreshStatus ();
 			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 
-			ConnectionInformation.InterruptDeadConnections (dbInfrastructure);
+			ConnectionInformation.InterruptDeadConnections (dbInfrastructure, System.TimeSpan.FromSeconds (2));
 			Assert.AreEqual (ConnectionStatus.Open, connection.Status);
 			
 			connection.RefreshStatus ();

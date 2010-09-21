@@ -40,12 +40,12 @@ namespace Cresus.Database.UnitTests
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new DbConnectionManager (System.TimeSpan.FromSeconds (1)).Attach (null, new DbTable ())
+					() => new DbConnectionManager ().Attach (null, new DbTable ())
 				);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new DbConnectionManager (System.TimeSpan.FromSeconds (1)).Attach (dbInfrastructure, null)
+					() => new DbConnectionManager ().Attach (dbInfrastructure, null)
 				);
 			}
 		}
@@ -101,7 +101,7 @@ namespace Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (2));
+				DbConnectionManager manager = new DbConnectionManager ();
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
@@ -123,7 +123,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (3000);
 
-				manager.InterruptDeadConnections ();
+				manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (2));
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
@@ -270,7 +270,7 @@ namespace Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (2));
+				DbConnectionManager manager = new DbConnectionManager ();
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
@@ -291,7 +291,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (3000);
 
-				manager.InterruptDeadConnections ();
+				manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (2));
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
@@ -402,7 +402,7 @@ namespace Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (5));
+				DbConnectionManager manager = new DbConnectionManager ();
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
@@ -421,7 +421,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (1000);
 
-				Assert.AreEqual (true, manager.InterruptDeadConnections ());
+				Assert.AreEqual (true, manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5)));
 
 				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
 				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId2));
@@ -439,7 +439,7 @@ namespace Cresus.Database.UnitTests
 		{
 			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
 			{
-				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (5));
+				DbConnectionManager manager = new DbConnectionManager ();
 
 				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
 
@@ -472,7 +472,7 @@ namespace Cresus.Database.UnitTests
 
 				System.Threading.Thread.Sleep (1000);
 
-				Assert.AreEqual (true, manager.InterruptDeadConnections ());
+				Assert.AreEqual (true, manager.InterruptDeadConnections (System.TimeSpan.FromSeconds (5)));
 				connectionIds.Remove (connectionId3);
 				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 

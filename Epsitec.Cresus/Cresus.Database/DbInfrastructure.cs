@@ -2418,7 +2418,7 @@ namespace Epsitec.Cresus.Database
 
 		private void SetupConnectionManager()
 		{
-			this.connectionManager = new DbConnectionManager (System.TimeSpan.FromSeconds (30));
+			this.connectionManager = new DbConnectionManager ();
 			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
 		}
 
