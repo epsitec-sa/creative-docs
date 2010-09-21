@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Database
 			connectionIdentity.ThrowIfNullOrEmpty ("connectionIdentity");
 
 			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			int status = (int) DbConnectionStatus.Opened;
+			int status = (int) DbConnectionStatus.Open;
 
 			SqlFieldList fieldsToInsert = new SqlFieldList ();
 
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database
 				SqlFieldList conditions = new SqlFieldList ()
 				{
 					this.CreateConditionForConnectionId (connectionId),
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				};
 
 				int nbRowsAffected = this.SetRowValue (fields, conditions);
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Database
 				SqlFieldList conditions = new SqlFieldList ()
 				{
 					this.CreateConditionForConnectionId (connectionId),
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				};
 
 				int nbRowsAffected = this.SetRowValue (fields, conditions);
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Database
 
 			SqlFieldList conditions = new SqlFieldList ()
 			{
-				this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened),
+				this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
 				this.CreateConditionForTimeOut (),
 			};
 
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public IEnumerable<long> GetOpenedConnectionIds()
+		public IEnumerable<long> GetOpenConnectionIds()
 		{
 			this.CheckIsAttached ();
 
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Database
 
 				SqlFieldList conditions = new SqlFieldList ()
 				{
-					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened)
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Open)
 				};
 
 				List<long> ids = this.GetRowsValue (column, conditions).Cast<long> ().ToList ();
@@ -312,11 +312,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		internal SqlFunction CreateConditionForOpenedConnections()
+		internal SqlFunction CreateConditionForOpenConnections()
 		{
 			this.CheckIsAttached ();
 
-			return this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened);
+			return this.CreateConditionForConnectionStatus (DbConnectionStatus.Open);
 		}
 
 

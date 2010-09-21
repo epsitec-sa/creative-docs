@@ -327,7 +327,7 @@ namespace Cresus.Database.UnitTests
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock2"));
 				Assert.IsTrue (lockManager.IsLockOwned ("myLock3"));
 
-				Assert.AreEqual (DbConnectionStatus.Opened, connectionManager.GetConnectionStatus (connectionId1));
+				Assert.AreEqual (DbConnectionStatus.Open, connectionManager.GetConnectionStatus (connectionId1));
 				Assert.AreEqual (DbConnectionStatus.Closed, connectionManager.GetConnectionStatus (connectionId2));
 				Assert.AreEqual (DbConnectionStatus.Interrupted, connectionManager.GetConnectionStatus (connectionId3));
 

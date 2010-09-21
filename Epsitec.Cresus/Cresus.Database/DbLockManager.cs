@@ -243,20 +243,20 @@ namespace Epsitec.Cresus.Database
 
 		private SqlFunction CreateConditionForInactiveLocks()
 		{
-			SqlSelect queryForOpenedConnectionIds = new SqlSelect ();
+			SqlSelect queryForOpenConnectionIds = new SqlSelect ();
 
 			DbTable connectionTable = this.DbInfrastructure.ResolveDbTable (Tags.TableConnection);
 			DbColumn connectionIdColumn = connectionTable.Columns[Tags.ColumnId];
 
-			queryForOpenedConnectionIds.Tables.Add ("t", SqlField.CreateName (connectionTable.GetSqlName ()));
-			queryForOpenedConnectionIds.Fields.Add ("c", SqlField.CreateName ("t", connectionIdColumn.GetSqlName ()));
-			queryForOpenedConnectionIds.Conditions.Add (this.DbInfrastructure.ConnectionManager.CreateConditionForOpenedConnections ());
+			queryForOpenConnectionIds.Tables.Add ("t", SqlField.CreateName (connectionTable.GetSqlName ()));
+			queryForOpenConnectionIds.Fields.Add ("c", SqlField.CreateName ("t", connectionIdColumn.GetSqlName ()));
+			queryForOpenConnectionIds.Conditions.Add (this.DbInfrastructure.ConnectionManager.CreateConditionForOpenConnections ());
 
 			return new SqlFunction
 			(
 				SqlFunctionCode.SetNotIn,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnId].GetSqlName ()),
-				SqlField.CreateSubQuery (queryForOpenedConnectionIds)
+				SqlField.CreateSubQuery (queryForOpenConnectionIds)
 			);
 		}
 		
