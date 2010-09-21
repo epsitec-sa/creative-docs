@@ -51,7 +51,8 @@ namespace Epsitec.Common.Types
 			{
 				System.Type type = this.value.GetType ();
 				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
-				return string.Concat (type.FullName, "/", converter.ConvertToString (this.value, null));
+				string assemblyTypeName = string.Join (", ", type.AssemblyQualifiedName.Split (new string[] { ", " }, System.StringSplitOptions.None), 0, 2);
+				return string.Concat (assemblyTypeName, "/", converter.ConvertToString (this.value, null));
 			}
 		}
 
@@ -75,7 +76,9 @@ namespace Epsitec.Common.Types
 
 				if (type == null)
 				{
-					//	This should never happen:
+					//	This should never happen !
+
+					System.Diagnostics.Debug.WriteLine ("Type '" + typeName + "' cannot be resolved by System.Type.GetType...");
 
 					var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
 								from assemblyType in assembly.GetTypes ()

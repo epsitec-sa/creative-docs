@@ -65,62 +65,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// Sets the index of the item in the filtered collection.
 		/// </summary>
 		/// <param name="newIndex">The new index.</param>
-		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
-		public bool SetItemIndex(int newIndex)
+		public void SetItemIndex(int newIndex)
 		{
-			var compatibleItems = this.CompatibleItems.ToList ();
-
 			if (this.collectionAccessor.IsReadOnly)
 			{
-				int itemCurrentIndex = compatibleItems.IndexOf (this.item);
-
-				if ((itemCurrentIndex == newIndex) ||
-					(itemCurrentIndex < 0))
-                {
-					return false;
-                }
-
-				int rank = 0;
-				int offset = 0;
-				
-				if (itemCurrentIndex < newIndex)
-				{
-					offset = 1;
-				}
-				
-				for (int i = 0; i < compatibleItems.Count; i++)
-				{
-					IItemRank rankable = compatibleItems[i] as IItemRank;
-
-					if ((rankable != null) &&
-						(rankable.Rank.HasValue))
-					{
-						if (i == itemCurrentIndex)
-						{
-							rankable.Rank = newIndex - offset;
-							continue;
-						}
-
-						if (i == newIndex)
-						{
-							rank++;
-						}							
-
-						rankable.Rank = rank++;
-					}
-				}
-
-				//	TODO: notify whoever to force Update...
-
-				return rank > 0;
+				this.MoveItemInReadOnlyCollectionAccessor (newIndex);
 			}
 
+			var compatibleItems = this.CompatibleItems.ToList ();
 			int oldIndex  = compatibleItems.IndexOf (this.item);
 
 			if ((newIndex == oldIndex) ||
 				(newIndex == oldIndex+1))
 			{
-				return false;
+				return;
 			}
 
 			//	Be careful: the caller is specifying an index relative to the CompatibleItems
@@ -142,10 +100,33 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				}
 				
 			}
-
-			return true;
 		}
 
+		private void MoveItemInReadOnlyCollectionAccessor(int newIndex)
+		{
+			var compatibleItems = this.CompatibleItems.ToList ();
+			int itemCurrentIndex = compatibleItems.IndexOf (this.item);
+
+			if ((itemCurrentIndex == newIndex) ||
+				(itemCurrentIndex < 0))
+			{
+				return;
+			}
+
+			if (itemCurrentIndex < newIndex)
+			{
+				newIndex--;
+			}
+
+			compatibleItems.Remove (this.item);
+			compatibleItems.Insert (newIndex, this.item);
+
+			if (GroupedItemController.RenumberItemRanks (compatibleItems))
+			{
+				//	TODO: notify whomever to force Update...
+			}
+		}
+		
 		private void UpdateCollection(int newIndex, List<AbstractEntity> compatibleItems)
 		{
 			var items = this.collectionAccessor.GetItemCollection ();
@@ -177,8 +158,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			GroupedItemController.RenumberItemRanks (compatibleItems);
 		}
 
-		private static void RenumberItemRanks(List<AbstractEntity> compatibleItems)
+		private static bool RenumberItemRanks(List<AbstractEntity> compatibleItems)
 		{
+			int changeCount = 0;
+
 			for (int i = 0; i < compatibleItems.Count; i++)
 			{
 				IItemRank rankable = compatibleItems[i] as IItemRank;
@@ -186,9 +169,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				if ((rankable != null) &&
 					(rankable.Rank.HasValue))
 				{
-					rankable.Rank = i;
+					if (rankable.Rank != i)
+					{
+						rankable.Rank = i;
+						changeCount++;
+					}
 				}
 			}
+
+			return changeCount > 0;
 		}
 
 
