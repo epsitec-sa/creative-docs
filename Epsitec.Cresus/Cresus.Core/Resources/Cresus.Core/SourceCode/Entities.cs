@@ -8870,8 +8870,44 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>SoftwareUser</c> entity.
 	///	designer:cap/L0AGF
 	///	</summary>
-	public partial class SoftwareUserEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange
+	public partial class SoftwareUserEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AGF/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AGF/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		#region IDateRange Members
 		///	<summary>
 		///	The <c>BeginDate</c> field.
@@ -8951,11 +8987,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>LoginPassword</c> field.
+		///	The <c>LoginPasswordHash</c> field.
 		///	designer:fld/L0AGF/L0AJF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AJF]")]
-		public string LoginPassword
+		public string LoginPasswordHash
 		{
 			get
 			{
@@ -8963,12 +8999,34 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.LoginPassword;
+				string oldValue = this.LoginPasswordHash;
 				if (oldValue != value)
 				{
-					this.OnLoginPasswordChanging (oldValue, value);
+					this.OnLoginPasswordHashChanging (oldValue, value);
 					this.SetField<string> ("[L0AJF]", oldValue, value);
-					this.OnLoginPasswordChanged (oldValue, value);
+					this.OnLoginPasswordHashChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>AuthenticationMethod</c> field.
+		///	designer:fld/L0AGF/L0APG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0APG]")]
+		public global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod AuthenticationMethod
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod> ("[L0APG]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue = this.AuthenticationMethod;
+				if (oldValue != value)
+				{
+					this.OnAuthenticationMethodChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod> ("[L0APG]", oldValue, value);
+					this.OnAuthenticationMethodChanged (oldValue, value);
 				}
 			}
 		}
@@ -9011,8 +9069,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnLoginNameChanging(string oldValue, string newValue);
 		partial void OnLoginNameChanged(string oldValue, string newValue);
-		partial void OnLoginPasswordChanging(string oldValue, string newValue);
-		partial void OnLoginPasswordChanged(string oldValue, string newValue);
+		partial void OnLoginPasswordHashChanging(string oldValue, string newValue);
+		partial void OnLoginPasswordHashChanged(string oldValue, string newValue);
+		partial void OnAuthenticationMethodChanging(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod newValue);
+		partial void OnAuthenticationMethodChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod newValue);
 		partial void OnDisabledChanging(bool oldValue, bool newValue);
 		partial void OnDisabledChanged(bool oldValue, bool newValue);
 		
@@ -9037,8 +9097,44 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>SoftwareUserGroup</c> entity.
 	///	designer:cap/L0AKF
 	///	</summary>
-	public partial class SoftwareUserGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class SoftwareUserGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AKF/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AKF/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AKF/L0ALF
@@ -9117,6 +9213,28 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity> ("[L0ATF]");
 			}
 		}
+		///	<summary>
+		///	The <c>UserPowerLevel</c> field.
+		///	designer:fld/L0AKF/L0AQG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AQG]")]
+		public global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel UserPowerLevel
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel> ("[L0AQG]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue = this.UserPowerLevel;
+				if (oldValue != value)
+				{
+					this.OnUserPowerLevelChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel> ("[L0AQG]", oldValue, value);
+					this.OnUserPowerLevelChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -9124,6 +9242,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDisabledChanging(bool oldValue, bool newValue);
 		partial void OnDisabledChanged(bool oldValue, bool newValue);
+		partial void OnUserPowerLevelChanging(global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel newValue);
+		partial void OnUserPowerLevelChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -9146,8 +9266,44 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>SoftwareUserRole</c> entity.
 	///	designer:cap/L0AQF
 	///	</summary>
-	public partial class SoftwareUserRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class SoftwareUserRoleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode
 	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AQF/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AQF/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
 		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/L0AQF/L0ARF
