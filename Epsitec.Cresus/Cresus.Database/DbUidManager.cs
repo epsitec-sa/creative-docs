@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database
                 this.CreateConditionForSlot (slot),
             };
 
-			this.RemoveRow (conditions);
+			this.RemoveRows (conditions);
 		}
 
 

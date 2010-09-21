@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Database
 				this.CreateConditionForLockName (lockName),
 			};
 
-			this.RemoveRow (conditions);
+			this.RemoveRows (conditions);
 		}
 
 
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Database
 				this.CreateConditionForInactiveLocks (),
 			};
 
-			this.RemoveRow (conditions);
+			this.RemoveRows (conditions);
 		}
 
 
