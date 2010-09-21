@@ -676,16 +676,32 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
-			if (this.DataContext.IsPersistent (target))
+			if (this.DataContext.Contains (target))
 			{
-				DbKey key = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
-
-				this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
-
+				if (this.DataContext.IsPersistent (target))
+				{
+					DbKey key = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
+					this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
+				}
+				else
+				{
+					this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
+				}
 			}
 			else
 			{
-				this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
+				//	TODO: check if this makes sense here (PA)
+				var entityKey = DataContextPool.Instance.FindEntityKey (target);
+
+				if (entityKey.HasValue)
+				{
+					DbKey key = entityKey.Value.RowKey;
+					this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
+				}
+				else
+				{
+					this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
+				}
 			}
 		}
 
