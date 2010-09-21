@@ -312,6 +312,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		internal SqlFunction CreateConditionForOpenedConnections()
+		{
+			this.CheckIsAttached ();
+
+			return this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened);
+		}
+
+
 		private SqlFunction CreateConditionForConnectionId(long connectionId)
 		{
 			return new SqlFunction
