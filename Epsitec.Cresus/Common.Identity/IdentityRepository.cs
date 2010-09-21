@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Identity;
@@ -203,7 +203,8 @@ namespace Epsitec.Common.Identity
 			return that.IdentityCards;
 		}
 
-		public static readonly DependencyProperty IdentityCardsProperty = DependencyProperty.RegisterReadOnly ("IdentityCards", typeof (ICollection<IdentityCard>), typeof (IdentityRepository), new DependencyPropertyMetadata (IdentityRepository.GetIdentityCardsValue).MakeReadOnlySerializable ());
+
+		public static readonly DependencyProperty IdentityCardsProperty = DependencyProperty<IdentityRepository>.RegisterReadOnly (x => x.IdentityCards, new DependencyPropertyMetadata (IdentityRepository.GetIdentityCardsValue).MakeReadOnlySerializable ());
 
 		public const string DefaultIdentitiesFileName = "default.identities";
 
