@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			else
 			{
-				return DataContextPool.AreEqualDatabaseInstances (that, other);
+				return DataContextPool.Instance.AreEqualDatabaseInstances (that, other);
 			}
 		}
 

@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				return null;
 			}
-			
+
 			return this.FirstOrDefault (context => context.Contains (entity));
 		}
 
@@ -107,10 +107,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public EntityKey? FindEntityKey(AbstractEntity entity)
 		{
 			if (entity == null)
-            {
+			{
 				return null;
-            }
-			
+			}
+
 			DataContext context = this.FindDataContext (entity);
 
 			return (context == null) ? null : context.GetNormalizedEntityKey (entity);
@@ -141,6 +141,37 @@ namespace Epsitec.Cresus.DataLayer.Context
 					}
 				}
 			}
+		}
+
+
+		/// <summary>
+		/// Compares two entities and returns <c>true</c> if they refer to the same database key
+		/// or if they are the same memory instance.
+		/// </summary>
+		/// <param name="that">The reference entity.</param>
+		/// <param name="other">The other entity.</param>
+		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
+		public bool AreEqualDatabaseInstances(AbstractEntity a, AbstractEntity b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+
+			var keyA = this.FindEntityKey (a);
+			var keyB = this.FindEntityKey (b);
+
+			if (!keyA.HasValue && a != null)
+			{
+				return false;
+			}
+
+			if (!keyB.HasValue && b != null)
+			{
+				return false;
+			}
+
+			return keyA == keyB;
 		}
 
 
@@ -200,26 +231,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly HashSet<DataContext> dataContexts;
 
 
-
-		/// <summary>
-		/// Compares two entities and returns <c>true</c> if they refer to the same database key
-		/// or if they are the same memory instance.
-		/// </summary>
-		/// <param name="that">The reference entity.</param>
-		/// <param name="other">The other entity.</param>
-		/// <returns><c>true</c> if both entities refer to the same database key; otherwise, <c>false</c>.</returns>
-		public static bool AreEqualDatabaseInstances(AbstractEntity a, AbstractEntity b)
-		{
-			if (a == b)
-			{
-				return true;
-			}
-
-			var keyA = DataContextPool.instance.FindEntityKey (a);
-			var keyB = DataContextPool.instance.FindEntityKey (b);
-
-			return keyA == keyB;
-		}
 	}
 
 
