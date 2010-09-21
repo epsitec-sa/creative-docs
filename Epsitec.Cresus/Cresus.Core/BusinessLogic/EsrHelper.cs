@@ -86,9 +86,11 @@ namespace Epsitec.Cresus.Core
 		/// <exception cref="System.ArgumentException">If <paramref name="number"/> is empty or contains non alpha-numeric characters.</exception>
 		public static char ComputeControlKey(string number)
 		{
+			number = number.Replace (" ", "");
+
 			if (!Regex.IsMatch (number, @"^[0-9]*$"))
 			{
-				throw new System.ArgumentException (string.Format("The provided string contains non alpah-numeric characters: {0}", number));
+				throw new System.ArgumentException (string.Format("The provided string contains non alpha-numeric characters: {0}", number));
 			}
 
 			if (number.Length == 0)

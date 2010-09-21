@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Printers
 {
@@ -329,14 +330,6 @@ namespace Epsitec.Cresus.Core.Printers
 			port.PaintSurface (path);
 		}
 
-		private static string PriceToStringRef(decimal price)
-		{
-			//	Extrait le codage d'un prix.
-			int franc = decimal.ToInt32 (price);
-			int cent = decimal.ToInt32 (price * 100) - decimal.ToInt32 (price) * 100;
-			return string.Concat (franc.ToString ("D8"), cent.ToString ("D2"));
-		}
-
 		protected static void PaintText(IPaintPort port, Rectangle bounds, ContentAlignment alignment, Font font, double fontSize, string text)
 		{
 			AbstractEsrBand.PaintText (port, bounds, alignment, font, fontSize, FormattedText.FromSimpleText (text));
@@ -364,112 +357,19 @@ namespace Epsitec.Cresus.Core.Printers
 			textLayout.Paint (bounds.BottomLeft, port);
 		}
 
-
-		protected string FormatedEsrReferenceNumber
+		protected IsrData IsrData
 		{
-			//	Retourne le numéro au format "96 13070 01000 02173 50356 73892".
 			get
 			{
-				string compact = this.CompactEsrReferenceNumber;
-
-				if (string.IsNullOrEmpty (compact))
-				{
-					return null;
-				}
-
-				if (compact.Length == 27)
-				{
-					string s1 = compact.Substring (0, 2);
-					string s2 = compact.Substring (2, 5);
-					string s3 = compact.Substring (7, 5);
-					string s4 = compact.Substring (12, 5);
-					string s5 = compact.Substring (17, 5);
-					string s6 = compact.Substring (22, 5);
-
-					return string.Concat (s1, " ", s2, " ", s3, " ", s4, " ", s5, " ", s6);
-				}
-				else
-				{
-					return this.EsrReferenceNumber;
-				}
-			}
-		}
-
-		protected string CompactEsrReferenceNumber
-		{
-			//	Retourne le numéro au format "961307001000021735035673892".
-			get
-			{
-				if (!string.IsNullOrEmpty (this.EsrReferenceNumber))
-				{
-					return this.EsrReferenceNumber.Replace (" ", "");
-				}
-
-				return null;
-			}
-		}
-
-		protected string FullEsrReferenceNumber
-		{
-			//	Retourne le numéro complet au format "0100000106201>100000001668190000043332147+ 010619511>"
-			get
-			{
-				string compact = this.CompactEsrReferenceNumber;
-
-				if (string.IsNullOrEmpty (compact))
-				{
-					return null;
-				}
-
-				string ccp = this.EsrCustomerNumber;
-
-				if (ccp == null)
-				{
-					ccp = "";
-				}
-				else
-				{
-					ccp = ccp.Replace (" ", "");
-				}
-
-				if (string.IsNullOrEmpty (ccp))
-				{
-					ccp = new string ('X', 9);
-				}
-				else
-				{
-					string[] ccps = ccp.Split ('-');
-					if (ccps.Length == 3)
-					{
-						// "10-88556-5" devient "100885565":
-						ccp = ccps[0] + new string ('0', 6-System.Math.Min (6, ccps[1].Length)) + ccps[1] + ccps[2];
-					}
-				}
-
-				string fixe = this.CompactEsrReferenceNumber;
-				if (string.IsNullOrEmpty (fixe))
-				{
-					fixe = new string ('X', 27);
-				}
-				else
-				{
-					fixe = fixe + new string ('X', System.Math.Max (0, 27-fixe.Length));
-				}
-
-				string montant;
 				if (this.NotForUse)
 				{
-					montant = string.Concat ("01", new string ('X', 10+1));
+					//	TODO: toujours passer un n° de client BVR, même si le bulletin n'est pas valable...
+					return new IsrData (subscriberNumber: this.EsrCustomerNumber ?? "000000000");
 				}
 				else
 				{
-					string p = string.Concat ("01", AbstractEsrBand.PriceToStringRef (this.Price));
-					char c = EsrHelper.ComputeControlKey (p);
-
-					montant = string.Concat(p, c);
+					return new IsrData (subscriberNumber: this.EsrCustomerNumber, referenceNumber: this.EsrReferenceNumber);
 				}
-
-				return string.Format ("{0}>{1}+ {2}>", montant, fixe, ccp);
 			}
 		}
 

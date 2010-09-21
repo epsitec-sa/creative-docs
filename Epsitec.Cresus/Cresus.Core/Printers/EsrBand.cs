@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.Business.Finance;
 
 namespace Epsitec.Cresus.Core.Printers
 {
@@ -93,18 +94,24 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Color = Color.FromBrightness (0);
 
+			var isr = this.IsrData;
+
+			string codingZone = isr.GetCodingZone (this.Price, CurrencyCode.Chf);
+			string formattedRefNumber = isr.GetFormattedReferenceNumber ();
+			string formattedSubscriberNumber = isr.GetFormattedSubscriberNumber ();
+
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+8, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+68, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
 
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-85, 50, 19), ContentAlignment.TopLeft, fixFontRegular, 2.4, this.From);
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+129, topLeft.Y-75, 70, 24), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.From);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.EsrCustomerNumber);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.EsrCustomerNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, formattedSubscriberNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, formattedSubscriberNumber);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-66, 50, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.FormatedEsrReferenceNumber);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+123, topLeft.Y-39, 83, 6), ContentAlignment.MiddleCenter, ocrFont, 4.0, this.FormatedEsrReferenceNumber);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullEsrReferenceNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-66, 50, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, formattedRefNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+123, topLeft.Y-39, 83, 6), ContentAlignment.MiddleCenter, ocrFont, 4.0, formattedRefNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, codingZone);
 
 			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+1, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+47, topLeft.Y-56, 10, 6), this.Price, this.NotForUse);
 			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+62, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+108, topLeft.Y-56, 10, 6), this.Price, this.NotForUse);
