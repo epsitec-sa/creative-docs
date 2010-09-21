@@ -136,6 +136,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this;
 		}
 
+//-		public 
+
 		public IndirectAccessor<T, FormattedText> TitleAccessor
 		{
 			get;

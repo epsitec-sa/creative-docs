@@ -94,6 +94,9 @@
     <Compile Include="BusinessLogic\BusinessContext.cs" />
     <Compile Include="BusinessLogic\BusinessContextPool.cs" />
     <Compile Include="BusinessLogic\BusinessRuleAttribute.cs" />
+    <Compile Include="BusinessLogic\Isr.cs" />
+    <Compile Include="BusinessLogic\IsrData.cs" />
+    <Compile Include="BusinessLogic\IsrType.cs" />
     <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticlePriceSetupRule.cs" />
@@ -242,7 +245,7 @@
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity.cs" />
     <Compile Include="Entities\PriceDocumentItemEntity.cs" />
     <Compile Include="Entities\TextDocumentItemEntity.cs" />
-    <Compile Include="EsrHelper.cs" />
+    <Compile Include="BusinessLogic\EsrHelper.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="CommandHandlers\DatabaseCommandHandler.cs" />
     <Compile Include="CommandHandlers\CoreCommandHandler.cs" />
