@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.table.SetWidthColumn (4, 80);
 			this.table.SetWidthColumn (5, 50);
 			this.table.SetWidthColumn (6, 30);
-			this.table.SetWidthColumn (7, 70);
+			this.table.SetWidthColumn (7, 80);
 			this.table.SetWidthColumn (8, 190);
 
 			this.table.SetWidthColumn (9, 70);
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateTableContentCell (row, 1, line.GenreTransaction.ToString ());
 			this.UpdateTableContentCell (row, 2, line.GenreRemise.ToString ());
 			this.UpdateTableContentCell (row, 6, line.MonnaieTransaction);
-			this.UpdateTableContentCell (row, 7, line.NoClient);
+			this.UpdateTableContentCell (row, 7, line.FormatedNoClient);
 
 			if (line is V11.V11RecordLine)
 			{
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateTableContentCell (row, 3, record.CodeTransaction.ToString ());
 				this.UpdateTableContentCell (row, 4, record.Origine.ToString ());
 				this.UpdateTableContentCell (row, 5, record.BVRTransaction.ToString ());
-				this.UpdateTableContentCell (row, 8, record.FormatedNoReference);
+				this.UpdateTableContentCell (row, 8, record.FormatedNoRéférence);
 
 				this.UpdateTableContentCell (row, 9, Misc.GetDateShortDescription (record.DateDépot));
 				this.UpdateTableContentCell (row, 10, Misc.GetDateShortDescription (record.DateTraitement));
