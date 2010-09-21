@@ -97,6 +97,9 @@
     <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticlePriceSetupRule.cs" />
+    <Compile Include="BusinessLogic\Rules\SoftwareUserSetupRule.cs" />
+    <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
+    <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	[DesignerVisible]
 	public enum UserPowerLevel
 	{
-		None		 = 0,
+		None			= 0,
 
 		System			= 10,
 		Developer		= 11,
