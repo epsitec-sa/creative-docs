@@ -176,7 +176,6 @@ namespace Epsitec.Cresus.Database
 
 		protected object GetRowValue(DbColumn dbColumn, SqlFieldList conditions)
 		{
-			
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				SqlSelect query = new SqlSelect ();
@@ -206,6 +205,34 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 
 				return (int) nbRowsAffected;
+			}
+		}
+
+
+		protected IEnumerable<object> GetRowsValue(DbColumn dbColumn, SqlFieldList conditions)
+		{
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				SqlSelect query = new SqlSelect ();
+
+				query.Tables.Add ("t", SqlField.CreateName (this.DbTable.GetSqlName ()));
+				query.Fields.Add ("c", SqlField.CreateName ("t", dbColumn.GetSqlName ()));
+				query.Conditions.AddRange (conditions);
+
+				transaction.SqlBuilder.SelectData (query);
+
+				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
+
+				List<object> values = new List<object> ();
+
+				foreach (DataRow row in table.Rows)
+				{
+					values.Add (row["c"]);
+				}
+
+				transaction.Commit ();
+
+				return values;
 			}
 		}
 
