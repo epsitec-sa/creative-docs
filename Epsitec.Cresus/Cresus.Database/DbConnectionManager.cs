@@ -2,6 +2,10 @@
 
 using Epsitec.Cresus.Database.Collections;
 
+using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database
 {
@@ -282,6 +286,28 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 
 				return (System.DateTime) connectionLastSeen;
+			}
+		}
+
+
+		public IEnumerable<long> GetOpenedConnectionIds()
+		{
+			this.CheckIsAttached ();
+
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				DbColumn column = this.DbTable.Columns[Tags.ColumnId];
+
+				SqlFieldList conditions = new SqlFieldList ()
+				{
+					this.CreateConditionForConnectionStatus (DbConnectionStatus.Opened)
+				};
+
+				List<long> ids = this.GetRowsValue (column, conditions).Cast<long> ().ToList ();
+
+				transaction.Commit ();
+
+				return ids;
 			}
 		}
 

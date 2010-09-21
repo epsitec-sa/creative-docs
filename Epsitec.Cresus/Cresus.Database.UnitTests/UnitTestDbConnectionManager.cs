@@ -434,6 +434,72 @@ namespace Cresus.Database.UnitTests
 		}
 
 
+		[TestMethod]
+		public void GetOpenedConnections()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbConnectionManager manager = new DbConnectionManager (System.TimeSpan.FromSeconds (5));
+
+				manager.Attach (dbInfrastructure, dbInfrastructure.ResolveDbTable (Tags.TableConnection));
+
+				List<long> connectionIds = new List<long> ();
+
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				long connectionId1 = manager.OpenConnection ("connection1");
+				connectionIds.Add (connectionId1);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				long connectionId2 = manager.OpenConnection ("connection2");
+				connectionIds.Add (connectionId2);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				long connectionId3 = manager.OpenConnection ("connection3");
+				connectionIds.Add (connectionId3);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				manager.CloseConnection (connectionId1);
+				connectionIds.Remove (connectionId1);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				for (int i = 0; i < 5; i++)
+				{
+					manager.KeepConnectionAlive (connectionId2);
+
+					System.Threading.Thread.Sleep (1000);
+				}
+
+				System.Threading.Thread.Sleep (1000);
+
+				Assert.AreEqual (true, manager.InterruptDeadConnections ());
+				connectionIds.Remove (connectionId3);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
+				Assert.AreEqual (DbConnectionStatus.Opened, manager.GetConnectionStatus (connectionId2));
+				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnectionStatus (connectionId3));
+
+				manager.CloseConnection (connectionId2);
+				connectionIds.Remove (connectionId2);
+				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+
+				manager.Detach ();
+			}
+		}
+
+
+		private void CheckSetAreSame(List<long> expected, List<long> actual)
+		{
+			Assert.AreEqual (expected.Count, actual.Count);
+
+			foreach (long l in expected)
+			{
+				CollectionAssert.Contains (actual, l);
+			}
+		}
+
+
 	}
 
 
