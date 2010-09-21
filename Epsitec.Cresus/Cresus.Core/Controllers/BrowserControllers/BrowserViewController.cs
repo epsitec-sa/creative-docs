@@ -242,14 +242,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			switch (dataSetName)
 			{
 				case "Customers":
-					return EntityInfo.GetTypeId<RelationEntity> ();
+					return EntityInfo<RelationEntity>.GetTypeId ();
 
 				case "ArticleDefinitions":
-					return EntityInfo.GetTypeId<ArticleDefinitionEntity> ();
+					return EntityInfo<ArticleDefinitionEntity>.GetTypeId ();
 
 				case "Documents":
 				case "InvoiceDocuments":
-					return EntityInfo.GetTypeId<InvoiceDocumentEntity> ();
+					return EntityInfo<InvoiceDocumentEntity>.GetTypeId ();
 			}
 
 			throw new System.NotImplementedException ();

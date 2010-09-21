@@ -158,14 +158,14 @@ namespace Epsitec.Cresus.Core
 		}
 
 		public static void Sort<T>(List<T> list)
-			where T : AbstractEntity
+			where T : AbstractEntity, new ()
 		{
-			T x = null;
-
-			if ((list.Count > 0) &&
-				(x is IItemRank))
+			if (EntityInfo<T>.Implements<IItemRank> ())
 			{
-				list.Sort ((a, b) => CoreData.CompareItems (a as IItemRank, b as IItemRank));
+				if (list.Count > 0)
+				{
+					list.Sort ((a, b) => CoreData.CompareItems (a as IItemRank, b as IItemRank));
+				}
 			}
 		}
 
@@ -216,8 +216,7 @@ namespace Epsitec.Cresus.Core
 			where T : AbstractEntity, new ()
 		{
 			var repository = this.GetRepository<T> ();
-			T t = null;
-
+			
 			if (repository != null)
 			{
 				var all = repository.GetAllEntities ();
@@ -229,7 +228,7 @@ namespace Epsitec.Cresus.Core
 
 				if ((extraction & Extraction.Sorted) != 0)
 				{
-					if (t is IItemRank)
+					if (EntityInfo<T>.Implements<IItemRank> ())
 					{
 						all = all.OrderBy (x => x as IItemRank, CoreData.itemRankComparer);
 					}

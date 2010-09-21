@@ -68,12 +68,52 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns><c>true</c> if the item changed its position in the collection; otherwise, <c>false</c>.</returns>
 		public bool SetItemIndex(int newIndex)
 		{
+			var compatibleItems = this.CompatibleItems.ToList ();
+
 			if (this.collectionAccessor.IsReadOnly)
 			{
-				return false;
-			}
+				int itemCurrentIndex = compatibleItems.IndexOf (this.item);
 
-			var compatibleItems = this.CompatibleItems.ToList ();
+				if ((itemCurrentIndex == newIndex) ||
+					(itemCurrentIndex < 0))
+                {
+					return false;
+                }
+
+				int rank = 0;
+				int offset = 0;
+				
+				if (itemCurrentIndex < newIndex)
+				{
+					offset = 1;
+				}
+				
+				for (int i = 0; i < compatibleItems.Count; i++)
+				{
+					IItemRank rankable = compatibleItems[i] as IItemRank;
+
+					if ((rankable != null) &&
+						(rankable.Rank.HasValue))
+					{
+						if (i == itemCurrentIndex)
+						{
+							rankable.Rank = newIndex - offset;
+							continue;
+						}
+
+						if (i == newIndex)
+						{
+							rank++;
+						}							
+
+						rankable.Rank = rank++;
+					}
+				}
+
+				//	TODO: notify whoever to force Update...
+
+				return rank > 0;
+			}
 
 			int oldIndex  = compatibleItems.IndexOf (this.item);
 

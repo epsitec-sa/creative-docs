@@ -3,11 +3,5 @@
 
 namespace Epsitec.Common.Support
 {
-	public enum OpletEvent
-	{
-		UndoExecuted,
-		RedoExecuted,
-		AddingOplet,
-		AddedOplet,
-	}
+	public delegate void OpletEventHandler(object sender, OpletEventArgs e);
 }

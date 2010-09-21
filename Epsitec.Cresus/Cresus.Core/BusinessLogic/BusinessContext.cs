@@ -401,6 +401,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				}
 
 				this.OnContainsChangesChanged ();
+				CoreProgram.Application.MainWindowController.Update ();
 			}
 			finally
 			{
