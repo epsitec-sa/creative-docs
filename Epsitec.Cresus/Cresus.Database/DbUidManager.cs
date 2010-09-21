@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using System.Data;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.Database
 {
@@ -114,8 +116,7 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 		}
-
-
+		
 
 		private void RemoveUidCounter(string name, int slot)
 		{
@@ -127,6 +128,7 @@ namespace Epsitec.Cresus.Database
 
 			this.RemoveRow (conditions);
 		}
+
 
 		/// <summary>
 		/// Tells whether a counter for uids exists in the database.
@@ -169,29 +171,18 @@ namespace Epsitec.Cresus.Database
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				SqlSelect query = new SqlSelect ();
+				DbColumn column = this.DbTable.Columns[Tags.ColumnUidSlot];
 
-				query.Tables.Add (Tags.TableUid, SqlField.CreateName (this.DbTable.GetSqlName ()));
-				query.Fields.Add (Tags.ColumnName, SqlField.CreateName (Tags.TableUid, Tags.ColumnName));
-				query.Fields.Add (Tags.ColumnUidSlot, SqlField.CreateName (Tags.TableUid, Tags.ColumnUidSlot));
-				query.Conditions.Add (this.CreateConditionForName (name));
-
-				transaction.SqlBuilder.SelectData (query);
-
-				DataTable table = this.DbInfrastructure.ExecuteSqlSelect (transaction, query, 0);
-
-				List<int> names = new List<int> ();
-
-				foreach (DataRow row in table.Rows)
+				SqlFieldList conditions = new SqlFieldList ()
 				{
-					int slot = (int) row[Tags.ColumnUidSlot];
+					this.CreateConditionForName (name)
+				};
 
-					names.Add (slot);
-				}
+				List<int> slots = this.GetRowsValue (column, conditions).Cast<int> ().ToList ();
 
 				transaction.Commit ();
 
-				return names;
+				return slots;
 			}
 		}
 
