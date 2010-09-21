@@ -286,6 +286,65 @@ namespace Cresus.Database.UnitTests
 		}
 
 
+		[TestMethod]
+		public void RemoveInactiveLocks()
+		{
+			using (DbInfrastructure dbInfrastructure = TestHelper.ConnectToDatabase ())
+			{
+				DbLockManager lockManager = dbInfrastructure.LockManager;
+				DbConnectionManager connectionManager = dbInfrastructure.ConnectionManager;
+
+				long connectionId1 = connectionManager.OpenConnection ("myId1");
+				long connectionId2 = connectionManager.OpenConnection ("myId2");
+				long connectionId3 = connectionManager.OpenConnection ("myId3");
+				
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock1"));
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock3"));
+
+				lockManager.RequestLock ("myLock1", connectionId1);
+				lockManager.RequestLock ("myLock2", connectionId2);
+				lockManager.RequestLock ("myLock3", connectionId3);
+
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock1"));
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock2"));
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock3"));
+
+				connectionManager.CloseConnection (connectionId2);
+
+				for (int i = 0; i < 30; i++)
+				{
+					connectionManager.KeepConnectionAlive (connectionId1);
+
+					System.Threading.Thread.Sleep (1000);
+				}
+
+				System.Threading.Thread.Sleep (1000);
+
+				connectionManager.InterruptDeadConnections ();
+
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock1"));
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock2"));
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock3"));
+
+				Assert.AreEqual (DbConnectionStatus.Opened, connectionManager.GetConnectionStatus (connectionId1));
+				Assert.AreEqual (DbConnectionStatus.Closed, connectionManager.GetConnectionStatus (connectionId2));
+				Assert.AreEqual (DbConnectionStatus.Interrupted, connectionManager.GetConnectionStatus (connectionId3));
+
+				lockManager.RemoveInactiveLocks ();
+
+				Assert.IsTrue (lockManager.IsLockOwned ("myLock1"));
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock2"));
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock3"));
+
+				lockManager.ReleaseLock ("myLock1", connectionId1);
+				Assert.IsFalse (lockManager.IsLockOwned ("myLock1"));
+
+				connectionManager.CloseConnection (connectionId1);
+			}
+		}
+
+
 	}
 
 

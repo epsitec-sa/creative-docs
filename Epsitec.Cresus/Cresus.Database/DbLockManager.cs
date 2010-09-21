@@ -2,7 +2,9 @@
 
 using Epsitec.Cresus.Database.Collections;
 
-using System.Data;
+using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.Database
@@ -185,6 +187,19 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public void RemoveInactiveLocks()
+		{
+			this.CheckIsAttached ();
+
+			SqlFieldList conditions = new SqlFieldList ()
+			{
+				this.CreateConditionForInactiveLocks (),
+			};
+
+			this.RemoveRow (conditions);
+		}
+
+
 		private object GetValue(string lockName, string valueName)
 		{
 			DbColumn column = this.DbTable.Columns[valueName];
@@ -223,6 +238,26 @@ namespace Epsitec.Cresus.Database
 				SqlFunctionCode.CompareEqual,
 				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnName].GetSqlName ()),
 				SqlField.CreateConstant (lockName, DbRawType.String)
+			);
+		}
+
+
+		private SqlFunction CreateConditionForInactiveLocks()
+		{
+			SqlSelect queryForOpenedConnectionIds = new SqlSelect ();
+
+			DbTable connectionTable = this.DbInfrastructure.ResolveDbTable (Tags.TableConnection);
+			DbColumn connectionIdColumn = connectionTable.Columns[Tags.ColumnId];
+
+			queryForOpenedConnectionIds.Tables.Add ("t", SqlField.CreateName (connectionTable.GetSqlName ()));
+			queryForOpenedConnectionIds.Fields.Add ("c", SqlField.CreateName ("t", connectionIdColumn.GetSqlName ()));
+			queryForOpenedConnectionIds.Conditions.Add (this.DbInfrastructure.ConnectionManager.CreateConditionForOpenedConnections ());
+
+			return new SqlFunction
+			(
+				SqlFunctionCode.SetNotIn,
+				SqlField.CreateName (this.DbTable.Columns[Tags.ColumnId].GetSqlName ()),
+				SqlField.CreateSubQuery (queryForOpenedConnectionIds)
 			);
 		}
 		
