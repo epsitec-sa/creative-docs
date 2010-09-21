@@ -157,7 +157,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			this.connectionInformation.KeepAlive ();
 
+#if false	// HACK: disabled dead connection recycling -- this is a real annoyance when debugging with multiple instances running
 			bool interruptedConnections = ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure);
+#else
+			bool interruptedConnections = false;
+#endif
 
 			if (interruptedConnections)
 			{
