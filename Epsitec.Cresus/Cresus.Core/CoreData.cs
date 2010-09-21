@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Core
 			var groupStandard = this.CreateUserGroup (logicGroup, "Utilisateurs", Business.UserManagement.UserPowerLevel.Standard);
 
 			var userStandard = this.CreateUser (logicUser, groupStandard, "Utilisateur par défaut");
-			var userDev = this.CreateUser (logicUser, groupDev, "Epsitec", "Epsitec", "admin");
+			var userDev      = this.CreateUser (logicUser, groupDev,      "Epsitec", "Epsitec", "admin");
 
 			this.DataContext.SaveChanges ();
 		}
@@ -497,8 +497,8 @@ namespace Epsitec.Cresus.Core
 			var user = this.DataContext.CreateEntity<SoftwareUserEntity> ();
 
 			logicUser.ApplyRules (RuleType.Setup, user);
-			
-			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.System;
+
+			user.AuthenticationMethod = (userPassword == null) ? Business.UserManagement.UserAuthenticationMethod.System : Business.UserManagement.UserAuthenticationMethod.Password;
 			user.DisplayName = displayName;
 			user.LoginName = userLogin ?? System.Environment.UserName;
 			user.UserGroups.Add (group);
