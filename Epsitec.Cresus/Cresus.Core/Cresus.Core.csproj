@@ -105,6 +105,7 @@
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Dialogs\PasswordDialog.cs" />
     <Compile Include="Dialogs\SelectUserDialog.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
