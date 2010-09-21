@@ -155,36 +155,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				throw new System.InvalidOperationException ("This instance is not connected.");
 			}
 
+			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
+
 			this.connectionInformation.KeepAlive ();
 
-#if false	// HACK: disabled dead connection recycling -- this is a real annoyance when debugging with multiple instances running
-			bool interruptedConnections = ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure);
-#else
-			bool interruptedConnections = false;
+#if false
+			// HACK: disabled dead connection recycling -- this is a real annoyance when debugging with multiple instances running
+			
+			ConnectionInformation.InterruptDeadConnections (this.dbInfrastructure);
+			LockTransaction.RemoveInactiveLocks (this.dbInfrastructure);
 #endif
-
-			if (interruptedConnections)
-			{
-				// TODO Remove all the locks associated with interrupted connections.
-				// 1) Create a method in the low level file DbLockManager that removes those locks,
-				//    with a request like "delete from CR_LOCK where CR_CONNECTION_ID in (select CR_ID from CR_CONNECTION where CR_CONNECTION_STATUS == 2)"
-				//    or something equivalent, if nested requests are not available in the lower level
-				//    layers. Maybe by doing two requests one after the other or by modifying the
-				//    InterruptDeadConnection(...) method so that it returns the id of the connections
-				//    that have been interrupted.
-				// 2) Call that method here.
-				// 3) Should we also take care of locks that are owned by closed connections. In a
-				// perfect world, this case should never happen. But you never know.
-				// 4) Maybe change the name of this method since if does something more than just KeepConnectionAlive()
-				//    the connection alive.
-				// 5) Maybe move this in ConnectionInformation because DataInfrastructure should
-				//    avoid to do anything directly but should only call single methods of other
-				//    classes to keep it simple.
-				// 6) Maybe call ConnectionInformation with a different name, or split it in two?
-				// Marc
-			}
-
-			System.Diagnostics.Debug.WriteLine ("KeepAlive pulsed");
 		}
 				
 		public void RefreshConnectionInformation()
@@ -199,11 +179,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public bool AreAllLocksAvailable(IEnumerable<string> lockNames)
 		{
+			this.AssertIsConnected ();
+
 			return LockTransaction.AreAllLocksAvailable (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 				
 		public LockTransaction CreateLockTransaction(IEnumerable<string> lockNames)
 		{
+			this.AssertIsConnected ();
+
 			return new LockTransaction (this.dbInfrastructure, this.connectionInformation.ConnectionId, lockNames);
 		}
 
@@ -215,6 +199,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 
 			base.Dispose (disposing);
+		}
+
+
+		private void AssertIsConnected()
+		{
+			if (this.connectionInformation == null || this.connectionInformation.Status != ConnectionStatus.Open)
+			{
+				throw new System.InvalidOperationException ("This instance is not connected.");
+			}
 		}
 
 		private string GetConnectionName()

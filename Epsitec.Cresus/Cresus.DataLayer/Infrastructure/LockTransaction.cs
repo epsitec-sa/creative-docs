@@ -168,6 +168,14 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
+
+		internal static void RemoveInactiveLocks(DbInfrastructure dbInfrastructure)
+		{
+			DbLockManager lockManager = dbInfrastructure.LockManager;
+
+			lockManager.RemoveInactiveLocks ();
+		}
+
 		
 		private static bool AreAllLocksAvailable(DbLockManager lockManager, long connectionId, IEnumerable<string> lockNames)
 		{

@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Database
 					this.DecrementLockCounter (lockName);
 				}
 				
-
 				transaction.Commit ();
 			}
 		}
