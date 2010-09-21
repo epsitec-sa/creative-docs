@@ -18,16 +18,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		Idle,
 
 		/// <summary>
-		/// Lock was requested asynchronously and it was not yet acquired.
-		/// </summary>
-		Waiting,
-
-		/// <summary>
-		/// Lock was requested asynchronously and it is ready to be acquired.
-		/// </summary>
-		Ready,
-
-		/// <summary>
 		/// The lock is active (successfully acquired).
 		/// </summary>
 		Locked,
