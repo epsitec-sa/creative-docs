@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			switch (status)
 			{
-				case DbConnectionStatus.Opened:
+				case DbConnectionStatus.Open:
 					convertedStatus = ConnectionStatus.Open;
 					break;
 

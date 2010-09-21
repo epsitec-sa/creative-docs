@@ -205,7 +205,7 @@ namespace Cresus.Database.UnitTests
 				long connectionId = manager.OpenConnection ("connection");
 
 				Assert.AreEqual ("connection", manager.GetConnectionIdentity (connectionId));
-				Assert.AreEqual (DbConnectionStatus.Opened, manager.GetConnectionStatus (connectionId));
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId));
 
 				manager.CloseConnection (connectionId);
 
@@ -424,7 +424,7 @@ namespace Cresus.Database.UnitTests
 				Assert.AreEqual (true, manager.InterruptDeadConnections ());
 
 				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
-				Assert.AreEqual (DbConnectionStatus.Opened, manager.GetConnectionStatus (connectionId2));
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId2));
 				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnectionStatus (connectionId3));
 
 				manager.CloseConnection (connectionId2);
@@ -445,23 +445,23 @@ namespace Cresus.Database.UnitTests
 
 				List<long> connectionIds = new List<long> ();
 
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				long connectionId1 = manager.OpenConnection ("connection1");
 				connectionIds.Add (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				long connectionId2 = manager.OpenConnection ("connection2");
 				connectionIds.Add (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				long connectionId3 = manager.OpenConnection ("connection3");
 				connectionIds.Add (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				manager.CloseConnection (connectionId1);
 				connectionIds.Remove (connectionId1);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				for (int i = 0; i < 5; i++)
 				{
@@ -474,15 +474,15 @@ namespace Cresus.Database.UnitTests
 
 				Assert.AreEqual (true, manager.InterruptDeadConnections ());
 				connectionIds.Remove (connectionId3);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				Assert.AreEqual (DbConnectionStatus.Closed, manager.GetConnectionStatus (connectionId1));
-				Assert.AreEqual (DbConnectionStatus.Opened, manager.GetConnectionStatus (connectionId2));
+				Assert.AreEqual (DbConnectionStatus.Open, manager.GetConnectionStatus (connectionId2));
 				Assert.AreEqual (DbConnectionStatus.Interrupted, manager.GetConnectionStatus (connectionId3));
 
 				manager.CloseConnection (connectionId2);
 				connectionIds.Remove (connectionId2);
-				this.CheckSetAreSame (connectionIds, manager.GetOpenedConnectionIds ().ToList ());
+				this.CheckSetAreSame (connectionIds, manager.GetOpenConnectionIds ().ToList ());
 
 				manager.Detach ();
 			}
