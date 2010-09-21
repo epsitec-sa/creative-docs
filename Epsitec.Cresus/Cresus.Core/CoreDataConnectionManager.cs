@@ -17,9 +17,10 @@ namespace Epsitec.Cresus.Core
 	/// </summary>
 	public sealed class CoreDataConnectionManager : System.IDisposable
 	{
-		public CoreDataConnectionManager(DataInfrastructure dataInfrastructure)
+		public CoreDataConnectionManager(CoreData data)
 		{
-			this.dataInfrastructure = dataInfrastructure;
+			this.data = data;
+			this.dataInfrastructure = data.DataInfrastructure;
 			
 			this.keepAliveTimer = new Timer ()
 			{
@@ -67,6 +68,15 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public void ReopenConnection()
+		{
+			if (this.isReady)
+			{
+				this.CloseConnection ();
+				this.OpenConnection ();
+			}
+		}
+
 		private void OpenConnection()
 		{
 			string identity = this.GetIdentity ();
@@ -83,13 +93,29 @@ namespace Epsitec.Cresus.Core
 
 		private string GetIdentity()
 		{
+			var userCode    = this.GetActiveUserCode ();
 			var userName    = System.Environment.UserName;
 			var machineName = System.Environment.MachineName;
 			var osVersion   = System.Environment.OSVersion.VersionString;
 			var clrVersion  = System.Environment.Version.ToString ();
 			var coreVersion = typeof (CoreData).Assembly.GetVersionString ();
 
-			return string.Concat (userName, "@", machineName, "/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
+			return string.Concat (userCode, ":", userName, "@", machineName, "/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
+		}
+
+		private string GetActiveUserCode()
+		{
+			var userManager = CoreProgram.Application.UserManager;
+			var activeUser  = userManager.AuthenticatedUser;
+
+			if (activeUser == null)
+			{
+				return "<none>";
+			}
+			else
+			{
+				return activeUser.Code;
+			}
 		}
 
 
@@ -129,6 +155,7 @@ namespace Epsitec.Cresus.Core
 
 		private static readonly double KeepAlivePeriodInSeconds = 10.0;
 
+		private readonly CoreData data;
 		private readonly DataInfrastructure dataInfrastructure;
 		private readonly Timer keepAliveTimer;
 		

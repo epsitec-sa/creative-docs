@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 		protected override void Apply(SoftwareUserEntity user)
 		{
 			user.Code = System.Guid.NewGuid ().ToString ("N");
+			user.DisplayName = new FormattedText ("");
 			user.LoginName = "";
 			user.BeginDate = System.DateTime.Now;
 			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.None;

@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// </summary>
 	public class UserManager
 	{
-		public UserManager (CoreData data)
+		public UserManager(CoreData data)
 		{
 			this.data = data;
 		}
@@ -43,8 +44,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
 		public bool Authenticate(SoftwareUserEntity user = null)
 		{
-			this.authenticatedUser = null;
-
 			string defaultPassword = null;
 
 			if (user == null)
@@ -56,7 +55,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			if (this.CheckUserAuthentication (user, defaultPassword))
 			{
+				this.OnAuthenticatedUserChanging ();
 				this.authenticatedUser = user;
+				this.OnAuthenticatedUserChanged ();
+				
 				return true;
 			}
 
@@ -74,11 +76,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return this.data.GetAllEntities<SoftwareUserEntity> ().Where (user => user.IsActive);
 		}
 
-		public SoftwareUserEntity FindActiveUser(string userCode)
-		{
-			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
-		}
-
 		public string CreateNewUser(System.Action<BusinessLogic.BusinessContext, SoftwareUserEntity> initializer)
 		{
 			using (var context = this.data.CreateBusinessContext ())
@@ -92,6 +89,22 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		/// <summary>
+		/// Finds the active system user, based on the user currently logged in to Windows.
+		/// </summary>
+		/// <returns>The user or <c>null</c>.</returns>
+		public SoftwareUserEntity FindActiveSystemUser()
+		{
+			var users = this.GetActiveUsers ();
+			var login = System.Environment.UserName;
+
+			return users.FirstOrDefault (user => user.AuthenticationMethod == UserAuthenticationMethod.System && user.LoginName == login);
+		}
+
+		public SoftwareUserEntity FindActiveUser(string userCode)
+		{
+			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
+		}
 
 		private bool CheckUserAuthentication(SoftwareUserEntity user, string defaultPassword)
 		{
@@ -136,6 +149,30 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			return false;
 		}
+
+
+		private void OnAuthenticatedUserChanging()
+		{
+			var handler = this.AuthenticatedUserChanging;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+		
+		private void OnAuthenticatedUserChanged()
+		{
+			var handler = this.AuthenticatedUserChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+		
+		public event EventHandler AuthenticatedUserChanging;
+        public event EventHandler AuthenticatedUserChanged;
 
 
 		private readonly CoreData data;

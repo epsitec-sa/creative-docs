@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
 			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
-			this.connectionManager = new CoreDataConnectionManager (this.dataInfrastructure);
+			this.connectionManager = new CoreDataConnectionManager (this);
 			this.locker = new CoreDataLocker (this.dataInfrastructure);
 			this.businessContextPool =  new BusinessContextPool (this);
 		}
@@ -65,6 +65,14 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.locker;
+			}
+		}
+
+		public CoreDataConnectionManager ConnectionManager
+		{
+			get
+			{
+				return this.connectionManager;
 			}
 		}
 
@@ -466,8 +474,8 @@ namespace Epsitec.Cresus.Core
 			var groupAdmin    = this.CreateUserGroup (logicGroup, "Administrateurs", Business.UserManagement.UserPowerLevel.Administrator);
 			var groupStandard = this.CreateUserGroup (logicGroup, "Utilisateurs", Business.UserManagement.UserPowerLevel.Standard);
 
-			var userStandard = this.CreateUser (logicUser, groupStandard);
-			var userDev = this.CreateUser (logicUser, groupDev, "Epsitec", "admin");
+			var userStandard = this.CreateUser (logicUser, groupStandard, "Utilisateur par défaut");
+			var userDev = this.CreateUser (logicUser, groupDev, "Epsitec", "Epsitec", "admin");
 
 			this.DataContext.SaveChanges ();
 		}
@@ -484,13 +492,14 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		private SoftwareUserEntity CreateUser(Logic logicUser, SoftwareUserGroupEntity group, string userLogin = null, string userPassword = null)
+		private SoftwareUserEntity CreateUser(Logic logicUser, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin = null, string userPassword = null)
 		{
 			var user = this.DataContext.CreateEntity<SoftwareUserEntity> ();
 
 			logicUser.ApplyRules (RuleType.Setup, user);
 			
 			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.System;
+			user.DisplayName = displayName;
 			user.LoginName = userLogin ?? System.Environment.UserName;
 			user.UserGroups.Add (group);
 			user.SetPassword (userPassword);

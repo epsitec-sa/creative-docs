@@ -114,6 +114,7 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
+    <Compile Include="Repositories\SoftwareUserRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="BusinessLogic\CompositeBusinessRule.cs" />
     <Compile Include="BusinessLogic\GenericBusinessRule`1.cs" />
