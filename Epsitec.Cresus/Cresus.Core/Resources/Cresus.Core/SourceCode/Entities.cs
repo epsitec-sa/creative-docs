@@ -6617,19 +6617,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A99/L0AC9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AC9]")]
-		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory Category
+		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? Category
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AC9]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AC9]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
+				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue = this.Category;
 				if (oldValue != value)
 				{
 					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AC9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AC9]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
 				}
 			}
@@ -6643,8 +6643,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnMultiplyRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnSmallestIncrementChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnSmallestIncrementChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
-		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
+		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
+		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6730,19 +6730,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AD9/L0AH9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH9]")]
-		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory Category
+		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? Category
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AH9]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AH9]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
+				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue = this.Category;
 				if (oldValue != value)
 				{
 					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AH9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AH9]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
 				}
 			}
@@ -6752,8 +6752,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
-		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
-		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
+		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
+		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -9035,19 +9035,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AGF/L0APG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0APG]")]
-		public global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod AuthenticationMethod
+		public global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? AuthenticationMethod
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod> ("[L0APG]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod?> ("[L0APG]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue = this.AuthenticationMethod;
+				global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? oldValue = this.AuthenticationMethod;
 				if (oldValue != value)
 				{
 					this.OnAuthenticationMethodChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod> ("[L0APG]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod?> ("[L0APG]", oldValue, value);
 					this.OnAuthenticationMethodChanged (oldValue, value);
 				}
 			}
@@ -9095,8 +9095,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnLoginNameChanged(string oldValue, string newValue);
 		partial void OnLoginPasswordHashChanging(string oldValue, string newValue);
 		partial void OnLoginPasswordHashChanged(string oldValue, string newValue);
-		partial void OnAuthenticationMethodChanging(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod newValue);
-		partial void OnAuthenticationMethodChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod newValue);
+		partial void OnAuthenticationMethodChanging(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? newValue);
+		partial void OnAuthenticationMethodChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod? newValue);
 		partial void OnDisabledChanging(bool oldValue, bool newValue);
 		partial void OnDisabledChanged(bool oldValue, bool newValue);
 		
