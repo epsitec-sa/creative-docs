@@ -453,6 +453,49 @@ namespace Epsitec.Cresus.Core
 		private void PopulateDatabase()
 		{
 			this.PopulateDatabaseHack ();
+			this.PopulateUsers ();
+		}
+
+		private void PopulateUsers()
+		{
+			var logicUser  = new BusinessLogic.Logic (typeof (SoftwareUserEntity), null);
+			var logicGroup = new BusinessLogic.Logic (typeof (SoftwareUserGroupEntity), null);
+
+			var groupSystem   = this.CreateUserGroup (logicGroup, "Système", Business.UserManagement.UserPowerLevel.System);
+			var groupDev      = this.CreateUserGroup (logicGroup, "Développeurs", Business.UserManagement.UserPowerLevel.Developer);
+			var groupAdmin    = this.CreateUserGroup (logicGroup, "Administrateurs", Business.UserManagement.UserPowerLevel.Administrator);
+			var groupStandard = this.CreateUserGroup (logicGroup, "Utilisateurs", Business.UserManagement.UserPowerLevel.Standard);
+
+			var userStandard = this.CreateUser (logicUser, groupStandard);
+			var userDev = this.CreateUser (logicUser, groupDev, "Epsitec", "admin");
+
+			this.DataContext.SaveChanges ();
+		}
+
+		private SoftwareUserGroupEntity CreateUserGroup(Logic logicGroup, string name, Business.UserManagement.UserPowerLevel level)
+		{
+			var group = this.DataContext.CreateEntity<SoftwareUserGroupEntity> ();
+			
+			logicGroup.ApplyRules (RuleType.Setup, group);
+			
+			group.Name           = name;
+			group.UserPowerLevel = level;
+			
+			return group;
+		}
+
+		private SoftwareUserEntity CreateUser(Logic logicUser, SoftwareUserGroupEntity group, string userLogin = null, string userPassword = null)
+		{
+			var user = this.DataContext.CreateEntity<SoftwareUserEntity> ();
+
+			logicUser.ApplyRules (RuleType.Setup, user);
+			
+			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.System;
+			user.LoginName = userLogin ?? System.Environment.UserName;
+			user.UserGroups.Add (group);
+			user.SetPassword (userPassword);
+			
+			return user;
 		}
 
 		private void ReloadDatabase()
