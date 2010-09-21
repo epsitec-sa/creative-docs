@@ -469,10 +469,10 @@ namespace Epsitec.Cresus.Core
 			var logicUser  = new BusinessLogic.Logic (typeof (SoftwareUserEntity), null);
 			var logicGroup = new BusinessLogic.Logic (typeof (SoftwareUserGroupEntity), null);
 
-			var groupSystem   = this.CreateUserGroup (logicGroup, "Système", Business.UserManagement.UserPowerLevel.System);
-			var groupDev      = this.CreateUserGroup (logicGroup, "Développeurs", Business.UserManagement.UserPowerLevel.Developer);
+			var groupSystem   = this.CreateUserGroup (logicGroup, "Système",         Business.UserManagement.UserPowerLevel.System);
+			var groupDev      = this.CreateUserGroup (logicGroup, "Développeurs",    Business.UserManagement.UserPowerLevel.Developer);
 			var groupAdmin    = this.CreateUserGroup (logicGroup, "Administrateurs", Business.UserManagement.UserPowerLevel.Administrator);
-			var groupStandard = this.CreateUserGroup (logicGroup, "Utilisateurs", Business.UserManagement.UserPowerLevel.Standard);
+			var groupStandard = this.CreateUserGroup (logicGroup, "Utilisateurs",    Business.UserManagement.UserPowerLevel.Standard);
 
 			var userStandard = this.CreateUser (logicUser, groupStandard, "Utilisateur par défaut");
 			var userDev      = this.CreateUser (logicUser, groupDev,      "Epsitec", "Epsitec", "admin");
@@ -555,9 +555,7 @@ namespace Epsitec.Cresus.Core
 
 		private DataContext immutableDataContext;
 		private DataContext stableDataContext;
-
 		private DataContext activeDataContext;
-		private int dataContextChangedLevel;
 
 		public BusinessLogic.BusinessContext CreateBusinessContext()
 		{
