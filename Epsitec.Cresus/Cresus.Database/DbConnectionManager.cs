@@ -11,27 +11,35 @@ namespace Epsitec.Cresus.Database
 {
 
 
+	/// <summary>
+	/// The <c>DbConnectionManager</c> class provides the low level tools required to manage an high
+	/// level connection to the database.
+	/// Basically, a connection contains an id which defines it, an identity which contains some
+	/// information about it, a status (open, closed, interrupted). In addition, it contains two
+	/// times, the times at which it was open, and the last time at which it has given some sign of
+	/// life.
+	/// A connection might be automatically closed by calls to the method InterruptDeadConnections if
+	/// it has not given any sign of life with the KeepConnectionAlive method recently.
+	/// </summary>
     public sealed class DbConnectionManager : DbAbstractAttachable
 	{
 
 
-		// TODO Comment this class.
-		// Marc
-
-		
-		public DbConnectionManager(System.TimeSpan timeOutValue) : base ()
+		/// <summary>
+		/// Creates a new <c>DbConnectionManager</c>.
+		/// </summary>
+		public DbConnectionManager() : base ()
 		{
-			this.TimeOutValue = timeOutValue;
 		}
 
 
-		public System.TimeSpan TimeOutValue
-		{
-			get;
-			private set;
-		}
-
-
+		/// <summary>
+		/// Opens a new connection with the given identity.
+		/// </summary>
+		/// <param name="connectionIdentity">The identity that describes the connection.</param>
+		/// <returns>The id allocated to the new connection.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionIdentity"/> is <c>null</c> or empty.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public long OpenConnection(string connectionIdentity)
 		{
 			this.CheckIsAttached ();
@@ -57,6 +65,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Closes a given connection.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection that must be closed.</param>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void CloseConnection(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -96,6 +112,13 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Checks if the given connection exists.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection.</param>
+		/// <returns><c>true</c> if the connection exists, <c>false</c> if it does not.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public bool ConnectionExists(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -111,6 +134,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Ensures that the given connection stays alive.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection.</param>
+		/// <returns><c>true</c> if the connection exists, <c>false</c> if it does not.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection is not open.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public void KeepConnectionAlive(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -150,7 +182,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		public bool InterruptDeadConnections()
+		/// <summary>
+		/// Sets the state of all open connections inactive for more than a given timeout value to
+		/// interrupted.
+		/// </summary>
+		/// <param name="timeOutValue">The value after which an inactive open connection is considered as dead.</param>
+		/// <returns><c>true</c> if at least one connection has been interrupted, <c>false</c> if none where interrupted.</returns>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
+		public bool InterruptDeadConnections(System.TimeSpan timeOutValue)
 		{
 			this.CheckIsAttached ();
 
@@ -165,7 +204,7 @@ namespace Epsitec.Cresus.Database
 			SqlFieldList conditions = new SqlFieldList ()
 			{
 				this.CreateConditionForConnectionStatus (DbConnectionStatus.Open),
-				this.CreateConditionForTimeOut (),
+				this.CreateConditionForTimeOut (timeOutValue),
 			};
 
 			int nbRowsAffected = this.SetRowValue (fields, conditions);
@@ -174,6 +213,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the identity of a given connection.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection</param>
+		/// <returns>The identity of the connection.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public string GetConnectionIdentity(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -203,6 +250,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the status of a given connection.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection</param>
+		/// <returns>The status of the connection.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public DbConnectionStatus GetConnectionStatus(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -232,6 +287,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the time at which a given connection was opened.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection</param>
+		/// <returns>The time at which the connection has been opened.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public System.DateTime GetConnectionSince(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -261,6 +324,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the last time at which a given connection has given some sign of life.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection</param>
+		/// <returns>The last time at which the connection has given sign of life.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.InvalidOperationException">If the connection does not exists.</exception>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public System.DateTime GetConnectionLastSeen(long connectionId)
 		{
 			this.CheckIsAttached ();
@@ -290,6 +361,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Gets the sequence of the ids of the connection that are open.
+		/// </summary>
+		/// <returns>The sequence of id of the open connections.</returns>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		public IEnumerable<long> GetOpenConnectionIds()
 		{
 			this.CheckIsAttached ();
@@ -312,6 +388,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
+		/// true only for the connections that are open.
+		/// </summary>
+		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
+		/// <exception cref="System.InvalidOperationException">If this instance is not attached.</exception>
 		internal SqlFunction CreateConditionForOpenConnections()
 		{
 			this.CheckIsAttached ();
@@ -320,6 +402,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
+		/// true only for a given connection id.
+		/// </summary>
+		/// <param name="connectionId">The id of the connection.</param>
+		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
 		private SqlFunction CreateConditionForConnectionId(long connectionId)
 		{
 			return new SqlFunction
@@ -331,6 +419,12 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
+		/// true only for a given connection status.
+		/// </summary>
+		/// <param name="connectionId">The status of the connection.</param>
+		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
 		private SqlFunction CreateConditionForConnectionStatus(DbConnectionStatus connectionStatus)
 		{
 			return new SqlFunction
@@ -342,10 +436,16 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private SqlFunction CreateConditionForTimeOut()
+		/// <summary>
+		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
+		/// true only for a given timeout.
+		/// </summary>
+		/// <param name="connectionId">The time out value for the connections.</param>
+		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
+		private SqlFunction CreateConditionForTimeOut(System.TimeSpan timeOutValue)
 		{
 			System.DateTime databaseTime = this.DbInfrastructure.GetDatabaseTime ();
-			System.DateTime timeOutTime = databaseTime - this.TimeOutValue;
+			System.DateTime timeOutTime = databaseTime - timeOutValue;
 			
 			return new SqlFunction
 			(
