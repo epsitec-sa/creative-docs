@@ -51,8 +51,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 
-			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
-
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Contenu du fichier importé";
 			window.ClientSize = new Size (800, 400);
@@ -88,6 +86,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = this.footer,
 				Text = "Fermer",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAcceptAndCancel,
 				Dock = DockStyle.Right,
 				TabIndex = 1,
 			};
@@ -101,8 +100,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.CloseDialog ();
 			};
-
-			this.closeButton.Clicked += (sender, e) => this.CloseDialog ();
 		}
 
 

@@ -46,11 +46,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			string defaultPassword = null;
 
-			if (user == null)
+			//?if (user == null)
 			{
 				//	TODO: display dialog box with list of users and let the user
 				//	pick a user (and maybe also type in a password, if the user
 				//	authentication mode is set to 'Password')
+				var dialog = new Dialogs.SelectUserDialog (CoreProgram.Application);
+				dialog.IsModal = true;
+				dialog.OpenDialog ();
 			}
 
 			if (this.CheckUserAuthentication (user, defaultPassword))

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.window.MakeFixedSizeWindow ();
 			this.window.ClientSize = new Size (840, 500);
 
-			window.WindowCloseClicked += delegate
+			this.window.WindowCloseClicked += delegate
 			{
 				this.OnDialogClosed ();
 				this.CloseDialog ();
@@ -380,6 +380,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = footer,
 				Text = "Annuler",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 				Dock = DockStyle.Right,
 				Margins = new Margins (10, 0, 0, 0),
 				TabIndex = 101,
@@ -389,6 +390,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = footer,
 				Text = "D'accord",
+				ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 				Dock = DockStyle.Right,
 				TabIndex = 100,
 			};
