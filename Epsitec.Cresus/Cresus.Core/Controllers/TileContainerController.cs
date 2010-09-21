@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	We don't refresh synchronously, since this method could be called very, very often
 			//	and also produce deep recursive calls. Simply set a flag and let the refresh timer
-			//	to its job asynchronously.
+			//	do its job asynchronously.
 
 			this.refreshNeeded = true;
 		}

@@ -177,6 +177,9 @@
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="IExceptionManager.cs" />
+    <Compile Include="InterfaceImplementationTester.cs" />
+    <Compile Include="OpletEventArgs.cs" />
+    <Compile Include="OpletEventHandler.cs" />
     <Compile Include="Platform\StockIcons.cs" />
     <Compile Include="Platform\UserAccountApi.cs" />
     <Compile Include="Platform\Win32\StockIcons.cs" />

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Repositories
 
 		public override Common.Support.Druid GetEntityType()
 		{
-			return EntityInfo.GetTypeId<T> ();
+			return EntityInfo<T>.GetTypeId ();
 		}
 
 		public IEnumerable<T> GetAllEntities()

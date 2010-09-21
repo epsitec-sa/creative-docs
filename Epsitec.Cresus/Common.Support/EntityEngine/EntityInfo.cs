@@ -13,38 +13,45 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityInfo</c> class is used to retrieve runtime information
 	/// about an entity, such as its DRUID.
 	/// </summary>
-	public static class EntityInfo
+	/// <typeparam name="T">The entity type.</typeparam>
+	public static class EntityInfo<T>
+		where T : AbstractEntity, new ()
 	{
 		/// <summary>
 		/// Gets the structured type id for the specified entity.
 		/// </summary>
-		/// <typeparam name="T">The entity type.</typeparam>
 		/// <returns>The entity id.</returns>
-		public static Druid GetTypeId<T>()
-			where T : AbstractEntity, new ()
+		public static Druid GetTypeId()
 		{
-			return TypeIdProvider<T>.Instance.Id;
+			return EntityInfo<T>.instance.Id;
 		}
 
 		/// <summary>
 		/// Gets the structured type key for the specified entity.
 		/// </summary>
-		/// <typeparam name="T">The entity type.</typeparam>
 		/// <returns>The entity key.</returns>
-		public static string GetTypeKey<T>()
-			where T : AbstractEntity, new ()
+		public static string GetTypeKey()
 		{
-			return TypeIdProvider<T>.Instance.Key;
+			return EntityInfo<T>.instance.Key;
+		}
+
+		/// <summary>
+		/// Checks whether the entity implements the specified interface.
+		/// </summary>
+		/// <typeparam name="TInterface">The type of the interface.</typeparam>
+		/// <returns><c>true</c> if entity of type <c>T</c> implements <c>TInterface</c>; otherwise, <c>false</c>.</returns>
+		public static bool Implements<TInterface>()
+		{
+			return InterfaceImplementationTester<T, TInterface>.Check ();
 		}
 
 		#region TypeIdProvider Class
 
-		private class TypeIdProvider<T>
-			where T : AbstractEntity, new ()
+		private class TypeIdProvider
 		{
 			public TypeIdProvider()
 			{
-				var entity = EmptyEntityContext.Instance.CreateEmptyEntity<T> ();
+				var entity = EmptyEntityContext.Instance.CreateEmptyEntity ();
 				this.id  = entity.GetEntityStructuredTypeId ();
 				this.key = entity.GetEntityStructuredTypeKey ();
 			}
@@ -66,8 +73,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 
-			public static TypeIdProvider<T> Instance = new TypeIdProvider<T> ();
-
 			private readonly Druid id;
 			private readonly string key;
 		}
@@ -87,9 +92,16 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 			}
 
+			public T CreateEmptyEntity()
+			{
+				return base.CreateEmptyEntity<T> ();
+			}
+
 			public static EmptyEntityContext Instance = new EmptyEntityContext ();
 		}
 
 		#endregion
+		
+		private static TypeIdProvider instance = new TypeIdProvider ();
 	}
 }
