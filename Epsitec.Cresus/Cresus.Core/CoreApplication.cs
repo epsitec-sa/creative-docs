@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Core
 			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator);
 
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
+
+			this.userManager = new Business.UserManagement.UserManager (this.data);
 		}
 
 
@@ -117,6 +119,14 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.attachedDialogs;
+			}
+		}
+
+		public Business.UserManagement.UserManager UserManager
+		{
+			get
+			{
+				return this.userManager;
 			}
 		}
 
@@ -383,6 +393,7 @@ namespace Epsitec.Cresus.Core
 
 		private PersistenceManager						persistenceManager;
 		private CoreData								data;
+		private Business.UserManagement.UserManager		userManager;
 		private ExceptionManager						exceptionManager;
 		private CoreCommandDispatcher					commands;
 		private DataViewOrchestrator					mainWindowOrchestrator;

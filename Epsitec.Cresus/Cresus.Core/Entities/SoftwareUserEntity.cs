@@ -30,7 +30,14 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public void SetPassword(string plaintextPassword)
 		{
-			this.LoginPasswordHash = Epsitec.Common.Identity.BCrypt.HashPassword (plaintextPassword);
+			if (plaintextPassword == null)
+			{
+				this.LoginPasswordHash = null;
+			}
+			else
+			{
+				this.LoginPasswordHash = Epsitec.Common.Identity.BCrypt.HashPassword (plaintextPassword);
+			}
 		}
 	}
 }

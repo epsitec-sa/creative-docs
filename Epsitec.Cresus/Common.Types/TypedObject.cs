@@ -1,5 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -70,6 +72,19 @@ namespace Epsitec.Common.Types
 				string typeName = value.Substring (0, pos);
 				string strValue = value.Substring (pos+1);
 				System.Type type = System.Type.GetType (typeName);
+
+				if (type == null)
+				{
+					//	This should never happen:
+
+					var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
+								from assemblyType in assembly.GetTypes ()
+								where assemblyType.FullName == typeName
+									select assemblyType;
+
+					type = types.FirstOrDefault ();
+				}
+
 				ISerializationConverter converter = InvariantConverter.GetSerializationConverter (type);
 				return new TypedObject (converter.ConvertFromString (strValue, null));
 			}

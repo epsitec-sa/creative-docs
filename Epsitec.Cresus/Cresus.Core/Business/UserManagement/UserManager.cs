@@ -16,8 +16,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// </summary>
 	public class UserManager
 	{
-		public UserManager ()
+		public UserManager (CoreData data)
 		{
+			this.data = data;
 		}
 
 
@@ -62,6 +63,34 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return false;
 		}
 
+
+
+		/// <summary>
+		/// Gets the active users.
+		/// </summary>
+		/// <returns>The collection of active users.</returns>
+		public IEnumerable<SoftwareUserEntity> GetActiveUsers()
+		{
+			return this.data.GetAllEntities<SoftwareUserEntity> ().Where (user => user.IsActive);
+		}
+
+		public SoftwareUserEntity FindActiveUser(string userCode)
+		{
+			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
+		}
+
+		public string CreateNewUser(System.Action<BusinessLogic.BusinessContext, SoftwareUserEntity> initializer)
+		{
+			using (var context = this.data.CreateBusinessContext ())
+			{
+				var user = context.CreateEntity<SoftwareUserEntity> ();
+
+				initializer (context, user);
+				context.SaveChanges ();
+
+				return user.Code;
+			}
+		}
 
 
 		private bool CheckUserAuthentication(SoftwareUserEntity user, string defaultPassword)
@@ -109,6 +138,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		private readonly CoreData data;
 		private SoftwareUserEntity authenticatedUser;
 	}
 }

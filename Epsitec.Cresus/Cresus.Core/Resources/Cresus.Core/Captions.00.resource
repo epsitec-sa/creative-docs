@@ -472,7 +472,7 @@
   <data name="Val.UserAuthenticationMode.None" id="A2G">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Sans authentification'}}" /&gt;</data>
   <data name="Val.UserAuthenticationMode.System" id="A3G">&lt;s:data id="_0" f:Name="System" f:Labels="{Collection {Text 'Authentification par le système'}}" /&gt;</data>
   <data name="Val.UserAuthenticationMode.Password" id="A4G">&lt;s:data id="_0" f:Name="Password" f:Labels="{Collection {Text 'Autentification par mot de passe'}}" /&gt;</data>
-  <data name="Typ.UserAuthenticationMode" id="A1G">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="UserAuthenticationMode" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0A2G]'}, {Text '1 [L0A3G]'}, {Text '2 [L0A4G]'}}" f:Labels="{Collection {Text 'Mode d&amp;amp;apos;auhtentification'}}" /&gt;</data>
+  <data name="Typ.UserAuthenticationMode" id="A1G">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="UserAuthenticationMode" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0A2G]'}, {Text '1 [L0A3G]'}, {Text '2 [L0A4G]'}, {Text '3 [L0ARG]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod/None" f:Labels="{Collection {Text 'Mode d&amp;amp;apos;auhtentification'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.None" id="A6G">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.System" id="A7G">&lt;s:data id="_0" f:Name="System" f:Labels="{Collection {Text 'Système'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.Developer" id="A8G">&lt;s:data id="_0" f:Name="Developer" f:Labels="{Collection {Text 'Développeur'}}" /&gt;</data>
@@ -492,4 +492,5 @@
   <data name="Fld.UserIdentity.IsLockedOut" id="AOG">&lt;s:data id="_0" f:Name="IsLockedOut" /&gt;</data>
   <data name="Fld.SoftwareUser.AuthenticationMethod" id="APG">&lt;s:data id="_0" f:Name="AuthenticationMethod" /&gt;</data>
   <data name="Fld.SoftwareUserGroup.UserPowerLevel" id="AQG">&lt;s:data id="_0" f:Name="UserPowerLevel" /&gt;</data>
+  <data name="Val.UserAuthenticationMode.Disabled" id="ARG">&lt;s:data id="_0" f:Name="Disabled" f:Labels="{Collection {Text 'Désactivé'}}" /&gt;</data>
 </bundle>

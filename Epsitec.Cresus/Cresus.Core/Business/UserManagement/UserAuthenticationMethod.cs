@@ -27,5 +27,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Password authentication by Cresus Core itself.
 		/// </summary>
 		Password,
+
+		/// <summary>
+		/// No authentication is possible; this is used for internal system users which
+		/// cannot be used by interactive users.
+		/// </summary>
+		Disabled,
 	}
 }
