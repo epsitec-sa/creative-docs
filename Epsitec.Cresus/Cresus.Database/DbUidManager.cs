@@ -22,10 +22,6 @@ namespace Epsitec.Cresus.Database
 	{
 
 
-		// TODO Comment what is not commented in this class.
-		// Marc
-
-
 		/// <summary>
 		/// Builds a new instance of <see cref="DbUidManager"/>.
 		/// </summary>
@@ -69,6 +65,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 
+		/// <summary>
+		/// Builds and executes the request used to insert an uid counter.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
+		/// <param name="min">The minimum value of the counter.</param>
+		/// <param name="max">The maximum value of the counter.</param>
 		private void InsertUidCounter(string name, int slot, long min, long max)
 		{
 			SqlFieldList fields = new SqlFieldList ();
@@ -118,6 +121,11 @@ namespace Epsitec.Cresus.Database
 		}
 		
 
+		/// <summary>
+		/// Builds and executes the request used to remove an uid counter.
+		/// </summary>
+		/// <param name="name">The name of the counter.</param>
+		/// <param name="slot">The slot number of the counter.</param>
 		private void RemoveUidCounter(string name, int slot)
 		{
 			SqlFieldList conditions = new SqlFieldList ()
