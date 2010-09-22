@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -27,11 +28,28 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Gets the authenticated user.
 		/// </summary>
 		/// <value>The authenticated user (or <c>null</c>).</value>
-		public SoftwareUserEntity AuthenticatedUser
+		public SoftwareUserEntity				AuthenticatedUser
 		{
 			get
 			{
 				return this.authenticatedUser;
+			}
+		}
+
+		/// <summary>
+		/// Gets the associated business context.
+		/// </summary>
+		/// <value>The business context.</value>
+		public BusinessContext					BusinessContext
+		{
+			get
+			{
+				if (this.businessContext == null)
+                {
+					this.businessContext = this.data.CreateBusinessContext ();
+                }
+
+				return this.businessContext;
 			}
 		}
 
@@ -45,6 +63,17 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		public bool Authenticate(SoftwareUserEntity user = null)
 		{
 			user = null;  // TODO: provisoire
+
+			
+			//	Make sure the user entity belongs to our data context; the only way to know for sure
+			//	is to retrieve the user based on its 'code':
+			
+			if (user != null)
+			{
+				user = this.FindActiveUser (user.Code);
+			}
+
+
 			string defaultPassword = null;
 
 			for (int i = 0; i < 3; i++)
@@ -92,22 +121,54 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The collection of active users.</returns>
 		public IEnumerable<SoftwareUserEntity> GetActiveUsers()
 		{
-			return this.data.GetAllEntities<SoftwareUserEntity> ().Where (user => user.IsActive);
+			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
 		}
 
-		public string CreateNewUser(System.Action<BusinessLogic.BusinessContext, SoftwareUserEntity> initializer)
+		/// <summary>
+		/// Creates a new user.
+		/// </summary>
+		/// <returns>The new user.</returns>
+		public SoftwareUserEntity CreateNewUser()
 		{
-			using (var context = this.data.CreateBusinessContext ())
+			return this.BusinessContext.CreateEntity<SoftwareUserEntity> ();
+		}
+
+		/// <summary>
+		/// Creates a new user group.
+		/// </summary>
+		/// <returns>The new user group.</returns>
+		public SoftwareUserGroupEntity CreateNewUserGroup()
+		{
+			return this.BusinessContext.CreateEntity<SoftwareUserGroupEntity> ();
+		}
+
+		/// <summary>
+		/// Saves changes done to the users and user groups stored in the associated
+		/// business context.
+		/// </summary>
+		public void SaveChanges()
+		{
+			if (this.businessContext != null)
 			{
-				var user = context.CreateEntity<SoftwareUserEntity> ();
-
-				initializer (context, user);
-				context.SaveChanges ();
-
-				return user.Code;
+				this.businessContext.SaveChanges ();
 			}
 		}
 
+		/// <summary>
+		/// Discards all changes done to the users and user groups stored in the associated
+		/// business context.
+		/// </summary>
+		public void DiscardChanges()
+		{
+			if (this.businessContext != null)
+			{
+				this.businessContext.Discard ();
+				this.businessContext.Dispose ();
+				this.businessContext = null;
+			}
+		}
+
+		
 		/// <summary>
 		/// Finds the active system user, based on the user currently logged in to Windows.
 		/// </summary>
@@ -213,5 +274,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		private readonly CoreData data;
 		private SoftwareUserEntity authenticatedUser;
+		private BusinessContext businessContext;
 	}
 }

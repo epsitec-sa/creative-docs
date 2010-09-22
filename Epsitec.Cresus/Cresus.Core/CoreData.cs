@@ -220,10 +220,10 @@ namespace Epsitec.Cresus.Core
 		private static ItemRankComparer itemRankComparer = new ItemRankComparer ();
 
 
-		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default)
+		public IEnumerable<T> GetAllEntities<T>(Extraction extraction = Extraction.Default, DataContext dataContext = null)
 			where T : AbstractEntity, new ()
 		{
-			var repository = this.GetRepository<T> ();
+			var repository = this.GetRepository<T> (dataContext);
 			
 			if (repository != null)
 			{
@@ -250,10 +250,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public Repositories.Repository<T> GetRepository<T>()
+		public Repositories.Repository<T> GetRepository<T>(DataContext dataContext = null)
 			where T : AbstractEntity, new ()
 		{
-			return Resolvers.RepositoryResolver.Resolve (typeof (T), this) as Repositories.Repository<T>;
+			return Resolvers.RepositoryResolver.Resolve (typeof (T), this, dataContext) as Repositories.Repository<T>;
 		}
 		
 		
