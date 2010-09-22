@@ -218,9 +218,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="connectionId">The id of the connection used for the lock.</param>
 		/// <param name="lockNames">The name of the locks whose state to check.</param>
 		/// <returns><c>true</c> if fall locks coule be acquired, <c>false</c> if at least one of them could not.</returns>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
-		/// <param name="connectionId">The id of the connection to use with the transaction.</param>
-		/// <param name="lockNames">The names of the locks that must be acquired.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="lockNames"/> is <c>null</c>.</exception>
@@ -265,7 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Checks whether a set of locks is available for a given connection id.
 		/// </summary>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <param name="lockManager">The <see cref="DbLockManager"/> object used to communicate with the database.</param>
 		/// <param name="connectionId">The id of the connection used for the lock.</param>
 		/// <param name="lockNames">The name of the locks whose state to check.</param>
 		/// <returns><c>true</c> if fall locks coule be acquired, <c>false</c> if at least one of them could not.</returns>
