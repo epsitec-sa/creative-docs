@@ -95,7 +95,7 @@
     <Compile Include="BusinessLogic\BusinessContextPool.cs" />
     <Compile Include="BusinessLogic\BusinessRuleAttribute.cs" />
     <Compile Include="BusinessLogic\Isr.cs" />
-    <Compile Include="BusinessLogic\IsrData.cs" />
+    <Compile Include="BusinessLogic\IsrSlip.cs" />
     <Compile Include="BusinessLogic\IsrType.cs" />
     <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />

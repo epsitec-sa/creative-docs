@@ -5,29 +5,45 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
-	public class IsrData
+	/// <summary>
+	/// The <c>IsrSlip</c> class implements the ISR slip coding zone
+	/// (in French: ligne de codage des justificatifs BVR).
+	/// </summary>
+	/// <remarks>
+	/// Spec. in French:  http://www.postfinance.ch/medialib/pf/fr/doc/consult/manual/dlserv/inpayslip_isr_man.Par.0001.File.pdf
+	/// Spec. in English: http://www.postfinance.ch/medialib/pf/en/doc/consult/manual/dlserv/inpayslip_isr_man.Par.0001.File.pdf
+	/// </remarks>
+	public class IsrSlip
 	{
-		public IsrData(string subscriberNumber)
+		public IsrSlip(BillingDetailEntity billingDetails, bool optionalAmount = false)
 		{
-			this.subscriberNumber  = Isr.GetCompactNumber (subscriberNumber);
-			this.referenceNumber = IsrData.EmptyReferenceNumber;
+			var amount   = billingDetails.AmountDue.Amount;
+			var currency = billingDetails.AmountDue.Currency.CurrencyCode;
 
-			System.Diagnostics.Debug.Assert (Isr.IsCompactSubscriberNumber (this.SubscriberNumber));
-		}
+			this.subscriberNumber = billingDetails.EsrCustomerNumber;
+			this.referenceNumber  = billingDetails.EsrReferenceNumber;
+			
+			this.amount   = Isr.GetRoundedAmount (amount, currency);
+			this.currency = currency;
+			this.optionalAmount = optionalAmount;
 
-		public IsrData(string subscriberNumber, string referenceNumber)
-		{
-			this.subscriberNumber = Isr.GetCompactNumber (subscriberNumber);
-			this.referenceNumber = Isr.GetCompactNumber (referenceNumber);
-
+			System.Diagnostics.Debug.Assert (this.currency == CurrencyCode.Chf || this.currency == CurrencyCode.Eur);
+			
 			System.Diagnostics.Debug.Assert (Isr.IsCompactSubscriberNumber (this.SubscriberNumber));
 			System.Diagnostics.Debug.Assert (Isr.IsCompactReferenceNumber (this.ReferenceNumber));
+			
+			//	01-xxx-x => ISR in CHF
+			//	03-xxx-x => ISR in EUR
+			
+			System.Diagnostics.Debug.Assert ((this.subscriberNumber.StartsWith ("01") && this.currency == CurrencyCode.Chf) ||
+				/**/						 (this.subscriberNumber.StartsWith ("03") && this.currency == CurrencyCode.Eur)); 
 		}
 
 		
@@ -47,18 +63,30 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public bool								IsEmpty
+		public decimal							Amount
 		{
 			get
 			{
-				return this.referenceNumber == IsrData.EmptyReferenceNumber;
+				return this.amount;
 			}
 		}
 
-		
-		public static readonly string EmptyReferenceNumber = new string (' ', 27);
+		public CurrencyCode						Currency
+		{
+			get
+			{
+				return this.currency;
+			}
+		}
 
-		
+		public IsrType							IsrType
+		{
+			get
+			{
+				return Isr.GetIsrType (this.currency, this.optionalAmount);
+			}
+		}
+
 		public string GetFormattedReferenceNumber()
 		{
 			return Isr.GetFormattedReferenceNumber (this.referenceNumber);
@@ -81,22 +109,17 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			return string.Concat (spaces, this.SubscriberNumber, ">");
 		}
 
-		public string GetCodingZone(decimal amount, CurrencyCode currency, bool leaveAmountBlank = false)
+		public string GetCodingZone()
 		{
 			//	Retourne le numéro complet au format "0100000106201>100000001668190000043332147+ 010619511>"
 
 			string referenceNumber  = this.ReferenceNumber;
 			string subscriberNumber = this.SubscriberNumber;
 
-			if (this.IsEmpty)
-			{
-				return this.GetInvalidCodingZone ();
-			}
-
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
-			decimal value = Isr.GetRoundedAmount (amount, currency);
-			IsrType type  = Isr.GetIsrType (currency, leaveAmountBlank);
+			decimal value = this.amount;
+			IsrType type  = this.IsrType;
 			
 			if (value <= 0)
 			{
@@ -123,7 +146,10 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 		
-		private readonly string subscriberNumber;
-		private readonly string referenceNumber;
+		private readonly string					subscriberNumber;
+		private readonly string					referenceNumber;
+		private readonly decimal				amount;
+		private readonly CurrencyCode			currency;
+		private readonly bool					optionalAmount;
 	}
 }
