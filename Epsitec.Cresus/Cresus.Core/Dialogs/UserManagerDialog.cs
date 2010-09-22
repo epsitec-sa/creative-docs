@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.OwnerWindow = this.application.Window;
 			window.Icon = this.application.Window.Icon;
-			window.Text = "Choix de l'utilisateur";
+			window.Text = "Gestion des utilisateurs";
 			window.MakeFixedSizeWindow ();
 			window.ClientSize = new Size (540, 400);
 
@@ -215,17 +215,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 				new StaticText
 				{
 					Parent = this.userBox,
-					Text = "Nom de l'utilisateur :",
+					Text = "Nom de compte :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
 
-				this.userField = new TextField
+				this.loginNameField = new TextField
 				{
 					Parent = this.userBox,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 10),
 				};
+
+
+				new StaticText
+				{
+					Parent = this.userBox,
+					Text = "Nom complet de l'utilisateur :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				this.displayNameField = new TextField
+				{
+					Parent = this.userBox,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 10),
+				};
+
 
 				new StaticText
 				{
@@ -277,6 +294,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Dock = DockStyle.Top,
 				};
 
+
 				new StaticText
 				{
 					Parent = this.userBox,
@@ -302,6 +320,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 2),
 				};
+
 
 				this.applyButton = new Button
 				{
@@ -355,7 +374,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.UpdateWidgets ();
 			};
 
-			this.userField.TextChanged += delegate
+			this.loginNameField.TextChanged += delegate
+			{
+				this.dirtyContent = true;
+				this.UpdateWidgets ();
+			};
+
+			this.displayNameField.TextChanged += delegate
 			{
 				this.dirtyContent = true;
 				this.UpdateWidgets ();
@@ -448,11 +473,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				if (user.DisplayName == user.LoginName)
 				{
-					text = user.DisplayName;
+					text = user.LoginName;
 				}
 				else
 				{
-					text = TextFormatter.FormatText (user.DisplayName, "(", user.LoginName, ")");
+					text = TextFormatter.FormatText (user.LoginName, "(", user.DisplayName, ")");
 				}
 
 				this.list.Items.Add (text);
@@ -468,7 +493,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.userBox.Enable = false;
 
-				this.userField.Text = null;
+				this.loginNameField.Text = null;
+				this.displayNameField.Text = null;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 				
@@ -483,7 +509,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				this.userBox.Enable = true;
 
-				this.userField.Text = user.LoginName;
+				this.loginNameField.Text = user.LoginName;
+				this.displayNameField.FormattedText = user.DisplayName;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 
@@ -504,6 +531,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			bool hasPassword = (user != null && user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password);
 
+			if (user != null && user.LoginName == System.Environment.UserName)
+			{
+				hasPassword = false;
+			}
+
 			this.passLabel.Enable = (sel != -1);
 			this.passField.Enable = (sel != -1);
 			this.okButton.Enable  = (sel != -1 && (!hasPassword || !string.IsNullOrEmpty (this.passField.Text)));
@@ -521,7 +553,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			if (user != null)
 			{
-				user.LoginName = this.userField.Text;
+				user.LoginName = this.loginNameField.Text;
+				user.DisplayName = this.displayNameField.FormattedText;
 				this.UpdateList ();
 			}
 
@@ -620,7 +653,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private StaticText								passLabel;
 		private TextField								passField;
 		private FrameBox								userBox;
-		private TextField								userField;
+		private TextField								loginNameField;
+		private TextField								displayNameField;
 		private CheckButton								checkAdministrator;
 		private CheckButton								checkSystem;
 		private CheckButton								checkDeveloper;
