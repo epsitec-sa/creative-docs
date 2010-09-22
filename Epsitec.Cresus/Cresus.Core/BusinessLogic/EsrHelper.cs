@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.BusinessLogic
 {
 
 	/// <summary>
@@ -14,34 +14,6 @@ namespace Epsitec.Cresus.Core
 	/// </summary>
 	static class EsrHelper
 	{
-
-		/// <summary>
-		/// This bidimensional <see cref="Array"/> is the table used by the modulo 10 recursive
-		/// algorithm to find the next report digit at each step.
-		/// </summary>
-		private static readonly int[,] controlKeyTable = new int[,]
-		{
-			{0, 9, 4, 6, 8, 2, 7, 1, 3, 5},
-			{9, 4, 6, 8, 2, 7, 1, 3, 5, 0},
-			{4, 6, 8, 2, 7, 1, 3, 5, 0, 9},
-			{6, 8, 2, 7, 1, 3, 5, 0, 9, 4},
-			{8, 2, 7, 1, 3, 5, 0, 9, 4, 6},
-			{2, 7, 1, 3, 5, 0, 9, 4, 6, 8},
-			{7, 1, 3, 5, 0, 9, 4, 6, 8, 2},
-			{1, 3, 5, 0, 9, 4, 6, 8, 2, 7},
-			{3, 5, 0, 9, 4, 6, 8, 2, 7, 1},
-			{5, 0, 9, 4, 6, 8, 2, 7, 1, 3},
-		};
-
-		/// <summary>
-		/// This <see cref="Array"/> contains the control keys used by the modulo 10 recursive
-		/// algorithm.
-		/// </summary>
-		private static readonly char[] controlKeys = new char[]
-		{
-			'0', '9', '8', '7', '6', '5', '4', '3', '2', '1'
-		};
-
 		/// <summary>
 		/// This <see cref="Dictionnary"/> is used to convert a <see cref="char"/> to an <see cref="int"/>
 		/// during the iban validation process.
@@ -75,40 +47,6 @@ namespace Epsitec.Cresus.Core
 			{"Y", "34"},
 			{"Z", "35"},
 		};
-
-		/// <summary>
-		/// Computes the control key of <paramref name="number"/> using the modulo 10 recursive
-		/// algorithm. The reference of this algorithm can be found in the DTA document at the
-		/// paragraph C9.4.
-		/// </summary>
-		/// <param name="number">The number whose control key to compute.</param>
-		/// <returns>The control key of number.</returns>
-		/// <exception cref="System.ArgumentException">If <paramref name="number"/> is empty or contains non alpha-numeric characters.</exception>
-		public static char ComputeControlKey(string number)
-		{
-			number = number.Replace (" ", "");
-
-			if (!Regex.IsMatch (number, @"^[0-9]*$"))
-			{
-				throw new System.ArgumentException (string.Format("The provided string contains non alpha-numeric characters: {0}", number));
-			}
-
-			if (number.Length == 0)
-			{
-				throw new System.ArgumentException ("The provided string is empty.");
-			}
-
-			int report = 0;
-
-			while (number.Length > 0)
-			{
-				int digit = int.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
-				report = EsrHelper.controlKeyTable[report, digit];
-				number = number.Substring (1);
-			}
-
-			return EsrHelper.controlKeys[report];
-		}
 
 		/// <summary>
 		/// Checks that <paramref name="iban"/> is a valid iban using the proper algorithm. The
@@ -398,44 +336,9 @@ namespace Epsitec.Cresus.Core
 			iban =  Regex.Replace (iban, @"\s", "");
 			string line = string.Format ("{0}{1}{2}", reference, "0000", iban.Substring (iban.Length - 12, 12));
 
-			return string.Format ("{0}{1}+", line, EsrHelper.ComputeControlKey (line));
+			return string.Format ("{0}{1}+", line, Isr.ComputeCheckDigit (line));
 		}
 
-		/// <summary>
-		/// Builds the text of the clearing line based on the given values.
-		/// </summary>
-		/// <param name="constant">The clearing constant.</param>
-		/// <param name="clearing">The bank clearing number.</param>
-		/// <param name="key">The bank clearing number control key.</param>
-		/// <returns>The text of the clearing line.</returns>
-		/// <exception cref="System.ArgumentException">If the provided values are not valid.</exception>
-		public static string BuildClearingLine(string constant, string clearing, string key)
-		{
-			if (!EsrHelper.CheckClearingLine (constant, clearing, key))
-			{
-				string message = string.Format ("One of the provided argument is not valid. Constant: {0}. Clearing: {1}. Key: {2}.", constant, clearing, key);
-				throw new System.ArgumentException (message);
-			}
-
-			string line = string.Format ("{0}{1}{2}", constant, clearing, key);
-			return string.Format ("{0}{1}>", line, EsrHelper.ComputeControlKey (line));
-		}
-
-		/// <summary>
-		/// Builds the text of the CCP number line based on the given value.
-		/// </summary>
-		/// <param name="ccp">The CCP number.</param>
-		/// <returns>The text of the CCP number line.</returns>
-		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
-		public static string BuildCcpNumberLine(string ccp)
-		{
-			if (!EsrHelper.CheckCcpNumber (ccp))
-			{
-				throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", ccp));
-			}
-
-			return string.Format ("{0}>", ccp);
-		}
 
 		/// <summary>
 		/// Normalizes <paramref name="iban"/> in the format "CH00 0000 0000 0000 0000 0".
@@ -454,41 +357,6 @@ namespace Epsitec.Cresus.Core
 			normalizedIban = normalizedIban.ToUpperInvariant ();
 
 			return normalizedIban;
-		}
-
-		/// <summary>
-		/// Normalizes <paramref name="amount"/> in the proper format.
-		/// </summary>
-		/// <param name="amount">The amount to normalize.</param>
-		/// <returns>The normalized version of <paramref name="amount"/>.</returns>
-		public static string BuildNormalizedAmount(string amount)
-		{
-			string normalizedAmount = amount;
-
-			if (amount.Length > 0)
-			{
-				int index = amount.LastIndexOfAny (new char[] { ',', '.' });
-
-				if (index < 0)
-				{
-					normalizedAmount += ".00";
-				}
-				else if (index == amount.Length - 2)
-				{
-					normalizedAmount += "0";
-				}
-				else if (index == amount.Length - 1)
-				{
-					normalizedAmount += "00";
-				}
-
-				if (normalizedAmount.LastIndexOfAny (new char[] { ',', '.' }) == 0)
-				{
-					normalizedAmount = "0" + normalizedAmount;
-				}
-			}
-
-			return normalizedAmount;
 		}
 
 		/// <summary>

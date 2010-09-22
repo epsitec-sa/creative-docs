@@ -31,10 +31,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 
-		public RefIdGenerator GetGenerator<T>(string suffix = null)
-			where T : AbstractEntity, new ()
+		public RefIdGenerator GetGenerator(string generatorName, long firstId = 0)
 		{
-			string generatorName = RefIdGeneratorPool.GetGeneratorName<T> (suffix);
 			RefIdGenerator generator = null;
 
 			if (this.generators.TryGetValue (generatorName, out generator))
@@ -42,10 +40,16 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				return generator;
 			}
 
-			generator = new RefIdGenerator (generatorName, this);
+			generator = new RefIdGenerator(generatorName, this, firstId);
 			this.generators[generatorName] = generator;
 
 			return generator;
+		}
+		
+		public RefIdGenerator GetGenerator<T>(string suffix = null)
+			where T : AbstractEntity, new ()
+		{
+			return this.GetGenerator (RefIdGeneratorPool.GetGeneratorName<T> (suffix), 1000L);
 		}
 
 

@@ -11,9 +11,24 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public static class Isr
 	{
-		public static string GetNewReferenceNumber()
+		public static string GetNewReferenceNumber(CoreData data, string subscriberNumber, string bankPrefix = null)
 		{
-			return null;
+			if (!Isr.IsCompactSubscriberNumber (subscriberNumber))
+			{
+				throw new System.ArgumentException ("Subscriber number is invalid");
+			}
+
+			var generator  = data.RefIdGeneratorPool.GetGenerator (Isr.GeneratorNamePrefix + subscriberNumber);
+			var nextLongId = generator.GetNextId ();
+
+			var refNumber  = nextLongId.ToString (System.Globalization.NumberFormatInfo.InvariantInfo);
+			var refPrefix  = bankPrefix ?? "";
+			var refZeroes  = new string ('0', 26 - (refNumber.Length + refPrefix.Length));
+
+			var refLine    = string.Concat (refPrefix, refZeroes, refNumber);
+			var checksum   = Isr.ComputeCheckDigit (refLine);
+
+			return refLine + checksum;
 		}
 
 
@@ -57,9 +72,33 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		private static bool IsDigit(this char c)
+
+		/// <summary>
+		/// Computes the control key of <paramref name="number"/> using the modulo 10 recursive
+		/// algorithm. The reference of this algorithm can be found in the DTA document at the
+		/// paragraph C9.4.
+		/// </summary>
+		/// <param name="number">The number whose control key to compute.</param>
+		/// <returns>The control key of number.</returns>
+		/// <exception cref="System.ArgumentException">If <paramref name="number"/> is empty or contains non alpha-numeric characters.</exception>
+		public static char ComputeCheckDigit(string number)
 		{
-			return (c >= '0') && (c <= '9');
+			if (string.IsNullOrWhiteSpace (number))
+			{
+				throw new System.ArgumentException ("The provided string is empty.");
+			}
+
+			int report = 0;
+
+			foreach (char digit in number)
+			{
+				if (digit.IsDigit ())
+				{
+					report = Isr.checkDigitTable[report, digit-'0'];
+				}
+			}
+
+			return Isr.checkDigits[report];
 		}
 
 		/// <summary>
@@ -129,5 +168,44 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 			return string.Concat (s1, " ", s2, " ", s3, " ", s4, " ", s5, " ", s6);
 		}
+
+
+		#region ISR ComputeCheckDigit Constants
+
+		/// <summary>
+		/// This bidimensional <see cref="Array"/> is the table used by the modulo 10 recursive
+		/// algorithm to find the next report digit at each step.
+		/// </summary>
+		private static readonly int[,] checkDigitTable = new int[,]
+		{
+			{0, 9, 4, 6, 8, 2, 7, 1, 3, 5},
+			{9, 4, 6, 8, 2, 7, 1, 3, 5, 0},
+			{4, 6, 8, 2, 7, 1, 3, 5, 0, 9},
+			{6, 8, 2, 7, 1, 3, 5, 0, 9, 4},
+			{8, 2, 7, 1, 3, 5, 0, 9, 4, 6},
+			{2, 7, 1, 3, 5, 0, 9, 4, 6, 8},
+			{7, 1, 3, 5, 0, 9, 4, 6, 8, 2},
+			{1, 3, 5, 0, 9, 4, 6, 8, 2, 7},
+			{3, 5, 0, 9, 4, 6, 8, 2, 7, 1},
+			{5, 0, 9, 4, 6, 8, 2, 7, 1, 3},
+		};
+
+		/// <summary>
+		/// This <see cref="Array"/> contains the control keys used by the modulo 10 recursive
+		/// algorithm.
+		/// </summary>
+		private static readonly char[] checkDigits = new char[]
+		{
+			'0', '9', '8', '7', '6', '5', '4', '3', '2', '1'
+		};
+
+		#endregion
+
+		private static bool IsDigit(this char c)
+		{
+			return (c >= '0') && (c <= '9');
+		}
+
+		private static readonly string GeneratorNamePrefix = "ISR.Ref.";
 	}
 }
