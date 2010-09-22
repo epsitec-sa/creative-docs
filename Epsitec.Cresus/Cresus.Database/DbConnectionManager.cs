@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Creates a new <c>DbConnectionManager</c>.
 		/// </summary>
-		public DbConnectionManager() : base ()
+		internal DbConnectionManager() : base ()
 		{
 		}
 
