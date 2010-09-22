@@ -62,56 +62,27 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
 		public bool Authenticate(SoftwareUserEntity user = null)
 		{
-			user = null;  // TODO: provisoire
-
-			
 			//	Make sure the user entity belongs to our data context; the only way to know for sure
 			//	is to retrieve the user based on its 'code':
-			
 			if (user != null)
 			{
 				user = this.FindActiveUser (user.Code);
 			}
 
+			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, user);
+			dialog.IsModal = true;
+			dialog.OpenDialog ();
 
-			string defaultPassword = null;
-
-			for (int i = 0; i < 3; i++)
+			if (dialog.Result == Common.Dialogs.DialogResult.Cancel)
 			{
-				if (user == null)
-				{
-					var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application);
-					dialog.IsModal = true;
-					dialog.OpenDialog ();
-
-					if (dialog.Result == Common.Dialogs.DialogResult.Cancel)
-					{
-						return false;
-					}
-
-					user            = dialog.SelectedUser;
-					defaultPassword = dialog.DefaultPassword;
-				}
-
-				var result = this.CheckUserAuthentication (user, defaultPassword);
-
-				if (result == CheckResult.OK)
-				{
-					this.OnAuthenticatedUserChanging ();
-					this.authenticatedUser = user;
-					this.OnAuthenticatedUserChanged ();
-
-					return true;
-				}
-				else if (result == CheckResult.Error)
-				{
-					return false;
-				}
-
-				user = null;  // on redemande l'utilisateur
+				return false;
 			}
 
-			return false;
+			this.OnAuthenticatedUserChanging ();
+			this.authenticatedUser = dialog.SelectedUser;
+			this.OnAuthenticatedUserChanged ();
+
+			return true;
 		}
 
 
@@ -122,6 +93,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		public IEnumerable<SoftwareUserEntity> GetActiveUsers()
 		{
 			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
+		}
+
+		public IEnumerable<SoftwareUserGroupEntity> GetActiveUserGroups()
+		{
+			return this.data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext);
 		}
 
 		/// <summary>
@@ -170,81 +146,53 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		
 		/// <summary>
-		/// Finds the active system user, based on the user currently logged in to Windows.
+		/// Finds the active user, based on the user currently logged in to Windows.
 		/// </summary>
 		/// <returns>The user or <c>null</c>.</returns>
-		public SoftwareUserEntity FindActiveSystemUser()
+		public SoftwareUserEntity FindActiveUser()
 		{
 			var users = this.GetActiveUsers ();
 			var login = System.Environment.UserName;
 
-			return users.FirstOrDefault (user => user.AuthenticationMethod == UserAuthenticationMethod.System && user.LoginName == login);
+			return users.FirstOrDefault (user => user.LoginName == login);
 		}
 
-		public SoftwareUserEntity FindActiveUser(string userCode)
+		private SoftwareUserEntity FindActiveUser(string userCode)
 		{
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
 		}
 
-		private CheckResult CheckUserAuthentication(SoftwareUserEntity user, string defaultPassword)
+		public bool CheckUserAuthentication(SoftwareUserEntity user, string passwordGiven)
 		{
 			switch (user.AuthenticationMethod)
             {
             	case UserAuthenticationMethod.None:
-					return CheckResult.OK;
+					return true;
 
 				case UserAuthenticationMethod.System:
 					return this.CheckSystemUserAuthentication (user);
 
 				case UserAuthenticationMethod.Password:
-					return this.CheckPasswordUserAuthentication (user, defaultPassword);
+					return this.CheckPasswordUserAuthentication (user, passwordGiven);
 
 				default:
-					return CheckResult.Error;
+					return false;
             }
 		}
 
-		private CheckResult CheckSystemUserAuthentication(SoftwareUserEntity user)
+		private bool CheckSystemUserAuthentication(SoftwareUserEntity user)
 		{
-			return (user.LoginName == System.Environment.UserName) ? CheckResult.OK : CheckResult.Error;
+			return user.LoginName == System.Environment.UserName;
 		}
 
-		private CheckResult CheckPasswordUserAuthentication(SoftwareUserEntity user, string defaultPassword)
+		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string passwordGiven)
 		{
-			if (defaultPassword == null)
+			if (user.LoginName == System.Environment.UserName)
 			{
-				//	TODO: display a dialog box to request the password for the specified
-				//	user...
+				return true;
 			}
 
-			for (int i = 0; i < 3; i++)
-			{
-				if (user.CheckPassword (defaultPassword))
-				{
-					return CheckResult.OK;
-				}
-
-				//	TODO: display dialog box to request the password (the one provided was not valid).
-				var dialog = new Dialogs.PasswordDialog (CoreProgram.Application, user);
-				dialog.IsModal = true;
-				dialog.OpenDialog ();
-
-				if (dialog.Result == Common.Dialogs.DialogResult.Cancel)
-				{
-					return CheckResult.Cancel;
-				}
-
-				defaultPassword = dialog.DefaultPassword;
-			}
-
-			return CheckResult.Error;
-		}
-
-		private enum CheckResult
-		{
-			OK,
-			Error,
-			Cancel,
+			return user.CheckPassword (passwordGiven);
 		}
 
 

@@ -96,10 +96,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					using (var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application))
-					{
-						dialog.OpenDialog ();
-					}
+					CoreProgram.Application.UserManager.Authenticate (CoreProgram.Application.UserManager.AuthenticatedUser);
 				});
 		}
 

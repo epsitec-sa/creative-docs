@@ -14,6 +14,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Printers;
 using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,19 +27,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class UserManagerDialog : AbstractDialog
 	{
-		public UserManagerDialog(CoreApplication application)
+		public UserManagerDialog(CoreApplication application, SoftwareUserEntity user = null)
 		{
 			this.application = application;
+			this.manager     = application.UserManager;
+			this.initialUser = user;
 
-			this.users = new List<SoftwareUserEntity> ();
-		}
+			this.users  = this.manager.GetActiveUsers ().ToList ();
+			this.groups = this.manager.GetActiveUserGroups ().ToList ();
 
-		public string DefaultPassword
-		{
-			get
-			{
-				return this.passField.Text;
-			}
+			this.checkButtonGroups = new List<CheckButton> ();
 		}
 
 
@@ -247,58 +245,29 @@ namespace Epsitec.Cresus.Core.Dialogs
 				new StaticText
 				{
 					Parent = this.userBox,
-					Text = "Niveau de l'utilisateur :",
+					Text = "L'utilisateur fait partie des groupes suivants :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel+2),
 				};
 
-				this.checkAdministrator = new CheckButton
+				this.checkButtonGroups.Clear ();
+				foreach (var group in this.groups)
 				{
-					Parent = this.userBox,
-					Text = "Administrateur",
-					Dock = DockStyle.Top,
-				};
+					var button = new CheckButton
+					{
+						Parent = this.userBox,
+						FormattedText = group.Name,
+						Dock = DockStyle.Top,
+					};
 
-				this.checkSystem = new CheckButton
-				{
-					Parent = this.userBox,
-					Text = "Système",
-					Dock = DockStyle.Top,
-				};
-
-				this.checkDeveloper = new CheckButton
-				{
-					Parent = this.userBox,
-					Text = "Développeur",
-					Dock = DockStyle.Top,
-				};
-
-				this.checkPowerUser = new CheckButton
-				{
-					Parent = this.userBox,
-					Text = "Utilisateur puissant",
-					Dock = DockStyle.Top,
-				};
-
-				this.checkStandard = new CheckButton
-				{
-					Parent = this.userBox,
-					Text = "Utilisateur standard",
-					Dock = DockStyle.Top,
-				};
-
-				this.checkRestricted = new CheckButton
-				{
-					Parent = this.userBox,
-					Text = "Utilisateur restreint",
-					Dock = DockStyle.Top,
-				};
+					this.checkButtonGroups.Add (button);
+				}
 
 
 				new StaticText
 				{
 					Parent = this.userBox,
-					Text = "Nouveau mot de passe :",
+					Text = "Pour le changer le mot de passe :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 10, UIBuilder.MarginUnderLabel),
 				};
@@ -333,6 +302,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			//	Crée le pied de page.
 			{
+				this.errorMessage = new StaticText
+				{
+					Parent = footer,
+					Visibility = false,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					BackColor = Color.FromName ("Gold"),
+					Dock = DockStyle.Fill,
+					Margins = new Margins (0, 10, 0, 0),
+				};
+
 				this.quitButton = new Button ()
 				{
 					Parent = footer,
@@ -342,7 +321,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = 11,
 				};
 
-				this.okButton = new Button ()
+				this.loginButton = new Button ()
 				{
 					Parent = footer,
 					Text = "S'identifier",
@@ -362,9 +341,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.list.SelectionActivated += delegate
 			{
+				this.loginErrorCounter = 0;
+				this.loginErrorMessage = null;
+
 				this.UpdateUser ();
 				this.UpdateWidgets ();
 
+				this.passField.Text = null;
 				this.passField.SelectAll ();
 				this.passField.Focus ();
 			};
@@ -399,41 +382,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
-			this.checkAdministrator.ActiveStateChanged += delegate
+			foreach (var button in this.checkButtonGroups)
 			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
-
-			this.checkSystem.ActiveStateChanged += delegate
-			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
-
-			this.checkDeveloper.ActiveStateChanged += delegate
-			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
-
-			this.checkPowerUser.ActiveStateChanged += delegate
-			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
-
-			this.checkStandard.ActiveStateChanged += delegate
-			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
-
-			this.checkRestricted.ActiveStateChanged += delegate
-			{
-				this.dirtyContent = true;
-				this.UpdateWidgets ();
-			};
+				button.ActiveStateChanged += delegate
+				{
+					this.dirtyContent = true;
+					this.UpdateWidgets ();
+				};
+			}
 
 
 			this.applyButton.Clicked += delegate
@@ -441,10 +397,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ApplyModifications ();
 			};
 
-			this.okButton.Clicked += delegate
+			this.loginButton.Clicked += delegate
 			{
-				this.Result = DialogResult.Accept;
-				this.CloseDialog ();
+				var result = this.LoginAction ();
+
+				if (result == LoginResult.OK)
+				{
+					this.Result = DialogResult.Accept;
+					this.CloseDialog ();
+				}
+
+				if (result == LoginResult.Quit)
+				{
+					this.Result = DialogResult.Cancel;
+					this.CloseDialog ();
+				}
 			};
 
 			this.quitButton.Clicked += delegate
@@ -458,15 +425,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateList()
 		{
 			this.list.Items.Clear ();
-			this.users.Clear ();
+			int sel = -1;
 
-			var users = this.application.UserManager.GetActiveUsers ();
-
-			foreach (var user in users)
+			foreach (var user in this.users)
 			{
-				if (user.IsArchive)
+				if (user == this.initialUser)
 				{
-					continue;
+					sel = this.list.Items.Count;
 				}
 
 				FormattedText text;
@@ -481,7 +446,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 
 				this.list.Items.Add (text);
-				this.users.Add (user);
+			}
+
+			if (this.initialUser != null)
+			{
+				this.list.SelectedItemIndex = sel;
+				this.initialUser = null;
 			}
 		}
 
@@ -497,13 +467,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.displayNameField.Text = null;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
-				
-				this.checkAdministrator.ActiveState = ActiveState.No;
-				this.checkSystem       .ActiveState = ActiveState.No;
-				this.checkDeveloper    .ActiveState = ActiveState.No;
-				this.checkPowerUser    .ActiveState = ActiveState.No;
-				this.checkStandard     .ActiveState = ActiveState.No;
-				this.checkRestricted   .ActiveState = ActiveState.No;
+
+				foreach (var button in this.checkButtonGroups)
+				{
+					button.ActiveState = ActiveState.No;
+				}
 			}
 			else
 			{
@@ -514,12 +482,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
 
-				this.checkAdministrator.ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.Administrator) ? ActiveState.Yes : ActiveState.No;
-				this.checkSystem       .ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.System       ) ? ActiveState.Yes : ActiveState.No;
-				this.checkDeveloper    .ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.Developer    ) ? ActiveState.Yes : ActiveState.No;
-				this.checkPowerUser    .ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.PowerUser    ) ? ActiveState.Yes : ActiveState.No;
-				this.checkStandard     .ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.Standard     ) ? ActiveState.Yes : ActiveState.No;
-				this.checkRestricted   .ActiveState = this.IsPowerLevelUsed (Business.UserManagement.UserPowerLevel.Restricted   ) ? ActiveState.Yes : ActiveState.No;
+				for (int i=0; i<this.checkButtonGroups.Count; i++)
+				{
+					var button = this.checkButtonGroups[i];
+
+					if (user.UserGroups.Contains (this.groups[i]))
+					{
+						button.ActiveState = ActiveState.Yes;
+					}
+					else
+					{
+						button.ActiveState = ActiveState.No;
+					}
+				}
 			}
 
 			this.dirtyContent = false;
@@ -538,12 +513,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.passLabel.Enable = (sel != -1);
 			this.passField.Enable = (sel != -1);
-			this.okButton.Enable  = (sel != -1 && (!hasPassword || !string.IsNullOrEmpty (this.passField.Text)));
-
-			this.applyButton.Enable = this.dirtyContent;
+			this.loginButton.Enable  = (sel != -1 && (!hasPassword || !string.IsNullOrEmpty (this.passField.Text)));
 
 			this.passLabel.Visibility = hasPassword;
 			this.passField.Visibility = hasPassword;
+
+			var message = this.GetErrorMessage ();
+			if (message == null)
+			{
+				this.errorMessage.Visibility = false;
+			}
+			else
+			{
+				this.errorMessage.Visibility = true;
+				this.errorMessage.FormattedText = message;
+			}
+
+			this.applyButton.Enable = this.dirtyContent && message == null;
 		}
 
 
@@ -561,6 +547,39 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.SetPowerLevelUsed ();
 		}
 
+		private LoginResult LoginAction()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			if (this.manager.CheckUserAuthentication (user, this.passField.Text))
+			{
+				return LoginResult.OK;
+			}
+
+			this.loginErrorCounter++;
+
+			if (this.loginErrorCounter >= 3)
+			{
+				return LoginResult.Quit;
+			}
+
+			this.loginErrorMessage = string.Format ("Mot de passe incorrect, réessayez ({0}/3).", this.loginErrorCounter.ToString ());
+			this.UpdateWidgets ();
+
+			this.passField.SelectAll ();
+			this.passField.Focus ();
+
+			return LoginResult.Retry;
+		}
+
+		private enum LoginResult
+		{
+			OK,
+			Retry,
+			Quit,
+		}
+
 
 		private void SetPowerLevelUsed()
 		{
@@ -570,34 +589,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				user.UserGroups.Clear ();
 
-				if (this.checkAdministrator.ActiveState == ActiveState.Yes)
-				{
-					// TODO:
-				}
-
-				if (this.checkSystem.ActiveState == ActiveState.Yes)
-				{
-				}
-
-				if (this.checkDeveloper.ActiveState == ActiveState.Yes)
-				{
-				}
-
-				if (this.checkPowerUser.ActiveState == ActiveState.Yes)
-				{
-				}
-
-				if (this.checkPowerUser.ActiveState == ActiveState.Yes)
-				{
-				}
-
-				if (this.checkStandard.ActiveState == ActiveState.Yes)
-				{
-				}
-
-				if (this.checkRestricted.ActiveState == ActiveState.Yes)
-				{
-				}
+				// TODO:
 			}
 		}
 
@@ -617,6 +609,36 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			return false;
+		}
+
+
+		private FormattedText GetErrorMessage()
+		{
+			if (!this.loginErrorMessage.IsNullOrEmpty)
+			{
+				return this.loginErrorMessage;
+			}
+
+			if (this.dirtyContent)
+			{
+				if (string.IsNullOrWhiteSpace (this.loginNameField.Text))
+				{
+					return "Vous devez donner un nom de compte.";
+				}
+
+				if (string.IsNullOrWhiteSpace (this.displayNameField.Text))
+				{
+					return "Vous devez donner un nom complet d'utilisateur.";
+				}
+
+				if ((string.IsNullOrEmpty (this.newPasswordField1.Text) || !string.IsNullOrEmpty (this.newPasswordField2.Text)) &&
+					this.newPasswordField1.Text != this.newPasswordField2.Text)
+				{
+					return "Les deux mots de passe ne sont pas identiques.";
+				}
+			}
+
+			return null;
 		}
 
 
@@ -643,29 +665,30 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 
 
-		private readonly CoreApplication				application;
-		private readonly List<SoftwareUserEntity>		users;
+		private readonly CoreApplication						application;
+		private readonly UserManager							manager;
+		private SoftwareUserEntity								initialUser;
+		private readonly List<SoftwareUserEntity>				users;
+		private readonly List<SoftwareUserGroupEntity>			groups;
+		private readonly List<CheckButton>						checkButtonGroups;
 
-		private FrameBox								toolbar;
-		private GlyphButton								addButton;
-		private GlyphButton								removeButton;
-		private ScrollList								list;
-		private StaticText								passLabel;
-		private TextField								passField;
-		private FrameBox								userBox;
-		private TextField								loginNameField;
-		private TextField								displayNameField;
-		private CheckButton								checkAdministrator;
-		private CheckButton								checkSystem;
-		private CheckButton								checkDeveloper;
-		private CheckButton								checkPowerUser;
-		private CheckButton								checkStandard;
-		private CheckButton								checkRestricted;
-		private TextField								newPasswordField1;
-		private TextField								newPasswordField2;
-		private Button									applyButton;
-		private bool									dirtyContent;
-		private Button									okButton;
-		private Button									quitButton;
+		private FrameBox										toolbar;
+		private GlyphButton										addButton;
+		private GlyphButton										removeButton;
+		private ScrollList										list;
+		private StaticText										passLabel;
+		private TextField										passField;
+		private FrameBox										userBox;
+		private TextField										loginNameField;
+		private TextField										displayNameField;
+		private TextField										newPasswordField1;
+		private TextField										newPasswordField2;
+		private Button											applyButton;
+		private bool											dirtyContent;
+		private StaticText										errorMessage;
+		private Button											loginButton;
+		private Button											quitButton;
+		private int												loginErrorCounter;
+		private FormattedText									loginErrorMessage;
 	}
 }
