@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
@@ -9,13 +10,32 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
+
+
+	/// <summary>
+	/// The <c>LockTransaction</c> class provides the tools required to manage the high level
+	/// transactions.
+	/// A <c>LockTransaction</c> can contain several locks and it must be used in the appropriate
+	/// way: once it has been locked, it must absolutely be unlocked or disposed.
+	/// </summary>
 	public sealed class LockTransaction : System.IDisposable
 	{
-		// TODO Comment this class and related stuff.
-		// Marc
-
+		
+		
+		/// <summary>
+		/// Builds a new <see cref="LockTransaction"/> for a given set of locks.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
+		/// <param name="connectionId">The id of the connection to use with the transaction.</param>
+		/// <param name="lockNames">The names of the locks that must be acquired.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="lockNames"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="lockNames"/> contains <c>null</c> or empty elements.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="lockNames"/> contains duplicates.</exception>
 		internal LockTransaction(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
@@ -31,12 +51,24 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.connectionId = connectionId;
 		}
 
+
+		/// <summary>
+		/// Destructor of the class.
+		/// </summary>
 		~LockTransaction()
 		{
 			this.Dispose (false);
 		}
 
 
+		/// <summary>
+		/// The current state of the transaction.
+		/// </summary>
+		/// <remarks>
+		/// This state might get out of sync with its real state in the database if the connection
+		/// used by the transaction is interrupted. This should never happen while the application is
+		/// still running, but you never know.
+		/// </remarks>
 		public LockState State
 		{
 			get;
@@ -44,6 +76,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// The <see cref="DbLockManager"/> used to access the low level lock functionnalities.
+		/// </summary>
 		private DbLockManager DbLockManager
 		{
 			get
@@ -55,7 +90,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		
 		#region IDisposable Members
 
-		
+
+		/// <summary>
+		/// Disposes the transaction. This method must be called if the transaction has ever been
+		/// locked, otherwise, an <see cref="System.InvalidOperationException"/> will be thrown by
+		/// the destructor.
+		/// </summary>
 		public void Dispose()
 		{
 			this.Dispose (true);	
@@ -65,6 +105,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		#endregion
 		
 
+		/// <summary>
+		/// Requests all the locks within the transaction. The success or failure is indicated by
+		/// the return value.
+		/// </summary>
+		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they have not.</returns>
+		/// <exception cref="System.InvalidOperationException">If the state of the transaction is not <see cref="LockState.Idle"/>.</exception>
 		public bool Lock()
 		{
 			if (this.State != LockState.Idle)
@@ -82,6 +128,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			return isLocked;
 		}
 
+
+		/// <summary>
+		/// Releases all the locks within the transaction. This method must be called if the transaction
+		/// has ever been locked.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">If the state of the transaction is not <see cref="LockState.Locked"/>.</exception>
 		public void Release()
 		{
 			if (this.State != LockState.Locked)
@@ -95,6 +147,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// Requests all the locks.
+		/// </summary>
+		/// <returns><c>true</c> if the locks have been acquired, <c>false</c> if they have not.</returns>
 		private bool InternalLock()
 		{
 			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
@@ -115,6 +171,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
+
+		/// <summary>
+		/// Releases all the locks.
+		/// </summary>
 		private void InternalRelease()
 		{
 			using (DbTransaction transaction = LockTransaction.CreateWriteTransaction (this.dbInfrastructure))
@@ -128,7 +188,10 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 		
-		
+		/// <summary>
+		/// Disposes the transaction, which release the locks if they haven't been released before.
+		/// </summary>
+		/// <param name="disposing">Indicates if the method has been called by the Dispose() method or by the destructor.</param>
 		private void Dispose(bool disposing)
 		{
 			if (!disposing && (this.State != LockState.Disposed && this.State != LockState.Idle))
@@ -148,6 +211,21 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// Checks whether a set of locks is available for a given connection id.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <param name="connectionId">The id of the connection used for the lock.</param>
+		/// <param name="lockNames">The name of the locks whose state to check.</param>
+		/// <returns><c>true</c> if fall locks coule be acquired, <c>false</c> if at least one of them could not.</returns>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
+		/// <param name="connectionId">The id of the connection to use with the transaction.</param>
+		/// <param name="lockNames">The names of the locks that must be acquired.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="connectionId"/> is lower than zero.</exception>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="lockNames"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="lockNames"/> contains <c>null</c> or empty elements.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="lockNames"/> contains duplicates.</exception>
 		internal static bool AreAllLocksAvailable(DbInfrastructure dbInfrastructure, long connectionId, IEnumerable<string> lockNames)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
@@ -169,14 +247,28 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// Removes the locks associated with an inactive connection.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dbInfrastructure"/> is <c>null</c>.</exception>
 		internal static void RemoveInactiveLocks(DbInfrastructure dbInfrastructure)
 		{
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+			
 			DbLockManager lockManager = dbInfrastructure.LockManager;
 
 			lockManager.RemoveInactiveLocks ();
 		}
 
 		
+		/// <summary>
+		/// Checks whether a set of locks is available for a given connection id.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <param name="connectionId">The id of the connection used for the lock.</param>
+		/// <param name="lockNames">The name of the locks whose state to check.</param>
+		/// <returns><c>true</c> if fall locks coule be acquired, <c>false</c> if at least one of them could not.</returns>
 		private static bool AreAllLocksAvailable(DbLockManager lockManager, long connectionId, IEnumerable<string> lockNames)
 		{
 			return lockNames.All (lockName =>
@@ -187,12 +279,22 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="DbTransaction"/> object used for read only transactions.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <returns>The <see cref="DbTransaction"/> object</returns>
 		private static DbTransaction CreateReadTransaction(DbInfrastructure dbInfrastructure)
 		{
 			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
 		}
 
 
+		/// <summary>
+		/// Creates the <see cref="DbTransaction"/> object used for read write transactions.
+		/// </summary>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> object used to communicate with the database.</param>
+		/// <returns>The <see cref="DbTransaction"/> object</returns>
 		private static DbTransaction CreateWriteTransaction(DbInfrastructure dbInfrastructure)
 		{
 			List<DbTable> tablesToLock = new List<DbTable> ()
@@ -204,10 +306,25 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// The names of the locks contained in the transaction.
+		/// </summary>
 		private IEnumerable<string> lockNames;
 
+
+		/// <summary>
+		/// The id of the connection used to acquire the locks.
+		/// </summary>
 		private long connectionId;
 
+
+		/// <summary>
+		/// The <see cref="DbInfrastructure"/> object used to communicate with the database.
+		/// </summary>
 		private DbInfrastructure dbInfrastructure;
+
+
 	}
+
+
 }
