@@ -152,6 +152,7 @@ namespace Epsitec.Cresus.Core
 			PaymentModeEntity[] paymentDefs = this.InsertPaymentModesInDatabase ().ToArray ();
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
+			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
 			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs).ToArray ();
 			
 			this.DataContext.SaveChanges ();
@@ -885,6 +886,30 @@ namespace Epsitec.Cresus.Core
 			yield return vatDef2011_2;
 			yield return vatDef2011_3;
 			yield return vatDef2011_4;
+		}
+
+		private IEnumerable<BusinessSettingsEntity> InsertBusinessSettingsInDatabase()
+		{
+			var business = this.DataContext.CreateEntity<BusinessSettingsEntity> ();
+			var tax = this.DataContext.CreateEntity<TaxSettingsEntity> ();
+			var finance = this.DataContext.CreateEntity<FinanceSettingsEntity> ();
+			var isrDef1 = this.DataContext.CreateEntity<IsrDefinitionEntity> ();
+
+			business.LegalPerson = this.DataContext.GetEntitiesOfType<LegalPersonEntity> (x => x.Name == "Epsitec SA").FirstOrDefault ();
+			business.FinanceSettings = finance;
+			business.TaxSettings = tax;
+
+			tax.VatNumber = "199160";
+			tax.TaxMode = Business.Finance.TaxMode.LiableForVat;
+
+			isrDef1.Currency = Business.Finance.CurrencyCode.Chf;
+			isrDef1.SubscriberNumber = "010694443";
+			isrDef1.SubscriberAddress = "Epsitec SA<br/>Ch. du Fontenay 6<br/>1400 Yverdon-les-Bains";
+			isrDef1.IncomingBookAccount = "1010";
+			
+			finance.IsrDefinitions.Add (isrDef1);
+
+			yield return business;
 		}
 
 		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs)

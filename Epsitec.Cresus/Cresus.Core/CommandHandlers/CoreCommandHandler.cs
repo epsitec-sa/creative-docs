@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			v11.Import (CoreProgram.Application);
 		}
 
-		[Command (Res.CommandIds.Global.Settings)]
-		public void ProcessGlobalSettings(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command (Res.CommandIds.Global.ShowSettings)]
+		public void ProcessGlobalShowSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				});
 		}
 
-		[Command (Res.CommandIds.Global.UserManager)]
-		public void ProcessGlobalUserManager(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command (Res.CommandIds.Global.ShowUserManager)]
+		public void ProcessGlobalShowUserManager(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate

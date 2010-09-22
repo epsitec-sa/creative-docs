@@ -456,6 +456,7 @@ namespace Epsitec.Cresus.Core
 			dataContext.CreateSchema<TotalDocumentItemEntity> ();
 
 			dataContext.CreateSchema<SoftwareUserEntity> ();
+			dataContext.CreateSchema<BusinessSettingsEntity> ();
 		}
 
 		private void PopulateDatabase()

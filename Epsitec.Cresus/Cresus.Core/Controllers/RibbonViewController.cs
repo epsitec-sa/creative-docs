@@ -256,8 +256,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				selectLanaugage2.ActiveState = ActiveState.Yes;
 			};
 
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.UserManager));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowSettings));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowUserManager));
 		}
 
 		

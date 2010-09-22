@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Cresus.Core.Orchestrators;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core
 {
@@ -56,6 +57,19 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.data;
+			}
+		}
+
+		public BusinessSettingsEntity			BusinessSettings
+		{
+			get
+			{
+				if (this.businessSettings == null)
+				{
+					this.businessSettings = this.data.GetAllEntities<BusinessSettingsEntity> ().First ();
+				}
+
+				return this.businessSettings;
 			}
 		}
 
@@ -400,5 +414,6 @@ namespace Epsitec.Cresus.Core
 		private DataViewOrchestrator					mainWindowOrchestrator;
 		private MainWindowController					mainWindowController;
 		private List<Dialogs.IAttachedDialog>			attachedDialogs;
+		private BusinessSettingsEntity					businessSettings;
 	}
 }
