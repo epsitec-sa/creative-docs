@@ -786,7 +786,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="example"/> is not managed by this instance.</exception>
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
 			where TEntity : AbstractEntity
 		{
@@ -804,7 +804,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> not managed by this instance.</exception>
 		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request)
 			where TEntity : AbstractEntity

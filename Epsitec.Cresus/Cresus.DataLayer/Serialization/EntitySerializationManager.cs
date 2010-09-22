@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 		/// <summary>
 		/// Builds a new <see cref="AbstractEntity"/> whose type and data are defined by an
-		/// <see cref="EntityData."/>
+		/// <see cref="EntityData"/>.
 		/// </summary>
 		/// <param name="data">The <see cref="EntityData"/> containing the type and data.</param>
 		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 
 		/// <summary>
-		/// Gets the proxy that must be used for a given field of an <see cref="AbstractENtity"/>.
+		/// Gets the proxy that must be used for a given field of an <see cref="AbstractEntity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> containing the field.</param>
 		/// <param name="field">The field for which to create a proxy.</param>
