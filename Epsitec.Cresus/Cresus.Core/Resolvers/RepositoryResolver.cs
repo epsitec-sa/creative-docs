@@ -3,6 +3,8 @@
 
 using Epsitec.Cresus.Core.Repositories;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,13 +12,13 @@ namespace Epsitec.Cresus.Core.Resolvers
 {
 	public static class RepositoryResolver
 	{
-		public static Repository Resolve(System.Type entityType, CoreData data)
+		public static Repository Resolve(System.Type entityType, CoreData data, DataContext dataContext)
 		{
 			var type = RepositoryResolver.FindRepositorySystemTypes (entityType).FirstOrDefault ();
 
 			if (type != null)
 			{
-				return System.Activator.CreateInstance (type, new object[] { data, null }) as Repository;
+				return System.Activator.CreateInstance (type, new object[] { data, dataContext }) as Repository;
 			}
 			else
 			{
