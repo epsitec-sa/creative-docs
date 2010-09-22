@@ -6067,11 +6067,11 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>EsrCustomerNumber</c> field.
+		///	The <c>IsrSubscriberNumber</c> field.
 		///	designer:fld/L0AS6/L0AIB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AIB]")]
-		public string EsrCustomerNumber
+		public string IsrSubscriberNumber
 		{
 			get
 			{
@@ -6079,21 +6079,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.EsrCustomerNumber;
+				string oldValue = this.IsrSubscriberNumber;
 				if (oldValue != value)
 				{
-					this.OnEsrCustomerNumberChanging (oldValue, value);
+					this.OnIsrSubscriberNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AIB]", oldValue, value);
-					this.OnEsrCustomerNumberChanged (oldValue, value);
+					this.OnIsrSubscriberNumberChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>EsrReferenceNumber</c> field.
+		///	The <c>IsrReferenceNumber</c> field.
 		///	designer:fld/L0AS6/L0AGB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AGB]")]
-		public string EsrReferenceNumber
+		public string IsrReferenceNumber
 		{
 			get
 			{
@@ -6101,12 +6101,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.EsrReferenceNumber;
+				string oldValue = this.IsrReferenceNumber;
 				if (oldValue != value)
 				{
-					this.OnEsrReferenceNumberChanging (oldValue, value);
+					this.OnIsrReferenceNumberChanging (oldValue, value);
 					this.SetField<string> ("[L0AGB]", oldValue, value);
-					this.OnEsrReferenceNumberChanged (oldValue, value);
+					this.OnIsrReferenceNumberChanged (oldValue, value);
 				}
 			}
 		}
@@ -6161,10 +6161,10 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnAmountDueChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnTransactionIdChanging(string oldValue, string newValue);
 		partial void OnTransactionIdChanged(string oldValue, string newValue);
-		partial void OnEsrCustomerNumberChanging(string oldValue, string newValue);
-		partial void OnEsrCustomerNumberChanged(string oldValue, string newValue);
-		partial void OnEsrReferenceNumberChanging(string oldValue, string newValue);
-		partial void OnEsrReferenceNumberChanged(string oldValue, string newValue);
+		partial void OnIsrSubscriberNumberChanging(string oldValue, string newValue);
+		partial void OnIsrSubscriberNumberChanged(string oldValue, string newValue);
+		partial void OnIsrReferenceNumberChanging(string oldValue, string newValue);
+		partial void OnIsrReferenceNumberChanged(string oldValue, string newValue);
 		partial void OnInstalmentRankChanging(int? oldValue, int? newValue);
 		partial void OnInstalmentRankChanged(int? oldValue, int? newValue);
 		partial void OnInstalmentNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -6617,19 +6617,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0A99/L0AC9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AC9]")]
-		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? Category
+		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory Category
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AC9]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AC9]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue = this.Category;
+				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
 				if (oldValue != value)
 				{
 					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AC9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AC9]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
 				}
 			}
@@ -6643,8 +6643,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnMultiplyRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnSmallestIncrementChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnSmallestIncrementChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
-		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
+		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
+		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6730,19 +6730,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/L0AD9/L0AH9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AH9]")]
-		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? Category
+		public global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory Category
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AH9]");
+				return this.GetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AH9]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue = this.Category;
+				global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue = this.Category;
 				if (oldValue != value)
 				{
 					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory?> ("[L0AH9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory> ("[L0AH9]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
 				}
 			}
@@ -6752,8 +6752,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
-		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
-		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory? newValue);
+		partial void OnCategoryChanging(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
+		partial void OnCategoryChanged(global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory oldValue, global::Epsitec.Cresus.Core.Business.UnitOfMeasureCategory newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

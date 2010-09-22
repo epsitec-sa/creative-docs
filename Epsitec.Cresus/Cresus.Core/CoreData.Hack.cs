@@ -1138,15 +1138,15 @@ namespace Epsitec.Cresus.Core
 
 			billingA1.Title = "Facture 1000-00, 1ère tranche";
 			billingA1.AmountDue = paymentA1;
-			billingA1.EsrCustomerNumber = isrSubscriber;								//	compte BVR
-			billingA1.EsrReferenceNumber = isrRef1;										//	n° de réf BVR lié
+			billingA1.IsrSubscriberNumber = isrSubscriber;								//	compte BVR
+			billingA1.IsrReferenceNumber = isrRef1;										//	n° de réf BVR lié
 			billingA1.InstalmentRank = 0;
 			billingA1.InstalmentName = "1/2";
 
 			billingA2.Title = "Facture 1000-00, 2ème tranche";
 			billingA2.AmountDue = paymentA2;
-			billingA2.EsrCustomerNumber = isrSubscriber;								//	compte BVR
-			billingA2.EsrReferenceNumber = isrRef2;										//	n° de réf BVR lié
+			billingA2.IsrSubscriberNumber = isrSubscriber;								//	compte BVR
+			billingA2.IsrReferenceNumber = isrRef2;										//	n° de réf BVR lié
 			billingA2.InstalmentRank = 1;
 			billingA2.InstalmentName = "2/2";
 

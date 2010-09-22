@@ -396,8 +396,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			billingDetails.AmountDue.Date = date;
 			billingDetails.Title = string.Format ("Votre commande du {0}", Misc.GetDateTimeDescription (date.ToDateTime ()));
-			billingDetails.EsrCustomerNumber = "01-69444-3";  // compte BVR
-			billingDetails.EsrReferenceNumber = "96 13070 01000 02173 50356 73892";  // n° de réf BVR lié
+			billingDetails.IsrSubscriberNumber = "01-69444-3";  // compte BVR
+			billingDetails.IsrReferenceNumber = "96 13070 01000 02173 50356 73892";  // n° de réf BVR lié
 			// TODO: Trouver ces 2 dernières informations de façon plus générale !
 		}
 

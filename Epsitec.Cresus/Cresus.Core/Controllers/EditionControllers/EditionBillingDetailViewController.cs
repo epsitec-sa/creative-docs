@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,  50, "Rang de la mensualité",               Marshaler.Create (() => this.InstalmentRank, x => this.InstalmentRank = x));
 			builder.CreateTextField      (tile,   0, "Description de la mensualité",        Marshaler.Create (() => this.Entity.InstalmentName, x => this.Entity.InstalmentName = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
-			builder.CreateTextField      (tile, 100, "N° d'adhérent BVR",                   Marshaler.Create (() => this.Entity.EsrCustomerNumber, x => this.Entity.EsrCustomerNumber = x));
-			builder.CreateTextField      (tile,   0, "N° de référence BVR à 27 chiffres",	Marshaler.Create (() => this.Entity.EsrReferenceNumber, x => this.Entity.EsrReferenceNumber = x));
+			builder.CreateTextField      (tile, 100, "N° d'adhérent BVR",                   Marshaler.Create (() => this.Entity.IsrSubscriberNumber, x => this.Entity.IsrSubscriberNumber = x));
+			builder.CreateTextField      (tile,   0, "N° de référence BVR à 27 chiffres",	Marshaler.Create (() => this.Entity.IsrReferenceNumber, x => this.Entity.IsrReferenceNumber = x));
 			builder.CreateMargin         (tile, horizontalSeparator: true);
 
 			FrameBox group = builder.CreateGroup (tile, "Montant à payer");

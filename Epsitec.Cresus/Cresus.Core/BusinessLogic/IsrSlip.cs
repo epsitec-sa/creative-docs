@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			var amount   = billingDetails.AmountDue.Amount;
 			var currency = billingDetails.AmountDue.Currency.CurrencyCode;
 
-			this.subscriberNumber = billingDetails.EsrCustomerNumber;
-			this.referenceNumber  = billingDetails.EsrReferenceNumber;
+			this.subscriberNumber = billingDetails.IsrSubscriberNumber;
+			this.referenceNumber  = billingDetails.IsrReferenceNumber;
 			
 			this.amount   = Isr.GetRoundedAmount (amount, currency);
 			this.currency = currency;

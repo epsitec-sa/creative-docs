@@ -11,6 +11,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 {
 	public static class Isr
 	{
+		/// <summary>
+		/// Gets a new reference number for an ISR.
+		/// </summary>
+		/// <param name="data">The <see cref="CoreData"/>.</param>
+		/// <param name="subscriberNumber">The (compact) subscriber number.</param>
+		/// <param name="bankPrefix">The optional bank prefix (6-12 digits).</param>
+		/// <returns>A unique reference number for an ISR slip.</returns>
 		public static string GetNewReferenceNumber(CoreData data, string subscriberNumber, string bankPrefix = null)
 		{
 			if (!Isr.IsCompactSubscriberNumber (subscriberNumber))
