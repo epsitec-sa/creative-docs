@@ -131,22 +131,24 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Color = Color.FromBrightness (0);
 
+			string subscriber = this.Slip.GetFormattedSubscriberNumber ();
+
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+8, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+68, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
 
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+7, topLeft.Y-85, 50, 20), ContentAlignment.TopLeft, fixFontRegular, 2.4, this.From);
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+129, topLeft.Y-75, 74, 24), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.From);
 
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.EsrCustomerNumber);
-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, this.EsrCustomerNumber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+34, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
+			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+94, topLeft.Y-47, 25, 5), ContentAlignment.TopLeft, fixFontRegular, 3.0, subscriber);
 
 //-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullEsrReferenceNumber);
 //-			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-98, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, this.FullEsrReferenceNumber);
 
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+125, topLeft.Y-29, 50, 19), ContentAlignment.TopLeft, fixFontRegular, 3.5, this.Communication);
 
-			EsBand.PaintPrice (port, new Point (topLeft.X+2, topLeft.Y-55), this.Price, this.NotForUse);
-			EsBand.PaintPrice (port, new Point (topLeft.X+63, topLeft.Y-55), this.Price, this.NotForUse);
+			EsBand.PaintPrice (port, new Point (topLeft.X+2, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
+			EsBand.PaintPrice (port, new Point (topLeft.X+63, topLeft.Y-55), this.Slip.Amount, this.NotForUse);
 		}
 
 

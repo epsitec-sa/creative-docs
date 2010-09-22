@@ -94,10 +94,10 @@ namespace Epsitec.Cresus.Core.Printers
 
 			port.Color = Color.FromBrightness (0);
 
-			var isr = this.IsrData;
+			var isr = this.Slip;
 
-			string codingZone = isr.GetCodingZone (this.Price, CurrencyCode.Chf);
-			string formattedRefNumber = isr.GetFormattedReferenceNumber ();
+			string codingZone                = this.NotForUse ? isr.GetInvalidCodingZone () : isr.GetCodingZone ();
+			string formattedRefNumber        = this.NotForUse ? "" : isr.GetFormattedReferenceNumber ();
 			string formattedSubscriberNumber = isr.GetFormattedSubscriberNumber ();
 
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+8, topLeft.Y-40, 50, 28), ContentAlignment.TopLeft, fixFontBold, 3.5, this.To);
@@ -113,8 +113,8 @@ namespace Epsitec.Cresus.Core.Printers
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+123, topLeft.Y-39, 83, 6), ContentAlignment.MiddleCenter, ocrFont, 4.0, formattedRefNumber);
 			AbstractEsrBand.PaintText (port, new Rectangle (topLeft.X+60, topLeft.Y-90, 143, 5), ContentAlignment.TopRight, ocrFont, 4.2, codingZone);
 
-			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+1, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+47, topLeft.Y-56, 10, 6), this.Price, this.NotForUse);
-			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+62, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+108, topLeft.Y-56, 10, 6), this.Price, this.NotForUse);
+			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+1, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+47, topLeft.Y-56, 10, 6), this.Slip.Amount, this.NotForUse);
+			EsrBand.PaintPrice (port, new Rectangle (topLeft.X+62, topLeft.Y-56, 40, 6), new Rectangle (topLeft.X+108, topLeft.Y-56, 10, 6), this.Slip.Amount, this.NotForUse);
 		}
 
 

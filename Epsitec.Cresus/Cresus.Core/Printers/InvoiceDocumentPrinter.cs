@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Helpers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core.Printers
 {
@@ -1320,36 +1321,27 @@ namespace Epsitec.Cresus.Core.Printers
 		private void BuildEsr(BillingDetailEntity billingDetails, bool mackle=false)
 		{
 			//	Met un BVR orangé ou un BV rose au bas de la page courante.
-			AbstractEsrBand Esr;
+			AbstractEsrBand isr;
 
 			if (this.HasDocumentOption (DocumentOption.InvoiceWithESR))
 			{
-				Esr = new EsrBand ();  // BVR orangé
+				isr = new EsrBand ();  // BVR orangé
 			}
 			else
 			{
-				Esr = new EsBand ();  // BV rose
+				isr = new EsBand ();  // BV rose
 			}
 
-			Esr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
-			Esr.From = InvoiceDocumentHelper.GetMailContact (this.Entity);
-			Esr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
-			Esr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
+			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
+			isr.From = InvoiceDocumentHelper.GetMailContact (this.Entity);
+			isr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
+			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
 
-			if (mackle)  // faux BV ?
-			{
-				Esr.NotForUse = true;  // pour imprimer "XXXXX XX"
-			}
-			else  // vrai BV ?
-			{
-				Esr.NotForUse          = false;  // c'est LE vrai BV
-				Esr.Price              = billingDetails.AmountDue.Amount;
-				Esr.EsrCustomerNumber  = billingDetails.EsrCustomerNumber;
-				Esr.EsrReferenceNumber = billingDetails.EsrReferenceNumber;
-			}
+			isr.Slip = new IsrSlip (billingDetails);
+			isr.NotForUse = mackle;  // pour imprimer "XXXXX XX" sur un faux BVR
 
 			var bounds = new Rectangle (Point.Zero, AbstractEsrBand.DefautlSize);
-			this.documentContainer.AddAbsolute (Esr, bounds);
+			this.documentContainer.AddAbsolute (isr, bounds);
 		}
 
 

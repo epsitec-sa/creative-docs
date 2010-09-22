@@ -57,23 +57,29 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		public static bool IsDigit(this char c)
+		private static bool IsDigit(this char c)
 		{
 			return (c >= '0') && (c <= '9');
 		}
 
-		public static IsrType GetIsrType(CurrencyCode currency, bool leaveAmountBlank)
+		/// <summary>
+		/// Gets the type of the ISR.
+		/// </summary>
+		/// <param name="currency">The currency.</param>
+		/// <param name="optionalAmount">If set to <c>true</c>, the amount may be left blank.</param>
+		/// <returns></returns>
+		public static IsrType GetIsrType(CurrencyCode currency, bool optionalAmount)
 		{
 			IsrType type;
 
 			switch (currency)
 			{
 				case CurrencyCode.Chf:
-					type  = leaveAmountBlank ? IsrType.Code04_IsrPlus_Chf : IsrType.Code01_Isr_Chf;
+					type  = optionalAmount ? IsrType.Code04_IsrPlus_Chf : IsrType.Code01_Isr_Chf;
 					break;
 
 				case CurrencyCode.Eur:
-					type  = leaveAmountBlank ? IsrType.Code31_IsrPlus_Eur : IsrType.Code21_Isr_Eur;
+					type  = optionalAmount ? IsrType.Code31_IsrPlus_Eur : IsrType.Code21_Isr_Eur;
 					break;
 
 				default:
@@ -82,7 +88,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 			return type;
 		}
-		
+
+		/// <summary>
+		/// Gets the rounded amount, based on the currency. ISR must be rounded to 0.05 CHF
+		/// for instance, whereas in EUR, there is no such requirement.
+		/// </summary>
+		/// <param name="amount">The amount.</param>
+		/// <param name="currency">The currency.</param>
+		/// <returns>The rounded amount.</returns>
 		public static decimal GetRoundedAmount(decimal amount, CurrencyCode currency)
 		{
 			switch (currency)

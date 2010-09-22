@@ -88,29 +88,10 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 		/// <summary>
-		/// Numéro de CCP.
-		/// Par exemple "01-69444-3".
+		/// Gets or sets the ISR slip, which includes the coding zone.
 		/// </summary>
-		public string EsrCustomerNumber
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Ligne de codage imprimée en OCR-B, avec ou sans les espaces.
-		/// Par exemple "96 13070 01000 02173 50356 73892".
-		/// </summary>
-		public string EsrReferenceNumber
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Montant imprimé. Un montant de 0.0M permet au client d'inscrire lui-même le montant.
-		/// </summary>
-		public decimal Price
+		/// <value>The ISR slip.</value>
+		public IsrSlip Slip
 		{
 			get;
 			set;
@@ -355,22 +336,6 @@ namespace Epsitec.Cresus.Core.Printers
 			};
 
 			textLayout.Paint (bounds.BottomLeft, port);
-		}
-
-		protected IsrData IsrData
-		{
-			get
-			{
-				if (this.NotForUse)
-				{
-					//	TODO: toujours passer un n° de client BVR, même si le bulletin n'est pas valable...
-					return new IsrData (subscriberNumber: this.EsrCustomerNumber ?? "000000000");
-				}
-				else
-				{
-					return new IsrData (subscriberNumber: this.EsrCustomerNumber, referenceNumber: this.EsrReferenceNumber);
-				}
-			}
 		}
 
 
