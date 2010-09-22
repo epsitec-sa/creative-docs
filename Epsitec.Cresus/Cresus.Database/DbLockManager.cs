@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Creates a new <c>DbLockManager</c>.
 		/// </summary>
-		public DbLockManager() : base ()
+		internal DbLockManager() : base ()
 		{
 		}
 

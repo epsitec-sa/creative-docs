@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Builds a new instance of <see cref="DbUidManager"/>.
 		/// </summary>
-		public DbUidManager() : base()
+		internal DbUidManager() : base()
 		{
 		}
 
