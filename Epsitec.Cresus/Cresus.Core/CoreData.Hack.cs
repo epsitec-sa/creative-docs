@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.BusinessLogic;
 
 namespace Epsitec.Cresus.Core
 {
@@ -1131,17 +1132,21 @@ namespace Epsitec.Cresus.Core
 			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == Business.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA2.Date = new Date (2010, 09, 05);
 
+			var isrSubscriber = "010694443";
+			var isrRef1 = Isr.GetNewReferenceNumber (this, isrSubscriber);
+			var isrRef2 = Isr.GetNewReferenceNumber (this, isrSubscriber);
+
 			billingA1.Title = "Facture 1000-00, 1ère tranche";
 			billingA1.AmountDue = paymentA1;
-			billingA1.EsrCustomerNumber = "010694443";									//	compte BVR
-			billingA1.EsrReferenceNumber = "961307001000021735035673892";				//	n° de réf BVR lié
+			billingA1.EsrCustomerNumber = isrSubscriber;								//	compte BVR
+			billingA1.EsrReferenceNumber = isrRef1;										//	n° de réf BVR lié
 			billingA1.InstalmentRank = 0;
 			billingA1.InstalmentName = "1/2";
 
 			billingA2.Title = "Facture 1000-00, 2ème tranche";
 			billingA2.AmountDue = paymentA2;
-			billingA2.EsrCustomerNumber = "010694443";									//	compte BVR
-			billingA2.EsrReferenceNumber = "961307001000021735035673893";				//	n° de réf BVR lié
+			billingA2.EsrCustomerNumber = isrSubscriber;								//	compte BVR
+			billingA2.EsrReferenceNumber = isrRef2;										//	n° de réf BVR lié
 			billingA2.InstalmentRank = 1;
 			billingA2.InstalmentName = "2/2";
 

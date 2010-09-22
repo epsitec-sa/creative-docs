@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.BusinessLogic;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -64,7 +66,7 @@ namespace Epsitec.Cresus.Core.V11
 
 				if (!string.IsNullOrEmpty (no) && no.Length == 9)
 				{
-					char c = EsrHelper.ComputeControlKey (no.Substring (0, 8));
+					char c = Isr.ComputeCheckDigit (no.Substring (0, 8));
 					return no[8] == c;
 				}
 

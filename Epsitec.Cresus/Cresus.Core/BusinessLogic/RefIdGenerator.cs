@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 	/// </summary>
 	public class RefIdGenerator
 	{
-		internal RefIdGenerator(string name, RefIdGeneratorPool pool)
+		internal RefIdGenerator(string name, RefIdGeneratorPool pool, long firstId = 1000L)
 		{
 			RefIdGenerator.AssertCaller<RefIdGeneratorPool> ();
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			if (this.uidGenerator == null)
 			{
 				List<UidSlot> slots = new List<UidSlot> ();
-				slots.Add (new UidSlot (1000L, 999999999999L));
+				slots.Add (new UidSlot (firstId, 999999999999L));
 				this.uidGenerator = infrastructure.CreateUidGenerator (this.name, slots);
 			}
 		}

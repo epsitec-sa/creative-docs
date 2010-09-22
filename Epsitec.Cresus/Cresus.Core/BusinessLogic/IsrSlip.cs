@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				buffer.Append (string.Format ("{0:00}{1:0000000000}", (int) type, (long) (value * 100)));
 			}
 
-			buffer.Append (EsrHelper.ComputeControlKey (buffer.ToString ()));		//	13
+			buffer.Append (Isr.ComputeCheckDigit (buffer.ToString ()));		//	13
 			buffer.Append (">");													//	 1
 			buffer.Append (referenceNumber);										//	27
 			buffer.Append ("+ ");													//	 2
