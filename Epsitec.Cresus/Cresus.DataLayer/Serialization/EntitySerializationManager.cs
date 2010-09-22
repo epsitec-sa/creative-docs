@@ -19,14 +19,19 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
 	
-	// TODO Comment this class.
-	// Marc
-	
-
+	/// <summary>
+	/// The <c>EntitySerializationManager</c> is used to convert <see cref="AbstractEntity"/> to
+	/// <see cref="EntityData"/> back and forth.
+	/// </summary>
 	internal sealed class EntitySerializationManager
 	{
 
 
+		/// <summary>
+		/// Builds a new <c>EntitySerializationManager</c> associated with a given <see cref="DataContext"/>.
+		/// </summary>
+		/// <param name="dataContext">The <see cref="DataContext"/> associated with this instance.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="dataContext"/> is <c>null</c>.</exception>
 		public EntitySerializationManager(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
@@ -35,6 +40,9 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// The <see cref="DataContext"/> associated with this instance.
+		/// </summary>
 		private DataContext DataContext
 		{
 			get;
@@ -42,6 +50,9 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// The <see cref="EntityContext"/> associated with this instance.
+		/// </summary>
 		private EntityContext EntityContext
 		{
 			get
@@ -51,7 +62,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
-
+		/// <summary>
+		/// Serializes the given <see cref="AbstractEntity"/> to an equivalent <see cref="EntityData"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to serialize.</param>
+		/// <returns>The serialized <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		public EntityData Serialize(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
@@ -68,6 +84,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Gets the <see cref="ValueData"/> that represents all the values of a given
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="ValueData"/> to get.</param>
+		/// <returns>The <see cref="ValueData"/>.</returns>
 		private ValueData GetValueData(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -94,6 +116,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Gets the <see cref="ReferenceData"/> that represents all the references of a given
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="ReferenceData"/> to get.</param>
+		/// <returns>The <see cref="ReferenceData"/>.</returns>
 		private ReferenceData GetReferenceData(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -122,7 +150,13 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			return referenceData;
 		}
 
-		
+
+		/// <summary>
+		/// Gets the <see cref="CollectionData"/> that represents all the collections of a given
+		/// <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="CollectionData"/> to get.</param>
+		/// <returns>The <see cref="CollectionData"/>.</returns>
 		private CollectionData GetCollectionData(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
@@ -158,6 +192,13 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 		
 
+		/// <summary>
+		/// Builds a new <see cref="AbstractEntity"/> whose type and data are defined by an
+		/// <see cref="EntityData."/>
+		/// </summary>
+		/// <param name="data">The <see cref="EntityData"/> containing the type and data.</param>
+		/// <returns>The new <see cref="AbstractEntity"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="data"/> is <c>null</c>.</exception>
 		public AbstractEntity Deserialize(EntityData data)
 		{
 			data.ThrowIfNull ("data");
@@ -191,9 +232,15 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
-		private void DeserializeEntityLocalWithProxies(AbstractEntity entity, Druid entityId)
+		/// <summary>
+		/// Set all the fields of a single entity type of an <see cref="AbstractEntity"/> to the
+		/// appropriate proxy.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose fields to set.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> of the type whose fields to set.</param>
+		private void DeserializeEntityLocalWithProxies(AbstractEntity entity, Druid localEntityId)
 		{
-			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (entityId))
+			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId))
 			{
 				object proxy = this.GetProxyForField (entity, field);
 
@@ -202,6 +249,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Gets the proxy that must be used for a given field of an <see cref="AbstractENtity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> containing the field.</param>
+		/// <param name="field">The field for which to create a proxy.</param>
+		/// <returns>The proxy object.</returns>
 		private object GetProxyForField(AbstractEntity entity, StructuredTypeField field)
 		{
 			switch (field.Relation)
@@ -220,6 +273,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			}
 		}
 
+
+		/// <summary>
+		/// Set all the fields of a single entity type of an <see cref="AbstractEntity"/> to the
+		/// appropriate value.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose fields to set.</param>
+		/// <param name="entityData">The <see cref="EntityData"/> containing the data of the fields.</param>
+		/// <param name="localEntityId">The <see cref="Druid"/> of the type whose fields to set.</param>
 		private void DeserializeEntityLocal(AbstractEntity entity, EntityData entityData, Druid localEntityId)
 		{
 			foreach (StructuredTypeField field in this.EntityContext.GetEntityLocalFieldDefinitions (localEntityId))
@@ -229,6 +290,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Sets the appropriate value to a given field of a given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to set.</param>
+		/// <param name="entityData">The <see cref="EntityData"/> containing the data of the field.</param>
+		/// <param name="field">The field whose value to set.</param>
 		private void DeserializeEntityLocalField(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
 			switch (field.Relation)
@@ -251,6 +318,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Sets the value to a given value field of a given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to set.</param>
+		/// <param name="entityData">The <see cref="EntityData"/> containing the data of the field.</param>
+		/// <param name="field">The field whose value to set.</param>
 		private void DeserializeEntityLocalFieldValue(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
 			Druid fieldId = field.CaptionId;
@@ -260,6 +333,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Sets the value to a given reference field of a given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to set.</param>
+		/// <param name="entityData">The <see cref="EntityData"/> containing the data of the field.</param>
+		/// <param name="field">The field whose value to set.</param>
 		private void DeserializeEntityLocalFieldReference(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
 			Druid fieldId = field.CaptionId;
@@ -276,6 +355,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		}
 
 
+		/// <summary>
+		/// Sets the value to a given collection field of a given <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> whose field to set.</param>
+		/// <param name="entityData">The <see cref="EntityData"/> containing the data of the field.</param>
+		/// <param name="field">The field whose value to set.</param>
 		private void DeserializeEntityLocalFieldCollection(AbstractEntity entity, EntityData entityData, StructuredTypeField field)
 		{
 			Druid fieldId = field.CaptionId;
