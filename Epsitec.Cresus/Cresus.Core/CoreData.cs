@@ -478,8 +478,9 @@ namespace Epsitec.Cresus.Core
 			var groupStandard   = this.CreateUserGroup (logicGroup, "Utilisateurs standards",    Business.UserManagement.UserPowerLevel.Standard);
 			var groupRestricted = this.CreateUserGroup (logicGroup, "Utilisateurs restreints",   Business.UserManagement.UserPowerLevel.Restricted);
 
-			var userStandard = this.CreateUser (logicUser, groupStandard, "Utilisateur par défaut");
-			var userDev      = this.CreateUser (logicUser, groupDev,      "Epsitec", "Epsitec", "admin");
+			var userStandard1 = this.CreateUser (logicUser, groupStandard, "Pierre Arnaud", "Pierre",  "smaky");
+			var userStandard2 = this.CreateUser (logicUser, groupStandard, "Daniel Roux",   "Daniel",  "blupi");
+			var userDev       = this.CreateUser (logicUser, groupDev,      "Epsitec",       "Epsitec", "admin");
 
 			this.DataContext.SaveChanges ();
 		}
@@ -496,15 +497,15 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		private SoftwareUserEntity CreateUser(Logic logicUser, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin = null, string userPassword = null)
+		private SoftwareUserEntity CreateUser(Logic logicUser, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword)
 		{
 			var user = this.DataContext.CreateEntity<SoftwareUserEntity> ();
 
 			logicUser.ApplyRules (RuleType.Setup, user);
 
-			user.AuthenticationMethod = (userPassword == null) ? Business.UserManagement.UserAuthenticationMethod.System : Business.UserManagement.UserAuthenticationMethod.Password;
+			user.AuthenticationMethod = Business.UserManagement.UserAuthenticationMethod.Password;
 			user.DisplayName = displayName;
-			user.LoginName = userLogin ?? System.Environment.UserName;
+			user.LoginName = userLogin;
 			user.UserGroups.Add (group);
 			user.SetPassword (userPassword);
 			

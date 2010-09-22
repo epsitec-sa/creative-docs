@@ -76,6 +76,8 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0K1
 				public static readonly global::Epsitec.Common.Widgets.Command Settings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+				//	designer:cap/L0KF
+				public static readonly global::Epsitec.Common.Widgets.Command UserManager = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
 			}
 			
 			public static class History
@@ -158,6 +160,8 @@ namespace Epsitec.Cresus.Core
 			{
 				//	designer:cap/L0K1
 				public const long Settings = 0x1500014000001L;
+				//	designer:cap/L0KF
+				public const long UserManager = 0x150001400000FL;
 			}
 			
 			public static class History

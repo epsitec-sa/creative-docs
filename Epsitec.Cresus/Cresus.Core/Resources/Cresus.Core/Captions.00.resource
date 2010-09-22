@@ -494,4 +494,5 @@
   <data name="Fld.SoftwareUserGroup.UserPowerLevel" id="AQG">&lt;s:data id="_0" f:Name="UserPowerLevel" /&gt;</data>
   <data name="Val.UserAuthenticationMode.Disabled" id="ARG">&lt;s:data id="_0" f:Name="Disabled" f:Labels="{Collection {Text 'Désactivé'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.DisplayName" id="ASG">&lt;s:data id="_0" f:Name="DisplayName" /&gt;</data>
+  <data name="Cmd.Global.UserManager" id="KF">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Global.UserManager" f:Description="Gestion des utilisateurs" f:Icon="manifest:Epsitec.Cresus.Core.Images.UserManager.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Gestion des utilisateurs'}}" /&gt;</data>
 </bundle>
