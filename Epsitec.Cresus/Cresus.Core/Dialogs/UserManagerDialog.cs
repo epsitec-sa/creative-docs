@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// <summary>
 	/// Dialogue pour choisir l'utilisateur (loggin).
 	/// </summary>
-	class SelectUserDialog : AbstractDialog
+	class UserManagerDialog : AbstractDialog
 	{
-		public SelectUserDialog(CoreApplication application)
+		public UserManagerDialog(CoreApplication application)
 		{
 			this.application = application;
 

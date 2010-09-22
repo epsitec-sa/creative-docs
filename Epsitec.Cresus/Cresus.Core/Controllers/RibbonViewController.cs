@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = "Réglages",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Right,
-				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 1,
+				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 2,
 			};
 
 			var frame = new FrameBox
@@ -257,6 +257,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.Settings));
+			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.UserManager));
 		}
 
 		

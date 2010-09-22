@@ -90,6 +90,19 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 				});
 		}
 
+		[Command (Res.CommandIds.Global.UserManager)]
+		public void ProcessGlobalUserManager(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.commandDispatcher.Dispatch (dispatcher, e,
+				delegate
+				{
+					using (var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application))
+					{
+						dialog.OpenDialog ();
+					}
+				});
+		}
+
 
 		[Command (Core.Res.CommandIds.Test.Crash)]
 		public void ProcessTestCrash()

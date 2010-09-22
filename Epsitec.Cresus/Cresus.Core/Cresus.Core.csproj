@@ -109,7 +109,7 @@
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
     <Compile Include="Dialogs\PasswordDialog.cs" />
-    <Compile Include="Dialogs\SelectUserDialog.cs" />
+    <Compile Include="Dialogs\UserManagerDialog.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
@@ -119,6 +119,7 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
+    <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="BusinessLogic\CompositeBusinessRule.cs" />
@@ -608,6 +609,7 @@
     <EmbeddedResource Include="Images\ImportV11.icon" />
     <EmbeddedResource Include="Images\Base.Documents.icon" />
     <EmbeddedResource Include="Images\Data.UnitOfMeasureGroup.icon" />
+    <EmbeddedResource Include="Images\UserManager.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (user == null)
 				{
-					var dialog = new Dialogs.SelectUserDialog (CoreProgram.Application);
+					var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application);
 					dialog.IsModal = true;
 					dialog.OpenDialog ();
 
