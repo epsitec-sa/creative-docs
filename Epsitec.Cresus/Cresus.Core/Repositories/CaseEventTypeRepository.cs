@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class CaseEventTypeRepository : Repository<CaseEventTypeEntity>
+	public class CaseEventTypeRepository : Repository<BusinessEventTypeEntity>
 	{
 		public CaseEventTypeRepository(CoreData data, DataContext context = null)
 			: base (data, context, Data.DataLifetimeExpectancy.Immutable)

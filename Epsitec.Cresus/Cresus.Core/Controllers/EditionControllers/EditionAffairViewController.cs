@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				document.ShippingMailContact = mailContact;
             }
 
-			businessEvent.EventType = this.BusinessContext.GetLocalEntity (this.BusinessContext.Data.GetAllEntities<CaseEventTypeEntity> ().Where (x => x.Code.Contains ("offre")).First ());
+			businessEvent.EventType = this.BusinessContext.GetLocalEntity (this.BusinessContext.Data.GetAllEntities<BusinessEventTypeEntity> ().Where (x => x.Code.Contains ("offre")).First ());
 			businessEvent.Date      = now;
 			businessEvent.Documents.Add (document);
 
