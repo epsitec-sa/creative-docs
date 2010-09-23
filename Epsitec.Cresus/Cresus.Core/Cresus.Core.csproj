@@ -102,6 +102,9 @@
     <Compile Include="BusinessLogic\Rules\ArticlePriceSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserSetupRule.cs" />
+    <Compile Include="Business\WorkflowStatus.cs" />
+    <Compile Include="Business\DocumentFlowDirection.cs" />
+    <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
