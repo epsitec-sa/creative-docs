@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnConnectionSince		= "CR_CONN_SINCE";
 		public const string ColumnConnectionLastSeen	= "CR_LAST_SEEN";
 		public const string ColumnConnectionStatus		= "CR_CONN_STATUS";
+		public const string ColumnKey			= "CR_KEY";
+		public const string ColumnValue			= "CR_VALUE";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
@@ -54,10 +56,11 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnRefRank		= "CREF_RANK";
 		
 		//	Basic CRESUS table names :
-		
+
 		public const string	TableTableDef		= "CR_TABLE_DEF";
 		public const string	TableColumnDef		= "CR_COLUMN_DEF";
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
+		public const string TableInfo			= "CR_INFO";
 		public const string TableLog			= "CR_LOG";
 		public const string TableUid			= "CR_UID";
 		public const string TableLock			= "CR_LOCK";
