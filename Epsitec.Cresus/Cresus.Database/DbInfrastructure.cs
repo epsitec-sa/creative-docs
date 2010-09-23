@@ -3210,7 +3210,7 @@ namespace Epsitec.Cresus.Database
 		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
-		private DbInfoManager				infoManager;
+		private DbInfoManager					infoManager;
 		private DbLogger						logger;
 		private DbUidManager					uidManager;
 		private DbLockManager					lockManager;

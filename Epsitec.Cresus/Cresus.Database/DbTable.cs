@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbTable : ICaption, IName, IXmlSerializable
 	{
+		
+
+		// TODO Make sure that this serialization/deserialization index stuff is ok, because it seems
+		// a little bit strange.
+		// Marc
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbTable"/> class.
 		/// </summary>
