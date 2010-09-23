@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Identification de l'utilisateur";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (400, 400);
+			window.ClientSize = new Size (450, 400);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				Parent = window.Root,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (10, 10, 10, 0),
+				Margins = new Margins (10, 10, 0, 0),
 				TabIndex = tabIndex++,
 			};
 
@@ -96,18 +96,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			//	Crée la liste.
 			{
-				new StaticText
+				var part = new FrameBox
 				{
 					Parent = topPane,
-					PreferredHeight = 30,
-					Dock = DockStyle.Top,
-					FormattedText = LoginDialog.GetInstruction ("1", "Identifiez-vous"),
-					Margins = new Margins (0, 0, 0, 5),
+					Dock = DockStyle.Fill,
 				};
+
+				var container = LoginDialog.CreateContainer (part, "1", "Identifiez-vous");
 
 				this.list = new ScrollList
 				{
-					Parent = topPane,
+					Parent = container,
 					Dock = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
@@ -124,42 +123,33 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				new StaticText
+				var container = LoginDialog.CreateContainer (this.passBoxEdit, "2", "Donnez votre mot de passe");
+
+				var box = new FrameBox
 				{
-					Parent = this.passBoxEdit,
-					PreferredHeight = 30,
+					Parent = container,
 					Dock = DockStyle.Top,
-					FormattedText = LoginDialog.GetInstruction ("2", "Donnez votre mot de passe"),
-					Margins = new Margins (0, 0, 0, 5),
+					TabIndex = tabIndex++,
 				};
 
+				this.passField = new TextField
 				{
-					var band = new FrameBox
-					{
-						Parent = this.passBoxEdit,
-						Dock = DockStyle.Top,
-						TabIndex = tabIndex++,
-					};
+					Parent = box,
+					IsPassword = true,
+					PasswordReplacementCharacter = '●',
+					Dock = DockStyle.Fill,
+					TabIndex = tabIndex++,
+				};
 
-					this.passField = new TextField
-					{
-						Parent = band,
-						IsPassword = true,
-						PasswordReplacementCharacter = '●',
-						Dock = DockStyle.Fill,
-						TabIndex = tabIndex++,
-					};
-
-					this.errorMessage = new StaticText
-					{
-						Parent = band,
-						Visibility = false,
-						PreferredWidth = 200,
-						ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-						Dock = DockStyle.Right,
-						Margins = new Margins (10, 0, 0, 0),
-					};
-				}
+				this.errorMessage = new StaticText
+				{
+					Parent = box,
+					Visibility = false,
+					PreferredWidth = 200,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					Dock = DockStyle.Right,
+					Margins = new Margins (10, 0, 0, 0),
+				};
 			}
 
 			//	Crée le groupe pour le mot de passe inutile.
@@ -173,23 +163,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				new StaticText
-				{
-					Parent = this.passBoxInfo,
-					PreferredHeight = 30,
-					Dock = DockStyle.Top,
-					FormattedText = LoginDialog.GetInstruction ("2", "Mot de passe"),
-					Margins = new Margins (0, 0, 0, 5),
-				};
+				var container = LoginDialog.CreateContainer (this.passBoxInfo, "2", "Mot de passe");
 
 				new StaticText
 				{
-					Parent = passBoxInfo,
+					Parent = container,
 					FormattedText = "<i>Il n'est pas nécessaire de donner le mot de passe, car l'utilisateur correspond à la session Windows en cours.</i>",
 					TextBreakMode = Common.Drawing.TextBreakMode.Hyphenate,
 					ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
 					Dock = DockStyle.Fill,
-					Margins = new Margins (41, 0, 0, 0),  // 41 = largeur occupée par "2. " en taille 32 (voir LoginDialog.GetInstruction) !
 				};
 			}
 
@@ -425,9 +407,39 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		private static FormattedText GetInstruction(string number, string text)
+		private static FrameBox CreateContainer(Widget parent, FormattedText number, FormattedText text)
 		{
-			return TextFormatter.FormatText ("<font size=\"32\"><b>", number, ". </b></font><font size=\"16\">", text, "</font>");
+			new StaticText
+			{
+				Parent = parent,
+				FormattedText = TextFormatter.FormatText ("<font size=\"40\"><b>", number, ".</b></font>"),
+				ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
+				PreferredWidth = 50,
+				Dock = DockStyle.Left,
+			};
+
+			var rightPart = new FrameBox
+			{
+				Parent = parent,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			new StaticText
+			{
+				Parent = rightPart,
+				FormattedText = TextFormatter.FormatText ("<font size=\"16\">", text, "</font>"),
+				ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
+				PreferredHeight = 20,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 5),
+			};
+
+			return new FrameBox
+			{
+				Parent = rightPart,
+				Dock = DockStyle.Fill,
+			};
 		}
 
 
