@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			this.commandDispatcher.Dispatch (dispatcher, e,
 				delegate
 				{
-					CoreProgram.Application.UserManager.Authenticate (CoreProgram.Application.UserManager.AuthenticatedUser);
+					CoreProgram.Application.UserManager.Authenticate (CoreProgram.Application.UserManager.AuthenticatedUser, hasQuitButton: false);
 				});
 		}
 
