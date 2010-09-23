@@ -135,6 +135,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public DbInfoManager					InfoManager
+		{
+			get
+			{
+				return this.infoManager;
+			}
+		}
+
 		public DbUidManager						UidManager
 		{
 			get
@@ -249,6 +257,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableTableDef ();
 				helper.CreateTableColumnDef ();
 				helper.CreateTableTypeDef ();
+				helper.CreateTableInfo ();
 				helper.CreateTableLog ();
 				helper.CreateTableUid ();
 				helper.CreateTableLock ();
@@ -316,10 +325,11 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableInfo));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnection));
@@ -2377,12 +2387,13 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Starts using the database. This loads the global and local settings
-		/// and instanciates the client manager.
+		/// and instantiates the client manager.
 		/// </summary>
 		private void StartUsingDatabase()
 		{
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
+				this.SetupInfoManager ();
 				this.SetupLogger (transaction);
 				this.SetupUidManager ();
 				this.SetupLockManager ();
@@ -2392,6 +2403,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		private void SetupInfoManager()
+		{
+			this.infoManager = new DbInfoManager ();
+			this.infoManager.Attach (this, this.internalTables[Tags.TableInfo]);
+		}
+		
 		/// <summary>
 		/// Sets up the database logger.
 		/// </summary>
@@ -2670,6 +2687,12 @@ namespace Epsitec.Cresus.Database
 					this.connectionManager.Detach ();
 					this.connectionManager = null;
 				}
+
+				if (this.infoManager != null)
+				{
+					this.infoManager.Detach ();
+					this.infoManager = null;
+				}
 				
 				if (this.abstraction != null)
 				{
@@ -2860,6 +2883,24 @@ namespace Epsitec.Cresus.Database
 					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+				};
+
+				this.CreateTable (table, columns);
+			}
+
+			public void CreateTableInfo()
+			{
+				TypeHelper types = this.infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableInfo);
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
 				};
 
 				this.CreateTable (table, columns);
@@ -3169,6 +3210,7 @@ namespace Epsitec.Cresus.Database
 		private ITypeConverter					converter;
 		
 		private TypeHelper						types;
+		private DbInfoManager				infoManager;
 		private DbLogger						logger;
 		private DbUidManager					uidManager;
 		private DbLockManager					lockManager;
