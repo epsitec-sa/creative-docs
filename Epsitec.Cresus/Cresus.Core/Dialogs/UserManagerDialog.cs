@@ -167,37 +167,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				};
 			}
 
-			{
-				//	Crée le groupe pour le mot de passe.
-				var box = new FrameBox
-				{
-					Parent = leftPane,
-					DrawFullFrame = true,
-					PreferredHeight = 60,
-					Dock = DockStyle.Bottom,
-					Margins = new Margins (0, TileArrow.Breadth, -1, 0),
-					Padding = new Margins (10),
-					TabIndex = tabIndex++,
-				};
-
-				this.passLabel = new StaticText
-				{
-					Parent = box,
-					Text = "Mot de passe :",
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
-				};
-
-				this.passField = new TextField
-				{
-					Parent = box,
-					IsPassword = true,
-					PasswordReplacementCharacter = '●',
-					Dock = DockStyle.Top,
-					TabIndex = tabIndex++,
-				};
-			}
-
 			//	Crée le panneau de droite.
 			new StaticText
 			{
@@ -294,7 +263,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					IsPassword = true,
 					PasswordReplacementCharacter = '●',
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 2),
+					Margins = new Margins (0, 0, 0, -1),
 					TabIndex = tabIndex++,
 				};
 
@@ -304,7 +273,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					IsPassword = true,
 					PasswordReplacementCharacter = '●',
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 2),
+					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = tabIndex++,
 				};
 
@@ -342,10 +311,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
-				this.loginButton = new Button ()
+				this.acceptButton = new Button ()
 				{
 					Parent = footer,
-					Text = "S'identifier",
+					Text = "Valider",
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultAccept,
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 10, 0, 0),
@@ -372,21 +341,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.list.SelectionActivated += delegate
 			{
-				this.loginErrorCounter = 0;
-				this.loginErrorMessage = null;
-				this.isUserCreation = false;
-
 				this.UpdateUser ();
 				this.UpdateWidgets ();
 
-				this.passField.Text = null;
-				this.passField.SelectAll ();
-				this.passField.Focus ();
-			};
-
-			this.passField.TextChanged += delegate
-			{
-				this.UpdateWidgets ();
+				this.loginNameField.SelectAll ();
+				this.loginNameField.Focus ();
 			};
 
 			this.loginNameField.TextChanged += delegate
@@ -429,19 +388,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ApplyModifications ();
 			};
 
-			this.loginButton.Clicked += delegate
+			this.acceptButton.Clicked += delegate
 			{
-				var result = this.LoginAction ();
-
-				if (result == LoginResult.OK)
-				{
-					this.CloseAction (cancel: false);
-				}
-
-				if (result == LoginResult.Quit)
-				{
-					this.CloseAction (cancel: true);
-				}
+				this.CloseAction (cancel: false);
 			};
 
 			this.cancelButton.Clicked += delegate
@@ -480,7 +429,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			foreach (var user in this.users)
 			{
-				if (user == this.initialUser)
+				if (this.initialUser != null && user.LoginName == this.initialUser.LoginName)
 				{
 					sel = this.list.Items.Count;
 				}
@@ -560,24 +509,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWidgets()
 		{
 			var user = this.SelectedUser;
-			bool hasPassword = (user != null && user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password);
-
-			if (user != null && user.LoginName == System.Environment.UserName)
-			{
-				//	Si le nom du compte est le même que l'utilisateur Windows en cours, le mot de passe n'est pas requis.
-				hasPassword = false;
-			}
+			bool hasPassword = (user != null && user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && !string.IsNullOrEmpty (user.LoginPasswordHash));
 
 			this.removeButton.Enable = (user != null);
 
-			this.passLabel.Enable = (user != null);
-			this.passField.Enable = (user != null);
-			this.loginButton.Enable  = (user != null && (!hasPassword || !string.IsNullOrEmpty (this.passField.Text)));
-
-			this.passLabel.Visibility = hasPassword;
-			this.passField.Visibility = hasPassword;
-
-			this.newPasswordLabel.Text = this.isUserCreation ? "Mot de passe du compte :" : "Pour le changer le mot de passe :";
+			this.newPasswordLabel.Text = hasPassword ? "Pour le changer le mot de passe :" : "Mot de passe du compte :";
 
 			var message = this.GetErrorMessage ();
 			if (message == null)
@@ -591,7 +527,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.errorMessage.FormattedText = message;
 			}
 
-			this.applyButton.Enable = this.dirtyContent && message == null;
+			this.applyButton.Enable  =  this.dirtyContent && message == null;
+			this.acceptButton.Enable = !this.dirtyContent && message == null;
 		}
 
 
@@ -602,10 +539,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.users.Add (newUser);
 
-			this.isUserCreation = true;
-
 			this.UpdateList (this.users.Count-1);
 			this.UpdateUser ();
+
+			this.dirtyContent = true;
 			this.UpdateWidgets ();
 
 			this.loginNameField.Focus ();
@@ -652,7 +589,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			this.dirtyContent = false;
-			this.isUserCreation = false;
 
 			this.UpdateList ();
 			this.UpdateWidgets ();
@@ -663,52 +599,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.errorMessage.FormattedText = string.Format ("Le compte {0} a été modifié avec succès.", user.LoginName);
 		}
 
-		private LoginResult LoginAction()
-		{
-			var user = this.SelectedUser;
-			System.Diagnostics.Debug.Assert (user != null);
-
-			if (this.manager.CheckUserAuthentication (user, this.passField.Text))
-			{
-				return LoginResult.OK;
-			}
-
-			this.loginErrorCounter++;
-
-			if (this.loginErrorCounter >= 3)
-			{
-				return LoginResult.Quit;
-			}
-
-			this.loginErrorMessage = string.Format ("Mot de passe incorrect, réessayez ({0}/3).", this.loginErrorCounter.ToString ());
-			this.UpdateWidgets ();
-
-			this.passField.SelectAll ();
-			this.passField.Focus ();
-
-			return LoginResult.Retry;
-		}
-
-		private enum LoginResult
-		{
-			OK,
-			Retry,
-			Quit,
-		}
-
 
 		private FormattedText GetErrorMessage()
 		{
-			if (!this.loginErrorMessage.IsNullOrEmpty)
-			{
-				return this.loginErrorMessage;
-			}
-
 			if (this.dirtyContent)
 			{
 				if (string.IsNullOrWhiteSpace (this.loginNameField.Text))
 				{
 					return "Vous devez donner un nom de compte.";
+				}
+
+				if (this.LoginNameCount != 0)
+				{
+					return string.Format ("Le nom de compte \"{0}\" est déjà utilisé.", this.loginNameField.Text.Trim ());
 				}
 
 				if (string.IsNullOrWhiteSpace (this.displayNameField.Text))
@@ -722,9 +625,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 					return "Les deux mots de passe ne sont pas identiques.";
 				}
 
-				if (this.LoginNameCount != 0)
+				if (!string.IsNullOrEmpty (this.newPasswordField1.Text))
 				{
-					return string.Format ("Le nom de compte \"{0}\" est déjà utilisé.", this.loginNameField.Text.Trim ());
+					string err = UserManagerDialog.CheckPassword (this.newPasswordField1.Text);
+					if (err != null)
+					{
+						return err;
+					}
 				}
 
 				int activeGroupCount = this.checkButtonGroups.Where (button => button.ActiveState == ActiveState.Yes).Count ();
@@ -742,8 +649,51 @@ namespace Epsitec.Cresus.Core.Dialogs
 					return "Vous devez donner un mot de passe.";
 				}
 			}
+			else
+			{
+				if (this.AdminCount == 0)
+				{
+					return "Il doit exister au moins un compte administrateur.";
+				}
+
+				for (int i = 0; i < this.users.Count; i++)
+				{
+					UserState state = UserManagerDialog.CheckUser (this.users[i]);
+
+					if (state == UserState.Empty)
+					{
+						return string.Format ("Le compte en postion {0} n'est pas défini.", (i+1).ToString ());
+					}
+
+					if (state == UserState.Error)
+					{
+						return string.Format ("Le compte en postion {0} n'est pas correctement défini.", (i+1).ToString ());
+					}
+				}
+			}
 
 			return null;
+		}
+
+		private int AdminCount
+		{
+			get
+			{
+				int count = 0;
+
+				foreach (var user in this.users)
+				{
+					foreach (var group in user.UserGroups)
+					{
+						if (group.UserPowerLevel == UserPowerLevel.Administrator)
+						{
+							count++;
+						}
+					}
+				}
+
+				return count;
+			}
 		}
 
 		private int LoginNameCount
@@ -755,6 +705,57 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				return this.users.Where (x => x.LoginName != user.LoginName && x.LoginName == name).Count ();
 			}
+		}
+
+		private static string CheckPassword(string pw)
+		{
+			if (string.IsNullOrWhiteSpace (pw))
+			{
+				return "Vous devez donner un mot de passe.";
+			}
+
+			if (pw.Length < 5)
+			{
+				return "Le mot de passe est trop court.";
+			}
+
+			// TODO: On pourrait faire mieux !
+			for (int i = 1; i < pw.Length; i++)
+			{
+				if (pw[0] != pw[i])
+				{
+					return null;  // ok
+				}
+			}
+
+			return "Le mot de passe est trop simple.";
+		}
+
+		private static UserState CheckUser(SoftwareUserEntity user)
+		{
+			bool b1 = string.IsNullOrWhiteSpace (user.LoginName);
+			bool b2 = user.DisplayName.IsNullOrWhiteSpace;
+			bool b3 = user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (user.LoginPasswordHash);
+			bool b4 = user.UserGroups.Count == 0;
+
+			if (b1 && b2 && b3 && b4)
+			{
+				return UserState.Empty;
+			}
+
+			if (b1 || b2 || b3 || b4)
+			{
+				return UserState.Error;
+			}
+
+			return UserState.OK;
+		}
+
+		private enum UserState
+		{
+			OK,
+			Empty,
+			Error,
 		}
 
 
@@ -793,8 +794,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private GlyphButton										addButton;
 		private GlyphButton										removeButton;
 		private ScrollList										list;
-		private StaticText										passLabel;
-		private TextField										passField;
 		private FrameBox										userBox;
 		private TextField										loginNameField;
 		private TextField										displayNameField;
@@ -804,10 +803,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private Button											applyButton;
 		private bool											dirtyContent;
 		private StaticText										errorMessage;
-		private Button											loginButton;
+		private Button											acceptButton;
 		private Button											cancelButton;
-		private int												loginErrorCounter;
-		private FormattedText									loginErrorMessage;
-		private bool											isUserCreation;
 	}
 }

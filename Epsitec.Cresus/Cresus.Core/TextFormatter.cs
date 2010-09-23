@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core
 
 				buffer.Append (text);
 
-				emptyItem = text.EndsWith (FormattedText.HtmlBreak);
+				emptyItem = text.EndsWith (FormattedText.HtmlBreak) || string.IsNullOrEmpty (text.RemoveTag ());
 			}
 		}
 

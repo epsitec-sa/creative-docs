@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				user = this.FindActiveUser (user.Code);
 			}
 
-			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, user, hasQuitButton);
+			var dialog = new Dialogs.LoginDialog (CoreProgram.Application, user, hasQuitButton);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
