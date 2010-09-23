@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// </summary>
 		/// <param name="user">The user (or <c>null</c> if it must be selected interactively).</param>
 		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
-		public bool Authenticate(SoftwareUserEntity user = null)
+		public bool Authenticate(SoftwareUserEntity user = null, bool hasQuitButton = false)
 		{
 			//	Make sure the user entity belongs to our data context; the only way to know for sure
 			//	is to retrieve the user based on its 'code':
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				user = this.FindActiveUser (user.Code);
 			}
 
-			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, user);
+			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, user, hasQuitButton);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
