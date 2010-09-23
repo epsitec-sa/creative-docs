@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
@@ -24,6 +26,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate to the Database.</param>
 		public DataInfrastructure(DbInfrastructure dbInfrastructure)
 		{
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
+
 			if (dbInfrastructure.ContainsValue (DataInfrastructure.DbInfrastructureProperty))
 			{
 				throw new System.ArgumentException ("DbInfrastructure already attached to another DataInfrastructure object", "dbInfrastructure");
@@ -54,6 +58,26 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				return this.connectionInformation;
 			}
+		}
+
+		/// <summary>
+		/// Gets an information stored in the database.
+		/// </summary>
+		/// <param name="key">The key defining the information whose value to get.</param>
+		/// <returns>The value of the information corresponding to the given key.</returns>
+		public string GetDatabaseInfo(string key)
+		{
+			return this.dbInfrastructure.InfoManager.GetInfo (key);
+		}
+
+		/// <summary>
+		/// Sets the information corresponding to the given key to the given value in the database.
+		/// </summary>
+		/// <param name="key">The key defining the information whose value to set.</param>
+		/// <param name="value">The new value of the information.</param>
+		public void SetDatabaseInfo(string key, string value)
+		{
+			this.dbInfrastructure.InfoManager.SetInfo (key, value);
 		}
 		
 		/// <summary>
