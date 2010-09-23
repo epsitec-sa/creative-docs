@@ -1451,7 +1451,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 						
 			EntityData data = sender.SerializationManager.Serialize (entity);
 			
-			return (TEntity) receiver.DataLoader.ResolveEntity (data);
+			return (TEntity) receiver.DataLoader.DeserializeEntityData (data);
 		}
 
 		public TEntity ResolveEntity<TEntity>(TEntity model)
