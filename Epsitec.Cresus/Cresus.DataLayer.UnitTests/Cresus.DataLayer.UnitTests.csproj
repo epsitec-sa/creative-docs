@@ -63,6 +63,7 @@
     <Compile Include="Context\UnitTestEntityCache.cs" />
     <Compile Include="Context\UnitTestEntityKey.cs" />
     <Compile Include="Infrastructure\UnitTestConnectionInformation.cs" />
+    <Compile Include="Infrastructure\UnitTestDataInfrastructure.cs" />
     <Compile Include="Infrastructure\UnitTestUidSlot.cs" />
     <Compile Include="Loader\UnitTestExpressionConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
