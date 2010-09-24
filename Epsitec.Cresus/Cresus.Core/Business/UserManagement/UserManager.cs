@@ -87,6 +87,15 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 
 		/// <summary>
+		/// Gets all users.
+		/// </summary>
+		/// <returns>The complete collection of users.</returns>
+		public IEnumerable<SoftwareUserEntity> GetAllUsers()
+		{
+			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsArchive == false);
+		}
+
+		/// <summary>
 		/// Gets the active users.
 		/// </summary>
 		/// <returns>The collection of active users.</returns>
@@ -95,9 +104,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return this.data.GetAllEntities<SoftwareUserEntity> (dataContext: this.BusinessContext.DataContext).Where (user => user.IsActive);
 		}
 
-		public IEnumerable<SoftwareUserGroupEntity> GetActiveUserGroups()
+		public IEnumerable<SoftwareUserGroupEntity> GetAllUserGroups()
 		{
-			return this.data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext);
+			return this.data.GetAllEntities<SoftwareUserGroupEntity> (dataContext: this.BusinessContext.DataContext).Where (group => group.IsArchive == false);
 		}
 
 		/// <summary>

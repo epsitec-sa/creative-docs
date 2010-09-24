@@ -34,8 +34,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.initialUser   = user;
 			this.hasQuitButton = hasQuitButton;
 
-			this.users  = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
-			this.groups = this.manager.GetActiveUserGroups ().OrderBy (x => x.UserPowerLevel).ToList ();
+			this.users  = this.manager.GetAllUsers ().OrderBy (x => x.DisplayName).ToList ();
+			this.groups = this.manager.GetAllUserGroups ().OrderBy (x => x.UserPowerLevel).ToList ();
 
 			this.checkButtonGroups = new List<CheckButton> ();
 		}
@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			this.removeButton.Enable = (user != null);
 
-			this.newPasswordLabel.Text = hasPassword ? "Pour le changer le mot de passe :" : "Mot de passe du compte :";
+			this.newPasswordLabel.Text = hasPassword ? "Pour changer le mot de passe :" : "Mot de passe du compte :";
 
 			var message = this.GetErrorMessage ();
 			if (message == null)
