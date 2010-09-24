@@ -508,23 +508,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					sel = this.list.Items.Count;
 				}
 
-				FormattedText text;
-
-				if (user.DisplayName == user.LoginName)
-				{
-					if (string.IsNullOrEmpty (user.LoginName))
-					{
-						text = "Nouveau compte";
-					}
-					else
-					{
-						text = user.LoginName;
-					}
-				}
-				else
-				{
-					text = TextFormatter.FormatText (user.LoginName, "(", user.DisplayName, ")");
-				}
+				FormattedText text = LoginDialog.GetUserDescription (user);
 
 				UserState state = UserManagerDialog.CheckUser (user);
 				if (state != UserState.OK)
