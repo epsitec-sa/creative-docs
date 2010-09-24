@@ -85,6 +85,76 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public static Date? GetDateFromString(string text)
+		{
+			//	Conversion d'une chaîne de la forme "jj.mm.aaaa" en une date.
+			//	Les séparateurs sont très libres, mais l'ordre jour/mois/année doit être respecté.
+			//	Si le mois ou l'année sont omis, utilise les valeurs du jour.
+			if (string.IsNullOrWhiteSpace (text))
+			{
+				return null;
+			}
+
+			text = text.Trim ();
+			text = text.Replace ("   ", " ");
+			text = text.Replace ("  ", " ");
+			text = text.Replace (".", " ");
+			text = text.Replace (":", " ");
+			text = text.Replace (",", " ");
+			text = text.Replace (";", " ");
+			text = text.Replace ("/", " ");
+			text = text.Replace ("-", " ");
+
+			string[] parts = text.Split (' ');
+
+			if (parts.Length == 0 || parts.Length > 3)
+			{
+				return null;
+			}
+
+			int year  = Date.Today.Year;
+			int month = Date.Today.Month;
+			int day   = Date.Today.Day;
+
+			if (parts.Length >= 1)
+			{
+				if (!int.TryParse (parts[0], out day))
+				{
+					return null;
+				}
+			}
+
+			if (parts.Length >= 2)
+			{
+				if (!int.TryParse (parts[1], out month))
+				{
+					return null;
+				}
+			}
+
+			if (parts.Length >= 3)
+			{
+				if (!int.TryParse (parts[2], out year))
+				{
+					return null;
+				}
+			}
+
+			if (year < 100)
+			{
+				year += 2000;
+			}
+
+			try
+			{
+				return new Date (year, month, day);
+			}
+			catch  // TODO: si month = 13, pourquoi n'y a-t-il pas d'exception levée ?
+			{
+				return null;
+			}
+		}
+
 		public static string GetDateShortDescription(Date? date)
 		{
 			if (date == null)
@@ -128,13 +198,11 @@ namespace Epsitec.Cresus.Core
 
 		public static bool IsDateInRange(System.DateTime date, System.DateTime? beginDate, System.DateTime? endDate)
 		{
-			if ((beginDate.HasValue) &&
-				(beginDate.Value > date))
+			if (beginDate.HasValue && beginDate.Value > date)
 			{
 				return false;
 			}
-			if ((endDate.HasValue) &&
-				(endDate.Value < date))
+			if (endDate.HasValue && endDate.Value < date)
 			{
 				return false;
 			}

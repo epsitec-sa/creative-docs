@@ -71,8 +71,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			//	Si on est dans le dialogue initial (celui qui s'affiche à l'exécution du logiciel),
 			//	et que l'utilisateur correspond à celui de la session Windows, on effectue le login
-			//	sans affiche le dialogue.
-			if (softwareStartup && user == this.FindActiveUser ())
+			//	sans afficher le dialogue.
+			if (softwareStartup && user != null && user == this.FindActiveUser ())
 			{
 				this.OnAuthenticatedUserChanging ();
 				this.authenticatedUser = user;
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			var users = this.GetActiveUsers ();
 			var login = System.Environment.UserName;
 
-			return users.FirstOrDefault (user => user.LoginName == login);
+			return users.FirstOrDefault (user => user.LoginName == login && user.AuthenticationMethod == UserAuthenticationMethod.System && user.Disabled == false);
 		}
 
 		private SoftwareUserEntity FindActiveUser(string userCode)
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 					return true;
 
 				case UserAuthenticationMethod.System:
-					return this.CheckSystemUserAuthentication (user);
+					return this.CheckSystemUserAuthentication (user, password);
 
 				case UserAuthenticationMethod.Password:
 					return this.CheckPasswordUserAuthentication (user, password);
@@ -201,19 +201,44 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
             }
 		}
 
-		private bool CheckSystemUserAuthentication(SoftwareUserEntity user)
+		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
 		{
-			return user.LoginName == System.Environment.UserName;
-		}
-
-		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string password)
-		{
-			if (string.Compare (user.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) == 0)
+			if (!this.IsPasswordRequired (user))
 			{
 				return true;
 			}
 
 			return user.CheckPassword (password);
+		}
+
+		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string password)
+		{
+			return user.CheckPassword (password);
+		}
+
+		public bool IsPasswordRequired(SoftwareUserEntity user)
+		{
+			if (user == null)
+			{
+				return false;
+			}
+
+			if (user.AuthenticationMethod == UserAuthenticationMethod.Password)
+			{
+				return true;
+			}
+
+			if (user.AuthenticationMethod == UserAuthenticationMethod.None)
+			{
+				return false;
+			}
+
+			if (user.AuthenticationMethod == UserAuthenticationMethod.System)
+			{
+				return string.Compare (user.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) != 0;
+			}
+
+			return false;
 		}
 
 
