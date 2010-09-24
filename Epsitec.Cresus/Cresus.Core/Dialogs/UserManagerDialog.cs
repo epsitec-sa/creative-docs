@@ -794,7 +794,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					foreach (var group in user.UserGroups)
 					{
-						if (group.UserPowerLevel == UserPowerLevel.Administrator)
+						if ((group.UserPowerLevel == UserPowerLevel.Administrator) ||
+							(group.UserPowerLevel == UserPowerLevel.Developer))
 						{
 							count++;
 						}
