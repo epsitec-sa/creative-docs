@@ -27,6 +27,15 @@ namespace Epsitec.Cresus.Database.UnitTests.Helpers
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Database.UnitTests");
 		}
 
+
+		public static DbInfrastructure DbInfrastructure
+		{
+			get
+			{
+				return TestHelper.dbInfrastructure;
+			}
+		}
+
 		
 		public static DbInfrastructure CreateAndConnectToDatabase()
 		{
