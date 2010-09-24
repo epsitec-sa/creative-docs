@@ -32,10 +32,13 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			var section = this.sections[this.sectionIndex];  // section <- section en cours d'impression
 
-			PaperSource paperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
-			if (paperSource != null)
+			if (!string.IsNullOrWhiteSpace (section.PrinterUnit.PhysicalPrinterTray))
 			{
-				pageSettings.PaperSource = paperSource;
+				PaperSource paperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, x => x.Name.Trim () == section.PrinterUnit.PhysicalPrinterTray.Trim ());
+				if (paperSource != null)
+				{
+					pageSettings.PaperSource = paperSource;
+				}
 			}
 
 			PaperSize paperSize = System.Array.Find (printDocument.PrinterSettings.PaperSizes, x => Common.PageSizeCompare (x.Size, section.DocumentPrinter.RequiredPageSize) != Common.PageSizeCompareEnum.Different);

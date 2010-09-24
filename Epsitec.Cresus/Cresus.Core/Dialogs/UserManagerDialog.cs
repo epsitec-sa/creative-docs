@@ -241,6 +241,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 					TabIndex = tabIndex++,
 				};
 
+				ToolTip.Default.SetToolTip (this.authenticationMethodCheckButton, "Si le nom du compte correspond à la session Windows en cours,<br/>le mot de passe ne sera pas demandé.");
+
 				this.enableUserCheckButton = new CheckButton
 				{
 					Parent = this.userBox,
@@ -250,6 +252,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = tabIndex++,
 				};
+
+				ToolTip.Default.SetToolTip (this.enableUserCheckButton, "Ce compte sera proposé lors de l'identification.");
 
 
 				new StaticText
@@ -984,12 +988,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private FormattedText GetPasswordMessage()
 		{
-			if ((!string.IsNullOrEmpty (this.newPasswordField1.Text) || !string.IsNullOrEmpty (this.newPasswordField2.Text)) &&
-				this.newPasswordField1.Text != this.newPasswordField2.Text)
-			{
-				return "Les deux mots de passe ne sont pas identiques.";
-			}
-
 			if (!string.IsNullOrEmpty (this.newPasswordField1.Text))
 			{
 				string err = UserManagerDialog.CheckPassword (this.newPasswordField1.Text);
@@ -997,6 +995,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					return err;
 				}
+			}
+
+			if (!string.IsNullOrEmpty (this.newPasswordField1.Text) && string.IsNullOrEmpty (this.newPasswordField2.Text))
+			{
+				return "Vous devez entrer une deuxième fois le mot de passe.";
+			}
+
+			if ((!string.IsNullOrEmpty (this.newPasswordField1.Text) || !string.IsNullOrEmpty (this.newPasswordField2.Text)) &&
+				this.newPasswordField1.Text != this.newPasswordField2.Text)
+			{
+				return "Les deux mots de passe ne sont pas identiques.";
 			}
 
 			return null;

@@ -626,7 +626,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			if (this.trayField.Items.Count == 1)
+			if (this.trayField.Items.Count == 0)
+			{
+				this.trayField.SelectedItemIndex = -1;
+			}
+			else if (this.trayField.Items.Count == 1)
 			{
 				this.trayField.SelectedItemIndex = 0;
 			}
@@ -1035,7 +1039,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				if (string.IsNullOrWhiteSpace (this.printerUnitList[i].PhysicalPrinterTray))
 				{
-					return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerUnitList[i].LogicalName);
+					List<string> trayNames = PrinterUnitListDialog.GetTrayList(this.printerUnitList[i]);
+					if (trayNames.Count > 0)
+					{
+						return string.Format ("<b>{0}</b>: Il faut choisir le bac.", this.printerUnitList[i].LogicalName);
+					}
 				}
 
 				if (this.printerUnitList[i].PhysicalPaperSize.IsEmpty)
