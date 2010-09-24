@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -10,7 +10,11 @@ namespace Epsitec.Common.Types.Collections
 	/// an <see cref="T:ObservableList"/>.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ReadOnlyObservableList<T> : IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList
+	public sealed class ReadOnlyObservableList<T> :
+		IList<T>,
+		INotifyCollectionChanged,
+		System.Collections.ICollection,
+		System.Collections.IList
 	{
 		public ReadOnlyObservableList(ObservableList<T> list)
 		{
@@ -228,7 +232,7 @@ namespace Epsitec.Common.Types.Collections
 			this.OnCollectionChanged (e);
 		}
 		
-		protected virtual void OnCollectionChanged(CollectionChangedEventArgs e)
+		private void OnCollectionChanged(CollectionChangedEventArgs e)
 		{
 			Epsitec.Common.Support.EventHandler<CollectionChangedEventArgs> handler;
 
