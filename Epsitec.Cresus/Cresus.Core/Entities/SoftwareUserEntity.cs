@@ -23,6 +23,64 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+
+		public FormattedText ShortDescription
+		{
+			get
+			{
+				//	Retourne la description à afficher dans une liste.
+				FormattedText text;
+
+				if (this.DisplayName == this.LoginName)
+				{
+					if (string.IsNullOrEmpty (this.LoginName))
+					{
+						text = "Nouveau compte";
+					}
+					else
+					{
+						text = this.LoginName;
+					}
+				}
+				else
+				{
+					text = TextFormatter.FormatText (this.DisplayName, "(", this.LoginName, ")");
+				}
+
+				if (this.CurrentState != SoftwareUserEntityState.OK)
+				{
+					//	Affiche en italique les comptes qui ont une erreur.
+					text = string.Concat ("<i>", text, "</i>");
+				}
+
+				return text;
+			}
+		}
+
+		public SoftwareUserEntityState CurrentState
+		{
+			get
+			{
+				bool b1 = string.IsNullOrWhiteSpace (this.LoginName);
+				bool b2 = this.DisplayName.IsNullOrWhiteSpace;
+				bool b3 = this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash);
+				bool b4 = this.UserGroups.Count == 0;
+
+				if (b1 && b2 && b3 && b4)
+				{
+					return SoftwareUserEntityState.Empty;
+				}
+
+				if (b1 || b2 || b3 || b4)
+				{
+					return SoftwareUserEntityState.Error;
+				}
+
+				return SoftwareUserEntityState.OK;
+			}
+		}
+
+
 		public bool CheckPassword(string plaintextPassword)
 		{
 			return Epsitec.Common.Identity.BCrypt.CheckPassword (plaintextPassword, this.LoginPasswordHash);

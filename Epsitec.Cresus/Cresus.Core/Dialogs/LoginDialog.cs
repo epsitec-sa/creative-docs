@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					sel = this.list.Items.Count;
 				}
 
-				this.list.Items.Add (LoginDialog.GetUserDescription (user));
+				this.list.Items.Add (user.ShortDescription);
 			}
 
 			this.list.SelectedItemIndex = sel;
@@ -429,27 +429,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				Parent = rightPart,
 				Dock = DockStyle.Fill,
 			};
-		}
-
-
-		public static FormattedText GetUserDescription(SoftwareUserEntity user)
-		{
-			//	Retourne le nom à afficher dans la liste.
-			if (user.DisplayName == user.LoginName)
-			{
-				if (string.IsNullOrEmpty (user.LoginName))
-				{
-					return "Nouveau compte";
-				}
-				else
-				{
-					return user.LoginName;
-				}
-			}
-			else
-			{
-				return TextFormatter.FormatText (user.DisplayName, "(", user.LoginName, ")");
-			}
 		}
 
 
