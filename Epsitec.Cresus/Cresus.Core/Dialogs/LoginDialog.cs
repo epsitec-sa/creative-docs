@@ -308,18 +308,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWidgets()
 		{
 			var user = this.SelectedUser;
-			bool hasPassword = (user != null && user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password);
+			bool passwordRequired = this.manager.IsPasswordRequired (user);
 
-			if (user != null && user.LoginName == System.Environment.UserName)
-			{
-				//	Si le nom du compte est le même que l'utilisateur Windows en cours, le mot de passe n'est pas requis.
-				hasPassword = false;
-			}
+			this.passBoxEdit.Visibility = (user == null ||  passwordRequired);
+			this.passBoxInfo.Visibility = (user != null && !passwordRequired);
 
-			this.passBoxEdit.Visibility = (user == null ||  hasPassword);
-			this.passBoxInfo.Visibility = (user != null && !hasPassword);
-
-			this.loginButton.Enable  = (user != null && (!hasPassword || !string.IsNullOrEmpty (this.passField.Text)));
+			this.loginButton.Enable  = (user != null && (!passwordRequired || !string.IsNullOrEmpty (this.passField.Text)));
 
 			var message = this.GetErrorMessage ();
 			if (message == null)

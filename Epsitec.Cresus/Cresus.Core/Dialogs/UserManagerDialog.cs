@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.initialUser = user;
 
 			this.users  = this.manager.GetAllUsers ().OrderBy (x => x.DisplayName).ToList ();
-			this.groups = this.manager.GetAllUserGroups ().OrderBy (x => x.UserPowerLevel).ToList ();
+			this.groups = this.manager.GetAllUserGroups ().Where (x => x.UserPowerLevel != UserPowerLevel.System).OrderBy (x => x.UserPowerLevel).ToList ();
 
 			this.checkButtonGroups = new List<CheckButton> ();
 		}
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			window.Icon = this.application.Window.Icon;
 			window.Text = "Gestion des comptes utilisateurs";
 			window.MakeFixedSizeWindow ();
-			window.ClientSize = new Size (560, 400);
+			window.ClientSize = new Size (560, 445);
 
 			window.WindowCloseClicked += delegate
 			{
@@ -190,21 +190,23 @@ namespace Epsitec.Cresus.Core.Dialogs
 				new StaticText
 				{
 					Parent = this.userBox,
-					Text = "Nom de compte :",
+					Text = "Nom du compte :",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
 				};
 
 				this.loginNameField = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = this.userBox,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 10),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 					TabIndex = tabIndex++,
 				};
 
-				ToolTip.Default.SetToolTip (this.loginNameField, "Nom court servant à identifier le compte.<br/>Exemples: \"Gérard\" ou \"Silver25\"");
+				ToolTip.Default.SetToolTip (this.loginNameField, "Nom court servant à identifier le compte.<br/>Exemples: \"Gérard\", \"secrétariat\" ou \"Silver25\"");
 
 
 				new StaticText
@@ -217,14 +219,83 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.displayNameField = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = this.userBox,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 10),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+					TabIndex = tabIndex++,
+				};
+
+				ToolTip.Default.SetToolTip (this.displayNameField, "Prénom et nom du possesseur du compte.<br/>Exemples: \"Jean-Paul van Decker\" ou \"Sophie Duval\"");
+
+
+				this.authenticationMethodCheckButton = new CheckButton
+				{
+					Parent = this.userBox,
+					AutoToggle = false,
+					Text = "Utilise l'identité Windows",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 0),
+					TabIndex = tabIndex++,
+				};
+
+				this.enableUserCheckButton = new CheckButton
+				{
+					Parent = this.userBox,
+					AutoToggle = false,
+					Text = "Utilisateur actif",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = tabIndex++,
 				};
 
-				ToolTip.Default.SetToolTip (this.displayNameField, "Prénom et nom du possesseur du compte.<br/>Exemples: \"Jean-Paul van Decker\" ou \"Sophie Duval\"");
+
+				new StaticText
+				{
+					Parent = this.userBox,
+					Text = "Dates de début et de fin de validité du compte :",
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel),
+				};
+
+				{
+					var box = new FrameBox
+					{
+						Parent = this.userBox,
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 0, 0, 10),
+						TabIndex = tabIndex++,
+					};
+
+					this.beginDateField = new TextFieldEx
+					{
+						Parent = box,
+						PreferredWidth = 100,
+						Dock = DockStyle.Left,
+						Margins = new Margins (0, 10, 0, 0),
+						DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+						SwallowEscapeOnRejectEdition = true,
+						SwallowReturnOnAcceptEdition = true,
+						TabIndex = tabIndex++,
+					};
+
+					this.endDateField = new TextFieldEx
+					{
+						Parent = box,
+						PreferredWidth = 100,
+						Dock = DockStyle.Left,
+						Margins = new Margins (0, 10, 0, 0),
+						DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+						SwallowEscapeOnRejectEdition = true,
+						SwallowReturnOnAcceptEdition = true,
+						TabIndex = tabIndex++,
+					};
+
+					ToolTip.Default.SetToolTip (this.beginDateField, "Date de début (inclue)");
+					ToolTip.Default.SetToolTip (this.endDateField,   "Date de fin (inclue)");
+				}
 
 
 				new StaticText
@@ -235,22 +306,34 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderLabel+2),
 				};
 
+				double scrollableHeight = 15 * System.Math.Min (this.groups.Count, 5);
+
+				var scrollable = new Scrollable
+				{
+					Parent = this.userBox,
+					Dock = DockStyle.Top,
+					PreferredHeight = scrollableHeight,
+					HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+					VerticalScrollerMode = ScrollableScrollerMode.Auto,
+					PaintViewportFrame = false,
+					TabIndex = tabIndex++,
+				};
+
+				scrollable.Viewport.IsAutoFitting = true;
+
 				this.checkButtonGroups.Clear ();
 				foreach (var group in this.groups)
 				{
-					if (group.UserPowerLevel != UserPowerLevel.System)
+					var button = new CheckButton
 					{
-						var button = new CheckButton
-						{
-							Parent = this.userBox,
-							AutoToggle = false,
-							FormattedText = group.Name,
-							Dock = DockStyle.Top,
-							TabIndex = tabIndex++,
-						};
+						Parent = scrollable.Viewport,
+						AutoToggle = false,
+						FormattedText = group.Name,
+						Dock = DockStyle.Top,
+						TabIndex = tabIndex++,
+					};
 
-						this.checkButtonGroups.Add (button);
-					}
+					this.checkButtonGroups.Add (button);
 				}
 
 
@@ -264,23 +347,26 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.newPasswordField1 = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = this.userBox,
 					IsPassword = true,
 					PasswordReplacementCharacter = '●',
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, -1),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 					TabIndex = tabIndex++,
 				};
 
 				this.newPasswordField2 = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = this.userBox,
 					IsPassword = true,
 					PasswordReplacementCharacter = '●',
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, 10),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 					TabIndex = tabIndex++,
 				};
 
@@ -342,6 +428,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.displayNameField.DefocusAndAcceptOrReject ();
 				this.newPasswordField1.DefocusAndAcceptOrReject ();
 				this.newPasswordField2.DefocusAndAcceptOrReject ();
+				this.beginDateField.DefocusAndAcceptOrReject ();
+				this.endDateField.DefocusAndAcceptOrReject ();
 			};
 
 			this.list.SelectionActivated += delegate
@@ -452,6 +540,67 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
+			this.beginDateField.EditionAccepted += delegate
+			{
+				this.ActionBeginDateChanged ();
+			};
+
+			this.beginDateField.EditionStarted += delegate
+			{
+				this.editionStarted = true;
+				this.UpdateWidgets ();
+			};
+
+			this.beginDateField.EditionAccepted += delegate
+			{
+				this.editionStarted = false;
+				this.UpdateWidgets ();
+			};
+
+			this.beginDateField.EditionRejected += delegate
+			{
+				this.editionStarted = false;
+				this.UpdateWidgets ();
+			};
+
+
+			this.endDateField.EditionAccepted += delegate
+			{
+				this.ActionEndDateChanged ();
+			};
+
+			this.endDateField.EditionStarted += delegate
+			{
+				this.editionStarted = true;
+				this.UpdateWidgets ();
+			};
+
+			this.endDateField.EditionAccepted += delegate
+			{
+				this.editionStarted = false;
+				this.UpdateWidgets ();
+			};
+
+			this.endDateField.EditionRejected += delegate
+			{
+				this.editionStarted = false;
+				this.UpdateWidgets ();
+			};
+
+
+			this.authenticationMethodCheckButton.Clicked += delegate
+			{
+				UserManagerDialog.ToggleCheckButton (this.authenticationMethodCheckButton);
+				this.ActionAuthenticationMethodChanged ();
+			};
+
+			this.enableUserCheckButton.Clicked += delegate
+			{
+				UserManagerDialog.ToggleCheckButton (this.enableUserCheckButton);
+				this.ActionEnableUserChanged ();
+			};
+
+
 			foreach (var button in this.checkButtonGroups)
 			{
 				button.Clicked += new EventHandler<MessageEventArgs> (this.HandleButtonClicked);
@@ -531,6 +680,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.displayNameField.Text = null;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
+				this.beginDateField.Text = null;
+				this.endDateField.Text = null;
+
+				this.authenticationMethodCheckButton.ActiveState = ActiveState.No;
+				this.enableUserCheckButton.ActiveState = ActiveState.No;
 
 				foreach (var button in this.checkButtonGroups)
 				{
@@ -545,6 +699,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.displayNameField.FormattedText = user.DisplayName;
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
+				this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
+				this.endDateField.Text = Misc.GetDateTimeShortDescription (user.EndDate);
+
+				this.authenticationMethodCheckButton.ActiveState = user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.System ? ActiveState.Yes : ActiveState.No;
+				this.enableUserCheckButton.ActiveState = user.Disabled ? ActiveState.No : ActiveState.Yes;
 
 				for (int i=0; i<this.checkButtonGroups.Count; i++)
 				{
@@ -565,7 +724,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWidgets()
 		{
 			var user = this.SelectedUser;
-			bool hasPassword = (user != null && user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && !string.IsNullOrEmpty (user.LoginPasswordHash));
+			bool hasPassword = (user != null && !string.IsNullOrEmpty (user.LoginPasswordHash));
 
 			this.removeButton.Enable = (user != null);
 
@@ -664,9 +823,75 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.UpdateWidgets ();
 		}
 
+		private void ActionBeginDateChanged()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			Date? date = Misc.GetDateFromString (this.beginDateField.Text);
+
+			if (date == null)
+			{
+				user.BeginDate = null;
+			}
+			else
+			{
+				user.BeginDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 0, 0, 0);
+			}
+
+			this.beginDateField.Text = Misc.GetDateTimeShortDescription (user.BeginDate);
+
+			this.UpdateList ();
+			this.UpdateWidgets ();
+		}
+
+		private void ActionEndDateChanged()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			Date? date = Misc.GetDateFromString (this.endDateField.Text);
+
+			if (date == null)
+			{
+				user.EndDate = null;
+			}
+			else
+			{
+				user.EndDate = new System.DateTime (date.Value.Year, date.Value.Month, date.Value.Day, 23, 59, 59);
+			}
+
+			this.endDateField.Text = Misc.GetDateTimeShortDescription (user.EndDate);
+
+			this.UpdateList ();
+			this.UpdateWidgets ();
+		}
+
+		private void ActionAuthenticationMethodChanged()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			user.AuthenticationMethod = this.authenticationMethodCheckButton.ActiveState == ActiveState.Yes ? Business.UserManagement.UserAuthenticationMethod.System : Business.UserManagement.UserAuthenticationMethod.Password;
+
+			this.UpdateList ();
+			this.UpdateWidgets ();
+		}
+
+		private void ActionEnableUserChanged()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			user.Disabled = this.enableUserCheckButton.ActiveState == ActiveState.No;
+
+			this.UpdateList ();
+			this.UpdateWidgets ();
+		}
+
 		private void ActionGroupChanged(CheckButton button)
 		{
-			button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+			UserManagerDialog.ToggleCheckButton (button);
 
 			//	Met à jour la liste des groupes.
 			var user = this.SelectedUser;
@@ -689,6 +914,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
+		private static void ToggleCheckButton(CheckButton button)
+		{
+			button.ActiveState = (button.ActiveState == ActiveState.Yes) ? ActiveState.No : ActiveState.Yes;
+		}
+
+
 		private FormattedText GetErrorMessage()
 		{
 			var user = this.SelectedUser;
@@ -698,9 +929,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return "Vous devez donner un nom de compte.";
 			}
 
-			if (this.LoginNameCount != 0)
+			if (this.NamesCount != 0)
 			{
-				return string.Format ("Le nom de compte \"{0}\" est déjà utilisé.", this.loginNameField.Text.Trim ());
+				return string.Format ("Les noms \"{0}\" et \"{1}\" sont déjà utilisés.", this.loginNameField.Text.Trim (), this.displayNameField.Text);
 			}
 
 			if (string.IsNullOrWhiteSpace (this.displayNameField.Text))
@@ -728,21 +959,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return "Vous devez donner un mot de passe.";
 			}
 
-			if (this.AdminCount == 0)
+			if (this.AdminEternallyCount == 0)
 			{
-				return "Il doit exister au moins un compte administrateur.";
+				return "Il doit exister au moins un compte administrateur valable éternellement.";
 			}
 
 			for (int i = 0; i < this.users.Count; i++)
 			{
-				var state = this.users[i].CurrentState;
+				var status = this.users[i].CurrentStatus;
 
-				if (state == SoftwareUserEntityState.Empty)
+				if (status == Controllers.EditionStatus.Empty)
 				{
 					return string.Format ("Le compte en position {0} n'est pas défini.", (i+1).ToString ());
 				}
 
-				if (state == SoftwareUserEntityState.Error)
+				if (status == Controllers.EditionStatus.Invalid)
 				{
 					return string.Format ("Le compte en position {0} n'est pas complètement défini.", (i+1).ToString ());
 				}
@@ -771,7 +1002,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			return null;
 		}
 
-		private int AdminCount
+		private int AdminEternallyCount
 		{
 			get
 			{
@@ -779,11 +1010,15 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				foreach (var user in this.users)
 				{
-					foreach (var group in user.UserGroups)
+					if ((user.BeginDate == null || user.BeginDate.Value <= System.DateTime.Now) && 
+						user.EndDate == null)
 					{
-						if (group.UserPowerLevel == UserPowerLevel.Administrator)
+						foreach (var group in user.UserGroups)
 						{
-							count++;
+							if (group.UserPowerLevel == UserPowerLevel.Administrator)
+							{
+								count++;
+							}
 						}
 					}
 				}
@@ -792,12 +1027,13 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
-		private int LoginNameCount
+		private int NamesCount
 		{
 			get
 			{
 				var sel = this.list.SelectedItemIndex;
-				var name = this.loginNameField.Text.Trim ();
+				var loginName = this.loginNameField.Text.Trim ();
+				var displayName = this.displayNameField.FormattedText;
 
 				int count = 0;
 
@@ -805,7 +1041,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					var user = this.users[i];
 
-					if (i != sel && user.LoginName == name)
+					if (i != sel && user.LoginName == loginName && user.DisplayName == displayName)
 					{
 						count++;
 					}
@@ -877,6 +1113,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private FrameBox									userBox;
 		private TextFieldEx									loginNameField;
 		private TextFieldEx									displayNameField;
+		private CheckButton									enableUserCheckButton;
+		private CheckButton									authenticationMethodCheckButton;
+		private TextFieldEx									beginDateField;
+		private TextFieldEx									endDateField;
 		private StaticText									newPasswordLabel;
 		private TextFieldEx									newPasswordField1;
 		private TextFieldEx									newPasswordField2;

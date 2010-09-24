@@ -14,11 +14,9 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				var now = System.DateTime.Now;
-
 				return (this.IsArchive == false)
 					&& (this.Disabled == false)
-					&& (Misc.IsDateInRange (now, this.BeginDate, this.EndDate))
+					&& (Misc.IsDateInRange (System.DateTime.Now, this.BeginDate, this.EndDate))
 					&& (this.UserGroups.Where (group => !group.IsArchive).All (group => group.Disabled == false));
 			}
 		}
@@ -47,17 +45,17 @@ namespace Epsitec.Cresus.Core.Entities
 					text = TextFormatter.FormatText (this.DisplayName, "(", this.LoginName, ")");
 				}
 
-				if (this.CurrentState != SoftwareUserEntityState.OK)
+				if (this.CurrentStatus != Controllers.EditionStatus.Valid)
 				{
 					//	Affiche en italique les comptes qui ont une erreur.
-					text = string.Concat ("<i>", text, "</i>");
+					text = TextFormatter.FormatText ("<i>", text, "</i>");
 				}
 
 				return text;
 			}
 		}
 
-		public SoftwareUserEntityState CurrentState
+		public Controllers.EditionStatus CurrentStatus
 		{
 			get
 			{
@@ -68,15 +66,15 @@ namespace Epsitec.Cresus.Core.Entities
 
 				if (b1 && b2 && b3 && b4)
 				{
-					return SoftwareUserEntityState.Empty;
+					return Controllers.EditionStatus.Empty;
 				}
 
 				if (b1 || b2 || b3 || b4)
 				{
-					return SoftwareUserEntityState.Error;
+					return Controllers.EditionStatus.Invalid;
 				}
 
-				return SoftwareUserEntityState.OK;
+				return Controllers.EditionStatus.Valid;
 			}
 		}
 

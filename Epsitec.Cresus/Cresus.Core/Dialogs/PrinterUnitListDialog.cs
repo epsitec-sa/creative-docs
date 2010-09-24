@@ -153,10 +153,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.logicalField = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = box,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 					TabIndex = ++tabIndex,
 				};
 
@@ -171,10 +173,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				this.commentField = new TextFieldEx
 				{
-					DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 					Parent = box,
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, UIBuilder.MarginUnderTextField),
+					DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
 					TabIndex = ++tabIndex,
 				};
 			}
@@ -488,10 +492,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			var field = new TextFieldEx
 			{
-				DefocusAction = Common.Widgets.DefocusAction.AcceptEdition,
 				Parent = box,
 				PreferredWidth = 70,
 				Dock = DockStyle.Left,
+				DefocusAction = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
 				TabIndex = tabIndex,
 			};
 
