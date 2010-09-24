@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
 		}
 
-		public bool CheckUserAuthentication(SoftwareUserEntity user, string passwordGiven)
+		public bool CheckUserAuthentication(SoftwareUserEntity user, string password)
 		{
 			switch (user.AuthenticationMethod)
             {
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 					return this.CheckSystemUserAuthentication (user);
 
 				case UserAuthenticationMethod.Password:
-					return this.CheckPasswordUserAuthentication (user, passwordGiven);
+					return this.CheckPasswordUserAuthentication (user, password);
 
 				default:
 					return false;
@@ -185,14 +185,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return user.LoginName == System.Environment.UserName;
 		}
 
-		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string passwordGiven)
+		private bool CheckPasswordUserAuthentication(SoftwareUserEntity user, string password)
 		{
-			if (user.LoginName == System.Environment.UserName)
+			if (string.Compare (user.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) == 0)
 			{
 				return true;
 			}
 
-			return user.CheckPassword (passwordGiven);
+			return user.CheckPassword (password);
 		}
 
 

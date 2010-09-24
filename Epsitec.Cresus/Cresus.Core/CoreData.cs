@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core
 			var groupStandard   = this.CreateUserGroup (logicGroup, "Utilisateurs standards",    Business.UserManagement.UserPowerLevel.Standard);
 			var groupRestricted = this.CreateUserGroup (logicGroup, "Utilisateurs restreints",   Business.UserManagement.UserPowerLevel.Restricted);
 
-			var userStandard1 = this.CreateUser (logicUser, groupStandard, "Pierre Arnaud", "Pierre",  "smaky");
+			var userStandard1 = this.CreateUser (logicUser, groupStandard, "Pierre Arnaud", "arnaud",  "smaky");
 			var userStandard2 = this.CreateUser (logicUser, groupStandard, "Daniel Roux",   "Daniel",  "blupi");
 			var userDev       = this.CreateUser (logicUser, groupDev,      "Epsitec",       "Epsitec", "admin");
 
