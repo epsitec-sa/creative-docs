@@ -197,6 +197,11 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		public T GetLocalEntity<T>(T entity)
 			where T : AbstractEntity, new ()
 		{
+			if (entity == null)
+            {
+				return entity.WrapNullEntity ();
+            }
+
 			if (entity.IsNull ())
 			{
 				return entity;
@@ -213,7 +218,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			return this.dataContext.ResolveEntity (key) as T;
 		}
 
-		
+
 		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
 		{
 			this.activeNavigationPathElement = navigationPathElement;

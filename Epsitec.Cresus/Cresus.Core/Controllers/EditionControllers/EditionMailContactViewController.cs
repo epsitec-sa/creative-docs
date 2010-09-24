@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUICommon (builder);
 
 				if (this.Entity.NaturalPerson.IsNull () &&
-					this.Entity.LegalPerson.IsActive ())
+					this.Entity.LegalPerson.IsNotNull ())
 				{
 					this.CreateUICountry  (builder);
 					this.CreateUIMain     (builder);
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		
 		private void HandleSelectTabPageLocal()
 		{
-			if (this.Entity.LegalPerson.IsActive ())
+			if (this.Entity.LegalPerson.IsNotNull ())
 			{
 				this.Entity.LegalPerson = EntityNullReferenceVirtualizer.CreateEmptyEntity<LegalPersonEntity> ();
 				this.Entity.Address = this.DataContext.CreateEntityAndRegisterAsEmpty<AddressEntity> ();
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					this.Entity.Address.Location = value;
 
-					if (this.Entity.Address.Location.IsActive ())
+					if (this.Entity.Address.Location.IsNotNull ())
 					{
 						this.countryTextField.SelectedItemIndex = this.countryTextField.Items.FindIndexByValue (this.Entity.Address.Location.Country);
 					}

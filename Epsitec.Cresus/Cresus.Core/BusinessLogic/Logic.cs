@@ -3,9 +3,12 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
@@ -23,6 +26,22 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			get
 			{
 				return this.BusinessContext.Data;
+			}
+		}
+
+		public CoreApplication Application
+		{
+			get
+			{
+				return CoreProgram.Application;
+			}
+		}
+
+		public BusinessSettingsEntity BusinessSettings
+		{
+			get
+			{
+				return this.Application.BusinessSettings;
 			}
 		}
 

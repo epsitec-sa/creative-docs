@@ -160,8 +160,8 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			//	Retourne true s'il s'agit d'un article de taxe (par exemple des frais de port).
 			if (article != null &&
-				article.ArticleDefinition.IsActive () &&
-				article.ArticleDefinition.ArticleCategory.IsActive ())
+				article.ArticleDefinition.IsNotNull () &&
+				article.ArticleDefinition.ArticleCategory.IsNotNull ())
 			{
 				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Freight ||
 					   article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Tax;
@@ -174,8 +174,8 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			//	Retourne true s'il s'agit d'un article qui doit figurer sur un BL.
 			if (article != null &&
-				article.ArticleDefinition.IsActive () &&
-				article.ArticleDefinition.ArticleCategory.IsActive ())
+				article.ArticleDefinition.IsNotNull () &&
+				article.ArticleDefinition.ArticleCategory.IsNotNull ())
 			{
 				return article.ArticleDefinition.ArticleCategory.ArticleType == Business.ArticleType.Goods;  // marchandises ?
 			}
@@ -187,8 +187,8 @@ namespace Epsitec.Cresus.Core.Helpers
 		{
 			//	Retourne true s'il s'agit d'un article qui doit figurer sur un ordre de production.
 			if (article != null &&
-				article.ArticleDefinition.IsActive () &&
-				article.ArticleDefinition.ArticleCategory.IsActive ())
+				article.ArticleDefinition.IsNotNull () &&
+				article.ArticleDefinition.ArticleCategory.IsNotNull ())
 			{
 				if (!article.ArticleDefinition.ArticleGroups.Contains (group))
 				{

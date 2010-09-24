@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			get
 			{
-				if (this.Entity.LegalPerson.IsActive ())
+				if (this.Entity.LegalPerson.IsNotNull ())
 				{
 					return TextFormatter.FormatText ("Client", this.Entity.LegalPerson.Name).ToSimpleText ();
 				}
 
-				if (this.Entity.NaturalPerson.IsActive ())
+				if (this.Entity.NaturalPerson.IsNotNull ())
 				{
 					return TextFormatter.FormatText ("Client", this.Entity.NaturalPerson.Lastname).ToSimpleText ();
 				}
