@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="entityId">The <see cref="Druid"/> defining the type of the <see cref="AbstractEntity"/>.</param>
 		/// <param name="rowKey">The <see cref="DbKey"/> defining the id of the <see cref="AbstractEntity"/>.</param>
-		/// <returns>The <see cref="AbstractEntitity"/>.</returns>
+		/// <returns>The <see cref="AbstractEntity"/>.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="entityId"/> is empty.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="rowKey"/> is empty.</exception>
 		public AbstractEntity ResolveEntity(Druid entityId, DbKey rowKey)
