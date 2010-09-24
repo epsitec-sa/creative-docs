@@ -1,4 +1,4 @@
-//	Copyright © 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -13,7 +13,14 @@ namespace Epsitec.Common.Types.Collections
 	/// refreshed.
 	/// </summary>
 	/// <typeparam name="T">The manipulated data type.</typeparam>
-	public class ObservableList<T> : AbstractObservableList, IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList, IReadOnly, IReadOnlyLock
+	public class ObservableList<T> :
+		AbstractObservableList,
+		IList<T>,
+		INotifyCollectionChanged,
+		System.Collections.ICollection,
+		System.Collections.IList,
+		IReadOnly,
+		IReadOnlyLock
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ObservableList&lt;T&gt;"/> class.
@@ -200,6 +207,20 @@ namespace Epsitec.Common.Types.Collections
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the read-only version of this observable list.
+		/// </summary>
+		/// <returns>The read-only version of this observable list.</returns>
+		public ReadOnlyObservableList<T> AsReadOnly()
+		{
+			if (this.readOnlyList == null)
+            {
+				this.readOnlyList = new ReadOnlyObservableList<T> (this);
+            }
+
+			return this.readOnlyList;
 		}
 
 		#region IReadOnlyLock Members
@@ -738,6 +759,7 @@ namespace Epsitec.Common.Types.Collections
 		protected readonly List<T> list = new List<T> ();
 		private int silent;
 		private DeferredNotifier deferredNotifier;
+		private ReadOnlyObservableList<T> readOnlyList;
 		private bool isReadOnly;
 	}
 }
