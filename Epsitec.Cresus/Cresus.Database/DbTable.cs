@@ -725,6 +725,9 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The key found in the row.</returns>
 		public DbKey ExtractKeyFromRow(System.Data.DataRow row)
 		{
+			// TODO Unused method? Should it be deleted?
+			// Marc
+
 			DbKey key = DbKey.Empty;
 
 			switch (this.category)
