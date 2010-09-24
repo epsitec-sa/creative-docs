@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.initialUser   = user;
 			this.hasQuitButton = hasQuitButton;
 
-			this.users  = this.manager.GetActiveUsers ().ToList ();
+			this.users = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
 		}
 
 
