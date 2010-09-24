@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			FormattedText shipping = GetShortMailContactSummary (x.ShippingMailContact);
 
 			FormattedText addresses;
-			if (x.BillingMailContact == x.ShippingMailContact || (!x.BillingMailContact.IsActive () && !x.ShippingMailContact.IsActive ()))
+			if (x.BillingMailContact == x.ShippingMailContact || (!x.BillingMailContact.IsNotNull () && !x.ShippingMailContact.IsNotNull ()))
 			{
 				addresses = FormattedText.Concat ("\n\n<b>• Adresse de facturation et de livraison:</b>\n", billing);
 			}
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 		private static FormattedText GetShortMailContactSummary(MailContactEntity x)
 		{
-			if (x.IsActive ())
+			if (x.IsNotNull ())
 			{
 				return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
 												 x.NaturalPerson.Firstname, x.NaturalPerson.Lastname, "\n",
@@ -71,13 +71,13 @@ namespace Epsitec.Cresus.Core.Helpers
 			FormattedText legal = "";
 			FormattedText natural = "";
 
-			if (x.LegalPerson.IsActive ())
+			if (x.LegalPerson.IsNotNull ())
 			{
 				var y = x.LegalPerson;
 				legal = TextFormatter.FormatText (y.Name);
 			}
 
-			if (x.NaturalPerson.IsActive ())
+			if (x.NaturalPerson.IsNotNull ())
 			{
 				var y = x.NaturalPerson;
 				natural = TextFormatter.FormatText (y.Title.Name, "~\n", y.Firstname, y.Lastname);

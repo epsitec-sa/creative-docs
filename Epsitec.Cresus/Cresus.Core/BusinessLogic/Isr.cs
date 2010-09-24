@@ -3,9 +3,12 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Business.Finance;
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business.Finance;
 
 namespace Epsitec.Cresus.Core.BusinessLogic
 {
@@ -36,6 +39,18 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			var checksum   = Isr.ComputeCheckDigit (refLine);
 
 			return refLine + checksum;
+		}
+
+		public static string GetNewReferenceNumber(CoreData data, IsrDefinitionEntity isrDefinition)
+		{
+			if (isrDefinition.IsNull ())
+			{
+				return null;
+			}
+			else
+			{
+				return Isr.GetNewReferenceNumber (data, isrDefinition.SubscriberNumber, isrDefinition.BankReferenceNumberPrefix);
+			}
 		}
 
 

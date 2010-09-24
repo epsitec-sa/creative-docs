@@ -3,9 +3,10 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -164,7 +165,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return entity.UnwrapNullEntity () == null;
 		}
 
-		public static bool IsActive(this AbstractEntity entity)
+		public static bool IsNotNull(this AbstractEntity entity)
 		{
 			return entity.UnwrapNullEntity () != null;
 		}

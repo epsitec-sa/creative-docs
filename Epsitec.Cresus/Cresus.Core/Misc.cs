@@ -109,6 +109,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static string GetDateTimeDescription(Date date)
+		{
+			return Misc.GetDateTimeDescription (date.ToDateTime ());
+		}
+
 		public static string GetDateTimeDescription(System.DateTime? dateTime)
 		{
 			if (dateTime == null)

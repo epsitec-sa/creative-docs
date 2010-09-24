@@ -180,11 +180,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 
-			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", this.BusinessContext);
 
 			template.DefineText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineSetupItem (SummaryInvoiceDocumentViewController.SetupBillingDetails);
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
 		}

@@ -100,6 +100,7 @@
     <Compile Include="BusinessLogic\Rules\AffairSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticleGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\ArticlePriceSetupRule.cs" />
+    <Compile Include="BusinessLogic\Rules\BusinessBillingDetailSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserSetupRule.cs" />
     <Compile Include="Business\WorkflowStatus.cs" />
