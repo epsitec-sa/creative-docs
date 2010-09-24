@@ -117,6 +117,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// The id of the DataContext that manages this instance.
+		/// </summary>
+		internal int? DataContextId
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Gets the id of the <see cref="StructuredType"/> which describes

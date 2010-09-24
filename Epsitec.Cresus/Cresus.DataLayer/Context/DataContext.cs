@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
 		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public EntityKey? GetNormalizedEntityKey(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose <see cref="EntityKey"/> to get.</param>
 		/// <returns>The <see cref="EntityKey"/> or <c>null</c> if there is none defined in this instance.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public EntityKey? GetLeafEntityKey(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void RegisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> has already been persisted.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void UnregisterEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -442,7 +442,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to register or unregister.</param>
 		/// <param name="isEmpty">A <see cref="bool"/> indicating the future empty status of the <see cref="AbstractEntity"/>.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void UpdateEmptyEntityStatus(AbstractEntity entity, bool isEmpty)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> is registered as empty, <c>false</c> if it isn't.</returns>
 		/// <remarks>See the remarks in <see cref="RegisterEmptyEntity"/>.</remarks>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public bool IsRegisteredAsEmptyEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </remarks>
 		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public void DeleteEntity(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to check if it has been deleted.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> has been deleted, <c>false</c> if it hasn't.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public bool IsDeleted(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -786,7 +786,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="example"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="example"/> is managed by another <see cref="DataContext"/>.</exception>
+		/// <exception cref="System.InvalidOperationException">If <paramref name="example"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
 			where TEntity : AbstractEntity
 		{
@@ -804,7 +805,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> is managed by another <see cref="DataContext"/>.</exception>
+		/// <exception cref="System.InvalidOperationException">If <paramref name="request"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
 		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request)
 			where TEntity : AbstractEntity
 		{
@@ -1159,27 +1161,47 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Throws an <see cref="System.ArgumentException"/> if the given <see cref="AbstractEntity"/>
-		/// is not managed by this instance.
+		/// is managed by another <see cref="DataContext"/>.
 		/// </summary>
 		/// <param name="entity">The entity whose presence in this instance to check.</param>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		private void AssertEntityIsNotForeign(AbstractEntity entity)
+		{
+			if (this.IsForeignEntity (entity))
+			{
+				throw new System.ArgumentException ("entity is managed by another DataContext.");
+			}
+		}
+		
+		
+		/// <summary>
+		/// Tells whether an <see cref="AbstractEntity"/> is managed by another
+		/// <see cref="DataContext"/>.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to check if it is foreign.</param>
+		/// <returns>
+		/// <c>true</c> if the <see cref="AbstractEntity"/> is managed by another
+		/// <see cref="DataContext"/>, <c>false</c> if it is not managed by another
+		/// <see cref="DataContext"/>.
+		/// </returns>
+		internal bool IsForeignEntity(AbstractEntity entity)
 		{
 			// TODO Remove 'entity != null' when adding argument checks to this class. Now it is a
 			// trick that avoid to break everything when these methods are called with null.
 			// Marc
 
-			// TODO Add something to detect the case when entity is not managed by anybody, for
-			// instance when building requests or dealing with null virtualized entities.
+			// HACK If you don't want to be bothered by foreign entity exceptions, comment the real
+			// body of this method and uncomment the fake body. Note that then, the program will
+			// still be incorrect. It's just that the errors will probably go unnoticed.
 			// Marc
+			
+			// Fake body of the method:
+			// return false;
 
-			if (entity != null && !this.Contains (entity))
-			{
-				// TODO Put this back in place when the condition above does not give fales positives.
-				// Marc
-
-				//throw new System.ArgumentException ("entity is not managed by this instance.");
-			}
+			// Real body of the method:
+			return entity != null
+				&& entity.DataContextId.HasValue
+				&& entity.DataContextId.Value != this.UniqueId;
 		}
 
 
@@ -1271,7 +1293,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose persistence to check.</param>
 		/// <returns><c>true</c> if the <see cref="AbstractEntity"/> has been persisted to the database, <c>false</c> if it hasn't.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is not managed by this instance.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		public bool IsPersistent(AbstractEntity entity)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -1293,10 +1315,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			AbstractEntity entity = e.Entity;
 
+			this.OnCreationAssignToDataContext (entity);
 			this.OnCreationPatchEntity (entity);
 			this.OnCreationRegisterAsEmptyEntity (entity, e);
 			this.OnCreationAddToCache (entity);
-
+			
 			try
 			{
 				this.OnCreationLoadSchema (entity);
@@ -1306,6 +1329,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.OnCreationRemoveFromCache (entity);
 				throw;
 			}
+		}
+
+
+		/// <summary>
+		/// Sets the <see cref="AbstractEntity.DataContextId"/> property so that it is assigned to
+		/// this instance.
+		/// </summary>
+		/// <param name="entity">The <see cref="AbstractEntity"/> to assign to this instance.</param>
+		private void OnCreationAssignToDataContext(AbstractEntity entity)
+		{
+			if (entity.DataContextId.HasValue)
+			{
+				throw new System.InvalidOperationException ("entity is already assigned to a DataContext");
+			}
+
+			entity.DataContextId = this.UniqueId;
 		}
 
 
@@ -1513,5 +1552,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The next unique id which will be used for the next instance of <c>DataContext</c>.
 		/// </summary>
 		private static int nextUniqueId;
+		
+
 	}
 }
