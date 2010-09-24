@@ -702,7 +702,15 @@ namespace Epsitec.Common.Widgets
 				this.MouseSelectRow (index);
 			}
 		}
-		
+
+		protected virtual void OnSelectedItemChanging()
+		{
+			var handler = (EventHandler) this.GetUserEventHandler ("SelectedItemChanging");
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
 		protected virtual void OnSelectedItemChanged()
 		{
 			//	Génère un événement pour dire que la sélection dans la liste a changé.
@@ -849,9 +857,10 @@ namespace Epsitec.Common.Widgets
 				}
 				if ( value != this.selectedRow )
 				{
+					this.OnSelectedItemChanging ();
 					this.selectedRow = value;
 					this.SetDirty();
-					this.OnSelectedItemChanged();
+					this.OnSelectedItemChanged ();
 				}
 			}
 		}
@@ -904,9 +913,21 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		public event EventHandler				SelectedItemChanged
+
+
+		public event EventHandler SelectedItemChanging
+		{
+			add
+			{
+				this.AddUserEventHandler ("SelectedItemChanging", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SelectedItemChanging", value);
+			}
+		}
+
+		public event EventHandler SelectedItemChanged
 		{
 			add
 			{
