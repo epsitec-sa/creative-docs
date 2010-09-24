@@ -247,8 +247,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
 
-			this.DataContext.DataSaver.AssertEntityIsNotForeign (target);
-
 			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
 			{
 				job = new ReferencePersistenceJob (entity, localEntityId, fieldId, target, PersistenceJobType.Insert);
@@ -292,8 +290,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractEntity target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
 			AbstractEntity targetToSave;
 
-			this.DataContext.DataSaver.AssertEntityIsNotForeign (target);
-
 			if (this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target))
 			{
 				targetToSave = target;
@@ -334,16 +330,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			CollectionPersistenceJob job = null;
 
-			IEnumerable<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ());
-
-			targets.ForEach (this.DataContext.DataSaver.AssertEntityIsNotForeign);
-
-			targets = targets.Where (this.DataContext.DataSaver.CheckIfEntityCanBeSaved).ToList ();
+			IEnumerable<AbstractEntity> targets = new List<AbstractEntity>
+			(
+				from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
+				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
+				select target
+			);
 
 			if (targets.Any ())
 			{
-				targets.ForEach (this.DataContext.DataSaver.AssertEntityIsNotForeign);
-				
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
 				job = this.CreateCollectionJob (entity, fieldId, targets, jobType);
@@ -381,11 +376,10 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private AbstractPersistenceJob CreateUpdateCollectionJob(AbstractEntity entity, Druid fieldId)
 		{
-			IEnumerable<AbstractEntity> targets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ());
-
-			targets.ForEach (this.DataContext.DataSaver.AssertEntityIsNotForeign);
-
-			targets = targets.Where (this.DataContext.DataSaver.CheckIfEntityCanBeSaved).ToList ();
+			IEnumerable<AbstractEntity> targets =
+				from target in entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
+				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
+				select target;
 
 			PersistenceJobType jobType = PersistenceJobType.Update;
 
