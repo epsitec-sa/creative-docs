@@ -328,6 +328,7 @@ namespace Epsitec.Cresus.Database
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableInfo));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
 				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
@@ -2497,6 +2498,9 @@ namespace Epsitec.Cresus.Database
 			//	Now that everything is properly defined, we may attach the
 			//	logger to the database :
 			
+			// TODO Why is the logger attached here? It is also attached later on. Why attach it twice?
+			// Marc
+
 			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
 			this.logger.CreateInitialEntry (transaction);
 			
