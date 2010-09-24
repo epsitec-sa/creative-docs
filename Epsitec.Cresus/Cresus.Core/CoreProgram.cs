@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core
 			CoreProgram.application.SetupData ();
 			CoreProgram.application.CreateUI ();
 
-			if (CoreProgram.application.UserManager.Authenticate (CoreProgram.application.UserManager.FindActiveUser (), hasQuitButton: true))
+			if (CoreProgram.application.UserManager.Authenticate (CoreProgram.application.UserManager.FindActiveUser (), softwareStartup: true))
 			{
 				CoreProgram.application.Window.Show ();
 				CoreProgram.application.Window.Run ();

@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class LoginDialog : AbstractDialog
 	{
-		public LoginDialog(CoreApplication application, SoftwareUserEntity user, bool hasQuitButton)
+		public LoginDialog(CoreApplication application, SoftwareUserEntity user, bool softwareStartup)
 		{
-			this.application   = application;
-			this.manager       = application.UserManager;
-			this.initialUser   = user;
-			this.hasQuitButton = hasQuitButton;
+			this.application     = application;
+			this.manager         = application.UserManager;
+			this.initialUser     = user;
+			this.softwareStartup = softwareStartup;
 
 			this.users = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
 		}
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.cancelButton = new Button ()
 				{
 					Parent = footer,
-					Text = this.hasQuitButton ? "Quitter" : "Annuler",
+					Text = this.softwareStartup ? "Quitter" : "Annuler",
 					PreferredWidth = 60,
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 					Dock = DockStyle.Right,
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					Parent = footer,
 					Text = "Gérer les comptes",
 					PreferredWidth = 100,
-					Visibility = !this.hasQuitButton,
+					Visibility = !this.softwareStartup && LoginDialog.IsAdministratorUser (this.initialUser),
 					Dock = DockStyle.Right,
 					Margins = new Margins (0, 10, 0, 0),
 					TabIndex = tabIndex++,
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.CloseAction (cancel: true);
 
-			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, this.SelectedUser, this.hasQuitButton);
+			var dialog = new Dialogs.UserManagerDialog (CoreProgram.Application, this.SelectedUser);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 		}
@@ -395,9 +395,32 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		private static bool IsAdministratorUser(SoftwareUserEntity user)
+		{
+			if (user == null)
+			{
+				return false;
+			}
+			else
+			{
+				return user.UserGroups.Where (group => group.UserPowerLevel == UserPowerLevel.Administrator).Count () > 0;
+			}
+		}
+
 
 		private static FrameBox CreateContainer(Widget parent, FormattedText number, FormattedText text)
 		{
+			//	Crée un container de cette forme:
+			//
+			//	+---+------------+
+			//	| n | text       |
+			//	|   +------------+
+			//	|   |            |
+			//	|   | FrameBox   |
+			//	|   | returned   |
+			//	|   |            |
+			//	+---+------------+
+
 			new StaticText
 			{
 				Parent = parent,
@@ -442,7 +465,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly CoreApplication						application;
 		private readonly UserManager							manager;
 		private readonly SoftwareUserEntity						initialUser;
-		private readonly bool									hasQuitButton;
+		private readonly bool									softwareStartup;
 		private readonly List<SoftwareUserEntity>				users;
 
 		private ScrollList										list;
