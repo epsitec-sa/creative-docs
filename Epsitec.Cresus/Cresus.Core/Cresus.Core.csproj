@@ -122,6 +122,8 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
+    <Compile Include="Entities\WorkflowEntity.cs" />
+    <Compile Include="Entities\WorkflowEventEntity.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
@@ -608,7 +610,7 @@
     <EmbeddedResource Include="Images\Data.Affair.icon" />
     <EmbeddedResource Include="Images\Data.Case.icon" />
     <EmbeddedResource Include="Images\Data.Comment.icon" />
-    <EmbeddedResource Include="Images\Data.BusinessEvent.icon" />
+    <EmbeddedResource Include="Images\Data.WorkflowEvent.icon" />
     <EmbeddedResource Include="Images\Print.icon" />
     <EmbeddedResource Include="Images\ImportV11.icon" />
     <EmbeddedResource Include="Images\Base.Documents.icon" />

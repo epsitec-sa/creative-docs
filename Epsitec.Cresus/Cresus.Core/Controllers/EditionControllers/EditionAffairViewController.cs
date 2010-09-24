@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				string.IsNullOrEmpty (this.Entity.IdB) &&
 				string.IsNullOrEmpty (this.Entity.IdC) &&
 				string.IsNullOrEmpty (this.Entity.DefaultDebtorBookAccount) &&
-				this.Entity.Events.Count == 0)
+				this.Entity.Workflows.Count == 0)
 			{
 				return EditionStatus.Empty;
 			}
@@ -105,12 +105,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void ExecuteNewOffer()
 		{
-			var businessEvent = this.DataContext.CreateEntity<BusinessEventEntity> ();
-			var document = this.DataContext.CreateEntity<InvoiceDocumentEntity> ();
+			var workflow      = this.BusinessContext.CreateEntity<WorkflowEntity> ();
+			var businessEvent = this.BusinessContext.CreateEntity<WorkflowEventEntity> ();
+			var document      = this.BusinessContext.CreateEntity<InvoiceDocumentEntity> ();
+			
 			var now = System.DateTime.Now;
 
 			//	TODO: définir le n° IdA plus proprement (business rule ?)
-			document.IdA                   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1}", this.Entity.IdA, this.Entity.Events.Select (x => x.Documents.FirstOrDefault ()).Distinct ().Count () + 1);
+			document.IdA                   = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1}", this.Entity.IdA, this.Entity.Documents.Count + 1);
 			document.OtherPartyBillingMode = Business.Finance.BillingMode.IncludingTax;
 			document.OtherPartyTaxMode     = Business.Finance.TaxMode.LiableForVat;
 			document.CurrencyCode          = Business.Finance.CurrencyCode.Chf;
@@ -130,11 +132,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				document.ShippingMailContact = mailContact;
             }
 
-			businessEvent.EventType = this.BusinessContext.GetLocalEntity (this.BusinessContext.Data.GetAllEntities<BusinessEventTypeEntity> ().Where (x => x.Code.Contains ("offre")).First ());
-			businessEvent.Date      = now;
-			businessEvent.Documents.Add (document);
+			//	TODO: clean up horrible hack
 
-			this.Entity.Events.Add (businessEvent);
+			businessEvent.EventType = this.BusinessContext.GetLocalEntity (this.BusinessContext.Data.GetAllEntities<WorkflowEventTypeEntity> ().Where (x => x.Code.Contains ("offre")).First ());
+			businessEvent.Date      = now;
+			businessEvent.Document  = document;
+
+			workflow.WorkflowEvents.Add (businessEvent);
+
+			this.Entity.Workflows.Add (workflow);
 
 			this.ReopenSubView (new TileNavigationPathElement (this.GetOfferTileName (document) + ".0"));
 		}
@@ -154,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			int counter = 0;
 
-			foreach (var doc in this.GetDocumentEntities (this.Entity))
+			foreach (var doc in this.Entity.Documents)
 			{
 				builder.CreateEditionTitleTile ("Data.Document", "Offre");
 				builder.CreateSummaryTile (EditionAffairViewController.GetOfferTileName (counter++), doc, TextFormatter.FormatText ("N°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate));
@@ -176,7 +182,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private string GetOfferTileName(InvoiceDocumentEntity doc)
 		{
-			return EditionAffairViewController.GetOfferTileName (this.GetDocumentEntities (this.Entity).IndexOf (doc));
+			return EditionAffairViewController.GetOfferTileName (this.Entity.Documents.IndexOf (doc));
 		}
 
 		private void CreateUICaseEvents(SummaryDataItems data)
@@ -185,46 +191,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				new SummaryData
 				{
 					AutoGroup    = true,
-					Name		 = "BusinessEvent",
-					IconUri		 = "Data.BusinessEvent",
+					Name		 = "WorkflowEvent",
+					IconUri		 = "Data.WorkflowEvent",
 					Title		 = TextFormatter.FormatText ("Evénements"),
 					CompactTitle = TextFormatter.FormatText ("Evénements"),
 					Text		 = CollectionTemplate.DefaultEmptyText
 				});
 
-			var template = new CollectionTemplate<BusinessEventEntity> ("BusinessEvent", data.Controller, this.DataContext);
+			var template = new CollectionTemplate<WorkflowEventEntity> ("WorkflowEvent", data.Controller, this.DataContext);
 
 			template.DefineText (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
-			data.Add (this.CreateCollectionAccessor (template, x => x.Events));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.WorkflowEvents).ToList ()));
 		}
 
-		private IList<InvoiceDocumentEntity> GetDocumentEntities(AffairEntity affair)
-		{
-			var documents = new HashSet<InvoiceDocumentEntity> ();
-
-			foreach (var businessEvent in affair.Events)
-			{
-				documents.AddRange (businessEvent.Documents.Select (doc => doc as InvoiceDocumentEntity).Where (doc => doc != null));
-			}
-
-			return documents.OrderBy (doc => doc.CreationDate).ToArray ();
-		}
-
-		private static string GetCaseEventsSummary(BusinessEventEntity caseEventEntity)
+		private static string GetCaseEventsSummary(WorkflowEventEntity caseEventEntity)
 		{
 			string date = Misc.GetDateTimeShortDescription (caseEventEntity.Date);
-			int count = caseEventEntity.Documents.Count;
-
-			if (count < 2)
-			{
-				return string.Format ("{0} {1}", date, caseEventEntity.EventType.Code);
-			}
-			else
-			{
-				return string.Format ("{0} {1} ({2} documents)", date, caseEventEntity.EventType.Code, count);
-			}
+			return string.Format ("{0} {1}", date, caseEventEntity.EventType.Code);
 		}
 	}
 }
