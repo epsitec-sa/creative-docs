@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// </summary>
 		/// <param name="user">The user (or <c>null</c> if it must be selected interactively).</param>
 		/// <returns><c>true</c> if the user was successfully authenticated; otherwise, <c>false</c>.</returns>
-		public bool Authenticate(SoftwareUserEntity user = null, bool hasQuitButton = false)
+		public bool Authenticate(SoftwareUserEntity user = null, bool softwareStartup = false)
 		{
 			//	Make sure the user entity belongs to our data context; the only way to know for sure
 			//	is to retrieve the user based on its 'code':
@@ -69,7 +69,19 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				user = this.FindActiveUser (user.Code);
 			}
 
-			var dialog = new Dialogs.LoginDialog (CoreProgram.Application, user, hasQuitButton);
+			//	Si on est dans le dialogue initial (celui qui s'affiche à l'exécution du logiciel),
+			//	et que l'utilisateur correspond à celui de la session Windows, on effectue le login
+			//	sans affiche le dialogue.
+			if (softwareStartup && user == this.FindActiveUser ())
+			{
+				this.OnAuthenticatedUserChanging ();
+				this.authenticatedUser = user;
+				this.OnAuthenticatedUserChanged ();
+
+				return true;
+			}
+
+			var dialog = new Dialogs.LoginDialog (CoreProgram.Application, user, softwareStartup);
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 

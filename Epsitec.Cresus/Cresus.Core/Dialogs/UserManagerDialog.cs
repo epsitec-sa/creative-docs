@@ -27,12 +27,11 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	class UserManagerDialog : AbstractDialog
 	{
-		public UserManagerDialog(CoreApplication application, SoftwareUserEntity user, bool hasQuitButton)
+		public UserManagerDialog(CoreApplication application, SoftwareUserEntity user)
 		{
-			this.application   = application;
-			this.manager       = application.UserManager;
-			this.initialUser   = user;
-			this.hasQuitButton = hasQuitButton;
+			this.application = application;
+			this.manager     = application.UserManager;
+			this.initialUser = user;
 
 			this.users  = this.manager.GetAllUsers ().OrderBy (x => x.DisplayName).ToList ();
 			this.groups = this.manager.GetAllUserGroups ().OrderBy (x => x.UserPowerLevel).ToList ();
@@ -239,16 +238,19 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.checkButtonGroups.Clear ();
 				foreach (var group in this.groups)
 				{
-					var button = new CheckButton
+					if (group.UserPowerLevel != UserPowerLevel.System)
 					{
-						Parent = this.userBox,
-						AutoToggle = false,
-						FormattedText = group.Name,
-						Dock = DockStyle.Top,
-						TabIndex = tabIndex++,
-					};
+						var button = new CheckButton
+						{
+							Parent = this.userBox,
+							AutoToggle = false,
+							FormattedText = group.Name,
+							Dock = DockStyle.Top,
+							TabIndex = tabIndex++,
+						};
 
-					this.checkButtonGroups.Add (button);
+						this.checkButtonGroups.Add (button);
+					}
 				}
 
 
@@ -300,7 +302,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.cancelButton = new Button ()
 				{
 					Parent = footer,
-					Text = this.hasQuitButton ? "Quitter" : "Annuler",
+					Text = "Annuler",
 					ButtonStyle = Common.Widgets.ButtonStyle.DefaultCancel,
 					Dock = DockStyle.Right,
 					TabIndex = tabIndex++,
@@ -863,7 +865,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private readonly CoreApplication					application;
 		private readonly UserManager						manager;
-		private readonly bool								hasQuitButton;
 		private readonly List<SoftwareUserEntity>			users;
 		private readonly List<SoftwareUserGroupEntity>		groups;
 		private readonly List<CheckButton>					checkButtonGroups;
