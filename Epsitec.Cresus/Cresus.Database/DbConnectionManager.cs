@@ -423,7 +423,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
 		/// true only for a given connection status.
 		/// </summary>
-		/// <param name="connectionId">The status of the connection.</param>
+		/// <param name="connectionStatus">The status of the connection.</param>
 		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
 		private SqlFunction CreateConditionForConnectionStatus(DbConnectionStatus connectionStatus)
 		{
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Database
 		/// Creates the <see cref="SqlFunction"/> object that describes the condition that returns
 		/// true only for a given timeout.
 		/// </summary>
-		/// <param name="connectionId">The time out value for the connections.</param>
+		/// <param name="timeOutValue">The time out value for the connections.</param>
 		/// <returns>The <see cref="SqlFunction"/> object that defines the condition.</returns>
 		private SqlFunction CreateConditionForTimeOut(System.TimeSpan timeOutValue)
 		{
