@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 {
-	public class EditionBusinessEventViewController : EditionViewController<Entities.BusinessEventEntity>
+	public class EditionBusinessEventViewController : EditionViewController<Entities.WorkflowEventEntity>
 	{
-		public EditionBusinessEventViewController(string name, Entities.BusinessEventEntity entity)
+		public EditionBusinessEventViewController(string name, Entities.WorkflowEventEntity entity)
 			: base (name, entity)
 		{
 			this.InitializeDefaultValues ();
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Summary:
 			using (var data = TileContainerController.Setup (this))
 			{
-				this.CreateUIDocuments (data);
+//-				this.CreateUIDocuments (data);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICaseEventTypes(Epsitec.Cresus.Core.UIBuilder builder)
 		{
-			var controller = new SelectionController<Entities.BusinessEventTypeEntity> (this.BusinessContext)
+			var controller = new SelectionController<Entities.WorkflowEventTypeEntity> (this.BusinessContext)
 			{
 				ValueGetter              = () => this.Entity.EventType,
 				ValueSetter              = x => this.Entity.EventType = x,
@@ -85,6 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
+#if false
 		private void CreateUIDocuments(SummaryDataItems data)
 		{
 			data.Add (
@@ -105,5 +106,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Documents));
 		}
+#endif
 	}
 }

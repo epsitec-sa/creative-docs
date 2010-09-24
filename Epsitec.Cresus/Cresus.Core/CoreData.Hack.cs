@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core
 		{
 			CountryEntity[] countries = this.InsertCountriesInDatabase ().ToArray ();
 			LocationEntity[] locations = this.InsertLocationsInDatabase (countries).ToArray ();
-			BusinessEventTypeEntity[] eventTypes = this.InsertCaseEventTypesInDatabase ().ToArray ();
+			WorkflowEventTypeEntity[] eventTypes = this.InsertCaseEventTypesInDatabase ().ToArray ();
 			ContactRoleEntity[] roles = this.InsertContactRolesInDatabase ().ToArray ();
 			UriSchemeEntity[] uriSchemes = this.InsertUriSchemesInDatabase ().ToArray ();
 			TelecomTypeEntity[] telecomTypes = this.InsertTelecomTypesInDatabase ().ToArray ();
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private IEnumerable<BusinessEventTypeEntity> InsertCaseEventTypesInDatabase()
+		private IEnumerable<WorkflowEventTypeEntity> InsertCaseEventTypesInDatabase()
 		{
 			string[] names = new string[]
 			{
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (string name in names)
 			{
-				BusinessEventTypeEntity eventType = this.DataContext.CreateEntity<BusinessEventTypeEntity> ();
+				WorkflowEventTypeEntity eventType = this.DataContext.CreateEntity<WorkflowEventTypeEntity> ();
 
 				eventType.Code = name;
 				//?eventType.Rank = rank++;
