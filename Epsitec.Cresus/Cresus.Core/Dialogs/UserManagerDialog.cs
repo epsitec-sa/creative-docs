@@ -34,8 +34,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.initialUser   = user;
 			this.hasQuitButton = hasQuitButton;
 
-			this.users  = this.manager.GetActiveUsers ().ToList ();
-			this.groups = this.manager.GetActiveUserGroups ().ToList ();
+			this.users  = this.manager.GetActiveUsers ().OrderBy (x => x.DisplayName).ToList ();
+			this.groups = this.manager.GetActiveUserGroups ().OrderBy (x => x.UserPowerLevel).ToList ();
 
 			this.checkButtonGroups = new List<CheckButton> ();
 		}
@@ -334,17 +334,27 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.RemoveAction ();
 			};
 
+			this.list.SelectedItemChanging += delegate
+			{
+				this.loginNameField.DefocusAndAcceptOrReject ();
+				this.displayNameField.DefocusAndAcceptOrReject ();
+				this.newPasswordField1.DefocusAndAcceptOrReject ();
+				this.newPasswordField2.DefocusAndAcceptOrReject ();
+			};
+
 			this.list.SelectionActivated += delegate
 			{
 				this.UpdateUser ();
 				this.UpdateWidgets ();
+
+				this.loginNameField.SetFocusOnTabWidget ();
 
 				//?this.loginNameField.SelectAll ();
 				//?this.loginNameField.Focus ();
 			};
 
 
-			this.loginNameField.AcceptingEdition += delegate
+			this.loginNameField.EditionAccepted += delegate
 			{
 				this.ActionLoginNameChanged ();
 			};
@@ -368,7 +378,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
-			this.displayNameField.AcceptingEdition += delegate
+			this.displayNameField.EditionAccepted += delegate
 			{
 				this.ActionDisplayNameChanged ();
 			};
@@ -392,7 +402,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
-			this.newPasswordField1.AcceptingEdition += delegate
+			this.newPasswordField1.EditionAccepted += delegate
 			{
 				this.ActionPasswordChanged ();
 			};
@@ -416,7 +426,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			};
 
 
-			this.newPasswordField2.AcceptingEdition += delegate
+			this.newPasswordField2.EditionAccepted += delegate
 			{
 				this.ActionPasswordChanged ();
 			};
@@ -794,8 +804,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					foreach (var group in user.UserGroups)
 					{
-						if ((group.UserPowerLevel == UserPowerLevel.Administrator) ||
-							(group.UserPowerLevel == UserPowerLevel.Developer))
+						if (group.UserPowerLevel == UserPowerLevel.Administrator)
 						{
 							count++;
 						}
