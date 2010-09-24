@@ -481,7 +481,9 @@ namespace Epsitec.Cresus.Core
 
 			var userStandard1 = this.CreateUser (logicUser, groupStandard, "Pierre Arnaud", "arnaud",  "smaky");
 			var userStandard2 = this.CreateUser (logicUser, groupStandard, "Daniel Roux",   "Daniel",  "blupi");
-			var userDev       = this.CreateUser (logicUser, groupDev,      "Epsitec",       "Epsitec", "admin");
+			var userEpsitec   = this.CreateUser (logicUser, groupDev,      "Epsitec",       "Epsitec", "admin");
+
+			userEpsitec.UserGroups.Add (groupAdmin);
 
 			this.DataContext.SaveChanges ();
 		}
