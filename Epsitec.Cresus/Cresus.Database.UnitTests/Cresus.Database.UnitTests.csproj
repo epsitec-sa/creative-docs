@@ -57,6 +57,7 @@
     <Compile Include="UnitTestDbInfoManager.cs" />
     <Compile Include="UnitTestDbConnectionManager.cs" />
     <Compile Include="UnitTestDbLockManager.cs" />
+    <Compile Include="UnitTestDbTableComparer.cs" />
     <Compile Include="UnitTestDbUidManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -165,6 +165,7 @@
     <Compile Include="DbJoin.cs" />
     <Compile Include="DbTableColumn.cs" />
     <Compile Include="DbReader.cs" />
+    <Compile Include="DbTableComparer.cs" />
     <Compile Include="DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
