@@ -90,6 +90,12 @@ namespace Epsitec.Cresus.Core
 			//	Conversion d'une chaîne de la forme "jj.mm.aaaa" en une date.
 			//	Les séparateurs sont très libres, mais l'ordre jour/mois/année doit être respecté.
 			//	Si le mois ou l'année sont omis, utilise les valeurs du jour.
+			//	Exemples acceptés:
+			//		"31.3.11"
+			//		"31.12"
+			//		"1"
+			//		"17/4/2011"
+			//		"25 12"
 			if (string.IsNullOrWhiteSpace (text))
 			{
 				return null;
@@ -149,7 +155,7 @@ namespace Epsitec.Cresus.Core
 			{
 				return new Date (year, month, day);
 			}
-			catch  // TODO: si month = 13, pourquoi n'y a-t-il pas d'exception levée ?
+			catch
 			{
 				return null;
 			}
