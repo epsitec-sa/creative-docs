@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		//// <summary>
+		/// <summary>
 		/// Checks whether the information corresponding to the given key exists in the database.
 		/// </summary>
 		/// <param name="key">The key of the information.</param>
