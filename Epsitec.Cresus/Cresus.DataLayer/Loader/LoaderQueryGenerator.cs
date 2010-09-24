@@ -482,6 +482,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionsForEntity(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias)
 		{
+			if (this.DataContext.IsForeignEntity (entity))
+			{
+				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
+			}
+
 			this.AddConditionForRootEntityStatus (dbReader, entity, rootEntityAlias);
 			this.AddConditionForRootEntityId (dbReader, entity, request, rootEntityAlias);
 			this.AddJoinToSubEntities (dbReader, entity, rootEntityAlias);
@@ -676,32 +681,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void AddConditionForRelation(DbReader dbReader, AbstractEntity entity, Request request, AliasNode rootEntityAlias, StructuredTypeField field, AbstractEntity target)
 		{
-			if (this.DataContext.Contains (target))
+			if (this.DataContext.IsForeignEntity (target))
 			{
-				if (this.DataContext.IsPersistent (target))
-				{
-					DbKey key = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
-					this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
-				}
-				else
-				{
-					this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
-				}
+				throw new System.InvalidOperationException ("Usage of a foreign entity in a request is not allowed.");
+			}
+
+			if (this.DataContext.IsPersistent (target))
+			{
+				DbKey key = this.DataContext.GetNormalizedEntityKey (target).Value.RowKey;
+				this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
 			}
 			else
 			{
-				//	TODO: check if this makes sense here (PA)
-				var entityKey = DataContextPool.Instance.FindEntityKey (target);
-
-				if (entityKey.HasValue)
-				{
-					DbKey key = entityKey.Value.RowKey;
-					this.AddConditionForRelationByReference (dbReader, entity, rootEntityAlias, field, key);
-				}
-				else
-				{
-					this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
-				}
+				this.AddConditionForRelationByValue (dbReader, entity, request, rootEntityAlias, field, target);
 			}
 		}
 

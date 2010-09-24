@@ -9,6 +9,8 @@ using Epsitec.Cresus.DataLayer.UnitTests.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.DataLayer.UnitTests.General
 {
@@ -36,7 +38,7 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 
 
 		[TestMethod]
-		public void EntityInReference()
+		public void EntityReference1()
 		{
 			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
 			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
@@ -52,21 +54,47 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
 
-					// TODO One of those calls should throw an exception.
-					// Marc
-
 					person1.Gender = gender2;
 
-					dataContext1.SaveChanges ();
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
-
-			Assert.Inconclusive ();
 		}
 
 
 		[TestMethod]
-		public void EntityCollection()
+		public void EntityReference2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			{
+				DbAccess access = TestHelper.CreateDbAccess ();
+
+				dbInfrastructure1.AttachToDatabase (access);
+				dbInfrastructure2.AttachToDatabase (access);
+
+				using (DataContext dataContext1 = new DataContext (dbInfrastructure1))
+				using (DataContext dataContext2 = new DataContext (dbInfrastructure2))
+				{
+					NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
+					PersonGenderEntity gender2 = dataContext2.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (2)));
+
+					person1.Gender = gender2;
+
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityCollection1()
 		{
 			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
 			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
@@ -82,16 +110,42 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
 
-					// TODO One of those calls should throw an exception.
-					// Marc
-
 					person1.Contacts.Add (contact2);
-					
-					dataContext1.SaveChanges ();
+
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
 				}
 			}
+		}
 
-			Assert.Inconclusive ();
+
+		[TestMethod]
+		public void EntityCollection2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = new DbInfrastructure ())
+			using (DbInfrastructure dbInfrastructure2 = new DbInfrastructure ())
+			{
+				DbAccess access = TestHelper.CreateDbAccess ();
+
+				dbInfrastructure1.AttachToDatabase (access);
+				dbInfrastructure2.AttachToDatabase (access);
+
+				using (DataContext dataContext1 = new DataContext (dbInfrastructure1))
+				using (DataContext dataContext2 = new DataContext (dbInfrastructure2))
+				{
+					NaturalPersonEntity person1 = dataContext1.CreateEntity<NaturalPersonEntity> ();
+					UriContactEntity contact2 = dataContext2.ResolveEntity<UriContactEntity> (new DbKey (new DbId (4)));
+
+					person1.Contacts.Add (contact2);
+
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext1.SaveChanges ()
+					);
+				}
+			}
 		}
 
 		
@@ -109,9 +163,6 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = new DataContext (dbInfrastructure1))
 				using (DataContext dataContext2 = new DataContext (dbInfrastructure2))
 				{
-					// TODO One of those calls should throw an exception.
-					// Marc
-
 					NaturalPersonEntity person = new NaturalPersonEntity ();
 
 					person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1))));
@@ -121,11 +172,12 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 						RootEntity = person,
 					};
 
-					dataContext2.GetByRequest<NaturalPersonEntity> (request);
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext2.GetByRequest<NaturalPersonEntity> (request).ToList ()
+					);
 				}
 			}
-
-			Assert.Inconclusive ();
 		}
 
 
@@ -202,19 +254,17 @@ namespace Epsitec.Cresus.DataLayer.UnitTests.General
 				using (DataContext dataContext1 = new DataContext (dbInfrastructure1))
 				using (DataContext dataContext2 = new DataContext (dbInfrastructure2))
 				{
-					// TODO One of those calls should throw an exception.
-					// Marc
-
 					AbstractContactEntity contact = new AbstractContactEntity ()
 					{
 						NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))),
 					};
 
-					dataContext2.GetByExample (contact);
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataContext2.GetByExample (contact).ToList ()
+					);
 				}
 			}
-
-			Assert.Inconclusive ();
 		}
 
 

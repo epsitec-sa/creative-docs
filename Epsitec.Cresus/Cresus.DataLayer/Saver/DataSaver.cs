@@ -228,6 +228,15 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		}
 
 
+		public void AssertEntityIsNotForeign(AbstractEntity entity)
+		{
+			if (this.DataContext.IsForeignEntity (entity))
+			{
+				throw new System.InvalidOperationException ("Usage of foreign entity is not allowed.");
+			}
+		}
+
+
 		internal bool CheckIfFieldMustBeResaved(AbstractEntity entity, Druid fieldId)
 		{
 			var fieldsToResave = this.DataContext.GetFieldsToResave ();
