@@ -508,16 +508,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 					sel = this.list.Items.Count;
 				}
 
-				FormattedText text = LoginDialog.GetUserDescription (user);
-
-				UserState state = UserManagerDialog.CheckUser (user);
-				if (state != UserState.OK)
-				{
-					//	Affiche en italique les comptes qui ont une erreur.
-					text = string.Concat ("<i>", text, "</i>");
-				}
-
-				this.list.Items.Add (text);
+				this.list.Items.Add (user.ShortDescription);
 			}
 
 			sel = System.Math.Min (sel.Value, this.list.Items.Count-1);
@@ -742,14 +733,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			for (int i = 0; i < this.users.Count; i++)
 			{
-				UserState state = UserManagerDialog.CheckUser (this.users[i]);
+				var state = this.users[i].CurrentState;
 
-				if (state == UserState.Empty)
+				if (state == SoftwareUserEntityState.Empty)
 				{
 					return string.Format ("Le compte en position {0} n'est pas défini.", (i+1).ToString ());
 				}
 
-				if (state == UserState.Error)
+				if (state == SoftwareUserEntityState.Error)
 				{
 					return string.Format ("Le compte en position {0} n'est pas complètement défini.", (i+1).ToString ());
 				}
@@ -844,33 +835,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			return "Le mot de passe est trop simple.";
-		}
-
-		private static UserState CheckUser(SoftwareUserEntity user)
-		{
-			bool b1 = string.IsNullOrWhiteSpace (user.LoginName);
-			bool b2 = user.DisplayName.IsNullOrWhiteSpace;
-			bool b3 = user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (user.LoginPasswordHash);
-			bool b4 = user.UserGroups.Count == 0;
-
-			if (b1 && b2 && b3 && b4)
-			{
-				return UserState.Empty;
-			}
-
-			if (b1 || b2 || b3 || b4)
-			{
-				return UserState.Error;
-			}
-
-			return UserState.OK;
-		}
-
-		private enum UserState
-		{
-			OK,
-			Empty,
-			Error,
 		}
 
 
