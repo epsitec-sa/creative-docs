@@ -126,8 +126,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="request">The <see cref="Request"/> defining which <see cref="AbstractEntity"/> to retrieve.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which corresponds to the <see cref="Request"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="request"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="request.RootEntity"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="request.RequestedEntity"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If request.RootEntity is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If request.RequestedEntity is <c>null</c>.</exception>
 		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
 		{
 			request.ThrowIfNull ("request");
