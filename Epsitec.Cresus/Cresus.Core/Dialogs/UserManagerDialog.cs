@@ -638,6 +638,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 			else
 			{
+				this.manager.UpdateAuthenticate ();
 				this.manager.SaveChanges ();
 
 				this.Result = DialogResult.Accept;

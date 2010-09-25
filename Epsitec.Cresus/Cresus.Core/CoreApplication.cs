@@ -42,7 +42,14 @@ namespace Epsitec.Cresus.Core
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
 
 			this.userManager = new Business.UserManagement.UserManager (this.data);
-			this.userManager.AuthenticatedUserChanged += sender => this.data.ConnectionManager.ReopenConnection ();
+
+			// TODO: Vérifier que l'appel de ReopenConnection est bien correct !
+			//?this.userManager.AuthenticatedUserChanged += sender => this.data.ConnectionManager.ReopenConnection ();
+			this.userManager.AuthenticatedUserChanged += delegate
+			{
+				this.data.ConnectionManager.ReopenConnection ();
+				this.mainWindowController.UpdateAuthenticateUser (this.userManager.AuthenticatedUser);
+			};
 		}
 
 
