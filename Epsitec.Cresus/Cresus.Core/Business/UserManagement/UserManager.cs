@@ -55,6 +55,24 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 
 		/// <summary>
+		/// Met à jour l'utilisateur authentifié après une modification des paramètres de son compte.
+		/// </summary>
+		public void UpdateAuthenticate()
+		{
+			var user = this.authenticatedUser;
+
+			if (user != null)
+			{
+				user = this.FindActiveUser (user.Code);
+
+				this.OnAuthenticatedUserChanging ();
+				this.authenticatedUser = user;
+				this.OnAuthenticatedUserChanged ();
+			}
+		}
+
+
+		/// <summary>
 		/// Authenticates the specified user. This will display a dialog to query for the
 		/// user name and/or password.
 		/// </summary>

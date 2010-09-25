@@ -30,6 +30,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonHomePage ();
 		}
 
+
+		public void UpdateAuthenticateUser(Entities.SoftwareUserEntity user)
+		{
+			//	Met à jour le nom de l'utilisateur dans le ruban.
+			this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
+
+			ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
+		}
+
 		
 		private void CreateRibbonBook(Widget container)
 		{
@@ -215,49 +224,74 @@ namespace Epsitec.Cresus.Core.Controllers
 				PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth) * 2,
 			};
 
-			var frame = new FrameBox
 			{
-				Parent = section,
-				Dock = DockStyle.StackBegin,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth = 21,
-			};
+				var frame = new FrameBox
+				{
+					Parent = section,
+					Dock = DockStyle.StackBegin,
+					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+					PreferredWidth = 21,
+				};
 
-			//	HACK: faire cela proprement avec des commandes multi-états
+				//	HACK: faire cela proprement avec des commandes multi-états
 
-			var selectLanaugage1 = new IconButton ()
-			{
-				Parent = frame,
-				Name = "language=fr",
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
-				ActiveState = ActiveState.Yes,
-			};
+				var selectLanaugage1 = new IconButton ()
+				{
+					Parent = frame,
+					Name = "language=fr",
+					Dock = DockStyle.Stacked,
+					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagFR.icon""/>",
+					ActiveState = ActiveState.Yes,
+				};
 
-			var selectLanaugage2 = new IconButton ()
-			{
-				Parent = frame,
-				Name = "language=de",
-				Dock = DockStyle.Stacked,
-				Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
-			};
+				var selectLanaugage2 = new IconButton ()
+				{
+					Parent = frame,
+					Name = "language=de",
+					Dock = DockStyle.Stacked,
+					Text = @"<img src=""manifest:Epsitec.Common.Widgets.Images.Flags.FlagDE.icon""/>",
+				};
 
-			selectLanaugage1.Clicked += delegate
-			{
-				UI.Settings.CultureForData.SelectLanguage (null);
-				selectLanaugage1.ActiveState = ActiveState.Yes;
-				selectLanaugage2.ActiveState = ActiveState.No;
-			};
-			
-			selectLanaugage2.Clicked += delegate
-			{
-				UI.Settings.CultureForData.SelectLanguage ("de");
-				selectLanaugage1.ActiveState = ActiveState.No;
-				selectLanaugage2.ActiveState = ActiveState.Yes;
-			};
+				selectLanaugage1.Clicked += delegate
+				{
+					UI.Settings.CultureForData.SelectLanguage (null);
+					selectLanaugage1.ActiveState = ActiveState.Yes;
+					selectLanaugage2.ActiveState = ActiveState.No;
+				};
+
+				selectLanaugage2.Clicked += delegate
+				{
+					UI.Settings.CultureForData.SelectLanguage ("de");
+					selectLanaugage1.ActiveState = ActiveState.No;
+					selectLanaugage2.ActiveState = ActiveState.Yes;
+				};
+			}
 
 			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowSettings));
-			section.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowUserManager));
+
+			{
+				var frame = new FrameBox
+				{
+					Parent = section,
+					Dock = DockStyle.StackBegin,
+					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+				};
+
+				frame.Children.Add (RibbonViewController.CreateButton (Res.Commands.Global.ShowUserManager));
+
+				//	Le widget 'authenticateUserWidget' déborde volontairement sur le bas du bouton 'ShowUserManager',
+				//	pour permettre d'afficher un nom d'utilisateur lisible.
+				this.authenticateUserWidget = new StaticText
+				{
+					Parent = frame,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					PreferredHeight = 6+6,
+					PreferredWidth = RibbonViewController.GetButtonWidth (RibbonViewController.buttonLargeWidth),
+					Dock = DockStyle.Stacked,
+					Margins = new Margins (0, 0, -6, 0),
+				};
+			}
 		}
 
 		
@@ -317,5 +351,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
+		private StaticText						authenticateUserWidget;
 	}
 }
