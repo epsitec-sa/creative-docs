@@ -35,21 +35,13 @@ namespace Epsitec.Cresus.Core
 
 			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommandDispatcher (this);
+			this.userManager = new Business.UserManagement.UserManager (this.data);
 
 			this.mainWindowOrchestrator = new DataViewOrchestrator (this.data, this.CommandContext);
 			this.mainWindowController = new MainWindowController (this.data, this.CommandContext, this.mainWindowOrchestrator);
 
 			this.attachedDialogs = new List<Dialogs.IAttachedDialog> ();
-
-			this.userManager = new Business.UserManagement.UserManager (this.data);
-
-			// TODO: Vérifier que l'appel de ReopenConnection est bien correct !
-			//?this.userManager.AuthenticatedUserChanged += sender => this.data.ConnectionManager.ReopenConnection ();
-			this.userManager.AuthenticatedUserChanged += delegate
-			{
-				this.data.ConnectionManager.ReopenConnection ();
-				this.mainWindowController.UpdateAuthenticateUser (this.userManager.AuthenticatedUser);
-			};
+			this.userManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 
@@ -265,7 +257,12 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private static string GetSettingsPath()
+		private void HandleAuthenticatedUserChanged(object sender)
+		{
+			this.data.ConnectionManager.ReopenConnection ();
+		}
+
+        private static string GetSettingsPath()
 		{
 			return System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus.Core.settings.data");
 		}
