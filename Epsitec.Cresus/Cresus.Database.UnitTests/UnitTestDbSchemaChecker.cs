@@ -17,7 +17,7 @@ namespace Cresus.Database.UnitTests
 	
 	
 	[TestClass]
-	public sealed class UnitTestDbTableComparer
+	public sealed class UnitTestDbSchemaChecker
 	{
 
 
@@ -40,9 +40,9 @@ namespace Cresus.Database.UnitTests
 		[TestMethod]
 		public void NullTest()
 		{
-			Assert.IsTrue (DbTableComparer.AreEqual (null, null));
-			Assert.IsFalse (DbTableComparer.AreEqual (new DbTable (), null));
-			Assert.IsFalse (DbTableComparer.AreEqual (null, new DbTable ()));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (null, null));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (new DbTable (), null));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (null, new DbTable ()));
 		}
 
 
@@ -51,7 +51,7 @@ namespace Cresus.Database.UnitTests
 		{
 			foreach (DbTable table in this.GetSampleTablesDatabase ())
 			{
-				Assert.IsTrue (DbTableComparer.AreEqual (table, table));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Cresus.Database.UnitTests
 		{
 			foreach (DbTable table in this.GetSampleTablesMemory ())
 			{
-				Assert.IsTrue (DbTableComparer.AreEqual (table, table));
+				Assert.IsTrue (DbSchemaChecker.CheckTables (table, table));
 			}
 		}
 
@@ -77,8 +77,8 @@ namespace Cresus.Database.UnitTests
 			table2.DefineDisplayName ("name1");
 			table3.DefineDisplayName ("name2");
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -93,8 +93,8 @@ namespace Cresus.Database.UnitTests
 			table2.DefineCategory (DbElementCat.Internal);
 			table3.DefineCategory (DbElementCat.ManagedUserData);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -109,8 +109,8 @@ namespace Cresus.Database.UnitTests
 			table2.Comment = "comment1";
 			table3.Comment = "comment3";
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -125,8 +125,8 @@ namespace Cresus.Database.UnitTests
 			table2.DefineCaptionId (Druid.FromLong (1));
 			table3.DefineCaptionId (Druid.FromLong (2));
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -141,8 +141,8 @@ namespace Cresus.Database.UnitTests
 			table2.DefineRevisionMode (DbRevisionMode.Immutable);
 			table3.DefineRevisionMode (DbRevisionMode.TrackChanges);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -157,8 +157,8 @@ namespace Cresus.Database.UnitTests
 			table2.DefineLocalizations (new string[] { "de", "en", "fr", });
 			table3.DefineLocalizations (new string[] { "fr", "en", });
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -182,8 +182,8 @@ namespace Cresus.Database.UnitTests
 			table2.AddIndex (table2.Columns[0], table2.Columns[1]);
 			table3.AddIndex (table3.Columns[1], table3.Columns[0]);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 
 			table1 = new DbTable ();
 			table2 = new DbTable ();
@@ -204,8 +204,8 @@ namespace Cresus.Database.UnitTests
 			table2.AddIndex (table2.Columns[1]);
 			table3.AddIndex (table3.Columns[0]);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 
 			table1 = new DbTable ();
 			table2 = new DbTable ();
@@ -219,8 +219,8 @@ namespace Cresus.Database.UnitTests
 			table2.AddIndex (SqlSortOrder.Ascending, table2.Columns[0]);
 			table3.AddIndex (SqlSortOrder.Descending, table3.Columns[0]);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -246,8 +246,8 @@ namespace Cresus.Database.UnitTests
 			table2.PrimaryKeys.Add (table2.Columns[0]);
 			table3.PrimaryKeys.Add (table3.Columns[0]);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -267,8 +267,8 @@ namespace Cresus.Database.UnitTests
 				table3.Columns.Add (DbTable.CreateRefColumn (transaction, TestHelper.DbInfrastructure, "c1", "t1", DbNullability.No));
 			}
 			
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -282,8 +282,8 @@ namespace Cresus.Database.UnitTests
 			table1.DefineKey (new DbKey (new DbId (1)));
 			table2.DefineKey (new DbKey (new DbId (2)));
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -310,8 +310,8 @@ namespace Cresus.Database.UnitTests
 			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource2, columnSource2);
 			DbTable relationTable3 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource3, columnSource3);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (relationTable1, relationTable2));
-			Assert.IsFalse (DbTableComparer.AreEqual (relationTable1, relationTable3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
 		}
 
 
@@ -338,8 +338,8 @@ namespace Cresus.Database.UnitTests
 			DbTable relationTable2 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource2);
 			DbTable relationTable3 = DbTable.CreateRelationTable (TestHelper.DbInfrastructure, tableSource, columnSource3);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (relationTable1, relationTable2));
-			Assert.IsFalse (DbTableComparer.AreEqual (relationTable1, relationTable3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (relationTable1, relationTable2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (relationTable1, relationTable3));
 		}
 
 
@@ -358,8 +358,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineCaptionId (Druid.FromLong (1));
 			table3.Columns[0].DefineCaptionId (Druid.FromLong (2));
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -378,8 +378,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineCardinality (DbCardinality.Collection);
 			table3.Columns[0].DefineCardinality (DbCardinality.Reference);			
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -398,8 +398,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineCategory (DbElementCat.ManagedUserData);
 			table3.Columns[0].DefineCategory (DbElementCat.Internal);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -418,8 +418,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineColumnClass (DbColumnClass.Data);
 			table3.Columns[0].DefineColumnClass (DbColumnClass.KeyId);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -438,8 +438,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].Comment = "comment1";
 			table3.Columns[0].Comment = "comment2";
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -458,8 +458,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].IsAutoIncremented = true;
 			table3.Columns[0].IsAutoIncremented = false;
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -478,8 +478,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineLocalization (DbColumnLocalization.Localized);
 			table3.Columns[0].DefineLocalization (DbColumnLocalization.None);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -498,8 +498,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineDisplayName ("name1");
 			table3.Columns[0].DefineDisplayName ("name2");
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -518,8 +518,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineRevisionMode (DbRevisionMode.TrackChanges);
 			table3.Columns[0].DefineRevisionMode (DbRevisionMode.Immutable);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -542,8 +542,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineTable (table2);
 			table3.Columns[0].DefineTable (table3);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -562,8 +562,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineType (this.GetDbTypeDef1 ());
 			table3.Columns[0].DefineType (this.GetDbTypeDef2 ());
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -582,8 +582,8 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefineTargetTableName ("name1");
 			table3.Columns[0].DefineTargetTableName ("name2");
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
@@ -602,30 +602,90 @@ namespace Cresus.Database.UnitTests
 			table2.Columns[0].DefinePrimaryKey (true);
 			table3.Columns[0].DefinePrimaryKey (false);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table1, table2));
-			Assert.IsFalse (DbTableComparer.AreEqual (table1, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.CheckTables (table1, table3));
 		}
 
 
 		[TestMethod]
 		public void DbTableMemoryDatabase()
 		{
-			DbTable table1 = this.CreateDbTableSample3 ();
-			DbTable table2 = this.CreateDbTableSample3 ();
+			DbTable table1 = this.CreateDbTableSample3 ("myTable");
+			DbTable table2 = this.CreateDbTableSample3 ("myTable");
 
 			TestHelper.DbInfrastructure.RegisterNewDbTable (table1);
 
 			DbTable table3 = TestHelper.DbInfrastructure.ResolveDbTable (table1.Name);
 
-			Assert.IsTrue (DbTableComparer.AreEqual (table2, table3));
+			Assert.IsTrue (DbSchemaChecker.CheckTables (table2, table3));
 		}
 
-		
+
+		[TestMethod]
+		public void CheckSchema1()
+		{
+			List<DbTable> dbTables = new List<DbTable> ()
+			{
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTableDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableConnection),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableInfo),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableLock),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableLog),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableUid),
+			};
+
+			Assert.IsTrue (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+		}
+
+
+		[TestMethod]
+		public void CheckSchema2()
+		{
+			List<DbTable> dbTables = new List<DbTable> ()
+			{
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableColumnDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTableDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableTypeDef),
+				TestHelper.DbInfrastructure.ResolveDbTable (Tags.TableConnection),
+				this.CreateDbTableSample3 ("myUndefinedTable")
+			};
+
+			Assert.IsFalse (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+		}
+
+
+		[TestMethod]
+		public void CheckSchema3()
+		{
+			List<string> names = new List<string> ()
+			{
+				"myDefinedTable1",
+				"myDefinedTable2",
+				"myDefinedTable3",
+				"myDefinedTable4",
+				"myDefinedTable5",
+			};
+
+			List<DbTable> dbTables = names.Select (this.CreateDbTableSample3).ToList ();
+
+			foreach (DbTable table in names.Select (this.CreateDbTableSample3).ToList ())
+			{
+				Assert.IsFalse (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+
+				TestHelper.DbInfrastructure.RegisterNewDbTable (table);
+			}
+
+			Assert.IsTrue (DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, dbTables));
+		}
+
+				
 		private IEnumerable<DbTable> GetSampleTablesMemory()
 		{
 			yield return this.CreateDbTableSample1 ();
 			yield return this.CreateDbTableSample2 ();
-			yield return this.CreateDbTableSample3 ();
+			yield return this.CreateDbTableSample3 ("myTable");
 		}
 
 
@@ -648,11 +708,11 @@ namespace Cresus.Database.UnitTests
 		}
 
 
-		private DbTable CreateDbTableSample3()
+		private DbTable CreateDbTableSample3(string name)
 		{
 			DbTable table = new DbTable ();
 
-			table.DefineDisplayName ("myTable");
+			table.DefineDisplayName (name);
 			table.DefineCategory (DbElementCat.ManagedUserData);
 			table.DefineRevisionMode (DbRevisionMode.Immutable);
 

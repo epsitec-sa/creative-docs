@@ -1,8 +1,7 @@
-﻿using Epsitec.Common.Support.Extensions;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using System.Linq;
+using System.Collections;
 
 
 namespace Epsitec.Cresus.Database
@@ -13,11 +12,27 @@ namespace Epsitec.Cresus.Database
 	// Marc
 
 
-	internal static class DbTableComparer
+	internal static class DbSchemaChecker
 	{
 
 
-		public static bool AreEqual(DbTable a, DbTable b)
+		public static bool CheckSchema(DbInfrastructure dbInfrastructure, List<DbTable> schema)
+		{
+			bool ok = true;
+
+			for (int i = 0; ok && i < schema.Count; i++)
+			{
+				DbTable expected = schema[i];
+				DbTable actual = dbInfrastructure.ResolveDbTable (expected.Name);
+
+				ok = DbSchemaChecker.CheckTables (expected, actual);
+			}
+
+			return ok;
+		}
+
+
+		public static bool CheckTables(DbTable a, DbTable b)
 		{
 			bool same;
 
@@ -29,7 +44,7 @@ namespace Epsitec.Cresus.Database
 			{
 				same = a != null
 					&& b != null
-					&& DbTableComparer.AreDbTableEqual (a, b);
+					&& DbSchemaChecker.AreDbTableEqual (a, b);
 			}
 
 			return same;
@@ -38,12 +53,12 @@ namespace Epsitec.Cresus.Database
 
 		private static bool AreDbTableEqual(DbTable a, DbTable b)
 		{
-			return DbTableComparer.AreDbTableValuesEqual (a, b)
-				&& DbTableComparer.AreDbTableLocalizationsEqual (a, b)
-				&& DbTableComparer.AreDbTablePrimaryKeysEqual (a, b)
-				&& DbTableComparer.AreDbTableForeignKeysEqual (a, b)
-				&& DbTableComparer.AreDbTableIndexesEqual (a, b)
-				&& DbTableComparer.AreDbTableColumnsEqual (a, b);
+			return DbSchemaChecker.AreDbTableValuesEqual (a, b)
+				&& DbSchemaChecker.AreDbTableLocalizationsEqual (a, b)
+				&& DbSchemaChecker.AreDbTablePrimaryKeysEqual (a, b)
+				&& DbSchemaChecker.AreDbTableForeignKeysEqual (a, b)
+				&& DbSchemaChecker.AreDbTableIndexesEqual (a, b)
+				&& DbSchemaChecker.AreDbTableColumnsEqual (a, b);
 		}
 
 
@@ -68,46 +83,46 @@ namespace Epsitec.Cresus.Database
 		private static bool AreDbTablePrimaryKeysEqual(DbTable a, DbTable b)
 		{
 			return a.HasPrimaryKeys == b.HasPrimaryKeys
-				&& DbTableComparer.CompareUnOrderedLists (a.PrimaryKeys.ToList (),b.PrimaryKeys.ToList (),DbTableComparer.AreDbColumnEqual);
+				&& DbSchemaChecker.CompareUnOrderedLists (a.PrimaryKeys.ToList (),b.PrimaryKeys.ToList (),DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
 		private static bool AreDbTableForeignKeysEqual(DbTable a, DbTable b)
 		{
-			return DbTableComparer.CompareUnOrderedLists (a.ForeignKeys.ToList(),b.ForeignKeys.ToList(),DbTableComparer.AreDbForeignKeyEqual);
+			return DbSchemaChecker.CompareUnOrderedLists (a.ForeignKeys.ToList(),b.ForeignKeys.ToList(),DbSchemaChecker.AreDbForeignKeyEqual);
 		}
 
 
 		private static bool AreDbTableIndexesEqual(DbTable a, DbTable b)
 		{
 			return a.HasIndexes == b.HasIndexes
-				&& DbTableComparer.CompareUnOrderedLists (a.Indexes.ToList (), b.Indexes.ToList (), DbTableComparer.AreDbIndexEqual);
+				&& DbSchemaChecker.CompareUnOrderedLists (a.Indexes.ToList (), b.Indexes.ToList (), DbSchemaChecker.AreDbIndexEqual);
 		}
 
 
 		private static bool AreDbTableLocalizationsEqual(DbTable a, DbTable b)
 		{
 			return a.LocalizationCount == b.LocalizationCount
-				&& DbTableComparer.CompareUnOrderedLists (a.Localizations.ToList (), b.Localizations.ToList (), string.Equals);
+				&& DbSchemaChecker.CompareUnOrderedLists (a.Localizations.ToList (), b.Localizations.ToList (), string.Equals);
 		}
 
 
 		private static bool AreDbTableColumnsEqual(DbTable a, DbTable b)
 		{
-			return DbTableComparer.CompareUnOrderedLists (a.Columns.ToList (), b.Columns.ToList (), DbTableComparer.AreDbColumnEqual);
+			return DbSchemaChecker.CompareUnOrderedLists (a.Columns.ToList (), b.Columns.ToList (), DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
 		private static bool AreDbForeignKeyEqual(DbForeignKey a, DbForeignKey b)
 		{
-			return DbTableComparer.CompareOrderedArrays (a.Columns, b.Columns, DbTableComparer.AreDbColumnEqual);
+			return DbSchemaChecker.CompareOrderedArrays (a.Columns, b.Columns, DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
 		private static bool AreDbIndexEqual(DbIndex a, DbIndex b)
 		{
 			return a.SortOrder == b.SortOrder
-				&& DbTableComparer.CompareOrderedArrays (a.Columns,b.Columns,DbTableComparer.AreDbColumnEqual);
+				&& DbSchemaChecker.CompareOrderedArrays (a.Columns,b.Columns,DbSchemaChecker.AreDbColumnEqual);
 		}
 
 
