@@ -283,6 +283,20 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
+		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		public void CheckDateInvalid1()
+		{
+			Date date = new Date (2010, 9, 31);
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentOutOfRangeException))]
+		public void CheckDateInvalid2()
+		{
+			Date date = new Date (2010, 13, 1);
+		}
+
+		[Test]
 		public void CheckDateSerialization()
 		{
 			Date date_1 = Date.Today;
