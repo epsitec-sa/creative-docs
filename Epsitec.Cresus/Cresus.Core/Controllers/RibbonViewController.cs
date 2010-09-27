@@ -36,9 +36,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Met à jour le nom de l'utilisateur dans le ruban.
 			Entities.SoftwareUserEntity user = CoreProgram.Application.UserManager.AuthenticatedUser;
-			this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
 
-			ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
+			if (user == null)
+			{
+				this.authenticateUserWidget.Text = null;
+
+				ToolTip.Default.HideToolTipForWidget (this.authenticateUserWidget);
+			}
+			else
+			{
+				this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
+
+				ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
+			}
 		}
 
 		

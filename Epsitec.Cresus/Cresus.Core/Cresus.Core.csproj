@@ -123,7 +123,6 @@
     <Compile Include="Entities\LegalPersonEntity.cs" />
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
-    <Compile Include="Entities\SoftwareUserEntityState.cs" />
     <Compile Include="Entities\WorkflowEntity.cs" />
     <Compile Include="Entities\WorkflowEventEntity.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />

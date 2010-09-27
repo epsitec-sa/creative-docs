@@ -31,7 +31,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 		{
 			this.application = application;
 			this.manager     = application.UserManager;
+
 			this.initialUser = user;
+			this.authenticatedUser = this.manager.AuthenticatedUser;
 
 			this.users  = this.manager.GetAllUsers ().OrderBy (x => x.DisplayName).ToList ();
 			this.groups = this.manager.GetAllUserGroups ().Where (x => x.UserPowerLevel != UserPowerLevel.System).OrderBy (x => x.UserPowerLevel).ToList ();
@@ -243,17 +245,17 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 				ToolTip.Default.SetToolTip (this.authenticationMethodCheckButton, "Si le nom du compte correspond à la session Windows en cours,<br/>le mot de passe ne sera pas demandé.");
 
-				this.enableUserCheckButton = new CheckButton
+				this.disableUserCheckButton = new CheckButton
 				{
 					Parent = this.userBox,
 					AutoToggle = false,
-					Text = "Utilisateur actif",
+					Text = "Utilisateur désactivé",
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, 10),
 					TabIndex = tabIndex++,
 				};
 
-				ToolTip.Default.SetToolTip (this.enableUserCheckButton, "Ce compte sera proposé lors de l'identification.");
+				ToolTip.Default.SetToolTip (this.disableUserCheckButton, "Ce compte ne sera plus proposé lors de l'identification.");
 
 
 				new StaticText
@@ -598,9 +600,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.ActionAuthenticationMethodChanged ();
 			};
 
-			this.enableUserCheckButton.Clicked += delegate
+			this.disableUserCheckButton.Clicked += delegate
 			{
-				UserManagerDialog.ToggleCheckButton (this.enableUserCheckButton);
+				UserManagerDialog.ToggleCheckButton (this.disableUserCheckButton);
 				this.ActionEnableUserChanged ();
 			};
 
@@ -664,7 +666,14 @@ namespace Epsitec.Cresus.Core.Dialogs
 					sel = this.list.Items.Count;
 				}
 
-				this.list.Items.Add (user.ShortDescription);
+				FormattedText description = user.ShortDescription;
+
+				if (this.authenticatedUser != null && this.authenticatedUser.Code == user.Code)
+				{
+					description = TextFormatter.FormatText ("<b>", description, "</b>");
+				}
+
+				this.list.Items.Add (description);
 			}
 
 			sel = System.Math.Min (sel.Value, this.list.Items.Count-1);
@@ -689,7 +698,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.endDateField.Text = null;
 
 				this.authenticationMethodCheckButton.ActiveState = ActiveState.No;
-				this.enableUserCheckButton.ActiveState = ActiveState.No;
+				this.disableUserCheckButton.ActiveState = ActiveState.No;
 
 				foreach (var button in this.checkButtonGroups)
 				{
@@ -708,7 +717,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.endDateField.Text = Misc.GetDateTimeShortDescription (user.EndDate);
 
 				this.authenticationMethodCheckButton.ActiveState = user.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.System ? ActiveState.Yes : ActiveState.No;
-				this.enableUserCheckButton.ActiveState = user.Disabled ? ActiveState.No : ActiveState.Yes;
+				this.disableUserCheckButton.ActiveState = user.Disabled ? ActiveState.Yes : ActiveState.No;
 
 				for (int i=0; i<this.checkButtonGroups.Count; i++)
 				{
@@ -731,8 +740,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			bool hasPassword = (user != null && !string.IsNullOrEmpty (user.LoginPasswordHash));
 
-			this.removeButton.Enable = (user != null);
-
+			this.removeButton.Enable = (user != null && (this.authenticatedUser == null || this.authenticatedUser.Code != user.Code));
+			this.disableUserCheckButton.Enable = (this.authenticatedUser == null || user == null || this.authenticatedUser.Code != user.Code);
 			this.newPasswordLabel.Text = hasPassword ? "Pour changer le mot de passe :" : "Mot de passe du compte :";
 
 			var message = this.GetErrorMessage ();
@@ -774,6 +783,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.users.RemoveAt (this.list.SelectedItemIndex);
 
 			this.UpdateList ();
+			this.UpdateUser ();
 			this.UpdateWidgets ();
 		}
 
@@ -888,7 +898,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			user.Disabled = this.enableUserCheckButton.ActiveState == ActiveState.No;
+			user.Disabled = this.disableUserCheckButton.ActiveState == ActiveState.Yes;
 
 			this.UpdateList ();
 			this.UpdateWidgets ();
@@ -1021,7 +1031,8 @@ namespace Epsitec.Cresus.Core.Dialogs
 				foreach (var user in this.users)
 				{
 					if ((user.BeginDate == null || user.BeginDate.Value <= System.DateTime.Now) && 
-						user.EndDate == null)
+						user.EndDate == null &&
+						user.Disabled == false)
 					{
 						foreach (var group in user.UserGroups)
 						{
@@ -1116,6 +1127,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private readonly List<CheckButton>					checkButtonGroups;
 
 		private SoftwareUserEntity							initialUser;
+		private SoftwareUserEntity							authenticatedUser;
 		private FrameBox									toolbar;
 		private GlyphButton									addButton;
 		private GlyphButton									removeButton;
@@ -1123,7 +1135,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private FrameBox									userBox;
 		private TextFieldEx									loginNameField;
 		private TextFieldEx									displayNameField;
-		private CheckButton									enableUserCheckButton;
+		private CheckButton									disableUserCheckButton;
 		private CheckButton									authenticationMethodCheckButton;
 		private TextFieldEx									beginDateField;
 		private TextFieldEx									endDateField;

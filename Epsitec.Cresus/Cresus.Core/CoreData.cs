@@ -491,11 +491,13 @@ namespace Epsitec.Cresus.Core
 #endif
 
 			var userStandard1 = this.CreateUser (logicUser, groupDev, "Pierre Arnaud", "arnaud",  "smaky", Business.UserManagement.UserAuthenticationMethod.System);
-			var userStandard2 = this.CreateUser (logicUser, groupDev, "Daniel Roux",   "Daniel",  "blupi", Business.UserManagement.UserAuthenticationMethod.System);
+			var userStandard2 = this.CreateUser (logicUser, groupDev, "Marc Bettex",   "Marc",    "tiger", Business.UserManagement.UserAuthenticationMethod.System);
+			var userStandard3 = this.CreateUser (logicUser, groupDev, "Daniel Roux",   "Daniel",  "blupi", Business.UserManagement.UserAuthenticationMethod.System);
 			var userEpsitec   = this.CreateUser (logicUser, groupDev, "Epsitec",       "Epsitec", "admin", Business.UserManagement.UserAuthenticationMethod.Password);
 
 			userStandard1.UserGroups.Add (groupStandard);
 			userStandard2.UserGroups.Add (groupStandard);
+			userStandard3.UserGroups.Add (groupStandard);
 			userEpsitec.UserGroups.Add (groupAdmin);
 
 			this.DataContext.SaveChanges ();
