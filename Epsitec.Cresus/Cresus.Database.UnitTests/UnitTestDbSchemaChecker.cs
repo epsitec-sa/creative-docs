@@ -622,6 +622,26 @@ namespace Cresus.Database.UnitTests
 
 
 		[TestMethod]
+		public void CheckSchemaArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => DbSchemaChecker.CheckSchema (null, new List<DbTable> () { new DbTable () })
+			);
+
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure , null)
+			);
+
+			ExceptionAssert.Throw<System.ArgumentException>
+			(
+				() => DbSchemaChecker.CheckSchema (TestHelper.DbInfrastructure, new List<DbTable> () { new DbTable (), null })
+			);
+		}
+
+
+		[TestMethod]
 		public void CheckSchema1()
 		{
 			List<DbTable> dbTables = new List<DbTable> ()
