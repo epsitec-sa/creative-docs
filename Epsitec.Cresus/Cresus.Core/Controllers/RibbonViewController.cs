@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public RibbonViewController(DataViewOrchestrator orchestrator)
 			: base ("Ribbon", orchestrator)
 		{
+			CoreProgram.Application.UserManager.AuthenticatedUserChanged += this.HandleAuthenticatedUserChanged;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -31,9 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void UpdateAuthenticateUser(Entities.SoftwareUserEntity user)
+		private void UpdateAuthenticatedUser()
 		{
 			//	Met à jour le nom de l'utilisateur dans le ruban.
+			Entities.SoftwareUserEntity user = CoreProgram.Application.UserManager.AuthenticatedUser;
 			this.authenticateUserWidget.Text = string.Concat ("<font size=\"9\">", user.LoginName, "</font>");
 
 			ToolTip.Default.SetToolTip (this.authenticateUserWidget, user.ShortDescription);
@@ -294,6 +296,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		private void HandleAuthenticatedUserChanged(object sender)
+		{
+			this.UpdateAuthenticatedUser ();
+		}
+
 		
 		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, int? dx = null, bool isActivable = false)
 		{
@@ -338,7 +346,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 			}
 		}
-
+		
 		private static double GetButtonWidth(int dx)
 		{
 			return 2 * ((dx + 1) / 2 + 5);

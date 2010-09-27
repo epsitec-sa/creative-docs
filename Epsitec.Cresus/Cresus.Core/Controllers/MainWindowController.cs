@@ -29,13 +29,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void UpdateAuthenticateUser(SoftwareUserEntity user)
-		{
-			//	Met à jour le nom de l'utilisateur dans le ruban.
-			this.ribbonController.UpdateAuthenticateUser (user);
-		}
-
-
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.ribbonController;
