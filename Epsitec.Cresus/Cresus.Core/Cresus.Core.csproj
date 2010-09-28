@@ -114,6 +114,8 @@
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionIsrDefinitionViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\LegalPersonEntity.cs" />
@@ -228,7 +231,7 @@
     <Compile Include="Controllers\EditionControllers\EditionNumericValueArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionArticleCategoryViewController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionArticleDefinitionItemViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionArticleDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionTaxDocumentItemViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryArticleCategoryViewController.cs" />
@@ -623,6 +626,7 @@
     <EmbeddedResource Include="Images\UserManager.icon" />
     <EmbeddedResource Include="Images\Base.BusinessSettings.icon" />
     <EmbeddedResource Include="Images\Data.BusinessSettings.icon" />
+    <EmbeddedResource Include="Images\Data.IsrDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

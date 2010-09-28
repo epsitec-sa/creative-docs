@@ -2,7 +2,9 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -24,18 +26,46 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			using (var data = TileContainerController.Setup (this))
 			{
-				data.Add (
-					new SummaryData
-					{
-						Name				= "BusinessSettings",
-						IconUri				= "Data.BusinessSettings",
-						Title				= TextFormatter.FormatText ("Réglages de l'entreprise"),
-						CompactTitle		= TextFormatter.FormatText ("Réglages de l'entreprise"),
-						TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("Réglages")),
-						CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("Réglages")),
-						EntityMarshaler		= this.CreateEntityMarshaler (),
-					});
+				this.CreateUIMain (data);
+				this.CreateUIIsrDefinitions (data);
 			}
 		}
+
+		private void CreateUIMain(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					Name				= "BusinessSettings",
+					IconUri				= "Data.BusinessSettings",
+					Title				= TextFormatter.FormatText ("Réglages de l'entreprise"),
+					CompactTitle		= TextFormatter.FormatText ("Réglages de l'entreprise"),
+					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("Réglages")),
+					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText ("Réglages")),
+					EntityMarshaler		= this.CreateEntityMarshaler (),
+				});
+		}
+
+		private void CreateUIIsrDefinitions(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "IsrDefinition",
+					IconUri		 = "Data.IsrDefinition",
+					Title		 = TextFormatter.FormatText ("Comptes BVR"),
+					CompactTitle = TextFormatter.FormatText ("Comptes BVR"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<IsrDefinitionEntity> ("IsrDefinition", this.BusinessContext);
+
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.FinanceSettings.IsrDefs));
+		}
+
 	}
 }
