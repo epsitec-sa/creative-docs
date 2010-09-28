@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public void CreateUI(FrameBox parent, bool isReadOnly)
 		{
 			this.InitialiseEnumValuesList ();
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 
 			this.listController = new ListController<decimal> (this.values, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
-			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize);
+			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize, isReadOnly);
 
 			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle valeur préférentielle");
 			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime la valeur préférentielle");
@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.valueField = new TextFieldEx
 			{
 				Parent = parent,
+				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),

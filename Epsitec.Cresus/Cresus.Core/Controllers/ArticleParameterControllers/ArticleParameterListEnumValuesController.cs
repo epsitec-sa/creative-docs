@@ -34,8 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public void CreateUI(FrameBox parent, bool isReadOnly)
 		{
+			this.isReadOnly = isReadOnly;
+
 			this.InitialiseEnumValuesList ();
 
 			//	Crée la liste.
@@ -48,7 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			};
 
 			this.listController = new ListController<EnumValue> (this.enumValues, this.ListControllerItemToText, this.ListControllerGetTextInfo, this.ListControllerCreateItem);
-			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize);
+			this.listController.CreateUI (listContainer, Direction.Down, UIBuilder.TinyButtonSize, isReadOnly);
 
 			ToolTip.Default.SetToolTip (this.listController.AddButton,      "Ajoute une nouvelle valeur dans l'énumération");
 			ToolTip.Default.SetToolTip (this.listController.RemoveButton,   "Supprime la valeur de l'énumération");
@@ -68,6 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.valueField = new TextFieldEx
 			{
 				Parent = parent,
+				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
@@ -88,6 +91,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.shortDescriptionField = new TextFieldEx
 			{
 				Parent = parent,
+				IsReadOnly = isReadOnly,
 				PreferredHeight = 20,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
@@ -108,6 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.longDescriptionField = new TextFieldMultiEx
 			{
 				Parent = parent,
+				IsReadOnly = isReadOnly,
 				PreferredHeight = 78,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, UIBuilder.RightMargin, 0, UIBuilder.MarginUnderTextField),
@@ -121,6 +126,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			this.defaultButton = new CheckButton
 			{
 				Parent = parent,
+				Enable = !isReadOnly,
 				Text = "Cette valeur est la valeur par défaut",
 				AutoToggle = false,
 				Dock = DockStyle.Top,
@@ -190,13 +196,13 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		{
 			int sel = this.listController.SelectedIndex;
 
-			this.valueLabel.Enable = sel != -1;
+			this.valueLabel.Enable            = sel != -1;
 			this.shortDescriptionLabel.Enable = sel != -1;
-			this.longDescriptionLabel.Enable = sel != -1;
-			this.valueField.Enable = sel != -1;
+			this.longDescriptionLabel.Enable  = sel != -1;
+			this.valueField.Enable            = sel != -1;
 			this.shortDescriptionField.Enable = sel != -1;
-			this.longDescriptionField.Enable = sel != -1;
-			this.defaultButton.Enable = sel != -1;
+			this.longDescriptionField.Enable  = sel != -1;
+			this.defaultButton.Enable         = !this.isReadOnly && sel != -1;
 		}
 
 
@@ -413,5 +419,6 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 		private CheckButton defaultButton;
 
 		private List<EnumValue> enumValues;
+		private bool isReadOnly;
 	}
 }

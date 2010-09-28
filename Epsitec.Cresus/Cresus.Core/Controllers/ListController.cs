@@ -45,9 +45,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void CreateUI(Widget parent, Direction arrowDirection, double? buttonSize = null)
+		public void CreateUI(Widget parent, Direction arrowDirection, double? buttonSize = null, bool isReadOnly = false)
 		{
 			//	Les valeurs préférentielles pour buttonSize sont 19 et 23, pour obtenir un dessin optimal des GlyphButton.
+			this.isReadOnly = isReadOnly;
+
 			if (buttonSize == null)
 			{
 				buttonSize = UIBuilder.TinyButtonSize;
@@ -319,10 +321,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			int sel = this.SelectedIndex;
 
-			this.addButton.Enable = true;
-			this.removeButton.Enable = sel != -1;
-			this.moveUpButton.Enable = sel > 0;
-			this.moveDownButton.Enable = sel != -1 && sel < this.collection.Count-1;
+			this.addButton.Enable      = !this.isReadOnly;
+			this.removeButton.Enable   = !this.isReadOnly && sel != -1;
+			this.moveUpButton.Enable   = !this.isReadOnly && sel > 0;
+			this.moveDownButton.Enable = !this.isReadOnly && sel != -1 && sel < this.collection.Count-1;
 		}
 
 
@@ -364,6 +366,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private GlyphButton									moveDownButton;
 		private StaticText									labelInfo;
 		private ScrollList									scrollList;
+		private bool										isReadOnly;
 		private bool										ignoreChange;
 	}
 }

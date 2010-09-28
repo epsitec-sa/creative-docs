@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var group = builder.CreateGroup (tile, "Contenu de l'énumération");
 			this.parameterController = new ArticleParameterControllers.ArticleParameterListEnumValuesController (this.TileContainer, this.Entity);
-			this.parameterController.CreateUI (group);
+			this.parameterController.CreateUI (group, builder.ReadOnly);
 		}
 
 
