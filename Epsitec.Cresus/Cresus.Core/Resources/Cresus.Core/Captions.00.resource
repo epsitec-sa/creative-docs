@@ -397,7 +397,7 @@
   <data name="Val.ArticleType.Charge" id="ATD">&lt;s:data id="_0" f:Name="Charge" f:Labels="{Collection {Text 'Frais'}}" /&gt;</data>
   <data name="Val.ArticleType.Freight" id="AUD">&lt;s:data id="_0" f:Name="Freight" f:Labels="{Collection {Text 'Port &amp;amp;amp; emballage'}}" /&gt;</data>
   <data name="Val.ArticleType.Tax" id="AVD">&lt;s:data id="_0" f:Name="Tax" f:Labels="{Collection {Text 'Taxes'}}" /&gt;</data>
-  <data name="Typ.ArticleType" id="AOD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ArticleType" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.ArticleType, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0APD]'}, {Text '1 [L0AQD]'}, {Text '2 [L0ARD]'}, {Text '3 [L0ASD]'}, {Text '4 [L0ATD]'}, {Text '5 [L0AUD]'}, {Text '6 [L0AVD]'}}" f:Labels="{Collection {Text 'Type d&amp;amp;apos;article'}}" /&gt;</data>
+  <data name="Typ.ArticleType" id="AOD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ArticleType" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.ArticleType, Cresus.Core" f:_2.EnumValues="{Collection {Text '0 [L0APD]'}, {Text '1 [L0AQD]'}, {Text '2 [L0ARD]'}, {Text '3 [L0ASD]'}, {Text '4 [L0ATD]'}, {Text '5 [L0AUD]'}, {Text '6 [L0AVD]'}, {Text '7 [L0KG]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.ArticleType, Cresus.Core/None" f:Labels="{Collection {Text 'Type d&amp;amp;apos;article'}}" /&gt;</data>
   <data name="Fld.ArticleCategory.ArticleType" id="A0E">&lt;s:data id="_0" f:Name="ArticleType" /&gt;</data>
   <data name="Val.PriceDisplayModes.WithTax" id="A1E">&lt;s:data id="_0" f:Name="WithTax" f:Labels="{Collection {Text 'Montants TTC'}}" /&gt;</data>
   <data name="Fld.PaymentDetailEvent.BillingDetail" id="A2E">&lt;s:data id="_0" f:Name="BillingDetail" /&gt;</data>
@@ -573,4 +573,6 @@
   <data name="Fld.WorkflowEdge.NextNode" id="AAJ">&lt;s:data id="_0" f:Name="NextNode" /&gt;</data>
   <data name="Fld.WorkflowNode.Name" id="ABJ">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
   <data name="Fld.WorkflowDefinition.Name" id="ACJ">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
+  <data name="Val.ArticleType.Admin" id="KG">&lt;s:data id="_0" f:Name="Admin" /&gt;</data>
+  <data name="Cmd.Base.ShowSettings" id="KH">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowSettings" f:Description="Montre la base des réglages de l&amp;amp;apos;entreprise" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.Settings.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Réglages de l&amp;amp;apos;entreprise'}}" /&gt;</data>
 </bundle>
