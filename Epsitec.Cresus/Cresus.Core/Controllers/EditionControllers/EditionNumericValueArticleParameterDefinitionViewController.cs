@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var group2 = builder.CreateGroup (tile, "Valeurs préférentielles");
 			this.parameterController = new ArticleParameterControllers.ArticleParameterListPreferredValuesController (this.TileContainer, this.Entity);
-			this.parameterController.CreateUI (group2);
+			this.parameterController.CreateUI (group2, builder.ReadOnly);
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
