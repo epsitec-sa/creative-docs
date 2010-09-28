@@ -20,14 +20,14 @@ namespace Epsitec.Cresus.Core
 				
 				//	designer:cap/L0AMC
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleDefinitions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406));
+				//	designer:cap/L0KH
+				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
 				//	designer:cap/L0A23
 				public static readonly global::Epsitec.Common.Widgets.Command ShowCustomers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98));
 				//	designer:cap/L0KE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
 				//	designer:cap/L0K4
 				public static readonly global::Epsitec.Common.Widgets.Command ShowInvoiceDocuments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
-				//	designer:cap/L0KH
-				public static readonly global::Epsitec.Common.Widgets.Command ShowSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
 			}
 			
 			public static class Clipboard
@@ -122,14 +122,14 @@ namespace Epsitec.Cresus.Core
 			{
 				//	designer:cap/L0AMC
 				public const long ShowArticleDefinitions = 0x150000A000196L;
+				//	designer:cap/L0KH
+				public const long ShowBusinessSettings = 0x1500014000011L;
 				//	designer:cap/L0A23
 				public const long ShowCustomers = 0x150000A000062L;
 				//	designer:cap/L0KE
 				public const long ShowDocuments = 0x150001400000EL;
 				//	designer:cap/L0K4
 				public const long ShowInvoiceDocuments = 0x1500014000004L;
-				//	designer:cap/L0KH
-				public const long ShowSettings = 0x1500014000011L;
 			}
 			
 			public static class Clipboard

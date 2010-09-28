@@ -223,6 +223,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				case "InvoiceDocuments":
 					this.SetContents (context => this.data.GetInvoiceDocuments (context));
 					break;
+
+				case "BusinessSettings":
+					this.SetContents (context => this.data.GetBusinessSettings (context));
+					break;
 			}
 		}
 

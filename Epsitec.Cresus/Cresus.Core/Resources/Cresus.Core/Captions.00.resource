@@ -574,5 +574,5 @@
   <data name="Fld.WorkflowNode.Name" id="ABJ">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
   <data name="Fld.WorkflowDefinition.Name" id="ACJ">&lt;s:data id="_0" f:Name="Name" /&gt;</data>
   <data name="Val.ArticleType.Admin" id="KG">&lt;s:data id="_0" f:Name="Admin" /&gt;</data>
-  <data name="Cmd.Base.ShowSettings" id="KH">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowSettings" f:Description="Montre la base des réglages de l&amp;amp;apos;entreprise" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.Settings.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Réglages de l&amp;amp;apos;entreprise'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowBusinessSettings" id="KH">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowBusinessSettings" f:Description="Montre la base des réglages de l&amp;amp;apos;entreprise" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.BusinessSettings.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Réglages de l&amp;amp;apos;entreprise'}}" /&gt;</data>
 </bundle>
