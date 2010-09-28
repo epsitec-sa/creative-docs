@@ -18,5 +18,11 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.Document.IsNull () == false;
 			}
 		}
+
+		public FormattedText GetSummary()
+		{
+			string date = Misc.GetDateTimeShortDescription (this.Date);
+			return TextFormatter.FormatText (date, this.EventType.Code);
+		}
 	}
 }

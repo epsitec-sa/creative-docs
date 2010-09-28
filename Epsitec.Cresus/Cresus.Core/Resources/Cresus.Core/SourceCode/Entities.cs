@@ -76,6 +76,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ACI]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AII]", typeof (Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUI]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A5J]", typeof (Epsitec.Cresus.Core.Entities.WorkflowNodeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0A6J]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -10192,6 +10194,18 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> ("[L0AHI]");
 			}
 		}
+		///	<summary>
+		///	The <c>ActiveNodes</c> field.
+		///	designer:fld/L0ACI/L0A7J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A7J]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ActiveNodes
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0A7J]");
+			}
+		}
 		
 		partial void OnIdChanging(int oldValue, int newValue);
 		partial void OnIdChanged(int oldValue, int newValue);
@@ -10262,6 +10276,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AII/L0ACJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ACJ]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACJ]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ACJ]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/L0AII/L0AJI
 		///	</summary>
@@ -10283,7 +10319,21 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>StartingNodes</c> field.
+		///	designer:fld/L0AII/L0A9J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A9J]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> StartingNodes
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0A9J]");
+			}
+		}
 		
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
@@ -10454,6 +10504,134 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 606);	// [L0AUI]
 		public static readonly new string EntityStructuredTypeKey = "[L0AUI]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.WorkflowNode Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>WorkflowNode</c> entity.
+	///	designer:cap/L0A5J
+	///	</summary>
+	public partial class WorkflowNodeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0A5J/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0A5J/L0ABJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ABJ]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0ABJ]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0ABJ]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Edges</c> field.
+		///	designer:fld/L0A5J/L0A8J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A8J]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> Edges
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity> ("[L0A8J]");
+			}
+		}
+		
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 613);	// [L0A5J]
+		public static readonly new string EntityStructuredTypeKey = "[L0A5J]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.WorkflowEdge Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>WorkflowEdge</c> entity.
+	///	designer:cap/L0A6J
+	///	</summary>
+	public partial class WorkflowEdgeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>NextNode</c> field.
+		///	designer:fld/L0A6J/L0AAJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AAJ]")]
+		public global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity NextNode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AAJ]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue = this.NextNode;
+				if (oldValue != value)
+				{
+					this.OnNextNodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0AAJ]", oldValue, value);
+					this.OnNextNodeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNextNodeChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		partial void OnNextNodeChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 614);	// [L0A6J]
+		public static readonly new string EntityStructuredTypeKey = "[L0A6J]";
 	}
 }
 #endregion

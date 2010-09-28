@@ -59,11 +59,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				this.CreateUIActionButtons (builder);
 
 				builder.CreateFooterEditorTile ();
-
-				using (var data = TileContainerController.Setup (builder))
-				{
-					this.CreateUICaseEvents (data);
-				}
 			}
 		}
 
@@ -185,31 +180,5 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			return EditionAffairViewController.GetOfferTileName (this.Entity.Documents.IndexOf (doc));
 		}
 
-		private void CreateUICaseEvents(SummaryDataItems data)
-		{
-			data.Add (
-				new SummaryData
-				{
-					AutoGroup    = true,
-					Name		 = "WorkflowEvent",
-					IconUri		 = "Data.WorkflowEvent",
-					Title		 = TextFormatter.FormatText ("Evénements"),
-					CompactTitle = TextFormatter.FormatText ("Evénements"),
-					Text		 = CollectionTemplate.DefaultEmptyText
-				});
-
-			var template = new CollectionTemplate<WorkflowEventEntity> ("WorkflowEvent", data.Controller, this.DataContext);
-
-			template.DefineText (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
-
-			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
-		}
-
-		private static string GetCaseEventsSummary(WorkflowEventEntity caseEventEntity)
-		{
-			string date = Misc.GetDateTimeShortDescription (caseEventEntity.Date);
-			return string.Format ("{0} {1}", date, caseEventEntity.EventType.Code);
-		}
 	}
 }
