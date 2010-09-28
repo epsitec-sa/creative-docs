@@ -126,6 +126,11 @@ namespace Epsitec.Cresus.Core
 			return new InvoiceDocumentRepository (this, context).GetAllEntities ();
 		}
 
+		public IEnumerable<BusinessSettingsEntity> GetBusinessSettings(DataContext context)
+		{
+			return new BusinessSettingsRepository (this, context).GetAllEntities ();
+		}
+
 		public IEnumerable<RelationEntity> GetCustomers(AbstractPersonEntity person)
 		{
 			var repository = new RelationRepository (this);
