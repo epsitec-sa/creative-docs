@@ -114,6 +114,7 @@
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionPaymentReminderDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionIsrDefinitionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\SoftwareUserEntity.cs" />
     <Compile Include="Entities\EnumValueArticleParameterDefinitionEntity1.cs" />
@@ -627,6 +629,7 @@
     <EmbeddedResource Include="Images\Base.BusinessSettings.icon" />
     <EmbeddedResource Include="Images\Data.BusinessSettings.icon" />
     <EmbeddedResource Include="Images\Data.IsrDefinition.icon" />
+    <EmbeddedResource Include="Images\Data.PaymentReminderDefinition.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
