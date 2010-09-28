@@ -55,8 +55,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					AutoGroup    = true,
 					Name		 = "IsrDefinition",
 					IconUri		 = "Data.IsrDefinition",
-					Title		 = TextFormatter.FormatText ("Comptes BVR"),
-					CompactTitle = TextFormatter.FormatText ("Comptes BVR"),
+					Title		 = TextFormatter.FormatText ("Contrats BVR"),
+					CompactTitle = TextFormatter.FormatText ("Contrats BVR"),
 					Text		 = CollectionTemplate.DefaultEmptyText,
 				});
 

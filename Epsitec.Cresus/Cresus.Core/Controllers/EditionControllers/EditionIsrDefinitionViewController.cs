@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			using (var builder = new UIBuilder (this))
 			{
 				builder.CreateHeaderEditorTile ();
-				builder.CreateEditionTitleTile ("Data.IsrDefinition", "Compte BVR");
+				builder.CreateEditionTitleTile ("Data.IsrDefinition", "Contrat BVR");
 
 				this.CreateUIMain (builder);
 
@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile,  0, "Numéro d'adhérent",  Marshaler.Create (() => this.Entity.SubscriberNumber, x => this.Entity.SubscriberNumber = x));
-			builder.CreateTextFieldMulti (tile, 52, "Adresse d'adhérent", Marshaler.Create (() => this.Entity.SubscriberAddress, x => this.Entity.SubscriberAddress = x));
-			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.Currency, x => this.Entity.Currency = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
+			builder.CreateTextField             (tile, 150,                              "Numéro d'adhérent",  Marshaler.Create (() => this.Entity.SubscriberNumber, x => this.Entity.SubscriberNumber = x));
+			builder.CreateTextFieldMulti        (tile,  52,                              "Adresse d'adhérent", Marshaler.Create (() => this.Entity.SubscriberAddress, x => this.Entity.SubscriberAddress = x));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie",            Marshaler.Create (() => this.Entity.Currency, x => this.Entity.Currency = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (string.IsNullOrWhiteSpace (this.Entity.SubscriberNumber) &&
+			if (string.IsNullOrWhiteSpace (this.Entity.SubscriberNumber) ||
 				string.IsNullOrWhiteSpace (this.Entity.BankReferenceNumberPrefix))
 			{
 				return EditionStatus.Empty;
