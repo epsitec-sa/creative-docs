@@ -10090,32 +10090,36 @@ namespace Epsitec.Cresus.Core.Entities
 	///	The <c>Workflow</c> entity.
 	///	designer:cap/L0ACI
 	///	</summary>
-	public partial class WorkflowEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.IItemCode
+	public partial class WorkflowEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region IItemCode Members
 		///	<summary>
-		///	The <c>Code</c> field.
-		///	designer:fld/L0ACI/L0AD3
+		///	The <c>Id</c> field.
+		///	designer:fld/L0ACI/L0A4J
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
-		public string Code
+		[global::Epsitec.Common.Support.EntityField ("[L0A4J]")]
+		public int Id
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+				return this.GetField<int> ("[L0A4J]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+				int oldValue = this.Id;
+				if (oldValue != value)
+				{
+					this.OnIdChanging (oldValue, value);
+					this.SetField<int> ("[L0A4J]", oldValue, value);
+					this.OnIdChanged (oldValue, value);
+				}
 			}
 		}
-		#endregion
 		///	<summary>
-		///	The <c>WorkflowStatus</c> field.
+		///	The <c>Status</c> field.
 		///	designer:fld/L0ACI/L0AFI
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AFI]")]
-		public global::Epsitec.Cresus.Core.Business.WorkflowStatus WorkflowStatus
+		public global::Epsitec.Cresus.Core.Business.WorkflowStatus Status
 		{
 			get
 			{
@@ -10123,21 +10127,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.WorkflowStatus;
+				global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue = this.Status;
 				if (oldValue != value)
 				{
-					this.OnWorkflowStatusChanging (oldValue, value);
+					this.OnStatusChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Business.WorkflowStatus> ("[L0AFI]", oldValue, value);
-					this.OnWorkflowStatusChanged (oldValue, value);
+					this.OnStatusChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>WorkflowDefinition</c> field.
+		///	The <c>WorkflowDef</c> field.
 		///	designer:fld/L0ACI/L0AEI
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AEI]")]
-		public global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity WorkflowDefinition
+		public global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity WorkflowDef
 		{
 			get
 			{
@@ -10145,21 +10149,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue = this.WorkflowDefinition;
+				global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue = this.WorkflowDef;
 				if (oldValue != value)
 				{
-					this.OnWorkflowDefinitionChanging (oldValue, value);
+					this.OnWorkflowDefChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity> ("[L0AEI]", oldValue, value);
-					this.OnWorkflowDefinitionChanged (oldValue, value);
+					this.OnWorkflowDefChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>WorkflowState</c> field.
+		///	The <c>SerializedState</c> field.
 		///	designer:fld/L0ACI/L0AGI
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AGI]")]
-		public string WorkflowState
+		public string SerializedState
 		{
 			get
 			{
@@ -10167,21 +10171,21 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.WorkflowState;
+				string oldValue = this.SerializedState;
 				if (oldValue != value)
 				{
-					this.OnWorkflowStateChanging (oldValue, value);
+					this.OnSerializedStateChanging (oldValue, value);
 					this.SetField<string> ("[L0AGI]", oldValue, value);
-					this.OnWorkflowStateChanged (oldValue, value);
+					this.OnSerializedStateChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>WorkflowEvents</c> field.
+		///	The <c>Events</c> field.
 		///	designer:fld/L0ACI/L0AHI
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AHI]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> WorkflowEvents
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.WorkflowEventEntity> Events
 		{
 			get
 			{
@@ -10189,12 +10193,14 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnWorkflowStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
-		partial void OnWorkflowStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
-		partial void OnWorkflowDefinitionChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
-		partial void OnWorkflowDefinitionChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
-		partial void OnWorkflowStateChanging(string oldValue, string newValue);
-		partial void OnWorkflowStateChanged(string oldValue, string newValue);
+		partial void OnIdChanging(int oldValue, int newValue);
+		partial void OnIdChanged(int oldValue, int newValue);
+		partial void OnStatusChanging(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnStatusChanged(global::Epsitec.Cresus.Core.Business.WorkflowStatus oldValue, global::Epsitec.Cresus.Core.Business.WorkflowStatus newValue);
+		partial void OnWorkflowDefChanging(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnWorkflowDefChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
+		partial void OnSerializedStateChanging(string oldValue, string newValue);
+		partial void OnSerializedStateChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

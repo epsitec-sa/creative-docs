@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Entities
 				if (this.documents == null)
                 {
 					this.documents = new ObservableList<DocumentEntity> ();
-					this.documents.AddRange (this.Workflows.SelectMany (w => w.WorkflowEvents).Where (e => e.HasDocument).Select (e => e.Document).Distinct ());
+					this.documents.AddRange (this.Workflows.SelectMany (w => w.Events).Where (e => e.HasDocument).Select (e => e.Document).Distinct ());
                 }
 
 				//	TODO : refresh this list when changes happen
