@@ -45,6 +45,11 @@ namespace Epsitec.Cresus.Core.Entities
 					text = TextFormatter.FormatText (this.DisplayName, "(", this.LoginName, ")");
 				}
 
+				if (Business.UserManagement.UserManager.IsPasswordRequired (this) == false)
+				{
+					text = TextFormatter.FormatText (text, "*");
+				}
+
 				if (this.CurrentStatus != Controllers.EditionStatus.Valid)
 				{
 					//	Affiche en italique les comptes qui ont une erreur.

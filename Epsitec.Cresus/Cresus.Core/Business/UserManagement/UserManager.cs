@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
 		{
-			if (!this.IsPasswordRequired (user))
+			if (!UserManager.IsPasswordRequired (user))
 			{
 				return true;
 			}
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			return user.CheckPassword (password);
 		}
 
-		public bool IsPasswordRequired(SoftwareUserEntity user)
+		public static bool IsPasswordRequired(SoftwareUserEntity user)
 		{
 			if (user == null)
 			{
