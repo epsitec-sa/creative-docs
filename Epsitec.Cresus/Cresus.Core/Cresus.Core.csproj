@@ -620,6 +620,7 @@
     <EmbeddedResource Include="Images\Base.Documents.icon" />
     <EmbeddedResource Include="Images\Data.UnitOfMeasureGroup.icon" />
     <EmbeddedResource Include="Images\UserManager.icon" />
+    <EmbeddedResource Include="Images\Base.Settings.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
