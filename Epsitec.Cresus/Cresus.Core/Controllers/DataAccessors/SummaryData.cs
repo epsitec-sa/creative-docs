@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public SummaryData()
 		{
 			this.bindings = new List<AccessorBinding> ();
+			this.DefaultMode = ViewControllerMode.Edition;
 		}
 
 		public SummaryData(SummaryData template)
@@ -138,6 +139,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public ViewControllerMode				DefaultMode
+		{
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Gets or sets the associated title tile. The <see cref="SummaryData"/>
@@ -309,7 +315,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else
 			{
 				navigationPathElement = new TileNavigationPathElement (this.Name);
-				var controller = EntityViewControllerFactory.Create ("ViewController", this.EntityMarshaler, ViewControllerMode.Edition, orchestrator, navigationPathElement);
+				var controller = EntityViewControllerFactory.Create ("ViewController", this.EntityMarshaler, this.DefaultMode, orchestrator, navigationPathElement);
 
 				return controller;
 			}

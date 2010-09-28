@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Core.Business
 
 		Freight		 = 50,	// fret (port et emballage)
 		Tax			 = 60,  // taxe
+		Admin		 = 70,	// frais administratif
 	}
 }
