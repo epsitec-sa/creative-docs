@@ -114,6 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			base.CreateUI (container);
 			this.CreateUIFrame (container);
 
 			this.browserViewController.CreateUI (this.leftPanel);

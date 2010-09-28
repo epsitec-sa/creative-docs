@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
 			this.pool.Add (this);
 			this.entityRecords = new List<EntityRecord> ();
+			this.masterEntities = new List<AbstractEntity> ();
 
 			this.dataContext = this.pool.CreateDataContext (this);
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
@@ -150,23 +151,36 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.SetNavigationPathElement (navigationPathElement);
 		}
 
+		public void AddMasterEntity(AbstractEntity masterEntity)
+		{
+			this.masterEntities.Add (masterEntity);
+		}
+
+		public void RemoveMasterEntity(AbstractEntity masterEntity)
+		{
+			this.masterEntities.Remove (masterEntity);
+		}
+
 		public T GetMasterEntity<T>()
 			where T : AbstractEntity, new ()
 		{
 			var entities = this.DataContext.GetEntitiesOfType<T> ();
-			T   master   = null;
+			T   master   = this.masterEntities.OfType<T> ().LastOrDefault ();
 
-			foreach (var entity in entities)
+			if (master == null)
 			{
-				if (master != null)
+				foreach (var entity in entities)
 				{
-					throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
-				}
+					if (master != null)
+					{
+						throw new System.InvalidOperationException ("More than one entity of type " + typeof (T).Name);
+					}
 
-				master = entity;
+					master = entity;
+				}
 			}
 
-			return EntityNullReferenceVirtualizer.WrapNullEntity (master);
+			return master.WrapNullEntity ();
 		}
 		
 		public void Discard()
@@ -447,6 +461,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		private readonly BusinessContextPool pool;
 		private readonly DataContext dataContext;
 		private readonly List<EntityRecord> entityRecords;
+		private readonly List<AbstractEntity> masterEntities;
 		private readonly CoreDataLocker locker;
 
 		private int dataChangedCounter;

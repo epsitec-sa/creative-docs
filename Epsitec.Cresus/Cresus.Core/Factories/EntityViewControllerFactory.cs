@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			if ((controller == null) &&
-						(mode == ViewControllerMode.Creation))
+				(mode == ViewControllerMode.Creation))
 			{
 				return EntityViewControllerFactory.Create (name, entity, ViewControllerMode.Summary, orchestrator, controllerSubTypeId, navigationPathElement);
 			}

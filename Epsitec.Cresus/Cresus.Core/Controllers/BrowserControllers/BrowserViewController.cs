@@ -130,6 +130,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public override void CreateUI(Widget container)
 		{
+			base.CreateUI (container);
 			var frame = new FrameBox ()
 			{
 				Parent = container,
