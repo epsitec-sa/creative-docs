@@ -103,6 +103,7 @@
     <Compile Include="BusinessLogic\Rules\BusinessBillingDetailSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserGroupSetupRule.cs" />
     <Compile Include="BusinessLogic\Rules\SoftwareUserSetupRule.cs" />
+    <Compile Include="BusinessLogic\Rules\WorkflowSetupRule.cs" />
     <Compile Include="Business\WorkflowStatus.cs" />
     <Compile Include="Business\DocumentFlowDirection.cs" />
     <Compile Include="Business\DocumentType.cs" />

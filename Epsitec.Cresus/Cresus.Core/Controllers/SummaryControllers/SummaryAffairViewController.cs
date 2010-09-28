@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIAffair (data);
+				this.CreateUIWorkflows (data);
+				this.CreateUIEvents (data);
 			}
 		}
 
@@ -38,6 +40,48 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.IdA)),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
+		}
+
+		private void CreateUIWorkflows(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = false,
+					Name		 = "Workflow",
+					IconUri		 = "Data.Workflow",
+					Title		 = TextFormatter.FormatText ("Workflow"),
+					CompactTitle = TextFormatter.FormatText ("Workflows"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<WorkflowEntity> ("Workflow", this.BusinessContext);
+
+			template.DefineText (x => TextFormatter.FormatText ("Variante", x.Id+1));
+			template.DefineCompactText (x => TextFormatter.FormatText ("Variante", x.Id+1));
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));
+		}
+
+		private void CreateUIEvents(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "WorkflowEvent",
+					IconUri		 = "Data.WorkflowEvent",
+					Title		 = TextFormatter.FormatText ("Evénement"),
+					CompactTitle = TextFormatter.FormatText ("Evénements"),
+					Text		 = CollectionTemplate.DefaultEmptyText
+				});
+
+			var template = new CollectionTemplate<WorkflowEventEntity> ("WorkflowEvent", this.BusinessContext);
+
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
 		}
 	}
 }
