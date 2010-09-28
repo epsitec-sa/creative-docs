@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<WorkflowEntity> ("Workflow", this.BusinessContext);
 
-			template.DefineText (x => TextFormatter.FormatText ("Variante", x.Id+1));
-			template.DefineCompactText (x => TextFormatter.FormatText ("Variante", x.Id+1));
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));
 		}
