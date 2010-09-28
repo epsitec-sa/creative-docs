@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public CoreData							Data
+		public virtual CoreData					Data
 		{
 			get
 			{
@@ -200,29 +200,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected virtual void AboutToCloseUI()
 		{
 		}
-
-        protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.OnDisposing ();
-				this.Disposing = null;
-			}
-
-			base.Dispose (disposing);
-		}
-
-		private void OnDisposing()
-		{
-			var handler = this.Disposing;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		public event EventHandler Disposing;
 
 		private readonly DataViewOrchestrator orchestrator;
 		private readonly CoreViewController parentController;

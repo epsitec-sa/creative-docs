@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 			billingDetails.AmountDue.Date = dueDate;
 			billingDetails.Title = string.Format ("Échéance au {0}", Misc.GetDateTimeDescription (dueDate));
 
-			var isrDef = settings.FinanceSettings.IsrDefinitions.FirstOrDefault (x => x.Currency == currencyCode);
+			var isrDef = settings.FinanceSettings.IsrDefs.FirstOrDefault (x => x.Currency == currencyCode);
 
 			if (isrDef.IsNull () == false)
 			{

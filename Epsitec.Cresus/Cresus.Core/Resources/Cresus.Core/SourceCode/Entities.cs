@@ -75,6 +75,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AFH]", typeof (Epsitec.Cresus.Core.Entities.DocumentTypeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0ACI]", typeof (Epsitec.Cresus.Core.Entities.WorkflowEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[L0AII]", typeof (Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[L0AUI]", typeof (Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity))]
 #region Epsitec.Cresus.Core.Country Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -9891,15 +9892,39 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class FinanceSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>IsrDefinitions</c> field.
+		///	The <c>IsrDefs</c> field.
 		///	designer:fld/L0A8H/L0AAH
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AAH]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> IsrDefinitions
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> IsrDefs
 		{
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[L0AAH]");
+			}
+		}
+		///	<summary>
+		///	The <c>PaymentReminderDefs</c> field.
+		///	designer:fld/L0A8H/L0AVI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AVI]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> PaymentReminderDefs
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity> ("[L0AVI]");
+			}
+		}
+		///	<summary>
+		///	The <c>PaymentModes</c> field.
+		///	designer:fld/L0A8H/L0ATI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0ATI]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> PaymentModes
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.PaymentModeEntity> ("[L0ATI]");
 			}
 		}
 		
@@ -10266,6 +10291,163 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 594);	// [L0AII]
 		public static readonly new string EntityStructuredTypeKey = "[L0AII]";
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.PaymentReminderDefinition Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>PaymentReminderDefinition</c> entity.
+	///	designer:cap/L0AUI
+	///	</summary>
+	public partial class PaymentReminderDefinitionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemCode
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/L0AUI/L0AB5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AB5]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region IItemCode Members
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/L0AUI/L0AD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AD3]")]
+		public string Code
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.GetCode (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemCodeInterfaceImplementation.SetCode (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/L0AUI/L0A0J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A0J]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A0J]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Name;
+				if (oldValue != value)
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A0J]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/L0AUI/L0A1J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A1J]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[L0A1J]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value)
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[L0A1J]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ExtraPaymentTerm</c> field.
+		///	designer:fld/L0AUI/L0A2J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A2J]")]
+		public int ExtraPaymentTerm
+		{
+			get
+			{
+				return this.GetField<int> ("[L0A2J]");
+			}
+			set
+			{
+				int oldValue = this.ExtraPaymentTerm;
+				if (oldValue != value)
+				{
+					this.OnExtraPaymentTermChanging (oldValue, value);
+					this.SetField<int> ("[L0A2J]", oldValue, value);
+					this.OnExtraPaymentTermChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>AdministrativeTaxArticle</c> field.
+		///	designer:fld/L0AUI/L0A3J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0A3J]")]
+		public global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity AdministrativeTaxArticle
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0A3J]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue = this.AdministrativeTaxArticle;
+				if (oldValue != value)
+				{
+					this.OnAdministrativeTaxArticleChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity> ("[L0A3J]", oldValue, value);
+					this.OnAdministrativeTaxArticleChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnExtraPaymentTermChanging(int oldValue, int newValue);
+		partial void OnExtraPaymentTermChanged(int oldValue, int newValue);
+		partial void OnAdministrativeTaxArticleChanging(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
+		partial void OnAdministrativeTaxArticleChanged(global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.ArticleDefinitionEntity newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.PaymentReminderDefinitionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (21, 10, 606);	// [L0AUI]
+		public static readonly new string EntityStructuredTypeKey = "[L0AUI]";
 	}
 }
 #endregion

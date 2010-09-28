@@ -84,6 +84,11 @@ namespace Epsitec.Cresus.Core.Orchestrators.Navigation
 			return this.Equals (obj as NavigationPath);
 		}
 
+		public override int GetHashCode()
+		{
+			return this.ToString ().GetHashCode ();
+		}
+
 		#region IEquatable<NavigationPath> Members
 
 		public bool Equals(NavigationPath other)
