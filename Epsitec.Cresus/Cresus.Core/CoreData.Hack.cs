@@ -214,14 +214,11 @@ namespace Epsitec.Cresus.Core
 				"Téléphone sortant"
 			};
 
-			int rank = 0;
-
 			foreach (string name in names)
 			{
 				WorkflowEventTypeEntity eventType = this.DataContext.CreateEntity<WorkflowEventTypeEntity> ();
 
 				eventType.Code = name;
-				//?eventType.Rank = rank++;
 
 				yield return eventType;
 			}
@@ -907,7 +904,7 @@ namespace Epsitec.Cresus.Core
 			isrDef1.SubscriberAddress = "Epsitec SA<br/>Ch. du Fontenay 6<br/>1400 Yverdon-les-Bains";
 			isrDef1.IncomingBookAccount = "1010";
 			
-			finance.IsrDefinitions.Add (isrDef1);
+			finance.IsrDefs.Add (isrDef1);
 
 			yield return business;
 		}

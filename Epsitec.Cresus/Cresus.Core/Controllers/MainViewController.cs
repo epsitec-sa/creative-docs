@@ -22,10 +22,9 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreViewController, ICommandHandler
 	{
-		public MainViewController(CoreData data, CommandContext commandContext, DataViewOrchestrator orchestrator)
+		public MainViewController(DataViewOrchestrator orchestrator, CommandContext commandContext)
 			: base ("MainView", orchestrator)
 		{
-			this.data = data;
 			this.commandContext = commandContext;
 
 			this.actionViewController  = new ActionViewController (this.Orchestrator);
@@ -34,17 +33,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserViewController = new BrowserViewController (this.Orchestrator);
 			this.browserSettingsController = new BrowserSettingsController (this.browserViewController);
 
+			//	TODO: check if following code is still meaningful
+
 			this.commandContext.AttachCommandHandler (this);
 		}
 
-
-		public CoreData Data
-		{
-			get
-			{
-				return this.data;
-			}
-		}
 
 		public CommandContext CommandContext
 		{
@@ -304,26 +297,23 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Print()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.data.CreateDataContext ("PrintEngine:Print");
+			var context   = this.Data.CreateDataContext ("PrintEngine:Print");
 			var entity    = context.ResolveEntity (entityKey);
 
 			PrintEngine.Print (entity);
 
-			this.data.DisposeDataContext (context);
+			this.Data.DisposeDataContext (context);
 		}
 
 		public void Preview()
 		{
 			var entityKey = this.GetVisiblePersistedEntities ().Where (x => PrintEngine.CanPrint (x)).Select (x => DataContextPool.Instance.FindEntityKey (x)).FirstOrDefault ();
-			var context   = this.data.CreateDataContext ("PrintEngine:Preview");
+			var context   = this.Data.CreateDataContext ("PrintEngine:Preview");
 			var entity    = context.ResolveEntity (entityKey);
 
 			PrintEngine.Preview (entity);
 
-			this.data.DisposeDataContext (context);
-//			var context = this.data.DataContext;
-//			var entity = this.browserViewController.GetActiveEntity (context);
-//			PrintEngine.Preview (entity);
+			this.Data.DisposeDataContext (context);
 		}
 
 		private IEnumerable<AbstractEntity> GetVisiblePersistedEntities()
@@ -364,7 +354,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private readonly CoreData data;
 		private readonly CommandContext commandContext;
 		private readonly BrowserViewController browserViewController;
 		private readonly BrowserSettingsController browserSettingsController;

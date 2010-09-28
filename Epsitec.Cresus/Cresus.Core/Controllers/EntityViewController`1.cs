@@ -127,6 +127,5 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		private T entity;
-		private BusinessLogic.BusinessContext businessContext;
 	}
 }

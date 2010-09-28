@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.data = data;
 			this.commandContext = commandContext;
-			this.mainViewController = new MainViewController (this.data, commandContext, this);
+			this.mainViewController = new MainViewController (this, commandContext);
 			this.dataViewController = new DataViewController (this);
 			this.navigator = new NavigationOrchestrator (this.mainViewController);
 		}
