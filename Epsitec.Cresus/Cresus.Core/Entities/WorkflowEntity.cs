@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return this.WorkflowEvents.FirstOrDefault ().WrapNullEntity ();
+				return this.Events.FirstOrDefault ().WrapNullEntity ();
 			}
 		}
 	}

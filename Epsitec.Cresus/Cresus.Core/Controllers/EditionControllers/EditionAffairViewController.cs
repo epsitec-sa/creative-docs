@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			businessEvent.Date      = now;
 			businessEvent.Document  = document;
 
-			workflow.WorkflowEvents.Add (businessEvent);
+			workflow.Events.Add (businessEvent);
 
 			this.Entity.Workflows.Add (workflow);
 
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			template.DefineText (x => TextFormatter.FormatText (GetCaseEventsSummary (x)));
 			template.DefineCompactText (x => TextFormatter.FormatText (Misc.GetDateTimeShortDescription (x.Date), x.EventType.Code));
 
-			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.WorkflowEvents).ToList ()));
+			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows.SelectMany (w => w.Events).ToList ()));
 		}
 
 		private static string GetCaseEventsSummary(WorkflowEventEntity caseEventEntity)
