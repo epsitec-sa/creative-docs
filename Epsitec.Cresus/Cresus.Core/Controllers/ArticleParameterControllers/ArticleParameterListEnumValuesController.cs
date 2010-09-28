@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 	/// <summary>
 	/// Ce contrôleur gère la définition des paramètres d'un article.
 	/// </summary>
-	public class ArticleParameterListController
+	public class ArticleParameterListEnumValuesController
 	{
-		public ArticleParameterListController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
+		public ArticleParameterListEnumValuesController(TileContainer tileContainer, EnumValueArticleParameterDefinitionEntity parameterEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.parameterEntity = parameterEntity;

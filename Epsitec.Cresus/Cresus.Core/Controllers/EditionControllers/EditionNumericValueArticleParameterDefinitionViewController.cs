@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -78,15 +79,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 80, "Valeur minimale",         Marshaler.Create (() => this.Entity.MinValue, x => this.Entity.MinValue = x));
-			builder.CreateTextField (tile, 80, "Valeur maximale",         Marshaler.Create (() => this.Entity.MaxValue, x => this.Entity.MaxValue = x));
-			builder.CreateTextField (tile, 80, "Valeur par défaut",       Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
-			builder.CreateTextField (tile,  0, "Valeurs préférentielles", Marshaler.Create (() => this.PreferredValues, x => this.PreferredValues = x));
+			var group1 = builder.CreateGroup (tile, "Valeurs minimale et maximale");
+			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.MinValue, x => this.Entity.MinValue = x));
+			builder.CreateTextField (group1, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.MaxValue, x => this.Entity.MaxValue = x));
+
+			builder.CreateTextField (tile, 80, "Valeur par défaut", Marshaler.Create (() => this.Entity.DefaultValue, x => this.Entity.DefaultValue = x));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 80, "Modulo",          Marshaler.Create (() => this.Entity.Modulo, x => this.Entity.Modulo = x));
-			builder.CreateTextField (tile, 80, "AddBeforeModulo", Marshaler.Create (() => this.Entity.AddBeforeModulo, x => this.Entity.AddBeforeModulo = x));
+			var group2 = builder.CreateGroup (tile, "Valeurs préférentielles");
+			this.parameterController = new ArticleParameterControllers.ArticleParameterListPreferredValuesController (this.TileContainer, this.Entity);
+			this.parameterController.CreateUI (group2);
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			var group3 = builder.CreateGroup (tile, "Modulo et AddBeforeModulo");
+			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.Modulo, x => this.Entity.Modulo = x));
+			builder.CreateTextField (group3, DockStyle.Left, 80, Marshaler.Create (() => this.Entity.AddBeforeModulo, x => this.Entity.AddBeforeModulo = x));
 		}
 
 
@@ -114,5 +123,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			return EditionStatus.Valid;
 		}
+
+
+		private ArticleParameterControllers.ArticleParameterListPreferredValuesController		parameterController;
 	}
 }
