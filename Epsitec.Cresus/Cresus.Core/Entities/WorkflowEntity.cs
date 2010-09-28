@@ -18,5 +18,33 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.Events.FirstOrDefault ().WrapNullEntity ();
 			}
 		}
+
+		public FormattedText GetCompactSummary()
+		{
+			return this.GetWorkflowName ();
+		}
+
+		public FormattedText GetSummary()
+		{
+			var    name    = this.GetWorkflowName ();
+			string version = this.Id == 0 ? "" : string.Format ("Variante {0}", this.Id);
+
+			return TextFormatter.FormatText (name, "\n", version);
+		}
+		
+		private FormattedText GetWorkflowName()
+		{
+			FormattedText name;
+
+			if (this.ActiveNodes.Count == 0)
+			{
+				name = TextFormatter.FormatText ("Workflow sans nom");
+			}
+			else
+			{
+				name = this.ActiveNodes[0].Name;
+			}
+			return name;
+		}
 	}
 }
