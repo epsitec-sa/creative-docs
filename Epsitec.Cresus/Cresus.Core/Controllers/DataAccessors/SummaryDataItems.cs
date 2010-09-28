@@ -194,6 +194,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				Title        = template.Title,
 				CompactTitle = template.CompactTitle,
 				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
+				DefaultMode  = template.DefaultMode
 			};
 		}
 

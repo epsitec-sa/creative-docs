@@ -89,7 +89,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri		 = "Data.Affair",
 					Title		 = TextFormatter.FormatText ("Affaires"),
 					CompactTitle = TextFormatter.FormatText ("Affaires"),
-					Text		 = CollectionTemplate.DefaultEmptyText
+					Text		 = CollectionTemplate.DefaultEmptyText,
+					DefaultMode  = ViewControllerMode.Summary,
 				});
 
 			var template = new CollectionTemplate<AffairEntity> ("Affair", this.BusinessContext);
