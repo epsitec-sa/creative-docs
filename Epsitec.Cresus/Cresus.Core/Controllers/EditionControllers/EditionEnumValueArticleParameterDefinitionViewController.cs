@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
 			var group = builder.CreateGroup (tile, "Contenu de l'énumération");
-			this.parameterController = new ArticleParameterControllers.ArticleParameterListController (this.TileContainer, this.Entity);
+			this.parameterController = new ArticleParameterControllers.ArticleParameterListEnumValuesController (this.TileContainer, this.Entity);
 			this.parameterController.CreateUI (group);
 		}
 
@@ -70,6 +70,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		}
 
 
-		private ArticleParameterControllers.ArticleParameterListController		parameterController;
+		private ArticleParameterControllers.ArticleParameterListEnumValuesController		parameterController;
 	}
 }
