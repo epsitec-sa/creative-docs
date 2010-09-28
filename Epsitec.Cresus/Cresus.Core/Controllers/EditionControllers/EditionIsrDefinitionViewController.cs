@@ -40,21 +40,23 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField      (tile,  0, "Numéro d'adhérent", Marshaler.Create (() => this.Entity.SubscriberNumber, x => this.Entity.SubscriberNumber = x));
+			builder.CreateTextField      (tile,  0, "Numéro d'adhérent",  Marshaler.Create (() => this.Entity.SubscriberNumber, x => this.Entity.SubscriberNumber = x));
 			builder.CreateTextFieldMulti (tile, 52, "Adresse d'adhérent", Marshaler.Create (() => this.Entity.SubscriberAddress, x => this.Entity.SubscriberAddress = x));
+			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Monnaie", Marshaler.Create (() => this.Entity.Currency, x => this.Entity.Currency = x), Business.Enumerations.GetAllPossibleCurrencyCodes (), x => TextFormatter.FormatText (x.Values[0], "-", x.Values[1]));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 0, "Numéro de référence bancaire", Marshaler.Create (() => this.Entity.BankReferenceNumberPrefix, x => this.Entity.BankReferenceNumberPrefix = x));
-			builder.CreateTextField (tile, 0, "Adresse de la banque, première ligne", Marshaler.Create (() => this.Entity.BankAddressLine1, x => this.Entity.BankAddressLine1 = x));
-			builder.CreateTextField (tile, 0, "Adresse de la banque, deuxième ligne", Marshaler.Create (() => this.Entity.BankAddressLine2, x => this.Entity.BankAddressLine2 = x));
-			builder.CreateTextField (tile, 0, "Numéro de compte", Marshaler.Create (() => this.Entity.BankAccount, x => this.Entity.BankAccount = x));
+			builder.CreateTextField (tile, 150, "Préfixe du numéro de référence bancaire", Marshaler.Create (() => this.Entity.BankReferenceNumberPrefix, x => this.Entity.BankReferenceNumberPrefix = x));
+			builder.CreateTextField (tile,   0, "Adresse de la banque, première ligne",    Marshaler.Create (() => this.Entity.BankAddressLine1, x => this.Entity.BankAddressLine1 = x));
+			builder.CreateTextField (tile,   0, "Adresse de la banque, deuxième ligne",    Marshaler.Create (() => this.Entity.BankAddressLine2, x => this.Entity.BankAddressLine2 = x));
+			builder.CreateTextField (tile, 150, "Numéro de compte bancaire",               Marshaler.Create (() => this.Entity.BankAccount, x => this.Entity.BankAccount = x));
 		}
 
 
 		protected override EditionStatus GetEditionStatus()
 		{
-			if (string.IsNullOrWhiteSpace (this.Entity.SubscriberNumber))
+			if (string.IsNullOrWhiteSpace (this.Entity.SubscriberNumber) &&
+				string.IsNullOrWhiteSpace (this.Entity.BankReferenceNumberPrefix))
 			{
 				return EditionStatus.Empty;
 			}

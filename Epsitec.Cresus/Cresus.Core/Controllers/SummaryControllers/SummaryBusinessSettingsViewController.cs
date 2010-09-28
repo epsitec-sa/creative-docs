@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			{
 				this.CreateUIMain (data);
 				this.CreateUIIsrDefinitions (data);
+				this.CreateUIPaymentReminderDefinitions (data);
 			}
 		}
 
@@ -65,6 +66,27 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			template.DefineCompactText (x => x.GetSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.FinanceSettings.IsrDefs));
+		}
+
+		private void CreateUIPaymentReminderDefinitions(SummaryDataItems data)
+		{
+			data.Add (
+				new SummaryData
+				{
+					AutoGroup    = true,
+					Name		 = "PaymentReminderDefinition",
+					IconUri		 = "Data.PaymentReminderDefinition",
+					Title		 = TextFormatter.FormatText ("Rappels"),
+					CompactTitle = TextFormatter.FormatText ("Rappels"),
+					Text		 = CollectionTemplate.DefaultEmptyText,
+				});
+
+			var template = new CollectionTemplate<PaymentReminderDefinitionEntity> ("PaymentReminderDefinition", this.BusinessContext);
+
+			template.DefineText (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetSummary ());
+
+			data.Add (this.CreateCollectionAccessor (template, x => x.FinanceSettings.PaymentReminderDefs));
 		}
 
 	}
