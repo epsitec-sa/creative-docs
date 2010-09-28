@@ -114,6 +114,7 @@
     <Compile Include="Controllers\DataAccessors\Accessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`1.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryBusinessSettingsViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAffairViewController.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
@@ -621,6 +622,7 @@
     <EmbeddedResource Include="Images\Data.UnitOfMeasureGroup.icon" />
     <EmbeddedResource Include="Images\UserManager.icon" />
     <EmbeddedResource Include="Images\Base.BusinessSettings.icon" />
+    <EmbeddedResource Include="Images\Data.BusinessSettings.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
