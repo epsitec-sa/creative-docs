@@ -228,6 +228,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.passField.Focus ();
 			};
 
+			this.list.DoubleClicked += delegate
+			{
+				var result = this.DoubleClickedAction ();
+
+				if (result == LoginResult.OK)
+				{
+					this.CloseAction (cancel: false);
+				}
+
+				if (result == LoginResult.Quit)
+				{
+					this.CloseAction (cancel: true);
+				}
+			};
+
 			this.passField.TextChanged += delegate
 			{
 				this.UpdateWidgets ();
@@ -308,7 +323,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateWidgets()
 		{
 			var user = this.SelectedUser;
-			bool passwordRequired = this.manager.IsPasswordRequired (user);
+			bool passwordRequired = UserManager.IsPasswordRequired (user);
 
 			this.passBoxEdit.Visibility = (user == null ||  passwordRequired);
 			this.passBoxInfo.Visibility = (user != null && !passwordRequired);
@@ -328,6 +343,21 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+
+		private LoginResult DoubleClickedAction()
+		{
+			var user = this.SelectedUser;
+			System.Diagnostics.Debug.Assert (user != null);
+
+			if (UserManager.IsPasswordRequired (user))
+			{
+				return LoginResult.Retry;
+			}
+			else
+			{
+				return this.LoginAction ();
+			}
+		}
 
 		private LoginResult LoginAction()
 		{
