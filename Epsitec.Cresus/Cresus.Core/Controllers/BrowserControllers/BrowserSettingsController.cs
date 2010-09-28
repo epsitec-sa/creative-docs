@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public override void CreateUI(Widget container)
 		{
+			base.CreateUI (container);
 			this.CreateUINewItemIconButton (container);
 		}
 

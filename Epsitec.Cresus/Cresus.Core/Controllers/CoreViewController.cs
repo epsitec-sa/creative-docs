@@ -162,7 +162,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Creates the UI managed by this controller.
 		/// </summary>
 		/// <param name="container">The container.</param>
-		public abstract void CreateUI(Widget container);
+		public virtual void CreateUI(Widget container)
+		{
+			this.AboutToCreateUI ();
+		}
 
 		/// <summary>
 		/// Closes the UI. The container will be disposed by the caller
@@ -195,6 +198,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				container.Window.ClearFocusedWidget ();
 			}
+		}
+
+		protected virtual void AboutToCreateUI()
+		{
 		}
 		
 		protected virtual void AboutToCloseUI()

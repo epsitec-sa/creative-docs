@@ -55,6 +55,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
         public sealed override void CreateUI(Widget container)
 		{
+			base.CreateUI (container);
+
 			var context       = this.DataContext;
 			var entity        = this.Entity;
 			var tileContainer = container as TileContainer;
@@ -94,10 +96,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			return CollectionAccessor.Create (this.EntityGetter, template);
 		}
 
+		protected override void AboutToCreateUI()
+		{
+			var businessContext = this.BusinessContext;
+
+			System.Diagnostics.Debug.Assert (businessContext != null);
+
+			businessContext.AddMasterEntity (this.Entity);
+		}
+		
 		protected override void AboutToCloseUI()
 		{
 			this.UpgradeEmptyEntity ();
 			base.AboutToCloseUI ();
+
+			var businessContext = this.BusinessContext;
+
+			businessContext.RemoveMasterEntity (this.Entity);
 		}
 
 

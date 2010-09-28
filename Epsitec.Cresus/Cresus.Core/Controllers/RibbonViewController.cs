@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			base.CreateUI (container);
 			this.CreateRibbonBook (container);
 			this.CreateRibbonHomePage ();
 		}
