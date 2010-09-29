@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.LegalPerson,
 				ValueSetter         = x => this.Entity.LegalPerson = x,
 				ReferenceController = new ReferenceController (() => this.Entity.LegalPerson, creator: this.CreateNewLegalPerson),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
 
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)

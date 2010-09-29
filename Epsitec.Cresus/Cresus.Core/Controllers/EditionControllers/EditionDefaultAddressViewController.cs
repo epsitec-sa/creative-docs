@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				ValueGetter         = () => this.Entity.Location,
 				ValueSetter         = x => this.Entity.Location = x,
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<Entities.LocationEntity> (),
 
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.PostalCode, x.Name),

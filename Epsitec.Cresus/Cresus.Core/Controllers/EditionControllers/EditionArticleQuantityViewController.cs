@@ -95,11 +95,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			if (article == null)
 			{
-				return CoreProgram.Application.Data.GetUnitOfMeasure ();
+				return this.Data.GetAllEntities<UnitOfMeasureEntity> ();
 			}
 			else
 			{
-				return CoreProgram.Application.Data.GetUnitOfMeasure ().Where (x => x.Category == article.ArticleDefinition.Units.Category);
+				return this.Data.GetAllEntities<UnitOfMeasureEntity> ().Where (x => x.Category == article.ArticleDefinition.Units.Category);
 			}
 		}
 
