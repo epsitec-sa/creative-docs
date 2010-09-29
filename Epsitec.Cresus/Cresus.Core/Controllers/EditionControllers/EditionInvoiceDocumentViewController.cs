@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter = () => this.Entity.BillingMailContact,
 				ValueSetter = x => this.Entity.BillingMailContact = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 
 				ToTextArrayConverter     = x => GetMailTexts (x),
 				ToFormattedTextConverter = x => GetMailText (x),
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter = () => this.Entity.ShippingMailContact,
 				ValueSetter = x => this.Entity.ShippingMailContact = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 
 				ToTextArrayConverter     = x => GetMailTexts (x),
 				ToFormattedTextConverter = x => GetMailText (x),

@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.LegalPerson,
 				ValueSetter         = x => this.Entity.LegalPerson = x,
 				ReferenceController = this.GetLegalPersonReferenceController (),
-				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
+				PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
 
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name),
@@ -312,7 +312,16 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			//	Retourne les localités du pays choisi.
 			get
 			{
-				return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
+				if (this.selectedCountry == null)
+				{
+					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext);
+				}
+				else
+				{
+					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext).Where (x => x.Country.Code == this.selectedCountry.Code);
+				}
+
+				//?return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
 				//?return CoreProgram.Application.Data.GetLocations ();
 			}
 		}
@@ -337,7 +346,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			if (string.IsNullOrEmpty (this.Entity.Address.Location.Country.Code))  // pays indéfini ?
 			{
-				foreach (var country in CoreProgram.Application.Data.GetCountries ().ToList ())
+				foreach (var country in this.Data.GetAllEntities<CountryEntity> ().ToList ())
 				{
 					if (country.Code == "CH")
 					{
@@ -398,7 +407,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			SummaryControllers.Common.CreateUIComments (this.DataContext, data, this.EntityGetter, x => x.Comments);
+			SummaryControllers.Common.CreateUIComments (this.Data, data, this.EntityGetter, x => x.Comments);
 		}
 
 

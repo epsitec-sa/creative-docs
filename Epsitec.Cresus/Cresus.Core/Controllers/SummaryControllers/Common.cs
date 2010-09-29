@@ -15,18 +15,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
 	internal static class Common
 	{
-		public static void CreateUIComments<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<CommentEntity>> collectionResolver)
+		public static void CreateUIComments<T1>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<CommentEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIComments<T1, CommentEntity, CommentEntity> (dataContext, data, source, collectionResolver);
+			Common.InternalCreateUIComments<T1, CommentEntity, CommentEntity> (coreData, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIComments<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIComments<T1, T2, T3>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : CommentEntity, new ()
 			where T3 : CommentEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("Comment", data.Controller, dataContext)
+			var template = new CollectionTemplate<T3> ("Comment", data.Controller, coreData.DataContext)
 				.DefineText        (x => TextFormatter.FormatText (Misc.FirstLine (x.Text)))
 				.DefineCompactText (x => TextFormatter.FormatText (Misc.FirstLine (x.Text)));
 
@@ -45,18 +45,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIMailContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUIMailContacts<T1>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIMailContacts<T1, AbstractContactEntity, MailContactEntity> (dataContext, data, source, collectionResolver);
+			Common.InternalCreateUIMailContacts<T1, AbstractContactEntity, MailContactEntity> (coreData, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIMailContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIMailContacts<T1, T2, T3>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : MailContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, dataContext)
+			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, coreData.DataContext)
 				.DefineTitle		(x => TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineText			(x => Common.GetMailContactSummary (x))
 				.DefineCompactText	(x => Common.GetCompactMailContactSummary (x));
@@ -95,18 +95,18 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUITelecomContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUITelecomContacts<T1>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUITelecomContacts<T1, AbstractContactEntity, TelecomContactEntity> (dataContext, data, source, collectionResolver);
+			Common.InternalCreateUITelecomContacts<T1, AbstractContactEntity, TelecomContactEntity> (coreData, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUITelecomContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUITelecomContacts<T1, T2, T3>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : TelecomContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, dataContext)
+			var template = new CollectionTemplate<T3> ("TelecomContact", data.Controller, coreData.DataContext)
 				.DefineTitle		(x => TextFormatter.FormatText (x.TelecomType.Name))
 				.DefineText			(x => TextFormatter.FormatText (x.Number, "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineCompactText  (x => TextFormatter.FormatText (x.Number, "(", x.TelecomType.Name, ")"));
@@ -126,21 +126,21 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		}
 
 
-		public static void CreateUIUriContacts<T1>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
+		public static void CreateUIUriContacts<T1>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<AbstractContactEntity>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 		{
-			Common.InternalCreateUIUriContacts<T1, AbstractContactEntity, UriContactEntity> (dataContext, data, source, collectionResolver);
+			Common.InternalCreateUIUriContacts<T1, AbstractContactEntity, UriContactEntity> (coreData, data, source, collectionResolver);
 		}
 
-		private static void InternalCreateUIUriContacts<T1, T2, T3>(DataContext dataContext, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
+		private static void InternalCreateUIUriContacts<T1, T2, T3>(CoreData coreData, SummaryDataItems data, System.Func<T1> source, System.Func<T1, IList<T2>> collectionResolver)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 			where T3 : UriContactEntity, T2, new ()
 		{
-			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, dataContext, filter: x => x.UriScheme.Code == "mailto")
+			var template = new CollectionTemplate<T3> ("UriContact", data.Controller, coreData.DataContext, filter: x => x.UriScheme.Code == "mailto")
 				.DefineText			(x => TextFormatter.FormatText (x.Uri, "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
 				.DefineCompactText	(x => TextFormatter.FormatText (x.Uri))
-				.DefineSetupItem	(x => x.UriScheme = CoreProgram.Application.Data.GetUriScheme ("mailto"));
+				.DefineSetupItem    (x => x.UriScheme = coreData.GetAllEntities<UriSchemeEntity> ().Where (y => y.Code == "mailto").FirstOrDefault ());
 
 			data.Add (
 				new SummaryData

@@ -210,23 +210,23 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			switch (this.dataSetName)
 			{
 				case "Customers":
-					this.SetContents (context => this.data.GetCustomers (context));
+					this.SetContents (context => this.data.GetAllEntities<RelationEntity> (dataContext: context));
 					break;
 
 				case "ArticleDefinitions":
-					this.SetContents (context => this.data.GetArticleDefinitions (context));
+					this.SetContents (context => this.data.GetAllEntities<ArticleDefinitionEntity> (dataContext: context));
 					break;
 
 				case "Documents":
-					this.SetContents (context => this.data.GetDocuments (context));
+					this.SetContents (context => this.data.GetAllEntities<DocumentEntity> (dataContext: context));
 					break;
 
 				case "InvoiceDocuments":
-					this.SetContents (context => this.data.GetInvoiceDocuments (context));
+					this.SetContents (context => this.data.GetAllEntities<InvoiceDocumentEntity> (dataContext: context));
 					break;
 
 				case "BusinessSettings":
-					this.SetContents (context => this.data.GetBusinessSettings (context));
+					this.SetContents (context => this.data.GetAllEntities<BusinessSettingsEntity> (dataContext: context));
 					break;
 			}
 		}
