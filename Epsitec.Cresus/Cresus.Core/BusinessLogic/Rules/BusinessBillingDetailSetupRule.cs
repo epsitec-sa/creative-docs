@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic.Rules
 
 			if (isrDef.IsNull () == false)
 			{
-				billingDetails.IsrSubscriberNumber = isrDef.SubscriberNumber;
+				billingDetails.IsrDefinition = isrDef;
 				billingDetails.IsrReferenceNumber  = Isr.GetNewReferenceNumber (Logic.Current.Data, isrDef);
 			}
 		}

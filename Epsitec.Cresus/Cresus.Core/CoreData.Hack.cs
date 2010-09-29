@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core
 			CurrencyEntity[] currencyDefs = this.InsertCurrenciesInDatabase ().ToArray ();
 			VatDefinitionEntity[] vatDefs = this.InsertVatDefinitionsInDatabase ().ToArray ();
 			BusinessSettingsEntity[] settings = this.InsertBusinessSettingsInDatabase ().ToArray ();
-			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs).ToArray ();
+			InvoiceDocumentEntity[] invoices = this.InsertInvoiceDocumentsInDatabase (abstractPersons.Where (x => x.Contacts.Count > 0 && x.Contacts[0] is MailContactEntity).First ().Contacts[0] as MailContactEntity, paymentDefs, currencyDefs, articleDefs, vatDefs, settings).ToArray ();
 			
 			this.DataContext.SaveChanges ();
 		}
@@ -802,7 +802,7 @@ namespace Epsitec.Cresus.Core
 			yield return business;
 		}
 
-		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs)
+		private IEnumerable<InvoiceDocumentEntity> InsertInvoiceDocumentsInDatabase(MailContactEntity billingAddress, PaymentModeEntity[] paymentDefs, CurrencyEntity[] currencyDefs, ArticleDefinitionEntity[] articleDefs, VatDefinitionEntity[] vatDefs, BusinessSettingsEntity[] settings)
 		{
 			var decimalType = DecimalType.Default;
 			decimal vatRate = vatDefs.Where (x => x.Code == Business.Finance.VatCode.StandardTaxOnTurnover).First ().Rate;
@@ -1047,21 +1047,23 @@ namespace Epsitec.Cresus.Core
 			paymentA2.Currency = currencyDefs.Where (x => x.CurrencyCode == Business.Finance.CurrencyCode.Chf).FirstOrDefault ();
 			paymentA2.Date = new Date (2010, 09, 05);
 
-			var isrSubscriber = "010694443";
+			var isrDefiniton = settings.First ().FinanceSettings.IsrDefs.First ();
+
+			var isrSubscriber = isrDefiniton.SubscriberNumber;
 			var isrRef1 = Isr.GetNewReferenceNumber (this, isrSubscriber);
 			var isrRef2 = Isr.GetNewReferenceNumber (this, isrSubscriber);
 
 			billingA1.Title = "Facture 1000-00, 1ère tranche";
 			billingA1.AmountDue = paymentA1;
-			billingA1.IsrSubscriberNumber = isrSubscriber;								//	compte BVR
-			billingA1.IsrReferenceNumber = isrRef1;										//	n° de réf BVR lié
+			billingA1.IsrDefinition = isrDefiniton;			//	compte BVR
+			billingA1.IsrReferenceNumber = isrRef1;			//	n° de réf BVR lié
 			billingA1.InstalmentRank = 0;
 			billingA1.InstalmentName = "1/2";
 
 			billingA2.Title = "Facture 1000-00, 2ème tranche";
 			billingA2.AmountDue = paymentA2;
-			billingA2.IsrSubscriberNumber = isrSubscriber;								//	compte BVR
-			billingA2.IsrReferenceNumber = isrRef2;										//	n° de réf BVR lié
+			billingA2.IsrDefinition = isrDefiniton;			//	compte BVR
+			billingA2.IsrReferenceNumber = isrRef2;			//	n° de réf BVR lié
 			billingA2.InstalmentRank = 1;
 			billingA2.InstalmentName = "2/2";
 
