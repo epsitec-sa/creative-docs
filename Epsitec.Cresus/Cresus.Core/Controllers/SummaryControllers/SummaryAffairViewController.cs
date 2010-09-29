@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			using (var data = TileContainerController.Setup (this))
 			{
 				this.CreateUIAffair (data);
-				this.CreateUIWorkflows (data);
+				this.CreateUIDocumentWorkflows (data);
 				this.CreateUIEvents (data);
 			}
 		}
@@ -42,21 +42,26 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 		}
 
-		private void CreateUIWorkflows(SummaryDataItems data)
+		private void CreateUIDocumentWorkflows(SummaryDataItems data)
 		{
-			data.Add (
+			var summaryData =
 				new SummaryData
 				{
 					AutoGroup    = false,
-					Name		 = "Workflow",
-					IconUri		 = "Data.Workflow",
-					Title		 = TextFormatter.FormatText ("Workflow"),
-					CompactTitle = TextFormatter.FormatText ("Workflows"),
+					Name		 = "DocWorkflow",
+					IconUri		 = "Data.DocWorkflow",
+					Title		 = TextFormatter.FormatText ("Document"),
+					CompactTitle = TextFormatter.FormatText ("Documents"),
 					Text		 = CollectionTemplate.DefaultEmptyText
-				});
+				};
 
-			var template = new CollectionTemplate<WorkflowEntity> ("Workflow", this.BusinessContext);
+			summaryData.SetEntityConverter<WorkflowEntity> (x => x.ActiveDocument);
 
+			data.Add (summaryData);
+
+			var template = new CollectionTemplate<WorkflowEntity> ("DocWorkflow", this.BusinessContext);
+
+			template.DefineTitle (x => x.GetCompactSummary ());
 			template.DefineText (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
