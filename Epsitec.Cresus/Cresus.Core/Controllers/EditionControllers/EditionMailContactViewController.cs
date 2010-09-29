@@ -313,6 +313,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			get
 			{
 				return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
+				//?return CoreProgram.Application.Data.GetLocations ();
 			}
 		}
 
