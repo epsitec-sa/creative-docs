@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.Title        = template.Title;
 				this.CompactTitle = template.CompactTitle;
 				this.DefaultMode  = template.DefaultMode;
+				this.EntityMarshalerConverter = template.EntityMarshalerConverter;
 			}
 		}
 
@@ -148,6 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
+
 		/// <summary>
 		/// Gets or sets the associated title tile. The <see cref="SummaryData"/>
 		/// will be inserted into the title tile collection of items.
@@ -210,6 +212,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
+		public System.Func<AbstractEntity, AbstractEntity> EntityMarshalerConverter
+		{
+			get;
+			private set;
+		}
+
 		public Accessor<FormattedText>			TitleAccessor
 		{
 			set
@@ -264,6 +272,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public void ExecuteAccessors()
 		{
 			this.bindings.ForEach (x => x.Execute ());
+		}
+
+		public void SetEntityConverter<T>(System.Func<T, AbstractEntity> converter)
+			where T : AbstractEntity
+		{
+			this.EntityMarshalerConverter = (System.Func<AbstractEntity, AbstractEntity>) converter;
 		}
 
 
@@ -321,6 +335,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				var entity = marshaler.GetValue<AbstractEntity> ();
 				var mode   = this.DefaultMode;
+
+				var converter = this.EntityMarshalerConverter;
+
+				if (converter != null)
+				{
+					entity = converter (entity);
+				}
 
 				navigationPathElement = new TileNavigationPathElement (this.Name);
 				
