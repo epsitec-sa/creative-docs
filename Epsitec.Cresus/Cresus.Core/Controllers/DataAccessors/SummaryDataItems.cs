@@ -182,19 +182,24 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return result != null;
 		}
 
+		/// <summary>
+		/// Creates a summay data based on the specified template.
+		/// </summary>
+		/// <param name="template">The template.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="index">The index.</param>
+		/// <returns>The summary data based on the specified template.</returns>
 		private static SummaryData CreateSummayData(SummaryData template, string name, int index)
 		{
 			string prefix = SummaryData.GetNamePrefix (name);
+			
+			string summaryName = SummaryData.BuildName (prefix, index);
+			int    summaryRank = SummaryData.CreateRank (template.GroupingRank, index);
 
-			return new SummaryData
+			return new SummaryData (template)
 			{
-				Name         = SummaryData.BuildName (prefix, index),
-				AutoGroup    = template.AutoGroup,
-				IconUri      = template.IconUri,
-				Title        = template.Title,
-				CompactTitle = template.CompactTitle,
-				Rank         = SummaryData.CreateRank (template.GroupingRank, index),
-				DefaultMode  = template.DefaultMode
+				Name = summaryName,
+				Rank = summaryRank,
 			};
 		}
 
