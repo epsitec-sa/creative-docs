@@ -151,16 +151,31 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			this.SetNavigationPathElement (navigationPathElement);
 		}
 
+		/// <summary>
+		/// Adds a master entity of a specific type. See <seealso cref="GerMasterEntity{T}"/>.
+		/// </summary>
+		/// <param name="masterEntity">The master entity.</param>
 		public void AddMasterEntity(AbstractEntity masterEntity)
 		{
 			this.masterEntities.Add (masterEntity);
 		}
 
+		/// <summary>
+		/// Removes a master entity of a specific type. See <seealso cref="GerMasterEntity{T}"/>.
+		/// </summary>
+		/// <param name="masterEntity">The master entity.</param>
 		public void RemoveMasterEntity(AbstractEntity masterEntity)
 		{
 			this.masterEntities.Remove (masterEntity);
 		}
 
+		/// <summary>
+		/// Gets the master entity of type <typeparamref name="T"/>. A master entity is an entity
+		/// for which there is currently an open piece of UI, or simply an entity which is a key
+		/// element in a graph (for instance the 'active' affair for a customer).
+		/// </summary>
+		/// <typeparam name="T">Type of the entity.</typeparam>
+		/// <returns>The master entity of type <typeparamref name="T"/> if it exists; otherwise, returns a wrapped null entity.</returns>
 		public T GetMasterEntity<T>()
 			where T : AbstractEntity, new ()
 		{

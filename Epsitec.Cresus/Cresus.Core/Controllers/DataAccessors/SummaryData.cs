@@ -33,11 +33,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (template != null)
 			{
-				this.Name      = template.Name;
-				this.Rank      = template.Rank;
-				this.IconUri   = template.IconUri;
-				this.AutoGroup = template.AutoGroup;
-				this.DataType  = template.DataType;
+				this.Name         = template.Name;
+				this.Rank         = template.Rank;
+				this.IconUri      = template.IconUri;
+				this.AutoGroup    = template.AutoGroup;
+				this.DataType     = template.DataType;
+				this.Title        = template.Title;
+				this.CompactTitle = template.CompactTitle;
+				this.DefaultMode  = template.DefaultMode;
 			}
 		}
 
@@ -308,14 +311,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		EntityViewController ITileController.CreateSubViewController(Orchestrators.DataViewOrchestrator orchestrator, NavigationPathElement navigationPathElement)
 		{
-			if (this.EntityMarshaler == null)
+			var marshaler = this.EntityMarshaler;
+			
+			if (marshaler == null)
 			{
 				return null;
 			}
 			else
 			{
+				var entity = marshaler.GetValue<AbstractEntity> ();
+				var mode   = this.DefaultMode;
+
 				navigationPathElement = new TileNavigationPathElement (this.Name);
-				var controller = EntityViewControllerFactory.Create ("ViewController", this.EntityMarshaler, this.DefaultMode, orchestrator, navigationPathElement);
+				
+				var controller = EntityViewControllerFactory.Create ("ViewController", entity, mode, orchestrator, navigationPathElement: navigationPathElement);
 
 				return controller;
 			}
