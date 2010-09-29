@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.BusinessSettings",
 					Title				= TextFormatter.FormatText ("Réglages de l'entreprise"),
 					CompactTitle		= TextFormatter.FormatText ("Réglages de l'entreprise"),
-					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText (this.Entity.Company.Person.GetSummary ())),
-					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (this.Entity.Company.Person.GetSummary ())),
+					TextAccessor		= this.CreateAccessor (x => this.Entity.Company.Person.GetSummary ()),
+					CompactTextAccessor = this.CreateAccessor (x => this.Entity.Company.Person.GetSummary ()),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
