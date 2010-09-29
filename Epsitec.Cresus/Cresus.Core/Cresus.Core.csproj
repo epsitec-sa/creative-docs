@@ -125,6 +125,16 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\CountryEntity.cs" />
+    <Compile Include="Entities\InvoiceDocumentEntity.cs" />
+    <Compile Include="Entities\LocationEntity.cs" />
+    <Compile Include="Entities\PaymentModeEntity.cs" />
+    <Compile Include="Entities\RelationEntity.cs" />
+    <Compile Include="Entities\PersonTitleEntity.cs" />
+    <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
+    <Compile Include="Entities\UnitOfMeasureEntity.cs" />
+    <Compile Include="Entities\UriContactEntity.cs" />
+    <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Entities\MailContactEntity.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />

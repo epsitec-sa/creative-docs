@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Printers
 		{
 			//	Ajoute le résumé dans le document.
 			var band = new TextBand ();
-			band.Text = Helpers.InvoiceDocumentHelper.GetMailContact (this.Entity);
+			band.Text = this.Entity.GetSummary ();
 			band.FontSize = 3.0;
 
 			this.documentContainer.AddFromTop (band, 0.0);
