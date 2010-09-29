@@ -10,6 +10,9 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateEditionTitleTile ("Data.PaymentReminderDefinition", "Rappel");
 
 				this.CreateUIMain (builder);
+				this.CreateUITaxArticle (builder);
 
 				builder.CreateFooterEditorTile ();
 			}
@@ -44,6 +48,28 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField      (tile,   0, "Nom",                     Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
 			builder.CreateTextFieldMulti (tile,  72, "Description",             Marshaler.Create (() => this.Entity.Description, x => this.Entity.Description = x));
 			builder.CreateTextField      (tile, 100, "Terme (nombre de jours)", Marshaler.Create (() => this.Entity.ExtraPaymentTerm, x => this.Entity.ExtraPaymentTerm = x));
+		}
+
+		private void CreateUITaxArticle(UIBuilder builder)
+		{
+			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.AdministrativeTaxArticle,
+				ValueSetter         = x => this.Entity.AdministrativeTaxArticle = x,
+				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxArticle, creator: this.CreateNewTaxArticleDefinition),
+
+				ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
+			};
+
+			builder.CreateAutoCompleteTextField ("Article pour facturer une taxe", controller);
+		}
+
+
+		private NewEntityReference CreateNewTaxArticleDefinition(DataContext context)
+		{
+			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
+			return article;
 		}
 
 

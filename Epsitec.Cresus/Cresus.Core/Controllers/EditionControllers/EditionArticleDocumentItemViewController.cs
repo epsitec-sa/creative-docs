@@ -397,14 +397,14 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private NewEntityReference CreateNewArticleDefinition(DataContext context)
 		{
-			var title = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
-			return title;
+			var article = context.CreateEntityAndRegisterAsEmpty<ArticleDefinitionEntity> ();
+			return article;
 		}
 
 		private NewEntityReference CreateNewUnitOfMeasure(DataContext context)
 		{
-			var title = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
-			return title;
+			var unit = context.CreateEntityAndRegisterAsEmpty<UnitOfMeasureEntity> ();
+			return unit;
 		}
 
 
