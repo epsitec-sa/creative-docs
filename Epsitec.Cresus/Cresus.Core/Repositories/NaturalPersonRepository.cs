@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Repositories
 {
-	public class NaturalPersonRepository : AbstractPersonRepository<NaturalPersonEntity>
+	public class NaturalPersonRepository : Repository<NaturalPersonEntity>
 	{
 		public NaturalPersonRepository(CoreData data, DataContext context = null)
 			: base (data, context)
