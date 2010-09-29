@@ -21,29 +21,30 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public FormattedText GetCompactSummary()
 		{
-			return this.GetWorkflowName ();
+			return this.GetDocumentName ();
 		}
 
-		public FormattedText GetSummary()
+		public FormattedText GetSummaryDescription()
 		{
-			var    name    = this.GetWorkflowName ();
-			string version = this.Id == 0 ? "" : string.Format ("Variante {0}", this.Id);
+			FormattedText version  = this.Id == 0 ? FormattedText.Empty : TextFormatter.FormatText ("Variante", this.Id);
+			FormattedText creation = this.ActiveDocument.IsNull () ? FormattedText.Empty : TextFormatter.FormatText ("Créé le ", this.ActiveDocument.CreationDate);
 
-			return TextFormatter.FormatText (name, "\n", version);
+			return TextFormatter.FormatText (version, "\n", creation);
 		}
 		
-		private FormattedText GetWorkflowName()
+		private FormattedText GetDocumentName()
 		{
 			FormattedText name;
 
-			if (this.ActiveNodes.Count == 0)
+			if (this.ActiveDocument.IsNull ())
 			{
-				name = TextFormatter.FormatText ("Workflow sans nom");
+				name = FormattedText.FromSimpleText ("Aucun document");
 			}
 			else
 			{
-				name = this.ActiveNodes[0].Name;
+				name = TextFormatter.FormatText (this.ActiveDocument.Description, this.ActiveDocument.IdA);
 			}
+
 			return name;
 		}
 	}
