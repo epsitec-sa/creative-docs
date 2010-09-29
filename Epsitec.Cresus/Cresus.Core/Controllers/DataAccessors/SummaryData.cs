@@ -277,7 +277,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		public void SetEntityConverter<T>(System.Func<T, AbstractEntity> converter)
 			where T : AbstractEntity
 		{
-			this.EntityMarshalerConverter = (System.Func<AbstractEntity, AbstractEntity>) converter;
+			if (converter == null)
+			{
+				this.EntityMarshalerConverter = null;
+			}
+			else
+			{
+				//	We cannot use contravariance here, since there is no possible conversion from
+				//	A = Func<T, X> to B = Func<AbstractEntity, X>; if we called B, passing it a T
+				//	as parameter, it would end up calling A (which is OK), but if we called B with
+				//	a type not compatible with T, the call to A would fail.
+				//	See http://msdn.microsoft.com/en-us/library/dd465122%28VS.100%29.aspx
+				
+				//	We convert the function manually, assuming that the caller knows what he is
+				//	doing and that the parameter will always be of the proper type:
+				
+				this.EntityMarshalerConverter = x => converter ((T) x);
+			}
 		}
 
 

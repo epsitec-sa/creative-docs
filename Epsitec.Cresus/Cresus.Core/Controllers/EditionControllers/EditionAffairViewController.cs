@@ -134,6 +134,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			businessEvent.Document  = document;
 
 			workflow.Events.Add (businessEvent);
+			workflow.ActiveDocument = document;
+
+			this.DataContext.UpdateEmptyEntityStatus (businessEvent, false);
+			this.DataContext.UpdateEmptyEntityStatus (workflow, false);
 
 			this.Entity.Workflows.Add (workflow);
 

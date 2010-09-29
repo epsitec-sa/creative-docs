@@ -389,18 +389,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 		}
 
-		private static void SetupBillingDetails(BillingDetailEntity billingDetails)
-		{
-			var date = Date.Today;
-
-			billingDetails.AmountDue.Date = date;
-			billingDetails.Title = string.Format ("Votre commande du {0}", Misc.GetDateTimeDescription (date.ToDateTime ()));
-			billingDetails.IsrSubscriberNumber = "01-69444-3";  // compte BVR
-			billingDetails.IsrReferenceNumber = "96 13070 01000 02173 50356 73892";  // n° de réf BVR lié
-			// TODO: Trouver ces 2 dernières informations de façon plus générale !
-		}
-
-
 		private static FormattedText GetTotalSummary(InvoiceDocumentEntity invoiceDocument)
 		{
 			string ht  = Misc.PriceToString (InvoiceDocumentHelper.GetPrimaryPriceHT  (invoiceDocument));
