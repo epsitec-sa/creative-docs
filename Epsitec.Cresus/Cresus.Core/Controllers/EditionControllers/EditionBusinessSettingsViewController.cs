@@ -54,13 +54,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			// TODO: Pourquoi on n'affiche aucune entreprise ?
 			var controller = new SelectionController<LegalPersonEntity> (this.BusinessContext)
 			{
 				ValueGetter         = () => this.Entity.LegalPerson,
 				ValueSetter         = x => this.Entity.LegalPerson = x,
-				ReferenceController = new ReferenceController (() => this.Entity.LegalPerson, creator: this.CreateNewLegalPerson),
-				PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
+				ReferenceController = new ReferenceController (() => this.Entity.LegalPerson),
 
 				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
 				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)

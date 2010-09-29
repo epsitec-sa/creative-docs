@@ -320,9 +320,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					return this.Data.GetAllEntities<LocationEntity> (dataContext: this.BusinessContext.DataContext).Where (x => x.Country.Code == this.selectedCountry.Code);
 				}
-
-				//?return CoreProgram.Application.Data.GetLocations (this.selectedCountry);
-				//?return CoreProgram.Application.Data.GetLocations ();
 			}
 		}
 
@@ -350,7 +347,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				{
 					if (country.Code == "CH")
 					{
-						this.Entity.Address.Location.Country = country;  // met la Suisse par défaut
+						var localCountry = this.BusinessContext.GetLocalEntity (country);
+
+						this.Entity.Address.Location.Country = localCountry;  // met la Suisse par défaut
 						break;
 					}
 				}
