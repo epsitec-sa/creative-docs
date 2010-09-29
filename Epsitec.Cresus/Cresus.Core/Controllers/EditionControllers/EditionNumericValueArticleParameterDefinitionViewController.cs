@@ -61,16 +61,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIUnitOfMeasure(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Unité",
-				new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.UnitOfMeasure,
-					ValueSetter = x => this.Entity.UnitOfMeasure = x,
-					ReferenceController = new ReferenceController (() => this.Entity.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
+			var controller = new SelectionController<UnitOfMeasureEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.UnitOfMeasure,
+				ValueSetter         = x => this.Entity.UnitOfMeasure = x,
+				ReferenceController = new ReferenceController (() => this.Entity.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
+			};
+
+			builder.CreateAutoCompleteTextField ("Unité", controller);
 		}
 
 		private void CreateUIMain2(Epsitec.Cresus.Core.UIBuilder builder)

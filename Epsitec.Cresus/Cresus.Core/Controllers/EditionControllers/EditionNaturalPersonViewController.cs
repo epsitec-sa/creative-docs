@@ -54,16 +54,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		
 		private void CreateUITitle(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Titre",
-				new SelectionController<PersonTitleEntity> (this.BusinessContext)
-				{
-					ValueGetter         = () => this.Entity.Title,
-					ValueSetter         = x => this.Entity.Title = x,
-					ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
+			var controller = new SelectionController<PersonTitleEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Title,
+				ValueSetter         = x => this.Entity.Title = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.ShortName).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.ShortName).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateAutoCompleteTextField ("Titre", controller);
 		}
 		
 		private void CreateUIFirstnameAndLastname(UIBuilder builder)
@@ -77,16 +78,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIGender(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Sexe",
-				new SelectionController<PersonGenderEntity> (this.BusinessContext)
-				{
-					ValueGetter         = () => this.Entity.Gender,
-					ValueSetter         = x => this.Entity.Gender = x,
-					ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
+			var controller = new SelectionController<PersonGenderEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Gender,
+				ValueSetter         = x => this.Entity.Gender = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateAutoCompleteTextField ("Sexe", controller);
 		}
 
 		private void CreateUIBirthDate(UIBuilder builder)

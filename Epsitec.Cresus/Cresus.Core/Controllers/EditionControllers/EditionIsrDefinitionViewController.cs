@@ -50,6 +50,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateTextField (tile,   0, "Adresse de la banque, première ligne",    Marshaler.Create (() => this.Entity.BankAddressLine1, x => this.Entity.BankAddressLine1 = x));
 			builder.CreateTextField (tile,   0, "Adresse de la banque, deuxième ligne",    Marshaler.Create (() => this.Entity.BankAddressLine2, x => this.Entity.BankAddressLine2 = x));
 			builder.CreateTextField (tile, 150, "Numéro de compte bancaire",               Marshaler.Create (() => this.Entity.BankAccount, x => this.Entity.BankAccount = x));
+
+			builder.CreateMargin (tile, horizontalSeparator: true);
+
+			builder.CreateTextField (tile, 150, "Compte entrant pour la comptabilisation", Marshaler.Create (() => this.Entity.IncomingBookAccount, x => this.Entity.IncomingBookAccount = x));
 		}
 
 

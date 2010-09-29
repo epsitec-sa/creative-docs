@@ -65,16 +65,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIArticleDefinition(UIBuilder builder)
 		{
-			var textField = builder.CreateAutoCompleteTextField ("Article à facturer",
-				new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.ArticleDefinition,
-					ValueSetter = x => this.ArticleDefinition = x,
-					ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
+			var controller = new SelectionController<ArticleDefinitionEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.ArticleDefinition,
+				ValueSetter         = x => this.ArticleDefinition = x,
+				ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 
-					ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
-				});
+				ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
+			};
+
+			builder.CreateAutoCompleteTextField ("Article à facturer", controller);
 		}
 
 		private void CreateUIParameter(UIBuilder builder)
