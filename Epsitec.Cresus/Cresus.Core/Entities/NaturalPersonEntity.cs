@@ -10,14 +10,19 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class NaturalPersonEntity
 	{
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText
+				(
+					this.Title.Name, "\n",
+					this.Firstname, this.Lastname, "(", this.Gender.Name, ")", "\n",
+					this.BirthDate
+				);
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Title.ShortName, this.Firstname, this.Lastname);
-		}
-
-		public override FormattedText GetSummary()
-		{
-			return TextFormatter.FormatText (this.Title.Name, "\n", this.Firstname, this.Lastname, "(", this.Gender.Name, ")");
 		}
 	}
 }

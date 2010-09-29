@@ -8,16 +8,20 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class AbstractPersonEntity
+	public partial class PersonTitleEntity
 	{
-		public virtual FormattedText GetSummary()
+		public FormattedText GetSummary()
 		{
-			return FormattedText.Empty;
+			return TextFormatter.FormatText
+				(
+					"Abrégé: ", this.ShortName, "\n",
+					"Complet: ", this.Name
+				);
 		}
 
-		public virtual FormattedText GetCompactSummary()
+		public FormattedText GetCompactSummary()
 		{
-			return this.GetSummary ();
+			return TextFormatter.FormatText (this.Name);
 		}
 	}
 }

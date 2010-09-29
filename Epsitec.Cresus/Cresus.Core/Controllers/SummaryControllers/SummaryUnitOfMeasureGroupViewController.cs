@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 					IconUri				= "Data.UnitOfMeasureGroup",
 					Title				= TextFormatter.FormatText ("Groupe d'unités de mesure"),
 					CompactTitle		= TextFormatter.FormatText ("Groupe d'unités"),
-					TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText ("Nom: ", x.Name, "\n", "Description: ", x.Description, "\n", "Catégorie: ", GetCategory (x))),
-					CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+					TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
+					CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
 					EntityMarshaler		= this.CreateEntityMarshaler (),
 				});
 		}
@@ -64,29 +64,10 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<UnitOfMeasureEntity> ("UnitOfMeasures", data.Controller, this.DataContext);
 
-			template.DefineText (x => TextFormatter.FormatText (GetUnitOfMeasuresSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetUnitOfMeasuresSummary (x)));
+			template.DefineText        (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Units));
-		}
-
-
-		private static string GetCategory(Entities.UnitOfMeasureGroupEntity unit)
-		{
-			foreach (var item in Enumerations.GetAllPossibleUnitOfMeasureCategories ())
-			{
-				if (item.Key == unit.Category)
-				{
-					return TextFormatter.FormatText (item.Values).ToSimpleText ();
-				}
-			}
-
-			return null;
-		}
-
-		private static FormattedText GetUnitOfMeasuresSummary(UnitOfMeasureEntity unit)
-		{
-			return TextFormatter.FormatText (unit.Name, "(", unit.Code, ")");
 		}
 	}
 }

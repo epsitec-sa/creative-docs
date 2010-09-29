@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Printers
 		/// Gets or sets the ISR slip, which includes the coding zone.
 		/// </summary>
 		/// <value>The ISR slip.</value>
-		public IsrSlip Slip
+		public IsrSlip Slip  // de bain ?
 		{
 			get;
 			set;

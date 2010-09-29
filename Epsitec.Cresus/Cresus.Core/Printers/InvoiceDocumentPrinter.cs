@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			var mailContactBand = new TextBand ();
-			mailContactBand.Text = InvoiceDocumentHelper.GetMailContact (this.Entity);
+			mailContactBand.Text = this.Entity.BillingMailContact.GetSummary ();
 			mailContactBand.Font = font;
 			mailContactBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (mailContactBand, new Rectangle (120, this.RequiredPageSize.Height-57, 80, 25));
@@ -1333,7 +1333,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 
 			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
-			isr.From = InvoiceDocumentHelper.GetMailContact (this.Entity);
+			isr.From = this.Entity.BillingMailContact.GetSummary ();
 			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
 
