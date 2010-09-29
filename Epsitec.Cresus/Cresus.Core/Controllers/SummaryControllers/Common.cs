@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, coreData.DataContext)
 				.DefineTitle		(x => TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
-				.DefineText			(x => Entities.Common.GetMailContactSummary (x))
-				.DefineCompactText	(x => Entities.Common.GetCompactMailContactSummary (x));
+				.DefineText			(x => x.GetSummary ())
+				.DefineCompactText	(x => x.GetCompactSummary ());
 
 
 			data.Add (

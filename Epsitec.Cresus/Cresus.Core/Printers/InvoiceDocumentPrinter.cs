@@ -1334,7 +1334,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
 			isr.From = InvoiceDocumentHelper.GetMailContact (this.Entity);
-			isr.To = Entities.Common.GetFirmAdress ();
+			isr.To = billingDetails.IsrDefinition.SubscriberAddress;
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
 
 			isr.Slip = new IsrSlip (billingDetails);
