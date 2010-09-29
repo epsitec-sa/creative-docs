@@ -9797,24 +9797,24 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class BusinessSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>LegalPerson</c> field.
+		///	The <c>Company</c> field.
 		///	designer:fld/L0A6H/L0A7H
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0A7H]")]
-		public global::Epsitec.Cresus.Core.Entities.LegalPersonEntity LegalPerson
+		public global::Epsitec.Cresus.Core.Entities.RelationEntity Company
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.LegalPersonEntity> ("[L0A7H]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0A7H]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue = this.LegalPerson;
+				global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue = this.Company;
 				if (oldValue != value)
 				{
-					this.OnLegalPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.LegalPersonEntity> ("[L0A7H]", oldValue, value);
-					this.OnLegalPersonChanged (oldValue, value);
+					this.OnCompanyChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.RelationEntity> ("[L0A7H]", oldValue, value);
+					this.OnCompanyChanged (oldValue, value);
 				}
 			}
 		}
@@ -9863,8 +9863,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnLegalPersonChanging(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
-		partial void OnLegalPersonChanged(global::Epsitec.Cresus.Core.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.LegalPersonEntity newValue);
+		partial void OnCompanyChanging(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
+		partial void OnCompanyChanged(global::Epsitec.Cresus.Core.Entities.RelationEntity oldValue, global::Epsitec.Cresus.Core.Entities.RelationEntity newValue);
 		partial void OnFinanceSettingsChanging(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
 		partial void OnFinanceSettingsChanged(global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.FinanceSettingsEntity newValue);
 		partial void OnTaxSettingsChanging(global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity newValue);
