@@ -10206,6 +10206,28 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity> ("[L0A7J]");
 			}
 		}
+		///	<summary>
+		///	The <c>ActiveDocument</c> field.
+		///	designer:fld/L0ACI/L0AGJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[L0AGJ]")]
+		public global::Epsitec.Cresus.Core.Entities.DocumentEntity ActiveDocument
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0AGJ]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue = this.ActiveDocument;
+				if (oldValue != value)
+				{
+					this.OnActiveDocumentChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.DocumentEntity> ("[L0AGJ]", oldValue, value);
+					this.OnActiveDocumentChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIdChanging(int oldValue, int newValue);
 		partial void OnIdChanged(int oldValue, int newValue);
@@ -10215,6 +10237,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnWorkflowDefChanged(global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowDefinitionEntity newValue);
 		partial void OnSerializedStateChanging(string oldValue, string newValue);
 		partial void OnSerializedStateChanged(string oldValue, string newValue);
+		partial void OnActiveDocumentChanging(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
+		partial void OnActiveDocumentChanged(global::Epsitec.Cresus.Core.Entities.DocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.DocumentEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
