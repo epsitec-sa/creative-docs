@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core
 			
 			List<string> items = TextFormatter.ConvertItemsToStrings (values);
 
-			TextFormatter.ProcessTags (items);
+			//?TextFormatter.ProcessTags (items);
 			TextFormatter.FormatText (buffer, items);
 
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
@@ -106,6 +106,7 @@ namespace Epsitec.Cresus.Core
 			public const char SkipItemIfNextEmpty = '~';
 		}
 
+#if false
 		public const string Mark = "‼[mark]";
 		public const string ClearGroupIfEmpty = "‼[clear-group-if-empty]";
 
@@ -163,6 +164,7 @@ namespace Epsitec.Cresus.Core
 
 			items.RemoveRange (startIndex, num);
 		}
+#endif
 
 		public static string CurrentLanguageId
 		{

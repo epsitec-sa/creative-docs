@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 
 		/// <summary>
-		/// true  -> Dessine un faux BVR orangé ou BV rose sur du papier vierge. A n'utiliser que pour l'aperçu avant impression.
+		/// true  -> Dessine un faux BVR orangé ou BV rose sur du papier vierge. A n'utiliser que pour l'aperçu avant impression ou l'exportation PDF.
 		/// false -> Ne dessine que les informations réelles sur du papier avec un BVR/BV préimprimé.
 		/// </summary>
 		public bool PaintEsrSimulator

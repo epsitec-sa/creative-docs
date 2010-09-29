@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		{
 			var template = new CollectionTemplate<T3> ("MailContact", data.Controller, coreData.DataContext)
 				.DefineTitle		(x => TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", x.Roles.Select (role => role.Name).ToArray ()), ")"))
-				.DefineText			(x => Common.GetMailContactSummary (x))
-				.DefineCompactText	(x => Common.GetCompactMailContactSummary (x));
+				.DefineText			(x => Entities.Common.GetMailContactSummary (x))
+				.DefineCompactText	(x => Entities.Common.GetCompactMailContactSummary (x));
 
 
 			data.Add (
@@ -73,25 +73,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				});
 
 			data.Add (CollectionAccessor.Create (source, collectionResolver, template));
-		}
-
-		private static FormattedText GetMailContactSummary(MailContactEntity x)
-		{
-			return TextFormatter.FormatText (x.LegalPerson.Name, "\n",
-											 x.LegalPerson.Complement, "\n",
-											 x.Complement, "\n",
-											 x.Address.Street.StreetName, "\n",
-											 x.Address.Street.Complement, "\n",
-											 x.Address.PostBox.Number, "\n",
-											 TextFormatter.Mark,
-											 x.Address.Location.Country.Code, "~-", x.Address.Location.PostalCode, TextFormatter.ClearGroupIfEmpty,
-											 TextFormatter.Mark,
-											 x.Address.Location.Name);
-		}
-
-		private static FormattedText GetCompactMailContactSummary(MailContactEntity x)
-		{
-			return TextFormatter.FormatText (x.Address.Street.StreetName, "~,", x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 
 
