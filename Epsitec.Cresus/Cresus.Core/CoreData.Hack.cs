@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core
 
 		public IEnumerable<LocationEntity> GetLocations(CountryEntity country)
 		{
-			return new LocationRepository (this).GetByCountry (country);
+			return this.GetLocations ().Where (x => x.Country.Code == country.Code);
 		}
 
 		public IList<ContactRoleEntity> GetRoles()
