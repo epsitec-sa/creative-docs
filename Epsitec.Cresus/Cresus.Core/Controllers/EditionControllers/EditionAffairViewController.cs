@@ -114,6 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			document.BillingStatus         = Business.Finance.BillingStatus.None;
 			document.CreationDate          = now;
 			document.LastModificationDate  = now;
+			document.Description           = FormattedText.FromSimpleText ("Offre");
 
 			var relation = this.Orchestrator.MainViewController.GetVisibleEntities ().Select (x => x as RelationEntity).Where (x => x.IsNull () == false).FirstOrDefault ();
 
@@ -156,14 +157,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 150, "Compte débiteur (comptabilité)",  Marshaler.Create (() => this.Entity.DefaultDebtorBookAccount, x => this.Entity.DefaultDebtorBookAccount = x));
-
-			int counter = 0;
-
-			foreach (var doc in this.Entity.Documents)
-			{
-				builder.CreateEditionTitleTile ("Data.Document", "Offre");
-				builder.CreateSummaryTile (EditionAffairViewController.GetOfferTileName (counter++), doc, TextFormatter.FormatText ("N°", doc.IdA ?? doc.IdB ?? doc.IdC ?? "?", "créée le", doc.CreationDate));
-			}
 		}
 
 		private static string GetOfferTileName(int index)

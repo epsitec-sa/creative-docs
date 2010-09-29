@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				{
 					AutoGroup    = false,
 					Name		 = "DocWorkflow",
-					IconUri		 = "Data.DocWorkflow",
+					IconUri		 = "Data.Document",
 					Title		 = TextFormatter.FormatText ("Document"),
 					CompactTitle = TextFormatter.FormatText ("Documents"),
 					Text		 = CollectionTemplate.DefaultEmptyText
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			var template = new CollectionTemplate<WorkflowEntity> ("DocWorkflow", this.BusinessContext);
 
 			template.DefineTitle (x => x.GetCompactSummary ());
-			template.DefineText (x => x.GetSummary ());
+			template.DefineText (x => x.GetSummaryDescription ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));
