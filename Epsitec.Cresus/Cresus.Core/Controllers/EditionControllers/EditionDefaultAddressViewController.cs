@@ -57,29 +57,31 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUICountry(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Nom et code du pays",
-				new SelectionController<Entities.CountryEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.Location.Country,
-					ValueSetter = x => this.Entity.Location.Country = x,
+			var controller = new SelectionController<Entities.CountryEntity> (this.BusinessContext)
+			{
+				ValueGetter = () => this.Entity.Location.Country,
+				ValueSetter = x => this.Entity.Location.Country = x,
 
-					ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
-				});
+				ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
+			};
+
+			builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
 		}
 
 		private void CreateUILocation(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Numéro postal et ville",
-				new SelectionController<Entities.LocationEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.Location,
-					ValueSetter = x => this.Entity.Location = x,
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
+			var controller = new SelectionController<Entities.LocationEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Location,
+				ValueSetter         = x => this.Entity.Location = x,
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLocations (),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.PostalCode, x.Name),
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.PostalCode, x.Name),
+			};
+
+			builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);
 		}
 	}
 }

@@ -77,16 +77,17 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIPaymentMode(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Mode de paiement",
-				new SelectionController<PaymentModeEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.AmountDue.PaymentMode,
-					ValueSetter = x => this.Entity.AmountDue.PaymentMode = x,
-					ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
+			var controller = new SelectionController<PaymentModeEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.AmountDue.PaymentMode,
+				ValueSetter         = x => this.Entity.AmountDue.PaymentMode = x,
+				ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateAutoCompleteTextField ("Mode de paiement", controller);
 		}
 
 		private NewEntityReference CreateNewPaymentMode(DataContext context)

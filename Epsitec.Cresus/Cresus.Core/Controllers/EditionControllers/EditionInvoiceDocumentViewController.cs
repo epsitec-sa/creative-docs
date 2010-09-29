@@ -81,32 +81,34 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUIBillingMail(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Adresse de facturation",
-				new SelectionController<MailContactEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.BillingMailContact,
-					ValueSetter = x => this.Entity.BillingMailContact = x,
-					ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
+			var controller = new SelectionController<MailContactEntity> (this.BusinessContext)
+			{
+				ValueGetter = () => this.Entity.BillingMailContact,
+				ValueSetter = x => this.Entity.BillingMailContact = x,
+				ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
 
-					ToTextArrayConverter     = x => GetMailTexts (x),
-					ToFormattedTextConverter = x => GetMailText (x),
-				});
+				ToTextArrayConverter     = x => GetMailTexts (x),
+				ToFormattedTextConverter = x => GetMailText (x),
+			};
+
+			builder.CreateAutoCompleteTextField ("Adresse de facturation", controller);
 		}
 
 		private void CreateUIShippingMail(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Adresse de livraison",
-				new SelectionController<MailContactEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.ShippingMailContact,
-					ValueSetter = x => this.Entity.ShippingMailContact = x,
-					ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
+			var controller = new SelectionController<MailContactEntity> (this.BusinessContext)
+			{
+				ValueGetter = () => this.Entity.ShippingMailContact,
+				ValueSetter = x => this.Entity.ShippingMailContact = x,
+				ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetMailContacts (),
 
-					ToTextArrayConverter     = x => GetMailTexts (x),
-					ToFormattedTextConverter = x => GetMailText (x),
-				});
+				ToTextArrayConverter     = x => GetMailTexts (x),
+				ToFormattedTextConverter = x => GetMailText (x),
+			};
+
+			builder.CreateAutoCompleteTextField ("Adresse de livraison", controller);
 		}
 
 		private void CreateUIMain2(Epsitec.Cresus.Core.UIBuilder builder)

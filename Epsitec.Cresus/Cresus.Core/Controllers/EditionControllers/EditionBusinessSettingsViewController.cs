@@ -9,6 +9,9 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
+using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,16 +54,25 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			builder.CreateAutoCompleteTextField ("Personne morale",
-				new SelectionController<LegalPersonEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Entity.LegalPerson,
-					ValueSetter = x => this.Entity.LegalPerson = x,
-					ReferenceController = new ReferenceController (() => this.Entity.LegalPerson),
+			var controller = new SelectionController<LegalPersonEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.LegalPerson,
+				ValueSetter         = x => this.Entity.LegalPerson = x,
+				ReferenceController = new ReferenceController (() => this.Entity.LegalPerson, creator: this.CreateNewLegalPerson),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+			};
+
+			builder.CreateAutoCompleteTextField ("Personne morale", controller);
+		}
+
+		private NewEntityReference CreateNewLegalPerson(DataContext context)
+		{
+			var person = context.CreateEntityAndRegisterAsEmpty<LegalPersonEntity> ();
+
+			return person;
 		}
 	}
 }

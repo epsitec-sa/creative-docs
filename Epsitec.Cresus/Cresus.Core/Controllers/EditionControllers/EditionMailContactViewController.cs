@@ -180,46 +180,47 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateUILegalPerson(UIBuilder builder)
 		{
-			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)",
-				new SelectionController<LegalPersonEntity> (this.BusinessContext)
+			var controller = new SelectionController<LegalPersonEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.LegalPerson,
+				ValueSetter         = x => this.Entity.LegalPerson = x,
+				ReferenceController = this.GetLegalPersonReferenceController (),
+				PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
+
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name),
+			};
+
+			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)", controller);
+
+			textField.SelectedItemChanged += delegate
+			{
+				System.Diagnostics.Debug.Assert (this.addressTextField != null);
+				this.addressTextField.Text = null;  // on efface l'adresse si on change d'entreprise
+				this.addressTextField.Items.Clear ();
+
+				var addressGetter = this.GetLegalPersonAddressGetter ();
+				foreach (var item in addressGetter)
 				{
-					ValueGetter         = () => this.Entity.LegalPerson,
-					ValueSetter         = x => this.Entity.LegalPerson = x,
-					ReferenceController = this.GetLegalPersonReferenceController (),
-					PossibleItemsGetter = () => CoreProgram.Application.Data.GetLegalPersons (),
-
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name),
-				});
-
-			textField.SelectedItemChanged +=
-				delegate
-				{
-					System.Diagnostics.Debug.Assert (this.addressTextField != null);
-					this.addressTextField.Text = null;  // on efface l'adresse si on change d'entreprise
-					this.addressTextField.Items.Clear ();
-
-					var addressGetter = this.GetLegalPersonAddressGetter ();
-					foreach (var item in addressGetter)
-					{
-						this.addressTextField.Items.Add (item);
-					}
-				};
+					this.addressTextField.Items.Add (item);
+				}
+			};
 		}
 
 		private void CreateUIAddress(UIBuilder builder)
 		{
-			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise",
-				new SelectionController<AddressEntity> (this.BusinessContext)
-				{
-					ValueGetter         = () => this.Entity.Address,
-					ValueSetter         = x => this.Entity.Address = x,
-					ReferenceController = this.GetAddressReferenceController (),
-					PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
+			var controller = new SelectionController<AddressEntity> (this.BusinessContext)
+			{
+				ValueGetter         = () => this.Entity.Address,
+				ValueSetter         = x => this.Entity.Address = x,
+				ReferenceController = this.GetAddressReferenceController (),
+				PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
-					ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Street.StreetName).ToSimpleText (), TextFormatter.FormatText (x.Location.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Location.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
-				});
+				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Street.StreetName).ToSimpleText (), TextFormatter.FormatText (x.Location.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Location.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
+			};
+
+			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise", controller);
 		}
 
 		private IEnumerable<AddressEntity> GetLegalPersonAddressGetter()
@@ -277,31 +278,33 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.InitializeDefaultCountry ();  // met "Suisse" si rien
 			this.selectedCountry = this.Entity.Address.Location.Country;
 
-			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays",
-				new SelectionController<CountryEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Country,
-					ValueSetter = x => this.Country = x,
-					ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
+			var controller = new SelectionController<CountryEntity> (this.BusinessContext)
+			{
+				ValueGetter = () => this.Country,
+				ValueSetter = x => this.Country = x,
+				ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
 
-					ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
-				});
+				ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
+			};
+
+			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
 		}
 
 		private void CreateUILocation(UIBuilder builder)
 		{
-			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville",
-				new SelectionController<LocationEntity> (this.BusinessContext)
-				{
-					ValueGetter = () => this.Location,
-					ValueSetter = x => this.Location = x,
-					ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
-					PossibleItemsGetter = () => this.LocationGetter,
+			var controller = new SelectionController<LocationEntity> (this.BusinessContext)
+			{
+				ValueGetter = () => this.Location,
+				ValueSetter = x => this.Location = x,
+				ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
+				PossibleItemsGetter = () => this.LocationGetter,
 
-					ToTextArrayConverter     = x => new string[] { x.Country.Code, TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
-					ToFormattedTextConverter = x => TextFormatter.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
-				});
+				ToTextArrayConverter     = x => new string[] { x.Country.Code, TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
+			};
+
+			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);
 		}
 
 		private IEnumerable<LocationEntity> LocationGetter
