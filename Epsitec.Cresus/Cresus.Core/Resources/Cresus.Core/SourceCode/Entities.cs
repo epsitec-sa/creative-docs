@@ -6227,24 +6227,24 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>IsrSubscriberNumber</c> field.
+		///	The <c>IsrDefinition</c> field.
 		///	designer:fld/L0AS6/L0AIB
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[L0AIB]")]
-		public string IsrSubscriberNumber
+		public global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity IsrDefinition
 		{
 			get
 			{
-				return this.GetField<string> ("[L0AIB]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[L0AIB]");
 			}
 			set
 			{
-				string oldValue = this.IsrSubscriberNumber;
+				global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue = this.IsrDefinition;
 				if (oldValue != value)
 				{
-					this.OnIsrSubscriberNumberChanging (oldValue, value);
-					this.SetField<string> ("[L0AIB]", oldValue, value);
-					this.OnIsrSubscriberNumberChanged (oldValue, value);
+					this.OnIsrDefinitionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity> ("[L0AIB]", oldValue, value);
+					this.OnIsrDefinitionChanged (oldValue, value);
 				}
 			}
 		}
@@ -6321,8 +6321,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnAmountDueChanged(global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity oldValue, global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity newValue);
 		partial void OnTransactionIdChanging(string oldValue, string newValue);
 		partial void OnTransactionIdChanged(string oldValue, string newValue);
-		partial void OnIsrSubscriberNumberChanging(string oldValue, string newValue);
-		partial void OnIsrSubscriberNumberChanged(string oldValue, string newValue);
+		partial void OnIsrDefinitionChanging(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
+		partial void OnIsrDefinitionChanged(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
 		partial void OnIsrReferenceNumberChanging(string oldValue, string newValue);
 		partial void OnIsrReferenceNumberChanged(string oldValue, string newValue);
 		partial void OnInstalmentRankChanging(int? oldValue, int? newValue);
