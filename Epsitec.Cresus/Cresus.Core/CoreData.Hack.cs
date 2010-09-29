@@ -785,7 +785,7 @@ namespace Epsitec.Cresus.Core
 			var finance = this.DataContext.CreateEntity<FinanceSettingsEntity> ();
 			var isrDef1 = this.DataContext.CreateEntity<IsrDefinitionEntity> ();
 
-			business.LegalPerson = this.DataContext.GetEntitiesOfType<LegalPersonEntity> (x => x.Name == "Epsitec SA").FirstOrDefault ();
+			business.Company = this.DataContext.GetEntitiesOfType<RelationEntity> (x => x.Person is LegalPersonEntity && (x.Person as LegalPersonEntity).Name == "Epsitec SA").FirstOrDefault ();
 			business.FinanceSettings = finance;
 			business.TaxSettings = tax;
 

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				builder.CreateHeaderEditorTile ();
 				builder.CreateEditionTitleTile ("Data.BusinessSettings", "Réglages de l'entreprise");
 
-				this.CreateUILegalPerson (builder);
+				this.CreateUIRelation (builder);
 				this.CreateUITax (builder);
 
 				builder.CreateFooterEditorTile ();
@@ -52,24 +52,24 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			builder.CreateAutoCompleteTextField (tile, 150-UIBuilder.ComboButtonWidth+1, "Mode d'assujetissement à la TVA", Marshaler.Create (() => this.Entity.TaxSettings.TaxMode, x => this.Entity.TaxSettings.TaxMode = x), Business.Enumerations.GetAllPossibleTaxModes (), x => TextFormatter.FormatText (x.Values[0]));
 		}
 
-		private void CreateUILegalPerson(UIBuilder builder)
+		private void CreateUIRelation(UIBuilder builder)
 		{
-			var controller = new SelectionController<LegalPersonEntity> (this.BusinessContext)
+			var controller = new SelectionController<RelationEntity> (this.BusinessContext)
 			{
-				ValueGetter         = () => this.Entity.LegalPerson,
-				ValueSetter         = x => this.Entity.LegalPerson = x,
-				ReferenceController = new ReferenceController (() => this.Entity.LegalPerson),
+				ValueGetter         = () => this.Entity.Company,
+				ValueSetter         = x => this.Entity.Company = x,
+				ReferenceController = new ReferenceController (() => this.Entity.Company),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToTextArrayConverter     = x => new string[] { x.Person.GetSummary ().ToSimpleText () },
+				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Person.GetSummary ())
 			};
 
-			builder.CreateAutoCompleteTextField ("Personne morale", controller);
+			builder.CreateAutoCompleteTextField ("Entreprise", controller);
 		}
 
 		private NewEntityReference CreateNewLegalPerson(DataContext context)
 		{
-			var person = context.CreateEntityAndRegisterAsEmpty<LegalPersonEntity> ();
+			var person = context.CreateEntityAndRegisterAsEmpty<RelationEntity> ();
 
 			return person;
 		}

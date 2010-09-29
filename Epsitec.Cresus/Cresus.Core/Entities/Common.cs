@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns></returns>
 		public static FormattedText GetFirmAdress()
 		{
+#if false
 			BusinessSettingsEntity settings = CoreProgram.Application.BusinessSettings;
 
 			if (settings == null)
@@ -36,6 +37,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 
 			return Entities.Common.GetMailContactSummary (mailContact);
+#endif
+			return null;  // TODO:  supprimer
 		}
 
 		public static FormattedText GetMailContactSummary(MailContactEntity x)
