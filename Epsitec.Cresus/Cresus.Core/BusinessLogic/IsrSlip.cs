@@ -132,11 +132,11 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 
 			buffer.Append (Isr.ComputeCheckDigit (buffer.ToString ()));		//	13
-			buffer.Append (">");													//	 1
-			buffer.Append (referenceNumber);										//	27
-			buffer.Append ("+ ");													//	 2
-			buffer.Append (subscriberNumber);										//	 9
-			buffer.Append (">");													//	 1
+			buffer.Append (">");											//	 1
+			buffer.Append (referenceNumber);								//	27
+			buffer.Append ("+ ");											//	 2
+			buffer.Append (subscriberNumber);								//	 9
+			buffer.Append (">");											//	 1
 
 			string line = buffer.ToString ();
 

@@ -125,6 +125,7 @@
     <Compile Include="Entities\AbstractPersonEntity.cs" />
     <Compile Include="Entities\AffairEntity.cs" />
     <Compile Include="Entities\ArticlePriceEntity.cs" />
+    <Compile Include="Entities\Common.cs" />
     <Compile Include="Entities\PaymentReminderDefinitionEntity.cs" />
     <Compile Include="Entities\IsrDefinitionEntity.cs" />
     <Compile Include="Entities\SoftwareUserEntity.cs" />

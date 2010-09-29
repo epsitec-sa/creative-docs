@@ -1334,7 +1334,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			isr.PaintEsrSimulator = this.HasDocumentOption (DocumentOption.ESRFacsimile);
 			isr.From = InvoiceDocumentHelper.GetMailContact (this.Entity);
-			isr.To = new FormattedText ("EPSITEC SA<br/>1400 Yverdon-les-Bains");
+			isr.To = Entities.Common.GetFirmAdress ();
 			isr.Communication = InvoiceDocumentHelper.GetTitle (this.Entity, billingDetails, this.SelectedDocumentType);
 
 			isr.Slip = new IsrSlip (billingDetails);
