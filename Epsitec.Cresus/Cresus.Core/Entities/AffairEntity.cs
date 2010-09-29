@@ -41,8 +41,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var root = this.RootWorkflow;
 
-			if ((root.IsNull ()) ||
-				(root.CreationEvent.IsNull ()))
+			if (root.IsNull () || root.CreationEvent.IsNull ())
 			{
 				return TextFormatter.FormatText (this.IdA);
 			}
@@ -51,6 +50,11 @@ namespace Epsitec.Cresus.Core.Entities
 				var date = Misc.GetDateTimeShortDescription (root.CreationEvent.Date);
 				return TextFormatter.FormatText (this.IdA, " - ", date, "(", this.Documents.Count, "doc.)");
 			}
+		}
+
+		public FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.IdA);
 		}
 
 

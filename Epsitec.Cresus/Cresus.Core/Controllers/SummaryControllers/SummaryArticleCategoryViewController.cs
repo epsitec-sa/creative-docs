@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 						IconUri				= "Data.ArticleCategory",
 						Title				= TextFormatter.FormatText ("Catégorie"),
 						CompactTitle		= TextFormatter.FormatText ("Catégorie"),
-						TextAccessor		= this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
-						CompactTextAccessor = this.CreateAccessor (x => TextFormatter.FormatText (x.Name)),
+						TextAccessor		= this.CreateAccessor (x => x.GetSummary ()),
+						CompactTextAccessor = this.CreateAccessor (x => x.GetCompactSummary ()),
 						EntityMarshaler		= this.CreateEntityMarshaler (),
 					});
 			}

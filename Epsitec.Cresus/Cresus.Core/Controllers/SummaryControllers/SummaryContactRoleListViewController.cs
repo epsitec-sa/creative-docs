@@ -48,16 +48,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ContactRoleEntity> ("ContactRoles", this.BusinessContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetContactRoleSummary (x)));
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 //-			template.DefineUpdateMethod (() => this.Orchestrator.UpdateUI ());
 
 			data.Add (this.CreateCollectionAccessor (template));
-		}
-
-		private static FormattedText GetContactRoleSummary(ContactRoleEntity group)
-		{
-			return TextFormatter.FormatText (group.Name);
 		}
 	}
 }

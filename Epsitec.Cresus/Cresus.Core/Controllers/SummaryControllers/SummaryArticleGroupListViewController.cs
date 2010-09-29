@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<ArticleGroupEntity> ("ArticleGroups", this.BusinessContext);
 
-			template.DefineText        (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
-			template.DefineCompactText (x => TextFormatter.FormatText (x.Code, "~:", x.Name));
+			template.DefineText        (x => x.GetSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template));
 		}
