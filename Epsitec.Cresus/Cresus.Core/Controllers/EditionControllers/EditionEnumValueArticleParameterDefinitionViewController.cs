@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 80, "Code", Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
-			builder.CreateTextField (tile, 0, "Nom", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
-			builder.CreateAutoCompleteTextField (tile, 0, "Cardinalité", Marshaler.Create (this.Entity, x => x.Cardinality, (x, v) => x.Cardinality = v), Business.Enumerations.GetAllPossibleValueCardinalities (), x => TextFormatter.FormatText (x.Values[0]));
+			builder.CreateTextField             (tile, 80, "Code",        Marshaler.Create (() => this.Entity.Code, x => this.Entity.Code = x));
+			builder.CreateTextField             (tile,  0, "Nom",         Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			builder.CreateAutoCompleteTextField (tile,  0, "Cardinalité", Marshaler.Create (() => this.Entity.Cardinality, x => this.Entity.Cardinality = x), Business.Enumerations.GetAllPossibleValueCardinalities (), x => TextFormatter.FormatText (x.Values[0]));
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 

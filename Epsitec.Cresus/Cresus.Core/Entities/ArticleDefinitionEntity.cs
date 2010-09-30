@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.IdA, "-", this.ShortDescription);
+			return TextFormatter.FormatText (this.IdA, "~-", this.ShortDescription);
 		}
 
 		public override string[] GetTextArray()

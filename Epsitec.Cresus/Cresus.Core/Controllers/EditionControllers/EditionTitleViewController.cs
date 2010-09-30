@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var tile = builder.CreateEditionTile ();
 
 			builder.CreateWarning   (tile);
-			builder.CreateTextField (tile, 0, "Titre abrégé", Marshaler.Create (() => this.Entity.ShortName, x => this.Entity.ShortName = x));
-			builder.CreateTextField (tile, 0, "Titre complet", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			builder.CreateTextField (tile, 0, "Titre abrégé",  Marshaler.Create (() => this.Entity.ShortName, x => this.Entity.ShortName = x));
+			builder.CreateTextField (tile, 0, "Titre complet", Marshaler.Create (() => this.Entity.Name,      x => this.Entity.Name = x));
 		}
 	}
 }
