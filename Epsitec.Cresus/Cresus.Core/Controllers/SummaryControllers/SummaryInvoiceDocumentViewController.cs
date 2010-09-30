@@ -152,8 +152,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<AbstractDocumentItemEntity> ("ArticleDocumentItem", data.Controller, this.DataContext);
 
-			template.DefineText (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (SummaryInvoiceDocumentViewController.GetDocumentItemSummary (x)));
+			template.DefineText        (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
 			template.DefineCreateItem (this.CreateArticleDocumentItem);  // le bouton [+] crée une ligne d'article
 			template.DefineCreateGetIndex (this.CreateArticleGetIndex);
 			template.Filter = SummaryInvoiceDocumentViewController.ArticleLineFilter;
@@ -182,8 +182,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<BillingDetailEntity> ("BillingDetails", this.BusinessContext);
 
-			template.DefineText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (GetBillingDetailsSummary (this.Entity, x)));
+			template.DefineText        (x => x.GetCompactSummary (this.Entity));
+			template.DefineCompactText (x => x.GetCompactSummary (this.Entity));
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.BillingDetails));
 		}
@@ -241,153 +241,6 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				    x is PriceDocumentItemEntity   );
 		}
 
-
-		private static FormattedText GetDocumentItemSummary(AbstractDocumentItemEntity documentItemEntity)
-		{
-			if (documentItemEntity is TextDocumentItemEntity)
-			{
-				return SummaryInvoiceDocumentViewController.GetTextDocumentItemSummary (documentItemEntity as TextDocumentItemEntity);
-			}
-
-			if (documentItemEntity is ArticleDocumentItemEntity)
-			{
-				return SummaryInvoiceDocumentViewController.GetArticleDocumentItemSummary (documentItemEntity as ArticleDocumentItemEntity);
-			}
-
-			if (documentItemEntity is PriceDocumentItemEntity)
-			{
-				return SummaryInvoiceDocumentViewController.GetPriceDocumentItemSummary (documentItemEntity as PriceDocumentItemEntity);
-			}
-
-			if (documentItemEntity is TaxDocumentItemEntity)
-			{
-				return SummaryInvoiceDocumentViewController.GetTaxDocumentItemSummary (documentItemEntity as TaxDocumentItemEntity);
-			}
-
-			if (documentItemEntity is TotalDocumentItemEntity)
-			{
-				return SummaryInvoiceDocumentViewController.GetTotalDocumentItemSummary (documentItemEntity as TotalDocumentItemEntity);
-			}
-
-			return FormattedText.Null;
-		}
-
-		private static FormattedText GetTextDocumentItemSummary(TextDocumentItemEntity x)
-		{
-			if (x.Text.IsNullOrEmpty)
-			{
-				return "<i>Texte</i>";
-			}
-			else
-			{
-				return x.Text;
-			}
-		}
-
-		private static FormattedText GetArticleDocumentItemSummary(ArticleDocumentItemEntity x)
-		{
-			var quantity = ArticleDocumentItemHelper.GetArticleQuantityAndUnit (x);
-			var desc = Misc.FirstLine (ArticleDocumentItemHelper.GetArticleDescription (x, shortDescription: true));
-			var price = Misc.PriceToString (x.PrimaryLinePriceBeforeTax);
-
-			FormattedText text = TextFormatter.FormatText (quantity, desc, price); // FormattedText.Join (" ", quantity, desc, price);
-
-			if (text.IsNullOrEmpty)
-			{
-				return "<i>Article</i>";
-			}
-			else
-			{
-				return text;
-			}
-		}
-
-		private static FormattedText GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
-		{
-			var builder = new TextBuilder ();
-
-			builder.Append ("Sous-total ");
-			builder.Append (Misc.PriceToString (x.ResultingPriceBeforeTax));
-
-			if (x.Discount.DiscountRate.HasValue)
-			{
-				builder.Append (" (après rabais en %)");
-			}
-			else if (x.Discount.DiscountAmount.HasValue)
-			{
-				builder.Append (" (après rabais en francs)");
-			}
-			else if (x.FixedPriceAfterTax.HasValue)
-			{
-				builder.Append (" (montant arrêté)");
-			}
-
-			return builder.ToFormattedText ();
-		}
-
-		private static FormattedText GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
-		{
-			var desc = x.Text;
-			var tax = Misc.PriceToString (x.ResultingTax);
-
-			var text = TextFormatter.FormatText (desc, tax);
-
-			if (text.IsNullOrEmpty)
-			{
-				return "<i>TVA</i>";
-			}
-			else
-			{
-				return text;
-			}
-		}
-
-		private static FormattedText GetTotalDocumentItemSummary(TotalDocumentItemEntity x)
-		{
-			var desc = x.TextForPrimaryPrice;
-
-			string total;
-			if (x.PrimaryPriceBeforeTax.HasValue)
-			{
-				total = Misc.PriceToString (x.PrimaryPriceBeforeTax);
-			}
-			else if (x.FixedPriceAfterTax.HasValue)
-			{
-				total = Misc.PriceToString (x.FixedPriceAfterTax);
-			}
-			else
-			{
-				total = Misc.PriceToString (x.PrimaryPriceAfterTax);
-			}
-
-			var text = TextFormatter.FormatText (desc, total);
-
-			if (text.IsNullOrEmpty)
-			{
-				return "<i>Total</i>";
-			}
-			else
-			{
-				return text;
-			}
-		}
-
-
-		private static FormattedText GetBillingDetailsSummary(InvoiceDocumentEntity invoiceDocument, BillingDetailEntity billingDetails)
-		{
-			string amount = Misc.PriceToString (billingDetails.AmountDue.Amount);
-			FormattedText title = Misc.FirstLine (billingDetails.Title);
-			FormattedText ratio = InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, billingDetails, true);
-
-			if (ratio.IsNullOrWhiteSpace)
-			{
-				return TextFormatter.FormatText (amount, title);
-			}
-			else
-			{
-				return TextFormatter.FormatText (amount, ratio, title);
-			}
-		}
 
 		private static FormattedText GetTotalSummary(InvoiceDocumentEntity invoiceDocument)
 		{

@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			where T3 : CommentEntity, T2, new ()
 		{
 			var template = new CollectionTemplate<T3> ("Comment", data.Controller, coreData.DataContext)
-				.DefineText        (x => TextFormatter.FormatText (Misc.FirstLine (x.Text)))
-				.DefineCompactText (x => TextFormatter.FormatText (Misc.FirstLine (x.Text)));
+				.DefineText        (x => x.GetCompactSummary ())
+				.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (
 				new SummaryData
