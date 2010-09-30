@@ -58,8 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.AdministrativeTaxArticle = x,
 				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxArticle, creator: this.CreateNewTaxArticleDefinition),
 
-				ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Article pour facturer une taxe", controller);

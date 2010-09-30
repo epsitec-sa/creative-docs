@@ -17,7 +17,12 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.PostalCode, " ", this.Name);
+			return TextFormatter.FormatText (this.Country.Code, "-", this.PostalCode, " ", this.Name);
+		}
+
+		public override string[] GetTextArray()
+		{
+			return new string[] { this.Country.Code, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
 		}
 	}
 }

@@ -187,8 +187,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = this.GetLegalPersonReferenceController (),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)", controller);
@@ -216,8 +216,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = this.GetAddressReferenceController (),
 				PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Street.StreetName).ToSimpleText (), TextFormatter.FormatText (x.Location.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Location.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Street.StreetName, ", ", x.Location.PostalCode, x.Location.Name),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise", controller);
@@ -284,8 +284,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter = x => this.Country = x,
 				ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
 
-				ToTextArrayConverter     = x => new string[] { x.Code, TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")"),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
@@ -300,8 +300,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
 				PossibleItemsGetter = () => this.LocationGetter,
 
-				ToTextArrayConverter     = x => new string[] { x.Country.Code, TextFormatter.FormatText (x.PostalCode).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Country.Code, "-", x.PostalCode, x.Name),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);

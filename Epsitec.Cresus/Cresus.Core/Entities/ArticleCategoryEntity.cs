@@ -19,5 +19,10 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText (this.Name);
 		}
+
+		public override string[] GetTextArray()
+		{
+			return new string[] { this.Name };
+		}
 	}
 }
