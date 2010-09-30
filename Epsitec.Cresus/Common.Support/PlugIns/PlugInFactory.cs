@@ -13,10 +13,10 @@ namespace Epsitec.Common.Support.PlugIns
 
 	/// <summary>
 	/// The <c>PlugInFactory</c> class provides a generic implementation of
-	/// a class resolver which instanciates objects based on an id; the classes
+	/// a class resolver which instantiates objects based on an id; the classes
 	/// are identified through the use of a dedicated attribute.
 	/// </summary>
-	/// <typeparam name="TClass">The base type of the class to instanciate.</typeparam>
+	/// <typeparam name="TClass">The base type of the class to instantiate.</typeparam>
 	/// <typeparam name="TAttribute">The type of the dedicated attribute.</typeparam>
 	/// <typeparam name="TId">The type of the id.</typeparam>
 	public class PlugInFactory<TClass, TAttribute, TId>

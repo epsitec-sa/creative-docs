@@ -1,6 +1,8 @@
 //	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 namespace Epsitec.Common.Widgets.Validators
 {
 	/// <summary>
@@ -57,11 +59,11 @@ namespace Epsitec.Common.Widgets.Validators
 			}
 		}
 
-		public string							ErrorMessage
+		public FormattedText					ErrorMessage
 		{
 			get
 			{
-				return null;
+				return FormattedText.Empty;
 			}
 		}
 		
