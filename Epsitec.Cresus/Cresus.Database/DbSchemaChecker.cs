@@ -257,8 +257,8 @@ namespace Epsitec.Cresus.Database
 		/// elements in different orders will be considered are equal.
 		/// </summary>
 		/// <typeparam name="T">The type of the elements in the sets.</typeparam>
-		/// <param name="arrayA">The first set to compare.</param>
-		/// <param name="arrayB">The second set to compare.</param>
+		/// <param name="listA">The first set to compare.</param>
+		/// <param name="listB">The second set to compare.</param>
 		/// <param name="comparer">A method that can compare two elements of the sets.</param>
 		/// <returns><c>true</c> if both sets contains the same elements, <c>false</c> if they do not.</returns>
 		private static bool CompareUnOrderedLists<T>(List<T> listA, List<T> listB, System.Func<T, T, bool> comparer)
