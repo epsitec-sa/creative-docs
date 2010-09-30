@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin    (tile, horizontalSeparator: true);
 			builder.CreateTextField (tile, 100, "Numéro postal", Marshaler.Create (() => this.Entity.PostalCode, x => this.Entity.PostalCode = x));
-			builder.CreateTextField (tile, 0, "Ville", Marshaler.Create (() => this.Entity.Name, x => this.Entity.Name = x));
+			builder.CreateTextField (tile,   0, "Ville",         Marshaler.Create (() => this.Entity.Name,       x => this.Entity.Name = x));
 		}
 
 

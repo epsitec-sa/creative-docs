@@ -52,35 +52,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-#if false
-			builder.CreateTextField (tile, 0, "TextForPrimaryPrice", Marshaler.Create (() => this.Entity.TextForPrimaryPrice, x => this.Entity.TextForPrimaryPrice = x));
-			builder.CreateTextField (tile, 0, "TextForResultingPrice", Marshaler.Create (() => this.Entity.TextForResultingPrice, x => this.Entity.TextForResultingPrice = x));
-			builder.CreateTextField (tile, 0, "TextForFixedPrice", Marshaler.Create (() => this.Entity.TextForFixedPrice, x => this.Entity.TextForFixedPrice = x));
-			builder.CreateTextField (tile, 0, "TextForTax", Marshaler.Create (() => this.Entity.TextForTax, x => this.Entity.TextForTax = x));
-
-			builder.CreateMargin (tile,	horizontalSeparator: true);
-
-			builder.CreateTextField (tile, 0, "Discount.Description", Marshaler.Create (() => this.Entity.Discount.Description, x => this.Entity.Discount.Description = x));
-			builder.CreateTextField (tile, 60, "Discount.DiscountRate", Marshaler.Create (() => this.Entity.Discount.DiscountRate, x => this.Entity.Discount.DiscountRate = x));
-			builder.CreateTextField (tile, 120, "Discount.DiscountAmount", Marshaler.Create (() => this.Entity.Discount.DiscountAmount, x => this.Entity.Discount.DiscountAmount = x));
-
-			builder.CreateMargin (tile, horizontalSeparator: true);
-
-			builder.CreateTextField (tile, 120, "PrimaryPriceBeforeTax", Marshaler.Create (() => this.Entity.PrimaryPriceBeforeTax, x => this.Entity.PrimaryPriceBeforeTax = x));
-			builder.CreateTextField (tile, 120, "PrimaryTax", Marshaler.Create (() => this.Entity.PrimaryTax, x => this.Entity.PrimaryTax = x));
-			builder.CreateTextField (tile, 120, "ResultingPriceBeforeTax", Marshaler.Create (() => this.Entity.ResultingPriceBeforeTax, x => this.Entity.ResultingPriceBeforeTax = x));
-			builder.CreateTextField (tile, 120, "ResultingTax", Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
-			builder.CreateTextField (tile, 120, "FixedPriceBeforeTax", Marshaler.Create (() => this.Entity.FixedPriceBeforeTax, x => this.Entity.FixedPriceBeforeTax = x));
-			builder.CreateTextField (tile, 120, "FixedPriceAfterTax", Marshaler.Create (() => this.Entity.FixedPriceAfterTax, x => this.Entity.FixedPriceAfterTax = x));
-			builder.CreateTextField (tile, 120, "FinalPriceBeforeTax", Marshaler.Create (() => this.Entity.FinalPriceBeforeTax, x => this.Entity.FinalPriceBeforeTax = x));
-			builder.CreateTextField (tile, 120, "FinalTax", Marshaler.Create (() => this.Entity.FinalTax, x => this.Entity.FinalTax = x));
-#else
 			builder.CreateStaticText (tile, 70, "Cette ligne effectue un sous-total de tous les articles précédents. Vous pouvez spécifier ci-dessous un rabais facultatif pour l'ensemble du sous-groupe.");
 
 			builder.CreateTextField  (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 			builder.CreateStaticText (tile, 16, "<b>— ou —</b>");
 			builder.CreateTextField  (tile, 80, "Sous-total arrêté TTC",        Marshaler.Create (() => this.GetFixedPriceAfterTax (), this.SetFixedPriceAfterTax));
-#endif
 		}
 
 
