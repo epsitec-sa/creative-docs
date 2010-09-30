@@ -6,7 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
 	/// A <c>CompositeBusinessRule</c> implements zero, one or several rules for a specified

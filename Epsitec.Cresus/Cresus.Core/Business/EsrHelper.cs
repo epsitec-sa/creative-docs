@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 
 	/// <summary>

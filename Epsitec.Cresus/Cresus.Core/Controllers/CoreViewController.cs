@@ -5,12 +5,10 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
-
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
-using Epsitec.Cresus.Core.BusinessLogic;
-using Epsitec.Cresus.Core.Resolvers;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -74,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public BusinessLogic.BusinessContext	BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{

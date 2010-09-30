@@ -7,7 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
 	/// The <c>RefIdGeneratorPool</c> maintains a collection of <see cref="RefIdGenerator"/>

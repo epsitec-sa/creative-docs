@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;

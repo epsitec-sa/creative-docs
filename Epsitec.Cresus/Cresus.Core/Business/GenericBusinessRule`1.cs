@@ -5,7 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	public abstract class GenericBusinessRule<T> : GenericBusinessRule
 		where T : AbstractEntity

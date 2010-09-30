@@ -7,7 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Rules
+namespace Epsitec.Cresus.Core.Business.Rules
 {
 	[BusinessRule (RuleType.Update)]
 	internal class RelationUpdateRule : GenericBusinessRule<RelationEntity>

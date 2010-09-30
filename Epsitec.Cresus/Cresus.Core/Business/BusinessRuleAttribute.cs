@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	/// <summary>
 	/// The <c>BusinessRuleAttribute</c> is used to tag a <see cref="GenericBusinessRule"/> derived

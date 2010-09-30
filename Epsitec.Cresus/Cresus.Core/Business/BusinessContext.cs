@@ -14,7 +14,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Cresus.Core.BusinessLogic
+namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class BusinessContext : System.IDisposable
 	{

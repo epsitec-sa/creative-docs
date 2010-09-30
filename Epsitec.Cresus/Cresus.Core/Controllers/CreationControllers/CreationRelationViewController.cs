@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
