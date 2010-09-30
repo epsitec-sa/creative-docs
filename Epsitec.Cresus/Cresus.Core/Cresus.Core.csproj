@@ -132,6 +132,10 @@
     <Compile Include="Entities\BusinessSettingsEntity.cs" />
     <Compile Include="Entities\ArticleQuantityEntity.cs" />
     <Compile Include="Entities\AddressEntity.cs" />
+    <Compile Include="Entities\CommentEntity.cs" />
+    <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\TotalDocumentItemEntity.cs" />
+    <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\PersonGenderEntity.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />

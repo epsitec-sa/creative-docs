@@ -9,25 +9,22 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class TextDocumentItemEntity
+	public partial class TaxDocumentItemEntity
 	{
-		public override DocumentItemTabId TabId
-		{
-			get
-			{
-				return DocumentItemTabId.Text;
-			}
-		}
-
 		public override FormattedText GetCompactSummary()
 		{
-			if (this.Text.IsNullOrEmpty)
+			var desc = this.Text;
+			var tax = Misc.PriceToString (this.ResultingTax);
+
+			var text = TextFormatter.FormatText (desc, tax);
+
+			if (text.IsNullOrEmpty)
 			{
-				return "<i>Texte</i>";
+				return "<i>TVA</i>";
 			}
 			else
 			{
-				return this.Text;
+				return text;
 			}
 		}
 	}
