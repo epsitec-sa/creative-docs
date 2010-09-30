@@ -192,10 +192,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
+		private System.Action addNewItem;
+
 		public System.Action					AddNewItem
 		{
-			get;
-			set;
+			get
+			{
+				return this.addNewItem;
+			}
+			set
+			{
+				this.addNewItem = value;
+			}
 		}
 
 		public System.Action					DeleteItem

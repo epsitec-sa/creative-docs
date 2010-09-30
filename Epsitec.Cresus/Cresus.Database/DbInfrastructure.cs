@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Database
 
 			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
 			// therefore, if the meta data is correct but does not match the real state of the tables
-			// in the database (that is, a table has been modified without the meta data beeing updated)
+			// in the database (that is, a table has been modified without the meta data being updated)
 			// we won't detect the problem.
 			// Marc
 			

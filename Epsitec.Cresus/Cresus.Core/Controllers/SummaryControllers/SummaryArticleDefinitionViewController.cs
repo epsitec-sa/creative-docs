@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 		
 		private void CreateUIComments(SummaryDataItems data)
 		{
-			SummaryControllers.Common.CreateUIComments (this.Data, data, this.EntityGetter, x => x.Comments);
+			SummaryControllers.Common.CreateUIComments (this.BusinessContext, data, this.EntityGetter, x => x.Comments);
 		}
 
 
