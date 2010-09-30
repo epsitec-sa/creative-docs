@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class UnitOfMeasureGroupEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
 				(
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Entities
 				);
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);
 		}

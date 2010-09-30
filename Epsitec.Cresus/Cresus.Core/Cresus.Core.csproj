@@ -130,6 +130,7 @@
     <Compile Include="Entities\ArticleDefinitionEntity.cs" />
     <Compile Include="Entities\ArticleCategoryEntity.cs" />
     <Compile Include="Entities\BusinessSettingsEntity.cs" />
+    <Compile Include="Entities\ArticleQuantityEntity.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\InvoiceDocumentEntity.cs" />

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
 		}
 
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
 				(
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Entities
 				);
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText
 				(

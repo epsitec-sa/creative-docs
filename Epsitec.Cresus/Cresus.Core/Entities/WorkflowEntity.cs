@@ -19,12 +19,12 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return this.GetDocumentName ();
 		}
 
-		public FormattedText GetSummaryDescription()
+		public override FormattedText GetSummary()
 		{
 			FormattedText version  = this.Id == 0 ? FormattedText.Empty : TextFormatter.FormatText ("Variante", this.Id);
 			FormattedText creation = this.ActiveDocument.IsNull () ? FormattedText.Empty : TextFormatter.FormatText ("Créé le ", this.ActiveDocument.CreationDate);

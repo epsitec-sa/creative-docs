@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 			var template = new CollectionTemplate<WorkflowEntity> ("DocWorkflow", this.BusinessContext);
 
-			template.DefineTitle (x => x.GetCompactSummary ());
-			template.DefineText (x => x.GetSummaryDescription ());
+			template.DefineTitle       (x => x.GetCompactSummary ());
+			template.DefineText        (x => x.GetSummary ());
 			template.DefineCompactText (x => x.GetCompactSummary ());
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.Workflows));

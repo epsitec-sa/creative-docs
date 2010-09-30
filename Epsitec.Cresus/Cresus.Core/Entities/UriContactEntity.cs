@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class UriContactEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Uri, "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Uri);
 		}

@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ArticleGroupEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Code, "~:", this.Name);
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Code, "~:", this.Name);
 		}

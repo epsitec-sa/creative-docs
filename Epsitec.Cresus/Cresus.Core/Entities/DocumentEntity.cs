@@ -10,12 +10,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class DocumentEntity
 	{
-		public virtual FormattedText GetSummary()
-		{
-			return FormattedText.Empty;
-		}
-
-		public virtual FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText ("Document n°", this.IdA);
 		}
