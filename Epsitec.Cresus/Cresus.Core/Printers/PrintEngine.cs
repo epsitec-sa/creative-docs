@@ -19,7 +19,12 @@ namespace Epsitec.Cresus.Core.Printers
 	{
 		static PrintEngine()
 		{
-			RegisterFonts ();
+			PrintEngine.RegisterFonts ();
+		}
+
+		public static void Setup()
+		{
+			//	Force execution of static constructor.
 		}
 
 		public static bool CanPrint(AbstractEntity entity)
