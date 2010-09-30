@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 			string date = Misc.GetDateTimeDescription (this.Entity.LastModificationDate);
 			var dateBand = new TextBand ();
-			dateBand.Text = FormattedText.Concat ("Crissier, le ", date);
+			dateBand.Text = FormattedText.Concat (InvoiceDocumentPrinter.GetDefaultLocation (), ", le ", date);
 			dateBand.Font = font;
 			dateBand.FontSize = fontSize;
 			this.documentContainer.AddAbsolute (dateBand, new Rectangle (120, this.RequiredPageSize.Height-82, 80, 10));
