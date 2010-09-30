@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var builder = new TextBuilder ();
 
-			builder.Append (Isr.GetFormattedSubscriberNumber (this.SubscriberNumber));
+			builder.Append (Isr.FormatSubscriberNumber (this.SubscriberNumber));
 
 			return builder.ToFormattedText ();
 		}

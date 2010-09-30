@@ -47,23 +47,61 @@ namespace Epsitec.Common.Widgets.Validators
 			set
 			{
 				this.marshaler = value;
+				this.Predicate = this.CreateComposedPredicate ();
+			}
+		}
 
-				if (value == null)
+		public System.Predicate<string> AdditionalPredicate
+		{
+			get
+			{
+				return this.predicate;
+			}
+			set
+			{
+				this.predicate = value;
+				this.Predicate = this.CreateComposedPredicate ();
+			}
+		}
+
+
+		private System.Func<bool> CreateComposedPredicate()
+		{
+			if (this.predicate == null)
+			{
+				if (this.marshaler == null)
 				{
-					this.Predicate = null;
+					return () => true;
 				}
 				else
 				{
-					this.Predicate = 
+					return () => this.marshaler.CanConvert (this.GetPredicateText ());
+				}
+			}
+			else
+			{
+				if (this.marshaler == null)
+				{
+					return () => this.predicate (this.GetPredicateText ());
+				}
+				else
+				{
+					return
 						delegate
 						{
-							string text = TextConverter.ConvertToSimpleText (this.Widget.Text);
-							return this.marshaler.CanConvert (text);
+							string text = this.GetPredicateText ();
+							return this.marshaler.CanConvert (text) && this.predicate (text);
 						};
 				}
 			}
 		}
 
+		private string GetPredicateText()
+		{
+			return TextConverter.ConvertToSimpleText (this.Widget.Text);
+		}
+
 		private Marshaler marshaler;
+		private System.Predicate<string> predicate;
 	}
 }
