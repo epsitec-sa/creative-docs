@@ -353,8 +353,25 @@ namespace Epsitec.Cresus.Database
 				throw new System.Exception ("Cannot load core tables.", e);
 			}
 
-			List<DbTable> expectedTables = BootHelper.CreateCoreTables (this).ToList ();
+			bool success = this.CheckCoreTables ();
 			
+			if (!success)
+			{
+				throw new System.Exception ("Invalid core tables definition.");
+			}
+		}
+
+
+		private bool CheckCoreTables()
+		{
+			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
+			// therefore, if the meta data is correct but does not match the real state of the tables
+			// in the database (that is, a table has been modified without the meta data being updated)
+			// we won't detect the problem.
+			// Marc
+
+			List<DbTable> expectedTables = BootHelper.CreateCoreTables (this).ToList ();
+
 			BootHelper.UpdateCoreTableRelations (expectedTables[0], expectedTables[1], expectedTables[2]);
 
 			foreach (DbTable table in expectedTables)
@@ -362,18 +379,8 @@ namespace Epsitec.Cresus.Database
 				table.UpdatePrimaryKeyInfo ();
 			}
 
-			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
-			// therefore, if the meta data is correct but does not match the real state of the tables
-			// in the database (that is, a table has been modified without the meta data beeing updated)
-			// we won't detect the problem.
-			// Marc
-
-			bool success = DbSchemaChecker.CheckSchema (this, expectedTables);
-			
-			if (!success)
-			{
-				throw new System.Exception ("Invalid core tables definition.");
-			}
+			return expectedTables.All (t => this.internalTables[t.Name] != null)
+				&& DbSchemaChecker.CheckSchema (this, expectedTables);
 		}
 
 		private void LoadServicesTables()
@@ -396,6 +403,22 @@ namespace Epsitec.Cresus.Database
 				throw new System.Exception ("Cannot load services tables.", e);
 			}
 
+			bool success = this.CheckServicesTables ();
+			
+			if (!success)
+			{
+				throw new System.Exception ("Invalid services tables definition.");
+			}
+		}
+
+		private bool CheckServicesTables()
+		{
+			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
+			// therefore, if the meta data is correct but does not match the real state of the tables
+			// in the database (that is, a table has been modified without the meta data being updated)
+			// we won't detect the problem.
+			// Marc
+
 			List<DbTable> expectedTables = BootHelper.CreateServicesTables (this).ToList ();
 
 			foreach (DbTable table in expectedTables)
@@ -403,18 +426,8 @@ namespace Epsitec.Cresus.Database
 				table.UpdatePrimaryKeyInfo ();
 			}
 
-			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
-			// therefore, if the meta data is correct but does not match the real state of the tables
-			// in the database (that is, a table has been modified without the meta data being updated)
-			// we won't detect the problem.
-			// Marc
-			
-			bool success = DbSchemaChecker.CheckSchema (this, expectedTables);
-			
-			if (!success)
-			{
-				throw new System.Exception ("Invalid services tables definition.");
-			}
+			return expectedTables.All (t => this.internalTables[t.Name] != null)
+				&& DbSchemaChecker.CheckSchema (this, expectedTables);
 		}
 
 		/// <summary>
