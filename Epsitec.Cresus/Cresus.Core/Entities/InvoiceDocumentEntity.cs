@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class InvoiceDocumentEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			string date = Misc.GetDateTimeShortDescription (this.LastModificationDate);
 			string total = Misc.PriceToString (Helpers.InvoiceDocumentHelper.GetTotalPriceTTC (this));
@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText ("N°", this.IdA, "/~", this.IdB, "/~", this.IdC, ", ", date, ", ", total, addresses);
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("N°", this.IdA);
+			return TextFormatter.FormatText ("Facture n°", this.IdA);
 		}
 
 

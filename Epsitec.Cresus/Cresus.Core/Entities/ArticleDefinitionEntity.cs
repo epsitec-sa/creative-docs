@@ -12,12 +12,16 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("N°~", this.IdA, "\n", this.ShortDescription, "\n", this.LongDescription);
+			return TextFormatter.FormatText
+				(
+					"N°~", this.IdA, "\n",
+					this.ShortDescription
+				);
 		}
 
 		public FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("N°~", this.IdA, "~, ~", this.ShortDescription);
+			return TextFormatter.FormatText (this.ShortDescription);
 		}
 	}
 }
