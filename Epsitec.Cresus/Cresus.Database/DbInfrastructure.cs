@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Database
 
 			if (this.InitializeDatabaseAbstraction () == false)
 			{
-				this.access = new DbAccess ();
+				this.access = DbAccess.Empty;
 				return false;
 			}
 			
@@ -306,8 +306,7 @@ namespace Epsitec.Cresus.Database
 			}
 			catch (System.Exception)
 			{
-				this.access = new DbAccess ();
-
+				this.access = DbAccess.Empty;
 				throw;
 			}
 		}
