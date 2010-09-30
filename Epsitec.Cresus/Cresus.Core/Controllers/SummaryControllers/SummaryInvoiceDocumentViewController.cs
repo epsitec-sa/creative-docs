@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 
 		private static FormattedText GetPriceDocumentItemSummary(PriceDocumentItemEntity x)
 		{
-			var builder = new System.Text.StringBuilder ();
+			var builder = new TextBuilder ();
 
 			builder.Append ("Sous-total ");
 			builder.Append (Misc.PriceToString (x.ResultingPriceBeforeTax));
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				builder.Append (" (montant arrêté)");
 			}
 
-			return builder.ToString ();
+			return builder.ToFormattedText ();
 		}
 
 		private static FormattedText GetTaxDocumentItemSummary(TaxDocumentItemEntity x)
