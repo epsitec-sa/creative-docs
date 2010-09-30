@@ -302,6 +302,22 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+		protected static FormattedText GetDefaultLocation()
+		{
+			//	Retourne la ville de l'entreprise, pour par exemple imprimer "Yverdon-les-Bains, le 30 septembre 2010".
+			var m = CoreProgram.Application.BusinessSettings.Company.Person.Contacts.Where (x => x is MailContactEntity).First () as MailContactEntity;
+
+			if (m == null)
+			{
+				return null;
+			}
+			else
+			{
+				return m.Address.Location.Name;
+			}
+		}
+
+	
 		private static readonly Font specimenFont = Font.GetFont ("Arial", "Bold");
 
 		protected readonly AbstractEntityPrinter			entityPrinter;
