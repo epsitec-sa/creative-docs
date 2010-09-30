@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			this.toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.TileContainer);
 			this.toolbarController.CreateUI (tile.Container, "Désignation");
 
-			this.designationTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (this.GetArticleDescription, this.SetArticleDescription));
+			this.designationTextField = builder.CreateTextFieldMulti (tile, 80, null, Marshaler.Create (() => this.GetArticleDescription (), this.SetArticleDescription));
 
 			this.toolbarController.UpdateUI (this.Entity.ArticleDefinition, this.Entity, this.designationTextField);
 		}
@@ -107,11 +107,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			builder.CreateMargin (tile, horizontalSeparator: true);
 
-			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (this.GetDiscount, this.SetDiscount));
+			builder.CreateTextField (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 
 			FrameBox group = builder.CreateGroup (tile, "Prix unitaire et total HT");
-			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetPrice,      this.SetPrice));
-			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (this.GetTotalPrice, this.SetTotalPrice));
+			        builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetPrice (),      this.SetPrice));
+			var t = builder.CreateTextField (group, DockStyle.Left, 80, Marshaler.Create (() => this.GetTotalPrice (), this.SetTotalPrice));
 			t.IsReadOnly = true;
 		}
 

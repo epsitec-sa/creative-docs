@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		/// Gets a value indicating whether this marshaler uses a nullable type <c>T1</c>.
 		/// </summary>
 		/// <value><c>true</c> if type <c>T1</c> is a nullable type; otherwise, <c>false</c>.</value>
-		public override bool UsesNullableType
+		public override bool					UsesNullableType
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types.Converters.Marshalers
 		/// and <c>string</c> (in both directions).
 		/// </summary>
 		/// <value>The converter.</value>
-		public GenericConverter<T2> Converter
+		public GenericConverter<T2>				Converter
 		{
 			get
 			{

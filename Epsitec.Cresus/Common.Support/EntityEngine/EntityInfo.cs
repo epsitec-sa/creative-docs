@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -13,71 +15,65 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityInfo</c> class is used to retrieve runtime information
 	/// about an entity, such as its DRUID.
 	/// </summary>
-	/// <typeparam name="T">The entity type.</typeparam>
-	public static class EntityInfo<T>
-		where T : AbstractEntity, new ()
+	public static class EntityInfo
 	{
-		/// <summary>
-		/// Gets the structured type id for the specified entity.
-		/// </summary>
-		/// <returns>The entity id.</returns>
-		public static Druid GetTypeId()
+		public static IStructuredType GetStructuredType(Druid entityId)
 		{
-			return EntityInfo<T>.instance.Id;
-		}
-
-		/// <summary>
-		/// Gets the structured type key for the specified entity.
-		/// </summary>
-		/// <returns>The entity key.</returns>
-		public static string GetTypeKey()
-		{
-			return EntityInfo<T>.instance.Key;
-		}
-
-		/// <summary>
-		/// Checks whether the entity implements the specified interface.
-		/// </summary>
-		/// <typeparam name="TInterface">The type of the interface.</typeparam>
-		/// <returns><c>true</c> if entity of type <c>T</c> implements <c>TInterface</c>; otherwise, <c>false</c>.</returns>
-		public static bool Implements<TInterface>()
-		{
-			return InterfaceImplementationTester<T, TInterface>.Check ();
-		}
-
-		#region TypeIdProvider Class
-
-		private class TypeIdProvider
-		{
-			public TypeIdProvider()
+			if (entityId.IsEmpty)
 			{
-				var entity = EmptyEntityContext.Instance.CreateEmptyEntity ();
-				this.id  = entity.GetEntityStructuredTypeId ();
-				this.key = entity.GetEntityStructuredTypeKey ();
+				return null;
+			}
+			else
+			{
+				return EntityInfo.EmptyEntityContext.Instance.GetStructuredType (entityId);
+			}
+		}
+
+		public static IStructuredType GetStructuredType(System.Type systemType)
+		{
+			return EntityInfo.GetStructuredType (EntityClassFactory.GetEntityId (systemType));
+		}
+
+		public static INamedType GetFieldType(Expression properyLambdaExpression)
+		{
+			var field = EntityInfo.GetStructuredTypeField (properyLambdaExpression);
+
+			if (field == null)
+			{
+				return null;
+			}
+			else
+			{
+				return field.Type;
+			}
+		}
+
+
+		public static StructuredTypeField GetStructuredTypeField(Expression properyLambdaExpression)
+		{
+			return EntityInfo.GetStructuredTypeField (ExpressionAnalyzer.GetLambdaPropertyInfo (properyLambdaExpression));
+		}
+
+		public static StructuredTypeField GetStructuredTypeField(PropertyInfo propertyInfo)
+		{
+			if (propertyInfo == null)
+			{
+				return null;
 			}
 
-			public Druid Id
+			var structuredType = EntityInfo.GetStructuredType (propertyInfo.DeclaringType);
+			var fieldAttribute = propertyInfo.GetCustomAttributes (true).OfType<EntityFieldAttribute> ().FirstOrDefault ();
+
+			if ((structuredType == null) ||
+				(fieldAttribute == null) ||
+				(fieldAttribute.FieldId == null))
 			{
-				get
-				{
-					return this.id;
-				}
+				return null;
 			}
 
-			public string Key
-			{
-				get
-				{
-					return this.key;
-				}
-			}
-
-
-			private readonly Druid id;
-			private readonly string key;
+			return structuredType.GetField (fieldAttribute.FieldId);
 		}
 
-		#endregion
 
 		#region EmptyEntityContext class
 
@@ -92,16 +88,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 			}
 
-			public T CreateEmptyEntity()
-			{
-				return base.CreateEmptyEntity<T> ();
-			}
-
 			public static EmptyEntityContext Instance = new EmptyEntityContext ();
 		}
 
 		#endregion
-		
-		private static TypeIdProvider instance = new TypeIdProvider ();
+
 	}
 }

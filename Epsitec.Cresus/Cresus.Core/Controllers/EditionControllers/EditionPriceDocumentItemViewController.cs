@@ -77,9 +77,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 #else
 			builder.CreateStaticText (tile, 70, "Cette ligne effectue un sous-total de tous les articles précédents. Vous pouvez spécifier ci-dessous un rabais facultatif pour l'ensemble du sous-groupe.");
 
-			builder.CreateTextField  (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (this.GetDiscount, this.SetDiscount));
+			builder.CreateTextField  (tile, 80, "Rabais (pourcent ou montant)", Marshaler.Create (() => this.GetDiscount (), this.SetDiscount));
 			builder.CreateStaticText (tile, 16, "<b>— ou —</b>");
-			builder.CreateTextField  (tile, 80, "Sous-total arrêté TTC",        Marshaler.Create (this.GetFixedPriceAfterTax, this.SetFixedPriceAfterTax));
+			builder.CreateTextField  (tile, 80, "Sous-total arrêté TTC",        Marshaler.Create (() => this.GetFixedPriceAfterTax (), this.SetFixedPriceAfterTax));
 #endif
 		}
 
