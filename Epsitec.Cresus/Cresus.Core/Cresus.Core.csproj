@@ -134,6 +134,8 @@
     <Compile Include="Entities\AddressEntity.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\BillingDetailEntity.cs" />
+    <Compile Include="Entities\PostBoxEntity.cs" />
+    <Compile Include="Entities\StreetEntity.cs" />
     <Compile Include="Entities\TotalDocumentItemEntity.cs" />
     <Compile Include="Entities\TaxDocumentItemEntity.cs" />
     <Compile Include="Entities\PersonGenderEntity.cs" />

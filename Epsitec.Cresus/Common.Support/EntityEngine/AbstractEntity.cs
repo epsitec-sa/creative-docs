@@ -114,6 +114,31 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.Status == EntityStatus.Empty;
+			}
+		}
+
+		public bool IsValid
+		{
+			get
+			{
+				return this.Status == EntityStatus.Valid;
+			}
+		}
+
+		public virtual EntityStatus Status
+		{
+			get
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
+
 		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.
 		/// </summary>
@@ -1506,5 +1531,4 @@ namespace Epsitec.Common.Support.EntityEngine
 		// Marc
 		private EventHandler<EntityFieldChangedEventArgs> entityChangedEvent;
 	}
-
 }
