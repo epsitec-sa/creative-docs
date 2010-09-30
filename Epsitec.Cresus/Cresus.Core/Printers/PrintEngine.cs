@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Core.Printers
 {
 	public static class PrintEngine
 	{
+		static PrintEngine()
+		{
+			RegisterFonts ();
+		}
+
 		public static bool CanPrint(AbstractEntity entity)
 		{
 			return AbstractEntityPrinter.FindEntityPrinterType (entity) != null;
@@ -330,6 +335,14 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
+
+		private static void RegisterFonts()
+		{
+			using (var stream = System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.Creus.Core.Resources.OCR_BB.tff"))
+			{
+				Font.RegisterDynamicFont (stream);
+			}
+		}
 
 		private enum Operation
 		{

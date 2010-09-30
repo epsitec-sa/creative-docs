@@ -661,6 +661,7 @@
     <EmbeddedResource Include="Images\Data.BusinessSettings.icon" />
     <EmbeddedResource Include="Images\Data.IsrDefinition.icon" />
     <EmbeddedResource Include="Images\Data.PaymentReminderDefinition.icon" />
+    <EmbeddedResource Include="Resources\OCR_BB.tff" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
