@@ -129,6 +129,8 @@
     <Compile Include="Entities\ArticleGroupEntity.cs" />
     <Compile Include="Entities\ArticleDefinitionEntity.cs" />
     <Compile Include="Entities\ArticleCategoryEntity.cs" />
+    <Compile Include="Entities\BusinessSettingsEntity.cs" />
+    <Compile Include="Entities\DocumentEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\InvoiceDocumentEntity.cs" />
     <Compile Include="Entities\LocationEntity.cs" />

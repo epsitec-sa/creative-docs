@@ -80,45 +80,40 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (entity is LegalPersonEntity)
 			{
 				var person = entity as LegalPersonEntity;
-				return TextFormatter.FormatText (person.Name);
+				return person.GetCompactSummary ();
 			}
+
 			if (entity is NaturalPersonEntity)
 			{
 				var person = entity as NaturalPersonEntity;
-				return TextFormatter.FormatText (person.Firstname, person.Lastname);
+				return person.GetCompactSummary ();
 			}
+
 			if (entity is RelationEntity)
 			{
 				var customer = entity as RelationEntity;
-				return TextFormatter.FormatText (this.GenerateEntityDisplayText (customer.Person), customer.DefaultAddress.Location.PostalCode, customer.DefaultAddress.Location.Name);
+				return customer.GetCompactSummary ();
 			}
+
 			if (entity is ArticleDefinitionEntity)
 			{
 				var article = entity as ArticleDefinitionEntity;
-				return TextFormatter.FormatText (article.ShortDescription);
+				return article.GetCompactSummary ();
 			}
+
 			if (entity is DocumentEntity)
 			{
-				return BrowserList.GetDocumentSummary (entity as DocumentEntity);
+				var document = entity as DocumentEntity;
+				return document.GetCompactSummary ();
+			}
+
+			if (entity is BusinessSettingsEntity)
+			{
+				var settings = entity as BusinessSettingsEntity;
+				return settings.GetCompactSummary ();
 			}
 
 			return FormattedText.Empty;
-		}
-
-
-		private static FormattedText GetDocumentSummary(DocumentEntity document)
-		{
-			if (document is InvoiceDocumentEntity)
-			{
-				return TextFormatter.FormatText ("Facture", document.IdA);
-			}
-
-			if (document is GenericArticleDocumentEntity)
-			{
-				return TextFormatter.FormatText ("Articles", document.IdA);  // TODO: juste ?
-			}
-
-			return TextFormatter.FormatText ("Document", document.IdA);
 		}
 
 

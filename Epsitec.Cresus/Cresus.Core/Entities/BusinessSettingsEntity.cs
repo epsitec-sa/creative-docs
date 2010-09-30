@@ -8,21 +8,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class RelationEntity
+	public partial class BusinessSettingsEntity
 	{
 		public FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-				(
-					"N°", this.IdA, "\n",
-					this.Person.GetSummary (), "\n",
-					"Représentant: ~", this.SalesRepresentative.GetCompactSummary ()
-				);
+			return TextFormatter.FormatText (this.Company.Person.GetSummary ());
 		}
 
 		public FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Person.GetCompactSummary ());
+			return TextFormatter.FormatText (this.Company.Person.GetCompactSummary ());
 		}
 	}
 }
