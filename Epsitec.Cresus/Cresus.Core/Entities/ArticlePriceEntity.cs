@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public FormattedText GetSummary()
 		{
-			var builder = new System.Text.StringBuilder ();
+			var builder = new TextBuilder ();
 
 			builder.Append (Misc.PriceToString (this.ValueBeforeTax));
 
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 				builder.Append (Misc.GetDateTimeShortDescription (this.EndDate));
 			}
 
-			return TextFormatter.FormatText (builder.ToString ());
+			return builder.ToFormattedText ();
 		}
 	}
 }

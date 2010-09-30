@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <summary>
 		/// La description vient dans la deuxième ligne du tooltip.
 		/// </summary>
-		public string Description
+		public FormattedText Description
 		{
 			get
 			{
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void UpdateTooltip()
 		{
-			var builder = new System.Text.StringBuilder ();
+			var builder = new TextBuilder ();
 
 			builder.Append ("<font size=\"13\"><b>");
 			builder.Append ("Page ");
@@ -184,18 +184,18 @@ namespace Epsitec.Cresus.Core.Widgets
 				builder.Append (" mm)");
 			}
 
-			if (!string.IsNullOrEmpty (this.description))
+			if (!this.description.IsNullOrEmpty)
 			{
 				builder.Append ("<br/>");
 				builder.Append (this.description);
 			}
 
-			ToolTip.Default.SetToolTip (this, builder.ToString ());
+			ToolTip.Default.SetToolTip (this, builder.ToFormattedText ());
 		}
 
 
 		private Printers.AbstractDocumentPrinter	documentPrinter;
 		private int									currentPage;
-		private string								description;
+		private FormattedText						description;
 	}
 }

@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				bool hasForcingOptions = PreviewerController.HasForcingOptions (printersUsed);
 
-				string description;
+				FormattedText description;
 				bool notPrinting, hasManyOptions;
 
 				if (this.ShowNotPrinting)  // montre les pages non imprimées ?
@@ -432,7 +432,7 @@ namespace Epsitec.Cresus.Core.Printers
 
 				if (hasManyOptions)
 				{
-					description = string.Concat (description, "<br/>L'aspect peut varier selon l'unité d'impression.");
+					description = FormattedText.Concat (description, "<br/>L'aspect peut varier selon l'unité d'impression.");
 				}
 
 				var preview = new Widgets.EntityPreviewer
@@ -711,7 +711,7 @@ namespace Epsitec.Cresus.Core.Printers
 		}
 
 
-		private string GetPrintersUsedDescription(Dictionary<PrinterUnit, int> printerUsed)
+		private FormattedText GetPrintersUsedDescription(Dictionary<PrinterUnit, int> printerUsed)
 		{
 			if (printerUsed.Count == 0)
 			{
@@ -719,7 +719,7 @@ namespace Epsitec.Cresus.Core.Printers
 			}
 			else
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
+				var builder = new TextBuilder ();
 				int i = 0;
 
 				foreach (var pair in printerUsed)
@@ -748,9 +748,9 @@ namespace Epsitec.Cresus.Core.Printers
 					i++;
 				}
 
-				string printerUnit = (printerUsed.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
+				FormattedText printerUnit = (printerUsed.Count > 1) ? "les unités d'impression" : "l'unité d'impression";
 
-				return string.Format ("Cette page sera imprimée avec {0} {1}.", printerUnit, builder.ToString ());
+				return FormattedText.Concat ("Cette page sera imprimée avec ", printerUnit, " ", builder.ToFormattedText (), ".");
 			}
 		}
 
