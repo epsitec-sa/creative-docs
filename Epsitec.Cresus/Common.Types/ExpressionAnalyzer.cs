@@ -20,15 +20,17 @@ namespace Epsitec.Common.Types
 		/// accessor (such as <c>x =&gt; x.Foo</c>).
 		/// </summary>
 		/// <param name="expression">The expression.</param>
-		/// <returns>The matching property info.</returns>
+		/// <returns>The matching property info; otherwise, <c>null</c>.</returns>
 		public static PropertyInfo GetLambdaPropertyInfo(Expression expression)
 		{
 			if (expression.NodeType == ExpressionType.Lambda)
 			{
 				return ExpressionAnalyzer.GetLambdaPropertyInfo (expression as LambdaExpression);
 			}
-
-			throw new System.NotSupportedException ("Invalid expression type (not a lambda)");
+			else
+			{
+				return null;
+			}
 		}
 
 		private static PropertyInfo GetLambdaPropertyInfo(LambdaExpression expression)
@@ -46,8 +48,8 @@ namespace Epsitec.Common.Types
 					return propertyInfo;
 				}
 			}
-			
-			throw new System.InvalidOperationException ("Lambda expression does not map to a property");
+
+			return null;
 		}
 	}
 }
