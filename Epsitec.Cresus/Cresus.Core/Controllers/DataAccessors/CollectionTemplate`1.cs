@@ -205,13 +205,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.BindRealEntitySummaryData (data, source, collectionAccessor);
 			}
 
-			if (this.HasCreateItem && this.HasDeleteItem && collectionAccessor != null)
+			if (collectionAccessor != null)
 			{
-				data.AddNewItem = () => this.CreateItem (data, collectionAccessor);
-				data.DeleteItem = () => this.DeleteItem (data, source, collectionAccessor);
-			}
+				if (this.HasCreateItem)
+				{
+					data.AddNewItem = () => this.CreateItem (data, collectionAccessor);
+				}
+				if (this.HasDeleteItem)
+				{
+					data.DeleteItem = () => this.DeleteItem (data, source, collectionAccessor);
+				}
 
-			data.GroupController = new GroupedItemController (collectionAccessor, source, x => this.IsCompatible (x));
+				data.GroupController = new GroupedItemController (collectionAccessor, source, x => this.IsCompatible (x));
+			}
 		}
 
 		public override void BindCreateItem(SummaryData data, ICollectionAccessor collectionAccessor)
