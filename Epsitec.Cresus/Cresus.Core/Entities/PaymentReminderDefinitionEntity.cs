@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class PaymentReminderDefinitionEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Code, this.Name);
 		}

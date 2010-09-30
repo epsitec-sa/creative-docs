@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return string.Join (AbstractArticleParameterDefinitionEntity.Separator, values);
 		}
 
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			var builder = new TextBuilder ();
 			

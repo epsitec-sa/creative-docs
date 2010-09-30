@@ -130,28 +130,11 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 			var template = new CollectionTemplate<ArticleQuantityEntity> ("ArticleQuantities", data.Controller, this.DataContext);
 
-			template.DefineText (x => TextFormatter.FormatText (EditionArticleDocumentItemViewController.GetArticleQuantitySummary (x)));
-			template.DefineCompactText (x => TextFormatter.FormatText (EditionArticleDocumentItemViewController.GetArticleQuantitySummary (x)));
-			template.DefineSetupItem (EditionArticleDocumentItemViewController.SetupArticleQuantity);
+			template.DefineText        (x => x.GetCompactSummary ());
+			template.DefineCompactText (x => x.GetCompactSummary ());
+			template.DefineSetupItem   (EditionArticleDocumentItemViewController.SetupArticleQuantity);
 
 			data.Add (this.CreateCollectionAccessor (template, x => x.ArticleQuantities));
-		}
-
-		private static string GetArticleQuantitySummary(ArticleQuantityEntity quantity)
-		{
-			string type = null;
-			foreach (var q in Business.Enumerations.GetAllPossibleValueArticleQuantityType ())
-			{
-				if (q.Key == quantity.QuantityType)
-				{
-					type = q.Values[0];
-					break;
-				}
-			}
-
-			string unit = Misc.FormatUnit (quantity.Quantity, quantity.Unit.Code);
-
-			return string.Concat (type, " ", unit);
 		}
 
 		private static void SetupArticleQuantity(ArticleQuantityEntity quantity)

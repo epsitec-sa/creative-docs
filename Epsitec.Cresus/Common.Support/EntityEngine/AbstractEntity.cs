@@ -87,6 +87,34 @@ namespace Epsitec.Common.Support.EntityEngine
 
 
 		/// <summary>
+		/// Retourne un résumé complet de l'entité.
+		/// </summary>
+		/// <returns></returns>
+		public virtual FormattedText GetSummary()
+		{
+			return FormattedText.Empty;
+		}
+
+		/// <summary>
+		/// Retourne un résumé court (d'une seule ligne) de l'entité.
+		/// </summary>
+		/// <returns></returns>
+		public virtual FormattedText GetCompactSummary()
+		{
+			return FormattedText.Empty;
+		}
+
+		/// <summary>
+		/// Retourne la liste des mots-clé de l'entité, en vue d'une recherche.
+		/// </summary>
+		/// <returns></returns>
+		public virtual string[] GetTextArray()
+		{
+			return null;
+		}
+
+
+		/// <summary>
 		/// Gets a value indicating whether calculations are disabled.
 		/// </summary>
 		/// <value><c>true</c> if calculations are disabled; otherwise, <c>false</c>.</value>

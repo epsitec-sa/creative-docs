@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			var root = this.RootWorkflow;
 
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.IdA);
 		}

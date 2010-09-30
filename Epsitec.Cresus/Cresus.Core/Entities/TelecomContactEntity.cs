@@ -15,12 +15,12 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.TelecomType.Name);
 		}
 
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Number, "(", FormattedText.Join (", ", this.Roles.Select (role => role.Name).ToArray ()), ")");
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Number, "(", this.TelecomType.Name, ")");
 		}

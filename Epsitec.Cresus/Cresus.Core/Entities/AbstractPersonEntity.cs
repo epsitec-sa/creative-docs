@@ -10,14 +10,5 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class AbstractPersonEntity
 	{
-		public virtual FormattedText GetSummary()
-		{
-			return FormattedText.Empty;
-		}
-
-		public virtual FormattedText GetCompactSummary()
-		{
-			return this.GetSummary ();
-		}
 	}
 }

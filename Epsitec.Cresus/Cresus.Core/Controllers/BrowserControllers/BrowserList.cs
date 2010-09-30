@@ -76,44 +76,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				return FormattedText.Empty;
 			}
-
-			if (entity is LegalPersonEntity)
+			else
 			{
-				var person = entity as LegalPersonEntity;
-				return person.GetCompactSummary ();
+				return entity.GetCompactSummary ();
 			}
-
-			if (entity is NaturalPersonEntity)
-			{
-				var person = entity as NaturalPersonEntity;
-				return person.GetCompactSummary ();
-			}
-
-			if (entity is RelationEntity)
-			{
-				var customer = entity as RelationEntity;
-				return customer.GetCompactSummary ();
-			}
-
-			if (entity is ArticleDefinitionEntity)
-			{
-				var article = entity as ArticleDefinitionEntity;
-				return article.GetCompactSummary ();
-			}
-
-			if (entity is DocumentEntity)
-			{
-				var document = entity as DocumentEntity;
-				return document.GetCompactSummary ();
-			}
-
-			if (entity is BusinessSettingsEntity)
-			{
-				var settings = entity as BusinessSettingsEntity;
-				return settings.GetCompactSummary ();
-			}
-
-			return FormattedText.Empty;
 		}
 
 

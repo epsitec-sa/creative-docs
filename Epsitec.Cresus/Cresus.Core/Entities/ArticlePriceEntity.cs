@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ArticlePriceEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			var builder = new TextBuilder ();
 

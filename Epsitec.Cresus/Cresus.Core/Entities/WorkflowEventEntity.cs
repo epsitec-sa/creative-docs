@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			string date = Misc.GetDateTimeShortDescription (this.Date);
 			return TextFormatter.FormatText (date, this.EventType.Code);

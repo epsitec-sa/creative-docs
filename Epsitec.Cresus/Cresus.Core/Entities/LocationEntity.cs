@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class LocationEntity
 	{
-		public FormattedText GetSummary()
+		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText ("Pays: ", this.Country.Name, "\n", "Numéro postal: ", this.PostalCode, "\n", "Ville: ", this.Name);
 		}
 
-		public FormattedText GetCompactSummary()
+		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.PostalCode, " ", this.Name);
 		}
