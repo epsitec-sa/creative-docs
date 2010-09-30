@@ -24,6 +24,12 @@ namespace Epsitec.Cresus.Core.Printers
 	/// </summary>
 	public class PreviewerController
 	{
+		static PreviewerController()
+		{
+			PrintEngine.Setup ();
+		}
+
+
 		public PreviewerController(Printers.AbstractEntityPrinter entityPrinter, IEnumerable<AbstractEntity> entities)
 		{
 			this.entityPrinter = entityPrinter;
