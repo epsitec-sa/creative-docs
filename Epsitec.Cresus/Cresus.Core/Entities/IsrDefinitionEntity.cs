@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.BusinessLogic;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,11 +14,11 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public FormattedText GetSummary()
 		{
-			var builder = new System.Text.StringBuilder ();
+			var builder = new TextBuilder ();
 
-			builder.Append (this.SubscriberNumber);
+			builder.Append (Isr.FormatSubscriberNumber (this.SubscriberNumber));
 
-			return TextFormatter.FormatText (builder.ToString ());
+			return builder.ToFormattedText ();
 		}
 	}
 }
