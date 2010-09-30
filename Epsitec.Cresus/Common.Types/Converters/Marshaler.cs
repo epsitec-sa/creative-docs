@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types.Converters
 		/// type.
 		/// </summary>
 		/// <value><c>true</c> if this marshaler operates on a nullable type; otherwise, <c>false</c>.</value>
-		public abstract bool UsesNullableType
+		public abstract bool					UsesNullableType
 		{
 			get;
 		}
@@ -27,12 +27,23 @@ namespace Epsitec.Common.Types.Converters
 		/// Gets the type of the marshaled data (basically, <code>typeof (T)</code>).
 		/// </summary>
 		/// <value>The type of the marshaled data.</value>
-		public abstract System.Type MarshaledType
+		public abstract System.Type				MarshaledType
 		{
 			get;
 		}
 
 		/// <summary>
+		/// Gets the lambda expression for the value getter (if any).
+		/// </summary>
+		/// <value>The value getter expression.</value>
+		public Expression						ValueGetterExpression
+		{
+			get;
+			private set;
+		}
+
+		
+		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
 		/// <typeparam name="T1">The type of the data source.</typeparam>
@@ -43,9 +54,11 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T2> Create<T1, T2>(T1 source, System.Func<T1, T2> getter, System.Action<T1, T2> setter)
+		public static Marshaler<T2> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2>> getterExpression, System.Action<T1, T2> setter)
 		{
-			return Marshaler.Create (() => getter (source), x => setter (source, x));
+			var getter = getterExpression.Compile ();
+
+			return Marshaler.CreateInternal (() => getter (source), x => setter (source, x), getterExpression);
 		}
 
 		/// <summary>
@@ -59,10 +72,12 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>
 		/// The <see cref="Marshaler"/> for the underlying type.
 		/// </returns>
-		public static Marshaler<T2?> Create<T1, T2>(T1 source, System.Func<T1, T2?> getter, System.Action<T1, T2?> setter)
+		public static Marshaler<T2?> Create<T1, T2>(T1 source, Expression<System.Func<T1, T2?>> getterExpression, System.Action<T1, T2?> setter)
 			where T2 : struct
 		{
-			return Marshaler.Create (() => getter (source), x => setter (source, x));
+			var getter = getterExpression.Compile ();
+
+			return Marshaler.CreateInternal (() => getter (source), x => setter (source, x), getterExpression);
 		}
 
 		/// <summary>
@@ -72,16 +87,13 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="getter">The getter.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
-		public static Marshaler<T> Create<T>(System.Func<T> getter, System.Action<T> setter)
+		public static Marshaler<T> Create<T>(Expression<System.Func<T>> getterExpression, System.Action<T> setter)
 		{
-			return new Marshalers.NonNullableMarshaler<T>
-			{
-				ValueGetter = getter,
-				ValueSetter = setter,
-				InitialValue = getter (),
-			};
-		}
+			var getter = getterExpression.Compile ();
 
+			return Marshaler.CreateInternal (getter, setter, getterExpression);
+		}
+		
 		/// <summary>
 		/// Creates a marshaler compatible with the specified getter and setter.
 		/// </summary>
@@ -89,15 +101,12 @@ namespace Epsitec.Common.Types.Converters
 		/// <param name="getter">The getter.</param>
 		/// <param name="setter">The setter.</param>
 		/// <returns>The <see cref="Marshaler"/> for the underlying type.</returns>
-		public static Marshaler<T?> Create<T>(System.Func<T?> getter, System.Action<T?> setter)
+		public static Marshaler<T?> Create<T>(Expression<System.Func<T?>> getterExpression, System.Action<T?> setter)
 			where T : struct
 		{
-			return new Marshalers.NullableMarshaler<T>
-			{
-				ValueGetter = getter,
-				ValueSetter = setter,
-				InitialValue = getter (),
-			};
+			var getter = getterExpression.Compile ();
+			
+			return Marshaler.CreateInternal (getter, setter, getterExpression);
 		}
 
 		/// <summary>
@@ -132,6 +141,31 @@ namespace Epsitec.Common.Types.Converters
 			object value = this.GetObjectValue ();
 			return (value is T) ? (T) value : default (T);
 		}
+
+		
+		private static Marshaler<T> CreateInternal<T>(System.Func<T> getter, System.Action<T> setter, Expression expression)
+		{
+			return new Marshalers.NonNullableMarshaler<T>
+			{
+				ValueGetter = getter,
+				ValueSetter = setter,
+				InitialValue = getter (),
+				ValueGetterExpression = expression,
+			};
+		}
+		
+		private static Marshaler<T?> CreateInternal<T>(System.Func<T?> getter, System.Action<T?> setter, Expression expression)
+			where T : struct
+		{
+			return new Marshalers.NullableMarshaler<T>
+			{
+				ValueGetter = getter,
+				ValueSetter = setter,
+				InitialValue = getter (),
+				ValueGetterExpression = expression,
+			};
+		}
+
 
 		protected abstract object GetObjectValue();
 	}

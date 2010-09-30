@@ -9,29 +9,25 @@ namespace Epsitec.Common.Types.Converters
 {
 	public abstract class Marshaler<T> : Marshaler
 	{
-		public System.Func<T> ValueGetter
+		public System.Func<T>					ValueGetter
 		{
 			get;
 			internal set;
 		}
 
-		public System.Action<T> ValueSetter
+		public System.Action<T>					ValueSetter
 		{
 			get;
 			internal set;
 		}
 
-		public T InitialValue
+		public T								InitialValue
 		{
 			get;
 			internal set;
 		}
 
-		public abstract void SetValue(T value);
-
-		public abstract T GetValue();
-
-		public override sealed System.Type MarshaledType
+		public override sealed System.Type		MarshaledType
 		{
 			get
 			{
@@ -39,6 +35,12 @@ namespace Epsitec.Common.Types.Converters
 			}
 		}
 
+		
+		public abstract void SetValue(T value);
+
+		public abstract T GetValue();
+
+		
 		protected override sealed object GetObjectValue()
 		{
 			return this.GetValue ();

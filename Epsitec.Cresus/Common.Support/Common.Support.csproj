@@ -164,6 +164,7 @@
     <Compile Include="EntityEngine\EntityContextEventArgs.cs" />
     <Compile Include="EntityEngine\EntityFieldChangedEventArgs.cs" />
     <Compile Include="EntityEngine\EntityInfo.cs" />
+    <Compile Include="EntityEngine\EntityInfo`1.cs" />
     <Compile Include="EntityEngine\EntityNullReferenceVirtualizer.cs" />
     <Compile Include="EntityEngine\IEntityPersistenceManager.cs" />
     <Compile Include="EntityEngine\IValueProxy.cs" />
