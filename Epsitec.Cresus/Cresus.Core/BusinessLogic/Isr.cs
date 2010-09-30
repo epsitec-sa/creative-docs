@@ -173,6 +173,25 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		}
 
 		/// <summary>
+		/// Gets the formatted subscriber number, such as <c>"01-069444-3"</c>.
+		/// </summary>
+		/// <param name="number">The compact number.</param>
+		/// <returns>The formatted subscriber number.</returns>
+		public static string GetFormattedSubscriberNumber(string number)
+		{
+			if (!Isr.IsCompactSubscriberNumber (number))
+			{
+				return number;
+			}
+
+			string s1 = number.Substring (0, 2);
+			string s2 = number.Substring (2, 6);
+			string s3 = number.Substring (8, 1);
+
+			return string.Concat (s1, "-", s2, "-", s3);
+		}
+
+		/// <summary>
 		/// Gets the formatted reference number, such as <c>"96 13070 01000 02173 50356 73892"</c>.
 		/// </summary>
 		/// <param name="number">The compact number.</param>
