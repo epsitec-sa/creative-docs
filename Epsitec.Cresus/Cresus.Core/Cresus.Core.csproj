@@ -160,6 +160,7 @@
     <Compile Include="Entities\NumericValueArticleParameterDefinitionEntity1.cs" />
     <Compile Include="Entities\WorkflowEntity.cs" />
     <Compile Include="Entities\WorkflowEventEntity.cs" />
+    <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Repositories\BusinessSettingsRepository.cs" />
     <Compile Include="Repositories\SoftwareUserGroupRepository.cs" />
     <Compile Include="Repositories\SoftwareUserRepository.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Printers\DocumentOption.cs" />
     <Compile Include="Printers\PreviewerController.cs" />
     <Compile Include="Data\DataLifetimeExpectancy.cs" />
+    <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="TextBuilder.cs" />
     <Compile Include="UI.CultureSettings.cs" />
@@ -442,7 +444,10 @@
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIBuilder.cs" />
+    <Compile Include="Binders\IFieldBinder.cs" />
+    <Compile Include="Binders\IFieldBinderProvider.cs" />
     <Compile Include="Validators\PostalCodeValidator.cs" />
+    <Compile Include="Binders\PostFinanceAccountFieldBinder.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\ArrowedFrame.cs" />

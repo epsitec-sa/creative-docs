@@ -1,7 +1,8 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
@@ -38,13 +39,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string								ErrorMessage
+		public FormattedText						ErrorMessage
 		{
 			get
 			{
 				//	TODO: détermine le message en fonction des dépendances...
 				
-				return null;
+				return FormattedText.Empty;
 			}
 		}
 		

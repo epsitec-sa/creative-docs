@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Binders;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -75,21 +77,33 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Attach(AbstractTextField widget)
 		{
 			this.widget = widget;
-			this.UpdateTextField ();
 
 			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 
+			this.SetupFieldBinder ();
+			this.AttachFieldBinder (validator);			
+			
+			this.UpdateTextField ();
+
+			widget.EditionAccepted += this.HandleEditionAccepted;
+		}
+
+		private void SetupFieldBinder()
+		{
 			INamedType fieldType = this.GetFieldType ();
 
 			if (fieldType != null)
 			{
-				if (fieldType.Name == "PostFinanceAccount")
-				{
-					validator.AdditionalPredicate = text => Isr.IsFormattedSubscriberNumber (text);
-				}
+				this.fieldBinder = FieldBinderFactory.Create (fieldType);
 			}
+		}
 
-			widget.EditionAccepted += this.HandleEditionAccepted;
+		private void AttachFieldBinder(MarshalerValidator validator)
+		{
+			if (this.fieldBinder != null)
+			{
+				validator.AdditionalPredicate = this.fieldBinder.GetPredicate ();
+			}
 		}
 
 		private void HandleEditionAccepted(object sender)
@@ -183,36 +197,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
-			INamedType fieldType = this.GetFieldType ();
-
-			if (fieldType != null)
-			{
-				if (fieldType.Name == "PostFinanceAccount")
-                {
-					if (Isr.IsCompactSubscriberNumber (value))
-                    {
-						value = Isr.FormatSubscriberNumber (value);
-                    }
-                }
-			}
-
-			return value;
+			return this.ConvertToUI (value);
 		}
 
 		private void SetMarshalerText(string text)
 		{
-			INamedType fieldType = this.GetFieldType ();
-
-			if (fieldType != null)
-			{
-				if (fieldType.Name == "PostFinanceAccount")
-				{
-					if (!Isr.TryCompactSubscriberNumber (text, out text))
-					{
-						return;
-					}
-				}
-			}
+			text = this.ConvertFromUI (text);
 			
 			if (this.marshaler.MarshaledType == typeof (FormattedText))
 			{
@@ -233,6 +223,30 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			
 			this.marshaler.SetStringValue (text);
+		}
+
+		private string ConvertToUI(string value)
+		{
+			if (this.fieldBinder != null)
+			{
+				return this.fieldBinder.ConvertToUI (value);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
+		private string ConvertFromUI(string value)
+		{
+			if (this.fieldBinder != null)
+			{
+				return this.fieldBinder.ConvertFromUI (value);
+			}
+			else
+			{
+				return value;
+			}
 		}
 
 		private void UpdateTextField()
@@ -279,5 +293,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		private Widget widget;
 		private string languageId;
+		private IFieldBinder fieldBinder;
 	}
 }
