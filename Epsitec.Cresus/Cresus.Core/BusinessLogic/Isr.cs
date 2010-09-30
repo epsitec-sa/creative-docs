@@ -74,7 +74,14 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 				(number.Length == 9) &&
 				(number.ToCharArray ().All (c => c.IsDigit ())))
 			{
-				return true;
+				if (Isr.ComputeCheckDigit (number.Substring (0, 8)) == number[8])
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else
 			{
@@ -92,6 +99,47 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			{
 				return new string (number.Where (c => c.IsDigit ()).ToArray ());
 			}
+		}
+
+		public static bool IsFormattedSubscriberNumber(string number)
+		{
+			string compactSubscriberNumber;
+			
+			if (Isr.TryCompactSubscriberNumber (number, out compactSubscriberNumber))
+			{
+				return Isr.IsCompactSubscriberNumber (compactSubscriberNumber);
+			}
+
+			return false;
+		}
+
+		public static bool TryCompactSubscriberNumber(string number, out string compactSubscriberNumber)
+		{
+			if (string.IsNullOrEmpty (number))
+			{
+				compactSubscriberNumber = null;
+				return false;
+			}
+
+			string cleanNumber = Isr.RemoveWhitespace (number);
+			string[] parts     = cleanNumber.Split ('-');
+
+			if ((parts.Length != 3) ||
+				(parts[0].Length > 2) || (parts[0].Length < 1) ||
+				(parts[1].Length > 6) || (parts[1].Length < 1) ||
+				(parts[2].Length != 1) ||
+				(parts.Any (x => !Isr.IsNumber (x))))
+			{
+				compactSubscriberNumber = null;
+				return false;
+			}
+
+			string s1 = Isr.InsertLeadingZeroes (parts[0], 2);
+			string s2 = Isr.InsertLeadingZeroes (parts[1], 6);
+			string s3 = parts[2];
+			
+			compactSubscriberNumber = string.Concat (s1, s2, s3);
+			return true;
 		}
 
 
@@ -172,31 +220,13 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			}
 		}
 
-		/// <summary>
-		/// Gets the formatted subscriber number, such as <c>"01-069444-3"</c>.
-		/// </summary>
-		/// <param name="number">The compact number.</param>
-		/// <returns>The formatted subscriber number.</returns>
-		public static string GetFormattedSubscriberNumber(string number)
-		{
-			if (!Isr.IsCompactSubscriberNumber (number))
-			{
-				return number;
-			}
-
-			string s1 = number.Substring (0, 2);
-			string s2 = number.Substring (2, 6);
-			string s3 = number.Substring (8, 1);
-
-			return string.Concat (s1, "-", s2, "-", s3);
-		}
 
 		/// <summary>
-		/// Gets the formatted reference number, such as <c>"96 13070 01000 02173 50356 73892"</c>.
+		/// Formats the reference number, such as <c>"96 13070 01000 02173 50356 73892"</c>.
 		/// </summary>
-		/// <param name="number">The compact number.</param>
+		/// <param name="number">The compact (27 digit) number.</param>
 		/// <returns>The formatted reference number.</returns>
-		public static string GetFormattedReferenceNumber(string number)
+		public static string FormatReferenceNumber(string number)
 		{
 			System.Diagnostics.Debug.Assert (Isr.IsCompactReferenceNumber (number));
 
@@ -208,6 +238,28 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 			string s6 = number.Substring (22, 5);
 
 			return string.Concat (s1, " ", s2, " ", s3, " ", s4, " ", s5, " ", s6);
+		}
+
+		/// <summary>
+		/// Formats the subscriber number, such as <c>"1-69444-3"</c>. This removes
+		/// the leading zeroes which are in excess.
+		/// </summary>
+		/// <param name="number">The compact (9 digit) number.</param>
+		/// <returns>The formatted subscriber number.</returns>
+		public static string FormatSubscriberNumber(string number)
+		{
+			if (string.IsNullOrEmpty (number))
+			{
+				return number;
+			}
+
+			System.Diagnostics.Debug.Assert (Isr.IsCompactSubscriberNumber (number));
+
+			string s1 = Isr.RemoveLeadingZeroes (number.Substring (0, 2));
+			string s2 = Isr.RemoveLeadingZeroes (number.Substring (2, 6));
+			string s3 = number.Substring (8);
+
+			return string.Concat (s1, "-", s2, "-", s3);
 		}
 
 
@@ -245,6 +297,50 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 		private static bool IsDigit(this char c)
 		{
 			return (c >= '0') && (c <= '9');
+		}
+
+		private static bool IsNumber(string text)
+		{
+			return text.All (x => x.IsDigit ());
+		}
+
+		private static string RemoveWhitespace(string number)
+		{
+			return new string (number.Where (x => !char.IsWhiteSpace (x)).ToArray ());
+		}
+
+		private static string RemoveLeadingZeroes(string number)
+		{
+			int pos = 0;
+
+			while (pos < number.Length)
+			{
+				if (number[pos] != '0')
+				{
+					break;
+				}
+
+				pos++;
+			}
+
+			if (pos < number.Length)
+			{
+				return pos == 0 ? number : number.Substring (pos);
+			}
+			else
+			{
+				return "0";
+			}
+		}
+
+		private static string InsertLeadingZeroes(string number, int expectedLength)
+		{
+			const string zeroes = "00000000000000000000000000000000";
+
+			System.Diagnostics.Debug.Assert (number.Length <= expectedLength);
+			System.Diagnostics.Debug.Assert (zeroes.Length + number.Length >= expectedLength);
+			
+			return string.Concat (zeroes.Substring (0, expectedLength-number.Length), number);
 		}
 
 		private static readonly string GeneratorNamePrefix = "ISR.Ref.";

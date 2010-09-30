@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.BusinessLogic
 
 		public string GetFormattedReferenceNumber()
 		{
-			return Isr.GetFormattedReferenceNumber (this.referenceNumber);
+			return Isr.FormatReferenceNumber (this.referenceNumber);
 		}
 
 		public string GetFormattedSubscriberNumber()

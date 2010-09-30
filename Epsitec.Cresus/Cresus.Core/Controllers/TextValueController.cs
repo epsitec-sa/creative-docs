@@ -75,9 +75,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void Attach(AbstractTextField widget)
 		{
 			this.widget = widget;
-			this.Update ();
+			this.UpdateTextField ();
 
-			MarshalerValidator.CreateValidator (this.widget, this.marshaler);
+			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
+
+			INamedType fieldType = this.GetFieldType ();
+
+			if (fieldType != null)
+			{
+				if (fieldType.Name == "PostFinanceAccount")
+				{
+					validator.AdditionalPredicate = text => BusinessLogic.Isr.IsFormattedSubscriberNumber (text);
+				}
+			}
 
 			widget.EditionAccepted += this.HandleEditionAccepted;
 		}
@@ -146,6 +156,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private INamedType GetFieldType()
+		{
+			return EntityInfo.GetFieldType (this.marshaler.ValueGetterExpression);
+		}
+
 		private string GetMarshalerText()
 		{
 			string value = this.marshaler.GetStringValue ();
@@ -168,12 +183,38 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
+			INamedType fieldType = this.GetFieldType ();
+
+			if (fieldType != null)
+			{
+				if (fieldType.Name == "PostFinanceAccount")
+                {
+					if (BusinessLogic.Isr.IsCompactSubscriberNumber (value))
+                    {
+						value = BusinessLogic.Isr.FormatSubscriberNumber (value);
+                    }
+                }
+			}
+
 			return value;
 		}
 
 		private void SetMarshalerText(string text)
 		{
-			if (marshaler.MarshaledType == typeof (FormattedText))
+			INamedType fieldType = this.GetFieldType ();
+
+			if (fieldType != null)
+			{
+				if (fieldType.Name == "PostFinanceAccount")
+				{
+					if (!BusinessLogic.Isr.TryCompactSubscriberNumber (text, out text))
+					{
+						return;
+					}
+				}
+			}
+			
+			if (this.marshaler.MarshaledType == typeof (FormattedText))
 			{
 				var originalValue = this.marshaler.GetStringValue ();
 				var originalFormattedText = new FormattedText (originalValue);
@@ -194,9 +235,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.marshaler.SetStringValue (text);
 		}
 
-		#region IWidgetUpdater Members
-
-		public void Update()
+		private void UpdateTextField()
 		{
 			if (this.widget != null)
 			{
@@ -219,6 +258,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				string text = this.GetMarshalerText ();
 				this.SetWidgetText (text);
 			}
+		}
+
+		#region IWidgetUpdater Members
+
+		void IWidgetUpdater.Update()
+		{
+			this.UpdateTextField ();
 		}
 
 		#endregion
