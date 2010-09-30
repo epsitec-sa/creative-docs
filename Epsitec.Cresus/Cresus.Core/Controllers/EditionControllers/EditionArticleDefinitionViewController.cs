@@ -101,8 +101,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.BillingUnit = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
 	
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText (), x.Code },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name, "(", x.Code, ")")
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Unité", controller);
@@ -116,8 +116,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.Units = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Groupe d'unités", controller);
@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.ArticleCategory = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
 
-				ToTextArrayConverter     = x => new string[] { x.Name },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Catégorie", controller);

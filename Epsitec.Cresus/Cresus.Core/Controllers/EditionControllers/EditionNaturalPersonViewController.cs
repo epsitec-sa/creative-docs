@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.Title = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.ShortName).ToSimpleText (), TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Titre", controller);
@@ -84,8 +84,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.Gender = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
 
-				ToTextArrayConverter     = x => new string[] { TextFormatter.FormatText (x.Name).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.Name)
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Sexe", controller);

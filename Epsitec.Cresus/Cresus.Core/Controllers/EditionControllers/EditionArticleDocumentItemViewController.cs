@@ -71,8 +71,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.ArticleDefinition = x,
 				ReferenceController = new ReferenceController (() => this.ArticleDefinition, creator: this.CreateNewArticleDefinition),
 
-				ToTextArrayConverter     = x => new string[] { x.IdA, TextFormatter.FormatText (x.ShortDescription).ToSimpleText () },
-				ToFormattedTextConverter = x => TextFormatter.FormatText (x.IdA, x.ShortDescription),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Article à facturer", controller);

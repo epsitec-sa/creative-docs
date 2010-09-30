@@ -8,25 +8,25 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class ArticleDefinitionEntity
+	public partial class AddressEntity
 	{
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
 				(
-					"N°~", this.IdA, "\n",
-					this.ShortDescription
+					this.Street.StreetName, "\n",
+					this.Location.PostalCode, this.Location.Name
 				);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.IdA, "-", this.ShortDescription);
+			return TextFormatter.FormatText (this.Street.StreetName, ", ", this.Location.Country.Code, "-", this.Location.PostalCode, this.Location.Name);
 		}
 
 		public override string[] GetTextArray()
 		{
-			return new string[] { this.IdA, this.ShortDescription.ToSimpleText () };
+			return new string[] { this.Street.StreetName.ToSimpleText (), this.Location.Country.Code, this.Location.PostalCode.ToSimpleText (), this.Location.Name.ToSimpleText () };
 		}
 	}
 }

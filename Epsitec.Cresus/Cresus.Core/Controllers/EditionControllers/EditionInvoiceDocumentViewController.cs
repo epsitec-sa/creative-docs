@@ -88,8 +88,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.Entity.BillingMailContact, creator: this.CreateNewMailContact),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 
-				ToTextArrayConverter     = x => GetMailTexts (x),
-				ToFormattedTextConverter = x => GetMailText (x),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Adresse de facturation", controller);
@@ -104,8 +104,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ReferenceController = new ReferenceController (() => this.Entity.ShippingMailContact, creator: this.CreateNewMailContact),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<MailContactEntity> (),
 
-				ToTextArrayConverter     = x => GetMailTexts (x),
-				ToFormattedTextConverter = x => GetMailText (x),
+				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Adresse de livraison", controller);
@@ -140,30 +140,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			var country = context.CreateEntityAndRegisterAsEmpty<MailContactEntity> ();
 
 			return country;
-		}
-
-
-		private static string[] GetMailTexts(MailContactEntity x)
-		{
-			//	Retourne la liste des textes pour les recherches 'AutoComplete'.
-			return new string[]
-			{
-				TextFormatter.FormatText (x.LegalPerson.Name).ToSimpleText (),
-				TextFormatter.FormatText (x.NaturalPerson.Firstname).ToSimpleText (),
-				TextFormatter.FormatText (x.NaturalPerson.Lastname).ToSimpleText (),
-				TextFormatter.FormatText (x.Address.Street.StreetName).ToSimpleText (),
-				TextFormatter.FormatText (x.Address.Location.PostalCode).ToSimpleText (),
-				TextFormatter.FormatText (x.Address.Location.Name).ToSimpleText (),
-			};
-		}
-
-		private static FormattedText GetMailText(MailContactEntity x)
-		{
-			//	Retourne le texte compact d'une ligne pour peupler le widget AutoCompleteTextField.
-			return TextFormatter.FormatText (x.LegalPerson.Name, "~,",
-										 string.Join (" ", x.NaturalPerson.Firstname, x.NaturalPerson.Lastname), "~,",
-										 x.Address.Street.StreetName, "~,",
-										 x.Address.Location.PostalCode, x.Address.Location.Name);
 		}
 	}
 }

@@ -35,10 +35,24 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					this.Address.Street.StreetName, "~,",
+					this.LegalPerson.Name, "~,",
 					TextFormatter.FormatText (this.NaturalPerson.Firstname, this.NaturalPerson.Lastname), "~,",
+					this.Address.Street.StreetName, "~,",
 					this.Address.Location.PostalCode, this.Address.Location.Name
 				);
+		}
+
+		public override string[] GetTextArray()
+		{
+			return new string[]
+			{
+				this.LegalPerson.Name.ToSimpleText (),
+				this.NaturalPerson.Firstname.ToSimpleText (),
+				this.NaturalPerson.Lastname.ToSimpleText (),
+				this.Address.Street.StreetName.ToSimpleText (),
+				this.Address.Location.PostalCode.ToSimpleText (),
+				this.Address.Location.Name.ToSimpleText ()
+			};
 		}
 	}
 }

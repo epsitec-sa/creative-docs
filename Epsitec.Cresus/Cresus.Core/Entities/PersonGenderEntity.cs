@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	public partial class LegalPersonEntity
+	public partial class PersonGenderEntity
 	{
 		public override FormattedText GetSummary()
 		{
