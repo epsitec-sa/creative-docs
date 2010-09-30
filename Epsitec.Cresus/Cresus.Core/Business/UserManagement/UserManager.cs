@@ -8,7 +8,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {

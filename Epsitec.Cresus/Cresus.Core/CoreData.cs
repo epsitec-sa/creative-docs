@@ -15,7 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 
 namespace Epsitec.Cresus.Core
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core
 			this.dbInfrastructure = new DbInfrastructure ();
 			this.dataInfrastructure = new DataLayer.Infrastructure.DataInfrastructure (this.dbInfrastructure);
 			this.independentEntityContext = new EntityContext (Resources.DefaultManager, EntityLoopHandlingMode.Throw, "Independent Entities");
-			this.refIdGeneratorPool = new BusinessLogic.RefIdGeneratorPool (this);
+			this.refIdGeneratorPool = new RefIdGeneratorPool (this);
 			this.connectionManager = new CoreDataConnectionManager (this);
 			this.locker = new CoreDataLocker (this.dataInfrastructure);
 			this.businessContextPool =  new BusinessContextPool (this);
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public BusinessLogic.RefIdGeneratorPool RefIdGeneratorPool
+		public RefIdGeneratorPool RefIdGeneratorPool
 		{
 			get
 			{
@@ -469,8 +469,8 @@ namespace Epsitec.Cresus.Core
 
 		private void PopulateUsers()
 		{
-			var logicUser  = new BusinessLogic.Logic (typeof (SoftwareUserEntity), null);
-			var logicGroup = new BusinessLogic.Logic (typeof (SoftwareUserGroupEntity), null);
+			var logicUser  = new Logic (typeof (SoftwareUserEntity), null);
+			var logicGroup = new Logic (typeof (SoftwareUserGroupEntity), null);
 
 			var groupSystem     = this.CreateUserGroup (logicGroup, "Système",                   Business.UserManagement.UserPowerLevel.System);
 			var groupDev        = this.CreateUserGroup (logicGroup, "Développeurs",              Business.UserManagement.UserPowerLevel.Developer);
@@ -571,7 +571,7 @@ namespace Epsitec.Cresus.Core
 		private readonly DbInfrastructure dbInfrastructure;
 		private readonly DataLayer.Infrastructure.DataInfrastructure dataInfrastructure;
 		private readonly EntityContext independentEntityContext;
-		private readonly BusinessLogic.RefIdGeneratorPool refIdGeneratorPool;
+		private readonly RefIdGeneratorPool refIdGeneratorPool;
 		private readonly CoreDataConnectionManager connectionManager;
 		private readonly BusinessContextPool businessContextPool;
 		private readonly CoreDataLocker locker;
@@ -580,7 +580,7 @@ namespace Epsitec.Cresus.Core
 		private DataContext stableDataContext;
 		private DataContext activeDataContext;
 
-		public BusinessLogic.BusinessContext CreateBusinessContext()
+		public BusinessContext CreateBusinessContext()
 		{
 			return this.businessContextPool.CreateBusinessContext ();
 		}

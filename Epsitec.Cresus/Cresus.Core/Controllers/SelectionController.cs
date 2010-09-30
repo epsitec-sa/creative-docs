@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Controllers
 {

@@ -6,12 +6,12 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
-using Epsitec.Cresus.DataLayer;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (fieldType.Name == "PostFinanceAccount")
 				{
-					validator.AdditionalPredicate = text => BusinessLogic.Isr.IsFormattedSubscriberNumber (text);
+					validator.AdditionalPredicate = text => Isr.IsFormattedSubscriberNumber (text);
 				}
 			}
 
@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (fieldType.Name == "PostFinanceAccount")
                 {
-					if (BusinessLogic.Isr.IsCompactSubscriberNumber (value))
+					if (Isr.IsCompactSubscriberNumber (value))
                     {
-						value = BusinessLogic.Isr.FormatSubscriberNumber (value);
+						value = Isr.FormatSubscriberNumber (value);
                     }
                 }
 			}
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (fieldType.Name == "PostFinanceAccount")
 				{
-					if (!BusinessLogic.Isr.TryCompactSubscriberNumber (text, out text))
+					if (!Isr.TryCompactSubscriberNumber (text, out text))
 					{
 						return;
 					}

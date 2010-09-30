@@ -7,14 +7,14 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.BusinessLogic.Rules
+namespace Epsitec.Cresus.Core.Business.Rules
 {
-	[BusinessRule (RuleType.Update)]
-	internal class LegalPersonUpdateRule : GenericBusinessRule<LegalPersonEntity>
+	[BusinessRule (RuleType.Bind)]
+	internal class RelationBindRule : GenericBusinessRule<RelationEntity>
 	{
-		protected override void Apply(LegalPersonEntity person)
+		protected override void Apply(RelationEntity relation)
 		{
-			person.Contacts.ForEach (x => x.LegalPerson = person);
+			Logic.Current.BusinessContext.Register (relation.Person);
 		}
 	}
 }

@@ -17,7 +17,7 @@ using Epsitec.Cresus.Core.Helpers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Epsitec.Cresus.Core.BusinessLogic;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Cresus.Core.Printers
 {
