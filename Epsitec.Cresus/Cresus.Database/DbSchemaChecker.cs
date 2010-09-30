@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Database
 			return a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
 				&& string.Equals (a.Comment, b.Comment)
-				&& ((a.Table == null && b.Table == null) || (a.Table.Name == b.Table.Name && a.Table.CaptionId == b.Table.CaptionId))
+				&& ((a.Table == null && b.Table == null) || (string.Equals(a.Table.Name, b.Table.Name) && a.Table.CaptionId == b.Table.CaptionId))
 				&& string.Equals (a.TargetTableName, b.TargetTableName)
 				&& string.Equals (a.TargetColumnName, b.TargetColumnName)
 				&& a.Category == b.Category
