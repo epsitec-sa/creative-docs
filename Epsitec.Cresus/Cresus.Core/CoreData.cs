@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.Core
 
 
 		#endregion
-		
+
 		private bool ConnectToDatabase(DbAccess access)
 		{
 			if (this.ForceDatabaseCreation)
@@ -337,10 +337,25 @@ namespace Epsitec.Cresus.Core
 				this.DeleteDatabase (access);
 			}
 
-			if (this.dbInfrastructure.AttachToDatabase (access))
+			bool connected;
+
+			try
 			{
+				this.dbInfrastructure.AttachToDatabase (access);
+
 				System.Diagnostics.Trace.WriteLine ("Connected to database");
 
+				connected = true;
+			}
+			catch (System.Exception e)
+			{
+				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + e.Message + "\n\n" + e.StackTrace);
+
+				connected = false;
+			}
+
+			if (connected)
+			{
 				return false;
 			}
 			else
@@ -361,7 +376,7 @@ namespace Epsitec.Cresus.Core
 				}
 
 				System.Diagnostics.Trace.WriteLine ("Created new database");
-				
+
 				return true;
 			}
 		}

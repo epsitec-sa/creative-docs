@@ -4,6 +4,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -246,22 +247,17 @@ namespace Epsitec.Cresus.Database
 			//	empty of any tables.
 			
 			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length == 0);
-			
+
+			List<DbTable> tableCore = BootHelper.CreateCoreTables (this).ToList ();
+			List<DbTable> tableServices = BootHelper.CreateServicesTables (this).ToList ();
+
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				BootHelper helper = new BootHelper (this, transaction);
-
 				//	Create the tables required for our own metadata management. The
-				//	created tables must be commited before they can be populated.
+				//	created tables must be committed before they can be populated.
 
-				helper.CreateTableTableDef ();
-				helper.CreateTableColumnDef ();
-				helper.CreateTableTypeDef ();
-				helper.CreateTableInfo ();
-				helper.CreateTableLog ();
-				helper.CreateTableUid ();
-				helper.CreateTableLock ();
-				helper.CreateTableConnection ();
+				BootHelper.RegisterTables (this, transaction, tableCore);
+				BootHelper.RegisterTables (this, transaction, tableServices);
 				
 				transaction.Commit ();
 			}
@@ -280,7 +276,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	The database is ready. Start using it...
 			
-			this.StartUsingDatabase ();
+			this.AttachServices ();
 
 			return true;
 		}
@@ -294,55 +290,194 @@ namespace Epsitec.Cresus.Database
 			abstraction.DropDatabase ();
 		}
 
-		/// <summary>
-		/// Attaches to an existing database. This is only possible if the
-		/// <c>DbInfrastructure</c> is not yet connected to any database.
-		/// </summary>
-		/// <param name="access">The database access.</param>
-		public bool AttachToDatabase(DbAccess access)
+		public void AttachToDatabase(DbAccess access)
 		{
 			if (this.access.IsValid)
 			{
-				throw new Exceptions.GenericException (this.access, "Database already attached");
+				throw new System.InvalidOperationException ("Database is already attached.");
 			}
-			
-			this.access = access;
-			this.access.CreateDatabase = false;
 
-			if (this.InitializeDatabaseAbstraction () == false)
+			try
+			{
+				this.ConnectToDatabase (access);
+				this.LoadCoreTables ();
+				this.LoadServicesTables ();
+				this.AttachServices ();
+			}
+			catch (System.Exception)
 			{
 				this.access = new DbAccess ();
-				return false;
-			}
-			
-			//	The database must have user tables (at least, it should have our metadata
-			//	tables)...
 
-			if (this.abstraction.QueryUserTableNames ().Length == 0)
+				throw;
+			}
+		}
+
+		private void ConnectToDatabase(DbAccess access)
+		{
+			bool success;
+
+			try
 			{
-				throw new Exceptions.EmptyDatabaseException (this.access);
+				this.access = access;
+				this.access.CreateDatabase = false;
+
+				success = this.InitializeDatabaseAbstraction ();
 			}
-			
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			catch (System.Exception e)
 			{
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
-
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableInfo));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
-				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnection));
-				
-				this.types.ResolveTypes (transaction);
-				
-				transaction.Commit ();
+				throw new System.Exception ("Cannot connect to database", e);
 			}
-			
-			this.StartUsingDatabase ();
 
-			return true;
+			if (!success)
+			{
+				throw new System.Exception ("Cannot connect to database");
+			}
+		}
+
+		private void LoadCoreTables()
+		{
+			try
+			{
+				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+
+					this.types.ResolveTypes (transaction);
+
+					transaction.Commit ();
+				}
+			}
+			catch (System.Exception e)
+			{
+				throw new System.Exception ("Cannot load core tables.", e);
+			}
+
+			List<DbTable> expectedTables = BootHelper.CreateCoreTables (this).ToList ();
+			
+			BootHelper.UpdateCoreTableRelations (expectedTables[0], expectedTables[1], expectedTables[2]);
+
+			foreach (DbTable table in expectedTables)
+			{
+				table.UpdatePrimaryKeyInfo ();
+			}
+
+			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
+			// therefore, if the meta data is correct but does not match the real state of the tables
+			// in the database (that is, a table has been modified without the meta data beeing updated)
+			// we won't detect the problem.
+			// Marc
+
+			bool success = DbSchemaChecker.CheckSchema (this, expectedTables);
+			
+			if (!success)
+			{
+				throw new System.Exception ("Invalid core tables definition.");
+			}
+		}
+
+		private void LoadServicesTables()
+		{
+			try
+			{
+				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableInfo));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableUid));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableLock));
+					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableConnection));
+
+					transaction.Commit ();
+				}
+			}
+			catch (System.Exception e)
+			{
+				throw new System.Exception ("Cannot load services tables.", e);
+			}
+
+			List<DbTable> expectedTables = BootHelper.CreateServicesTables (this).ToList ();
+
+			foreach (DbTable table in expectedTables)
+			{
+				table.UpdatePrimaryKeyInfo ();
+			}
+
+			// TODO This check is based only on the meta data found in CR_TABLE_DEF and CR_COLUMN_DEF
+			// therefore, if the meta data is correct but does not match the real state of the tables
+			// in the database (that is, a table has been modified without the meta data beeing updated)
+			// we won't detect the problem.
+			// Marc
+			
+			bool success = DbSchemaChecker.CheckSchema (this, expectedTables);
+			
+			if (!success)
+			{
+				throw new System.Exception ("Invalid services tables definition.");
+			}
+		}
+
+		/// <summary>
+		/// Starts using the database. This loads the global and local settings
+		/// and instantiates the client manager.
+		/// </summary>
+		private void AttachServices()
+		{
+			try
+			{
+				this.AttachInfoManager ();
+				this.AttachUidManager ();
+				this.AttachLockManager ();
+				this.AttachConnectionManager ();
+
+				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.AttachLogger (transaction);
+
+					transaction.Commit ();
+				}
+			}
+			catch (System.Exception e)
+			{
+				throw new System.Exception ("Cannot attach services", e);
+			}
+		}
+
+		private void AttachInfoManager()
+		{
+			this.infoManager = new DbInfoManager ();
+			this.infoManager.Attach (this, this.internalTables[Tags.TableInfo]);
+		}
+
+		private void AttachUidManager()
+		{
+			this.uidManager = new DbUidManager ();
+			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
+		}
+
+		private void AttachLockManager()
+		{
+			this.lockManager = new DbLockManager ();
+			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
+		}
+
+		private void AttachConnectionManager()
+		{
+			this.connectionManager = new DbConnectionManager ();
+			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
+		}
+
+		/// <summary>
+		/// Sets up the database logger.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		private void AttachLogger(DbTransaction transaction)
+		{
+			this.logger = new DbLogger ();
+			this.logger.DefineClientId (this.clientId);
+			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
+			this.logger.ResetCurrentLogId (transaction);
 		}
 
 		/// <summary>
@@ -2386,60 +2521,6 @@ namespace Epsitec.Cresus.Database
 			conditions.Add (new SqlFunction (function, nameStatus, constStatus));
 		}
 
-		/// <summary>
-		/// Starts using the database. This loads the global and local settings
-		/// and instantiates the client manager.
-		/// </summary>
-		private void StartUsingDatabase()
-		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				this.SetupInfoManager ();
-				this.SetupLogger (transaction);
-				this.SetupUidManager ();
-				this.SetupLockManager ();
-				this.SetupConnectionManager ();
-
-				transaction.Commit ();
-			}
-		}
-
-		private void SetupInfoManager()
-		{
-			this.infoManager = new DbInfoManager ();
-			this.infoManager.Attach (this, this.internalTables[Tags.TableInfo]);
-		}
-		
-		/// <summary>
-		/// Sets up the database logger.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		private void SetupLogger(DbTransaction transaction)
-		{
-			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.clientId);
-			this.logger.Attach (this, this.internalTables[Tags.TableLog]);
-			this.logger.ResetCurrentLogId (transaction);
-		}
-
-		private void SetupUidManager()
-		{
-			this.uidManager = new DbUidManager ();
-			this.uidManager.Attach (this, this.internalTables[Tags.TableUid]);
-		}
-
-		private void SetupLockManager()
-		{
-			this.lockManager = new DbLockManager ();
-			this.lockManager.Attach (this, this.internalTables[Tags.TableLock]);
-		}
-
-		private void SetupConnectionManager()
-		{
-			this.connectionManager = new DbConnectionManager ();
-			this.connectionManager.Attach (this, this.internalTables[Tags.TableConnection]);
-		}
-
 
 		/// <summary>
 		/// Sets up the metadata table definitions by filling them with the
@@ -2749,188 +2830,260 @@ namespace Epsitec.Cresus.Database
 		
 		#region BootHelper Class
 		
-		private sealed class BootHelper
+		private static class BootHelper
 		{
-			public BootHelper(DbInfrastructure infrastructure, DbTransaction transaction)
-			{
-				this.infrastructure = infrastructure;
-				this.transaction    = transaction;
 
-				System.Diagnostics.Debug.Assert (this.infrastructure.types.KeyId.IsNullable == false);
-				System.Diagnostics.Debug.Assert (this.infrastructure.types.KeyStatus.IsNullable == false);
-				System.Diagnostics.Debug.Assert (this.infrastructure.types.NullableKeyId.IsNullable == true);
-				System.Diagnostics.Debug.Assert (this.infrastructure.types.Name.IsNullable == false);
-				System.Diagnostics.Debug.Assert (this.infrastructure.types.InfoXml.IsNullable == false);
-			}
-			
-			public void CreateTableTableDef()
+			public static void RegisterTables(DbInfrastructure infrastructure, DbTransaction transaction, IEnumerable<DbTable> tables)
 			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableTableDef);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
-					};
+				BootHelper.RegisterToDatabase (infrastructure, transaction, tables);
+				BootHelper.RegisterToDbInfrastructure (infrastructure, tables);
+			}
 
-				this.CreateTable (table, columns);
+			private static void RegisterToDatabase(DbInfrastructure infrastructure, DbTransaction transaction, IEnumerable<DbTable> tables)
+			{
+				foreach (DbTable table in tables)
+				{
+					SqlTable sqlTable = table.CreateSqlTable (infrastructure.converter);
+
+					infrastructure.DefaultSqlBuilder.InsertTable (sqlTable);
+					infrastructure.ExecuteSilent (transaction);
+				}
+			}
+
+			private static void RegisterToDbInfrastructure(DbInfrastructure infrastructure, IEnumerable<DbTable> tables)
+			{
+				infrastructure.internalTables.AddRange (tables);
+			}
+
+			public static IEnumerable<DbTable> CreateCoreTables(DbInfrastructure infrastructure)
+			{
+				yield return BootHelper.CreateTableTableDef (infrastructure);
+				yield return BootHelper.CreateTableColumnDef (infrastructure);
+				yield return BootHelper.CreateTableTypeDef (infrastructure);
+			}
+
+			public static void UpdateCoreTableRelations(DbTable tableDef, DbTable columnDef, DbTable typeDef)
+			{
+				columnDef.Columns[Tags.ColumnRefTable].DefineTargetTableName (tableDef.GetSqlName ());
+				columnDef.Columns[Tags.ColumnRefType].DefineTargetTableName (typeDef.GetSqlName ());
+				columnDef.Columns[Tags.ColumnRefTarget].DefineTargetTableName (tableDef.GetSqlName ());
 			}
 			
-			public void CreateTableColumnDef()
+			public static IEnumerable<DbTable> CreateServicesTables(DbInfrastructure infrastructure)
 			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableColumnDef);
-				DbColumn[] columns = new DbColumn[]
-					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal),
-						new DbColumn (Tags.ColumnDisplayName, types.Name,		   DbColumnClass.Data,        DbElementCat.Internal),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal),
-					};
-				
-				this.CreateTable (table, columns);
+				yield return BootHelper.CreateTableInfo (infrastructure);
+				yield return BootHelper.CreateTableLog (infrastructure);
+				yield return BootHelper.CreateTableUid (infrastructure);
+				yield return BootHelper.CreateTableLock (infrastructure);
+				yield return BootHelper.CreateTableConnection (infrastructure);
 			}
-			
-			public void CreateTableTypeDef()
+
+			private static DbTable CreateTableTableDef(DbInfrastructure infrastructure)
 			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableTypeDef);
+				TypeHelper types = infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableTableDef);
+				table.DefineCategory (DbElementCat.Internal);
+
 				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
-						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal),
-						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal),
-						new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal),
-						new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal),
-						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal),
-					};
-				
-				this.CreateTable (table, columns);
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+				};
+
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
 			}
-			
-			public void CreateTableLog()
+
+			private static DbTable CreateTableColumnDef(DbInfrastructure infrastructure)
 			{
-				TypeHelper types   = this.infrastructure.types;
-				DbTable    table   = new DbTable (Tags.TableLog);
+				TypeHelper types = infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableColumnDef);
+				table.DefineCategory (DbElementCat.Internal);
+
 				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId,		  types.KeyId,		   DbColumnClass.KeyId,		  DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
-						new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable) { IsAutoIncremented = true, },
-						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.Immutable),
-					};
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	   DbColumnClass.KeyStatus,   DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		   DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnName,		  types.Name,		   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnDisplayName, types.Name,		   DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	   DbColumnClass.Data,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefTable,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefType,	  types.KeyId,         DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefTarget,	  types.NullableKeyId, DbColumnClass.RefId,		  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+				};
+
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
+			}
+
+			private static DbTable CreateTableTypeDef(DbInfrastructure infrastructure)
+			{
+				TypeHelper types = infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableTypeDef);
+				table.DefineCategory (DbElementCat.Internal);
+
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId,		  types.KeyId,		 DbColumnClass.KeyId,		DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 DbColumnClass.KeyStatus,	DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 DbColumnClass.RefInternal, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnName,		  types.Name,		 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnDisplayName, types.Name,		 DbColumnClass.Data,        DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 DbColumnClass.Data,		DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+				};
+
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
+			}
+
+			private static DbTable CreateTableLog(DbInfrastructure infrastructure)
+			{
+				TypeHelper types = infrastructure.types;
+
+				DbTable table = new DbTable (Tags.TableLog);
 				
+				DbColumn[] columns = new DbColumn[]
+				{
+					new DbColumn (Tags.ColumnId,		  types.KeyId,		DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
+					{
+						IsAutoIncremented = true,
+					},
+					new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	DbColumnClass.Data,  DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+				};
+
 				//	TODO: add a column recording the nature of the change and the author of the change...
 
-				this.CreateTable (table, columns);
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
 			}
 
-			public void CreateTableUid()
+			private static DbTable CreateTableUid(DbInfrastructure infrastructure)
 			{
-				TypeHelper types = this.infrastructure.types;
+				TypeHelper types = infrastructure.types;
 
 				DbTable table = new DbTable (Tags.TableUid);
+				
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnUidSlot, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnUidMin, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnUidMax, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnUidNext, types.DefaultLongInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 				};
 
-				this.CreateTable (table, columns);
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
 			}
 
-			public void CreateTableLock()
+			private static DbTable CreateTableLock(DbInfrastructure infrastructure)
 			{
-				TypeHelper types = this.infrastructure.types;
+				TypeHelper types = infrastructure.types;
 
 				DbTable table = new DbTable (Tags.TableLock);
+				
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnName, types.Name, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnConnectionId, types.KeyId, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnCounter, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 				};
 
-				this.CreateTable (table, columns);
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
 			}
 
-			public void CreateTableConnection()
+			private static DbTable CreateTableConnection(DbInfrastructure infrastructure)
 			{
-				TypeHelper types = this.infrastructure.types;
+				TypeHelper types = infrastructure.types;
 
 				DbTable table = new DbTable (Tags.TableConnection);
+				
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnConnectionIdentity, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnConnectionSince, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnConnectionLastSeen, types.DateTime, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnConnectionStatus, types.DefaultInteger, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 				};
 
-				this.CreateTable (table, columns);
+				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
+				table.DefinePrimaryKey (columns[0]);
+
+				return table;
 			}
 
-			public void CreateTableInfo()
+			private static DbTable CreateTableInfo(DbInfrastructure infrastructure)
 			{
-				TypeHelper types = this.infrastructure.types;
+				TypeHelper types = infrastructure.types;
 
 				DbTable table = new DbTable (Tags.TableInfo);
+
 				DbColumn[] columns = new DbColumn[]
 				{
 					new DbColumn (Tags.ColumnId, types.KeyId, DbColumnClass.KeyId, DbElementCat.Internal, DbRevisionMode.Immutable)
 					{
 						IsAutoIncremented = true,
 					},
-					new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
-					new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable),
+					new DbColumn (Tags.ColumnKey, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
+					new DbColumn (Tags.ColumnValue, types.DefaultString, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.IgnoreChanges),
 				};
 
-				this.CreateTable (table, columns);
-			}
-			
-			private void CreateTable(DbTable table, DbColumn[] columns)
-			{
-				for (int i = 0; i < columns.Length; i++)
-				{
-					columns[i].DefineCategory (DbElementCat.Internal);
-				}
-				
-				table.Columns.AddRange (columns);
-				
 				table.DefineCategory (DbElementCat.Internal);
+				table.Columns.AddRange (columns);
 				table.DefinePrimaryKey (columns[0]);
-				
-				this.infrastructure.internalTables.Add (table);
-				
-				SqlTable sqlTable = table.CreateSqlTable (this.infrastructure.converter);
-				this.infrastructure.DefaultSqlBuilder.InsertTable (sqlTable);
-				this.infrastructure.ExecuteSilent (this.transaction);
+
+				return table;
 			}
-		
-			private DbInfrastructure			infrastructure;
-			private DbTransaction				transaction;
+
 		}
 		
 		#endregion
