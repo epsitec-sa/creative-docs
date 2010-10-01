@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class PostBoxEntity
 	{
-		public override EntityStatus Status
+		public override EntityStatus EntityStatus
 		{
 			get
 			{

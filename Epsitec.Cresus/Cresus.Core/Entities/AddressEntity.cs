@@ -30,25 +30,11 @@ namespace Epsitec.Cresus.Core.Entities
 			return new string[] { this.Street.StreetName.ToSimpleText (), this.Location.Country.Code, this.Location.PostalCode.ToSimpleText (), this.Location.Name.ToSimpleText () };
 		}
 
-		public override EntityStatus Status
+		public override EntityStatus EntityStatus
 		{
 			get
 			{
-				EntityStatus ok1 = this.Street.Status;
-				EntityStatus ok2 = this.PostBox.Status;
-				EntityStatus ok3 = this.Location.Status;
-
-				if (ok1 == EntityStatus.Valid && ok2 == EntityStatus.Valid && ok3 == EntityStatus.Valid)
-				{
-					return EntityStatus.Valid;
-				}
-
-				if (ok1 == EntityStatus.Invalid || ok2 == EntityStatus.Invalid || ok3 == EntityStatus.Invalid)
-				{
-					return EntityStatus.Invalid;
-				}
-
-				return EntityStatus.Empty;
+				return Helpers.EntityStatusHelper.CombineStatus (this.Street, this.PostBox, this.Location);
 			}
 		}
 	}

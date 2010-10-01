@@ -7,6 +7,7 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	public enum EntityStatus
 	{
+		Unknown = -1,
 		Empty,
 		Valid,
 		Invalid,
