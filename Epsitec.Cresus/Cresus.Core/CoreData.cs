@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Core
 				this.DeleteDatabase (access);
 			}
 
-			bool connected;
+			bool connected = false;
 
 			try
 			{
@@ -347,11 +347,24 @@ namespace Epsitec.Cresus.Core
 
 				connected = true;
 			}
-			catch (System.Exception e)
+			catch (Epsitec.Cresus.Database.Exceptions.IncompatibleDatabaseException ex)
 			{
-				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + e.Message + "\n\n" + e.StackTrace);
+				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
 
-				connected = false;
+				UI.ShowErrorMessage (
+					Res.Strings.Error.IncompatibleDatabase,
+					Res.Strings.Hint.Error.IncompatibleDatabase, ex);
+
+				this.dbInfrastructure.Dispose ();
+				this.DeleteDatabase (access);
+
+				//	TODO: start external migration process...
+
+				System.Environment.Exit (0);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine ("Failed to connect to database: " + ex.Message + "\n\n" + ex.StackTrace);
 			}
 
 			if (connected)

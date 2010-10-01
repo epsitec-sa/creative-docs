@@ -201,6 +201,14 @@ namespace Epsitec.Cresus.Core
 						return global::Epsitec.Cresus.Core.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
 					}
 				}
+				//	designer:str/L0A2
+				public static global::Epsitec.Common.Types.FormattedText IncompatibleDatabase
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772162));
+					}
+				}
 			}
 			
 			public static class Hint
@@ -213,6 +221,14 @@ namespace Epsitec.Cresus.Core
 						get
 						{
 							return global::Epsitec.Cresus.Core.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772161));
+						}
+					}
+					//	designer:str/L0A3
+					public static global::Epsitec.Common.Types.FormattedText IncompatibleDatabase
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772163));
 						}
 					}
 				}

@@ -168,6 +168,7 @@
     <Compile Include="DbSchemaChecker.cs" />
     <Compile Include="DbUidManager.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
+    <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />
     <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="SqlIndex.cs" />
     <Compile Include="DbIndex.cs" />

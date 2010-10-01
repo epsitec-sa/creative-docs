@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Database
 				this.LoadServicesTables ();
 				this.AttachServices ();
 			}
-			catch (System.Exception)
+			catch
 			{
 				this.access = DbAccess.Empty;
 				throw;
@@ -348,16 +348,16 @@ namespace Epsitec.Cresus.Database
 					transaction.Commit ();
 				}
 			}
-			catch (System.Exception e)
+			catch (System.Exception ex)
 			{
-				throw new System.Exception ("Cannot load core tables.", e);
+				throw new Exceptions.GenericException (this.access, "Cannot load core tables.", ex);
 			}
 
 			bool success = this.CheckCoreTables ();
 			
 			if (!success)
 			{
-				throw new System.Exception ("Invalid core tables definition.");
+				throw new Exceptions.IncompatibleDatabaseException (this.access, "Incompatible core tables.");
 			}
 		}
 
@@ -400,14 +400,14 @@ namespace Epsitec.Cresus.Database
 			}
 			catch (System.Exception e)
 			{
-				throw new System.Exception ("Cannot load services tables.", e);
+				throw new Exceptions.GenericException (this.access, "Cannot load services tables.", e);
 			}
 
 			bool success = this.CheckServicesTables ();
 			
 			if (!success)
 			{
-				throw new System.Exception ("Invalid services tables definition.");
+				throw new Exceptions.IncompatibleDatabaseException (this.access, "Invalid services tables definition.");
 			}
 		}
 

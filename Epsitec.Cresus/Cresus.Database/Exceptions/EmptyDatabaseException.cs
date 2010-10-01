@@ -1,4 +1,4 @@
-//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
@@ -7,9 +7,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	/// The <c>EmptyDatabaseException</c> exception is raised when an empty database
 	/// is being opened.
 	/// </summary>
-	
 	[System.Serializable]
-	
 	public sealed class EmptyDatabaseException : GenericException
 	{
 		/// <summary>
