@@ -59,9 +59,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Title,
 				ValueSetter         = x => this.Entity.Title = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Title, creator: this.CreateNewTitle),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Titre", controller);
@@ -83,9 +80,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Gender,
 				ValueSetter         = x => this.Entity.Gender = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Gender, mode: ViewControllerMode.None),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Sexe", controller);

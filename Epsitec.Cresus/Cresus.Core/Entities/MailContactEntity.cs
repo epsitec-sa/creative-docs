@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Entities
 				);
 		}
 
-		public override string[] GetTextArray()
+		public override string[] GetEntityKeywords()
 		{
 			return new string[]
 			{

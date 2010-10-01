@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Country.Code, "-", this.PostalCode, " ", this.Name);
 		}
 
-		public override string[] GetTextArray()
+		public override string[] GetEntityKeywords()
 		{
 			return new string[] { this.Country.Code, this.PostalCode.ToSimpleText (), this.Name.ToSimpleText () };
 		}

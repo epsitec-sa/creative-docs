@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.Company = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Company),
 
-				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToTextArrayConverter     = x => x.GetEntityKeywords (),
 				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 

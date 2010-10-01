@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Person.GetCompactSummary ());
 		}
 
-		public override string[] GetTextArray()
+		public override string[] GetEntityKeywords()
 		{
-			return this.Person.GetTextArray ();
+			return this.Person.GetEntityKeywords ();
 		}
 	}
 }

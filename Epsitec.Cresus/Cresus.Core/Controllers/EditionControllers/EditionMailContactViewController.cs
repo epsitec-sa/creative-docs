@@ -186,9 +186,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.LegalPerson = x,
 				ReferenceController = this.GetLegalPersonReferenceController (),
 				PossibleItemsGetter = () => this.Data.GetAllEntities<LegalPersonEntity> (),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			var textField = builder.CreateAutoCompleteTextField ("Entreprise (personne morale)", controller);
@@ -215,9 +212,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.Address = x,
 				ReferenceController = this.GetAddressReferenceController (),
 				PossibleItemsGetter = () => this.GetLegalPersonAddressGetter (),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.addressTextField = builder.CreateAutoCompleteTextField ("Adresse de l'entreprise", controller);
@@ -283,9 +277,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter = () => this.Country,
 				ValueSetter = x => this.Country = x,
 				ReferenceController = new ReferenceController (() => this.Country, creator: this.CreateNewCountry),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.countryTextField = builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
@@ -299,9 +290,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter = x => this.Location = x,
 				ReferenceController = new ReferenceController (() => this.Location, creator: this.CreateNewLocation),
 				PossibleItemsGetter = () => this.LocationGetter,
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			this.locationTextField = builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);

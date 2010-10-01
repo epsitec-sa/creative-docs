@@ -29,6 +29,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		public SelectionController(BusinessContext businessContext)
 		{
 			this.businessContext = businessContext;
+
+			this.ToTextArrayConverter     = x => x.GetEntityKeywords ();
+			this.ToFormattedTextConverter = x => x.GetCompactSummary ();
 		}
 		
 
