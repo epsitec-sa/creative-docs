@@ -81,9 +81,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.AmountDue.PaymentMode,
 				ValueSetter         = x => this.Entity.AmountDue.PaymentMode = x,
 				ReferenceController = new ReferenceController (() => this.Entity.AmountDue.PaymentMode, creator: this.CreateNewPaymentMode),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Mode de paiement", controller);

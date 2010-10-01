@@ -66,9 +66,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.UnitOfMeasure,
 				ValueSetter         = x => this.Entity.UnitOfMeasure = x,
 				ReferenceController = new ReferenceController (() => this.Entity.UnitOfMeasure, creator: this.CreateNewUnitOfMeasure),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Unité", controller);

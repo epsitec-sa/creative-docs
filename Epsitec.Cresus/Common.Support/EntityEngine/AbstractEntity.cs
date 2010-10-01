@@ -108,7 +108,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Retourne la liste des mots-clé de l'entité, en vue d'une recherche.
 		/// </summary>
 		/// <returns></returns>
-		public virtual string[] GetTextArray()
+		public virtual string[] GetEntityKeywords()
 		{
 			return null;
 		}

@@ -100,9 +100,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.BillingUnit,
 				ValueSetter         = x => this.Entity.BillingUnit = x,
 				ReferenceController = new ReferenceController (() => this.Entity.BillingUnit, creator: this.CreateNewUnitOfMeasure),
-	
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Unité", controller);
@@ -115,9 +112,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Units,
 				ValueSetter         = x => this.Entity.Units = x,
 				ReferenceController = new ReferenceController (() => this.Entity.Units, creator: this.CreateNewUnitOfMeasureGroup),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Groupe d'unités", controller);
@@ -130,9 +124,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.ArticleCategory,
 				ValueSetter         = x => this.Entity.ArticleCategory = x,
 				ReferenceController = new ReferenceController (() => this.Entity.ArticleCategory, creator: this.CreateNewCategory),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Catégorie", controller);

@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueSetter         = x => this.Entity.AdministrativeTaxArticle = x,
 				ReferenceController = new ReferenceController (() => this.Entity.AdministrativeTaxArticle, creator: this.CreateNewTaxArticleDefinition),
 
-				ToTextArrayConverter     = x => x.GetTextArray (),
+				ToTextArrayConverter     = x => x.GetEntityKeywords (),
 				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 

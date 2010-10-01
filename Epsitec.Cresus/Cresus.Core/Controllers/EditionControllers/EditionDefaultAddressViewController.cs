@@ -61,9 +61,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			{
 				ValueGetter = () => this.Entity.Location.Country,
 				ValueSetter = x => this.Entity.Location.Country = x,
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Nom et code du pays", controller);
@@ -76,9 +73,6 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				ValueGetter         = () => this.Entity.Location,
 				ValueSetter         = x => this.Entity.Location = x,
 				PossibleItemsGetter = () => this.Data.GetAllEntities<Entities.LocationEntity> (),
-
-				ToTextArrayConverter     = x => x.GetTextArray (),
-				ToFormattedTextConverter = x => x.GetCompactSummary ()
 			};
 
 			builder.CreateAutoCompleteTextField ("Numéro postal et ville", controller);
